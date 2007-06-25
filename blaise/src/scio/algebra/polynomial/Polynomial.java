@@ -15,6 +15,12 @@ import scio.algebra.GroupElement;
 public class Polynomial extends GroupAlgebraElement<AddInt>{
     /** Constructor: creates a new instance of Polynomial, initializes to zero. */
     public Polynomial(){super();}
+    /** Creates from an array of weights plus array of ints */
+    public Polynomial(float[] ws,int[] es){
+        this();
+        if(ws.length!=es.length){return;}
+        for(int i=0;i<ws.length;i++){appendTerm(ws[i],es[i]);}
+    }
     /** Creates from a given algebra element. */
     public Polynomial(GroupAlgebraElement<AddInt> e){this();}
     /** Creates from a given algebra term. */
@@ -22,9 +28,7 @@ public class Polynomial extends GroupAlgebraElement<AddInt>{
     /** Commutative group! */
     public static boolean isCommutative(){return true;}
     /** New way to append. */
-    public void appendTerm(float f,int x){
-        appendTerm(f,new AddInt(x));
-    }
+    public void appendTerm(float w,int x){appendTerm(w,new AddInt(x));}
     /** Override getInverse mthod. */
     public GroupElement getInverse(){
         Polynomial result;
@@ -49,5 +53,4 @@ public class Polynomial extends GroupAlgebraElement<AddInt>{
         copy.append(this);
         return copy;
     }
-    // public Polynomial actLeft(Polynomial p2){return clone().actLeft(p2);}
 }

@@ -8,7 +8,7 @@ import scio.algebra.GroupElementId;
  * Author: <i>Elisha Peterson</i><br>
  * Created on <i>June 21, 2007, 1:56 PM</i><br><br>
  *
- * The additive group of integers.
+ * The additive group (Z,+) of integers.
  */
 public class AddInt extends GroupElementId {
     /** Value of the integer */
@@ -19,6 +19,8 @@ public class AddInt extends GroupElementId {
     public AddInt(int n){this.n=n;}
     /** Returns value */
     public int get(){return n;}
+    /** Returns the identity element. */
+    public static GroupElementId getIdentity(){return new AddInt();}
     /** Gets the inverse (-n) */
     public GroupElement getInverse(){return new AddInt(-n);}
     /** Group action is addition */

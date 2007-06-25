@@ -21,12 +21,12 @@ public class PolynomialTest extends TestCase {
 
     public static Test suite(){return new TestSuite(PolynomialTest.class);}
 
-    Polynomial instance=new Polynomial();
+    Polynomial instance;
     
     protected void setUp() throws Exception {
-        instance.appendTerm(1,1);
-        instance.appendTerm(1.5f,7);
-        instance.appendTerm(6,0);
+        float[] w={1,1.5f,6};
+        int[] t={1,7,0};
+        instance=new Polynomial(w,t);
         instance.appendTerm(-8,0);
         instance.appendTerm(-48,-2);
         instance.appendTerm(3,7);
