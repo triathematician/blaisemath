@@ -26,4 +26,8 @@ public abstract class GroupElementId implements GroupElement,Comparable{
 
     /** Comparing two group algebra elements... */
     public abstract int compareTo(Object o);
+    
+    /** Default output methods */
+    public String toLongString(){return toString();}
+    public String toShortString(){return toShortString();}
 }

@@ -1,18 +1,18 @@
-package scio.planar;
+package scio.algebra.planar;
 
-import java.awt.Adjustable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import scio.algebra.GroupAlgebraSummand;
 import scio.algebra.GroupElement;
 import scio.algebra.GroupElementId;
-import scio.algebra.PermutationElement;
+import scio.algebra.permutation.Permutation;
 import scio.graph.Edge;
 import scio.graph.Graph;
-import scio.graph.GraphGroupElement;
 
 /**
  * <b>TemperleyLiebElement.java</b><br>
@@ -35,11 +35,11 @@ import scio.graph.GraphGroupElement;
  *
  * Here are some default formatting options:
  *   1) Nested parentheses counting: e.g. ( (()()()) () ) () () becomes 53000100... numbers represent how many parentheses are inside
- *   2) Integer pairings... 
+ *   2) Integer pairings...
  */
-public class TemperleyLiebElement extends PlanarGraphElement implements Iterator<TemperleyLiebElement> {
+public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<TemperleyLiebTerm> {
     
-// Fields    
+    // Fields
     
     ArrayList<Integer> inputs;
     ArrayList<Integer> outputs;
@@ -47,10 +47,10 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     int kinks=0;
     boolean positive=true;
     
-// Constructors    
+    // Constructors
     
     /** Default: set to identity, or each input is matched with each output */
-    TemperleyLiebElement(){
+    TemperleyLiebTerm(){
         super();
         g.multiEdge=true;
         g.directed=false;
@@ -58,24 +58,27 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         initId(2);
     }
     /** Default: sets up for a given n. */
-    TemperleyLiebElement(int n){this();initPuts(n);initId(n);}
+    TemperleyLiebTerm(int n){this();initPuts(n);initId(n);}
     /** Construct based on a list of pairings. */
-    TemperleyLiebElement(int[][] pair){
+    TemperleyLiebTerm(int[][] pair){
         super();g.multiEdge=true;g.directed=false;
         inputs=new ArrayList<Integer>();
         outputs=new ArrayList<Integer>();
         /** pair should be an ?x2 array! */
         this.n=pair.length;
         for(int i=0;i<n;i++){addEdge(pair[i][0],pair[i][1]);}
+        n-=g.getNumTrivialLoops();
     }
+    /** Construct with a pairing list, and a standard n */
+    TemperleyLiebTerm(int[][] pair,int n){this(pair);initPuts(n);}
     /** Construct based on nesting information */
-    TemperleyLiebElement(int[] paren){
+    TemperleyLiebTerm(int[] paren){
         this(paren.length);
         g.clear();
         setToParen(paren);
     }
     /** Construct based on another TL Element */
-    TemperleyLiebElement(TemperleyLiebElement e){
+    TemperleyLiebTerm(TemperleyLiebTerm e){
         super();
         inputs=(ArrayList<Integer>)e.inputs.clone();
         outputs=(ArrayList<Integer>)e.outputs.clone();
@@ -85,7 +88,7 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         g.addAll(e.getGraph());
     }
     
-// Initializer methods
+    // Initializer methods
     
     /** Resets the underlying graph */
     public void clear(){g.clear();}
@@ -103,8 +106,21 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         g.clear();
         for(int i=1;i<=n;i++){addEdge(i,2*n+1-i);}
     }
+    /** Override add edge method to ensure ordering of vertices. */
+    public void addEdge(int a,int b,int w){
+        if(a>b){int c=a;a=b;b=c;}
+        if(validEdge(a,b,w)){g.addEdge(a,b,w);}
+    }
     
-// Set methods    
+    // Set methods
+    
+    /** Returns a TL element corresponding to a given permutation. */
+    public TemperleyLiebTerm setToPermutation(Permutation p){
+        n=p.getN();
+        g.clear();
+        for(int i=1;i<=p.getN();i++){addEdge(i,2*p.getN()+1-p.get(i));}
+        return this;
+    }
     
     /** Adds to parenthetical elements from given start position. */
     public void setToParen(int i0,int[] paren,int ps,int pe){
@@ -116,21 +132,35 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         /** Add edges inside paren 0 */
         setToParen(i0+1,paren,ps+1,ps+inParen);
         /** Add edges outside paren 0 */
-        setToParen(i0+2*inParen+2,paren,ps+inParen+1,pe); 
+        setToParen(i0+2*inParen+2,paren,ps+inParen+1,pe);
     }
     /** Same method without bounds. */
     public void setToParen(int[] paren){setToParen(1,paren,0,paren.length-1);}
     
-    /** Initializes to element represented by the string. Returns false if not valid. */
+    /** Initializes to element represented by the string. Returns false if not valid.
+     * Sample notation: instance3.setTo("{(2)(1-10)(2-3)(4-6)(5-7)(8-9)}"); */
     public boolean setTo(String s){
-        //TODO fill in the gaps here!!
+        TreeMap<Integer,Integer> result=new TreeMap<Integer,Integer>();
+        // Match numbers/spaces/-/parentheses inside brackets
+        Matcher m1=Pattern.compile("\\{([\\s\\d\\(\\)\\-]*)\\}").matcher(s);
+        if(m1.find()){s=m1.group(1);}else{return false;}
+        g.clear();
+        // Match trivial loops (no dash inside parentheses)
+        Matcher m2=Pattern.compile("\\([\\s]*([\\d]*)[\\s]*\\)").matcher(s);
+        if(m2.find()){g.addEdge(-1,-1,Integer.valueOf(m2.group(1)));}
+        // Now separates groups inside each set of parentheses
+        Matcher m3=Pattern.compile("\\([\\s]*([\\d]*)[\\s]*\\-[\\s]*([\\d]*)[\\s]*\\)").matcher(s);
+        // Copy into the hashmap
+        while(m3.find()){this.addEdge(Integer.valueOf(m3.group(1)),Integer.valueOf(m3.group(2)));}
+        n=g.size();
+        if(g.getNumTrivialLoops()>0){n--;}
         return true;
     }
     
-// Get methods    
+    // Get methods
     
     /** Returns parenthetical notation, if possible... does not check validity! */
-    public int[] getParen(){
+    public int[] toParen(){
         int[] result=new int[n];
         int i=0;
         for(Edge e:g){if(!e.isTrivial()){result[i]=(e.getSink()-e.getSource()-1)/2;i++;}}
@@ -138,21 +168,32 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     }
     
     /** Returns paren string */
-    public String getParenString(){
-        int[] p=getParen();
+    public String toParenString(){
+        if(hasCrossings()){return "";}
+        int[] p=toParen();
         String s="";
         for(int i=0;i<p.length;i++){s+=p[i];}
         return s;
     }
     
-    /** Returns whether this is indeed a basis element... */
-    public boolean isBasisElement(){
-        return g.getNumTrivialLoops()==0&&validParen(getParen())&&kinks==0;
+    /** Gets combined weight */
+    public int pow(int a,int p){if(p==0){return 1;}return a*pow(a,p-1);}
+    public int pown(int p){if(2*(p%2)==p){return 1;}return -1;}
+    public float getTotalWeight(GroupAlgebraSummand<TemperleyLiebTerm> owner){
+        return (float)(owner.getWeight()*pown(kinks)*pow(2,g.getNumTrivialLoops()));
     }
     
-    /** Prints out the graph */
-    public String toString(){return ((kinks%2==1)?"-":"")+g.toString()+" in TL("+n+")";}
-        
+    /** Returns whether this is indeed a basis element... */
+    public boolean isBasisElement(){
+        //System.out.println("crossings: "+Boolean.toString(hasCrossings())+", trivial: "+Boolean.toString(g.getNumTrivialLoops()==0)+", kinks: "+Boolean.toString(kinks==0));
+        return (!hasCrossings())&&g.getNumTrivialLoops()==0&&kinks==0;
+    }
+    
+    /** Prints out the TL element */
+    public String toString(){return ((kinks%2==1)?"-":"")+g.toString();}
+    /** Prints out the TL element, with containing group */
+    public String toLongString(){return ((kinks%2==1)?"-":"")+g.toString()+" in TL("+n+")";}
+    
     /** Validity checking redefined! Determines if it's "ok" to add the given edge.
      * No vertex can be used more than once!
      */
@@ -173,7 +214,9 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     public boolean crossed(int va,int vb){
         int va2=g.getAdjacency(va).first();
         int vb2=g.getAdjacency(vb).first();
-        return (va-vb)*(va2-vb)*(va-vb2)*(va2-vb2)<0;
+        boolean result=(va-vb)*(va2-vb)*(va-vb2)*(va2-vb2)<0;
+        //System.out.println("strand between verices "+va+" and "+vb+ " is "+(result?"crossed.":"not crossed."));
+        return result;
     }
     /** As above, but with edges */
     public boolean crossed(Edge a,Edge b){
@@ -187,20 +230,25 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     public Edge[] getCrossedEdges(){
         for(Edge e1:g){for(Edge e2:g){
             if(e1==e2){continue;}
-            if(crossed(e1,e2)){
-                Edge[] result={e1,e2};
-                return result;
-            }
+            if(crossed(e1,e2)){Edge[] result={e1,e2};return result;}
         }}
         return null;
     }
+    /** Returns whether there are any crossings. */
+    public boolean hasCrossings(){
+        return (getCrossedEdges()!=null);
+    }
     
-    /** Fundamental group action! No check yet on validity here...*/
+    /** Fundamental group action! No check yet on validity here...
+     * @param x 
+     * @return 
+     */
     public GroupElementId actLeft(GroupElement x){
         // perform the gluing; result is contained in gTemp
-        TemperleyLiebElement tlx=(TemperleyLiebElement)x;
-        Graph gTemp=(Graph)tlx.getGraph().clone();
-        int plus=gTemp.glueTo(this.getGraph(),this.outputs,tlx.inputs);
+        TemperleyLiebTerm tlx=(TemperleyLiebTerm)x;
+        // set up gTemp as the bottom portion of the diagram, so its puts will not change
+        Graph gTemp=tlx.getGraph().clone();
+        int plus=gTemp.glueTo(this.getGraph(),this.inputs,tlx.outputs);
         //System.out.println("gtemp"+gTemp.toString());
         
         // populate a mapping of vertices to adjacent vertices
@@ -211,8 +259,6 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         
         // Construct and add an edge for each strand. Here's where some account
         // must be taken for signs/kinks/vertex removals.
-        // TODO account for signs/kinks
-        // TODO remove trivial loops
         Graph resultGraph=new Graph();resultGraph.directed=false;resultGraph.multiEdge=true;
         resultGraph.addEdge(-1,-1,gTemp.getLoopsAt(-1));
         int newKinks=0;
@@ -225,13 +271,13 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
                 resultGraph.addEdge(start,end);
                 //check for crossings along first/last edge of the strand
                 if(start>plus&&end>plus&&this.crossed(start-plus,end-plus)){newKinks++;}
-                if(start<=plus&&end<=plus&&tlx.crossed(start,end)){newKinks++;}
+                else if(start<=plus&&end<=plus&&tlx.crossed(start,end)){newKinks++;}
             }
         }
         //System.out.println(resultGraph.toString());
         
         // Constructs the new graph based on the above computation.
-        TemperleyLiebElement result=new TemperleyLiebElement();
+        TemperleyLiebTerm result=new TemperleyLiebTerm();
         result.g.clear();
         result.inputs=tlx.inputs;
         result.outputs=this.outputs;
@@ -241,8 +287,8 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         return result;
     }
     
-// STATIC METHODS
-
+    // STATIC METHODS
+    
     /** Returns whether a given integer list is a valid paren notation. */
     public static boolean validParen(int[] p,int ps,int pe){
         if(p==null||pe>=p.length){return false;}
@@ -252,16 +298,6 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     }
     /** Same method without bounds. */
     public static boolean validParen(int[] p){return validParen(p,0,p.length-1);}
-    
-    /** Returns a TL element corresponding to a given permutation. */
-    public static TemperleyLiebElement getPermutationElement(PermutationElement p){
-        TemperleyLiebElement result=new TemperleyLiebElement(p.getN());
-        result.g.clear();
-        for(int i=1;i<=p.getN();i++){
-            result.addEdge(i,2*p.getN()+1-p.get(i));
-        }
-        return result;
-    }
     
     /** Help method. Determines which of a given integer list is contained in an arraydeque. */
     private static Integer notContained(TreeSet<Integer> adj,ArrayDeque<Integer> deque){
@@ -333,7 +369,7 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
         return result;
     }
     
-// Iterator Methods... basis elements only!
+    // Iterator Methods... basis elements only!
     
     /** Whether a parenthetical notation has a next value */
     public static boolean hasParenAfter(int[] p,int ps,int pe){
@@ -346,7 +382,7 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     /** Determines the next element given parenthetical notation */
     public static int[] parenAfter(int[] p,int ps,int pe){
         //String s="1. ps="+ps+" pe="+pe+" p=[";for(int i=ps;i<=pe;i++){s+=p[i];}System.out.println(s+"]");
-        if(ps==pe){int[] result={p[ps]-1};return result;} 
+        if(ps==pe){int[] result={p[ps]-1};return result;}
         if(!hasParenAfter(p,ps,pe)){return null;}
         int[] result=new int[pe-ps+1];
         for(int i=ps;i<=pe;i++){result[i-ps]=p[i];}
@@ -357,14 +393,11 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
             //System.out.println("replacing after");
             int[] pReplace=parenAfter(p,ps+first+1,pe);
             for(int i=ps+first+1;i<=pe;i++){result[i-ps]=pReplace[i-ps-first-1];}
-        }
-        else if(hasParenAfter(p,ps+1,ps+first)){
+        } else if(hasParenAfter(p,ps+1,ps+first)){
             //System.out.println("replacing inside");
             int[] pReplace=parenAfter(p,ps+1,ps+first);
             for(int i=ps+1;i<=ps+first;i++){result[i-ps]=pReplace[i-ps-1];}
-        }
-        else if(first<=0){System.out.println("error!");return null;}
-        else{
+        } else if(first<=0){System.out.println("error!");return null;} else{
             //System.out.println("replacing first");
             first--;
             for(int i=0;i<=first;i++){result[i]=first-i;}
@@ -377,16 +410,36 @@ public class TemperleyLiebElement extends PlanarGraphElement implements Iterator
     public static int[] parenAfter(int[] p){return parenAfter(p,0,p.length-1);}
     
     /** Determines whether there is a next TL element */
-    public boolean hasNext(){return g.getNumTrivialLoops()==0&&kinks==0&&hasParenAfter(getParen());}
+    public boolean hasNext(){return isBasisElement()&&hasParenAfter(toParen());}
     
     /** Determines the next TL element, if it exists */
-    public TemperleyLiebElement next(){if(!hasNext()){return null;}return new TemperleyLiebElement(parenAfter(getParen()));}
+    public TemperleyLiebTerm next(){if(!hasNext()){return null;}return new TemperleyLiebTerm(parenAfter(toParen()));}
     
     /** Required by Iterator interface */
     public void remove(){}
     
-    /** Compare to another AddInt */
+    /** Compare to another TemperleyLiebTerm */
     public int compareTo(Object o){
-        return Integer.valueOf(getParenString())-Integer.valueOf(((TemperleyLiebElement)o).getParenString());
+        TemperleyLiebTerm ot=(TemperleyLiebTerm)o;
+        if(hasCrossings()||ot.hasCrossings()){
+            int[][] pairs=new int[n][2];
+            int i=0;
+            Iterator<Edge> i1=g.iterator();
+            Iterator<Edge> i2=ot.g.iterator();
+            Edge e1,e2;
+            int e1min,e1max,e2min,e2max;
+            while(i1.hasNext()&&i2.hasNext()){
+                // get next nontrivial loop
+                do{e1=i1.next();}while(e1.isTrivial()&&i1.hasNext());
+                do{e2=i2.next();}while(e2.isTrivial()&&i2.hasNext());
+                // compare min/max values
+                if(e1.getMin()!=e2.getMin()){return e1.getMin()-e2.getMin();}
+                if(e1.getMax()!=e2.getMax()){return e1.getMax()-e2.getMax();}
+            }
+            if(i1.hasNext()){return 1;}
+            else if(i2.hasNext()){return -1;}
+            else{return 0;}
+        }        
+        return Integer.valueOf(toParenString())-Integer.valueOf(((TemperleyLiebTerm)o).toParenString());
     }
 }

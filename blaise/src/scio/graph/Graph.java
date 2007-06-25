@@ -47,6 +47,7 @@ public class Graph extends TreeSet<Edge>{
     }
     /** Adds an edge. All add/delete edge methods should be funnelled through addEdge(a,b,w). */
     public boolean addTrivialLoop(){return addEdge(-1,-1,1);}
+    public void deleteTrivialLoops(){removeVertex(-1);}
     public boolean addEdge(Edge e){return addEdge(e.v0,e.v1,e.weight);}
     public boolean addEdge(int a,int b){return addEdge(a,b,1);}
     /** Workhorse method. */
@@ -118,12 +119,12 @@ public class Graph extends TreeSet<Edge>{
         for(Edge e:this){if(e.contains(v))removals.add(e);}
         removeAll(removals);
     }
-    /** Glues two vertices together... replaces all v2's with v1's. Returns the removed element (v2). */
+    /** Glues two vertices together... replaces all v1's with v2's. Returns the removed element (v1). */
     public int glueVertices(int v1,int v2){
-        Graph gnb2=getNeighborhood(v2);
+        Graph gnb2=getNeighborhood(v1);
         this.removeAll(gnb2);
-        for(Edge e:gnb2){e.relabel(v2,v1);addEdge(e);}
-        return v2;
+        for(Edge e:gnb2){e.relabel(v1,v2);addEdge(e);}
+        return v1;
     }
     /** Returns the number of loops to a given vertex. */
     public int getLoopsAt(int v){float i=0;for(Edge e:this){i+=e.weightedEquals(v,v);}return ((Float)i).intValue();}
@@ -189,7 +190,11 @@ public class Graph extends TreeSet<Edge>{
     }
     
     /** Contracts an edge in the graph (glues endpoints together & removes the edge). */
-    public int contractEdge(int ev0,int ev1){removeEdge(ev0,ev1);return glueVertices(ev0,ev1);}
+    public int contractEdge(int ev0,int ev1){
+        removeEdge(ev0,ev1);
+        if(ev0<ev1){return glueVertices(ev1,ev0);}
+        return glueVertices(ev0,ev1);
+    }
     
     
 // Global operations on the graph
@@ -260,13 +265,14 @@ public class Graph extends TreeSet<Edge>{
     }
     /** Glues two graphs together using the specified map (pairing of vertex labels). The keys are the
      * values in g2 that will be mapped over. Returns amount added to second graph before gluing.
+     * Map keys are elements of Graph g, values are elements of this graph.
      */
     public int glueTo(Graph g,Map<Integer,Integer> map){
         Graph g2=(Graph)g.clone();
         int plus=getMaxVertex();
         g2.addToLabels(plus);
         for(Edge e:g2){addEdge(e);}
-        if(map!=null){for(int key:map.keySet()){glueVertices(key,map.get(key)+plus);}}
+        if(map!=null){for(int key:map.keySet()){glueVertices(key+plus,map.get(key));}}
         return plus;
     }
     /** Glues two graphs together using the specified map (pairing of vertex labels).

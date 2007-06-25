@@ -1,5 +1,6 @@
-package scio.algebra;
+package scio.algebra.permutation;
 
+import scio.algebra.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,15 +21,15 @@ import java.util.regex.Pattern;
  * mapped from (1,2,3,..,n). For example, (1,2,3) is the identity permutation, while
  * (1,3,2) swaps the last two elements. Supports multiple other output forms.
  */
-public class PermutationElement extends GroupElementId implements Iterator<PermutationElement> {
+public class Permutation extends GroupElementId implements Iterator<Permutation> {
     /** Stores the permutation. */
     private int[] p;
     
     /** Constructor: creates a new instance of PermutationElement */
-    public PermutationElement(){setToIdentity(2);}
-    public PermutationElement(int n){setToIdentity(n);}
-    public PermutationElement(int[] p){setP(p);}
-    public PermutationElement(PermutationElement pe){setP(pe.getP());}
+    public Permutation(){setToIdentity(2);}
+    public Permutation(int n){setToIdentity(n);}
+    public Permutation(int[] p){setP(p);}
+    public Permutation(Permutation pe){setP(pe.getP());}
     
     
 // METHODS USED TO CONSTRUCT/DEFINE THE PERMUTATION
@@ -167,16 +168,16 @@ public class PermutationElement extends GroupElementId implements Iterator<Permu
     public GroupElement getInverse() {
         int[] pResult=new int[p.length];
         for(int i=0;i<p.length;i++){pResult[p[i]]=i;}
-        return new PermutationElement(pResult);
+        return new Permutation(pResult);
     }
     
     /** Permutation composition action. */
     public GroupElement actLeft(GroupElement x) {
-        int[] p2=((PermutationElement)x).getP();
+        int[] p2=((Permutation)x).getP();
         if(p.length!=p2.length){return null;}
         int[] pResult=new int[p.length];
         for(int i=0;i<p.length;i++){pResult[i]=p[p2[i]];}
-        return new PermutationElement(pResult);
+        return new Permutation(pResult);
     }
     
     
@@ -200,7 +201,7 @@ public class PermutationElement extends GroupElementId implements Iterator<Permu
     
     /** Returns the identity element. Defaults to identity on two elements. */
     public static GroupElementId getIdentity(){return getIdentity(2);}
-    public static GroupElementId getIdentity(int n){return new PermutationElement(n);}
+    public static GroupElementId getIdentity(int n){return new Permutation(n);}
     
 // ITERATOR METHODS
     
@@ -212,7 +213,7 @@ public class PermutationElement extends GroupElementId implements Iterator<Permu
     }
     
     /** Get the next permutation in lexicographic order. */
-    public PermutationElement next(){
+    public Permutation next(){
         if(!hasNext()){return null;}
         int n=getN();
         int[] pResult=new int[n+1];
@@ -233,7 +234,7 @@ public class PermutationElement extends GroupElementId implements Iterator<Permu
         /** Copy elements between iSwap and iNew into the final positions. (above, 7 8 9) */
         for(int i=iNew-1;i>iSwap;i--){pResult[iSwap+n-i+1]=pCurrent[i];}
         /** Return the result! */
-        return new PermutationElement(pResult);
+        return new Permutation(pResult);
     }
     
     /** Not possible to remove elements */

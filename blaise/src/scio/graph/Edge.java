@@ -41,6 +41,8 @@ public class Edge implements Comparable{
     }
     public int getSource(){return v0;}
     public int getSink(){return v1;}
+    public int getMax(){return (v0>=v1)?v0:v1;}
+    public int getMin(){return (v0>=v1)?v1:v0;}
     public int getWeight(){return weight;}
     public boolean addWeight(int i){weight+=i;return weight>0;}
     public boolean startsAt(int i){return v0==i;}

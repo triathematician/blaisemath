@@ -8,8 +8,6 @@
 package scio.algebra.polynomial;
 
 import junit.framework.*;
-import scio.algebra.GroupAlgebraElement;
-import scio.algebra.GroupAlgebraTerm;
 
 /**
  *

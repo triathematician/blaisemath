@@ -29,9 +29,6 @@ public class GroupAlgebraElementTest extends TestCase {
         p1=new Polynomial();p1.appendTerm(1,1);p1.appendTerm(-1,0);
         p2=new Polynomial();p2.appendTerm(1,1);p2.appendTerm(1,0);
         p3=new Polynomial();p3.appendTerm(.5f,1);p3.appendTerm(-.7f,-1);
-        assertEquals("+x-1",p1.toString());
-        assertEquals("+x+1",p2.toString());
-        assertEquals("+0.5x-0.7x^-1",p3.toString());
     }
 
     /**
@@ -84,15 +81,9 @@ public class GroupAlgebraElementTest extends TestCase {
      */
     public void testGetInverse() {
         System.out.println("getInverse");
-        
-        GroupAlgebraElement instance = new GroupAlgebraElement();
-        
-        GroupElement expResult = null;
-        GroupElement result = instance.getInverse();
-        assertEquals(expResult, result);
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(null,p1.getInverse());
+        p1.append(p2);
+        assertEquals("+0.5x^-1",p1.getInverse().toString());
     }
 
     /**
@@ -112,33 +103,18 @@ public class GroupAlgebraElementTest extends TestCase {
      * Test of toString method, of class scio.algebra.GroupAlgebraElement.
      */
     public void testToString() {
-        System.out.println("toString");
-        
-        GroupAlgebraElement instance = new GroupAlgebraElement();
-        
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("toString: INADEQUATE TEST!!");
+        assertEquals("+x-1",p1.toString());
+        assertEquals("+x+1",p2.toString());
+        assertEquals("+0.5x-0.7x^-1",p3.toString());
     }
 
     /**
      * Test of compareTo method, of class scio.algebra.GroupAlgebraElement.
      */
     public void testCompareTo() {
-        System.out.println("compareTo");
-        
-        Object o = null;
-        GroupAlgebraElement instance = new GroupAlgebraElement();
-        
-        int expResult = 0;
-        int result = instance.compareTo(o);
-        assertEquals(expResult, result);
-        
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("compareTo: INADEQUATE TEST!!");
+        assertEquals(0,new GroupAlgebraElement<AddInt>().compareTo(new GroupAlgebraElement<AddInt>()));
     }
     
 }

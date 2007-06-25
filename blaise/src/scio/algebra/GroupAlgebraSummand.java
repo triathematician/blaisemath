@@ -10,30 +10,28 @@ package scio.algebra;
  * product of two groups. The coefficients are taken to be floats.
  */
 
-public class GroupAlgebraTerm<ELEMENT extends GroupElementId> extends GroupElementId{
+public class GroupAlgebraSummand<ELEMENT extends GroupElementId> extends GroupElementId{
     protected ELEMENT e;
     protected float w;
-    GroupAlgebraTerm(){e=(ELEMENT)e.getIdentity();w=1;}
-    GroupAlgebraTerm(ELEMENT e){this.e=e;w=1;}
-    GroupAlgebraTerm(float w,ELEMENT e){this.e=e;this.w=w;}
-    GroupAlgebraTerm(GroupAlgebraTerm<ELEMENT> g){this.e=g.e;this.w=g.w;}
+    GroupAlgebraSummand(){e=(ELEMENT)e.getIdentity();w=1;}
+    GroupAlgebraSummand(ELEMENT e){this.e=e;w=1;}
+    GroupAlgebraSummand(float w,ELEMENT e){this.e=e;this.w=w;}
+    GroupAlgebraSummand(GroupAlgebraSummand<ELEMENT> g){this.e=g.e;this.w=g.w;}
     public ELEMENT getElement(){return e;}
     public float getWeight(){return w;}
-    public static GroupElementId getIdentity(){return new GroupAlgebraTerm();}
+    public void setWeight(float w){this.w=w;}
+    public static GroupElementId getIdentity(){return new GroupAlgebraSummand();}
     public boolean isIdentity(){return super.isIdentity()&&w==1;}
     public GroupElement getInverse(){
         if(w==0){return null;}
-        return new GroupAlgebraTerm(1/w,(ELEMENT)e.getInverse());
+        return new GroupAlgebraSummand(1/w,(ELEMENT)e.getInverse());
     }
     public GroupElement actLeft(GroupElement x){
-        GroupAlgebraTerm x1=new GroupAlgebraTerm(this);
-        GroupAlgebraTerm xb=(GroupAlgebraTerm)x;
+        GroupAlgebraSummand x1=new GroupAlgebraSummand(this);
+        GroupAlgebraSummand xb=(GroupAlgebraSummand)x;
         x1.w*=xb.w;x1.e=(ELEMENT)e.actLeft(xb.e);
         return x1;
     }
-    
-    /** Checks to see if the term can be added to this one. */
-    public boolean canAdd(GroupAlgebraTerm<ELEMENT> t){if(compareTo(t)==0){this.w+=t.getWeight();return true;}return false;}
     
     /** Tests whether a float is really an integer. */
     public String ifInt(Float w){if(w.intValue()==w){return ""+w.intValue();}return w.toString();}
@@ -49,5 +47,5 @@ public class GroupAlgebraTerm<ELEMENT extends GroupElementId> extends GroupEleme
     public String toString(){if(w==0){return "0";}return coeffString()+termString();}
     
     /** Pass comparing routine down to ELEMENT! */
-    public int compareTo(Object o){return e.compareTo(((GroupAlgebraTerm<ELEMENT>)o).getElement());}
+    public int compareTo(Object o){return e.compareTo(((GroupAlgebraSummand<ELEMENT>)o).getElement());}
 }

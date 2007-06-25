@@ -154,9 +154,9 @@ public class GraphTest extends TestCase {
      */
     public void testGlueVertices() {
         System.out.println("glueVertices");
-        instance.glueVertices(3,5);
+        instance.glueVertices(5,3);
         assertEquals("3&5","{2(2->3)}",(instance.getNeighborhood(3).toString()));
-        instance.glueVertices(10,11);
+        instance.glueVertices(11,10);
         assertEquals("10&11","{(6->10)(10->1)(10->10)}", (instance.getNeighborhood(10).toString()));
     }
 
@@ -243,7 +243,10 @@ public class GraphTest extends TestCase {
         instance2.addTrivialLoop();
         ArrayList<Integer> ag1=new ArrayList<Integer>();ag1.add(10);ag1.add(11);
         ArrayList<Integer> ag2=new ArrayList<Integer>();ag2.add(1);ag2.add(2);
-        instance.glueTo(instance2,ag1,ag2);
+        System.out.println("before 1: "+instance.toString());
+        System.out.println("before 2: "+instance2.toString());
+        instance.glueTo(instance2,ag2,ag1);
+        System.out.println("after: "+instance.toString());
         assertEquals("v-1",2,instance.getLoopsAt(-1));
         assertEquals("v10","{(6->10)(10->11)(24->10)}",(instance.getNeighborhood(10).toString()));
         assertEquals("v24","{(11->24)(24->10)(24->25)}",(instance.getNeighborhood(24).toString()));

@@ -19,4 +19,6 @@ public interface GroupElement{
     public GroupElement actRight(GroupElement x);
     /** Require a string representation. */
     public String toString();
+    public String toShortString();
+    public String toLongString();
 }
