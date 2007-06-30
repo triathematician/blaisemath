@@ -61,4 +61,5 @@ public class Edge implements Comparable{
     /** Relabels: va is the old label, vb the new label. */
     public void relabel(int va,int vb){if(v0==va){v0=vb;}if(v1==va){v1=vb;}}
     public void addToLabel(int n){v0+=n;v1+=n;}
+    public void addToLabelAbove(int n,int i){if(v0>i){v0+=n;}if(v1>i){v1+=n;}}
 }

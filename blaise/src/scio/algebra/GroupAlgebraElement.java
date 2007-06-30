@@ -28,20 +28,18 @@ public class GroupAlgebraElement<ELEMENT extends GroupElementId> extends GroupEl
         }
         terms.add(tAdd);
     }
+    /** Synonyms... all of these call the above! */
+    public void appendTerm(ELEMENT e){appendTerm(1,e);}
+    public void appendTerm(float w,ELEMENT e){appendTerm(new GroupAlgebraSummand(w,e));}
+    public void append(GroupAlgebraElement<ELEMENT> e){for(GroupAlgebraSummand t:e.getTermList()){appendTerm(t);}}
+    public void append(float w,GroupAlgebraElement<ELEMENT> e){
+        for(GroupAlgebraSummand<ELEMENT> t:e.getTermList()){appendTerm(w*t.getWeight(),t.getElement());}
+    }
     
     /** Checks to see if two terms can be added together... if so, add their weights */
     public boolean addIfPossible(GroupAlgebraSummand<ELEMENT> t1,GroupAlgebraSummand<ELEMENT> t2){
         if(t1.compareTo(t2)==0){t1.w+=t2.w;return true;}
         return false;
-    }
-    
-    
-    /** Synonyms... all of these call the above! */
-    public void appendTerm(ELEMENT e){appendTerm(new GroupAlgebraSummand(1,e));}
-    public void appendTerm(float w,ELEMENT e){appendTerm(new GroupAlgebraSummand(w,e));}
-    public void append(GroupAlgebraElement<ELEMENT> e){for(GroupAlgebraSummand t:e.getTermList()){appendTerm(t);}}
-    public void append(float w,GroupAlgebraElement<ELEMENT> e){
-        for(GroupAlgebraSummand<ELEMENT> t:e.getTermList()){appendTerm(w*t.getWeight(),t.getElement());}
     }
     
     /** Gets the element list */
@@ -55,7 +53,7 @@ public class GroupAlgebraElement<ELEMENT extends GroupElementId> extends GroupEl
         if(terms.size()==1){return new GroupAlgebraElement<ELEMENT>((GroupAlgebraSummand<ELEMENT>)terms.first().getInverse());}
         return null;
     }
-    /** Perform group action... in place */
+    /** Perform group action... in place.. this is multiplication. */
     public GroupElement actLeft(GroupElement x){
         GroupAlgebraElement<ELEMENT> x2=(GroupAlgebraElement<ELEMENT>)x;
         GroupAlgebraElement<ELEMENT> temp=new GroupAlgebraElement<ELEMENT>();
@@ -64,7 +62,7 @@ public class GroupAlgebraElement<ELEMENT extends GroupElementId> extends GroupEl
         for(GroupAlgebraSummand<ELEMENT> g1:temp.terms){
             for(GroupAlgebraSummand<ELEMENT> g2:x2.terms){
                 //System.out.println("action: "+g1.toString()+" and "+g2.toString());
-                GroupAlgebraSummand<ELEMENT> result=(GroupAlgebraSummand<ELEMENT>) g1.actLeft(g2);
+                GroupAlgebraSummand<ELEMENT> result=(GroupAlgebraSummand<ELEMENT>)g1.actLeft(g2);
                 this.appendTerm(result);
                 //System.out.println("=> result: "+result.toString());
             }

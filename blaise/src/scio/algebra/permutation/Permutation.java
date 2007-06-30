@@ -30,6 +30,7 @@ public class Permutation extends GroupElementId implements Iterator<Permutation>
     public Permutation(int n){setToIdentity(n);}
     public Permutation(int[] p){setP(p);}
     public Permutation(Permutation pe){setP(pe.getP());}
+    public Permutation(String s){setTo(s);}
     
     
 // METHODS USED TO CONSTRUCT/DEFINE THE PERMUTATION
@@ -48,7 +49,7 @@ public class Permutation extends GroupElementId implements Iterator<Permutation>
     }
     
     /** Sets the permuation based on a string representation of the permutation.
-     * Returns false if the string is not valid. e.g. "13254"  */
+     * Returns false if the string is not valid. e.g. "(1,3 ,2,5,4)"  */
     public boolean setTo(String s){
         /** Matches only spaces and digits inside parentheses */
         Matcher m=Pattern.compile("\\(([\\s\\d]*)\\)").matcher(s);
@@ -114,6 +115,13 @@ public class Permutation extends GroupElementId implements Iterator<Permutation>
     
     /** Tests to see if this is the identity. */
     public boolean isIdentity(){return isIdentity(p);}
+    
+    /** Returns the sign of the permutation, as +1 or -1. */
+    public int sign(){
+        int num=0;
+        for(int i=1;i<p.length;i++){num+=Math.abs(p[i]-i);}
+        return (num%4==0)?+1:-1;
+    }
     
 // VARIOUS FORMATTING/CONVERSION OUTPUT METHODS == GLOBAL VIEWS
     

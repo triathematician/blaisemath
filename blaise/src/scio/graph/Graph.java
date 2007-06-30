@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NavigableSet;
 
 /**
  * <b>Graph.java</b><br>
@@ -34,11 +35,11 @@ public class Graph extends TreeSet<Edge>{
         Graph g=new Graph();
         g.multiEdge=this.multiEdge;
         g.directed=this.directed;
-        for(Edge e:this){g.addEdge(e);}
+        for(Edge e:this){g.addEdge(e.getSource(),e.getSink(),e.getWeight());}
         return g;
     }
     
-// Routines which change the structure of the graph
+    // Routines which change the structure of the graph
     
     /** Returns edge class between two specified labels. */
     public Edge getEdge(int a,int b){
@@ -71,7 +72,7 @@ public class Graph extends TreeSet<Edge>{
         if(multiEdge){addEdge(ev0,ev1,0-w);}else{this.remove(new Edge(ev0,ev1,w));}
     }
     
-// Views of the vertex set
+    // Views of the vertex set
     
     /** Returns list of vertices as an (ordered) TreeSet. Will not contain -1. */
     public TreeSet<Integer> getVertices(){
@@ -83,11 +84,11 @@ public class Graph extends TreeSet<Edge>{
     /** Returns the number of distinct vertices of the graph */
     public int getNumVertices(){return getVertices().size();}
     /** Returns the maximum vertex number of the graph */
-    public int getMaxVertex(){return getVertices().last();}
+    public int getMaxVertex(){if(getVertices().size()==0){return 0;}return getVertices().last();}
     /** Returns the number of trivial loops. */
     public int getNumTrivialLoops(){return getLoopsAt(-1);}
     
-// String output of the graph
+    // String output of the graph
     
     /** Returns a string containing the (ordered) list of edges */
     public String toString(){
@@ -97,7 +98,7 @@ public class Graph extends TreeSet<Edge>{
         return s+"}";
     }
     
-// Properties of the graph
+    // Properties of the graph
     
     /** Counts number of edges in the graph. */
     public int edgeCount(){
@@ -111,7 +112,13 @@ public class Graph extends TreeSet<Edge>{
         return getComponent(this.first().getSource()).edgeCount()==edgeCount();
     }
     
-// Local operations on the graph
+    /** Determines if the graph is a loop or collection of loops (all vertices have valency two). */
+    public boolean isLoops(){
+        for(Integer i:getVertices()){if(getValency(i)!=2){return false;}}
+        return true;
+    }
+    
+    // Local operations on the graph
     
     /** Removes a vertex from the graph, and all edges incident to it. */
     public void removeVertex(int v){
@@ -176,7 +183,7 @@ public class Graph extends TreeSet<Edge>{
         ArrayList<Graph> result=new ArrayList<Graph>();
         TreeSet<Integer> verticesUnused=new TreeSet<Integer>();
         verticesUnused.add(-1);verticesUnused.addAll(getVertices());
-        Graph remainingGraph=new Graph(this);       
+        Graph remainingGraph=new Graph(this);
         while(verticesUnused.size()>0){
             int i=verticesUnused.first();
             Graph gComponent=remainingGraph.getComponent(i);
@@ -185,7 +192,25 @@ public class Graph extends TreeSet<Edge>{
             verticesUnused.clear();
             verticesUnused.addAll(remainingGraph.getVertices());
             result.add(gComponent);
-        }          
+        }
+        return result;
+    }
+    /** Returns all components as lists of integers (starting at lowest number), provided the graph is a collection of loops. */
+    public ArrayList<ArrayList<Integer>> getLoops(){
+        ArrayList<ArrayList<Integer>> result=new ArrayList<ArrayList<Integer>>();
+        for(Graph g:getAllComponents()){
+            if(!g.isLoops()){continue;}
+            TreeSet<Integer> v=g.getVertices();
+            ArrayList<Integer> r=new ArrayList<Integer>();
+            if(v.size()==0){continue;}
+            r.add(v.first());
+            for(int i=1;i<v.size();i++){
+                TreeSet<Integer> adj=g.getAdjacency(r.get(i-1));
+                if(i==1){r.add(adj.first());}
+                else{if(r.get(i-2)==adj.first()){r.add(adj.last());}else{r.add(adj.first());}}
+            }
+            result.add(r);
+        }
         return result;
     }
     
@@ -197,7 +222,7 @@ public class Graph extends TreeSet<Edge>{
     }
     
     
-// Global operations on the graph
+    // Global operations on the graph
     
     /** Gets a list of integers adjacent to a given vertex. */
     public TreeSet<Integer> getAdjacency(int v){
@@ -230,8 +255,19 @@ public class Graph extends TreeSet<Edge>{
     }
     /** Adds a constant to the set of labels */
     public void addToLabels(int n){for(Edge e:this){if(!e.isTrivial()){e.addToLabel(n);}}}
+    /** Adds a constant n to the set of labels above i */
+    public void addToLabelsAbove(int n,int i){for(Edge e:this){if(!e.isTrivial()){e.addToLabelAbove(n,i);}}}
     /** Reverses order of graph edges. */
     public void reverseEdges(){for(Edge e:this){e.reverse();}}
+    /** Reverses numbering of the vertices */
+    public void reverseLabels(){
+        Iterator<Integer> verts=getVertices().iterator();
+        Iterator<Integer> newVerts=getVertices().descendingSet().iterator();
+        TreeMap<Integer,Integer> mapping=new TreeMap<Integer,Integer>();
+        mapping.put(-1,-1);
+        for(int i=1;i<=getVertices().size();i++){mapping.put(verts.next(),newVerts.next());}
+        for(Edge e:this){e.relabel(mapping);}
+    }
     /** Finds (first) vertex of the specified degree. Returns 0 if there are none. */
     public int getVertexOfDegree(int d){
         for(Integer i:getVertices()){if(getValency(i)==d){return i;}}
@@ -257,7 +293,7 @@ public class Graph extends TreeSet<Edge>{
                 for(Edge e:this){
                     if(e.startsAt(i)){newSink=e.getSink();}
                     if(e.endsAt(i)){newSource=e.getSource();}
-                }                
+                }
                 removeVertex(i);
                 addEdge(newSource,newSink);
             }
@@ -286,14 +322,14 @@ public class Graph extends TreeSet<Edge>{
     }
     
     
-// PROCEDURES YET TO IMPLEMENT
+    // PROCEDURES YET TO IMPLEMENT
     
     /** Performs surgery operation */
     public Graph surgery(Graph x){return null;}
     /** Performs closing operation */
     public Graph closeOff(){return null;}
     
-// Return views of the graph as a matrix
+    // Return views of the graph as a matrix
     
     /** Returns the *ordered* & weighted matrix representation of the graph */
     public float[][] getWeightedMatrix(){

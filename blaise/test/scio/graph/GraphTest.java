@@ -140,6 +140,16 @@ public class GraphTest extends TestCase {
     }
 
     /**
+     * Test of reverseEdges method, of class scio.graph.Graph.
+     */
+    public void testReverseLabels() {
+        System.out.println("reverseEdges");        
+        instance.reverseLabels();
+        assertEquals("{-1=[-1], 1=[2], 2=[1], 3=[3], 4=[5, 21], 5=[4, 6], 6=[5, 6, 21], 10=[20], 11=[20], 15=[20], 20=[10, 11, 15, 21], 21=[4, 6, 20]}",
+                instance.getAllAdjacencies().toString());
+    }   
+    
+    /**
      * Test of removeVertex method, of class scio.graph.Graph.
      */
     public void testRemoveVertex() {
@@ -304,6 +314,15 @@ public class GraphTest extends TestCase {
         assertEquals("[0, 8, 1, 2]",vertices.toString());
     }
 
+    /** Test of getLoops method */
+    public void testGetLoops() {
+        System.out.println("getLoops");
+        assertEquals("[[15]]",instance.getLoops().toString());
+        instance.addEdge(21,23);
+        instance.addEdge(23,20);
+        assertEquals("[[15], [20, 21, 23]]",instance.getLoops().toString());
+    }
+    
     /**
      * Test of getVertexOfDegree method, of class scio.graph.Graph.
      */

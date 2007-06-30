@@ -14,12 +14,13 @@ public class MAddInt extends GroupElementId {
     /** Number of factors */
     private int nf=1;
     /** Strings for factors */
-    final String[] fs={"x","y","z","r","s","t","u","v","w"};
+    final String[] fs={"x","y","z","w","t[xZ]","t[yZ]","t[xzY]","t[xYz]","t[xyZY]","t[xYZy]","t[xzXyZ]","t[xZyXz]"};
+    //{"t[x]","t[y]","t[z]","t[xY]","t[xZ]","t[yZ]","t[xzY]","t[xYz]","t[xyZY]","t[xYZy]","t[xzXyZ]","t[xZyXz]"};
     /** Values of each factor */
     final int[] n;    
     /** Constructor */
     public MAddInt(){nf=1;n=new int[nf];}
-    /** Initializes to given value */
+    /** Initializes with number of factors */
     public MAddInt(int nf){this.nf=nf;n=new int[nf];}
     /** Initializes to a single term */
     public MAddInt(int[] n){this.nf=n.length;this.n=n;}
@@ -35,8 +36,10 @@ public class MAddInt extends GroupElementId {
     }
     /** Group action is addition */
     public GroupElement actLeft(GroupElement x){
-        int[] nr=new int[nf];
-        for(int i=0;i<nf;i++){nr[i]=get(i)+((MAddInt)x).get(i);}
+        MAddInt mx=(MAddInt)x;
+        int[] nr=new int[this.nf>=mx.nf?this.nf:mx.nf];
+        for(int i=0;i<this.nf;i++){nr[i]+=this.get(i);}
+        for(int i=0;i<mx.nf;i++){nr[i]+=mx.get(i);}
         return new MAddInt(nr);
     }
     /** Returns if the underlying group is commutative. */
@@ -45,7 +48,8 @@ public class MAddInt extends GroupElementId {
     public int compareTo(Object o){
         MAddInt x=(MAddInt)o;
         int i=0;
-        while(get(i)==x.get(i)){i++;}
+        if(nf!=x.nf){return nf-x.nf;}
+        while(i<nf-1&&get(i)==x.get(i)){i++;}
         return get(i)-x.get(i);
     }
     /** String output of the term... either "1" or "x^i y^j z^k" */

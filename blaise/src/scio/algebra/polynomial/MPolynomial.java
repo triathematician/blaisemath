@@ -14,6 +14,8 @@ import scio.algebra.GroupElement;
 public class MPolynomial extends GroupAlgebraElement<MAddInt>{
     /** Constructor: creates a new instance of Polynomial, initializes to zero. */
     public MPolynomial(){super();}
+    /** Creates from a weight and MAddInt */
+    public MPolynomial(float f,MAddInt m){this();appendTerm(f,m);}
     /** Creates from a given algebra element. */
     public MPolynomial(GroupAlgebraElement<MAddInt> e){this();}
     /** Creates from a given algebra term. */
@@ -21,7 +23,7 @@ public class MPolynomial extends GroupAlgebraElement<MAddInt>{
     /** Commutative group! */
     public static boolean isCommutative(){return true;}
     /** New way to append. */
-    public void appendTerm(float f,int[] x){appendTerm(f,new MAddInt(x));}
+    public void appendTerm(float f,int[] x){if(x!=null){appendTerm(f,new MAddInt(x));}}
     /** Override getInverse mthod. */
     public GroupElement getInverse(){
         Polynomial result;
@@ -35,8 +37,7 @@ public class MPolynomial extends GroupAlgebraElement<MAddInt>{
         for(GroupAlgebraSummand<MAddInt> t:terms.descendingSet()){
             String sc=t.coeffString();
             String st=t.getElement().toString();
-            if(st=="1"){if(sc=="+"){s+="+1";}else if(sc=="-"){s+="-1";}else{s+=sc;}}
-            else{s+=sc+st;}
+            if(st=="1"){if(sc=="+"){s+="+1";}else if(sc=="-"){s+="-1";}else{s+=sc;}} else{s+=sc+st;}
         }
         return s;
     }

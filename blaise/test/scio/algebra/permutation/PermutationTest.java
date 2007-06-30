@@ -200,6 +200,15 @@ public class PermutationTest extends TestCase {
         assertEquals("(1 2 3 4)",instance2.getIdentity(4).toString());
     }
     
+    /** Test of sign method */
+    public void testSign(){
+        System.out.println("sign");
+        assertEquals(+1,instance1.sign());
+        assertEquals(-1,instance2.sign());
+        assertEquals(+1,instance3.sign());
+        assertEquals(+1,instance4.sign());
+    }
+    
     /**
      * Test of hasNext method
      */
