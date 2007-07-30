@@ -6,9 +6,6 @@
 
 package Planar;
 
-import Planar.FiniteGridPlot;
-import Planar.VisualPermutation;
-import PlanarAlgebra.FiniteGridGeometry;
 import PlanarAlgebra.PermutationModel;
 import java.awt.Point;
 import javax.swing.event.ChangeEvent;
@@ -34,6 +31,7 @@ public class PermutationEdit extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         pModel = new PlanarAlgebra.PermutationModel();
         geo = new PlanarAlgebra.FiniteGridGeometry();
         pInput = new javax.swing.JTextField();
@@ -63,8 +61,10 @@ public class PermutationEdit extends javax.swing.JPanel {
         pOutput.setText(pModel.getLongString());
 
         permPlot.setGeometry(geo);
+
         vp1.setGeometry(geo);
         vp1.setModel(pModel);
+
         javax.swing.GroupLayout vp1Layout = new javax.swing.GroupLayout(vp1);
         vp1.setLayout(vp1Layout);
         vp1Layout.setHorizontalGroup(

@@ -10,7 +10,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -28,7 +30,7 @@ import javax.swing.event.ChangeEvent;
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-public class VisualTL extends BPlottable{
+public class VisualTL extends JComponent implements BPlottable{
     // basic parameters
     private Point click1,click2;
     private FiniteGridGeometry geo;
@@ -56,7 +58,7 @@ public class VisualTL extends BPlottable{
     public VisualTL(JPanel panel){super();initializeModels(panel);}
     
     public void initializeModels(JPanel panel){t=new TLModel();geo=new FiniteGridGeometry(panel,1,1);}
-    public void initializeModels(){t=new TLModel();geo=new FiniteGridGeometry(getParent(),1,1);}
+    public void initializeModels(){t=new TLModel();geo=new FiniteGridGeometry(new JPanel(),1,1);}
     
     public void setX(int wx){}
     public void setY(int wy){}
@@ -67,7 +69,6 @@ public class VisualTL extends BPlottable{
     
     public void stateChanged(ChangeEvent e){}
     public void paintComponent(Graphics grb){
-        super.paintComponent(grb);
         Graphics2D gr=(Graphics2D)grb;
         gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -144,10 +145,28 @@ public class VisualTL extends BPlottable{
         }
     }
     public void mouseMoved(MouseEvent e){}
-    
-    public int getX() {return 0;
+
+    public void setX(double wx) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public int getY() {return 0;
+
+    public void setY(double wy) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void paintComponent(Graphics2D g, AffineTransform at) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double getGeoX() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double getGeoY() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -6,7 +6,7 @@
     </Component>
     <Component class="PlanarAlgebra.FiniteGridGeometry" name="geo">
       <Properties>
-        <Property name="window" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+        <Property name="window" type="java.awt.Container" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="tlPlot"/>
         </Property>
       </Properties>
@@ -18,6 +18,7 @@
     </Component>
   </NonVisualComponents>
   <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -87,10 +88,8 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-              <FontInfo relative="false">
-                <Font name="Tahoma" size="24" style="0"/>
-              </FontInfo>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="24" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="O"/>
           </Properties>
@@ -105,10 +104,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-              <FontInfo relative="false">
-                <Font name="Tahoma" size="14" style="0"/>
-              </FontInfo>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="in TL("/>
           </Properties>
@@ -124,10 +121,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-              <FontInfo relative="false">
-                <Font name="Tahoma" size="14" style="0"/>
-              </FontInfo>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="14" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value=")"/>
           </Properties>
@@ -135,10 +130,8 @@
         <Component class="javax.swing.JTextField" name="tlOutput">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-              <FontInfo relative="false">
-                <Font name="Tahoma" size="9" style="0"/>
-              </FontInfo>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="9" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection component="tlModel" name="getLongString" type="method"/>

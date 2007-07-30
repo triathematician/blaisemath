@@ -36,6 +36,7 @@ public class TLEdit extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         pModel = new PlanarAlgebra.PermutationModel();
         geo = new PlanarAlgebra.FiniteGridGeometry();
         tlModel = new PlanarAlgebra.TLModel();
@@ -50,6 +51,7 @@ public class TLEdit extends javax.swing.JPanel {
         visualTL1 = new Planar.VisualTL();
 
         geo.setWindow(tlPlot);
+
         tlModel.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tlModelStateChanged(evt);
@@ -119,8 +121,10 @@ public class TLEdit extends javax.swing.JPanel {
         );
 
         tlPlot.setGeometry(geo);
+
         visualTL1.setGeometry(geo);
         visualTL1.setModel(tlModel);
+
         javax.swing.GroupLayout visualTL1Layout = new javax.swing.GroupLayout(visualTL1);
         visualTL1.setLayout(visualTL1Layout);
         visualTL1Layout.setHorizontalGroup(

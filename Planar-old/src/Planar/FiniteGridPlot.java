@@ -10,10 +10,10 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.util.Vector;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 
@@ -46,7 +46,7 @@ public class FiniteGridPlot extends JPanel implements BPlotPanel {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         
         g.setColor(Color.GRAY);
-        Point pt=geo.getMax();
+        Point pt=geo.getGeoMax();
         for(int i=0;i<=pt.x;i++){
             for(int j=0;j<=pt.y;j++){
                 Point2D.Double p=geo.toWindow(i,j);
@@ -69,5 +69,37 @@ public class FiniteGridPlot extends JPanel implements BPlotPanel {
             addMouseMotionListener((BPlottable)comp);
         }
         return x;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mousePressed(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseExited(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

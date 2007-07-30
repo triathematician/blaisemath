@@ -10,7 +10,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.Vector;
 import javax.swing.JComponent;
@@ -25,7 +27,7 @@ import javax.swing.event.ChangeEvent;
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-public class VisualBraid extends BPlottable{
+public class VisualBraid extends JComponent implements BPlottable{
     // basic parameters
     private Point click1,click2;
     private FiniteGridGeometry geo;
@@ -56,7 +58,7 @@ public class VisualBraid extends BPlottable{
         geo=new FiniteGridGeometry(panel,20,5);
         p=new PermutationModel();
     }
-    public void initializeModels(){p=new PermutationModel();geo=new FiniteGridGeometry(getParent(), 20,5);}
+    public void initializeModels(){p=new PermutationModel();geo=new FiniteGridGeometry(new JPanel(), 20,5);}
     
     public void setX(int wx){}
     public void setY(int wy){}
@@ -67,7 +69,6 @@ public class VisualBraid extends BPlottable{
     
     public void stateChanged(ChangeEvent e){}
     public void paintComponent(Graphics grb){
-        super.paintComponent(grb);
         Graphics2D gr=(Graphics2D)grb;
         gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -135,10 +136,28 @@ public class VisualBraid extends BPlottable{
         }
     }
     public void mouseMoved(MouseEvent e){}
-    
-    public int getX() {return 0;
+
+    public double getGeoX() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public int getY() {return 0;
+
+    public double getGeoY() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setX(double wx) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setY(double wy) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void paintComponent(Graphics2D g, AffineTransform at) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
