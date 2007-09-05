@@ -5,10 +5,14 @@
 
 package agent;
 
+import Blaise.BPlotPath2D;
+import Euclidean.PPath;
 import Euclidean.PPoint;
 import Euclidean.PRandom;
+import Model.PointRangeModel;
 import java.util.ArrayList;
 import behavior.Tasking;
+import java.util.Collection;
 import utility.DistanceTable;
 
 /**
@@ -62,6 +66,9 @@ public class Team extends ArrayList<Agent> {
     /** Sets tasking behavior given default settings */
     public void initTasking(){tasking=Tasking.getTasking(ts.getTasking());}
     
+    /** Resets all agents to their initial positions; clears all paths */
+    public void reset(){for(Agent a:this){a.reset();}}
+    
     
 // BEAN PATTERNS: GETTERS & SETTERS
     
@@ -79,9 +86,33 @@ public class Team extends ArrayList<Agent> {
         return center;    
     }
     
-    /** Sets team target
+    /** Sets team target.
      * @param target the target team */
     public void setTarget(Team target){ts.goal.setTarget(target);}
+    
+    /** Returns paths taken by team members.
+     * @return collection of paths associated to the team */
+    public ArrayList<PPath> getPaths(){
+        ArrayList<PPath> result=new ArrayList<PPath>();
+        for(Agent a:this){result.add(a.getPath());}
+        return result;
+    }
+    
+    /** Returns plot path taken by team members.
+     * @return collection of plottable paths */
+    public ArrayList<BPlotPath2D> getPlotPaths(){
+        ArrayList<BPlotPath2D> result=new ArrayList<BPlotPath2D>();
+        for(Agent a:this){result.add(a.getPlotPath());}
+        return result;
+    }
+    
+    /** Returns point models corresponding to initial positions
+     * @return list of point models, suitable for creation of BClickablePoint's */
+    public ArrayList<PointRangeModel> getPointModels(){
+        ArrayList<PointRangeModel> result=new ArrayList<PointRangeModel>();
+        for(Agent a:this){result.add(a.getPointModel());}
+        return result;
+    }
 
     
 // METHODS TO HELP SETUP THE TEAM
@@ -105,11 +136,11 @@ public class Team extends ArrayList<Agent> {
 // METHODS FOR SETTING INITIAL POSITIONS OF TEAM MEMBERS
     
     /** Places all team members at zero. */
-    public void startZero(){for(Agent agent:this){agent.setXY(0,0);}}
+    public void startZero(){for(Agent agent:this){agent.getPointModel().setTo(0,0);}}
     
     /** Places team members at random within a rectangle.
      * @param spread sets the rectangle to [-spread,-spread]->[spread,spread] */
-    public void startRandom(double spread){for(Agent agent:this){agent.setPoint(PRandom.rectangle(spread));}}
+    public void startRandom(double spread){for(Agent agent:this){agent.getPointModel().setTo(PRandom.rectangle(spread));}}
     
     /** Places team members along a line.
      * @param p1   position of the first agent
@@ -119,7 +150,7 @@ public class Team extends ArrayList<Agent> {
         else{
             PPoint step=p1.toward(pn).multiply(1/(size()-1));
             for(int i=0;i<size();i++){
-                get(i).setPoint(p1.translate(step.multiply(i)));
+                get(i).getPointModel().setTo(p1.translate(step.multiply(i)));
             }
         }
     }
@@ -163,7 +194,7 @@ public class Team extends ArrayList<Agent> {
      * @param stepTime  the time between iterations */
     public void planPaths(double time,double stepTime){for(Agent a:this){a.planPath(time,stepTime);}}    
     /** Moves all agents on the team using their assigned directions. */
-    public void move(){for(Agent a:this){a.move();}}
+    public void move(){for(Agent a:this){a.move();a.remember();}}
     
     
 // BOOLEAN-GENERATING METHODS TESTING FOR WHETHER GOAL HAS BEEN REACHED    
@@ -173,5 +204,8 @@ public class Team extends ArrayList<Agent> {
      * @param d     the global distance table
      * @return      true if the team's goal has been achieved, otherwise false
      */
-    public boolean goalAchieved(DistanceTable d){return ts.goal.isAchieved(d);}
+    public boolean goalAchieved(DistanceTable d){
+        if(ts.goal==null){return true;}
+        return ts.goal.isAchieved(d);
+    }
 }

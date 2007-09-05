@@ -5,10 +5,13 @@
 
 package agent;
 
+import Blaise.BClickablePoint;
+import Blaise.BPlotPath2D;
 import Euclidean.PPath;
 import Euclidean.PPoint;
 import pursuitevasion.Pitch;
 import Euclidean.PVector;
+import Model.PointRangeModel;
 import behavior.Behavior;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +42,8 @@ public class Agent extends PVector {
     /** Behavior corresponding to current task */
     Behavior behavior;
     
+    /** Agent's initial position */
+    PointRangeModel initialPosition;
     /** Agent's path */
     PPath path;
     /** Agent's view of the playing field */
@@ -59,6 +64,7 @@ public class Agent extends PVector {
         this.as=as;
         team=toTeam();
         initBehavior();
+        initialPosition=new PointRangeModel(this);
         initMemory();
     }
     /** Constructs with a player's team only
@@ -67,6 +73,7 @@ public class Agent extends PVector {
         this.team=team;
         this.as=new AgentSettings(team.ts);
         initBehavior();
+        initialPosition=new PointRangeModel(this);
         initMemory();
     }
 
@@ -86,12 +93,23 @@ public class Agent extends PVector {
         memory=new ArrayList<Pitch>();
         remember();
     }
+    /** Resets positions, memory, and paths (but not behavior) */
+    public void reset(){
+        this.setPoint(initialPosition.getPoint());
+        initMemory();
+    }
 
 // BEAN PATTERNS: GETTERS & SETTERS
-    
+
     /** Returns the agent's path
      * @return the path plotted so far */
-    public PPath getPath(){return path;}
+    public PPath getPath(){return path;}    
+    /** Returns plottable path for the agent
+     * @return a path which can be plotted */
+    public BPlotPath2D getPlotPath(){return new BPlotPath2D(path,as.getColor());}
+    /** Returns the initial position model 
+     * @return model with the agent's color at the initial position */
+    public PointRangeModel getPointModel(){return initialPosition;}
     
     
 // TASK ADJUSTMENT METHODS
@@ -158,6 +176,7 @@ public class Agent extends PVector {
      * @param stepTime  the time between iterations
      */
     public void planPath(double time,double stepTime){
+        if(tasks.isEmpty()){return;}
         this.v=behavior.direction(this,tasks.get(0).getTarget(),time).multiply(stepTime*as.getTopSpeed());
     }
     

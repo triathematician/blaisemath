@@ -42,6 +42,8 @@ public class Goal {
     /** The target of this goal. */
     Team target;
     
+    /** Is the goal trivial? */
+    boolean trivial;
     /** Whether to use the minimum (true) or maximum (false) */
     boolean minimum;
     /** Whether to desire greater than (true) or less than (false).
@@ -53,16 +55,16 @@ public class Goal {
     
 // CONSTANTS
     
-    /** Specifies a stationary, nonfunctional team */
-    public static final int DUMMY=0;
+    /** Specifies a pursuing team */
+    public static final int TRIVIAL=0;
     /** Specifies a pursuing team */
     public static final int CAPTURE_ALL=101;
     /** Specifies a pursuing team */
     public static final int CAPTURE_ONE=102;
     /** Specifies an evading team */
-    public static final int AVOID_CAPTURE=201;
+    public static final int ALL_ESCAPE=201;
     /** Specifies an evading team */
-    public static final int ALL_ESCAPE=202;
+    public static final int ONE_ESCAPE=202;
     
     
 // CONSTRUCTORS    
@@ -71,7 +73,7 @@ public class Goal {
     public Goal() {
         setTeam(null);
         setTarget(null);
-        setType(DUMMY);
+        setType(CAPTURE_ALL);
         setThreshhold(0);
     }     
     /** Constructor with goalType and threshhold only. The team/target
@@ -114,12 +116,13 @@ public class Goal {
     
     public void setType(int goalType){
         switch(goalType){
-            case DUMMY:         setMinimum(true);   setGreater(true);   setThreshhold(0);   break;
-            case CAPTURE_ALL:   setMinimum(false);  setGreater(false);                      break;
-            case CAPTURE_ONE:   setMinimum(true);   setGreater(false);                      break;
-            case AVOID_CAPTURE: setMinimum(true);   setGreater(true);                       break;
-            case ALL_ESCAPE:    setMinimum(false);  setGreater(true);                       break;
+                                                case TRIVIAL:       trivial=true; return;
+            case CAPTURE_ALL:   setMinimum(false);  setGreater(false);  break;
+            case CAPTURE_ONE:   setMinimum(true);   setGreater(false);  break;
+            case ALL_ESCAPE: setMinimum(true);   setGreater(true);   break;
+            case ONE_ESCAPE:    setMinimum(false);  setGreater(true);   break;
         }
+        trivial=false;
     }
 
 
@@ -132,6 +135,7 @@ public class Goal {
      * @return      numeric value indicating the closeness to the goal (positive if goal has been reached, otherwise negative)
      */
     public double value(DistanceTable d){
+        if(trivial){return 0;}
         double value;
         if(minimum){value=d.min(team,target).getDistance();}
         else{value=d.max(team,target).getDistance();}

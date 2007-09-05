@@ -37,7 +37,7 @@ public class SimulationSettings implements ChangeListener,PropertyChangeListener
     /** Number of teams */
     private IntegerRangeModel numTeams=new IntegerRangeModel(2,1,100);
     /** Type of game involved */
-    private IntegerRangeModel gameType=new IntegerRangeModel(0,0,2);
+    private IntegerRangeModel gameType=new IntegerRangeModel(0,0,3);
     /** Pitch settings */
     private PitchSettings pitchSettings;
     
@@ -57,6 +57,8 @@ public class SimulationSettings implements ChangeListener,PropertyChangeListener
     public static final int SIMPLE_PPE=1;
     /** Specifies game with two teams, pursuers, and evaders, with evaders seeking a goal */
     public static final int GOAL_PE=2;
+    /** Lots of teams!! */
+    public static final int LOTS_OF_FUN=3;
     
     /** Specifies non-stationary & stationary */
     public static final boolean STATIONARY=true;
@@ -149,34 +151,66 @@ public class SimulationSettings implements ChangeListener,PropertyChangeListener
         ArrayList<Team> teams=new ArrayList<Team>();
         switch(gameType.getValue()){
         // Initialize with capture radius 1, two teams
+                // Initialize with capture radius 1, two teams
         case SIMPLE_PE:{
             setNumTeams(2);
-            Team dogs=new Team(new TeamSettings(new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.RED,this));
-            Team cats=new Team(new TeamSettings(new Goal(Goal.ALL_ESCAPE,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,MOVING,Color.BLUE,this));
+            Team dogs=new Team(new TeamSettings(3,TeamSettings.START_RANDOM,
+                    new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,
+                    MOVING,Color.RED,this));
+            Team cats=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.ALL_ESCAPE,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,MOVING,
+                    Color.BLUE,this));
             dogs.setTarget(cats);teams.add(dogs);
             cats.setTarget(dogs);teams.add(cats);
             break;
-        }
-        // Initialize with capture radius 1, three teams
+        }        // Initialize with capture radius 1, three teams
         case SIMPLE_PPE:{
             setNumTeams(3);
-            Team dogs=new Team(new TeamSettings(new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.RED,this));
-            Team cats=new Team(new TeamSettings(new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.BLUE,this));
-            Team mice=new Team(new TeamSettings(new Goal(Goal.ALL_ESCAPE,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,MOVING,Color.GREEN,this));
+            Team dogs=new Team(new TeamSettings(3,TeamSettings.START_RANDOM,
+                    new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,
+                    MOVING,Color.RED,this));
+            Team cats=new Team(new TeamSettings(4,TeamSettings.START_RANDOM,
+                    new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,
+                    MOVING,Color.BLUE,this));
+            Team mice=new Team(new TeamSettings(5,TeamSettings.START_RANDOM,new Goal(Goal.ALL_ESCAPE,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,MOVING,
+                    Color.GREEN,this));
             dogs.ts.getGoal().setTarget(cats);teams.add(dogs);
             cats.ts.getGoal().setTarget(mice);teams.add(cats);
             mice.ts.getGoal().setTarget(cats);teams.add(mice);
             break;
-        }
-        // Initialize with capture radius 1, two teams plus a goal
+        }        // Initialize with capture radius 1, two teams plus a goal
         case GOAL_PE:{
             setNumTeams(3);
-            Team dogs=new Team(new TeamSettings(new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.RED,this));
-            Team cats=new Team(new TeamSettings(new Goal(Goal.CAPTURE_ALL,5.0),Tasking.AUTO_CLOSEST,Behavior.SEEK,MOVING,Color.BLUE,this));
-            Team milk=new Team(new TeamSettings(new Goal(Goal.DUMMY,0.0),Tasking.NO_TASKING,Behavior.FLEE,STATIONARY,Color.GREEN,this));
-            dogs.ts.getGoal().setTarget(cats);teams.add(dogs);
-            cats.ts.getGoal().setTarget(milk);teams.add(cats);
+            Team dogs=new Team(new TeamSettings(3,TeamSettings.START_RANDOM,
+                    new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,
+                    MOVING,Color.RED,this));
+            Team cats=new Team(new TeamSettings(4,TeamSettings.START_RANDOM,
+                    new Goal(Goal.CAPTURE_ALL,5.0),Tasking.AUTO_CLOSEST,Behavior.SEEK,
+                    MOVING,Color.BLUE,this));
+            Team milk=new Team(new TeamSettings(1,TeamSettings.START_RANDOM,
+                    new Goal(Goal.TRIVIAL,5.0),Tasking.NO_TASKING,Behavior.FLEE,
+                    STATIONARY,Color.GREEN,this));
+            dogs.setTarget(cats);teams.add(dogs);
+            cats.setTarget(milk);teams.add(cats);
             teams.add(milk);
+            break;
+        }
+        // Initialize with many, many teams
+        case LOTS_OF_FUN:{
+            setNumTeams(3);
+            Team[] t=new Team[10];
+            t[0]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.TRIVIAL,5.0),Tasking.NO_TASKING,Behavior.FLEE,STATIONARY,Color.BLACK,this));
+            t[1]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.RED,this));
+            t[2]=new Team(new TeamSettings(4,TeamSettings.START_RANDOM,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.ORANGE,this));
+            t[3]=new Team(new TeamSettings(3,TeamSettings.START_LINE,new Goal(Goal.CAPTURE_ONE,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.YELLOW,this));
+            t[4]=new Team(new TeamSettings(5,TeamSettings.START_ARC,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.GREEN,this));
+            t[5]=new Team(new TeamSettings(6,TeamSettings.START_RANDOM,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.CYAN,this));
+            t[6]=new Team(new TeamSettings(3,TeamSettings.START_CIRCLE,new Goal(Goal.CAPTURE_ONE,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.BLUE,this));
+            t[7]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,MOVING,Color.MAGENTA,this));
+            t[8]=new Team(new TeamSettings(4,TeamSettings.START_CIRCLE,new Goal(Goal.CAPTURE_ONE,5.0),Tasking.AUTO_CLOSEST,Behavior.SEEK,MOVING,Color.PINK,this));
+            t[9]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.CAPTURE_ALL,5.0),Tasking.AUTO_CLOSEST,Behavior.SEEK,MOVING,Color.GRAY,this));
+            teams.add(t[0]);
+            for(int i=1;i<9;i++){t[i].setTarget(t[i+1]);teams.add(t[i]);}
+            t[9].setTarget(t[0]);teams.add(t[9]);
             break;
         }
         }

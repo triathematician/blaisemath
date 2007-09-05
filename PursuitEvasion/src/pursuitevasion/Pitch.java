@@ -19,7 +19,7 @@ public class Pitch extends ArrayList<Agent>{
 // PROPERTIES
     
     /** All the settings */
-    PitchSettings ps;
+    public PitchSettings ps;
     
 // CONSTRUCTORS    
     

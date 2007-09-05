@@ -82,15 +82,19 @@ public class TeamSettings implements ChangeListener,PropertyChangeListener {
         topSpeed.addChangeListener(this);
     }
     /** Constructs and adds support for change listening 
+     * @param n     the number of players on the team
+     * @param st    the team's tarting positions
      * @param g     the team's goal
      * @param t     the team's tasking
      * @param b     the team's default agent behavior
      * @param s     whether the team is stationary
      * @param c     the team's color
      * @param ss    pointer to the governing simulation settings */
-    public TeamSettings(Goal g,int t,int b,boolean s,Color c,SimulationSettings ss){
+    public TeamSettings(int n,int st,Goal g,int t,int b,boolean s,Color c,SimulationSettings ss){
         this();
         pcs=new PropertyChangeSupport(this);
+        setSize(n);
+        setStart(st);
         setGoal(g);
         setTasking(t);
         setDefaultBehavior(b);
