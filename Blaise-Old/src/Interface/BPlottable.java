@@ -21,8 +21,8 @@ import javax.swing.event.MouseInputListener;
  */
 public interface BPlottable extends ActionListener,BEditor,MouseInputListener{
     /** Coordinates */
-    public abstract double getX();
-    public abstract double getY();
+    public abstract double getGeoX();
+    public abstract double getGeoY();
     public abstract void setX(double wx);
     public abstract void setY(double wy);
     /** Display routines */

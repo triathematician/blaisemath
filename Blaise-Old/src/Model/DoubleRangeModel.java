@@ -1,6 +1,7 @@
 package Model;
 
 import Interface.BModel;
+import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 
 /**
@@ -30,8 +31,8 @@ public class DoubleRangeModel extends BModel implements Serializable {
     public void setValue(double newValue){setRangeProperties(newValue,minimum,maximum);}
     public void setValue(String s){setValue(Double.valueOf(s));}
     
-    public String getString(){return Double.toString(value);}
-    public String getLongString(){return ""+minimum+"<="+value+"<="+maximum;}
+    public String toString(){return Double.toString(value);}
+    public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
     
     /**
      * Better initializer
@@ -61,4 +62,7 @@ public class DoubleRangeModel extends BModel implements Serializable {
         if(changeValue){value=newValue;}
         if(changeMin||changeMax||changeValue){fireStateChanged();}
     }
+    
+    
+    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
 }

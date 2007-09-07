@@ -132,10 +132,10 @@ public class BClickablePoint implements BPlottable {
      * These get values from the underlying point model, adjusted by
      * the affine transform corresponding to the window.
      */
-    public double getX(){return xModel.getDoubleValue();}
+    public double getGeoX(){return xModel.getDoubleValue();}
     public void setX(double x){xModel.setDoubleValue(x);}
     public void setX(int windowX){xModel.setDoubleValue(controller.toCartesianX(windowX));}
-    public double getY(){return yModel.getDoubleValue();}
+    public double getGeoY(){return yModel.getDoubleValue();}
     public void setY(double y){yModel.setDoubleValue(y);}
     public void setY(int windowY){yModel.setDoubleValue(controller.toCartesianY(windowY));}
     
@@ -152,8 +152,8 @@ public class BClickablePoint implements BPlottable {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         
         g.setColor(color);
-        int winX=controller.toWindowX(getX());
-        int winY=controller.toWindowY(getY());
+        int winX=controller.toWindowX(getGeoX());
+        int winY=controller.toWindowY(getGeoY());
         switch(style){
             case SMALL:
                 g.fill(new Ellipse2D.Double(winX-1,winY-1,2,2));
@@ -175,7 +175,7 @@ public class BClickablePoint implements BPlottable {
     
     /** Determines if the point was clicked on, given a mouse event. */
     public boolean clicked(MouseEvent e){
-        return Math.abs(e.getX()-controller.toWindowX(getX()))+Math.abs(e.getY()-controller.toWindowY(getY()))<CLICK_EDIT_RANGE;
+        return Math.abs(e.getX()-controller.toWindowX(getGeoX()))+Math.abs(e.getY()-controller.toWindowY(getGeoY()))<CLICK_EDIT_RANGE;
     }
     
     // sets parameters based on a mouse event

@@ -1,5 +1,6 @@
 package Interface;
 
+import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -14,9 +15,9 @@ import javax.swing.event.EventListenerList;
 public abstract class BModel {
     /** Basic support for string manipulation. */
     public abstract void setValue(String s);
-    public abstract String getString();
-    public abstract String getLongString();
+    public abstract String toLongString();
     
+    public abstract PropertyChangeEvent getChangeEvent(String s);
     /** Event handling code copied from DefaultBoundedRangeModel. */      
     protected ChangeEvent changeEvent=null;
     protected EventListenerList listenerList=new EventListenerList();    

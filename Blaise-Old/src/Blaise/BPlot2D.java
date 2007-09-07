@@ -22,6 +22,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -252,32 +253,25 @@ public class BPlot2D extends JPanel implements BPlotPanel {
     /**
      * Methods to add/delete points...
      */
-    public void addPoint(PointRangeModel prmodel){
-        point.add(new BClickablePoint(prmodel,this));
-    }
-    public void addPoint(PointRangeModel prmodel,Color color){
-        point.add(new BClickablePoint(prmodel,this,color));
-    }
-    public void addPoints(Vector<PointRangeModel> prmodel){
-        for (PointRangeModel prm:prmodel){addPoint(prm);}
-    }
-    public void addPoints(Vector<PointRangeModel> prmodel,Color color){
-        for (PointRangeModel prm:prmodel){addPoint(prm,color);}
-    }
-    public void deletePoints(Vector<PointRangeModel> prmodel){
-        point.removeAll(prmodel);
-    }
-    public void addFixedPoints(Vector<PPoint> points){fixedPoints.addAll(points);}
+    public void addPoint(PointRangeModel prmodel){point.add(new BClickablePoint(prmodel,this));}
+    public void addPoint(PointRangeModel prmodel,Color color){point.add(new BClickablePoint(prmodel,this,color));}
+    public void addPoints(Collection<PointRangeModel> prmodel){for (PointRangeModel prm:prmodel){addPoint(prm);}}
+    public void addPoints(Collection<PointRangeModel> prmodel,Color color){for (PointRangeModel prm:prmodel){addPoint(prm,color);}}
+    public void deletePoints(Collection<PointRangeModel> prmodel){point.removeAll(prmodel);}
+    public void addFixedPoints(Collection<PPoint> points){fixedPoints.addAll(points);}
     public void deleteFixedPoints(){fixedPoints.removeAllElements();}
     public void deletePoints(){point.removeAllElements();}
+    
     public void addPath(PPath path){this.path.add((BPlotPath2D)path);}
-    public void addPaths(Vector<PPath> paths){
-        for(PPath path:paths){this.path.add((BPlotPath2D)path);}
-    }
+    public void addPath(PPath path,Color color){this.path.add(new BPlotPath2D(path,color));}
+    public void addPlotPaths(Collection<BPlotPath2D> paths){for(BPlotPath2D path:paths){addPath(path);}}
+    public void addPaths(Collection<PPath> paths){for(PPath path:paths){addPath(path);}}
+    public void addPaths(Collection<PPath> paths,Color color){for(PPath path:paths){addPath(path,color);}}
     public void deletePaths(){path.removeAllElements();}
     
     /** Sets the animation cycle. */
     public void setAnimateCycle(int c){animateCycle=c;}
+    public int getAnimateCycle(){return animateCycle;}
     /** Initiate animation cycle. */
     protected void turnAnimationOn(){
         animateTime=0;
@@ -615,7 +609,7 @@ public class BPlot2D extends JPanel implements BPlotPanel {
             labelsColor=Color.GRAY;
             
             showAxes=true;
-            crossAxes=true;
+            crossAxes=false;
             axesColor=Color.DARK_GRAY;
             x=0;y=0;
             
@@ -667,7 +661,7 @@ public class BPlot2D extends JPanel implements BPlotPanel {
             if(showTicks){drawTicks(g);}
             if(showAxes){drawAxes(g);}
             if(showLabels){drawLabels(g);}
-            if(showField){drawField(g);}
+            if(showField&&vectorField!=null){drawField(g);}
         }
         
         /** Draws the grid. */
@@ -760,7 +754,7 @@ public class BPlot2D extends JPanel implements BPlotPanel {
                 for (double yValue:gridY){
                     drawnVector=new PPoint(xValue,yValue);
                     drawnVector.setPoint(vectorField.get(drawnVector));
-                    drawnVector.scale(optimalLength);
+                    drawnVector.scaleMagnitudeTo(optimalLength);
                     g.draw(new Line2D.Double(toWindowX(xValue),toWindowY(yValue),
                             toWindowX(xValue+drawnVector.x),toWindowY(yValue+drawnVector.y)));
                 }

@@ -46,32 +46,33 @@ public class PPoint{
     public PPoint(PPoint point){x=point.x;y=point.y;}
     public PPoint(Point2D point){x=point.getX();y=point.getY();}
     
-    // getPoint methods: given an affine transform
-    public PPoint getAfterTransform(AffineTransform at){return new PPoint(at.transform(getPoint2D(),null));}
-    public PPoint getBeforeTransform(AffineTransform at) throws NoninvertibleTransformException{return new PPoint(at.inverseTransform(getPoint2D(),null));}
-
-    // getPoint methods: translated
-    public PPoint toward(double x1,double y1){return new PPoint(x1-x,y1-y);}
-    public PPoint toward(PPoint point){return toward(point.x,point.y);}
-    public PPoint from(double x1,double y1){return new PPoint(x-x1,y-y1);}
-    public PPoint from(PPoint point){return from(point.x,point.y);}
-    
     // getPoint methods: basic properties
     public double magnitude(){return magnitude(x,y);}
     public double length(){return length(x,y);}
     public double magnitudeSquared(){return magnitudeSquared(x,y);}
     
+    // getPoint methods: given an affine transform
+    public PPoint getAfterTransform(AffineTransform at){return new PPoint(at.transform(getPoint2D(),null));}
+    public PPoint getBeforeTransform(AffineTransform at) throws NoninvertibleTransformException{return new PPoint(at.inverseTransform(getPoint2D(),null));}
+    
     // basic manipulation methods
     public PPoint translate(double x0,double y0){x+=x0;y+=y0;return this;}
     public PPoint translate(PPoint point){return translate(point.x,point.y);}
     public PPoint multiply(double c){x*=c;y*=c;return this;}
-    public PPoint scale(double d){return (length()==0)?this:multiply(d/length());} // scales to length d
-    public PPoint normalize(){return scale(1);} // normalizes the vector
+    public PPoint scaleMagnitudeTo(double d){return (length()==0)?this:multiply(d/length());} // scales to length d
+    public PPoint normalize(){return scaleMagnitudeTo(1);} // normalizes the vector
+
+    // getPoint methods: return new point
+    public PPoint toward(double x1,double y1){return new PPoint(x1-x,y1-y);}
+    public PPoint toward(PPoint point){return toward(point.x,point.y);}
+    public PPoint from(double x1,double y1){return new PPoint(x-x1,y-y1);}
+    public PPoint from(PPoint point){return from(point.x,point.y);}
+    public PPoint plus(double x1,double y1){return new PPoint(x+x1,y+y1);}
+    public PPoint plus(PPoint point){return plus(point.x,point.y);}
+    public PPoint multipliedBy(double c){return new PPoint(x*c,y*c);}
     
     // inversion methods
-    public PPoint invertInCircleOfRadius(double r){
-        return multiply(r/magnitudeSquared());
-    }
+    public PPoint invertInCircleOfRadius(double r){return multiply(r/magnitudeSquared());}
     
     // two point/vector operations
     public double dot(double x1,double y1){return x*x1+y*y1;}

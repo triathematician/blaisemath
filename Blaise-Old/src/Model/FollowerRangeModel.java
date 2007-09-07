@@ -1,6 +1,7 @@
 package Model;
 
 import Interface.BModel;
+import java.beans.PropertyChangeEvent;
 import javax.swing.BoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -70,15 +71,16 @@ public class FollowerRangeModel extends BModel implements BoundedRangeModel,Chan
     public void setValueIsAdjusting(boolean b){isAdjusting=b;}
     
     public void setValue(String s){sourceModel.setValue(s);}
-    public String getString(){return sourceModel.getString();}
-    public String getLongString(){return ""+minimum+"<="+getValue()+"<="+maximum+"->"+sourceModel.getLongString();}
+    public String toString(){return sourceModel.toString();}
+    public String toLongString(){return ""+minimum+"<="+getValue()+"<="+maximum+"->"+sourceModel.toLongString();}
     
     //The only method in the ChangeListener interface... updates multiplier
     public void stateChanged(ChangeEvent e){
-        multiplier=(double)(maximum-minimum)/(double)sourceModel.getRange();
+        multiplier=(maximum-minimum)/sourceModel.getRange();
         //System.out.println("max"+maximum+" min"+minimum+" range"+sourceModel.getRange());
         fireStateChanged();
     }
+    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
     
     public void setRangeProperties(int value,int extent,int min,int max,boolean adjusting){
         sourceModel.setRangeProperties(value/getMultiplier()+sourceModel.getMinimum(),

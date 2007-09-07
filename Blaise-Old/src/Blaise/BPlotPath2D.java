@@ -62,7 +62,16 @@ public class BPlotPath2D extends PPath implements BPlottable {
         start=0;
         end=0;
     }
-    
+    // Constructs given a ppath and color
+    public BPlotPath2D(PPath path,Color color){
+        addAll(path);
+        this.color=color;
+        stroke=new BasicStroke(1.5f);
+        animate=false;
+        start=0;
+        end=0;
+    }
+        
 // Bean Patterns
     
     public Color getColor(){return color;}
@@ -100,8 +109,8 @@ public class BPlotPath2D extends PPath implements BPlottable {
     /** Responds to change events... perhaps from the containing BPlot2D?? */
     public void stateChanged(ChangeEvent e){}
 
-    public double getX(){return get(0).x;}
-    public double getY(){return get(0).y;}
+    public double getGeoX(){return get(0).x;}
+    public double getGeoY(){return get(0).y;}
     public void setX(int wx){}
     public void setY(int wy){}
     public void paintComponent(Graphics gb) {
