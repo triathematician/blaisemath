@@ -14,6 +14,7 @@
 package behavior;
 
 import Euclidean.PPoint;
+import Model.ComboBoxRangeModel;
 import agent.Agent;
 
 /**
@@ -24,12 +25,17 @@ public class Behavior {
     
 // CONSTANTS
     
-    public static final int SEEK=100;
-    public static final int PURSUIT_LEADING=101;
-    public static final int FLEE=200;
-    public static final int EVASION_FIXEDPATH=201;
-    public static final int EVASION_RANDOMPATH=202;
-    
+    public static final int FIRST=0;
+    public static final int STATIONARY=0;
+    public static final int SEEK=1;
+    public static final int PURSUIT_LEADING=2;
+    public static final int FLEE=3;
+    public static final int EVASION_FIXEDPATH=4;
+    public static final int EVASION_RANDOMPATH=5;
+    public static final int LAST=5;
+    public static final String[] BEHAVIOR_STRINGS={"Stationary","Seek","Pursue with Lead Factor","Flee","Follow Fixed Path","Follow Random Path"};
+
+    public static ComboBoxRangeModel getComboBoxModel(){return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,FIRST,LAST);}
     
 // CONSTRUCTORS    
 

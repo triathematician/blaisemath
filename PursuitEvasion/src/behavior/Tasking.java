@@ -18,13 +18,16 @@ public class Tasking {
     
 // CONSTANTS
     
+    public static final int FIRST=0;
     public static final int NO_TASKING=0;
-    public static final int AUTO_CLOSEST=100;
-    public static final int AUTO_TWO_LINE=101;
-    public static final int AUTO_FARTHEST=102;
-    public static final int AUTO_COM=103;
-    public static final int AUTO_GRADIENT=104;
-    public static final int CONTROL_CLOSEST=301;
+    public static final int AUTO_CLOSEST=1;
+    public static final int AUTO_TWO_LINE=2;
+    public static final int AUTO_FARTHEST=3;
+    public static final int AUTO_COM=4;
+    public static final int AUTO_GRADIENT=5;
+    public static final int CONTROL_CLOSEST=6;
+    public static final int LAST=6;
+    public static final String[] TASKING_STRINGS={"None","Autonomous Closest","Autonomous Two Closest","Autonomous Farthest","Autonomous Center-of-Mass","Autonomous Gradient","Control Closest"};
     
     
 // CONSTRUCTORS    

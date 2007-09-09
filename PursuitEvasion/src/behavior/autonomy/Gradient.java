@@ -12,6 +12,9 @@ import task.Goal;
 import utility.DistanceTable;
 
 /**
+ * Player considers the entire enemy team, following the gradient to maximize or minimize
+ * the sum of distances.
+ * <br><br>
  * @author Elisha Peterson
  */
 public class Gradient extends Autonomy {
@@ -34,7 +37,7 @@ public class Gradient extends Autonomy {
             }
             Agent bGRAD=new Agent();
             bGRAD.setPoint(a.translate(dir));
-            a.assignTask(bGRAD,goal.isSeek());
+            a.assignTask(bGRAD,goal.getType());
         }
     }
 }

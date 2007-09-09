@@ -41,11 +41,9 @@ public class Task {
     public Task(){}
     /** Constructs with settings.
      * @param target the object of the task
-     * @param seek true if seek, false if flee
+     * @param type 0 if trivial, 1 if pursue, 2 if evade
      * @param priority priority of the task, between 0 and 1 */
-    public Task(Agent target,boolean seek,double priority){
-        setTarget(target);setSeek(seek);setPriority(priority);
-    }
+    public Task(Agent target,int type,double priority){setTarget(target);setSeek(type);setPriority(priority);}
     
     
 // BEAN PATTERNS: GETTERS & SETTERS
@@ -64,12 +62,9 @@ public class Task {
      * @param target the new target */
     public void setTarget(Agent target){this.target=target;}
     /** Sets seeking vs fleeing parameter
-     * @param seek the new seek/flee: true if seek, false if flee */
-    public void setSeek(boolean seek){this.seek=seek;}
+     * @param type 0 if trivial, 1 if pursue, 2 if evade */
+    public void setSeek(int type){seek=(type==1);}
     /** Sets priority. Makes sure value is between 0 and 1.
      * @param priority a double between 0 and 1. */
-    public void setPriority(double priority){
-        if(priority<0||priority>1){return;}
-        this.priority=priority;
-    }
+    public void setPriority(double priority){this.priority=(priority<0)?0:(priority>1)?1:priority;}
 }

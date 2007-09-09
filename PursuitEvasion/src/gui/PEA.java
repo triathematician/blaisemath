@@ -80,7 +80,7 @@ public class PEA {
     public static class PlotArea extends BPlot2D implements ActionListener,PropertyChangeListener {
         Simulation sim;
         public PlotArea(Simulation sim){
-            super(new Dimension(600,601),sim.pitch.ps.getSize());
+            super(new Dimension(600,601),sim.ss.getPitchSize());
             this.setBackground(Color.WHITE);
             this.sim=sim;
             sim.addActionListener(this);
@@ -94,7 +94,7 @@ public class PEA {
         }
         public void propertyChange(PropertyChangeEvent e){
             if(e.getPropertyName()=="numPursuers"||e.getPropertyName()=="numEvaders"){initPoints();}
-            else if(e.getPropertyName()=="fieldSize"){super.setBounds(sim.pitch.ps.getSize());}
+            else if(e.getPropertyName()=="fieldSize"){super.setBounds(sim.ss.getPitchSize());}
             else if(e.getPropertyName()=="pursueColor"){initPoints();}
             else if(e.getPropertyName()=="evadeColor"){initPoints();}
             else if(e.getPropertyName()=="numSteps"){setAnimateCycle(sim.ss.getNumSteps()+10);}

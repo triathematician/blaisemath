@@ -9,10 +9,12 @@ import Blaise.BClickablePoint;
 import Blaise.BPlotPath2D;
 import Euclidean.PPath;
 import Euclidean.PPoint;
+import java.beans.PropertyChangeEvent;
 import pursuitevasion.Pitch;
 import Euclidean.PVector;
 import Model.PointRangeModel;
 import behavior.Behavior;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import task.Task;
@@ -27,7 +29,7 @@ import utility.DistanceTable;
  * Each is determined by several characteristic properties (Personality), its team (Team), its understanding
  * of the playing field (Pitch), and its memory (ArrayList of Pitch's).
  */
-public class Agent extends PVector {
+public class Agent extends PVector implements PropertyChangeListener {
     
     
 // PROPERTIES
@@ -62,6 +64,7 @@ public class Agent extends PVector {
      * @param as the agent settings to use */
     public Agent(AgentSettings as){
         this.as=as;
+        this.as.addPropertyChangeListener(this);
         team=toTeam();
         initBehavior();
         initialPosition=new PointRangeModel(this);
@@ -71,7 +74,8 @@ public class Agent extends PVector {
      * @param team  the agent's team */
     public Agent(Team team){
         this.team=team;
-        this.as=new AgentSettings(team.ts);
+        as=new AgentSettings(team.ts);
+        as.addPropertyChangeListener(this);
         initBehavior();
         initialPosition=new PointRangeModel(this);
         initMemory();
@@ -82,7 +86,7 @@ public class Agent extends PVector {
     
     /** Sets behavior given default settings */
     public void initBehavior(){
-        behavior=Behavior.getBehavior(as.getDefaultBehavior());
+        behavior=Behavior.getBehavior(as.getBehavior());
         tasks=new ArrayList<Task>();
     }
     /** Initializes memory... path,pov,commpov,memory */
@@ -111,7 +115,6 @@ public class Agent extends PVector {
      * @return model with the agent's color at the initial position */
     public PointRangeModel getPointModel(){return initialPosition;}
     
-    
 // TASK ADJUSTMENT METHODS
     
     /** Removes all tasks from list */
@@ -119,8 +122,11 @@ public class Agent extends PVector {
     
     /** Sets single task to seek/flee a given agent. Priority is automatically set to 1.
      * @param agent the target agent of the task
-     * @param seek true if seek; false if flee */
-    public void assignTask(Agent agent,boolean seek){clearTasks();tasks.add(new Task(agent,seek,1));}
+     * @param type  0 if trivial (ignored, 1 if pursue, 2 if evade */
+    public void assignTask(Agent agent,int type){
+        clearTasks();
+        if(type!=0){tasks.add(new Task(agent,type,1));}
+    }
     
 
 // CONVERSION METHODS
@@ -185,5 +191,9 @@ public class Agent extends PVector {
         path.add(new PPoint(x,y));
         memory.add(0,pov);
         pov.clear();
+    }
+
+    public void propertyChange(PropertyChangeEvent evt){
+        if(evt.getPropertyName()=="Behavior"){initBehavior();}
     }
 }

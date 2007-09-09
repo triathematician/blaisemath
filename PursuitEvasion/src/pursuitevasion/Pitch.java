@@ -18,14 +18,8 @@ public class Pitch extends ArrayList<Agent>{
 
 // PROPERTIES
     
-    /** All the settings */
-    public PitchSettings ps;
-    
 // CONSTRUCTORS    
     
     /** Default Constructor */
-    public Pitch(){super();ps=new PitchSettings();}    
-    /** Constructs with given settings
-     * @param ps a collection of pitch settings */
-    public Pitch(PitchSettings ps){this.ps=ps;}
+    public Pitch(){super();}    
 }

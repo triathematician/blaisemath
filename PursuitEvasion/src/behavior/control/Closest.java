@@ -42,11 +42,11 @@ public class Closest extends Control {
         AgentPair closest;
         while(!(ps.isEmpty()||es.isEmpty())){
             closest=dist.min(ps,es);
-            closest.getFirst().assignTask(closest.getSecond(),goal.isSeek());
+            closest.getFirst().assignTask(closest.getSecond(),goal.getType());
             ps.remove(closest.getFirst());
             es.remove(closest.getSecond());
         }
         // assign remaining pursuers to closest prey
-        for(Agent p:ps){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.isSeek());}
+        for(Agent p:ps){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.getType());}
     }
 }

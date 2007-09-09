@@ -11,6 +11,8 @@ import task.Goal;
 import utility.DistanceTable;
 
 /**
+ * Player only considers the closest enemy.
+ * <br><br>
  * @author Elisha Peterson
  */
 public class Closest extends Autonomy {
@@ -22,6 +24,6 @@ public class Closest extends Autonomy {
      * @param goal the goal used for task assignment */
     public void assign(Team team,Goal goal){
         DistanceTable dist=new DistanceTable(team,goal.getTarget());
-        for(Agent p:team){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.isSeek());}
+        for(Agent p:team){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.getType());}
     }
 }

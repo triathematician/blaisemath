@@ -10,9 +10,14 @@ import Euclidean.PPath;
 import Euclidean.PPoint;
 import Euclidean.PRandom;
 import Model.PointRangeModel;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import behavior.Tasking;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import javax.swing.event.ChangeEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import utility.DistanceTable;
 
 /**
@@ -21,7 +26,7 @@ import utility.DistanceTable;
  * Handles routines dealing with an entire team of players.
  * Includes cooperative/control algorithms, broadcast methods for instructing team's agents, etc.
  */
-public class Team extends ArrayList<Agent> {
+public class Team extends ArrayList<Agent> implements PropertyChangeListener {
 
     
 // PROPERTIES  
@@ -34,28 +39,18 @@ public class Team extends ArrayList<Agent> {
     
 // CONSTRUCTORS    
     
-    /** Default constructor */
-    public Team(){
-        super();
-        ts=new TeamSettings();
-        ts.goal.setTeam(this);
-        initTasking();
-        initializeAgents();
-    }
-    /** Constructs with given settings
-     * @param ts team settings used to construct the team */
+    public Team(){this(new TeamSettings());}
     public Team(TeamSettings ts){
         super();
         this.ts=ts;
-        ts.goal.setTeam(this);
+        ts.getGoal().setTeam(this);
         initTasking();
-        initializeAgents();
+        for(int i=0;i<ts.getSize();i++){add(new Agent(this));}
+        initStartingLocations();
     }
-    /** Constructs as copy of another team
-     * @param team the team to copy */
     public Team(Team team){
         ts=team.ts;
-        ts.goal.setTeam(this);
+        ts.getGoal().setTeam(this);
         initTasking();
         for(Agent a:team){this.add(a);}
     }
@@ -68,6 +63,18 @@ public class Team extends ArrayList<Agent> {
     
     /** Resets all agents to their initial positions; clears all paths */
     public void reset(){for(Agent a:this){a.reset();}}
+    
+    /** Re-initializes agent starting locations. */
+    public void initStartingLocations(){
+        switch(ts.getStart()){
+            case TeamSettings.START_RANDOM: startRandom(50); break;
+            case TeamSettings.START_LINE: startLine(new PPoint(-50,50),new PPoint(50,-50)); break;
+            case TeamSettings.START_CIRCLE: startCircle(new PPoint(),50);break;
+            case TeamSettings.START_ARC: startArc(new PPoint(),50,Math.PI/3,5*Math.PI/3);break;
+            case TeamSettings.START_ZERO:
+            default: startZero(); break;
+        }
+    }    
     
     
 // BEAN PATTERNS: GETTERS & SETTERS
@@ -88,7 +95,7 @@ public class Team extends ArrayList<Agent> {
     
     /** Sets team target.
      * @param target the target team */
-    public void setTarget(Team target){ts.goal.setTarget(target);}
+    public void setTarget(Team target){ts.getGoal().setTarget(target);}
     
     /** Returns paths taken by team members.
      * @return collection of paths associated to the team */
@@ -113,24 +120,13 @@ public class Team extends ArrayList<Agent> {
         for(Agent a:this){result.add(a.getPointModel());}
         return result;
     }
-
     
-// METHODS TO HELP SETUP THE TEAM
-    
-    // TODO  Get this to work with the default field size!!
-    /** Resets the team size and positions, using TeamSettings */
-    public void initializeAgents(){
-        this.clear();
-        for(int i=0;i<ts.getSize();i++){add(new Agent(this));}
-        switch(ts.getStart()){
-            case TeamSettings.START_RANDOM: startRandom(50); break;
-            case TeamSettings.START_LINE: startLine(new PPoint(-50,50),new PPoint(50,-50)); break;
-            case TeamSettings.START_CIRCLE: startCircle(new PPoint(),50);break;
-            case TeamSettings.START_ARC: startArc(new PPoint(),50,Math.PI/3,5*Math.PI/3);break;
-            case TeamSettings.START_ZERO:
-            default: startZero(); break;
-        }
-    }    
+    /** Generates tree given list of agents */
+    public DefaultMutableTreeNode getTreeNode(){
+        DefaultMutableTreeNode result=new DefaultMutableTreeNode(ts);
+        for(Agent agent:this){result.add(new DefaultMutableTreeNode(agent.as));}
+        return result;
+    }
     
     
 // METHODS FOR SETTING INITIAL POSITIONS OF TEAM MEMBERS
@@ -148,9 +144,9 @@ public class Team extends ArrayList<Agent> {
     public void startLine(PPoint p1,PPoint pn){
         if(size()==1){get(0).setPoint(p1.translate(pn).multiply(.5));}
         else{
-            PPoint step=p1.toward(pn).multiply(1/(size()-1));
+            PPoint step=p1.toward(pn).multiply(1/(size()-1.0));
             for(int i=0;i<size();i++){
-                get(i).getPointModel().setTo(p1.translate(step.multiply(i)));
+                get(i).getPointModel().setTo(p1.x+step.x*i,p1.y+step.y*i);
             }
         }
     }
@@ -160,7 +156,7 @@ public class Team extends ArrayList<Agent> {
      * @param r     radius of the circle */
     public void startCircle(PPoint point,double r){
         for(int i=0;i<size();i++){
-            get(i).setXYRTheta(point.x,point.y,r,2*Math.PI*i/size());
+            get(i).getPointModel().setTo(point.x+r*Math.cos(2*Math.PI*i/(double)size()),point.y+r*Math.sin(2*Math.PI*i/(double)size()));
         }
     }
     
@@ -170,10 +166,10 @@ public class Team extends ArrayList<Agent> {
      * @param th1   starting angle of the arc
      * @param th2   ending angle of the arc */
     public void startArc(PPoint point, double r,double th1,double th2){
-        if(size()==1){get(0).setXYRTheta(point.x,point.y,r,(th1+th2)/2);}
+        if(size()==1){get(0).getPointModel().setTo(point.x+r*Math.cos((th1+th2)/2),point.y+r*Math.sin((th1+th2)/2));}
         else{
             for(int i=0;i<size();i++){
-                get(i).setXYRTheta(point.x,point.y,r,th1+i*(th2-th1)/(size()-1));
+                get(i).getPointModel().setTo(point.x+r*Math.cos(th1+i*(th2-th1)/(size()-1.0)),point.y+r*Math.sin(th1+i*(th2-th1)/(size()-1.0)));
             }
         }
     }
@@ -205,7 +201,14 @@ public class Team extends ArrayList<Agent> {
      * @return      true if the team's goal has been achieved, otherwise false
      */
     public boolean goalAchieved(DistanceTable d){
-        if(ts.goal==null){return true;}
-        return ts.goal.isAchieved(d);
+        if(ts.getGoal()==null){return true;}
+        return ts.getGoal().isAchieved(d);
+    }
+    
+    
+// HANDLE PROPERTY CHANGE EVENTS... BROADCAST TO TEAM!!
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName()=="Starting Loc"){initStartingLocations();}
+        if(evt.getPropertyName()=="Color"){for(Agent a:this){a.as.setColor(ts.getAgentSettings().getColor());}}
     }
 }

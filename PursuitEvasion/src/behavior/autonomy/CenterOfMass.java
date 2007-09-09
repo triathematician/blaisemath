@@ -11,6 +11,8 @@ import task.Goal;
 import utility.DistanceTable;
 
 /**
+ * Player seeks/flees the center-of-mass of the enemy team.
+ * <br><br>
  * @author Elisha Peterson
  */
 public class CenterOfMass extends Autonomy {
@@ -23,6 +25,6 @@ public class CenterOfMass extends Autonomy {
     public void assign(Team team,Goal goal){
         Agent bCOM=new Agent();
         bCOM.setPoint(goal.getTarget().getCenterOfMass());
-        for(Agent p:team){p.assignTask(bCOM,goal.isSeek());}
+        for(Agent p:team){p.assignTask(bCOM,goal.getType());}
     }
 }
