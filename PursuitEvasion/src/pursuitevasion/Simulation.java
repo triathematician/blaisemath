@@ -10,6 +10,7 @@
 
 package pursuitevasion;
 
+import Blaise.BPlot2D;
 import Blaise.BPlotPath2D;
 import Model.PointRangeModel;
 import Model.Settings;
@@ -32,7 +33,7 @@ import utility.DistanceTable;
  *
  * @author ae3263
  */
-public class Simulation extends Settings {
+public class Simulation implements ActionListener,PropertyChangeListener {
     
 
 // PROPERTIES   
@@ -87,14 +88,16 @@ public class Simulation extends Settings {
      * @param newValue the new settings to use */
     public void setSettings(SimulationSettings newValue){
         if(newValue==null){return;}
-        if(newValue!=ss){
-            if(ss!=null){ss.removePropertyChangeListener(this);}
-            ss=newValue;
-            ss.addPropertyChangeListener(this);
+        // remove previous event listeners so classes recycle... i'm not sure this is necessary!
+        if(ss==null){ss=newValue;ss.addPropertyChangeListener(this);}
+        else{
+            for(Team t:teams){t.removeActionListener(this);}
+            if(newValue!=ss){ss.removeAllPropertyChangeListeners();ss=newValue;ss.addPropertyChangeListener(this);}
         }
-        teams=this.ss.getTeams();
+        teams=ss.getTeams();for(Team t:teams){t.addActionListener(this);}
         bird=new Agent();
-        pcs.firePropertyChange("teams",null,null);
+        fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"reset"));
+        run();
     }
     
     
@@ -109,7 +112,7 @@ public class Simulation extends Settings {
     public int run(int numSteps){
         reset();
         for(int i=0;i<numSteps;i++){iterate();}
-        fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"simulation"));
+        fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"redraw"));
         return 0;
     }
     
@@ -138,17 +141,14 @@ public class Simulation extends Settings {
     
 // METHODS: RETURN RESULTS OF SIMULATION IN VARIOUS FORMATS
     
-    /** Returns point models corresponding to initial conditions
-     * @return arraylist of pointrangemodel's suitable to add to a BPlot2D */
-    public ArrayList<PointRangeModel> getInitialPoints(){
-        ArrayList<PointRangeModel> result=new ArrayList<PointRangeModel>();
-        for(Team t:teams){
-            for(PointRangeModel prm:t.getPointModels()){
-                prm.addChangeListener(this);
-                result.add(prm);
-            }
-        }
-        return result;
+    /** Returns point models corresponding to initial conditions */
+    public void placeInitialPointsOn(BPlot2D p){for(Team t:teams){t.placeInitialPointsOn(p);}}
+    
+    /** Recomputes animation settings for a plot window */
+    public void setAnimationCycle(BPlot2D p){
+        p.setAnimateCycle(ss.getNumSteps()+10);
+        if(ss.getStepTime()>.4){p.setAnimateDelay(100);}
+        else{p.setAnimateDelay((int)(250*ss.getStepTime()));}
     }
     
     /** Returns all paths computed by the simulation
@@ -169,26 +169,25 @@ public class Simulation extends Settings {
 
     
 // EVENT HANDLING    
-
-    /** Simply run the event!! */
-    public void stateChanged(ChangeEvent e){run();}
-
-    /** ALmost all changes pass through this method. This is a very important method! */
+    
+    /** Almost all changes pass through this method. This is a very important method! */
     public void propertyChange(PropertyChangeEvent e) {
-        if(e.getPropertyName()=="# of Steps"
-                ||e.getPropertyName()=="max Steps"
-                ||e.getPropertyName()=="Step Time"){run();}
-        else if(e.getPropertyName()=="Pitch Size"){initStartingLocations();run();}
+        //System.out.println("simulation prop change: "+e.getPropertyName());
+        if(e.getPropertyName()=="# of Steps"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"animation"));run();}
+        else if(e.getPropertyName()=="Step Time"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"animation"));run();}
+        else if(e.getPropertyName()=="Pitch Size"){System.out.println("Starting locs should reference this value!");initStartingLocations();run();}
         else if(e.getPropertyName()=="Preset Game"){setSettings(ss);}
-        else if(e.getPropertyName()=="# of Teams"){setSettings(ss);}
+        else if(e.getPropertyName()=="max Steps"){System.out.println("nonfunctional!");}
+        else if(e.getPropertyName()=="# of Teams"){System.out.println("nonfunctional!");}
     }
     
     // Remaining code deals with action listening
-    protected ActionEvent actionEvent = null;
-    protected EventListenerList listenerList = new EventListenerList();
+    protected ActionEvent actionEvent=null;
+    protected EventListenerList listenerList=new EventListenerList();
     public void addActionListener(ActionListener l){listenerList.add(ActionListener.class, l);}
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
     protected void fireActionPerformed(ActionEvent e){
+        actionEvent=e;
         Object[] listeners=listenerList.getListenerList();
         for(int i=listeners.length-2;i>=0;i-=2){
             if(listeners[i]==ActionListener.class){
@@ -196,5 +195,12 @@ public class Simulation extends Settings {
                 ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
             }
         }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        //System.out.println("simulation action performed: "+e.getActionCommand());
+        if(e.getActionCommand()=="rerun"){run();}
+        else if(e.getActionCommand()=="redraw"){fireActionPerformed(e);}
+        else if(e.getActionCommand()=="reset"){fireActionPerformed(e);}
     }
 }

@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.event.ChangeEvent;
 import behavior.Tasking;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Contains global settings for a pursuit/evasion scenario.
@@ -120,8 +121,8 @@ public class SimulationSettings extends Settings {
             Team cats=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,
                     new Goal(Goal.EVADE,Goal.ALL,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,
                     Color.BLUE,this));
-            dogs.ts.getAgentSettings().setString("Dogs");dogs.setTarget(cats);teams.add(dogs);
-            dogs.ts.getAgentSettings().setString("Cats");cats.setTarget(dogs);teams.add(cats);
+            dogs.ts.getSubSettings().setString("Dogs");dogs.setTarget(cats);teams.add(dogs);
+            dogs.ts.getSubSettings().setString("Cats");cats.setTarget(dogs);teams.add(cats);
             break;
         }        case SIMPLE_PPE:{
             setString("1-on-1-on-1");
@@ -135,9 +136,9 @@ public class SimulationSettings extends Settings {
             Team mice=new Team(new TeamSettings(5,TeamSettings.START_RANDOM,
                     new Goal(Goal.EVADE,Goal.ALL,5.0),Tasking.AUTO_CLOSEST,Behavior.FLEE,
                     Color.GREEN,this));
-            dogs.ts.getAgentSettings().setString("Dogs");dogs.ts.getGoal().setTarget(cats);teams.add(dogs);
-            cats.ts.getAgentSettings().setString("Cats");cats.ts.getGoal().setTarget(mice);teams.add(cats);
-            mice.ts.getAgentSettings().setString("Mice");mice.ts.getGoal().setTarget(cats);teams.add(mice);
+            dogs.ts.getSubSettings().setString("Dogs");dogs.setTarget(cats);teams.add(dogs);
+            cats.ts.getSubSettings().setString("Cats");cats.setTarget(mice);teams.add(cats);
+            mice.ts.getSubSettings().setString("Mice");mice.setTarget(cats);teams.add(mice);
             break;
         }        // Initialize with capture radius 1, two teams plus a goal
         case GOAL_PE:{
@@ -152,9 +153,9 @@ public class SimulationSettings extends Settings {
             Team milk=new Team(new TeamSettings(1,TeamSettings.START_RANDOM,
                     new Goal(Goal.NONE,Goal.ALL,5.0),Tasking.NO_TASKING,Behavior.STATIONARY,
                     Color.GREEN,this));
-            dogs.ts.getAgentSettings().setString("Dogs");dogs.setTarget(cats);teams.add(dogs);
-            cats.ts.getAgentSettings().setString("Cats");cats.setTarget(milk);teams.add(cats);
-            milk.ts.getAgentSettings().setString("Milk (Goal)");teams.add(milk);
+            dogs.ts.getSubSettings().setString("Dogs");dogs.setTarget(cats);teams.add(dogs);
+            cats.ts.getSubSettings().setString("Cats");cats.setTarget(milk);teams.add(cats);
+            milk.ts.getSubSettings().setString("Milk (Goal)");teams.add(milk);
             break;
         }
         // Initialize with many, many teams
@@ -163,7 +164,7 @@ public class SimulationSettings extends Settings {
             setNumTeams(3);
             Team[] t=new Team[10];
             t[0]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.NONE,Goal.ONE,5.0),Tasking.NO_TASKING,Behavior.STATIONARY,Color.BLACK,this));
-            t[0].ts.getAgentSettings().setString("Goal");
+            t[0].ts.getSubSettings().setString("Goal");
             t[1]=new Team(new TeamSettings(2,TeamSettings.START_RANDOM,new Goal(Goal.PURSUE,Goal.ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,Color.RED,this));
             t[2]=new Team(new TeamSettings(4,TeamSettings.START_RANDOM,new Goal(Goal.PURSUE,Goal.ALL,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,Color.ORANGE,this));
             t[3]=new Team(new TeamSettings(3,TeamSettings.START_LINE,new Goal(Goal.PURSUE,Goal.ONE,5.0),Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,Color.YELLOW,this));
@@ -181,4 +182,9 @@ public class SimulationSettings extends Settings {
         }
         return teams;
     }
+    
+// EVENT HANDLING
+
+    public void removeAllPropertyChangeListeners(){pcs=new PropertyChangeSupport(this);}
+            
 } // class SimulationSettings

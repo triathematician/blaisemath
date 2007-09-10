@@ -93,7 +93,10 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
      * @param a the first agent
      * @param b the second agent
      * @return the distance between the agents */
-    public double get(Agent a,Agent b){return get(a).get(b);}
+    public double get(Agent a,Agent b){
+        Double result=get(a).get(b);
+        return result==null?Double.MAX_VALUE:result;
+    }
 
     /** Returns minimum between two collections of agents
      * @param ta the first collection of agents

@@ -21,7 +21,8 @@ public class PEGPlot extends javax.swing.JFrame {
     /** Creates new form PEGPlot */
     public PEGPlot() {
         initComponents();
-        bPlot2D1.addPoints(simulation1.getInitialPoints());
+        simulation1.placeInitialPointsOn(bPlot2D1);
+        simulation1.setAnimationCycle(bPlot2D1);
         simulation1.run();
     }
     
@@ -34,23 +35,47 @@ public class PEGPlot extends javax.swing.JFrame {
     private void initComponents() {
 
         simulation1 = new pursuitevasion.Simulation();
+        menuSimModeGroup = new javax.swing.ButtonGroup();
         bPlot2D1 = new Blaise.BPlot2D();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        resetButton = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        statusBar = new javax.swing.JPanel();
+        statusText = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        simulationMenu = new javax.swing.JMenu();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        PresetMenu = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        settingsMenu = new javax.swing.JMenu();
+        ModeMenu = new javax.swing.JMenu();
+        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
+        jRadioButtonMenuItem2 = new javax.swing.JRadioButtonMenuItem();
+        jRadioButtonMenuItem3 = new javax.swing.JRadioButtonMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        appearanceMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
 
         simulation1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 simulation1ActionPerformed(evt);
-            }
-        });
-        simulation1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                simulation1PropertyChange(evt);
             }
         });
 
@@ -63,6 +88,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jSplitPane1.setDividerLocation(130);
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setContinuousLayout(true);
+        jSplitPane1.setMaximumSize(new java.awt.Dimension(500, 324));
         jSplitPane1.setOneTouchExpandable(true);
 
         jScrollPane1.setMinimumSize(new java.awt.Dimension(100, 23));
@@ -82,78 +108,219 @@ public class PEGPlot extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(simulation1.getSettings().getPanel());
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14));
-        jButton1.setText("RESET");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        resetButton.setFont(new java.awt.Font("Tahoma", 1, 14));
+        resetButton.setText("RESET");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                resetButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14));
-        jButton2.setText("RUN!!");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        runButton.setFont(new java.awt.Font("Tahoma", 1, 14));
+        runButton.setText("RUN!!");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                runButtonActionPerformed(evt);
             }
         });
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane4.setViewportView(jTextArea1);
+
+        statusBar.setBackground(new java.awt.Color(255, 255, 255));
+        statusBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        statusText.setText("Status: nonfunctional status bar.");
+
+        javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
+        statusBar.setLayout(statusBarLayout);
+        statusBarLayout.setHorizontalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(statusText, javax.swing.GroupLayout.DEFAULT_SIZE, 1152, Short.MAX_VALUE)
+        );
+        statusBarLayout.setVerticalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(statusText, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+
+        fileMenu.setText("File");
+
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem9.setText("New");
+        fileMenu.add(jMenuItem9);
+
+        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem11.setText("Open");
+        fileMenu.add(jMenuItem11);
+
+        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem10.setText("Save");
+        fileMenu.add(jMenuItem10);
+
+        jMenuItem12.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem12.setText("Quit");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem12);
+
+        jMenuBar1.add(fileMenu);
+
+        simulationMenu.setText("Simulation");
+
+        jMenuItem13.setText("Reset Simulation");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        simulationMenu.add(jMenuItem13);
+
+        jMenuItem14.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem14.setText("Re-Run Silumation");
+        simulationMenu.add(jMenuItem14);
+
+        PresetMenu.setText("Load Preset");
+
+        jMenuItem3.setText("Item");
+        PresetMenu.add(jMenuItem3);
+
+        jMenuItem4.setText("Item");
+        PresetMenu.add(jMenuItem4);
+
+        jMenuItem5.setText("Item");
+        PresetMenu.add(jMenuItem5);
+
+        jMenuItem6.setText("Item");
+        PresetMenu.add(jMenuItem6);
+
+        simulationMenu.add(PresetMenu);
+
+        jMenuBar1.add(simulationMenu);
+
+        settingsMenu.setText("Settings");
+
+        ModeMenu.setText("Simulation Mode");
+
+        jRadioButtonMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuSimModeGroup.add(jRadioButtonMenuItem1);
+        jRadioButtonMenuItem1.setSelected(true);
+        jRadioButtonMenuItem1.setText("One Simulation (Dynamic)");
+        ModeMenu.add(jRadioButtonMenuItem1);
+
+        jRadioButtonMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuSimModeGroup.add(jRadioButtonMenuItem2);
+        jRadioButtonMenuItem2.setText("Two Simulations (Comparison)");
+        ModeMenu.add(jRadioButtonMenuItem2);
+
+        jRadioButtonMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuSimModeGroup.add(jRadioButtonMenuItem3);
+        jRadioButtonMenuItem3.setText("Multiple Simulations (Statistical)");
+        ModeMenu.add(jRadioButtonMenuItem3);
+
+        settingsMenu.add(ModeMenu);
+
+        jMenuItem8.setText("Other");
+        settingsMenu.add(jMenuItem8);
+
+        jMenuBar1.add(settingsMenu);
+
+        appearanceMenu.setText("Appearance");
+
+        jMenuItem1.setText("Plot Window");
+        appearanceMenu.add(jMenuItem1);
+
+        jMenuItem2.setText("Points");
+        appearanceMenu.add(jMenuItem2);
+
+        jMenuItem7.setText("Paths");
+        appearanceMenu.add(jMenuItem7);
+
+        jMenuBar1.add(appearanceMenu);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                            .addComponent(resetButton, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bPlot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE))
+                .addComponent(bPlot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE))
+            .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(bPlot2D1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
+                    .addComponent(bPlot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void simulation1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_simulation1PropertyChange
-    bPlot2D1.deletePoints();
-    bPlot2D1.addPoints(simulation1.getInitialPoints());
-    jTree1.setModel(simulation1.getTreeModel());
-    simulation1.run();
-}//GEN-LAST:event_simulation1PropertyChange
+private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+    System.exit(0);
+}//GEN-LAST:event_jMenuItem12ActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_jMenuItem13ActionPerformed
+
+private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
     simulation1.initStartingLocations();
     simulation1.run();
-}//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_resetButtonActionPerformed
 
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
-    bPlot2D1.deletePaths();
-    bPlot2D1.addPlotPaths(simulation1.getComputedPaths());
-    bPlot2D1.repaint();
+    //System.out.println("pegplot action performed: "+evt.getActionCommand());
+    if(evt.getActionCommand()=="redraw"){
+        bPlot2D1.deletePaths();
+        bPlot2D1.addPlotPaths(simulation1.getComputedPaths());
+        bPlot2D1.repaint();
+    }
+    else if(evt.getActionCommand()=="reset"){
+        bPlot2D1.deletePoints();
+        simulation1.placeInitialPointsOn(bPlot2D1);
+        jTree1.setModel(simulation1.getTreeModel());
+        if(evt.getSource()==simulation1){jScrollPane2.setViewportView(null);}
+        simulation1.setAnimationCycle(bPlot2D1);
+    }
+    else if(evt.getActionCommand()=="animation"){
+        simulation1.setAnimationCycle(bPlot2D1);    
+    }
 }//GEN-LAST:event_simulation1ActionPerformed
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
     simulation1.run();
-}//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_runButtonActionPerformed
 
 private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
     javax.swing.JPanel result=new javax.swing.JPanel();
@@ -161,6 +328,7 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
    // result.setPreferredSize(new Dimension(200,200));
    // result.setMaximumSize(new Dimension(300,300));
     DefaultMutableTreeNode node=(DefaultMutableTreeNode)jTree1.getLastSelectedPathComponent();
+    if(node==null){return;}
     switch(node.getDepth()){
     case 0:
         result.add(((AgentSettings)node.getUserObject()).getPanel());
@@ -185,15 +353,44 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu ModeMenu;
+    private javax.swing.JMenu PresetMenu;
+    private javax.swing.JMenu appearanceMenu;
     private Blaise.BPlot2D bPlot2D1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
+    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
+    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTree jTree1;
+    private javax.swing.ButtonGroup menuSimModeGroup;
+    private javax.swing.JButton resetButton;
+    private javax.swing.JButton runButton;
+    private javax.swing.JMenu settingsMenu;
     private pursuitevasion.Simulation simulation1;
+    private javax.swing.JMenu simulationMenu;
+    private javax.swing.JPanel statusBar;
+    private javax.swing.JLabel statusText;
     // End of variables declaration//GEN-END:variables
     
 }

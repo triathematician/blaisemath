@@ -60,7 +60,7 @@ public class AgentSettings extends Settings {
         addProperty("Color",color,Settings.EDIT_COLOR);
         initEventListening();
     }
-    public AgentSettings(TeamSettings ts){this();copyFrom(ts.getAgentSettings());}
+    public AgentSettings(TeamSettings ts){this();copyFrom(ts.getSubSettings());}
     public void copyFrom(AgentSettings as){setSensorRange(as.getSensorRange());setCommRange(as.getCommRange());setTopSpeed(as.getTopSpeed());setColor(as.getColor());setBehavior(as.getBehavior());}
     
     
@@ -79,30 +79,4 @@ public class AgentSettings extends Settings {
     public void setBehavior(int newValue){behavior.setValue(newValue);}
     public void setColor(Color newValue){color.setValue(newValue);}
     public void setString(String newValue){s=newValue;}
-    
-
-// METHODS TO GENERATE GUI ELEMENTS
-    
-//    public SpinnerModel getSensorRangeSpinnerModel(){return getSpinnerModel(sensorRange,0.1);}
-//    public SpinnerModel getCommRangeSpinnerModel(){return getSpinnerModel(commRange,0.1);}
-//    public SpinnerModel getTopSpeedSpinnerModel(){return getSpinnerModel(topSpeed,0.05);}
-//    public ComboBoxModel getBehaviorComboModel(){return getComboBoxModel(Behavior.BEHAVIOR_STRINGS);}
-    
-    
-// EVENT HANDLING ROUTINES
-    
-    /** Sets up event listening. */
-//    protected void initEventListening(){
-//        sensorRange.addChangeListener(this);
-//        commRange.addChangeListener(this);
-//        topSpeed.addChangeListener(this);   
-//        behavior.addChangeListener(this);
-//    }    
-//    /** Handles state changes */
-//    public void stateChanged(ChangeEvent e){
-//        if(e.getSource()==sensorRange){pcs.firePropertyChange("agentSensorRange",null,sensorRange.getValue());}
-//        if(e.getSource()==commRange){pcs.firePropertyChange("agentCommRange",null,commRange.getValue());}
-//        if(e.getSource()==topSpeed){pcs.firePropertyChange("agentTopSpeed",null,topSpeed.getValue());}
-//        if(e.getSource()==behavior){pcs.firePropertyChange("agentBehavior",null,behavior.getValue());}
-//   }
 }

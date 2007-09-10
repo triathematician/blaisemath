@@ -14,9 +14,12 @@ import pursuitevasion.Pitch;
 import Euclidean.PVector;
 import Model.PointRangeModel;
 import behavior.Behavior;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.event.EventListenerList;
 import task.Task;
 import utility.DistanceTable;
 
@@ -70,6 +73,7 @@ public class Agent extends PVector implements PropertyChangeListener {
         initialPosition=new PointRangeModel(this);
         initMemory();
     }
+    public Agent(PPoint p){this();x=p.x;y=p.y;}
     /** Constructs with a player's team only
      * @param team  the agent's team */
     public Agent(Team team){
@@ -183,7 +187,7 @@ public class Agent extends PVector implements PropertyChangeListener {
      */
     public void planPath(double time,double stepTime){
         if(tasks.isEmpty()){return;}
-        this.v=behavior.direction(this,tasks.get(0).getTarget(),time).multiply(stepTime*as.getTopSpeed());
+        this.v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*as.getTopSpeed());
     }
     
     /** Logs current point and pitch in memory, and resets current understanding. */
@@ -193,7 +197,34 @@ public class Agent extends PVector implements PropertyChangeListener {
         pov.clear();
     }
 
+    
+// EVENT LISTENING    
+    
+    /** Listens for changes to settings */
     public void propertyChange(PropertyChangeEvent evt){
-        if(evt.getPropertyName()=="Behavior"){initBehavior();}
+        //System.out.println("agent prop change: "+evt.getPropertyName());
+        if(evt.getPropertyName()=="Speed"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
+        else if(evt.getPropertyName()=="Sensor Range"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
+        else if(evt.getPropertyName()=="Comm Range"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
+        else if(evt.getPropertyName()=="Behavior"){
+            initBehavior();
+            fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));
+        }
+        else if(evt.getPropertyName()=="Color"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"redraw"));}
+    }
+    
+    // Remaining code deals with action listening
+    protected ActionEvent actionEvent = null;
+    protected EventListenerList listenerList = new EventListenerList();
+    public void addActionListener(ActionListener l){listenerList.add(ActionListener.class, l);}
+    public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
+    protected void fireActionPerformed(ActionEvent e){
+        Object[] listeners=listenerList.getListenerList();
+        for(int i=listeners.length-2;i>=0;i-=2){
+            if(listeners[i]==ActionListener.class){
+                if(actionEvent==null){actionEvent=e;}
+                ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
+            }
+        }
     }
 }

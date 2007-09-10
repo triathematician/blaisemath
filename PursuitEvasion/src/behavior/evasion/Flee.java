@@ -9,9 +9,9 @@ import Euclidean.PPoint;
 import agent.Agent;
 
 /**
- * @author Elisha Peterson<br><br>
- * 
  * Moves directly away from an agent.
+ * 
+ * @author Elisha Peterson<br><br>
  */
 public class Flee extends behavior.Behavior {  
     /**
@@ -21,7 +21,5 @@ public class Flee extends behavior.Behavior {
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior
      */
-    public PPoint direction(Agent self,Agent target,double t){
-        return self.from(target).normalize();
-    }
+    public PPoint direction(Agent self,Agent target,double t){return self.unitFrom(target);}
 }

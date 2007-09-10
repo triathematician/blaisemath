@@ -57,12 +57,9 @@ public class TeamSettings extends Settings {
         addProperty("# Agents",size,Settings.EDIT_INTEGER);
         addProperty("Starting Loc",start,Settings.EDIT_COMBO);
         addProperty("Tasking",tasking,Settings.EDIT_COMBO);
-        initEventListening();
         setSize(n);setStart(st);setGoal(g);setTasking(t);as.setBehavior(b);as.setColor(c);
         as.setString("Team");
-        as.addPropertyChangeListener(this);
-        g.addPropertyChangeListener(this);
-        addPropertyChangeListener(ss);
+        initEventListening();
     }
     
     
@@ -72,18 +69,19 @@ public class TeamSettings extends Settings {
     public int getStart(){return start.getValue();}
     public int getTasking(){return tasking.getValue();}
     public Goal getGoal(){return goal;}
-    public AgentSettings getAgentSettings(){return as;}
+    public AgentSettings getSubSettings(){return as;}
     public String toString(){return as.toString();}
     
     public void setSize(int newValue){size.setValue(newValue);}
     public void setStart(int newValue){start.setValue(newValue);}
     public void setTasking(int newValue){tasking.setValue(newValue);}
     public void setGoal(Goal newValue){if(!newValue.equals(goal)){goal=newValue;}}
-    public void setAgentSettings(AgentSettings newValue){if(!newValue.equals(as)){as=newValue;}}
+    public void setSubSettings(AgentSettings newValue){if(!newValue.equals(as)){as=newValue;}}
     
 
 // METHODS TO GENERATE GUI ELEMENTS
     
+    /** Overrides super method to add in goal and subsettings as well */
     public JPanel getPanel(){
         JPanel result=super.getPanel();
         for(Component c:goal.getPanel().getComponents()){result.add(c);}

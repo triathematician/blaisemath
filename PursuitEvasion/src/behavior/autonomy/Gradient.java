@@ -28,16 +28,10 @@ public class Gradient extends Autonomy {
         int POWER=-1;
         DistanceTable dist=new DistanceTable(team,goal.getTarget());
         for(Agent a:team){
+            // here, dir will be the direction of the gradient of the distance sum
             PPoint dir=new PPoint(0,0);
-            for(Agent b:goal.getTarget()){
-                PPoint temp=new PPoint(a);
-                temp.translate(-b.x,-b.y);
-                temp.multiply(Math.pow(dist.get(a,b),POWER-1));
-                dir.translate(temp);
-            }
-            Agent bGRAD=new Agent();
-            bGRAD.setPoint(a.translate(dir));
-            a.assignTask(bGRAD,goal.getType());
+            for(Agent b:goal.getTarget()){dir.translate(new PPoint(b.x-a.x,b.y-a.y).multiply(Math.pow(dist.get(a,b),POWER-1)));}
+            a.assignTask(new Agent(a.plus(dir)),goal.getType());
         }
     }
 }
