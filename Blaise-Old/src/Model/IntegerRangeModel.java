@@ -18,9 +18,17 @@ public class IntegerRangeModel extends BModel implements Serializable {
     private int maximum = 10;
     private int minimum = -10;
     private int value = 0;
+    private int step = 1;
     
     // Components required for the bean
     public IntegerRangeModel(){}
+    public IntegerRangeModel(int newValue,int newMin,int newMax){
+        setRangeProperties(newValue,newMin,newMax);
+    }
+    public IntegerRangeModel(int newValue,int newMin,int newMax,int step){
+        setRangeProperties(newValue,newMin,newMax);
+        setStep(step);
+    }
     
     // required getters & setters
     public int getMaximum(){return maximum;}
@@ -30,16 +38,11 @@ public class IntegerRangeModel extends BModel implements Serializable {
     public int getValue(){return value;}
     public void setValue(int newValue){setRangeProperties(newValue,minimum,maximum);}
     public void setValue(String s){setValue(Integer.valueOf(s));}
+    public int getStep(){return step;}
+    public void setStep(int newValue){step=newValue;}
     
     public String toString(){return Integer.toString(value);}
     public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
-    
-    /**
-     * Better initializer
-     */
-    public IntegerRangeModel(int newValue,int newMin,int newMax){
-        setRangeProperties(newValue,newMin,newMax);
-    }
     
     public int getRange(){return (maximum-minimum);}
     

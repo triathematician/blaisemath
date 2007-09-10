@@ -6,6 +6,7 @@
 package Model;
 
 import Interface.BModel;
+import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -81,10 +82,28 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
 // GUI HANDLING SUPPORT    
     
     /** Generates a combo box given a string list. */
-    public ComboBoxModel getComboBoxModel(ComboBoxRangeModel cbrm){return new ComboBoxEditor(cbrm);}
-    /** Generates a spinner model given a range model and a step size. */
-    public SpinnerDoubleEditor getSpinnerModel(DoubleRangeModel drm,double step){return new SpinnerDoubleEditor(drm,step);}
-    public SpinnerIntegerEditor getSpinnerModel(IntegerRangeModel irm,int step){return new SpinnerIntegerEditor(irm,step);}
+    public JComboBox getComboBox(ComboBoxRangeModel cbrm){
+        JComboBox result=new JComboBox(new ComboBoxEditor(cbrm));
+        result.setMinimumSize(new Dimension(50,20));
+        result.setPreferredSize(new Dimension(50,25));
+        result.setMaximumSize(new Dimension(200,25));
+        return result;
+    }
+    /** Generates a spinner given a range model and a step size. */
+    public JSpinner getSpinner(DoubleRangeModel drm){
+        JSpinner result=new JSpinner(new SpinnerDoubleEditor(drm));
+        result.setMinimumSize(new Dimension(20,20));
+        result.setPreferredSize(new Dimension(50,25));
+        result.setMaximumSize(new Dimension(50,25));
+        return result;
+    }
+    public JSpinner getSpinner(IntegerRangeModel irm){
+        JSpinner result=new JSpinner(new SpinnerIntegerEditor(irm));
+        result.setMinimumSize(new Dimension(20,20));
+        result.setPreferredSize(new Dimension(50,25));
+        result.setMaximumSize(new Dimension(50,25));
+        return result;
+    }
     
     
 // GUI METHODS
@@ -95,9 +114,9 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
         for(int i=0;i<names.size();i++){
             result.add(new JLabel(names.get(i)));
             switch(editors.get(i)){
-            case 0:result.add(new JSpinner(getSpinnerModel((DoubleRangeModel)models.get(i),.1)));break;
-            case 1:result.add(new JSpinner(getSpinnerModel((IntegerRangeModel)models.get(i),1)));break;
-            case 2:result.add(new JComboBox(getComboBoxModel((ComboBoxRangeModel)models.get(i))));break;
+            case 0:result.add(getSpinner((DoubleRangeModel)models.get(i)));break;
+            case 1:result.add(getSpinner((IntegerRangeModel)models.get(i)));break;
+            case 2:result.add(getComboBox((ComboBoxRangeModel)models.get(i)));break;
             case 3:result.add(new JTextField());break;
             case 4:result.add(new ColorEditor((ColorModel)models.get(i)).button);break;
             }

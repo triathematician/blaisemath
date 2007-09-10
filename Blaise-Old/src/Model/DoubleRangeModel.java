@@ -18,9 +18,17 @@ public class DoubleRangeModel extends BModel implements Serializable {
     private double maximum = 1.0;
     private double minimum = -1.0;
     private double value = 0.0;
+    private double step = 0.1;
     
     // Components required for the bean
     public DoubleRangeModel(){}
+    public DoubleRangeModel(double newValue,double newMin,double newMax){
+        setRangeProperties(newValue,newMin,newMax);
+    }
+    public DoubleRangeModel(double newValue,double newMin,double newMax,double step){
+        setRangeProperties(newValue,newMin,newMax);
+        setStep(step);
+    }
     
     // required getters & setters
     public double getMaximum(){return maximum;}
@@ -30,16 +38,11 @@ public class DoubleRangeModel extends BModel implements Serializable {
     public double getValue(){return value;}
     public void setValue(double newValue){setRangeProperties(newValue,minimum,maximum);}
     public void setValue(String s){setValue(Double.valueOf(s));}
+    public double getStep(){return step;}
+    public void setStep(double newValue){step=newValue;}
     
     public String toString(){return Double.toString(value);}
     public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
-    
-    /**
-     * Better initializer
-     */
-    public DoubleRangeModel(double newValue,double newMin,double newMax){
-        setRangeProperties(newValue,newMin,newMax);
-    }
     
     public double getRange(){return (maximum-minimum);}
     

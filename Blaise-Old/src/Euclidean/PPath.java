@@ -30,6 +30,7 @@ public class PPath extends Vector<PPoint> implements Serializable{
     
     /** Converts path to a Path2D.Double type, using the specified subset range. */
     public Path2D.Double getPath2D(int start,int end){
+        if(size()==0){return new Path2D.Double();}
         if(start<0){start=0;}else if(start>=size()){start=size()-1;}
         if(end<0){end=0;}else if(end>=size()){end=size()-1;}
         Path2D.Double path=new Path2D.Double();

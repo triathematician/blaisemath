@@ -55,18 +55,20 @@ public class PPoint{
     public PPoint getAfterTransform(AffineTransform at){return new PPoint(at.transform(getPoint2D(),null));}
     public PPoint getBeforeTransform(AffineTransform at) throws NoninvertibleTransformException{return new PPoint(at.inverseTransform(getPoint2D(),null));}
     
-    // basic manipulation methods
+    // basic manipulation methods: manipulate and return this point
     public PPoint translate(double x0,double y0){x+=x0;y+=y0;return this;}
     public PPoint translate(PPoint point){return translate(point.x,point.y);}
     public PPoint multiply(double c){x*=c;y*=c;return this;}
-    public PPoint scaleMagnitudeTo(double d){return (length()==0)?this:multiply(d/length());} // scales to length d
+    public PPoint scaleMagnitudeTo(double d){return(length()==0)?this:multiply(d/length());} // scales to length d
     public PPoint normalize(){return scaleMagnitudeTo(1);} // normalizes the vector
 
     // getPoint methods: return new point
     public PPoint toward(double x1,double y1){return new PPoint(x1-x,y1-y);}
     public PPoint toward(PPoint point){return toward(point.x,point.y);}
+    public PPoint unitToward(PPoint point){double d=distanceTo(point);return(d==0)?new PPoint():new PPoint((point.x-x)/d,(point.y-y)/d);}
     public PPoint from(double x1,double y1){return new PPoint(x-x1,y-y1);}
     public PPoint from(PPoint point){return from(point.x,point.y);}
+    public PPoint unitFrom(PPoint point){double d=distanceTo(point);return(d==0)?new PPoint():new PPoint((x-point.x)/d,(y-point.y)/d);}
     public PPoint plus(double x1,double y1){return new PPoint(x+x1,y+y1);}
     public PPoint plus(PPoint point){return plus(point.x,point.y);}
     public PPoint multipliedBy(double c){return new PPoint(x*c,y*c);}

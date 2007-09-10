@@ -1,6 +1,7 @@
 package Blaise;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JLabel;
@@ -19,35 +20,36 @@ public class BFunctionEditField extends JTextField implements ActionListener {
 // constants
     
     public static String DEFAULT_LABEL_STRING="Enter function: f(x)=";
-    public static JLabel DEFAULT_LABEL=new JLabel(DEFAULT_LABEL_STRING);
     
 // Fields    
     
+    private String label=DEFAULT_LABEL_STRING;
     /** Parser corresponding to the function */
     private BParser parser;
     
     /** Constructor: creates a new instance of BFunctionEditField */
-    public BFunctionEditField(){
+    public BFunctionEditField(){this(DEFAULT_LABEL_STRING,"x");}
+    public BFunctionEditField(String label,String var){
         super();
-        parser=new BParser();
+        this.label=label;
+        parser=new BParser(var);
         parser.addActionListener(this);
         getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
             public void insertUpdate(javax.swing.event.DocumentEvent e){parser.setExpressionString(getText());}
             public void removeUpdate(javax.swing.event.DocumentEvent e){parser.setExpressionString(getText());}
             public void changedUpdate(javax.swing.event.DocumentEvent e){}
         });    
-        setText(BParser.DEFAULT_STRING);        
+        setText(parser.DEFAULT_STRING);  
+        setPreferredSize(new Dimension(50,20));
     }
     
 // Bean patterns
     
+    public String getLabel(){return label;}
+    public void setLabel(String s){label=s;}
     public void setParser(BParser p){parser=p;}
     public BParser getParser(){return parser;}
-    public BPlotFunction2D getPlotFunction(BPlot2D owner){
-        BPlotFunction2D result=new BPlotFunction2D(owner);
-        result.setParser(parser);
-        return result;
-    }
+    public BPlotFunction2D getPlotFunction(BPlot2D owner){return new BPlotFunction2D(owner,parser);}
     
 // Handles actions created by the parser
 

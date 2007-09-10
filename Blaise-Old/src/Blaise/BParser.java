@@ -21,14 +21,17 @@ public class BParser extends JEP {
     
     /** Default string to use */
     public static String DEFAULT_STRING="4-x^2";
+    public String var="x";
     
     /** Constructor: creates a new instance of BParser */
-    public BParser(){
+    public BParser(){this("x");}
+    public BParser(String var){
         super();
         setImplicitMul(true);
         addStandardFunctions();
         addStandardConstants();
-        addVariable("x",0);
+        this.var=var;
+        addVariable(var,0);
         setExpressionString(DEFAULT_STRING);
     }
     
@@ -40,7 +43,10 @@ public class BParser extends JEP {
     }
     
     /** @return The value of the function at an x value of the parameter. */
-    public double getY(double x){addVariable("x",x);return getValue();}
+    public double getValue(double x){
+        addVariable(var,x);
+        return getValue();
+    }
     
     /** Event handling code modified from DefaultBoundedRangeModel. */
     protected EventListenerList listenerList=new EventListenerList();

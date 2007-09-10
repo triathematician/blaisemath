@@ -22,19 +22,13 @@ public class SpinnerIntegerEditor extends SpinnerNumberModel implements BEditor 
      */
     public SpinnerIntegerEditor(){initializeModels();}
     public SpinnerIntegerEditor(IntegerRangeModel sourceModel){initializeModels(sourceModel);}
-    public SpinnerIntegerEditor(IntegerRangeModel sourceModel,int stepSize){
-        initializeModels(sourceModel);
-        this.stepSize=stepSize;
-    }
-    public SpinnerIntegerEditor(int value,int min,int max,int stepSize){
-        initializeModels(new IntegerRangeModel(value,min,max));
-        this.stepSize=stepSize;
-    }
+    public SpinnerIntegerEditor(int value,int min,int max,int stepSize){initializeModels(new IntegerRangeModel(value,min,max,stepSize));}
     
     // initializes given a model
     public void initializeModels(IntegerRangeModel model){
         sourceModel=model;
         sourceModel.addChangeListener(this);
+        stepSize=sourceModel.getStep();
     }
     
     // initialize underlying models

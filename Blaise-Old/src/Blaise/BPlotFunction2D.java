@@ -35,26 +35,17 @@ public class BPlotFunction2D extends BPlotPath2D {
     
 // Constructors
     
-    /** Constructor: creates a new instance of BPlotFunction2D */
-    public BPlotFunction2D(){
-        super();
-        owner=new BPlot2D();
-        owner.addActionListener(this);
-        parser=new BParser();
-        parser.addActionListener(this);
-        parser.setExpressionString("0");
-        setColor(Color.RED);
-        setStroke(new BasicStroke(1.5f));
-    }
-    /** Constructor: initializes for a given plot window */
-    public BPlotFunction2D(BPlot2D o){
+    public BPlotFunction2D(){this(new BPlot2D());}
+    public BPlotFunction2D(BPlot2D o){this(o,new BParser());}
+    public BPlotFunction2D(BPlot2D o,BParser p){
         super();
         setOwner(o);
-        parser=new BParser();
+        parser=p;
         parser.addActionListener(this);
-        parser.setExpressionString("0");
         setColor(Color.RED);
         setStroke(new BasicStroke(1.5f));
+        recomputeCurve();
+        o.repaint();
     }
     
 // Bean patterns
@@ -80,10 +71,10 @@ public class BPlotFunction2D extends BPlotPath2D {
         clear();
         double stepX=(maxX-minX)/numSamples;
         for(double x=minX;x<=maxX;x+=stepX){
-            double y=parser.getY(x);
+            double y=parser.getValue(x);
             if(y>maxY){y=maxY+1;}
             if(y<minY){y=minY-1;}
-            add(new PPoint(x,parser.getY(x)));
+            add(new PPoint(x,parser.getValue(x)));
         }
     }
     
