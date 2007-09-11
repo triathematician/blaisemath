@@ -38,9 +38,7 @@ public class Agent extends PVector implements PropertyChangeListener {
 // PROPERTIES
     
     /** Properties of the agent... this doesn't change during a simulation. */
-    AgentSettings as;
-    /** Pointer to player's team */
-    Team team;
+    public AgentSettings as;
     
     /** Agent's current list of tasks (changes over time) */
     ArrayList<Task> tasks;
@@ -68,7 +66,6 @@ public class Agent extends PVector implements PropertyChangeListener {
     public Agent(AgentSettings as){
         this.as=as;
         this.as.addPropertyChangeListener(this);
-        team=toTeam();
         initBehavior();
         initialPosition=new PointRangeModel(this);
         initMemory();
@@ -77,7 +74,6 @@ public class Agent extends PVector implements PropertyChangeListener {
     /** Constructs with a player's team only
      * @param team  the agent's team */
     public Agent(Team team){
-        this.team=team;
         as=new AgentSettings(team.ts);
         as.addPropertyChangeListener(this);
         initBehavior();
@@ -96,9 +92,9 @@ public class Agent extends PVector implements PropertyChangeListener {
     /** Initializes memory... path,pov,commpov,memory */
     public void initMemory(){
         path=new PPath();
-        pov=new Pitch();
-        commpov=new Pitch();
-        memory=new ArrayList<Pitch>();
+        //pov=new Pitch();
+        //commpov=new Pitch();
+        //memory=new ArrayList<Pitch>();
         remember();
     }
     /** Resets positions, memory, and paths (but not behavior) */
@@ -132,34 +128,24 @@ public class Agent extends PVector implements PropertyChangeListener {
         if(type!=0){tasks.add(new Task(agent,type,1));}
     }
     
-
-// CONVERSION METHODS
-    
-    /** Generates team with this single agent
-     * @return team with this agent only. */
-    public Team toTeam(){
-        Team team=new Team();
-        team.add(this);
-        return team;
-    }
-    
     
 // METHODS DEALING WITH UNDERSTANDING OF PLAYING FIELD (POV)
     
     /** Gathers sensory data based on distance table. 
      * @param dist the global table of distances */
     public void gatherSensoryData(DistanceTable dist){
-        pov=new Pitch();
+        //pov=new Pitch();
         // TODO implement error in data
-        pov.addAll(dist.getAgentsInRadius(this,as.getSensorRange()));
+        //pov.addAll(dist.getAgentsInRadius(this,as.getSensorRange()));
     }
     /** Generates communications events based on sensory data that should be passed on to team members. 
      * These events are sent to agents within communications range, who then adjust their understanding
      * of the playing field based on these comms. A sensory event is simply a collection of agents that
      * a given player sees. For the moment, it is just the single player's sensory events, and not those
      * stored in memory.
+     * @param team the agent's team
      * @param dist the global table of distances */
-    public void generateSensoryEvents(DistanceTable dist){
+    public void generateSensoryEvents(Team team,DistanceTable dist){
         for(Agent a:dist.getAgentsInRadius(this,team,as.getCommRange())){
             a.acceptSensoryEvent(pov);
         }
@@ -167,16 +153,16 @@ public class Agent extends PVector implements PropertyChangeListener {
     /** Accept a communication based on sensory data 
      * @param agents list of agent positions communicated */
     public void acceptSensoryEvent(Collection<Agent> agents){
-        if(commpov==null){commpov=new Pitch();}
-        commpov.addAll(agents);
+        //if(commpov==null){commpov=new Pitch();}
+        //commpov.addAll(agents);
     }
     
     /** Forms belief about the playing field by fusing own understanding
      * of playing field with that suggested by others. */
     public void fusePOV(){
         // TODO improve the functionality here!! use more advanced techniques!!
-        pov.addAll(commpov);
-        commpov.clear();
+        //pov.addAll(commpov);
+        //commpov.clear();
     }
     
     // TODO implement task fusion here!
@@ -193,8 +179,8 @@ public class Agent extends PVector implements PropertyChangeListener {
     /** Logs current point and pitch in memory, and resets current understanding. */
     public void remember(){
         path.add(new PPoint(x,y));
-        memory.add(0,pov);
-        pov.clear();
+        //memory.add(0,pov);
+        //pov.clear();
     }
 
     
@@ -206,6 +192,7 @@ public class Agent extends PVector implements PropertyChangeListener {
         if(evt.getPropertyName()=="Speed"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
         else if(evt.getPropertyName()=="Sensor Range"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
         else if(evt.getPropertyName()=="Comm Range"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
+        else if(evt.getPropertyName()=="Lead Factor"){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
         else if(evt.getPropertyName()=="Behavior"){
             initBehavior();
             fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));

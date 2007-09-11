@@ -23,7 +23,12 @@ public class Closest extends Autonomy {
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
     public void assign(Team team,Goal goal){
-        DistanceTable dist=new DistanceTable(team,goal.getTarget());
-        for(Agent p:team){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.getType());}
+        if(goal.getTarget().size()==1){
+            for(Agent p:team){p.assignTask(goal.getTarget().get(0),goal.getType());}
+        }
+        else{
+            DistanceTable dist=new DistanceTable(team,goal.getTarget());
+            for(Agent p:team){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.getType());}
+        }
     }
 }

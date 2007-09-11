@@ -26,6 +26,7 @@ import javax.swing.JTree;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import utility.DistanceTable;
 
@@ -134,7 +135,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         time+=ss.getStepTime();
         for(Team t:teams){
             if(t.goalAchieved(dist)){
-                //System.out.println("Team "+t.toString()+" achieved its goal at time "+time+"!");
+                fireActionPerformed("Team "+t.ts.toString()+" achieved its goal at time "+time+"!");
             }
         }
     }  
@@ -186,6 +187,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     protected EventListenerList listenerList=new EventListenerList();
     public void addActionListener(ActionListener l){listenerList.add(ActionListener.class, l);}
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
+    protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));}
     protected void fireActionPerformed(ActionEvent e){
         actionEvent=e;
         Object[] listeners=listenerList.getListenerList();

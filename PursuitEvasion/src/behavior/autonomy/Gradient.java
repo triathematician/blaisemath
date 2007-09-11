@@ -34,4 +34,7 @@ public class Gradient extends Autonomy {
             a.assignTask(new Agent(a.plus(dir)),goal.getType());
         }
     }
+    public void assign(Agent agent,Goal goal){
+        System.out.println("nonfunctional!");
+    }
 }

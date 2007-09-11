@@ -28,7 +28,7 @@ public class Task {
 // PROPERTIES
     
     /** Target agent of the task */
-    Agent target=new Agent();    
+    Agent target;    
     /** Whether to seek or flee the target */
     boolean seek=true;
     /** Priority level of the task (between 0 and 1) */

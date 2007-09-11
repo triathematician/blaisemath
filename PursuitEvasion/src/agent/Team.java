@@ -42,6 +42,12 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
     /** How the team assigns tasks to its agents */
     public Tasking tasking;
     
+    /** Whether to forward action events */
+    private boolean editing=false;
+    /** Whether goal has been achieved yet */
+    private boolean achieved=false;
+     
+    
     
 // CONSTRUCTORS    
     
@@ -72,10 +78,11 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
     public void initTasking(){tasking=Tasking.getTasking(ts.getTasking());}
     
     /** Resets all agents to their initial positions; clears all paths */
-    public void reset(){for(Agent a:this){a.reset();}}
+    public void reset(){for(Agent a:this){a.reset();}achieved=false;}
     
     /** Changes the number of agents, resets starting locations. */
     public void initAgentNumber(){
+        editing=true;
         while(size()>ts.getSize()){get(size()-1).removeActionListener(this);this.remove(size()-1);}
         while(size()<ts.getSize()){add(new Agent(this));get(size()-1).addActionListener(this);}
         initStartingLocations();
@@ -83,9 +90,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
     
     /** Re-initializes agent starting locations. */
     public void initStartingLocations(){
-        // don't want this to fire a bunch of events!
-        for(Agent a:this){a.getPointModel().removeChangeListener(this);}
-        // initialize positions
+        editing=true;
         switch(ts.getStart()){
             case TeamSettings.START_RANDOM: startRandom(50); break;
             case TeamSettings.START_LINE: startLine(new PPoint(-50,50),new PPoint(50,-50)); break;
@@ -94,8 +99,8 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
             case TeamSettings.START_ZERO:
             default: startZero(); break;
         }
-        // reset event firing
-        for(Agent a:this){a.getPointModel().addChangeListener(this);}
+        editing=false;
+        achieved=false;
     }    
     
     
@@ -136,7 +141,12 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
     }
     
     /** Adds initial point models to plot, and adds change listening to this team. */
-    public void placeInitialPointsOn(BPlot2D p){for(Agent a:this){p.addPoint(a.getPointModel(),a.as.getColor());a.getPointModel().addChangeListener(this);}}
+    public void placeInitialPointsOn(BPlot2D p){
+        for(Agent a:this){
+            p.addPoint(a.getPointModel(),a.as.getColor());
+            a.getPointModel().addChangeListener(this);
+        }
+    }
     
     /** Generates tree given list of agents */
     public DefaultMutableTreeNode getTreeNode(){
@@ -208,7 +218,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
     public void gatherSensoryData(DistanceTable d){for(Agent a:this){a.gatherSensoryData(d);}}
     /** Instructs all agents to generate communication events for other players
      * @param d The global table of distances */
-    public void communicateSensoryData(DistanceTable d){for(Agent a:this){a.generateSensoryEvents(d);}}    
+    public void communicateSensoryData(DistanceTable d){for(Agent a:this){a.generateSensoryEvents(this,d);}}    
     /** Tells each agent to form their belief regarding the playing field. */
     public void fuseAgentPOV(){for(Agent a:this){a.fusePOV();}}
    /** Generates directions for each team member based on their task and behavior. 
@@ -227,48 +237,48 @@ public class Team extends ArrayList<Agent> implements ActionListener,ChangeListe
      * @return      true if the team's goal has been achieved, otherwise false
      */
     public boolean goalAchieved(DistanceTable d){
-        if(ts.getGoal()==null){return true;}
-        return ts.getGoal().isAchieved(d);
+        if(ts.getGoal()==null){return false;}
+        boolean result=ts.getGoal().isAchieved(d);
+        if(result==true&&result!=achieved){achieved=true;return true;}
+        return false;
     }
     
     
 // EVENT LISTENING    
     
     /** Indicates position has changed via a PointRangeModle */
-    public void stateChanged(ChangeEvent evt){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
+    public void stateChanged(ChangeEvent evt){if(editing){return;}fireActionPerformed("rerun");}
     
     /** Listens for changes to settings */    
     public void propertyChange(PropertyChangeEvent evt) {
         //System.out.println("team prop change: "+evt.getPropertyName());
-             if(evt.getPropertyName()=="# Agents"){     initAgentNumber();      fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"reset"));
-                                                                                fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Starting Loc"){ initStartingLocations();fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Tasking"){      initTasking();          fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Goal Type"){                            fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="One or All"){                           fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Capture Distance"){                     fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Speed"){        copySpeedtoTeam();      fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Sensor Range"){ copySensorRangetoTeam();fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Comm Range"){   copyCommRangetoTeam();  fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Behavior"){     copyBehaviortoTeam();   fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"rerun"));}
-        else if(evt.getPropertyName()=="Color"){        copyColortoTeam();      fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"redraw"));}
+             if(evt.getPropertyName()=="# Agents"){     initAgentNumber();      fireActionPerformed("reset");
+                                                                                fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Starting Loc"){ initStartingLocations();fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Tasking"){      initTasking();          fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Goal Type"){                            fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="One or All"){                           fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Capture Distance"){                     fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Speed"){        copySpeedtoTeam();      fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Sensor Range"){ copySensorRangetoTeam();fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Comm Range"){   copyCommRangetoTeam();  fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Behavior"){     copyBehaviortoTeam();   fireActionPerformed("rerun");}
+        else if(evt.getPropertyName()=="Color"){        copyColortoTeam();      fireActionPerformed("redraw");}
     }
     
     /** Receives and re-broadcasts action events from agents on the team */
-    public void actionPerformed(ActionEvent evt){System.out.println("team action performed: "+evt.getActionCommand());fireActionPerformed(evt);}
+    public void actionPerformed(ActionEvent evt){if(editing){return;}fireActionPerformed(evt.getActionCommand());}
     
     // Remaining code deals with action listening
-    protected ActionEvent actionEvent = null;
     protected EventListenerList listenerList = new EventListenerList();
     public void addActionListener(ActionListener l){listenerList.add(ActionListener.class, l);}
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
-    protected void fireActionPerformed(ActionEvent e){
-        actionEvent=e;
+    protected void fireActionPerformed(String s){
+        if(editing){return;}
         Object[] listeners=listenerList.getListenerList();
         for(int i=listeners.length-2;i>=0;i-=2){
             if(listeners[i]==ActionListener.class){
-                if(actionEvent==null){actionEvent=e;}
-                ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
+                ((ActionListener)listeners[i+1]).actionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));
             }
         }
     }

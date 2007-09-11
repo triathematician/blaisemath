@@ -84,7 +84,7 @@ public class Cooperation {
                 Team temp=new Team(ta);
                 temp.remove(aa);
                 aa.v=new PPoint(aa);
-                new Gradient().assign(aa.toTeam(),new Goal());
+                new Gradient().assign(aa,new Goal());
             }
             
             // now perform inversion again... both points

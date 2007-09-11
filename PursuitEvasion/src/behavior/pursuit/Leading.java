@@ -23,11 +23,6 @@ public class Leading extends behavior.Behavior {
      */
     public PPoint direction(Agent self,Agent target,double t){
         if(self.v.magnitude()==0){return self.toward(target).normalize();}
-        return self.toward(target.plus(target.v.multipliedBy(leadFactor*self.distanceTo(target)/self.v.magnitude()))).normalize();
+        return self.toward(target.plus(target.v.multipliedBy(self.as.getLeadFactor()*self.distanceTo(target)/self.v.magnitude()))).normalize();
     }
-    
-// PARAMETERS
-    
-    /** Lead factor, as percentage of distance to target. */
-    double leadFactor=0;
 }

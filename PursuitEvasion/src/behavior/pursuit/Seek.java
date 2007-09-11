@@ -13,16 +13,6 @@ import agent.Agent;
  * 
  * Behavior moving directly towards an agent.
  */
-public class Seek extends behavior.Behavior {    
-    public Seek(){}
-    /**
-     * Computes desired direction of travel
-     * @param self      the agent exhibiting this behavior
-     * @param target    the agent targeted by the behavior
-     * @param t         the current time stamp
-     * @return          the direction of travel corresponding to this behavior
-     */
-    public PPoint direction(Agent self,Agent target,double t){
-        return self.toward(target).normalize();
-    }
+public class Seek extends behavior.Behavior {   
+    public PPoint direction(Agent self,Agent target,double t){return self.unitToward(target);}
 }

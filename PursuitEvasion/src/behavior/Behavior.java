@@ -30,7 +30,7 @@ public class Behavior {
     public static final int SEEK=1;
     public static final int PURSUIT_LEADING=2;
     public static final int FLEE=3;
-    public static final int EVASION_FIXEDPATH=4;
+    public static final int FIXEDPATH=4;
     public static final int EVASION_RANDOMPATH=5;
     public static final int LAST=5;
     public static final String[] BEHAVIOR_STRINGS={"Stationary","Seek","Pursue with Lead Factor","Flee","Follow Fixed Path","Follow Random Path"};
@@ -47,10 +47,10 @@ public class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-        case SEEK:                  return new behavior.pursuit.Seek();
+                                case SEEK:                  return new behavior.pursuit.Seek();
         case PURSUIT_LEADING:       return new behavior.pursuit.Leading();
         case FLEE:                  return new behavior.evasion.Flee();
-        case EVASION_FIXEDPATH:     return new behavior.evasion.FixedPath();
+        case FIXEDPATH:     return new behavior.FixedPath();
         case EVASION_RANDOMPATH:    return new behavior.evasion.RandomPath();
         }
         return new Behavior();        
