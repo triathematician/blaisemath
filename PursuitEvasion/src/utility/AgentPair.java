@@ -5,7 +5,7 @@
 
 package utility;
 
-import agent.Agent;
+import simulation.Agent;
 
 /**
  * @author Elisha Peterson

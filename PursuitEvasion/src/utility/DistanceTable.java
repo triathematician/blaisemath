@@ -5,8 +5,8 @@
 
 package utility;
 
-import agent.Agent;
-import agent.Team;
+import simulation.Agent;
+import simulation.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,6 +94,7 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
      * @param b the second agent
      * @return the distance between the agents */
     public double get(Agent a,Agent b){
+        //System.out.println("distance request: Agent "+a+" and Agent "+b);
         Double result=get(a).get(b);
         return result==null?Double.MAX_VALUE:result;
     }
