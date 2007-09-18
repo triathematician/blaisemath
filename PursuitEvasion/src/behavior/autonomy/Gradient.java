@@ -6,9 +6,11 @@
 package behavior.autonomy;
 
 import Euclidean.PPoint;
-import agent.Agent;
-import agent.Team;
-import task.Goal;
+import Euclidean.PVector;
+import simulation.Agent;
+import simulation.Team;
+import java.util.ArrayList;
+import behavior.Goal;
 import utility.DistanceTable;
 
 /**
@@ -24,14 +26,14 @@ public class Gradient extends Autonomy {
     /** Performs tasking based on a preset goal.
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
-    public void assign(Team team,Goal goal){        
+    public void assign(ArrayList<Agent> team,Goal goal){        
         int POWER=-1;
         DistanceTable dist=new DistanceTable(team,goal.getTarget());
         for(Agent a:team){
             // here, dir will be the direction of the gradient of the distance sum
             PPoint dir=new PPoint(0,0);
             for(Agent b:goal.getTarget()){dir.translate(new PPoint(b.x-a.x,b.y-a.y).multiply(Math.pow(dist.get(a,b),POWER-1)));}
-            a.assignTask(new Agent(a.plus(dir)),goal.getType());
+            a.assignTask(new PVector(a.plus(dir)),goal.getType());
         }
     }
     public void assign(Agent agent,Goal goal){
