@@ -6,7 +6,8 @@
 package behavior.evasion;
 
 import Euclidean.PPoint;
-import agent.Agent;
+import Euclidean.PVector;
+import simulation.Agent;
 
 /**
  * @author Elisha Peterson<br><br>
@@ -21,7 +22,5 @@ public class RandomPath extends behavior.Behavior {
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior
      */
-    public PPoint direction(Agent self,Agent target,double t){
-        return Euclidean.PRandom.direction();
-    }
+    public PPoint direction(Agent self,PVector target,double t){return Euclidean.PRandom.direction();}
 }

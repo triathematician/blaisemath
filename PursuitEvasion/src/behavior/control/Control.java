@@ -5,7 +5,10 @@
 
 package behavior.control;
 
+import simulation.Agent;
 import behavior.Tasking;
+import java.util.ArrayList;
+import behavior.Goal;
 
 /**
  * @author Elisha Peterson
@@ -13,4 +16,9 @@ import behavior.Tasking;
  * This class is intended to contain algorithms for <i>control</i> tasking, such as
  * assigning a task to each player on a team.
  */
-public class Control extends Tasking {}
+public class Control extends Tasking {
+
+    public void assign(ArrayList<Agent> team, Goal goal) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+}

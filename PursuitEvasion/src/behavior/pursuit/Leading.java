@@ -6,7 +6,8 @@
 package behavior.pursuit;
 
 import Euclidean.PPoint;
-import agent.Agent;
+import Euclidean.PVector;
+import simulation.Agent;
 
 /**
  * @author Elisha Peterson<br><br>
@@ -21,8 +22,8 @@ public class Leading extends behavior.Behavior {
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior
      */
-    public PPoint direction(Agent self,Agent target,double t){
+    public PPoint direction(Agent self,PVector target,double t){
         if(self.v.magnitude()==0){return self.toward(target).normalize();}
-        return self.toward(target.plus(target.v.multipliedBy(self.as.getLeadFactor()*self.distanceTo(target)/self.v.magnitude()))).normalize();
+        return self.toward(target.plus(target.v.multipliedBy(self.getLeadFactor()*self.distanceTo(target)/self.v.magnitude()))).normalize();
     }
 }

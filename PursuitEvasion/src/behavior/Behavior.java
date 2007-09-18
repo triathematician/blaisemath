@@ -14,14 +14,15 @@
 package behavior;
 
 import Euclidean.PPoint;
+import Euclidean.PVector;
 import Model.ComboBoxRangeModel;
-import agent.Agent;
+import simulation.Agent;
 
 /**
  *
  * @author ae3263
  */
-public class Behavior {
+public abstract class Behavior {
     
 // CONSTANTS
     
@@ -38,22 +39,20 @@ public class Behavior {
     public static ComboBoxRangeModel getComboBoxModel(){return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,FIRST,LAST);}
     
 // CONSTRUCTORS    
-
-    /** Default constructor */
-    public Behavior(){}
     
     /** Return class with desired behavior 
      * @param behavior the behavioral code 
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-                                case SEEK:                  return new behavior.pursuit.Seek();
+        case STATIONARY:            return new behavior.pursuit.Seek();
+        case SEEK:                  return new behavior.pursuit.Seek();
         case PURSUIT_LEADING:       return new behavior.pursuit.Leading();
         case FLEE:                  return new behavior.evasion.Flee();
-        case FIXEDPATH:     return new behavior.FixedPath();
+        case FIXEDPATH:             return new behavior.FixedPath();
         case EVASION_RANDOMPATH:    return new behavior.evasion.RandomPath();
-        }
-        return new Behavior();        
+        }     
+        return null;
     }
     
 // METHODS    
@@ -63,7 +62,5 @@ public class Behavior {
      * @param target    the agent targeted by the behavior
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior */
-    public PPoint direction(Agent self,Agent target,double t){
-        return new PPoint();
-    }
+    public abstract PPoint direction(Agent self,PVector target,double t);
 }

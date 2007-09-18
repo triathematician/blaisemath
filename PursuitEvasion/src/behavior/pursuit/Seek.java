@@ -6,7 +6,8 @@
 package behavior.pursuit;
 
 import Euclidean.PPoint;
-import agent.Agent;
+import Euclidean.PVector;
+import simulation.Agent;
 
 /**
  * @author Elisha Peterson<br><br>
@@ -14,5 +15,5 @@ import agent.Agent;
  * Behavior moving directly towards an agent.
  */
 public class Seek extends behavior.Behavior {   
-    public PPoint direction(Agent self,Agent target,double t){return self.unitToward(target);}
+    public PPoint direction(Agent self,PVector target,double t){return self.unitToward(target);}
 }

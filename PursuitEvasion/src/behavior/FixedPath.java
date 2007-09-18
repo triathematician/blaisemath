@@ -6,7 +6,8 @@
 package behavior;
 
 import Euclidean.PPoint;
-import agent.Agent;
+import Euclidean.PVector;
+import simulation.Agent;
 
 /**
  * @author Elisha Peterson<br><br>
@@ -15,5 +16,5 @@ import agent.Agent;
  */
 public class FixedPath extends Behavior {  
     /** Follows the path as best as possible. If unable to follow the path, heads towards where it SHOULD be at that time. */
-    public PPoint direction(Agent self,Agent target,double t){return self.unitToward(self.as.getPositionTime(t));}
+    public PPoint direction(Agent self,PVector target,double t){return self.unitToward(self.getPositionTime(t));}
 }

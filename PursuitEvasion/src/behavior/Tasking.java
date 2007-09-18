@@ -5,8 +5,9 @@
 
 package behavior;
 
-import task.*;
-import agent.Team;
+import behavior.Goal;
+import simulation.Agent;
+import java.util.ArrayList;
 
 /**
  * @author Elisha Peterson
@@ -14,7 +15,7 @@ import agent.Team;
  * Super-class which contains default for assigning tasks to all team members. Specialized
  * algorithms for this assignment should override this method.
  */
-public class Tasking {
+public abstract class Tasking {
     
 // CONSTANTS
     
@@ -44,7 +45,7 @@ public class Tasking {
         case AUTO_GRADIENT:     return new behavior.autonomy.Gradient();
         case CONTROL_CLOSEST:   return new behavior.control.Closest();
         }
-        return new Tasking();
+        return null;
     }
     
 // METHODS
@@ -52,5 +53,5 @@ public class Tasking {
     /** Assigns agents of team a to targets, given the specified goal
      * @param team  team to assign tasks to
      * @param goal  the goal used to make the assignments */
-    public void assign(Team team,Goal goal){}
+    public abstract void assign(ArrayList<Agent> team,Goal goal);
 }

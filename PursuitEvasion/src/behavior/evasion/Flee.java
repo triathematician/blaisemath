@@ -6,7 +6,8 @@
 package behavior.evasion;
 
 import Euclidean.PPoint;
-import agent.Agent;
+import Euclidean.PVector;
+import simulation.Agent;
 
 /**
  * Moves directly away from an agent.
@@ -21,5 +22,5 @@ public class Flee extends behavior.Behavior {
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior
      */
-    public PPoint direction(Agent self,Agent target,double t){return self.unitFrom(target);}
+    public PPoint direction(Agent self,PVector target,double t){return self.unitFrom(target);}
 }

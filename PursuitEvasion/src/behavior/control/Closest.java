@@ -5,11 +5,11 @@
 
 package behavior.control;
 
-import agent.Agent;
-import agent.Team;
+import simulation.Agent;
+import simulation.Team;
 import java.util.ArrayList;
 import java.util.TreeMap;
-import task.Goal;
+import behavior.Goal;
 import utility.AgentPair;
 import utility.DistanceTable;
 
@@ -34,7 +34,7 @@ public class Closest extends Control {
      * @param team pursuing team
      * @param goal the goal to work with
      */
-    public void assign(Team team,Goal goal){
+    public void assign(ArrayList<Agent> team,Goal goal){
         DistanceTable dist=new DistanceTable(team,goal.getTarget());            
         // assign prey by closest-to-pursuer first
         ArrayList<Agent> ps=new ArrayList<Agent>(team);

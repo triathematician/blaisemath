@@ -7,11 +7,11 @@ package behavior.cooperation;
 
 import behavior.autonomy.Autonomy;
 import Euclidean.PPoint;
-import agent.Agent;
-import agent.Team;
+import simulation.Agent;
+import simulation.Team;
 import behavior.autonomy.Gradient;
 import java.util.TreeMap;
-import task.Goal;
+import behavior.Goal;
 import utility.DistanceTable;
 
 /**
