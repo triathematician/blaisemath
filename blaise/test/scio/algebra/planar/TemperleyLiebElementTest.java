@@ -235,7 +235,10 @@ public class TemperleyLiebElementTest extends TestCase {
         }
         
         System.out.println("Rank 3 Central Functions:");
+        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,2,0).toString());
+        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,0,2,2).toString());
         System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,2,2).toString());
+        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,4,2).toString());
         for(int a=0;a<=3;a++){
             for(int b=0;b<=3;b++){
                 for(int c=0;c<=3;c++){

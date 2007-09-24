@@ -14,7 +14,8 @@ public class MAddInt extends GroupElementId {
     /** Number of factors */
     private int nf=1;
     /** Strings for factors */
-    final String[] fs={"x","y","z","w","t[xZ]","t[yZ]","t[xzY]","t[xYz]","t[xyZY]","t[xYZy]","t[xzXyZ]","t[xZyXz]"};
+    final String[] fs={"x","y","z","Z","Y","X","t[acB]","t[aBc]","t[abCB]","t[aBCb]","t[acAbC]","t[aCbAc]"};
+    //{"x","y","z","w","t[xZ]","t[yZ]","t[xzY]","t[xYz]","t[xyZY]","t[xYZy]","t[xzXyZ]","t[xZyXz]"};
     //{"t[x]","t[y]","t[z]","t[xY]","t[xZ]","t[yZ]","t[xzY]","t[xYz]","t[xyZY]","t[xYZy]","t[xzXyZ]","t[xZyXz]"};
     /** Values of each factor */
     final int[] n;    
