@@ -63,12 +63,13 @@ public class BPlotParametric2D extends BPlotPath2D implements ActionListener {
     
 // Recomputes the curve... requires an underlying BPlot2D object
     
+    /** Gets point at a certain time. */
+    public PPoint getValue(double t){return new PPoint(px.getValue(t),py.getValue(t));}
+    
     /** Computes the path corresponding to a function graph. */
     private void recomputeCurve(){
         clear();
-        for(double t=minT;t<maxT;t+=stepT){
-            add(new PPoint(px.getValue(t),py.getValue(t)));
-        }
+        for(double t=minT;t<maxT;t+=stepT){add(getValue(t));}
     }
     
     /** Responds to change events. */

@@ -48,6 +48,8 @@ public class BParser extends JEP {
         return getValue();
     }
     
+    public String toString(){return "Click to Edit!";}
+    
     /** Event handling code modified from DefaultBoundedRangeModel. */
     protected EventListenerList listenerList=new EventListenerList();
     public void addActionListener(ActionListener l){listenerList.add(ActionListener.class,l);}

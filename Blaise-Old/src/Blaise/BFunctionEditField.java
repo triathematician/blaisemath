@@ -42,6 +42,19 @@ public class BFunctionEditField extends JTextField implements ActionListener {
         setText(parser.DEFAULT_STRING);  
         setPreferredSize(new Dimension(50,20));
     }
+    public BFunctionEditField(BParser p){
+        super();
+        this.label=label;
+        parser=p;
+        parser.addActionListener(this);
+        getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+            public void insertUpdate(javax.swing.event.DocumentEvent e){parser.setExpressionString(getText());}
+            public void removeUpdate(javax.swing.event.DocumentEvent e){parser.setExpressionString(getText());}
+            public void changedUpdate(javax.swing.event.DocumentEvent e){}
+        });    
+        setText(parser.DEFAULT_STRING);  
+        setPreferredSize(new Dimension(50,20));
+    }
     
 // Bean patterns
     

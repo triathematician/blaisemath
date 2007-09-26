@@ -1,6 +1,5 @@
 package Blaise;
 
-import Interface.BPlotPanel;
 import Function.VectorField;
 import Euclidean.PPath;
 import Euclidean.PPoint;
@@ -16,7 +15,10 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -24,10 +26,11 @@ import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 /**
@@ -57,48 +60,11 @@ import javax.swing.event.EventListenerList;
  * Almost all the work is farmed out to subclasses responsible for coordinating
  *   the window bounds, the grid, and the axes.<br><br>
  *
- * <b>DESIRED FEATURES LIST:</b><br>
- *    1. Export options to BPlot2DOptions class
- *    2. Create bean patterns for plot class
- *    3. Allow change of aspect ratio
- *    4. Implement bounds adjustment controls
- *                           CLICK/DRAG      MOUSEWHEEL      BUTTON      CONTEXTMENU
- *       a. Pan:             normal          --              yes        `center(0,0)
- *       b. Zoom:            alt[rectangle]  normal          yes         automatic settings
- *       c. Aspect:          shift[arrow]    shift           yes         automatic settings
- *    5. Implement axis clicks for single-dimension adjustments, including single bound adjustments
- *    6. Implement "snap to integer" for view adjustments
- *    7. Implement "snap to quadrants" for four basic quadrants
- *    8. Choose better names than leftX,lowY,etc. Use x0,y0,x1,y1 or something else.
- *    9. Display coordinates at mouse cursor
- *   10. Use icons and/or small buttons for basic plot settings.
- *   11. Create plot settings panel
- *   12. Allow grid class to generate coordiante lists, both 1d and 2d.
- *   13. Write universal interface for plot components.
- *      a. Paint class
- *      b. Positioning getters/setters
- *      c. Click checking
- *      d. Ability to fire ChangeEvent's
- *      e. Animation settings
- *      f. Ability to respond to changes in geometry
- *   14. Implement color options/editing in BPlot2DOptions and corresponding panel/editor
- *   15. Place Bounds and Grid in separate class files
- *      a. Bounds: controls the range of values displayed within the window, coordinate transformations
- *      b. Grid: controls the spacing of lines, ticks, etc. within the window, and generates lists of points
- *      c. BPlot2D: swing component, draws elements, controls animation
- *   16. Have Bounds implement the BGeometry interface
- *   17. Introduce event handling into Bounds and Grid classes
- *   18. Ability to edit strings corresponding to the plot axes
- *   19. Ability to "pull" the axes off the chart
- *   20. Implement "L" axis mode as well as Box and Cross
- *   21. Write BVectorField2D class (display a vector field 2 inputs->2 outputs on the plot)
- *   22. Write BColorMap2D class (display a color map 2 inputs->1 output on the plot)
+ * This class is about to be completely redone!! For details on the changes to be
+ *   made, see your latex documents (assuming, that is, the person reading this is me!)
  */
 
-public class BPlot2D extends JPanel implements BPlotPanel {
-    
-    /** Constants */
-    private final int IDEAL_GRID_SPACE=40;
+public class BPlot2D extends JPanel implements ActionListener,ChangeListener,MouseListener,MouseMotionListener,MouseWheelListener {
     
     /** Stores bounds elements & settings. Class definition below. */
     private Bounds bounds;
@@ -110,13 +76,6 @@ public class BPlot2D extends JPanel implements BPlotPanel {
     private Timer animator;
     private int animateTime;
     private int animateCycle=1000;
-    private JCheckBox gridCheck;
-    private JCheckBox axesCheck;
-    private JCheckBox crossCheck;
-    private JCheckBox ticksCheck;
-    private JCheckBox labelsCheck;
-    private JCheckBox fieldCheck;
-    private JCheckBox animateCheck;
     
     /** A vector of paths stored for painting */
     private Vector<BPlotPath2D> path;
@@ -162,40 +121,102 @@ public class BPlot2D extends JPanel implements BPlotPanel {
     public void setRightX(double rightX){bounds.setRightX(rightX);}
     public double getUpY(){return bounds.drawUpY;}
     public void setUpY(double upY){bounds.setUpY(upY);}
+    public void setCrossAxes(boolean newValue){grid.crossAxes=newValue;}
     
     /** Animation parameters */
     public int getAnimateDelay(){return animator.getDelay();}
     public void setAnimateDelay(int ad){animator.setDelay(ad);}
     
+                  
+    private javax.swing.JToggleButton animateButton;
+    private javax.swing.JToggleButton showAxesButton;
+    private javax.swing.JToggleButton axesButton;
+    private javax.swing.JToggleButton gridButton;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToggleButton labelsButton;
+    private javax.swing.JToggleButton ticksButton;
     /** Sets up the interface buttons. */
     private void initUI() {
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         // sets up & adds buttons
-        gridCheck=new JCheckBox("Grid",grid.showGrid);
-        axesCheck=new JCheckBox("Axes",grid.showAxes);
-        crossCheck=new JCheckBox("Cross",grid.crossAxes);
-        ticksCheck=new JCheckBox("Ticks",grid.showTicks);
-        labelsCheck=new JCheckBox("Labels",grid.showLabels);
-        fieldCheck=new JCheckBox("Field",grid.showField);
-        animateCheck=new JCheckBox("Animate",grid.animate);
-        gridCheck.addActionListener(grid);
-        axesCheck.addActionListener(grid);
-        crossCheck.addActionListener(grid);
-        ticksCheck.addActionListener(grid);
-        labelsCheck.addActionListener(grid);
-        fieldCheck.addActionListener(grid);
-        animateCheck.addActionListener(grid);
-        gridCheck.setContentAreaFilled(false);
-        axesCheck.setContentAreaFilled(false);
-        crossCheck.setContentAreaFilled(false);
-        ticksCheck.setContentAreaFilled(false);
-        labelsCheck.setContentAreaFilled(false);
-        fieldCheck.setContentAreaFilled(false);
-        animateCheck.setContentAreaFilled(false);
+
+        jToolBar1 = new javax.swing.JToolBar();
+        showAxesButton = new javax.swing.JToggleButton();
+        axesButton = new javax.swing.JToggleButton();
+        gridButton = new javax.swing.JToggleButton();
+        labelsButton = new javax.swing.JToggleButton();
+        ticksButton = new javax.swing.JToggleButton();
+        animateButton = new javax.swing.JToggleButton();
+
+        showAxesButton.setText("AXES");
+        showAxesButton.setSelected(true);
+
+        setOpaque(false);
+
+        //jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+        jToolBar1.setOpaque(false);
+        jToolBar1.setOrientation(JToolBar.VERTICAL);
         
-        // performs layout... code generated by NetBeans graphical form
+        jToolBar1.add(showAxesButton);
+
+        axesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/CrossAxes.gif"))); // NOI18N
+        axesButton.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/CrossAxes.gif"))); // NOI18N
+        axesButton.setFocusable(false);
+        axesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        axesButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/BoxAxes.gif"))); // NOI18N
+        axesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(axesButton);
+
+        gridButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/GridOff.gif"))); // NOI18N
+        gridButton.setSelected(true);
+        gridButton.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/GridOff.gif"))); // NOI18N
+        gridButton.setFocusable(false);
+        gridButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        gridButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/GridOn.gif"))); // NOI18N
+        gridButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(gridButton);
+
+        labelsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/LabelsOff.gif"))); // NOI18N
+        labelsButton.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/LabelsOff.gif"))); // NOI18N
+        labelsButton.setFocusable(false);
+        labelsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        labelsButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/LabelsOn.gif"))); // NOI18N
+        labelsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(labelsButton);
+
+        ticksButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/TicksOff.gif"))); // NOI18N
+        ticksButton.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/TicksOff.gif"))); // NOI18N
+        ticksButton.setFocusable(false);
+        ticksButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ticksButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/TicksOn.gif"))); // NOI18N
+        ticksButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(ticksButton);
+
+        animateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/AnimateOff.gif"))); // NOI18N
+        animateButton.setDisabledSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/AnimateOff.gif"))); // NOI18N
+        animateButton.setFocusable(false);
+        animateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        animateButton.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/AnimateOn.gif"))); // NOI18N
+        animateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(animateButton);
+        
+        gridButton.setSelected(grid.showGrid);     
+        labelsButton.setSelected(grid.showLabels);
+        ticksButton.setSelected(grid.showTicks);
+        axesButton.setSelected(!grid.crossAxes);
+        showAxesButton.setSelected(grid.showAxes);
+        animateButton.setSelected(grid.animate);
+        
+        showAxesButton.addActionListener(grid);
+        gridButton.addActionListener(grid);
+        axesButton.addActionListener(grid);
+        ticksButton.addActionListener(grid);
+        labelsButton.addActionListener(grid);
+        animateButton.addActionListener(grid);
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -203,31 +224,13 @@ public class BPlot2D extends JPanel implements BPlotPanel {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(327, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(gridCheck)
-                .addComponent(axesCheck)
-                .addComponent(crossCheck)
-                .addComponent(ticksCheck)
-                .addComponent(labelsCheck)
-                .addComponent(fieldCheck)
-                .addComponent(animateCheck)))
+                .addComponent(jToolBar1)))
                 );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(201, Short.MAX_VALUE)
-                .addComponent(gridCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(axesCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(crossCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ticksCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelsCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fieldCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(animateCheck)));
+                .addComponent(jToolBar1)));
     }
     
     /** Initializes components of the class. */
@@ -559,6 +562,9 @@ public class BPlot2D extends JPanel implements BPlotPanel {
         }
     }
     
+    
+    /** Constants */
+    private final int IDEAL_GRID_SPACE=40;
     /**
      * BPlot2D.Grid class
      *
@@ -589,8 +595,6 @@ public class BPlot2D extends JPanel implements BPlotPanel {
         protected Stroke gridStroke;
         /** Stores the coordinates of the horizontal and vertical grids. */
         protected Vector<Double> gridX,gridY;
-        /** Stores the position of the axes. */
-        protected double x,y;
         
         
         /** Initializes elements */
@@ -611,7 +615,6 @@ public class BPlot2D extends JPanel implements BPlotPanel {
             showAxes=true;
             crossAxes=false;
             axesColor=Color.DARK_GRAY;
-            x=0;y=0;
             
             showField=false;
             fieldColor=Color.GRAY;
@@ -763,13 +766,12 @@ public class BPlot2D extends JPanel implements BPlotPanel {
         
         /** Listens for button toggle */
         public void actionPerformed(ActionEvent e){
-            if(e.getSource()==gridCheck){showGrid=!showGrid;}
-            if(e.getSource()==axesCheck){showAxes=!showAxes;}
-            if(e.getSource()==crossCheck){crossAxes=!crossAxes;}
-            if(e.getSource()==ticksCheck){showTicks=!showTicks;}
-            if(e.getSource()==labelsCheck){showLabels=!showLabels;}
-            if(e.getSource()==fieldCheck){showField=!showField;}
-            if(e.getSource()==animateCheck){if(animate){turnAnimationOff();}else{turnAnimationOn();}}
+            if(e.getSource()==gridButton){showGrid=!showGrid;}
+            if(e.getSource()==showAxesButton){showAxes=!showAxes;}
+            if(e.getSource()==axesButton){crossAxes=!crossAxes;}
+            if(e.getSource()==ticksButton){showTicks=!showTicks;}
+            if(e.getSource()==labelsButton){showLabels=!showLabels;}
+            if(e.getSource()==animateButton){if(animate){turnAnimationOff();}else{turnAnimationOn();}}
             repaint();
         }
     }
