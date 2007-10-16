@@ -18,6 +18,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import simulation.Agent;
+import utility.AgentPair;
 import utility.DistanceTable;
 
 /**
@@ -35,19 +37,21 @@ public class Goal extends Settings {
 // PROPERTIES
     
     /** The team owning this goal. */
-    private Team team;    
+    private Team team;  
     /** The target of this goal. */
     private Team target;
     
     /** Whether or not the goal has been achieved. */
     private boolean achieved=false;
+    /** The agent which achieved the goal. */
+    private Agent which;
     
     /** Specifies whether goal is trivial (0), pursuit (1), or evade (2). */
     private ComboBoxRangeModel type=new ComboBoxRangeModel(TYPE_STRINGS,NONE,0,2);
     /** Specifies number of team members to consider: one (0) or all (1). */
     private ComboBoxRangeModel all=new ComboBoxRangeModel(NUMBER_STRINGS,ALL,ONE,ALL);
     /** The threshhold distance */
-    private DoubleRangeModel threshhold=new DoubleRangeModel(1,0,5000);
+    private DoubleRangeModel threshhold=new DoubleRangeModel(5,0,5000);
     
     
 // CONSTANTS
@@ -77,6 +81,7 @@ public class Goal extends Settings {
 
     public void setGoal(Team team,Team target,int type,int all,double threshhold){setTeam(team);setTarget(target);setType(type);setAll(all);setThreshhold(threshhold);}
         
+    public void reset(){achieved=false;which=null;}
     
 // BEAN PATTERNS: GETTERS & SETTERS    
     
@@ -109,9 +114,18 @@ public class Goal extends Settings {
      * @param d     the global table of distances
      * @return      numeric value indicating the closeness to the goal (positive if goal has been reached, otherwise negative) */
     public double value(DistanceTable d){
-        if(type.getValue()==NONE){return 0;}
-        if(type.getValue()==PURSUE){return threshhold.getValue()-(all.getValue()==ALL?d.max(team,target).getDistance():d.min(team,target).getDistance());}
-        if(type.getValue()==EVADE){return (all.getValue()==ALL?d.min(team,target).getDistance():d.max(team,target).getDistance())-threshhold.getValue();}
+        if(type.getValue()==NONE){return 0;
+    } else if(type.getValue()==PURSUE){
+            AgentPair result=(all.getValue()==ALL?d.max(team,target):d.min(team,target));
+            double dist=threshhold.getValue()-result.getDistance();
+            if(dist>0&&!achieved){which=result.getFirst();}
+            return dist;
+        } else if(type.getValue()==EVADE){
+            AgentPair result=(all.getValue()==ALL?d.max(team,target):d.min(team,target));
+            double dist=result.getDistance()-threshhold.getValue();
+            if(dist>0&&!achieved){which=result.getFirst();}
+            return dist;
+        }
         return -1;
     }
     
@@ -120,8 +134,13 @@ public class Goal extends Settings {
      * @return      true if goal achieved, false otherwise */
     public boolean justAchieved(DistanceTable d){
         if(!achieved){
-            if(value(d)>0){achieved=true;return true;}
+            if(value(d)>0){
+                achieved=true;return true;
+            }
         }
         return false;
     }    
+    
+    /** Returns agent which achieved the goal */
+    public Agent getAgent(){return which;}
 }

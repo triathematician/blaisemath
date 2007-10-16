@@ -26,8 +26,8 @@ public class TwoLine extends Autonomy {
         Agent one,two;
         for(Agent p:team){
             Agent bPERP=new Agent();
-            one=dist.min(p,goal.getTarget()).getSecond();dist.get(p).remove(one);
-            two=dist.min(p,goal.getTarget()).getSecond();
+            one=dist.minVisible(p,goal.getTarget()).getSecond();dist.get(p).remove(one);
+            two=dist.minVisible(p,goal.getTarget()).getSecond();
             bPERP.setPoint(p.closestOnLine(one,two));
             p.assignTask(bPERP,goal.getType());
         }

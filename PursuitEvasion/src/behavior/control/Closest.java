@@ -47,6 +47,6 @@ public class Closest extends Control {
             es.remove(closest.getSecond());
         }
         // assign remaining pursuers to closest prey
-        for(Agent p:ps){p.assignTask(dist.min(p,goal.getTarget()).getSecond(),goal.getType());}
+        for(Agent p:ps){p.assignTask(dist.minVisible(p,goal.getTarget()).getSecond(),goal.getType());}
     }
 }

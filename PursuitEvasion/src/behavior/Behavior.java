@@ -45,12 +45,12 @@ public abstract class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-        case STATIONARY:            return new behavior.pursuit.Seek();
+                case STATIONARY:            return new behavior.independent.Stationary();
         case SEEK:                  return new behavior.pursuit.Seek();
         case PURSUIT_LEADING:       return new behavior.pursuit.Leading();
         case FLEE:                  return new behavior.evasion.Flee();
-        case FIXEDPATH:             return new behavior.FixedPath();
-        case EVASION_RANDOMPATH:    return new behavior.evasion.RandomPath();
+        case FIXEDPATH:             return new behavior.independent.ApproachPath();
+        case EVASION_RANDOMPATH:    return new behavior.independent.RandomPath();
         }     
         return null;
     }

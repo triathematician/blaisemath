@@ -23,7 +23,8 @@ public class Leading extends behavior.Behavior {
      * @return          the direction of travel corresponding to this behavior
      */
     public PPoint direction(Agent self,PVector target,double t){
-        if(self.v.magnitude()==0){return self.toward(target).normalize();}
+        if(target==null){return new PPoint();}
+        if(self.v.magnitude()==0||target.v.magnitude()==0){return self.toward(target).normalize();}
         return self.toward(target.plus(target.v.multipliedBy(self.getLeadFactor()*self.distanceTo(target)/self.v.magnitude()))).normalize();
     }
 }

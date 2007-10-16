@@ -20,23 +20,35 @@ import utility.DistanceTable;
  * @author Elisha Peterson
  */
 public class Gradient extends Autonomy {
-
+    
     public Gradient(){}
-        
+    
     /** Performs tasking based on a preset goal.
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
-    public void assign(ArrayList<Agent> team,Goal goal){        
+    public void assign(ArrayList<Agent> team,Goal goal){
         int POWER=-1;
-        DistanceTable dist=new DistanceTable(team,goal.getTarget());
         for(Agent a:team){
-            // here, dir will be the direction of the gradient of the distance sum
-            PPoint dir=new PPoint(0,0);
-            for(Agent b:goal.getTarget()){dir.translate(new PPoint(b.x-a.x,b.y-a.y).multiply(Math.pow(dist.get(a,b),POWER-1)));}
+            PPoint dir=new PPoint();
+            for(Agent b:goal.getTarget()){
+                if(a.sees(b)){
+                    dir.translate(new PPoint(b.x-a.x,b.y-a.y).multiply(Math.pow(a.distanceTo(b),POWER-1)));
+                }
+            }
             a.assignTask(new PVector(a.plus(dir)),goal.getType());
         }
-    }
-    public void assign(Agent agent,Goal goal){
-        System.out.println("nonfunctional!");
+    }    
+    /** Performs tasking based on a preset goal.
+     * @param a the agent to assign tasks to
+     * @param goal the goal used for task assignment */
+    public void assign(Agent a,Goal goal){
+        int POWER=-1;
+        PPoint dir=new PPoint();
+        for(Agent b:goal.getTarget()){
+            if(a.sees(goal.getTarget().get(0))){
+                dir.translate(new PPoint(b.x-a.x,b.y-a.y).multiply(Math.pow(a.distanceTo(b),POWER-1)));
+            }
+        }
+        a.assignTask(new PVector(a.plus(dir)),goal.getType());
     }
 }

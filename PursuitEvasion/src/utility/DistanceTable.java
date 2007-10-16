@@ -161,9 +161,9 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
      * @param a the agent
      * @param tb the team
      * @return the minimum value in the distance table */
-    public AgentPair min(Agent a,Team tb){
+    public AgentPair minVisible(Agent a,Team tb){
         AgentPair result=new AgentPair();
-        for(Agent b:tb){result.replaceIfLessBy(a,b,get(a,b));}
+        for(Agent b:tb){if(a.sees(b)){result.replaceIfLessBy(a,b,get(a,b));}}
         return result;
     }
     
@@ -171,9 +171,9 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
      * @param a the agent
      * @param tb the team
      * @return the maximum value in the distance table */
-    public AgentPair max(Agent a,Team tb){
+    public AgentPair maxVisible(Agent a,Team tb){
         AgentPair result=new AgentPair(0);
-        for(Agent b:tb){result.replaceIfMoreBy(a,b,get(a,b));}
+        for(Agent b:tb){if(a.sees(b)){result.replaceIfMoreBy(a,b,get(a,b));}}
         return result;
     }
     

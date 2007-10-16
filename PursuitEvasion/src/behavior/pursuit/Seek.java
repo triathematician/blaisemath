@@ -15,5 +15,8 @@ import simulation.Agent;
  * Behavior moving directly towards an agent.
  */
 public class Seek extends behavior.Behavior {   
-    public PPoint direction(Agent self,PVector target,double t){return self.unitToward(target);}
+    public PPoint direction(Agent self,PVector target,double t){
+        if(target==null){return new PPoint();}
+        return self.unitToward(target);
+    }
 }

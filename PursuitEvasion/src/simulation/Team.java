@@ -42,6 +42,8 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     
     /** Whether to forward action events */
     private boolean editing=false;
+    /** Result of the simulation if it should be recorded. Defaults to time at which goal is reached. */
+    private Double value;
     
     
     
@@ -49,6 +51,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public Team(){super();tes=new TeamSettings();}
     public Team(TeamSettings tes){
         super();
+        value=null;
         this.tes=tes;
         getGoal().setTeam(this);
         initTasking();
@@ -57,6 +60,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
         for(Agent a:this){a.addActionListener(this);}
     }
     public Team(Team team){
+        value=null;
         tes=team.tes;
         initTasking();
         for(Agent a:team){this.add(a);}
@@ -65,6 +69,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public Team(int size,int start,int goalType,int goalNum,double goalDist,int tasking,int behavior,Color color){
         super();
         editing=true;
+        value=null;
         tes=new TeamSettings();
         setSize(size);
         setStart(start);
@@ -88,7 +93,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public void initTasking(){tasking=Tasking.getTasking(getTasking());}
     
     /** Resets all agents to their initial positions; clears all paths */
-    public void reset(){for(Agent a:this){a.reset();}getGoal().setAchieved(false);}
+    public void reset(){value=null;for(Agent a:this){a.reset();}getGoal().reset();}
     
     /** Changes the number of agents, resets starting locations. */
     public void initAgentNumber(){
@@ -204,15 +209,6 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     }
     
     
-    // BROADCAST METHODS: CHANGE SETTINGS OF AGENTS ON TEAM
-    
-    public void copySpeedtoTeam(){for(Agent a:this){a.setTopSpeed(getTopSpeed());}}
-    public void copySensorRangetoTeam(){for(Agent a:this){a.setSensorRange(getSensorRange());}}
-    public void copyCommRangetoTeam(){for(Agent a:this){a.setCommRange(getCommRange());}}
-    public void copyBehaviortoTeam(){for(Agent a:this){a.setBehavior(getBehavior());}}
-    public void copyColortoTeam(){for(Agent a:this){a.setColor(getColor());}}
-    public void copyLeadFactortoTeam(){for(Agent a:this){a.setLeadFactor(getLeadFactor());}}
-    
     
     // BROADCAST METHODS: PASS INSTRUCTIONS ONTO TEAM MEMBERS
     
@@ -224,6 +220,8 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public void communicateSensoryData(DistanceTable d){for(Agent a:this){a.generateSensoryEvents(this,d);}}
     /** Tells each agent to form their belief regarding the playing field. */
     public void fuseAgentPOV(){for(Agent a:this){a.fusePOV();}}
+    /** Assigns tasks to the agents. */
+    public void assignTasks(){tasking.assign(this,tes.goal);}
     /** Generates directions for each team member based on their task and behavior.
      * @param time      the current time stamp
      * @param stepTime  the time between iterations */
@@ -235,14 +233,15 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     // BOOLEAN-GENERATING METHODS TESTING FOR WHETHER GOAL HAS BEEN REACHED
     
     /**
-     * Checks to see if goal has been achieved
+     * Checks to see if default value if goal has changed.
      * @param d     the global distance table
      * @return      true if the team's goal has been achieved, otherwise false
      */
     public void checkGoal(DistanceTable d,double time){
         if(getGoal()==null){return;}
         if(getGoal().justAchieved(d)){
-            fireActionPerformed("goalmet");
+            if(getGoal().getAgent()!=null){value=getGoal().getAgent().getLeadFactor();}
+            fireActionPerformed("Team "+toString()+" just met its goal, with value "+value);
         }
     }
     
@@ -291,6 +290,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public double getLeadFactor(){return tes.leadFactor.getValue();}
     public Color getColor(){return tes.color.getValue();}
     public PPoint getPositionTime(double t){return tes.pm.getValue(t);}
+    public Double getValue(){return value;}
     
     public void setSensorRange(double newValue){tes.sensorRange.setValue(newValue);}
     public void setCommRange(double newValue){tes.commRange.setValue(newValue);}
@@ -302,7 +302,16 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public void setFixedPath(String xt,String yt){tes.pm.setXString(xt);tes.pm.setYString(yt);}
     
     public JPanel getPanel(){return tes.getPanel();}   
+        
+    // BROADCAST METHODS: CHANGE SETTINGS OF AGENTS ON TEAM
     
+    public void copySpeedtoTeam(){for(Agent a:this){a.setTopSpeed(getTopSpeed());}}
+    public void copySensorRangetoTeam(){for(Agent a:this){a.setSensorRange(getSensorRange());}}
+    public void copyCommRangetoTeam(){for(Agent a:this){a.setCommRange(getCommRange());}}
+    public void copyBehaviortoTeam(){for(Agent a:this){a.setBehavior(getBehavior());}}
+    public void copyColortoTeam(){for(Agent a:this){a.setColor(getColor());}}
+    public void copyLeadFactortoTeam(){for(Agent a:this){a.setLeadFactor(getLeadFactor());}}
+    public void copyPathtoTeam(){for(Agent a:this){a.setFixedPath(tes.pm.getStringX(),tes.pm.getStringY());}}
     
     // CONSTANTS FOR INITIAL SETTINGS
     
@@ -329,9 +338,9 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
         private Goal goal=new Goal();
         
         /** Default sensor range [in ft]. */
-        private DoubleRangeModel sensorRange=new DoubleRangeModel(10,0,5000);
+        private DoubleRangeModel sensorRange=new DoubleRangeModel(20,0,5000);
         /** Default communications range [in ft]. */
-        private DoubleRangeModel commRange=new DoubleRangeModel(20,0,5000);
+        private DoubleRangeModel commRange=new DoubleRangeModel(50,0,5000);
         /** Default speed [in ft/s]. */
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
@@ -353,15 +362,15 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
             addProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE);
             addProperty("Comm Range",commRange,Settings.EDIT_DOUBLE);
             addProperty("Behavior",behavior,Settings.EDIT_COMBO);
-            addProperty("Lead Factor",leadFactor,Settings.EDIT_DOUBLE);
-            addProperty("Position(t)",pm,Settings.EDIT_PARAMETRIC);
+            addProperty("Lead Factor",leadFactor,Settings.NO_EDIT);
+            addProperty("Position(t)",pm,Settings.NO_EDIT);
             addProperty("Color",color,Settings.EDIT_COLOR);
             initEventListening();
         }
         
         public JPanel getPanel(){
-            JPanel result=super.getPanel();
-            for(Component c:goal.getPanel().getComponents()){result.add(c);}
+            JPanel result=goal.getPanel();
+            for(Component c:super.getPanel().getComponents()){result.add(c);}
             SpringUtilities.makeCompactGrid(result,result.getComponentCount()/2,2,5,5,5,5);
             return result;
         }
@@ -370,18 +379,29 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
         public void propertyChange(PropertyChangeEvent evt) {
             editing=true;
             String ac=null;
-            if(evt.getPropertyName()=="# Agents"){            initAgentNumber();      ac="teamAgentsChange";
-            } else if(evt.getPropertyName()=="Starting Loc"){ initStartingLocations();ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Tasking"){      initTasking();          ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Goal Type"){                            ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="One or All"){                           ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Capture Distance"){                     ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Speed"){        copySpeedtoTeam();      ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Sensor Range"){ copySensorRangetoTeam();ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Comm Range"){   copyCommRangetoTeam();  ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Behavior"){     copyBehaviortoTeam();   ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Lead Factor"){  copyLeadFactortoTeam(); ac="teamSetupChange";
-            } else if(evt.getPropertyName()=="Color"){        copyColortoTeam();      ac="teamDisplayChange";}
+            if(evt.getSource()==behavior){
+                copyBehaviortoTeam();
+                if(behavior.getValue()==Behavior.PURSUIT_LEADING){
+                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
+                    setPropertyEditor("Position(t)",Settings.NO_EDIT);
+                }else if(behavior.getValue()==Behavior.FIXEDPATH){
+                    setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);
+                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
+                }else{
+                    setPropertyEditor("Position(t)",Settings.NO_EDIT);
+                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
+                }
+                ac="teamSetupChange";
+            } else if(evt.getSource()==size){       initAgentNumber();      ac="teamAgentsChange";
+            } else if(evt.getSource()==start){      initStartingLocations();ac="teamSetupChange";
+            } else if(evt.getSource()==tasking){    initTasking();          ac="teamSetupChange";
+            } else if(evt.getSource()==goal){                               ac="teamSetupChange";
+            } else if(evt.getSource()==topSpeed){   copySpeedtoTeam();      ac="teamSetupChange";
+            } else if(evt.getSource()==sensorRange){copySensorRangetoTeam();ac="teamSetupChange";
+            } else if(evt.getSource()==commRange){  copyCommRangetoTeam();  ac="teamSetupChange";
+            } else if(evt.getSource()==leadFactor){ copyLeadFactortoTeam(); ac="teamSetupChange";
+            } else if(evt.getSource()==pm){         copyPathtoTeam();       ac="teamSetupChange";
+            } else if(evt.getSource()==color){      copyColortoTeam();      ac="teamDisplayChange";}
             editing=false;
             fireActionPerformed(ac);
         }

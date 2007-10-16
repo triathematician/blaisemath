@@ -39,10 +39,10 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Contains all settings used to run the simulation. */
     public SimSettings ss;
-    /** Has complete/precise knowledge of playing field. */
-    Agent bird;
     /** Contains list of teams involved. */
     ArrayList<Team> teams;
+    /** The team responsible for returning data for statistical runs. */
+    Team primary;
     /** Table of distances (for speed of simulation) */
     DistanceTable dist;
     /** The time stamp when iterating */
@@ -55,7 +55,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public Simulation(){
         ss=new SimSettings();
         setGameType(SimulationFactory.SIMPLE_PE);
-        bird=null;
         SimulationFactory.setSimulation(this,getGameType());
         dist=null;
     }
@@ -64,7 +63,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public Simulation(int gameType){
         ss=new SimSettings();
         setGameType(gameType);
-        bird=null;
         SimulationFactory.setSimulation(this,gameType);
         dist=null;
     }
@@ -98,17 +96,31 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         time=0;
     }
     
+    /** Runs several times and computes average result. */
+    public Double runSeveral(int numTimes){
+        Double total=0.0;
+        Double current;
+        for(int i=0;i<numTimes;i++){
+            for(Team team:teams){team.initStartingLocations();team.reset();}
+            dist=new DistanceTable(teams);
+            time=0;
+            current=run();
+            if(current!=null){total+=current;}            
+        }
+        fireActionPerformed("Result of "+numTimes+" run is an average of "+total/numTimes);
+        return total/numTimes;
+    }
     /** Runs default number of steps */
-    public void run(){run(getNumSteps());}
+    public Double run(){return run(getNumSteps());}
     /** Tells the simulation to get going!
      * @param numSteps  how many time steps to run the simulation
-     * @return          to be determined...
+     * @return          value of the simulated run according to the given team...
      */
-    public int run(int numSteps){
+    public Double run(int numSteps){
         reset();
         for(int i=0;i<numSteps;i++){iterate();}
         fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"redraw"));
-        return 0;
+        return primary.getValue();
     }
     
     /** Runs a single iteration of the scenario */
@@ -117,10 +129,10 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         for(Team t:teams){
             if(!t.getGoal().isTrivial()){
                 t.checkGoal(dist,time);
-                //t.gatherSensoryData(dist);
-                //t.communicateSensoryData(dist);
-                //t.fuseAgentPOV();
-                t.tasking.assign(t,t.getGoal());
+                t.gatherSensoryData(dist);
+                t.communicateSensoryData(dist);
+                t.fuseAgentPOV();
+                t.assignTasks();
             }
         }
         for(Team t:teams){t.planPaths(time,getStepTime());}
@@ -182,6 +194,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }else if(e.getActionCommand()=="agentSetupChange"){run();
         }else if(e.getActionCommand()=="teamSetupChange"){run();
         }else if(e.getActionCommand()=="teamAgentsChange"){run();fireActionPerformed("reset");
+        }else {fireActionPerformed(e);
         }
     }
     
@@ -207,6 +220,8 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
     public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
     public void setString(String newValue){ss.s=newValue;}
+    public void setPrimary(Team newValue){primary=newValue;}
+    public void setPrimary(int newIndex){if(newIndex<teams.size()){primary=teams.get(newIndex);}}
     
     public JPanel getPanel(){return ss.getPanel();}
     

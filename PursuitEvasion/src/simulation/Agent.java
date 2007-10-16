@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.event.EventListenerList;
-import simulation.Pitch;
 import behavior.Behavior;
 import behavior.Task;
 import javax.swing.JPanel;
@@ -47,11 +46,9 @@ public class Agent extends PVector {
     /** Agent's path */
     PPath path;
     /** Agent's view of the playing field */
-    Pitch pov;
+    ArrayList<Agent> pov;
     /** Communications regarding the playing field */
-    Pitch commpov;
-    /** Agent's memory of the playing field */
-    ArrayList<Pitch> memory;
+    ArrayList<Agent> commpov;
     
     
     // CONSTRUCTORS
@@ -86,14 +83,14 @@ public class Agent extends PVector {
     /** Initializes memory... path,pov,commpov,memory */
     public void initMemory(){
         path=new PPath();
-        //pov=new Pitch();
-        //commpov=new Pitch();
-        //memory=new ArrayList<Pitch>();
+        pov=new ArrayList<Agent>();
+        commpov=new ArrayList<Agent>();
         remember();
     }
     /** Resets positions, memory, and paths (but not behavior) */
     public void reset(){
         setPoint(initialPosition.getPoint());
+        initBehavior();
         initMemory();
     }
     public void copySettingsFrom(Team team){
@@ -127,15 +124,12 @@ public class Agent extends PVector {
     
     
     // METHODS: TASKING
-    
-    /** Removes all tasks from list */
-    public void clearTasks(){tasks.clear();}
-    
+        
     /** Sets single task to seek/flee a given agent. Priority is automatically set to 1.
      * @param agent the target agent of the task
      * @param type  0 if trivial (ignored, 1 if pursue, 2 if evade */
     public void assignTask(PVector agent,int type){
-        clearTasks();
+        tasks.clear();
         if(type!=0){tasks.add(new Task(agent,type,1));}
     }
     
@@ -145,9 +139,8 @@ public class Agent extends PVector {
     /** Gathers sensory data based on distance table.
      * @param dist the global table of distances */
     public void gatherSensoryData(DistanceTable dist){
-        //pov=new Pitch();
-        // TODO implement error in data
-        //pov.addAll(dist.getAgentsInRadius(this,as.getSensorRange()));
+        pov.clear();
+        pov.addAll(dist.getAgentsInRadius(this,getSensorRange()));
     }
     /** Generates communications events based on sensory data that should be passed on to team members.
      * These events are sent to agents within communications range, who then adjust their understanding
@@ -163,18 +156,17 @@ public class Agent extends PVector {
     }
     /** Accept a communication based on sensory data
      * @param agents list of agent positions communicated */
-    public void acceptSensoryEvent(Collection<Agent> agents){
-        //if(commpov==null){commpov=new Pitch();}
-        //commpov.addAll(agents);
-    }
+    public void acceptSensoryEvent(Collection<Agent> agents){commpov.addAll(agents);}
     
     /** Forms belief about the playing field by fusing own understanding
      * of playing field with that suggested by others. */
     public void fusePOV(){
-        // TODO improve the functionality here!! use more advanced techniques!!
-        //pov.addAll(commpov);
-        //commpov.clear();
+        pov.addAll(commpov);
+        commpov.clear();
     }
+    
+    /** Whether or not this agent can "see" another agent. */
+    public boolean sees(Agent b){return pov.contains(b);}
     
     // TODO implement task fusion here!
     /**
@@ -183,8 +175,9 @@ public class Agent extends PVector {
      * @param stepTime  the time between iterations
      */
     public void planPath(double time,double stepTime){
-        if(tasks.isEmpty()){return;}
-        v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*getTopSpeed());
+        if(tasks.isEmpty()){v=behavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());           
+        }else{v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*getTopSpeed());
+        }
     }
     
     /** Logs current point and pitch in memory, and resets current understanding. */
@@ -230,7 +223,10 @@ public class Agent extends PVector {
     public void setSensorRange(double newValue){ags.sensorRange.setValue(newValue);}
     public void setCommRange(double newValue){ags.commRange.setValue(newValue);}
     public void setTopSpeed(double newValue){ags.topSpeed.setValue(newValue);}
-    public void setBehavior(int newValue){ags.behavior.setValue(newValue);}
+    public void setBehavior(int newValue){
+        ags.behavior.setValue(newValue);
+        if(newValue==Behavior.FIXEDPATH){}
+    }
     public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
     public void setColor(Color newValue){ags.color.setValue(newValue);}
     public void setString(String newValue){ags.s=newValue;}
@@ -244,9 +240,9 @@ public class Agent extends PVector {
     private class AgentSettings extends Settings {
         
         /** Default sensor range [in ft]. */
-        private DoubleRangeModel sensorRange=new DoubleRangeModel(10,0,5000);
+        private DoubleRangeModel sensorRange=new DoubleRangeModel(20,0,5000,1.0);
         /** Default communications range [in ft]. */
-        private DoubleRangeModel commRange=new DoubleRangeModel(20,0,5000);
+        private DoubleRangeModel commRange=new DoubleRangeModel(50,0,5000,1.0);
         /** Default speed [in ft/s]. */
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
@@ -265,15 +261,28 @@ public class Agent extends PVector {
             addProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE);
             addProperty("Comm Range",commRange,Settings.EDIT_DOUBLE);
             addProperty("Behavior",behavior,Settings.EDIT_COMBO);
-            addProperty("Lead Factor",leadFactor,Settings.EDIT_DOUBLE);
-            addProperty("Position(t)",pm,Settings.EDIT_PARAMETRIC);
+            addProperty("Lead Factor",leadFactor,Settings.NO_EDIT);
+            addProperty("Position(t)",pm,Settings.NO_EDIT);
             addProperty("Color",color,Settings.EDIT_COLOR);
             initEventListening();
         }
         
         public void stateChanged(ChangeEvent e){
-            if(e.getSource()==color){fireActionPerformed("agentDisplayChange");} else{fireActionPerformed("agentSetupChange");}
+            if(e.getSource()==behavior){
+                initBehavior();
+                if(behavior.getValue()==Behavior.PURSUIT_LEADING){
+                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
+                    setPropertyEditor("Position(t)",Settings.NO_EDIT);
+                }else if(behavior.getValue()==Behavior.FIXEDPATH){
+                    setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);
+                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
+                }else{
+                    setPropertyEditor("Position(t)",Settings.NO_EDIT);
+                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
+                }
+            }
+            if(e.getSource()==color){fireActionPerformed("agentDisplayChange");
+            } else{fireActionPerformed("agentSetupChange");}
         }
-    }
-    
+    }    
 }
