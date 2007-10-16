@@ -5,7 +5,6 @@
 
 package simulation;
 
-import Blaise.BPlotPath2D;
 import Euclidean.*;
 import Model.*;
 import javax.swing.event.ChangeEvent;
@@ -18,6 +17,7 @@ import javax.swing.event.EventListenerList;
 import behavior.Behavior;
 import behavior.Task;
 import javax.swing.JPanel;
+import specto.dynamicplottable.PointSet2D;
 import utility.DistanceTable;
 
 /**
@@ -117,7 +117,7 @@ public class Agent extends PVector {
     public PPath getPath(){return path;}
     /** Returns plottable path for the agent
      * @return a path which can be plotted */
-    public BPlotPath2D getPlotPath(){return new BPlotPath2D(path,getColor());}
+    public PointSet2D getPlotPath(){return new PointSet2D(path,getColor());}
     /** Returns the initial position model
      * @return model with the agent's color at the initial position */
     public PointRangeModel getPointModel(){if(initialPosition==null){initialPosition=new PointRangeModel(this);initialPosition.addChangeListener(ags);}return initialPosition;}

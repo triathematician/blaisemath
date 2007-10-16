@@ -5,8 +5,6 @@
 
 package simulation;
 
-import Blaise.BPlot2D;
-import Blaise.BPlotPath2D;
 import Euclidean.PPath;
 import Euclidean.PPoint;
 import Euclidean.PRandom;
@@ -22,6 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import behavior.*;
+import specto.PlotPanel;
+import specto.dynamicplottable.Point2D;
+import specto.dynamicplottable.PointSet2D;
+import specto.visometry.Euclidean2;
 import utility.DistanceTable;
 
 /**
@@ -148,14 +150,14 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     
     /** Returns plot path taken by team members.
      * @return collection of plottable paths */
-    public ArrayList<BPlotPath2D> getPlotPaths(){
-        ArrayList<BPlotPath2D> result=new ArrayList<BPlotPath2D>();
+    public ArrayList<PointSet2D> getPlotPaths(){
+        ArrayList<PointSet2D> result=new ArrayList<PointSet2D>();
         for(Agent a:this){result.add(a.getPlotPath());}
         return result;
     }
     
     /** Adds initial point models to plot, and adds change listening to this team. */
-    public void placeInitialPointsOn(BPlot2D p){for(Agent a:this){p.addPoint(a.getPointModel(),a.getColor());}}
+    public void placeInitialPointsOn(PlotPanel<Euclidean2> p){for(Agent a:this){p.add(new Point2D(a.getPointModel(),a.getColor().brighter()));}}
     
     /** Generates tree given list of agents */
     public DefaultMutableTreeNode getTreeNode(){
@@ -276,6 +278,7 @@ public class Team extends ArrayList<Agent> implements ActionListener,PropertyCha
     public int getStart(){return tes.start.getValue();}
     public int getTasking(){return tes.tasking.getValue();}
     public Goal getGoal(){return tes.goal;}
+    @Override
     public String toString(){return tes.s;}
     
     public void setSize(int newValue){tes.size.setValue(newValue);}

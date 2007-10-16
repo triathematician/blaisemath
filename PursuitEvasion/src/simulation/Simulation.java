@@ -10,8 +10,6 @@
 
 package simulation;
 
-import Blaise.BPlot2D;
-import Blaise.BPlotPath2D;
 import Model.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -19,13 +17,17 @@ import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Vector;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import simulation.Team;
-import simulation.Agent;
 import javax.swing.JPanel;
+import specto.PlotPanel;
+import specto.dynamicplottable.Point2D;
+import specto.dynamicplottable.PointSet2D;
+import specto.visometry.Euclidean2;
 import utility.DistanceTable;
+import utility.DynamicTeamGraph;
 import utility.SimulationFactory;
 
 /**
@@ -143,21 +145,51 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     // METHODS: RETURN RESULTS OF SIMULATION IN VARIOUS FORMATS
     
-    /** Returns point models corresponding to initial conditions */
-    public void placeInitialPointsOn(BPlot2D p){for(Team t:teams){t.placeInitialPointsOn(p);}}
-    
-    /** Recomputes animation settings for a plot window */
-    public void setAnimationCycle(BPlot2D p){
-        p.setAnimateCycle(getNumSteps()+10);
-        if(getStepTime()>.4){p.setAnimateDelay(100);} else{p.setAnimateDelay((int)(250*getStepTime()));}
+    /** Places simulation's points on the plot. */
+    public void placeInitialPointsOn(PlotPanel<Euclidean2> p){
+        Vector<Point2D> removeThese=new Vector<Point2D>();
+        for(Object dp:p.getDynamicPlottables()){
+            if(dp instanceof Point2D){
+                removeThese.add((Point2D)dp);
+            }
+        }
+        p.removeAll(removeThese);        
+        for(Team t:teams){t.placeInitialPointsOn(p);}
     }
     
-    /** Returns all paths computed by the simulation
-     * @return arraylist of bplotpath2d's suitable to add to a BPlot2D */
-    public ArrayList<BPlotPath2D> getComputedPaths(){
-        ArrayList<BPlotPath2D> result=new ArrayList<BPlotPath2D>();
-        for(Team t:teams){result.addAll(t.getPlotPaths());}
-        return result;
+    /** Places simulation's paths on the plot. */
+    public void putComputedPaths(PlotPanel p){
+        Vector<PointSet2D> removeThese=new Vector<PointSet2D>();
+        for(Object dp:p.getDynamicPlottables()){
+            if(dp instanceof PointSet2D){
+                removeThese.add((PointSet2D)dp);
+            }
+        }
+        p.removeAll(removeThese);
+        for(Team t:teams){p.addAll(t.getPlotPaths());}
+    }
+    
+    /** Places graph element on the plot. */
+    public void placeGraphsOn(PlotPanel<Euclidean2> p){
+        Vector<DynamicTeamGraph> removeThese=new Vector<DynamicTeamGraph>();
+        for(Object dp:p.getBasicPlottables()){
+            if(dp instanceof DynamicTeamGraph){
+                removeThese.add((DynamicTeamGraph)dp);
+            }
+        }
+        p.removeAll(removeThese);
+        for(Team t:teams){p.add(new DynamicTeamGraph(t));}
+    }
+    
+    /** Recomputes animation settings for a plot window */
+    public void setAnimationCycle(PlotPanel<Euclidean2> p){
+        if(p.getTimer()==null){p.resetAnimation();p.getTimer().stop();}
+        p.getTimer().setNumSteps(getNumSteps()+10);
+        if(getStepTime()>.4){
+            p.getTimer().setDelay(100);
+        }else{
+            p.getTimer().setDelay((int)(250*getStepTime()));
+        }
     }
     
     /** Returns all teams/agents as a JTree
