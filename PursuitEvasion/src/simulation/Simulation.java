@@ -10,22 +10,24 @@
 
 package simulation;
 
-import Model.*;
+import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JPanel;
+import sequor.component.Settings;
+import sequor.model.ComboBoxRangeModel;
+import sequor.model.IntegerRangeModel;
 import specto.PlotPanel;
-import specto.dynamicplottable.Point2D;
-import specto.dynamicplottable.PointSet2D;
+import specto.plotpanel.Plot2D;
 import specto.visometry.Euclidean2;
+import utility.DataLog;
 import utility.DistanceTable;
 import utility.DynamicTeamGraph;
 import utility.SimulationFactory;
@@ -42,13 +44,14 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     /** Contains all settings used to run the simulation. */
     public SimSettings ss;
     /** Contains list of teams involved. */
-    ArrayList<Team> teams;
+    Vector<Team> teams;
     /** The team responsible for returning data for statistical runs. */
     Team primary;
     /** Table of distances (for speed of simulation) */
     DistanceTable dist;
-    /** The time stamp when iterating */
-    double time=0;
+    
+    /** The data collected in a simulation. */
+    DataLog log;
     
     
     // CONSTRUCTORS
@@ -59,6 +62,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         setGameType(SimulationFactory.SIMPLE_PE);
         SimulationFactory.setSimulation(this,getGameType());
         dist=null;
+        log=new DataLog(this);
     }
     /** Constructs given a type of game
      * @param gameType the type of game to simulate */
@@ -67,20 +71,28 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         setGameType(gameType);
         SimulationFactory.setSimulation(this,gameType);
         dist=null;
+        log=new DataLog(this);
     }
     
     
     // METHODS: INITIALIZERS
     
     /** Intializes to a given list of teams. */
-    public void initTeams(ArrayList<Team> newTeams){
+    public void initTeams(Vector<Team> newTeams){
         if(newTeams!=null){
             if(teams!=null){for(Team t:teams){t.removeActionListener(this);}}
             teams=newTeams;
-            for(Team t:teams){t.addActionListener(this);}
-        }
+            for(Team t:teams){
+                t.addActionListener(this);
+                t.initStartingLocations();
+            }
+            log=new DataLog(this);
+        }        
         //fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"teamsInitialized"));
     }
+    
+    /** Returns list of teams used in the simulation. */
+    public Vector<Team> getTeams(){return teams;}
     
     // METHODS: DEPLOY SIMULATION
     
@@ -88,14 +100,14 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void reset(){
         for(Team team:teams){team.reset();}
         dist=new DistanceTable(teams);
-        time=0;
+        log.reset();
     }
     
     /** Resets the starting positions. Useful when positions are initialized randomly. */
     public void initStartingLocations(){
         for(Team team:teams){team.initStartingLocations();}
         dist=new DistanceTable(teams);
-        time=0;
+        log.reset();
     }
     
     /** Runs several times and computes average result. */
@@ -105,7 +117,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         for(int i=0;i<numTimes;i++){
             for(Team team:teams){team.initStartingLocations();team.reset();}
             dist=new DistanceTable(teams);
-            time=0;
             current=run();
             if(current!=null){total+=current;}            
         }
@@ -120,17 +131,24 @@ public class Simulation implements ActionListener,PropertyChangeListener {
      */
     public Double run(int numSteps){
         reset();
-        for(int i=0;i<numSteps;i++){iterate();}
-        fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"redraw"));
+        double time=0;
+        for(int i=0;i<numSteps;i++){
+            iterate(time);
+            log.logAll(i);
+            log.logCaptures(dist,3);
+        }
+        log.output();
+        fireActionPerformed("redraw");
         return primary.getValue();
     }
     
     /** Runs a single iteration of the scenario */
-    public void iterate(){
+    public void iterate(double time){
         dist.recalculate();
+        // TODO check for capture here
+        for(Team t:teams){t.checkGoal(dist,time);}
         for(Team t:teams){
-            if(!t.getGoal().isTrivial()){
-                t.checkGoal(dist,time);
+            if(!t.getGoals().isEmpty()){
                 t.gatherSensoryData(dist);
                 t.communicateSensoryData(dist);
                 t.fuseAgentPOV();
@@ -147,43 +165,28 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Places simulation's points on the plot. */
     public void placeInitialPointsOn(PlotPanel<Euclidean2> p){
-        Vector<Point2D> removeThese=new Vector<Point2D>();
-        for(Object dp:p.getDynamicPlottables()){
-            if(dp instanceof Point2D){
-                removeThese.add((Point2D)dp);
-            }
-        }
-        p.removeAll(removeThese);        
         for(Team t:teams){t.placeInitialPointsOn(p);}
     }
     
     /** Places simulation's paths on the plot. */
-    public void putComputedPaths(PlotPanel p){
-        Vector<PointSet2D> removeThese=new Vector<PointSet2D>();
-        for(Object dp:p.getDynamicPlottables()){
-            if(dp instanceof PointSet2D){
-                removeThese.add((PointSet2D)dp);
-            }
-        }
-        p.removeAll(removeThese);
-        for(Team t:teams){p.addAll(t.getPlotPaths());}
+    @SuppressWarnings("unchecked")
+    public void placePathsOn(PlotPanel p){
+        p.addAll(log.getPlotPaths());
     }
     
     /** Places graph element on the plot. */
     public void placeGraphsOn(PlotPanel<Euclidean2> p){
-        Vector<DynamicTeamGraph> removeThese=new Vector<DynamicTeamGraph>();
-        for(Object dp:p.getBasicPlottables()){
-            if(dp instanceof DynamicTeamGraph){
-                removeThese.add((DynamicTeamGraph)dp);
-            }
-        }
-        p.removeAll(removeThese);
-        for(Team t:teams){p.add(new DynamicTeamGraph(t));}
+        for(Team t:teams){p.add(new DynamicTeamGraph(t,log));}
+    }
+    
+    /** Places value functions on given plot. */
+    public void placeValuesOn(Plot2D p){
+        p.addAll(log.getValuePlots());
     }
     
     /** Recomputes animation settings for a plot window */
     public void setAnimationCycle(PlotPanel<Euclidean2> p){
-        if(p.getTimer()==null){p.resetAnimation();p.getTimer().stop();}
+        if(p.getTimer()==null){p.getTimer().restart();p.getTimer().stop();}
         p.getTimer().setNumSteps(getNumSteps()+10);
         if(getStepTime()>.4){
             p.getTimer().setDelay(100);
@@ -225,7 +228,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }else if(e.getActionCommand()=="teamDisplayChange"){fireActionPerformed("redraw");
         }else if(e.getActionCommand()=="agentSetupChange"){run();
         }else if(e.getActionCommand()=="teamSetupChange"){run();
-        }else if(e.getActionCommand()=="teamAgentsChange"){run();fireActionPerformed("reset");
+        }else if(e.getActionCommand()=="teamAgentsChange"){log=new DataLog(this);run();fireActionPerformed("reset");
         }else {fireActionPerformed(e);
         }
     }
@@ -294,7 +297,11 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             } else if(e.getSource()==pitchSize){System.out.println("Nonfunctional! Starting locs should reference this value!");initStartingLocations();run();
             } else if(e.getSource()==maxSteps){System.out.println("nonfunctional!");
             } else if(e.getSource()==numTeams){System.out.println("nonfunctional!");
-            } else if(e.getSource()==gameType){SimulationFactory.setSimulation(Simulation.this,getGameType());run();fireActionPerformed("reset");
+            } else if(e.getSource()==gameType){
+                SimulationFactory.setSimulation(Simulation.this,getGameType());
+                fireActionPerformed("reset");
+                dist=null;
+                run();                
             }
         }
     }

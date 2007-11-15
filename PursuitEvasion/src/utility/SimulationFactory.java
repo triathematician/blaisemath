@@ -5,14 +5,14 @@
 
 package utility;
 
-import Model.ComboBoxRangeModel;
 import simulation.Team;
 import behavior.Behavior;
-import behavior.Tasking;
+import tasking.Tasking;
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Vector;
 import simulation.Simulation;
-import behavior.Goal;
+import goal.Goal;
+import sequor.model.ComboBoxRangeModel;
 
 /**
  * This class provides preset simulations to load into a program.
@@ -56,58 +56,77 @@ public class SimulationFactory {
         }
     }
     
-    public static ArrayList<Team> lightSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();
-        //                 #    STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(4,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.AUTO_CLOSEST,   Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
-        Team cats=new Team(1,   Team.START_RANDOM,  Goal.EVADE,     Goal.ALL,   10.0,       Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
-        dogs.setString("Bugs");         dogs.setTarget(cats);   teams.add(dogs);
-        cats.setString("Light");        cats.setTarget(dogs);   teams.add(cats);
+    public static Vector<Team> lightSimulation(){
+        Vector<Team> teams=new Vector<Team>();
+        //                      #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        Team bugTeam=new Team(  4,   Team.START_RANDOM,  Tasking.AUTO_CLOSEST,   Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
+        Team lightTeam=new Team(1,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
+        bugTeam.addGoal(  1.0,lightTeam,Goal.SEEK,10.0);
+        lightTeam.addGoal(1.0,bugTeam,  Goal.FLEE, 10.0);
+        bugTeam.setString("Bugs");         
+        lightTeam.setString("Light");        
+        teams.add(bugTeam);
+        teams.add(lightTeam);
         return teams;
     }
     
-    public static ArrayList<Team> twoTeamSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();        
-        //                 #    STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(5,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
-        Team cats=new Team(4,   Team.START_RANDOM,  Goal.EVADE,     Goal.ALL,   10.0,       Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.ORANGE);
-        dogs.setString("Cops");         dogs.setTarget(cats);   teams.add(dogs);
-        cats.setString("Robbers");      cats.setTarget(dogs);   teams.add(cats);
+    public static Vector<Team> twoTeamSimulation(){
+        Vector<Team> teams=new Vector<Team>();        
+        //                          #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        Team copTeam=new Team(      5,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
+        Team robberTeam=new Team(   4,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.ORANGE);
+        robberTeam.addGoal(1.0, copTeam,   Goal.SEEK,10.0);
+        copTeam.addGoal(   1.0, robberTeam,Goal.FLEE, 10.0);
+        copTeam.setString("Cops");
+        robberTeam.setString("Robbers");
+        teams.add(copTeam);
+        teams.add(robberTeam);
         return teams;
     }
     
-    public static ArrayList<Team> threeTeamSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();
+    public static Vector<Team> threeTeamSimulation(){
+        Vector<Team> teams=new Vector<Team>();
+        //                      #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
+        Team catTeam=new Team(  4,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLACK);
+        Team mouseTeam=new Team(5,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
+        dogTeam.addGoal(  1.0,catTeam,  Goal.SEEK,10.0);
+        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 10.0);
+        catTeam.addGoal(  1.0,mouseTeam,Goal.SEEK,10.0);
+        mouseTeam.addGoal(1.0,catTeam,  Goal.FLEE, 10.0);
+        dogTeam.setString("Seals");
+        catTeam.setString("Penguins");
+        mouseTeam.setString("Fish");
+        teams.add(dogTeam);
+        teams.add(catTeam);
+        teams.add(mouseTeam);
+        return teams;
+    }
+    
+    public static Vector<Team> twoPlusGoalSimulation(){
+        Vector<Team> teams=new Vector<Team>();        
+        //                      #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.ORANGE);
+        Team catTeam=new Team(  4,   Team.START_RANDOM,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.GRAY);
+        Team milk=new Team(     1,   Team.START_RANDOM,  Tasking.NO_TASKING,     Behavior.STATIONARY,        Color.BLUE);
+        dogTeam.addGoal(  1.0,catTeam,  Goal.SEEK,10.0);
+        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 10.0);
+        catTeam.addGoal(  1.0,milk,     Goal.SEEK,10.0);
+        dogTeam.setString("Lions");
+        catTeam.setString("Wildebeest");
+        milk.setString("Watering Hole");
+        teams.add(dogTeam);
+        teams.add(catTeam);
+        teams.add(milk);
+        return teams;
+    }
+    
+    public static Vector<Team> leadFactorSimulation(){
+        Vector<Team> teams=new Vector<Team>();
         
-        //                 #    STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(3,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
-        Team cats=new Team(4,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLACK);
-        Team mice=new Team(5,   Team.START_RANDOM,  Goal.EVADE,     Goal.ALL,   10.0,       Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
-        dogs.setString("Seals");        dogs.setTarget(cats);   teams.add(dogs);
-        cats.setString("Penguins");     cats.setTarget(mice);   teams.add(cats);
-        mice.setString("Fish");         mice.setTarget(cats);   teams.add(mice);
-        return teams;
-    }
-    
-    public static ArrayList<Team> twoPlusGoalSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();
-        
-        //                 #    STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(3,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.ORANGE);
-        Team cats=new Team(4,   Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,       Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.GRAY);
-        Team milk=new Team(1,   Team.START_RANDOM,  Goal.NONE,      Goal.ALL,   10.0,       Tasking.NO_TASKING,     Behavior.STATIONARY,        Color.BLUE);
-        dogs.setString("Lions");        dogs.setTarget(cats);   teams.add(dogs);
-        cats.setString("Wildebeest");   cats.setTarget(milk);   teams.add(cats);
-        milk.setString("Watering Hole");                        teams.add(milk);
-        return teams;
-    }
-    
-    public static ArrayList<Team> leadFactorSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();
-        
-        //                 #    STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(11,  Team.START_ZERO,    Goal.PURSUE,    Goal.ALL,   1.0,        Tasking.AUTO_CLOSEST,   Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
-        Team cats=new Team(1,   Team.START_RANDOM,  Goal.NONE,      Goal.ALL,   1.0,        Tasking.NO_TASKING,     Behavior.FIXEDPATH,         Color.GREEN);
+        //                 #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        Team dogs=new Team(11,  Team.START_ZERO,    Tasking.AUTO_CLOSEST,   Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
+        Team cats=new Team(1,   Team.START_RANDOM,  Tasking.NO_TASKING,     Behavior.FIXEDPATH,         Color.GREEN);
         cats.setFixedPath("20cos(t/4)","20sin(t/2)");
         for(int i=0;i<dogs.size();i++){
             dogs.get(i).setColor(new Color(100+15*i,25*i,25*i));
@@ -115,24 +134,27 @@ public class SimulationFactory {
         }
         dogs.get(0).setColor(Color.DARK_GRAY);
         dogs.get(dogs.size()-1).setColor(new Color(100,100,250));
-        dogs.setString("Velociraptors");dogs.setTarget(cats);teams.add(dogs);
-        cats.setString("Mathematicians");teams.add(cats);
+        dogs.addGoal(1.0, cats, Goal.SEEK, 1.0);
+        dogs.setString("Velociraptors");
+        cats.setString("Mathematicians");
+        teams.add(dogs);
+        teams.add(cats);
         return teams;
     }
     
-    public static ArrayList<Team> bigSimulation(){
-        ArrayList<Team> teams=new ArrayList<Team>();
-        //            #     STARTING POS        GOAL TYPE       ONE/ALL     CAP.DIST.   TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
-        teams.add(new Team(1,    Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.RED));
-        teams.add(new Team(4,    Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.ORANGE));
-        teams.add(new Team(3,    Team.START_LINE,    Goal.PURSUE,    Goal.ONE,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.YELLOW));
-        teams.add(new Team(5,    Team.START_ARC,     Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.GREEN));
-        teams.add(new Team(6,    Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.CYAN));
-        teams.add(new Team(3,    Team.START_CIRCLE,  Goal.PURSUE,    Goal.ONE,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE));
-        teams.add(new Team(2,    Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.MAGENTA));
-        teams.add(new Team(4,    Team.START_CIRCLE,  Goal.PURSUE,    Goal.ONE,   10.0,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.PINK));
-        teams.add(new Team(2,    Team.START_RANDOM,  Goal.PURSUE,    Goal.ALL,   10.0,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.GRAY));
-        teams.add(new Team(2,    Team.START_RANDOM,  Goal.NONE,      Goal.ONE,   10.0,  Tasking.NO_TASKING,     Behavior.STATIONARY,        Color.BLACK));
+    public static Vector<Team> bigSimulation(){
+        Vector<Team> teams=new Vector<Team>();
+        //                  #     STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
+        teams.add(new Team( 1,    Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.RED));
+        teams.add(new Team( 4,    Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.ORANGE));
+        teams.add(new Team( 3,    Team.START_LINE,    Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.YELLOW));
+        teams.add(new Team( 5,    Team.START_ARC,     Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.GREEN));
+        teams.add(new Team( 6,    Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.CYAN));
+        teams.add(new Team( 3,    Team.START_CIRCLE,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE));
+        teams.add(new Team( 2,    Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.MAGENTA));
+        teams.add(new Team( 4,    Team.START_CIRCLE,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.PINK));
+        teams.add(new Team( 2,    Team.START_RANDOM,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.GRAY));
+        teams.add(new Team( 2,    Team.START_RANDOM,  Tasking.NO_TASKING,     Behavior.STATIONARY,        Color.BLACK));
         teams.get(0).setString("Old Lady");
         teams.get(1).setString("Horses");
         teams.get(2).setString("Cows");
@@ -143,7 +165,10 @@ public class SimulationFactory {
         teams.get(7).setString("Spiders");
         teams.get(8).setString("Flies");
         teams.get(9).setString("Why");
-        for(int i=0;i<9;i++){teams.get(i).setTarget(teams.get(i+1));}
+        for(int i=0;i<9;i++){
+            teams.get(i).addGoal(1.0,teams.get(i+1),Goal.SEEK,10.0);
+            teams.get(i+1).addGoal(0.5,teams.get(i),Goal.FLEE,10.0);
+        }
         return teams;
     }
 }

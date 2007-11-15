@@ -1,14 +1,13 @@
-package applications;
-
 /*
  * PEGPlot.java
- *
  * Created on September 8, 2007, 8:59 AM
  */
 
+// TODO synchronize timers in the two different plot windows.
+
+package applications;
 
 
-import Model.Settings;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BoxLayout;
@@ -17,8 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import specto.coordinate.R2;
-import specto.dynamicplottable.Grid2D;
+import scio.coordinate.R2;
+import specto.gridplottable.Grid2D;
 
 /**
  *
@@ -27,14 +26,19 @@ import specto.dynamicplottable.Grid2D;
 public class PEGPlot extends javax.swing.JFrame {
     
     /** Creates new form PEGPlot */
+    @SuppressWarnings("unchecked")
     public PEGPlot() {
         initComponents();
-        plotPanel1.getVisometry().setBounds(new R2(-50,-50),new R2(50,50));
+        plotPanel1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
         plotPanel1.add(new Grid2D());
+        plot2D1.getVisometry().setBounds(new R2(-1,-150),new R2(300,150));
+        plot2D1.getVisometry().setAspectRatio(2);
         simulation1.setAnimationCycle(plotPanel1);
         simulation1.run();
         simulation1.placeInitialPointsOn(plotPanel1);
         simulation1.placeGraphsOn(plotPanel1);
+        simulation1.placePathsOn(plotPanel1);
+        simulation1.placeValuesOn(plot2D1);
     }
     
     /** This method is called from within the constructor to
@@ -100,13 +104,14 @@ public class PEGPlot extends javax.swing.JFrame {
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        plot2D1 = new specto.plotpanel.Plot2D();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        notificationWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        notificationWindow = new javax.swing.JTextArea();
         jToolBar1 = new javax.swing.JToolBar();
         resetButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
@@ -155,7 +160,7 @@ public class PEGPlot extends javax.swing.JFrame {
         statusBar.setLayout(statusBarLayout);
         statusBarLayout.setHorizontalGroup(
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusText, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE)
+            .addComponent(statusText, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
         );
         statusBarLayout.setVerticalGroup(
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,14 +365,35 @@ public class PEGPlot extends javax.swing.JFrame {
 
         jTabbedPane1.setMaximumSize(new java.awt.Dimension(450, 600));
 
-        jScrollPane3.setViewportView(simulation1.getPanel());
-        jTabbedPane1.addTab("Simulation", jScrollPane3);
+        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
+        plot2D1.setLayout(plot2D1Layout);
+        plot2D1Layout.setHorizontalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 444, Short.MAX_VALUE)
+        );
+        plot2D1Layout.setVerticalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 189, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Value Functions", plot2D1);
+
+        notificationWindow.setColumns(20);
+        notificationWindow.setEditable(false);
+        notificationWindow.setRows(5);
+        jScrollPane5.setViewportView(notificationWindow);
+
+        jTabbedPane1.addTab("Log", jScrollPane5);
+        jTabbedPane1.addTab("Network View", jScrollPane3);
 
         jSplitPane1.setDividerLocation(130);
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setContinuousLayout(true);
         jSplitPane1.setMaximumSize(new java.awt.Dimension(500, 324));
         jSplitPane1.setOneTouchExpandable(true);
+
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(100, 23));
+        jSplitPane1.setRightComponent(jScrollPane2);
 
         jScrollPane1.setMinimumSize(new java.awt.Dimension(100, 23));
 
@@ -381,16 +407,6 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTree1);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
-
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(100, 23));
-        jSplitPane1.setRightComponent(jScrollPane2);
-
-        jTabbedPane1.addTab("Teams/Agents", jSplitPane1);
-
-        notificationWindow.setColumns(20);
-        notificationWindow.setEditable(false);
-        notificationWindow.setRows(5);
-        jScrollPane4.setViewportView(notificationWindow);
 
         jToolBar1.setFloatable(false);
 
@@ -430,8 +446,8 @@ public class PEGPlot extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
             .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -439,24 +455,12 @@ public class PEGPlot extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
-
-        javax.swing.GroupLayout plotPanel1Layout = new javax.swing.GroupLayout(plotPanel1);
-        plotPanel1.setLayout(plotPanel1Layout);
-        plotPanel1Layout.setHorizontalGroup(
-            plotPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 408, Short.MAX_VALUE)
-        );
-        plotPanel1Layout.setVerticalGroup(
-            plotPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
-        );
-
         jSplitPane2.setRightComponent(plotPanel1);
 
         fileMenu.setText("File");
@@ -568,13 +572,13 @@ public class PEGPlot extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
             .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -598,21 +602,31 @@ private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     simulation1.run();
 }//GEN-LAST:event_resetButtonActionPerformed
 
+    @SuppressWarnings("unchecked")
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
     //System.out.println("pegplot action performed: "+evt.getActionCommand());
-    if(evt.getActionCommand()=="redraw"){
-        simulation1.putComputedPaths(plotPanel1);
+    if(evt.getActionCommand().equals("redraw")){
         plotPanel1.repaint();
+        plot2D1.repaint();
     }
-    else if(evt.getActionCommand()=="reset"){
+    else if(evt.getActionCommand().equals("reset")){
+        plotPanel1.removeAll();
+        plotPanel1.add(new Grid2D());
         simulation1.placeInitialPointsOn(plotPanel1);
+        simulation1.placePathsOn(plotPanel1);
         simulation1.placeGraphsOn(plotPanel1);
+        plot2D1.removeAll();
+        plot2D1.add(new Grid2D());
+        simulation1.placeValuesOn(plot2D1);
         jTree1.setModel(simulation1.getTreeModel());
         if(evt.getSource()==simulation1){jScrollPane2.setViewportView(null);}
         simulation1.setAnimationCycle(plotPanel1);
+        simulation1.setAnimationCycle(plot2D1);
+        plotPanel1.rebuildOptionsMenu();
     }
-    else if(evt.getActionCommand()=="animation"){
-        simulation1.setAnimationCycle(plotPanel1);    
+    else if(evt.getActionCommand().equals("animation")){
+        simulation1.setAnimationCycle(plotPanel1);  
+        simulation1.setAnimationCycle(plot2D1);
     }
     else{
         notificationWindow.append(evt.getActionCommand()+"\n");
@@ -631,14 +645,15 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
    // result.setMaximumSize(new Dimension(300,300));
     DefaultMutableTreeNode node=(DefaultMutableTreeNode)jTree1.getLastSelectedPathComponent();
     if(node==null){return;}
-    switch(node.getDepth()){
-    case 0:
-        result.add(((simulation.Agent)node.getUserObject()).getPanel());
-        break;
-    case 1:
-        result.add(((simulation.Team)node.getUserObject()).getPanel());
-        break;
-    case 2:
+    Object nodeObject=node.getUserObject();
+    if(nodeObject instanceof simulation.Simulation){
+        result.add(((simulation.Simulation)nodeObject).getPanel());
+    }else if(nodeObject instanceof simulation.Agent){
+        result.add(((simulation.Agent)nodeObject).getPanel());
+    }else if(nodeObject instanceof simulation.Team){
+        result.add(((simulation.Team)nodeObject).getPanel());
+    }else if(nodeObject instanceof goal.Goal){
+        result.add(((goal.Goal)nodeObject).getPanel());
     }
     jScrollPane2.setViewportView(result);
 }//GEN-LAST:event_jTree1ValueChanged
@@ -726,7 +741,7 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -734,6 +749,7 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JTree jTree1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private javax.swing.JTextArea notificationWindow;
+    private specto.plotpanel.Plot2D plot2D1;
     private specto.PlotPanel plotPanel1;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton runButton;

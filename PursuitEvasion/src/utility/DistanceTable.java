@@ -77,7 +77,8 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
         for(Agent a:keya){
             put(a,new HashMap<Agent,Double>());
             for(Agent b:keyb){
-                get(a).put(b,a.distanceTo(b.getPoint()));
+                //if(Double.isNaN(a.distance(b))){System.out.println("nan... ("+a.getX()+","+a.getY()+" and ("+b.getX()+","+b.getY()+")");}
+                get(a).put(b,a.loc.distance(b.loc));
             }
         }
     }
@@ -110,6 +111,7 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
                 result.replaceIfLessBy(a,b,get(a,b));
             }
         }
+        if(result.first==null){return null;}
         return result;
     }
     

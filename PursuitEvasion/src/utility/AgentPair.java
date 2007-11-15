@@ -6,6 +6,7 @@
 package utility;
 
 import simulation.Agent;
+import scio.coordinate.V2;
 
 /**
  * @author Elisha Peterson
@@ -29,11 +30,25 @@ public class AgentPair {
     // BEAN PATTERNS: GETTERS/SETTERS
     
     public Agent getFirst(){return first;}
+    public V2 getFirstLoc(){return first==null?null:first.loc;}
     public Agent getSecond(){return second;}
+    public V2 getSecondLoc(){return second==null?null:second.loc;}
     public double getDistance(){return distance;}    
     
 // METHODS TO CHANGE THE AGENTS STORED HERE
     
-    public void replaceIfLessBy(Agent a,Agent b,double d){if(d<distance){first=a;second=b;distance=d;}}
-    public void replaceIfMoreBy(Agent a,Agent b,double d){if(d>distance){first=a;second=b;distance=d;}}
+    public void replaceIfLessBy(Agent a,Agent b,double d){
+        if(d<distance){
+            first=a;
+            second=b;
+            distance=d;
+        }        
+    }
+    public void replaceIfMoreBy(Agent a,Agent b,double d){
+        if(d>distance){
+            first=a;
+            second=b;
+            distance=d;
+        }
+    }
 }

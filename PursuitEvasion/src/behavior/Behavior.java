@@ -13,10 +13,10 @@
 
 package behavior;
 
-import Euclidean.PPoint;
-import Euclidean.PVector;
-import Model.ComboBoxRangeModel;
+import sequor.model.ComboBoxRangeModel;
 import simulation.Agent;
+import scio.coordinate.R2;
+import scio.coordinate.V2;
 
 /**
  *
@@ -36,7 +36,9 @@ public abstract class Behavior {
     public static final int LAST=5;
     public static final String[] BEHAVIOR_STRINGS={"Stationary","Seek","Pursue with Lead Factor","Flee","Follow Fixed Path","Follow Random Path"};
 
-    public static ComboBoxRangeModel getComboBoxModel(){return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,FIRST,LAST);}
+    public static ComboBoxRangeModel getComboBoxModel(){
+        return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,FIRST,LAST);
+    }
     
 // CONSTRUCTORS    
     
@@ -45,12 +47,12 @@ public abstract class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-                case STATIONARY:            return new behavior.independent.Stationary();
-        case SEEK:                  return new behavior.pursuit.Seek();
-        case PURSUIT_LEADING:       return new behavior.pursuit.Leading();
-        case FLEE:                  return new behavior.evasion.Flee();
-        case FIXEDPATH:             return new behavior.independent.ApproachPath();
-        case EVASION_RANDOMPATH:    return new behavior.independent.RandomPath();
+        case STATIONARY:            return new behavior.Stationary();
+        case SEEK:                  return new behavior.Seek();
+        case PURSUIT_LEADING:       return new behavior.Leading();
+        case FLEE:                  return new behavior.Flee();
+        case FIXEDPATH:             return new behavior.ApproachPath();
+        case EVASION_RANDOMPATH:    return new behavior.RandomPath();
         }     
         return null;
     }
@@ -62,5 +64,5 @@ public abstract class Behavior {
      * @param target    the agent targeted by the behavior
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this behavior */
-    public abstract PPoint direction(Agent self,PVector target,double t);
+    public abstract R2 direction(Agent self,V2 target,double t);
 }

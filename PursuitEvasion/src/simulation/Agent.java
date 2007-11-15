@@ -5,50 +5,62 @@
 
 package simulation;
 
-import Euclidean.*;
-import Model.*;
+import sequor.model.DoubleRangeModel;
+import sequor.model.PointRangeModel;
+import behavior.Behavior;
+import goal.Task;
+import utility.DistanceTable;
+import scio.coordinate.R2;
+import scio.coordinate.V2;
 import javax.swing.event.ChangeEvent;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Collection;
 import javax.swing.event.EventListenerList;
-import behavior.Behavior;
-import behavior.Task;
 import javax.swing.JPanel;
-import specto.dynamicplottable.PointSet2D;
-import utility.DistanceTable;
+import behavior.TaskFusion;
+import goal.Goal;
+import goal.TaskGenerator;
+import sequor.component.Settings;
+import sequor.model.ColorModel;
+import sequor.model.ComboBoxRangeModel;
+import sequor.model.ParametricModel;
 
 /**
- * @author Elisha Peterson<br><br>
- *
  * Represents a single participant in the pursuit-evasion game. May be a pursuer, an evader, a stationary goal
  * or sensor, a universal knowledge control, etc.<br><br>
  *
  * Each is determined by several characteristic properties (Personality), its team (Team), its understanding
- * of the playing field (Pitch), and its memory (ArrayList of Pitch's).
+ * of the playing field (Pitch), and its memory (Vector of Pitch's).<br><br>
+ * 
+ * @author Elisha Peterson
  */
-public class Agent extends PVector {
+public class Agent implements TaskGenerator {
     
     // PROPERTIES
+    
+    /** Location */
+    public V2 loc;
     
     /** Agent's settings */
     AgentSettings ags;
     
     /** Agent's current list of tasks (changes over time) */
-    ArrayList<Task> tasks;
+    Vector<Task> tasks;
     /** Behavior corresponding to current task */
     Behavior behavior;
     
     /** Agent's initial position */
     PointRangeModel initialPosition;
-    /** Agent's path */
-    PPath path;
     /** Agent's view of the playing field */
-    ArrayList<Agent> pov;
+    Vector<Agent> pov;
     /** Communications regarding the playing field */
-    ArrayList<Agent> commpov;
+    Vector<Agent> commpov;
+    
+    /** Whether the agent is still in play. */
+    boolean active=true;
     
     
     // CONSTRUCTORS
@@ -56,43 +68,42 @@ public class Agent extends PVector {
     /** Default constructor */
     public Agent(){
         super();
+        loc=new V2();
         ags=new AgentSettings();
-        initBehavior();
-        initialPosition=null;
-        initMemory();
+        initialize();
     }
-    public Agent(PPoint p){this();setPoint(p);}
+    public Agent(R2 p){
+        this();
+        setPosition(p);
+    }
     /** Constructs with a player's team only
      * @param team  the agent's team */
     public Agent(Team team){
-        ags=new AgentSettings();
+        this();
         copySettingsFrom(team);
-        initBehavior();
-        initialPosition=null;
-        initMemory();
+        initialize();
     }
     
     
     // METHODS: INITIALIZATION HELPERS
-    
-    /** Sets behavior given default settings */
-    public void initBehavior(){
+
+    /** First initialization of the agent. */
+    public void initialize(){
         behavior=Behavior.getBehavior(getBehavior());
-        tasks=new ArrayList<Task>();
+        tasks=new Vector<Task>();
+        initialPosition=null;
+        pov=new Vector<Agent>();
+        commpov=new Vector<Agent>();
     }
-    /** Initializes memory... path,pov,commpov,memory */
-    public void initMemory(){
-        path=new PPath();
-        pov=new ArrayList<Agent>();
-        commpov=new ArrayList<Agent>();
-        remember();
-    }
-    /** Resets positions, memory, and paths (but not behavior) */
+    
+    /** Resets before another run of the simulation. */
     public void reset(){
-        setPoint(initialPosition.getPoint());
-        initBehavior();
-        initMemory();
+        setPosition(initialPosition.getX(),initialPosition.getY());
+        tasks.clear();
+        pov.clear();
+        commpov.clear();
     }
+    
     public void copySettingsFrom(Team team){
         setSensorRange(team.getSensorRange());
         setCommRange(team.getCommRange());
@@ -105,32 +116,36 @@ public class Agent extends PVector {
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
-    public PPoint getPosition(){return (PPoint)this;}
-    public void setPosition(PPoint newValue){setPoint(newValue);}
+    public R2 getPosition(){return loc.getStart();}
+    public void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}
+    public void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
     // See just before settings subclass for the rest!
     
     
     // BEAN PATTERNS: RESULTS
     
-    /** Returns the agent's path
-     * @return the path plotted so far */
-    public PPath getPath(){return path;}
-    /** Returns plottable path for the agent
-     * @return a path which can be plotted */
-    public PointSet2D getPlotPath(){return new PointSet2D(path,getColor());}
     /** Returns the initial position model
      * @return model with the agent's color at the initial position */
-    public PointRangeModel getPointModel(){if(initialPosition==null){initialPosition=new PointRangeModel(this);initialPosition.addChangeListener(ags);}return initialPosition;}
+    public PointRangeModel getPointModel(){
+        if(initialPosition==null){
+            initialPosition=new PointRangeModel(loc.x,loc.y);
+            initialPosition.addChangeListener(ags);
+        }
+        return initialPosition;
+    }
     
     
     // METHODS: TASKING
         
-    /** Sets single task to seek/flee a given agent. Priority is automatically set to 1.
-     * @param agent the target agent of the task
-     * @param type  0 if trivial (ignored, 1 if pursue, 2 if evade */
-    public void assignTask(PVector agent,int type){
-        tasks.clear();
-        if(type!=0){tasks.add(new Task(agent,type,1));}
+    /** Sets single task to seek/flee a given agent.
+     * @param agent     the target agent of the task
+     * @param g         the goal underlying the task
+     * @param weight    the weighting of the task
+     */
+    public void assignTask(TaskGenerator tg,V2 agent,Goal g,double weight){
+        if(agent!=null){
+            tasks.add(new Task(tg,g,agent,weight));
+        }
     }
     
     
@@ -166,25 +181,25 @@ public class Agent extends PVector {
     }
     
     /** Whether or not this agent can "see" another agent. */
-    public boolean sees(Agent b){return pov.contains(b);}
+    public boolean sees(Agent b){
+        return pov.contains(b);
+    }
     
-    // TODO implement task fusion here!
     /**
      * Determines direction to proceed based on assigned behavior
      * @param time      the current time stamp
      * @param stepTime  the time between iterations
      */
     public void planPath(double time,double stepTime){
-        if(tasks.isEmpty()){v=behavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());           
-        }else{v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*getTopSpeed());
+        if(tasks.isEmpty()){
+            loc.v=behavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());
+            //System.out.println("empty tasks");
+        }else if(tasks.size()==1){            
+            loc.v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*getTopSpeed());
+        }else{
+            loc.v=TaskFusion.getVector(this,behavior,tasks,time).multipliedBy(stepTime*getTopSpeed());
         }
-    }
-    
-    /** Logs current point and pitch in memory, and resets current understanding. */
-    public void remember(){
-        path.add(new PPoint(this));
-        //memory.add(0,pov);
-        //pov.clear();
+        if(java.lang.Double.isNaN(loc.v.x)){System.out.println("nan in path planning "+loc.v.toString()+" and pos x="+loc.x+" y="+loc.y);}
     }
     
     
@@ -211,6 +226,7 @@ public class Agent extends PVector {
     
     // BEAN PATTERNS: INITIAL SETTINGS
     
+    public R2 getInitialPosition(){return new R2(initialPosition.getX(),initialPosition.getY());}
     public double getSensorRange(){return ags.sensorRange.getValue();}
     public double getCommRange(){return ags.commRange.getValue();}
     public double getTopSpeed(){return ags.topSpeed.getValue();}
@@ -218,8 +234,10 @@ public class Agent extends PVector {
     public double getLeadFactor(){return ags.leadFactor.getValue();}
     public Color getColor(){return ags.color.getValue();}
     public String toString(){return ags.s;}
-    public PPoint getPositionTime(double t){return ags.pm.getValue(t);}
+    public R2 getPositionTime(double t){return new R2(ags.pm.getValue(t));}
+    public boolean isActive(){return active;}
     
+    public void deactivate(){active=false;}
     public void setSensorRange(double newValue){ags.sensorRange.setValue(newValue);}
     public void setCommRange(double newValue){ags.commRange.setValue(newValue);}
     public void setTopSpeed(double newValue){ags.topSpeed.setValue(newValue);}
@@ -269,7 +287,6 @@ public class Agent extends PVector {
         
         public void stateChanged(ChangeEvent e){
             if(e.getSource()==behavior){
-                initBehavior();
                 if(behavior.getValue()==Behavior.PURSUIT_LEADING){
                     setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
@@ -280,9 +297,13 @@ public class Agent extends PVector {
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
                     setPropertyEditor("Lead Factor",Settings.NO_EDIT);
                 }
+                fireActionPerformed("agentBehaviorChange");
             }
-            if(e.getSource()==color){fireActionPerformed("agentDisplayChange");
-            } else{fireActionPerformed("agentSetupChange");}
+            if(e.getSource()==color){
+                fireActionPerformed("agentDisplayChange");
+            }else{
+                fireActionPerformed("agentSetupChange");
+            }
         }
     }    
 }
