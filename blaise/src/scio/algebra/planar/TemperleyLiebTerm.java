@@ -14,7 +14,7 @@ import scio.algebra.permutation.Permutation;
 import scio.algebra.polynomial.MAddInt;
 import scio.algebra.polynomial.MPolynomial;
 import scio.graph.Edge;
-import scio.graph.Graph;
+import scio.graph.GraphE;
 
 /**
  * <b>TemperleyLiebElement.java</b><br>
@@ -147,7 +147,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
     
     /** Flips the term upside-down... corresponds to reversing the order of the vertices. */
     public void flipVertical(){
-        Graph g2=g.clone();
+        GraphE g2=g.clone();
         g2.reverseLabels();
         g.clear();
         for(Edge e:g2){this.addEdge(e.getSource(),e.getSink(),e.getWeight());}
@@ -247,7 +247,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
     public ArrayList<ArrayList<Integer>> toLoops(){
         if(in!=out){return null;}
         // Look at just the graph. Add edges from top to bottom.
-        Graph ga=new Graph(g);
+        GraphE ga=new GraphE(g);
         for(int i=1;i<=in;i++){ga.addEdge(2*in+1-i,i);}
         return ga.getLoops();
     }
@@ -279,7 +279,10 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
         }
         return r;
     }
-    /** Associates a polynomial to the term... works much like the above. */
+    /** 
+     * Associates a polynomial to the term... works much like the above. 
+     * @param split     determines # of each matrix variable to use
+     */
     public MPolynomial toPolynomial(int[] split){
         // first labels are "1", the second are "2" and so on...
         ArrayList<Integer> s=new ArrayList<Integer>();
@@ -355,16 +358,16 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
         if(r.size()==1){return getArray(n,r.get(0));}
         if(r.size()==2){return getArray(n,Math.abs(r.get(0))+Math.abs(r.get(1))+l-2);}
         if(r.size()==3){
-            if(r.toString().equals("[1, 3, -2]")){return getArray(n,6);}
-            if(r.toString().equals("[1, -2, 3]")){return getArray(n,7);}
+            if(r.toString().equals("[1, 3, -2]")){return getArray(n,7);}
+            if(r.toString().equals("[1, -2, 3]")){return getArray(n,8);}
         }
         if(r.size()==4){
-            if(r.toString().equals("[1, 2, -3, -2]")){return getArray(n,8);}
-            if(r.toString().equals("[1, -2, -3, 2]")){return getArray(n,9);}
+            if(r.toString().equals("[1, 2, -3, -2]")){return getArray(n,9);}
+            if(r.toString().equals("[1, -2, -3, 2]")){return getArray(n,10);}
         }
         if(r.size()==5){
-            if(r.toString().equals("[1, 3, -1, 2, -3]")){return getArray(n,10);}
-            if(r.toString().equals("[1, -3, 2, -1, 3]")){return getArray(n,11);}
+            if(r.toString().equals("[1, 3, -1, 2, -3]")){return getArray(n,11);}
+            if(r.toString().equals("[1, -3, 2, -1, 3]")){return getArray(n,12);}
             
         }
         System.out.println("TemperleyLiebTerm.convertPoly: unsupported array "+r.toString());
@@ -444,7 +447,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
             return null;
         }
         // set up gTemp as the bottom portion of the diagram, so its puts will not change
-        Graph gTemp=tlx.getGraph().clone();
+        GraphE gTemp=tlx.getGraph().clone();
         int plus=gTemp.glueTo(this.getGraph(),this.inputs,tlx.outputs);
         //System.out.println("gtemp"+gTemp.toString());
         
@@ -467,7 +470,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
             
             // Construct and add an edge for each strand. Here's where some account
             // must be taken for signs/kinks/vertex removals.
-            Graph resultGraph=new Graph();resultGraph.directed=false;resultGraph.multiEdge=true;
+            GraphE resultGraph=new GraphE();resultGraph.directed=false;resultGraph.multiEdge=true;
             resultGraph.addEdge(-1,-1,gTemp.getLoopsAt(-1));
             int newKinks=0;
             for(ArrayDeque<Integer> strand:strands){
@@ -522,7 +525,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
     }
     
     /** Returns a deque containing the given integer based on a list of adjacencies. */
-    public static ArrayDeque<Integer> getStrandFromAdjacency(Graph g,TreeMap<Integer,TreeSet<Integer>> adj,Integer i){
+    public static ArrayDeque<Integer> getStrandFromAdjacency(GraphE g,TreeMap<Integer,TreeSet<Integer>> adj,Integer i){
         ArrayDeque<Integer> result=new ArrayDeque<Integer>();
         result.add(i);
         // add onto the beginning of the deque
@@ -545,7 +548,7 @@ public class TemperleyLiebTerm extends PlanarGraphTerm implements Iterator<Tempe
     }
     
     /** Returns an array of deques as given above, one for each connected component. */
-    public static ArrayDeque<ArrayDeque<Integer>> getAllStrandsFromAdjacency(Graph g,TreeMap<Integer,TreeSet<Integer>> adj){
+    public static ArrayDeque<ArrayDeque<Integer>> getAllStrandsFromAdjacency(GraphE g,TreeMap<Integer,TreeSet<Integer>> adj){
         ArrayDeque<ArrayDeque<Integer>> result=new ArrayDeque<ArrayDeque<Integer>>();
         TreeSet<Integer> vertices=new TreeSet<Integer>();
         vertices.addAll(adj.keySet());

@@ -26,14 +26,14 @@ public class GraphTest extends TestCase {
     
     public static Test suite(){return new TestSuite(GraphTest.class);}
 
-    Graph instance;
+    GraphE instance;
     
     public GraphTest(String testName) {
         super(testName);
     }
 
     protected void setUp() throws Exception {
-        instance=new Graph();
+        instance=new GraphE();
         instance.addEdge(1,2);
         instance.addEdge(1,2,4);
         instance.addEdge(1,2,-2);
@@ -246,7 +246,7 @@ public class GraphTest extends TestCase {
      */
     public void testGlueTo() {
         System.out.println("glueTo");
-        Graph instance2=new Graph();
+        GraphE instance2=new GraphE();
         instance2.addEdge(3,1);
         instance2.addEdge(2,3);
         instance2.addEdge(3,4);
@@ -284,7 +284,7 @@ public class GraphTest extends TestCase {
         System.out.println("isConnected");
         assertEquals("g connected",false,instance.isConnected());        
         assertEquals("n1 connected",true,instance.getNeighborhood(1).isConnected());
-        Graph instance2=new Graph();
+        GraphE instance2=new GraphE();
         instance2.addEdge(3,1);
         instance2.addEdge(2,3);
         instance2.addEdge(3,4);
@@ -310,7 +310,7 @@ public class GraphTest extends TestCase {
     public void testGetAllComponents() {
         System.out.println("getAllComponents");
         ArrayList<Integer> vertices=new ArrayList<Integer>();
-        for(Graph g:instance.getAllComponents()){vertices.add(g.getNumVertices());}        
+        for(GraphE g:instance.getAllComponents()){vertices.add(g.getNumVertices());}        
         assertEquals("[0, 8, 1, 2]",vertices.toString());
     }
 

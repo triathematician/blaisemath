@@ -7,7 +7,6 @@
 
 package scio.algebra.planar;
 
-import scio.algebra.planar.TemperleyLiebElement;
 import junit.framework.*;
 import scio.algebra.permutation.Permutation;
 import scio.algebra.polynomial.MPolynomial;
@@ -222,11 +221,10 @@ public class TemperleyLiebElementTest extends TestCase {
         }
         
         System.out.println("Rank 2 Central Functions:");
-        for(int rank=0;rank<=6;rank++){
-            for(int c=rank;c>=0;c--){
-                for(int a=c;a>=0;a--){
-                    int b=2*rank-a-c;
-                    if(b>a||b<0){continue;}
+        for(int a=0;a<=4;a++){
+            for(int b=0;b<=4;b++){
+                for(int c=Math.abs(a-b);c<=a+b;c+=2){
+                    if(c>5){continue;}
                     System.out.println("cftest["+a+","+b+","+c+"] := ("
                             +TemperleyLiebElement.getCentral(a,b,c).toString()
                             +")/"+(factorial(a)*factorial(b)*factorial(c)));
@@ -235,31 +233,28 @@ public class TemperleyLiebElementTest extends TestCase {
         }
         
         System.out.println("Rank 3 Central Functions:");
-        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,2,0).toString());
-        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,0,2,2).toString());
-        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,2,2).toString());
-        System.out.println("All 2s: "+TemperleyLiebElement.getCentral(2,2,2,2,4,2).toString());
-        for(int a=0;a<=3;a++){
-            for(int b=0;b<=3;b++){
-                for(int c=0;c<=3;c++){
-                    for(int d=Math.abs(a-b);d<=a+b;d+=2){
-                        if(d>5){continue;}
-                        for(int f=Math.abs(a-b);f<=a+b;f+=2){
-                            if(f>5){continue;}
-                            for(int e=Math.abs(c-d);e<=c+d;e+=2){
-                                if(e>5){continue;}
-                                if(d==0&&f==0&&e!=0){continue;}
+//        System.out.println("All 1s: "+TemperleyLiebElement.getCentral(1,1,1,0,1,2).toString());
+//        System.out.println("All 1s: "+TemperleyLiebElement.getCentral(1,1,1,2,1,0).toString());
+//        System.out.println("All 1s: "+TemperleyLiebElement.getCentral(1,1,1,2,1,2).toString());
+//        System.out.println("All 1s: "+TemperleyLiebElement.getCentral(1,1,1,2,3,2).toString());
+        
+        int n=0;
+        for(int a=0;a<=3;a++){for(int b=0;b<=3;b++){for(int c=0;c<=3;c++){
+                    for(int d=Math.abs(a-b);d<=a+b;d+=2){if(d>3){continue;}
+                        for(int f=Math.abs(a-b);f<=a+b;f+=2){if(f>3){continue;}
+                            for(int e=Math.abs(c-d);e<=c+d;e+=2){if(e>3){continue;}
                                 if(!TemperleyLiebElement.admissible(c,f,e)){continue;}
-                                MPolynomial cf=TemperleyLiebElement.getCentral(a,b,c,d,e,f);
-                                if(cf==null){continue;}
-                                System.out.println("cftest["+a+","+b+","+c+","+d+","+e+","+f+"] := ("
+                                try{
+                                    MPolynomial cf=TemperleyLiebElement.getCentral(a,b,c,d,e,f);
+                                    System.out.println("cftest["+a+","+b+","+c+","+d+","+e+","+f+"] := ("
                                         +TemperleyLiebElement.getCentral(a,b,c,d,e,f).toString()
                                         +")/"+(factorial(a)*factorial(b)*factorial(c)*factorial(d)*factorial(e)*factorial(f)));
+                                    n++;
+                                }catch(NullPointerException evt){}
                             }
                         }
                     }
-                }
-            }
-        }
+        }}}
+        System.out.println(n+" functions computed!");
     }
 }

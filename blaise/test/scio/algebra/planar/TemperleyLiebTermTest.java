@@ -9,7 +9,7 @@ package scio.algebra.planar;
 
 import scio.algebra.planar.TemperleyLiebTerm;
 import junit.framework.*;
-import scio.graph.Graph;
+import scio.graph.GraphE;
 import scio.algebra.permutation.Permutation;
 
 /**
@@ -187,7 +187,7 @@ public class TemperleyLiebTermTest extends TestCase {
      */
     public void testGetStrandFromAdjacency() {
         System.out.println("getStrandFromAdjacency");
-        Graph g=new Graph();
+        GraphE g=new GraphE();
         g.addEdge(1,2);g.addEdge(3,8);g.addEdge(2,3);g.addEdge(5,8);
         g.addEdge(4,4);g.addEdge(-1,-1);
         assertEquals("[1, 2, 3, 8, 5]",TemperleyLiebTerm.getStrandFromAdjacency(g,g.getAllAdjacencies(),5).toString());
@@ -200,7 +200,7 @@ public class TemperleyLiebTermTest extends TestCase {
      */
     public void testGetAllStrandsFromAdjacency() {
         System.out.println("getStrandFromAdjacency");
-        Graph g=new Graph();
+        GraphE g=new GraphE();
         g.addEdge(1,2);g.addEdge(3,8);g.addEdge(2,3);g.addEdge(5,8);
         g.addEdge(4,4);g.addEdge(-1,-1);
         assertEquals("[[5, 8, 3, 2, 1], [4, 4]]",TemperleyLiebTerm.getAllStrandsFromAdjacency(g,g.getAllAdjacencies()).toString());

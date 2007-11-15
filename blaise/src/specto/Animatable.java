@@ -5,8 +5,8 @@
 
 package specto;
 
+import sequor.component.RangeTimer;
 import java.awt.Graphics2D;
-import javax.swing.Timer;
 
 /**
  * This interface handles animation of objects on the plot window. By default, most Plottable's
@@ -16,5 +16,5 @@ import javax.swing.Timer;
  * @author Elisha Peterson
  */
 public interface Animatable<V extends Visometry> {    
-    public abstract void paintComponent(Graphics2D g,V v,Timer t);    
+    public abstract void paintComponent(Graphics2D g,RangeTimer t);    
 }

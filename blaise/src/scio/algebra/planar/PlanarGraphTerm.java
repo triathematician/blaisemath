@@ -3,7 +3,7 @@ package scio.algebra.planar;
 import java.util.ArrayList;
 import scio.algebra.GroupElement;
 import scio.algebra.GroupElementId;
-import scio.graph.Graph;
+import scio.graph.GraphE;
 import scio.algebra.planar.GraphGroupTerm;
 
 /**
@@ -25,7 +25,7 @@ public class PlanarGraphTerm extends GraphGroupTerm {
         inputs=new ArrayList<Integer>();for(int i=0;i<n;i++){inputs.add(i);}
         outputs=new ArrayList<Integer>();for(int i=0;i<m;i++){outputs.add(i);}        
     }
-    public PlanarGraphTerm(Graph g){super(g);inputs=new ArrayList<Integer>();outputs=new ArrayList<Integer>();}
+    public PlanarGraphTerm(GraphE g){super(g);inputs=new ArrayList<Integer>();outputs=new ArrayList<Integer>();}
         
     /** Usually not commutative! */
     public static boolean isCommutative(){return false;}

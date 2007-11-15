@@ -3,9 +3,9 @@
  * Created on Sep 14, 2007, 8:15:59 AM
  */
 
-package specto.coordinate;
+package scio.coordinate;
 
-import specto.Coordinate;
+import scio.coordinate.Coordinate;
 
 /**
  * This class handles three-dimensional coordinates in space.

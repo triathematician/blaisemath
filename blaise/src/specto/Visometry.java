@@ -5,8 +5,20 @@
 
 package specto;
 
+import scio.coordinate.Coordinate;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.Point2D;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -20,7 +32,8 @@ import javax.swing.event.EventListenerList;
  * <br><br>
  * @author ae3263
  */
-public abstract class Visometry<C extends Coordinate> implements ChangeListener {
+public abstract class Visometry<C extends Coordinate> 
+        implements ComponentListener,ChangeListener,MouseListener,MouseMotionListener,MouseWheelListener,BuildsContextMenu{
 
     
     // PROPERTIES
@@ -30,18 +43,24 @@ public abstract class Visometry<C extends Coordinate> implements ChangeListener 
     
     // CONSTRUCTORS    
     public Visometry(){container=null;}
-    public Visometry(PlotPanel p){initContainer(p);computeTransformation();}
+    public Visometry(PlotPanel p){initContainer(p);p.setVisometry(this);computeTransformation();}
     
     
     // INITIALIZERS
-    public void initContainer(PlotPanel p){container=p;addChangeListener(container);computeTransformation();}
+    public void initContainer(PlotPanel p){
+        container=p;        
+        addChangeListener(container);
+        computeTransformation();
+    }
     
     
     // TRANSLATORS
-    public abstract Point toWindow(C cp);
+    public abstract Point2D.Double toWindow(C cp);
     public abstract C toGeometry(Point wp);
-    public Point getWindowMin(){return new Point(0,-1);}
-    public Point getWindowMax(){return new Point(-1,0);}
+    public Point2D.Double getWindowMin(){return new Point2D.Double(0,container.getHeight());}
+    public Point2D.Double getWindowMax(){return new Point2D.Double(container.getWidth(),0);}
+    public int getWindowWidth(){return container.getWidth();}
+    public int getWindowHeight(){return container.getHeight();}
     
     
     // UPDATERS    
@@ -51,10 +70,24 @@ public abstract class Visometry<C extends Coordinate> implements ChangeListener 
     
     // EVENT HANDLING
     /** Indicates the window has been resized... then recompute the transformation! */
-    public void stateChanged(ChangeEvent e){if(container!=null){computeTransformation();}}
+    public void componentResized(ComponentEvent e){if(container!=null){computeTransformation();}}    
+    public void actionPerformed(ActionEvent e){}
+    public void stateChanged(ChangeEvent e){}
+    public void componentMoved(ComponentEvent e){}
+    public void componentShown(ComponentEvent e){}
+    public void componentHidden(ComponentEvent e){}
+    public void mouseMoved(MouseEvent e){}
+    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){}
+    public void mouseClicked(MouseEvent e){}
+    public void mousePressed(MouseEvent e){}
+    public void mouseDragged(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){}
+    public void mouseWheelMoved(MouseWheelEvent e){}
+    
     
     /** Event handling code copied from DefaultBoundedRangeModel. */      
-    protected ChangeEvent changeEvent=null;
+    protected ChangeEvent changeEvent=new ChangeEvent("Visometry");
     protected EventListenerList listenerList=new EventListenerList();    
     public void addChangeListener(ChangeListener l){listenerList.add(ChangeListener.class,l);}
     public void removeChangeListener(ChangeListener l){listenerList.remove(ChangeListener.class,l);}
@@ -67,4 +100,5 @@ public abstract class Visometry<C extends Coordinate> implements ChangeListener 
             }
         }
     }
+    
 }

@@ -13,5 +13,6 @@
             </test-roots>
         </data>
         <junit-version xmlns="http://www.netbeans.org/ns/junit/1" value="junit4"/>
+        <references xmlns="http://www.netbeans.org/ns/ant-project-references/1"/>
     </configuration>
 </project>

@@ -1,13 +1,15 @@
 /*
  * TestFrame.java
- *
  * Created on September 15, 2007, 1:00 PM
  */
 
 package specto.tests;
 
+import specto.gridplottable.Grid2D;
+import specto.plottable.VectorField2D;
+import specto.plottable.PlaneFunction2D;
 import specto.PlotPanel;
-import specto.dynamicplottable.Grid2D;
+import specto.dynamicplottable.*;
 import specto.visometry.Euclidean2;
 
 /**
@@ -23,12 +25,23 @@ public class TestFrame extends javax.swing.JFrame {
         initComponents();
     }
     
+    @SuppressWarnings("unchecked")
     private void initComponents() {
         pp=new PlotPanel(new Euclidean2());
-        pp.add(new Grid2D());        
+        pp.add(new Grid2D());     
+        //pp.add(new PolarGrid2D());
+        //pp.add(new PlaneFunction2D());
+        pp.add(new VectorField2D());
+        pp.add(new DESolution2D());
+        pp.add(new DESolution2D());
+        //pp.add(new Function2D());
+        //pp.add(new Parametric2D());
+        //pp.add(new Point2D());
+        //pp.add(new Point2D());
         add(pp);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         pack();
+        pp.getVisometry().computeTransformation();
     }// </editor-fold>
     
     /**

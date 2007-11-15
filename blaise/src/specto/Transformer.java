@@ -5,6 +5,8 @@
 
 package specto;
 
+import scio.coordinate.Coordinate;
+
 /**
  * This interface is more than meets the eye. Okay, well it handles transformations between
  * two underlying geometries, geometry "from" and geometry "to".

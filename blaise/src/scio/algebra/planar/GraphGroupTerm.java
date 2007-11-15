@@ -14,11 +14,11 @@ import scio.algebra.GroupElementId;
  * The actual graph is stored in the "Graph" class, as an ordered collection of edges.
  */
 public class GraphGroupTerm extends GroupElementId{
-    protected Graph g;
-    public GraphGroupTerm(){g=new Graph();}
-    public GraphGroupTerm(Graph g){if(valid(g)){this.g=new Graph(g);}}
+    protected GraphE g;
+    public GraphGroupTerm(){g=new GraphE();}
+    public GraphGroupTerm(GraphE g){if(valid(g)){this.g=new GraphE(g);}}
     
-    public Graph getGraph(){return g;}
+    public GraphE getGraph(){return g;}
     
     /** Fundamental validity check! */
     public boolean validEdge(int a,int b,int w){return true;}
@@ -33,7 +33,7 @@ public class GraphGroupTerm extends GroupElementId{
         
     /** Adding edges requires validity checks... override these methods to
      * limit the structure of the graph. */
-    public boolean valid(Graph g){for(Edge e:g){if(!validEdge(e))return false;}return true;}
+    public boolean valid(GraphE g){for(Edge e:g){if(!validEdge(e))return false;}return true;}
     public boolean validEdge(Edge e){return validEdge(e.getSource(),e.getSink(),e.getWeight());}
     public boolean validEdge(int a,int b){return validEdge(a,b,1);}
     public void addEdge(int a,int b){addEdge(a,b,1);}

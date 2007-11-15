@@ -7,10 +7,14 @@ package specto.visometry;
 
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.util.Vector;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import specto.Coordinate;
+import javax.swing.JPopupMenu;
+import scio.coordinate.Coordinate;
 import specto.Visometry;
-import specto.coordinate.R3;
+import scio.coordinate.R3;
 
 /**
  * This class handles coordinate transformations betwen standard 3D Cartesian coordinates
@@ -20,18 +24,12 @@ import specto.coordinate.R3;
  */
 public class Euclidean3 extends Visometry<R3> {
 
-// PROPERTIES
     AffineTransform at;
-
-// CONSTANTS
-
-
-// CONSTRUCTORS
-
+    
     /** Default constructor */
     public Euclidean3(){}
 
-    public Point toWindow(R3 cp) {
+    public Point2D.Double toWindow(R3 cp) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -48,10 +46,8 @@ public class Euclidean3 extends Visometry<R3> {
     }
 
 
-// BEAN PATTERNS: GETTERS & SETTERS
-
-
-// METHODS:
-
+    public Vector<JMenuItem> getMenuItems() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
