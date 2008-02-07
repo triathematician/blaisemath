@@ -2,7 +2,7 @@ package Blaise;
 
 import Interface.BPlottable;
 import Model.FollowerRangeModel;
-import Model.PointRangeModel;
+import sequor.model.PointRangeModel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
