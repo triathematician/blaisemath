@@ -1,9 +1,8 @@
-package scio.planar;
+package scio.algebra.planar;
 
 import scio.algebra.GroupAlgebraElement;
-import scio.algebra.GroupAlgebraTerm;
+import scio.algebra.GroupAlgebraSummand;
 import scio.graph.Edge;
-import java.util.ArrayList;
 
 /**
  * <b>TemperleyLiebAlgebra.java</b><br>
@@ -32,10 +31,10 @@ public class TemperleyLiebAlgebra extends GroupAlgebraElement<TemperleyLiebEleme
     
     /** Returns TemperleyLiebAlgebra element with crossings removed. */
     public static TemperleyLiebAlgebra removeCrossings(TemperleyLiebElement e){
-        TemperleyLiebAlgebra result=new TemperleyLiebAlgebra(e.n);
+        TemperleyLiebAlgebra result=null;//new TemperleyLiebAlgebra(e.n);
         float COEFF1=+1;
         float COEFF2=-1;
-        Edge[] ce=e.getCrossedEdges();
+        /**Edge[] ce=e.getCrossedEdges();
         if(ce==null){result.appendTerm(e);}
         else{
             TemperleyLiebElement e1=new TemperleyLiebElement(e);
@@ -50,14 +49,14 @@ public class TemperleyLiebAlgebra extends GroupAlgebraElement<TemperleyLiebEleme
             e2.addEdge(ce[0].getSource(),ce[1].getSink());
             e2.addEdge(ce[0].getSink(),ce[1].getSource());
             result.append(COEFF2,removeCrossings(e2));
-        }
+        }*/
         return result;
     }  
     
     /** Removes all crossings in current algebra element. */
     public void removeCrossings(){
         TemperleyLiebAlgebra result=new TemperleyLiebAlgebra(n);
-        for(GroupAlgebraTerm<TemperleyLiebElement> t:getTermList()){
+        for(GroupAlgebraSummand<TemperleyLiebElement> t:getTermList()){
             result.append(t.getWeight(),removeCrossings(t.getElement()));
         }
     }    
@@ -70,7 +69,7 @@ public class TemperleyLiebAlgebra extends GroupAlgebraElement<TemperleyLiebEleme
         TemperleyLiebElement e=new TemperleyLiebElement(n);
         TemperleyLiebAlgebra result=new TemperleyLiebAlgebra(n);
         float weight=1/factorial(n);
-        while(e.hasNext()){result.appendTerm(weight,e);e=e.next();}
+        //while(e.hasNext()){result.appendTerm(weight,e);e=e.next();}
         result.appendTerm(weight,e);
         return result;
     }    
@@ -81,17 +80,17 @@ public class TemperleyLiebAlgebra extends GroupAlgebraElement<TemperleyLiebEleme
         TemperleyLiebElement e=new TemperleyLiebElement(n);
         TemperleyLiebAlgebra result=new TemperleyLiebAlgebra(n);
         float weight=1/factorial(n);
-        while(e.hasNext()){result.appendTerm(weight,e);e=e.next();}
+        //while(e.hasNext()){result.appendTerm(weight,e);e=e.next();}
         result.appendTerm(weight,e);
         return result;
     }        
     /** String output */
     public String toString(){
-        if(elements.size()==0){return "0";}
+        //if(elements.size()==0){return "0";}
         String s="";
-        for(GroupAlgebraTerm<TemperleyLiebElement> t:elements){
+        /**for(GroupAlgebraTerm<TemperleyLiebElement> t:elements){
             s+=t.coeffString()+t.getElement().getParenString();
-        }
+        }*/
         return s;
     }
 }

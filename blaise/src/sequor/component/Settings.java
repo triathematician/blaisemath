@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -48,31 +49,53 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
     /** List of editor types to use. */
     protected Vector<Integer> editors=new Vector<Integer>();
     
-    // Constants for editor types
+    /** Adds a listening property which cannot be edited */
     public static final int NO_EDIT=0;
+    /** Adds a spinner with double editing */
     public static final int EDIT_DOUBLE=1;
+    /** Adds a spinner with integer editing */
     public static final int EDIT_INTEGER=2;
+    /** Adds a combo box with several strings */
     public static final int EDIT_COMBO=3;
+    /** Adds a text field with string editing */
     public static final int EDIT_STRING=4;
+    /** Adds a button for color editing */
     public static final int EDIT_COLOR=5;
+    /** Adds a checkbox for boolean editing */
     public static final int EDIT_BOOLEAN=6;
+    /** Adds field for function editing */
+    public static final int EDIT_FUNCTION=9;
+    /** Adds two fields for parametric function editing */
     public static final int EDIT_PARAMETRIC=10;
+    /** Adds a separator */
+    public static final int EDIT_SEPARATOR=99;
     
     /** Adds property to the editor */
     public void addProperty(String s,FiresChangeEvents model,int type){names.add(s);models.add(model);editors.add(type);}
+    /** Adds a separator */
+    public void addPropertySeparator(){names.add(null);models.add(null);editors.add(EDIT_SEPARATOR);}
     
     /** Changes edit status of a property, by name */
     public void setPropertyEditor(String s,int newType){
-        for(int i=0;i<names.size();i++){if(names.get(i)==s){editors.set(i,newType);}}
+        for(int i=0;i<names.size();i++){
+            if(names.get(i)==null){continue;}
+            if(names.get(i)==s){editors.set(i,newType);}
+        }
     }
     
     // EVENT HANDLING SUPPORT
     
     /** Sets up event listening. Should be called by the constructor!! */
-    protected void initEventListening(){for(FiresChangeEvents m:models){m.addChangeListener(this);}}
+    protected void initEventListening(){
+        for(FiresChangeEvents m:models){
+            if(m==null){continue;}
+            m.addChangeListener(this);
+        }
+    }
     /**This should pass state changes to pcs. */
     public void stateChanged(ChangeEvent e){
         for(int i=0;i<models.size();i++){
+            if(models.get(i)==null){continue;}
             if(e.getSource()==models.get(i)){
                 propertyChange(models.get(i).getChangeEvent(names.get(i)));
             }
@@ -124,14 +147,19 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
         for(int i=0;i<names.size();i++){
             if(editors.get(i)==NO_EDIT){numComponents--;
             }else{
-                result.add(new JLabel(names.get(i)));
-                switch(editors.get(i)){
-                case EDIT_DOUBLE    : result.add(getSpinner((DoubleRangeModel)models.get(i)));break;
-                case EDIT_INTEGER   : result.add(getSpinner((IntegerRangeModel)models.get(i)));break;
-                case EDIT_COMBO     : result.add(getComboBox((ComboBoxRangeModel)models.get(i)));break;
-                case EDIT_STRING    : result.add(new JTextField());break;
-                case EDIT_COLOR     : result.add(new ColorEditor((ColorModel)models.get(i)).getButton());break;
-                case EDIT_PARAMETRIC: result.add(new BParametricFunctionPanel((ParametricModel)models.get(i)));break;
+                if(editors.get(i)==EDIT_SEPARATOR){
+                    result.add(new JSeparator());
+                    result.add(new JSeparator());
+                }else{
+                    result.add(new JLabel(names.get(i)));
+                    switch(editors.get(i)){
+                    case EDIT_DOUBLE    : result.add(getSpinner((DoubleRangeModel)models.get(i)));break;
+                    case EDIT_INTEGER   : result.add(getSpinner((IntegerRangeModel)models.get(i)));break;
+                    case EDIT_COMBO     : result.add(getComboBox((ComboBoxRangeModel)models.get(i)));break;
+                    case EDIT_STRING    : result.add(new JTextField());break;
+                    case EDIT_COLOR     : result.add(new ColorEditor((ColorModel)models.get(i)).getButton());break;
+                    case EDIT_PARAMETRIC: result.add(new BParametricFunctionPanel((ParametricModel)models.get(i)));break;
+                    }
                 }
             }
         }

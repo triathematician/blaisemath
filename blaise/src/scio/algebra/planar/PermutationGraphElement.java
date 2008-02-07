@@ -1,4 +1,6 @@
-package scio.planar;
+package scio.algebra.planar;
+
+import scio.algebra.planar.TemperleyLiebElement;
 
 /**
  * <b>PermutationGraphElement.java</b><br>

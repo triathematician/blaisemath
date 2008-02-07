@@ -1,10 +1,10 @@
-package scio.planar;
+package scio.algebra.planar;
 
 import java.util.ArrayList;
 import scio.algebra.GroupElement;
 import scio.algebra.GroupElementId;
 import scio.graph.Graph;
-import scio.graph.GraphGroupElement;
+import scio.graph.GraphE;
 
 /**
  * <b>PlanarGraphElement.java</b><br>
@@ -14,7 +14,7 @@ import scio.graph.GraphGroupElement;
  * Planar graph elements are simply graphs with subsets (no-repeat lists) of inputs
  * and outputs specified... this provides a canonical way to glue two graphs together!
  */
-public class PlanarGraphElement extends GraphGroupElement {
+public class PlanarGraphElement extends GraphGroupTerm {
     ArrayList<Integer> inputs;
     ArrayList<Integer> outputs;
     
@@ -25,7 +25,7 @@ public class PlanarGraphElement extends GraphGroupElement {
         inputs=new ArrayList<Integer>();for(int i=0;i<n;i++){inputs.add(i);}
         outputs=new ArrayList<Integer>();for(int i=0;i<m;i++){outputs.add(i);}        
     }
-    public PlanarGraphElement(Graph g){super(g);inputs=new ArrayList<Integer>();outputs=new ArrayList<Integer>();}
+    public PlanarGraphElement(GraphE g){super(g);inputs=new ArrayList<Integer>();outputs=new ArrayList<Integer>();}
         
     /** Usually not commutative! */
     public static boolean isCommutative(){return false;}
