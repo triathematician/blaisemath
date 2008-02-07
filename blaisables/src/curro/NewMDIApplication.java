@@ -1,32 +1,20 @@
 /*
- * BlaisePlotter.java
+ * NewMDIApplication.java
  *
- * Created on November 9, 2007, 1:36 PM
+ * Created on November 9, 2007, 2:05 PM
  */
 
 package curro;
-
-import specto.dynamicplottable.DESolution2D;
-import specto.dynamicplottable.Function2D;
-import specto.dynamicplottable.Parametric2D;
-import specto.plottable.PlaneFunction2D;
-import specto.plottable.VectorField2D;
 
 /**
  *
  * @author  ae3263
  */
-public class SamplePlotters extends javax.swing.JFrame {
+public class NewMDIApplication extends javax.swing.JFrame {
     
-    /** Creates new form BlaisePlotter */
-    public SamplePlotters() {
+    /** Creates new form NewMDIApplication */
+    public NewMDIApplication() {
         initComponents();
-        plot2D1.add(new Function2D());
-        plot2D2.add(new Parametric2D());
-        plot2D3.add(new VectorField2D());
-        plot2D3.add(new DESolution2D());
-        plot2D3.add(new DESolution2D());
-        plot2D4.add(new PlaneFunction2D());
     }
     
     /** This method is called from within the constructor to
@@ -37,12 +25,11 @@ public class SamplePlotters extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        desktopPane = new javax.swing.JDesktopPane();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
         plot2D1 = new specto.plotpanel.Plot2D();
+        jInternalFrame2 = new javax.swing.JInternalFrame();
         plot2D2 = new specto.plotpanel.Plot2D();
-        plot2D3 = new specto.plotpanel.Plot2D();
-        plot2D4 = new specto.plotpanel.Plot2D();
-        plot3D1 = new specto.plotpanel.Plot3D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -55,63 +42,69 @@ public class SamplePlotters extends javax.swing.JFrame {
         pasteMenuItem = new javax.swing.JMenuItem();
         deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
+        contentMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jInternalFrame1.setIconifiable(true);
+        jInternalFrame1.setMaximizable(true);
+        jInternalFrame1.setResizable(true);
+        jInternalFrame1.setVisible(true);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 220, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 145, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Basic", plot2D1);
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(plot2D1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, Short.MAX_VALUE)
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(plot2D1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, Short.MAX_VALUE)
+        );
+
+        jInternalFrame1.setBounds(130, 50, 230, 180);
+        desktopPane.add(jInternalFrame1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        jInternalFrame2.setVisible(true);
 
         javax.swing.GroupLayout plot2D2Layout = new javax.swing.GroupLayout(plot2D2);
         plot2D2.setLayout(plot2D2Layout);
         plot2D2Layout.setHorizontalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 180, Short.MAX_VALUE)
         );
         plot2D2Layout.setVerticalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 134, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Parametric", plot2D2);
-
-        javax.swing.GroupLayout plot2D3Layout = new javax.swing.GroupLayout(plot2D3);
-        plot2D3.setLayout(plot2D3Layout);
-        plot2D3Layout.setHorizontalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+        javax.swing.GroupLayout jInternalFrame2Layout = new javax.swing.GroupLayout(jInternalFrame2.getContentPane());
+        jInternalFrame2.getContentPane().setLayout(jInternalFrame2Layout);
+        jInternalFrame2Layout.setHorizontalGroup(
+            jInternalFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(plot2D2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, Short.MAX_VALUE)
         );
-        plot2D3Layout.setVerticalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Field", plot2D3);
-
-        javax.swing.GroupLayout plot2D4Layout = new javax.swing.GroupLayout(plot2D4);
-        plot2D4.setLayout(plot2D4Layout);
-        plot2D4Layout.setHorizontalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        plot2D4Layout.setVerticalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+        jInternalFrame2Layout.setVerticalGroup(
+            jInternalFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame2Layout.createSequentialGroup()
+                .addComponent(plot2D2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Surface", plot2D4);
-        jTabbedPane1.addTab("tab5", plot3D1);
+        jInternalFrame2.setBounds(50, 90, 190, 170);
+        desktopPane.add(jInternalFrame2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         fileMenu.setText("File");
 
@@ -152,8 +145,8 @@ public class SamplePlotters extends javax.swing.JFrame {
 
         helpMenu.setText("Help");
 
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
+        contentMenuItem.setText("Contents");
+        helpMenu.add(contentMenuItem);
 
         aboutMenuItem.setText("About");
         helpMenu.add(aboutMenuItem);
@@ -166,11 +159,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
         );
 
         pack();
@@ -186,30 +179,29 @@ public class SamplePlotters extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SamplePlotters().setVisible(true);
+                new NewMDIApplication().setVisible(true);
             }
         });
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentsMenuItem;
+    private javax.swing.JMenuItem contentMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JInternalFrame jInternalFrame2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private specto.plotpanel.Plot2D plot2D1;
     private specto.plotpanel.Plot2D plot2D2;
-    private specto.plotpanel.Plot2D plot2D3;
-    private specto.plotpanel.Plot2D plot2D4;
-    private specto.plotpanel.Plot3D plot3D1;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
