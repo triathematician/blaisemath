@@ -7,8 +7,8 @@ package tasking;
 
 import simulation.Agent;
 import tasking.Tasking;
-import java.util.ArrayList;
 import goal.Goal;
+import java.util.Vector;
 
 /**
  * @author Elisha Peterson
@@ -18,7 +18,7 @@ import goal.Goal;
  */
 public class Control extends Tasking {
 
-    public void assign(ArrayList<Agent> team, Goal goal,double weight) {
+    public void assign(Vector<Agent> team, Goal goal,double weight) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

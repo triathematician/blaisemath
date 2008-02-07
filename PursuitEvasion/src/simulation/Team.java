@@ -4,6 +4,8 @@
  */
 
 // TODO Add team select box to goal settings panel
+// TODO Move starting location initializers to outside utility class
+// TODO Consolidate all "broadcast" methods
 
 package simulation;
 
@@ -264,7 +266,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     // BOOLEAN-GENERATING METHODS TESTING FOR WHETHER GOAL HAS BEEN REACHED
     
     /**
-     * Checks to see if default value if goal has changed.
+     * Checks to see if default value of goal has changed.
      * @param d     the global distance table
      */
     public void checkGoal(DistanceTable d,double time){  
@@ -313,6 +315,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     @Override
     public String toString(){return tes.s;}
     
+    @Override
     public void setSize(int newValue){tes.size.setValue(newValue);}
     public void setStart(int newValue){tes.start.setValue(newValue);}
     
@@ -404,6 +407,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         }*/
         
         /** Listens for changes to settings */
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             editing=true;
             String ac=null;

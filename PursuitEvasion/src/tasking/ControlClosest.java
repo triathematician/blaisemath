@@ -6,7 +6,7 @@
 package tasking;
 
 import simulation.Agent;
-import java.util.ArrayList;
+import java.util.Vector;
 import goal.Goal;
 import utility.AgentPair;
 import utility.DistanceTable;
@@ -32,11 +32,11 @@ public class ControlClosest extends Control {
      * @param team pursuing team
      * @param goal the goal to work with
      */
-    public void assign(ArrayList<Agent> team,Goal goal,double weight){
+    public void assign(Vector<Agent> team,Goal goal,double weight){
         DistanceTable dist=new DistanceTable(team,goal.getTarget());            
         // assign prey by closest-to-pursuer first
-        ArrayList<Agent> ps=new ArrayList<Agent>(team);
-        ArrayList<Agent> es=new ArrayList<Agent>(goal.getTarget());
+        Vector<Agent> ps=new Vector<Agent>(team);
+        Vector<Agent> es=new Vector<Agent>(goal.getTarget());
         AgentPair closest;
         while(!ps.isEmpty()&&!es.isEmpty()){
             closest=dist.min(ps,es);

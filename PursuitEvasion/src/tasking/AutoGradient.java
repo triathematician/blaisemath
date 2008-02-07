@@ -6,8 +6,8 @@
 package tasking;
 
 import simulation.Agent;
-import java.util.ArrayList;
 import goal.Goal;
+import java.util.Vector;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
 
@@ -24,7 +24,7 @@ public class AutoGradient extends Autonomy {
     /** Performs tasking based on a preset goal.
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
-    public void assign(ArrayList<Agent> team,Goal goal,double weight){
+    public void assign(Vector<Agent> team,Goal goal,double weight){
         int POWER=-1;
         for(Agent a:team){
             R2 dir=new R2();

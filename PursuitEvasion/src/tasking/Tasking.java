@@ -4,13 +4,12 @@
  */
 
 // TODO offload static methods to factory class
-// TODO change ArrayList to Vector
 
 package tasking;
 
 import goal.Goal;
 import simulation.Agent;
-import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * @author Elisha Peterson
@@ -56,5 +55,5 @@ public abstract class Tasking {
     /** Assigns agents of team a to targets, given the specified goal
      * @param team  team to assign tasks to
      * @param goal  the goal used to make the assignments */
-    public abstract void assign(ArrayList<Agent> team,Goal goal,double weight);
+    public abstract void assign(Vector<Agent> team,Goal goal,double weight);
 }

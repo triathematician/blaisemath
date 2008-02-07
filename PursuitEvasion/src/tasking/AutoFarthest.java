@@ -6,8 +6,8 @@
 package tasking;
 
 import simulation.Agent;
-import java.util.ArrayList;
 import goal.Goal;
+import java.util.Vector;
 import utility.DistanceTable;
 
 /**
@@ -22,7 +22,7 @@ public class AutoFarthest extends Autonomy {
     /** Performs tasking based on a preset goal.
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
-    public void assign(ArrayList<Agent> team,Goal goal,double weight){
+    public void assign(Vector<Agent> team,Goal goal,double weight){
         DistanceTable dist=new DistanceTable(team,goal.getTarget());
         for(Agent p:team){
             p.assignTask(null,dist.maxVisible(p,goal.getTarget()).getSecondLoc(),goal,weight);

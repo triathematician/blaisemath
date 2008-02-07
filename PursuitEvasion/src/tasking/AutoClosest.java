@@ -6,8 +6,8 @@
 package tasking;
 
 import simulation.Agent;
-import java.util.ArrayList;
 import goal.Goal;
+import java.util.Vector;
 import utility.DistanceTable;
 
 /**
@@ -22,7 +22,7 @@ public class AutoClosest extends Autonomy {
     /** Performs tasking based on a preset goal.
      * @param team the team to assign tasks to
      * @param goal the goal used for task assignment */
-    public void assign(ArrayList<Agent> team,Goal goal,double weight){
+    public void assign(Vector<Agent> team,Goal goal,double weight){
         if(goal.getTarget().size()==1){
             for(Agent p:team){
                 if(p.sees(goal.getTarget().get(0))){p.assignTask(null,goal.getTarget().get(0).loc,goal,weight);}
