@@ -3,7 +3,7 @@ package Blaise;
 import Function.VectorField;
 import Euclidean.PPath;
 import Euclidean.PPoint;
-import sequor.model.PointRangeModel;
+import Model.PointRangeModel;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
