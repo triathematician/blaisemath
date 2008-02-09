@@ -192,6 +192,11 @@ public class Simulation implements ChangeListener {
         return result;
     }
     
+    /** Decide pursuer directions */
+    void assignPursuerDirections(Vector<Double> evaderPosition,Vector<Double> pursuerPosition){
+         // code here
+    }
+    
     /** Main loop for the simulation. Performs one iteration. */
     void loopSimulation(int curStep){
         // pursuing elements chase closest evader
