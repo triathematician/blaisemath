@@ -5,13 +5,16 @@
  */
 
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultTreeModel;
+import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 import scribo.tree.FunctionTreeRoot;
 import specto.dynamicplottable.Function2D;
-import specto.dynamicplottable.Grid2D;
+import specto.gridplottable.Grid2D;
 import specto.visometry.Euclidean2;
 
 /**
@@ -25,21 +28,34 @@ public class ParserTestFrame extends javax.swing.JFrame {
     
     /** Creates new form ParserTestFrame */
     public ParserTestFrame() {
-        functionPlotted=new Function2D();
-        functionPlotted.setColor(Color.RED);
-        dPlotted=new Function2D();
-        dPlotted.setColor(Color.BLUE);
-        initComponents();
-        plotPanel1.add(new Grid2D());
-        plotPanel1.add(functionPlotted);
-        plotPanel1.add(dPlotted);
-        result=new FunctionTreeRoot(Parser.parseExpression(jTextField1.getText()));
-        jTextField1ActionPerformed(null);
-        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {jTextField1ActionPerformed(null);}
-            public void removeUpdate(DocumentEvent e) {jTextField1ActionPerformed(null);}
-            public void changedUpdate(DocumentEvent e) {jTextField1ActionPerformed(null);}
-        });
+        try {
+            functionPlotted = new Function2D();
+            functionPlotted.setColor(Color.RED);
+            dPlotted = new Function2D();
+            dPlotted.setColor(Color.BLUE);
+            initComponents();
+            plotPanel1.add(new Grid2D());
+            plotPanel1.add(functionPlotted);
+            plotPanel1.add(dPlotted);
+            result = new FunctionTreeRoot(Parser.parseExpression(jTextField1.getText()));
+            jTextField1ActionPerformed(null);
+            jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+
+                public void insertUpdate(DocumentEvent e) {
+                    jTextField1ActionPerformed(null);
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    jTextField1ActionPerformed(null);
+                }
+
+                public void changedUpdate(DocumentEvent e) {
+                    jTextField1ActionPerformed(null);
+                }
+            });
+        } catch (FunctionSyntaxException ex) {
+            Logger.getLogger(ParserTestFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /** This method is called from within the constructor to
@@ -214,66 +230,87 @@ public class ParserTestFrame extends javax.swing.JFrame {
 
  
 private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-    FunctionTreeRoot temp=new FunctionTreeRoot(Parser.parseExpression(jTextField1.getText()));
-    jTree1.setModel(new DefaultTreeModel(temp.getTreeNode()));
-    if(temp!=null){
-        result=temp;
-        dresult=new FunctionTreeRoot(temp.derivativeTree("x"));
-        jTextField1.setForeground(Color.BLACK);
-        try{jTextField2.setText(result.toString());jTextField2.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("getString null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField2.setForeground(Color.RED);}
-        try{jTextField3.setText(Double.toString(result.getValue()));jTextField3.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("getValue null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField3.setForeground(Color.RED);}
-        try{
-            jTextField4.setText(dresult.toString());
-            jTree2.setModel(new DefaultTreeModel(dresult.getTreeNode()));
-            jTextField4.setForeground(Color.BLACK);
+        try {
+            FunctionTreeRoot temp = new FunctionTreeRoot(Parser.parseExpression(jTextField1.getText()));
+            jTree1.setModel(new DefaultTreeModel(temp.getTreeNode()));
+            if (temp != null) {
+                result = temp;
+                dresult = new FunctionTreeRoot(temp.derivativeTree("x"));
+                jTextField1.setForeground(Color.BLACK);
+                try {
+                    jTextField2.setText(result.toString());
+                    jTextField2.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("getString null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField2.setForeground(Color.RED);
+                }
+                try {
+                    jTextField3.setText(Double.toString(result.getValue()));
+                    jTextField3.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("getValue null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField3.setForeground(Color.RED);
+                }
+                try {
+                    jTextField4.setText(dresult.toString());
+                    jTree2.setModel(new DefaultTreeModel(dresult.getTreeNode()));
+                    jTextField4.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("derivative null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField4.setForeground(Color.RED);
+                }
+                try {
+                    jTextField5.setText(Parser.parseExpression(result.toString()).toString());
+                    jTextField5.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("recycle null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField5.setForeground(Color.RED);
+                }
+                try {
+                    jTextField6.setText(result.fullSimplified().toString());
+                    jTextField6.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("simplify null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField6.setForeground(Color.RED);
+                }
+                try {
+                    jTextField7.setText(dresult.fullSimplified().toString());
+                    jTextField7.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("d-simplify null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField7.setForeground(Color.RED);
+                }
+                try {
+                    jTextField8.setText(Double.toString(result.getValue("x", 1.0)));
+                    jTextField8.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("f(1) null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField8.setForeground(Color.RED);
+                }
+                try {
+                    jTextField9.setText(Double.toString(dresult.getValue("x", 1.0)));
+                    jTextField9.setForeground(Color.BLACK);
+                } catch (NullPointerException e) {
+                    System.out.println("f'(1) null pointer: " + e.getMessage());
+                    jTextField1.setForeground(Color.RED);
+                    jTextField9.setForeground(Color.RED);
+                }
+            } else {
+                jTextField1.setForeground(Color.RED);
+            }
+            functionPlotted.setFunction(result);
+            dPlotted.setFunction(dresult);
+            plotPanel1.repaint();
+        } catch (FunctionSyntaxException ex) {
+            Logger.getLogger(ParserTestFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(NullPointerException e){
-            System.out.println("derivative null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField4.setForeground(Color.RED);}
-        try{jTextField5.setText(Parser.parseExpression(result.toString()).toString());jTextField5.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("recycle null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField5.setForeground(Color.RED);}
-        try{jTextField6.setText(result.fullSimplified().toString());jTextField6.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("simplify null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField6.setForeground(Color.RED);}
-        try{jTextField7.setText(dresult.fullSimplified().toString());jTextField7.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("d-simplify null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField7.setForeground(Color.RED);}
-        try{
-            jTextField8.setText(Double.toString(result.getValue("x",1.0)));
-            jTextField8.setForeground(Color.BLACK);
-        }
-        catch(NullPointerException e){
-            System.out.println("f(1) null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField8.setForeground(Color.RED);
-        }
-        try{jTextField9.setText(Double.toString(dresult.getValue("x",1.0)));jTextField9.setForeground(Color.BLACK);}
-        catch(NullPointerException e){
-            System.out.println("f'(1) null pointer: "+e.getMessage());
-            jTextField1.setForeground(Color.RED);
-            jTextField9.setForeground(Color.RED);}
-    }else{
-        jTextField1.setForeground(Color.RED);
-    }
-    functionPlotted.setFunction(result);
-    dPlotted.setFunction(dresult);
-    plotPanel1.repaint();
 }//GEN-LAST:event_jTextField1ActionPerformed
     
     /**
