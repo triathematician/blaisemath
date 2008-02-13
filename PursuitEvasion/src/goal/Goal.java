@@ -46,8 +46,9 @@ public class Goal implements Function<DistanceTable,Double>{
     // CONSTANTS
     
     public static final int SEEK=0;
-    public static final int FLEE=1;
-    public static final String[] TYPE_STRINGS={"Seek","Flee"};
+    public static final int CAPTURE=1;
+    public static final int FLEE=2;
+    public static final String[] TYPE_STRINGS={"Seek","Capture","Flee"};
     
     
     // CONSTRUCTORS & INITIALIZERS   
@@ -97,7 +98,8 @@ public class Goal implements Function<DistanceTable,Double>{
      * @return      numeric value indicating the closeness to the goal (positive if goal has been reached, otherwise negative) 
      */
     public Double getValue(DistanceTable d){
-        AgentPair result=d.min(getOwner(),getTarget());
+        AgentPair result=d.min(getOwner().getActiveAgents(),getTarget().getActiveAgents());
+        if(result==null){return 0.0;}
         double dist=getThreshhold()-result.getDistance();
         if(getType()==FLEE){dist=-dist;}
         if(dist>0&&!achieved){which=result.getFirst();}
@@ -177,14 +179,14 @@ public class Goal implements Function<DistanceTable,Double>{
         private Team target;
     
         /** Specifies the weighting/priority of the goal. */
-        private DoubleRangeModel weight=new DoubleRangeModel(0,1,.01);
+        private DoubleRangeModel weight=new DoubleRangeModel(1,0,1,.01);
         /** Specifies whether goal is pursuit (0) or evade (1). */
-        private ComboBoxRangeModel type=new ComboBoxRangeModel(TYPE_STRINGS,SEEK,0,1);
+        private ComboBoxRangeModel type=new ComboBoxRangeModel(TYPE_STRINGS,SEEK,0,2);
         /** 
          * Another parameter to use in specifying the goal. Usually the "target"
          * distance required to reach the goal.
          */
-        private DoubleRangeModel threshhold=new DoubleRangeModel(0,1,.01);
+        private DoubleRangeModel threshhold=new DoubleRangeModel(1,0,1000,.1);
 
         /** The team's tasking algorithm default */
         private ComboBoxRangeModel tasking=new ComboBoxRangeModel(Tasking.TASKING_STRINGS,Tasking.AUTO_CLOSEST,Tasking.FIRST,Tasking.LAST);
@@ -206,6 +208,7 @@ public class Goal implements Function<DistanceTable,Double>{
         }
         
         /** Listens for changes to settings */
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String ac=null;
             if(evt.getSource()==weight){                                    ac="teamAgentsChange";

@@ -5,6 +5,7 @@
 
 package utility;
 
+import goal.Goal;
 import java.util.HashMap;
 import java.util.Vector;
 import simulation.Agent;
@@ -85,9 +86,20 @@ public class DataLog {
         }
     }
     
-    /** Logs captures within a specified distance. Deactivates these agents. */
-    public void logCaptures(DistanceTable dt,double capDistance){
-        for(Team t:teamValues.keySet()){
+    /** Logs captures of a specified team over another team, within the specified distance.
+     * Also removes the captured elements from activity.
+     * @param dt            The DistanceTable containing the distances
+     * @param g             The Goal representing the capturing
+     * @param capDistance   The distance within which capture occurs
+     */
+    public void logCaptures(DistanceTable dt,Goal g){
+        AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
+        while((closest!=null)&&(closest.distance<g.getThreshhold())){
+            System.out.println("capture occurred!");
+            dt.removeAgents(closest);
+            g.getOwner().deactivate(closest.first);
+            g.getTarget().deactivate(closest.second);
+            closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
         }
     }
     

@@ -10,6 +10,7 @@
 
 package simulation;
 
+import goal.Goal;
 import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -52,6 +53,8 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** The data collected in a simulation. */
     DataLog log;
+    /** Whether a batch of several runs is currently processing. */
+    boolean batchProcessing;
     
     
     // CONSTRUCTORS
@@ -63,6 +66,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         SimulationFactory.setSimulation(this,getGameType());
         dist=null;
         log=new DataLog(this);
+        batchProcessing=false;
     }
     /** Constructs given a type of game
      * @param gameType the type of game to simulate */
@@ -72,6 +76,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         SimulationFactory.setSimulation(this,gameType);
         dist=null;
         log=new DataLog(this);
+        batchProcessing=false;
     }
     
     
@@ -112,6 +117,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Runs several times and computes average result. */
     public Double runSeveral(int numTimes){
+        batchProcessing=true;
         Double total=0.0;
         Double current;
         for(int i=0;i<numTimes;i++){
@@ -121,6 +127,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             if(current!=null){total+=current;}            
         }
         fireActionPerformed("Result of "+numTimes+" run is an average of "+total/numTimes);
+        batchProcessing=false;
         return total/numTimes;
     }
     /** Runs default number of steps */
@@ -135,10 +142,14 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         for(int i=0;i<numSteps;i++){
             iterate(time);
             log.logAll(i);
-            log.logCaptures(dist,3);
+            for(Team t:teams){
+                for(Goal g:t.getCaptureGoals()){
+                    log.logCaptures(dist,g);                    
+                }
+            }
         }
         log.output();
-        fireActionPerformed("redraw");
+        actionPerformed(new ActionEvent(this,0,"redraw"));
         return primary.getValue();
     }
     
@@ -146,7 +157,9 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void iterate(double time){
         dist.recalculate();
         // TODO check for capture here
-        for(Team t:teams){t.checkGoal(dist,time);}
+        for(Team t:teams){
+            t.checkGoal(dist,time);
+        }
         for(Team t:teams){
             if(!t.getGoals().isEmpty()){
                 t.gatherSensoryData(dist);
@@ -224,11 +237,23 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand()=="agentDisplayChange"){fireActionPerformed("redraw");
-        }else if(e.getActionCommand()=="teamDisplayChange"){fireActionPerformed("redraw");
-        }else if(e.getActionCommand()=="agentSetupChange"){run();
-        }else if(e.getActionCommand()=="teamSetupChange"){run();
-        }else if(e.getActionCommand()=="teamAgentsChange"){log=new DataLog(this);run();fireActionPerformed("reset");
+        String es=e.getActionCommand();
+        // if several runs are being performed, do not bother to display the changes being made
+        if(batchProcessing){return;}
+        // otherwise, go ahead and redraw/recolor/etc. as appropriate
+        if(es.equals("simulationRun")){ // routine run of the simulation
+            fireActionPerformed("redraw");
+        }
+        else if(es.equals("agentDisplayChange")||es.equals("teamDisplayChange")){ // cosmetic change only
+            fireActionPerformed("recolor");
+        }else if(es.equals("agentSetupChange")||es.equals("teamSetupChange")){ // change in parameters for a particular player or team
+            reset();
+            run();
+            fireActionPerformed("redraw");
+        }else if(e.getActionCommand().equals("teamAgentsChange")){ // change in number of agents; must reset the simulation to reload the settings tree
+            log=new DataLog(this);
+            run();
+            fireActionPerformed("reset");
         }else {fireActionPerformed(e);
         }
     }

@@ -233,6 +233,7 @@ public class Agent implements TaskGenerator {
     public int getBehavior(){return ags.behavior.getValue();}
     public double getLeadFactor(){return ags.leadFactor.getValue();}
     public Color getColor(){return ags.color.getValue();}
+    @Override
     public String toString(){return ags.s;}
     public R2 getPositionTime(double t){return new R2(ags.pm.getValue(t));}
     public boolean isActive(){return active;}

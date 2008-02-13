@@ -455,12 +455,14 @@ public class PEGPlot extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
+
+        plotPanel1.setLayout(new java.awt.FlowLayout());
         jSplitPane2.setRightComponent(plotPanel1);
 
         fileMenu.setText("File");
@@ -578,7 +580,7 @@ public class PEGPlot extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -606,6 +608,18 @@ private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
     //System.out.println("pegplot action performed: "+evt.getActionCommand());
     if(evt.getActionCommand().equals("redraw")){
+        plotPanel1.repaint();
+        plot2D1.repaint();
+    }
+    else if(evt.getActionCommand().equals("recolor")){
+        plotPanel1.removeAll();
+        plotPanel1.add(new Grid2D());
+        simulation1.placeInitialPointsOn(plotPanel1);
+        simulation1.placePathsOn(plotPanel1);
+        simulation1.placeGraphsOn(plotPanel1);
+        plot2D1.removeAll();
+        plot2D1.add(new Grid2D());
+        simulation1.placeValuesOn(plot2D1);
         plotPanel1.repaint();
         plot2D1.repaint();
     }

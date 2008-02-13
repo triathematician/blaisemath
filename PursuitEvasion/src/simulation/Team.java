@@ -15,7 +15,6 @@ import behavior.*;
 import utility.DistanceTable;
 import goal.TaskGenerator;
 import specto.PlotPanel;
-import specto.dynamicplottable.Point2D;
 import specto.visometry.Euclidean2;
 import java.beans.PropertyChangeEvent;
 import java.util.Vector;
@@ -34,7 +33,8 @@ import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
 import scio.coordinate.R2;
-import scio.random.PRandom;
+import utility.CircledPoint;
+import utility.StartingPositionsFactory;
 
 /**
  * @author Elisha Peterson<br><br>
@@ -51,6 +51,8 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public TeamSettings tes;
     /** The team's goals */
     private Vector<Goal> goals=new Vector<Goal>();
+    /** The goals which involve "capturing" */
+    private Vector<Goal> captureGoals=new Vector<Goal>();
     /** Active agents */
     private Vector<Agent> activeAgents=new Vector<Agent>();
     
@@ -89,11 +91,12 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         setBehavior(behavior);
         setColor(color);
         this.clear();
-        for(int i=0;i<getSize();i++){add(new Agent(this));}
+        initAgentNumber();
+        //for(int i=0;i<getSize();i++){add(new Agent(this));}
         initStartingLocations();
-        for(Agent a:this){a.addActionListener(this);} 
+        //for(Agent a:this){a.addActionListener(this);} 
         editing=false;
-        activeAgents.addAll(this);
+        //activeAgents.addAll(this);
     }
     
     
@@ -101,13 +104,17 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     
     /** Adds a goal. */        
     public void addGoal(double weight,Team target,int type,double threshhold){
-        goals.add(new Goal(weight,this,target,type,threshhold));
+        Goal g=new Goal(weight,this,target,type,threshhold);
+        goals.add(g);
+        if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
         
     /** Resets all agents to their initial positions; clears all paths */
     public void reset(){
         value=Double.MAX_VALUE;
-        for(Agent a:activeAgents){
+        activeAgents.clear();
+        activeAgents.addAll(this);
+        for(Agent a:this){
             a.reset();
         }
         for(Goal g:goals){
@@ -118,9 +125,11 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Changes the number of agents, resets starting locations. */
     public void initAgentNumber(){
         editing=true;
-        while(size()>getSize()){get(size()-1).removeActionListener(this);this.remove(size()-1);}
+        while(size()>getSize()){get(size()-1).removeActionListener(this);remove(size()-1);}
         while(size()<getSize()){add(new Agent(this));get(size()-1).addActionListener(this);}
         initStartingLocations();
+        activeAgents.clear();
+        activeAgents.addAll(this);
         editing=false;
     }
     
@@ -128,12 +137,11 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public void initStartingLocations(){
         editing=true;
         switch(getStart()){
-        case START_RANDOM: startRandom(50); break;
-        case START_LINE: startLine(new R2(-50,50),new R2(50,-50)); break;
-        case START_CIRCLE: startCircle(new R2(),50);break;
-        case START_ARC: startArc(new R2(),50,Math.PI/3,5*Math.PI/3);break;
-        case START_ZERO:
-        default: startZero(); break;
+        case START_RANDOM: StartingPositionsFactory.startRandom(this,50); break;
+        case START_LINE: StartingPositionsFactory.startLine(this,new R2(-50,50),new R2(50,-50)); break;
+        case START_CIRCLE: StartingPositionsFactory.startCircle(this,new R2(),50);break;
+        case START_ARC: StartingPositionsFactory.startArc(this,new R2(),50,Math.PI/3,5*Math.PI/3);break;
+        default: StartingPositionsFactory.startZero(this); break;
         }
         editing=false;
     }
@@ -158,7 +166,10 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Adds initial point models to plot, and adds change listening to this team. */
     public void placeInitialPointsOn(PlotPanel<Euclidean2> p){
         for(Agent a:this){
-            p.add(new Point2D(a.getPointModel(),a.getColor().brighter()));
+            CircledPoint cp=new CircledPoint(a.getPointModel(),a.getColor().brighter());
+            cp.addRadius(a.getCommRange());
+            cp.addRadius(a.getSensorRange());
+            p.add(cp);
         }
     }
     
@@ -170,50 +181,19 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         return result;
     }
     
-    
-    // METHODS FOR SETTING INITIAL POSITIONS OF TEAM MEMBERS
-    
-    /** Places all team members at zero. */
-    public void startZero(){for(Agent agent:this){agent.getPointModel().setTo(0,0);}}
-    
-    /** Places team members at random within a rectangle.
-     * @param spread sets the rectangle to [-spread,-spread]->[spread,spread] */
-    public void startRandom(double spread){for(Agent agent:this){agent.getPointModel().setTo(PRandom.rectangle(spread));}}
-    
-    /** Places team members along a line.
-     * @param p1   position of the first agent
-     * @param pn   position of the last agent */
-    public void startLine(R2 p1,R2 pn){
-        if(size()==1){get(0).setPosition(p1.plus(pn).multipliedBy(.5));} else{
-            R2 step=pn.minus(p1).multipliedBy(1.0/(size()-1.0));
-            for(int i=0;i<size();i++){
-                get(i).getPointModel().setTo(p1.x+step.x*i,p1.y+step.y*i);
-            }
-        }
+    /** Returns all goals which require capture checks.
+     * @return      Vector of Goals representing those which involve capturing and removing player from the field.
+     */
+    public Vector<Goal> getCaptureGoals(){
+        return captureGoals;
     }
     
-    /** Places team members in a circle.
-     * @param point center of the circle
-     * @param r     radius of the circle */
-    public void startCircle(R2 point,double r){
-        for(int i=0;i<size();i++){
-            get(i).getPointModel().setTo(point.x+r*Math.cos(2*Math.PI*i/(double)size()),point.y+r*Math.sin(2*Math.PI*i/(double)size()));
-        }
+    /** Returns list of active agents.
+     * @return      Vector of agents which are still active in the simualtion
+     */
+    public Vector<Agent> getActiveAgents(){
+        return activeAgents;
     }
-    
-    /** Places team members in a circular arc.
-     * @param point center of the arc
-     * @param r     radius of the arc
-     * @param th1   starting angle of the arc
-     * @param th2   ending angle of the arc */
-    public void startArc(R2 point, double r,double th1,double th2){
-        if(size()==1){get(0).getPointModel().setTo(point.x+r*Math.cos((th1+th2)/2),point.y+r*Math.sin((th1+th2)/2));} else{
-            for(int i=0;i<size();i++){
-                get(i).getPointModel().setTo(point.x+r*Math.cos(th1+i*(th2-th1)/(size()-1.0)),point.y+r*Math.sin(th1+i*(th2-th1)/(size()-1.0)));
-            }
-        }
-    }
-    
     
     
     // BROADCAST METHODS: PASS INSTRUCTIONS ONTO TEAM MEMBERS
@@ -260,6 +240,11 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         for(Agent a:activeAgents){
             a.setPosition(a.loc.getEnd());        
         }
+    }
+    /** Deactivates a particular agent. */
+    public void deactivate(Agent a){
+        activeAgents.remove(a);
+        a.deactivate();
     }
     
     

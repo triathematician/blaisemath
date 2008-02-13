@@ -61,8 +61,8 @@ public class SimulationFactory {
         //                      #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
         Team bugTeam=new Team(  4,   Team.START_RANDOM,  Tasking.AUTO_CLOSEST,   Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
         Team lightTeam=new Team(1,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
-        bugTeam.addGoal(  1.0,lightTeam,Goal.SEEK,10.0);
-        lightTeam.addGoal(1.0,bugTeam,  Goal.FLEE, 10.0);
+        bugTeam.addGoal(  1.0,lightTeam,Goal.SEEK,1.0);
+        lightTeam.addGoal(1.0,bugTeam,  Goal.FLEE, 1.0);
         bugTeam.setString("Bugs");         
         lightTeam.setString("Light");        
         teams.add(bugTeam);
@@ -75,8 +75,8 @@ public class SimulationFactory {
         //                          #    STARTING POS        TASK ALGORITHM          BEHAVIOR ALGORITHM          COLOR
         Team copTeam=new Team(      5,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
         Team robberTeam=new Team(   4,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.ORANGE);
-        robberTeam.addGoal(1.0, copTeam,   Goal.SEEK,10.0);
-        copTeam.addGoal(   1.0, robberTeam,Goal.FLEE, 10.0);
+        robberTeam.addGoal(1.0, copTeam,   Goal.CAPTURE,1.0);
+        copTeam.addGoal(   1.0, robberTeam,Goal.FLEE, 1.0);
         copTeam.setString("Cops");
         robberTeam.setString("Robbers");
         teams.add(copTeam);
@@ -90,10 +90,10 @@ public class SimulationFactory {
         Team dogTeam=new Team(  3,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLUE);
         Team catTeam=new Team(  4,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.BLACK);
         Team mouseTeam=new Team(5,   Team.START_RANDOM,  Tasking.AUTO_GRADIENT,  Behavior.FLEE,              Color.GREEN);
-        dogTeam.addGoal(  1.0,catTeam,  Goal.SEEK,10.0);
-        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 10.0);
-        catTeam.addGoal(  1.0,mouseTeam,Goal.SEEK,10.0);
-        mouseTeam.addGoal(1.0,catTeam,  Goal.FLEE, 10.0);
+        dogTeam.addGoal(  1.0,catTeam,  Goal.CAPTURE,1.0);
+        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 1.0);
+        catTeam.addGoal(  1.0,mouseTeam,Goal.CAPTURE,1.0);
+        mouseTeam.addGoal(1.0,catTeam,  Goal.FLEE, 1.0);
         dogTeam.setString("Seals");
         catTeam.setString("Penguins");
         mouseTeam.setString("Fish");
@@ -109,9 +109,9 @@ public class SimulationFactory {
         Team dogTeam=new Team(  3,   Team.START_RANDOM,  Tasking.CONTROL_CLOSEST,Behavior.PURSUIT_LEADING,   Color.ORANGE);
         Team catTeam=new Team(  4,   Team.START_RANDOM,  Tasking.AUTO_CLOSEST,   Behavior.SEEK,              Color.GRAY);
         Team milk=new Team(     1,   Team.START_RANDOM,  Tasking.NO_TASKING,     Behavior.STATIONARY,        Color.BLUE);
-        dogTeam.addGoal(  1.0,catTeam,  Goal.SEEK,10.0);
-        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 10.0);
-        catTeam.addGoal(  1.0,milk,     Goal.SEEK,10.0);
+        dogTeam.addGoal(  1.0,catTeam,  Goal.CAPTURE,1.0);
+        catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, 1.0);
+        catTeam.addGoal(  1.0,milk,     Goal.CAPTURE,1.0);
         dogTeam.setString("Lions");
         catTeam.setString("Wildebeest");
         milk.setString("Watering Hole");
@@ -166,8 +166,8 @@ public class SimulationFactory {
         teams.get(8).setString("Flies");
         teams.get(9).setString("Why");
         for(int i=0;i<9;i++){
-            teams.get(i).addGoal(1.0,teams.get(i+1),Goal.SEEK,10.0);
-            teams.get(i+1).addGoal(0.5,teams.get(i),Goal.FLEE,10.0);
+            teams.get(i).addGoal(1.0,teams.get(i+1),Goal.CAPTURE,1.0);
+            teams.get(i+1).addGoal(0.5,teams.get(i),Goal.FLEE,1.0);
         }
         return teams;
     }

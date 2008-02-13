@@ -12,17 +12,17 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * @author Elisha Peterson
- * <br><br>
  * This class calculates and contains a table of distances between players on two
  * different teams. Recalculation is only done when necessary. Also contains routines
  * for producing the minimum and maximum values in the table. Separate tables are
  * necessary for each pair of teams, if relevant. These are used with the Goal class
  * to determine whether a goal has been achieved.
- * <br><br>
+ * <p>
  * Uses nested hashmaps to populate a matrix of distances between two
  * collections of agents. Able to recalculate, pick out specific values,
  * minimum values, etc.
+ * </p>
+ * @author Elisha Peterson
  */
 public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
 
@@ -39,22 +39,26 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
     
 // CONSTRUCTORS    
 
-    /** Generic constructor */
+    /** Generic constructor, for two teams with no agents. */
     public DistanceTable(){
         keya=new ArrayList<Agent>();
         keyb=new ArrayList<Agent>();
     }       
-    /** Constructs given two collections of agents 
-     * @param keya the first set of agents
-     * @param keyb the second set of agents */
+    /** Constructs the table based on two collections of agents, so that the distance from one agent to another can be looked up directly.
+     * @param keya  the first set of agents; forms the set of hash keys
+     * @param keyb  the second set of agents; forms the set of hash values
+     */
     public DistanceTable(Collection<Agent> keya,Collection<Agent> keyb){
         this();
         this.keya.addAll(keya);
         this.keyb.addAll(keyb);
         recalculate();
     }
-    /** Constructs given a collection of teams
-     * @param teams the set of teams */
+    /** Constructs the table based upon several different teams (or collections of agents). The algorithm will compute the distances between
+     * every pair of agents for any team, including the team to itself. Values may be looked up by the object identifier corresponding to any
+     * agent.
+     * @param teams     any collection of teams
+     */
     public DistanceTable(Collection<Team> teams){
         this();
         for(Team t:teams){keya.addAll(t);}
@@ -66,7 +70,9 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
 // BEAN PATTERNS
     
     /** Override... says if the table is empty, i.e. if either keySet is null
-     * @return true if empty, otherwise false. */
+     * @return  true if empty, otherwise false.
+     */
+    @Override
     public boolean isEmpty(){return(keya.size()==0||keyb.size()==0);}
     
     
@@ -83,9 +89,33 @@ public class DistanceTable extends HashMap<Agent,HashMap<Agent,Double>> {
         }
     }
     
+    /** Removes an agent key.
+     * @param agent     the Agent to be removed
+     */
+    public void outerRemoveAgent(Agent agent){
+        keya.remove(agent);
+        remove(agent);
+    }
+    
     /** Remove an agent from all nested HashMaps
-     * @param agent the agent */
-    public void removeSecond(Agent agent){for(Agent a:keya){get(a).remove(agent);}}
+     * @param agent     the Agent to be removed
+     */
+    public void innerRemoveAgent(Agent agent){
+        keyb.remove(agent);
+        for(Agent a:keya){
+            get(a).remove(agent);
+        }
+    }
+    
+    /** Removes specified agent pair from the table.
+     * @param agents    the pair of Agents to be removed
+     */
+    public void removeAgents(AgentPair agents){
+        outerRemoveAgent(agents.first);
+        outerRemoveAgent(agents.second);
+        innerRemoveAgent(agents.first);
+        innerRemoveAgent(agents.second);
+    }
     
     
 // BASIC QUERY METHODS
