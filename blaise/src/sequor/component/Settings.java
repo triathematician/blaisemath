@@ -22,20 +22,45 @@ import javax.swing.event.ChangeListener;
 import sequor.model.*;
 
 /**
- * This class is intended as a superclass to add property change functionality to a collection
- * of settings. Mainly consists of some event handling routines! Extending classes should do the following
- * for each property which they implement:
- * <ul>
- *   <li>Implement as a model which generates checks the values and change events
+ * <p>
+ * The <b>Settings</B> class is a tool for easily constructing a panel of adjustable options in a GUI. It is intended
+ * to streamline the often complicated process of handling event listening for such GUI elements. These options
+ * will appear, one in each row, as a list of possible changes which can be made. The <b>Settings</b> class supports
+ * several different kinds of options which can be added, featuring editors such as sliders, spinners, textfields,
+ * comboboxes, and more. Eventually it should get to the point where it supports lots of different custom editors.
+ * </p>
+ * <p>
+ * Much of this class consists of event handling routines to eliminate repetitious code. Any class which implements
+ * this one does however need to do the following for each added property:
+ * <ol>
+ *   <li>Implement the property a model which generates checks the values and change events
  *   <li>Implement normal get/set methods for the property
- *   <li>Add the property with string, editor, and type code in the initializer using "addProperty"
+ *   <li>Use the <i>addProperty</i> method to add the property along with its string, editor, and type code
+ * </ol>
+ * The supported type codes are as follows:
+ * <ul>
+ *   <li> EDIT_BOOLEAN (boolean as a checkbox)
+ *   <li> EDIT_COLOR (creates a button to change the color)
+ *   <li> EDIT_COMBO (combobox; requires a comboboxmodel)
+ *   <li> EDIT_DOUBLE (double as a spinner)
+ *   <li> EDIT_FUNCTION (function as a textfield)
+ *   <li> EDIT_INTEGER (integer as a spinner)
+ *   <li> EDIT_PARAMETRIC (parametric equation)
+ *   <li> EDIT_SEPARATOR (separator bar... no property being edited)
+ *   <li> EDIT_STRING (simple textfield)
+ *   <li> NO_EDIT (does not appear in the panel)
  * </ul>
- * Property change events are automatically generated using the string from the property, and fired
+ * </p>
+ * <p>
+ * <b>PropertyChangeEvent</b>'s are automatically generated using the string from the property, and fired
  * to any classes which listen for property changes from this one.
+ * </p>
+ * <p>
  * If a GUI is required, a panel can be automatically generated using the underlying models
- * and a standard set of editors. The panel uses a SpringLayout to create two columns... one
- * with text labels and the other with the editing objects.
- * <br><br>
+ * and a standard set of editors. The panel uses a <b>SpringLayout</b> to create two columns... one
+ * with text labels and the other with the editing objects. Eventually this may be implemented as a table
+ * rather than a <b>SpringLayout</b> (to be decided at a later date).
+ * </p>
  * @author Elisha Peterson
  */
 public abstract class Settings implements ChangeListener,PropertyChangeListener {
@@ -93,6 +118,7 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
         }
     }
     /**This should pass state changes to pcs. */
+    @Override
     public void stateChanged(ChangeEvent e){
         for(int i=0;i<models.size();i++){
             if(models.get(i)==null){continue;}
@@ -108,6 +134,7 @@ public abstract class Settings implements ChangeListener,PropertyChangeListener 
     /**Remove a property change listener for a specific property. */
     public void removePropertyChangeListener(PropertyChangeListener l){pcs.removePropertyChangeListener(l);}
     /** Handles property change events fired from a few properties */
+    @Override
     public void propertyChange(PropertyChangeEvent e) {pcs.firePropertyChange(e);}
     
     

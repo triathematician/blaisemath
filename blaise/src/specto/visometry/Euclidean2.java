@@ -111,14 +111,21 @@ public class Euclidean2 extends Visometry<R2> {
     public void setWindowAspect(double newValue){if(newValue!=windowAspect){windowAspect=newValue;computeTransformation();}}
     
     
-    // MORE GENERAL GETTERS & SETTERS
+    // COMMANDS GENERATING RANGES OF VALUE WITHIN THE WINDOW
     
+    /** Returns a range of x values, about one every two pixels.
+     * @return vector of doubles containing x values within the range
+     */
     public Vector<Double> getXRange(){
         Vector<Double> result=new Vector<Double>();
         double step=2*getDrawWidth()/(double)getWindowWidth();
         for(double d=actualMin.x;d<actualMax.x;d+=step){result.add(d);}
         return result;
     }
+    
+    /** Returns a range of y values, about one every two pixels.
+     * @return vector of doubles containing x values within the range
+     */
     public Vector<Double> getYRange(){
         Vector<Double> result=new Vector<Double>();
         double step=2*getDrawHeight()/(double)getWindowHeight();
@@ -126,17 +133,44 @@ public class Euclidean2 extends Visometry<R2> {
         return result;
     }
     
+    /** Returns a range of x values, according to the given parameter.
+     * @param factor    Inverse of number of samples per pixel.
+     * @return          Vector of doubles containing x values within the range
+     */
     public Vector<Double> getSparseXRange(double factor){
         Vector<Double> result=new Vector<Double>();
         double step=factor*getDrawWidth()/(double)getWindowWidth();
         for(double d=actualMin.x;d<actualMax.x;d+=step){result.add(d);}
         return result;
     }
+
+    /** Returns a range of y values, according to the given parameter.
+     * @param factor    Inverse of number of samples per pixel.
+     * @return          Vector of doubles containing y values within the range
+     */
     public Vector<Double> getSparseYRange(double factor){
         Vector<Double> result=new Vector<Double>();
         double step=factor*getDrawHeight()/(double)getWindowHeight();
         for(double d=actualMin.y;d<actualMax.y;d+=step){result.add(d);}
         return result;
+    }
+    
+    /** Returns nice (rounds to nearest coordinates) range of x values.
+     * @param factor    Determines number of samples per pixel.
+     * @return          Vector of doubles containing the parameters in range.
+     */
+    public Vector<Double> getNiceXRange(double factor){
+        // TODO implement this, based on the method in Grid2D
+        return null;
+    }
+    
+    /** Returns nice (rounds to nearest coordinates) range of y values.
+     * @param factor    Determines number of samples per pixel.
+     * @return          Vector of doubles containing the parameters in range.
+     */
+    public Vector<Double> getNiceYRange(double factor){
+        // TODO implement this, based on the method in Grid2D
+        return null;
     }
     
     

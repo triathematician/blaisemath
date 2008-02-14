@@ -16,7 +16,7 @@ import scio.function.Function;
 import sequor.model.ParametricModel;
 import specto.PlotPanel;
 import scio.coordinate.R2;
-import specto.dynamicplottable.Parametric2D;
+import specto.plottable.Parametric2D;
 
 /**
  * This class

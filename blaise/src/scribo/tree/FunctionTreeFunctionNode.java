@@ -9,17 +9,19 @@ import java.util.HashMap;
 import scribo.parser.*;
 
 /**
+ * <p>
  * This class represents a basic input/output function. It requires just one subnode, called
  * the <i>argument</i>, which can be easily accessed. This allows many methods required by
- * FunctionTreeNode to be automatically generated.<br><br>
- * 
+ * <b>FunctionTreeNode</b> to be automatically generated.
+ * </p>
+ * <p>
  * Such nodes have four owned settings: a string which represents the function, a string
  * representing the derivative class of the function, a string representing the function's
  * inverse, and the class type of the inverse. These allow the function's derivative to be
  * computed easily, and the function to be automatically simplified. Sub-classes may augment
- * these automatic methods for increases in performance.<br><br>
- * 
- * @author Elisha
+ * these automatic methods for increases in performance.
+ * </p>
+ * @author Elisha Peterson
  */
 public abstract class FunctionTreeFunctionNode extends FunctionTreeNode {
 

@@ -6,7 +6,7 @@
 package scio.coordinate;
 
 /**
- * Represents a vector in R2 (with base poitn and length)
+ * Represents a vector in R2 (with base point and length)
  * @author ae3263
  */
 public class V2 extends R2{

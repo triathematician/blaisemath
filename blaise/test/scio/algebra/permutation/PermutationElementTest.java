@@ -5,12 +5,9 @@
  * Created on June 6, 2007, 3:03 PM
  */
 
-package scio.algebra;
+package scio.algebra.permutation;
 
 import junit.framework.*;
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.HashSet;
 
 /**
  *
@@ -27,13 +24,14 @@ public class PermutationElementTest extends TestCase {
     int[] p2={0,1,3,4,5,2,6};
     int[] p3={0,5,3,6,4,2,1};
     int[] p4={0,5,4,3,2,1};
-    PermutationElement instance1,instance2,instance3,instance4;
+    Permutation instance1,instance2,instance3,instance4;
     
+    @Override
     protected void setUp() throws Exception {
-        instance1=new PermutationElement(6);
-        instance2=new PermutationElement(p2);
-        instance3=new PermutationElement(p3);
-        instance4=new PermutationElement(p4);
+        instance1=new Permutation(6);
+        instance2=new Permutation(p2);
+        instance3=new Permutation(p3);
+        instance4=new Permutation(p4);
     }
     
     /**
@@ -41,7 +39,7 @@ public class PermutationElementTest extends TestCase {
      */
     public void testSetToIdentity() {
         System.out.println("setToIdentity");
-        PermutationElement instance=new PermutationElement();
+        Permutation instance=new Permutation();
         instance.setToIdentity(5);
         assertEquals("(1 2 3 4 5)",instance.toString());
     }
@@ -52,7 +50,7 @@ public class PermutationElementTest extends TestCase {
     public void testSetP() {
         System.out.println("setP");
         int[] pp={0,1,3,4,5,2,6};
-        PermutationElement instance=new PermutationElement();
+        Permutation instance=new Permutation();
         instance.setP(pp);
         assertEquals("(1 3 4 5 2 6)",instance.toString());
     }
@@ -62,7 +60,7 @@ public class PermutationElementTest extends TestCase {
      */
     public void testSetTo() {
         System.out.println("setTo");
-        PermutationElement instance=new PermutationElement();
+        Permutation instance=new Permutation();
         instance.setTo("(1 3 4 5 2 6)");
         assertEquals("(1 3 4 5 2 6)",instance.toString());
         assertEquals(false,instance.setTo("3(43.2)"));
@@ -73,7 +71,7 @@ public class PermutationElementTest extends TestCase {
      */
     public void testSetToCycle() {
         System.out.println("setToCycle");
-        PermutationElement instance=new PermutationElement();
+        Permutation instance=new Permutation();
         instance.setToCycle("(1 4) (2 3)  (5  ) (6)");
         assertEquals("(4 3 2 1 5 6)",instance.toString());
         instance.setToCycle("(1 6) (2 3 )");
@@ -86,7 +84,7 @@ public class PermutationElementTest extends TestCase {
      */
     public void testGetP() {
         System.out.println("getP");
-        assertEquals(instance2.toString(),new PermutationElement(instance2.getP()).toString());
+        assertEquals(instance2.toString(),new Permutation(instance2.getP()).toString());
     }
     
     /**
@@ -167,8 +165,8 @@ public class PermutationElementTest extends TestCase {
      */
     public void testActLeft() {
         System.out.println("actLeft");
-        assertEquals("2o3","(1 2 4 5 3 6)",((PermutationElement)instance2.actLeft(instance3)).toCycleString());
-        assertEquals("3o2","(1 5 3 4 2 6)",((PermutationElement)instance3.actLeft(instance2)).toCycleString());
+        assertEquals("2o3","(1 2 4 5 3 6)",((Permutation)instance2.actLeft(instance3)).toCycleString());
+        assertEquals("3o2","(1 5 3 4 2 6)",((Permutation)instance3.actLeft(instance2)).toCycleString());
         assertEquals("1o2",instance2.toString(),instance1.actLeft(instance2).toString());
         assertEquals("2o1",instance2.toString(),instance2.actLeft(instance1).toString());
     }

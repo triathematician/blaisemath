@@ -15,9 +15,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * This class takes the Plottable class and adds in support for mouse event handling,
- * allowing the firing of events, handling of menu, etc.
- * <br><br>
+ * <p>
+ * This class takes the <b>Plottable</b> class and adds in basic support for mouse event handling,
+ * allowing the firing of events, handling of menu, etc. In order to properly handle incoming events,
+ * the mouse positions should be passed through the visometry to convert coordinates and determine whether
+ * the object has actually been clicked.
+ * </p>
  * @author Elisha Peterson
  */
 public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseListener,MouseMotionListener {

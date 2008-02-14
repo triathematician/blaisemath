@@ -16,10 +16,21 @@ import java.util.Vector;
 import scio.function.DoubleFunction;
 
 /**
- * Represents the root of a function tree. Should not be addable to any other tree node,
- * and simply returns the argument's value. Implemented like an identity function.
- * <br><br> 
- * @author Elisha
+ * <p>
+ * This class represents the root of a FunctionTree. In particular, every tree which is constructed passes all
+ * information through a root node, which is this one.
+ * </p>
+ * <p>
+ * The class stores a list of variables (whose values are "unknowns") and parameters (whose values are "knowns" although
+ * they can be changed). The distinction is important because fundamentally the function f(x)=a*sin(b(x+c))+d should be
+ * plotted in two-dimensions, although nominally there are five unknowns on the righthand side. Other classes which use
+ * this one should be able to "observe" this fact and know what to do with the parameters and the variables automatically.
+ * This, the part that is important for any class which utilizes this one is (i) how to get at and adjust parameters, (ii) how
+ * to get at the variables, and (iii) how to evaluate the function at a particular value or range of values.
+ * </p>
+ * <p>
+ * </p>
+ * @author Elisha Peterson
  */
 public class FunctionTreeRoot extends FunctionTreeFunctionNode implements DoubleFunction{
     

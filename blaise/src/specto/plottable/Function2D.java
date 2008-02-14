@@ -4,8 +4,9 @@
  * Created on Sep 27, 2007, 12:35:22 PM
  */
 
-package specto.dynamicplottable;
+package specto.plottable;
 
+import specto.dynamicplottable.*;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -132,5 +133,5 @@ public class Function2D extends PointSet2D{
     /** Displays function as a series of bars, plus the function. */
     private static final int CBARS=3;
     
-    private static int style=CBARS;
+    private static int style=CONTINUOUS;
 }

@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package specto.dynamicplottable;
+package specto.plottable;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,16 +22,16 @@ import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import specto.Animatable;
-import specto.DynamicPlottable;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import specto.Plottable;
 import specto.visometry.Euclidean2;
 
 /**
  *
  * @author ae3263
  */
-public class PointSet2D extends DynamicPlottable<Euclidean2> implements Animatable<Euclidean2>{
+public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>{
     Vector<R2> points;
     public PointSet2D(){
         setOptionsMenuBuilding(true);
@@ -146,9 +146,6 @@ public class PointSet2D extends DynamicPlottable<Euclidean2> implements Animatab
     
     // EVENT HANDLING
     
-    @Override
-    public boolean clicked(MouseEvent e){return false;}
-
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu("Path");
         result.add(new JMenuItem("Color",null));

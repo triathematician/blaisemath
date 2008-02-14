@@ -26,6 +26,9 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
     public Point2D(){
         point=new R2(0,0);
     }
+    public Point2D(R2 value){
+        point=value;
+    }
 
     
     // UPDATE ROUTINES
@@ -41,6 +44,7 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
         }
     }
     
+    public R2 getPoint(){return point;}
     
     // DRAW ROUTINES
     
@@ -66,8 +70,8 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
 
     // STYLE SETTINGS
     
-    private Color color=Color.RED;
-    private int style=LARGE;
+    protected Color color=Color.RED;
+    protected int style=LARGE;
     
     public static final int SMALL=0;
     public static final int MEDIUM=1;
@@ -85,6 +89,9 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
             style=newValue;
             fireStateChanged();
         }
+    }
+    public int getStyle(){
+        return style;
     }
     
     
