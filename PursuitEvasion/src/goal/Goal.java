@@ -14,6 +14,7 @@ import javax.swing.event.EventListenerList;
 import scio.function.Function;
 import sequor.component.Settings;
 import sequor.model.ComboBoxRangeModel;
+import sequor.model.SettingsProperty;
 import simulation.Team;
 import simulation.Agent;
 import tasking.Tasking;
@@ -34,7 +35,7 @@ public class Goal implements Function<DistanceTable,Double>{
     // PROPERTIES
     
     /** Static settings. */
-    private GoalSettings gs;    
+    public GoalSettings gs;    
     /** Tasking class. */
     private Tasking tasker;
     /** Whether or not the goal has been achieved. */
@@ -59,10 +60,11 @@ public class Goal implements Function<DistanceTable,Double>{
      * @param owner     the team whose goal this is
      * @param target    the target of this goal
      * @param type      whether this is a "SEEK" goal or an "EVADE" goal
+     * @param tasking   the type of tasking associated with this goal
      * @param thresh    specifies at what point the goal has been reached... sometimes a more generic parameter
      */
-    public Goal(double weight,Team owner,Team target,int type,double thresh){
-        gs=new GoalSettings(weight,owner,target,type,thresh);
+    public Goal(double weight,Team owner,Team target,int type,int tasking,double thresh){
+        gs=new GoalSettings(weight,owner,target,type,tasking,thresh);
         tasker=gs.getTasking();
         addActionListener(owner);
     }
@@ -86,7 +88,7 @@ public class Goal implements Function<DistanceTable,Double>{
      * String representation of the goal.
      */
     @Override
-    public String toString(){return "Goal";}        
+    public String toString(){return gs.toString();}        
     
     
     // IMPLEMENT BASIC FUNCTIONALITY OF THE GOAL   
@@ -194,16 +196,18 @@ public class Goal implements Function<DistanceTable,Double>{
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable,Double> value;
         
-        public GoalSettings(double weight,Team owner,Team target,int type,double threshhold){
+        public GoalSettings(double weight,Team owner,Team target,int type,int tasking,double threshhold){
+            setName("Goal");
             this.weight.setValue(weight);
             this.owner=owner;
             this.target=target;
             this.type.setValue(type);
+            this.tasking.setValue(tasking);
             this.threshhold.setValue(threshhold);
-            addProperty("Goal Type",this.type,Settings.EDIT_COMBO);
-            addProperty("Goal Weight",this.weight,Settings.EDIT_DOUBLE);
-            addProperty("Goal Cutoff",this.threshhold,Settings.EDIT_DOUBLE);
-            addProperty("Tasking",tasking,Settings.EDIT_COMBO);
+            add(new SettingsProperty("Goal Type",this.type,Settings.EDIT_COMBO));
+            add(new SettingsProperty("Goal Weight",this.weight,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Goal Cutoff",this.threshhold,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Tasking",this.tasking,Settings.EDIT_COMBO));
             initEventListening();
         }
         

@@ -27,6 +27,7 @@ import sequor.component.Settings;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.ParametricModel;
+import sequor.model.SettingsProperty;
 
 /**
  * Represents a single participant in the pursuit-evasion game. May be a pursuer, an evader, a stationary goal
@@ -234,7 +235,7 @@ public class Agent implements TaskGenerator {
     public double getLeadFactor(){return ags.leadFactor.getValue();}
     public Color getColor(){return ags.color.getValue();}
     @Override
-    public String toString(){return ags.s;}
+    public String toString(){return ags.toString();}
     public R2 getPositionTime(double t){return new R2(ags.pm.getValue(t));}
     public boolean isActive(){return active;}
     
@@ -248,7 +249,7 @@ public class Agent implements TaskGenerator {
     }
     public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
     public void setColor(Color newValue){ags.color.setValue(newValue);}
-    public void setString(String newValue){ags.s=newValue;}
+    public void setString(String newValue){ags.setName(newValue);}
     public void setFixedPath(String xt,String yt){ags.pm.setXString(xt);ags.pm.setYString(yt);}
     
     public JPanel getPanel(){return ags.getPanel();}
@@ -272,17 +273,18 @@ public class Agent implements TaskGenerator {
         private ParametricModel pm=new ParametricModel();
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
-        /** Display string */
-        private String s="Agent";
+        /** Returns the color */
+        public Color getColor(){return color.getValue();}
         
         AgentSettings(){
-            addProperty("Speed",topSpeed,Settings.EDIT_DOUBLE);
-            addProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE);
-            addProperty("Comm Range",commRange,Settings.EDIT_DOUBLE);
-            addProperty("Behavior",behavior,Settings.EDIT_COMBO);
-            addProperty("Lead Factor",leadFactor,Settings.NO_EDIT);
-            addProperty("Position(t)",pm,Settings.NO_EDIT);
-            addProperty("Color",color,Settings.EDIT_COLOR);
+            setName("Agent");
+            add(new SettingsProperty("Speed",topSpeed,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Comm Range",commRange,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Behavior",behavior,Settings.EDIT_COMBO));
+            add(new SettingsProperty("Lead Factor",leadFactor,Settings.NO_EDIT));
+            add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
+            add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
             initEventListening();
         }
         

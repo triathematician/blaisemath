@@ -26,12 +26,12 @@ import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
-import javax.swing.tree.DefaultMutableTreeNode;
 import sequor.component.Settings;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
+import sequor.model.SettingsProperty;
 import scio.coordinate.R2;
 import utility.CircledPoint;
 import utility.StartingPositionsFactory;
@@ -64,24 +64,20 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     
     
     // CONSTRUCTORS
-    public Team(){super();tes=new TeamSettings();}
+    public Team(){
+        super();
+        tes=new TeamSettings();
+    }
     public Team(TeamSettings tes){
         super();
         value=Double.MAX_VALUE;
         this.tes=tes;
-        for(int i=0;i<getSize();i++){add(new Agent(this));}
-        initStartingLocations();
-        for(Agent a:this){a.addActionListener(this);}
-        activeAgents.addAll(this);
+        initAgentNumber();
     }
     public Team(Team team){
-        value=Double.MAX_VALUE;
-        tes=team.tes;
-        for(Agent a:team){this.add(a);}
-        activeAgents.addAll(this);
-    }
-    
-    public Team(int size,int start,int tasking,int behavior,Color color){
+        this(team.tes);
+    }    
+    public Team(int size,int start,int behavior,Color color){
         super();
         editing=true;
         value=Double.MAX_VALUE;
@@ -92,20 +88,17 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         setColor(color);
         this.clear();
         initAgentNumber();
-        //for(int i=0;i<getSize();i++){add(new Agent(this));}
-        initStartingLocations();
-        //for(Agent a:this){a.addActionListener(this);} 
         editing=false;
-        //activeAgents.addAll(this);
     }
     
     
     // METHODS: HELP FOR INITIALIZAITON
     
     /** Adds a goal. */        
-    public void addGoal(double weight,Team target,int type,double threshhold){
-        Goal g=new Goal(weight,this,target,type,threshhold);
+    public void addGoal(double weight,Team target,int type,int tasking,double threshhold){
+        Goal g=new Goal(weight,this,target,type,tasking,threshhold);
         goals.add(g);
+        tes.addChild(g.gs,Settings.PROPERTY_INDEPENDENT);
         if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
         
@@ -125,8 +118,19 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Changes the number of agents, resets starting locations. */
     public void initAgentNumber(){
         editing=true;
-        while(size()>getSize()){get(size()-1).removeActionListener(this);remove(size()-1);}
-        while(size()<getSize()){add(new Agent(this));get(size()-1).addActionListener(this);}
+        while(size()>getSize()){
+            Agent a=get(size()-1);
+            a.removeActionListener(this);
+            tes.removeChild(a.ags);
+            remove(size()-1);
+        }
+        while(size()<getSize()){
+            Agent a=new Agent(this);
+            a.setString("Agent "+(size()+1));
+            add(a);
+            a.addActionListener(this);
+            tes.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
+        }
         initStartingLocations();
         activeAgents.clear();
         activeAgents.addAll(this);
@@ -173,13 +177,13 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         }
     }
     
-    /** Generates tree given list of goals and agents */
-    public DefaultMutableTreeNode getTreeNode(){
-        DefaultMutableTreeNode result=new DefaultMutableTreeNode(this);
-        for(Goal g:goals){result.add(new DefaultMutableTreeNode(g));}
-        for(Agent agent:this){result.add(new DefaultMutableTreeNode(agent));}
-        return result;
-    }
+//    /** Generates tree given list of goals and agents */
+//    public DefaultMutableTreeNode getTreeNode(){
+//        DefaultMutableTreeNode result=new DefaultMutableTreeNode(this);
+//        for(Goal g:goals){result.add(new DefaultMutableTreeNode(g));}
+//        for(Agent agent:this){result.add(new DefaultMutableTreeNode(agent));}
+//        return result;
+//    }
     
     /** Returns all goals which require capture checks.
      * @return      Vector of Goals representing those which involve capturing and removing player from the field.
@@ -298,7 +302,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public int getStart(){return tes.start.getValue();}
     public Collection<Goal> getGoals(){return goals;}
     @Override
-    public String toString(){return tes.s;}
+    public String toString(){return tes.toString();}
     
     @Override
     public void setSize(int newValue){tes.size.setValue(newValue);}
@@ -319,7 +323,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public void setBehavior(int newValue){tes.behavior.setValue(newValue);}
     public void setLeadFactor(double newValue){tes.leadFactor.setValue(newValue);}
     public void setColor(Color newValue){tes.color.setValue(newValue);}
-    public void setString(String newValue){tes.s=newValue;}
+    public void setString(String newValue){tes.setName(newValue);}
     public void setFixedPath(String xt,String yt){tes.pm.setXString(xt);tes.pm.setYString(yt);}
     
     public JPanel getPanel(){return tes.getPanel();}   
@@ -368,19 +372,20 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         private ParametricModel pm=new ParametricModel();
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
-        /** Display string */
-        private String s="Team";
+        /** Returns the color */
+        @Override
+        public Color getColor(){return color.getValue();}
         
         public TeamSettings(){
-            addProperty("# Agents",size,Settings.EDIT_INTEGER);
-            addProperty("Starting Loc",start,Settings.EDIT_COMBO);
-            addProperty("Speed",topSpeed,Settings.EDIT_DOUBLE);
-            addProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE);
-            addProperty("Comm Range",commRange,Settings.EDIT_DOUBLE);
-            addProperty("Behavior",behavior,Settings.EDIT_COMBO);
-            addProperty("Lead Factor",leadFactor,Settings.NO_EDIT);
-            addProperty("Position(t)",pm,Settings.NO_EDIT);
-            addProperty("Color",color,Settings.EDIT_COLOR);
+            add(new SettingsProperty("# Agents",size,Settings.EDIT_INTEGER));
+            add(new SettingsProperty("Starting Loc",start,Settings.EDIT_COMBO));
+            add(new SettingsProperty("Speed",topSpeed,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Comm Range",commRange,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Behavior",behavior,Settings.EDIT_COMBO));
+            add(new SettingsProperty("Lead Factor",leadFactor,Settings.NO_EDIT));
+            add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
+            add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
             initEventListening();
         }
         
@@ -394,7 +399,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         /** Listens for changes to settings */
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            editing=true;
+            if(editing){return;}
             String ac=null;
             if(evt.getSource()==behavior){
                 copyBehaviortoTeam();
@@ -418,7 +423,6 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             } else if(evt.getSource()==leadFactor){ copyLeadFactortoTeam(); ac="teamSetupChange";
             } else if(evt.getSource()==pm){         copyPathtoTeam();       ac="teamSetupChange";
             } else if(evt.getSource()==color){      copyColortoTeam();      ac="teamDisplayChange";}
-            editing=false;
             fireActionPerformed(ac);
         }
     }

@@ -18,13 +18,13 @@ import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.util.Vector;
+import javax.swing.JMenu;
 import javax.swing.event.EventListenerList;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JPanel;
 import sequor.component.Settings;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
+import sequor.model.SettingsProperty;
 import specto.PlotPanel;
 import specto.plotpanel.Plot2D;
 import specto.visometry.Euclidean2;
@@ -87,9 +87,11 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         if(newTeams!=null){
             if(teams!=null){for(Team t:teams){t.removeActionListener(this);}}
             teams=newTeams;
+            ss.getChildren().clear();
             for(Team t:teams){
                 t.addActionListener(this);
                 t.initStartingLocations();
+                ss.addChild(t.tes,Settings.PROPERTY_INDEPENDENT);
             }
             log=new DataLog(this);
         }        
@@ -140,11 +142,12 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         reset();
         double time=0;
         for(int i=0;i<numSteps;i++){
+            time=i*getStepTime();
             iterate(time);
             log.logAll(i);
             for(Team t:teams){
                 for(Goal g:t.getCaptureGoals()){
-                    log.logCaptures(dist,g);                    
+                    log.logCaptures(dist,g,time);                    
                 }
             }
         }
@@ -208,13 +211,13 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }
     }
     
-    /** Returns all teams/agents as a JTree
-     * @return a tree model with all agents involved in the simulation */
-    public DefaultTreeModel getTreeModel(){
-        DefaultMutableTreeNode top=new DefaultMutableTreeNode(this);
-        for(Team t:teams){top.add(t.getTreeNode());}
-        return new DefaultTreeModel(top);
-    }
+//    /** Returns all teams/agents as a JTree
+//     * @return a tree model with all agents involved in the simulation */
+//    public DefaultTreeModel getTreeModel(){
+//        DefaultMutableTreeNode top=new DefaultMutableTreeNode(this);
+//        for(Team t:teams){top.add(t.getTreeNode());}
+//        return new DefaultTreeModel(top);
+//    }
     
     
     // EVENT HANDLING
@@ -271,7 +274,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public double getStepTime(){return ss.stepTime.getValue();}
     public int getNumSteps(){return ss.numSteps.getValue();}
     public int getMaxSteps(){return ss.maxSteps.getValue();}
-    public String toString(){return ss.s;}
+    public String toString(){return ss.toString();}
     
     public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
     public void setGameType(int newValue){ss.gameType.setValue(newValue);}
@@ -279,11 +282,12 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void setStepTime(double newValue){ss.stepTime.setValue(newValue);}
     public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
     public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
-    public void setString(String newValue){ss.s=newValue;}
+    public void setString(String newValue){ss.setName(newValue);}
     public void setPrimary(Team newValue){primary=newValue;}
     public void setPrimary(int newIndex){if(newIndex<teams.size()){primary=teams.get(newIndex);}}
     
     public JPanel getPanel(){return ss.getPanel();}
+    public JMenu getMenu(String s){return ss.getMenu(s);}
     
     // SUBCLASSES
     
@@ -301,16 +305,14 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         private IntegerRangeModel numSteps=new IntegerRangeModel(100,0,10000);
         /** If stop is based on reaching a goal, this is the max # of steps to allow. */
         private IntegerRangeModel maxSteps=new IntegerRangeModel(1000,0,10000000);
-        /** Display string */
-        private String s="PEG Simulation";
         
         SimSettings(){
             super();
-            addProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE);
-            addProperty("Step Time",stepTime,Settings.EDIT_DOUBLE);
-            addProperty("# of Steps",numSteps,Settings.EDIT_INTEGER);
+            add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER));
             //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
-            addProperty("Preset Game",gameType,Settings.EDIT_COMBO);
+            add(new SettingsProperty("Preset Game",gameType,Settings.EDIT_COMBO));
             //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
             initEventListening();
         }

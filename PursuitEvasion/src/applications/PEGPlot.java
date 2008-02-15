@@ -39,6 +39,7 @@ public class PEGPlot extends javax.swing.JFrame {
         simulation1.placeGraphsOn(plotPanel1);
         simulation1.placePathsOn(plotPanel1);
         simulation1.placeValuesOn(plot2D1);
+        settingsMenu.add(simulation1.getMenu("Simulation"));
     }
     
     /** This method is called from within the constructor to
@@ -108,14 +109,11 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         notificationWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
         jToolBar1 = new javax.swing.JToolBar();
         resetButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         plotPanel1 = new specto.PlotPanel(new specto.visometry.Euclidean2());
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -126,17 +124,11 @@ public class PEGPlot extends javax.swing.JFrame {
         simulationMenu = new javax.swing.JMenu();
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
-        PresetMenu = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
         settingsMenu = new javax.swing.JMenu();
         ModeMenu = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItem2 = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItem3 = new javax.swing.JRadioButtonMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
         appearanceMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -386,28 +378,6 @@ public class PEGPlot extends javax.swing.JFrame {
         jTabbedPane1.addTab("Log", jScrollPane5);
         jTabbedPane1.addTab("Network View", jScrollPane3);
 
-        jSplitPane1.setDividerLocation(130);
-        jSplitPane1.setResizeWeight(0.5);
-        jSplitPane1.setContinuousLayout(true);
-        jSplitPane1.setMaximumSize(new java.awt.Dimension(500, 324));
-        jSplitPane1.setOneTouchExpandable(true);
-
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(100, 23));
-        jSplitPane1.setRightComponent(jScrollPane2);
-
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(100, 23));
-
-        jTree1.setCellRenderer(new MyTreeCellRenderer(createImageIcon("images/teamicon.gif"),createImageIcon("images/teamicon2.gif"),createImageIcon("images/agenticon.gif")));
-        jTree1.setModel(simulation1.getTreeModel());
-        jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                jTree1ValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTree1);
-
-        jSplitPane1.setLeftComponent(jScrollPane1);
-
         jToolBar1.setFloatable(false);
 
         resetButton.setFont(new java.awt.Font("Tahoma", 1, 14));
@@ -447,7 +417,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -455,8 +425,8 @@ public class PEGPlot extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -510,22 +480,6 @@ public class PEGPlot extends javax.swing.JFrame {
         });
         simulationMenu.add(jMenuItem14);
 
-        PresetMenu.setText("Load Preset");
-
-        jMenuItem3.setText("Item");
-        PresetMenu.add(jMenuItem3);
-
-        jMenuItem4.setText("Item");
-        PresetMenu.add(jMenuItem4);
-
-        jMenuItem5.setText("Item");
-        PresetMenu.add(jMenuItem5);
-
-        jMenuItem6.setText("Item");
-        PresetMenu.add(jMenuItem6);
-
-        simulationMenu.add(PresetMenu);
-
         jMenuBar1.add(simulationMenu);
 
         settingsMenu.setText("Settings");
@@ -549,9 +503,6 @@ public class PEGPlot extends javax.swing.JFrame {
         ModeMenu.add(jRadioButtonMenuItem3);
 
         settingsMenu.add(ModeMenu);
-
-        jMenuItem8.setText("Other");
-        settingsMenu.add(jMenuItem8);
 
         jMenuBar1.add(settingsMenu);
 
@@ -632,11 +583,10 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         plot2D1.removeAll();
         plot2D1.add(new Grid2D());
         simulation1.placeValuesOn(plot2D1);
-        jTree1.setModel(simulation1.getTreeModel());
-        if(evt.getSource()==simulation1){jScrollPane2.setViewportView(null);}
         simulation1.setAnimationCycle(plotPanel1);
         simulation1.setAnimationCycle(plot2D1);
         plotPanel1.rebuildOptionsMenu();
+        simulationSettingsPanel1.setTree(simulation1.ss);
     }
     else if(evt.getActionCommand().equals("animation")){
         simulation1.setAnimationCycle(plotPanel1);  
@@ -651,26 +601,6 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
     simulation1.run();
 }//GEN-LAST:event_runButtonActionPerformed
-
-private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-    javax.swing.JPanel result=new javax.swing.JPanel();
-    result.setLayout(new BoxLayout(result,BoxLayout.PAGE_AXIS));
-   // result.setPreferredSize(new Dimension(200,200));
-   // result.setMaximumSize(new Dimension(300,300));
-    DefaultMutableTreeNode node=(DefaultMutableTreeNode)jTree1.getLastSelectedPathComponent();
-    if(node==null){return;}
-    Object nodeObject=node.getUserObject();
-    if(nodeObject instanceof simulation.Simulation){
-        result.add(((simulation.Simulation)nodeObject).getPanel());
-    }else if(nodeObject instanceof simulation.Agent){
-        result.add(((simulation.Agent)nodeObject).getPanel());
-    }else if(nodeObject instanceof simulation.Team){
-        result.add(((simulation.Team)nodeObject).getPanel());
-    }else if(nodeObject instanceof goal.Goal){
-        result.add(((goal.Goal)nodeObject).getPanel());
-    }
-    jScrollPane2.setViewportView(result);
-}//GEN-LAST:event_jTree1ValueChanged
     
     /**
      * @param args the command line arguments
@@ -687,7 +617,6 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JMenu ModeMenu;
     private javax.swing.JMenu ModeMenu1;
     private javax.swing.JMenu ModeMenu2;
-    private javax.swing.JMenu PresetMenu;
     private javax.swing.JMenu PresetMenu1;
     private javax.swing.JMenu PresetMenu2;
     private javax.swing.JMenu appearanceMenu;
@@ -722,7 +651,6 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JMenuItem jMenuItem27;
     private javax.swing.JMenuItem jMenuItem28;
     private javax.swing.JMenuItem jMenuItem29;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem30;
     private javax.swing.JMenuItem jMenuItem31;
     private javax.swing.JMenuItem jMenuItem32;
@@ -733,14 +661,10 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JMenuItem jMenuItem37;
     private javax.swing.JMenuItem jMenuItem38;
     private javax.swing.JMenuItem jMenuItem39;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem40;
     private javax.swing.JMenuItem jMenuItem41;
     private javax.swing.JMenuItem jMenuItem42;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
@@ -752,15 +676,11 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem7;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem8;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTree jTree1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private javax.swing.JTextArea notificationWindow;
     private specto.plotpanel.Plot2D plot2D1;
@@ -774,53 +694,8 @@ private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN
     private javax.swing.JMenu simulationMenu;
     private javax.swing.JMenu simulationMenu1;
     private javax.swing.JMenu simulationMenu2;
+    private applications.SimulationSettingsPanel simulationSettingsPanel1;
     private javax.swing.JPanel statusBar;
     private javax.swing.JLabel statusText;
     // End of variables declaration//GEN-END:variables
-
-
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = PEGPlot.class.getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    } 
-    
-    static class MyTreeCellRenderer extends DefaultTreeCellRenderer {
-        MyTreeCellRenderer(){super();}
-        MyTreeCellRenderer(Icon t,Icon t2,Icon a){
-            super();
-            teamIcon=t;teamIcon2=t2;agentIcon=a;
-            if(t!=null){this.setOpenIcon(t);}
-            if(t2!=null){this.setClosedIcon(t2);}
-            if(a!=null){setLeafIcon(a);}
-        }
-        private Icon teamIcon=null;
-        private Icon teamIcon2=null;
-        private Icon agentIcon=null;
-        private DefaultMutableTreeNode curNode=null;
-        //public Icon getLeafIcon(){return (agentIcon==null)?agentIcon:super.getLeafIcon();}
-        public Color getTextSelectionColor(){
-            if(curNode!=null){
-                if(curNode.getUserObject() instanceof simulation.Team){return ((simulation.Team)curNode.getUserObject()).getColor();}
-                if(curNode.getUserObject() instanceof simulation.Agent){return ((simulation.Agent)curNode.getUserObject()).getColor();}
-            }
-            return super.getTextSelectionColor();
-        }
-        public Color getTextNonSelectionColor() {
-            if(curNode!=null){
-                if(curNode.getUserObject() instanceof simulation.Team){return ((simulation.Team)curNode.getUserObject()).getColor();}
-                if(curNode.getUserObject() instanceof simulation.Agent){return ((simulation.Agent)curNode.getUserObject()).getColor();}
-            }
-            return super.getTextNonSelectionColor();
-        }
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus){
-            if(value instanceof DefaultMutableTreeNode){curNode=(DefaultMutableTreeNode)value;}
-            return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        }
-    }
 }

@@ -16,17 +16,26 @@ import specto.plottable.PointSet2D;
 
 /**
  * Logs data from a simulation's run. Can be used to plot various results.
- * <br><br>
+ * <p>
+ * The log contains the following information:
+ * <li>
+ * <ul>Paths of all players throughout the simulation;
+ * <ul>Value functions of all teams throughout the simulation;
+ * <ul>Significant event for one or two agents = String + Agent + Agent + time
+ * </li>
+ * </p>
  * @author ae3263
  */
 public class DataLog {
     HashMap<Agent,Vector<R2>> agentPaths;
     HashMap<Team,Vector<R2>> teamValues;
+    Vector<SignificantEvent> significantEvents;
     
     /** Initializes to the agents/teams of a particular simulation. */
     public DataLog(Simulation sim){
         agentPaths=new HashMap<Agent,Vector<R2>>();
         teamValues=new HashMap<Team,Vector<R2>>();
+        significantEvents=new Vector<SignificantEvent>();
         for(Team t:sim.getTeams()){
             initialize(t);
         }
@@ -45,6 +54,7 @@ public class DataLog {
     public void reset(){
         for(Vector<R2> vv:agentPaths.values()){vv.clear();}
         for(Vector<R2> vv:teamValues.values()){vv.clear();}
+        significantEvents.clear();
         logAll(0);
     }
     
@@ -92,10 +102,10 @@ public class DataLog {
      * @param g             The Goal representing the capturing
      * @param capDistance   The distance within which capture occurs
      */
-    public void logCaptures(DistanceTable dt,Goal g){
+    public void logCaptures(DistanceTable dt,Goal g,double time){
         AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
         while((closest!=null)&&(closest.distance<g.getThreshhold())){
-            System.out.println("capture occurred!");
+            significantEvents.add(new SignificantEvent(closest.first,closest.second,"capture",time));
             dt.removeAgents(closest);
             g.getOwner().deactivate(closest.first);
             g.getTarget().deactivate(closest.second);
@@ -103,9 +113,35 @@ public class DataLog {
         }
     }
     
-    /** Outputs results. */
+    /** Outputs results to standard output. */
     public void output(){
-        //for(Vector<R2> vv:agentPaths.values()){System.out.println(vv);}
-        //for(Vector<R2> vv:teamValues.values()){System.out.println(vv);}
+        for(SignificantEvent se:significantEvents){
+            System.out.println(se.toString());
+        }
     }
+    
+    
+    /** 
+     * This subclass is used to store significant Agent or Agent/Agent events, such as the
+     * capture of a particular player, communications, etc. It stores a string to describe
+     * the event, the two agents, and the time at which it occurred.
+     */
+    class SignificantEvent{
+        Agent originator;
+        Agent receiver;
+        String description;
+        double time;
+
+        public SignificantEvent(Agent originator, Agent receiver, String description, double time) {
+            this.originator = originator;
+            this.receiver = receiver;
+            this.description = description;
+            this.time = time;
+        }
+        
+        @Override
+        public String toString(){
+            return description+" at time "+time+" (agents "+originator+" and "+receiver+")";
+        }
+    } // CLASS SignificantEvent //
 }
