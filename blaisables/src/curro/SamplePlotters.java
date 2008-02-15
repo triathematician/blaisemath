@@ -6,9 +6,10 @@
 
 package curro;
 
-import specto.dynamicplottable.DESolution2D;
-import specto.dynamicplottable.Function2D;
-import specto.dynamicplottable.Parametric2D;
+import specto.decoration.DESolution2D;
+import specto.dynamicplottable.Point2D;
+import specto.plottable.Function2D;
+import specto.plottable.Parametric2D;
 import specto.plottable.PlaneFunction2D;
 import specto.plottable.VectorField2D;
 
@@ -24,8 +25,12 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D1.add(new Function2D());
         plot2D2.add(new Parametric2D());
         plot2D3.add(new VectorField2D());
-        plot2D3.add(new DESolution2D());
-        plot2D3.add(new DESolution2D());
+        Point2D p1=new Point2D();
+        Point2D p2=new Point2D();
+        plot2D3.add(p1);
+        plot2D3.add(p2);
+        plot2D3.add(new DESolution2D(p1));
+        plot2D3.add(new DESolution2D(p2));
         plot2D4.add(new PlaneFunction2D());
     }
     

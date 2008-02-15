@@ -6,7 +6,7 @@
 
 package curro;
 
-import specto.dynamicplottable.Function2D;
+import specto.plottable.Function2D;
 
 /**
  *

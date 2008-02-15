@@ -13,7 +13,7 @@ import javax.swing.tree.DefaultTreeModel;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 import scribo.tree.FunctionTreeRoot;
-import specto.dynamicplottable.Function2D;
+import specto.plottable.Function2D;
 import specto.gridplottable.Grid2D;
 import specto.visometry.Euclidean2;
 
