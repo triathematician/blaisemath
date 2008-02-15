@@ -34,6 +34,10 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
         } catch (FunctionSyntaxException ex) {            
         }
     }
+    public ParametricModel(String sx,String sy){
+        setXString(sx);
+        setYString(sy);
+    }
     public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
     public void setXString(String s){
         try {
@@ -63,4 +67,12 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,null);}
     public String toString(){return "("+sx+","+sy+")";}
     public void actionPerformed(ActionEvent e){fireStateChanged();}
+
+    @Override
+    public FiresChangeEvents clone() {return new ParametricModel(sx,sy);}
+    @Override
+    public void copyValuesFrom(FiresChangeEvents parent) {
+        setXString(((ParametricModel)parent).sx);
+        setYString(((ParametricModel)parent).sy);
+    }
 }

@@ -48,6 +48,11 @@ public class SettingsProperty {
         this.name = name;
     }
     
+    // INHERITANCE METHODS
     
-    
+    /** Copies values to another class and adds listening capabilities */
+    public SettingsProperty getDescendant(){        
+        FiresChangeEvents newModel=getModel().getDescendant();
+        return new SettingsProperty(getName(),newModel,getEditorType());
+    }
 }

@@ -5,10 +5,16 @@
 
 package sequor.component;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 
 /**
  * SettingsPanel is designed to streamline the process of creating a panel for editing several
@@ -18,9 +24,9 @@ import javax.swing.JTree;
  */
 public class SettingsPanel extends JSplitPane{
     
-    JScrollPane pane1;
-    JScrollPane pane2;
-    JTree tree;
+    protected JScrollPane pane1;
+    protected JScrollPane pane2;
+    protected JTree tree;
     
     public SettingsPanel(){
         super();
@@ -36,7 +42,6 @@ public class SettingsPanel extends JSplitPane{
         super();
         initComponents();        
         setTree(s);
-        pane1.setViewportView(tree);
         pane2.setViewportView(s.getPanel());
         setLeftComponent(pane1);
         setRightComponent(pane2);
@@ -46,17 +51,28 @@ public class SettingsPanel extends JSplitPane{
         // default settings for the panel
         setDividerLocation(130);
         setResizeWeight(0.5);
-        setMaximumSize(new Dimension(1000,300));
+        setPreferredSize(new Dimension(400,500));
+        setMaximumSize(new Dimension(400,1000));
         setContinuousLayout(true);
-        setOneTouchExpandable(true);    
-        JScrollPane pane1=new JScrollPane();  
+        setOneTouchExpandable(true);  
+        pane1=new JScrollPane();  
         pane1.setMinimumSize(new Dimension(100,23));
-        JScrollPane pane2=new JScrollPane();
+        pane2=new JScrollPane();
         pane2.setMinimumSize(new Dimension(100,23));
     }
     
     /** Constructs the tree based on the settings class. */
-    private void setTree(Settings s){
+    protected void setTree(Settings s){
+        // TODO make sure this works
         tree=new JTree(s.getTreeModel());
+        tree.addTreeSelectionListener(new TreeSelectionListener(){
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                Settings nodeObject=(Settings)node.getUserObject();
+                pane2.setViewportView(nodeObject.getPanel());
+            }
+        });
+        pane1.setViewportView(tree);
     }
 }

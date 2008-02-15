@@ -15,4 +15,14 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
     String[] s;
     public ComboBoxRangeModel(){}
     public ComboBoxRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
+    public String[] getStrings(){return s;}
+    public String getString(int i){return s[i];}
+    @Override
+    public void setValue(String sv){
+        for(int i=0;i<s.length;i++){
+            if(sv.equals(s[i])){
+                setValue(i);
+            }
+        }
+    }
 }

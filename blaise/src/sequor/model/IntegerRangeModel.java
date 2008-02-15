@@ -64,5 +64,11 @@ public class IntegerRangeModel extends FiresChangeEvents {
         if(changeMin||changeMax||changeValue){fireStateChanged();}
     }
     
+    @Override
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
+    
+    @Override
+    public FiresChangeEvents clone(){return new IntegerRangeModel(value,minimum,maximum,step);}
+    @Override
+    public void copyValuesFrom(FiresChangeEvents parent){setValue(((IntegerRangeModel)parent).value);}
 }

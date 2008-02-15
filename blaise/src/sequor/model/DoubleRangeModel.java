@@ -66,4 +66,9 @@ public class DoubleRangeModel extends FiresChangeEvents {
     }
         
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
+    
+    @Override
+    public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
+    @Override
+    public void copyValuesFrom(FiresChangeEvents parent){setValue(((DoubleRangeModel)parent).value);}
 }

@@ -21,6 +21,10 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
         setTo(0,0);
         setBoundsMax();
     }
+    public PointRangeModel(DoubleRangeModel xModel,DoubleRangeModel yModel){
+        this.xModel=(DoubleRangeModel) xModel.clone();
+        this.yModel=(DoubleRangeModel) yModel.clone();
+    }
     public PointRangeModel(double x,double y){
         initializeModels();
         setTo(x,y);
@@ -75,4 +79,12 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     
     public void stateChanged(ChangeEvent e){fireStateChanged();}
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
+
+    @Override
+    public FiresChangeEvents clone() {return new PointRangeModel(xModel,yModel);}
+    @Override
+    public void copyValuesFrom(FiresChangeEvents parent){
+        xModel.setValue(((PointRangeModel)parent).getX());
+        yModel.setValue(((PointRangeModel)parent).getY());
+    }
 }

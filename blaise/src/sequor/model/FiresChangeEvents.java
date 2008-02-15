@@ -20,6 +20,25 @@ import javax.swing.event.EventListenerList;
  */
 public abstract class FiresChangeEvents {
 
+    /** Clones this object. Should create a copy of the underlying models. */
+    @Override
+    public abstract FiresChangeEvents clone();
+    /** Copies all model values from another FiresChangeEvents class. */
+    public abstract void copyValuesFrom(FiresChangeEvents parent);
+    /** Listens for changes from a class of the same type, and copies properties from the other model. */
+    public FiresChangeEvents initListening(final FiresChangeEvents parent){
+        parent.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                copyValuesFrom(parent);
+            }
+        });
+        return this;
+    }
+
+    /** Generates a copy of this class which listens for changes from this one. */
+    public FiresChangeEvents getDescendant() {return clone().initListening(this);}
+    
     /** Basic support for string manipulation. */
     public abstract void setValue(String s);
     public abstract String toLongString();
