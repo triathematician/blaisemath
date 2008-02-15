@@ -12,7 +12,7 @@ import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
 import scio.coordinate.R2;
-import specto.dynamicplottable.PointSet2D;
+import specto.plottable.PointSet2D;
 
 /**
  * Logs data from a simulation's run. Can be used to plot various results.

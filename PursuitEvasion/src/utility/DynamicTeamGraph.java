@@ -15,7 +15,7 @@ import specto.Animatable;
 import specto.Plottable;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
-import specto.dynamicplottable.PointSet2D;
+import specto.plottable.PointSet2D;
 import specto.visometry.Euclidean2;
 
 /**
