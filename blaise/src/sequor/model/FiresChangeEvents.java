@@ -1,10 +1,6 @@
 /*
  * FiresChangeEvents.java
- * 
  * Created on Nov 12, 2007, 8:46:21 AM
- * 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
  */
 
 package sequor.model;

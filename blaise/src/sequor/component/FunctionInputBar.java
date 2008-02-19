@@ -14,17 +14,19 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import sequor.model.FunctionTreeModel;
 
 /**
- * Contains a text field for inputting a function, as well as a selection of the type
+ * Contains a text field for inputting a function, as well as a combo box for selecting the type
  * of function.
- * <br><br>
- * @author ae3263
+ * 
+ * @author Elisha Peterson
  */
 public class FunctionInputBar extends JPanel implements ChangeListener,ItemListener{
     public FunctionInputBar(){
-        FunctionTreeTextField fttf=new FunctionTreeTextField();
-        fttf.addChangeListener(this);
+        FunctionTreeModel ftm=new FunctionTreeModel();
+        FunctionTreeTextField fttf=new FunctionTreeTextField(ftm);
+        ftm.addChangeListener(this);
         fttf.setMinimumSize(new Dimension(100,20));
         fttf.setPreferredSize(new Dimension(100,20));
         JComboBox chooser=functionChoiceBox();

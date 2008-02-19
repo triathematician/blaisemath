@@ -16,7 +16,7 @@ import scio.function.Function;
 import sequor.model.ParametricModel;
 import specto.PlotPanel;
 import scio.coordinate.R2;
-import specto.plottable.Parametric2D;
+import sequor.model.FunctionTreeModel;
 
 /**
  * This class
@@ -33,17 +33,17 @@ public class BParametricFunctionPanel extends JPanel{
         fy=new FunctionTreeTextField("y(t)=","t");
         fx.setText("t^cos(t)");
         fy.setText("t^sin(t)");
-        add(new JLabel(fx.getLabel()));
+        add(new JLabel("label"));
         add(fx);
-        add(new JLabel(fy.getLabel()));
+        add(new JLabel("label"));
         add(fy);
         setMinimumSize(new Dimension(20,20));
         setPreferredSize(new Dimension(50,25));
         setMaximumSize(new Dimension(50,25));
     }
     public BParametricFunctionPanel(ParametricModel pm){
-        fx=new FunctionTreeTextField(pm.getTreeX());
-        fy=new FunctionTreeTextField(pm.getTreeY());
+        fx=new FunctionTreeTextField(new FunctionTreeModel(pm.getTreeX()));
+        fy=new FunctionTreeTextField(new FunctionTreeModel(pm.getTreeY()));
         fx.setText(pm.getStringX());
         fy.setText(pm.getStringY());
         add(new JLabel("x(t)="));

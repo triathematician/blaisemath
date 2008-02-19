@@ -5,7 +5,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 import scribo.parser.FunctionSyntaxException;
 
@@ -35,7 +35,7 @@ public class Differentiator extends FunctionTreeFunctionNode {
             for(int i=0;i<n;i++){dArg=dArg.derivativeTree(x);}
         }
     }
-    public Double getValue(HashMap<Variable, Double> table){initDArg();return dArg.getValue(table);}
+    public Double getValue(TreeMap<Variable, Double> table){initDArg();return dArg.getValue(table);}
     
     @Override
     public FunctionTreeNode derivativeTree(Variable v){return new Differentiator(argumentNode(),x,n+1);}

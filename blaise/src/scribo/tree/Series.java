@@ -5,7 +5,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 import scribo.parser.FunctionSyntaxException;
 
@@ -108,7 +108,7 @@ public abstract class Series extends FunctionTreeFunctionNode {
         public Sum(FunctionTreeNode ftn,Variable index,double min,double max){super(ftn,index,min,max);}
         
         public void initFunctionType(){setFunctionNames("sum",null,null,null);}
-        public Double getValue(HashMap<Variable, Double> table){
+        public Double getValue(TreeMap<Variable, Double> table){
             double result=0;
             double dMin=min.getValue(table);
             double dMax=max.getValue(table);
@@ -133,7 +133,7 @@ public abstract class Series extends FunctionTreeFunctionNode {
         public Prod(FunctionTreeNode ftn,Variable index,double min,double max){super(ftn,index,min,max);}
         
         public void initFunctionType(){setFunctionNames("product",null,null,null);}
-        public Double getValue(HashMap<Variable, Double> table){
+        public Double getValue(TreeMap<Variable, Double> table){
             double result=1;
             double dMin=min.getValue(table);
             double dMax=max.getValue(table);

@@ -5,16 +5,13 @@
 
 package sequor.component;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
 
 /**
  * SettingsPanel is designed to streamline the process of creating a panel for editing several

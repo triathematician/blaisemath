@@ -5,7 +5,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * @author Elisha
@@ -20,7 +20,7 @@ public class Constant extends FunctionTreeLeaf {
     
     @Override
     public Double getValue(){return value;}
-    public Double getValue(HashMap<Variable,Double> table) {return value;}
+    public Double getValue(TreeMap<Variable,Double> table) {return value;}
     @Override
     public boolean equals(double d){return value==d;}
     public boolean equals(Constant c){return value==c.value;}

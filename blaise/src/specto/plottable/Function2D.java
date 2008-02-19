@@ -6,16 +6,19 @@
 
 package specto.plottable;
 
+import javax.swing.event.ChangeEvent;
 import specto.dynamicplottable.*;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.util.Vector;
+import javax.swing.event.ChangeListener;
 import scio.function.DoubleFunction;
 import scio.function.Function;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import sequor.model.FunctionTreeModel;
 
 /**
  * Draws a one-input/one-output function on the Cartesian Plane. Requires a function to work.
@@ -36,6 +39,15 @@ public class Function2D extends PointSet2D{
     public Function2D(){this(DEFAULT_FUNCTION);}
     public Function2D(Function<Double,Double> function){setFunction(function);}
     public Function2D(DoubleFunction function){setFunction(function);}
+    public Function2D(FunctionTreeModel functionModel){
+        setFunction(functionModel.getRoot());
+        functionModel.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                fireStateChanged();
+            }
+        });
+    }
 
     public void setFunction(final Function<Double,Double> newFunction){
         setFunction(new DoubleFunction(){

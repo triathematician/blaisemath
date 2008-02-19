@@ -53,18 +53,28 @@ public class SpinnerIntegerEditor extends SpinnerNumberModel implements ChangeLi
     
     // more getters & setters
     
+    @Override
     public Comparable getMaximum(){return getIntegerMax();}
+    @Override
     public Comparable getMinimum(){return getIntegerMin();}
+    @Override
     public Object getNextValue(){return getIntegerValue()+stepSize;}
+    @Override
     public Number getNumber(){return getIntegerValue();}
+    @Override
     public Object getPreviousValue(){return getIntegerValue()-stepSize;}
+    @Override
     public Number getStepSize(){return stepSize;}
+    @Override
     public Object getValue(){return getIntegerValue();}
 
     // the following routines are required for spinners...     
+    @Override
     public void setStepSize(Number stepSize){this.stepSize=stepSize.intValue();}
+    @Override
     public void setValue(Object value){if(value instanceof Number){setValue(((Number)value).intValue());}}
         
     //The only method in the ChangeListener interface...
+    @Override
     public void stateChanged(ChangeEvent e){fireStateChanged();}
 }

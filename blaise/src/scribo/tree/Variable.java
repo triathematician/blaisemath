@@ -7,7 +7,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Vector;
  * 
  * @author Elisha
  */
-public class Variable extends FunctionTreeLeaf {
+public class Variable extends FunctionTreeLeaf implements Comparable {
     Double value;
     String string;
     
@@ -28,7 +28,7 @@ public class Variable extends FunctionTreeLeaf {
     public void setValue(Double newValue){value=newValue;}
     @Override
     public Double getValue(){return value;}
-    public Double getValue(HashMap<Variable,Double> table) {
+    public Double getValue(TreeMap<Variable,Double> table) {
         //for(Variable v:table.keySet()){System.out.println("variable called with "+v.toString()+" taken to "+table.get(v).toString());}
         for(Variable v:table.keySet()){if(v.equals(this)){return table.get(v);}}
         return null;
@@ -64,5 +64,10 @@ public class Variable extends FunctionTreeLeaf {
         }
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return (power==0)?Constant.ZERO:new Monomial(coefficient*power,string,power-1);}
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return toString().compareTo(o.toString());
     }
 }

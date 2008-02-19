@@ -5,7 +5,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import scribo.parser.*;
 
 /**
@@ -47,7 +47,7 @@ public abstract class FunctionTreeFunctionNode extends FunctionTreeNode {
     public String toString(){return fn+"("+argumentString()+")";}    
     public void setArgumentNode(FunctionTreeNode argument){if(argument!=null&&argument.isValidSubNode()){getSubNodes().set(0,argument);}}
     public FunctionTreeNode argumentNode(){return getSubNode(0);}
-    public Double argumentValue(HashMap<Variable, Double> table){return argumentNode().getValue(table);}
+    public Double argumentValue(TreeMap<Variable, Double> table){return argumentNode().getValue(table);}
     public String argumentString(){return argumentNode().toString();}
     public FunctionTreeNode argumentDerivative(Variable v){return argumentNode().derivativeTree(v);}
     public FunctionTreeNode argumentSimplified(){return argumentNode().simplified();}

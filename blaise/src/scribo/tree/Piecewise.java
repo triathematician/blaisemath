@@ -10,7 +10,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Implements a piecewise function. Argument is additive sum of restricted
@@ -23,7 +23,7 @@ public class Piecewise extends FunctionTreeFunctionNode {
     public Piecewise(Domain a,Domain b){super(new Operation.Add(a,b));}
     
     public void initFunctionType(){setFunctionNames(null,null,null,null);}
-    public Double getValue(HashMap<Variable, Double> table){return argumentValue(table);}
+    public Double getValue(TreeMap<Variable, Double> table){return argumentValue(table);}
         
     /** Function defined on a restricted domain. Supports a single input variable only. */
     public static class Domain extends FunctionTreeFunctionNode{
@@ -45,7 +45,7 @@ public class Piecewise extends FunctionTreeFunctionNode {
             return argumentNode().getValue(v,value);
         }
         
-        public Double getValue(HashMap<Variable, Double> table){
+        public Double getValue(TreeMap<Variable, Double> table){
             Variable first=(Variable)(table.keySet().toArray()[0]);
             return getValue(first,table.get(first));
         }        
@@ -65,7 +65,7 @@ public class Piecewise extends FunctionTreeFunctionNode {
         @Override
         public void initFunctionType(){setFunctionNames("step",null,null,null);}
         @Override
-        public Double getValue(HashMap<Variable,Double>table){return argumentValue(table)>=0.0?1.0:0.0;}
+        public Double getValue(TreeMap<Variable,Double>table){return argumentValue(table)>=0.0?1.0:0.0;}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return Constant.ZERO;}
     } // class Piecewise.Step
@@ -76,7 +76,7 @@ public class Piecewise extends FunctionTreeFunctionNode {
         @Override
         public void initFunctionType(){setFunctionNames("stepp",null,null,null);}
         @Override
-        public Double getValue(HashMap<Variable,Double>table){return argumentValue(table)>=0.0?1.0:-1.0;}
+        public Double getValue(TreeMap<Variable,Double>table){return argumentValue(table)>=0.0?1.0:-1.0;}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return Constant.ZERO;}
     } // class Piecewise.Stepp
@@ -87,6 +87,6 @@ public class Piecewise extends FunctionTreeFunctionNode {
         @Override
         public void initFunctionType(){setFunctionNames("abs","stepp",null,null);}
         @Override
-        public Double getValue(HashMap<Variable,Double> table) {return Math.abs(argumentValue(table));}
+        public Double getValue(TreeMap<Variable,Double> table) {return Math.abs(argumentValue(table));}
     } // class Piecewise.Abs
 }

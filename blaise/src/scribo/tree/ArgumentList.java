@@ -5,7 +5,7 @@
 
 package scribo.tree;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -21,7 +21,7 @@ public class ArgumentList extends FunctionTreeNode {
     public boolean isValidSubNode(){return false;}
     
     @Override
-    public Double getValue(HashMap<Variable, Double> table){return null;}
+    public Double getValue(TreeMap<Variable, Double> table){return null;}
 
     @Override
     public FunctionTreeNode derivativeTree(Variable v){return null;}

@@ -12,8 +12,11 @@
 package scribo.tree;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 import scio.function.DoubleFunction;
+import scribo.parser.FunctionSyntaxException;
+import scribo.parser.Parser;
 
 /**
  * <p>
@@ -39,27 +42,41 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Double
     
     /** Variables required to obtain a value. */
     Vector<Variable> variables;
-    /** Parameters associated with the tree.. along with the variables. */
-    HashMap<Variable,Double> unknowns;
+    /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
+     * the values will be looked up in this table.
+     */
+    TreeMap<Variable,Double> unknowns;
     
     
     // CONSTRUCTORS
     
+    public FunctionTreeRoot(String s) throws FunctionSyntaxException {
+        this(Parser.parseExpression(s));
+    }
+    
     public FunctionTreeRoot(FunctionTreeNode c){
         addSubNode(c);
-        variables=new Vector<Variable>();
-        variables.addAll(c.getVariables());
-        unknowns=new HashMap<Variable,Double>();
-        for(Variable v:variables){
-            unknowns.put(v,null);
-        }
+        variables=c.getVariables();
+        unknowns=new TreeMap<Variable,Double>();
     }    
+    
+    
+    // HANDLING UNKNOWN PARAMETERS
+
+    /** Sets up an entire list of parameters. */
+    public void setUnknowns(TreeMap<Variable,Double> values){
+        unknowns.putAll(values);
+        variables.removeAll(values.keySet());
+    }
     
     
     // OVERRIDE SUBMETHODS FROM FUNCTIONTREEFUNCTIONNODE
     
-    public Double getValue(HashMap<Variable,Double> table){
-        return numSubNodes()==1?argumentValue(table):null;
+    @Override
+    public Double getValue(TreeMap<Variable,Double> table){
+        if(numSubNodes()!=1){return null;}
+        table.putAll(unknowns);
+        return argumentValue(table);
     }
     @Override
     public String toString(){

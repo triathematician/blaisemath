@@ -5,91 +5,54 @@
 
 package sequor.component;
 
-import scribo.parser.*;
 import java.awt.Color;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
+import scribo.parser.*;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.EventListenerList;
-import scribo.tree.ArgumentList;
-import scribo.tree.FunctionTreeNode;
 import scribo.tree.FunctionTreeRoot;
-import scribo.tree.Variable;
+import sequor.model.FunctionTreeModel;
 
 /**
- * This class is a text field synchronized with an underlying function tree.
+ * This class is a text field synchronized with an underlying function tree. The FunctionTreeModel contains the
+ * underlying tree, while this class interoperates with the actual text field.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
-public class FunctionTreeTextField extends JTextField {
-
-    FunctionTreeRoot f;
+public class FunctionTreeTextField extends JTextField implements ChangeListener {
     
-    public FunctionTreeTextField(){
-        initEventListening();
-        f=new FunctionTreeRoot(new Variable("x"));
-        setText("x");
-    }
-        
-    public FunctionTreeTextField(FunctionTreeRoot ftr){
-        initEventListening();
-        f=ftr;
-    }
-        
-    public FunctionTreeTextField(String text,String var){
-        initEventListening();
-        setText(text);
-    }
+    FunctionTreeModel ftm;
+    
+    public FunctionTreeTextField(){this(new FunctionTreeModel());}   
+    public FunctionTreeTextField(String text,String var){this(new FunctionTreeModel(text,var));}
+    public FunctionTreeTextField(FunctionTreeModel ftm){this.ftm=ftm;initEventListening();}
     
     public void initEventListening(){
+        setText(ftm.getRoot().argumentString());
         getDocument().addDocumentListener(new DocumentListener(){
-            public void insertUpdate(DocumentEvent e){updateFunctionTree();}
-            public void removeUpdate(DocumentEvent e){updateFunctionTree();}
-            public void changedUpdate(DocumentEvent e){updateFunctionTree();}
+            @Override
+            public void insertUpdate(DocumentEvent e){ftm.setValue(getText());}
+            @Override
+            public void removeUpdate(DocumentEvent e){ftm.setValue(getText());}
+            @Override
+            public void changedUpdate(DocumentEvent e){ftm.setValue(getText());}
         });
+        ftm.addChangeListener(this);
     }
-    
-    public void updateFunctionTree(){                                          
-        try{
-            FunctionTreeNode temp=Parser.parseExpression(getText());
-            if(temp instanceof ArgumentList){throw new FunctionSyntaxException(FunctionSyntaxException.INCOMPLETE_INPUT);}
-            f.setArgumentNode(temp);
-            setForeground(Color.BLACK);
-            fireStateChanged();
-        }catch(FunctionSyntaxException e){
-            setForeground(Color.RED);
-            System.out.println(e.getMessage()+" for string "+getText());
-        }        
-    }
-    
-    
+
     // BEAN PATTERNS
     
-    public String getLabel(){return "f(?)";}
-    public FunctionTreeRoot getF(){return f;}
-    public void setF(FunctionTreeRoot newValue){
-        if(!f.equals(newValue)){
-            f=newValue;
-        }
-    }    
-    
+    /** Calls up the function corresponding to the underlying text tree. */
+    public FunctionTreeRoot getF(){return ftm.getRoot();}
     
     // EVENT HANDLING
     
-    /** Event handling code copied from DefaultBoundedRangeModel. */      
-    protected ChangeEvent changeEvent=new ChangeEvent("Plottable");
-    protected EventListenerList listenerList=new EventListenerList();    
-    public void addChangeListener(ChangeListener l){listenerList.add(ChangeListener.class,l);}
-    public void removeChangeListener(ChangeListener l){listenerList.remove(ChangeListener.class,l);}
-    protected void fireStateChanged(){
-        Object[] listeners=listenerList.getListenerList();
-        for(int i=listeners.length-2; i>=0; i-=2){
-            if(listeners[i]==ChangeListener.class){
-                if(changeEvent==null){return;}
-                ((ChangeListener)listeners[i+1]).stateChanged(changeEvent);
-            }
-        }
+    /** If the underlying tree compiles correctly, set the text color to red; otherwise to black. */
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        setForeground(ftm.isValid()?Color.BLACK:Color.RED);
     }
+    
 }

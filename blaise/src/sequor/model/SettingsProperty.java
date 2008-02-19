@@ -17,13 +17,21 @@ public class SettingsProperty {
     String name;
     FiresChangeEvents model;
     int editorType;
+    String tooltipText;
 
     public SettingsProperty(String name, FiresChangeEvents model, int editorType) {
         this.name = name;
         this.model = model;
         this.editorType = editorType;
     }
-
+    
+    public SettingsProperty(String name, FiresChangeEvents model, int editorType, String tooltipText) {
+        this.name = name;
+        this.model = model;
+        this.editorType = editorType;
+        this.tooltipText = tooltipText;
+    }
+    
     public int getEditorType() {
         return editorType;
     }
@@ -46,6 +54,10 @@ public class SettingsProperty {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public String getTooltipText() {
+        return tooltipText;
     }
     
     // INHERITANCE METHODS

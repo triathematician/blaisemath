@@ -13,6 +13,7 @@ package scribo.tree;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -154,7 +155,7 @@ public abstract class Operation extends FunctionTreeNode {
         }
 
         /** Returns value given table of variables. */
-        public Double getValue(HashMap<Variable, Double> table){
+        public Double getValue(TreeMap<Variable, Double> table){
             Double result=0.0;
             try{
                 for(int i=0;i<numSubNodes();i++){result+=coefficient.get(i)*getSubNode(i).getValue(table);}
@@ -293,7 +294,7 @@ public abstract class Operation extends FunctionTreeNode {
         }
 
         /** Returns value given table of variables. */
-        public Double getValue(HashMap<Variable, Double> table){
+        public Double getValue(TreeMap<Variable, Double> table){
             Double result=1.0;
             try{
                 for(int i=0;i<numSubNodes();i++){result*=Math.pow(getSubNode(i).getValue(table),coefficient.get(i));}
@@ -436,7 +437,7 @@ public abstract class Operation extends FunctionTreeNode {
         public FunctionTreeNode basePart(){return getSubNode(0);}
         public FunctionTreeNode powerPart(){return (numSubNodes()==2)?getSubNode(1):new Power(getSubNodes().subList(1,numSubNodes()));}
                 
-        public Double getValue(HashMap<Variable,Double> table){return Math.pow(basePart().getValue(table),powerPart().getValue(table));}
+        public Double getValue(TreeMap<Variable,Double> table){return Math.pow(basePart().getValue(table),powerPart().getValue(table));}
         public FunctionTreeNode derivativeTree(Variable v) {
             if(powerPart().isNumber()){
                 return new Operation.Multiply(powerPart(),new Power(basePart(),powerPart().getValue()-1),basePart().derivativeTree(v));

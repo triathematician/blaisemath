@@ -11,7 +11,7 @@
 package scribo.tree;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -106,11 +106,11 @@ public abstract class FunctionTreeNode {
     }
     
     /** Returns the value of the tree given a table of variable/value matches. */
-    public abstract Double getValue(HashMap<Variable,Double> table);   
+    public abstract Double getValue(TreeMap<Variable,Double> table);   
     
     /** Returns the value of the tree assuming there is a single variable. */
     public Double getValue(Variable v,Double value){
-        HashMap<Variable,Double> table=new HashMap<Variable,Double>();
+        TreeMap<Variable,Double> table=new TreeMap<Variable,Double>();
         table.put(v,value);
         return getValue(table);
     }

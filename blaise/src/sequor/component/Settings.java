@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -81,13 +83,13 @@ import sequor.model.*;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class Settings extends Vector<SettingsProperty> implements ChangeListener, PropertyChangeListener {
+public class Settings extends Vector<SettingsProperty> implements ChangeListener, PropertyChangeListener {
 
     // PROPERTIES
     /** Name of this collection of settings. */
     private String name="SettingsGroup";
     /** Parent classes. */
-    //private HashMap<Settings,Integer> parents;
+    private Vector<Settings> parents;
     /** Child classes. */
     private HashMap<Settings,Integer> children;
     
@@ -114,8 +116,8 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
     public static final int EDIT_COMBO = 3;
     /** Adds a text field with string editing */
     public static final int EDIT_STRING = 4;
-    /** Adds a button for color editing (okay for menu) */
-    public static final int EDIT_COLOR = 5;
+    /** Adds a button for editing a more general object */
+    public static final int EDIT_BUTTON = 5;
     /** Adds a checkbox for boolean editing (okay for menu) */
     public static final int EDIT_BOOLEAN = 6;
     /** Adds field for function editing */
@@ -129,7 +131,7 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
     // CONSTRUCTORS
     public Settings() {
         super();
-        //parents = new HashMap<Settings,Integer>();
+        parents = new Vector<Settings>();
         children = new HashMap<Settings,Integer>();
     }
     
@@ -147,6 +149,8 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
 
     /** Adds a property */
     public void addProperty(String s,FiresChangeEvents e,int type){add(new SettingsProperty(s,e,type));}
+    /** Adds a property with tooltip text */
+    public void addProperty(String s,FiresChangeEvents e,int type,String tooltipText){add(new SettingsProperty(s,e,type,tooltipText));}
     /** Adds a separator */
     public void addSeparator(){add(PROPERTY_SEPARATOR);}
 
@@ -172,7 +176,7 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
             case PROPERTY_PROPAGATE : // copy parent's properties to this class
                 child.copySettingsFrom(this);
             case PROPERTY_INHERIT : // allow for "lookup" of parent properties
-                // TODO: I'm not sure how to implement this!
+                child.addLookupParent(this);
                 break;
             case PROPERTY_INDEPENDENT : // no event handling required
             default :
@@ -185,10 +189,18 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
             add(sp.getDescendant());
         }
     }
+    /** Adds a parent class from which this class may look up settings. */
+    public void addLookupParent(Settings s){
+        parents.add(s);
+    }
+    /** Returns list of lookup parents. */
+    public Vector<Settings> getLookupParents(){
+        return parents;
+    }
     
     // EVENT HANDLING SUPPORT
     /** Sets up event listening. Should be called by the constructor!! */
-    protected void initEventListening() {
+    public void initEventListening() {
         for (SettingsProperty sp : this) {
             if (sp.getModel() == null) {
                 continue;
@@ -235,8 +247,10 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
                 case EDIT_COMBO : 
                     result.add(getMenuItem(sp.getName(),(ComboBoxRangeModel)sp.getModel()));
                     break;
-                case EDIT_COLOR :
-                    result.add(getMenuItem(sp.getName(),(ColorModel)sp.getModel()));
+                case EDIT_BUTTON :
+                    if (sp.getModel() instanceof ColorModel){
+                        result.add(getMenuItem(sp.getName(),(ColorModel)sp.getModel()));
+                    }
                     break;
                 default :
                     break;
@@ -245,53 +259,69 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
         return result;
     }
     
-    /** Generates a JPanel with the settings contained herein.
-     * @return JPanel with all the visible parameters.
-     */
-    public JPanel getPanel() {
-        JPanel result = new JPanel(new SpringLayout());        
+    /** Places the settings on a given panel, and performs proper layout. */
+    public JPanel initPanel(JPanel jp){
+        if(jp==null){
+            jp=new JPanel();
+        }else{
+            jp.removeAll();
+        }
+        jp.setLayout(new SpringLayout());   
+        
         // adds all the elements defined in this class
         int numComponents = size();
         for (SettingsProperty sp : this) {
+            if (sp.getEditorType()==NO_EDIT){
+                numComponents--;
+                continue;
+            }
+            if (sp.getEditorType()==EDIT_SEPARATOR){
+                jp.add(new JSeparator());
+                jp.add(new JSeparator());
+                continue;
+            }
+            JLabel label=new JLabel(sp.getName());
+            JComponent component = null;
             switch (sp.getEditorType()) {
-                case NO_EDIT:
-                    numComponents--;
-                    break;
-                case EDIT_SEPARATOR:
-                    result.add(new JSeparator());
-                    result.add(new JSeparator());
-                    break;
                 case EDIT_DOUBLE:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(getSpinner((DoubleRangeModel) sp.getModel()));
+                    component=getSpinner((DoubleRangeModel) sp.getModel());
                     break;
                 case EDIT_INTEGER:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(getSpinner((IntegerRangeModel) sp.getModel()));
+                    component=getSpinner((IntegerRangeModel) sp.getModel());
                     break;
                 case EDIT_COMBO:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(getComboBox((ComboBoxRangeModel) sp.getModel()));
+                    component=getComboBox((ComboBoxRangeModel) sp.getModel());
                     break;
                 case EDIT_STRING:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(new JTextField());
+                    component=new JTextField();
                     break;
-                case EDIT_COLOR:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(new ColorEditor((ColorModel) sp.getModel()).getButton());
+                case EDIT_BUTTON:
+                    component=new ColorEditor((ColorModel) sp.getModel()).getButton();
+                    break;
+                case EDIT_FUNCTION:
+                    component=new FunctionTreeTextField((FunctionTreeModel)sp.getModel());
                     break;
                 case EDIT_PARAMETRIC:
-                    result.add(new JLabel(sp.getName()));
-                    result.add(new BParametricFunctionPanel((ParametricModel) sp.getModel()));
+                    component=new BParametricFunctionPanel((ParametricModel) sp.getModel());
                     break;
                 }
+            label.setToolTipText(sp.getTooltipText());
+            jp.add(label);
+            if(component!=null){
+                component.setToolTipText(sp.getTooltipText());
+                jp.add(component);
+            }
         }
-        SpringUtilities.makeCompactGrid(result, numComponents, 2, 5, 5, 5, 5);
-        result.setToolTipText(name);
-        result.setName(name);
-        return result;
+        SpringUtilities.makeCompactGrid(jp, numComponents, 2, 5, 5, 5, 5);
+        jp.setToolTipText(name);
+        jp.setName(name);
+        return jp;
     }
+    
+    /** Generates a JPanel with the settings contained herein.
+     * @return JPanel with all the visible parameters.
+     */
+    public JPanel getPanel() { return initPanel(null); }
 
     /** Generates a JSplitPane with a tree on the left and settings on the right. */
     public JSplitPane getSplitPanel() {
@@ -340,6 +370,26 @@ public abstract class Settings extends Vector<SettingsProperty> implements Chang
         return result;
     }
     
+    public static JSlider getSlider(IntegerRangeModel irm) {
+        JSlider result = new JSlider(new SliderIntegerEditor(irm));
+        result.setPaintTicks(true);
+        result.setPaintLabels(true);
+        result.setMinimumSize(new Dimension(20, 20));
+        result.setPreferredSize(new Dimension(50, 25));
+        result.setMaximumSize(new Dimension(50, 25));
+        return result;
+    }
+    
+    public static JSlider getSlider(DoubleRangeModel irm) {
+        JSlider result = new JSlider(new SliderDoubleEditor(irm));
+        result.setPaintTicks(true);
+        result.setPaintLabels(true);
+        result.setMinimumSize(new Dimension(20, 20));
+        result.setPreferredSize(new Dimension(50, 25));
+        result.setMaximumSize(new Dimension(50, 25));
+        return result;
+    }
+
     public static JMenuItem getMenuItem(String name,final ComboBoxRangeModel cbrm){
         // TODO test this method; really not sure if it works
         JMenu subMenu=new JMenu(name);
