@@ -6,19 +6,35 @@
 
 package curro;
 
-import sequor.model.DoubleRangeModel;
+import sequor.component.Settings;
+import sequor.model.FunctionTreeModel;
+import sequor.model.ParameterListModel;
+import sequor.model.SettingsProperty;
+import specto.plottable.Function2D;
 
 /**
  *
  * @author  ae3263
  */
 public class MultiPlotter extends javax.swing.JFrame {
-    
+    FunctionTreeModel ftm;
+    ParameterListModel plm;
+        
     /** Creates new form MultiPlotter */
     public MultiPlotter() {
-        initComponents();
-        parameterPanel1.addParameter("a",
-                new DoubleRangeModel(0,1,10,.1));
+        plm=new ParameterListModel();
+        ftm=new FunctionTreeModel("a*cos(b*(x-c))+d","x");
+        plm.addChangeListener(ftm);  
+        plm.setParameterValue("a",1.0);
+        plm.setParameterValue("b",2.0);
+        plm.setParameterValue("c",Math.PI/2);
+        plm.setParameterValue("d",-1.0);
+        initComponents();      
+        Settings s=new Settings();
+        s.add(new SettingsProperty("f(x)=",ftm,Settings.EDIT_FUNCTION));
+        s.add(new SettingsProperty("f(x)=",new FunctionTreeModel("sin(t)","t"),Settings.EDIT_FUNCTION));
+        s.initPanel(jPanel1);
+        plot2D1.add(new Function2D(ftm));
     }
     
     /** This method is called from within the constructor to
@@ -30,36 +46,19 @@ public class MultiPlotter extends javax.swing.JFrame {
     private void initComponents() {
 
         plot2D1 = new specto.plotpanel.Plot2D();
-        functionInputBar1 = new sequor.component.FunctionInputBar();
-        parameterPanel1 = new sequor.component.ParameterPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = plm.getPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         plot2D1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
-        functionInputBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
 
-        parameterPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(parameterPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
-            .addComponent(functionInputBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(parameterPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                    .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(functionInputBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -76,8 +75,8 @@ public class MultiPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.FunctionInputBar functionInputBar1;
-    private sequor.component.ParameterPanel parameterPanel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private specto.plotpanel.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables
     
