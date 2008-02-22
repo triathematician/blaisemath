@@ -6,6 +6,9 @@
 
 package curro;
 
+import java.awt.Color;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import sequor.component.Settings;
 import sequor.model.FunctionTreeModel;
 import sequor.model.ParameterListModel;
@@ -17,24 +20,33 @@ import specto.plottable.Function2D;
  * @author  ae3263
  */
 public class MultiPlotter extends javax.swing.JFrame {
-    FunctionTreeModel ftm;
+    FunctionTreeModel ftm,ftm2;
     ParameterListModel plm;
         
     /** Creates new form MultiPlotter */
     public MultiPlotter() {
         plm=new ParameterListModel();
-        ftm=new FunctionTreeModel("a*cos(b*(x-c))+d","x");
+        plm.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                if(e.getSource().equals("add")){plm.updatePanel(jPanel2);}
+            }
+        });    
+        initComponents();  
+        ftm=new FunctionTreeModel("a*sin(b*(x-c))+d","x");
+        ftm2=new FunctionTreeModel(ftm.getRoot().derivativeTree("x").simplified());
+        plot2D1.add(new Function2D(ftm));
+        plot2D1.add(new Function2D(ftm2));
         plm.addChangeListener(ftm);  
+        plm.addChangeListener(ftm2);
         plm.setParameterValue("a",1.0);
         plm.setParameterValue("b",2.0);
         plm.setParameterValue("c",Math.PI/2);
         plm.setParameterValue("d",-1.0);
-        initComponents();      
         Settings s=new Settings();
         s.add(new SettingsProperty("f(x)=",ftm,Settings.EDIT_FUNCTION));
-        s.add(new SettingsProperty("f(x)=",new FunctionTreeModel("sin(t)","t"),Settings.EDIT_FUNCTION));
+        s.add(new SettingsProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION));
         s.initPanel(jPanel1);
-        plot2D1.add(new Function2D(ftm));
+        plot2D1.repaint();
     }
     
     /** This method is called from within the constructor to

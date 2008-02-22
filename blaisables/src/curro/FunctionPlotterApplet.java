@@ -6,6 +6,7 @@
 
 package curro;
 
+import sequor.model.FunctionTreeModel;
 import specto.plottable.Function2D;
 
 /**
@@ -20,8 +21,9 @@ public class FunctionPlotterApplet extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
+                    FunctionTreeModel ftm=new FunctionTreeModel(functionTreeTextField1.getF());
                     plot2D1.add(new Function2D(functionTreeTextField1.getF()));
-                    functionTreeTextField1.addChangeListener(plot2D1);
+                    ftm.addChangeListener(plot2D1);
                 }
             });
         } catch (Exception ex) {
@@ -39,7 +41,7 @@ public class FunctionPlotterApplet extends javax.swing.JApplet {
 
         plot2D1 = new specto.plotpanel.Plot2D();
         jLabel1 = new javax.swing.JLabel();
-        functionTreeTextField1 = new sequor.component.FunctionTreeTextField();
+        functionTreeTextField1 = new sequor.component.FunctionTextField();
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
@@ -80,7 +82,7 @@ public class FunctionPlotterApplet extends javax.swing.JApplet {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.FunctionTreeTextField functionTreeTextField1;
+    private sequor.component.FunctionTextField functionTreeTextField1;
     private javax.swing.JLabel jLabel1;
     private specto.plotpanel.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables

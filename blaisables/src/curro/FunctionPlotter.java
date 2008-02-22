@@ -6,6 +6,7 @@
 
 package curro;
 
+import sequor.model.FunctionTreeModel;
 import specto.plottable.Function2D;
 
 /**
@@ -14,12 +15,13 @@ import specto.plottable.Function2D;
  */
 public class FunctionPlotter extends javax.swing.JFrame {
     
+    FunctionTreeModel ftm=new FunctionTreeModel();
 
-        /** Creates new form BasicPlotter */
+    /** Creates new form BasicPlotter */
     public FunctionPlotter() {
         initComponents();
-        plot2D1.add(new Function2D(functionTreeTextField1.getF()));
-        functionTreeTextField1.addChangeListener(plot2D1);
+        plot2D1.add(new Function2D(ftm));
+        ftm.addChangeListener(plot2D1);
     }
    
     
@@ -33,7 +35,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
 
         plot2D1 = new specto.plotpanel.Plot2D();
         jLabel1 = new javax.swing.JLabel();
-        functionTreeTextField1 = new sequor.component.FunctionTreeTextField();
+        functionTextComboBox1 = new sequor.component.FunctionTextComboBox(ftm);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,11 +57,11 @@ public class FunctionPlotter extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(functionTreeTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addComponent(functionTextComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -68,7 +70,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(functionTreeTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(functionTextComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pack();
@@ -89,7 +91,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.FunctionTreeTextField functionTreeTextField1;
+    private sequor.component.FunctionTextComboBox functionTextComboBox1;
     private javax.swing.JLabel jLabel1;
     private specto.plotpanel.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables
