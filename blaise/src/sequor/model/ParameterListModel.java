@@ -6,6 +6,9 @@
 package sequor.model;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Comparator;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -32,20 +35,21 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
             this.values.put(v,values.get(v));
         }
     }
+    
+    
+    // PARAMETER METHODS
 
-    
-    // ROUTE ADDING MODELS THIS WAY (FOR LISTENING PURPOSES)
-    
+    /** Adds a model with a particular range of values. */
     public void addModel(Variable v,DoubleRangeModel drm){
         if(drm!=null){
             values.put(v,drm);
             drm.addChangeListener(this);
+            changeEvent=new ChangeEvent("add");
             fireStateChanged();
+            changeEvent=null;
         }
     }
-    
-    // PARAMETER METHODS
-    
+
     /** Populates a list of parameters according to the specified values. */
     public TreeMap<Variable,Double> getParameterList(){
         TreeMap<Variable,Double> result=new TreeMap<Variable,Double>();
@@ -54,12 +58,6 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
         }
         return result;
     }
-    
-    /** Returns a default DoubleRangeModel */
-    public static DoubleRangeModel defaultDoubleRangeModel(double d){
-        return new DoubleRangeModel(d,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY,.1);
-    }
-    
     /** Sets a parameter value. */
     public boolean setParameterValue(Variable v,Double d){
         if(values.containsKey(v)){
@@ -72,7 +70,15 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
         }
         return true;
     }
+    /** Sets a parameter value with a given string. */
     public boolean setParameterValue(String s,Double d){return setParameterValue(new Variable(s),d);}
+    /** Removes a particular variable. */
+    public void removeParameter(Variable v){
+        if(values.containsKey(v)){
+            values.get(v).removeChangeListener(this);
+            values.remove(v);
+        }
+    }        
     
     
     // GUI INPUT/OUTPUTS
@@ -83,9 +89,19 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
         for(Variable v:values.keySet()){
             s.addProperty(v.toString(),values.get(v),Settings.EDIT_DOUBLE);
         }        
+        s.addProperty("",this,Settings.EDIT_PARAMETER);
         return s.getPanel();
     }
     
+    /** Updates a panel to contain the settings here. */
+    public void updatePanel(JPanel p){
+        Settings s=new Settings();
+        for(Variable v:values.keySet()){
+            s.addProperty(v.toString(),values.get(v),Settings.EDIT_DOUBLE);
+        }        
+        s.addProperty("",this,Settings.EDIT_PARAMETER);
+        s.initPanel(p);
+    }
     // INTERFACE METHODS
 
     @Override
@@ -97,7 +113,6 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
             this.values.put(v,((ParameterListModel)parent).values.get(v));
         }
     }
-
     @Override
     public void setValue(String s) {throw new UnsupportedOperationException("Not supported yet.");}
     @Override
@@ -107,4 +122,12 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
 
     @Override
     public void stateChanged(ChangeEvent e) {fireStateChanged();}
+
+    
+    // UTILITY METHODS
+    
+    /** Returns a default DoubleRangeModel */
+    public static DoubleRangeModel defaultDoubleRangeModel(double d){
+        return new DoubleRangeModel(d,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY,.1);
+    }
 }

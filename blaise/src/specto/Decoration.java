@@ -5,7 +5,6 @@
 
 package specto;
 
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -18,10 +17,11 @@ public abstract class Decoration<P extends Plottable,V extends Visometry> extend
     
     public void setParent(P parent){
         this.parent=parent;
-        parent.addChangeListener(this);
+        //parent.addChangeListener(this);
     }
     public P getParent(){return parent;}
     
+    @Override
     public void setVisometry(V v){
         super.setVisometry(v);
         parent.setVisometry(v);

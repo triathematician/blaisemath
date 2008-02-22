@@ -41,9 +41,9 @@ public abstract class FunctionTreeFunctionNode extends FunctionTreeNode {
      * @param ifc   Class type of the function's inverse.
      */
     public void setFunctionNames(String fn,String dfn,String ifn,Class<? extends FunctionTreeFunctionNode> ifc){this.fn=fn;this.dfn=dfn;this.ifn=ifn;this.ifc=ifc;}
-    
+    @Override
     public boolean isValidSubNode(){return numSubNodes() == 1 && argumentNode() != null;}
-    
+    @Override
     public String toString(){return fn+"("+argumentString()+")";}    
     public void setArgumentNode(FunctionTreeNode argument){if(argument!=null&&argument.isValidSubNode()){getSubNodes().set(0,argument);}}
     public FunctionTreeNode argumentNode(){return getSubNode(0);}

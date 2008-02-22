@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import scio.function.DoubleFunction;
 import scribo.parser.FunctionSyntaxException;
+import scribo.parser.FunctionValueException;
 import scribo.parser.Parser;
 
 /**
@@ -113,6 +114,7 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Double
     }
 
     public Double getValue(Double x) {
+        if(variables.size()>1){return null;}
         return getValue(variables.firstElement(),x);
     }
 

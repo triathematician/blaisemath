@@ -116,16 +116,18 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public static final int EDIT_COMBO = 3;
     /** Adds a text field with string editing */
     public static final int EDIT_STRING = 4;
-    /** Adds a button for editing a more general object */
-    public static final int EDIT_BUTTON = 5;
     /** Adds a checkbox for boolean editing (okay for menu) */
     public static final int EDIT_BOOLEAN = 6;
     /** Adds field for function editing */
-    public static final int EDIT_FUNCTION = 9;
+    public static final int EDIT_FUNCTION = 101;
     /** Adds two fields for parametric function editing */
-    public static final int EDIT_PARAMETRIC = 10;
+    public static final int EDIT_PARAMETRIC = 102;
+    /** Adds a button for editing a more general object */
+    public static final int EDIT_COLOR = 201;
+    /** Adds a button for editing a more general object */
+    public static final int EDIT_PARAMETER = 202;
     /** Adds a separator */
-    public static final int EDIT_SEPARATOR = 99;
+    public static final int EDIT_SEPARATOR = 1000;
     
     
     // CONSTRUCTORS
@@ -247,7 +249,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
                 case EDIT_COMBO : 
                     result.add(getMenuItem(sp.getName(),(ComboBoxRangeModel)sp.getModel()));
                     break;
-                case EDIT_BUTTON :
+                case EDIT_COLOR :
                     if (sp.getModel() instanceof ColorModel){
                         result.add(getMenuItem(sp.getName(),(ColorModel)sp.getModel()));
                     }
@@ -295,11 +297,14 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
                 case EDIT_STRING:
                     component=new JTextField();
                     break;
-                case EDIT_BUTTON:
+                case EDIT_COLOR:
                     component=new ColorEditor((ColorModel) sp.getModel()).getButton();
                     break;
+                case EDIT_PARAMETER:
+                    component=new ParameterEditor((ParameterListModel)sp.getModel()).getButton();
+                    break;
                 case EDIT_FUNCTION:
-                    component=new FunctionTreeTextField((FunctionTreeModel)sp.getModel());
+                    component=new FunctionTextComboBox((FunctionTreeModel)sp.getModel());
                     break;
                 case EDIT_PARAMETRIC:
                     component=new BParametricFunctionPanel((ParametricModel) sp.getModel());
@@ -315,6 +320,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         SpringUtilities.makeCompactGrid(jp, numComponents, 2, 5, 5, 5, 5);
         jp.setToolTipText(name);
         jp.setName(name);
+        jp.paintComponents(jp.getGraphics());
         return jp;
     }
     

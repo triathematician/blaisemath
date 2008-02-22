@@ -10,6 +10,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
+import scribo.tree.FunctionTreeNode;
 import scribo.tree.FunctionTreeRoot;
 
 /**
@@ -25,6 +26,8 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     boolean valid=true;
 
     public FunctionTreeModel(){setValue("cos(x)");}
+
+    public FunctionTreeModel(FunctionTreeNode ftn) {this(new FunctionTreeRoot(ftn));}
     public FunctionTreeModel(FunctionTreeRoot ftr){this.ftr=ftr;}
     public FunctionTreeModel(String text,String var){setValue(text);}
     
@@ -42,8 +45,8 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
             }else{
                 ftr.setArgumentNode(Parser.parseExpression(s));
             }
-            fireStateChanged();
             valid=true;
+            fireStateChanged();
         } catch (FunctionSyntaxException ex) {
             valid=false;
         }

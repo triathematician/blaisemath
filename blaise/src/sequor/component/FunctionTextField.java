@@ -6,6 +6,7 @@
 package sequor.component;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import javax.swing.event.ChangeEvent;
 import scribo.parser.*;
 import javax.swing.JTextField;
@@ -21,13 +22,18 @@ import sequor.model.FunctionTreeModel;
  * 
  * @author Elisha Peterson
  */
-public class FunctionTreeTextField extends JTextField implements ChangeListener {
+public class FunctionTextField extends JTextField implements ChangeListener {
     
     FunctionTreeModel ftm;
     
-    public FunctionTreeTextField(){this(new FunctionTreeModel());}   
-    public FunctionTreeTextField(String text,String var){this(new FunctionTreeModel(text,var));}
-    public FunctionTreeTextField(FunctionTreeModel ftm){this.ftm=ftm;initEventListening();}
+    public FunctionTextField(){this(new FunctionTreeModel());}   
+    public FunctionTextField(String text,String var){this(new FunctionTreeModel(text,var));}
+    public FunctionTextField(FunctionTreeModel ftm){
+        this.ftm=ftm;
+        initEventListening();
+        setMinimumSize(new Dimension(50, 20));
+        setMaximumSize(new Dimension(200, 25));
+    }
     
     public void initEventListening(){
         setText(ftm.getRoot().argumentString());

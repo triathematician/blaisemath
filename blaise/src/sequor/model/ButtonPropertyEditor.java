@@ -7,6 +7,8 @@ package sequor.model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
@@ -16,7 +18,7 @@ import javax.swing.JDialog;
  * 
  * @author Elisha Peterson
  */
-public abstract class ButtonPropertyEditor<F extends FiresChangeEvents> implements ActionListener {   
+public abstract class ButtonPropertyEditor<F extends FiresChangeEvents> implements ActionListener,WindowListener {   
     
     /** Button which brings up a dialog. */
     JButton button;    
@@ -43,12 +45,25 @@ public abstract class ButtonPropertyEditor<F extends FiresChangeEvents> implemen
     @Override
     public void actionPerformed(ActionEvent e) {
         if (EDIT.equals(e.getActionCommand())){editPressed();dialog.setVisible(true);}
-        else {dialogClosed();}
     }
+    /** Handles dialog close action. */
+    @Override
+    public void windowClosed(WindowEvent e) {}
+    @Override
+    public void windowClosing(WindowEvent e) {}
+    @Override
+    public void windowActivated(WindowEvent e) {}
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+    @Override
+    public void windowIconified(WindowEvent e) {}
+    @Override
+    public void windowOpened(WindowEvent e) {}
+    
     /** Called when button is pressed. */
     public abstract void editPressed();
-    /** Called when the dialog is closed. */
-    public abstract void dialogClosed();
 
     /** Returns the button. */
     public JButton getButton(){return button;}

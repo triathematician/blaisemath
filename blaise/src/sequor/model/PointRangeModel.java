@@ -71,13 +71,18 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     public void setTo(R2 point){xModel.setValue(point.x);yModel.setValue(point.y);}
     
     // string methods
+    @Override
     public String toString(){return "("+xModel.toString()+","+yModel.toString()+")";}
+    @Override
     public String toLongString(){return "("+xModel.toLongString()+","+yModel.toLongString()+")";}
+    @Override
     public void setValue(String s){
         // take in (alpha,beta) and set the point using this...
     }
     
+    @Override
     public void stateChanged(ChangeEvent e){fireStateChanged();}
+    @Override
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
 
     @Override

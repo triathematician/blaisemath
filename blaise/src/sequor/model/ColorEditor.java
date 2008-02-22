@@ -6,6 +6,7 @@
 package sequor.model;
 
 
+import java.awt.event.WindowEvent;
 import javax.swing.JColorChooser;
 
 /**
@@ -33,5 +34,5 @@ public class ColorEditor extends ButtonPropertyEditor<ColorModel>{
     @Override
     public void editPressed() {colorChooser.setColor(model.getValue());}
     @Override
-    public void dialogClosed(){model.setValue(colorChooser.getColor());button.setBackground(model.getValue());}
+    public void windowClosed(WindowEvent e){model.setValue(colorChooser.getColor());button.setBackground(model.getValue());}
 }

@@ -25,12 +25,12 @@ import sequor.model.FunctionTreeModel;
  */
 public class BParametricFunctionPanel extends JPanel{
     
-    private FunctionTreeTextField fx;
-    private FunctionTreeTextField fy;
+    private FunctionTextField fx;
+    private FunctionTextField fy;
     
     public BParametricFunctionPanel(){
-        fx=new FunctionTreeTextField("x(t)=","t");
-        fy=new FunctionTreeTextField("y(t)=","t");
+        fx=new FunctionTextField("x(t)=","t");
+        fy=new FunctionTextField("y(t)=","t");
         fx.setText("t^cos(t)");
         fy.setText("t^sin(t)");
         add(new JLabel("label"));
@@ -42,8 +42,8 @@ public class BParametricFunctionPanel extends JPanel{
         setMaximumSize(new Dimension(50,25));
     }
     public BParametricFunctionPanel(ParametricModel pm){
-        fx=new FunctionTreeTextField(new FunctionTreeModel(pm.getTreeX()));
-        fy=new FunctionTreeTextField(new FunctionTreeModel(pm.getTreeY()));
+        fx=new FunctionTextField(new FunctionTreeModel(pm.getTreeX()));
+        fy=new FunctionTextField(new FunctionTreeModel(pm.getTreeY()));
         fx.setText(pm.getStringX());
         fy.setText(pm.getStringY());
         add(new JLabel("x(t)="));
@@ -55,8 +55,8 @@ public class BParametricFunctionPanel extends JPanel{
         setMaximumSize(new Dimension(50,25));
     }
     
-    public FunctionTreeTextField getFX(){return fx;}
-    public FunctionTreeTextField getFY(){return fy;}
+    public FunctionTextField getFX(){return fx;}
+    public FunctionTextField getFY(){return fy;}
     
     public Function<Double,R2> getFunction(PlotPanel owner){
         return new Function<Double,R2>(){

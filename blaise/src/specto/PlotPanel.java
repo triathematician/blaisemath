@@ -256,7 +256,10 @@ public class PlotPanel<V extends Visometry> extends JPanel
     // EVENT HANDLING
     
     @Override
-    public void stateChanged(ChangeEvent e){refresh=true;repaint();}
+    public void stateChanged(ChangeEvent e){
+        refresh=true;
+        repaint();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

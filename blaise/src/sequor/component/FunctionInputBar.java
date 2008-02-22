@@ -25,7 +25,7 @@ import sequor.model.FunctionTreeModel;
 public class FunctionInputBar extends JPanel implements ChangeListener,ItemListener{
     public FunctionInputBar(){
         FunctionTreeModel ftm=new FunctionTreeModel();
-        FunctionTreeTextField fttf=new FunctionTreeTextField(ftm);
+        FunctionTextField fttf=new FunctionTextField(ftm);
         ftm.addChangeListener(this);
         fttf.setMinimumSize(new Dimension(100,20));
         fttf.setPreferredSize(new Dimension(100,20));

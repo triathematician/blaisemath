@@ -8,43 +8,49 @@ package specto.dynamicplottable;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.model.PointRangeModel;
 import specto.DynamicPlottable;
 import scio.coordinate.R2;
+import sequor.style.PointStyle;
 import specto.visometry.Euclidean2;
 
 /**
- * Represents a point which can be moved around the screen and fires state changes if moved.
+ * Represents a point which can be moved around the screen. The data is stored in a PointRangeModel, which restricts the movement of
+ * the point to within a particular range.
  * @author ae3263
  */
-public class Point2D extends DynamicPlottable<Euclidean2>{
-    protected R2 point;
-    public Point2D(){
-        point=new R2(0,0);
-    }
-    public Point2D(R2 value){
-        point=value;
-    }
-
+public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListener{
     
-    // UPDATE ROUTINES
+    // PROPERTIES
     
-    public void setPoint(R2 newValue){
-        if(!newValue.equals(point)){
-            if(prm==null){
-                point=newValue;
-                fireStateChanged();
-            }else{
-                prm.setTo(newValue.x,newValue.y);
-            }
-        }
+    protected PointRangeModel prm;
+    public PointStyle style;    
+    
+    
+    // CONSTRUCTORS
+    
+    /** Default constructor places point at the origin. */
+    public Point2D(){this(new PointRangeModel());}
+    /** Constructor places point at a given location. */
+    public Point2D(R2 value){this(new PointRangeModel(value));}
+    /** Constructor given a PointRangeModel. */
+    public Point2D(PointRangeModel prm){
+        this.prm=prm; 
+        this.prm.addChangeListener(this); 
+        style=new PointStyle();
+        style.addChangeListener(this);
     }
+    /** Constructor given a PointRangeModel and a particular color. */
+    public Point2D(PointRangeModel prm,Color c){this(prm);style.setColor(c);}
+        
     
-    public R2 getPoint(){return point;}
+    // GETTERS AND SETTERS
+    
+    public R2 getPoint(){return prm.getPoint();}    
+    public void setPoint(R2 newValue){prm.setTo(newValue);}
     
     // DRAW ROUTINES
     
@@ -53,57 +59,25 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
     
     @Override
     public void paintComponent(Graphics2D g) {
-        g.setColor(color);
-        switch(style){
-        case SMALL: g.fill(drawDot(1)); break;
-        case MEDIUM: g.fill(drawDot(2)); break;
-        case LARGE: g.fill(drawDot(4)); break;
-        case CONCENTRIC: g.fill(drawDot(3));g.draw(drawDot(5));break;            
+        R2 point=prm.getPoint();
+        g.setColor(style.getColor());
+        switch(style.getStyle()){
+        case PointStyle.SMALL: g.fill(((Euclidean2)visometry).dot(point,1)); break;
+        case PointStyle.MEDIUM: g.fill(((Euclidean2)visometry).dot(point,2)); break;
+        case PointStyle.LARGE: g.fill(((Euclidean2)visometry).dot(point,4)); break;
+        case PointStyle.CONCENTRIC: g.fill(((Euclidean2)visometry).dot(point,3));g.draw(((Euclidean2)visometry).dot(point,5));break;    
         }
-    }
-    
-    public Ellipse2D.Double drawDot(int r){
-        java.awt.geom.Point2D.Double pt=visometry.toWindow(point);
-        return new Ellipse2D.Double(pt.x-r,pt.y-r,2*r,2*r);
     }
     
 
-    // STYLE SETTINGS
-    
-    protected Color color=Color.RED;
-    protected int style=LARGE;
-    
-    public static final int SMALL=0;
-    public static final int MEDIUM=1;
-    public static final int LARGE=2;
-    public static final int CONCENTRIC=3;
-    
-    public void setColor(Color newValue){
-        if(color!=newValue){
-            color=newValue;
-            fireStateChanged();
-        }
-    }
-    public void setStyle(int newValue){
-        if(newValue!=style&&newValue>=0&&newValue<=4){
-            style=newValue;
-            fireStateChanged();
-        }
-    }
-    public int getStyle(){
-        return style;
-    }
-    
-    
     // DYNAMIC EVENT HANDLING
     
     /** Determines if the point was clicked on, given a mouse event. */
     @Override
     public boolean clicked(MouseEvent e){
         if(!mobile||e==null){return false;}
-        return Math.abs(e.getX()-visometry.toWindowX(point.x))+Math.abs(e.getY()-visometry.toWindowY(point.y))<CLICK_EDIT_RANGE;
-    }
-    
+        return Math.abs(e.getX()-visometry.toWindowX(prm.getX()))+Math.abs(e.getY()-visometry.toWindowY(prm.getY()))<CLICK_EDIT_RANGE;
+    }    
     @Override
     public void mousePressed(MouseEvent e){if(clicked(e)){adjusting=true;}}
     @Override
@@ -111,37 +85,14 @@ public class Point2D extends DynamicPlottable<Euclidean2>{
     @Override
     public void mouseReleased(MouseEvent e){mouseDragged(e);adjusting=false;}
     @Override
-    public void mouseClicked(MouseEvent e){if(clicked(e)){setStyle((style+1)%4);adjusting=false;}}
+    public void mouseClicked(MouseEvent e){if(clicked(e)){style.cycleStyle();adjusting=false;}}
     
     
-    // TEMPORARY ROUTINES
-    
-    // TODO Remove This!!
-    PointRangeModel prm;
-    public Point2D(final PointRangeModel prm){
-        setPoint(prm);
-        this.prm=prm;
-        setPoint(prm);
-        prm.addChangeListener(
-                new ChangeListener(){public void stateChanged(ChangeEvent e){setPoint(prm);}}            
-        );
-    }
-    public Point2D(final PointRangeModel prm,Color c){
-        this(prm);
-        setColor(c);
-    }
-    public void setPoint(PointRangeModel prm){
-        if(prm!=null){
-            if(point==null){
-                point=new R2(prm.getPoint().x,prm.getPoint().y);
-            }else{
-                point.x=prm.getPoint().x;
-                point.y=prm.getPoint().y;
-            }
-            fireStateChanged();
-        }
-    }
+    // IMPLEMENTING ABSTRACT METHODS    
 
     @Override
     public JMenu getOptionsMenu() {return null;}
+
+    @Override
+    public void stateChanged(ChangeEvent e) {fireStateChanged();}
 }
