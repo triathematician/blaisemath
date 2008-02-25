@@ -6,7 +6,7 @@
 package sequor.model;
 
 
-import java.awt.event.WindowEvent;
+import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
 
 /**
@@ -14,10 +14,10 @@ import javax.swing.JColorChooser;
  * 
  * @author Elisha Peterson
  */
-public class ColorEditor extends ButtonPropertyEditor<ColorModel>{
+public class ColorEditor extends ButtonPropertyEditor<ColorModel> {
     JColorChooser colorChooser;
     
-    public ColorEditor(){initModel(new ColorModel());initButton();initDialog();}
+    public ColorEditor(){this(new ColorModel());}
     public ColorEditor(ColorModel cm){initModel(cm);initButton();initDialog();}
     
     @Override
@@ -32,7 +32,14 @@ public class ColorEditor extends ButtonPropertyEditor<ColorModel>{
         dialog=JColorChooser.createDialog(button,"Pick a Color",true,colorChooser,this,null);
     }
     @Override
-    public void editPressed() {colorChooser.setColor(model.getValue());}
+    public void editPressed() {
+        colorChooser.setColor(model.getValue());
+    }
     @Override
-    public void windowClosed(WindowEvent e){model.setValue(colorChooser.getColor());button.setBackground(model.getValue());}
+    public void otherAction(ActionEvent e){
+        if(e.getActionCommand().equals("OK")){
+            model.setValue(colorChooser.getColor());
+            button.setBackground(model.getValue());
+        }
+    }
 }

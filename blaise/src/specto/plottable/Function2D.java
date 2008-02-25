@@ -1,11 +1,11 @@
 /*
  * Function2D.java
- * 
  * Created on Sep 27, 2007, 12:35:22 PM
  */
 
 package specto.plottable;
 
+import java.awt.Color;
 import javax.swing.event.ChangeEvent;
 import specto.dynamicplottable.*;
 import java.awt.AlphaComposite;
@@ -14,33 +14,25 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
-import scio.function.DoubleFunction;
 import scio.function.Function;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import scio.function.FunctionValueException;
 import sequor.model.FunctionTreeModel;
 
 /**
  * Draws a one-input/one-output function on the Cartesian Plane. Requires a function to work.
- * <br><br>
- * @author ae3263
+ * 
+ * @author Elisha Peterson
  */
 public class Function2D extends PointSet2D{
     boolean swapXY=false;
-    DoubleFunction function;
-    private static final DoubleFunction DEFAULT_FUNCTION=new DoubleFunction(){
-        public Double getValue(Double x){return 2*Math.cos(x);}
-        public Double minValue(){return -2.0;}
-        public Double maxValue(){return +2.0;}
-        public int getNumInputs(){return 1;}
-        public Double getValue(Vector<Double> x){return getValue(x.firstElement());}
-        };
+    Function<Double,Double> function;
         
-    public Function2D(){this(DEFAULT_FUNCTION);}
-    public Function2D(Function<Double,Double> function){setFunction(function);}
-    public Function2D(DoubleFunction function){setFunction(function);}
+    public Function2D() {this(new FunctionTreeModel());}
+    public Function2D(Function<Double,Double> function){this.function=function;}
     public Function2D(FunctionTreeModel functionModel){
-        setFunction(functionModel.getRoot());
+        function=functionModel.getRoot();
         functionModel.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -48,68 +40,60 @@ public class Function2D extends PointSet2D{
             }
         });
     }
-
-    public void setFunction(final Function<Double,Double> newFunction){
-        setFunction(new DoubleFunction(){
-            public Double getValue(Double x){return newFunction.getValue(x);}
-            public Double minValue(){return newFunction.minValue();}
-            public Double maxValue(){return newFunction.maxValue();}
-            public int getNumInputs(){return 1;}
-            public Double getValue(Vector<Double> x){return newFunction.getValue(x.firstElement());}        
-        });
-    }
-    public void setFunction(DoubleFunction newFunction){
-        this.function=newFunction;
-    }
+    public Function2D(FunctionTreeModel ftm, Color color) {this(ftm);setColor(color);}
     
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){
-        g.setColor(color);
-        g.setStroke(stroke);
-        computePath();
-        switch(style){
-        case CONTINUOUS:
-            super.paintComponent(g,t);
-            break;
-        case POLYGONAL:
-            break;
-        case BARS:
-            drawBars(g);
-            break;
-        case CBARS:
-            super.paintComponent(g,t);
-            drawBars(g);
-            break;
-        }
+        try {
+            g.setColor(color);
+            g.setStroke(stroke);
+            computePath();
+            switch (style) {
+                case CONTINUOUS:
+                    super.paintComponent(g, t);
+                    break;
+                case POLYGONAL:
+                    break;
+                case BARS:
+                    drawBars(g);
+                    break;
+                case CBARS:
+                    super.paintComponent(g, t);
+                    drawBars(g);
+                    break;
+            }
+        } catch (FunctionValueException ex) {}
     }
     
     @Override
     public void paintComponent(Graphics2D g) {
-        g.setColor(color);
-        g.setStroke(stroke);
-        computePath();
-        switch(style){
-        case CONTINUOUS:
-            super.paintComponent(g);
-            break;
-        case POLYGONAL:
-            break;
-        case BARS:
-            drawBars(g);
-            break;
-        case CBARS:
-            super.paintComponent(g);
-            drawBars(g);
-            break;
-        }
+        try{
+            g.setColor(color);
+            g.setStroke(stroke);
+            computePath();
+            switch(style){
+            case CONTINUOUS:
+                super.paintComponent(g);
+                break;
+            case POLYGONAL:
+                break;
+            case BARS:
+                drawBars(g);
+                break;
+            case CBARS:
+                super.paintComponent(g);
+                drawBars(g);
+                break;
+            }
+        }catch(FunctionValueException e){}
     }
-    public void computePath(){
-        Vector<Double> xRange=visometry.getXRange();
+    public void computePath() throws FunctionValueException {
+        Vector<Double> xValues=visometry.getXRange();
         points.clear();
-        for(Double d:xRange){
-            if(function.getValue(d)==null){continue;}
-            if(!swapXY){points.add(new R2(d,function.getValue(d)));}
-            else{points.add(new R2(function.getValue(d),d));}
+        Vector<Double> yValues=function.getValue(xValues);
+        if(swapXY){Vector<Double> temp=xValues;xValues=yValues;yValues=temp;}
+        for(int i=0;i<xValues.size();i++){
+            points.add(new R2(xValues.get(i),yValues.get(i)));
         }
     }
     public Vector<R2> decimatedPath(int n){

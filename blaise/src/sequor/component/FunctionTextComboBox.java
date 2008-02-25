@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scribo.tree.FunctionTreeRoot;
 import sequor.model.FunctionTreeModel;
+import sequor.model.SettingsProperty;
 
 /**
  * This class maintains a combo box containing a function, and maintains a history of past (valid) functions which have been computed.
@@ -40,11 +41,24 @@ public class FunctionTextComboBox extends JComboBox implements ChangeListener {
         addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                ftm.setValue((String)getSelectedItem());                
+                if(getSelectedItem() instanceof String){
+                    ftm.setValue((String)getSelectedItem());                
+                }
             }
         });
         ftm.addChangeListener(this);
     }
+
+    @Override
+    public void setSelectedItem(Object anObject) {
+        if(anObject instanceof String){
+            super.setSelectedItem(anObject);
+        }else if(anObject instanceof SettingsProperty){
+            super.setSelectedItem(((SettingsProperty)anObject).getModel().toString());
+        }
+    }
+    
+    
 
     // BEAN PATTERNS
     
@@ -70,7 +84,8 @@ public class FunctionTextComboBox extends JComboBox implements ChangeListener {
     public void stateChanged(ChangeEvent e) {
         if(ftm.isValid()){
             setForeground(Color.BLACK);
-            addItem(getF().argumentString());
+            addItem(ftm.toString());
+            setSelectedItem(ftm.toString());
         }else{
             setForeground(Color.RED);
         }

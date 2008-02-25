@@ -150,6 +150,16 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public static final SettingsProperty PROPERTY_SEPARATOR = new SettingsProperty(null, null, EDIT_SEPARATOR);
 
     /** Adds a property */
+    @Override
+    public boolean add(SettingsProperty sp){
+        boolean result=super.add(sp);
+        if(sp.getModel()!=null){
+            sp.getModel().addChangeListener(this);
+        }
+        return result;
+    }
+    
+    /** Adds a property */
     public void addProperty(String s,FiresChangeEvents e,int type){add(new SettingsProperty(s,e,type));}
     /** Adds a property with tooltip text */
     public void addProperty(String s,FiresChangeEvents e,int type,String tooltipText){add(new SettingsProperty(s,e,type,tooltipText));}
@@ -320,7 +330,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         SpringUtilities.makeCompactGrid(jp, numComponents, 2, 5, 5, 5, 5);
         jp.setToolTipText(name);
         jp.setName(name);
-        jp.paintComponents(jp.getGraphics());
+        jp.validate();
         return jp;
     }
     
@@ -432,5 +442,22 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
                 }
         });
         return menuItem;
+    }
+    
+    public static class Default extends Settings {
+        public Default(){
+            super();
+            //addProperty("boolean",null,Settings.EDIT_BOOLEAN);
+            addProperty("color",new ColorModel(Color.BLUE),Settings.EDIT_COLOR);
+            addProperty("combo",new ComboBoxRangeModel(),Settings.EDIT_COMBO);
+            addProperty("double",new DoubleRangeModel(1.0,-10.0,100.0,0.1),Settings.EDIT_DOUBLE);
+            addProperty("function",new FunctionTreeModel(),Settings.EDIT_FUNCTION);
+            addProperty("integer",new IntegerRangeModel(1,-10,100,1),Settings.EDIT_INTEGER);
+            addProperty("parameter",new ParameterListModel(),Settings.EDIT_PARAMETER);
+            addProperty("parametric",new ParametricModel(),Settings.EDIT_PARAMETRIC);
+            //addProperty("separator",null,Settings.EDIT_SEPARATOR);
+            //addProperty("string",null,Settings.EDIT_STRING);
+            //addProperty("noedit",null,Settings.NO_EDIT);
+        }
     }
 }

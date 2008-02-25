@@ -24,15 +24,16 @@ import sequor.component.Settings;
  * @author ae3263
  */
 public class ParameterListModel extends FiresChangeEvents implements ChangeListener {
-    TreeMap<Variable,DoubleRangeModel> values;
+    TreeMap<String,DoubleRangeModel> values;
+    boolean added=false;
     
     public ParameterListModel(){
-        values=new TreeMap<Variable,DoubleRangeModel>();
+        values=new TreeMap<String,DoubleRangeModel>();
     }
-    public ParameterListModel(TreeMap<Variable,DoubleRangeModel> values){
-        this.values=new TreeMap<Variable,DoubleRangeModel>();
-        for(Variable v:values.keySet()){
-            this.values.put(v,values.get(v));
+    public ParameterListModel(TreeMap<String,DoubleRangeModel> values){
+        this.values=new TreeMap<String,DoubleRangeModel>();
+        for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+            this.values.put(e.getKey(),e.getValue());
         }
     }
     
@@ -40,43 +41,43 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     // PARAMETER METHODS
 
     /** Adds a model with a particular range of values. */
-    public void addModel(Variable v,DoubleRangeModel drm){
+    public void addModel(String s,DoubleRangeModel drm){
         if(drm!=null){
-            values.put(v,drm);
+            values.put(s,drm);
             drm.addChangeListener(this);
-            changeEvent=new ChangeEvent("add");
+            added=true;
             fireStateChanged();
-            changeEvent=null;
         }
+        added=false;
     }
+    
+    public boolean isAdded(){return added;}
 
     /** Populates a list of parameters according to the specified values. */
-    public TreeMap<Variable,Double> getParameterList(){
-        TreeMap<Variable,Double> result=new TreeMap<Variable,Double>();
-        for(Variable v:values.keySet()){
+    public TreeMap<String,Double> getParameterList(){
+        TreeMap<String,Double> result=new TreeMap<String,Double>();
+        for(String v:values.keySet()){
             result.put(v,values.get(v).getValue());
         }
         return result;
     }
     /** Sets a parameter value. */
-    public boolean setParameterValue(Variable v,Double d){
-        if(values.containsKey(v)){
-            if(values.get(v).getValue()==d){
+    public boolean setParameterValue(String s,Double d){
+        if(values.containsKey(s)){
+            if(values.get(s).getValue()==d){
                 return false;
             }
-            values.get(v).setValue(d);
+            values.get(s).setValue(d);
         } else {
-            addModel(v, defaultDoubleRangeModel(d));
+            addModel(s, defaultDoubleRangeModel(d));
         }
         return true;
     }
-    /** Sets a parameter value with a given string. */
-    public boolean setParameterValue(String s,Double d){return setParameterValue(new Variable(s),d);}
     /** Removes a particular variable. */
-    public void removeParameter(Variable v){
-        if(values.containsKey(v)){
-            values.get(v).removeChangeListener(this);
-            values.remove(v);
+    public void removeParameter(String s){
+        if(values.containsKey(s)){
+            values.get(s).removeChangeListener(this);
+            values.remove(s);
         }
     }        
     
@@ -84,23 +85,17 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     // GUI INPUT/OUTPUTS
     
     /** Returns panel containing all the parameters. */
-    public JPanel getPanel(){
-        Settings s=new Settings();
-        for(Variable v:values.keySet()){
-            s.addProperty(v.toString(),values.get(v),Settings.EDIT_DOUBLE);
-        }        
-        s.addProperty("",this,Settings.EDIT_PARAMETER);
-        return s.getPanel();
-    }
+    public JPanel getPanel(){return updatePanel(new JPanel());}
     
     /** Updates a panel to contain the settings here. */
-    public void updatePanel(JPanel p){
+    public JPanel updatePanel(JPanel jp){
         Settings s=new Settings();
-        for(Variable v:values.keySet()){
-            s.addProperty(v.toString(),values.get(v),Settings.EDIT_DOUBLE);
-        }        
+        for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+            s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE);
+        }
         s.addProperty("",this,Settings.EDIT_PARAMETER);
-        s.initPanel(p);
+        s.initPanel(jp);
+        return jp;
     }
     // INTERFACE METHODS
 
@@ -109,7 +104,7 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     @Override
     public void copyValuesFrom(FiresChangeEvents parent) {        
         values.clear();
-        for(Variable v:((ParameterListModel)parent).values.keySet()){
+        for(String v:((ParameterListModel)parent).values.keySet()){
             this.values.put(v,((ParameterListModel)parent).values.get(v));
         }
     }
@@ -118,7 +113,7 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     @Override
     public String toLongString() {throw new UnsupportedOperationException("Not supported yet.");}
     @Override
-    public PropertyChangeEvent getChangeEvent(String s) {throw new UnsupportedOperationException("Not supported yet.");}
+    public PropertyChangeEvent getChangeEvent(String s) {return new PropertyChangeEvent(this,s,null,null);}
 
     @Override
     public void stateChanged(ChangeEvent e) {fireStateChanged();}

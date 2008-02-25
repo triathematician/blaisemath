@@ -5,25 +5,22 @@
 
 // TODO Add equality root node.
 // TODO Add list of variables at FunctionRoot/setting variable values at the top
-// TODO Change to generic Function<Double,Double> method...
 // TODO Remove dependence on FunctionTreeFunctionNode
 // TODO Change Variable collection to a set
 
 package scribo.tree;
 
-import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Vector;
-import scio.function.DoubleFunction;
+import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
-import scribo.parser.FunctionValueException;
+import scio.function.FunctionValueException;
 import scribo.parser.Parser;
 
 /**
- * <p>
  * This class represents the root of a FunctionTree. In particular, every tree which is constructed passes all
  * information through a root node, which is this one.
- * </p>
  * <p>
  * The class stores a list of variables (whose values are "unknowns") and parameters (whose values are "knowns" although
  * they can be changed). The distinction is important because fundamentally the function f(x)=a*sin(b(x+c))+d should be
@@ -33,20 +30,22 @@ import scribo.parser.Parser;
  * to get at the variables, and (iii) how to evaluate the function at a particular value or range of values.
  * </p>
  * <p>
+ * Note that this is the only class which "cares" that an unknown is either a parameter or a variable; any other FunctionTreeNode
+ * treats the two types exactly the same.
  * </p>
  * @author Elisha Peterson
  */
-public class FunctionTreeRoot extends FunctionTreeFunctionNode implements DoubleFunction{
+public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Function<Double,Double>{
     
     
     // VARIABLES
     
     /** Variables required to obtain a value. */
-    Vector<Variable> variables;
+    TreeSet<String> variables;
     /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
      * the values will be looked up in this table.
      */
-    TreeMap<Variable,Double> unknowns;
+    TreeMap<String,Double> unknowns;
     
     
     // CONSTRUCTORS
@@ -57,15 +56,15 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Double
     
     public FunctionTreeRoot(FunctionTreeNode c){
         addSubNode(c);
-        variables=c.getVariables();
-        unknowns=new TreeMap<Variable,Double>();
+        variables=c.getUnknowns();
+        unknowns=new TreeMap<String,Double>();
     }    
     
     
     // HANDLING UNKNOWN PARAMETERS
 
     /** Sets up an entire list of parameters. */
-    public void setUnknowns(TreeMap<Variable,Double> values){
+    public void setUnknowns(TreeMap<String,Double> values){
         unknowns.putAll(values);
         variables.removeAll(values.keySet());
     }
@@ -73,12 +72,6 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Double
     
     // OVERRIDE SUBMETHODS FROM FUNCTIONTREEFUNCTIONNODE
     
-    @Override
-    public Double getValue(TreeMap<Variable,Double> table){
-        if(numSubNodes()!=1){return null;}
-        table.putAll(unknowns);
-        return argumentValue(table);
-    }
     @Override
     public String toString(){
         return "Root "
@@ -92,33 +85,55 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Double
     public boolean isValidSubNode(){return false;}    
     @Override
     public FunctionTreeNode simplified(){
-        return isNumber()?new Constant(getValue()).simplified():new FunctionTreeRoot(argumentSimplified());
+        try{
+            return new Constant(getValue()).simplified();
+        }catch(FunctionValueException e){
+            return new FunctionTreeRoot(argumentSimplified());
+        }
     }
     public Class inverseFunctionClass(){return null;}
+    @Override
     public void initFunctionType(){}
 
     
+    // METHODS TO RETURN VALUE
+    
+    @Override
+    public Double getValue(TreeMap<String, Double> table) throws FunctionValueException {
+        table.putAll(unknowns);
+        return argumentValue(table);
+    }
+    @Override
+    public Double getValue(String s, Double d) throws FunctionValueException {
+        if(unknowns==null||unknowns.isEmpty()){return argumentValue(s,d);}
+        TreeMap<String,Double> table=new TreeMap<String,Double>();
+        table.put(s,d);
+        return getValue(table);
+    }
+    @Override
+    public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
+        // TODO make more efficient!
+        if(unknowns==null||unknowns.isEmpty()){return argumentValue(s,d);}
+        TreeMap<String,Double> table=new TreeMap<String,Double>();
+        table.putAll(unknowns);
+        Vector<Double> result=new Vector<Double>(d.size());
+        for(Double x:d){
+            table.put(s,x);
+            result.add(argumentValue(table));
+        }
+        return result;
+    }
+    
+    
+
     // FUNCTION INTERFACE METHODS
     
-    public int getNumInputs() {
-        if(variables==null){return 0;}
-        return variables.size();
-    }
-
-    public Double getValue(Vector<Double> xs) {
-        if(xs.size()<getNumInputs()){return null;}
-        for(int i=0;i<xs.size();i++){
-            unknowns.put(variables.get(i),xs.get(i));
-        }
-        return getValue(unknowns);
-    }
-
-    public Double getValue(Double x) {
-        if(variables.size()>1){return null;}
-        return getValue(variables.firstElement(),x);
-    }
-
+    @Override
+    public Double getValue(Double x) throws FunctionValueException {return getValue(variables.first(),x);}      
+    @Override
+    public Vector<Double> getValue(Vector<Double> x) throws FunctionValueException {return getValue(variables.first(),x);}
+    @Override
     public Double minValue() { return 0.0; }
-
+    @Override
     public Double maxValue() { return 0.0; }
 }

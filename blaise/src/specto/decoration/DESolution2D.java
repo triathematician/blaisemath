@@ -6,6 +6,7 @@
 package specto.decoration;
 
 import javax.swing.JMenu;
+import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import specto.plottable.PointSet2D;
 import java.awt.Graphics2D;
@@ -64,7 +65,7 @@ public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Anim
      * @param steps     The number of iterations.
      * @param stepSize  The size of path added at each step.
      */
-    void calcNewton(int steps,double stepSize){
+    void calcNewton(int steps,double stepSize) throws FunctionValueException{
         initSolutionCurves();
         R2 cur=getParent().getPoint();
         R2 dir=new R2(0,0);
@@ -101,7 +102,9 @@ public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Anim
 
     @Override
     public void recompute() {
-        calcNewton(500,.04);
+        try {
+            calcNewton(500, .04);
+        } catch (FunctionValueException ex) {}
     }
 
     @Override

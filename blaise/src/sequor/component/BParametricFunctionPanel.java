@@ -10,9 +10,11 @@
 package sequor.component;
 
 import java.awt.Dimension;
+import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import scio.function.Function;
+import scio.function.FunctionValueException;
 import sequor.model.ParametricModel;
 import specto.PlotPanel;
 import scio.coordinate.R2;
@@ -59,8 +61,16 @@ public class BParametricFunctionPanel extends JPanel{
     public FunctionTextField getFY(){return fy;}
     
     public Function<Double,R2> getFunction(PlotPanel owner){
-        return new Function<Double,R2>(){
-            public R2 getValue(Double x){return new R2(fx.getF().getValue(x),fy.getF().getValue(x));}
+        return new Function<Double,R2>(){        
+            public R2 getValue(Double x) throws FunctionValueException{
+                return new R2(fx.getF().getValue(x),fy.getF().getValue(x));
+            }
+            @Override
+            public Vector<R2> getValue(Vector<Double> x) throws FunctionValueException {
+                Vector<R2> result=new Vector<R2>(x.size());
+                for(Double d:x){result.add(getValue(d));}
+                return result;
+            }
             public R2 minValue(){return null;}
             public R2 maxValue(){return null;}  
         };

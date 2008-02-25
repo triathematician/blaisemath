@@ -15,9 +15,12 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import scio.function.Function;
+import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
 import specto.visometry.Euclidean2;
@@ -31,6 +34,12 @@ public class VectorField2D extends Plottable<Euclidean2> {
     Function<R2,R2> function;
     public static final Function<R2,R2> DEFAULT_FUNCTION=new Function<R2,R2>(){
         public R2 getValue(R2 p){return new R2(p.y,-p.y-10*Math.sin(p.x));}
+        @Override
+        public Vector<R2> getValue(Vector<R2> x) {
+            Vector<R2> result=new Vector<R2>(x.size());
+            for(R2 r:x){result.add(getValue(r));}
+            return result;
+        }
         public R2 minValue(){return new R2(-10.0,-10.0);}
         public R2 maxValue(){return new R2(10.0,10.0);}
         };
@@ -99,11 +108,15 @@ public class VectorField2D extends Plottable<Euclidean2> {
     
     /** Return angle and desired length of the arrow. The length is in window coordinates! */    
     public R2 getArrow(R2 p){
-        double maxLength=function.maxValue().minus(function.minValue()).magnitude();
-        R2 result=function.getValue(p);
-        double magnitude=result.magnitude();
-        double angle=result.angle();
-        return new R2(25.0*magnitude/maxLength,angle);
+        try {
+            double maxLength = function.maxValue().minus(function.minValue()).magnitude();
+            R2 result = function.getValue(p);
+            double magnitude = result.magnitude();
+            double angle = result.angle();
+            return new R2(25.0 * magnitude / maxLength, angle);
+        } catch (FunctionValueException ex) {
+           return new R2();
+        }
     }
     
     /** Draws a vector in the direction of the field at the current point. */
@@ -138,8 +151,10 @@ public class VectorField2D extends Plottable<Euclidean2> {
         forward.add(p);
         backward.add(p);
         for(int i=1;i<NUM;i++){
-            forward.add(forward.get(i-1).plus(function.getValue(forward.get(i-1)).scaledToLength(STEP)));
-            backward.add(backward.get(i-1).minus(function.getValue(backward.get(i-1)).scaledToLength(STEP)));
+            try {
+                forward.add(forward.get(i - 1).plus(function.getValue(forward.get(i - 1)).scaledToLength(STEP)));
+                backward.add(backward.get(i - 1).minus(function.getValue(backward.get(i - 1)).scaledToLength(STEP)));
+            } catch (FunctionValueException ex) {}
         }
         Path2D.Double path=new Path2D.Double();
         path.moveTo(visometry.toWindowX(p.x),visometry.toWindowY(p.y));

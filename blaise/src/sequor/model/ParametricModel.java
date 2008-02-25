@@ -12,9 +12,11 @@ package sequor.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.util.Vector;
 import scio.function.Function;
+import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
-import scribo.tree.FunctionTreeFactory;
+import scribo.parser.FunctionTreeFactory;
 import scribo.tree.FunctionTreeRoot;
 import scio.coordinate.R2;
 
@@ -55,10 +57,16 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     public FunctionTreeRoot getTreeY(){return fy;}
     public String getStringX(){return sx;}
     public String getStringY(){return sy;}
-    public R2 getValue(double t){return new R2(fx.getValue(t),fy.getValue(t));}
+    public R2 getValue(double t) throws FunctionValueException{return new R2(fx.getValue(t),fy.getValue(t));}
     public Function<Double,R2> getFunction(){
         return new Function<Double,R2>(){
             public R2 getValue(Double x){return getValue(x);}
+            @Override
+            public Vector<R2> getValue(Vector<Double> x) {
+                Vector<R2> result=new Vector<R2>(x.size());
+                for(Double d:x){result.add(getValue(d));}
+                return result;
+            }
             public R2 minValue(){return null;}
             public R2 maxValue(){return null;}            
         };

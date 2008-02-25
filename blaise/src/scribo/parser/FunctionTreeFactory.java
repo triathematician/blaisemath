@@ -3,8 +3,11 @@
  * Created on Sep 21, 2007, 9:01:36 AM
  */
 
-package scribo.tree;
+package scribo.parser;
 
+import scribo.tree.*;
+import scio.function.FunctionValueException;
+import scribo.parser.FunctionSyntaxException;
 import java.util.Vector;
 import scribo.parser.*;
 import scio.function.Function;
@@ -19,7 +22,7 @@ public class FunctionTreeFactory {
     /** Returns functions with single arguments. */
     public static FunctionTreeNode getFunction(String name,FunctionTreeNode argument) throws FunctionSyntaxException{
         if(argument==null||name==null){return null;}
-        if(argument instanceof ArgumentList){return getFunction(name,((ArgumentList)argument).getSubNodes());}
+        if(argument instanceof ArgumentList){return getFunction(name,((ArgumentList)argument).arguments());}
         name=name.toLowerCase();
         if      (name.equals("abs")){return new Piecewise.Abs(argument);
         }else if(name.equals("step")){return new Piecewise.Step(argument);
@@ -72,8 +75,12 @@ public class FunctionTreeFactory {
     public static Function<Double,Double> getFunctionObject(final String s,final Variable v) throws FunctionSyntaxException{
         return new Function<Double,Double>(){
             final FunctionTreeNode compiled=getFunction(s);
-            public Double getValue(Double x){return compiled.getValue(v,x);}
+            @Override
+            public Double getValue(Double x) throws FunctionValueException{return compiled.getValue(v,x);}
+            public Vector<Double> getValue(Vector<Double> xs) throws FunctionValueException{return compiled.getValue(v,xs);}
+            @Override
             public Double minValue(){throw new UnsupportedOperationException("Not supported yet.");}
+            @Override
             public Double maxValue(){throw new UnsupportedOperationException("Not supported yet.");}
         };
     }

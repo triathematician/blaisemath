@@ -26,7 +26,6 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     boolean valid=true;
 
     public FunctionTreeModel(){setValue("cos(x)");}
-
     public FunctionTreeModel(FunctionTreeNode ftn) {this(new FunctionTreeRoot(ftn));}
     public FunctionTreeModel(FunctionTreeRoot ftr){this.ftr=ftr;}
     public FunctionTreeModel(String text,String var){setValue(text);}
@@ -36,15 +35,12 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     public boolean isValid(){return valid;}
     
     public FunctionTreeRoot getRoot(){return ftr;}
-    
+    public void setRoot(FunctionTreeRoot ftr){setValue(ftr.argumentString());}
     @Override
     public void setValue(String s) {
         try {
-            if(ftr==null){
-                ftr=new FunctionTreeRoot(s);
-            }else{
-                ftr.setArgumentNode(Parser.parseExpression(s));
-            }
+            if(ftr==null){ftr=new FunctionTreeRoot(s);}
+            else{ftr.setArgumentNode(Parser.parseExpression(s));}
             valid=true;
             fireStateChanged();
         } catch (FunctionSyntaxException ex) {
@@ -57,7 +53,7 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     @Override
     public FiresChangeEvents clone() {return new FunctionTreeModel(ftr);}
     @Override
-    public String toLongString() {return ftr.toString();}
+    public String toString(){return ftr.argumentString();}
     @Override
     public PropertyChangeEvent getChangeEvent(String s) {return new PropertyChangeEvent(this,s,null,ftr);}
     @Override

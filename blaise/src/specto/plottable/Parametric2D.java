@@ -6,6 +6,9 @@
 
 package specto.plottable;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -33,7 +36,7 @@ public class Parametric2D extends PointSet2D {
     double tMax;
     
     /** The number of points to compute */
-    double samplePoints;
+    int samplePoints;
     
     /** Range of independent variable values which are required to compute the path of the function.
      * By default, this is controlled within this class, and 2000 points are plotted.
@@ -44,6 +47,12 @@ public class Parametric2D extends PointSet2D {
     private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
         @Override
         public R2 getValue(Double x){return new R2(2*Math.cos(x),2*Math.sin(2*x));}
+        @Override
+        public Vector<R2> getValue(Vector<Double> x) {
+            Vector<R2> result=new Vector<R2>(x.size());
+            for(Double d:x){result.add(getValue(d));}
+            return result;
+        }
         @Override
         public R2 minValue(){return new R2(-2,-2);}
         @Override
@@ -67,20 +76,21 @@ public class Parametric2D extends PointSet2D {
     /** Draws the path. */
     @Override
     public void paintComponent(Graphics2D g) {
-        computePath();
-        super.paintComponent(g);
+        try {
+            computePath();
+            super.paintComponent(g);
+        } catch (FunctionValueException ex) {}
     }
     
     /** Computes the path over the given range */
-    public void computePath(){
+    public void computePath() throws FunctionValueException{
         double tStep=(tMax-tMin)/samplePoints;
         if(tRange==null){
-            tRange=new Vector<Double>();
+            tRange=new Vector<Double>(samplePoints);
         }else{
             tRange.clear();
         }
         for(double d=tMin;d<=tMax;d+=tStep){tRange.add(d);}
-        points.clear();
-        for(Double d:tRange){points.add(function.getValue(d));}
+        points=function.getValue(tRange);
     }
 }

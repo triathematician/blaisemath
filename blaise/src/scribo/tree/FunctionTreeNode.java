@@ -12,17 +12,21 @@ package scribo.tree;
 
 import java.util.Collection;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import scio.function.FunctionValueException;
 
 /**
- * <p>
  * The <b>FunctionTreeNode</b> has support for basic functionality of a node in a <i>function tree</i>
- * </p>
  * <p>
  * The most import methods to override are <i>toString</i>, <i>getValue</i>, and <i>derivativeTree</i>. Much of the rest
  * of the code required for nodes is already implemented in this class.
+ * </p>
+ * <p>
+ * There are several <i>getValue</i> methods which may be used in different cases. In the most generic case, a table assigning
+ * potential inputs to variables is passed to the function.
  * </p>
  * @author Elisha Peterson
  */
@@ -35,10 +39,10 @@ public abstract class FunctionTreeNode {
     protected int depth=0;
     
     /** The subnodes associated to this node */
-    private Vector<FunctionTreeNode> children; 
+    protected Vector<FunctionTreeNode> children; 
     
     /** String which can be used to represent the type of node this is */
-    private String nodeName="unknown";
+    protected String nodeName=null;
     
     
     // INITIALIZERS
@@ -50,22 +54,15 @@ public abstract class FunctionTreeNode {
     // METHODS FOR HANDLING SUBNODES
     
     /** Whether the node may be added to a tree. */
-    public abstract boolean isValidSubNode();
-    
+    public abstract boolean isValidSubNode();    
     /** Adds a subnode, provided it is non-null and valid */
-    public FunctionTreeNode addSubNode(FunctionTreeNode child){if(child!=null&&child.isValidSubNode()){children.add(child);}return this;}
-    
+    public FunctionTreeNode addSubNode(FunctionTreeNode child){if(child!=null&&child.isValidSubNode()){children.add(child);}return this;}    
     /** Adds multiple subnodes */
-    public FunctionTreeNode addSubNodes(Collection<? extends FunctionTreeNode> kids){for(FunctionTreeNode c:kids)addSubNode(c);return this;}
-    
+    public FunctionTreeNode addSubNodes(Collection<? extends FunctionTreeNode> kids){for(FunctionTreeNode c:kids)addSubNode(c);return this;}    
+    /** Returns ith subnode */
+    public FunctionTreeNode getSubNode(int i){return children.get(i);}
     /** Returns number of subnodes */
     public int numSubNodes(){return (children==null)?-1:children.size();}
-    
-    /** Returns all subnodes */
-    public Vector<FunctionTreeNode> getSubNodes(){return children;}
-    
-    /** Returns a specific subnode */
-    public FunctionTreeNode getSubNode(int i){return children.get(i);}
     
     
     // METHODS FOR CHECKING EQUALITY
@@ -93,50 +90,23 @@ public abstract class FunctionTreeNode {
     
     /** Checks equality with a numeric value. */
     public boolean equals(double d){
-        return isNumber()&&getValue().equals(d);
-    }
-    
-    
-    // METHODS FOR GETTING VALUES OUT OF THE TREE
-    
-    /** Returns the numeric value of the tree (provided there are no variables in it). */
-    public Double getValue(){
-        if(isNumber()){return getValue("novariable",0.0);}
-        return null;
-    }
-    
-    /** Returns the value of the tree given a table of variable/value matches. */
-    public abstract Double getValue(TreeMap<Variable,Double> table);   
-    
-    /** Returns the value of the tree assuming there is a single variable. */
-    public Double getValue(Variable v,Double value){
-        TreeMap<Variable,Double> table=new TreeMap<Variable,Double>();
-        table.put(v,value);
-        return getValue(table);
-    }
-    
-    /** Returns the value of tree at a vector of input values assuming a single variable. Extending classes may wish
-     * to override this method to optimize speed. */
-    public Vector<Double> getValues(Variable v,Vector<Double> values){
-        Vector<Double> result=new Vector<Double>();
-        for(Double value:values){
-            result.add(getValue(v,value));
+        try {
+            return getValue()==d;
+        } catch (FunctionValueException ex) {
+            return false;
         }
-        return result;
     }
     
-    /** Return value of function at a particular value, with the input variable given as a string. */
-    public Double getValue(String s,Double value){return getValue(new Variable(s),value);}    
-    
-    /** Return values of function at several values, with the input variable given as a string. */
-    public Vector<Double> getValues(String s,Vector<Double> values){return getValues(new Variable(s),values);}
-    
-    
+   
     // OPERATIONS ON THE TREE
     
     /** Returns a simplified version of this tree. */
     public FunctionTreeNode simplified(){
-        return isNumber()?new Constant(getValue()).simplified():this;
+        try{
+            return new Constant(getValue());
+        }catch(FunctionValueException e){
+            return this;
+        }
     }
     
     /** Returns a recursive simplification */
@@ -162,17 +132,17 @@ public abstract class FunctionTreeNode {
     // METHODS TO ASCERTAIN INFO REGARDING PARAMETERS AND VARIABLES
     
     /** Returns list of variables used in the tree. */
-    public Vector<Variable> getVariables(){
-        Vector<Variable> result=new Vector<Variable>();
-        for(FunctionTreeNode ftn:children){result.addAll(ftn.getVariables());}
+    public TreeSet<String> getUnknowns(){
+        TreeSet<String> result=new TreeSet<String>();
+        for(FunctionTreeNode ftn:children){result.addAll(ftn.getUnknowns());}
         return result;
     }
     
     /** Returns a default variable for the tree. */
-    public Variable getDefaultVariable(){
-        Vector<Variable> vars=getVariables();
-        if(vars.size()==1){return vars.get(0);}
-        return null;
+    public String getDefaultVariable(){
+        TreeSet<String> vars=getUnknowns();
+        if(vars.isEmpty()){return null;}
+        return vars.first();
     }
     
     
@@ -201,4 +171,52 @@ public abstract class FunctionTreeNode {
     /** Alternate output displaying the node name first. In particular, the basic operations should override this. */
     public String toOpString(){return toString();}
     
+
+
+    
+    
+    // ABSTRACT METHODS FOR RETURNING VALUE OF A NODE
+    
+   
+    /** Returns the value of the tree given a table of variable/value matches. This is one of the
+     * primary functions which needs to be overridden by subclasses.
+     * 
+     * @param table
+     *      a table mapping variables to doubles.
+     * @return
+     *      a single value representing the output of the function
+     * @throws scribo.parser.FunctionValueException
+     *      if there are variables whose value cannot be assigned
+     */
+    public abstract Double getValue(TreeMap<String,Double> table) throws FunctionValueException;
+    public Double getValue() throws FunctionValueException {return getValue("novariablegiven",0.0);}
+    
+    /** Returns value of tree given a single variable assignment. This could by default call the above
+     * method, but to ensure speed that is not done.
+     * 
+     * @param s
+     *      the string representing a variable
+     * @param d
+     *      the double value associated with the variable
+     * @return
+     *      a single value representing the output of the function
+     * @throws scribo.parser.FunctionValueException
+     *      if there are variables whose value cannot be assigned
+     */
+    public abstract Double getValue(String s,Double d) throws FunctionValueException;
+    public Double getValue(Variable v,Double d) throws FunctionValueException{return getValue(v.nodeName,d);}
+
+    /** Returns value of tree given a list of values for a single input.
+     * 
+     * @param s
+     *      the string representing a variable
+     * @param d
+     *      the list of double values associated with the variable
+     * @return
+     *      a list of double values representing the output of the function
+     * @throws scribo.parser.FunctionValueException
+     *      if there are variables whose value cannot be assigned
+     */
+    public abstract Vector<Double> getValue(String s,Vector<Double> d) throws FunctionValueException;
+    public Vector<Double> getValue(Variable v,Vector<Double> d) throws FunctionValueException{return getValue(v.nodeName,d);}
 }

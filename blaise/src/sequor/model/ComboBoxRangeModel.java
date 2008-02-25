@@ -13,9 +13,15 @@ package sequor.model;
  */
 public class ComboBoxRangeModel extends IntegerRangeModel{
     String[] s;
-    public ComboBoxRangeModel(){}
+    public ComboBoxRangeModel(){
+        String[] test={"test1","test2","test3"};
+        s=test;
+        setRangeProperties(1,0,2);
+    }
     public ComboBoxRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
     public String[] getStrings(){return s;}
+    @Override
+    public String toString(){return s[getValue()];}
     public String getString(int i){return s[i];}
     @Override
     public void setValue(String sv){

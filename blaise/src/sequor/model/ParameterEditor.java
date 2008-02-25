@@ -5,8 +5,7 @@
 
 package sequor.model;
 
-import java.awt.event.WindowEvent;
-import scribo.tree.Variable;
+import java.awt.event.ActionEvent;
 import sequor.component.ParameterDialog;
 
 /**
@@ -25,15 +24,15 @@ public class ParameterEditor extends ButtonPropertyEditor<ParameterListModel>{
     }
     @Override
     public void initDialog(){
-        dialog=new ParameterDialog(null,false);
-        dialog.addWindowListener(this);
+        dialog=new ParameterDialog(null,false,this);
     }
     @Override
     public void editPressed() {}
     @Override
-    public void windowClosed(WindowEvent e) {
-        ParameterDialog d=(ParameterDialog)dialog;
-        model.addModel(new Variable(d.getParameterName()),
-                ParameterListModel.defaultDoubleRangeModel(d.getParameterValue()));
+    public void otherAction(ActionEvent e) {
+        if(e.getActionCommand().equals("OK")){
+            ParameterDialog d=(ParameterDialog)dialog;
+            model.addModel(d.getParameterName(),ParameterListModel.defaultDoubleRangeModel(d.getParameterValue()));
+        }
     }
 }

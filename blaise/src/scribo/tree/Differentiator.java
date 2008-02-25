@@ -8,13 +8,14 @@ package scribo.tree;
 import java.util.TreeMap;
 import java.util.Vector;
 import scribo.parser.FunctionSyntaxException;
+import scio.function.FunctionValueException;
 
 /**
  * This class represents a differentiation operator contained on a tree.<br><br>
  * 
  * @author Elisha
  */
-public class Differentiator extends FunctionTreeFunctionNode {
+public class Differentiator extends Operator {
     FunctionTreeNode dArg;
     Variable x;
     int n;
@@ -22,25 +23,47 @@ public class Differentiator extends FunctionTreeFunctionNode {
     public Differentiator(){this(Constant.ZERO,new Variable("x"),1);}
     public Differentiator(FunctionTreeNode argument,String s){this(argument,new Variable(s),1);}
     public Differentiator(FunctionTreeNode argument,Variable x){this(argument,x,1);}
-    public Differentiator(FunctionTreeNode argument,Variable x,int n){super(argument);this.x=x;setDegree(n);}
-    public void initFunctionType(){setFunctionNames("D",null,null,null);}
+    public Differentiator(FunctionTreeNode argument,Variable x,int n){super(argument);this.x=x;setDegree(n);initDArg();}
     
     @Override
-    public String toString(){return getFunctionName()+(n==1?"":"^"+n)+x.toString()+"("+argumentString()+")";}
+    public String toString(){return nodeName+(n==1?"":"^"+n)+x.toString()+"("+argumentString()+")";}
     
     public void setDegree(int n){if(n>0){this.n=n;}}
     public void initDArg(){
         if(dArg==null){
-            dArg=argumentNode();
+            dArg=getArgument();
             for(int i=0;i<n;i++){dArg=dArg.derivativeTree(x);}
         }
     }
-    public Double getValue(TreeMap<Variable, Double> table){initDArg();return dArg.getValue(table);}
     
     @Override
-    public FunctionTreeNode derivativeTree(Variable v){return new Differentiator(argumentNode(),x,n+1);}
+    public FunctionTreeNode derivativeTree(Variable v){return new Differentiator(getArgument(),x,n+1);}
     @Override
     public FunctionTreeNode simplified(){initDArg();return dArg.simplified();}
+    
+    
+    
+    // VALUE METHODS
+    
+    @Override
+    public Double getValue(TreeMap<String,Double> table) throws FunctionValueException {
+        initDArg();
+        return dArg.getValue(table);
+    }
+
+
+    @Override
+    public Double getValue(String s, Double d) throws FunctionValueException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+        
+        
+    // STATIC METHODS
     
     /** Static method generating a derivative given a vector of elements. First element should be a regular argument;
      * remaining elements should be variables.
@@ -57,5 +80,10 @@ public class Differentiator extends FunctionTreeFunctionNode {
             return new Differentiator(arguments.get(0),(Variable)arguments.get(1));
         }
         throw new FunctionSyntaxException(FunctionSyntaxException.ARGUMENT_NUMBER);                
+    }
+
+    @Override
+    public boolean isValidSubNode() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

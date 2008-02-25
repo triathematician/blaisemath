@@ -6,7 +6,10 @@
 
 package sequor.component;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JDialog;
+import javax.swing.event.EventListenerList;
 
 /**
  *
@@ -18,8 +21,9 @@ public class ParameterDialog extends javax.swing.JDialog {
     public double getParameterValue(){return Double.valueOf(jTextField2.getText());}
     
     /** Creates new form ParameterDialog */
-    public ParameterDialog(java.awt.Frame parent, boolean modal) {
+    public ParameterDialog(java.awt.Frame parent, boolean modal, ActionListener al) {
         super(parent, modal);
+        addActionListener(al);
         initComponents();
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
@@ -106,12 +110,35 @@ public class ParameterDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        fireActionPerformed(evt);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        fireActionPerformed(evt);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    
+    // EVENT HANDLING
+    
+    // Remaining code deals with action listening
+    protected ActionEvent actionEvent=null;
+    protected EventListenerList listenerList=new EventListenerList();
+    public void addActionListener(ActionListener l){listenerList.add(ActionListener.class, l);}
+    public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
+    protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));}
+    protected void fireActionPerformed(ActionEvent e){
+        actionEvent=e;
+        Object[] listeners=listenerList.getListenerList();
+        for(int i=listeners.length-2;i>=0;i-=2){
+            if(listeners[i]==ActionListener.class){
+                if(actionEvent==null){actionEvent=e;}
+                ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
+            }
+        }
+    }
+
     
     /**
      * @param args the command line arguments
@@ -119,7 +146,7 @@ public class ParameterDialog extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ParameterDialog dialog = new ParameterDialog(new javax.swing.JFrame(), true);
+                ParameterDialog dialog = new ParameterDialog(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);

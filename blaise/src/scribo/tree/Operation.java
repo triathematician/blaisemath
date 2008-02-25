@@ -11,10 +11,10 @@
 package scribo.tree;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
+import scio.function.FunctionValueException;
 
 /**
  * Handles basic operations on nodes.<br><br>
@@ -34,12 +34,21 @@ public abstract class Operation extends FunctionTreeNode {
     public Operation(){super();initCoefficients();initOperationString();}
     /** Any number of subnodes is allowed, assuming it is positive. The first subnode
      * should be used to store either the constant summands or the constant coefficient. */
+    @Override
     public boolean isValidSubNode(){return numSubNodes()>0;}
     
     /** Initializes other elements for the linear combination. */
     public void initCoefficients(){coefficient=new Vector<Double>();}
     /** Returns ith coefficient. */        
     public double getCoefficient(int i){return coefficient.get(i);}
+    
+    /** Returns vector of subnode values. */
+    public Vector<Vector<Double>> getSubNodeValues(String s,Vector<Double> values) throws FunctionValueException{
+        Vector<Vector<Double>> result=new Vector<Vector<Double>>();
+        for(int i=0;i<numSubNodes();i++){result.add(getSubNode(i).getValue(s, values));}
+        return result;
+        
+    }
     
     /** Adds several subnodes with the specified coefficient. */
     public FunctionTreeNode addSubNodes(double coeff,Collection<FunctionTreeNode> children){
@@ -52,12 +61,13 @@ public abstract class Operation extends FunctionTreeNode {
 
     public abstract void initOperationString();
     public void setOperationString(String s,int d){opSymbol=s;depth=d;}
+    @Override
     public String toString(){
         if(numSubNodes()==0){return "";}
         if(numSubNodes()==1){return getSubNode(0).toString(this);}
         String result=getSubNode(0).toString(this)+opSymbol;
         for(int i=1;i<numSubNodes()-1;i++){result+=getSubNode(i).toString(this)+opSymbol;}
-        return result+getSubNodes().get(numSubNodes()-1).toString(this);
+        return result+getSubNode(numSubNodes()-1).toString(this);
     }
     
     
@@ -100,18 +110,30 @@ public abstract class Operation extends FunctionTreeNode {
         result.addSubNode(-1.0,ftn2);
         return result;
     }
+        /** 
+     * Basic addition operation.<br><br>
+     * Really, the node represents a product of elements to powers, so that each subnode
+     * comes equipped with an integer power. This combines multiplication/division/powers into a unified class.
+     * The first subnode element is used to represent the constant summand, and all constant values are
+     * accumulated here, even before simplification.
+     * If told to add an "Add" subNode, adds its children. This is permitted by associativity.
+     * @author Elisha Peterson
+     */   
+    
     
     
     
     // INSTANCES OF OPERATIONS
     
     /** 
-     * Basic addition operation.<br><br>
+     * Basic addition operation.
+     * 
      * Really, the node represents a linear combination of its subnodes, so that each subnode
      * comes equipped with a coefficient. This combines addition/subtraction into a unified class.
      * The first subnode element is used to represent the constant summand, and all constant values are
      * accumulated here, even before simplification.
      * If told to add an "Add" subNode, adds its children. This is permitted by associativity.
+     * 
      * @author Elisha Peterson
      */   
     public static class Add extends Operation {        
@@ -123,6 +145,7 @@ public abstract class Operation extends FunctionTreeNode {
         public Add(Collection<FunctionTreeNode> as){super();addSubNodes(as);}
         
         /** Initializes notation for the command, as well as the depth. */
+        @Override
         public void initOperationString(){setOperationString("+",5);}
         
         /** Override the standard addSubNode to treat constants in a special way. */
@@ -130,6 +153,7 @@ public abstract class Operation extends FunctionTreeNode {
         public FunctionTreeNode addSubNode(FunctionTreeNode child){return addSubNode(1.0,child);}
         
         /** Adds a subnode with the specified coefficient. */
+        @Override
         public FunctionTreeNode addSubNode(double coeff,FunctionTreeNode child){
             if(coeff==0||child==null){return this;}
             if(child instanceof Add){
@@ -137,35 +161,29 @@ public abstract class Operation extends FunctionTreeNode {
                     addSubNode(coeff*((Add)child).getCoefficient(i),child.getSubNode(i));
                 }
             }else if(child.isValidSubNode()){
-                if(child.isNumber()){addNumericNode(coeff*child.getValue());
-                }else{super.addSubNode(child);coefficient.add(coeff);
+                try {
+                    addNumericNode(coeff*child.getValue());
+                } catch (FunctionValueException ex) {
+                    super.addSubNode(child);
+                    coefficient.add(coeff);
                 }
             }
             return this;
         }
         
         /** Adds a numeric node, if none present. Otherwise, adds value to the existing numeric node. */
+        @Override
         public FunctionTreeNode addNumericNode(double coeff){
             if(coeff==0){return this;}
             if(numSubNodes()==0){super.addSubNode(new Constant(coeff));coefficient.add(1.0);
             }else if(getSubNode(0) instanceof Constant){((Constant)getSubNode(0)).add(coeff);
-            }else{getSubNodes().insertElementAt(new Constant(coeff),0);coefficient.insertElementAt(1.0,0);
+            }else{children.insertElementAt(new Constant(coeff),0);coefficient.insertElementAt(1.0,0);
             }
             return this;
-        }
-
-        /** Returns value given table of variables. */
-        public Double getValue(TreeMap<Variable, Double> table){
-            Double result=0.0;
-            try{
-                for(int i=0;i<numSubNodes();i++){result+=coefficient.get(i)*getSubNode(i).getValue(table);}
-            }catch(NullPointerException e){
-                return null;
-            }
-            return result;
-        }
+        }    
         
         /** Computes the derivative tree corresponding to this function. */
+        @Override
         public FunctionTreeNode derivativeTree(Variable v) {
             //may want to add this: if(isNumber()){return Constant.ZERO;}
             Add result=new Add();
@@ -186,18 +204,19 @@ public abstract class Operation extends FunctionTreeNode {
         @Override
         public FunctionTreeNode simplified() {
             // First check to see if result is numeric.
-            if(isNumber()){return new Constant(getValue()).simplified();}
+            try{return new Constant(getValue()).simplified();}
+            catch(FunctionValueException e){}
             Vector<Boolean> added=new Vector<Boolean>();
-            for(FunctionTreeNode ftn:getSubNodes()){added.add(false);}
+            for(FunctionTreeNode ftn:children){added.add(false);}
             double constantSummand=0;
             double coeff=0;
             Add result=new Add();
             for(int i=0;i<numSubNodes();i++){
                 if(added.get(i)){continue;}
                 added.set(i,true);
-                if(getSubNode(i).isNumber()){
+                try{
                     constantSummand+=coefficient.get(i)*getSubNode(i).getValue();
-                }else{
+                }catch(FunctionValueException e){
                     coeff=coefficient.get(i);
                     for(int j=i+1;j<numSubNodes();j++){
                         if(added.get(j)){continue;}
@@ -236,18 +255,43 @@ public abstract class Operation extends FunctionTreeNode {
             }
             return result;
         }
+
         
+        // METHODS TO RETURN VALUE
+        
+        @Override
+        public Double getValue(String s, Double d) throws FunctionValueException {
+            Double result=0.0;
+            for(int i=0;i<numSubNodes();i++){result+=coefficient.get(i)*getSubNode(i).getValue(s,d);}
+            return result;
+        }
+        @Override
+        public Double getValue(TreeMap<String, Double> table) throws FunctionValueException{
+            Double result=0.0;
+            for(int i=0;i<numSubNodes();i++){result+=coefficient.get(i)*getSubNode(i).getValue(table);}
+            return result;
+        }
+
+        @Override
+        public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
+            Vector<Vector<Double>> subValues=getSubNodeValues(s,d);
+            Vector<Double> result=new Vector<Double>(d.size());
+            double curValue;
+            for(int j=0;j<d.size();j++){
+                curValue=0.0;
+                for(int i=0;i<numSubNodes();i++){
+                    curValue+=coefficient.get(i)*subValues.get(i).get(j);
+                }
+                result.add(curValue);
+            }
+            return result;
+        }
+
     } // class Operation.Add
     
-        /** 
-     * Basic addition operation.<br><br>
-     * Really, the node represents a product of elements to powers, so that each subnode
-     * comes equipped with an integer power. This combines multiplication/division/powers into a unified class.
-     * The first subnode element is used to represent the constant summand, and all constant values are
-     * accumulated here, even before simplification.
-     * If told to add an "Add" subNode, adds its children. This is permitted by associativity.
-     * @author Elisha Peterson
-     */   
+    
+    
+    
     public static class Multiply extends Operation {
         
         public Multiply(){super();}
@@ -268,6 +312,7 @@ public abstract class Operation extends FunctionTreeNode {
         public FunctionTreeNode addSubNode(FunctionTreeNode child){return addSubNode(1.0,child);}
         
         /** Adds a subnode with the specified coefficient. */
+        @Override
         public FunctionTreeNode addSubNode(double coeff,FunctionTreeNode child){
             if(coeff==0||child==null){return this;}
             if(child instanceof Multiply){
@@ -275,36 +320,30 @@ public abstract class Operation extends FunctionTreeNode {
                     addSubNode(coeff*((Multiply)child).getCoefficient(i),child.getSubNode(i));
                 }
             }else if(child.isValidSubNode()){
-                if(child.isNumber()){addNumericNode(Math.pow(child.getValue(),coeff));
-                }else{super.addSubNode(child);coefficient.add(coeff);
+                try{
+                    addNumericNode(Math.pow(child.getValue(),coeff));
+                }catch(FunctionValueException e){
+                    super.addSubNode(child);
+                    coefficient.add(coeff);
                 }
             }
             return this;
         }
         
         /** Adds a numeric node, if none present. Otherwise, adds value to the existing numeric node. */
+        @Override
         public FunctionTreeNode addNumericNode(double coeff){
-            if(coeff==0){coefficient.clear();getSubNodes().clear();}
+            if(coeff==0){coefficient.clear();children.clear();}
             if(coeff==1){return this;}
             if(numSubNodes()==0){super.addSubNode(new Constant(coeff));coefficient.add(1.0);
             }else if(getSubNode(0) instanceof Constant){((Constant)getSubNode(0)).multiplyBy(coeff);
-            }else{getSubNodes().insertElementAt(new Constant(coeff),0);coefficient.insertElementAt(1.0,0);
+            }else{children.insertElementAt(new Constant(coeff),0);coefficient.insertElementAt(1.0,0);
             }
             return this;
         }
-
-        /** Returns value given table of variables. */
-        public Double getValue(TreeMap<Variable, Double> table){
-            Double result=1.0;
-            try{
-                for(int i=0;i<numSubNodes();i++){result*=Math.pow(getSubNode(i).getValue(table),coefficient.get(i));}
-            }catch(NullPointerException e){
-                return null;
-            }
-            return result;
-        }
         
         /** Computes the derivative tree corresponding to this function. */
+        @Override
         public FunctionTreeNode derivativeTree(Variable v) {
             //may want to add this: if(isNumber()){return Constant.ZERO;}
             Vector<FunctionTreeNode> summands=new Vector<FunctionTreeNode>();
@@ -342,18 +381,19 @@ public abstract class Operation extends FunctionTreeNode {
         @Override
         public FunctionTreeNode simplified() {
             // First check to see if result is numeric.
-            if(isNumber()){return new Constant(getValue()).simplified();}
+            try{return new Constant(getValue()).simplified();}
+            catch(FunctionValueException e){}
             Vector<Boolean> multiplied=new Vector<Boolean>();
-            for(FunctionTreeNode ftn:getSubNodes()){multiplied.add(false);}
+            for(FunctionTreeNode ftn:children){multiplied.add(false);}
             double constantElement=1;
             double coeff=0;
             Multiply result=new Multiply();
             for(int i=0;i<numSubNodes();i++){
                 if(multiplied.get(i)){continue;}
                 multiplied.set(i,true);
-                if(getSubNode(i).isNumber()){
+                try{
                     constantElement*=Math.pow(getSubNode(i).getValue(),coefficient.get(i));
-                }else{
+                }catch(FunctionValueException e){
                     coeff=coefficient.get(i);
                     for(int j=i+1;j<numSubNodes();j++){
                         if(multiplied.get(j)){continue;}
@@ -387,9 +427,10 @@ public abstract class Operation extends FunctionTreeNode {
             case 2:
                 int numericNode=getSubNode(0).isNumber()?0:1;
                 if(getSubNode(numericNode).isNumber()&&coefficient.get(1-numericNode)==1){
-                    return new Add(Math.pow(getSubNode(numericNode).getValue(),coefficient.get(numericNode)),
-                            getSubNode(1-numericNode));
-                }
+                try {
+                    return new Add(Math.pow(getSubNode(numericNode).getValue(), coefficient.get(numericNode)), getSubNode(1 - numericNode));
+                } catch (FunctionValueException ex) {}
+                }                
                 break;
             }
             return this;
@@ -418,8 +459,42 @@ public abstract class Operation extends FunctionTreeNode {
             if(result.startsWith("-1*")){return "-"+result.substring(3);}
             return result;
         }
+
+
         
+        // VALUE METHODS
+        
+        @Override
+        public Double getValue(String s, Double d) throws FunctionValueException {
+            Double result=1.0;
+            for(int i=0;i<numSubNodes();i++){result*=Math.pow(getSubNode(i).getValue(s,d),coefficient.get(i));}
+            return result;
+        }
+
+        public Double getValue(TreeMap<String, Double> table) throws FunctionValueException {
+            Double result=1.0;
+            for(int i=0;i<numSubNodes();i++){result*=Math.pow(getSubNode(i).getValue(table),coefficient.get(i));}
+            return result;
+        }
+        
+        @Override
+        public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
+            Vector<Vector<Double>> subValues=getSubNodeValues(s,d);
+            Vector<Double> result=new Vector<Double>(d.size());
+            double curValue;
+            for(int j=0;j<d.size();j++){
+                curValue=1.0;
+                for(int i=0;i<numSubNodes();i++){
+                    curValue*=Math.pow(subValues.get(i).get(j),coefficient.get(i));
+                }
+                result.add(curValue);
+            }
+            return result;
+        }        
+       
     } // class Operation.Multiply
+    
+    
     
     
     /** Power operation. */
@@ -432,48 +507,88 @@ public abstract class Operation extends FunctionTreeNode {
         @Override
         public boolean isValidSubNode(){return numSubNodes()==2;}
         
+        @Override
         public void initOperationString(){setOperationString("^",1);}
         public void setSubNodes(FunctionTreeNode base,FunctionTreeNode power){addSubNode(base);addSubNode(power);}
         public FunctionTreeNode basePart(){return getSubNode(0);}
-        public FunctionTreeNode powerPart(){return (numSubNodes()==2)?getSubNode(1):new Power(getSubNodes().subList(1,numSubNodes()));}
-                
-        public Double getValue(TreeMap<Variable,Double> table){return Math.pow(basePart().getValue(table),powerPart().getValue(table));}
+        public FunctionTreeNode powerPart(){return (numSubNodes()==2)?getSubNode(1):new Power(children.subList(1,numSubNodes()));}
+               
+        @Override
         public FunctionTreeNode derivativeTree(Variable v) {
             if(powerPart().isNumber()){
-                return new Operation.Multiply(powerPart(),new Power(basePart(),powerPart().getValue()-1),basePart().derivativeTree(v));
+                try {
+                    return new Operation.Multiply(powerPart(), new Power(basePart(), powerPart().getValue() - 1), basePart().derivativeTree(v));
+                } catch (FunctionValueException ex) {}
             }else if(basePart().equals(Constant.E)){
                 return new Operation.Multiply(powerPart().derivativeTree(v),this);
             }else if(basePart().isNumber()){
-                return new Operation.Multiply(Math.log(basePart().getValue()),this,powerPart().derivativeTree(v));
+                try {
+                    return new Operation.Multiply(Math.log(basePart().getValue()), this, powerPart().derivativeTree(v));
+                } catch (FunctionValueException ex) {}
             }else{
                 return new Operation.Add(
                     new Operation.Multiply(powerPart(),new Power(basePart(),subtractNode(powerPart(),Constant.ONE)),basePart().derivativeTree(v)),
                     new Operation.Multiply(this,new Exponential.Log(basePart()),powerPart().derivativeTree(v)));
             }
+            return null;
         }
 
         @Override
         public FunctionTreeNode simplified(){
-            if(isNumber()){return new Constant(getValue()).simplified();}
+            try{
+                return new Constant(getValue()).simplified();
+            }catch(FunctionValueException e){}
             if(powerPart().isNumber()){
-                if(powerPart().equals(0)){return Constant.ONE;
-                }else if(powerPart().equals(1)){return basePart();}
-                Multiply result=new Multiply();
-                result.addSubNode(powerPart().getValue(),basePart());
-                return result;
+                try {
+                    if (powerPart().equals(0)) {
+                        return Constant.ONE;
+                    } else if (powerPart().equals(1)) {
+                        return basePart();
+                    }
+                    Multiply result = new Multiply();
+                    result.addSubNode(powerPart().getValue(), basePart());
+                    return result;
+                } catch (FunctionValueException ex) {}
             }
             if(basePart().equals(1)){return Constant.ONE;}
             if(basePart().equals(0)){return Constant.ZERO;}
             return this;
         }
 
+        @Override
         public FunctionTreeNode addSubNode(double coeff, FunctionTreeNode child) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public FunctionTreeNode addNumericNode(double coeff) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
+        
+        
+        // VALUE METHODS
+        
+        @Override
+        public Double getValue(String s, Double d) throws FunctionValueException {
+            return Math.pow(basePart().getValue(s,d),powerPart().getValue(s,d));
+        }
+        
+        @Override
+        public Double getValue(TreeMap<String,Double> table) throws FunctionValueException {
+            return Math.pow(basePart().getValue(table),powerPart().getValue(table));
+        }
+        
+        /** Returns list of values given a particular variable assignment. */
+        @Override
+        public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
+            Vector<Double> baseValues=basePart().getValue(s, d);
+            Vector<Double> powerValues=powerPart().getValue(s, d);
+            Vector<Double> result=new Vector<Double>(d.size());
+            for(int j=0;j<d.size();j++){result.add(Math.pow(baseValues.get(j),powerValues.get(j)));}
+            return result;
+        }        
+
     } // POWER SUB-CLASS
 
 } // OPERATION CLASS

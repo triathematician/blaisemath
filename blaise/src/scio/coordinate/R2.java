@@ -14,6 +14,8 @@ import scio.coordinate.Coordinate;
  * @author Elisha Peterson
  */
 public class R2 extends Point2D.Double implements Coordinate {
+    public static final R2 Origin=new R2(0,0);
+    
     public R2(){super(0,0);}
     public R2(double x,double y){super(x,y);}
     public R2(Point2D.Double p){x=p.x;y=p.y;}

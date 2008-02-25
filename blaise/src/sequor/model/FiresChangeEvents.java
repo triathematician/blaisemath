@@ -37,7 +37,7 @@ public abstract class FiresChangeEvents {
     
     /** Basic support for string manipulation. */
     public abstract void setValue(String s);
-    public abstract String toLongString();
+    public String toLongString(){return toString();}
     
     public abstract PropertyChangeEvent getChangeEvent(String s);
     /** Event handling code copied from DefaultBoundedRangeModel. */      
@@ -53,6 +53,5 @@ public abstract class FiresChangeEvents {
                 ((ChangeListener)listeners[i+1]).stateChanged(changeEvent);
             }
         }
-    }
-    
+    }    
 }
