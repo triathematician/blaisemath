@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 import sequor.model.PointRangeModel;
+import sequor.style.PointStyle;
 import specto.dynamicplottable.Point2D;
 
 /**
@@ -33,9 +34,9 @@ public class CircledPoint extends Point2D {
     @Override
     public void paintComponent(Graphics2D g) {
         super.paintComponent(g);
-        if(style==MEDIUM){
+        if(style.getStyle()==PointStyle.MEDIUM){
             for(double r:radii){
-                g.draw(visometry.circle(point,r));
+                g.draw(visometry.circle(getPoint(),r));
             }
         }
     }

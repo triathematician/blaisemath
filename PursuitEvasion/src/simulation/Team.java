@@ -9,6 +9,7 @@
 
 package simulation;
 
+import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import goal.Goal;
 import behavior.*;
@@ -314,7 +315,13 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public int getBehavior(){return tes.behavior.getValue();}
     public double getLeadFactor(){return tes.leadFactor.getValue();}
     public Color getColor(){return tes.color.getValue();}
-    public R2 getPositionTime(double t){return new R2(tes.pm.getValue(t));}
+    public R2 getPositionTime(double t){
+        try {
+            return new R2(tes.pm.getValue(t));
+        } catch (FunctionValueException ex) {
+            return R2.Origin;
+        }
+}
     public Double getValue(){return value;}
     
     public void setSensorRange(double newValue){tes.sensorRange.setValue(newValue);}

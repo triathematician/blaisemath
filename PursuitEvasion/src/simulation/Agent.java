@@ -5,6 +5,9 @@
 
 package simulation;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
@@ -236,7 +239,13 @@ public class Agent implements TaskGenerator {
     public Color getColor(){return ags.color.getValue();}
     @Override
     public String toString(){return ags.toString();}
-    public R2 getPositionTime(double t){return new R2(ags.pm.getValue(t));}
+    public R2 getPositionTime(double t){
+        try {
+            return new R2(ags.pm.getValue(t));
+        } catch (FunctionValueException ex) {
+            return R2.Origin;
+        }
+    }
     public boolean isActive(){return active;}
     
     public void deactivate(){active=false;}
