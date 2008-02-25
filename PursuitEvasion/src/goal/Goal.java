@@ -5,6 +5,8 @@
 
 package goal;
 
+import java.util.Vector;
+import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,7 +83,9 @@ public class Goal implements Function<DistanceTable,Double>{
      * Assigns tasks to team based upon the tasking algorithm.
      */
     public void assignTasks(){
-        tasker.assign(gs.owner,this,getWeight());
+        if(tasker!=null){
+            tasker.assign(gs.owner,this,getWeight());
+        }
     }
     
     /** 
@@ -124,6 +128,10 @@ public class Goal implements Function<DistanceTable,Double>{
     
     // UNSUPPORTED OPERATIONS
 
+    public Vector<Double> getValue(Vector<DistanceTable> x) throws FunctionValueException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     public Double minValue() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
