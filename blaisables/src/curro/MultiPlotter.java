@@ -28,14 +28,23 @@ public class MultiPlotter extends javax.swing.JFrame {
         plm=new ParameterListModel();
         plm.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
-                if(e.getSource().equals("add")){plm.updatePanel(jPanel2);}
+                if((e.getSource() instanceof ParameterListModel)&&(((ParameterListModel)plm).isAdded())){
+                    ((ParameterListModel)plm).updatePanel(jPanel2);
+                }
             }
         });    
         initComponents();  
         ftm=new FunctionTreeModel("a*sin(b*(x-c))+d","x");
-        ftm2=new FunctionTreeModel(ftm.getRoot().derivativeTree("x").simplified());
+        ftm2=new FunctionTreeModel(ftm.getRoot().derivativeTree("x").fullSimplified());
+        ftm.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){ 
+                try{
+                    ftm2.setValue(ftm.getRoot().derivativeTree("x").fullSimplified().toString());
+                }catch(NullPointerException exc){}
+            }
+        });
+        plot2D1.add(new Function2D(ftm2,Color.lightGray));
         plot2D1.add(new Function2D(ftm));
-        plot2D1.add(new Function2D(ftm2));
         plm.addChangeListener(ftm);  
         plm.addChangeListener(ftm2);
         plm.setParameterValue("a",1.0);
@@ -43,8 +52,8 @@ public class MultiPlotter extends javax.swing.JFrame {
         plm.setParameterValue("c",Math.PI/2);
         plm.setParameterValue("d",-1.0);
         Settings s=new Settings();
-        s.add(new SettingsProperty("f(x)=",ftm,Settings.EDIT_FUNCTION));
-        s.add(new SettingsProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION));
+        s.addProperty("f(x)=",ftm,Settings.EDIT_FUNCTION);
+        s.addProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION);
         s.initPanel(jPanel1);
         plot2D1.repaint();
     }
