@@ -38,13 +38,17 @@ public class Simulation implements ChangeListener {
     Vector<PointRangeModel> eStartsAt;
     Vector<PointSet2D> pPaths;
     Vector<PointSet2D> ePaths;
+    Vector<Double> pDirections;
+    Vector<Double> eDirections;
     
     public Simulation(){
         settings=new SimSettings();
         pStartsAt=new Vector<PointRangeModel>(getNP());
-        pPaths=new Vector<PointSet2D>(getNE());
+        pPaths=new Vector<PointSet2D>(getNP());
+        pDirections=new Vector<Double>(getNP());
         eStartsAt=new Vector<PointRangeModel>(getNE());
         ePaths=new Vector<PointSet2D>(getNE());
+        eDirections=new Vector<Double>(getNE());
     }
     
     /** resets the entire simulation */
@@ -116,9 +120,13 @@ public class Simulation implements ChangeListener {
     }
     
     /** Returns last current position. */
-    double curPPos(int i){return getPPath(i).lastElement().x;}   
+    Double curPPos(int i){return getPPath(i).lastElement().x;}   
     /** Returns evader's current position. */
-    double curEPos(int i){return getEPath(i).lastElement().x;}  
+    Double curEPos(int i){return getEPath(i).lastElement().x;}  
+    /** Returns previous pursuer position. */
+    Double lastPPos(int i){if(getPPath(i).size()<=1){return null;}else{return getPPath(i).get(getPPath(i).size()-1).x;}}
+    /** Returns previous pursuer position. */
+    Double lastEPos(int i){if(getEPath(i).size()<=1){return null;}else{return getEPath(i).get(getEPath(i).size()-1).x;}}
     /** Returns ith pursuer path. */
     Vector<R2> getPPath(int i){return pPaths.get(i).getPath();}    
     /** Returns ith evader path. */
@@ -128,7 +136,7 @@ public class Simulation implements ChangeListener {
         Vector<Double> result=new Vector<Double>();
         for(int i=0;i<getNP();i++){result.add(curPPos(i));}
         return result;
-    }
+    } 
     /** Returns vector of pursuer positions. */
     Vector<Double> getEvaderPositions(){
         Vector<Double> result=new Vector<Double>();
@@ -149,22 +157,61 @@ public class Simulation implements ChangeListener {
     public void run(){runSimulation(getNumSteps());} 
     
     /** Main loop for the simulation. Performs one iteration. */
-    void loopSimulation(int curStep){        
+    void loopSimulation(int curStep){     
+        // compute directions of all players for use in algorithms
+        computeDirections();        
+        
+        // determine new positions of all players
         Vector<Double> newEPos=Algorithms.evadersTowardOrigin(getEvaderPositions(), getPursuerPositions(), this, curStep);
         Vector<Double> newPPos=Algorithms.pursuersTowardClosest(getEvaderPositions(), getPursuerPositions(), this, curStep);
         
+        // moves captured players outside the playing field
+        moveCapturedPlayersToInfinity(newPPos,newEPos);
+        
+        // add new points onto the displayed paths
+        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
+        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));}
+    }
+    
+    /** Computes directions in which each player is heading. Returns +1,0, or -1. If not enough data to determine a direction, returns 0. */
+    void computeDirections(){
+        pDirections.clear();
+        for(int i=0;i<getNP();i++){
+            if(lastPPos(i)==null){
+                pDirections.add(0.0);
+            }else if(lastPPos(i)<curPPos(i)){
+                pDirections.add(1.0);
+            }else if(lastPPos(i)>curPPos(i)){
+                pDirections.add(-1.0);
+            }else{
+                pDirections.add(0.0);
+            }
+        }
+        eDirections.clear();
+        for(int i=0;i<getNE();i++){
+            if(lastEPos(i)==null){
+                eDirections.add(0.0);
+            }else if(lastEPos(i)<curEPos(i)){
+                eDirections.add(1.0);
+            }else if(lastEPos(i)>curEPos(i)){
+                eDirections.add(-1.0);
+            }else{
+                eDirections.add(0.0);
+            }
+        }
+    }
+    
+    /** Moves captured players to infinity. */
+    void moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions){
         // if any two elements are closer than capture distance, remove to infinity.
         for(int i=0;i<getNP();i++){
             for(int j=0;j<getNE();j++){
-                if(Math.abs(newPPos.get(i)-newEPos.get(j))<getCaptureRange()){
-                    newPPos.set(i,Double.POSITIVE_INFINITY);
-                    newEPos.set(j,Double.NEGATIVE_INFINITY);
+                if(Math.abs(pursuerPositions.get(i)-evaderPositions.get(j))<getCaptureRange()){
+                    pursuerPositions.set(i,Double.POSITIVE_INFINITY);
+                    evaderPositions.set(j,Double.NEGATIVE_INFINITY);
                 }
             }
         }
-        // add new points onto the paths
-        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
-        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));}
     }
     
     // Bean patterns

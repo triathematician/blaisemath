@@ -43,7 +43,7 @@ public class Algorithms {
         // pursuing elements chase closest evader
         Vector<Double> result=new Vector<Double>();
         for(int i=0;i<pursuerPosition.size();i++){
-            double closestEvader=getClosestTo(evaderPosition,pursuerPosition.get(i));
+            Double closestEvader=getClosestTo(evaderPosition,pursuerPosition.get(i));
             if(closestEvader<pursuerPosition.get(i)){
                 result.add(pursuerPosition.get(i)-sim.getPSpeed()*sim.getStepSize());
             }else{
@@ -57,8 +57,8 @@ public class Algorithms {
     // UTILITY METHODS
 
    /** Returns closest in a list of doubles to the double given. */
-   public static double getClosestTo(Vector<Double> opponentPositions,Double position){
-        double minDist=Double.MAX_VALUE;
+   public static Double getClosestTo(Vector<Double> opponentPositions,Double position){
+        Double minDist=Double.POSITIVE_INFINITY;
         int minIndex=0;
         for(int j=0;j<opponentPositions.size();j++){
             if(Math.abs(position-opponentPositions.get(j))<minDist){
