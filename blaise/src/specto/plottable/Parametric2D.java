@@ -6,8 +6,6 @@
 
 package specto.plottable;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import java.awt.Color;
@@ -15,6 +13,7 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
+import specto.visometry.Euclidean2;
 
 /**
  * Draws a parametric function on the plane. In other words, it contains two functions which give the x and y coordinates
@@ -60,10 +59,11 @@ public class Parametric2D extends PointSet2D {
         };
         
     /** Default constructor uses the default function and t between 0 and 2pi */
-    public Parametric2D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
+    public Parametric2D(Euclidean2 vis){this(vis,DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
     
     /** Constructor for use with a particular function and range of t values */
-    public Parametric2D(Function<Double,R2> function,double tMin,double tMax,int samplePoints){
+    public Parametric2D(Euclidean2 vis,Function<Double,R2> function,double tMin,double tMax,int samplePoints){
+        super(vis);
         setColor(Color.BLUE);
         this.function=function;
         this.tMin=tMin;

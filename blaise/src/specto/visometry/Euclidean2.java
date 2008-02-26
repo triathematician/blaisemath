@@ -241,7 +241,7 @@ public class Euclidean2 extends Visometry<R2> {
         pressedAt=e.getPoint();
         mode=e.getModifiersExText(e.getModifiersEx());
         if(mode.equals("Alt+Button1")){
-            zoomBox=new Rectangle2D(toGeometryX(pressedAt.x),toGeometryY(pressedAt.y),toGeometryX(pressedAt.x),toGeometryY(pressedAt.y));
+            zoomBox=new Rectangle2D(this,toGeometryX(pressedAt.x),toGeometryY(pressedAt.y),toGeometryX(pressedAt.x),toGeometryY(pressedAt.y));
             container.add(zoomBox);
         }else {
             oldMin=new R2(desiredMin);

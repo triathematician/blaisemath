@@ -43,10 +43,11 @@ public class VectorField2D extends Plottable<Euclidean2> {
         public R2 minValue(){return new R2(-10.0,-10.0);}
         public R2 maxValue(){return new R2(10.0,10.0);}
         };
-    public VectorField2D(){
-        this(DEFAULT_FUNCTION);
+    public VectorField2D(Euclidean2 vis){
+        this(vis,DEFAULT_FUNCTION);
     }
-    public VectorField2D(Function<R2,R2> function){
+    public VectorField2D(Euclidean2 vis,Function<R2,R2> function){
+        super(vis);
         setOptionsMenuBuilding(true);
         color=Color.GRAY;
         this.function=function;

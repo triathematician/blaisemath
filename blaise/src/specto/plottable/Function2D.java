@@ -19,6 +19,7 @@ import sequor.component.RangeTimer;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
 import sequor.model.FunctionTreeModel;
+import specto.visometry.Euclidean2;
 
 /**
  * Draws a one-input/one-output function on the Cartesian Plane. Requires a function to work.
@@ -29,9 +30,11 @@ public class Function2D extends PointSet2D{
     boolean swapXY=false;
     Function<Double,Double> function;
         
-    public Function2D() {this(new FunctionTreeModel());}
-    public Function2D(Function<Double,Double> function){this.function=function;}
-    public Function2D(FunctionTreeModel functionModel){
+    public Function2D(Euclidean2 vis,Function<Double,Double> function){super(vis);this.function=function;}
+    public Function2D(Euclidean2 vis){this(vis,new FunctionTreeModel());}
+    public Function2D(Euclidean2 vis,FunctionTreeModel ftm, Color color) {this(vis,ftm);setColor(color);}
+    public Function2D(Euclidean2 vis,FunctionTreeModel functionModel){
+        super(vis);
         function=functionModel.getRoot();
         functionModel.addChangeListener(new ChangeListener(){
             @Override
@@ -40,7 +43,6 @@ public class Function2D extends PointSet2D{
             }
         });
     }
-    public Function2D(FunctionTreeModel ftm, Color color) {this(ftm);setColor(color);}
     
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){

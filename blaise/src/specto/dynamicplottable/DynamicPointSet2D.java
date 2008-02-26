@@ -6,7 +6,7 @@
 package specto.dynamicplottable;
 
 import java.awt.Graphics2D;
-import specto.plottable.PlottableCollection;
+import specto.PlottableGroup;
 import specto.visometry.Euclidean2;
 
 /**
@@ -15,10 +15,10 @@ import specto.visometry.Euclidean2;
  * </p>
  * @author Elisha Peterson
  */
-public class DynamicPointSet2D extends PlottableCollection<Euclidean2>{
-    public DynamicPointSet2D(){
-        super();
-        addPlottable(new Point2D());
+public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
+    public DynamicPointSet2D(Euclidean2 vis){
+        super(vis);
+        add(new Point2D(vis));
     }
 
     @Override

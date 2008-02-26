@@ -28,7 +28,7 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     /** Default constructor */
     public Plot2D(){
         super(new Euclidean2());
-        add(new Grid2D());
+        add(new Grid2D(getVisometry()));
     }
 
 

@@ -66,6 +66,7 @@ public class PlotLayer<V extends Visometry> extends JLayeredPane {
     @Override
     public void paintComponent(Graphics gb){
         for(Plottable p:plottables){
+            p.paintDecorations((Graphics2D)gb);
             p.paintComponent((Graphics2D)gb);
         }
     }
@@ -73,8 +74,11 @@ public class PlotLayer<V extends Visometry> extends JLayeredPane {
     public void paintComponent(Graphics gb,RangeTimer timer){
         if(!animates){return;}
         for(Plottable p:plottables){
+            p.paintDecorations((Graphics2D)gb);
             if(p instanceof Animatable){
                 ((Animatable)p).paintComponent((Graphics2D)gb,timer);
+            }else{
+                p.paintComponent((Graphics2D)gb);
             }
         }        
     }

@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
 import specto.Decoration;
-import specto.plottable.PlottableCollection;
+import specto.PlottableGroup;
 import specto.visometry.Euclidean2;
 
 /**
@@ -22,28 +22,24 @@ import specto.visometry.Euclidean2;
  * </p>
  * @author Elisha Peterson
  */
-public class Segment2D extends Decoration<PlottableCollection<Euclidean2>,Euclidean2> {
-    /** The first point */
-    R2 point1;
-    /** The second point */
-    R2 point2;
+public class Segment2D extends Decoration<Euclidean2> {
+    /** Second point of the segment; the first need not be stored since it is listed under "parent" */
+    Point2D point2;
     
     /** Default constructor */
-    public Segment2D(){
-        point1=new R2();
-        point2=new R2();
-        getParent().addPlottable(new Point2D(point1));
-        getParent().addPlottable(new Point2D(point2));
+    public Segment2D(Point2D point1,Point2D point2){
+        super(point1);
+        this.point2=point2;
     }
 
     /** Returns first point */
-    public R2 getPoint1() {return point1;}
+    public R2 getPoint1() {return ((Point2D)parent).getPoint();}
     /** Sets first point */
-    public void setPoint1(R2 point1) {this.point1 = point1;}
+    public void setPoint1(R2 point1) {((Point2D)parent).setPoint(point1);}
     /** Returns second point */
-    public R2 getPoint2() {return point2;}
+    public R2 getPoint2() {return point2.getPoint();}
     /** Sets second point */
-    public void setPoint2(R2 point2) {this.point2 = point2;}
+    public void setPoint2(R2 point2) {this.point2.setPoint(point2);}
 
     @Override
     public void recompute(){}

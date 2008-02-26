@@ -10,6 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import sequor.component.RangeTimer;
 
 /**
  * This abstract class includes basic functionality for the plotting of some object on
@@ -25,22 +26,31 @@ import javax.swing.event.EventListenerList;
  */
 public abstract class Plottable<V extends Visometry> {
     
+    /** Underlying visometry used by the element. */
     protected V visometry;
     /** Determines whether this adds to options menu. */
-    protected boolean optionsMenuBuilding;
+    protected boolean optionsMenuBuilding=false;
+    /** List of decorations. */
+    protected PlottableGroup<V> decorations;
 
-    public Plottable(){
-        setOptionsMenuBuilding(false);
-    }
+    public Plottable(V v){setVisometry(v);}
     
-    public abstract void recompute();
-    public abstract void paintComponent(Graphics2D g);
-    
-    public void setVisometry(V newVis){visometry=newVis;}
-    
+    public void setVisometry(V newVis){visometry=newVis;}    
+    public V getVisometry(){return visometry;}
     public void setOptionsMenuBuilding(boolean newValue){optionsMenuBuilding=newValue;}
     public boolean isOptionsMenuBuilding(){return optionsMenuBuilding;}
+    public void addDecoration(Decoration<V> d){
+        if(decorations==null){decorations=new PlottableGroup<V>(visometry);}
+        decorations.add(d);
+        d.setParent(this);
+    }
     public abstract JMenu getOptionsMenu();
+
+    public abstract void recompute();
+    public void paintDecorations(Graphics2D g){if(decorations!=null){decorations.paintComponent(g);}}
+    public void paintDecorations(Graphics2D g,RangeTimer t){if(decorations!=null){decorations.paintComponent(g,t);}}
+    public abstract void paintComponent(Graphics2D g);
+    
     
     // EVENT HANDLING
     

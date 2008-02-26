@@ -33,24 +33,19 @@ import specto.visometry.Euclidean2;
  */
 public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>{
     Vector<R2> points;
-    public PointSet2D(){
-        setOptionsMenuBuilding(true);
-        points=new Vector<R2>();
-    }
-    public PointSet2D(Vector<R2> points,Color c){
+    public PointSet2D(Euclidean2 vis){this(vis,new Vector<R2>(),Color.BLACK);}
+    public PointSet2D(Euclidean2 vis,Color c){this(vis,new Vector<R2>(),c);}
+    public PointSet2D(Euclidean2 vis,Vector<R2> points,Color c){
+        super(vis);
         setOptionsMenuBuilding(true);
         this.points=points;
-        setColor(c);
-    }
-    public PointSet2D(Color c){
-        setOptionsMenuBuilding(true);
-        points=new Vector<R2>();
         setColor(c);
     }
     
     public Vector<R2> getPath(){
         return points;
     }
+    public void setPath(Vector<R2> path){points=path;}
     
     
     // DRAW METHODS

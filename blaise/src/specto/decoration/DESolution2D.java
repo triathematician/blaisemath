@@ -5,18 +5,13 @@
 
 package specto.decoration;
 
-import javax.swing.JMenu;
 import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import specto.plottable.PointSet2D;
 import java.awt.Graphics2D;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import scio.function.Function;
-import specto.Animatable;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
-import specto.Decoration;
 import specto.plottable.VectorField2D;
 import specto.visometry.Euclidean2;
 
@@ -26,39 +21,30 @@ import specto.visometry.Euclidean2;
  * <br><br>
  * @author ae3263
  */
-public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Animatable,ChangeListener{
+public class DESolution2D extends InitialPointSet2D {
     /** The underlying vector field. */
     Function<R2,R2> function;
-    /** The forwards solution. */
-    PointSet2D fSolution;
     /** The backwards solution. */
-    PointSet2D rSolution;
-    
-    public DESolution2D(){
-        setParent(new Point2D());
-        function=VectorField2D.DEFAULT_FUNCTION;
-        addChangeListener(this);
-    }
+    PointSet2D reversePath;
+    /** Whether to show the "reverse path" */
+    boolean showReverse=true;
     
     public DESolution2D(Point2D parent){
-        setParent(parent);
+        super(parent);
         function=VectorField2D.DEFAULT_FUNCTION;
-        addChangeListener(this);
     }
     
     /** Initializes solution curve models. */
     void initSolutionCurves(){
-        if(fSolution==null){
-            fSolution=new PointSet2D();
-            fSolution.setVisometry(visometry);
+        if(path==null){
+            path=new PointSet2D(visometry);
         }
-        if(rSolution==null){
-            rSolution=new PointSet2D();
-            rSolution.setVisometry(visometry);
-            rSolution.setStyle(PointSet2D.DOTTED);
+        if(reversePath==null){
+            reversePath=new PointSet2D(visometry);
+            reversePath.setStyle(PointSet2D.DOTTED);
         }
-        fSolution.getPath().clear();
-        rSolution.getPath().clear();
+        path.getPath().clear();
+        reversePath.getPath().clear();
     }
     
     /** Re-calculates the solution curves, using Newton's Method.
@@ -67,17 +53,17 @@ public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Anim
      */
     void calcNewton(int steps,double stepSize) throws FunctionValueException{
         initSolutionCurves();
-        R2 cur=getParent().getPoint();
+        R2 cur=((Point2D)getParent()).getPoint();
         R2 dir=new R2(0,0);
         for(int i=0;i<steps;i++){
-            fSolution.getPath().add(cur.plus(dir));
+            path.getPath().add(cur.plus(dir));
             dir=function.getValue(cur).scaledToLength(stepSize);
             cur=cur.plus(dir);
         }
-        cur=getParent().getPoint();
+        cur=((Point2D)getParent()).getPoint();
         dir=new R2(0,0);
         for(int i=0;i<steps;i++){            
-            rSolution.getPath().add(cur.minus(dir));
+            reversePath.getPath().add(cur.minus(dir));
             dir=function.getValue(cur).scaledToLength(stepSize);
             cur=cur.minus(dir);
         }
@@ -85,19 +71,14 @@ public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Anim
 
     @Override
     public void paintComponent(Graphics2D g) {
-        if(fSolution!=null){fSolution.paintComponent(g);}
-        if(rSolution!=null){rSolution.paintComponent(g);}
+        if(path!=null){path.paintComponent(g);}
+        if(showReverse&&reversePath!=null){reversePath.paintComponent(g);}
     }
 
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){
-        if(fSolution!=null){fSolution.paintComponent(g,t);}
-        if(rSolution!=null){rSolution.paintComponent(g,t);}
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        recompute();
+        if(path!=null){path.paintComponent(g,t);}
+        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,t);}
     }
 
     @Override
@@ -105,10 +86,5 @@ public class DESolution2D extends Decoration<Point2D,Euclidean2> implements Anim
         try {
             calcNewton(500, .04);
         } catch (FunctionValueException ex) {}
-    }
-
-    @Override
-    public JMenu getOptionsMenu() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

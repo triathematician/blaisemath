@@ -31,6 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import specto.visometry.Euclidean2;
 
 /**
  * This is a superclass for plot windows. It implements component handling and drawing
@@ -38,7 +39,7 @@ import javax.swing.event.ChangeListener;
  * <br><br>
  * @author Elisha Peterson
  */
-public class PlotPanel<V extends Visometry> extends JPanel 
+public abstract class PlotPanel<V extends Visometry> extends JPanel 
         implements ActionListener,ChangeListener,MouseListener,MouseMotionListener,MouseWheelListener {
     
     
@@ -47,9 +48,9 @@ public class PlotPanel<V extends Visometry> extends JPanel
     /** The underlying visometry, which describes coordinate transformations. */
     private V visometry;
     /** Contains all the basic components. */    
-    private Vector<Plottable<V>> basicComponents;
+    private PlottableGroup<V> basicComponents;
     /** Contains components which receive mouse input. */
-    private Vector<DynamicPlottable<V>> dynamicComponents;
+    private PlottableGroup<V> dynamicComponents;
     /** Contains the underlying grid component. */
     //private DynamicPlottable<V> gridComponent;
     
@@ -78,32 +79,25 @@ public class PlotPanel<V extends Visometry> extends JPanel
         
     // CONSTRUCTORS
     
-    public PlotPanel(){
-        super();
-        initComponents();
-        initLayout();        
-    }
+    public PlotPanel(){}
     public PlotPanel(V visometry){
         super();
-        initComponents();
+        initComponents(visometry);
         initLayout();
-        setVisometry(visometry);
     }
     
     
     // INITIALIZERS
     
-    private void initComponents(){
-        basicComponents=new Vector<Plottable<V>>();
-        dynamicComponents=new Vector<DynamicPlottable<V>>();
-        visometry=null;
-        setBackground(Color.WHITE);
-        setOpaque(true);   
+    private void initComponents(V visometry){
+        timer=new RangeTimer(this);
+        initContextMenu();
+        setVisometry(visometry);
+        basicComponents=new PlottableGroup<V>(visometry);
+        dynamicComponents=new PlottableGroup<V>(visometry);
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
-        timer=new RangeTimer(this);
-        initContextMenu();
         staticPlottables=new PlotLayer<V>(this);
         animatePlottables=new PlotLayer<V>(this);
         add(staticPlottables);
@@ -112,6 +106,8 @@ public class PlotPanel<V extends Visometry> extends JPanel
     }
     
     private void initLayout(){
+        setBackground(Color.WHITE);
+        setOpaque(true);   
         setPreferredSize(new Dimension(300,200));
         toolBar=new JToolBar();
         propertyPanel=new JPanel();
@@ -149,8 +145,8 @@ public class PlotPanel<V extends Visometry> extends JPanel
         addToContextMenu(visometry.getMenuItems());
     }
     
-    public Collection<Plottable<V>> getBasicPlottables(){return basicComponents;}
-    public Collection<DynamicPlottable<V>> getDynamicPlottables(){return dynamicComponents;}
+    public Collection<Plottable<V>> getBasicPlottables(){return basicComponents.getElements();}
+    public Collection<Plottable<V>> getDynamicPlottables(){return dynamicComponents.getElements();}
         
         
     
@@ -172,7 +168,7 @@ public class PlotPanel<V extends Visometry> extends JPanel
             optionsMenu.add(pv.getOptionsMenu());
         }
         if(pv instanceof DynamicPlottable){
-            dynamicComponents.add((DynamicPlottable<V>)pv);
+            dynamicComponents.add(pv);
         }else{
             basicComponents.add(pv);
         }
@@ -215,10 +211,10 @@ public class PlotPanel<V extends Visometry> extends JPanel
     public <T extends Plottable<V>> void removeAll(Collection<T> cpv){for(T pv:cpv){remove(pv);}}
     public void rebuildOptionsMenu(){
         optionsMenu.removeAll();
-        for(Plottable p:basicComponents){
+        for(Plottable p:basicComponents.getElements()){
             if(p.isOptionsMenuBuilding()){optionsMenu.add(p.getOptionsMenu());}
         }
-        for(Plottable p:dynamicComponents){
+        for(Plottable p:dynamicComponents.getElements()){
             if(p.isOptionsMenuBuilding()){optionsMenu.add(p.getOptionsMenu());}
         }
     }
@@ -275,7 +271,11 @@ public class PlotPanel<V extends Visometry> extends JPanel
     
     Vector<DynamicPlottable<V>> getHits(MouseEvent e){
         Vector<DynamicPlottable<V>> result=new Vector<DynamicPlottable<V>>();
-        for (DynamicPlottable<V> dp:dynamicComponents){if(dp.clicked(e)){result.add(dp);}}
+        for (Plottable<V> dp:dynamicComponents.getElements()){
+            if(((DynamicPlottable<V>)dp).clicked(e)){
+                result.add((DynamicPlottable<V>)dp);
+            }
+        }
         return result;
     }
 

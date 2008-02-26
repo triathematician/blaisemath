@@ -5,6 +5,7 @@
 
 package specto;
 
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -12,18 +13,17 @@ import javax.swing.event.ChangeListener;
  * e.g. a point or vector along a function plot.
  * @author ae3263
  */
-public abstract class Decoration<P extends Plottable,V extends Visometry> extends Plottable<V> implements ChangeListener {
-    private P parent;
+public abstract class Decoration<V extends Visometry> extends Plottable<V> implements ChangeListener {
+    public Decoration(Plottable<V> parent){super(parent.getVisometry());setParent(parent);}
     
-    public void setParent(P parent){
+    protected Plottable<V> parent;
+    
+    public void setParent(Plottable<V> parent){
         this.parent=parent;
-        //parent.addChangeListener(this);
+        parent.addChangeListener(this);
     }
-    public P getParent(){return parent;}
-    
+    public Plottable<V> getParent(){return parent;}
+        
     @Override
-    public void setVisometry(V v){
-        super.setVisometry(v);
-        parent.setVisometry(v);
-    }
+    public void stateChanged(ChangeEvent e){recompute();}
 }

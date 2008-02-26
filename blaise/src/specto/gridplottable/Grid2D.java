@@ -83,7 +83,7 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
     
     // CONSTRUCTORS
     
-    public Grid2D(){}
+    public Grid2D(Euclidean2 vis){super(vis);}
     
     
     // BEAN PATTERNS: GETTERS & SETTERS

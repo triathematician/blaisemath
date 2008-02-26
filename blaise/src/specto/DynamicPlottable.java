@@ -25,6 +25,8 @@ import java.awt.event.MouseMotionListener;
  */
 public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseListener,MouseMotionListener {
     
+    public DynamicPlottable(V v){super(v);}
+    
     // HOW TO DETERMINE WHEN TO PROCESS A MOUSE EVENT
 
     public static final int CLICK_EDIT_RANGE=8;

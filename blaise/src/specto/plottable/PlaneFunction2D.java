@@ -43,8 +43,9 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             return result;
         }
         };
-    public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
-    public PlaneFunction2D(Function<R2,Double> function){
+    public PlaneFunction2D(Euclidean2 vis){this(vis,DEFAULT_FUNCTION);}
+    public PlaneFunction2D(Euclidean2 vis,Function<R2,Double> function){
+        super(vis);
         setOptionsMenuBuilding(true);
         color=Color.ORANGE;
         this.function=function;

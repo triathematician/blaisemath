@@ -32,6 +32,8 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     private static final float[] dash1={6.0f,4.0f};
     private static final Stroke DASHED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash1,0.0f);
 
+    public PolarGrid2D(Euclidean2 vis){super(vis);}
+    
     // DRAW METHODS
         
     @Override

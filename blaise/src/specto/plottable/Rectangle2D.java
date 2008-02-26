@@ -25,8 +25,8 @@ import specto.visometry.Euclidean2;
 public class Rectangle2D extends Plottable<Euclidean2>{
     R2 min=null;
     R2 max=null;
-    public Rectangle2D(double minx,double miny,double maxx,double maxy){min=new R2(minx,miny);max=new R2(maxx,maxy);}
-    public Rectangle2D(R2 min,R2 max){this(min.x,min.y,max.x,max.y);}
+    public Rectangle2D(Euclidean2 vis,R2 min,R2 max){this(vis,min.x,min.y,max.x,max.y);}
+    public Rectangle2D(Euclidean2 vis,double minx,double miny,double maxx,double maxy){super(vis);min=new R2(minx,miny);max=new R2(maxx,maxy);}
     public void setMax(R2 max){this.max.x=max.x;this.max.y=max.y;}
     public R2 getMin(){return min;}
     public R2 getMax(){return max;}
