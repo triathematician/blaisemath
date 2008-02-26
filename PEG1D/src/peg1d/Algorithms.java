@@ -20,7 +20,7 @@ public class Algorithms {
     
     // EVADER ALGORITHMS
     /** Computes new evader positions... in this case they all head to the origin. */
-    public static Vector<Double> evadersTowardOrigin(Vector<Double> evaderPosition,Vector<Double> pursuerPosition,Simulation sim,int curStep){
+    public static Vector<Double> evadersTowardOrigin(Vector<Double> pursuerPosition,Vector<Double> evaderPosition,Simulation sim,int curStep){
         Vector<Double> result=new Vector<Double>();
         // evading elements always head to origin
         for(int i=0;i<evaderPosition.size();i++) {
@@ -39,7 +39,7 @@ public class Algorithms {
     // PURSUER ALGORITHMS      
     
     /** Decide pursuer directions */
-    public static Vector<Double> pursuersTowardClosest(Vector<Double> evaderPosition,Vector<Double> pursuerPosition,Simulation sim,int curStep){
+    public static Vector<Double> pursuersTowardClosest(Vector<Double> pursuerPosition,Vector<Double> evaderPosition,Simulation sim,int curStep){
         // pursuing elements chase closest evader
         Vector<Double> result=new Vector<Double>();
         for(int i=0;i<pursuerPosition.size();i++){

@@ -13,7 +13,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-import javax.swing.JSplitPane;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -21,6 +21,7 @@ import specto.PlotPanel;
 import scio.coordinate.R2;
 import sequor.component.Settings;
 import sequor.model.ColorModel;
+import sequor.model.ComboBoxRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
@@ -161,9 +162,27 @@ public class Simulation implements ChangeListener {
         // compute directions of all players for use in algorithms
         computeDirections();        
         
-        // determine new positions of all players
-        Vector<Double> newEPos=Algorithms.evadersTowardOrigin(getEvaderPositions(), getPursuerPositions(), this, curStep);
-        Vector<Double> newPPos=Algorithms.pursuersTowardClosest(getEvaderPositions(), getPursuerPositions(), this, curStep);
+        // determine new positions of all players... use the current algorithm settings.
+        Vector<Double> newEPos;
+        Vector<Double> newPPos;
+        switch(getEAlgorithm()){
+            case SimSettings.EVADE_TO_GOAL:
+            default:
+                newEPos=Algorithms.evadersTowardOrigin(getPursuerPositions(), getEvaderPositions(), this, curStep);
+                break;
+        }
+        switch(getPAlgorithm()){
+            case SimSettings.PURSUE_DJ:
+                // insert your algorithm here
+                // you can pass pDirections and eDirections to the algorithm in addition to the parameters shown above and below
+                // each of these vectors contains +1,0,-1, depending upon whether the direction is in the positive x-direction, negative x-direction, or not moving
+                // be sure to uncomment the "break" line below.
+                //break;
+            case SimSettings.PURSUE_CLOSEST:
+            default:
+                newPPos=Algorithms.pursuersTowardClosest(getPursuerPositions(), getEvaderPositions(), this, curStep);
+                break;
+        }
         
         // moves captured players outside the playing field
         moveCapturedPlayersToInfinity(newPPos,newEPos);
@@ -219,6 +238,8 @@ public class Simulation implements ChangeListener {
     public int getNE(){return settings.numEvader.getValue();}
     public double getPSpeed(){return settings.speedPursuer.getValue();}
     public double getESpeed(){return settings.speedEvader.getValue();}
+    public int getPAlgorithm(){return settings.algorithmPursuer.getValue();}
+    public int getEAlgorithm(){return settings.algorithmEvader.getValue();}
     public double getGoal(){return settings.goalPosition.getValue();}
     public double getCaptureRange(){return settings.captureRegion.getValue();}
     public double getStepSize(){return settings.stepSize.getValue();}
@@ -232,8 +253,12 @@ public class Simulation implements ChangeListener {
         private DoubleRangeModel speedPursuer=new DoubleRangeModel(1,0,10,.05);
         /** Pursuer color */
         private ColorModel colorPursuer=new ColorModel(Color.RED);
-        /** Behavior (to be implemented */
-        // private ComboBoxRangeModel algorithmPursuer=Behavior.getComboBoxModel();
+        /** Pursuit algorithm strings */
+        public final String[] PURSUIT_STRINGS={"Pursue Closest","DJ's Algorithm"};
+        public static final int PURSUE_CLOSEST=0;
+        public static final int PURSUE_DJ=1;
+        /** Choice of algorithm */
+        private ComboBoxRangeModel algorithmPursuer=new ComboBoxRangeModel(PURSUIT_STRINGS,PURSUE_CLOSEST,0,PURSUIT_STRINGS.length-1);
         
         /** Number of evaders */
         private IntegerRangeModel numEvader=new IntegerRangeModel(3,1,50);
@@ -241,8 +266,11 @@ public class Simulation implements ChangeListener {
         private DoubleRangeModel speedEvader=new DoubleRangeModel(1,0,10,.05);
         /** Evader color */
         private ColorModel colorEvader=new ColorModel(Color.BLUE);
-        /** Behavior (to be implemented */
-        // private ComboBoxRangeModel algorithmEvader=Behavior.getComboBoxModel();
+        /** Evader algorithm strings */
+        public final String[] EVADER_STRINGS={"Head to Goal"};
+        public static final int EVADE_TO_GOAL=0;
+        /** Choice of algorithm */
+        private ComboBoxRangeModel algorithmEvader=new ComboBoxRangeModel(EVADER_STRINGS,EVADE_TO_GOAL,0,EVADER_STRINGS.length-1);
         
         /** Position of goal */
         private DoubleRangeModel goalPosition=new DoubleRangeModel(0,-1000,1000,.05);
@@ -260,12 +288,12 @@ public class Simulation implements ChangeListener {
             addProperty("# Pursuers",numPursuer,Settings.EDIT_INTEGER);
             addProperty(" Pursuer Speed",speedPursuer,Settings.EDIT_DOUBLE);
             addProperty(" Pursuer Color",colorPursuer,Settings.EDIT_COLOR);
-            //addProperty("Pursuer Algorithm",algorithmPursuer,Settings.EDIT_COMBO);
+            addProperty("Pursuer Algorithm",algorithmPursuer,Settings.EDIT_COMBO);
             addSeparator();
             addProperty("# Evaders",numEvader,Settings.EDIT_INTEGER);
             addProperty(" Evader Speed",speedEvader,Settings.EDIT_DOUBLE);
             addProperty(" Evader Color",colorEvader,Settings.EDIT_COLOR);
-            //addProperty("Evader Algorithm",algorithmEvader,Settings.EDIT_COMBO);
+            addProperty("Evader Algorithm",algorithmEvader,Settings.EDIT_COMBO);
             addSeparator();
             addProperty(" Evader Goal",goalPosition,Settings.EDIT_DOUBLE);
             addSeparator();
@@ -293,7 +321,7 @@ public class Simulation implements ChangeListener {
     }    
     
     // GUI SETTINGS PANEL
-    public JSplitPane getPanel(){return settings.getSplitPanel();}
+    public JPanel getPanel(){return settings.getPanel();}
     
     // EVENT HANDLING
     public void stateChanged(ChangeEvent e){run();}
