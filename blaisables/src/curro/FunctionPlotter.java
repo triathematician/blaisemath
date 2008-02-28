@@ -20,7 +20,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     /** Creates new form BasicPlotter */
     public FunctionPlotter() {
         initComponents();
-        plot2D1.add(new Function2D(ftm));
+        plot2D1.add(new Function2D(plot2D1.getVisometry(),ftm));
         ftm.addChangeListener(plot2D1);
     }
    

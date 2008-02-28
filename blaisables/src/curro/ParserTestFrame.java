@@ -34,7 +34,7 @@ public class ParserTestFrame extends javax.swing.JFrame {
             initComponents();
             result=new FunctionTreeModel(new FunctionTreeRoot(Parser.parseExpression(jTextField1.getText())));
             dresult=new FunctionTreeModel(result.getRoot().derivativeTree("x"));
-            plotPanel1.add(new Grid2D());
+            plotPanel1.add(new Grid2D(plotPanel1.getVisometry()));
             plotPanel1.add(new Function2D(result,Color.RED));
             plotPanel1.add(new Function2D(dresult,Color.BLUE));
             jTextField1ActionPerformed(null);

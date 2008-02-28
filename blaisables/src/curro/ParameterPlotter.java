@@ -1,5 +1,5 @@
 /*
- * MultiPlotter.java
+ * ParameterPlotter.java
  *
  * Created on November 13, 2007, 9:31 AM
  */
@@ -19,12 +19,12 @@ import specto.plottable.Function2D;
  *
  * @author  ae3263
  */
-public class MultiPlotter extends javax.swing.JFrame {
+public class ParameterPlotter extends javax.swing.JFrame {
     FunctionTreeModel ftm,ftm2;
     ParameterListModel plm;
         
-    /** Creates new form MultiPlotter */
-    public MultiPlotter() {
+    /** Creates new form ParameterPlotter */
+    public ParameterPlotter() {
         plm=new ParameterListModel();
         plm.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
@@ -41,10 +41,11 @@ public class MultiPlotter extends javax.swing.JFrame {
                 try{
                     ftm2.setValue(ftm.getRoot().derivativeTree("x").fullSimplified().toString());
                 }catch(NullPointerException exc){}
+                jPanel1.validate();
             }
         });
-        plot2D1.add(new Function2D(ftm2,Color.lightGray));
-        plot2D1.add(new Function2D(ftm));
+        plot2D1.add(new Function2D(plot2D1.getVisometry(),ftm2,Color.lightGray));
+        plot2D1.add(new Function2D(plot2D1.getVisometry(),ftm));
         plm.addChangeListener(ftm);  
         plm.addChangeListener(ftm2);
         plm.setParameterValue("a",1.0);
@@ -76,6 +77,7 @@ public class MultiPlotter extends javax.swing.JFrame {
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setMinimumSize(new java.awt.Dimension(200, 12));
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -90,7 +92,7 @@ public class MultiPlotter extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MultiPlotter().setVisible(true);
+                new ParameterPlotter().setVisible(true);
             }
         });
     }
