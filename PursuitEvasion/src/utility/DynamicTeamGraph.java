@@ -28,7 +28,7 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     Team team;
     DataLog log;
     
-    public DynamicTeamGraph(Team t,DataLog l){team=t;log=l;}
+    public DynamicTeamGraph(Euclidean2 vis,Team t,DataLog l){super(vis);team=t;log=l;}
     
     public int pathSize(){
         return log.size();

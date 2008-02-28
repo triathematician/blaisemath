@@ -108,6 +108,9 @@ public class Agent implements TaskGenerator {
         commpov.clear();
     }
     
+    /** Moves the agent. */
+    public void move(){setPosition(loc.getEnd());}
+    
     public void copySettingsFrom(Team team){
         setSensorRange(team.getSensorRange());
         setCommRange(team.getCommRange());
@@ -121,8 +124,8 @@ public class Agent implements TaskGenerator {
     // BEAN PATTERNS: GETTERS & SETTERS
     
     public R2 getPosition(){return loc.getStart();}
-    public void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}
-    public void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
+    private void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}
+    private void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
     // See just before settings subclass for the rest!
     
     
@@ -136,8 +139,7 @@ public class Agent implements TaskGenerator {
             initialPosition.addChangeListener(ags);
         }
         return initialPosition;
-    }
-    
+    }    
     
     // METHODS: TASKING
         

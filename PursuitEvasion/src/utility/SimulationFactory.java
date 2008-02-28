@@ -45,15 +45,26 @@ public class SimulationFactory {
     public static ComboBoxRangeModel comboBoxRangeModel(){return new ComboBoxRangeModel(GAME_STRINGS,SIMPLE_PE,0,6);}
     
     public static void setSimulation(Simulation sim,int simCode){
+        String name;
+        Vector<Team> teams;
+        int primary;
         switch(simCode){
-        case SIMPLE_PE:     sim.setString("Follow the Light");  sim.setNumTeams(2);     sim.initTeams(lightSimulation());           sim.setPrimary(1);  break;
-        case TWOTEAM:       sim.setString("Cops & Robbers");    sim.setNumTeams(2);     sim.initTeams(twoTeamSimulation());         sim.setPrimary(1);  break;
-        case SIMPLE_PPE:    sim.setString("Antarctica");        sim.setNumTeams(3);     sim.initTeams(threeTeamSimulation());       sim.setPrimary(1);  break;
-        case GOAL_PE:       sim.setString("Sahara");            sim.setNumTeams(3);     sim.initTeams(twoPlusGoalSimulation());     sim.setPrimary(0);  break;
-        case LOTS_OF_FUN:   sim.setString("Swallowed");         sim.setNumTeams(10);    sim.initTeams(bigSimulation());             sim.setPrimary(0);  break;
-        case LEAD_FACTOR:   sim.setString("Jurassic");          sim.setNumTeams(2);     sim.initTeams(leadFactorSimulation());      sim.setPrimary(0);  break;
-        case CUSTOM:        System.out.println("custom operation not supported!");;
+        case SIMPLE_PE:
+            name="Follow the Light"; teams=lightSimulation(); primary=1; break;
+        case TWOTEAM:      
+            name="Cops & Robbers"; teams=twoTeamSimulation(); primary=1; break;
+        case SIMPLE_PPE:    
+            name="Antarctica"; teams=threeTeamSimulation(); primary=1; break;
+        case GOAL_PE:       
+            name="Sahara"; teams=twoPlusGoalSimulation(); primary=0; break;
+        case LOTS_OF_FUN:   
+            name="Swallowed"; teams=bigSimulation(); primary=0; break;
+        case LEAD_FACTOR:   
+            name="Jurassic"; teams=leadFactorSimulation(); primary=0; break;
+        default:
+            name="custom operation not supported!"; teams=null; primary=0; break;
         }
+        sim.mainInitialize(name, teams.size(), teams, primary);
     }
     
     public static Vector<Team> lightSimulation(){

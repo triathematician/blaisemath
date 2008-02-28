@@ -30,7 +30,7 @@ public class StartingPositionsFactory {
      * @param pn   position of the last agent */
     public static void startLine(Vector<Agent> team,R2 p1,R2 pn){
         if(team.size()==1){
-            team.get(0).setPosition(p1.plus(pn).multipliedBy(.5));
+            team.get(0).getPointModel().setTo(p1.plus(pn).multipliedBy(.5));
         }else{
             R2 step=pn.minus(p1).multipliedBy(1.0/(team.size()-1.0));
             for(int i=0;i<team.size();i++){

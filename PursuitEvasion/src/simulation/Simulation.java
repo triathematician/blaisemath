@@ -26,11 +26,9 @@ import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.SettingsProperty;
 import specto.PlotPanel;
-import specto.plotpanel.Plot2D;
 import specto.visometry.Euclidean2;
 import utility.DataLog;
 import utility.DistanceTable;
-import utility.DynamicTeamGraph;
 import utility.SimulationFactory;
 
 /**
@@ -60,14 +58,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     // CONSTRUCTORS
     
     /** Standard constructor */
-    public Simulation(){
-        ss=new SimSettings();
-        setGameType(SimulationFactory.SIMPLE_PE);
-        SimulationFactory.setSimulation(this,getGameType());
-        dist=null;
-        log=new DataLog(this);
-        batchProcessing=false;
-    }
+    public Simulation(){this(SimulationFactory.SIMPLE_PE);}
     /** Constructs given a type of game
      * @param gameType the type of game to simulate */
     public Simulation(int gameType){
@@ -75,12 +66,19 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         setGameType(gameType);
         SimulationFactory.setSimulation(this,gameType);
         dist=null;
-        log=new DataLog(this);
         batchProcessing=false;
     }
     
     
     // METHODS: INITIALIZERS
+    
+    /** PRimary Initializer */
+    public void mainInitialize(String name,int numTeams,Vector<Team> teams,int primaryTeam){
+        setString(name);
+        setNumTeams(numTeams);
+        initTeams(teams);
+        setPrimary(primaryTeam);
+    }
     
     /** Intializes to a given list of teams. */
     public void initTeams(Vector<Team> newTeams){
@@ -90,12 +88,10 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             ss.getChildren().clear();
             for(Team t:teams){
                 t.addActionListener(this);
-                t.initStartingLocations();
+                t.initStartingLocations(getPitchSize());
                 ss.addChild(t.tes,Settings.PROPERTY_INDEPENDENT);
             }
-            log=new DataLog(this);
         }        
-        //fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,"teamsInitialized"));
     }
     
     /** Returns list of teams used in the simulation. */
@@ -107,39 +103,41 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void reset(){
         for(Team team:teams){team.reset();}
         dist=new DistanceTable(teams);
-        log.reset();
     }
     
     /** Resets the starting positions. Useful when positions are initialized randomly. */
     public void initStartingLocations(){
-        for(Team team:teams){team.initStartingLocations();}
+        for(Team team:teams){team.initStartingLocations(getPitchSize());}
         dist=new DistanceTable(teams);
-        log.reset();
     }
     
     /** Runs several times and computes average result. */
-    public Double runSeveral(int numTimes){
+    public void runSeveral(int numTimes){
+        Statistics stats=new Statistics(numTimes);
         batchProcessing=true;
-        Double total=0.0;
-        Double current;
         for(int i=0;i<numTimes;i++){
-            for(Team team:teams){team.initStartingLocations();team.reset();}
+            for(Team team:teams){
+                team.initStartingLocations(getPitchSize());
+                team.reset();
+            }
             dist=new DistanceTable(teams);
-            current=run();
-            if(current!=null){total+=current;}            
+            run();
+            stats.captureData(log);
         }
-        fireActionPerformed("Result of "+numTimes+" run is an average of "+total/numTimes);
         batchProcessing=false;
-        return total/numTimes;
+        fireActionPerformed(new ActionEvent(stats,0,"log"));
+        actionPerformed(new ActionEvent(this,0,"redraw"));
     }
+    
     /** Runs default number of steps */
-    public Double run(){return run(getNumSteps());}
+    public void run(){run(getNumSteps());}
     /** Tells the simulation to get going!
      * @param numSteps  how many time steps to run the simulation
      * @return          value of the simulated run according to the given team...
      */
-    public Double run(int numSteps){
+    public void run(int numSteps){
         reset();
+        log.preRun();
         double time=0;
         for(int i=0;i<numSteps;i++){
             time=i*getStepTime();
@@ -151,9 +149,9 @@ public class Simulation implements ActionListener,PropertyChangeListener {
                 }
             }
         }
-        log.output();
+        log.setPrimaryOutput(primary.getValue());
+        actionPerformed(new ActionEvent(log,0,"log"));
         actionPerformed(new ActionEvent(this,0,"redraw"));
-        return primary.getValue();
     }
     
     /** Runs a single iteration of the scenario */
@@ -177,28 +175,22 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         time+=getStepTime();
     }
     
-    // METHODS: RETURN RESULTS OF SIMULATION IN VARIOUS FORMATS
+    // METHODS FOR RUNNING STATS ON THE SIMULATION
     
-    /** Places simulation's points on the plot. */
-    public void placeInitialPointsOn(PlotPanel<Euclidean2> p){
-        for(Team t:teams){t.placeInitialPointsOn(p);}
+    /** Returns one agent whose position may be changed automatically. */
+    public Agent getPrimaryAgent(){return primary.firstElement();}
+    
+    /** Runs simulation and returns the primary "value" of the simulation. */
+    public Double getPrimaryValue(){    
+        for(Team team:teams){team.reset();}
+        dist=new DistanceTable(teams);
+        run();
+        return primary.getValue();
     }
     
-    /** Places simulation's paths on the plot. */
-    @SuppressWarnings("unchecked")
-    public void placePathsOn(PlotPanel p){
-        p.addAll(log.getPlotPaths());
-    }
     
-    /** Places graph element on the plot. */
-    public void placeGraphsOn(PlotPanel<Euclidean2> p){
-        for(Team t:teams){p.add(new DynamicTeamGraph(t,log));}
-    }
     
-    /** Places value functions on given plot. */
-    public void placeValuesOn(Plot2D p){
-        p.addAll(log.getValuePlots());
-    }
+    // GUI METHODS
     
     /** Recomputes animation settings for a plot window */
     public void setAnimationCycle(PlotPanel<Euclidean2> p){
@@ -210,15 +202,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             p.getTimer().setDelay((int)(250*getStepTime()));
         }
     }
-    
-//    /** Returns all teams/agents as a JTree
-//     * @return a tree model with all agents involved in the simulation */
-//    public DefaultTreeModel getTreeModel(){
-//        DefaultMutableTreeNode top=new DefaultMutableTreeNode(this);
-//        for(Team t:teams){top.add(t.getTreeNode());}
-//        return new DefaultTreeModel(top);
-//    }
-    
     
     // EVENT HANDLING
     
@@ -240,23 +223,25 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        String es=e.getActionCommand();
         // if several runs are being performed, do not bother to display the changes being made
         if(batchProcessing){return;}
+        String es=e.getActionCommand();
         // otherwise, go ahead and redraw/recolor/etc. as appropriate
         if(es.equals("simulationRun")){ // routine run of the simulation
             fireActionPerformed("redraw");
         }
-        else if(es.equals("agentDisplayChange")||es.equals("teamDisplayChange")){ // cosmetic change only
+        // cosmetic change only
+        else if(es.equals("agentDisplayChange")||es.equals("teamDisplayChange")){ 
             fireActionPerformed("recolor");
-        }else if(es.equals("agentSetupChange")||es.equals("teamSetupChange")){ // change in parameters for a particular player or team
-            reset();
+        // change in parameters for a particular player or team
+        }else if(es.equals("agentSetupChange")||es.equals("teamSetupChange")){ 
+            run();
+        // change in number of agents; must preRun the simulation to reload the settings tree
+        }else if(e.getActionCommand().equals("teamAgentsChange")){ 
+            log.initializeNumbersOnly();
+            fireActionPerformed("reset");
             run();
             fireActionPerformed("redraw");
-        }else if(e.getActionCommand().equals("teamAgentsChange")){ // change in number of agents; must reset the simulation to reload the settings tree
-            log=new DataLog(this);
-            run();
-            fireActionPerformed("reset");
         }else {fireActionPerformed(e);
         }
     }
@@ -274,6 +259,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public double getStepTime(){return ss.stepTime.getValue();}
     public int getNumSteps(){return ss.numSteps.getValue();}
     public int getMaxSteps(){return ss.maxSteps.getValue();}
+    @Override
     public String toString(){return ss.toString();}
     
     public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
@@ -285,9 +271,11 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void setString(String newValue){ss.setName(newValue);}
     public void setPrimary(Team newValue){primary=newValue;}
     public void setPrimary(int newIndex){if(newIndex<teams.size()){primary=teams.get(newIndex);}}
+    public void setDataLog(DataLog dl){this.log=dl;}
     
     public JPanel getPanel(){return ss.getPanel();}
     public JMenu getMenu(String s){return ss.getMenu(s);}
+    public ComboBoxRangeModel getGameTypeModel(){return ss.gameType;}
     
     // SUBCLASSES
     
@@ -308,20 +296,21 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         
         SimSettings(){
             super();
-            add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE));
-            add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE));
-            add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER));
+            add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE,"Change the boundaries of the random positions (nonfunctional)"));
+            add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE,"Change the time taken for each iteration of the algorithm"));
+            add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER,"Change the number of steps in the simulation"));
+            gameType.addChangeListener(this);
             //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
-            add(new SettingsProperty("Preset Game",gameType,Settings.EDIT_COMBO));
             //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
             initEventListening();
         }
         
+        @Override
         public void stateChanged(ChangeEvent e) {
             //System.out.println("simulation prop change: "+e.getPropertyName());
             if(e.getSource()==stepTime){      fireActionPerformed("animation");run();
             } else if(e.getSource()==numSteps){fireActionPerformed("animation");run();
-            } else if(e.getSource()==pitchSize){System.out.println("Nonfunctional! Starting locs should reference this value!");initStartingLocations();run();
+            } else if(e.getSource()==pitchSize){initStartingLocations();run();
             } else if(e.getSource()==maxSteps){System.out.println("nonfunctional!");
             } else if(e.getSource()==numTeams){System.out.println("nonfunctional!");
             } else if(e.getSource()==gameType){

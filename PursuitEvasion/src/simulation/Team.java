@@ -34,7 +34,8 @@ import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
 import sequor.model.SettingsProperty;
 import scio.coordinate.R2;
-import utility.CircledPoint;
+import specto.decoration.CirclePoint2D;
+import specto.dynamicplottable.Point2D;
 import utility.StartingPositionsFactory;
 
 /**
@@ -132,20 +133,19 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             a.addActionListener(this);
             tes.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
         }
-        initStartingLocations();
         activeAgents.clear();
         activeAgents.addAll(this);
         editing=false;
     }
     
     /** Re-initializes agent starting locations. */
-    public void initStartingLocations(){
+    public void initStartingLocations(double pitchSize){
         editing=true;
         switch(getStart()){
-        case START_RANDOM: StartingPositionsFactory.startRandom(this,50); break;
-        case START_LINE: StartingPositionsFactory.startLine(this,new R2(-50,50),new R2(50,-50)); break;
-        case START_CIRCLE: StartingPositionsFactory.startCircle(this,new R2(),50);break;
-        case START_ARC: StartingPositionsFactory.startArc(this,new R2(),50,Math.PI/3,5*Math.PI/3);break;
+        case START_RANDOM: StartingPositionsFactory.startRandom(this,pitchSize); break;
+        case START_LINE: StartingPositionsFactory.startLine(this,new R2(-pitchSize,pitchSize),new R2(pitchSize,-pitchSize)); break;
+        case START_CIRCLE: StartingPositionsFactory.startCircle(this,new R2(),pitchSize);break;
+        case START_ARC: StartingPositionsFactory.startArc(this,new R2(),pitchSize,Math.PI/3,5*Math.PI/3);break;
         default: StartingPositionsFactory.startZero(this); break;
         }
         editing=false;
@@ -168,16 +168,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         return center;
     }
     
-    /** Adds initial point models to plot, and adds change listening to this team. */
-    public void placeInitialPointsOn(PlotPanel<Euclidean2> p){
-        for(Agent a:this){
-            CircledPoint cp=new CircledPoint(a.getPointModel(),a.getColor().brighter());
-            cp.addRadius(a.getCommRange());
-            cp.addRadius(a.getSensorRange());
-            p.add(cp);
-        }
-    }
-    
+   
 //    /** Generates tree given list of goals and agents */
 //    public DefaultMutableTreeNode getTreeNode(){
 //        DefaultMutableTreeNode result=new DefaultMutableTreeNode(this);
@@ -241,11 +232,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         }
     }
     /** Moves all agents on the team using their assigned directions. */
-    public void move(){
-        for(Agent a:activeAgents){
-            a.setPosition(a.loc.getEnd());        
-        }
-    }
+    public void move(){for(Agent a:activeAgents){a.move();}}
     /** Deactivates a particular agent. */
     public void deactivate(Agent a){
         activeAgents.remove(a);
@@ -422,7 +409,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
                 }
                 ac="teamSetupChange";
             } else if(evt.getSource()==size){       initAgentNumber();      ac="teamAgentsChange";
-            } else if(evt.getSource()==start){      initStartingLocations();ac="teamSetupChange";
+            } else if(evt.getSource()==start){                              ac="teamSetupChange";
             } else if(evt.getSource()==goals){                              ac="teamSetupChange";
             } else if(evt.getSource()==topSpeed){   copySpeedtoTeam();      ac="teamSetupChange";
             } else if(evt.getSource()==sensorRange){copySensorRangetoTeam();ac="teamSetupChange";

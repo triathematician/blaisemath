@@ -85,6 +85,7 @@ public class Goal implements Function<DistanceTable,Double>{
     public void assignTasks(){
         if(tasker!=null){
             tasker.assign(gs.owner,this,getWeight());
+            // TODO implement noise here!
         }
     }
     
