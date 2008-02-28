@@ -44,6 +44,13 @@ public class Function2D extends PointSet2D{
         });
     }
     
+    // RETURNS POINT ON THE FUNCTION AT A GIVEN X VALUE
+    public R2 getFunctionPoint(Double input) throws FunctionValueException{
+        return new R2(input,function.getValue(input));
+    }
+    
+    // PAINT METHODS
+    
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){
         try {

@@ -30,12 +30,12 @@ public class CirclePoint2D extends Decoration<Euclidean2> {
 
     @Override
     public void paintComponent(Graphics2D g) {
-        Point2D parent=(Point2D)getParent();
-        if(parent.style.getStyle()==PointStyle.CONCENTRIC){
-            g.setColor(parent.getColor().brighter());
+        Point2D ptParent=(Point2D)parent;
+        if(ptParent.style.getStyle()==PointStyle.CONCENTRIC){
+            g.setColor(ptParent.getColor().brighter());
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.15f));
             for(double r:radii){
-                g.fill(visometry.circle(parent.getPoint(),r));                
+                g.fill(visometry.circle(ptParent.getPoint(),r));                
             }
             g.setComposite(AlphaComposite.SrcOver);
         }

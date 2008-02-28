@@ -74,7 +74,6 @@ public abstract class Series extends Operator {
     }
     @Override
     public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
-        // TODO streamline this code
         Vector<Double> result=new Vector<Double>(d.size());
         for(Double x:d){result.add(getValue(s,x));}
         return result;

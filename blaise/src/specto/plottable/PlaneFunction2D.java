@@ -12,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import scio.function.Function;
@@ -81,19 +79,25 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
                 }
             }
             Vector<Double> result = function.getValue(inputs);
-            double WEIGHT=8/(function.maxValue()-function.minValue());
-            double SHIFT=-8*function.minValue()/(function.maxValue()-function.minValue())+1;
+            double WEIGHT=10/(function.maxValue()-function.minValue());
+            double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
             switch (style) {
                 case DOTS:
                     for(int i=0;i<inputs.size();i++){
-                        g.fill(drawDot(inputs.get(i).x,inputs.get(i).y,getRadius(result.get(i),WEIGHT,SHIFT)));
+                        g.fill(visometry.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
                     }
                     break;
                 case COLORS:
-                    break;
+                    for(int i=0;i<inputs.size();i++){
+                        g.fill(visometry.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
+                    }                    break;
                 case CONTOURS:
                     break;
-                case DENSITY:
+                case DENSITY:                    
+                    for(int i=0;i<inputs.size();i++){
+                        g.setColor(Color.getHSBColor(1.0f-(float)getRadius(result.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
+                        g.fill(visometry.squareDot(inputs.get(i),10.0));
+                    }
                     break;
             }
         } catch (FunctionValueException ex) {}
@@ -103,10 +107,6 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     public double getRadius(double value,double weight,double shift) throws FunctionValueException{
         value=value*weight+shift;
         return(value<0)?0:value;
-    }
-    
-    public Ellipse2D.Double drawDot(double x,double y,double r){
-        return new Ellipse2D.Double(visometry.toWindowX(x)-r,visometry.toWindowY(y)-r,2*r,2*r);
     }
 
     public JMenu getOptionsMenu() {

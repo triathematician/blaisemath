@@ -45,6 +45,7 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
         if(mobile){this.prm.addChangeListener(this);}
         style=new PointStyle();
         style.addChangeListener(this);
+        setColor(Color.BLUE);
     }
     public Point2D(Euclidean2 vis, double x, double y, Color color, boolean mobile) {
         super(vis);

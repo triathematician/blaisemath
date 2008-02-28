@@ -56,6 +56,7 @@ public class Segment2D extends Decoration<Euclidean2> {
             case LINE_SEGMENT:
             case LINE_RAY:
             case LINE_LINE:
+                g.draw(visometry.line(getPoint1(),getPoint2()));
         }
     }
 
@@ -79,9 +80,7 @@ public class Segment2D extends Decoration<Euclidean2> {
     public void setType(int type) {this.type = type;}
 
     @Override
-    public void stateChanged(ChangeEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public void stateChanged(ChangeEvent e) {}
     
     // TODO further options for display style
 }

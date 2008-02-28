@@ -360,11 +360,12 @@ public class Euclidean2 extends Visometry<R2> {
     
     // SHAPE FACTORY METHODS
  
+    /** Returns a line in the current geometry. */
     public Shape line(R2 p1,R2 p2){
         return new java.awt.geom.Line2D.Double(toWindow(p1),toWindow(p2));
     }
     
-    public Shape rectangle(R2 p1,R2 p2){return rectangle(p1.x,p1.y,p2.x,p2.y);}
+    /** Returns a rectangle in the current geometry */
     public Shape rectangle(double x1,double y1,double x2,double y2){
         double wx1=toWindowX(x1);
         double wx2=toWindowX(x2);
@@ -374,8 +375,10 @@ public class Euclidean2 extends Visometry<R2> {
         double y=(wy1<wy2?wy1:wy2);        
         return new java.awt.geom.Rectangle2D.Double(x,y,Math.abs(wx1-wx2),Math.abs(wy1-wy2));
     }
+    /** Returns a rectangle in the current geometry */
+    public Shape rectangle(R2 p1,R2 p2){return rectangle(p1.x,p1.y,p2.x,p2.y);}
     
-    public Shape ellipse(R2 p1,R2 p2){return ellipse(p1.x,p1.y,p2.x,p2.y);}
+    /** Returns an ellipse in the current geometry */
     public Shape ellipse(double x1,double y1,double x2,double y2){
         double wx1=toWindowX(x1);
         double wx2=toWindowX(x2);
@@ -385,12 +388,19 @@ public class Euclidean2 extends Visometry<R2> {
         double y=(wy1<wy2?wy1:wy2);        
         return new java.awt.geom.Ellipse2D.Double(x,y,Math.abs(wx1-wx2),Math.abs(wy1-wy2));      
     }    
-    public Shape ellipse(R2 ctr,double wid,double height){
-        return ellipse(new R2(ctr.x-wid,ctr.y-height),new R2(ctr.x+wid,ctr.y+height));
+    /** Returns an ellipse in the current geometry */
+    public Shape ellipse(R2 p1,R2 p2){return ellipse(p1.x,p1.y,p2.x,p2.y);}
+    /** Returns an ellipse in the current geometry */
+    public Shape ellipse(R2 ctr,double wid,double height){return ellipse(new R2(ctr.x-wid,ctr.y-height),new R2(ctr.x+wid,ctr.y+height));
     }    
+    /** Returns a circle in the current geometry. */
     public Shape circle(R2 ctr,double rad){return ellipse(ctr,rad,rad);}
     /** Return a dot, whose size is independent of the geometry. */
     public Shape dot(R2 ctr,double winRad){
         return new java.awt.geom.Ellipse2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
+    }
+    /** Returns square dot with size independent of geometry. */
+    public Shape squareDot(R2 ctr,double winRad){
+        return new java.awt.geom.Rectangle2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
     }
 }
