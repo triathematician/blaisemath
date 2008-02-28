@@ -5,6 +5,7 @@
 
 package specto;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
@@ -28,6 +29,8 @@ public abstract class Plottable<V extends Visometry> {
     
     /** Underlying visometry used by the element. */
     protected V visometry;
+    /** Color used by the element. */
+    protected Color color;
     /** Determines whether this adds to options menu. */
     protected boolean optionsMenuBuilding=false;
     /** List of decorations. */
@@ -37,6 +40,14 @@ public abstract class Plottable<V extends Visometry> {
     
     public void setVisometry(V newVis){visometry=newVis;}    
     public V getVisometry(){return visometry;}
+    public Color getColor(){return color;}
+    public void setColor(Color newValue){
+        if(color!=newValue){
+            color=newValue;
+            if(decorations!=null){decorations.setColor(newValue);}
+            fireStateChanged();
+        }
+    }
     public void setOptionsMenuBuilding(boolean newValue){optionsMenuBuilding=newValue;}
     public boolean isOptionsMenuBuilding(){return optionsMenuBuilding;}
     public void addDecoration(Decoration<V> d){

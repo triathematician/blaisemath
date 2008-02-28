@@ -72,29 +72,36 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         
     @Override
     public void paintComponent(Graphics2D g){
-        g.setColor(color);
-        switch(style){
-        case DOTS:
-            for(double px:visometry.getSparseXRange(20)){
-                for(double py:visometry.getSparseYRange(20)){
-                try {
-                    g.fill(drawDot(px, py, getRadius(px, py)));
-                } catch (FunctionValueException ex) {}
+        try {
+            g.setColor(color);
+            Vector<R2> inputs = new Vector<R2>();
+            for (double px : visometry.getSparseXRange(20)) {
+                for (double py : visometry.getSparseYRange(20)) {
+                    inputs.add(new R2(px, py));
                 }
             }
-            break;
-        case COLORS:
-            break;
-        case CONTOURS:
-            break;
-        case DENSITY:
-            break;
-        }
+            Vector<Double> result = function.getValue(inputs);
+            double WEIGHT=8/(function.maxValue()-function.minValue());
+            double SHIFT=-8*function.minValue()/(function.maxValue()-function.minValue())+1;
+            switch (style) {
+                case DOTS:
+                    for(int i=0;i<inputs.size();i++){
+                        g.fill(drawDot(inputs.get(i).x,inputs.get(i).y,getRadius(result.get(i),WEIGHT,SHIFT)));
+                    }
+                    break;
+                case COLORS:
+                    break;
+                case CONTOURS:
+                    break;
+                case DENSITY:
+                    break;
+            }
+        } catch (FunctionValueException ex) {}
     }
     
-    public double getRadius(double x,double y) throws FunctionValueException{
-        double value=function.getValue(new R2(x,y));
-        value=8*(value-function.minValue())/(function.maxValue()-function.minValue())+1;
+    /** Computes radius of a given point with specified multiplier and shift. */
+    public double getRadius(double value,double weight,double shift) throws FunctionValueException{
+        value=value*weight+shift;
         return(value<0)?0:value;
     }
     

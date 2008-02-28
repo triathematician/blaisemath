@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package sequor.style;
+package specto.style;
 
+import specto.VisualStyle;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;

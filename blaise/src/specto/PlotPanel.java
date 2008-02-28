@@ -164,21 +164,27 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     public void add(Plottable<V> pv){
         pv.addChangeListener(this);
         pv.setVisometry(visometry);
-        if(pv.isOptionsMenuBuilding()){
-            optionsMenu.add(pv.getOptionsMenu());
-        }
-        if(pv instanceof DynamicPlottable){
+        if(pv instanceof PlottableGroup){
+            if(pv.getOptionsMenu()!=null){optionsMenu.add(pv.getOptionsMenu());}
             dynamicComponents.add(pv);
+            animatePlottables.add(pv);            
         }else{
-            basicComponents.add(pv);
-        }
-        if(pv instanceof BuildsContextMenu){
-            addToContextMenu(((BuildsContextMenu)pv).getMenuItems());
-        }
-        if(pv instanceof Animatable){
-            animatePlottables.add(pv);
-        }else{
-            staticPlottables.add(pv);
+            if(pv.isOptionsMenuBuilding()&&pv.getOptionsMenu()!=null){
+                optionsMenu.add(pv.getOptionsMenu());
+            }
+            if(pv instanceof DynamicPlottable){
+                dynamicComponents.add(pv);
+            }else{
+                basicComponents.add(pv);
+            }
+            if(pv instanceof BuildsContextMenu){
+                addToContextMenu(((BuildsContextMenu)pv).getMenuItems());
+            }
+            if(pv instanceof Animatable){
+                animatePlottables.add(pv);
+            }else{
+                staticPlottables.add(pv);
+            }
         }
     }
     public <T extends Plottable<V>> void addAll(Collection<T> cpv){for(T pv:cpv){add(pv);}}

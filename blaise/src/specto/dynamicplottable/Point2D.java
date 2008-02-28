@@ -14,7 +14,7 @@ import javax.swing.event.ChangeListener;
 import sequor.model.PointRangeModel;
 import specto.DynamicPlottable;
 import scio.coordinate.R2;
-import sequor.style.PointStyle;
+import specto.style.PointStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -37,14 +37,24 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     /** Constructor places point at a given location. */
     public Point2D(Euclidean2 vis,R2 value){this(vis,new PointRangeModel(value));}
     /** Constructor given a PointRangeModel and a particular color. */
-    public Point2D(Euclidean2 vis,PointRangeModel prm,Color c){this(vis,prm);style.setColor(c);}
+    public Point2D(Euclidean2 vis,PointRangeModel prm,Color c){this(vis,prm);setColor(c);}
     /** Constructor given a PointRangeModel. */
     public Point2D(Euclidean2 vis,PointRangeModel prm){
         super(vis);
         this.prm=prm; 
-        this.prm.addChangeListener(this); 
+        if(mobile){this.prm.addChangeListener(this);}
         style=new PointStyle();
         style.addChangeListener(this);
+    }
+    public Point2D(Euclidean2 vis, double x, double y, Color color, boolean mobile) {
+        super(vis);
+        this.mobile=mobile;
+        if(mobile){prm=new PointRangeModel(x,y);
+        }else{prm=new PointRangeModel(new R2(x,y),x,y,x,y);}
+        style=new PointStyle();
+        style.addChangeListener(this);
+        if(mobile){prm.addChangeListener(this);}
+        setColor(color);
     }
         
     
@@ -61,12 +71,13 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     @Override
     public void paintComponent(Graphics2D g) {
         R2 point=prm.getPoint();
-        g.setColor(style.getColor());
+        g.setColor(getColor());
         switch(style.getStyle()){
         case PointStyle.SMALL: g.fill(((Euclidean2)visometry).dot(point,1)); break;
         case PointStyle.MEDIUM: g.fill(((Euclidean2)visometry).dot(point,2)); break;
         case PointStyle.LARGE: g.fill(((Euclidean2)visometry).dot(point,4)); break;
         case PointStyle.CONCENTRIC: g.fill(((Euclidean2)visometry).dot(point,3));g.draw(((Euclidean2)visometry).dot(point,5));break;    
+        case PointStyle.CIRCLE: g.draw(((Euclidean2)visometry).dot(point,5));break;    
         }
     }
     

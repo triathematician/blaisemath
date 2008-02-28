@@ -66,6 +66,7 @@ public class SettingsPanel extends JSplitPane{
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                if(node==null){return;}
                 Settings nodeObject=(Settings)node.getUserObject();
                 pane2.setViewportView(nodeObject.getPanel());
             }

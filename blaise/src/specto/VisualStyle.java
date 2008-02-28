@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package sequor.style;
+package specto;
 
 import java.beans.PropertyChangeEvent;
 import sequor.model.FiresChangeEvents;

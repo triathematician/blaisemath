@@ -66,9 +66,16 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         g.setColor(color);
         g.setStroke(stroke);
         switch(animateStyle){
-        case ANIMATE_DRAW:g.draw(drawPath(t.getStartStep(),t.getCurrentStep()));break;
-        case ANIMATE_DOT:g.fill(drawDot(t.getCurrentStep()));break;
-        case ANIMATE_TRACE:g.draw(drawPath(0,points.size()));g.fill(drawDot(t.getCurrentStep()));break;
+        case ANIMATE_DRAW:
+            g.draw(drawPath(t.getStartStep(),t.getCurrentStep()));
+            break;
+        case ANIMATE_DOT:
+            g.fill(drawDot(t.getCurrentStep()));
+            break;
+        case ANIMATE_TRACE:
+            g.draw(drawPath(0,points.size()));
+            g.fill(drawDot(t.getCurrentStep()));
+            break;
         case ANIMATE_TRAIL:
             g.setColor(color.brighter());
             g.draw(drawPath(0,t.getCurrentStep()));
@@ -97,7 +104,6 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     
     // STYLE SETTINGS
     
-    protected Color color=Color.RED;
     protected Stroke stroke=MEDIUM_STROKE;
     private int style=MEDIUM;
     private int animateStyle=ANIMATE_TRAIL;
@@ -121,7 +127,6 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public static final float[] dash3={1.0f,4.0f};
     public static final Stroke VERY_DOTTED_STROKE=new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f);
     
-    public void setColor(Color newValue){if(color!=newValue){color=newValue;fireStateChanged();}}
     public void setStroke(Stroke newValue){if(stroke!=newValue){stroke=newValue;fireStateChanged();}}
     public void setStyle(int newValue){
         if(style!=newValue){

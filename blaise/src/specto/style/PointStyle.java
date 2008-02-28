@@ -1,16 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * PointStyle.java
+ * Created on Feb 20, 2008
  */
 
-package sequor.style;
+package specto.style;
 
+import specto.VisualStyle;
 import java.awt.Color;
 import sequor.model.FiresChangeEvents;
 
 /**
  *
- * @author ae3263
+ * @author Elisha Peterson
  */
 public class PointStyle extends VisualStyle {
     
@@ -26,14 +27,13 @@ public class PointStyle extends VisualStyle {
     public static final int MEDIUM=1;
     public static final int LARGE=2;
     public static final int CONCENTRIC=3;
+    public static final int CIRCLE=4;
         
     // GETTERS AND SETTERS
     
-    public Color getColor(){return color;}
-    public void setColor(Color newValue){if(color!=newValue){color=newValue;fireStateChanged();}}
     public int getStyle(){return style;}
     public void setStyle(int newValue){if(newValue!=style&&newValue>=0&&newValue<=4){style=newValue;fireStateChanged();}}
-    public void cycleStyle(){style=(style+1)%4;fireStateChanged();}
+    public void cycleStyle(){style=(style+1)%5;fireStateChanged();}
     public double getSize(){return size;}
     public void setSize(double newValue){if(newValue!=size&&newValue>0&&newValue<=10){size=newValue;fireStateChanged();}}
     

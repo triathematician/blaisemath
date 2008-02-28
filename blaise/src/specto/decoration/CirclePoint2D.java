@@ -5,10 +5,11 @@
 
 package specto.decoration;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.Vector;
 import javax.swing.JMenu;
-import sequor.style.PointStyle;
+import specto.style.PointStyle;
 import specto.Decoration;
 import specto.dynamicplottable.Point2D;
 import specto.visometry.Euclidean2;
@@ -31,10 +32,12 @@ public class CirclePoint2D extends Decoration<Euclidean2> {
     public void paintComponent(Graphics2D g) {
         Point2D parent=(Point2D)getParent();
         if(parent.style.getStyle()==PointStyle.CONCENTRIC){
-            g.setColor(parent.style.getColor());
+            g.setColor(parent.getColor().brighter());
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.15f));
             for(double r:radii){
-                g.draw(visometry.circle(parent.getPoint(),r));
+                g.fill(visometry.circle(parent.getPoint(),r));                
             }
+            g.setComposite(AlphaComposite.SrcOver);
         }
     }
 

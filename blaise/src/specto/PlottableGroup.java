@@ -10,6 +10,7 @@
 
 package specto;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -32,6 +33,11 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     public void remove(Plottable<V> p){plottables.remove(p);}
     public Collection<Plottable<V>> getElements(){return plottables;}
 
+    @Override
+    public void setColor(Color newValue) {
+        super.setColor(newValue);
+        for(Plottable p:plottables){p.setColor(newValue);}
+    }
     @Override
     public void setVisometry(V newVis) {super.setVisometry(newVis);if(plottables!=null){for(Plottable p:plottables){p.setVisometry(newVis);}}}
     @Override
