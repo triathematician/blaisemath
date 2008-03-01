@@ -5,6 +5,16 @@
 
 package sequor.model;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+
 /**
  * This class extends the standard combo box with an underlying IntegerRangeModel to handle
  * which property is selected.
@@ -30,5 +40,29 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
                 setValue(i);
             }
         }
+    }
+
+    // GUI GENERATING METHODS
+    
+    /** Generates a combo box given a string list. */
+    public JComboBox getComboBox() {return new JComboBox(new ComboBoxEditor(this));}
+
+    /** Generates a submenu with this list of options. */
+    public JMenuItem getSubMenu(String name){
+        // TODO test this method; really not sure if it works
+        JMenu subMenu=new JMenu(name);
+        ButtonGroup group=new ButtonGroup();
+        for(int i=getMinimum();i<=getMaximum();i++){
+            final int j=i;
+            JRadioButtonMenuItem item=new JRadioButtonMenuItem(getString(i));
+            item.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {setValue(j);}
+            });
+            subMenu.add(item);
+            group.add(item);
+            if(i==getValue()){item.setSelected(true);}
+        }
+        return subMenu;
     }
 }

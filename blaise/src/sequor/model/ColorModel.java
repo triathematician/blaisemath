@@ -11,6 +11,7 @@ package sequor.model;
 
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JButton;
 
 /**
  * This class
@@ -33,4 +34,8 @@ public class ColorModel extends FiresChangeEvents {
     public FiresChangeEvents clone(){return new ColorModel(c);}
     @Override
     public void copyValuesFrom(FiresChangeEvents parent){c=((ColorModel)parent).c;}
+    
+    public JButton getButton(){
+        return new ColorEditor(this).button;
+    }
 }

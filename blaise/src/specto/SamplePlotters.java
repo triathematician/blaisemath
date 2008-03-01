@@ -10,8 +10,9 @@ package specto;
 
 import specto.decoration.CirclePoint2D;
 import specto.decoration.DESolution2D;
-import specto.decoration.RiemannSum2D;
+import specto.decoration.FunctionSampleSet;
 import specto.decoration.Segment2D;
+import specto.dynamicplottable.DynamicPointSet2D;
 import specto.dynamicplottable.Point2D;
 import specto.plottable.Function2D;
 import specto.plottable.Parametric2D;
@@ -28,10 +29,13 @@ public class SamplePlotters extends javax.swing.JFrame {
     /** Creates new form BlaisePlotter */
     public SamplePlotters() {
         initComponents();
+        
         Function2D f1=new Function2D(plot2D1.getVisometry());
-        f1.addDecoration(new RiemannSum2D(f1));
+        f1.addDecoration(new FunctionSampleSet(f1));
         plot2D1.add(f1);
+        
         plot2D2.add(new Parametric2D(plot2D2.getVisometry()));
+
         plot2D3.add(new VectorField2D(plot2D3.getVisometry()));
         Point2D p1=new Point2D(plot2D3.getVisometry());
         p1.addDecoration(new DESolution2D(p1));
@@ -39,7 +43,9 @@ public class SamplePlotters extends javax.swing.JFrame {
         p2.addDecoration(new DESolution2D(p2));
         plot2D3.add(p1);
         plot2D3.add(p2);
+
         plot2D4.add(new PlaneFunction2D(plot2D4.getVisometry()));
+
         Point2D p3=new Point2D(plot2D5.getVisometry());
         Point2D p4=new Point2D(plot2D5.getVisometry());
         CirclePoint2D cp3=new CirclePoint2D(p3);cp3.addRadius(2.0);cp3.addRadius(3.0);cp3.addRadius(5.0);
@@ -49,6 +55,12 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D5.add(p3);
         plot2D5.add(p4);
         plot2D5.add(new Rectangle2D(plot2D5.getVisometry()));
+        
+        DynamicPointSet2D dps1=new DynamicPointSet2D(plot2D6.getVisometry());
+        for(double x=0;x<20;x+=.5){
+            dps1.add(x*Math.cos(x/3.0),x*Math.sin(x/3.0));
+        }
+        plot2D6.add(dps1);
     }
     
     /** This method is called from within the constructor to
@@ -65,6 +77,7 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D3 = new specto.plotpanel.Plot2D();
         plot2D4 = new specto.plotpanel.Plot2D();
         plot2D5 = new specto.plotpanel.Plot2D();
+        plot2D6 = new specto.plotpanel.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -79,20 +92,20 @@ public class SamplePlotters extends javax.swing.JFrame {
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        menuBar1 = new javax.swing.JMenuBar();
+        fileMenu1 = new javax.swing.JMenu();
+        openMenuItem1 = new javax.swing.JMenuItem();
+        saveMenuItem1 = new javax.swing.JMenuItem();
+        saveAsMenuItem1 = new javax.swing.JMenuItem();
+        exitMenuItem1 = new javax.swing.JMenuItem();
+        editMenu1 = new javax.swing.JMenu();
+        cutMenuItem1 = new javax.swing.JMenuItem();
+        copyMenuItem1 = new javax.swing.JMenuItem();
+        pasteMenuItem1 = new javax.swing.JMenuItem();
+        deleteMenuItem1 = new javax.swing.JMenuItem();
+        helpMenu1 = new javax.swing.JMenu();
+        contentsMenuItem1 = new javax.swing.JMenuItem();
+        aboutMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,11 +113,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
+            .addGap(0, 395, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 242, Short.MAX_VALUE)
+            .addGap(0, 251, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Basic", plot2D1);
@@ -113,11 +126,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D2.setLayout(plot2D2Layout);
         plot2D2Layout.setHorizontalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
+            .addGap(0, 395, Short.MAX_VALUE)
         );
         plot2D2Layout.setVerticalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 242, Short.MAX_VALUE)
+            .addGap(0, 251, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Parametric", plot2D2);
@@ -126,11 +139,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D3.setLayout(plot2D3Layout);
         plot2D3Layout.setHorizontalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
+            .addGap(0, 395, Short.MAX_VALUE)
         );
         plot2D3Layout.setVerticalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 242, Short.MAX_VALUE)
+            .addGap(0, 251, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Field", plot2D3);
@@ -139,28 +152,29 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D4.setLayout(plot2D4Layout);
         plot2D4Layout.setHorizontalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
+            .addGap(0, 395, Short.MAX_VALUE)
         );
         plot2D4Layout.setVerticalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 242, Short.MAX_VALUE)
+            .addGap(0, 251, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Surface", plot2D4);
         jTabbedPane1.addTab("Points", plot2D5);
+        jTabbedPane1.addTab("Point Set", plot2D6);
 
-        fileMenu.setText("File");
+        fileMenu.setText("File"); // NOI18N
 
-        openMenuItem.setText("Open");
+        openMenuItem.setText("Open"); // NOI18N
         fileMenu.add(openMenuItem);
 
-        saveMenuItem.setText("Save");
+        saveMenuItem.setText("Save"); // NOI18N
         fileMenu.add(saveMenuItem);
 
-        saveAsMenuItem.setText("Save As ...");
+        saveAsMenuItem.setText("Save As ..."); // NOI18N
         fileMenu.add(saveAsMenuItem);
 
-        exitMenuItem.setText("Exit");
+        exitMenuItem.setText("Exit"); // NOI18N
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
@@ -170,82 +184,80 @@ public class SamplePlotters extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        editMenu.setText("Edit");
+        editMenu.setText("Edit"); // NOI18N
 
-        cutMenuItem.setText("Cut");
+        cutMenuItem.setText("Cut"); // NOI18N
         editMenu.add(cutMenuItem);
 
-        copyMenuItem.setText("Copy");
+        copyMenuItem.setText("Copy"); // NOI18N
         editMenu.add(copyMenuItem);
 
-        pasteMenuItem.setText("Paste");
+        pasteMenuItem.setText("Paste"); // NOI18N
         editMenu.add(pasteMenuItem);
 
-        deleteMenuItem.setText("Delete");
+        deleteMenuItem.setText("Delete"); // NOI18N
         editMenu.add(deleteMenuItem);
 
         menuBar.add(editMenu);
 
-        helpMenu.setText("Help");
+        helpMenu.setText("Help"); // NOI18N
 
-        contentsMenuItem.setText("Contents");
+        contentsMenuItem.setText("Contents"); // NOI18N
         helpMenu.add(contentsMenuItem);
 
-        aboutMenuItem.setText("About");
+        aboutMenuItem.setText("About"); // NOI18N
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
 
-        setJMenuBar(menuBar);
+        fileMenu1.setText("File"); // NOI18N
 
-        fileMenu.setText("File");
+        openMenuItem1.setText("Open"); // NOI18N
+        fileMenu1.add(openMenuItem1);
 
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
+        saveMenuItem1.setText("Save"); // NOI18N
+        fileMenu1.add(saveMenuItem1);
 
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
+        saveAsMenuItem1.setText("Save As ..."); // NOI18N
+        fileMenu1.add(saveAsMenuItem1);
 
-        saveAsMenuItem.setText("Save As ...");
-        fileMenu.add(saveAsMenuItem);
-
-        exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        exitMenuItem1.setText("Exit"); // NOI18N
+        exitMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(exitMenuItem);
+        fileMenu1.add(exitMenuItem1);
 
-        menuBar.add(fileMenu);
+        menuBar1.add(fileMenu1);
 
-        editMenu.setText("Edit");
+        editMenu1.setText("Edit"); // NOI18N
 
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
+        cutMenuItem1.setText("Cut"); // NOI18N
+        editMenu1.add(cutMenuItem1);
 
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
+        copyMenuItem1.setText("Copy"); // NOI18N
+        editMenu1.add(copyMenuItem1);
 
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
+        pasteMenuItem1.setText("Paste"); // NOI18N
+        editMenu1.add(pasteMenuItem1);
 
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
+        deleteMenuItem1.setText("Delete"); // NOI18N
+        editMenu1.add(deleteMenuItem1);
 
-        menuBar.add(editMenu);
+        menuBar1.add(editMenu1);
 
-        helpMenu.setText("Help");
+        helpMenu1.setText("Help"); // NOI18N
 
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
+        contentsMenuItem1.setText("Contents"); // NOI18N
+        helpMenu1.add(contentsMenuItem1);
 
-        aboutMenuItem.setText("About");
-        helpMenu.add(aboutMenuItem);
+        aboutMenuItem1.setText("About"); // NOI18N
+        helpMenu1.add(aboutMenuItem1);
 
-        menuBar.add(helpMenu);
+        menuBar1.add(helpMenu1);
 
-        setJMenuBar(menuBar);
+        setJMenuBar(menuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -278,25 +290,40 @@ public class SamplePlotters extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem aboutMenuItem1;
     private javax.swing.JMenuItem contentsMenuItem;
+    private javax.swing.JMenuItem contentsMenuItem1;
     private javax.swing.JMenuItem copyMenuItem;
+    private javax.swing.JMenuItem copyMenuItem1;
     private javax.swing.JMenuItem cutMenuItem;
+    private javax.swing.JMenuItem cutMenuItem1;
     private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JMenuItem deleteMenuItem1;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu editMenu1;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem exitMenuItem1;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu fileMenu1;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenu helpMenu1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuBar menuBar1;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem openMenuItem1;
     private javax.swing.JMenuItem pasteMenuItem;
+    private javax.swing.JMenuItem pasteMenuItem1;
     private specto.plotpanel.Plot2D plot2D1;
     private specto.plotpanel.Plot2D plot2D2;
     private specto.plotpanel.Plot2D plot2D3;
     private specto.plotpanel.Plot2D plot2D4;
     private specto.plotpanel.Plot2D plot2D5;
+    private specto.plotpanel.Plot2D plot2D6;
     private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JMenuItem saveAsMenuItem1;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem saveMenuItem1;
     // End of variables declaration//GEN-END:variables
     
 }

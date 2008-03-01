@@ -17,7 +17,7 @@ import specto.visometry.Euclidean2;
 /**
  * <p>
  * Implements a segment between two 2D points. Uses two <b>R2</b>s for the endpoints
- * and connects them with a solid line. Optionally should have two <b>Point2D</b>s at the
+ * and connects them with a solid lineSegment. Optionally should have two <b>Point2D</b>s at the
  * endpoints to control the position of the segment.
  * </p>
  * @author Elisha Peterson
@@ -56,7 +56,7 @@ public class Segment2D extends Decoration<Euclidean2> {
             case LINE_SEGMENT:
             case LINE_RAY:
             case LINE_LINE:
-                g.draw(visometry.line(getPoint1(),getPoint2()));
+                g.draw(visometry.lineSegment(getPoint1(),getPoint2()));
         }
     }
 
@@ -66,17 +66,17 @@ public class Segment2D extends Decoration<Euclidean2> {
     
     // STYLE OPTIONS
     
-    /** Represents a line segment */
+    /** Represents a lineSegment segment */
     public static final int LINE_SEGMENT = 0;
     /** Draws as a ray */
     public static final int LINE_RAY = 1;
-    /** Draw as a line */
+    /** Draw as a lineSegment */
     public static final int LINE_LINE = 2;
-    /** Switch for which type of line this is. */
+    /** Switch for which type of lineSegment this is. */
     private int type = LINE_SEGMENT;
-    /** Returns the type of line being displayed. */
+    /** Returns the type of lineSegment being displayed. */
     public int getType() {return type;}
-    /** Sets the type of line being displayed. */
+    /** Sets the type of lineSegment being displayed. */
     public void setType(int type) {this.type = type;}
 
     @Override

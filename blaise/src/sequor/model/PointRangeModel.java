@@ -16,24 +16,20 @@ import scio.coordinate.R2;
 public class PointRangeModel extends FiresChangeEvents implements ChangeListener{
     public DoubleRangeModel xModel,yModel;
     
-    public PointRangeModel(){
-        initializeModels();
-        setTo(0,0);
-        setBoundsMax();
-    }
+    public PointRangeModel(){this(0,0);}
     public PointRangeModel(DoubleRangeModel xModel,DoubleRangeModel yModel){
         this.xModel=(DoubleRangeModel) xModel.clone();
         this.yModel=(DoubleRangeModel) yModel.clone();
     }
     public PointRangeModel(double x,double y){
         initializeModels();
-        setTo(x,y);
         setBoundsMax();
+        setTo(x,y);
     }
     public PointRangeModel(R2 point){
         initializeModels();
-        setTo(point);
         setBoundsMax();
+        setTo(point);
     }
     public PointRangeModel(R2 point,double lx,double ly,double rx,double ry){
         initializeModels();

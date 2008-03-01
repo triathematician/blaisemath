@@ -104,7 +104,11 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     // IMPLEMENTING ABSTRACT METHODS    
 
     @Override
-    public JMenu getOptionsMenu() {return null;}
+    public JMenu getOptionsMenu() {
+        JMenu result=new JMenu("Point Style");
+        result.add(getColorButton());
+        return result;
+    }
 
     
     

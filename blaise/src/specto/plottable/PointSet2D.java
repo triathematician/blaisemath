@@ -14,32 +14,34 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import specto.Animatable;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import sequor.model.ComboBoxRangeModel;
 import specto.Plottable;
+import specto.VisualStyle;
 import specto.visometry.Euclidean2;
 
 /**
  *
  * @author ae3263
  */
-public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>{
+public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>,ChangeListener{
     Vector<R2> points;
     public PointSet2D(Euclidean2 vis){this(vis,new Vector<R2>(),Color.BLACK);}
     public PointSet2D(Euclidean2 vis,Color c){this(vis,new Vector<R2>(),c);}
     public PointSet2D(Euclidean2 vis,Vector<R2> points,Color c){
         super(vis);
+        initStyle();
+        setColor(c);
         setOptionsMenuBuilding(true);
         this.points=points;
-        setColor(c);
     }
     
     public Vector<R2> getPath(){
@@ -57,33 +59,34 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public void paintComponent(Graphics2D g) {
         if(points.size()==0){return;}
         g.setColor(color);
-        g.setStroke(stroke);
+        g.setStroke(strokes[style.getValue()]);
         g.draw(drawPath(0,points.size()));
     }
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){
         if(points.size()==0){return;}
         g.setColor(color);
-        g.setStroke(stroke);
-        switch(animateStyle){
-        case ANIMATE_DRAW:
-            g.draw(drawPath(t.getStartStep(),t.getCurrentStep()));
-            break;
-        case ANIMATE_DOT:
-            g.fill(drawDot(t.getCurrentStep()));
-            break;
-        case ANIMATE_TRACE:
-            g.draw(drawPath(0,points.size()));
-            g.fill(drawDot(t.getCurrentStep()));
-            break;
-        case ANIMATE_TRAIL:
-            g.setColor(color.brighter());
-            g.draw(drawPath(0,t.getCurrentStep()));
-            
-            g.setColor(color.darker());
-            g.draw(drawPath(t.getCurrentStep()-5,t.getCurrentStep()));
-            g.fill(drawDot(t.getCurrentStep()));
-            break;
+        g.setStroke(strokes[style.getValue()]);
+        switch(animateStyle.getValue()){
+            case ANIMATE_DRAW:
+                g.draw(drawPath(t.getStartStep(),t.getCurrentStep()));
+                break;
+            case ANIMATE_DOT:
+                g.fill(drawDot(t.getCurrentStep()));
+                break;
+            case ANIMATE_TRACE:
+                g.draw(drawPath(0,points.size()));
+                g.fill(drawDot(t.getCurrentStep()));
+                break;
+            case ANIMATE_TRAIL:
+            default:
+                g.setColor(color.brighter());
+                g.draw(drawPath(0,t.getCurrentStep()));
+
+                g.setColor(color.darker());
+                g.draw(drawPath(t.getCurrentStep()-5,t.getCurrentStep()));
+                g.fill(drawDot(t.getCurrentStep()));
+                break;
         }        
     }
     
@@ -103,80 +106,54 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     }
     
     // STYLE SETTINGS
-    
-    protected Stroke stroke=MEDIUM_STROKE;
-    private int style=MEDIUM;
-    private int animateStyle=ANIMATE_TRAIL;
-    
-    public static final int LINE=0;
+
+    public static final int REGULAR=0;
     public static final int MEDIUM=1;
     public static final int THICK=2;
     public static final int DOTTED=3;
     public static final int SKETCH=4;    
+
+    public static final float[] dash2={1.0f,4.0f};
+    public static final float[] dash3={2.0f,6.0f};
+    public static final Stroke[] strokes={
+        new BasicStroke(2.0f),
+        new BasicStroke(3.0f),
+        new BasicStroke(4.0f),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f)};
+    
+    static final String[] styleStrings={"Regular","Medium","Thick","Dotted","Sketch"};
+    public ComboBoxRangeModel style;
     
     public static final int ANIMATE_DRAW=0;
     public static final int ANIMATE_DOT=1;
     public static final int ANIMATE_TRACE=2;
     public static final int ANIMATE_TRAIL=3;
     
-    public static final Stroke BASIC_STROKE=new BasicStroke(2.0f);
-    public static final Stroke MEDIUM_STROKE=new BasicStroke(3.0f);
-    public static final Stroke THICK_STROKE=new BasicStroke(4.0f);
-    public static final float[] dash2={2.0f,2.0f};
-    public static final Stroke DOTTED_STROKE=new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f);
-    public static final float[] dash3={1.0f,4.0f};
-    public static final Stroke VERY_DOTTED_STROKE=new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f);
-    
-    public void setStroke(Stroke newValue){if(stroke!=newValue){stroke=newValue;fireStateChanged();}}
-    public void setStyle(int newValue){
-        if(style!=newValue){
-            switch(newValue){
-            case LINE:stroke=BASIC_STROKE;break;
-            case MEDIUM:stroke=MEDIUM_STROKE;break;
-            case THICK:stroke=THICK_STROKE;break;
-            case DOTTED:stroke=VERY_DOTTED_STROKE;break;
-            case SKETCH:break;
-            default:break;
-            }
-            style=newValue;
-            fireStateChanged();
-        }
+    static final String[] animateStyleStrings={"Draw path","Moving dot","Trace path","Draw with trail"};
+    public ComboBoxRangeModel animateStyle;
+
+    public void initStyle(){
+        style=new ComboBoxRangeModel(styleStrings,MEDIUM,0,4);
+        style.addChangeListener(this);
+        animateStyle=new ComboBoxRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
+        animateStyle.addChangeListener(this);
     }
     
-    
+
+
     // EVENT HANDLING
     
     public JMenu getOptionsMenu() {
-        JMenu result=new JMenu("Path");
-        result.add(new JMenuItem("Color",null));
-        JMenu strokeSubMenu=new JMenu("Stroke");
-        strokeSubMenu.add(new JMenuItem("Regular")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(LINE);}            
-        });
-        strokeSubMenu.add(new JMenuItem("Medium")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(MEDIUM);}            
-        });
-        strokeSubMenu.add(new JMenuItem("Thick")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(THICK);}            
-        });
-        strokeSubMenu.add(new JMenuItem("Dotted")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(DOTTED);}            
-        });
-        result.add(strokeSubMenu);
-        JMenu animateSubMenu=new JMenu("Animation Style");
-        animateSubMenu.add(new JMenuItem("Draw")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){animateStyle=ANIMATE_DRAW;}
-        });
-        animateSubMenu.add(new JMenuItem("Dot")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){animateStyle=ANIMATE_DOT;}
-        });
-        animateSubMenu.add(new JMenuItem("Trace")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){animateStyle=ANIMATE_TRACE;}
-        });
-        animateSubMenu.add(new JMenuItem("Trail")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){animateStyle=ANIMATE_TRAIL;}
-        });
-        result.add(animateSubMenu);
+        JMenu result=new JMenu("Path Options");
+        result.add(getColorButton());
+        result.add(style.getSubMenu("Line Style"));
+        result.add(animateStyle.getSubMenu("Animation Style"));
+        try{
+            for(JMenuItem mi:getDecorationMenuItems()){result.add(mi);}
+        }catch(NullPointerException e){}
         return result;
     }
+
+    public void stateChanged(ChangeEvent e) {redraw();}
 }

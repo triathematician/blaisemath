@@ -1,22 +1,26 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * VisualStyle.java
+ * Created on Feb 20, 2008
  */
 
 package specto;
 
-import java.beans.PropertyChangeEvent;
-import sequor.model.FiresChangeEvents;
+import sequor.model.ComboBoxRangeModel;
 
 /**
- *
- * @author ae3263
+ * Contains a list of style parameters for general use; automatically generates menus and comboboxes for selection.
+ * Also defines several static methods.
+ * 
+ * @author Elisha Peterson
  */
-public abstract class VisualStyle extends FiresChangeEvents {
-    @Override
-    public void setValue(String s) {}
-    @Override
-    public String toLongString() {return "Visual style";}
-    @Override
-    public PropertyChangeEvent getChangeEvent(String s) {return new PropertyChangeEvent(this,s,null,null);}
+public class VisualStyle extends ComboBoxRangeModel{
+    public VisualStyle(){super();}
+    public VisualStyle(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
+    public void cycleStyle(){
+        if(getValue()==getMaximum()){
+            setValue(getMinimum());
+        }else{
+            setValue(getValue()+1);
+        }
+    }
 }

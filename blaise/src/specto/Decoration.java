@@ -20,10 +20,14 @@ public abstract class Decoration<V extends Visometry> extends Plottable<V> imple
     
     public void setParent(Plottable<V> parent){
         this.parent=parent;
+        setColor(parent.color);
         parent.addChangeListener(this);
     }
     public Plottable<V> getParent(){return parent;}
         
     @Override
     public void stateChanged(ChangeEvent e){recompute();}
+
+    @Override
+    protected void fireStateChanged() {parent.redraw();}
 }

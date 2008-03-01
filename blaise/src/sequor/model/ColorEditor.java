@@ -8,6 +8,7 @@ package sequor.model;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
+import javax.swing.JMenuItem;
 
 /**
  * This class is able to return a button which opens a dialog to edit a color model upon being pressed.

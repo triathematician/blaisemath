@@ -1,6 +1,7 @@
 package sequor.model;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Vector;
 import javax.swing.BoundedRangeModel;
 
 /**
@@ -39,11 +40,37 @@ public class DoubleRangeModel extends FiresChangeEvents {
     public void setValue(String s){setValue(Double.valueOf(s));}
     public double getStep(){return step;}
     public void setStep(double newValue){step=newValue;}
-    
     public String toString(){return Double.toString(value);}
     public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
     
-    public double getRange(){return (maximum-minimum);}
+    // MORE ADVANCED METHODS
+    
+    /** Returns the range of values. */
+    public Double getRange(){return maximum-minimum;}
+    /** Returns list of doubles specified by the current min, max, and step size.
+     * @param inclusive whether to include the endpoints in the range; if not, starts at minimum+step/2
+     * @return Vector of Double's containing the values
+     */
+    public Vector<Double> getValueRange(boolean inclusive,double shift){
+        Vector<Double> result=new Vector<Double>();
+        if(inclusive){result.add(minimum-shift*step);}else{result.add(minimum+step/2-shift*step);}
+        while(result.lastElement()<=(maximum-step-shift*step)){result.add(result.lastElement()+step);}
+        return result;
+    }
+    
+    /** This sets the step size based on the current endpoints and a desired number of "sample points"
+     * @param numSteps the desired number of points
+     * @param inclusive whether the endpoints should be included or not
+     */
+    public void setNumSteps(int numSteps,boolean inclusive){
+        if(inclusive){
+            if(numSteps<2){return;}
+            setStep(getRange()/(numSteps-1));
+        }else{
+            if(numSteps<1){return;}
+            setStep(getRange()/numSteps);
+        }
+    }
     
     /**
      * Routine which changes the values stored by the model. All other routines

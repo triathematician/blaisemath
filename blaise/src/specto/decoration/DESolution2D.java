@@ -13,7 +13,6 @@ import scio.function.Function;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
 import specto.plottable.VectorField2D;
-import specto.visometry.Euclidean2;
 
 /**
  * Represents a solution curve to a differential equation. Visually consists of an initial point,
@@ -37,11 +36,11 @@ public class DESolution2D extends InitialPointSet2D {
     /** Initializes solution curve models. */
     void initSolutionCurves(){
         if(path==null){
-            path=new PointSet2D(visometry);
+            path=new PointSet2D(visometry,parent.getColor());
         }
         if(reversePath==null){
-            reversePath=new PointSet2D(visometry);
-            reversePath.setStyle(PointSet2D.DOTTED);
+            reversePath=new PointSet2D(visometry,parent.getColor());
+            reversePath.style.setValue(PointSet2D.DOTTED);
         }
         path.getPath().clear();
         reversePath.getPath().clear();

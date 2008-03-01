@@ -5,6 +5,7 @@
 
 package specto.visometry;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 import javax.swing.ButtonGroup;
@@ -360,8 +362,8 @@ public class Euclidean2 extends Visometry<R2> {
     
     // SHAPE FACTORY METHODS
  
-    /** Returns a line in the current geometry. */
-    public Shape line(R2 p1,R2 p2){
+    /** Returns a lineSegment in the current geometry. */
+    public Shape lineSegment(R2 p1,R2 p2){
         return new java.awt.geom.Line2D.Double(toWindow(p1),toWindow(p2));
     }
     
@@ -377,6 +379,18 @@ public class Euclidean2 extends Visometry<R2> {
     }
     /** Returns a rectangle in the current geometry */
     public Shape rectangle(R2 p1,R2 p2){return rectangle(p1.x,p1.y,p2.x,p2.y);}
+    
+    /** Returns a rectangle in the current geometry */
+    public Shape trapezoid(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4){   
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        path.moveTo(x1,y1);
+        path.lineTo(x2,y2);
+        path.lineTo(x3,y3);
+        path.lineTo(x4,y4);
+        path.lineTo(x1,y1);
+        path.transform(getAffineTransformation());
+        return path;
+    }
     
     /** Returns an ellipse in the current geometry */
     public Shape ellipse(double x1,double y1,double x2,double y2){
@@ -402,5 +416,28 @@ public class Euclidean2 extends Visometry<R2> {
     /** Returns square dot with size independent of geometry. */
     public Shape squareDot(R2 ctr,double winRad){
         return new java.awt.geom.Rectangle2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
+    }
+    /** Returns path containing given list of points. */
+    public Shape path(Vector<R2> points){
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        path.moveTo(points.firstElement().x, points.firstElement().y);
+        for(R2 p:points){path.lineTo(p.x,p.y);}
+        path.transform(getAffineTransformation());
+        return path;
+    }
+    /** Returns closed path containing given list of points. */
+    public Shape closedPath(Vector<R2> points){
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        path.moveTo(points.firstElement().x, points.firstElement().y);
+        for(R2 p:points){path.lineTo(p.x,p.y);}
+        path.lineTo(points.firstElement().x,points.firstElement().y);
+        path.transform(getAffineTransformation());
+        return path;
+    }
+    // DRAW METHODS
+    
+    /** Draws a bunch of solid dots. */
+    public void fillDots(Graphics2D g,Vector<R2> points,double rad){
+        for(R2 point:points){g.fill(dot(point,rad));}
     }
 }

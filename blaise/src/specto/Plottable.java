@@ -6,12 +6,17 @@
 package specto;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
+import java.util.Vector;
+import javax.swing.JButton;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import sequor.component.RangeTimer;
+import sequor.model.ColorModel;
 
 /**
  * This abstract class includes basic functionality for the plotting of some object on
@@ -56,11 +61,33 @@ public abstract class Plottable<V extends Visometry> {
         d.setParent(this);
     }
     public abstract JMenu getOptionsMenu();
+    public Vector<JMenuItem> getDecorationMenuItems(){
+        if(decorations==null){return null;}
+        Vector<JMenuItem> result=new Vector<JMenuItem>();
+        for(Plottable<V> decoration:decorations.getElements()){
+            result.add(decoration.getOptionsMenu());
+        }
+        return result;
+    }
+    public Component getColorButton(){
+        final ColorModel cm=new ColorModel(color);
+        final JButton result=cm.getButton();
+        cm.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){setColor(cm.getValue());result.setForeground(cm.getValue().brighter());}
+        });
+        result.setForeground(color);
+        result.setText("Change Color");
+        result.setOpaque(false);
+        result.setRolloverEnabled(true);
+        return result;
+    }
 
     public abstract void recompute();
+    public void redraw(){fireStateChanged();}
     public void paintDecorations(Graphics2D g){if(decorations!=null){decorations.paintComponent(g);}}
     public void paintDecorations(Graphics2D g,RangeTimer t){if(decorations!=null){decorations.paintComponent(g,t);}}
     public abstract void paintComponent(Graphics2D g);
+            
     
     
     // EVENT HANDLING

@@ -133,7 +133,7 @@ public class VectorField2D extends Plottable<Euclidean2> {
         g.draw(new Line2D.Double(end,arrow2));
     }
     
-    /** Draws a line in the direction of the field at the current point. */
+    /** Draws a lineSegment in the direction of the field at the current point. */
     public void drawLine(Graphics2D g,R2 p){
         R2 arrow=getArrow(p);
         Point2D.Double winPoint=visometry.toWindow(p);

@@ -26,7 +26,7 @@ public class InitialPointSet2D extends Decoration<Euclidean2> implements Animata
     /** The path "decorating" the initial point. */
     PointSet2D path;
 
-    public InitialPointSet2D(Point2D parent){super(parent);}
+    public InitialPointSet2D(Point2D parent){super(parent);path=new PointSet2D(parent.getVisometry());}
     public InitialPointSet2D(Point2D parent,Vector<R2> points,Color c){
         super(parent);
         path=new PointSet2D(parent.getVisometry(),points,parent.getColor());
@@ -38,7 +38,7 @@ public class InitialPointSet2D extends Decoration<Euclidean2> implements Animata
     @Override
     public void setColor(Color newValue){
         super.setColor(newValue);
-        path.setColor(newValue);
+        if(path!=null){path.setColor(newValue);}
     }
     
     @Override

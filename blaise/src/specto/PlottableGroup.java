@@ -17,20 +17,22 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import sequor.component.RangeTimer;
 
 /**
  *
  * @author Elisha Peterson
  */
-public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable {
-    Vector<Plottable<V>> plottables;
+public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable,ChangeListener {
+    protected Vector<Plottable<V>> plottables;
 
     public PlottableGroup(V v) {super(v);plottables=new Vector<Plottable<V>>();}
     
     public void clear(){plottables.clear();}    
-    public void add(Plottable<V> p){plottables.add(p);}
-    public void remove(Plottable<V> p){plottables.remove(p);}
+    public void add(Plottable<V> p){plottables.add(p);p.addChangeListener(this);}
+    public void remove(Plottable<V> p){plottables.remove(p);p.removeChangeListener(this);}
     public Collection<Plottable<V>> getElements(){return plottables;}
 
     @Override
@@ -134,4 +136,6 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     @Override
     public void mouseExited(MouseEvent e){visometry.mouseExited(e);}
+
+    public void stateChanged(ChangeEvent e) {fireStateChanged();}
 }

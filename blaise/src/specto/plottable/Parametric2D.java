@@ -1,6 +1,5 @@
 /*
  * Parametric2D.java
- * 
  * Created on Sep 27, 2007, 1:12:35 PM
  */
 
@@ -13,13 +12,14 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
+import sequor.model.DoubleRangeModel;
 import specto.visometry.Euclidean2;
 
 /**
  * Draws a parametric function on the plane. In other words, it contains two functions which give the x and y coordinates
  * of the function in terms of some other parameter (frequently 't'). The properties of this class which permit it to be
  * plotted are any function from Double->(Double,Double), and min/max values of t.
- * @author ae3263
+ * @author ElishaPeterson
  */
 public class Parametric2D extends PointSet2D {
     
@@ -27,20 +27,9 @@ public class Parametric2D extends PointSet2D {
     
     /** Function which takes in a double and returns a pair of doubles = a point in the plane. */
     Function<Double,R2> function;
-    
-    /** The default minimum of t */
-    double tMin;
 
-    /** The default maximum of t */
-    double tMax;
-    
-    /** The number of points to compute */
-    int samplePoints;
-    
-    /** Range of independent variable values which are required to compute the path of the function.
-     * By default, this is controlled within this class, and 2000 points are plotted.
-     */
-    Vector<Double> tRange;
+    /** Range of t values. */
+    DoubleRangeModel tRange;
     
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
     private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
@@ -66,9 +55,8 @@ public class Parametric2D extends PointSet2D {
         super(vis);
         setColor(Color.BLUE);
         this.function=function;
-        this.tMin=tMin;
-        this.tMax=tMax;
-        this.samplePoints=samplePoints;
+        tRange=new DoubleRangeModel(tMin,tMin,tMax);
+        tRange.setNumSteps(samplePoints,true);
     }
     
     // TODO should not recompute path every time. Just when it's necessary
@@ -84,13 +72,6 @@ public class Parametric2D extends PointSet2D {
     
     /** Computes the path over the given range */
     public void computePath() throws FunctionValueException{
-        double tStep=(tMax-tMin)/samplePoints;
-        if(tRange==null){
-            tRange=new Vector<Double>(samplePoints);
-        }else{
-            tRange.clear();
-        }
-        for(double d=tMin;d<=tMax;d+=tStep){tRange.add(d);}
-        points=function.getValue(tRange);
+        points=function.getValue(tRange.getValueRange(true,0.0));
     }
 }

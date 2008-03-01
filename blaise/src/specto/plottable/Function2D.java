@@ -54,46 +54,16 @@ public class Function2D extends PointSet2D{
     @Override
     public void paintComponent(Graphics2D g,RangeTimer t){
         try {
-            g.setColor(color);
-            g.setStroke(stroke);
             computePath();
-            switch (style) {
-                case CONTINUOUS:
-                    super.paintComponent(g, t);
-                    break;
-                case POLYGONAL:
-                    break;
-                case BARS:
-                    drawBars(g);
-                    break;
-                case CBARS:
-                    super.paintComponent(g, t);
-                    drawBars(g);
-                    break;
-            }
+            super.paintComponent(g, t);
         } catch (FunctionValueException ex) {}
     }
     
     @Override
     public void paintComponent(Graphics2D g) {
         try{
-            g.setColor(color);
-            g.setStroke(stroke);
             computePath();
-            switch(style){
-            case CONTINUOUS:
-                super.paintComponent(g);
-                break;
-            case POLYGONAL:
-                break;
-            case BARS:
-                drawBars(g);
-                break;
-            case CBARS:
-                super.paintComponent(g);
-                drawBars(g);
-                break;
-            }
+            super.paintComponent(g);
         }catch(FunctionValueException e){}
     }
     public void computePath() throws FunctionValueException {
@@ -105,38 +75,4 @@ public class Function2D extends PointSet2D{
             points.add(new R2(xValues.get(i),yValues.get(i)));
         }
     }
-    public Vector<R2> decimatedPath(int n){
-        Vector<R2> result=new Vector<R2>();
-        for(int i=0;i<points.size();i++){
-            if(i%n==0){result.add(points.get(i));}
-        }
-        return result;
-    }
-    public void drawBars(Graphics2D g){
-        if(points.size()<2){return;}
-        g.setStroke(new BasicStroke(.5f));
-        Vector<R2> temp=decimatedPath(10);
-        double width=5*(points.get(1).x-points.get(0).x);
-        Shape r;
-        for(R2 p:temp){
-            r=visometry.rectangle(p.x-width,0,p.x+width,p.y);
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float).2));
-            g.fill(r);
-            g.setPaintMode();
-            g.draw(r);
-        }
-    }
-        
-    
-    // STYLES    
-    /** Displays function normally. */
-    private static final int CONTINUOUS=0;
-    /** Displays function as a polygonal approximation. */
-    private static final int POLYGONAL=1;
-    /** Displays function as a series of bars. */
-    private static final int BARS=2;
-    /** Displays function as a series of bars, plus the function. */
-    private static final int CBARS=3;
-    
-    private static int style=CONTINUOUS;
 }

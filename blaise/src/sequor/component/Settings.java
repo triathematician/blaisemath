@@ -257,7 +257,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         for(SettingsProperty sp:this){
             switch(sp.getEditorType()){
                 case EDIT_COMBO : 
-                    result.add(getMenuItem(sp.getName(),(ComboBoxRangeModel)sp.getModel()));
+                    result.add(((ComboBoxRangeModel)sp.getModel()).getSubMenu(sp.getName()));
                     break;
                 case EDIT_COLOR :
                     if (sp.getModel() instanceof ColorModel){
@@ -302,7 +302,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
                     component=getSpinner((IntegerRangeModel) sp.getModel());
                     break;
                 case EDIT_COMBO:
-                    component=getComboBox((ComboBoxRangeModel) sp.getModel());
+                    component=((ComboBoxRangeModel) sp.getModel()).getComboBox();
                     break;
                 case EDIT_STRING:
                     component=new JTextField();
@@ -359,15 +359,6 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
 
     // GUI HANDLING SUPPORT
-    
-    /** Generates a combo box given a string list. */
-    public static JComboBox getComboBox(ComboBoxRangeModel cbrm) {
-        JComboBox result = new JComboBox(new ComboBoxEditor(cbrm));
-        result.setMinimumSize(new Dimension(50, 20));
-        result.setPreferredSize(new Dimension(50, 25));
-        result.setMaximumSize(new Dimension(200, 25));
-        return result;
-    }
 
     /** Generates a spinner given a range model and a step size. */
     public static JSpinner getSpinner(DoubleRangeModel drm) {
@@ -404,26 +395,6 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         result.setPreferredSize(new Dimension(50, 25));
         result.setMaximumSize(new Dimension(50, 25));
         return result;
-    }
-
-    public static JMenuItem getMenuItem(String name,final ComboBoxRangeModel cbrm){
-        // TODO test this method; really not sure if it works
-        JMenu subMenu=new JMenu(name);
-        ButtonGroup group=new ButtonGroup();
-        for(int i=cbrm.getMinimum();i<=cbrm.getMaximum();i++){
-            final int j=i;
-            JRadioButtonMenuItem item=new JRadioButtonMenuItem(cbrm.getString(i));
-            item.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    cbrm.setValue(j);
-                }                
-            });
-            subMenu.add(item);
-            group.add(item);
-            if(i==cbrm.getValue()){item.setSelected(true);}
-        }
-        return subMenu;
     }
     
     public static JMenuItem getMenuItem(final String name,final ColorModel cm){

@@ -57,7 +57,7 @@ public class SettingsTable extends JTable {
         switch(sp.getEditorType()){
             case Settings.EDIT_BOOLEAN: return new DefaultCellEditor(new JCheckBox());
             case Settings.EDIT_COLOR: return new ColorEditor((ColorModel)sp.getModel());
-            case Settings.EDIT_COMBO: return new DefaultCellEditor(Settings.getComboBox((ComboBoxRangeModel)sp.getModel()));
+            case Settings.EDIT_COMBO: return new DefaultCellEditor(((ComboBoxRangeModel)sp.getModel()).getComboBox());
             // TODO write custom double cell editor
             case Settings.EDIT_DOUBLE: return new TableSpinner((DoubleRangeModel)sp.getModel());
             case Settings.EDIT_FUNCTION: return new DefaultCellEditor(new FunctionTextComboBox((FunctionTreeModel)sp.getModel()));
