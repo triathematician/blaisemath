@@ -5,7 +5,6 @@
 
 package behavior;
 
-import behavior.*;
 import simulation.Agent;
 import scio.coordinate.R2;
 import scio.coordinate.V2;

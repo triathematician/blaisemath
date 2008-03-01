@@ -5,6 +5,7 @@
 
 package simulation;
 
+import behavior.ApproachPath;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import scio.function.FunctionValueException;
@@ -54,7 +55,7 @@ public class Agent implements TaskGenerator {
     /** Agent's current list of tasks (changes over time) */
     Vector<Task> tasks;
     /** Behavior corresponding to current task */
-    Behavior behavior;
+    Behavior myBehavior;
     
     /** Agent's initial position */
     PointRangeModel initialPosition;
@@ -93,7 +94,7 @@ public class Agent implements TaskGenerator {
 
     /** First initialization of the agent. */
     public void initialize(){
-        behavior=Behavior.getBehavior(getBehavior());
+        myBehavior=Behavior.getBehavior(getBehaviorType());
         tasks=new Vector<Task>();
         initialPosition=null;
         pov=new Vector<Agent>();
@@ -123,6 +124,7 @@ public class Agent implements TaskGenerator {
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
+    public Behavior getBehavior(){return myBehavior;}
     public R2 getPosition(){return loc.getStart();}
     private void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}
     private void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
@@ -192,18 +194,15 @@ public class Agent implements TaskGenerator {
     }
     
     /**
-     * Determines direction to proceed based on assigned behavior
+     * Determines direction to proceed based on assigned myBehavior
      * @param time      the current time stamp
      * @param stepTime  the time between iterations
      */
     public void planPath(double time,double stepTime){
-        if(tasks.isEmpty()){
-            loc.v=behavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());
-            //System.out.println("empty tasks");
-        }else if(tasks.size()==1){            
-            loc.v=behavior.direction(this,tasks.get(0).getTarget(),time).multipliedBy(stepTime*getTopSpeed());
+        if(myBehavior instanceof ApproachPath){
+            loc.v=myBehavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());
         }else{
-            loc.v=TaskFusion.getVector(this,behavior,tasks,time).multipliedBy(stepTime*getTopSpeed());
+            loc.v=TaskFusion.getVector(this,tasks,time).multipliedBy(stepTime*getTopSpeed());
         }
         if(java.lang.Double.isNaN(loc.v.x)){System.out.println("nan in path planning "+loc.v.toString()+" and pos x="+loc.x+" y="+loc.y);}
     }
@@ -236,7 +235,7 @@ public class Agent implements TaskGenerator {
     public double getSensorRange(){return ags.sensorRange.getValue();}
     public double getCommRange(){return ags.commRange.getValue();}
     public double getTopSpeed(){return ags.topSpeed.getValue();}
-    public int getBehavior(){return ags.behavior.getValue();}
+    public int getBehaviorType(){return ags.behavior.getValue();}
     public double getLeadFactor(){return ags.leadFactor.getValue();}
     public Color getColor(){return ags.color.getValue();}
     @Override
@@ -256,7 +255,7 @@ public class Agent implements TaskGenerator {
     public void setTopSpeed(double newValue){ags.topSpeed.setValue(newValue);}
     public void setBehavior(int newValue){
         ags.behavior.setValue(newValue);
-        if(newValue==Behavior.FIXEDPATH){}
+        if(newValue==Behavior.APPROACHPATH){}
     }
     public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
     public void setColor(Color newValue){ags.color.setValue(newValue);}
@@ -278,10 +277,10 @@ public class Agent implements TaskGenerator {
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
         private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
-        /** Lead factor if required for behavior */
+        /** Lead factor if required for myBehavior */
         private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,5,.01);
-        /** Position function if required for behavior */
-        private ParametricModel pm=new ParametricModel();
+        /** Position function if required for myBehavior */
+        private ParametricModel pm=new ParametricModel("10cos(t)","10sin(t)");
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
         /** Returns the color */
@@ -301,10 +300,11 @@ public class Agent implements TaskGenerator {
         
         public void stateChanged(ChangeEvent e){
             if(e.getSource()==behavior){
-                if(behavior.getValue()==Behavior.PURSUIT_LEADING){
+                myBehavior=Behavior.getBehavior(behavior.getValue());
+                if(behavior.getValue()==Behavior.LEADING){
                     setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
-                }else if(behavior.getValue()==Behavior.FIXEDPATH){
+                }else if(behavior.getValue()==Behavior.APPROACHPATH){
                     setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);
                     setPropertyEditor("Lead Factor",Settings.NO_EDIT);
                 }else{

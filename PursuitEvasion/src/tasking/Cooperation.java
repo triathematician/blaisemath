@@ -61,8 +61,8 @@ public class Cooperation {
      * agent will attempt to avoid both the enemy object, when centered at 0, and
      * its teammates in the inverted plane. The result on the normal value is
      * chasing down the prey while simultaneously avoiding teammates... this translates
-     * to a surround-like behavior which is completely autonomous, when all agents
-     * agree to perform the same behavior.
+     * to a surround-like myBehavior which is completely autonomous, when all agents
+     * agree to perform the same myBehavior.
      * @param ta team to assign tasks to
      * @param tb opposing team
      * @return treemap which pairs the pursuers to prey (by number in each team)

@@ -1,14 +1,6 @@
 /*
  * Behavior.java
- * 
  * Created on Aug 28, 2007, 10:26:46 AM
- * 
- * Author: Elisha Peterson
- * 
- * A behavior is an algorithm for converting an agent's understanding of the playing field (Pitch)
- * into movement. This is accomplished by the method direction(Pitch,Time) whereby a desired direction
- * of travel (mathematically, a <b>unit vector</b>) is computed. This will later be normalized by the
- * player via their maximum speed and maneuvering constraints. 
  */
 
 package behavior;
@@ -19,25 +11,26 @@ import scio.coordinate.R2;
 import scio.coordinate.V2;
 
 /**
- *
- * @author ae3263
+ * A behavior is an algorithm for converting an agent's understanding of the playing field (Pitch)
+ * into movement. This is accomplished by the method direction(Pitch,Time) whereby a desired direction
+ * of travel (mathematically, a <b>unit vector</b>) is computed. This will later be normalized by the
+ * player via their maximum speed and maneuvering constraints. 
+ * @author Elisha Peterson
  */
 public abstract class Behavior {
     
 // CONSTANTS
     
-    public static final int FIRST=0;
     public static final int STATIONARY=0;
-    public static final int SEEK=1;
-    public static final int PURSUIT_LEADING=2;
-    public static final int FLEE=3;
-    public static final int FIXEDPATH=4;
-    public static final int EVASION_RANDOMPATH=5;
-    public static final int LAST=5;
-    public static final String[] BEHAVIOR_STRINGS={"Stationary","Seek","Pursue with Lead Factor","Flee","Follow Fixed Path","Follow Random Path"};
+    public static final int STRAIGHT=1;
+    public static final int REVERSE=2;
+    public static final int LEADING=3;
+    public static final int APPROACHPATH=4;
+    public static final int RANDOMPATH=5;
+    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading","Approach Path","Random Path"};
 
     public static ComboBoxRangeModel getComboBoxModel(){
-        return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,FIRST,LAST);
+        return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,5);
     }
     
 // CONSTRUCTORS    
@@ -47,12 +40,12 @@ public abstract class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-        case STATIONARY:            return new behavior.Stationary();
-        case SEEK:                  return new behavior.Seek();
-        case PURSUIT_LEADING:       return new behavior.Leading();
-        case FLEE:                  return new behavior.Flee();
-        case FIXEDPATH:             return new behavior.ApproachPath();
-        case EVASION_RANDOMPATH:    return new behavior.RandomPath();
+        case STATIONARY:    return new behavior.Stationary();
+        case STRAIGHT:      return new behavior.Straight();
+        case REVERSE:       return new behavior.Straight();
+        case LEADING:       return new behavior.Leading();
+        case APPROACHPATH:  return new behavior.ApproachPath();
+        case RANDOMPATH:    return new behavior.RandomPath();
         }     
         return null;
     }

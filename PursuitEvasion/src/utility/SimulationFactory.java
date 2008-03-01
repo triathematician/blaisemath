@@ -70,8 +70,8 @@ public class SimulationFactory {
     public static Vector<Team> lightSimulation(){
         Vector<Team> teams=new Vector<Team>();
         //                      #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        Team bugTeam=new Team(  4,   Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
-        Team lightTeam=new Team(1,   Team.START_RANDOM,  Behavior.FLEE,              Color.GREEN);
+        Team bugTeam=new Team(  4,   Team.START_RANDOM,  Behavior.LEADING,   Color.DARK_GRAY);
+        Team lightTeam=new Team(1,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.GREEN);
         bugTeam.addGoal(  1.0,lightTeam,Goal.SEEK,  Tasking.AUTO_CLOSEST,1.0);
         lightTeam.addGoal(1.0,bugTeam,  Goal.FLEE,  Tasking.AUTO_GRADIENT, 1.0);
         bugTeam.setString("Bugs");         
@@ -84,8 +84,8 @@ public class SimulationFactory {
     public static Vector<Team> twoTeamSimulation(){
         Vector<Team> teams=new Vector<Team>();        
         //                          #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        Team copTeam=new Team(      5,   Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.BLUE);
-        Team robberTeam=new Team(   4,   Team.START_RANDOM,  Behavior.FLEE,              Color.ORANGE);
+        Team copTeam=new Team(      5,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLUE);
+        Team robberTeam=new Team(   4,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.ORANGE);
         robberTeam.addGoal(1.0, copTeam,   Goal.CAPTURE,  Tasking.AUTO_GRADIENT,1.0);
         copTeam.addGoal(   1.0, robberTeam,Goal.FLEE,  Tasking.CONTROL_CLOSEST, 1.0);
         copTeam.setString("Cops");
@@ -98,9 +98,9 @@ public class SimulationFactory {
     public static Vector<Team> threeTeamSimulation(){
         Vector<Team> teams=new Vector<Team>();
         //                      #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.BLUE);
-        Team catTeam=new Team(  4,   Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.BLACK);
-        Team mouseTeam=new Team(5,   Team.START_RANDOM,  Behavior.FLEE,              Color.GREEN);
+        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLUE);
+        Team catTeam=new Team(  4,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLACK);
+        Team mouseTeam=new Team(5,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.GREEN);
         dogTeam.addGoal(  1.0,catTeam,  Goal.CAPTURE,Tasking.CONTROL_CLOSEST,1.0);
         catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE,Tasking.AUTO_GRADIENT,  1.0);
         catTeam.addGoal(  1.0,mouseTeam,Goal.CAPTURE,Tasking.CONTROL_CLOSEST,1.0);
@@ -117,8 +117,8 @@ public class SimulationFactory {
     public static Vector<Team> twoPlusGoalSimulation(){
         Vector<Team> teams=new Vector<Team>();        
         //                      #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.ORANGE);
-        Team catTeam=new Team(  4,   Team.START_RANDOM,  Behavior.SEEK,              Color.GRAY);
+        Team dogTeam=new Team(  3,   Team.START_RANDOM,  Behavior.LEADING,   Color.ORANGE);
+        Team catTeam=new Team(  4,   Team.START_RANDOM,  Behavior.STRAIGHT,              Color.GRAY);
         Team milk=new Team(     1,   Team.START_RANDOM,  Behavior.STATIONARY,        Color.BLUE);
         dogTeam.addGoal(  1.0,catTeam,  Goal.CAPTURE,Tasking.CONTROL_CLOSEST,1.0);
         catTeam.addGoal(  0.5,dogTeam,  Goal.FLEE, Tasking.AUTO_GRADIENT, 1.0);
@@ -136,8 +136,8 @@ public class SimulationFactory {
         Vector<Team> teams=new Vector<Team>();
         
         //                 #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        Team dogs=new Team(11,  Team.START_ZERO,    Behavior.PURSUIT_LEADING,   Color.DARK_GRAY);
-        Team cats=new Team(1,   Team.START_RANDOM,  Behavior.FIXEDPATH,         Color.GREEN);
+        Team dogs=new Team(11,  Team.START_ZERO,    Behavior.LEADING,   Color.DARK_GRAY);
+        Team cats=new Team(1,   Team.START_RANDOM,  Behavior.APPROACHPATH,         Color.GREEN);
         cats.setFixedPath("20cos(t/4)","20sin(t/2)");
         for(int i=0;i<dogs.size();i++){
             dogs.get(i).setColor(new Color(100+15*i,25*i,25*i));
@@ -156,15 +156,15 @@ public class SimulationFactory {
     public static Vector<Team> bigSimulation(){
         Vector<Team> teams=new Vector<Team>();
         //                  #     STARTING POS        BEHAVIOR ALGORITHM          COLOR
-        teams.add(new Team( 1,    Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.RED));
-        teams.add(new Team( 4,    Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.ORANGE));
-        teams.add(new Team( 3,    Team.START_LINE,    Behavior.PURSUIT_LEADING,   Color.YELLOW));
-        teams.add(new Team( 5,    Team.START_ARC,     Behavior.PURSUIT_LEADING,   Color.GREEN));
-        teams.add(new Team( 6,    Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.CYAN));
-        teams.add(new Team( 3,    Team.START_CIRCLE,  Behavior.PURSUIT_LEADING,   Color.BLUE));
-        teams.add(new Team( 2,    Team.START_RANDOM,  Behavior.PURSUIT_LEADING,   Color.MAGENTA));
-        teams.add(new Team( 4,    Team.START_CIRCLE,  Behavior.SEEK,              Color.PINK));
-        teams.add(new Team( 2,    Team.START_RANDOM,  Behavior.SEEK,              Color.GRAY));
+        teams.add(new Team( 1,    Team.START_RANDOM,  Behavior.LEADING,   Color.RED));
+        teams.add(new Team( 4,    Team.START_RANDOM,  Behavior.LEADING,   Color.ORANGE));
+        teams.add(new Team( 3,    Team.START_LINE,    Behavior.LEADING,   Color.YELLOW));
+        teams.add(new Team( 5,    Team.START_ARC,     Behavior.LEADING,   Color.GREEN));
+        teams.add(new Team( 6,    Team.START_RANDOM,  Behavior.LEADING,   Color.CYAN));
+        teams.add(new Team( 3,    Team.START_CIRCLE,  Behavior.LEADING,   Color.BLUE));
+        teams.add(new Team( 2,    Team.START_RANDOM,  Behavior.LEADING,   Color.MAGENTA));
+        teams.add(new Team( 4,    Team.START_CIRCLE,  Behavior.STRAIGHT,              Color.PINK));
+        teams.add(new Team( 2,    Team.START_RANDOM,  Behavior.STRAIGHT,              Color.GRAY));
         teams.add(new Team( 2,    Team.START_RANDOM,  Behavior.STATIONARY,        Color.BLACK));
         teams.get(0).setString("Old Lady");
         teams.get(1).setString("Horses");

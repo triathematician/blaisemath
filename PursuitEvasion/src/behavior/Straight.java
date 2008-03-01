@@ -1,5 +1,5 @@
 /*
- * Seek.java 
+ * Straight.java 
  * Created on Aug 28, 2007, 11:21:25 AM
  */
 
@@ -14,7 +14,7 @@ import scio.coordinate.V2;
  * 
  * Behavior moving directly towards an agent.
  */
-public class Seek extends behavior.Behavior {   
+public class Straight extends behavior.Behavior {   
     public R2 direction(Agent self,V2 target,double t){
         if(target==null){return new R2();}
         return target.minus(self.loc).normalized();

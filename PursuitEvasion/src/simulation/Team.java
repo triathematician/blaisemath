@@ -223,7 +223,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             g.assignTasks();
         }
     }
-    /** Generates directions for each team member based on their task and behavior.
+    /** Generates directions for each team member based on their task and myBehavior.
      * @param time      the current time stamp
      * @param stepTime  the time between iterations */
     public void planPaths(double time,double stepTime){
@@ -360,9 +360,9 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
         private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
-        /** Lead factor if required for behavior */
+        /** Lead factor if required for myBehavior */
         private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,5,.01);
-        /** Position function if required for behavior */
+        /** Position function if required for myBehavior */
         private ParametricModel pm=new ParametricModel();
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
@@ -397,10 +397,10 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             String ac=null;
             if(evt.getSource()==behavior){
                 copyBehaviortoTeam();
-                if(behavior.getValue()==Behavior.PURSUIT_LEADING){
+                if(behavior.getValue()==Behavior.LEADING){
                     setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
-                }else if(behavior.getValue()==Behavior.FIXEDPATH){
+                }else if(behavior.getValue()==Behavior.APPROACHPATH){
                     setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);
                     setPropertyEditor("Lead Factor",Settings.NO_EDIT);
                 }else{

@@ -5,6 +5,7 @@
 
 package behavior;
 
+import goal.Goal;
 import goal.Task;
 import java.util.Vector;
 import simulation.Agent;
@@ -31,11 +32,13 @@ public class TaskFusion {
      * I do not currently have a way in which to manipulate how the tasks are fused. I'll go with
      * the gradient to start.
      */
-    public static R2 getVector(Agent agent,Behavior behavior,Vector<Task> tasks,double time){
+    public static R2 getVector(Agent agent,Vector<Task> tasks,double time){
         R2 result=new R2();
+        double multiplier;
         for(Task t:tasks){
-            result.translate(behavior.direction(agent,t.getTarget(),time)
-                    .multipliedBy(t.getPriority()));
+            // translate... distinguish between seek and flee behaviors here
+            multiplier=(t.getGoalType()==Goal.FLEE?-1:1)*(agent.getBehaviorType()==Behavior.REVERSE?-1:1);
+            result.translate(agent.getBehavior().direction(agent,t.getTarget(),time).multipliedBy(multiplier*t.getPriority()));
         }
         return result.normalized();
     }

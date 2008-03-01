@@ -55,9 +55,12 @@ public class Task {
         this.target=target;
         setPriority(priority);
     }
-    
+
     
     // BEAN PATTERNS: GETTERS & SETTERS
+    
+
+    public int getGoalType() {return goal.getType();}
     
     /** Returns target
      * @return object of the task */

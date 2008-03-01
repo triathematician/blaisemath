@@ -327,7 +327,7 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }//GEN-LAST:event_jButton2ActionPerformed
     
     /**
-     * @param args the command line arguments
+     * @param args the command lineSegment arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
