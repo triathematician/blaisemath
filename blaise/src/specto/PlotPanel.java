@@ -3,7 +3,6 @@
  * Created on Sep 14, 2007, 7:50:15 AM
  */
 
-// TODO Implement "style" submenu for added elements...
 // TODO Require "toString" method for Plottable's
 
 package specto;
@@ -31,7 +30,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import specto.visometry.Euclidean2;
+import sequor.event.MouseVisometryEvent;
 
 /**
  * This is a superclass for plot windows. It implements component handling and drawing
@@ -93,8 +92,8 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         timer=new RangeTimer(this);
         initContextMenu();
         setVisometry(visometry);
-        basicComponents=new PlottableGroup<V>(visometry);
-        dynamicComponents=new PlottableGroup<V>(visometry);
+        basicComponents=new PlottableGroup<V>();
+        dynamicComponents=new PlottableGroup<V>();
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
@@ -163,22 +162,18 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     public void add(Plottable<V> pv){
         pv.addChangeListener(this);
-        pv.setVisometry(visometry);
         if(pv instanceof PlottableGroup){
             if(pv.getOptionsMenu()!=null){optionsMenu.add(pv.getOptionsMenu());}
             dynamicComponents.add(pv);
             animatePlottables.add(pv);            
         }else{
-            if(pv.isOptionsMenuBuilding()&&pv.getOptionsMenu()!=null){
+            if(pv.getOptionsMenu()!=null){
                 optionsMenu.add(pv.getOptionsMenu());
             }
             if(pv instanceof DynamicPlottable){
                 dynamicComponents.add(pv);
             }else{
                 basicComponents.add(pv);
-            }
-            if(pv instanceof BuildsContextMenu){
-                addToContextMenu(((BuildsContextMenu)pv).getMenuItems());
             }
             if(pv instanceof Animatable){
                 animatePlottables.add(pv);
@@ -218,10 +213,12 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     public void rebuildOptionsMenu(){
         optionsMenu.removeAll();
         for(Plottable p:basicComponents.getElements()){
-            if(p.isOptionsMenuBuilding()){optionsMenu.add(p.getOptionsMenu());}
+            optionsMenu.add(p.getOptionsMenu());
         }
         for(Plottable p:dynamicComponents.getElements()){
-            if(p.isOptionsMenuBuilding()){optionsMenu.add(p.getOptionsMenu());}
+            try{
+                optionsMenu.add(p.getOptionsMenu());
+            }catch(NullPointerException e){}
         }
     }
     
@@ -275,10 +272,10 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     DynamicPlottable<V> mover;
     
-    Vector<DynamicPlottable<V>> getHits(MouseEvent e){
+    Vector<DynamicPlottable<V>> getHits(MouseVisometryEvent mve){
         Vector<DynamicPlottable<V>> result=new Vector<DynamicPlottable<V>>();
         for (Plottable<V> dp:dynamicComponents.getElements()){
-            if(((DynamicPlottable<V>)dp).clicked(e)){
+            if(((DynamicPlottable<V>)dp).clicked(mve)){
                 result.add((DynamicPlottable<V>)dp);
             }
         }
@@ -287,39 +284,57 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
 
     @Override
     public void mouseClicked(MouseEvent e){
-        Vector<DynamicPlottable<V>> hits=getHits(e);
-        if(hits.isEmpty()){visometry.mouseClicked(e);}
-        else{hits.get(0).mouseClicked(e);}
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        Vector<DynamicPlottable<V>> hits=getHits(mve);
+        if(hits.isEmpty()){visometry.mouseClicked(mve);}
+        else{hits.get(0).mouseClicked(mve);}
     }
 
     @Override
     public void mousePressed(MouseEvent e){
-        Vector<DynamicPlottable<V>> hits=getHits(e);
-        if(hits.isEmpty()){visometry.mousePressed(e);}
-        else{mover=hits.get(0);mover.mousePressed(e);}
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        Vector<DynamicPlottable<V>> hits=getHits(mve);
+        if(hits.isEmpty()){visometry.mousePressed(mve);}
+        else{mover=hits.get(0);mover.mousePressed(mve);}
     }
 
     @Override
     public void mouseDragged(MouseEvent e){
-        if(mover!=null){mover.mouseDragged(e);}
-        else{visometry.mouseDragged(e);}
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        if(mover!=null){mover.mouseDragged(mve);}
+        else{visometry.mouseDragged(mve);}
     }
 
     @Override
     public void mouseReleased(MouseEvent e){
-        if(mover!=null){mover.mouseReleased(e);mover=null;}
-        else{visometry.mouseReleased(e);}
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        if(mover!=null){mover.mouseReleased(mve);mover=null;}
+        else{visometry.mouseReleased(mve);}
     }
 
     @Override
-    public void mouseMoved(MouseEvent e){visometry.mouseMoved(e);}
+    public void mouseMoved(MouseEvent e){
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        visometry.mouseMoved(mve);
+    }
 
     @Override
-    public void mouseEntered(MouseEvent e){visometry.mouseEntered(e);}
+    public void mouseEntered(MouseEvent e){        
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        visometry.mouseEntered(mve);
+    }
 
     @Override
-    public void mouseExited(MouseEvent e){visometry.mouseExited(e);}
+    public void mouseExited(MouseEvent e){
+        MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        visometry.mouseExited(mve);
+    }
 
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e){if(e!=null){visometry.mouseWheelMoved(e);}}
+    public void mouseWheelMoved(MouseWheelEvent e){
+        if(e!=null){
+            MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+            visometry.mouseWheelMoved(e);
+        }
+    }
 }

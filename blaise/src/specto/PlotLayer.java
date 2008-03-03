@@ -10,7 +10,6 @@ package specto;
 import sequor.component.RangeTimer;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JLayeredPane;
@@ -66,19 +65,23 @@ public class PlotLayer<V extends Visometry> extends JLayeredPane {
     @Override
     public void paintComponent(Graphics gb){
         for(Plottable p:plottables){
-            p.paintDecorations((Graphics2D)gb);
-            p.paintComponent((Graphics2D)gb);
+            gb.setColor(p.getColor());
+            p.paintDecorations((Graphics2D)gb,owner.getVisometry());
+            gb.setColor(p.getColor());
+            p.paintComponent((Graphics2D)gb,owner.getVisometry());
         }
     }
     
     public void paintComponent(Graphics gb,RangeTimer timer){
         if(!animates){return;}
         for(Plottable p:plottables){
-            p.paintDecorations((Graphics2D)gb);
+            gb.setColor(p.getColor());
+            p.paintDecorations((Graphics2D)gb,owner.getVisometry(),timer);
+            gb.setColor(p.getColor());
             if(p instanceof Animatable){
-                ((Animatable)p).paintComponent((Graphics2D)gb,timer);
+                ((Animatable)p).paintComponent((Graphics2D)gb,owner.getVisometry(),timer);
             }else{
-                p.paintComponent((Graphics2D)gb);
+                p.paintComponent((Graphics2D)gb,owner.getVisometry());
             }
         }        
     }

@@ -16,5 +16,5 @@ import java.awt.Graphics2D;
  * @author Elisha Peterson
  */
 public interface Animatable<V extends Visometry> {    
-    public abstract void paintComponent(Graphics2D g,RangeTimer t);    
+    public abstract void paintComponent(Graphics2D g,V v,RangeTimer t);    
 }

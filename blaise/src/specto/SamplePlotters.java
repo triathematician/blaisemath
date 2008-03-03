@@ -8,7 +8,9 @@ package specto;
 
 
 
+import java.awt.Color;
 import specto.decoration.CirclePoint2D;
+import specto.decoration.Clock2D;
 import specto.decoration.DESolution2D;
 import specto.decoration.FunctionSampleSet;
 import specto.decoration.Segment2D;
@@ -19,6 +21,7 @@ import specto.plottable.Parametric2D;
 import specto.plottable.PlaneFunction2D;
 import specto.plottable.Rectangle2D;
 import specto.plottable.VectorField2D;
+import specto.style.PointStyle;
 
 /**
  *
@@ -30,33 +33,39 @@ public class SamplePlotters extends javax.swing.JFrame {
     public SamplePlotters() {
         initComponents();
         
-        Function2D f1=new Function2D(plot2D1.getVisometry());
+        Function2D f1=new Function2D();
         f1.addDecoration(new FunctionSampleSet(f1));
+        Point2D p0=f1.getConstrainedPoint();
         plot2D1.add(f1);
+        plot2D1.add(p0);
         
-        plot2D2.add(new Parametric2D(plot2D2.getVisometry()));
+        plot2D2.add(new Parametric2D());
 
-        plot2D3.add(new VectorField2D(plot2D3.getVisometry()));
-        Point2D p1=new Point2D(plot2D3.getVisometry());
+        plot2D3.add(new VectorField2D());
+        Point2D p1=new Point2D();
         p1.addDecoration(new DESolution2D(p1));
-        Point2D p2=new Point2D(plot2D3.getVisometry());
+        Point2D p2=new Point2D();
         p2.addDecoration(new DESolution2D(p2));
         plot2D3.add(p1);
         plot2D3.add(p2);
 
-        plot2D4.add(new PlaneFunction2D(plot2D4.getVisometry()));
+        plot2D4.add(new PlaneFunction2D());
 
-        Point2D p3=new Point2D(plot2D5.getVisometry());
-        Point2D p4=new Point2D(plot2D5.getVisometry());
+        Point2D p3=new Point2D(-8,5);
+        p3.style.setStyle(PointStyle.CONCENTRIC);
+        Point2D p4=new Point2D(-2,-2);
         CirclePoint2D cp3=new CirclePoint2D(p3);cp3.addRadius(2.0);cp3.addRadius(3.0);cp3.addRadius(5.0);
         p3.addDecoration(cp3);
         Segment2D s1=new Segment2D(p3,p4);
         p3.addDecoration(s1);
+        Point2D p5=new Point2D(5.0,5.0,Color.BLACK);
+        p5.addDecoration(new Clock2D(p5));
         plot2D5.add(p3);
         plot2D5.add(p4);
-        plot2D5.add(new Rectangle2D(plot2D5.getVisometry()));
+        plot2D5.add(p5);
+        plot2D5.add(new Rectangle2D());
         
-        DynamicPointSet2D dps1=new DynamicPointSet2D(plot2D6.getVisometry());
+        DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
             dps1.add(x*Math.cos(x/3.0),x*Math.sin(x/3.0));
         }

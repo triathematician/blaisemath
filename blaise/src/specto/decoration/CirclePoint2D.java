@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * CirclePoint2D.java
+ * Created on February 20, 2008
  */
 
 package specto.decoration;
@@ -15,8 +15,8 @@ import specto.dynamicplottable.Point2D;
 import specto.visometry.Euclidean2;
 
 /**
- *
- * @author ae3263
+ * A list of radii around a central point.
+ * @author Elisha Peterson
  */
 public class CirclePoint2D extends Decoration<Euclidean2> {
     Vector<Double> radii;
@@ -29,13 +29,13 @@ public class CirclePoint2D extends Decoration<Euclidean2> {
     public void addRadius(double r){radii.add(r);}
 
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         Point2D ptParent=(Point2D)parent;
         if(ptParent.style.getStyle()==PointStyle.CONCENTRIC){
             g.setColor(ptParent.getColor().brighter());
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.15f));
             for(double r:radii){
-                g.fill(visometry.circle(ptParent.getPoint(),r));                
+                g.fill(v.circle(ptParent.getPoint(),r));                
             }
             g.setComposite(AlphaComposite.SrcOver);
         }

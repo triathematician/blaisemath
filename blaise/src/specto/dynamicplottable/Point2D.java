@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import sequor.event.MouseVisometryEvent;
 import sequor.model.PointRangeModel;
 import specto.DynamicPlottable;
 import scio.coordinate.R2;
@@ -33,28 +34,29 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     // CONSTRUCTORS
     
     /** Default constructor places point at the origin. */
-    public Point2D(Euclidean2 vis){this(vis,new PointRangeModel());}
+    public Point2D(){this(new PointRangeModel());}
     /** Constructor places point at a given location. */
-    public Point2D(Euclidean2 vis,R2 value){this(vis,new PointRangeModel(value));}
+    public Point2D(R2 value){this(new PointRangeModel(value));}
+    public Point2D(double x, double y) {this(new PointRangeModel(x,y));}
+    public Point2D(double x, double y,Color c) {this(new PointRangeModel(x,y));setColor(c);}
     /** Constructor given a PointRangeModel and a particular color. */
-    public Point2D(Euclidean2 vis,PointRangeModel prm,Color c){this(vis,prm);setColor(c);}
+    public Point2D(PointRangeModel prm,Color c){this(prm);setColor(c);}
+    public Point2D(R2 point, Color c, boolean editable) {this(point.x,point.y,c,editable);}
     /** Constructor given a PointRangeModel. */
-    public Point2D(Euclidean2 vis,PointRangeModel prm){
-        super(vis);
+    public Point2D(PointRangeModel prm){
         this.prm=prm; 
-        if(mobile){this.prm.addChangeListener(this);}
+        if(editable){this.prm.addChangeListener(this);}
         style=new PointStyle();
         style.addChangeListener(this);
         setColor(Color.BLUE);
     }
-    public Point2D(Euclidean2 vis, double x, double y, Color color, boolean mobile) {
-        super(vis);
-        this.mobile=mobile;
-        if(mobile){prm=new PointRangeModel(x,y);
+    public Point2D(double x, double y, Color color, boolean editable) {
+        this.editable=editable;
+        if(editable){prm=new PointRangeModel(x,y);
         }else{prm=new PointRangeModel(new R2(x,y),x,y,x,y);}
         style=new PointStyle();
         style.addChangeListener(this);
-        if(mobile){prm.addChangeListener(this);}
+        if(editable){prm.addChangeListener(this);}
         setColor(color);
     }
         
@@ -63,6 +65,7 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     
     public R2 getPoint(){return prm.getPoint();}    
     public void setPoint(R2 newValue){prm.setTo(newValue);}
+    public void setModel(PointRangeModel prm){this.prm=prm;}
     
     // DRAW ROUTINES
     
@@ -70,35 +73,33 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     public void recompute(){}
     
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         R2 point=prm.getPoint();
         g.setColor(getColor());
         switch(style.getStyle()){
-        case PointStyle.SMALL: g.fill(((Euclidean2)visometry).dot(point,1)); break;
-        case PointStyle.MEDIUM: g.fill(((Euclidean2)visometry).dot(point,2)); break;
-        case PointStyle.LARGE: g.fill(((Euclidean2)visometry).dot(point,4)); break;
-        case PointStyle.CONCENTRIC: g.fill(((Euclidean2)visometry).dot(point,3));g.draw(((Euclidean2)visometry).dot(point,5));break;    
-        case PointStyle.CIRCLE: g.draw(((Euclidean2)visometry).dot(point,5));break;    
+        case PointStyle.SMALL: g.fill(((Euclidean2)v).dot(point,1)); break;
+        case PointStyle.MEDIUM: g.fill(((Euclidean2)v).dot(point,2)); break;
+        case PointStyle.LARGE: g.fill(((Euclidean2)v).dot(point,4)); break;
+        case PointStyle.CONCENTRIC: g.fill(((Euclidean2)v).dot(point,3));g.draw(((Euclidean2)v).dot(point,5));break;    
+        case PointStyle.CIRCLE: g.draw(((Euclidean2)v).dot(point,5));break;    
         }
     }
     
 
     // DYNAMIC EVENT HANDLING
-    
+       
     /** Determines if the point was clicked on, given a mouse event. */
+
     @Override
-    public boolean clicked(MouseEvent e){
-        if(!mobile||e==null){return false;}
-        return Math.abs(e.getX()-visometry.toWindowX(prm.getX()))+Math.abs(e.getY()-visometry.toWindowY(prm.getY()))<CLICK_EDIT_RANGE;
-    }    
+    public boolean clicked(MouseVisometryEvent<Euclidean2> e) {return withinClickRange(e,prm.getPoint());}
     @Override
-    public void mousePressed(MouseEvent e){if(clicked(e)){adjusting=true;}}
+    public void mousePressed(MouseVisometryEvent<Euclidean2> e){if(clicked(e)){adjusting=true;}}
     @Override
-    public void mouseDragged(MouseEvent e){if(adjusting){setPoint(visometry.toGeometry(e.getPoint()));}}
+    public void mouseDragged(MouseVisometryEvent<Euclidean2> e){if(adjusting){setPoint((R2)e.getCoordinate());}}
     @Override
-    public void mouseReleased(MouseEvent e){mouseDragged(e);adjusting=false;}
+    public void mouseReleased(MouseVisometryEvent<Euclidean2> e){mouseDragged(e);adjusting=false;}
     @Override
-    public void mouseClicked(MouseEvent e){if(clicked(e)){style.cycleStyle();adjusting=false;}}
+    public void mouseClicked(MouseVisometryEvent<Euclidean2> e){if(clicked(e)){style.cycleStyle();adjusting=false;}}
     
     
     // IMPLEMENTING ABSTRACT METHODS    
@@ -106,14 +107,10 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     @Override
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu("Point Style");
-        result.add(getColorButton());
+        result.add(getColorMenuItem());
         return result;
     }
-
-    
     
     @Override
-    public void stateChanged(ChangeEvent e) {
-        fireStateChanged();
-    }
+    public void stateChanged(ChangeEvent e) {fireStateChanged();}
 }

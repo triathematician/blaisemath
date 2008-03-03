@@ -17,8 +17,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
+import java.util.Vector;
+import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -33,8 +33,7 @@ import javax.swing.event.EventListenerList;
  * @author ae3263
  */
 public abstract class Visometry<C extends Coordinate> 
-        implements ComponentListener,ChangeListener,MouseListener,MouseMotionListener,MouseWheelListener,BuildsContextMenu{
-
+        implements ActionListener,ComponentListener,ChangeListener,MouseListener,MouseMotionListener,MouseWheelListener{
     
     // PROPERTIES
     /** The enclosing panel */
@@ -52,6 +51,7 @@ public abstract class Visometry<C extends Coordinate>
         addChangeListener(container);
         computeTransformation();
     }
+    public abstract Vector<JMenuItem> getMenuItems();
     
     
     // TRANSLATORS

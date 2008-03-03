@@ -18,29 +18,29 @@ import specto.visometry.Euclidean2;
  * @author Elisha Peterson
  */
 public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
-    public DynamicPointSet2D(Euclidean2 vis){super(vis);}
+    public DynamicPointSet2D(){}
 
     @Override
     public void add(Plottable<Euclidean2> p) {if(p instanceof Point2D){super.add(p);}}
-    public void add(R2 newPoint){add(new Point2D(visometry,newPoint));}
-    public void add(double x,double y){add(new Point2D(visometry,new R2(x,y)));}
+    public void add(R2 newPoint){add(new Point2D(newPoint));}
+    public void add(double x,double y){add(new Point2D(new R2(x,y)));}
 
     @Override
-    public void paintComponent(Graphics2D g) {
-        super.paintComponent(g);
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        super.paintComponent(g,v);
         Vector<R2> points=new Vector<R2>();
         for(Plottable<Euclidean2> p:plottables){points.add(((Point2D)p).getPoint());}
         switch(cyclic){
             case STYLE_OPEN: 
-                g.draw(visometry.path(points));
+                g.draw(v.path(points));
                 break;
             case STYLE_CYCLIC:
-                g.draw(visometry.closedPath(points));
+                g.draw(v.closedPath(points));
                 break;
             case STYLE_FILLED:
                 
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
-                g.fill(visometry.closedPath(points));
+                g.fill(v.closedPath(points));
                 break;
         }
     }

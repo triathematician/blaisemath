@@ -1,6 +1,6 @@
 /*
- * Decoration.java
- * Created on Oct 19, 2007, 12:42:46 PM
+ * DynamicDecoration.java
+ * Created on Mar 1, 2008
  */
 
 package specto;
@@ -9,12 +9,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * This interface is designed to control and display a "decoration" of another plottable,
- * e.g. a point or vector along a function plot.
- * @author ae3263
+ * <p>
+ * DynamicDecoration is ...
+ * </p>
+ * @author Elisha Peterson
  */
-public abstract class Decoration<V extends Visometry> extends Plottable<V> implements ChangeListener {
-    public Decoration(Plottable<V> parent){super();setParent(parent);}
+public abstract class DynamicDecoration<V extends Visometry> extends DynamicPlottable<V> implements ChangeListener {
+    public DynamicDecoration(Plottable<V> parent){setParent(parent);}
     
     protected Plottable<V> parent;
     

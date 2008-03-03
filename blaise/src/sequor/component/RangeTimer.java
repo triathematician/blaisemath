@@ -26,7 +26,7 @@ import javax.swing.Timer;
  * <br><br>
  * @author Elisha Peterson
  */
-public class RangeTimer extends Timer implements ActionListener,BuildsContextMenu{
+public class RangeTimer extends Timer implements ActionListener{
     int startStep=0;
     int currentStep=0;
     int pauseSteps=0;
@@ -37,6 +37,10 @@ public class RangeTimer extends Timer implements ActionListener,BuildsContextMen
     boolean activated=false;
     
     public RangeTimer(){this(null);}
+    public RangeTimer(double start,double stop,double step){
+        this(null);
+        setRange(start,stop,step);
+    }
     public RangeTimer(ActionListener al){
         super(0,al);
         addActionListener(this);
@@ -80,7 +84,7 @@ public class RangeTimer extends Timer implements ActionListener,BuildsContextMen
         paused=false;
         activated=false;
         super.stop();
-        fireActionPerformed(new ActionEvent(this,0,"stop"));
+        //fireActionPerformed(new ActionEvent(this,0,"stop"));
     }
     public void pause(){
         if(isRunning()){paused=!paused;}
@@ -89,6 +93,7 @@ public class RangeTimer extends Timer implements ActionListener,BuildsContextMen
         if(!paused){
             currentStep++;
             if(currentStep+pauseSteps>stopStep){
+                stop();
                 currentStep=startStep;
             }
         }

@@ -13,8 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -23,6 +24,7 @@ import javax.swing.JRadioButtonMenuItem;
 import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
+import sequor.component.RangeTimer;
 import specto.plottable.Rectangle2D;
 
 /**
@@ -243,7 +245,7 @@ public class Euclidean2 extends Visometry<R2> {
         pressedAt=e.getPoint();
         mode=e.getModifiersExText(e.getModifiersEx());
         if(mode.equals("Alt+Button1")){
-            zoomBox=new Rectangle2D(this,toGeometryX(pressedAt.x),toGeometryY(pressedAt.y),toGeometryX(pressedAt.x),toGeometryY(pressedAt.y));
+            zoomBox=new Rectangle2D(toGeometry(pressedAt),toGeometry(pressedAt));
             container.add(zoomBox);
         }else {
             oldMin=new R2(desiredMin);
@@ -293,6 +295,24 @@ public class Euclidean2 extends Visometry<R2> {
         setDesiredBounds(new R2(cx-factor*getDrawWidth()/2,cy-factor*getDrawHeight()/2),new R2(cx+factor*getDrawWidth()/2,cy+factor*getDrawHeight()/2));
     }
     public void zoomCenter(double factor){zoomPoint(getActualCenter(),factor);}
+    /** Creates an animating zoom using a particular timer. */
+    public void zoomPointAnimated(R2 p,double factor){
+        // TODO Fix this method!!
+        final double cx=.1*p.x+.9*getActualCenter().x;
+        final double cy=.1*p.y+.9*getActualCenter().y;
+        final double xMultiplier=factor*getDrawWidth()/2;
+        final double yMultiplier=factor*getDrawHeight()/2;
+        final RangeTimer t=new RangeTimer(0.1,1.0,0.1);
+        ActionListener al=new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                setDesiredBounds(new R2(cx-t.getCurrent()*xMultiplier,cy-t.getCurrent()*yMultiplier),
+                        new R2(cx+t.getCurrent()*xMultiplier,cy+t.getCurrent()*yMultiplier));                
+            }
+        };
+        t.addActionListener(al);
+        t.setDelay(1000);
+        t.start();
+    }
         
 
     @Override
@@ -361,10 +381,83 @@ public class Euclidean2 extends Visometry<R2> {
     
     
     // SHAPE FACTORY METHODS
- 
+    
+    /** Says whether a given point is contained within the visometry window. */
+    public boolean contains(R2 point){
+        return (point.x>=actualMin.x)&&(point.x<=actualMax.x)&&(point.y>=actualMin.x)&&(point.y<=actualMax.x);
+    }
+    
+    /** Returns points at which the ray beginning at p1 and passing through p2 intersects the boundary of the window. */
+    public R2 rayHit(R2 p1,R2 p2){
+        if(p2.x>p1.x && p1.x<=actualMax.x){ // line goes to the right
+            double slope=(p2.y-p1.y)/(p2.x-p1.x);
+            double yRight=slope*(actualMax.x-p1.x)+p1.y;
+            if(yRight<=actualMax.y&&yRight>=actualMin.y){ // point is on the right
+                return new R2(actualMax.x,yRight);
+            }else if(p2.y>p1.y && p1.y<=actualMax.y){ // line goes up
+                return new R2((actualMax.y-p1.y)/slope+p1.x,actualMax.y);                
+            }else if(p1.y>=actualMin.y){ // line goes down
+                return new R2((actualMin.y-p1.y)/slope+p1.x,actualMin.y);                
+            }
+        }else if(p2.x<p1.x && p1.x>=actualMin.x){ // line goes to the left
+            double slope=(p2.y-p1.y)/(p2.x-p1.x);
+            double yLeft=slope*(actualMin.x-p1.x)+p1.y;
+            if(yLeft<=actualMax.y&&yLeft>=actualMin.y){ // point is on the right
+                return new R2(actualMin.x,yLeft);
+            }else if(p2.y>p1.y && p1.y<=actualMax.y){ // line goes up
+                return new R2((actualMax.y-p1.y)/slope+p1.x,actualMax.y);                
+            }else if(p1.y>=actualMin.y){ // line goes down
+                return new R2((actualMin.y-p1.y)/slope+p1.x,actualMin.y);                
+            }
+        }else if(p1.x==p2.x){ // line is vertical
+            if(p2.y<p1.y && p1.y>=actualMin.y){ // line goes up
+                return new R2(p1.x,actualMin.y);
+            }else if(p1.y<=actualMax.y){
+                return new R2(p1.x,actualMax.y);
+            }
+        }
+        return null;
+    }
+    
     /** Returns a lineSegment in the current geometry. */
     public Shape lineSegment(R2 p1,R2 p2){
         return new java.awt.geom.Line2D.Double(toWindow(p1),toWindow(p2));
+    }
+    public Shape lineSegment(double x1,double y1,double x2,double y2){return lineSegment(new R2(x1,y1),new R2(x2,y2));}
+    /** Returns the line that passes through the two points. */
+    public Shape line(R2 p1,R2 p2){
+        if(p1.x==p2.x){
+            return lineSegment(p1.x,getActualMin().y,p2.x,getActualMax().y);
+        }
+        double slope=(p2.y-p1.y)/(p2.x-p1.x);
+        return lineSegment(getActualMin().x,slope*(getActualMin().x-p1.x)+p1.y,getActualMax().x,slope*(getActualMax().x-p1.x)+p1.y);
+    }
+    /** Returns the ray that points from the first point through the second point. */
+    public Shape ray(R2 p1,R2 p2,double arrowSize){        
+        return arrow(p1,rayHit(p1,p2),arrowSize);
+    }
+    /** Returns arrow shape... the angles of the arrow must be done with respect to window geometry.
+     * @param start the starting point for the arrow
+     * @param end the ending point for the arrow
+     * @param arrowSize multiplier for the arrow's size; if negative, it represents a multiple of the arrow's length; if positive, size in pixels
+     * @return Path2D.Double containing the arrow
+     */
+    public Shape arrow(R2 start,R2 end,double arrowSize){
+        if (start==null||end==null){return new Path2D.Double();}
+        Point2D.Double winStart=toWindow(start);
+        Point2D.Double winEnd=toWindow(end);
+        double arrLength=arrowSize<=0?(-winStart.distance(winEnd)*arrowSize/5.0):(arrowSize);
+        double winAngle=Math.atan2(winEnd.y-winStart.y,winEnd.x-winStart.x);
+        double angle=Math.PI/6;
+        Point2D.Double arrowEnd1=getPointOffsetAngle(winEnd, Math.PI+winAngle+angle, arrLength);
+        Point2D.Double arrowEnd2=getPointOffsetAngle(winEnd, Math.PI+winAngle-angle, arrLength);
+        Path2D.Double result=new Path2D.Double();
+        result.moveTo(winStart.x,winStart.y);
+        result.lineTo(winEnd.x,winEnd.y);
+        result.lineTo(arrowEnd1.x,arrowEnd1.y);
+        result.lineTo(arrowEnd2.x,arrowEnd2.y);
+        result.lineTo(winEnd.x,winEnd.y);
+        return result;
     }
     
     /** Returns a rectangle in the current geometry */
@@ -409,14 +502,6 @@ public class Euclidean2 extends Visometry<R2> {
     }    
     /** Returns a circle in the current geometry. */
     public Shape circle(R2 ctr,double rad){return ellipse(ctr,rad,rad);}
-    /** Return a dot, whose size is independent of the geometry. */
-    public Shape dot(R2 ctr,double winRad){
-        return new java.awt.geom.Ellipse2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
-    }
-    /** Returns square dot with size independent of geometry. */
-    public Shape squareDot(R2 ctr,double winRad){
-        return new java.awt.geom.Rectangle2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
-    }
     /** Returns path containing given list of points. */
     public Shape path(Vector<R2> points){
         java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
@@ -434,6 +519,42 @@ public class Euclidean2 extends Visometry<R2> {
         path.transform(getAffineTransformation());
         return path;
     }
+    
+    // ABSOLUTE DISTANCE METHODS
+    
+    /** Returns window coordinate point at an offset of given distance and angle from a particular one. */
+    public java.awt.geom.Point2D.Double getPointOffsetAngle(java.awt.geom.Point2D.Double point,double angle,double distance){
+        return new java.awt.geom.Point2D.Double(point.x+distance*Math.cos(angle),point.y+distance*Math.sin(angle));
+    }
+    
+    /** Return a dot, whose size is independent of the geometry. */
+    public Shape dot(R2 ctr,double winRad){
+        return new java.awt.geom.Ellipse2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
+    }
+    /** Returns square dot with size independent of geometry. */
+    public Shape squareDot(R2 ctr,double winRad){
+        return new java.awt.geom.Rectangle2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
+    }
+    /** Returns arrow at given angle and given length in window geometry. */
+    public Shape winArrow(R2 start,double angle,double length,double winArrowSize){
+        Point2D.Double winStart=toWindow(start);
+        Point2D.Double winEnd=getPointOffsetAngle(winStart,angle,length);
+        double tipAngle=Math.PI/6;
+        Point2D.Double arrowEnd1=getPointOffsetAngle(winEnd, Math.PI+angle+tipAngle, winArrowSize);
+        Point2D.Double arrowEnd2=getPointOffsetAngle(winEnd, Math.PI+angle-tipAngle, winArrowSize);
+        Path2D.Double result=new Path2D.Double();
+        result.moveTo(winStart.x,winStart.y);
+        result.lineTo(winEnd.x,winEnd.y);
+        result.lineTo(arrowEnd1.x,arrowEnd1.y);
+        result.lineTo(arrowEnd2.x,arrowEnd2.y);
+        result.lineTo(winEnd.x,winEnd.y);
+        return result;
+    }
+    /** Returns line at given angle and between given lengths in window geometry. */
+    public Shape winLineAtRadius(R2 start,double angle,double length1,double length2){        
+        return new java.awt.geom.Line2D.Double(getPointOffsetAngle(toWindow(start),angle,length1),getPointOffsetAngle(toWindow(start),angle,length2));
+    }
+    
     // DRAW METHODS
     
     /** Draws a bunch of solid dots. */

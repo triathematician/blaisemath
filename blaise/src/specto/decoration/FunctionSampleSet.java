@@ -30,12 +30,12 @@ import specto.visometry.Euclidean2;
  * 
  * @author Elisha Peterson
  */
-public class FunctionSampleSet extends Decoration<Euclidean2> implements Animatable{
+public class FunctionSampleSet extends Decoration<Euclidean2> implements Animatable<Euclidean2>{
    
     /** whether range of values includes the max and min */
     boolean inclusive=false;
     /** whether to sample from the left (-0.5), right (0.5), or center (0) of a Riemann sum range. */
-    double rSampleShift=0.2;
+    double rSampleShift=0.0;
     DoubleRangeModel valueRange;
     
     public FunctionSampleSet(Function2D parent){this(parent,-4.0,4.0,20);}
@@ -55,26 +55,25 @@ public class FunctionSampleSet extends Decoration<Euclidean2> implements Animata
     }
     
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         try {
             Vector<R2> samplePoints = getSamplePoints();
             double width = valueRange.getStep();
-            g.setColor(color);
             if(style==STYLE_DOTS||style==STYLE_STICKS_DOTS){
-                visometry.fillDots(g,samplePoints,4);
+                v.fillDots(g,samplePoints,4);
             }
             if(style==STYLE_STICKS||style==STYLE_STICKS_DOTS){    
                 g.setStroke(PointSet2D.strokes[PointSet2D.MEDIUM]);
                 for(R2 point : samplePoints){
-                    g.draw(visometry.lineSegment(new R2(point.x,0), point));
+                    g.draw(v.lineSegment(new R2(point.x,0), point));
                 }
             }
             else if(style==STYLE_RIEMANN_SUM){
                 for (R2 point : samplePoints) {
                     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                    g.draw(visometry.rectangle(point.x - width / 2 + width * rSampleShift, 0.0, point.x + width / 2 + width * rSampleShift, point.y));
+                    g.draw(v.rectangle(point.x - width / 2 + width * rSampleShift, 0.0, point.x + width / 2 + width * rSampleShift, point.y));
                     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-                    g.fill(visometry.rectangle(point.x - width / 2 + width * rSampleShift, 0.0, point.x + width / 2 + width * rSampleShift, point.y));
+                    g.fill(v.rectangle(point.x - width / 2 + width * rSampleShift, 0.0, point.x + width / 2 + width * rSampleShift, point.y));
                 }
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));  
             }
@@ -83,9 +82,9 @@ public class FunctionSampleSet extends Decoration<Euclidean2> implements Animata
                 for(int i=0;i<samplePoints.size()-1;i++){
                     pta=samplePoints.get(i);
                     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-                    g.draw(visometry.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
+                    g.draw(v.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
                     g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-                    g.fill(visometry.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
+                    g.fill(v.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
                 }              
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));  
             }
@@ -94,15 +93,15 @@ public class FunctionSampleSet extends Decoration<Euclidean2> implements Animata
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
                 for(int i=0;i<samplePoints.size()-1;i++){
                     pta=samplePoints.get(i);
-                    g.fill(visometry.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
+                    g.fill(v.trapezoid(pta.x,0.0,pta.x,pta.y,pta.x+width,samplePoints.get(i+1).y,pta.x+width,0.0));
                 }              
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));                  
             }
         } catch (FunctionValueException ex) {return;}
     }
     @Override
-    public void paintComponent(Graphics2D g, RangeTimer t) {
-        paintComponent(g);
+    public void paintComponent(Graphics2D g, Euclidean2 v,RangeTimer t) {
+        paintComponent(g,v);
     }
     @Override
     public JMenu getOptionsMenu() {

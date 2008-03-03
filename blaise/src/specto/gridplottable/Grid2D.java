@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -22,7 +23,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
-import specto.BuildsContextMenu;
 import specto.DynamicPlottable;
 import specto.visometry.Euclidean2;
 
@@ -40,7 +40,7 @@ import specto.visometry.Euclidean2;
  * <br><br>
  * @author Elisha Peterson
  */
-public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContextMenu {
+public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListener {
     
     // PROPERTIES
     
@@ -83,7 +83,7 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
     
     // CONSTRUCTORS
     
-    public Grid2D(Euclidean2 vis){super(vis);}
+    public Grid2D(){super();}
     
     
     // BEAN PATTERNS: GETTERS & SETTERS
@@ -106,18 +106,18 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
     // METHODS: COMPUTING THE GRID
     
     /** Sets the boundaries of the window */
-    public void initMinMax(){
-        origin=visometry.toWindow(0,0);
-        min=visometry.getWindowMin();
-        max=visometry.getWindowMax();
+    public void initMinMax(Euclidean2 v){
+        origin=v.toWindow(0,0);
+        min=v.getWindowMin();
+        max=v.getWindowMax();
     }
     
     /** Sets the spacing of the grid using the underlying visometry */
-    public void initGrid(){
-        xGrid=niceRange(visometry.getActualMin().x,visometry.getActualMax().x,(double)IDEAL_GRID_SPACE*visometry.getDrawWidth()/visometry.getWindowWidth());
-        xGridWin=new Vector<Double>();for(double d:xGrid){xGridWin.add(visometry.toWindowX(d));}
-        yGrid=niceRange(visometry.getActualMin().y,visometry.getActualMax().y,(double)IDEAL_GRID_SPACE*visometry.getDrawHeight()/visometry.getWindowHeight());
-        yGridWin=new Vector<Double>();for(double d:yGrid){yGridWin.add(visometry.toWindowY(d));}
+    public void initGrid(Euclidean2 v){
+        xGrid=niceRange(v.getActualMin().x,v.getActualMax().x,(double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
+        xGridWin=new Vector<Double>();for(double d:xGrid){xGridWin.add(v.toWindowX(d));}
+        yGrid=niceRange(v.getActualMin().y,v.getActualMax().y,(double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());
+        yGridWin=new Vector<Double>();for(double d:yGrid){yGridWin.add(v.toWindowY(d));}
     }
     
     /**
@@ -162,9 +162,9 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
     public void recompute(){}
     
     /** Repaints the component on the given panel, using the given visometry. */
-    public void paintComponent(Graphics2D g) {
-        initMinMax();
-        if(gridOn||ticksOn||tickLabelsOn){initGrid();}
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        initMinMax(v);
+        if(gridOn||ticksOn||tickLabelsOn){initGrid(v);}
         if(gridOn){
             g.setColor(gridColor);
             g.setStroke(DASHED_STROKE);
@@ -279,7 +279,6 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
         throw new UnsupportedOperationException("Not supported yet.");
     }    
     
-    @Override
     public Vector<JMenuItem> getMenuItems() {
         Vector<JMenuItem> result=new Vector<JMenuItem>();
         JMenuItem mi;
@@ -326,9 +325,6 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements BuildsContex
     
     // EVENT HANDLING
     
-    @Override
-    public boolean clicked(MouseEvent e){return false;}
-
     @Override
     public JMenu getOptionsMenu() {return null;}
 }

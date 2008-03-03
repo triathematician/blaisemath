@@ -34,13 +34,11 @@ import specto.visometry.Euclidean2;
  */
 public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>,ChangeListener{
     Vector<R2> points;
-    public PointSet2D(Euclidean2 vis){this(vis,new Vector<R2>(),Color.BLACK);}
-    public PointSet2D(Euclidean2 vis,Color c){this(vis,new Vector<R2>(),c);}
-    public PointSet2D(Euclidean2 vis,Vector<R2> points,Color c){
-        super(vis);
+    public PointSet2D(){this(new Vector<R2>(),Color.BLACK);}
+    public PointSet2D(Color c){this(new Vector<R2>(),c);}
+    public PointSet2D(Vector<R2> points,Color c){
         initStyle();
         setColor(c);
-        setOptionsMenuBuilding(true);
         this.points=points;
     }
     
@@ -56,52 +54,50 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public void recompute(){}
 
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v){
         if(points.size()==0){return;}
-        g.setColor(color);
         g.setStroke(strokes[style.getValue()]);
-        g.draw(drawPath(0,points.size()));
+        g.draw(drawPath(v,0,points.size()));
     }
     @Override
-    public void paintComponent(Graphics2D g,RangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(points.size()==0){return;}
-        g.setColor(color);
         g.setStroke(strokes[style.getValue()]);
         switch(animateStyle.getValue()){
             case ANIMATE_DRAW:
-                g.draw(drawPath(t.getStartStep(),t.getCurrentStep()));
+                g.draw(drawPath(v,t.getStartStep(),t.getCurrentStep()));
                 break;
             case ANIMATE_DOT:
-                g.fill(drawDot(t.getCurrentStep()));
+                g.fill(drawDot(v,t.getCurrentStep()));
                 break;
             case ANIMATE_TRACE:
-                g.draw(drawPath(0,points.size()));
-                g.fill(drawDot(t.getCurrentStep()));
+                g.draw(drawPath(v,0,points.size()));
+                g.fill(drawDot(v,t.getCurrentStep()));
                 break;
             case ANIMATE_TRAIL:
             default:
-                g.setColor(color.brighter());
-                g.draw(drawPath(0,t.getCurrentStep()));
+                g.setColor(color.getValue().brighter());
+                g.draw(drawPath(v,0,t.getCurrentStep()));
 
-                g.setColor(color.darker());
-                g.draw(drawPath(t.getCurrentStep()-5,t.getCurrentStep()));
-                g.fill(drawDot(t.getCurrentStep()));
+                g.setColor(color.getValue().darker());
+                g.draw(drawPath(v,t.getCurrentStep()-5,t.getCurrentStep()));
+                g.fill(drawDot(v,t.getCurrentStep()));
                 break;
         }        
     }
     
-    public Shape drawDot(int pos){
+    public Shape drawDot(Euclidean2 v,int pos){
         int posB=pos<0?0:(pos>=points.size()?points.size()-1:pos);
-        return visometry.dot(points.get(posB),3.0);
+        return v.dot(points.get(posB),3.0);
     }
     
-    public Path2D.Double drawPath(int start,int end){
+    public Path2D.Double drawPath(Euclidean2 v,int start,int end){
         Path2D.Double result=new Path2D.Double();
         int startB=start<0?0:(start>=points.size()?points.size()-1:start);
         int endB=end<0?0:(end>=points.size()?points.size()-1:end);
         result.moveTo(points.get(startB).x,points.get(startB).y);
         for(int i=startB;i<=endB;i++){result.lineTo(points.get(i).x,points.get(i).y);}
-        result.transform(visometry.getAffineTransformation());
+        result.transform(v.getAffineTransformation());
         return result;
     }
     
@@ -144,9 +140,10 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
 
     // EVENT HANDLING
     
+    @Override
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu("Path Options");
-        result.add(getColorButton());
+        result.add(getColorMenuItem());
         result.add(style.getSubMenu("Line Style"));
         result.add(animateStyle.getSubMenu("Animation Style"));
         try{

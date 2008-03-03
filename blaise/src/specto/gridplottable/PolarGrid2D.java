@@ -32,27 +32,27 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     private static final float[] dash1={6.0f,4.0f};
     private static final Stroke DASHED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash1,0.0f);
 
-    public PolarGrid2D(Euclidean2 vis){super(vis);}
+    public PolarGrid2D(){}
     
     // DRAW METHODS
         
     @Override
     public void recompute(){}
     
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         g.setColor(gridColor);
         g.setStroke(DASHED_STROKE);
         double LENGTH=15;
         for(double i=0;i<2*Math.PI;i+=Math.PI/12){
             g.draw(new Line2D.Double(
-                    visometry.toWindowX(LENGTH/40*Math.cos(i)),visometry.toWindowY(LENGTH/40*Math.sin(i)),
-                    visometry.toWindowX(LENGTH*Math.cos(i)),visometry.toWindowY(LENGTH*Math.sin(i))));
+                    v.toWindowX(LENGTH/40*Math.cos(i)),v.toWindowY(LENGTH/40*Math.sin(i)),
+                    v.toWindowX(LENGTH*Math.cos(i)),v.toWindowY(LENGTH*Math.sin(i))));
         }
         java.awt.geom.Point2D.Double left;
         java.awt.geom.Point2D.Double right;
         for(double i=LENGTH/20;i<LENGTH;i+=LENGTH/10){
-            left=visometry.toWindow(new R2(-i,-i));
-            right=visometry.toWindow(new R2(i,i));
+            left=v.toWindow(new R2(-i,-i));
+            right=v.toWindow(new R2(i,i));
             g.draw(new Ellipse2D.Double(left.x,right.y,right.x-left.x,left.y-right.y));
         }
     }

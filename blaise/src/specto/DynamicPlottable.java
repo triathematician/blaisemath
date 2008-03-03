@@ -10,9 +10,9 @@
 package specto;
 
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import scio.coordinate.Coordinate;
+import sequor.event.MouseVisometryEvent;
+import sequor.event.MouseVisometryListener;
 
 /**
  * <p>
@@ -23,36 +23,29 @@ import java.awt.event.MouseMotionListener;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseListener,MouseMotionListener {
-    
-    public DynamicPlottable(V v){super(v);}
+public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseVisometryListener<V> {
     
     // HOW TO DETERMINE WHEN TO PROCESS A MOUSE EVENT
-
-    public static final int CLICK_EDIT_RANGE=8;
     
     public boolean adjusting=false;
-    public boolean mobile=true;
+    public boolean editable=true;
+
+    public boolean isAdjusting() {return adjusting;}
+    public boolean isEditable() {return editable;}
+    public void setAdjusting(boolean newValue) {adjusting=newValue;}
+    public void setEditable(boolean newValue) {editable=newValue;}    
     
-    public void setMoving(boolean newValue){mobile=newValue;}
+    public boolean clicked(MouseVisometryEvent<V> e) {return false;}
+    public boolean withinClickRange(MouseVisometryEvent<V> e,Coordinate c){
+        java.awt.geom.Point2D.Double point=e.getSourceVisometry().toWindow(c);
+        return Math.abs(e.getX()-point.x)+Math.abs(e.getY()-point.y)<CLICK_EDIT_RANGE;        
+    }
     
-    public boolean clicked(MouseEvent e){return false;}
-    
-    
-    // MOUSE EVENTS
-    
-    @Override
-    public void mouseClicked(MouseEvent e){}
-    @Override
-    public void mousePressed(MouseEvent e){}
-    @Override
-    public void mouseReleased(MouseEvent e){}
-    @Override
-    public void mouseEntered(MouseEvent e){}
-    @Override
-    public void mouseExited(MouseEvent e){}
-    @Override
-    public void mouseDragged(MouseEvent e){}
-    @Override
-    public void mouseMoved(MouseEvent e){}
+    public void mouseClicked(MouseVisometryEvent<V> e) {}
+    public void mouseDragged(MouseVisometryEvent<V> e) {}
+    public void mouseEntered(MouseVisometryEvent<V> e) {}
+    public void mouseExited(MouseVisometryEvent<V> e) {}
+    public void mouseMoved(MouseVisometryEvent<V> e) {}
+    public void mousePressed(MouseVisometryEvent<V> e) {}
+    public void mouseReleased(MouseVisometryEvent<V> e) {}    
 }

@@ -22,45 +22,35 @@ import sequor.model.ColorModel;
  * This abstract class includes basic functionality for the plotting of some object on
  * a plot panel. Adds in support for firing change events, if the underlying settings
  * have changed for some reason.
- * <br><br>
+ * <p>
  * Plottable's store all computations before displaying, allowing for plotpanel's to
  * pick and choose which elements to recompute before drawing. This allows the program
  * to avoid redundant computations. The PlotPanel class handles the recomputation
  * method before painting.
- * <br><br>
+ * </p>
  * @author Elisha Peterson
  */
 public abstract class Plottable<V extends Visometry> {
-    
-    /** Underlying visometry used by the element. */
-    protected V visometry;
     /** Color used by the element. */
-    protected Color color;
-    /** Determines whether this adds to options menu. */
-    protected boolean optionsMenuBuilding=false;
+    protected ColorModel color;
     /** List of decorations. */
     protected PlottableGroup<V> decorations;
 
-    public Plottable(V v){setVisometry(v);}
+    public Plottable() {
+        color=new ColorModel();
+        color.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e) {redraw();}});
+    }        
     
-    public void setVisometry(V newVis){visometry=newVis;}    
-    public V getVisometry(){return visometry;}
-    public Color getColor(){return color;}
-    public void setColor(Color newValue){
-        if(color!=newValue){
-            color=newValue;
-            if(decorations!=null){decorations.setColor(newValue);}
-            fireStateChanged();
-        }
+    public Color getColor(){return color.getValue();}
+    public void setColor(Color newValue){color.setValue(newValue);}
+    public void addDecoration(Plottable p){
+        if(decorations==null){decorations=new PlottableGroup<V>();}
+        decorations.add(p);
+        if(p instanceof Decoration){((Decoration)p).setParent(this);}
     }
-    public void setOptionsMenuBuilding(boolean newValue){optionsMenuBuilding=newValue;}
-    public boolean isOptionsMenuBuilding(){return optionsMenuBuilding;}
-    public void addDecoration(Decoration<V> d){
-        if(decorations==null){decorations=new PlottableGroup<V>(visometry);}
-        decorations.add(d);
-        d.setParent(this);
-    }
-    public abstract JMenu getOptionsMenu();
+    /** Returns menu containing any desired options. By default, returns null...
+     * otherwise whatever is returned may be added to the plotpanel context menu. */
+    public JMenu getOptionsMenu(){return null;}
     public Vector<JMenuItem> getDecorationMenuItems(){
         if(decorations==null){return null;}
         Vector<JMenuItem> result=new Vector<JMenuItem>();
@@ -69,24 +59,16 @@ public abstract class Plottable<V extends Visometry> {
         }
         return result;
     }
-    public Component getColorButton(){
-        final ColorModel cm=new ColorModel(color);
-        final JButton result=cm.getButton();
-        cm.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e){setColor(cm.getValue());result.setForeground(cm.getValue().brighter());}
-        });
-        result.setForeground(color);
-        result.setText("Change Color");
-        result.setOpaque(false);
-        result.setRolloverEnabled(true);
-        return result;
+    /** Returns button which when pressed opens a color palette to change the color of the given item. */
+    public Component getColorMenuItem(){        
+        return color.getMenuItem();
     }
 
     public abstract void recompute();
     public void redraw(){fireStateChanged();}
-    public void paintDecorations(Graphics2D g){if(decorations!=null){decorations.paintComponent(g);}}
-    public void paintDecorations(Graphics2D g,RangeTimer t){if(decorations!=null){decorations.paintComponent(g,t);}}
-    public abstract void paintComponent(Graphics2D g);
+    public void paintDecorations(Graphics2D g,V v){if(decorations!=null){decorations.paintComponent(g,v);}}
+    public void paintDecorations(Graphics2D g,V v,RangeTimer t){if(decorations!=null){decorations.paintComponent(g,v,t);}}
+    public abstract void paintComponent(Graphics2D g,V v);
             
     
     

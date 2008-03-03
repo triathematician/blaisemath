@@ -10,14 +10,17 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Ellipse2D;
 import java.util.Vector;
 import javax.swing.JMenu;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
+import sequor.model.ComboBoxRangeModel;
 import specto.visometry.Euclidean2;
 
 /**
@@ -41,62 +44,44 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             return result;
         }
         };
-    public PlaneFunction2D(Euclidean2 vis){this(vis,DEFAULT_FUNCTION);}
-    public PlaneFunction2D(Euclidean2 vis,Function<R2,Double> function){
-        super(vis);
-        setOptionsMenuBuilding(true);
+    public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
+    public PlaneFunction2D(Function<R2,Double> function){
         color=Color.ORANGE;
         this.function=function;
-    }
-
-    private int style=DOTS;
-    public static final int DOTS=0;
-    public static final int COLORS=1;
-    public static final int CONTOURS=2;
-    public static final int DENSITY=3;
-    
-    public void setStyle(int newStyle){
-        if(style!=newStyle){
-            style=newStyle;
-            fireStateChanged();
-        }
+        initStyle();
     }
     
     // DRAW METHODS
-    
-    
+        
     @Override
     public void recompute(){}
         
     @Override
-    public void paintComponent(Graphics2D g){
+    public void paintComponent(Graphics2D g,Euclidean2 v){
         try {
             g.setColor(color);
             Vector<R2> inputs = new Vector<R2>();
-            for (double px : visometry.getSparseXRange(20)) {
-                for (double py : visometry.getSparseYRange(20)) {
+            for (double px : v.getSparseXRange(20)) {
+                for (double py : v.getSparseYRange(20)) {
                     inputs.add(new R2(px, py));
                 }
             }
             Vector<Double> result = function.getValue(inputs);
             double WEIGHT=10/(function.maxValue()-function.minValue());
             double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
-            switch (style) {
+            switch (style.getValue()) {
                 case DOTS:
                     for(int i=0;i<inputs.size();i++){
-                        g.fill(visometry.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
+                        g.fill(v.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
                     }
                     break;
-                case COLORS:
-                    for(int i=0;i<inputs.size();i++){
-                        g.fill(visometry.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
-                    }                    break;
                 case CONTOURS:
-                    break;
                 case DENSITY:                    
+                case COLORS:
+                default:
                     for(int i=0;i<inputs.size();i++){
                         g.setColor(Color.getHSBColor(1.0f-(float)getRadius(result.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
-                        g.fill(visometry.squareDot(inputs.get(i),10.0));
+                        g.fill(v.squareDot(inputs.get(i),10.0));
                     }
                     break;
             }
@@ -109,22 +94,26 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         return(value<0)?0:value;
     }
 
+    // STYLE METHODS
+
+    public static final int DOTS=0;
+    public static final int COLORS=1;
+    public static final int CONTOURS=2;
+    public static final int DENSITY=3;
+    
+    public static final String[] styleStrings={"Dots","Color Boxes","Contours","Density"};
+    public ComboBoxRangeModel style;
+    
+    public void initStyle(){
+        style=new ComboBoxRangeModel(styleStrings,COLORS,0,3);
+        style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e) {redraw();}});
+    }
+    
+    @Override
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu("Plane Function");
-        result.add(new JMenuItem("Color",null));
-        result.addSeparator();
-        result.add(new JMenuItem("Dots")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(DOTS);}            
-        });
-        result.add(new JMenuItem("Colors")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(COLORS);}            
-        });
-        result.add(new JMenuItem("Contours")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(CONTOURS);}            
-        });
-        result.add(new JMenuItem("Density")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){setStyle(DENSITY);}            
-        });
+        result.add(getColorMenuItem());
+        result.add(style.getSubMenu("Display style"));
         return result;
     }
 }

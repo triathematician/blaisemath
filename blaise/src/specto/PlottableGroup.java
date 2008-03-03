@@ -20,15 +20,16 @@ import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.component.RangeTimer;
+import sequor.event.MouseVisometryEvent;
 
 /**
  *
  * @author Elisha Peterson
  */
-public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable,ChangeListener {
+public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable<V>,ChangeListener {
     protected Vector<Plottable<V>> plottables;
 
-    public PlottableGroup(V v) {super(v);plottables=new Vector<Plottable<V>>();}
+    public PlottableGroup() {plottables=new Vector<Plottable<V>>();}
     
     public void clear(){plottables.clear();}    
     public void add(Plottable<V> p){plottables.add(p);p.addChangeListener(this);}
@@ -41,39 +42,41 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         for(Plottable p:plottables){p.setColor(newValue);}
     }
     @Override
-    public void setVisometry(V newVis) {super.setVisometry(newVis);if(plottables!=null){for(Plottable p:plottables){p.setVisometry(newVis);}}}
-    @Override
     public void recompute() {for (Plottable p:plottables){p.recompute();}}
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,V v) {
         for (Plottable p:plottables){
-            p.paintDecorations(g);
-            p.paintComponent(g);
+            g.setColor(p.getColor());
+            p.paintDecorations(g,v);
+            g.setColor(p.getColor());
+            p.paintComponent(g,v);
         }
     }
     @Override
-    public void paintComponent(Graphics2D g, RangeTimer t) {
+    public void paintComponent(Graphics2D g,V v,RangeTimer t) {
         for (Plottable p:plottables){
-            p.paintDecorations(g,t);
+            g.setColor(p.getColor());
+            p.paintDecorations(g,v,t);
+            g.setColor(p.getColor());
             if(p instanceof Animatable){
-                ((Animatable)p).paintComponent(g,t);
+                ((Animatable)p).paintComponent(g,v,t);
             }else{
-                p.paintComponent(g);
+                p.paintComponent(g,v);
             }
         }
     }
 
     @Override
     public JMenu getOptionsMenu() {
-        if(!isOptionsMenuBuilding()){return null;}
         JMenu result=new JMenu();
         for(Plottable p:plottables){
-            if(p.isOptionsMenuBuilding()){
+            try{
                 for(Component c:p.getOptionsMenu().getComponents()){
                     result.add(c);
                 }
-            }
+            }catch(NullPointerException e){}
         }
+        if(result.getComponentCount()==0){return null;}
         return result;
     }
 
@@ -83,7 +86,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     DynamicPlottable<V> mover;
     
     @Override
-    public boolean clicked(MouseEvent e) {
+    public boolean clicked(MouseVisometryEvent<V> e) {
         for (Plottable<V> dp:plottables){
             if (dp instanceof DynamicPlottable && ((DynamicPlottable<V>)dp).clicked(e)){
                return true;
@@ -92,7 +95,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         return false;
     }
             
-    Vector<DynamicPlottable<V>> getHits(MouseEvent e){
+    Vector<DynamicPlottable<V>> getHits(MouseVisometryEvent<V> e){
         Vector<DynamicPlottable<V>> result=new Vector<DynamicPlottable<V>>();
         for (Plottable<V> dp:plottables){
             if (dp instanceof DynamicPlottable && ((DynamicPlottable<V>)dp).clicked(e)){
@@ -103,39 +106,39 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     }
 
     @Override
-    public void mouseClicked(MouseEvent e){
+    public void mouseClicked(MouseVisometryEvent<V> e){
         Vector<DynamicPlottable<V>> hits=getHits(e);
-        if(hits.isEmpty()){visometry.mouseClicked(e);}
+        if(hits.isEmpty()){e.getSourceVisometry().mouseClicked(e);}
         else{hits.get(0).mouseClicked(e);}
     }
 
     @Override
-    public void mousePressed(MouseEvent e){
+    public void mousePressed(MouseVisometryEvent<V> e){
         Vector<DynamicPlottable<V>> hits=getHits(e);
-        if(hits.isEmpty()){visometry.mousePressed(e);}
+        if(hits.isEmpty()){e.getSourceVisometry().mousePressed(e);}
         else{mover=hits.get(0);mover.mousePressed(e);}
     }
 
     @Override
-    public void mouseDragged(MouseEvent e){
+    public void mouseDragged(MouseVisometryEvent<V> e){
         if(mover!=null){mover.mouseDragged(e);}
-        else{visometry.mouseDragged(e);}
+        else{e.getSourceVisometry().mouseDragged(e);}
     }
 
     @Override
-    public void mouseReleased(MouseEvent e){
+    public void mouseReleased(MouseVisometryEvent<V> e){
         if(mover!=null){mover.mouseReleased(e);mover=null;}
-        else{visometry.mouseReleased(e);}
+        else{e.getSourceVisometry().mouseReleased(e);}
     }
 
     @Override
-    public void mouseMoved(MouseEvent e){visometry.mouseMoved(e);}
+    public void mouseMoved(MouseVisometryEvent<V> e){e.getSourceVisometry().mouseMoved(e);}
 
     @Override
-    public void mouseEntered(MouseEvent e){visometry.mouseEntered(e);}
+    public void mouseEntered(MouseVisometryEvent<V> e){e.getSourceVisometry().mouseEntered(e);}
 
     @Override
-    public void mouseExited(MouseEvent e){visometry.mouseExited(e);}
+    public void mouseExited(MouseVisometryEvent<V> e){e.getSourceVisometry().mouseExited(e);}
 
     public void stateChanged(ChangeEvent e) {fireStateChanged();}
 }

@@ -9,10 +9,12 @@ import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import specto.plottable.PointSet2D;
 import java.awt.Graphics2D;
+import java.util.Vector;
 import scio.function.Function;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
 import specto.plottable.VectorField2D;
+import specto.visometry.Euclidean2;
 
 /**
  * Represents a solution curve to a differential equation. Visually consists of an initial point,
@@ -36,10 +38,10 @@ public class DESolution2D extends InitialPointSet2D {
     /** Initializes solution curve models. */
     void initSolutionCurves(){
         if(path==null){
-            path=new PointSet2D(visometry,parent.getColor());
+            path=new PointSet2D(parent.getColor());
         }
         if(reversePath==null){
-            reversePath=new PointSet2D(visometry,parent.getColor());
+            reversePath=new PointSet2D(parent.getColor());
             reversePath.style.setValue(PointSet2D.DOTTED);
         }
         path.getPath().clear();
@@ -50,40 +52,76 @@ public class DESolution2D extends InitialPointSet2D {
      * @param steps     The number of iterations.
      * @param stepSize  The size of path added at each step.
      */
-    void calcNewton(int steps,double stepSize) throws FunctionValueException{
-        initSolutionCurves();
-        R2 cur=((Point2D)getParent()).getPoint();
-        R2 dir=new R2(0,0);
+    public static Vector<R2> calcNewton(Function<R2,R2> field,R2 start,int steps,double stepSize) throws FunctionValueException{
+        Vector<R2> result=new Vector<R2>();
+        result.add(start);
+        R2 last;
         for(int i=0;i<steps;i++){
-            path.getPath().add(cur.plus(dir));
-            dir=function.getValue(cur).scaledToLength(stepSize);
-            cur=cur.plus(dir);
+            last=result.lastElement();
+            result.add(last.plus(getScaledVector(field,last,stepSize)));
         }
-        cur=((Point2D)getParent()).getPoint();
-        dir=new R2(0,0);
-        for(int i=0;i<steps;i++){            
-            reversePath.getPath().add(cur.minus(dir));
-            dir=function.getValue(cur).scaledToLength(stepSize);
-            cur=cur.minus(dir);
+        return result;
+    }
+    
+    /** Re-calculates solution curves using Runge-Kutta 4th order.
+     * @param steps the number of iteration
+     * @param stepSize the change in t for each iteration
+     */
+    public static Vector<R2> calcRungeKutta4(Function<R2,R2> field,R2 start,int steps,double stepSize) throws FunctionValueException{
+        Vector<R2> result=new Vector<R2>();
+        result.add(start);
+        R2 k1,k2,k3,k4;
+        R2 last;
+        for(int i=0;i<steps;i++){
+            last=result.lastElement();
+            k1=getScaledVector(field,last,stepSize);
+            k2=getScaledVector(field,last.plus(k1.multipliedBy(0.5)),stepSize);
+            k3=getScaledVector(field,last.plus(k2.multipliedBy(0.5)),stepSize);
+            k4=getScaledVector(field,last.plus(k3),stepSize);
+            result.add(new R2(last.x+(k1.x+2*k2.x+2*k3.x+k4.x)/6,last.y+(k1.y+2*k2.y+2*k3.y+k4.y)/6));
+            
         }
+        return result;
+    }
+
+    public static R2 getScaledVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
+        return field.getValue(point).scaledToLength(size);
+    }
+    
+    @Override
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        if(path!=null){path.paintComponent(g,v);}
+        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,v);}
     }
 
     @Override
-    public void paintComponent(Graphics2D g) {
-        if(path!=null){path.paintComponent(g);}
-        if(showReverse&&reversePath!=null){reversePath.paintComponent(g);}
-    }
-
-    @Override
-    public void paintComponent(Graphics2D g,RangeTimer t){
-        if(path!=null){path.paintComponent(g,t);}
-        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,t);}
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+        if(path!=null){path.paintComponent(g,v,t);}
+        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,v,t);}
     }
 
     @Override
     public void recompute() {
         try {
-            calcNewton(500, .04);
+            initSolutionCurves();
+            switch(algorithm){
+                case ALGORITHM_RUNGE_KUTTA:
+                    path.setPath(calcRungeKutta4(function,((Point2D)parent).getPoint(),500,.04));
+                    reversePath.setPath(calcRungeKutta4(function,((Point2D)parent).getPoint(),500,-.04));
+                    break;
+                case ALGORITHM_NEWTON:
+                default:
+                    path.setPath(calcNewton(function,((Point2D)parent).getPoint(),500,.04));
+                    reversePath.setPath(calcNewton(function,((Point2D)parent).getPoint(),500,-.04));
+                    break;
+            }
         } catch (FunctionValueException ex) {}
     }
+
+    // STYLE PARAMETERS
+
+    int algorithm=ALGORITHM_NEWTON;
+    public static final int ALGORITHM_NEWTON=0;
+    public static final int ALGORITHM_RUNGE_KUTTA=1;
+    
 }

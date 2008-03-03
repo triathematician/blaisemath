@@ -10,8 +10,12 @@
 package sequor.model;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JMenuItem;
 
 /**
  * This class
@@ -37,5 +41,21 @@ public class ColorModel extends FiresChangeEvents {
     
     public JButton getButton(){
         return new ColorEditor(this).button;
+    }
+    public JMenuItem getMenuItem(){
+        final JMenuItem jmi=new JMenuItem("Change Color");
+        jmi.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) { // if menu item is selected
+                final JColorChooser jcc=new JColorChooser();
+                JColorChooser.createDialog(jmi,"Pick a Color",true,jcc,new ActionListener(){
+                    public void actionPerformed(ActionEvent e) { // if OK is pressed
+                        jmi.setForeground(jcc.getColor());
+                        setValue(jcc.getColor());
+                    }
+                },null).setVisible(true);                
+            }
+        });
+        jmi.setForeground(c);
+        return jmi;
     }
 }

@@ -47,12 +47,9 @@ public class Parametric2D extends PointSet2D {
         public R2 maxValue(){return new R2(2,2);}
         };
         
-    /** Default constructor uses the default function and t between 0 and 2pi */
-    public Parametric2D(Euclidean2 vis){this(vis,DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
-    
+    public Parametric2D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
     /** Constructor for use with a particular function and range of t values */
-    public Parametric2D(Euclidean2 vis,Function<Double,R2> function,double tMin,double tMax,int samplePoints){
-        super(vis);
+    public Parametric2D(Function<Double,R2> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(tMin,tMin,tMax);
@@ -63,10 +60,10 @@ public class Parametric2D extends PointSet2D {
 
     /** Draws the path. */
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         try {
             computePath();
-            super.paintComponent(g);
+            super.paintComponent(g,v);
         } catch (FunctionValueException ex) {}
     }
     
