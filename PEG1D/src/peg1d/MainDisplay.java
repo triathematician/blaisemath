@@ -169,7 +169,6 @@ public class MainDisplay extends javax.swing.JFrame {
         }
         else if(evt.getActionCommand().equals("reset")){
             plot2D1.removeAll();
-            plot2D1.add(new Grid2D(plot2D1.getVisometry()));
             simulation1.addToPanel(plot2D1);
             plot2D1.rebuildOptionsMenu();
             plot2D1.repaint();

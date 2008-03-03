@@ -68,14 +68,14 @@ public class Simulation implements ChangeListener {
         for(int i=0;i<getNP();i++){
             addThis=new PointRangeModel();
             pStartsAt.add(addThis);
-            pPaths.add(new PointSet2D(vis,settings.colorPursuer.getValue()));
+            pPaths.add(new PointSet2D(settings.colorPursuer.getValue()));
         }
         eStartsAt.clear();
         ePaths.clear();
         for(int i=0;i<getNE();i++){
             addThis=new PointRangeModel();
             eStartsAt.add(addThis);
-            ePaths.add(new PointSet2D(vis,settings.colorEvader.getValue()));
+            ePaths.add(new PointSet2D(settings.colorEvader.getValue()));
         }
     }
     
@@ -92,8 +92,8 @@ public class Simulation implements ChangeListener {
     public void addToPanel(PlotPanel<Euclidean2> p){
         reset(p.getVisometry());
         if(pStartsAt==null||pPaths==null||eStartsAt==null||ePaths==null){return;}
-        for(PointRangeModel prm:pStartsAt){p.add(new Point2D(p.getVisometry(),prm,settings.colorPursuer.getValue()));}
-        for(PointRangeModel prm:eStartsAt){p.add(new Point2D(p.getVisometry(),prm,settings.colorEvader.getValue()));}
+        for(PointRangeModel prm:pStartsAt){p.add(new Point2D(prm,settings.colorPursuer.getValue()));}
+        for(PointRangeModel prm:eStartsAt){p.add(new Point2D(prm,settings.colorEvader.getValue()));}
         for(PointSet2D ps:pPaths){p.add(ps);}
         for(PointSet2D ps:ePaths){p.add(ps);}
     }
@@ -305,8 +305,10 @@ public class Simulation implements ChangeListener {
         
         @Override
         public void stateChanged(ChangeEvent e){
-            if(e.getSource()==colorEvader||e.getSource()==colorPursuer){        
-                for(PointSet2D ps:ePaths){ps.setColor(colorEvader.getValue());}
+            if(e.getSource()==colorEvader){
+                for(PointSet2D es:ePaths){es.setColor(colorEvader.getValue());}
+                fireActionPerformed("reset");
+            }else if(e.getSource()==colorPursuer){        
                 for(PointSet2D ps:pPaths){ps.setColor(colorPursuer.getValue());}
                 fireActionPerformed("reset");
             }else if(e.getSource()==numPursuer||e.getSource()==numEvader){
