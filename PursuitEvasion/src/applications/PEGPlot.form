@@ -190,8 +190,8 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" alignment="0" pref="393" max="32767" attributes="1"/>
-                  <Component id="simulationSettingsPanel1" alignment="0" pref="393" max="32767" attributes="1"/>
+                  <Component id="jTabbedPane1" alignment="0" pref="394" max="32767" attributes="1"/>
+                  <Component id="simulationSettingsPanel1" alignment="0" pref="394" max="32767" attributes="1"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

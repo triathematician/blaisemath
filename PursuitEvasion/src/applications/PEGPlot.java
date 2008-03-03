@@ -296,8 +296,8 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
     // simulation has changed in some fundamental way
     else if(evt.getActionCommand().equals("reset")){
-        plot2D1.removeAll();plot2D1.add(new Grid2D(plot2D1.getVisometry()));
-        plot2D2.removeAll();plot2D2.add(new Grid2D(plot2D1.getVisometry()));
+        plot2D1.removeAll();
+        plot2D2.removeAll();
         simulation1.setAnimationCycle(plot2D1);
         simulation1.setAnimationCycle(plot2D2);
         plot2D1.rebuildOptionsMenu();

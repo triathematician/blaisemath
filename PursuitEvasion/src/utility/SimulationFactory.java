@@ -86,8 +86,8 @@ public class SimulationFactory {
         //                          #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team copTeam=new Team(      5,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLUE);
         Team robberTeam=new Team(   4,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.ORANGE);
-        robberTeam.addGoal(1.0, copTeam,   Goal.CAPTURE,  Tasking.AUTO_GRADIENT,1.0);
-        copTeam.addGoal(   1.0, robberTeam,Goal.FLEE,  Tasking.CONTROL_CLOSEST, 1.0);
+        robberTeam.addGoal(1.0, copTeam,   Goal.FLEE,  Tasking.AUTO_GRADIENT,1.0);
+        copTeam.addGoal(   1.0, robberTeam,Goal.CAPTURE,  Tasking.CONTROL_CLOSEST, 1.0);
         copTeam.setString("Cops");
         robberTeam.setString("Robbers");
         teams.add(copTeam);

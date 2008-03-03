@@ -56,7 +56,7 @@ public class Statistics extends FiresChangeEvents {
     /** Returns PlaneFunction2D corresponding to the above value function. */
     public PlaneFunction2D getInitialPositionTestPlot(Euclidean2 vis,Simulation sim){
         InitialPositionTestFunction iptf=new InitialPositionTestFunction(sim);
-        return new PlaneFunction2D(vis,iptf);
+        return new PlaneFunction2D(iptf);
     }
     
     

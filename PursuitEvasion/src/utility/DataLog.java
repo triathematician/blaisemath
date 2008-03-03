@@ -89,9 +89,9 @@ public class DataLog extends FiresChangeEvents {
     // OTHER METHODS    
     
     /** Called by the initialization methods */
-    private void addAgentVisuals(Team t, Euclidean2 mainVis, PlottableGroup<Euclidean2> teamGroup) {
+    private void addAgentVisuals(Team t, PlottableGroup<Euclidean2> teamGroup) {
         for (Agent a : t) {
-            Point2D point = new Point2D(mainVis, a.getPointModel(), a.getColor().brighter());
+            Point2D point = new Point2D(a.getPointModel(), a.getColor().brighter());
             // add the dynamic point
             teamGroup.add(point);
             CirclePoint2D cp = new CirclePoint2D(point);
@@ -128,14 +128,14 @@ public class DataLog extends FiresChangeEvents {
             Euclidean2 mainVis=mainDisplay.getVisometry();
             mainDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){            
-                PlottableGroup<Euclidean2> teamGroup=new PlottableGroup<Euclidean2>(mainVis);
-                addAgentVisuals(t, mainVis, teamGroup);
-                teamGroup.add(new DynamicTeamGraph(mainVis,t,this));
+                PlottableGroup<Euclidean2> teamGroup=new PlottableGroup<Euclidean2>();
+                addAgentVisuals(t,teamGroup);
+                teamGroup.add(new DynamicTeamGraph(t,this));
                 mainDisplay.add(teamGroup);
                 mainDisplayGroup.put(t, teamGroup);
             }
             // initializes capture groups
-            captureGroup=new PlottableGroup<Euclidean2>(mainVis);
+            captureGroup=new PlottableGroup<Euclidean2>();
             mainDisplay.add(captureGroup);
         }
         
@@ -144,8 +144,8 @@ public class DataLog extends FiresChangeEvents {
             Euclidean2 valueVis=valueDisplay.getVisometry();
             valueDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){
-                PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>(valueVis);
-                valueGroup.add(new PointSet2D(valueVis,teamValues.get(t),t.getColor()));
+                PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>();
+                valueGroup.add(new PointSet2D(teamValues.get(t),t.getColor()));
                 valueDisplay.add(valueGroup);
                 valueDisplayGroup.put(t, valueGroup);
             }
@@ -170,12 +170,12 @@ public class DataLog extends FiresChangeEvents {
             for(Team t:sim.getTeams()){            
                 PlottableGroup<Euclidean2> teamGroup=mainDisplayGroup.get(t);
                 if(teamGroup==null){
-                    teamGroup=new PlottableGroup<Euclidean2>(mainPlot.getVisometry());
+                    teamGroup=new PlottableGroup<Euclidean2>();
                 }else{
                     teamGroup.clear();
                 }
-                addAgentVisuals(t, mainVis, teamGroup);
-                teamGroup.add(new DynamicTeamGraph(mainVis,t,this));
+                addAgentVisuals(t,teamGroup);
+                teamGroup.add(new DynamicTeamGraph(t,this));
             }
         }
     }
@@ -221,9 +221,7 @@ public class DataLog extends FiresChangeEvents {
         AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
         while((closest!=null)&&(closest.distance<g.getThreshhold())){
             significantEvents.add(new SignificantEvent(g.getOwner(),closest.first,g.getTarget(),closest.second,"Capture",time));
-            Point2D adder=new Point2D(captureGroup.getVisometry(),
-                    (closest.first.loc.x+closest.second.loc.x)/2,(closest.first.loc.y+closest.second.loc.y)/2,
-                    Color.RED,false);
+            Point2D adder=new Point2D(closest.first.loc.plus(closest.second.loc).multipliedBy(0.5),Color.RED,false);
             adder.style.setStyle(PointStyle.CIRCLE);
             captureGroup.add(adder);
             dt.removeAgents(closest);
