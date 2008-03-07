@@ -13,8 +13,15 @@ import scio.coordinate.Coordinate;
  * <br><br>
  * @author ae3263
  */
-public interface Transformer {
-    public Coordinate transform(Coordinate c);
-    public Coordinate inverseTransform(Coordinate c);
-    public Transformer getInverseTransform();
+public abstract class Transformer<C extends Coordinate,D extends Coordinate> {
+    public abstract D transform(C c);
+    public abstract C inverseTransform(D c);
+    public Transformer getInverseTransform(){
+        return new Transformer<D,C>(){
+            @Override
+            public C transform(D c) {return Transformer.this.inverseTransform(c);}
+            @Override
+            public D inverseTransform(C c) {return Transformer.this.transform(c);}            
+        };
+    }
 }

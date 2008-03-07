@@ -23,9 +23,12 @@ import javax.swing.event.ChangeListener;
 import specto.Animatable;
 import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import scio.function.Function;
+import scio.function.FunctionValueException;
 import sequor.model.ComboBoxRangeModel;
+import sequor.model.PointRangeModel;
 import specto.Plottable;
-import specto.VisualStyle;
+import specto.dynamicplottable.Point2D;
 import specto.visometry.Euclidean2;
 
 /**
@@ -101,6 +104,38 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         return result;
     }
     
+    // POINT MODELS
+        
+    public PointRangeModel getConstraintModel() {return new PathPointModel();}
+    public Point2D getConstrainedPoint() {return new Point2D(getConstraintModel());}
+  
+    /** Gets closest point out of the computed path */
+    public R2 getClosestPoint(double x0,double y0) {
+        R2 closestPoint=new R2(Double.MAX_VALUE,Double.MAX_VALUE);
+        double closestDistance=Double.MAX_VALUE;
+        try{
+            for(R2 pt:points){
+                if(pt.distance(x0,y0)<closestDistance){
+                    closestPoint=pt;
+                    closestDistance=pt.distance(x0, y0);
+                }
+            }
+        }catch(NullPointerException e){}
+        return closestPoint;
+    }
+    
+    // INNER CLASSES
+    class PathPointModel extends PointRangeModel {
+        public PathPointModel(){super.setTo(0,0);}
+
+        @Override
+        public void setTo(double x0, double y0) {
+            R2 closest=getClosestPoint(x0,y0);
+            super.setTo(closest.x,closest.y);
+        }        
+    } // class Function2D.ParametricPointModel
+    
+    
     // STYLE SETTINGS
 
     public static final int REGULAR=0;
@@ -112,11 +147,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public static final float[] dash2={1.0f,4.0f};
     public static final float[] dash3={2.0f,6.0f};
     public static final Stroke[] strokes={
-        new BasicStroke(2.0f),
-        new BasicStroke(3.0f),
-        new BasicStroke(4.0f),
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f),
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f)};
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(3.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(4.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash2,0.0f),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash3,0.0f)};
     
     static final String[] styleStrings={"Regular","Medium","Thick","Dotted","Sketch"};
     public ComboBoxRangeModel style;

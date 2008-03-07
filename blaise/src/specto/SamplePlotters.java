@@ -16,6 +16,8 @@ import specto.decoration.FunctionSampleSet;
 import specto.decoration.Segment2D;
 import specto.dynamicplottable.DynamicPointSet2D;
 import specto.dynamicplottable.Point2D;
+import specto.dynamicplottable.Triangle2D;
+import specto.gridplottable.PolarGrid2D;
 import specto.plottable.Function2D;
 import specto.plottable.Parametric2D;
 import specto.plottable.PlaneFunction2D;
@@ -35,11 +37,14 @@ public class SamplePlotters extends javax.swing.JFrame {
         
         Function2D f1=new Function2D();
         f1.addDecoration(new FunctionSampleSet(f1));
-        Point2D p0=f1.getConstrainedPoint();
+        Point2D cp0=f1.getConstrainedPoint();
         plot2D1.add(f1);
-        plot2D1.add(p0);
+        plot2D1.add(cp0);
         
-        plot2D2.add(new Parametric2D());
+        Parametric2D par1=new Parametric2D();
+        Point2D cp1=par1.getConstrainedPoint();
+        plot2D2.add(par1);
+        plot2D2.add(cp1);
 
         plot2D3.add(new VectorField2D());
         Point2D p1=new Point2D();
@@ -64,12 +69,16 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D5.add(p4);
         plot2D5.add(p5);
         plot2D5.add(new Rectangle2D());
+        plot2D5.add(new Triangle2D());
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
             dps1.add(x*Math.cos(x/3.0),x*Math.sin(x/3.0));
         }
         plot2D6.add(dps1);
+        
+        plot2D7.removeAll();
+        plot2D7.add(new PolarGrid2D());
     }
     
     /** This method is called from within the constructor to
@@ -87,6 +96,7 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D4 = new specto.plotpanel.Plot2D();
         plot2D5 = new specto.plotpanel.Plot2D();
         plot2D6 = new specto.plotpanel.Plot2D();
+        plot2D7 = new specto.plotpanel.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -122,11 +132,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 242, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Basic", plot2D1);
@@ -135,11 +145,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D2.setLayout(plot2D2Layout);
         plot2D2Layout.setHorizontalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         plot2D2Layout.setVerticalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 242, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Parametric", plot2D2);
@@ -148,11 +158,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D3.setLayout(plot2D3Layout);
         plot2D3Layout.setHorizontalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         plot2D3Layout.setVerticalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 242, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Field", plot2D3);
@@ -161,16 +171,17 @@ public class SamplePlotters extends javax.swing.JFrame {
         plot2D4.setLayout(plot2D4Layout);
         plot2D4Layout.setHorizontalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         plot2D4Layout.setVerticalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 242, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Surface", plot2D4);
         jTabbedPane1.addTab("Points", plot2D5);
         jTabbedPane1.addTab("Point Set", plot2D6);
+        jTabbedPane1.addTab("Radial", plot2D7);
 
         fileMenu.setText("File"); // NOI18N
 
@@ -272,7 +283,7 @@ public class SamplePlotters extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -329,6 +340,7 @@ public class SamplePlotters extends javax.swing.JFrame {
     private specto.plotpanel.Plot2D plot2D4;
     private specto.plotpanel.Plot2D plot2D5;
     private specto.plotpanel.Plot2D plot2D6;
+    private specto.plotpanel.Plot2D plot2D7;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem1;
     private javax.swing.JMenuItem saveMenuItem;

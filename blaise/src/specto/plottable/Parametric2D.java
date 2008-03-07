@@ -70,5 +70,5 @@ public class Parametric2D extends PointSet2D {
     /** Computes the path over the given range */
     public void computePath() throws FunctionValueException{
         points=function.getValue(tRange.getValueRange(true,0.0));
-    }
+    }    
 }

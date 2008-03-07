@@ -26,7 +26,7 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     // STYLES
 
     private Color axesColor=Color.getHSBColor(0.6f,0.5f,0.6f);
-    private Color gridColor=Color.getHSBColor(0.6f,0.3f,0.85f);
+    private Color gridColor=Color.getHSBColor(0.5f,0.3f,0.85f);
     
     private static final Stroke BASIC_STROKE=new BasicStroke();
     private static final float[] dash1={6.0f,4.0f};
@@ -39,25 +39,35 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     @Override
     public void recompute(){}
     
-    public void paintComponent(Graphics2D g,Euclidean2 v) {
+    double THETA_STEPS=24;
+    
+    public void paintComponent(Graphics2D g,Euclidean2 v) {       
         g.setColor(gridColor);
         g.setStroke(DASHED_STROKE);
-        double LENGTH=15;
-        for(double i=0;i<2*Math.PI;i+=Math.PI/12){
+        double maxRad=maxRadius(v);
+        double minRad=maxRad/40;
+        // draw outward lines
+        for(double i=0;i<2*Math.PI;i+=2*Math.PI/THETA_STEPS){
             g.draw(new Line2D.Double(
-                    v.toWindowX(LENGTH/40*Math.cos(i)),v.toWindowY(LENGTH/40*Math.sin(i)),
-                    v.toWindowX(LENGTH*Math.cos(i)),v.toWindowY(LENGTH*Math.sin(i))));
+                    v.toWindowX(minRad*Math.cos(i)),v.toWindowY(minRad*Math.sin(i)),
+                    v.toWindowX(maxRad*Math.cos(i)),v.toWindowY(maxRad*Math.sin(i))));
         }
         java.awt.geom.Point2D.Double left;
         java.awt.geom.Point2D.Double right;
-        for(double i=LENGTH/20;i<LENGTH;i+=LENGTH/10){
+        for(double i=minRad;i<maxRad;i+=(maxRad-minRad)/10){
             left=v.toWindow(new R2(-i,-i));
             right=v.toWindow(new R2(i,i));
             g.draw(new Ellipse2D.Double(left.x,right.y,right.x-left.x,left.y-right.y));
         }
     }
-
-    public JMenu getOptionsMenu() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    
+    public double maxRadius(Euclidean2 v){
+        double x1=v.getActualMin().x;
+        double x2=v.getActualMax().x;
+        double y1=v.getActualMin().y;
+        double y2=v.getActualMax().y;
+        double result=(x1*x1>x2*x2)?(x1*x1):(x2*x2);
+        result+=(y1*y1>y2*y2)?(y1*y1):(y2*y2);
+        return Math.sqrt(result);
     }
 }

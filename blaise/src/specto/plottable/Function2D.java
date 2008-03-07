@@ -76,8 +76,8 @@ public class Function2D extends PointSet2D implements Constrains2D{
         }
     }
 
+    @Override
     public PointRangeModel getConstraintModel() {return new FunctionPointModel(function);}
-    public Point2D getConstrainedPoint() {return new Point2D(getConstraintModel());}
     
     
     // INNER CLASSES
