@@ -33,6 +33,7 @@ public class PointStyle extends VisualStyle {
     
     public int getStyle(){return style;}
     public void setStyle(int newValue){if(newValue!=style&&newValue>=0&&newValue<=4){style=newValue;fireStateChanged();}}
+    @Override
     public void cycleStyle(){style=(style+1)%5;fireStateChanged();}
     public double getSize(){return size;}
     public void setSize(double newValue){if(newValue!=size&&newValue>0&&newValue<=10){size=newValue;fireStateChanged();}}

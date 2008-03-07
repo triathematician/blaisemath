@@ -13,10 +13,9 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
-import sequor.component.RangeTimer;
+import sequor.component.IntegerRangeTimer;
 import sequor.model.DoubleRangeModel;
 import specto.Animatable;
 import specto.Decoration;
@@ -30,7 +29,7 @@ import specto.visometry.Euclidean2;
  * 
  * @author Elisha Peterson
  */
-public class FunctionSampleSet extends Decoration<Euclidean2> implements Animatable<Euclidean2>{
+public class FunctionSampleSet extends Decoration<Euclidean2> {
    
     /** whether range of values includes the max and min */
     boolean inclusive=false;
@@ -98,10 +97,6 @@ public class FunctionSampleSet extends Decoration<Euclidean2> implements Animata
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));                  
             }
         } catch (FunctionValueException ex) {return;}
-    }
-    @Override
-    public void paintComponent(Graphics2D g, Euclidean2 v,RangeTimer t) {
-        paintComponent(g,v);
     }
     @Override
     public JMenu getOptionsMenu() {

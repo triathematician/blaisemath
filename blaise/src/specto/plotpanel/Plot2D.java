@@ -5,9 +5,7 @@
 
 package specto.plotpanel;
 
-import java.util.Collection;
 import specto.PlotPanel;
-import specto.Plottable;
 import specto.gridplottable.Grid2D;
 import specto.visometry.Euclidean2;
 
@@ -20,18 +18,6 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     /** Default constructor */
     public Plot2D(){
         super(new Euclidean2());
-        add(new Grid2D());
-    }
-
-    @Override
-    public void removeAll() {
-        super.removeAll();
-        add(new Grid2D());
-    }
-
-    @Override
-    public <T extends Plottable<Euclidean2>> void removeAll(Collection<T> cpv) {
-        super.removeAll(cpv);
-        add(new Grid2D());
+        addBase(new Grid2D());
     }
 }

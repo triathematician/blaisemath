@@ -9,13 +9,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.util.Vector;
-import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import sequor.component.RangeTimer;
+import sequor.component.IntegerRangeTimer;
 import sequor.model.ColorModel;
 
 /**
@@ -30,7 +29,7 @@ import sequor.model.ColorModel;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class Plottable<V extends Visometry> {
+public abstract class Plottable<V extends Visometry> implements ChangeListener {
     /** Color used by the element. */
     protected ColorModel color;
     /** List of decorations. */
@@ -38,7 +37,7 @@ public abstract class Plottable<V extends Visometry> {
 
     public Plottable() {
         color=new ColorModel();
-        color.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e) {redraw();}});
+        color.addChangeListener(this);
     }        
     
     public Color getColor(){return color.getValue();}
@@ -66,10 +65,10 @@ public abstract class Plottable<V extends Visometry> {
 
     public abstract void recompute();
     public void redraw(){fireStateChanged();}
+    public void stateChanged(ChangeEvent e){changeEvent=e;redraw();}
     public void paintDecorations(Graphics2D g,V v){if(decorations!=null){decorations.paintComponent(g,v);}}
-    public void paintDecorations(Graphics2D g,V v,RangeTimer t){if(decorations!=null){decorations.paintComponent(g,v,t);}}
-    public abstract void paintComponent(Graphics2D g,V v);
-            
+    public void paintDecorations(Graphics2D g,V v,IntegerRangeTimer t){if(decorations!=null){decorations.paintComponent(g,v,t);}}
+    public abstract void paintComponent(Graphics2D g,V v);           
     
     
     // EVENT HANDLING

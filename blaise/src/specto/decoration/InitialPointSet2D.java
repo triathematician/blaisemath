@@ -11,10 +11,9 @@ import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
-import sequor.component.RangeTimer;
+import sequor.component.IntegerRangeTimer;
 import specto.Animatable;
 import specto.Decoration;
-import specto.Visometry;
 import specto.dynamicplottable.Point2D;
 import specto.plottable.PointSet2D;
 import specto.visometry.Euclidean2;
@@ -45,9 +44,10 @@ public class InitialPointSet2D extends Decoration<Euclidean2> implements Animata
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {path.paintComponent(g,v);}
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t) {path.paintComponent(g,v,t);}
+    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){path.paintComponent(g,v,t);}
     @Override
     public JMenu getOptionsMenu() {return path.getOptionsMenu();}
     @Override
     public void recompute() {}
+    public int getAnimatingSteps() {return path.getAnimatingSteps();}
 }

@@ -1,17 +1,18 @@
+/* IntegerRangeModel.java
+ * Created on February 26, 2007
+ */
+         
 package sequor.model;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Vector;
 
 /**
- * <b>DoubleRangeModel.java</b><br>
- * Author: <i>Elisha Peterson</i><br>
- * Created on <i>February 26, 2007, 11:57 AM</i><br><br>
- *
- * Based on the source code for DefaultBoundedRangeModel (borrowed from the Sun
- * Java website), this class stores its value as a double, rather than an int.
- **/
+ * Based on the source code for DefaultBoundedRangeModel 
+ * @author Elisha Peterson
+ */
 
-public class IntegerRangeModel extends FiresChangeEvents {
+public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     
     private int maximum = 10;
     private int minimum = -10;
@@ -39,7 +40,9 @@ public class IntegerRangeModel extends FiresChangeEvents {
     public int getStep(){return step;}
     public void setStep(int newValue){step=newValue;}
     
+    @Override
     public String toString(){return Integer.toString(value);}
+    @Override
     public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
     
     public int getRange(){return (maximum-minimum);}
@@ -62,11 +65,52 @@ public class IntegerRangeModel extends FiresChangeEvents {
         if(changeMax){maximum=newMax;}
         if(changeValue){value=newValue;}
         if(changeMin||changeMax||changeValue){fireStateChanged();}
+    }    
+    
+    
+    // MORE ADVANCED METHODS
+    
+    public Vector<Integer> getValueRange(boolean inclusive,Integer shift){
+        Vector<Integer> result=new Vector<Integer>();
+        if(inclusive){result.add(minimum-shift*step);}else{result.add(minimum+step/2-shift*step);}
+        while(result.lastElement()<=(maximum-step-shift*step)){result.add(result.lastElement()+step);}
+        return result;
     }
     
-    @Override
-    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
+    /** Increments the current value.
+     * @param loop whether to shift the value back to the beginning if outside the range of values.
+     * @return false if the value would be greater than the maximum in range, or if it loops; otherwise true
+     */
+    public boolean increment(boolean loop){
+        if(value+step>maximum){
+            if(loop){setValue(minimum);
+            }else{setValue(maximum);}
+            return false;
+        }else{
+            setValue(value+step);
+            return true;
+        }
+    }
     
+    /** This sets the step size based on the current endpoints and a desired number of "sample points"
+     * @param numSteps the desired number of points
+     * @param inclusive whether the endpoints should be included or not
+     */
+    public void setNumSteps(int numSteps,boolean inclusive){
+        if(inclusive){
+            if(numSteps<2){return;}
+            setStep(getRange()/(numSteps-1));
+        }else{
+            if(numSteps<1){return;}
+            setStep(getRange()/numSteps);
+        }
+    }
+    public int getNumSteps(){return (int)((maximum-minimum)/step);}
+    
+    // IMPLEMENTING ABSTRACT METHODS FROM FIRESCHANGEEVENTS
+    
+    @Override
+    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}    
     @Override
     public FiresChangeEvents clone(){return new IntegerRangeModel(value,minimum,maximum,step);}
     @Override

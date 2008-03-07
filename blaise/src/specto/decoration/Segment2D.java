@@ -10,7 +10,6 @@ import specto.dynamicplottable.*;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import javax.swing.JMenu;
-import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
 import sequor.model.ComboBoxRangeModel;
 import specto.Decoration;
@@ -89,7 +88,7 @@ public class Segment2D extends Decoration<Euclidean2> {
     
     public void initStyle(){
         style=new ComboBoxRangeModel(styleStrings,LINE_SEGMENT,0,3);
-        style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e) {redraw();}});
+        style.addChangeListener(this);
     }
     
     @Override
@@ -97,14 +96,14 @@ public class Segment2D extends Decoration<Euclidean2> {
     
     // SUBCLASSES
     
-    public class Line extends Segment2D {
+    public static class Line extends Segment2D {
         public Line(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_LINE);}
     }    
-    public class Ray extends Segment2D {
+    public static class Ray extends Segment2D {
         public Ray(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_RAY);}
     }
     
-    public class Vector extends Segment2D {        
+    public static class Vector extends Segment2D {        
         public Vector(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_VECTOR);}
     }
 }

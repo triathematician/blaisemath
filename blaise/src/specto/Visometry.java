@@ -42,13 +42,12 @@ public abstract class Visometry<C extends Coordinate>
     
     // CONSTRUCTORS    
     public Visometry(){container=null;}
-    public Visometry(PlotPanel p){initContainer(p);p.setVisometry(this);computeTransformation();}
+    public Visometry(PlotPanel p){initContainer(p);computeTransformation();}
     
     
     // INITIALIZERS
     public void initContainer(PlotPanel p){
         container=p;        
-        addChangeListener(container);
         computeTransformation();
     }
     public abstract Vector<JMenuItem> getMenuItems();

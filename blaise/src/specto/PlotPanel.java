@@ -7,7 +7,6 @@
 
 package specto;
 
-import sequor.component.RangeTimer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,6 +21,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -30,7 +30,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import sequor.component.IntegerRangeTimer;
 import sequor.event.MouseVisometryEvent;
+import sequor.model.IntegerRangeModel;
 
 /**
  * This is a superclass for plot windows. It implements component handling and drawing
@@ -45,21 +47,27 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     // PROPERTIES
     
     /** The underlying visometry, which describes coordinate transformations. */
-    private V visometry;
-    /** Contains all the basic components. */    
-    private PlottableGroup<V> basicComponents;
-    /** Contains components which receive mouse input. */
-    private PlottableGroup<V> dynamicComponents;
-    /** Contains the underlying grid component. */
-    //private DynamicPlottable<V> gridComponent;
+    protected V visometry;
+    /** The components displayed on the panel before anything else (e.g. grid) */
+    private PlottableGroup<V> baseComponents;
+    /** General components */
+    private PlottableGroup<V> components;
+//    /** Contains all the basic components. */    
+//    private HashSet<Plottable<V>> basicComponents;
+//    /** Contains components which receive mouse input. */
+//    private HashSet<Plottable<V>> dynamicComponents;
+//    /** Contains the underlying grid component. */
+//    //private DynamicPlottable<V> gridComponent;
     
+    /** Model used for timer. */
+    private IntegerRangeModel timerModel;
     /** Timer object for animations. */
-    private RangeTimer timer;
+    private IntegerRangeTimer timer;
     
-    /** Static object drawing pane. */
-    private PlotLayer<V> staticPlottables;
-    /** Animating object drawing pane. */
-    private PlotLayer<V> animatePlottables;
+//    /** Static object drawing pane. */
+//    private PlottableGroup<V> staticPlottables;
+//    /** Animating object drawing pane. */
+//    private PlottableGroup<V> animatePlottables;
     
     /** The context menu. */
     private JPopupMenu contextMenu;
@@ -73,35 +81,48 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     private JPanel statusPanel;
     private JPanel mainPanel;
     
-    /** Determines whether all components should be redrawn. */
-    private boolean refresh=false;
+    /** Determines whether all components should be recomputed. If true, all elements are recomputed.
+     * If false, just the animatable's are "recomputed".
+     */
+    private boolean recomputeAll=false;
         
     // CONSTRUCTORS
     
     public PlotPanel(){}
     public PlotPanel(V visometry){
-        super();
-        initComponents(visometry);
+        initComponents();
         initLayout();
+        initVisometry(visometry);
     }
     
     
     // INITIALIZERS
     
-    private void initComponents(V visometry){
-        timer=new RangeTimer(this);
+    private void initComponents(){
+        timerModel=new IntegerRangeModel(0,0,10);
+        timerModel.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){
+                if(timer!=null && timer.isRunning()){repaint();}
+            }});            
+        timer=new IntegerRangeTimer(timerModel);
+        timer.setLooping(true);
+        timer.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if(e!=null && ("start").equals(e.getActionCommand())){
+                    timerModel.setMaximum(components.getAnimatingSteps());                    
+                }else{
+                    repaint();
+                }
+            }
+        });
         initContextMenu();
-        setVisometry(visometry);
-        basicComponents=new PlottableGroup<V>();
-        dynamicComponents=new PlottableGroup<V>();
+        baseComponents=new PlottableGroup<V>();
+        components=new PlottableGroup<V>();
+        baseComponents.addChangeListener(this);
+        components.addChangeListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
-        staticPlottables=new PlotLayer<V>(this);
-        animatePlottables=new PlotLayer<V>(this);
-        add(staticPlottables);
-        add(animatePlottables);
-        animatePlottables.setAnimates(true);
     }
     
     private void initLayout(){
@@ -135,17 +156,21 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     // BEAN PATTERNS: GETTERS & SETTERS
     
     public V getVisometry(){return visometry;}
-    public RangeTimer getTimer(){return timer;}
+    public IntegerRangeTimer getTimer(){return timer;}
+    public void setTimer(IntegerRangeTimer timer){
+        // TODO code for synchronization of timers
+    }
     
-    public void setVisometry(V newValue){
+    private void initVisometry(V newValue){
         visometry=newValue;
         visometry.initContainer(this);
+        visometry.addChangeListener(this);
         addComponentListener(visometry);
         addToContextMenu(visometry.getMenuItems());
     }
     
-    public Collection<Plottable<V>> getBasicPlottables(){return basicComponents.getElements();}
-    public Collection<Plottable<V>> getDynamicPlottables(){return dynamicComponents.getElements();}
+    public Collection<Plottable<V>> getBasePlottables(){return baseComponents.getElements();}
+    public Collection<Plottable<V>> getPlottables(){return components.getElements();}
         
         
     
@@ -160,62 +185,20 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
        }
    }
     
-    public void add(Plottable<V> pv){
-        pv.addChangeListener(this);
-        if(pv instanceof PlottableGroup){
-            if(pv.getOptionsMenu()!=null){optionsMenu.add(pv.getOptionsMenu());}
-            dynamicComponents.add(pv);
-            animatePlottables.add(pv);            
-        }else{
-            if(pv.getOptionsMenu()!=null){
-                optionsMenu.add(pv.getOptionsMenu());
-            }
-            if(pv instanceof DynamicPlottable){
-                dynamicComponents.add(pv);
-            }else{
-                basicComponents.add(pv);
-            }
-            if(pv instanceof Animatable){
-                animatePlottables.add(pv);
-            }else{
-                staticPlottables.add(pv);
-            }
-        }
-    }
-    public <T extends Plottable<V>> void addAll(Collection<T> cpv){for(T pv:cpv){add(pv);}}
-    public void remove(Plottable<V> pv){
-        //TODO remove menu items here as well!!
-        if(pv instanceof DynamicPlottable){
-            dynamicComponents.remove(pv);
-        }else{
-            basicComponents.remove(pv);
-        }
-        if(pv instanceof Animatable){
-            animatePlottables.remove(pv);
-        }else{
-            staticPlottables.remove(pv);
-        }
-        pv.removeChangeListener(this);
-    }
-    public void removeAll(){
-        basicComponents.clear();
-        dynamicComponents.clear();
-        animatePlottables.clear();
-        staticPlottables.clear();
+   public void addBase(Plottable<V> pv){baseComponents.add(pv);}
+   public void add(Plottable<V> pv){components.add(pv);}
+   public <T extends Plottable<V>> void addAll(Collection<T> cpv){for(T pv:cpv){add(pv);}}
+   public void remove(Plottable<V> pv){components.remove(pv);rebuildOptionsMenu();}
+   public <T extends Plottable<V>> void removeAll(Collection<T> cpv){for(T pv:cpv){remove(pv);}}
+   public void clearPlottables(){components.clear();rebuildOptionsMenu();}
+   public void rebuildOptionsMenu(){
         optionsMenu.removeAll();
-        contextMenu.removeAll();
-        contextMenu.add(optionsMenu);
-        contextMenu.addSeparator();
-        contextMenu.add(timer.getMenuItems().get(0));
-        addToContextMenu(visometry.getMenuItems());
-    }
-    public <T extends Plottable<V>> void removeAll(Collection<T> cpv){for(T pv:cpv){remove(pv);}}
-    public void rebuildOptionsMenu(){
-        optionsMenu.removeAll();
-        for(Plottable p:basicComponents.getElements()){
-            optionsMenu.add(p.getOptionsMenu());
+        for(Plottable<V> p:baseComponents.getElements()){
+            try{
+                optionsMenu.add(p.getOptionsMenu());
+            }catch(NullPointerException e){}
         }
-        for(Plottable p:dynamicComponents.getElements()){
+        for(Plottable<V> p:components.getElements()){
             try{
                 optionsMenu.add(p.getOptionsMenu());
             }catch(NullPointerException e){}
@@ -235,28 +218,26 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         Graphics2D g=(Graphics2D)gb;        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         // Recompute any necessary elements before plotting
-        if(refresh){
-            staticPlottables.recompute();
-            animatePlottables.recompute();
-            refresh=false;
-        }
-        else if(timer!=null&&timer.isNotStopped()){
-            animatePlottables.recompute();
-        }
-        staticPlottables.paintComponent(g);
-        if(timer!=null&&timer.isNotStopped()){            
-            animatePlottables.paintComponent(g,timer);
+        baseComponents.recompute(recomputeAll);
+        components.recompute(recomputeAll);
+        if(timer!=null&&timer.isRunning()){            
+            baseComponents.paintComponent(g,visometry,timer);
+            components.paintComponent(g,visometry,timer);
         }else{
-            animatePlottables.paintComponent(g);
+            baseComponents.paintComponent(g,visometry);
+            components.paintComponent(g,visometry);
         }
     }
     
-    
     // EVENT HANDLING
     
+    /** When the state of one of the components changes, requiring the panel to be redrawn. May also represent
+     * changes in the visometry.
+     * @param e
+     */
     @Override
     public void stateChanged(ChangeEvent e){
-        refresh=true;
+        recomputeAll=true;
         repaint();
     }
 
@@ -267,17 +248,14 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         }
     }
     
-    
     // MOUSE EVENT HANDLING
     
     DynamicPlottable<V> mover;
     
     Vector<DynamicPlottable<V>> getHits(MouseVisometryEvent mve){
-        Vector<DynamicPlottable<V>> result=new Vector<DynamicPlottable<V>>();
-        for (Plottable<V> dp:dynamicComponents.getElements()){
-            if(((DynamicPlottable<V>)dp).clicked(mve)){
-                result.add((DynamicPlottable<V>)dp);
-            }
+        Vector<DynamicPlottable<V>> result=components.getHits(mve);
+        if(result.isEmpty()){
+            result=baseComponents.getHits(mve);
         }
         return result;
     }

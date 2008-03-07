@@ -13,6 +13,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
+import sequor.component.IntegerRangeTimer;
+import specto.Animatable;
 import specto.Decoration;
 import specto.dynamicplottable.Point2D;
 import specto.visometry.Euclidean2;
@@ -22,7 +24,7 @@ import specto.visometry.Euclidean2;
  *
  * @author Elisha Peterson
  */
-public class Clock2D extends Decoration<Euclidean2> {
+public class Clock2D extends Decoration<Euclidean2> implements Animatable<Euclidean2> {
     double radius=30.0;
 
     public Clock2D(Point2D parent){
@@ -55,8 +57,12 @@ public class Clock2D extends Decoration<Euclidean2> {
             g.draw(v.winLineAtRadius(center,ticks,0.85*radius, 0.95*radius));
         }
         g.setStroke(new BasicStroke(2.0f));
-        g.draw(v.winArrow(center,hrAngle,0.6*radius,5.0));
+        // hour hand
+        g.draw(v.winArrow(center,hrAngle,0.5*radius,5.0));
+        // minute hand
         g.draw(v.winArrow(center,minAngle,0.8*radius,5.0));
     }
 
+    public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {paintComponent(g,v);}
+    public int getAnimatingSteps(){return 10;}
 }

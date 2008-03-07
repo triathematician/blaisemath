@@ -13,13 +13,11 @@ package specto;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import sequor.component.RangeTimer;
+import sequor.component.IntegerRangeTimer;
 import sequor.event.MouseVisometryEvent;
 
 /**
@@ -32,14 +30,29 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     public PlottableGroup() {plottables=new Vector<Plottable<V>>();}
     
     public void clear(){plottables.clear();}    
-    public void add(Plottable<V> p){plottables.add(p);p.addChangeListener(this);}
-    public void remove(Plottable<V> p){plottables.remove(p);p.removeChangeListener(this);}
+    public void add(Plottable<V> p){
+        plottables.add(p);
+        p.addChangeListener(this);
+    }
+    public void remove(Plottable<V> p){
+        plottables.remove(p);
+        p.removeChangeListener(this);
+    }
     public Collection<Plottable<V>> getElements(){return plottables;}
 
     @Override
     public void setColor(Color newValue) {
         super.setColor(newValue);
         for(Plottable p:plottables){p.setColor(newValue);}
+    }
+    public void recompute(boolean recomputeAll){
+        if(recomputeAll){
+            recompute();
+        }else{
+            for(Plottable p:plottables){
+                if(p instanceof Animatable){p.recompute();}
+            }
+        }
     }
     @Override
     public void recompute() {for (Plottable p:plottables){p.recompute();}}
@@ -53,7 +66,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         }
     }
     @Override
-    public void paintComponent(Graphics2D g,V v,RangeTimer t) {
+    public void paintComponent(Graphics2D g,V v,IntegerRangeTimer t) {
         for (Plottable p:plottables){
             g.setColor(p.getColor());
             p.paintDecorations(g,v,t);
@@ -140,5 +153,18 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     @Override
     public void mouseExited(MouseVisometryEvent<V> e){e.getSourceVisometry().mouseExited(e);}
 
-    public void stateChanged(ChangeEvent e) {fireStateChanged();}
+    public int getAnimatingSteps() {
+        int maxSteps=0;
+        int curSteps;
+        for(Plottable p:plottables){
+            if(p instanceof Animatable){
+                curSteps=((Animatable)p).getAnimatingSteps();
+                if(curSteps>maxSteps){maxSteps=curSteps;}
+            }else if(p.decorations!=null){
+                curSteps=p.decorations.getAnimatingSteps();
+                if(curSteps>maxSteps){maxSteps=curSteps;}
+            }
+        }
+        return maxSteps;
+    }    
 }

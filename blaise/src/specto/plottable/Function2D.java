@@ -13,9 +13,9 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
-import sequor.component.RangeTimer;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
+import sequor.component.IntegerRangeTimer;
 import sequor.model.FunctionTreeModel;
 import specto.Constrains2D;
 import specto.visometry.Euclidean2;
@@ -52,7 +52,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
     // PAINT METHODS
     
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
         try {
             computePath(v);
             super.paintComponent(g,v,t);

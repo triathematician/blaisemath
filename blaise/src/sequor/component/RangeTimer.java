@@ -26,7 +26,7 @@ import javax.swing.Timer;
  * <br><br>
  * @author Elisha Peterson
  */
-public class RangeTimer extends Timer implements ActionListener{
+public class RangeTimer extends Timer{
     int startStep=0;
     int currentStep=0;
     int pauseSteps=0;
@@ -41,10 +41,7 @@ public class RangeTimer extends Timer implements ActionListener{
         this(null);
         setRange(start,stop,step);
     }
-    public RangeTimer(ActionListener al){
-        super(0,al);
-        addActionListener(this);
-    }
+    public RangeTimer(ActionListener al){super(0,al);}
     
     public int getStartStep(){return startStep;}
     public int getCurrentStep(){return currentStep;}
@@ -115,9 +112,9 @@ public class RangeTimer extends Timer implements ActionListener{
             setDelay(getDelay()+50);
         }
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e){iterate();}
+    protected void fireActionPerformed(ActionEvent e) {iterate();super.fireActionPerformed(e);}    
 
     public Vector<JMenuItem> getMenuItems() {
         final JMenu sub=new JMenu("Animation Settings");

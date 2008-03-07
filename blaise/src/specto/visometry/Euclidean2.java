@@ -15,16 +15,18 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
-import sequor.component.RangeTimer;
+import sequor.component.DoubleRangeTimer;
+import sequor.model.DoubleRangeModel;
 import specto.plottable.Rectangle2D;
 
 /**
@@ -302,15 +304,15 @@ public class Euclidean2 extends Visometry<R2> {
         final double cy=.1*p.y+.9*getActualCenter().y;
         final double xMultiplier=factor*getDrawWidth()/2;
         final double yMultiplier=factor*getDrawHeight()/2;
-        final RangeTimer t=new RangeTimer(0.1,1.0,0.1);
-        ActionListener al=new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                setDesiredBounds(new R2(cx-t.getCurrent()*xMultiplier,cy-t.getCurrent()*yMultiplier),
-                        new R2(cx+t.getCurrent()*xMultiplier,cy+t.getCurrent()*yMultiplier));                
+        final DoubleRangeModel drm=new DoubleRangeModel(0.1,0.1,1.0,0.1);
+        drm.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                setDesiredBounds(new R2(cx-drm.getValue()*xMultiplier,cy-drm.getValue()*yMultiplier),
+                        new R2(cx+drm.getValue()*xMultiplier,cy+drm.getValue()*yMultiplier));   
             }
-        };
-        t.addActionListener(al);
-        t.setDelay(1000);
+        });
+        DoubleRangeTimer t=new DoubleRangeTimer(drm);
+        t.setLooping(false);
         t.start();
     }
         
