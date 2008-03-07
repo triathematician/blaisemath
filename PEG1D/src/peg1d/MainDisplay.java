@@ -182,7 +182,7 @@ public class MainDisplay extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(plot2D1.getTimer().isNotStopped()){
+        if(plot2D1.getTimer().isRunning()){
             plot2D1.getTimer().stop();
         }else{
             plot2D1.getTimer().start();
@@ -194,7 +194,7 @@ public class MainDisplay extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
     
     /**
-     * @param args the command line arguments
+     * @param args the command lineSegment arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

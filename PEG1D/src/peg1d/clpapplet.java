@@ -128,7 +128,7 @@ public class clpapplet extends javax.swing.JApplet {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(plot2D1.getTimer().isNotStopped()){
+        if(plot2D1.getTimer().isRunning()){
             plot2D1.getTimer().stop();
         }else{
             plot2D1.getTimer().start();
