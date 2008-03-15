@@ -41,7 +41,7 @@ public class FunctionPlotterApplet extends javax.swing.JApplet {
 
         plot2D1 = new specto.plotpanel.Plot2D();
         jLabel1 = new javax.swing.JLabel();
-        functionTreeTextField1 = new sequor.component.FunctionTextField();
+        functionTreeTextField1 = new sequor.editor.FunctionTextField();
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
@@ -82,7 +82,7 @@ public class FunctionPlotterApplet extends javax.swing.JApplet {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.FunctionTextField functionTreeTextField1;
+    private sequor.editor.FunctionTextField functionTreeTextField1;
     private javax.swing.JLabel jLabel1;
     private specto.plotpanel.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables

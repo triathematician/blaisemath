@@ -58,7 +58,7 @@
         <Property name="text" type="java.lang.String" value="f(x)="/>
       </Properties>
     </Component>
-    <Component class="sequor.component.FunctionTextField" name="functionTreeTextField1">
+    <Component class="sequor.editor.FunctionTextField" name="functionTreeTextField1">
     </Component>
   </SubComponents>
 </Form>

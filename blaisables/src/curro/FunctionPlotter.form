@@ -64,9 +64,9 @@
         <Property name="text" type="java.lang.String" value="f(x)="/>
       </Properties>
     </Component>
-    <Component class="sequor.component.FunctionTextComboBox" name="functionTextComboBox1">
+    <Component class="sequor.editor.FunctionTextComboBox" name="functionTextComboBox1">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new sequor.component.FunctionTextComboBox(ftm)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new sequor.editor.FunctionTextComboBox(ftm)"/>
       </AuxValues>
     </Component>
   </SubComponents>

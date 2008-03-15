@@ -20,7 +20,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     /** Creates new form BasicPlotter */
     public FunctionPlotter() {
         initComponents();
-        plot2D1.add(new Function2D(plot2D1.getVisometry(),ftm));
+        plot2D1.add(new Function2D(ftm));
         ftm.addChangeListener(plot2D1);
     }
    
@@ -35,7 +35,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
 
         plot2D1 = new specto.plotpanel.Plot2D();
         jLabel1 = new javax.swing.JLabel();
-        functionTextComboBox1 = new sequor.component.FunctionTextComboBox(ftm);
+        functionTextComboBox1 = new sequor.editor.FunctionTextComboBox(ftm);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +91,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.FunctionTextComboBox functionTextComboBox1;
+    private sequor.editor.FunctionTextComboBox functionTextComboBox1;
     private javax.swing.JLabel jLabel1;
     private specto.plotpanel.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables

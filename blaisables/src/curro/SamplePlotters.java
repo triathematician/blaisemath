@@ -23,16 +23,16 @@ public class SamplePlotters extends javax.swing.JFrame {
     /** Creates new form BlaisePlotter */
     public SamplePlotters() {
         initComponents();
-        plot2D1.add(new Function2D(plot2D1.getVisometry()));
-        plot2D2.add(new Parametric2D(plot2D2.getVisometry()));
-        plot2D3.add(new VectorField2D(plot2D3.getVisometry()));
-        Point2D p1=new Point2D(plot2D3.getVisometry());
+        plot2D1.add(new Function2D());
+        plot2D2.add(new Parametric2D());
+        plot2D3.add(new VectorField2D());
+        Point2D p1=new Point2D();
         p1.addDecoration(new DESolution2D(p1));
-        Point2D p2=new Point2D(plot2D3.getVisometry());
+        Point2D p2=new Point2D();
         p2.addDecoration(new DESolution2D(p2));
         plot2D3.add(p1);
         plot2D3.add(p2);
-        plot2D4.add(new PlaneFunction2D(plot2D4.getVisometry()));
+        plot2D4.add(new PlaneFunction2D());
     }
     
     /** This method is called from within the constructor to
