@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import specto.PlotPanel;
 import scio.coordinate.R2;
-import sequor.component.Settings;
+import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.DoubleRangeModel;
