@@ -60,6 +60,22 @@ public class R2 extends Point2D.Double implements Coordinate {
         double t=(point1.minus(this).dot(point1.minus(point2)))/point1.distanceSq(point2);
         return new R2(point1.x+t*(point2.x-point1.x),point1.y+t*(point2.y-point1.y));
     }
+    /**
+     * Returns point on line SEGMENT between point1 and point2 which is closest to this point.
+     */
+    public R2 closestOnSegment(R2 point1,R2 point2){
+        double t=(point1.minus(this).dot(point1.minus(point2)))/point1.distanceSq(point2);
+        if(t<0){t=0;}else if(t>1){t=1;}
+        return new R2(point1.x+t*(point2.x-point1.x),point1.y+t*(point2.y-point1.y));        
+    }
+    /**
+     * Returns point on RAY from point1 to point2 which is closest to this point.
+     */
+    public R2 closestOnRay(R2 point1,R2 point2){
+        double t=(point1.minus(this).dot(point1.minus(point2)))/point1.distanceSq(point2);
+        if(t<0){t=0;}
+        return new R2(point1.x+t*(point2.x-point1.x),point1.y+t*(point2.y-point1.y));           
+    }
 
     public boolean equals(Coordinate c2){return (x==((R2)c2).x)&&(y==((R2)c2).y);}
 }

@@ -5,6 +5,7 @@
 
 package specto.decoration;
 
+import specto.dynamicplottable.InitialPointSet2D;
 import scio.function.FunctionValueException;
 import specto.dynamicplottable.*;
 import specto.plottable.PointSet2D;
@@ -13,6 +14,7 @@ import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
 import sequor.component.IntegerRangeTimer;
+import specto.Decoration;
 import specto.plottable.VectorField2D;
 import specto.visometry.Euclidean2;
 
@@ -22,18 +24,30 @@ import specto.visometry.Euclidean2;
  * <br><br>
  * @author ae3263
  */
-public class DESolution2D extends InitialPointSet2D {
+public class DESolution2D extends InitialPointSet2D implements Decoration<Euclidean2,VectorField2D> {
+    
     /** The underlying vector field. */
-    Function<R2,R2> function;
+    VectorField2D parent;
     /** The backwards solution. */
     PointSet2D reversePath;
     /** Whether to show the "reverse path" */
     boolean showReverse=true;
     
-    public DESolution2D(Point2D parent){
-        super(parent);
-        function=VectorField2D.DEFAULT_FUNCTION;
+    // CONSTRUCTOR
+    
+    public DESolution2D(Point2D point,VectorField2D parent){
+        super(point);
+        this.parent=parent;
     }
+    public DESolution2D(VectorField2D parent){
+        super();
+        this.parent=parent;
+    }
+    
+    // DECORATION METHODS
+
+    public void setParent(VectorField2D parent) {this.parent=parent;}
+    public VectorField2D getParent() {return parent;}
     
     /** Initializes solution curve models. */
     void initSolutionCurves(){
@@ -87,6 +101,9 @@ public class DESolution2D extends InitialPointSet2D {
     public static R2 getScaledVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).scaledToLength(size);
     }
+    public static R2 getMultipliedVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
+        return field.getValue(point).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
+    }
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
@@ -106,13 +123,13 @@ public class DESolution2D extends InitialPointSet2D {
             initSolutionCurves();
             switch(algorithm){
                 case ALGORITHM_RUNGE_KUTTA:
-                    path.setPath(calcRungeKutta4(function,((Point2D)parent).getPoint(),500,.04));
-                    reversePath.setPath(calcRungeKutta4(function,((Point2D)parent).getPoint(),500,-.04));
+                    path.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,.04));
+                    reversePath.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,-.04));
                     break;
                 case ALGORITHM_NEWTON:
                 default:
-                    path.setPath(calcNewton(function,((Point2D)parent).getPoint(),500,.04));
-                    reversePath.setPath(calcNewton(function,((Point2D)parent).getPoint(),500,-.04));
+                    path.setPath(calcNewton(parent.getFunction(),getPoint(),500,.04));
+                    reversePath.setPath(calcNewton(parent.getFunction(),getPoint(),500,-.04));
                     break;
             }
         } catch (FunctionValueException ex) {}
@@ -124,4 +141,6 @@ public class DESolution2D extends InitialPointSet2D {
     public static final int ALGORITHM_NEWTON=0;
     public static final int ALGORITHM_RUNGE_KUTTA=1;
     
+    @Override
+    public String toString(){return "DE Solution Curve";}
 }

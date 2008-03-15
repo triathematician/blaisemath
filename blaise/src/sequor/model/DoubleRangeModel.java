@@ -1,6 +1,6 @@
 package sequor.model;
 
-import java.beans.PropertyChangeEvent;
+import sequor.FiresChangeEvents;
 import java.util.Vector;
 
 /**
@@ -14,46 +14,47 @@ import java.util.Vector;
 
 public class DoubleRangeModel extends BoundedRangeModel<Double> {
     
-    private double maximum = 1.0;
-    private double minimum = -1.0;
-    private double value = 0.0;
-    private double step = 0.1;
-    
     /** Default initializer. */
-    public DoubleRangeModel(){}
+    public DoubleRangeModel(){super(0.0,-1.0,1.0,0.1);}
     /** Initializes with particular values. The stepsize is by default 0.1.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      */
-    public DoubleRangeModel(double newValue,double newMin,double newMax){
-        setRangeProperties(newValue,newMin,newMax);
-    }
+    public DoubleRangeModel(double newValue,double newMin,double newMax){super(newValue,newMin,newMax,0.1);}
     /** Initializes with particular values.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      * @param step the increment size
      */
-    public DoubleRangeModel(double newValue,double newMin,double newMax,double step){
-        setRangeProperties(newValue,newMin,newMax);
-        setStep(step);
-    }
+    public DoubleRangeModel(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
     
-    // required getters & setters
-    public double getMaximum(){return maximum;}
-    public void setMaximum(double newMaximum){setRangeProperties(value,minimum,newMaximum);}
-    public double getMinimum(){return minimum;}
-    public void setMinimum(double newMinimum){setRangeProperties(value,newMinimum,maximum);}
-    public double getValue(){return value;}
-    public void setValue(double newValue){setRangeProperties(newValue,minimum,maximum);}
-    public void setValue(String s){setValue(Double.valueOf(s));}
-    public double getStep(){return step;}
-    public void setStep(double newValue){step=newValue;}
+    
+    // GETTERS & SETTERS
+    
     @Override
-    public String toString(){return Double.toString(value);}
+    public boolean setStep(Double step){
+        if(step<getRange()&& !this.step.equals(step)){
+            this.step=step;
+            return true;
+        }
+        return false;
+    }
     @Override
-    public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
+    public int getStepNumber() {
+        return (int)((value-minimum)/(double)step);
+    }
+    @Override
+    public void setValue(String s) {setValue(Double.valueOf(s));}
+    /** Sets value as a percentage of length. */
+    @Override
+    public void setValuePercent(double percent){
+        setValue(minimum+percent*(maximum-minimum));
+    }
+    @Override
+    public Double getRange(){return (maximum-minimum);}
+    
     
     // MORE ADVANCED METHODS
     
@@ -61,19 +62,21 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
      * @param loop whether to shift the value back to the beginning if outside the range of values.
      * @return false if the value would be greater than the maximum in range, or if it loops; otherwise true
      */
-    public boolean increment(boolean loop){
-        if(value+step>maximum){
+    public boolean increment(boolean loop, int n){
+        if(value+n*step>maximum){
             if(loop){setValue(minimum);
             }else{setValue(maximum);}
             return false;
+        }else if(value+n*step<minimum){
+            if(loop){setValue(maximum);
+            }else{setValue(minimum);}
+            return false;
         }else{
-            setValue(value+step);
+            setValue(value+n*step);
             return true;
         }
     }
     
-    /** Returns the range of values. */
-    public Double getRange(){return maximum-minimum;}
     /** Returns list of doubles specified by the current min, max, and step size.
      * @param inclusive whether to include the endpoints in the range; if not, starts at minimum+step/2
      * @return Vector of Double's containing the values
@@ -99,31 +102,7 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
         }
     }
     public int getNumSteps(){return (int)((maximum-minimum)/step);}
-    
-    /**
-     * Routine which changes the values stored by the model. All other routines
-     * which adjust values must change this.
-     */
-    public void setRangeProperties(double newValue,double newMin,double newMax){
-        // adjust values
-        if(newMax<newMin){double temp=newMin; newMin=newMax; newMax=temp;}
-        if(newValue>newMax){newValue=newMax;}
-        if(newValue<newMin){newValue=newMin;}
         
-        // determine if changes are required
-        boolean changeMin=(newMin!=minimum);
-        boolean changeMax=(newMax!=maximum);
-        boolean changeValue=(newValue!=value);
-        if(changeMin){minimum=newMin;}
-        if(changeMax){maximum=newMax;}
-        if(changeValue){value=newValue;}
-        if(changeMin||changeMax||changeValue){fireStateChanged();}
-    }
-        
-    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}
-    
     @Override
     public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
-    @Override
-    public void copyValuesFrom(FiresChangeEvents parent){setValue(((DoubleRangeModel)parent).value);}
 }

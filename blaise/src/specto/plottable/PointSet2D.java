@@ -7,6 +7,7 @@ package specto.plottable;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -27,7 +28,7 @@ import specto.visometry.Euclidean2;
 
 /**
  *
- * @author ae3263
+ * @author Elisha Peterson
  */
 public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>,ChangeListener{
     Vector<R2> points;
@@ -39,16 +40,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         this.points=points;
     }
     
-    public Vector<R2> getPath(){
-        return points;
-    }
+    public Vector<R2> getPath(){return points;}
     public void setPath(Vector<R2> path){points=path;}
     
     
     // DRAW METHODS
-    
-    @Override
-    public void recompute(){}
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v){
@@ -97,6 +93,57 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         return result;
     }
     
+    
+    // STYLE SETTINGS
+
+    public static final int REGULAR=0;
+    public static final int THIN=1;
+    public static final int MEDIUM=2;
+    public static final int THICK=3;
+    public static final int DOTTED=4;
+    public static final int SKETCH=5;    
+
+    public static final float[] dash2={1.0f,4.0f};
+    public static final float[] dash3={2.0f,6.0f};
+    public static final Stroke[] strokes={
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(3.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(4.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash2,0.0f),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash3,0.0f)};
+    
+    public static final String[] styleStrings={"Regular","Thin","Medium","Thick","Dotted","Sketch"};
+    @Override
+    public String[] getStyleStrings() {return styleStrings;}
+    
+    public static final int ANIMATE_DRAW=0;
+    public static final int ANIMATE_DOT=1;
+    public static final int ANIMATE_TRACE=2;
+    public static final int ANIMATE_TRAIL=3;
+    
+    static final String[] animateStyleStrings={"Draw path","Moving dot","Trace path","Draw with trail"};
+    public ComboBoxRangeModel animateStyle;
+
+    @Override
+    public void initStyle(){
+        super.initStyle();
+        animateStyle=new ComboBoxRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
+        animateStyle.addChangeListener(this);
+    }
+
+    
+    // EVENT HANDLING
+    
+    @Override
+    public JMenu getOptionsMenu() {return animateStyle.appendToMenu(super.getOptionsMenu());}
+    
+    
+    // ANIMATION ELEMENTS
+
+    public int getAnimatingSteps() {return (points==null)?0:points.size();}
+
+
     // POINT MODELS
         
     public PointRangeModel getConstraintModel() {return new PathPointModel();}
@@ -117,7 +164,9 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         return closestPoint;
     }
     
+    
     // INNER CLASSES
+
     class PathPointModel extends PointRangeModel {
         public PathPointModel(){super.setTo(0,0);}
 
@@ -127,59 +176,4 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
             super.setTo(closest.x,closest.y);
         }        
     } // class Function2D.ParametricPointModel
-    
-    
-    // STYLE SETTINGS
-
-    public static final int REGULAR=0;
-    public static final int MEDIUM=1;
-    public static final int THICK=2;
-    public static final int DOTTED=3;
-    public static final int SKETCH=4;    
-
-    public static final float[] dash2={1.0f,4.0f};
-    public static final float[] dash3={2.0f,6.0f};
-    public static final Stroke[] strokes={
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
-        new BasicStroke(3.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
-        new BasicStroke(4.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash2,0.0f),
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash3,0.0f)};
-    
-    static final String[] styleStrings={"Regular","Medium","Thick","Dotted","Sketch"};
-    public ComboBoxRangeModel style;
-    
-    public static final int ANIMATE_DRAW=0;
-    public static final int ANIMATE_DOT=1;
-    public static final int ANIMATE_TRACE=2;
-    public static final int ANIMATE_TRAIL=3;
-    
-    static final String[] animateStyleStrings={"Draw path","Moving dot","Trace path","Draw with trail"};
-    public ComboBoxRangeModel animateStyle;
-
-    public void initStyle(){
-        style=new ComboBoxRangeModel(styleStrings,MEDIUM,0,4);
-        style.addChangeListener(this);
-        animateStyle=new ComboBoxRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
-        animateStyle.addChangeListener(this);
-    }
-
-    // EVENT HANDLING
-    
-    @Override
-    public JMenu getOptionsMenu() {
-        JMenu result=new JMenu("Path Options");
-        result.add(getColorMenuItem());
-        result.add(style.getSubMenu("Line Style"));
-        result.add(animateStyle.getSubMenu("Animation Style"));
-        try{
-            for(JMenuItem mi:getDecorationMenuItems()){result.add(mi);}
-        }catch(NullPointerException e){}
-        return result;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {redraw();}
-
-    public int getAnimatingSteps() {return (points==null)?0:points.size();}
 }

@@ -41,7 +41,7 @@ public class PRandom {
      * deviation.
      **/
     public static double normal(double mean,double std){
-        return (std*(normal()+mean));
+        return std*normal()+mean;
     }
     
     // TWO-DIMENSIONAL DISTRIBUTIONS
@@ -75,32 +75,32 @@ public class PRandom {
     }
     
     /**
-     * Returns a (uniform) random point in the disk radius 0->r
+     * Returns a (uniform) random point in the diskNormal radius 0->r
      **/
     public static R2 disk(double r){
         double randRadius=between(0,r);
         double randTheta=between(0,2*Math.PI);
         return new R2(randRadius*Math.cos(randTheta),randRadius*Math.sin(randTheta));
-    }
-    
-    /**
-     * Returns a (uniform)  random point in the disk radius 0->r centered at (x,y)
-     **/
-    public static R2 disk(double x,double y,double r){
-        R2 point=disk(r);
-        point.translate(x,y);
-        return point;
-    }
+    }    
+    /** Returns a (uniform) random point in the diskNormal radius 0->r centered at (x,y) */
+    public static R2 disk(double x,double y,double r){return disk(r).plus(new R2(x,y));}
+    /** Returns uniform random point in diskNormal radius 0->r centered at point. */
+    public static R2 disk(R2 point,double r){return disk(r).plus(point);}
     
     /**
      * Returns a normally distributed (with respect to radius) random point
      * centered at (x,y).
      **/
-    public static R2 disk(double r,double std){
+    public static R2 diskNormal(double std){
         double randRadius=normal(0,std);
         double randTheta=between(0,2*Math.PI);
         return new R2(randRadius*Math.cos(randTheta),randRadius*Math.sin(randTheta));
     }
+    /** Returns a (Gaussian) random point in the diskNormal radius 0->r centered at (x,y) */
+    public static R2 diskNormal(double x,double y,double std){return diskNormal(std).plus(new R2(x,y));}
+    /** Returns Gaussian random point in diskNormal radius 0->r centered at point. */
+    public static R2 diskNormal(R2 point,double std){return diskNormal(std).plus(point);}
+    
     
     /**
      * Returns a uniformly distributed direction

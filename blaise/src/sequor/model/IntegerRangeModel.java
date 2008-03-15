@@ -4,7 +4,7 @@
          
 package sequor.model;
 
-import java.beans.PropertyChangeEvent;
+import sequor.FiresChangeEvents;
 import java.util.Vector;
 
 /**
@@ -14,82 +14,71 @@ import java.util.Vector;
 
 public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     
-    private int maximum = 10;
-    private int minimum = -10;
-    private int value = 0;
-    private int step = 1;
     
-    // Components required for the bean
-    public IntegerRangeModel(){}
-    public IntegerRangeModel(int newValue,int newMin,int newMax){
-        setRangeProperties(newValue,newMin,newMax);
-    }
-    public IntegerRangeModel(int newValue,int newMin,int newMax,int step){
-        setRangeProperties(newValue,newMin,newMax);
-        setStep(step);
-    }
+    // CONSTRUCTORS
     
-    // required getters & setters
-    public int getMaximum(){return maximum;}
-    public void setMaximum(int newMaximum){setRangeProperties(value,minimum,newMaximum);}
-    public int getMinimum(){return minimum;}
-    public void setMinimum(int newMinimum){setRangeProperties(value,newMinimum,maximum);}
-    public int getValue(){return value;}
-    public void setValue(int newValue){setRangeProperties(newValue,minimum,maximum);}
-    public void setValue(String s){setValue(Integer.valueOf(s));}
-    public int getStep(){return step;}
-    public void setStep(int newValue){step=newValue;}
+    public IntegerRangeModel(){super(0,-10,10,1);}
+    public IntegerRangeModel(int newValue,int newMin,int newMax){super(newValue,newMin,newMax,1);}
+    public IntegerRangeModel(int newValue,int newMin,int newMax,int step){super(newValue,newMin,newMax,step);}
+    
+    
+    // GETTERS & SETTERS
     
     @Override
-    public String toString(){return Integer.toString(value);}
+    public boolean setStep(Integer step){
+        if(step<getRange()&& !this.step.equals(step)){
+            this.step=step;
+            return true;
+        }
+        return false;
+    }
     @Override
-    public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
-    
-    public int getRange(){return (maximum-minimum);}
-    
-    /**
-     * Routine which changes the values stored by the model. All other routines
-     * which adjust values must change this.
-     */
-    public void setRangeProperties(int newValue,int newMin,int newMax){
-        // adjust values
-        if(newMax<newMin){int temp=newMin; newMin=newMax; newMax=temp;}
-        if(newValue>newMax){newValue=newMax;}
-        if(newValue<newMin){newValue=newMin;}
+    public int getStepNumber() {
+        return (int)((value-minimum)/(double)step);
+    }
+    @Override
+    public void setValue(String s) {setValue(Integer.valueOf(s));}
+    /** Sets value as a percentage of length. */
+    @Override
+    public void setValuePercent(double percent){
+        setValue((int)(minimum+percent*(maximum-minimum)));
+    }
+    @Override
+    public Integer getRange(){return (maximum-minimum);}
+
         
-        // determine if changes are required
-        boolean changeMin=(newMin!=minimum);
-        boolean changeMax=(newMax!=maximum);
-        boolean changeValue=(newValue!=value);
-        if(changeMin){minimum=newMin;}
-        if(changeMax){maximum=newMax;}
-        if(changeValue){value=newValue;}
-        if(changeMin||changeMax||changeValue){fireStateChanged();}
-    }    
-    
-    
     // MORE ADVANCED METHODS
-    
-    public Vector<Integer> getValueRange(boolean inclusive,Integer shift){
-        Vector<Integer> result=new Vector<Integer>();
-        if(inclusive){result.add(minimum-shift*step);}else{result.add(minimum+step/2-shift*step);}
-        while(result.lastElement()<=(maximum-step-shift*step)){result.add(result.lastElement()+step);}
-        return result;
-    }
     
     /** Increments the current value.
      * @param loop whether to shift the value back to the beginning if outside the range of values.
      * @return false if the value would be greater than the maximum in range, or if it loops; otherwise true
      */
-    public boolean increment(boolean loop){
-        if(value+step>maximum){
+    public boolean increment(boolean loop,int n){
+        if(value+n*step>maximum){
             if(loop){setValue(minimum);
             }else{setValue(maximum);}
             return false;
+        }else if(value+n*step<minimum){
+            if(loop){setValue(maximum);
+            }else{setValue(minimum);}
+            return false;
         }else{
-            setValue(value+step);
+            setValue(value+n*step);
             return true;
         }
+    }
+        
+    /* Gets at the range of values contained in this data model.
+     * @param inclusive whether the vector includes the endpoints or not
+     * @param shift usually 0, this specifies whether to shift the entire range of values or not
+     * @return vector containing all elements in the range of values.
+     */
+    @Override
+    public Vector<Integer> getValueRange(boolean inclusive,Integer shift){
+        Vector<Integer> result=new Vector<Integer>();
+        if(inclusive){result.add(minimum-shift*step);}else{result.add(minimum+step/2-shift*step);}
+        while(result.lastElement()<=(maximum-step-shift*step)){result.add(result.lastElement()+step);}
+        return result;
     }
     
     /** This sets the step size based on the current endpoints and a desired number of "sample points"
@@ -107,12 +96,9 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     }
     public int getNumSteps(){return (int)((maximum-minimum)/step);}
     
-    // IMPLEMENTING ABSTRACT METHODS FROM FIRESCHANGEEVENTS
+
+    // METHODS FROM FiresChangeEvents
     
     @Override
-    public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,getValue());}    
-    @Override
     public FiresChangeEvents clone(){return new IntegerRangeModel(value,minimum,maximum,step);}
-    @Override
-    public void copyValuesFrom(FiresChangeEvents parent){setValue(((IntegerRangeModel)parent).value);}
 }

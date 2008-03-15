@@ -5,16 +5,20 @@
 
 package sequor.model;
 
+import sequor.FiresChangeEvents;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.util.Comparator;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.TreeMap;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import scribo.tree.Variable;
-import sequor.component.Settings;
+import sequor.Settings;
+import sequor.component.SettingsPanel;
 
 /**
  * This class is a data model for a list of parameters (doubles). It maps Strings (or Variables) to DoubleRangeModel's which control their values,
@@ -26,6 +30,7 @@ import sequor.component.Settings;
 public class ParameterListModel extends FiresChangeEvents implements ChangeListener {
     TreeMap<String,DoubleRangeModel> values;
     boolean added=false;
+    boolean useSliders=true;
     
     public ParameterListModel(){
         values=new TreeMap<String,DoubleRangeModel>();
@@ -85,16 +90,38 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     // GUI INPUT/OUTPUTS
     
     /** Returns panel containing all the parameters. */
-    public JPanel getPanel(){return updatePanel(new JPanel());}
+    public JPanel getPanel(){return updatePanel(null);}
     
     /** Updates a panel to contain the settings here. */
-    public JPanel updatePanel(JPanel jp){
+    public JPanel updatePanel(final SettingsPanel jp){
         Settings s=new Settings();
-        for(Entry<String,DoubleRangeModel> e:values.entrySet()){
-            s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE);
+        if(!useSliders){
+            for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+                s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE);
+            }
+        }else{
+            for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+                s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE_SLIDER);
+            }
         }
         s.addProperty("",this,Settings.EDIT_PARAMETER);
-        s.initPanel(jp);
+        jp.setSettings(s);
+        jp.updatePanel();
+        JPopupMenu context=new JPopupMenu();
+        JMenuItem mi;
+        if(useSliders){
+            mi=new JMenuItem("Use spinners");
+            mi.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {useSliders=false;updatePanel(jp);jp.setPreferredSize(new Dimension(80,150));fireStateChanged();}
+            });
+        }else{
+            mi=new JMenuItem("Use sliders");
+            mi.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {useSliders=true;updatePanel(jp);jp.setPreferredSize(new Dimension(200,150));fireStateChanged();}
+            });            
+        }
+        context.add(mi);
+        jp.setComponentPopupMenu(context);
         return jp;
     }
     // INTERFACE METHODS
@@ -123,6 +150,6 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     
     /** Returns a default DoubleRangeModel */
     public static DoubleRangeModel defaultDoubleRangeModel(double d){
-        return new DoubleRangeModel(d,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY,.1);
+        return new DoubleRangeModel(d,-10,10,.1);
     }
 }

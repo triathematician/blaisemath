@@ -6,6 +6,8 @@
 
 package sequor.component;
 
+import sequor.Settings;
+
 /**
  *
  * @author  ae3263
@@ -31,7 +33,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        settingsPanel1 = new sequor.component.SettingsPanel();
+        settingsPanel1 = new sequor.component.SettingsTreePanel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -105,7 +107,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
-    private sequor.component.SettingsPanel settingsPanel1;
+    private sequor.component.SettingsTreePanel settingsPanel1;
     // End of variables declaration//GEN-END:variables
     
 }

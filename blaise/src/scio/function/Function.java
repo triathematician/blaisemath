@@ -1,13 +1,11 @@
 /*
  * Function.java
- * 
  * Created on Sep 27, 2007, 12:31:58 PM
  */
 
 package scio.function;
 
 import java.util.Vector;
-import scio.function.FunctionValueException;
 
 /**
  * Basic interface for a particular function. Requires an input and an output.<br><br>

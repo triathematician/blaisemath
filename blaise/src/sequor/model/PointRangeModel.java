@@ -1,4 +1,5 @@
 package sequor.model;
+import sequor.FiresChangeEvents;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeEvent;

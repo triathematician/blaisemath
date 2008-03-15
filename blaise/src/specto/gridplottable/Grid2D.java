@@ -11,17 +11,14 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.util.Vector;
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 import specto.DynamicPlottable;
 import specto.visometry.Euclidean2;
@@ -49,13 +46,9 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     private boolean tickLabelsOn=true;
     private boolean axesOn=true;
     private boolean axisLabelsOn=true;
-    private int axesType=AXES_CROSS;
     
     private String xLabel="x";
     private String yLabel="y";
-    
-    private Color axesColor=Color.getHSBColor(0.6f,0.5f,0.6f);
-    private Color gridColor=Color.getHSBColor(0.6f,0.3f,0.85f);
     
     private Vector<Double> xGrid;
     private Vector<Double> xGridWin;
@@ -70,12 +63,7 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     
     // CONSTANTS
-    
-    public static final int AXES_BOX=0;
-    public static final int AXES_CROSS=1;
-    public static final int AXES_L=2;
-    public static final int AXES_T=3;
-    
+       
     private static final int IDEAL_GRID_SPACE=40;
     private static final int TICK_HEIGHT=5;
     private static final DecimalFormat nf=new DecimalFormat("##0.#");
@@ -83,7 +71,10 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     // CONSTRUCTORS
     
-    public Grid2D(){super();}
+    public Grid2D(){
+        super();
+        color.setValue(Color.getHSBColor(0.6f,0.5f,0.6f));
+    }
     
     
     // BEAN PATTERNS: GETTERS & SETTERS
@@ -93,14 +84,14 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     public boolean isTickLabelsOn(){return tickLabelsOn;}
     public boolean isAxesOn(){return axesOn;}
     public boolean isAxisLabelsOn(){return axisLabelsOn;}
-    public int getAxesType(){return axesType;}
+    public int getAxesType(){return style.getValue();}
     
     public void setGridOn(boolean newValue){if(newValue!=gridOn){gridOn=newValue;fireStateChanged();}}
     public void setTicksOn(boolean newValue){if(newValue!=ticksOn){ticksOn=newValue;fireStateChanged();}}
     public void setTickLabelsOn(boolean newValue){if(newValue!=tickLabelsOn){tickLabelsOn=newValue;fireStateChanged();}}
     public void setAxesOn(boolean newValue){if(newValue!=axesOn){axesOn=newValue;fireStateChanged();}}
     public void setAxisLabelsOn(boolean newValue){if(newValue!=axisLabelsOn){axisLabelsOn=newValue;fireStateChanged();}}
-    public void setAxesType(int newValue){if(newValue!=axesType){axesType=newValue;fireStateChanged();}}
+    public void setAxesType(int newValue){style.setValue(newValue);}
     
     
     // METHODS: COMPUTING THE GRID
@@ -166,12 +157,13 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
         initMinMax(v);
         if(gridOn||ticksOn||tickLabelsOn){initGrid(v);}
         if(gridOn){
-            g.setColor(gridColor);
+            g.setColor(color.getValue().brighter());
             g.setStroke(DASHED_STROKE);
             drawHLines(g,min.x,max.x);
             drawVLines(g,min.y,max.y);
         }
         if(axesOn){
+            g.setColor(color.getValue());
             g.setStroke(BASIC_STROKE);
             paintAxes(g);
         }
@@ -186,10 +178,7 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     /** Paints the axes, ticks, and labels on the axes. */
     public void paintAxes(Graphics2D g){
-        g.setColor(axesColor);
-        double temp;
-        Point2D.Double tempPoint;
-        switch(axesType){
+        switch(style.getValue()){
         case AXES_CROSS:
             Point2D.Double origin=new Point2D.Double(this.origin.x,this.origin.y);
             boolean xRight=false;
@@ -268,39 +257,33 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
             }
             break;
         }
-    }
-        
-    
+    }    
     
     
     // GUI ELEMENT SUPPORT
     
-    public JToolBar generateToolBar(){
-        throw new UnsupportedOperationException("Not supported yet.");
-    }    
+    public JToolBar generateToolBar(){return null;}
     
-    public Vector<JMenuItem> getMenuItems() {
-        Vector<JMenuItem> result=new Vector<JMenuItem>();
+    @Override
+    public JMenu getOptionsMenu() {
+        JMenu result=new JMenu("Grid Options");
+        result.setForeground(getColor());
         JMenuItem mi;
-        JMenu sub;
+        
+        result.add(color.getMenuItem());
+        result.addSeparator();
         
         mi=new JCheckBoxMenuItem("Show Grid");          mi.setSelected(true);mi.addActionListener(this);result.add(mi);
         mi=new JCheckBoxMenuItem("Show Axes");          mi.setSelected(true);mi.addActionListener(this);result.add(mi);
+        result.addSeparator();
         
-        sub=new JMenu("Axis Options");
-        mi=new JMenuItem("Change Color");               mi.setSelected(true);mi.addActionListener(this);sub.add(mi);
-        mi=new JCheckBoxMenuItem("Show Axis Labels");   mi.setSelected(true);mi.addActionListener(this);sub.add(mi);
-        mi=new JCheckBoxMenuItem("Show Ticks");         mi.setSelected(true);mi.addActionListener(this);sub.add(mi);
-        mi=new JCheckBoxMenuItem("Show Tick Labels");   mi.setSelected(true);mi.addActionListener(this);sub.add(mi);
-        result.add(sub);
-
-        sub=new JMenu("Axis Style");
-        ButtonGroup rbg=new ButtonGroup();
-        mi=new JRadioButtonMenuItem("Cross-Style Axes");mi.setSelected(true);mi.addActionListener(this);sub.add(mi);rbg.add(mi);
-        mi=new JRadioButtonMenuItem("Box-Style Axes");  mi.addActionListener(this);sub.add(mi);rbg.add(mi);
-        mi=new JRadioButtonMenuItem("L-Style Axes");    mi.addActionListener(this);sub.add(mi);rbg.add(mi);
-        mi=new JRadioButtonMenuItem("Inverted T-Style Axes");mi.addActionListener(this);sub.add(mi);rbg.add(mi);
-        result.add(sub);
+        mi=new JCheckBoxMenuItem("Show Axis Labels");   mi.setSelected(true);mi.addActionListener(this);result.add(mi);
+        mi=new JCheckBoxMenuItem("Show Ticks");         mi.setSelected(true);mi.addActionListener(this);result.add(mi);
+        mi=new JCheckBoxMenuItem("Show Tick Labels");   mi.setSelected(true);mi.addActionListener(this);result.add(mi);
+        result.addSeparator();
+        
+        for(JMenuItem mi2:style.getMenuItems()){result.add(mi2);}
+        
         return result;
     }
     
@@ -313,18 +296,19 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
             }else if(s.equals("Show Axes")){axesOn=!axesOn;
             }else if(s.equals("Show Axis Labels")){axisLabelsOn=!axisLabelsOn;
             }else if(s.equals("Show Grid")){gridOn=!gridOn;
-            }else if(s.equals("Cross-Style Axes")){axesType=AXES_CROSS;
-            }else if(s.equals("Box-Style Axes")){axesType=AXES_BOX;
-            }else if(s.equals("L-Style Axes")){axesType=AXES_L;
-            }else if(s.equals("Inverted T-Style Axes")){axesType=AXES_T;
             }
             fireStateChanged();
         }
     }
     
     
-    // EVENT HANDLING
+    // STYLE PARAMETERS
     
+    public static final int AXES_CROSS=0;
+    public static final int AXES_BOX=1;
+    public static final int AXES_L=2;
+    public static final int AXES_T=3;
+    final static String[] styleStrings={"Cross-Style Axes","Box-Style Axes","L-Style Axes","Inverted T-Style Axes"};
     @Override
-    public JMenu getOptionsMenu() {return null;}
+    public String[] getStyleStrings() {return styleStrings;}
 }

@@ -30,8 +30,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import sequor.VisualControl;
 import sequor.component.IntegerRangeTimer;
 import sequor.event.MouseVisometryEvent;
+import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
 
 /**
@@ -52,22 +54,13 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     private PlottableGroup<V> baseComponents;
     /** General components */
     private PlottableGroup<V> components;
-//    /** Contains all the basic components. */    
-//    private HashSet<Plottable<V>> basicComponents;
-//    /** Contains components which receive mouse input. */
-//    private HashSet<Plottable<V>> dynamicComponents;
-//    /** Contains the underlying grid component. */
-//    //private DynamicPlottable<V> gridComponent;
+    /** Visual controls */
+    private HashSet<VisualControl> controls;
     
     /** Model used for timer. */
     private IntegerRangeModel timerModel;
     /** Timer object for animations. */
     private IntegerRangeTimer timer;
-    
-//    /** Static object drawing pane. */
-//    private PlottableGroup<V> staticPlottables;
-//    /** Animating object drawing pane. */
-//    private PlottableGroup<V> animatePlottables;
     
     /** The context menu. */
     private JPopupMenu contextMenu;
@@ -116,6 +109,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
             }
         });
         initContextMenu();
+        controls=new HashSet<VisualControl>();
         baseComponents=new PlottableGroup<V>();
         components=new PlottableGroup<V>();
         baseComponents.addChangeListener(this);
@@ -184,9 +178,12 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
             else{getComponentPopupMenu().add(mi);}
        }
    }
+   
+   public void add(VisualControl vc){if(vc!=null){controls.add(vc);vc.addChangeListener(this);}}
+   public void remove(VisualControl vc){controls.remove(vc);vc.removeChangeListener(this);}
     
-   public void addBase(Plottable<V> pv){baseComponents.add(pv);}
-   public void add(Plottable<V> pv){components.add(pv);}
+   public void addBase(Plottable<V> pv){baseComponents.add(pv);rebuildOptionsMenu();}
+   public void add(Plottable<V> pv){components.add(pv);rebuildOptionsMenu();}
    public <T extends Plottable<V>> void addAll(Collection<T> cpv){for(T pv:cpv){add(pv);}}
    public void remove(Plottable<V> pv){components.remove(pv);rebuildOptionsMenu();}
    public <T extends Plottable<V>> void removeAll(Collection<T> cpv){for(T pv:cpv){remove(pv);}}
@@ -227,6 +224,10 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
             baseComponents.paintComponent(g,visometry);
             components.paintComponent(g,visometry);
         }
+        // Draw visual controls
+        for(VisualControl vc:controls){
+            vc.paintComponent(g);
+        }
     }
     
     // EVENT HANDLING
@@ -250,44 +251,67 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     // MOUSE EVENT HANDLING
     
-    DynamicPlottable<V> mover;
+    MouseVisometryListener<V> mover;
+    MouseListener altMover;
     
-    Vector<DynamicPlottable<V>> getHits(MouseVisometryEvent mve){
-        Vector<DynamicPlottable<V>> result=components.getHits(mve);
+    Vector<MouseVisometryListener<V>> getHits(MouseVisometryEvent mve){
+        Vector<MouseVisometryListener<V>> result=components.getHits(mve);
         if(result.isEmpty()){
             result=baseComponents.getHits(mve);
         }
+        return result;
+    }
+    Vector<MouseListener> getHits(MouseEvent e){
+        Vector<MouseListener> result=new Vector<MouseListener>();
+        for(VisualControl vc:controls){
+            if(vc.clicked(e)){result.add(vc);}
+        }
+        result.add(visometry);
         return result;
     }
 
     @Override
     public void mouseClicked(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
-        Vector<DynamicPlottable<V>> hits=getHits(mve);
-        if(hits.isEmpty()){visometry.mouseClicked(mve);}
-        else{hits.get(0).mouseClicked(mve);}
+        Vector<MouseVisometryListener<V>> hits=getHits(mve);
+        if(!hits.isEmpty()){
+            hits.firstElement().mouseClicked(mve);
+        }
+        else{
+            Vector<MouseListener> altHits=getHits(e);
+            altHits.firstElement().mouseClicked(e);
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
-        Vector<DynamicPlottable<V>> hits=getHits(mve);
-        if(hits.isEmpty()){visometry.mousePressed(mve);}
-        else{mover=hits.get(0);mover.mousePressed(mve);}
+        Vector<MouseVisometryListener<V>> hits=getHits(mve);
+        if(!hits.isEmpty()){
+            mover=hits.firstElement();
+            altMover=null;
+            mover.mousePressed(mve);
+        }
+        else{
+            Vector<MouseListener> altHits=getHits(e);
+            altMover=altHits.firstElement();
+            mover=null;
+            altMover.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
         if(mover!=null){mover.mouseDragged(mve);}
-        else{visometry.mouseDragged(mve);}
+        else if(altMover!=null && altMover instanceof MouseMotionListener){((MouseMotionListener)altMover).mouseDragged(mve);}
     }
 
     @Override
     public void mouseReleased(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
         if(mover!=null){mover.mouseReleased(mve);mover=null;}
-        else{visometry.mouseReleased(mve);}
+        else if(altMover!=null){altMover.mouseReleased(mve);altMover=null;}
     }
 
     @Override
@@ -311,7 +335,6 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     @Override
     public void mouseWheelMoved(MouseWheelEvent e){
         if(e!=null){
-            MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
             visometry.mouseWheelMoved(e);
         }
     }

@@ -25,27 +25,29 @@ import sequor.event.MouseVisometryListener;
  */
 public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseVisometryListener<V> {
     
-    // HOW TO DETERMINE WHEN TO PROCESS A MOUSE EVENT
-    
-    public boolean adjusting=false;
     public boolean editable=true;
 
+    // BEAN PATTERNS
+    
     public boolean isAdjusting() {return adjusting;}
     public boolean isEditable() {return editable;}
     public void setAdjusting(boolean newValue) {adjusting=newValue;}
     public void setEditable(boolean newValue) {editable=newValue;}    
     
+    // HANDLING MOUSE EVENTS
+    
+    public boolean adjusting=false;
     public boolean clicked(MouseVisometryEvent<V> e) {return false;}
     public boolean withinClickRange(MouseVisometryEvent<V> e,Coordinate c){
         java.awt.geom.Point2D.Double point=e.getSourceVisometry().toWindow(c);
         return Math.abs(e.getX()-point.x)+Math.abs(e.getY()-point.y)<CLICK_EDIT_RANGE;        
     }
     
-    public void mouseClicked(MouseVisometryEvent<V> e) {}
+    public void mouseClicked(MouseVisometryEvent<V> e) {if(clicked(e)){adjusting=true;}}
+    public void mousePressed(MouseVisometryEvent<V> e) {if(clicked(e)){adjusting=true;}}
     public void mouseDragged(MouseVisometryEvent<V> e) {}
+    public void mouseReleased(MouseVisometryEvent<V> e) {mouseDragged(e);adjusting=false;}  
     public void mouseEntered(MouseVisometryEvent<V> e) {}
     public void mouseExited(MouseVisometryEvent<V> e) {}
     public void mouseMoved(MouseVisometryEvent<V> e) {}
-    public void mousePressed(MouseVisometryEvent<V> e) {}
-    public void mouseReleased(MouseVisometryEvent<V> e) {}    
 }

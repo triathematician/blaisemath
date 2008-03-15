@@ -5,6 +5,7 @@
 
 package sequor.component;
 
+import sequor.editor.FunctionTextField;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;

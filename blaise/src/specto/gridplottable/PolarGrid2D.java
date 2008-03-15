@@ -24,15 +24,14 @@ import specto.visometry.Euclidean2;
 public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     
     // STYLES
-
-    private Color axesColor=Color.getHSBColor(0.6f,0.5f,0.6f);
-    private Color gridColor=Color.getHSBColor(0.5f,0.3f,0.85f);
     
-    private static final Stroke BASIC_STROKE=new BasicStroke();
     private static final float[] dash1={6.0f,4.0f};
     private static final Stroke DASHED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash1,0.0f);
 
-    public PolarGrid2D(){}
+    public PolarGrid2D(){
+        super();
+        color.setValue(Color.getHSBColor(0.6f,0.5f,0.6f));
+    }
     
     // DRAW METHODS
         
@@ -41,8 +40,8 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     
     double THETA_STEPS=24;
     
-    public void paintComponent(Graphics2D g,Euclidean2 v) {       
-        g.setColor(gridColor);
+    public void paintComponent(Graphics2D g,Euclidean2 v) {    
+        g.setColor(getColor().brighter());
         g.setStroke(DASHED_STROKE);
         double maxRad=maxRadius(v);
         double minRad=maxRad/40;
@@ -70,4 +69,9 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
         result+=(y1*y1>y2*y2)?(y1*y1):(y2*y2);
         return Math.sqrt(result);
     }
+
+    @Override
+    public String[] getStyleStrings() {return null;}
+    @Override
+    public String toString(){return "Polar Grid";}
 }

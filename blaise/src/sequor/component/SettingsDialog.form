@@ -39,7 +39,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="sequor.component.SettingsPanel" name="settingsPanel1">
+    <Container class="sequor.component.SettingsTreePanel" name="settingsPanel1">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
     </Container>

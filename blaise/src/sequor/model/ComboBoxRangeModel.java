@@ -5,12 +5,12 @@
 
 package sequor.model;
 
+import sequor.editor.ComboBoxEditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import javax.swing.ButtonGroup;
-import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
@@ -29,6 +29,7 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
         setRangeProperties(1,0,2);
     }
     public ComboBoxRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
+
     public String[] getStrings(){return s;}
     @Override
     public String toString(){return s[getValue()];}
@@ -41,6 +42,7 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
             }
         }
     }
+    public void cycle() {super.increment(true);}
 
     // GUI GENERATING METHODS
     
@@ -48,9 +50,8 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
     public JComboBox getComboBox() {return new JComboBox(new ComboBoxEditor(this));}
 
     /** Generates a submenu with this list of options. */
-    public JMenuItem getSubMenu(String name){
-        // TODO test this method; really not sure if it works
-        JMenu subMenu=new JMenu(name);
+    public Vector<JMenuItem> getMenuItems(){
+        Vector<JMenuItem> result=new Vector<JMenuItem>();
         ButtonGroup group=new ButtonGroup();
         for(int i=getMinimum();i<=getMaximum();i++){
             final int j=i;
@@ -59,10 +60,20 @@ public class ComboBoxRangeModel extends IntegerRangeModel{
                 @Override
                 public void actionPerformed(ActionEvent e) {setValue(j);}
             });
-            subMenu.add(item);
+            result.add(item);
             group.add(item);
             if(i==getValue()){item.setSelected(true);}
         }
-        return subMenu;
+        return result;
+    }
+    
+    /** Appends the items to a specified menu. */
+    public JMenu appendToMenu(JMenu menu){
+        if(menu==null){return null;}
+        menu.addSeparator();
+        for(JMenuItem mi:getMenuItems()){
+            menu.add(mi);
+        }
+        return menu;
     }
 }

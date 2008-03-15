@@ -5,17 +5,14 @@
 
 package specto.dynamicplottable;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import javax.swing.JMenu;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.event.MouseVisometryEvent;
 import sequor.model.PointRangeModel;
 import specto.DynamicPlottable;
 import scio.coordinate.R2;
-import specto.style.PointStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -28,7 +25,7 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     // PROPERTIES
     
     protected PointRangeModel prm;
-    public PointStyle style;    
+    private String label;
     
     
     // CONSTRUCTORS
@@ -46,16 +43,12 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     public Point2D(PointRangeModel prm){
         this.prm=prm; 
         if(editable){this.prm.addChangeListener(this);}
-        style=new PointStyle();
-        style.addChangeListener(this);
         setColor(Color.BLUE);
     }
     public Point2D(double x, double y, Color color, boolean editable) {
         this.editable=editable;
         if(editable){prm=new PointRangeModel(x,y);
         }else{prm=new PointRangeModel(new R2(x,y),x,y,x,y);}
-        style=new PointStyle();
-        style.addChangeListener(this);
         if(editable){prm.addChangeListener(this);}
         setColor(color);
     }
@@ -65,25 +58,64 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     
     public R2 getPoint(){return prm.getPoint();}    
     public void setPoint(R2 newValue){prm.setTo(newValue);}
-    public void setModel(PointRangeModel prm){this.prm=prm;}
+    public void setModel(PointRangeModel prm){
+        this.prm.removeChangeListener(this);
+        this.prm=prm;
+        if(editable){prm.addChangeListener(this);}
+    }
+    //public PointRangeModel getModel(){return prm;}
+    public void setLabel(String s){label=s;}
     
-    // DRAW ROUTINES
     
-    @Override
-    public void recompute(){}
+    // DRAW ROUTINES    
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
         R2 point=prm.getPoint();
         g.setColor(getColor());
-        switch(style.getStyle()){
-        case PointStyle.SMALL: g.fill(((Euclidean2)v).dot(point,1)); break;
-        case PointStyle.MEDIUM: g.fill(((Euclidean2)v).dot(point,2)); break;
-        case PointStyle.LARGE: g.fill(((Euclidean2)v).dot(point,4)); break;
-        case PointStyle.CONCENTRIC: g.fill(((Euclidean2)v).dot(point,3));g.draw(((Euclidean2)v).dot(point,5));break;    
-        case PointStyle.CIRCLE: g.draw(((Euclidean2)v).dot(point,5));break;    
+        switch(style.getValue()){
+            case SMALL: 
+                g.fill(((Euclidean2)v).dot(point,1)); 
+                break;
+            case MEDIUM: 
+                g.fill(((Euclidean2)v).dot(point,2)); 
+                break;
+            case LARGE: 
+                g.fill(((Euclidean2)v).dot(point,4)); 
+                break;
+            case CONCENTRIC: 
+                g.fill(((Euclidean2)v).dot(point,3));
+                g.draw(((Euclidean2)v).dot(point,5));
+                break;    
+            case CIRCLE: 
+                g.draw(((Euclidean2)v).dot(point,5));
+                break;    
+        }
+        if(label!=null){
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
+            drawString(g,v,label,prm.getPoint(),5,5);
+            g.setComposite(AlphaComposite.SrcOver);
         }
     }
+    
+    public static void drawString(Graphics2D g,Euclidean2 v,String s,R2 point,double dx,double dy){
+        g.drawString(s,(float)(v.toWindowX(point.x)+dx),(float)(v.toWindowY(point.y)-dy));}
+
+    
+    // STYLE SETTINGS
+    
+    public static final int LARGE=0;
+    public static final int MEDIUM=1;
+    public static final int SMALL=2;
+    public static final int CONCENTRIC=3;
+    public static final int CIRCLE=4;
+
+    final static String[] styleStrings={"Large","Medium","Small","Concentric","Circle"};
+    @Override
+    public String[] getStyleStrings() {return styleStrings;}    
+    @Override
+    public String toString(){return "Point";}
+
     
 
     // DYNAMIC EVENT HANDLING
@@ -93,24 +125,7 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     @Override
     public boolean clicked(MouseVisometryEvent<Euclidean2> e) {return withinClickRange(e,prm.getPoint());}
     @Override
-    public void mousePressed(MouseVisometryEvent<Euclidean2> e){if(clicked(e)){adjusting=true;}}
-    @Override
     public void mouseDragged(MouseVisometryEvent<Euclidean2> e){if(adjusting){setPoint((R2)e.getCoordinate());}}
     @Override
-    public void mouseReleased(MouseVisometryEvent<Euclidean2> e){mouseDragged(e);adjusting=false;}
-    @Override
-    public void mouseClicked(MouseVisometryEvent<Euclidean2> e){if(clicked(e)){style.cycleStyle();adjusting=false;}}
-    
-    
-    // IMPLEMENTING ABSTRACT METHODS    
-
-    @Override
-    public JMenu getOptionsMenu() {
-        JMenu result=new JMenu("Point Style");
-        result.add(getColorMenuItem());
-        return result;
-    }
-    
-    @Override
-    public void stateChanged(ChangeEvent e) {fireStateChanged();}
+    public void mouseClicked(MouseVisometryEvent<Euclidean2> e){if(clicked(e)){style.cycle();adjusting=false;}}
 }

@@ -5,14 +5,22 @@
 
 package specto.plottable;
 
+import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
+import sequor.component.IntegerRangeTimer;
+import sequor.model.PointRangeModel;
 import specto.dynamicplottable.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.text.NumberFormat;
 import java.util.Vector;
+import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
+import scio.function.Derivative;
 import sequor.model.DoubleRangeModel;
+import specto.Animatable;
+import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -56,6 +64,8 @@ public class Parametric2D extends PointSet2D {
         tRange.setNumSteps(samplePoints,true);
     }
     
+    public DoubleRangeModel getModel(){return tRange;}
+    
     // TODO should not recompute path every time. Just when it's necessary
 
     /** Draws the path. */
@@ -71,4 +81,105 @@ public class Parametric2D extends PointSet2D {
     public void computePath() throws FunctionValueException{
         points=function.getValue(tRange.getValueRange(true,0.0));
     }    
+
+    
+    // BEAN PATTERNS
+    
+    public Function<Double,R2> getFunction(){return function;}
+    
+    // STYLE
+        
+    @Override
+    public String toString(){return "Parametric Function";}
+    
+    /** Returns t value at closest point on path. */
+    public double getTime(R2 point){
+        R2 closest=getClosestPoint(point.x,point.y);
+        int i;
+        for(i=0;i<points.size();i++){
+            if(closest.equals(points.get(i))){break;}
+        }
+        return tRange.getMinimum()+i*tRange.getStep();
+    }
+    
+    
+    // DECORATIONS
+    
+    /** Returns a point with a line through it representing the slope of the function at that point. Can also be displayed as a vector or ray
+     * from the particular point.
+     * @return Point2D object which can be added to a plot
+     */
+    public Point2D getPointSlope() {return new ParametricPoint(getConstraintModel());}
+    
+    
+    // INNER CLASSES
+    
+    /** Represents a point on the parametric function with the ability to display position, velocity, acceleration vectors. */
+    public class ParametricPoint extends Point2D implements Animatable<Euclidean2> {
+        R2 velocity;
+        R2 acceleration;
+        
+        DoubleRangeModel tModel;
+        
+        public ParametricPoint(PointRangeModel prm){
+            setModel(prm);
+            tModel=new DoubleRangeModel(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
+            tModel.addChangeListener(new ChangeListener(){
+                public void stateChanged(ChangeEvent e) {
+                    try {
+                        setPoint(function.getValue(tModel.getValue()));
+                    } catch (FunctionValueException ex) {}
+                }
+            });
+            addChangeListener(new ChangeListener(){
+                public void stateChanged(ChangeEvent e) {
+                    if(!e.getSource().equals(tModel)){
+                        tModel.setRangeProperties(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum());
+                    }
+                }
+            });
+        }
+        
+        /** Returns data model which can be used to control the time of this point. */
+        public DoubleRangeModel getModel(){return tModel;}
+        
+        @Override
+        public void recompute() {
+            try {
+                super.setLabel("t="+NumberFormat.getInstance().format(tModel.getValue()));
+                velocity = Derivative.approximateDerivative(function, tModel.getValue(), .001);
+                acceleration = Derivative.approximateDerivativeTwo(function, tModel.getValue(), .001);
+            } catch (FunctionValueException ex) {
+                System.out.println("error");
+            }
+        }
+
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean2 v) {
+            super.paintComponent(g,v);
+            g.setStroke(LineStyle.BASIC_STROKE);
+            R2 position=getPoint();
+            if(velocity!=null){
+                g.setColor(Color.RED);
+                g.draw(v.arrow(position,position.plus(velocity),8.0));
+            }
+            if(acceleration!=null){
+                g.setColor(Color.PINK);
+                g.draw(v.arrow(position,position.plus(acceleration),8.0));
+            }
+            g.setColor(Color.BLACK);
+            g.draw(v.arrow(new R2(),position,8.0));
+        } 
+            
+        @Override
+        public String toString(){return "Point on Curve";}
+
+        public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {
+            int pos=t.getModel().getValue();
+            prm.setTo(pos>=points.size()?points.lastElement():points.get(pos));
+            paintComponent(g,v);
+        }
+
+        public int getAnimatingSteps() {return Parametric2D.this.getAnimatingSteps();}
+    } // class Parametric2D.ParametricPoint
 }

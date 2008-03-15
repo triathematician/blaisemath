@@ -9,6 +9,7 @@
 
 package sequor.model;
 
+import sequor.FiresChangeEvents;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -73,7 +74,7 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     }
     public String toLongString(){throw new UnsupportedOperationException("Not supported yet.");}
     public PropertyChangeEvent getChangeEvent(String s){return new PropertyChangeEvent(this,s,null,null);}
-    public String toString(){return "("+sx+","+sy+")";}
+    public String toString(){return "( "+sx+" , "+sy+" )";}
     public void actionPerformed(ActionEvent e){fireStateChanged();}
 
     @Override

@@ -9,6 +9,8 @@
 
 package sequor.model;
 
+import sequor.FiresChangeEvents;
+import sequor.editor.ColorEditor;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +42,7 @@ public class ColorModel extends FiresChangeEvents {
     public void copyValuesFrom(FiresChangeEvents parent){c=((ColorModel)parent).c;}
     
     public JButton getButton(){
-        return new ColorEditor(this).button;
+        return new ColorEditor(this).getButton();
     }
     public JMenuItem getMenuItem(){
         final JMenuItem jmi=new JMenuItem("Change Color");

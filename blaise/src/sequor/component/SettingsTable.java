@@ -5,6 +5,8 @@
 
 package sequor.component;
 
+import sequor.editor.FunctionTextComboBox;
+import sequor.Settings;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.AbstractCellEditor;
@@ -16,21 +18,21 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import sequor.model.ColorEditor;
+import sequor.editor.ColorEditor;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.DoubleRangeModel;
-import sequor.model.FiresChangeEvents;
+import sequor.FiresChangeEvents;
 import sequor.model.FunctionTreeModel;
 import sequor.model.IntegerRangeModel;
-import sequor.model.ParameterEditor;
+import sequor.editor.ParameterEditor;
 import sequor.model.ParameterListModel;
-import sequor.model.SettingsProperty;
+import sequor.SettingsProperty;
+import sequor.model.ParametricModel;
 
 /**
- * <p>
- * SettingsTable is ...
- * </p>
+ * SettingsTable is a JTable with the capability of editing anything contained in a Settings class.
+ *
  * @author Elisha Peterson
  */
 public class SettingsTable extends JTable {
@@ -59,9 +61,11 @@ public class SettingsTable extends JTable {
             case Settings.EDIT_COLOR: return new ColorEditor((ColorModel)sp.getModel());
             case Settings.EDIT_COMBO: return new DefaultCellEditor(((ComboBoxRangeModel)sp.getModel()).getComboBox());
             // TODO write custom double cell editor
+            case Settings.EDIT_DOUBLE_SLIDER:
             case Settings.EDIT_DOUBLE: return new TableSpinner((DoubleRangeModel)sp.getModel());
             case Settings.EDIT_FUNCTION: return new DefaultCellEditor(new FunctionTextComboBox((FunctionTreeModel)sp.getModel()));
             // TODO write custom integer cell editor
+            case Settings.EDIT_INTEGER_SLIDER:
             case Settings.EDIT_INTEGER: return new TableSpinner((IntegerRangeModel)sp.getModel());
             // TODO ensure events are handled properly
             case Settings.EDIT_PARAMETER: return new ParameterEditor((ParameterListModel)sp.getModel());
@@ -99,14 +103,20 @@ public class SettingsTable extends JTable {
                 case Settings.EDIT_COMBO:
                     setText(((ComboBoxRangeModel)sp.getModel()).toString());
                     break;
+                case Settings.EDIT_DOUBLE_SLIDER:
                 case Settings.EDIT_DOUBLE:
                     setText(((DoubleRangeModel)sp.getModel()).toString());
                     break;
+                case Settings.EDIT_INTEGER_SLIDER:
                 case Settings.EDIT_INTEGER:
                     setText(((IntegerRangeModel)sp.getModel()).toString());
                     break;
                 case Settings.EDIT_FUNCTION:
                     setText(((FunctionTreeModel)sp.getModel()).toString());
+                    break;
+                case Settings.EDIT_PARAMETRIC:
+                    setText(((ParametricModel)sp.getModel()).toString());
+                    break;
             }
             return this;
         }

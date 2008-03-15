@@ -31,6 +31,7 @@ public class IntegerRangeTimer extends Timer{
     /** Whether the timer loops (goes several times). */
     boolean loops=true;
     
+    public IntegerRangeTimer(){this(0,10,1);}
     public IntegerRangeTimer(int start,int stop,int step){this(new IntegerRangeModel(start,start,stop,step));}
     public IntegerRangeTimer(IntegerRangeModel model){        
         super(0,null);
@@ -45,7 +46,7 @@ public class IntegerRangeTimer extends Timer{
     public void setStep(int newStep){model.setStep(newStep);}
     public void setNumSteps(int n){model.setNumSteps(n, true);}
     
-    public void pause(){if(isRunning()){paused=!paused;}}
+    public void pause(){paused=!paused;}
 
     @Override
     public void start() {

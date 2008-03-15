@@ -16,9 +16,11 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.event.ChangeListener;
 import sequor.component.IntegerRangeTimer;
 import sequor.event.MouseVisometryEvent;
+import sequor.event.MouseVisometryListener;
 
 /**
  *
@@ -60,16 +62,12 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     public void paintComponent(Graphics2D g,V v) {
         for (Plottable p:plottables){
             g.setColor(p.getColor());
-            p.paintDecorations(g,v);
-            g.setColor(p.getColor());
             p.paintComponent(g,v);
         }
     }
     @Override
     public void paintComponent(Graphics2D g,V v,IntegerRangeTimer t) {
         for (Plottable p:plottables){
-            g.setColor(p.getColor());
-            p.paintDecorations(g,v,t);
             g.setColor(p.getColor());
             if(p instanceof Animatable){
                 ((Animatable)p).paintComponent(g,v,t);
@@ -85,7 +83,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         for(Plottable p:plottables){
             try{
                 for(Component c:p.getOptionsMenu().getComponents()){
-                    result.add(c);
+                    result.add(c);                    
                 }
             }catch(NullPointerException e){}
         }
@@ -93,10 +91,12 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         return result;
     }
 
+    @Override
+    public String[] getStyleStrings() {return null;}
     
     // mouse event handling
     
-    DynamicPlottable<V> mover;
+    MouseVisometryListener<V> mover;
     
     @Override
     public boolean clicked(MouseVisometryEvent<V> e) {
@@ -108,8 +108,8 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         return false;
     }
             
-    Vector<DynamicPlottable<V>> getHits(MouseVisometryEvent<V> e){
-        Vector<DynamicPlottable<V>> result=new Vector<DynamicPlottable<V>>();
+    Vector<MouseVisometryListener<V>> getHits(MouseVisometryEvent<V> e){
+        Vector<MouseVisometryListener<V>> result=new Vector<MouseVisometryListener<V>>();
         for (Plottable<V> dp:plottables){
             if (dp instanceof DynamicPlottable && ((DynamicPlottable<V>)dp).clicked(e)){
                 result.add((DynamicPlottable<V>)dp);
@@ -120,14 +120,14 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     @Override
     public void mouseClicked(MouseVisometryEvent<V> e){
-        Vector<DynamicPlottable<V>> hits=getHits(e);
+        Vector<MouseVisometryListener<V>> hits=getHits(e);
         if(hits.isEmpty()){e.getSourceVisometry().mouseClicked(e);}
         else{hits.get(0).mouseClicked(e);}
     }
 
     @Override
     public void mousePressed(MouseVisometryEvent<V> e){
-        Vector<DynamicPlottable<V>> hits=getHits(e);
+        Vector<MouseVisometryListener<V>> hits=getHits(e);
         if(hits.isEmpty()){e.getSourceVisometry().mousePressed(e);}
         else{mover=hits.get(0);mover.mousePressed(e);}
     }
@@ -160,11 +160,8 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
             if(p instanceof Animatable){
                 curSteps=((Animatable)p).getAnimatingSteps();
                 if(curSteps>maxSteps){maxSteps=curSteps;}
-            }else if(p.decorations!=null){
-                curSteps=p.decorations.getAnimatingSteps();
-                if(curSteps>maxSteps){maxSteps=curSteps;}
             }
         }
         return maxSteps;
-    }    
+    }
 }

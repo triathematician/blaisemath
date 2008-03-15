@@ -20,7 +20,6 @@ import scio.function.Function;
 import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
-import sequor.model.ComboBoxRangeModel;
 import specto.visometry.Euclidean2;
 
 /**
@@ -28,7 +27,6 @@ import specto.visometry.Euclidean2;
  * @author ae3263
  */
 public class PlaneFunction2D extends Plottable<Euclidean2>{
-    Color color;
     Function<R2,Double> function;
     private static final Function<R2,Double> DEFAULT_FUNCTION=new Function<R2,Double>(){
         @Override
@@ -46,20 +44,16 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         };
     public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
     public PlaneFunction2D(Function<R2,Double> function){
-        color=Color.ORANGE;
         this.function=function;
-        initStyle();
+        setColor(Color.ORANGE);
     }
     
     // DRAW METHODS
         
     @Override
-    public void recompute(){}
-        
-    @Override
     public void paintComponent(Graphics2D g,Euclidean2 v){
         try {
-            g.setColor(color);
+            g.setColor(getColor());
             Vector<R2> inputs = new Vector<R2>();
             for (double px : v.getSparseXRange(20)) {
                 for (double py : v.getSparseYRange(20)) {
@@ -72,7 +66,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             switch (style.getValue()) {
                 case DOTS:
                     for(int i=0;i<inputs.size();i++){
-                        g.fill(v.dot(inputs.get(i),getRadius(result.get(i),WEIGHT,SHIFT)));
+                        g.fill(v.dot(inputs.get(i),getRadius(result.get(i),1.5*WEIGHT,SHIFT)));
                     }
                     break;
                 case CONTOURS:
@@ -101,20 +95,10 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     public static final int CONTOURS=2;
     public static final int DENSITY=3;
     
-    public static final String[] styleStrings={"Dots","Color Boxes","Contours","Density"};
-    public ComboBoxRangeModel style;
-    
-    public void initStyle(){
-        style=new ComboBoxRangeModel(styleStrings,COLORS,0,3);
-        style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e) {redraw();}});
-    }
-    
+    public static final String[] styleStrings={"Dots","Color Boxes"};
     @Override
-    public JMenu getOptionsMenu() {
-        JMenu result=new JMenu("Plane Function");
-        result.add(getColorMenuItem());
-        result.add(style.getSubMenu("Display style"));
-        return result;
-    }
+    public String[] getStyleStrings() {return styleStrings;}
+    @Override
+    public String toString(){return "Plane Function";}
 }
 

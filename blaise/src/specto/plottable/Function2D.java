@@ -6,6 +6,7 @@
 package specto.plottable;
 
 import java.awt.Color;
+import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import sequor.model.PointRangeModel;
 import specto.dynamicplottable.*;
@@ -14,10 +15,13 @@ import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
+import scio.function.Derivative;
 import scio.function.FunctionValueException;
 import sequor.component.IntegerRangeTimer;
 import sequor.model.FunctionTreeModel;
+import specto.Animatable;
 import specto.Constrains2D;
+import specto.Decoration;
 import specto.visometry.Euclidean2;
 
 /**
@@ -78,9 +82,20 @@ public class Function2D extends PointSet2D implements Constrains2D{
 
     @Override
     public PointRangeModel getConstraintModel() {return new FunctionPointModel(function);}
+       
+    @Override
+    public String toString(){return "Function";}
+    
+    /** Returns a point with a line through it representing the slope of the function at that point. Can also be displayed as a vector or ray
+     * from the particular point.
+     * @return Point2D object which can be added to a plot
+     */
+    public Point2D getPointSlope() {return new DerivativePoint(getConstraintModel());}
     
     
     // INNER CLASSES
+    
+    /** A point restricted to this function. */
     class FunctionPointModel extends PointRangeModel {
         Function<Double,Double> function;
 
@@ -101,4 +116,57 @@ public class Function2D extends PointSet2D implements Constrains2D{
 
         }        
     } // class Function2D.FunctionPointModel
+    
+    
+    /** A point on this function with ability to display derivative vector and/or tangent line. */
+    class DerivativePoint extends Point2D implements Decoration<Euclidean2,Function2D>, Animatable<Euclidean2> {
+        double slope;
+        Segment2D vector;
+        PointRangeModel endVector;
+        public DerivativePoint(PointRangeModel prm){
+            super(prm);
+            endVector=new PointRangeModel(prm.getX(),prm.getY());
+            vector=new Segment2D(prm,endVector);
+            vector.style.setValue(Segment2D.LINE_VECTOR);
+            vector.addChangeListener(this);
+        }
+        
+        @Override
+        public void recompute() {
+            try {
+                slope = Derivative.approximateDerivative(function, prm.getX(), .0001);
+                endVector.setTo(getPoint().plus(new R2(1.,slope).multipliedBy(1/Math.sqrt(1+slope*slope))));
+            } catch (FunctionValueException ex) {
+                System.out.println("error");
+            }
+        }
+
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean2 v) {
+            vector.paintComponent(g,v);
+            super.paintComponent(g,v);
+        }
+            
+        @Override
+        public String toString(){return "Point on Function";}
+
+        public void setParent(Function2D parent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public Function2D getParent() {return Function2D.this;}
+
+        public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {
+            int pos=t.getModel().getValue();
+            prm.setTo(pos>=points.size()?points.lastElement():points.get(pos));
+            paintComponent(g,v);
+        }
+
+        public int getAnimatingSteps() {return Function2D.this.getAnimatingSteps();}
+
+        @Override
+        public JMenu getOptionsMenu() {
+            return vector.style.appendToMenu(super.getOptionsMenu());
+        }
+    } // class Function2D.DerivativePoint
 }
