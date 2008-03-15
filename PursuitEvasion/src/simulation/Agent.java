@@ -27,11 +27,11 @@ import javax.swing.JPanel;
 import behavior.TaskFusion;
 import goal.Goal;
 import goal.TaskGenerator;
-import sequor.component.Settings;
+import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.ParametricModel;
-import sequor.model.SettingsProperty;
+import sequor.SettingsProperty;
 
 /**
  * Represents a single participant in the pursuit-evasion game. May be a pursuer, an evader, a stationary goal
@@ -278,7 +278,7 @@ public class Agent implements TaskGenerator {
         /** Default behavioral setting */
         private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
-        private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,5,.01);
+        private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
         /** Position function if required for myBehavior */
         private ParametricModel pm=new ParametricModel("10cos(t)","10sin(t)");
         /** Default color. */
@@ -302,7 +302,7 @@ public class Agent implements TaskGenerator {
             if(e.getSource()==behavior){
                 myBehavior=Behavior.getBehavior(behavior.getValue());
                 if(behavior.getValue()==Behavior.LEADING){
-                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
+                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE_SLIDER);
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
                 }else if(behavior.getValue()==Behavior.APPROACHPATH){
                     setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);

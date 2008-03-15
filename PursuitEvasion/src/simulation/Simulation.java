@@ -10,6 +10,7 @@
 
 package simulation;
 
+import analysis.Statistics;
 import goal.Goal;
 import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
@@ -21,13 +22,13 @@ import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.event.EventListenerList;
 import javax.swing.JPanel;
-import sequor.component.Settings;
+import sequor.Settings;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
-import sequor.model.SettingsProperty;
+import sequor.SettingsProperty;
 import specto.PlotPanel;
 import specto.visometry.Euclidean2;
-import utility.DataLog;
+import analysis.DataLog;
 import utility.DistanceTable;
 import utility.SimulationFactory;
 
@@ -179,6 +180,8 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Returns one agent whose position may be changed automatically. */
     public Agent getPrimaryAgent(){return primary.firstElement();}
+    /** Returns primary team. */
+    public Team getPrimaryTeam(){return primary;}
     
     /** Runs simulation and returns the primary "value" of the simulation. */
     public Double getPrimaryValue(){    
@@ -187,21 +190,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         run();
         return primary.getValue();
     }
-    
-    
-    
-    // GUI METHODS
-    
-    /** Recomputes animation settings for a plot window */
-    public void setAnimationCycle(PlotPanel<Euclidean2> p){
-        if(p.getTimer()==null){p.getTimer().restart();p.getTimer().stop();}
-        p.getTimer().setNumSteps(getNumSteps()+10);
-        if(getStepTime()>.4){
-            p.getTimer().setDelay(100);
-        }else{
-            p.getTimer().setDelay((int)(250*getStepTime()));
-        }
-    }
+    public void setBatchProcessing(boolean b) {batchProcessing=b;}
     
     // EVENT HANDLING
     
@@ -274,7 +263,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void setDataLog(DataLog dl){this.log=dl;}
     
     public JPanel getPanel(){return ss.getPanel();}
-    public JMenu getMenu(String s){return ss.getMenu(s);}
+    public JMenu getMenu(String s){JMenu jm=ss.getMenu();jm.setText(s);return jm;}
     public ComboBoxRangeModel getGameTypeModel(){return ss.gameType;}
     
     // SUBCLASSES

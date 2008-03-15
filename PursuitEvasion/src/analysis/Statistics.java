@@ -3,8 +3,9 @@
  * Created on Aug 28, 2007, 10:40:52 AM
  */
 
-package simulation;
+package analysis;
 
+import simulation.*;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.Vector;
@@ -12,10 +13,10 @@ import javax.swing.JTextArea;
 import scio.coordinate.R2;
 import scio.function.Function;
 import scio.function.FunctionValueException;
-import sequor.model.FiresChangeEvents;
+import sequor.FiresChangeEvents;
 import specto.plottable.PlaneFunction2D;
 import specto.visometry.Euclidean2;
-import utility.DataLog;
+import analysis.DataLog;
 
 /**
  * Static library of methods to perform batch runs of simulations for a variety of initial conditions.
@@ -33,19 +34,18 @@ public class Statistics extends FiresChangeEvents {
         Simulation sim;
         public InitialPositionTestFunction(Simulation sim){this.sim=sim;}        
         public Double getValue(R2 x) throws FunctionValueException {
-            Agent changes=sim.getPrimaryAgent();
-            changes.getPointModel().setTo(x);
+            sim.getPrimaryAgent().getPointModel().setTo(x);
             return sim.getPrimaryValue();
         }
         public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
             Agent changes=sim.getPrimaryAgent();
             Vector<Double> result=new Vector<Double>();
-            sim.batchProcessing=true;
+            sim.setBatchProcessing(true);
             for(R2 point:x){
                 changes.getPointModel().setTo(point);
-                result.add(sim.getPrimaryValue()>0.5?50.0:0.0);
+                result.add(sim.getPrimaryValue()>0.5?50.0:0.0); // threshhold
             }
-            sim.batchProcessing=false;
+            sim.setBatchProcessing(false);
             return result;
         }
         public Double minValue() {return 0.0;}
@@ -54,9 +54,8 @@ public class Statistics extends FiresChangeEvents {
     }
     
     /** Returns PlaneFunction2D corresponding to the above value function. */
-    public PlaneFunction2D getInitialPositionTestPlot(Euclidean2 vis,Simulation sim){
-        InitialPositionTestFunction iptf=new InitialPositionTestFunction(sim);
-        return new PlaneFunction2D(iptf);
+    public PlaneFunction2D getInitialPositionTestPlot(Simulation sim){
+        return new PlaneFunction2D(new InitialPositionTestFunction(sim));
     }
     
     

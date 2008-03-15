@@ -5,17 +5,17 @@
 
 package utility;
 
+import analysis.DataLog;
 import goal.Goal;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
-import javax.swing.JMenu;
 import simulation.Agent;
 import simulation.Team;
 import specto.Animatable;
 import specto.Plottable;
-import sequor.component.RangeTimer;
 import scio.coordinate.R2;
+import sequor.component.IntegerRangeTimer;
 import specto.visometry.Euclidean2;
 
 /**
@@ -37,13 +37,13 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     public void paintComponent(Graphics2D g,Euclidean2 v) {}
 
     /** Draws graph corresponding to current step. */
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
         if(pathSize()==0){return;}
         g.setColor(team.getColor().brighter().brighter());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
-        g.draw(getEdges(v,t.getCurrentStep()));
+        g.draw(getEdges(v,t.getModel().getValue()));
         for(Goal goal:team.getGoals()){
-            g.draw(getTargetEdges(v,goal,t.getCurrentStep()));
+            g.draw(getTargetEdges(v,goal,t.getModel().getValue()));
         }
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
     }   
@@ -88,5 +88,8 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         return result;        
     }
 
-    public void recompute() {}
+    public int getAnimatingSteps() {return 2;}
+
+    @Override
+    public String[] getStyleStrings() {return null;}
 }

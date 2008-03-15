@@ -3,8 +3,9 @@
  * Created on Nov 5, 2007, 10:26:59 AM
  */
 
-package utility;
+package analysis;
 
+import utility.*;
 import goal.Goal;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
@@ -16,11 +17,11 @@ import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
 import scio.coordinate.R2;
-import sequor.model.FiresChangeEvents;
+import sequor.FiresChangeEvents;
 import specto.Plottable;
 import specto.PlottableGroup;
-import specto.decoration.CirclePoint2D;
-import specto.decoration.InitialPointSet2D;
+import specto.dynamicplottable.CirclePoint2D;
+import specto.dynamicplottable.InitialPointSet2D;
 import specto.dynamicplottable.Point2D;
 import specto.plotpanel.Plot2D;
 import specto.plottable.PointSet2D;
@@ -91,16 +92,16 @@ public class DataLog extends FiresChangeEvents {
     /** Called by the initialization methods */
     private void addAgentVisuals(Team t, PlottableGroup<Euclidean2> teamGroup) {
         for (Agent a : t) {
-            Point2D point = new Point2D(a.getPointModel(), a.getColor().brighter());
             // add the dynamic point
-            teamGroup.add(point);
-            CirclePoint2D cp = new CirclePoint2D(point);
+            CirclePoint2D cp = new CirclePoint2D(a.getPointModel());
+            cp.setLabel(a.toString());
+            cp.setColor(a.getColor());
             cp.addRadius(a.getCommRange());
             cp.addRadius(a.getSensorRange());
             // add radius around the point
-            point.addDecoration(cp);
+            teamGroup.add(cp);
             // add path attached to the point
-            point.addDecoration(new InitialPointSet2D(point, agentPaths.get(a), a.getColor()));
+            teamGroup.add(new InitialPointSet2D(cp, agentPaths.get(a), a.getColor()));
         }
     }    
     
@@ -125,7 +126,6 @@ public class DataLog extends FiresChangeEvents {
         
         if(mainDisplay!=null){
             // initializes the main display groups
-            Euclidean2 mainVis=mainDisplay.getVisometry();
             mainDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){            
                 PlottableGroup<Euclidean2> teamGroup=new PlottableGroup<Euclidean2>();
@@ -141,7 +141,6 @@ public class DataLog extends FiresChangeEvents {
         
         if(valueDisplay!=null){
             // initializes the secondary display group
-            Euclidean2 valueVis=valueDisplay.getVisometry();
             valueDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){
                 PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>();
@@ -166,7 +165,6 @@ public class DataLog extends FiresChangeEvents {
         }
         // preRun the agent visuals; the team display groups do not change!
         if(mainPlot!=null){
-            Euclidean2 mainVis=mainPlot.getVisometry();
             for(Team t:sim.getTeams()){            
                 PlottableGroup<Euclidean2> teamGroup=mainDisplayGroup.get(t);
                 if(teamGroup==null){
@@ -219,14 +217,14 @@ public class DataLog extends FiresChangeEvents {
      */
     public void logCaptures(DistanceTable dt,Goal g,double time){
         AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
-        while((closest!=null)&&(closest.distance<g.getThreshhold())){
-            significantEvents.add(new SignificantEvent(g.getOwner(),closest.first,g.getTarget(),closest.second,"Capture",time));
-            Point2D adder=new Point2D(closest.first.loc.plus(closest.second.loc).multipliedBy(0.5),Color.RED,false);
-            adder.style.setStyle(PointStyle.CIRCLE);
+        while((closest!=null)&&(closest.getDistance()<g.getThreshhold())){
+            significantEvents.add(new SignificantEvent(g.getOwner(),closest.getFirst(),g.getTarget(),closest.getSecond(),"Capture",time));
+            Point2D adder=new Point2D(closest.getFirst().loc.plus(closest.getSecond().loc).multipliedBy(0.5),Color.RED,false);
+            adder.style.setValue(Point2D.CIRCLE);
             captureGroup.add(adder);
             dt.removeAgents(closest);
-            g.getOwner().deactivate(closest.first);
-            g.getTarget().deactivate(closest.second);
+            g.getOwner().deactivate(closest.getFirst());
+            g.getTarget().deactivate(closest.getSecond());
             closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
         }
     }

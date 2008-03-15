@@ -15,8 +15,6 @@ import goal.Goal;
 import behavior.*;
 import utility.DistanceTable;
 import goal.TaskGenerator;
-import specto.PlotPanel;
-import specto.visometry.Euclidean2;
 import java.beans.PropertyChangeEvent;
 import java.util.Vector;
 import java.awt.Color;
@@ -24,18 +22,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
-import sequor.component.Settings;
+import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
-import sequor.model.SettingsProperty;
+import sequor.SettingsProperty;
 import scio.coordinate.R2;
-import specto.decoration.CirclePoint2D;
-import specto.dynamicplottable.Point2D;
 import utility.StartingPositionsFactory;
 
 /**
@@ -45,18 +42,23 @@ import utility.StartingPositionsFactory;
  * Includes cooperative/control algorithms, broadcast methods for instructing team's agents, etc.
  */
 public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,PropertyChangeListener {
-    
-    
+        
     // PROPERTIES
     
     /** The team's settings */
     public TeamSettings tes;
     /** The team's goals */
-    private Vector<Goal> goals=new Vector<Goal>();
+    private Vector<Goal> goals;
     /** The goals which involve "capturing" */
-    private Vector<Goal> captureGoals=new Vector<Goal>();
+    private HashSet<Goal> captureGoals;
     /** Active agents */
-    private Vector<Agent> activeAgents=new Vector<Agent>();
+    private HashSet<Agent> activeAgents;
+    /** Agents which start the simulation as active. */
+    private HashSet<Agent> startAgents;
+    /** Agents used to measure a team's value function. */
+    private HashSet<Agent> valueAgents;
+    /** Active agents used to measure team's value function. */
+    private HashSet<Agent> activeValueAgents;
     
     /** Whether to forward action events */
     private boolean editing=false;
@@ -68,33 +70,44 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     // CONSTRUCTORS
     public Team(){
         super();
+        initLists();
         tes=new TeamSettings();
     }
-    public Team(TeamSettings tes){
+    public Team(Team team){this(team.tes);}    
+    Team(TeamSettings tes){
         super();
         value=Double.MAX_VALUE;
+        initLists();
         this.tes=tes;
         initAgentNumber();
     }
-    public Team(Team team){
-        this(team.tes);
-    }    
     public Team(int size,int start,int behavior,Color color){
         super();
         editing=true;
         value=Double.MAX_VALUE;
+        initLists();
         tes=new TeamSettings();
         setSize(size);
         setStart(start);
         setBehavior(behavior);
         setColor(color);
-        this.clear();
+        clear();
         initAgentNumber();
         editing=false;
     }
     
     
     // METHODS: HELP FOR INITIALIZAITON
+    
+    /** Initializes all the vectors. */
+    public void initLists(){
+        goals=new Vector<Goal>();
+        captureGoals=new HashSet<Goal>();
+        activeAgents=new HashSet<Agent>();
+        startAgents=new HashSet<Agent>();
+        valueAgents=new HashSet<Agent>();
+        activeValueAgents=new HashSet<Agent>();
+    }
     
     /** Adds a goal. */        
     public void addGoal(double weight,Team target,int type,int tasking,double threshhold){
@@ -108,13 +121,27 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     public void reset(){
         value=Double.MAX_VALUE;
         activeAgents.clear();
-        activeAgents.addAll(this);
+        activeAgents.addAll(startAgents);
+        activeValueAgents.clear();
+        activeValueAgents.addAll(valueAgents);
         for(Agent a:this){
             a.reset();
         }
         for(Goal g:goals){
             g.reset();
         }
+    }
+    
+    /** Activate all. */
+    public void initAllActive(){
+        startAgents.clear();
+        startAgents.addAll(this);
+        activeAgents.clear();
+        activeAgents.addAll(startAgents);
+        valueAgents.clear();
+        valueAgents.addAll(startAgents);
+        activeValueAgents.clear();
+        activeValueAgents.addAll(valueAgents);        
     }
     
     /** Changes the number of agents, resets starting locations. */
@@ -133,8 +160,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             a.addActionListener(this);
             tes.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
         }
-        activeAgents.clear();
-        activeAgents.addAll(this);
+        initAllActive();
         editing=false;
     }
     
@@ -180,16 +206,18 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Returns all goals which require capture checks.
      * @return      Vector of Goals representing those which involve capturing and removing player from the field.
      */
-    public Vector<Goal> getCaptureGoals(){
-        return captureGoals;
-    }
+    public HashSet<Goal> getCaptureGoals(){return captureGoals;}
     
     /** Returns list of active agents.
      * @return      Vector of agents which are still active in the simualtion
      */
-    public Vector<Agent> getActiveAgents(){
-        return activeAgents;
-    }
+    public HashSet<Agent> getActiveAgents(){return activeAgents;}
+    public HashSet<Agent> getStartAgents(){return startAgents;}
+    public void setStartAgents(HashSet<Agent> agents){startAgents=agents;}
+    public HashSet<Agent> getValueAgents(){return valueAgents;}
+    public void setValueAgents(HashSet<Agent> agents){valueAgents=agents;}
+    public HashSet<Agent> getActiveValueAgents(){return activeValueAgents;}
+    
     
     
     // BROADCAST METHODS: PASS INSTRUCTIONS ONTO TEAM MEMBERS
@@ -236,6 +264,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Deactivates a particular agent. */
     public void deactivate(Agent a){
         activeAgents.remove(a);
+        activeValueAgents.remove(a);
         a.deactivate();
     }
     
@@ -361,7 +390,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         /** Default behavioral setting */
         private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
-        private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,5,.01);
+        private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
         /** Position function if required for myBehavior */
         private ParametricModel pm=new ParametricModel();
         /** Default color. */
@@ -398,7 +427,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
             if(evt.getSource()==behavior){
                 copyBehaviortoTeam();
                 if(behavior.getValue()==Behavior.LEADING){
-                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE);
+                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE_SLIDER);
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
                 }else if(behavior.getValue()==Behavior.APPROACHPATH){
                     setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);

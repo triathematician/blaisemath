@@ -8,10 +8,14 @@
 package applications;
 
 import scio.coordinate.R2;
-import sequor.model.ComboBoxEditor;
-import simulation.Statistics;
-import specto.gridplottable.Grid2D;
-import utility.DataLog;
+import sequor.editor.ComboBoxEditor;
+import analysis.Statistics;
+import analysis.DataLog;
+import analysis.Metrics;
+import analysis.Metrics.SplitContribution;
+import java.util.HashSet;
+import simulation.Agent;
+import specto.plottable.PlaneFunction2D;
 
 /**
  *
@@ -26,8 +30,6 @@ public class PEGPlot extends javax.swing.JFrame {
         plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
         plot2D2.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
         plot2D2.getVisometry().setAspectRatio(2);
-        simulation1.setAnimationCycle(plot2D1);
-        simulation1.setAnimationCycle(plot2D2);
         dataLog1.initialize(simulation1, plot2D1, plot2D2);
         simulation1.run();
         settingsMenu.add(simulation1.getMenu("Simulation"));
@@ -44,7 +46,7 @@ public class PEGPlot extends javax.swing.JFrame {
 
         simulation1 = new simulation.Simulation();
         menuSimModeGroup = new javax.swing.ButtonGroup();
-        dataLog1 = new utility.DataLog();
+        dataLog1 = new analysis.DataLog();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -62,6 +64,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JToolBar.Separator();
         resetButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -173,6 +176,17 @@ public class PEGPlot extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton1);
+
+        jButton3.setText("jButton3");
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton3);
         jToolBar1.add(jSeparator3);
 
         jButton2.setText("Add Dots");
@@ -296,18 +310,12 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
     // simulation has changed in some fundamental way
     else if(evt.getActionCommand().equals("reset")){
-        plot2D1.removeAll();
-        plot2D2.removeAll();
-        simulation1.setAnimationCycle(plot2D1);
-        simulation1.setAnimationCycle(plot2D2);
+        plot2D1.clearPlottables();
+        plot2D2.clearPlottables();
         plot2D1.rebuildOptionsMenu();
         plot2D2.rebuildOptionsMenu();
         dataLog1.initialize(simulation1, plot2D1, plot2D2);
         simulationSettingsPanel1.setTree(simulation1.ss);
-    }
-    else if(evt.getActionCommand().equals("animation")){
-        simulation1.setAnimationCycle(plot2D1);  
-        simulation1.setAnimationCycle(plot2D2);
     }
     else if(evt.getActionCommand().equals("log")){
         if(evt.getSource() instanceof DataLog){
@@ -323,8 +331,19 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_simulation1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        plot2D1.add(new Statistics().getInitialPositionTestPlot(plot2D1.getVisometry(), simulation1));
+        PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
+        pf.style.setValue(PlaneFunction2D.DOTS);
+        plot2D1.add(pf);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        HashSet<Agent> subset=new HashSet<Agent>();
+        subset.add(simulation1.getPrimaryAgent());
+        SplitContribution result=Metrics.subsetContribution(simulation1,simulation1.getPrimaryTeam(),subset);
+        notificationWindow.append(result.toString()+"\n");
+        simulation1.getPrimaryTeam().initAllActive();
+        simulation1.run();
+    }//GEN-LAST:event_jButton3ActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -340,10 +359,11 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ModeMenu;
     private javax.swing.JMenu appearanceMenu;
-    private utility.DataLog dataLog1;
+    private analysis.DataLog dataLog1;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;

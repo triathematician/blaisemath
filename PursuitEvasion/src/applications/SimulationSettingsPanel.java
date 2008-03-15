@@ -12,14 +12,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import sequor.component.Settings;
-import sequor.component.SettingsPanel;
+import sequor.Settings;
+import sequor.component.SettingsTreePanel;
 
 /**
  *
  * @author ae3263
  */
-public class SimulationSettingsPanel extends SettingsPanel {
+public class SimulationSettingsPanel extends SettingsTreePanel {
     
     /** Default constructor */
     public SimulationSettingsPanel(){super();}

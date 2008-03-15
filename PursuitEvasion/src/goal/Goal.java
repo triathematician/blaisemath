@@ -14,9 +14,9 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 import scio.function.Function;
-import sequor.component.Settings;
+import sequor.Settings;
 import sequor.model.ComboBoxRangeModel;
-import sequor.model.SettingsProperty;
+import sequor.SettingsProperty;
 import simulation.Team;
 import simulation.Agent;
 import tasking.Tasking;
@@ -105,7 +105,7 @@ public class Goal implements Function<DistanceTable,Double>{
      * @return      numeric value indicating the closeness to the goal (positive if goal has been reached, otherwise negative) 
      */
     public Double getValue(DistanceTable d){
-        AgentPair result=d.min(getOwner().getActiveAgents(),getTarget().getActiveAgents());
+        AgentPair result=d.min(getOwner().getActiveValueAgents(),getTarget().getActiveAgents());
         if(result==null){return 0.0;}
         double dist=getThreshhold()-result.getDistance();
         if(getType()==FLEE){dist=-dist;}
