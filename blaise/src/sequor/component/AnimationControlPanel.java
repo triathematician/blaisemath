@@ -24,7 +24,7 @@ public class AnimationControlPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        integerRangeTimer1 = new sequor.component.IntegerRangeTimer();
+        rangeTimer1 = new sequor.component.RangeTimer();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -99,44 +99,44 @@ public class AnimationControlPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        if(integerRangeTimer1.isRunning()){
-            integerRangeTimer1.stop();
+        if(rangeTimer1.isPlaying()){
+            rangeTimer1.stop();
             jToggleButton1.setText("PLAY");
         }else{
-            integerRangeTimer1.start();        
+            rangeTimer1.start();        
             jToggleButton1.setText("STOP");
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        integerRangeTimer1.slower();
+        rangeTimer1.slower();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        integerRangeTimer1.faster();
+        rangeTimer1.faster();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        integerRangeTimer1.restart();
+        rangeTimer1.restart();
         jToggleButton1.setSelected(true);
         jToggleButton1.setText("STOP");
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        integerRangeTimer1.pause();
+        rangeTimer1.pause();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.IntegerRangeTimer integerRangeTimer1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
+    private sequor.component.RangeTimer rangeTimer1;
     // End of variables declaration//GEN-END:variables
     
-    public IntegerRangeTimer getTimer(){return integerRangeTimer1;}
-    public void setTimer(IntegerRangeTimer irt){integerRangeTimer1=irt;}
+    public RangeTimer getTimer(){return rangeTimer1;}
+    public void setTimer(RangeTimer irt){rangeTimer1=irt;}
 }

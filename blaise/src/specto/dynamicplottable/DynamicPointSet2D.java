@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.Plottable;
 import specto.PlottableGroup;
 import specto.visometry.Euclidean2;
@@ -63,7 +63,7 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
     }
 
     @Override
-    public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {paintComponent(g,v);}
+    public void paintComponent(Graphics2D g, Euclidean2 v, RangeTimer t) {paintComponent(g,v);}
     
     
     // STYLES    

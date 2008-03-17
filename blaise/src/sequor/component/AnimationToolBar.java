@@ -5,18 +5,15 @@
 
 package sequor.component;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 /**
  * ToolBar button collection for animating an underlying RangeTimer.
- * <br><br>
+ * 
  * @author ae3263
  */
-public class AnimationToolBar extends JToolBar implements ActionListener {
-    
+public class AnimationToolBar extends JToolBar {    
     RangeTimer timer;
     
     /** Default constructs a new timer. */
@@ -26,35 +23,18 @@ public class AnimationToolBar extends JToolBar implements ActionListener {
     
     /** Construct to control an underlying timer. */
     public AnimationToolBar(RangeTimer timer){
-        addButton("Reverse");
-        addButton("Stop");
-        addButton("Pause");
-        addButton("Slow");
-        addButton("Play");
-        addButton("Fast");
+        add(getButton("Restart","restart"));
+        add(getButton("Stop","stop"));
+        add(getButton("Pause","pause"));
+        add(getButton("Slow","slower"));
+        add(getButton("Play","play"));
+        add(getButton("Fast","faster"));
     }
     
-    public void addButton(String s){
+    public JButton getButton(String s,String ac){
         JButton adder=new JButton(s);
-        adder.addActionListener(this);
-        add(adder);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String s=e.getActionCommand();
-        if(s.equals("Reverse")){   
-            //timer.reverse();
-        }else if(s.equals("Stop")){
-            timer.stop();
-        }else if(s.equals("Pause")){
-            timer.pause();
-        }else if(s.equals("Slow")){
-            timer.slower();
-        }else if(s.equals("Play")){
-            timer.start();
-        }else if(s.equals("Fast")){
-            timer.faster();
-        }
+        adder.setActionCommand(ac);
+        adder.addActionListener(timer);
+        return adder;
     }
 }

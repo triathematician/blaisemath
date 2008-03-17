@@ -16,9 +16,8 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.event.ChangeListener;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 
@@ -66,7 +65,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         }
     }
     @Override
-    public void paintComponent(Graphics2D g,V v,IntegerRangeTimer t) {
+    public void paintComponent(Graphics2D g,V v,RangeTimer t) {
         for (Plottable p:plottables){
             g.setColor(p.getColor());
             if(p instanceof Animatable){

@@ -14,7 +14,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeListener;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.Animatable;
 import specto.Plottable;
 import specto.PlottableGroup;
@@ -55,7 +55,7 @@ public class TransformedGroup<V1 extends Visometry,V2 extends Visometry> extends
         }
     }
     @Override
-    public void paintComponent(Graphics2D g,V1 v,IntegerRangeTimer t) {
+    public void paintComponent(Graphics2D g,V1 v,RangeTimer t) {
         for (Plottable p:tPlottables.getElements()){
             g.setColor(p.getColor());
             if(p instanceof Animatable){

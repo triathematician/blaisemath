@@ -7,12 +7,10 @@ package specto;
  */
 
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
+import sequor.control.AnimationControl;
 import sequor.control.NumberAdjuster;
 import sequor.control.NumberRangeAdjuster;
-import sequor.control.ToggleButton;
 import sequor.model.DoubleRangeModel;
 import specto.dynamicplottable.CirclePoint2D;
 import specto.dynamicplottable.Clock2D;
@@ -23,6 +21,7 @@ import specto.dynamicplottable.DynamicPointSet2D;
 import specto.dynamicplottable.FractalEdge2D;
 import specto.dynamicplottable.Point2D;
 import specto.dynamicplottable.RandomPoint2D;
+import specto.dynamicplottable.RandomWalk2D;
 import specto.dynamicplottable.Triangle2D;
 import specto.plottable.Function2D;
 import specto.plottable.Parametric2D;
@@ -55,13 +54,6 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D1.add(cp2);
         DoubleRangeModel drm1=fss.getModel();
         plot2D1.add(new NumberRangeAdjuster(70.,20.,drm1));
-        ToggleButton tb=new ToggleButton(20.,70.,"Animate",false);
-        tb.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e) {
-                if(plot2D1.getTimer().isRunning()){plot2D1.getTimer().stop();}else{plot2D1.getTimer().start();}
-            }            
-        });
-        plot2D1.add(tb);
         NumberAdjuster na=new NumberAdjuster(300.,15.,drm1);
         na.setModel(na.style);
         plot2D1.add(na);
@@ -70,6 +62,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D1.add(cp0.getStyleAdjuster(300.,75.));
         plot2D1.add(cp1.getStyleAdjuster(300.,95.));
         plot2D1.add(cp2.getStyleAdjuster(300.,115.));
+        plot2D1.add(new AnimationControl(20.,70.,plot2D1.getTimer()));
 
         VectorField2D vf=new VectorField2D();
         plot2D3.add(vf);
@@ -80,10 +73,12 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D3.add(vf.getStyleAdjuster(300.,15.));
         plot2D3.add(de1.getStyleAdjuster(300.,35.));
         plot2D3.add(de2.getStyleAdjuster(300.,55.));
+        plot2D3.add(new AnimationControl(20.,70.,plot2D3.getTimer()));
 
         PlaneFunction2D pf1=new PlaneFunction2D();
         plot2D4.add(pf1);
         plot2D4.add(pf1.getStyleAdjuster(300.,15.));
+        plot2D4.add(new AnimationControl(20.,70.,plot2D4.getTimer()));
 
         Segment2D s1=new Segment2D(-8,5,2,-1);
         CirclePoint2D cirp1=new CirclePoint2D(s1.getConstraintModel());
@@ -103,6 +98,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D5.add(clock1.getStyleAdjuster(300.,55.));
         plot2D5.add(rect1.getStyleAdjuster(300.,75.));
         plot2D5.add(tri1.getStyleAdjuster(300.,95.));
+        plot2D5.add(new AnimationControl(20.,70.,plot2D5.getTimer()));
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
@@ -117,6 +113,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D6.add(fe1);
         plot2D6.add(dps1.getStyleAdjuster(300.,15.));
         plot2D6.add(fe1.getStyleAdjuster(300.,35.));
+        plot2D6.add(new AnimationControl(20.,70.,plot2D6.getTimer()));
         
         final Parametric2D par1=new Parametric2D();
         DoubleRangeModel drm2=par1.getModel();
@@ -124,17 +121,30 @@ public class TestPlottables extends javax.swing.JFrame {
         polarPlot2D1.add(cp5);
         polarPlot2D1.add(par1);
         polarPlot2D1.add(new NumberRangeAdjuster(60.,220.,drm2));
-        NumberAdjuster da1=new NumberAdjuster(200,20,cp5.getModel());
-        da1.setProperties(360,20,NumberAdjuster.HORIZONTAL,NumberAdjuster.STYLE_DOTS);
+        NumberAdjuster da1=new NumberAdjuster(60,60,cp5.getModel());
+        da1.setProperties(100,20,NumberAdjuster.HORIZONTAL,NumberAdjuster.STYLE_DOTS);
         polarPlot2D1.add(da1);
-        polarPlot2D1.add(par1.getStyleAdjuster(300.,45.));
-        polarPlot2D1.add(cp5.getStyleAdjuster(300.,65.));
+        polarPlot2D1.add(new NumberAdjuster(200,15,da1.style));
+        polarPlot2D1.add(new NumberAdjuster(200,35,da1.getLengthModel()));
+        polarPlot2D1.add(new NumberAdjuster(200,55,da1.getGirthModel()));
+        polarPlot2D1.add(new NumberAdjuster(200,75,da1.getOrientationModel()));
+        polarPlot2D1.add(par1.getStyleAdjuster(400.,15.));
+        polarPlot2D1.add(cp5.getStyleAdjuster(400.,35.));
+        polarPlot2D1.add(new AnimationControl(20.,70.,polarPlot2D1.getTimer()));
+        
         
         RandomPoint2D rp1=new RandomPoint2D();
         plot2D2.add(rp1);
+        RandomWalk2D rw1=new RandomWalk2D();
+        plot2D2.add(rw1);
         plot2D2.add(rp1.getStyleAdjuster(300.,15.));
         plot2D2.add(new NumberAdjuster(300.,35.,rp1.getNumPointsModel()));
         plot2D2.add(new NumberAdjuster(300.,55.,rp1.getParameterModel()));
+        plot2D2.add(rw1.getStyleAdjuster(300.,75.));
+        plot2D2.add(new NumberAdjuster(300.,95.,rw1.getLengthModel()));
+        plot2D2.add(new NumberAdjuster(300.,115.,rw1.getAngleParameterModel()));
+        plot2D2.add(new NumberAdjuster(300.,135.,rw1.getDistancePerTimeModel()));
+        plot2D2.add(new AnimationControl(20.,70.,plot2D2.getTimer()));
     }
     
     /** This method is called from within the constructor to

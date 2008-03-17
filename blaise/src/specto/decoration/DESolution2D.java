@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.Decoration;
 import specto.plottable.VectorField2D;
 import specto.visometry.Euclidean2;
@@ -112,7 +112,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     }
 
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(path!=null){path.paintComponent(g,v,t);}
         if(showReverse&&reversePath!=null){reversePath.paintComponent(g,v,t);}
     }

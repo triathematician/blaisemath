@@ -17,7 +17,7 @@ import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.Derivative;
 import scio.function.FunctionValueException;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import sequor.model.FunctionTreeModel;
 import specto.Animatable;
 import specto.Constrains2D;
@@ -56,7 +56,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
     // PAINT METHODS
     
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         try {
             computePath(v);
             super.paintComponent(g,v,t);
@@ -156,8 +156,8 @@ public class Function2D extends PointSet2D implements Constrains2D{
 
         public Function2D getParent() {return Function2D.this;}
 
-        public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {
-            int pos=t.getModel().getValue();
+        public void paintComponent(Graphics2D g, Euclidean2 v, RangeTimer t) {
+            int pos=t.getCurrentIntValue();
             prm.setTo(pos>=points.size()?points.lastElement():points.get(pos));
             paintComponent(g,v);
         }

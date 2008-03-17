@@ -7,7 +7,6 @@ package specto.plottable;
 
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
-import sequor.component.IntegerRangeTimer;
 import sequor.model.PointRangeModel;
 import specto.dynamicplottable.*;
 import java.awt.Color;
@@ -18,6 +17,7 @@ import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.Derivative;
+import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
 import specto.Animatable;
 import specto.style.LineStyle;
@@ -174,8 +174,8 @@ public class Parametric2D extends PointSet2D {
         @Override
         public String toString(){return "Point on Curve";}
 
-        public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {
-            int pos=t.getModel().getValue();
+        public void paintComponent(Graphics2D g, Euclidean2 v, RangeTimer t) {
+            int pos=t.getCurrentIntValue();
             prm.setTo(pos>=points.size()?points.lastElement():points.get(pos));
             paintComponent(g,v);
         }

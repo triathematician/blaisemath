@@ -6,7 +6,6 @@
 package scio.coordinate;
 
 import java.awt.geom.Point2D;
-import scio.coordinate.Coordinate;
 
 /**
  * This class wraps a Point2D as a coordinate.

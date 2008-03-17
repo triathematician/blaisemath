@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.5" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
-    <Component class="sequor.component.IntegerRangeTimer" name="integerRangeTimer1">
+    <Component class="sequor.component.RangeTimer" name="rangeTimer1">
     </Component>
   </NonVisualComponents>
   <AuxValues>

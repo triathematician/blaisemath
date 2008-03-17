@@ -1,144 +1,212 @@
 /*
  * RangeTimer.java
- * 
  * Created on Sep 14, 2007, 2:17:05 PM
- * 
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * Completely Redesigned on Mar 16, 2008
  */
 
 package sequor.component;
 
-import specto.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.Timer;
+import javax.swing.event.EventListenerList;
+import sequor.model.BoundedRangeModel;
+import sequor.model.ComboBoxRangeModel;
+import sequor.model.IntegerRangeModel;
+import specto.*;
 
 /**
  * This class extends the timer class to permit firing a sequence of doubles OR a sequence
- * of integers, depending on user necessity. The events correspond to a discrete integer set,
- * while the doubles are translated based on a shift (shift/startStep occur at the same time),
- * and a step.
- * <br><br>
+ * of integers, depending on user necessity. Timer's have three different states: playing, paused, or stopped; and
+ * several different potential speeds.
+ * 
  * @author Elisha Peterson
  */
-public class RangeTimer extends Timer{
-    int startStep=0;
-    int currentStep=0;
-    int pauseSteps=0;
-    int stopStep=400;
-    double step=1;
-    double shift=0;
-    boolean paused=false;
-    boolean activated=false;
+public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
+    /** Determines what values the timer contains. */
+    BoundedRangeModel rangeValues;
+ 
+    public static final int PLAYING=0;
+    public static final int PAUSED=1;
+    public static final int STOPPED=2;    
+    public static final String[] statusStrings={"Play","Pause","Stop"};
     
-    public RangeTimer(){this(null);}
-    public RangeTimer(double start,double stop,double step){
-        this(null);
-        setRange(start,stop,step);
-    }
-    public RangeTimer(ActionListener al){super(0,al);}
+    /** Stores the actual timer. */
+    Timer timer;
+    /** Stores whether or not the timer loops. */
+    boolean looping;
+    /** Stores the speed of the timer. */
+    int speed;
+    /** Stores the initial step included in "rangeValues" */
+    Number initialStepSize;
     
-    public int getStartStep(){return startStep;}
-    public int getCurrentStep(){return currentStep;}
-    public int getStopStep(){return stopStep;}
-    public int getPauseSteps(){return pauseSteps;}
-    public double getStart(){return shift;}
-    public double getCurrent(){
-        if(currentStep>stopStep){return getStop();}
-        return shift+step*(currentStep-startStep);
+    // CONSTRUCTOR
+    
+    public RangeTimer(){this(new IntegerRangeModel(0,0,10,1));}
+    public RangeTimer(BoundedRangeModel animatingValues){
+        super(statusStrings,STOPPED,0,2);
+        speed=0;
+        this.rangeValues=animatingValues;
+        initialStepSize=animatingValues.getStep();
+        looping=true;
     }
-    public double getStep(){return step;}
-    public double getStop(){return shift+step*(stopStep-startStep);}
+    
+    
+    // BEAN PATTERNS
+    
+    public boolean isPlaying(){return getValue()==PLAYING;}
+    public boolean isPaused(){return getValue()==PAUSED;}
+    public boolean isStopped(){return getValue()==STOPPED;}
+    public boolean isLooping(){return looping;}
+    public int getStatus(){return getValue();}
+    public int getSpeed(){return speed;}
+    public Number getFirstValue(){return rangeValues.getMinimum();}
+    public int getFirstIntValue(){
+        return (rangeValues.getMinimum() instanceof Integer)?
+            (Integer)rangeValues.getMinimum():
+            (int)Math.floor((Double)rangeValues.getMinimum());
+    }
+    public Number getCurrentValue(){return rangeValues.getValue();}
+    public int getCurrentIntValue(){
+        return (rangeValues.getValue() instanceof Integer)?
+            (Integer)rangeValues.getValue():
+            (int)Math.floor((Double)rangeValues.getValue());
+    }
+    public Number getLastValue(){return rangeValues.getMaximum();}
+    public int getLastIntValue(){
+        return (rangeValues.getMaximum() instanceof Integer)?
+            (Integer)rangeValues.getMaximum():
+            (int)Math.floor((Double)rangeValues.getMaximum());
+    }
+    
+    public void setLooping(boolean looping){this.looping=looping;}
 
-    public void setStart(double start){shift=start;}
-    public void setStep(double step){this.step=step;}
-    public void setStop(double stop){setNumSteps((int)((stop-shift)/step));}
-    public void setRange(double start,double stop,double step){setStart(start);setStop(stop);setStep(step);}
-    public void setStartStep(int ss){startStep=ss;}
-    public void setStopStep(int ss){stopStep=ss;}
-    public void setNumSteps(int n){stopStep=startStep+n;}
-    public void setPauseSteps(int newValue){pauseSteps=newValue;}
-   
-    public boolean isNotStopped(){return isRunning()||paused;}
     
-    @Override
-    public void start(){
-        activated=true;
-        super.start();
+    // TIMER METHODS
+    
+    /** Starts sending out timer events; turns off pause if on. */
+    void start(){play();}
+    void play(){
+        if(getStatus()!=PLAYING){
+            if(getStatus()==STOPPED){fireActionPerformed("restart");}
+            setValue(PLAYING);
+            timer.start();
+            fireStateChanged();
+        }
     }
-    @Override
-    public void restart(){
-        currentStep=startStep;
-        start();
+    /** Pauses the timer if running; does nothing otherwise. */
+    void pause(){
+        if(getStatus()==PLAYING){
+            setValue(PAUSED);
+            timer.start();
+            fireStateChanged();
+        }
     }
-    @Override
-    public void stop(){
-        paused=false;
-        activated=false;
-        super.stop();
-        //fireActionPerformed(new ActionEvent(this,0,"stop"));
+    /** Pauses the timer if running; starts playing if paused. */
+    void togglePause(){
+        if(getStatus()==PLAYING){
+            pause();
+        }else if(getStatus()==PAUSED){
+            play();
+        }
     }
-    public void pause(){
-        if(isRunning()){paused=!paused;}
+    /** Stops the timer completely. */
+    void stop(){
+        if(getStatus()!=STOPPED){
+            setValue(STOPPED);
+            timer.stop();
+            fireStateChanged();
+        }
     }
-    public void iterate(){
-        if(!paused){
-            currentStep++;
-            if(currentStep+pauseSteps>stopStep){
-                stop();
-                currentStep=startStep;
+    /** Resets the animation to the beginning; starts if stopped or paused. */
+    void restart(){
+        rangeValues.setValue(rangeValues.getMinimum());
+        play();
+        fireActionPerformed("restart");
+    }
+    /** Makes the animation run slower. */
+    void slower(){
+        speed--;
+        if(timer.getDelay()==0){ // if delay is bottomed out, create a default delay value.
+            if(initialStepSize==null){
+                timer.setDelay(10);
+            }else if((Double)rangeValues.getStep()>2*(Double)initialStepSize){
+                rangeValues.setStep((Double)(rangeValues.getStep())/2);
+            }else if((Double)rangeValues.getStep()>(Double)initialStepSize){
+                rangeValues.setStep(initialStepSize);
+            }else{
+                timer.setDelay(10);
+            }
+        }else if(timer.getDelay()<50){ // if delay is small, Integer it
+            timer.setDelay(2*timer.getDelay());
+        }else{ // if delay is large, just increase by 50
+            timer.setDelay(timer.getDelay()+50);
+        }
+    }
+    /** Makes the animation run faster. */
+    void faster(){     
+        speed++;
+        if(timer.getDelay()==0){ // if delay is bottomed out, change the stepsize of the model down to at fewest ten steps
+            if(rangeValues.getNumSteps()>10){
+                if(initialStepSize==null){
+                    initialStepSize=rangeValues.getStep();
+                }
+                if(rangeValues.getStep().equals(0)){
+                    rangeValues.setStep(1);
+                }else{
+                    rangeValues.setStep(2*(Double)rangeValues.getStep());
+                }
+            }else{
+                speed--;
+            }
+        } else if(timer.getDelay()<100){ // delay is small, divide by two each time
+            timer.setDelay(timer.getDelay()/2);
+        } else{ // if delay is large, increment by 50 clicks
+            timer.setDelay(timer.getDelay()-50);
+        }
+    }
+   
+    
+    
+    // EVENT HANDLING
+    
+    /** Actions fired to the timer; e.g. menu items selected or toggle buttons pressed. Significantly,
+     * may also represent actions from the underlying timer.
+     */
+    public void actionPerformed(ActionEvent e) {
+        if(e==null){return;}
+        // an actual timer event
+        if(e.getSource().equals(timer)&&isPlaying()){
+            // increment value unless set to not loop
+            if(rangeValues.increment(looping)&&!looping){stop();}
+            fireActionPerformed(e);
+            return;
+        }
+        String s=e.getActionCommand();
+        if(s.equals("play")||s.equals("start")){play();
+        }else if(s.equals("pause")){togglePause();
+        }else if(s.equals("stop")){stop();
+        }else if(s.equals("restart")){restart();
+        }else if(s.equals("slower")){slower();
+        }else if(s.equals("faster")){faster();}
+    }
+    
+    
+    // ACTION EVENT HANDLING
+     
+    protected ActionEvent actionEvent=null;
+    protected EventListenerList actionListenerList=new EventListenerList();    
+    public void addActionListener(ActionListener l){listenerList.add(ActionListener.class,l);}
+    public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class,l);}
+    protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,0,s));}
+    protected void fireActionPerformed(ActionEvent e){
+        if(e!=null){actionEvent=e;}
+        Object[] listeners=listenerList.getListenerList();
+        for(int i=listeners.length-2; i>=0; i-=2){
+            if(listeners[i]==ActionListener.class){
+                if(actionEvent==null){actionEvent=new ActionEvent(this,0,"timer");}
+                ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
             }
         }
-    }
-    
-    public void faster(){
-        if(getDelay()<100){
-            setDelay(getDelay()/2);
-        }else{
-            setDelay(getDelay()-50);
-        }
-    }
-    public void slower(){
-        if(getDelay()==0){
-            setDelay(10);
-        }else if(getDelay()<50){
-            setDelay(2*getDelay());
-        }else{
-            setDelay(getDelay()+50);
-        }
-    }
-
-    @Override
-    protected void fireActionPerformed(ActionEvent e) {iterate();super.fireActionPerformed(e);}    
-
-    public Vector<JMenuItem> getMenuItems() {
-        final JMenu sub=new JMenu("Animation Settings");
-        sub.add(new JCheckBoxMenuItem("Active",false)).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                if(isNotStopped()){stop();
-                }else{start();}
-            }            
-        });
-        sub.addSeparator();
-        sub.add(new JMenuItem("Restart Animation |<-")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){if(activated){restart();}}
-        });
-        sub.add(new JMenuItem("Pause Animation ||")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){if(activated){pause();}}            
-        });
-        sub.add(new JMenuItem("Slower ||>")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){if(activated){slower();}}            
-        });
-        sub.add(new JMenuItem("Faster >>")).addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){if(activated){faster();}}     
-        });
-        Vector<JMenuItem> result=new Vector<JMenuItem>();
-        result.add(sub);
-        return result;
     }    
 }

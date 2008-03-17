@@ -31,9 +31,9 @@ public class RandomPoint2D extends Point2D{
     public RandomPoint2D(PointRangeModel prm){
         super(prm);
         points=new Vector<R2>();
-        numPoints=new IntegerRangeModel(100,0,5000,1);
+        numPoints=new IntegerRangeModel(1000,0,5000,1);
         parameter=new DoubleRangeModel(1,0,10,.1);
-        style.setValue(CIRCLE);
+        style.setValue(TYPE_NCIRCLE);
     }
     public RandomPoint2D(Point2D parent) {this(parent.prm);}
 
@@ -67,6 +67,7 @@ public class RandomPoint2D extends Point2D{
                 }
                 break;
             case TYPE_NRECTANGLE:
+            default:
                 for(int i=0;i<numPoints.getValue();i++){
                     points.add(new R2(PRandom.normal(x,size),PRandom.normal(y,size)));
                 }
@@ -76,13 +77,12 @@ public class RandomPoint2D extends Point2D{
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
-        g.setColor(Color.BLACK);
+        g.setColor(getColor());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
         for(R2 p:points){
             g.fill(v.dot(p,1));
         }
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        g.setColor(color.getValue());
         super.paintComponent(g,v);
     }
     
@@ -90,5 +90,10 @@ public class RandomPoint2D extends Point2D{
     public static final int TYPE_NCIRCLE=1;
     public static final int TYPE_URECTANGLE=2;
     public static final int TYPE_NRECTANGLE=3;
-    public static String[] styleStrings={"Uniform Circle","Normal Circle","Uniform Rectangle","Normal Rectangle"};    
+    public static String[] typeStrings={"Uniform Circle","Normal Circle","Uniform Rectangle","Normal Rectangle"};
+
+    @Override
+    public String[] getStyleStrings() {return typeStrings;}
+    @Override
+    public String toString() {return "Random Point";}    
 }

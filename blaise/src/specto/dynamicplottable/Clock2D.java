@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.Animatable;
 import specto.visometry.Euclidean2;
 
@@ -67,7 +67,7 @@ public class Clock2D extends Point2D implements Animatable<Euclidean2> {
         g.drawString(month,x-11,y-(float)(0.5*radius));
     }
 
-    public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {paintComponent(g,v);}
+    public void paintComponent(Graphics2D g, Euclidean2 v, RangeTimer t) {paintComponent(g,v);}
     public int getAnimatingSteps(){return 10;}    
     
     @Override

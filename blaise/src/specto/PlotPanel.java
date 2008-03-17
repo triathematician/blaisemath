@@ -31,7 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
@@ -60,7 +60,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     /** Model used for timer. */
     private IntegerRangeModel timerModel;
     /** Timer object for animations. */
-    private IntegerRangeTimer timer;
+    private RangeTimer timer;
     
     /** The context menu. */
     private JPopupMenu contextMenu;
@@ -93,21 +93,10 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     private void initComponents(){
         timerModel=new IntegerRangeModel(0,0,10);
-        timerModel.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e){
-                if(timer!=null && timer.isRunning()){repaint();}
-            }});            
-        timer=new IntegerRangeTimer(timerModel);
+        timerModel.addChangeListener(this);
+        timer=new RangeTimer(timerModel);
         timer.setLooping(true);
-        timer.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                if(e!=null && ("start").equals(e.getActionCommand())){
-                    timerModel.setMaximum(components.getAnimatingSteps());                    
-                }else{
-                    repaint();
-                }
-            }
-        });
+        timer.addActionListener(this);
         initContextMenu();
         controls=new HashSet<VisualControl>();
         baseComponents=new PlottableGroup<V>();
@@ -150,8 +139,8 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     // BEAN PATTERNS: GETTERS & SETTERS
     
     public V getVisometry(){return visometry;}
-    public IntegerRangeTimer getTimer(){return timer;}
-    public void setTimer(IntegerRangeTimer timer){
+    public RangeTimer getTimer(){return timer;}
+    public void setTimer(RangeTimer timer){
         // TODO code for synchronization of timers
     }
     
@@ -217,7 +206,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         // Recompute any necessary elements before plotting
         baseComponents.recompute(recomputeAll);
         components.recompute(recomputeAll);
-        if(timer!=null&&timer.isRunning()){            
+        if(timer!=null&&!timer.isStopped()){            
             baseComponents.paintComponent(g,visometry,timer);
             components.paintComponent(g,visometry,timer);
         }else{
@@ -245,7 +234,11 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(timer)){
-            repaint();
+            if(e!=null && e.getActionCommand().equals("restart")){
+                timerModel.setMaximum(components.getAnimatingSteps());                    
+            }else{
+                repaint();
+            }
         }
     }
     

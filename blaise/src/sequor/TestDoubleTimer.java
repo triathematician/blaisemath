@@ -6,6 +6,7 @@
 
 package sequor;
 
+import java.awt.event.ActionEvent;
 import sequor.component.*;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -27,12 +28,12 @@ public class TestDoubleTimer extends javax.swing.JFrame {
         plot2D1.add(point);
         doubleRangeModel1.setMaximum(10.0);
         doubleRangeModel1.setMinimum(-10.0);
-        DoubleRangeTimer drt=new DoubleRangeTimer(doubleRangeModel1);
+        RangeTimer drt=new RangeTimer(doubleRangeModel1);
         JPopupMenu contextMenu=new JPopupMenu();
         for(JMenuItem jmi:drt.getMenuItems()){contextMenu.add(jmi);}
         plot2D1.setComponentPopupMenu(contextMenu);
         drt.setLooping(true);
-        drt.start();
+        drt.actionPerformed(new ActionEvent(this,0,"play"));
     }
     
     /** This method is called from within the constructor to

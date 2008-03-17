@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.Plottable;
 import specto.plottable.PointSet2D;
 import specto.visometry.Euclidean2;
@@ -64,7 +64,7 @@ public class FractalEdge2D extends DynamicPointSet2D {
     
 
     @Override
-    public void paintComponent(Graphics2D g, Euclidean2 v, IntegerRangeTimer t) {
+    public void paintComponent(Graphics2D g, Euclidean2 v, RangeTimer t) {
         g.setColor(getColor().brighter());
         edges.paintComponent(g,v,t);
         g.setColor(getColor());

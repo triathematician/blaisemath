@@ -7,19 +7,16 @@ package specto.plottable;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Path2D;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import specto.Animatable;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import sequor.model.ComboBoxRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Plottable;
@@ -53,27 +50,28 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         g.draw(drawPath(v,0,points.size()));
     }
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(points.size()==0){return;}
+        int curVal=t.getCurrentIntValue();
         g.setStroke(strokes[style.getValue()]);
         switch(animateStyle.getValue()){
             case ANIMATE_DRAW:
-                g.draw(drawPath(v,t.getModel().getMinimum(),t.getModel().getValue()));
+                g.draw(drawPath(v,t.getFirstIntValue(),curVal));
                 break;
             case ANIMATE_DOT:
-                g.fill(drawDot(v,t.getModel().getValue()));
+                g.fill(drawDot(v,curVal));
                 break;
             case ANIMATE_TRACE:
                 g.draw(drawPath(v,0,points.size()));
-                g.fill(drawDot(v,t.getModel().getValue()));
+                g.fill(drawDot(v,curVal));
                 break;
             case ANIMATE_TRAIL:
             default:
                 g.setColor(color.getValue().brighter());
-                g.draw(drawPath(v,0,t.getModel().getValue()));
+                g.draw(drawPath(v,0,curVal));
                 g.setColor(color.getValue().darker());
-                g.draw(drawPath(v,t.getModel().getValue()-5,t.getModel().getValue()));
-                g.fill(drawDot(v,t.getModel().getValue()));
+                g.draw(drawPath(v,curVal-5,curVal));
+                g.fill(drawDot(v,curVal));
                 break;
         }        
     }
@@ -130,7 +128,9 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         super.initStyle();
         animateStyle=new ComboBoxRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
         animateStyle.addChangeListener(this);
-    }
+    }    
+    @Override
+    public String toString(){return "Path or Set of Points";}
 
     
     // EVENT HANDLING

@@ -25,7 +25,7 @@ import javax.swing.event.ChangeListener;
 import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
-import sequor.component.DoubleRangeTimer;
+import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
 import specto.plottable.Rectangle2D;
 
@@ -311,9 +311,9 @@ public class Euclidean2 extends Visometry<R2> {
                         new R2(cx+drm.getValue()*xMultiplier,cy+drm.getValue()*yMultiplier));   
             }
         });
-        DoubleRangeTimer t=new DoubleRangeTimer(drm);
+        RangeTimer t=new RangeTimer(drm);
         t.setLooping(false);
-        t.start();
+        t.actionPerformed(new ActionEvent(this,0,"play"));
     }
         
 
@@ -506,7 +506,7 @@ public class Euclidean2 extends Visometry<R2> {
     public Shape circle(R2 ctr,double rad){return ellipse(ctr,rad,rad);}
     /** Returns path containing given list of points. */
     public Shape path(Vector<R2> points){
-        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
         path.moveTo(points.firstElement().x, points.firstElement().y);
         for(R2 p:points){path.lineTo(p.x,p.y);}
         path.transform(getAffineTransformation());
@@ -514,10 +514,10 @@ public class Euclidean2 extends Visometry<R2> {
     }
     /** Returns closed path containing given list of points. */
     public Shape closedPath(Vector<R2> points){
-        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
         path.moveTo(points.firstElement().x, points.firstElement().y);
         for(R2 p:points){path.lineTo(p.x,p.y);}
-        path.lineTo(points.firstElement().x,points.firstElement().y);
+        path.closePath();
         path.transform(getAffineTransformation());
         return path;
     }
