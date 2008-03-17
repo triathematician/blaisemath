@@ -25,13 +25,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         initComponents();
         plot2D1.add(new Function2D());
         plot2D2.add(new Parametric2D());
-        plot2D3.add(new VectorField2D());
-        Point2D p1=new Point2D();
-        p1.addDecoration(new DESolution2D(p1));
+        VectorField2D vf1=new VectorField2D();
+        plot2D3.add(vf1);
+        plot2D3.add(new DESolution2D(vf1));
         Point2D p2=new Point2D();
-        p2.addDecoration(new DESolution2D(p2));
-        plot2D3.add(p1);
-        plot2D3.add(p2);
+        plot2D3.add(new DESolution2D(vf1));
         plot2D4.add(new PlaneFunction2D());
     }
     
