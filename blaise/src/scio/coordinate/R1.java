@@ -11,26 +11,14 @@ package scio.coordinate;
  * </p>
  * @author Elisha Peterson
  */
-public class R1 implements Coordinate {
-    
-    // PROPERTIES
-    
-    Double value;
+public class R1 extends Euclidean {
 
     // CONSTRUCTORS
-    public R1(){setValue(0.0);}
-    public R1(double v){setValue(v);}
+    public R1(){super(1);setValue(0.0);}
+    public R1(double v){super(1);setValue(v);}
     
     // GETTERS & SETTERS
     
-    public Double getValue(){return value;}
-    public void setValue(Double value){this.value=value;}
-    
-    // METHODS
-    
-    @Override
-    public boolean equals(Coordinate c2) {
-        return (c2 instanceof R1)&&(getValue().equals(((R1)c2).getValue()));
-    }
-
+    public Double getValue(){return coord.get(0);}
+    public void setValue(Double value){setElement(0,value);}
 }

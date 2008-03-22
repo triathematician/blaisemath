@@ -10,9 +10,12 @@
 
 package scribo.tree;
 
+import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+import scio.coordinate.Euclidean;
+import scio.coordinate.R1;
 import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
 import scio.function.FunctionValueException;
@@ -35,7 +38,7 @@ import scribo.parser.Parser;
  * </p>
  * @author Elisha Peterson
  */
-public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Function<Double,Double>{
+public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     
     
     // VARIABLES
@@ -91,7 +94,6 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
             return new FunctionTreeRoot(argumentSimplified());
         }
     }
-    public Class inverseFunctionClass(){return null;}
     @Override
     public void initFunctionType(){}
 
@@ -128,12 +130,45 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
 
     // FUNCTION INTERFACE METHODS
     
-    @Override
-    public Double getValue(Double x) throws FunctionValueException {return getValue(variables.first(),x);}      
-    @Override
-    public Vector<Double> getValue(Vector<Double> x) throws FunctionValueException {return getValue(variables.first(),x);}
-    @Override
-    public Double minValue() { return 0.0; }
-    @Override
-    public Double maxValue() { return 0.0; }
+    /** Returns a generic function corresponding to this tree. The type of the function will depend on the number of inputs. */
+    public Function<Euclidean,Double> getDoubleFunction() {
+        int n=variables.size();
+        return new Function<Euclidean,Double>(){
+            @Override
+            public Double getValue(Euclidean x) throws FunctionValueException {
+                TreeMap<String,Double> table=new TreeMap<String,Double>();
+                Iterator iter=variables.iterator();
+                for(int i=0;i<variables.size();i++){                    
+                    table.put((String)iter.next(),x.getElement(i));
+                }
+                table.putAll(unknowns);
+                return FunctionTreeRoot.this.getValue(table);
+            }      
+            @Override
+            public Vector<Double> getValue(Vector<Euclidean> x) throws FunctionValueException {
+                Vector<Double> result=new Vector<Double>();
+                TreeMap<String,Double> table=new TreeMap<String,Double>();
+                table.putAll(unknowns);
+                Iterator iter=variables.iterator();
+                for(int i=0;i<x.size();i++){
+                    for(int j=0;j<variables.size();j++){                    
+                        table.put((String)iter.next(),x.get(i).getElement(j));
+                    }
+                    result.add(FunctionTreeRoot.this.getValue(table));
+                }
+                return result;
+            }
+            @Override
+            public Double minValue() { return 0.0; }
+            @Override
+            public Double maxValue() { return 0.0; }
+        };
+    }
+
+    /** Default value function for Function<Double,Double>. Required as part of FunctionTreeFunctionNode. */
+    public Double getValue(Double x) throws FunctionValueException {
+        int n=variables.size();
+        if(n!=1){throw new FunctionValueException();}
+        return getDoubleFunction().getValue(new R1(x));
+    }
 }

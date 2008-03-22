@@ -12,7 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
-import sequor.control.NumberAdjuster;
+import sequor.control.NumberSlider;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Animatable;
@@ -61,7 +61,7 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     @Override
     public String[] getStyleStrings() {return PointSet2D.styleStrings;}
     @Override
-    public NumberAdjuster getStyleAdjuster(double x, double y) {return path.getStyleAdjuster(x, y);}
+    public NumberSlider getStyleSlider(int x, int y) {return path.getStyleSlider(x, y);}
     @Override
     public String toString(){return "Initial Point Set";}
 }

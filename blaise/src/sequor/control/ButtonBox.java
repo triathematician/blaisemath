@@ -5,8 +5,12 @@
 
 package sequor.control;
 
+import java.awt.event.MouseEvent;
+import javax.swing.event.ChangeEvent;
+import sequor.VisualControlGroup;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import sequor.VisualControl;
 import sequor.model.ComboBoxRangeModel;
@@ -17,23 +21,28 @@ import sequor.model.ComboBoxRangeModel;
  */
 public class ButtonBox extends VisualControlGroup {
 
-    double buttonSize=15;
-    double spacing=2;
+    protected int buttonSize=20;
+    
+    protected int desiredNumberColumns=2;
     
     
     // CONSTRUCTORS
     
     /** Intializes to size which depends on given button size. */
-    public ButtonBox(double x,double y,double size){
+    public ButtonBox(int x,int y,int size){
         super(x,y,10,10);
         setButtonSize(size);
         initStyle();
-    }
-    
+    }    
     /** Initialize with bounding box. */
-    public ButtonBox(double x,double y,double wid,double ht){
+    public ButtonBox(int x,int y,int wid,int ht){
         super(x,y,wid,ht);
         initStyle();
+    }
+    public ButtonBox(int x,int y,int wid,int ht,int layout){
+        super(x,y,wid,ht);        
+        initStyle();
+        layoutType.setValue(layout);
     }
     
     
@@ -43,7 +52,7 @@ public class ButtonBox extends VisualControlGroup {
     public VisualButton getElement(int i){return (VisualButton)elements.get(i);}
     
     /** Sets the button size. Also changes the bounding box. */
-    public void setButtonSize(double newSize){
+    public void setButtonSize(int newSize){
         if(newSize!=buttonSize){
             buttonSize=newSize;
             adjustBounds();
@@ -59,7 +68,7 @@ public class ButtonBox extends VisualControlGroup {
                 return 1;
             case LAYOUT_BOX:
             default:
-                int nCols=(int)((getWidth()-spacing)/(buttonSize+spacing));
+                int nCols=(int)((getWidth()-2*padding+spacing)/(buttonSize+spacing));
                 return (nCols<1)?1:nCols;
         }        
     }
@@ -73,7 +82,7 @@ public class ButtonBox extends VisualControlGroup {
                 return elements.size();
             case LAYOUT_BOX:
             default:
-                int nRows=(int)((getHeight()-spacing)/(buttonSize+spacing));
+                int nRows=(int)((getHeight()-2*padding+spacing)/(buttonSize+spacing));
                 return (nRows<1)?1:nRows;
         }        
     }
@@ -87,9 +96,9 @@ public class ButtonBox extends VisualControlGroup {
         VisualButton vb=(VisualButton)vc;
         vb.setSize(buttonSize);
         super.add(vc);
-    }    
+    }
     
-    
+
     // LAYOUT METHODS
     
     public static final int MIN_BUTTON_SIZE=5;
@@ -99,15 +108,29 @@ public class ButtonBox extends VisualControlGroup {
         int nRows=getNumRows();
         int nCols=getNumCols();
         // now set the button size to accomodate the width/height of the box.
-        double desiredButtonWidth=(getWidth()-nCols*(spacing+1))/nCols;
-        double desiredButtonHeight=(getHeight()-nRows*(spacing+1))/nRows;
+        int desiredButtonWidth=(getWidth()-(nCols-1)*spacing-2*padding)/nCols;
+        int desiredButtonHeight=(getHeight()-(nRows-1)*spacing-2*padding)/nRows;
         buttonSize=(desiredButtonWidth<desiredButtonHeight)?desiredButtonWidth:desiredButtonHeight;
         buttonSize=(buttonSize>MIN_BUTTON_SIZE)?buttonSize:MIN_BUTTON_SIZE;
+        for(int i=0;i<elements.size();i++){
+            getElement(i).setSize(buttonSize);
+        }
     }
     
-    /** Adjusts the width/height of the box to accomodate the current buttonSize and spacing */
+    /** Adjusts the width of the box if the current layout is a standard box, to accomodate at least a particular number of buttons per row. */
+    public void adjustWidth(){
+        if(layoutType.getValue()==LAYOUT_BOX){
+            setSize(2*padding+desiredNumberColumns*(buttonSize+spacing)-spacing,2*padding+buttonSize+spacing);
+        }
+    }
+    
+    /** Adjusts the width/height of the box to accomodate the current buttonSize and spacing. Uses the currently specified width to control the number of
+     * buttons horizontally, and adjusts the height of the box accordingly.
+     */
     public void adjustBounds(){
-        boundingBox.setRect(getX(),getY(),getNumCols()*(buttonSize+spacing)+spacing,getNumRows()*(buttonSize+spacing)+spacing);
+        int nCols=getNumCols();
+        int nRows=(int)Math.ceil(elements.size()/(double)nCols);
+        setBounds(getX(),getY(),nCols*(buttonSize+spacing)+2*padding-spacing,nRows*(buttonSize+spacing)+2*padding-spacing);
     }
     
     /** Sets the positions of all the buttons. */
@@ -116,9 +139,10 @@ public class ButtonBox extends VisualControlGroup {
         int nCols=getNumCols();
         // go through the buttons and lay them out
         for(int i=0;i<n;i++){
-            ((VisualButton)elements.get(i)).setPosition(
-                    spacing+(i%nCols)*(buttonSize+spacing),
-                    spacing+((int)(i/nCols))*(buttonSize+spacing),
+            elements.get(i).setBounds(
+                    getX()+padding+(i%nCols)*(buttonSize+spacing),
+                    getY()+padding+((int)(i/nCols))*(buttonSize+spacing),
+                    buttonSize,
                     buttonSize);
         }            
     }
@@ -132,21 +156,68 @@ public class ButtonBox extends VisualControlGroup {
     public static final int LAYOUT_VLINE=2;
     public static String[] layoutStrings={"Box","Horizontal","Vertical"};
     public ComboBoxRangeModel getLayoutModel(){return layoutType;}
-    
+    public void setOrientation(int newOrientation){layoutType.setValue(newOrientation);}
     
     // STYLE OPTIONS
     
     ComboBoxRangeModel buttonStyle;
-    public static final int STYLE_CIRCLE=VisualButton.STYLE_CIRCLE;
-    public static final int STYLE_BOX=VisualButton.STYLE_BOX;
-    public static final int STYLE_RBOX=VisualButton.STYLE_RBOX;
-    public static String[] styleStrings=VisualButton.styleStrings;
+    public static final int STYLE_CIRCLE=0;
+    public static final int STYLE_BOX=1;
+    public static final int STYLE_RBOX=2;
+    public static String[] styleStrings={"Circular","Square","Rounded"};
     public ComboBoxRangeModel getButtonStyle(){return buttonStyle;}
+    public BoundedShape getButtonShape(){
+        switch(buttonStyle.getValue()){
+            case STYLE_BOX:
+                return BoundedShape.Rectangle;
+            case STYLE_RBOX:
+                return new BoundedWidthShape.RoundRectangle(8);
+            case STYLE_CIRCLE:
+            default:
+                return BoundedShape.Ellipse;
+                
+        }
+    }
 
     private void initStyle() {
-        layoutType=new ComboBoxRangeModel(layoutStrings,0,0,2);
-        buttonStyle=new ComboBoxRangeModel(styleStrings,0,0,2);
+        layoutType=new ComboBoxRangeModel(layoutStrings,LAYOUT_BOX,0,2);
+        layoutType.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                adjustWidth();
+                adjustBounds();
+                performLayout();
+                fireStateChanged();
+            }            
+        });
+        buttonStyle=new ComboBoxRangeModel(styleStrings,STYLE_CIRCLE,0,2);
+        buttonStyle.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                for(int i=0;i<elements.size();i++){
+                    getElement(i).setBackgroundShape(getButtonShape());
+                }
+                switch(buttonStyle.getValue()){
+                    case(STYLE_CIRCLE):
+                    case(STYLE_RBOX):
+                        backgroundShape=new BoundedWidthShape.RoundRectangle(8);
+                        break;
+                    case(STYLE_BOX):
+                        backgroundShape=BoundedShape.Rectangle;
+                        break;
+                }
+            }            
+        });
+        backgroundShape=new BoundedWidthShape.RoundRectangle(8);
     }
+    
+    
+    // MOUSE EVENT HANDLING
+
+    @Override
+    public void clickAction(MouseEvent e) {
+        if(e!=null){
+            layoutType.cycle();
+        }
+    }       
 
     
     // ACTION EVENT HANDLING

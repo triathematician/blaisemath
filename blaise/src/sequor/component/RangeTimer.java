@@ -12,7 +12,6 @@ import javax.swing.Timer;
 import javax.swing.event.EventListenerList;
 import sequor.model.BoundedRangeModel;
 import sequor.model.ComboBoxRangeModel;
-import sequor.model.IntegerRangeModel;
 import specto.*;
 
 /**
@@ -22,9 +21,9 @@ import specto.*;
  * 
  * @author Elisha Peterson
  */
-public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
+public class RangeTimer<N extends Number> extends ComboBoxRangeModel implements ActionListener {
     /** Determines what values the timer contains. */
-    BoundedRangeModel rangeValues;
+    BoundedRangeModel<N> rangeValues;
  
     public static final int PLAYING=0;
     public static final int PAUSED=1;
@@ -38,17 +37,18 @@ public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
     /** Stores the speed of the timer. */
     int speed;
     /** Stores the initial step included in "rangeValues" */
-    Number initialStepSize;
+    N initialStepSize;
     
     // CONSTRUCTOR
     
-    public RangeTimer(){this(new IntegerRangeModel(0,0,10,1));}
-    public RangeTimer(BoundedRangeModel animatingValues){
+    public RangeTimer(){}
+    public RangeTimer(BoundedRangeModel<N> rangeValues){
         super(statusStrings,STOPPED,0,2);
         speed=0;
-        this.rangeValues=animatingValues;
-        initialStepSize=animatingValues.getStep();
+        this.rangeValues=rangeValues;
+        initialStepSize=(N)rangeValues.getStep();
         looping=true;
+        timer=new Timer(10,this);
     }
     
     
@@ -120,9 +120,9 @@ public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
     }
     /** Resets the animation to the beginning; starts if stopped or paused. */
     void restart(){
+        stop();
         rangeValues.setValue(rangeValues.getMinimum());
-        play();
-        fireActionPerformed("restart");
+        start();
     }
     /** Makes the animation run slower. */
     void slower(){
@@ -130,9 +130,9 @@ public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
         if(timer.getDelay()==0){ // if delay is bottomed out, create a default delay value.
             if(initialStepSize==null){
                 timer.setDelay(10);
-            }else if((Double)rangeValues.getStep()>2*(Double)initialStepSize){
-                rangeValues.setStep((Double)(rangeValues.getStep())/2);
-            }else if((Double)rangeValues.getStep()>(Double)initialStepSize){
+            }else if(rangeValues.getStep().doubleValue()>2*initialStepSize.doubleValue()){
+                rangeValues.halfStep();
+            }else if(rangeValues.getStep().doubleValue()>initialStepSize.doubleValue()){
                 rangeValues.setStep(initialStepSize);
             }else{
                 timer.setDelay(10);
@@ -151,11 +151,7 @@ public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
                 if(initialStepSize==null){
                     initialStepSize=rangeValues.getStep();
                 }
-                if(rangeValues.getStep().equals(0)){
-                    rangeValues.setStep(1);
-                }else{
-                    rangeValues.setStep(2*(Double)rangeValues.getStep());
-                }
+                rangeValues.doubleStep();
             }else{
                 speed--;
             }
@@ -176,19 +172,27 @@ public class RangeTimer extends ComboBoxRangeModel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e==null){return;}
         // an actual timer event
-        if(e.getSource().equals(timer)&&isPlaying()){
-            // increment value unless set to not loop
-            if(rangeValues.increment(looping)&&!looping){stop();}
-            fireActionPerformed(e);
-            return;
+        if(e.getSource().equals(timer)){
+            if(isPlaying()){
+                // increment value unless set to not loop
+                if(rangeValues.increment(looping)&&!looping){stop();}
+                fireActionPerformed(e);
+                return;
+            }
+        }else{
+            String s=e.getActionCommand();
+            if(s.equals("play")||s.equals("start")){play();
+            }else if(s.equals("pause")){
+                togglePause();
+            }else if(s.equals("stop")){stop();
+            }else if(s.equals("restart")){restart();
+            }else if(s.equals("slower")){
+                if(isPlaying()){slower();}else{ 
+                    if(rangeValues.increment(looping)&&!looping){stop();}
+                }
+                fireActionPerformed(e);
+            }else if(s.equals("faster")){if(isPlaying()){faster();}}
         }
-        String s=e.getActionCommand();
-        if(s.equals("play")||s.equals("start")){play();
-        }else if(s.equals("pause")){togglePause();
-        }else if(s.equals("stop")){stop();
-        }else if(s.equals("restart")){restart();
-        }else if(s.equals("slower")){slower();
-        }else if(s.equals("faster")){faster();}
     }
     
     

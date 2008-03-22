@@ -5,6 +5,7 @@
 
 package sequor.control;
 
+import java.awt.Color;
 import javax.swing.event.ChangeEvent;
 import sequor.component.RangeTimer;
 
@@ -15,32 +16,55 @@ import sequor.component.RangeTimer;
 public class AnimationControl extends ButtonBox {
     RangeTimer timer;
 
-    public AnimationControl(double x,double y,RangeTimer t){        
-        super(x,y,62,22);
+    public AnimationControl(int x,int y,RangeTimer t){this(x,y,20,t);}
+    public AnimationControl(int x,int y,int buttonSize,RangeTimer t){this(x,y,buttonSize,LAYOUT_BOX,t);}
+    public AnimationControl(int x, int y, RangeTimer timer,int orientation){
+        this(x,y,timer);
+        setOrientation(orientation);
+    }
+    public AnimationControl(int x,int y,int buttonSize,int layout,RangeTimer t){        
+        super(x,y,80,22,layout);
+        this.buttonSize=buttonSize;
         timer=t;
         timer.addChangeListener(this);
         timer.addActionListener(this);
         initButtons();
+        stateChanged(new ChangeEvent(timer));
     }
     
     void initButtons(){
-        double x=getX();
-        double y=getY();
-        add(new VisualButton("restart",this,new ShapeLibrary.PlayRestart(buttonSize,4)));
-        add(new VisualButton("slower",this,new ShapeLibrary.PlaySlower(buttonSize,4)));
-        add(new VisualButton("play",this,new ShapeLibrary.PlayTriangle(buttonSize,4)));
-        add(new VisualButton("faster",this,new ShapeLibrary.PlayFaster(buttonSize,4)));        
-        add(new ToggleButton("pause",this,new ShapeLibrary.PlayPause(buttonSize,4)));
-        add(new VisualButton("stop",this,new ShapeLibrary.PlayStop(buttonSize,4)));
-        super.adjustBounds();
-        super.performLayout();
+        add(new VisualButton("restart",timer,BoundedShape.PlayRestart));
+        add(new VisualButton("slower",timer,BoundedShape.PlaySlow));
+        add(new VisualButton("play",timer,BoundedShape.PlayTriangle));
+        add(new VisualButton("faster",timer,BoundedShape.FastForward));
+        add(new ToggleButton("pause",timer,BoundedShape.PlayPause));
+        add(new VisualButton("stop",timer,BoundedShape.Rectangle));
+        buttonStyle.setValue(STYLE_RBOX);
+        adjustBounds();
+        performLayout();
     }
     
     @Override
     public void stateChanged(ChangeEvent e){
-        // only possible change coming from the timer which we care about is the "paused" state which turns on and off
         if(e.getSource().equals(timer)){
+//            if(timer.isStopped()){
+//                getElement(1).setActive(false);
+//                getElement(3).setActive(false);
+//                getElement(4).setActive(false);
+//                getElement(5).setActive(false);
+//            }else{
+//                getElement(1).setActive(true);
+//                getElement(3).setActive(true);
+//                getElement(4).setActive(true);
+//                getElement(5).setActive(true);
+//            }
+            getElement(2).setPressed(!timer.isStopped());
             getElement(4).setPressed(timer.isPaused());
+            getElement(1).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
+            getElement(3).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
+            getElement(4).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
+            getElement(5).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
         }
+        super.stateChanged(e);
     }
 }

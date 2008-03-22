@@ -26,9 +26,9 @@ import sequor.event.MouseVisometryListener;
  * @author Elisha Peterson
  */
 public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable<V>,ChangeListener {
-    protected Vector<Plottable<V>> plottables;
+    protected Vector<Plottable> plottables;
 
-    public PlottableGroup() {plottables=new Vector<Plottable<V>>();}
+    public PlottableGroup() {plottables=new Vector<Plottable>();}
     
     public void clear(){plottables.clear();}    
     public void add(Plottable<V> p){
@@ -39,7 +39,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         plottables.remove(p);
         p.removeChangeListener(this);
     }
-    public Collection<Plottable<V>> getElements(){return plottables;}
+    public Collection<Plottable> getElements(){return plottables;}
 
     @Override
     public void setColor(Color newValue) {

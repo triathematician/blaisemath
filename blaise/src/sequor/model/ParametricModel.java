@@ -9,6 +9,8 @@
 
 package sequor.model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sequor.FiresChangeEvents;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,7 +63,12 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     public R2 getValue(double t) throws FunctionValueException{return new R2(fx.getValue(t),fy.getValue(t));}
     public Function<Double,R2> getFunction(){
         return new Function<Double,R2>(){
-            public R2 getValue(Double x){return getValue(x);}
+            public R2 getValue(Double x){try {
+                    return ParametricModel.this.getValue(x);
+                } catch (FunctionValueException ex) {
+                    return null;
+                }
+}
             @Override
             public Vector<R2> getValue(Vector<Double> x) {
                 Vector<R2> result=new Vector<R2>(x.size());

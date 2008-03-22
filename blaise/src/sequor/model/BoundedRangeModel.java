@@ -6,6 +6,7 @@
 package sequor.model;
 
 import java.beans.PropertyChangeEvent;
+import java.text.NumberFormat;
 import sequor.FiresChangeEvents;
 import java.util.Vector;
 import javax.swing.event.ChangeEvent;
@@ -75,6 +76,8 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     public boolean increment(boolean loop){return increment(loop,1);}
     public abstract boolean increment(boolean loop,int n);
     public abstract void setValuePercent(double percent);
+    public abstract void doubleStep();
+    public abstract void halfStep();
     
     /** Returns the size of the possible range. */
     public abstract N getRange();
@@ -102,7 +105,7 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     // METHODS FROM FiresChangeEvents
     
     @Override
-    public String toString(){return value.toString();}
+    public String toString(){return NumberFormat.getInstance().format(value);}
     @Override
     public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
     @Override

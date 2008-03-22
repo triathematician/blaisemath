@@ -12,7 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import sequor.control.NumberAdjuster;
+import sequor.control.NumberSlider;
 import sequor.model.ColorModel;
 import sequor.model.ComboBoxRangeModel;
 
@@ -65,10 +65,9 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     /** Style strings used to select a style. */
     public abstract String[] getStyleStrings();
     /** Returns adjuster which can be used to modify the style. */
-    public NumberAdjuster getStyleAdjuster(double x,double y){
+    public NumberSlider getStyleSlider(int x,int y){
         if(style!=null){
-            NumberAdjuster result=new NumberAdjuster(x,y,style);
-            result.setStyle(NumberAdjuster.STYLE_LINE);
+            NumberSlider result=new NumberSlider(x,y,style);
             return result;
         }else{
             return null;

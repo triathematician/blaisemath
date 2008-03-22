@@ -1,5 +1,5 @@
 /**
- * NumberRangeAdjuster.java
+ * BoundedRangeSliderBox.java
  * Created on Mar 12, 2008
  */
 
@@ -7,33 +7,44 @@ package sequor.control;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.model.BoundedRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
+import sequor.model.StepControlledRangeModel;
 
 /**
  * Adjusts four values: minimum, maximum, value, and stepsize.
  * @author Elisha Peterson
  */
-public class NumberRangeAdjuster extends VisualControlGroup{
+public class BoundedRangeSliderBox extends SliderBox {
+    
     BoundedRangeModel mainModel;
     BoundedRangeModel minModel;
     BoundedRangeModel maxModel;
     BoundedRangeModel stepModel;
             
-    public NumberRangeAdjuster(double x,double y,BoundedRangeModel model){this(new Point2D.Double(x,y),model);}
-    public NumberRangeAdjuster(Point2D.Double position,final BoundedRangeModel model){
-        super(position.x,position.y,200,50);
+    public BoundedRangeSliderBox(Point position,BoundedRangeModel model){this(position.x,position.y,model);}
+    public BoundedRangeSliderBox(int x,int y,final BoundedRangeModel model){
+        super(x,y,150,40);        
+        adjusterGirth=15;
         mainModel=model;
         initControls();
+        initListening();
+    }
+    
+    public void initListening(){
+        minModel.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){mainModel.setMinimum(minModel.getValue());}});
+        maxModel.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){mainModel.setMaximum(maxModel.getValue());}});
+        stepModel.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){mainModel.setStep(stepModel.getValue());}});
         mainModel.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
-                minModel.setValue(model.getMinimum());
-                maxModel.setValue(model.getMaximum());
-                stepModel.setValue(model.getStep());
+                minModel.setValue(mainModel.getMinimum());
+                maxModel.setValue(mainModel.getMaximum());
+                stepModel.setValue(mainModel.getStep());
             }
         });
     }   
@@ -41,7 +52,7 @@ public class NumberRangeAdjuster extends VisualControlGroup{
     @Override
     public void paintComponent(Graphics2D g){
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.1f));
-        g.fill(boundingBox);
+        g.fill(getBounds());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         super.paintComponent(g);
     }
@@ -57,9 +68,9 @@ public class NumberRangeAdjuster extends VisualControlGroup{
             maxModel=new DoubleRangeModel((Double)mainModel.getMaximum(),-Double.MAX_VALUE,Double.MAX_VALUE);
             stepModel=new DoubleRangeModel((Double)mainModel.getStep(),.001,Double.MAX_VALUE,.001);
         }
-        add(new NumberAdjuster(0,0,80,10,NumberAdjuster.HORIZONTAL,NumberAdjuster.STYLE_LINE,mainModel));
-        add(new NumberAdjuster(0,0,80,10,NumberAdjuster.VERTICAL,NumberAdjuster.STYLE_JOYSTICK,minModel));
-        add(new NumberAdjuster(0,0,80,10,NumberAdjuster.VERTICAL,NumberAdjuster.STYLE_JOYSTICK,maxModel));
-        add(new NumberAdjuster(0,0,80,10,NumberAdjuster.HORIZONTAL,NumberAdjuster.STYLE_JOYSTICK,stepModel));
+        add(new NumberSlider(0,0,mainModel));
+        add(new NumberSlider(0,0,new StepControlledRangeModel(minModel)));
+        add(new NumberSlider(0,0,new StepControlledRangeModel(stepModel)));
+        add(new NumberSlider(0,0,new StepControlledRangeModel(maxModel)));
     }
 }

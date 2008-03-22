@@ -8,9 +8,13 @@ package specto;
 
 
 import scio.coordinate.R2;
-import sequor.control.AnimationControl;
-import sequor.control.NumberAdjuster;
-import sequor.control.NumberRangeAdjuster;
+import sequor.VisualControl;
+import sequor.control.ArcSlider;
+import sequor.control.SliderBox;
+import sequor.control.BoundedRangeSliderBox;
+import sequor.control.DrawnPath;
+import sequor.control.NumberSlider;
+import sequor.control.SnapRule;
 import sequor.model.DoubleRangeModel;
 import specto.dynamicplottable.CirclePoint2D;
 import specto.dynamicplottable.Clock2D;
@@ -53,16 +57,9 @@ public class TestPlottables extends javax.swing.JFrame {
         Point2D cp2=f1.getPointSlope();
         plot2D1.add(cp2);
         DoubleRangeModel drm1=fss.getModel();
-        plot2D1.add(new NumberRangeAdjuster(70.,20.,drm1));
-        NumberAdjuster na=new NumberAdjuster(300.,15.,drm1);
-        na.setModel(na.style);
-        plot2D1.add(na);
-        plot2D1.add(f1.getStyleAdjuster(300.,35.));
-        plot2D1.add(fss.getStyleAdjuster(300.,55.));
-        plot2D1.add(cp0.getStyleAdjuster(300.,75.));
-        plot2D1.add(cp1.getStyleAdjuster(300.,95.));
-        plot2D1.add(cp2.getStyleAdjuster(300.,115.));
-        plot2D1.add(new AnimationControl(20.,70.,plot2D1.getTimer()));
+        plot2D1.add(SliderBox.getStyleAdjusters(100,10,15,plot2D1.getPlottables(),plot2D1));
+        BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
+        plot2D1.add(nra1,3,5);
 
         VectorField2D vf=new VectorField2D();
         plot2D3.add(vf);
@@ -70,15 +67,11 @@ public class TestPlottables extends javax.swing.JFrame {
         DESolution2D de2=new DESolution2D(vf);
         plot2D3.add(de1);
         plot2D3.add(de2);
-        plot2D3.add(vf.getStyleAdjuster(300.,15.));
-        plot2D3.add(de1.getStyleAdjuster(300.,35.));
-        plot2D3.add(de2.getStyleAdjuster(300.,55.));
-        plot2D3.add(new AnimationControl(20.,70.,plot2D3.getTimer()));
+        plot2D3.add(SliderBox.getStyleAdjusters(100,10,15,plot2D3.getPlottables(),plot2D3));
 
         PlaneFunction2D pf1=new PlaneFunction2D();
         plot2D4.add(pf1);
-        plot2D4.add(pf1.getStyleAdjuster(300.,15.));
-        plot2D4.add(new AnimationControl(20.,70.,plot2D4.getTimer()));
+        plot2D4.add(SliderBox.getStyleAdjusters(100,10,15,plot2D4.getPlottables(),plot2D4));
 
         Segment2D s1=new Segment2D(-8,5,2,-1);
         CirclePoint2D cirp1=new CirclePoint2D(s1.getConstraintModel());
@@ -93,12 +86,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D5.add(rect1);
         Triangle2D tri1=new Triangle2D(-10,-2,-8,-8,-3,-5);
         plot2D5.add(tri1);
-        plot2D5.add(s1.getStyleAdjuster(300.,15.));
-        plot2D5.add(cirp1.getStyleAdjuster(300.,35.));
-        plot2D5.add(clock1.getStyleAdjuster(300.,55.));
-        plot2D5.add(rect1.getStyleAdjuster(300.,75.));
-        plot2D5.add(tri1.getStyleAdjuster(300.,95.));
-        plot2D5.add(new AnimationControl(20.,70.,plot2D5.getTimer()));
+        plot2D5.add(SliderBox.getStyleAdjusters(100,10,15,plot2D5.getPlottables(),plot2D5));
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
@@ -111,40 +99,39 @@ public class TestPlottables extends javax.swing.JFrame {
         fe1.add(-2-2/3.,3);
         plot2D6.add(dps1);
         plot2D6.add(fe1);
-        plot2D6.add(dps1.getStyleAdjuster(300.,15.));
-        plot2D6.add(fe1.getStyleAdjuster(300.,35.));
-        plot2D6.add(new AnimationControl(20.,70.,plot2D6.getTimer()));
+        plot2D6.add(SliderBox.getStyleAdjusters(100,10,15,plot2D6.getPlottables(),plot2D6));
         
         final Parametric2D par1=new Parametric2D();
-        DoubleRangeModel drm2=par1.getModel();
         Parametric2D.ParametricPoint cp5=(Parametric2D.ParametricPoint) par1.getPointSlope();
         polarPlot2D1.add(cp5);
         polarPlot2D1.add(par1);
-        polarPlot2D1.add(new NumberRangeAdjuster(60.,220.,drm2));
-        NumberAdjuster da1=new NumberAdjuster(60,60,cp5.getModel());
-        da1.setProperties(100,20,NumberAdjuster.HORIZONTAL,NumberAdjuster.STYLE_DOTS);
-        polarPlot2D1.add(da1);
-        polarPlot2D1.add(new NumberAdjuster(200,15,da1.style));
-        polarPlot2D1.add(new NumberAdjuster(200,35,da1.getLengthModel()));
-        polarPlot2D1.add(new NumberAdjuster(200,55,da1.getGirthModel()));
-        polarPlot2D1.add(new NumberAdjuster(200,75,da1.getOrientationModel()));
-        polarPlot2D1.add(par1.getStyleAdjuster(400.,15.));
-        polarPlot2D1.add(cp5.getStyleAdjuster(400.,35.));
-        polarPlot2D1.add(new AnimationControl(20.,70.,polarPlot2D1.getTimer()));
+        ArcSlider da1=new ArcSlider(10,70,cp5.getModel());
+        //da1.getStyle().setValue(NumberSlider.STYLE_DOTS);
+        polarPlot2D1.add(da1,3,1);
+        //polarPlot2D1.add(SliderBox.getStyleAdjusters(100,10,15,polarPlot2D1.getPlottables(),polarPlot2D1));
+        SliderBox nab1=new SliderBox();
+        //nab1.add(new NumberSlider(0,0,da1.getStyle()));
+        nab1.add(new NumberSlider(0,0,da1.getSizeModel()));
+        nab1.add(new NumberSlider(0,0,da1.getHandleSizeModel()));
+        polarPlot2D1.add(nab1,3,8);
+        DoubleRangeModel drm2=par1.getModel();
+        polarPlot2D1.add(new BoundedRangeSliderBox(320,10,drm2),3,4);
         
         
         RandomPoint2D rp1=new RandomPoint2D();
         plot2D2.add(rp1);
         RandomWalk2D rw1=new RandomWalk2D();
         plot2D2.add(rw1);
-        plot2D2.add(rp1.getStyleAdjuster(300.,15.));
-        plot2D2.add(new NumberAdjuster(300.,35.,rp1.getNumPointsModel()));
-        plot2D2.add(new NumberAdjuster(300.,55.,rp1.getParameterModel()));
-        plot2D2.add(rw1.getStyleAdjuster(300.,75.));
-        plot2D2.add(new NumberAdjuster(300.,95.,rw1.getLengthModel()));
-        plot2D2.add(new NumberAdjuster(300.,115.,rw1.getAngleParameterModel()));
-        plot2D2.add(new NumberAdjuster(300.,135.,rw1.getDistancePerTimeModel()));
-        plot2D2.add(new AnimationControl(20.,70.,plot2D2.getTimer()));
+        plot2D2.add(SliderBox.getStyleAdjusters(100,10,15,plot2D2.getPlottables(),plot2D2));
+        SliderBox nab2=new SliderBox();
+        nab2.add(new NumberSlider(210,10,rp1.getNumPointsModel()));
+        nab2.add(new NumberSlider(210,30,rp1.getParameterModel()));
+        plot2D2.add(nab2,3,1);
+        SliderBox nab3=new SliderBox();
+        nab3.add(new NumberSlider(320,10,rw1.getLengthModel()));
+        nab3.add(new NumberSlider(320,30,rw1.getAngleParameterModel()));
+        nab3.add(new NumberSlider(320,50,rw1.getDistancePerTimeModel()));
+        plot2D2.add(nab3,3,5);
     }
     
     /** This method is called from within the constructor to

@@ -32,6 +32,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
 import sequor.component.RangeTimer;
+import sequor.control.AnimationControl;
+import sequor.control.BoundedShape;
+import sequor.control.ButtonBox;
+import sequor.control.DrawnPath;
+import sequor.control.ToggleButton;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
@@ -99,6 +104,29 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         timer.addActionListener(this);
         initContextMenu();
         controls=new HashSet<VisualControl>();
+        AnimationControl ac=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE);
+        add(ac,3,2);
+        {
+            ButtonBox markerBox=new ButtonBox(0,0,50,50,ButtonBox.LAYOUT_BOX);
+            final DrawnPath marker=new DrawnPath(Color.YELLOW,DrawnPath.HIGHLIGHTER);
+            markerBox.add(new ToggleButton(
+                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker.setVisible(true);}},
+                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker.setVisible(false);}},
+                    BoundedShape.Diamond,
+                    Color.YELLOW));
+            final DrawnPath marker2=new DrawnPath(Color.RED,DrawnPath.HIGHLIGHTER);
+            markerBox.add(new ToggleButton(
+                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker2.setVisible(true);}},
+                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker2.setVisible(false);}},
+                    BoundedShape.Diamond,
+                    Color.RED));
+            markerBox.getButtonStyle().setValue(ButtonBox.STYLE_RBOX);
+            markerBox.adjustBounds();
+            markerBox.performLayout();
+            add(markerBox,3,0);  
+            add(marker);
+            add(marker2); 
+        }
         baseComponents=new PlottableGroup<V>();
         components=new PlottableGroup<V>();
         baseComponents.addChangeListener(this);
@@ -130,8 +158,6 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         contextMenu=new JPopupMenu();
         optionsMenu=new JMenu("Options");
         contextMenu.add(optionsMenu);
-        contextMenu.addSeparator();
-        contextMenu.add(timer.getMenuItems().get(0));
         setComponentPopupMenu(contextMenu);        
     }
     
@@ -140,9 +166,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     public V getVisometry(){return visometry;}
     public RangeTimer getTimer(){return timer;}
-    public void setTimer(RangeTimer timer){
-        // TODO code for synchronization of timers
-    }
+    public void setTimer(RangeTimer timer){this.timer=timer;}
     
     private void initVisometry(V newValue){
         visometry=newValue;
@@ -152,8 +176,8 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         addToContextMenu(visometry.getMenuItems());
     }
     
-    public Collection<Plottable<V>> getBasePlottables(){return baseComponents.getElements();}
-    public Collection<Plottable<V>> getPlottables(){return components.getElements();}
+    public Collection<Plottable> getBasePlottables(){return baseComponents.getElements();}
+    public Collection<Plottable> getPlottables(){return components.getElements();}
         
         
     
@@ -169,6 +193,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
    }
    
    public void add(VisualControl vc){if(vc!=null){controls.add(vc);vc.addChangeListener(this);}}
+   public void add(VisualControl vc,int padding,int stickyPoint){add(vc);vc.enableSnapping(this,padding,stickyPoint);}
    public void remove(VisualControl vc){controls.remove(vc);vc.removeChangeListener(this);}
     
    public void addBase(Plottable<V> pv){baseComponents.add(pv);rebuildOptionsMenu();}
@@ -184,6 +209,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
                 optionsMenu.add(p.getOptionsMenu());
             }catch(NullPointerException e){}
         }
+        optionsMenu.addSeparator();
         for(Plottable<V> p:components.getElements()){
             try{
                 optionsMenu.add(p.getOptionsMenu());

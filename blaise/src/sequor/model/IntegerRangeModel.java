@@ -33,6 +33,10 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
         return false;
     }
     @Override
+    public void doubleStep(){setStep(2*step);}
+    @Override
+    public void halfStep(){setStep(step>=2?step/2:1);}
+    @Override
     public int getStepNumber() {
         return (int)((value-minimum)/(double)step);
     }
@@ -41,7 +45,7 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     /** Sets value as a percentage of length. */
     @Override
     public void setValuePercent(double percent){
-        setValue((int)(minimum+percent*(maximum-minimum)));
+        setValue((int)Math.round(minimum+percent*(maximum-minimum)));
     }
     @Override
     public Integer getRange(){return (maximum-minimum);}
@@ -94,7 +98,7 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
             setStep(getRange()/numSteps);
         }
     }
-    public int getNumSteps(){return (int)((maximum-minimum)/step);}
+    public int getNumSteps(){return (int)Math.round((maximum-minimum)/(double)step);}
     
 
     // METHODS FROM FiresChangeEvents

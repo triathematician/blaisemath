@@ -100,7 +100,11 @@ public abstract class FunctionTreeNode {
    
     // OPERATIONS ON THE TREE
     
-    /** Returns a simplified version of this tree. */
+    /** Returns a simplified version of this tree.
+     * Many subclasses will override this method.
+     * By default, just tries to return a constant.
+     * @return
+     */
     public FunctionTreeNode simplified(){
         try{
             return new Constant(getValue());

@@ -6,13 +6,10 @@
 package specto.dynamicplottable;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
-import javax.swing.JMenu;
 import scio.coordinate.R2;
 import scio.random.PRandom;
-import sequor.control.NumberAdjuster;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;

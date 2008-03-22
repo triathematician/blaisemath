@@ -5,130 +5,107 @@
 
 package sequor.control;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import sequor.VisualControl;
-import sequor.control.ShapeLibrary.BoundedElement;
-import sequor.model.ComboBoxRangeModel;
-import specto.style.LineStyle;
 
 /**
  * VisualButton has 
  * @author Elisha Peterson
  */
 public class VisualButton extends VisualControl {
+    
+    BoundedShape buttonShape;
+    
     boolean pressed;
-    String label;
+    boolean active=true;
     String actionCommand;
+    public static final int DEFAULT_PADDING=3;
+    int padding=3;
     
-    ShapeLibrary.BoundedElement normalShape;
-    ShapeLibrary.BoundedElement pressedShape;
-    
-    public VisualButton(){this(0,0,15);}
-    public VisualButton(String actionCommand,ActionListener al,ShapeLibrary.BoundedElement shape){
+    public VisualButton(String actionCommand,ActionListener al,BoundedShape shape){
         this(shape);
         this.actionCommand=actionCommand;
         addActionListener(al);
+        setForeground(Color.BLACK);
+        setBackground(Color.WHITE);
     }
-    public VisualButton(ShapeLibrary.BoundedElement shape){this();setButtons(shape);}
-    public VisualButton(double x,double y,double sz){this(x,y,sz,sz,null);}
-    public VisualButton(double x,double y,double sz,String label){this(x,y,sz,sz,label);}
-    public VisualButton(double x,double y,double wid,double ht,String label){      
+    public VisualButton(BoundedShape shape){
+        this();
+        buttonShape=shape;
+        setForeground(Color.BLACK);
+        setBackground(Color.WHITE);
+    }
+    public VisualButton(){this(0,0,15);}
+    public VisualButton(int x,int y,int sz){this(x,y,sz,sz,null);}
+    public VisualButton(int x,int y,int sz,String label){this(x,y,sz,sz,label);}
+    public VisualButton(int x,int y,int wid,int ht,String label){      
         super(x,y,wid,ht);
-        this.label=label;
+        setName(label);
         pressed=false;
         actionCommand="button";
-        initStyle();        
+        setBackgroundShape(BoundedShape.Ellipse);
+        buttonShape=BoundedShape.Ellipse;
     }
     
     // BEAN PATTERNS
     
-    public void setSize(double size){
-        boundingBox.setRect(getX(),getY(),size,size);
-    }
-    
-    public void setButtons(ShapeLibrary.BoundedElement normalShape){
-        this.normalShape=normalShape;
-        this.pressedShape=normalShape;
-    }
-    
-    public void setButtons(ShapeLibrary.BoundedElement normalShape,ShapeLibrary.BoundedElement pressedShape){
-        this.normalShape=normalShape;
-        this.pressedShape=pressedShape;
-    }
-
-    public boolean isPressed(){return pressed;}
+    public void setSize(int size){setSize(size,size);}
     public void setPressed(boolean pressed) {this.pressed=pressed;}
+    public boolean isPressed(){return pressed;}
+    public void setActive(boolean active) {this.active=active;}
+    public boolean isActive(){return active;}
+    
+    void setForegroundShape(BoundedShape buttonShape) {this.buttonShape=buttonShape;}
+    @Override
+    public void setBackgroundShape(BoundedShape shape) {        
+        super.setBackgroundShape(shape);
+        if(shape==BoundedShape.Ellipse){
+            if(getWidth()>20 && getHeight()>20){
+                padding=DEFAULT_PADDING+((getWidth()>getHeight())?getHeight()/7:getWidth()/7);
+            }else{
+                padding=DEFAULT_PADDING+1;
+            }
+        }
+    }
     
     
     // PAINT METHODS
     
+    public static final int ROUNDED_CORNERS=8;
+    
     @Override
     public void paintComponent(Graphics2D g){
+        super.paintComponent(g,0.7f);
         if(pressed){
-            g.setColor(color.getValue());
-            paintNormal(g,0.9f);
-            g.setColor(Color.WHITE);
-            if(pressedShape==null){
-                g.fill(new Ellipse2D.Double(getX()+3,getY()+3,getWidth()-6,getHeight()-6));
-            }else{
-                g.fill(pressedShape.getShape());
-            }
+            g.setColor(getForeground());
+            g.fill(backgroundShape.getBoundedShape(getBounds(),0));
+            g.setColor(getBackground());
+            g.fill(buttonShape.getBoundedShape(getBounds(),padding));
         }else{
-            g.setColor(color.getValue());
-            if(normalShape==null){
-                paintNormal(g,0.3f);
-            }else{
-                paintNormal(g,0.3f);
-                g.fill(normalShape.getShape());
-            }
+            g.setColor(getForeground());
+            g.fill(buttonShape.getBoundedShape(getBounds(),padding));
         }
     }
     
-    public void paintNormal(Graphics2D g,float opacity) {
-        Shape outer;
-        switch(buttonStyle.getValue()){
-            case STYLE_BOX:
-                outer=new Rectangle2D.Double(getX(),getY(),getWidth()-1,getHeight()-1);
-                break;
-            case STYLE_RBOX:
-                outer=new RoundRectangle2D.Double(getX(),getY(),getWidth()-1,getHeight()-1,5,5);
-                break;
-            case STYLE_CIRCLE:
-            default:
-                outer=new Ellipse2D.Double(getX(),getY(),getWidth()-1,getHeight()-1);
-                break;
-        }
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,opacity));
-        g.fill(outer);        
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        g.setStroke(LineStyle.THIN_STROKE);
-        g.draw(outer);
-        if(label!=null){
-            g.drawString(label,(float)(getX()+getWidth()+5),(float)(getY()+4.0));
-        }
-    }
     
     // MOUSE EVENTS
-    
+
     @Override
-    public void mouseClicked(MouseEvent e) {
-        pressed=false;
-        fireActionPerformed(actionCommand);
-    }    
+    public boolean clicked(MouseEvent e) {
+        return (active && super.clicked(e));
+    }
     
     @Override
     public void mousePressed(MouseEvent e){
         if(clicked(e)){
             pressed=true;
+            fireStateChanged();
         }
     }
     
@@ -136,6 +113,7 @@ public class VisualButton extends VisualControl {
     public void mouseReleased(MouseEvent e){
         pressed=false;
         fireActionPerformed(actionCommand);
+        fireStateChanged();
     }
     
     
@@ -143,32 +121,18 @@ public class VisualButton extends VisualControl {
      
     protected ActionEvent actionEvent=null;
     protected EventListenerList actionListenerList=new EventListenerList();    
-    public void addActionListener(ActionListener l){listenerList.add(ActionListener.class,l);}
-    public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class,l);}
+    public void addActionListener(ActionListener l){actionListenerList.add(ActionListener.class,l);}
+    public void removeActionListener(ActionListener l){actionListenerList.remove(ActionListener.class,l);}
     protected void fireActionPerformed(String s){
-        Object[] listeners=listenerList.getListenerList();
+        Object[] listeners=actionListenerList.getListenerList();
         for(int i=listeners.length-2; i>=0; i-=2){
             if(listeners[i]==ActionListener.class){
                 if(actionEvent==null){actionEvent=new ActionEvent(this,0,s);}
                 ((ActionListener)listeners[i+1]).actionPerformed(actionEvent);
             }
         }
-    }    
+    }
     
     
     // STYLE SETTINGS
-    
-    
-    // STYLE OPTIONS
-    
-    ComboBoxRangeModel buttonStyle;
-    public static final int STYLE_CIRCLE=0;
-    public static final int STYLE_BOX=1;
-    public static final int STYLE_RBOX=2;
-    public static String[] styleStrings={"Circle","Square","Rounded"};
-    public ComboBoxRangeModel getButtonStyle(){return buttonStyle;}
-
-    private void initStyle() {
-        buttonStyle=new ComboBoxRangeModel(styleStrings,0,0,2);
-    }
 }

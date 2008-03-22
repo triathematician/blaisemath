@@ -19,6 +19,7 @@ import scio.coordinate.R2;
 import scio.function.Derivative;
 import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
+import sequor.model.ParametricModel;
 import specto.Animatable;
 import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
@@ -64,6 +65,12 @@ public class Parametric2D extends PointSet2D {
         tRange.setNumSteps(samplePoints,true);
     }
     
+    
+    // BEAN PATTERNS
+    
+    public void setFunction(String fx,String fy){
+        this.function=new ParametricModel(fx,fy).getFunction();
+    }
     public DoubleRangeModel getModel(){return tRange;}
     
     // TODO should not recompute path every time. Just when it's necessary
@@ -126,6 +133,7 @@ public class Parametric2D extends PointSet2D {
             tModel=new DoubleRangeModel(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
             tModel.addChangeListener(new ChangeListener(){
                 public void stateChanged(ChangeEvent e) {
+                    if(adjusting){return;}
                     try {
                         setPoint(function.getValue(tModel.getValue()));
                     } catch (FunctionValueException ex) {}
@@ -134,7 +142,9 @@ public class Parametric2D extends PointSet2D {
             addChangeListener(new ChangeListener(){
                 public void stateChanged(ChangeEvent e) {
                     if(!e.getSource().equals(tModel)){
+                        adjusting=true;
                         tModel.setRangeProperties(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum());
+                        adjusting=false;
                     }
                 }
             });

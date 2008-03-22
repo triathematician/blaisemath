@@ -42,6 +42,10 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
         return false;
     }
     @Override
+    public void doubleStep(){setStep(2*step);}
+    @Override
+    public void halfStep(){setStep(step/2);}
+    @Override
     public int getStepNumber() {
         return (int)((value-minimum)/(double)step);
     }
@@ -101,7 +105,7 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
             setStep(getRange()/numSteps);
         }
     }
-    public int getNumSteps(){return (int)((maximum-minimum)/step);}
+    public int getNumSteps(){return (int)Math.round((maximum-minimum)/step);}
         
     @Override
     public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
