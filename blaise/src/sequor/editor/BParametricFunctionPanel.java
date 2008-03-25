@@ -9,15 +9,14 @@
 
 package sequor.editor;
 
-import sequor.editor.FunctionTextField;
 import java.awt.Dimension;
 import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import scio.function.Function;
 import scio.function.FunctionValueException;
 import sequor.model.ParametricModel;
 import scio.coordinate.R2;
+import scio.function.Function;
 import sequor.model.FunctionTreeModel;
 
 /**
@@ -59,8 +58,6 @@ public class BParametricFunctionPanel extends JPanel{
                 for(Double d:x){result.add(getValue(d));}
                 return result;
             }
-            public R2 minValue(){return null;}
-            public R2 maxValue(){return null;}  
         };
     }
 }

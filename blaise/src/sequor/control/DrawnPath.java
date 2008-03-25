@@ -9,8 +9,13 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
+import java.util.Vector;
+import scio.coordinate.R2;
+import scio.random.Markov;
+import scio.random.Markov.CurrentState;
 import sequor.VisualControl;
 
 /**
@@ -32,6 +37,8 @@ public class DrawnPath extends VisualControl {
     public static final int PEN=1;
     public static final int MARKER=2;
     public static final int HIGHLIGHTER=3;
+    
+    Shape tempShape;
     
     @Override
     public void paintComponent(Graphics2D g, float opacity) {
@@ -55,6 +62,7 @@ public class DrawnPath extends VisualControl {
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,opacity));
         if(path!=null){g.draw(path);}
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        if(tempShape!=null){g.draw(tempShape);}
     }
     
     
@@ -79,6 +87,7 @@ public class DrawnPath extends VisualControl {
     @Override
     public void mouseDragged(MouseEvent e) {
         path.lineTo(e.getX(),e.getY());
+        observed.add(new R2(e.getX(),e.getY()));
         fireStateChanged();
     }
 
@@ -86,10 +95,44 @@ public class DrawnPath extends VisualControl {
     public void mousePressed(MouseEvent e) {
         if(path==null){clear();}
         path.moveTo(e.getX(),e.getY());
+        observed=new Vector<R2>();
         fireStateChanged();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        markovOutput();
+    }
+    
+
+    Vector<R2> observed=new Vector<R2>();
+    
+    /**  Outputs left/right sequence of a path */
+    public void markovOutput(){
+        try {
+            R2[] observations = new R2[observed.size()-1];
+            for(int i=1;i<observed.size();i++){
+                observations[i-1]=observed.get(i).minus(observed.get(i-1));
+            }
+            
+//            System.out.println(hiddenStates.toString());
+            System.out.println(observations.toString());
+//            System.out.println(startProb.toString());
+//            System.out.println(transProb.toString());
+//            System.out.println(emitProb.toString());
+            
+            CurrentState result = new Markov<String,R2>().forwardViterbi(
+                    observations,
+                    Gestures.moveStates,
+                    Gestures.getStartProb(0.2),
+                    Gestures.getTransProb(0.1,0.4,0.1,0.1),
+                    Gestures.getEmitProb());
+            System.out.println(result.toString());
+            Vector<String> gesture=Gestures.clipOutput(result.vitPath);
+            System.out.println(gesture.toString());
+            tempShape=Gestures.checkGesture(gesture);
+            if(tempShape!=null){fireStateChanged();}
+        } catch (Exception e) {
+        }
     }
 }

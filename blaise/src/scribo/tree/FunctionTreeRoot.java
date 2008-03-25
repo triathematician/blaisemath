@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 import scio.coordinate.Euclidean;
 import scio.coordinate.R1;
-import scio.function.Function;
+import scio.function.BoundedFunction;
 import scribo.parser.FunctionSyntaxException;
 import scio.function.FunctionValueException;
 import scio.function.ParameterFunction;
@@ -141,13 +141,13 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
 
     // FUNCTION INTERFACE METHODS
     
-    public Function getFunction(){return getDoubleFunction();}
+    public BoundedFunction getFunction(){return getDoubleFunction();}
     public ParameterFunction getParameterFunction(){return null;}
     
     /** Returns a generic function corresponding to this tree. The type of the function will depend on the number of inputs. */
-    public Function<Euclidean,Double> getDoubleFunction() {
+    public BoundedFunction<Euclidean,Double> getDoubleFunction() {
         int n=variables.size();
-        return new Function<Euclidean,Double>(){
+        return new BoundedFunction<Euclidean,Double>(){
             @Override
             public Double getValue(Euclidean x) throws FunctionValueException {
                 TreeMap<String,Double> table=new TreeMap<String,Double>();

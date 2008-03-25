@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
+import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
 import specto.Decoration;
 import specto.plottable.VectorField2D;
@@ -101,7 +102,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     public static R2 getScaledVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).scaledToLength(size);
     }
-    public static R2 getMultipliedVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
+    public static R2 getMultipliedVector(BoundedFunction<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
     }
     

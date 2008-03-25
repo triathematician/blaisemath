@@ -9,19 +9,17 @@
 
 package sequor.model;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Vector;
 import sequor.FiresChangeEvents;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.util.Vector;
-import scio.function.Function;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.FunctionTreeFactory;
 import scribo.tree.FunctionTreeRoot;
 import scio.coordinate.R2;
+import scio.function.BoundedFunction;
 
 /**
  * This class
@@ -61,8 +59,8 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     public String getStringX(){return sx;}
     public String getStringY(){return sy;}
     public R2 getValue(double t) throws FunctionValueException{return new R2(fx.getValue(t),fy.getValue(t));}
-    public Function<Double,R2> getFunction(){
-        return new Function<Double,R2>(){
+    public BoundedFunction<Double,R2> getFunction(){
+        return new BoundedFunction<Double,R2>(){
             public R2 getValue(Double x){try {
                     return ParametricModel.this.getValue(x);
                 } catch (FunctionValueException ex) {
@@ -76,7 +74,7 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
                 return result;
             }
             public R2 minValue(){return null;}
-            public R2 maxValue(){return null;}            
+            public R2 maxValue(){return null;}
         };
     }
     public String toLongString(){throw new UnsupportedOperationException("Not supported yet.");}

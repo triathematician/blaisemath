@@ -6,18 +6,21 @@
 package scio.random;
 
 import java.util.HashMap;
-import java.util.Vector;
 import junit.framework.TestCase;
 import scio.coordinate.R2;
 import scio.function.Function;
-import scio.function.FunctionValueException;
+import scio.matrix.HashMatrix;
 import scio.random.Markov.CurrentState;
+import sequor.control.Gestures;
 
 /**
  *
  * @author elisha
  */
 public class MarkovTest extends TestCase {
+    private HashMap<String, Double> startProb;
+    private HashMatrix<String, Double> transProb;
+    private HashMap<String, Function<R2, Double>> emitProb;
     
     public MarkovTest(String testName) {
         super(testName);
@@ -39,56 +42,31 @@ public class MarkovTest extends TestCase {
     public void testForwardViterbi() throws Exception {
         System.out.println("forwardViterbi");
         
-        String[] hiddenStates = {"left","right"};
         R2[] observations = {
-            new R2(.5,0),
-            new R2(1,0), new R2(.5,0),
-            new R2(-.3,.1), new R2(-.8,1), new R2(-.1,1), new R2(0,0), new R2(.1,0),
-            new R2(.5,0), new R2(.9,1)};
-        HashMap<String,Double> startProb = new HashMap<String,Double>();
-        {
-            startProb.put("left", .5);
-            startProb.put("right",.5);
-        }
-        HashMap<String,HashMap<String,Double>> transProb = new HashMap<String,HashMap<String,Double>>();
-        {
-            HashMap<String,Double> left=new HashMap<String,Double>();
-            left.put("left",.3);
-            left.put("right",.7);
-            HashMap<String,Double> right=new HashMap<String,Double>();
-            right.put("left",.3);
-            right.put("right",.7);            
-            transProb.put("left",left);
-            transProb.put("right",right);
-        }
-        HashMap<String, Function<R2, Double>> emitProb = new HashMap<String,Function<R2,Double>>();
-        {
-            emitProb.put("left",new Function<R2,Double>(){
-                public Double getValue(R2 pt) throws FunctionValueException {
-                    double x=pt.x;
-                    return (x<0)?0.8:(x<.5)?0.8-x*8/5.0:0.0;
-                }
-                public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {return null;}
-                public Double minValue() {return null;}
-                public Double maxValue() {return null;}
-            });
-            emitProb.put("right",new Function<R2,Double>(){
-                public Double getValue(R2 pt) throws FunctionValueException {
-                    double x=pt.x;
-                    return (x>0)?0.8:(x>-.5)?0.8+x*8/5.0:0.0;
-                }
-                public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {return null;}
-                public Double minValue() {return null;}
-                public Double maxValue() {return null;}
-            });
-        }
+            new R2(5,0),
+            new R2(10,0), new R2(20,0), new R2(30,10),
+            new R2(-20,1),
+            new R2(-1,30),
+            new R2(0,0),
+            new R2(15,0),
+            new R2(10,-20),
+            new R2(90,1)};              
+        String[] hiddenStates=Gestures.moveStates;
+        startProb=Gestures.getStartProb(0.2);
+        transProb=Gestures.getTransProb(0.1,0.4,0.1,0.1);
+        emitProb=Gestures.getEmitProb();
+        
         System.out.println(hiddenStates.toString());
         System.out.println(observations.toString());
         System.out.println(startProb.toString());
         System.out.println(transProb.toString());
         System.out.println(emitProb.toString());
-        CurrentState result = Markov.forwardViterbi(observations, hiddenStates, startProb, transProb, emitProb);
-        assertEquals("[left, right, right, left, left, left, left, left, right, right]", result.toString());
+        
+        CurrentState result = new Markov<String,R2>().forwardViterbi(observations,hiddenStates,startProb,transProb,emitProb);
+        
+        System.out.println(result.toString());
+            
+        assertEquals("[right, right, right, none, left, down, none, none, up, none]", result.toString());
+        assertEquals("[right, left, down, up]", Gestures.clipOutput(result.vitPath).toString());
     }
-
 }

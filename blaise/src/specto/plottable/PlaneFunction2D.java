@@ -8,18 +8,13 @@ package specto.plottable;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
+import scio.function.BoundedFunction;
 import specto.visometry.Euclidean2;
 
 /**
@@ -27,8 +22,8 @@ import specto.visometry.Euclidean2;
  * @author ae3263
  */
 public class PlaneFunction2D extends Plottable<Euclidean2>{
-    Function<R2,Double> function;
-    private static final Function<R2,Double> DEFAULT_FUNCTION=new Function<R2,Double>(){
+    BoundedFunction<R2,Double> function;
+    private static final BoundedFunction<R2,Double> DEFAULT_FUNCTION=new BoundedFunction<R2,Double>(){
         @Override
         public Double getValue(R2 p){return 2-Math.cos(p.x)*Math.cos(p.x)-Math.sin(p.y)*Math.sin(p.y);}
         @Override
@@ -43,7 +38,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         }
         };
     public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
-    public PlaneFunction2D(Function<R2,Double> function){
+    public PlaneFunction2D(BoundedFunction<R2,Double> function){
         this.function=function;
         setColor(Color.ORANGE);
     }

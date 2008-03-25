@@ -5,11 +5,14 @@
 
 package specto.gridplottable;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+import sequor.control.Ruler;
+import sequor.style.VisualStyle;
 import specto.DynamicPlottable;
 import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
@@ -29,7 +32,7 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
     
     // CONSTRUCTOR
     public NewGrid2D(){
-        setColor(Color.getHSBColor(.2f,.5f,.7f));
+        setColor(Color.getHSBColor(.4f,.5f,.7f));
     }
     
     
@@ -43,12 +46,11 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
                 (double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
         Vector<Double> yGrid=spacing.niceRange(
                 v.getActualMin().y,v.getActualMax().y,
-                (double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());
-        
+                (double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());        
         g.setColor(getColor());
-        g.setStroke(LineStyle.VERY_DOTTED_STROKE);
-        g.draw(v.vLines(xGrid));
-        g.draw(v.hLines(yGrid));
+        g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
+        g.draw(Ruler.getHorizontalLines(0,v.toWindowY(yGrid),v.getWindowWidth()));
+        g.draw(Ruler.getVerticalLines(v.toWindowX(xGrid),0,v.getWindowHeight()));
     }
 
     
@@ -63,4 +65,7 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
 
     @Override
     public String[] getStyleStrings() {return null;}
+    @Override
+    public String toString(){return "Grid";}
+
 }

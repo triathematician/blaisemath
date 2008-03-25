@@ -10,7 +10,7 @@ import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import java.util.TreeMap;
 import java.util.Vector;
-import scio.function.Function;
+import scio.function.BoundedFunction;
 import scribo.parser.*;
 
 /**
@@ -27,7 +27,7 @@ import scribo.parser.*;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class FunctionTreeFunctionNode extends FunctionTreeNode implements Function<Double,Double> {
+public abstract class FunctionTreeFunctionNode extends FunctionTreeNode implements BoundedFunction<Double,Double> {
 
     private Class<? extends FunctionTreeFunctionNode> ifc;
     protected String ifn;

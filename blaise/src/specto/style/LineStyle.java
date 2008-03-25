@@ -5,7 +5,7 @@
 
 package specto.style;
 
-import specto.VisualStyle;
+import specto.style.VisStyle;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
@@ -15,7 +15,7 @@ import sequor.FiresChangeEvents;
  *
  * @author ae3263
  */
-public class LineStyle extends VisualStyle {
+public class LineStyle extends VisStyle {
     
     // GENERAL STYLE OPTIONS
     

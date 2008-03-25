@@ -16,6 +16,7 @@ import scio.function.Function;
 import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
+import scio.function.BoundedFunction;
 import specto.decoration.DESolution2D;
 import specto.visometry.Euclidean2;
 
@@ -24,8 +25,8 @@ import specto.visometry.Euclidean2;
  * @author ae3263
  */
 public class VectorField2D extends Plottable<Euclidean2> implements ChangeListener {
-    Function<R2,R2> function;
-    public static final Function<R2,R2> DEFAULT_FUNCTION=new Function<R2,R2>(){
+    BoundedFunction<R2,R2> function;
+    public static final BoundedFunction<R2,R2> DEFAULT_FUNCTION=new BoundedFunction<R2,R2>(){
         public R2 getValue(R2 p){return new R2(p.y,-p.y-5*Math.sin(p.x));}
         @Override
         public Vector<R2> getValue(Vector<R2> x) {
@@ -41,7 +42,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements ChangeListen
     // CONSTRUCTORS
         
     public VectorField2D(){this(DEFAULT_FUNCTION);}
-    public VectorField2D(Function<R2,R2> function){
+    public VectorField2D(BoundedFunction<R2,R2> function){
         setColor(Color.GRAY);
         this.function=function;
     }
@@ -49,8 +50,8 @@ public class VectorField2D extends Plottable<Euclidean2> implements ChangeListen
     
     // BEAN PATTERNS
     
-    public Function<R2,R2> getFunction(){return function;}
-    public void setFunction(Function<R2,R2> function){this.function=function;}
+    public BoundedFunction<R2,R2> getFunction(){return function;}
+    public void setFunction(BoundedFunction<R2,R2> function){this.function=function;}
     
     // DRAW METHODS
     

@@ -6,6 +6,7 @@
 package specto.plotpanel;
 
 import specto.PlotPanel;
+import specto.gridplottable.Axes2D;
 import specto.gridplottable.PolarGrid2D;
 import specto.visometry.Euclidean2;
 
@@ -19,5 +20,6 @@ public class PolarPlot2D extends PlotPanel<Euclidean2> {
     public PolarPlot2D(){
         super(new Euclidean2());
         addBase(new PolarGrid2D());
+        addBase(new Axes2D());
     }
 }

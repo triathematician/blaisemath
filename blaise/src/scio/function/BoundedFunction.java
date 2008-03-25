@@ -12,9 +12,7 @@ import java.util.Vector;
  * 
  * @author ae3263
  */
-public interface BoundedFunction<C,D> {
-    public D getValue(C x) throws FunctionValueException;
-    public Vector<D> getValue(Vector<C> xx) throws FunctionValueException;
+public interface BoundedFunction<C,D> extends Function<C,D> {
     public D minValue();
     public D maxValue();
 }

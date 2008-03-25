@@ -1,9 +1,9 @@
 /*
- * VisualStyle.java
+ * VisStyle.java
  * Created on Feb 20, 2008
  */
 
-package specto;
+package specto.style;
 
 import sequor.model.StringRangeModel;
 
@@ -13,9 +13,9 @@ import sequor.model.StringRangeModel;
  * 
  * @author Elisha Peterson
  */
-public class VisualStyle extends StringRangeModel{
-    public VisualStyle(){super();}
-    public VisualStyle(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
+public class VisStyle extends StringRangeModel{
+    public VisStyle(){super();}
+    public VisStyle(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
     public void cycleStyle(){
         if(getValue()==getMaximum()){
             setValue(getMinimum());

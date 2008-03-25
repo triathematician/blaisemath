@@ -78,10 +78,6 @@ public class FunctionTreeFactory {
             @Override
             public Double getValue(Double x) throws FunctionValueException{return compiled.getValue(v,x);}
             public Vector<Double> getValue(Vector<Double> xs) throws FunctionValueException{return compiled.getValue(v,xs);}
-            @Override
-            public Double minValue(){throw new UnsupportedOperationException("Not supported yet.");}
-            @Override
-            public Double maxValue(){throw new UnsupportedOperationException("Not supported yet.");}
         };
     }
     

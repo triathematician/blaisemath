@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
+import scio.function.BoundedFunction;
 import scio.function.Derivative;
 import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
@@ -35,13 +36,13 @@ public class Parametric2D extends PointSet2D {
     // PROPERTIES
     
     /** Function which takes in a double and returns a pair of doubles = a point in the plane. */
-    Function<Double,R2> function;
+    BoundedFunction<Double,R2> function;
 
     /** Range of t values. */
     DoubleRangeModel tRange;
     
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
-    private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
+    private static final BoundedFunction<Double,R2> DEFAULT_FUNCTION=new BoundedFunction<Double,R2>(){
         @Override
         public R2 getValue(Double x){return new R2(2*Math.cos(x),2*Math.sin(2*x));}
         @Override
@@ -58,7 +59,7 @@ public class Parametric2D extends PointSet2D {
         
     public Parametric2D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
     /** Constructor for use with a particular function and range of t values */
-    public Parametric2D(Function<Double,R2> function,double tMin,double tMax,int samplePoints){
+    public Parametric2D(BoundedFunction<Double,R2> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(tMin,tMin,tMax);
@@ -92,7 +93,7 @@ public class Parametric2D extends PointSet2D {
     
     // BEAN PATTERNS
     
-    public Function<Double,R2> getFunction(){return function;}
+    public BoundedFunction<Double,R2> getFunction(){return function;}
     
     // STYLE
         

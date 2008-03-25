@@ -15,6 +15,6 @@ import java.util.Vector;
 public interface Function<C,D> {
     public D getValue(C x) throws FunctionValueException;
     public Vector<D> getValue(Vector<C> xx) throws FunctionValueException;
-    public D minValue();
-    public D maxValue();
+//    public D minValue();
+//    public D maxValue();
 }

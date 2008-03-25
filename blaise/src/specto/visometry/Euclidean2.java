@@ -170,7 +170,21 @@ public class Euclidean2 extends Visometry<R2> {
     // CONVERT GEOMETRY COORDINATES TO WINDOW COORDINATES
     
     public double toWindowX(double vx){return vx*at.getScaleX()+at.getTranslateX();}
+    public Vector<Double> toWindowX(Vector<Double> vxs){
+        double scale=at.getScaleX();
+        double translate=at.getTranslateX();
+        Vector<Double> result=new Vector<Double>();
+        for(Double d:vxs){result.add(d*scale+translate);}
+        return result;
+    }
     public double toWindowY(double vy){return vy*at.getScaleY()+at.getTranslateY();}
+    public Vector<Double> toWindowY(Vector<Double> vys){
+        double scale=at.getScaleY();
+        double translate=at.getTranslateY();
+        Vector<Double> result=new Vector<Double>();
+        for(Double d:vys){result.add(d*scale+translate);}
+        return result;
+    }
     public Point2D.Double toWindow(double vx,double vy){return new Point2D.Double(toWindowX(vx),toWindowY(vy));}
     public Point2D.Double toWindow(R2 vp){return new Point2D.Double(toWindowX(vp.x),toWindowY(vp.y));}
     
@@ -540,8 +554,6 @@ public class Euclidean2 extends Visometry<R2> {
         for(Double x:coords){result.append(vLine(x),false);}
         return result;
     }
-    
-    
     
     
     // ABSOLUTE DISTANCE METHODS
