@@ -21,9 +21,11 @@ import sequor.model.StringRangeModel;
  */
 public class ButtonBox extends VisualControlGroup {
 
+    /** The size of the buttons herein. */
     protected int buttonSize=20;
     
-    protected int desiredNumberColumns=2;
+    /** The number of columns used for BOX layouts */
+    protected int desiredNumberColumns=2;    
     
     
     // CONSTRUCTORS
@@ -169,12 +171,12 @@ public class ButtonBox extends VisualControlGroup {
     public BoundedShape getButtonShape(){
         switch(buttonStyle.getValue()){
             case STYLE_BOX:
-                return BoundedShape.Rectangle;
+                return BoundedShape.RECTANGLE;
             case STYLE_RBOX:
                 return new BoundedWidthShape.RoundRectangle(8);
             case STYLE_CIRCLE:
             default:
-                return BoundedShape.Ellipse;
+                return BoundedShape.ELLIPSE;
                 
         }
     }
@@ -201,7 +203,7 @@ public class ButtonBox extends VisualControlGroup {
                         backgroundShape=new BoundedWidthShape.RoundRectangle(8);
                         break;
                     case(STYLE_BOX):
-                        backgroundShape=BoundedShape.Rectangle;
+                        backgroundShape=BoundedShape.RECTANGLE;
                         break;
                 }
             }            

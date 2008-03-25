@@ -7,7 +7,7 @@ package specto.dynamicplottable;
 
 import java.util.Vector;
 import scio.coordinate.R2;
-import scio.random.PRandom;
+import scio.random.Random2D;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 
@@ -44,7 +44,7 @@ public class RandomWalk2D extends InitialPointSet2D {
         double speed=this.distancePerTime.getValue();
         R2 lastPoint=getPoint();
         for(int i=0;i<length.getValue();i++){
-            theta+=PRandom.normal(0,dtheta);
+            theta+=Random2D.normal(0,dtheta);
             lastPoint.translate(speed*Math.cos(theta),speed*Math.sin(theta));
             newPath.add(new R2(lastPoint.x,lastPoint.y));
         }

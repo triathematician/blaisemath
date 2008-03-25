@@ -32,13 +32,14 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
         setBoundsMax();
         setTo(point);
     }
+    public PointRangeModel(R2 desiredMin, R2 desiredMax) {this(desiredMin,desiredMin.x,desiredMin.y,desiredMax.x,desiredMax.y);}
     public PointRangeModel(R2 point,double lx,double ly,double rx,double ry){
         initializeModels();
         setBounds(lx,ly,rx,ry);
         setTo(point);
     }
     public PointRangeModel(R2 point,double range){this(point,-range,-range,range,range);}
-    
+
     private void initializeModels(){
         xModel=new DoubleRangeModel();
         xModel.addChangeListener(this);
@@ -48,10 +49,19 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     
     public void setXModel(DoubleRangeModel xm){xModel=xm;}
     public void setYModel(DoubleRangeModel ym){yModel=ym;}
+    
     public R2 getPoint(){return new R2(xModel.getValue(),yModel.getValue());}
     public R2 getValue(){return getPoint();}
+    public R2 getMinimum(){return new R2(xModel.getMinimum(),yModel.getMinimum());}
+    public R2 getMaximum(){return new R2(xModel.getMaximum(),yModel.getMaximum());}
+    public R2 getCenter(){return new R2((xModel.getMinimum()+xModel.getMaximum())/2.0,(yModel.getMinimum()+yModel.getMaximum())/2.0);}
+    
     public double getX(){return xModel.getValue();}
     public double getY(){return yModel.getValue();}
+    public double getMinX(){return xModel.getMinimum();}
+    public double getMinY(){return yModel.getMinimum();}
+    public double getMaxX(){return xModel.getMaximum();}
+    public double getMaxY(){return yModel.getMaximum();}
     public double getXRange(){return xModel.getRange();}
     public double getYRange(){return yModel.getRange();}
     
@@ -88,5 +98,9 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     public void copyValuesFrom(FiresChangeEvents parent){
         xModel.setValue(((PointRangeModel)parent).getX());
         yModel.setValue(((PointRangeModel)parent).getY());
+    }
+
+    public boolean contains(R2 point) {
+        return xModel.contains(point.x) && yModel.contains(point.y);
     }
 }

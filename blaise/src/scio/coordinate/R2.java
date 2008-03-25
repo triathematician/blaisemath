@@ -6,6 +6,7 @@
 package scio.coordinate;
 
 import java.awt.geom.Point2D;
+import java.text.NumberFormat;
 
 /**
  * This class wraps a Point2D as a coordinate.
@@ -89,4 +90,11 @@ public class R2 extends Point2D.Double implements Coordinate {
 //        if(!(p2 instanceof R2)){return -1;}
 //        return super.distance((R2)p2);
 //    }
+    
+    /** Overwrite default string */    
+    @Override
+    public String toString(){
+        NumberFormat nf=NumberFormat.getInstance();
+        return "("+nf.format(x)+", "+nf.format(y)+")";
+    }
 }

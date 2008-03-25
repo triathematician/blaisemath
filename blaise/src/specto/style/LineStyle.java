@@ -42,10 +42,10 @@ public class LineStyle extends VisualStyle {
     public static final Stroke BASIC_STROKE=new BasicStroke(2.0f);
     public static final Stroke MEDIUM_STROKE=new BasicStroke(3.0f);
     public static final Stroke THICK_STROKE=new BasicStroke(4.0f);
-    public static final float[] dash2={2.0f,2.0f};
-    public static final Stroke DOTTED_STROKE=new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f);
+    public static final float[] dash2={2.0f,4.0f};
+    public static final Stroke DOTTED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f);
     public static final float[] dash3={1.0f,4.0f};
-    public static final Stroke VERY_DOTTED_STROKE=new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f);
+    public static final Stroke VERY_DOTTED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f);
         
     // GETTERS AND SETTERS
     

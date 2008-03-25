@@ -24,6 +24,8 @@ import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
 import sequor.model.DoubleRangeModel;
+import sequor.model.PointRangeModel;
+import specto.gridplottable.NiceRangeGenerator;
 import specto.plottable.Rectangle2D;
 
 /**
@@ -47,8 +49,8 @@ public class Euclidean2 extends Visometry<R2> {
     /** Aspect ratio for use in the transform. */
     private double aspectRatio=1;
     
-    /** Actual min,max,aspect of the containing panel. */
-    private R2 actualMin,actualMax;
+    /** Stores the boundaries of the window. */
+    private PointRangeModel bounds;
     private double windowAspect;
     
     /** Desired min,max of the containing panel. The plot MUST include these points!! */
@@ -58,8 +60,8 @@ public class Euclidean2 extends Visometry<R2> {
     
     // CONSTRUCTORS
     
-    public Euclidean2(){super();at=new AffineTransform();}
-    public Euclidean2(PlotPanel p){super(p);at=new AffineTransform();}
+    public Euclidean2(){super();at=new AffineTransform();bounds=new PointRangeModel(desiredMin,desiredMax);}
+    public Euclidean2(PlotPanel p){super(p);at=new AffineTransform();bounds=new PointRangeModel(desiredMin,desiredMax);}
     
     
     // INITIALIZERS    
@@ -76,24 +78,25 @@ public class Euclidean2 extends Visometry<R2> {
     }
     /** Snaps boundaries if x or y-axis is close to edge of screen. */
     public void snapBounds(){
-        /** If actualmax.x is within a few pixels of x=0, or actualmin.x is, then reset the screen boundaries so that
-         * the actualmax.x (or actualmin.x) actually IS at the origin. Do the same for y. */
+        /** If actualBounds.getMaxX() is within a few pixels of x=0, or actualBounds.getMinX() is, then reset the screen boundaries so that
+         * the actualBounds.getMaxX() (or actualBounds.getMinX()) actually IS at the origin. Do the same for y. */
     }
         
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
     public double getAspectRatio(){return aspectRatio;}
-    public R2 getActualMin(){return actualMin;}
-    public R2 getActualMax(){return actualMax;}
-    public R2 getActualCenter(){return new R2(.5*(actualMin.x+actualMax.x),.5*(actualMin.y+actualMax.y));}
+    public R2 getActualMin(){return bounds.getMinimum();}
+    public R2 getActualMax(){return bounds.getMaximum();}
+    public R2 getActualCenter(){return bounds.getCenter();}
     public R2 getDesiredMin(){return desiredMin;}
     public R2 getDesiredMax(){return desiredMax;}
     public double getWindowAspect(){return windowAspect;}
-    public double getDrawWidth(){return Math.abs(actualMax.x-actualMin.x);}
-    public double getDrawHeight(){return Math.abs(actualMax.y-actualMin.y);}
+    public double getDrawWidth(){return bounds.getXRange();}
+    public double getDrawHeight(){return bounds.getYRange();}
     public double getDrawAspect(){return getDrawWidth()/getDrawHeight();}
     public AffineTransform getAffineTransformation(){return at;}
+    public PointRangeModel getBounds(){return bounds;}
     
     public void setAspectRatio(final double newValue){
         if(newValue!=aspectRatio){
@@ -113,6 +116,7 @@ public class Euclidean2 extends Visometry<R2> {
     public void setDesiredMin(R2 newValue){setDesiredBounds(newValue,desiredMax);}
     public void setDesiredMax(R2 newValue){setDesiredBounds(desiredMin,newValue);}
     public void setDesiredBounds(R2 newMin,R2 newMax){
+//            System.out.println("newmin: "+newMin.toString()+", newmax: "+newMax.toString());
         boolean recompute=false;
         if(!newMin.equals(desiredMin)){
             desiredMin=newMin;
@@ -122,7 +126,10 @@ public class Euclidean2 extends Visometry<R2> {
             desiredMax=newMax;
             recompute=true;
         }
-        if(recompute){updateBounds();computeTransformation();}
+        if(recompute){            
+            updateBounds();
+            computeTransformation();
+        }
     }
     public void setDesiredBounds(double minx,double miny,double maxx,double maxy){setDesiredBounds(new R2(minx,miny),new R2(maxx,maxy));}
     public void setWindowAspect(double newValue){if(newValue!=windowAspect){windowAspect=newValue;computeTransformation();}}
@@ -133,61 +140,30 @@ public class Euclidean2 extends Visometry<R2> {
     /** Returns a range of x values, about one every two pixels.
      * @return vector of doubles containing x values within the range
      */
-    public Vector<Double> getXRange(){
-        Vector<Double> result=new Vector<Double>();
-        double step=2*getDrawWidth()/(double)getWindowWidth();
-        for(double d=actualMin.x;d<actualMax.x;d+=step){result.add(d);}
-        return result;
-    }
-    
+    public Vector<Double> getXRange(){return getSparseXRange(2);}    
     /** Returns a range of y values, about one every two pixels.
      * @return vector of doubles containing x values within the range
      */
-    public Vector<Double> getYRange(){
-        Vector<Double> result=new Vector<Double>();
-        double step=2*getDrawHeight()/(double)getWindowHeight();
-        for(double d=actualMin.x;d<actualMax.x;d+=step){result.add(d);}
-        return result;
-    }
-    
+    public Vector<Double> getYRange(){return getSparseYRange(2);}    
     /** Returns a range of x values, according to the given parameter.
      * @param factor    Inverse of number of samples per pixel.
      * @return          Vector of doubles containing x values within the range
      */
     public Vector<Double> getSparseXRange(double factor){
-        Vector<Double> result=new Vector<Double>();
-        double step=factor*getDrawWidth()/(double)getWindowWidth();
-        for(double d=actualMin.x;d<actualMax.x;d+=step){result.add(d);}
-        return result;
+        return new NiceRangeGenerator.StandardRange().niceRange(
+                bounds.getMinX(),
+                bounds.getMaxX(),
+                factor*getDrawWidth()/(double)getWindowWidth());
     }
-
     /** Returns a range of y values, according to the given parameter.
      * @param factor    Inverse of number of samples per pixel.
      * @return          Vector of doubles containing y values within the range
      */
     public Vector<Double> getSparseYRange(double factor){
-        Vector<Double> result=new Vector<Double>();
-        double step=factor*getDrawHeight()/(double)getWindowHeight();
-        for(double d=actualMin.y;d<actualMax.y;d+=step){result.add(d);}
-        return result;
-    }
-    
-    /** Returns nice (rounds to nearest coordinates) range of x values.
-     * @param factor    Determines number of samples per pixel.
-     * @return          Vector of doubles containing the parameters in range.
-     */
-    public Vector<Double> getNiceXRange(double factor){
-        // TODO implement this, based on the method in Grid2D
-        return null;
-    }
-    
-    /** Returns nice (rounds to nearest coordinates) range of y values.
-     * @param factor    Determines number of samples per pixel.
-     * @return          Vector of doubles containing the parameters in range.
-     */
-    public Vector<Double> getNiceYRange(double factor){
-        // TODO implement this, based on the method in Grid2D
-        return null;
+        return new NiceRangeGenerator.StandardRange().niceRange(
+                bounds.getMinY(),
+                bounds.getMaxY(),
+                factor*getDrawHeight()/(double)getWindowHeight());
     }
     
     
@@ -214,31 +190,29 @@ public class Euclidean2 extends Visometry<R2> {
         windowAspect=(double)windowWidth/(double)windowHeight;
         
         // Compute multiplier to determine how much the coordinates should be scaled.
-        // This also computes the *actual* min and max points of the plot window.
-        actualMin=(R2)desiredMin.clone();
-        actualMax=(R2)desiredMax.clone();
-        double multiplier=windowAspect/getDrawAspect()/aspectRatio;
+        bounds.setBounds(desiredMin.x,desiredMin.y,desiredMax.x,desiredMax.y);
+        Double multiplier=windowAspect/getDrawAspect()/aspectRatio;
+        if(multiplier.isNaN() || multiplier.isInfinite()){return 1;}
         
+//        System.out.println("multiplier: "+multiplier);
+//        System.out.println("actual bds "+bounds.toLongString());
         // Need to add space in the x-direction... getPlotWidth should increase
         if (multiplier>=1){
             double shift=0.5*(multiplier-1)*getDrawWidth();
-            actualMin.x-=shift;
-            actualMax.x+=shift;
+            bounds.xModel.setRangeProperties(bounds.getX(),desiredMin.x-shift,desiredMax.x+shift);
             multiplier=(double)windowWidth/getDrawWidth()/aspectRatio;
         }
         // Need to add space in the y-direction... getPlotHeight should increase
         else{
             double shift=0.5*(1/multiplier-1)*getDrawHeight();
-            actualMin.y-=shift;
-            actualMax.y+=shift;
+            bounds.yModel.setRangeProperties(bounds.getY(),desiredMin.y-shift,desiredMax.y+shift);
             multiplier=(double)windowHeight/getDrawHeight();
         }        
-        //System.out.println("actual min "+actualMin.toString());
-        //System.out.println("actual max "+actualMax.toString());
+//        System.out.println("actual bds "+bounds.toLongString());
         
         at.setToIdentity();        
         at.scale(multiplier*aspectRatio,-multiplier);
-        at.translate(-actualMin.x,-actualMax.y);
+        at.translate(-bounds.getMinX(),-bounds.getMaxY());
         fireStateChanged();
         return multiplier;
     }
@@ -305,7 +279,7 @@ public class Euclidean2 extends Visometry<R2> {
         * close to center => 100% at the given point, close to edge => 10% at the given point. */
         double cx=.1*p.x+.9*getActualCenter().x;
         double cy=.1*p.y+.9*getActualCenter().y;
-        setDesiredBounds(new R2(cx-factor*getDrawWidth()/2,cy-factor*getDrawHeight()/2),new R2(cx+factor*getDrawWidth()/2,cy+factor*getDrawHeight()/2));
+        setDesiredBounds(new R2(cx-factor*getDrawWidth()/2.0,cy-factor*getDrawHeight()/2.0),new R2(cx+factor*getDrawWidth()/2.0,cy+factor*getDrawHeight()/2.0));
     }
     public void zoomCenter(double factor){zoomPointAnimated(getActualCenter(),factor);}
     /** Creates an animating zoom using a particular timer. */
@@ -416,37 +390,35 @@ public class Euclidean2 extends Visometry<R2> {
     // SHAPE FACTORY METHODS
     
     /** Says whether a given point is contained within the visometry window. */
-    public boolean contains(R2 point){
-        return (point.x>=actualMin.x)&&(point.x<=actualMax.x)&&(point.y>=actualMin.y)&&(point.y<=actualMax.y);
-    }
+    public boolean contains(R2 point){return bounds.contains(point);}
     
     /** Returns points at which the ray beginning at p1 and passing through p2 intersects the boundary of the window. */
     public R2 rayHit(R2 p1,R2 p2){
-        if(p2.x>p1.x && p1.x<=actualMax.x){ // line goes to the right
+        if(p2.x>p1.x && p1.x<=bounds.getMaxX()){ // line goes to the right
             double slope=(p2.y-p1.y)/(p2.x-p1.x);
-            double yRight=slope*(actualMax.x-p1.x)+p1.y;
-            if(yRight<=actualMax.y&&yRight>=actualMin.y){ // point is on the right
-                return new R2(actualMax.x,yRight);
-            }else if(p2.y>p1.y && p1.y<=actualMax.y){ // line goes up
-                return new R2((actualMax.y-p1.y)/slope+p1.x,actualMax.y);                
-            }else if(p1.y>=actualMin.y){ // line goes down
-                return new R2((actualMin.y-p1.y)/slope+p1.x,actualMin.y);                
+            double yRight=slope*(bounds.getMaxX()-p1.x)+p1.y;
+            if(yRight<=bounds.getMaxY()&&yRight>=bounds.getMinY()){ // point is on the right
+                return new R2(bounds.getMaxX(),yRight);
+            }else if(p2.y>p1.y && p1.y<=bounds.getMaxY()){ // line goes up
+                return new R2((bounds.getMaxY()-p1.y)/slope+p1.x,bounds.getMaxY());                
+            }else if(p1.y>=bounds.getMinY()){ // line goes down
+                return new R2((bounds.getMinY()-p1.y)/slope+p1.x,bounds.getMinY());                
             }
-        }else if(p2.x<p1.x && p1.x>=actualMin.x){ // line goes to the left
+        }else if(p2.x<p1.x && p1.x>=bounds.getMinX()){ // line goes to the left
             double slope=(p2.y-p1.y)/(p2.x-p1.x);
-            double yLeft=slope*(actualMin.x-p1.x)+p1.y;
-            if(yLeft<=actualMax.y&&yLeft>=actualMin.y){ // point is on the right
-                return new R2(actualMin.x,yLeft);
-            }else if(p2.y>p1.y && p1.y<=actualMax.y){ // line goes up
-                return new R2((actualMax.y-p1.y)/slope+p1.x,actualMax.y);                
-            }else if(p1.y>=actualMin.y){ // line goes down
-                return new R2((actualMin.y-p1.y)/slope+p1.x,actualMin.y);                
+            double yLeft=slope*(bounds.getMinX()-p1.x)+p1.y;
+            if(yLeft<=bounds.getMaxY()&&yLeft>=bounds.getMinY()){ // point is on the right
+                return new R2(bounds.getMinX(),yLeft);
+            }else if(p2.y>p1.y && p1.y<=bounds.getMaxY()){ // line goes up
+                return new R2((bounds.getMaxY()-p1.y)/slope+p1.x,bounds.getMaxY());                
+            }else if(p1.y>=bounds.getMinY()){ // line goes down
+                return new R2((bounds.getMinY()-p1.y)/slope+p1.x,bounds.getMinY());                
             }
         }else if(p1.x==p2.x){ // line is vertical
-            if(p2.y<p1.y && p1.y>=actualMin.y){ // line goes up
-                return new R2(p1.x,actualMin.y);
-            }else if(p1.y<=actualMax.y){
-                return new R2(p1.x,actualMax.y);
+            if(p2.y<p1.y && p1.y>=bounds.getMinY()){ // line goes up
+                return new R2(p1.x,bounds.getMinY());
+            }else if(p1.y<=bounds.getMaxY()){
+                return new R2(p1.x,bounds.getMaxY());
             }
         }
         return null;
@@ -552,12 +524,30 @@ public class Euclidean2 extends Visometry<R2> {
         path.transform(getAffineTransformation());
         return path;
     }
+    /** Returns horizontal line at the given coordinate. */
+    public Shape hLine(double y){return lineSegment(bounds.getMinX(),y,bounds.getMaxX(),y);}
+    /** Returns set of horizontal lines at given positions. */
+    public Shape hLines(Vector<Double> coords){
+        Path2D.Double result=new Path2D.Double();
+        for(Double y:coords){result.append(hLine(y),false);}
+        return result;
+    }
+    /** Returns horizontal line at the given coordinate. */
+    public Shape vLine(double x){return lineSegment(x,bounds.getMinY(),x,bounds.getMaxY());}
+    /** Returns set of vertical lines at given positions. */
+    public Shape vLines(Vector<Double> coords){
+        Path2D.Double result=new Path2D.Double();
+        for(Double x:coords){result.append(vLine(x),false);}
+        return result;
+    }
     
     
     
     
     // ABSOLUTE DISTANCE METHODS
     // REFER TO THE ABSOLUTE COORDINATES OF THE WINDOW
+    
+    // ABSOLUTE DISTANCE METHODS (USE THE WINDOW COORDINATES)
     
     /** Returns window coordinate point at an offset of given distance and angle from a particular one. */
     public java.awt.geom.Point2D.Double getPointOffsetAngle(java.awt.geom.Point2D.Double point,double angle,double distance){

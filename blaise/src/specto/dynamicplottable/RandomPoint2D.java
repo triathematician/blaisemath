@@ -9,7 +9,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.coordinate.R2;
-import scio.random.PRandom;
+import scio.random.Random2D;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
@@ -50,23 +50,23 @@ public class RandomPoint2D extends Point2D{
         switch(style.getValue()){
             case TYPE_UCIRCLE:
                 for(int i=0;i<numPoints.getValue();i++){
-                    points.add(PRandom.disk(getPoint(),size));
+                    points.add(Random2D.disk(getPoint(),size));
                 }
                 break;
             case TYPE_NCIRCLE:
                 for(int i=0;i<numPoints.getValue();i++){
-                    points.add(PRandom.diskNormal(getPoint(),size));
+                    points.add(Random2D.diskNormal(getPoint(),size));
                 }
                 break;
             case TYPE_URECTANGLE:
                 for(int i=0;i<numPoints.getValue();i++){
-                    points.add(PRandom.rectangle(x-size,y-size,x+size,y+size));
+                    points.add(Random2D.rectangle(x-size,y-size,x+size,y+size));
                 }
                 break;
             case TYPE_NRECTANGLE:
             default:
                 for(int i=0;i<numPoints.getValue();i++){
-                    points.add(new R2(PRandom.normal(x,size),PRandom.normal(y,size)));
+                    points.add(new R2(Random2D.normal(x,size),Random2D.normal(y,size)));
                 }
                 break;
         }

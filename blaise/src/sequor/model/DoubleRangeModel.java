@@ -110,4 +110,6 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
         
     @Override
     public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
+    
+    public boolean contains(double x){return x>=minimum && x<=maximum;}
 }

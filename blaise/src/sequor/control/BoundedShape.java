@@ -40,22 +40,22 @@ public abstract class BoundedShape {
     
     // BASIC SHAPES
     
-    /** Standard Rectangle */
-    public static BoundedShape Rectangle = new BoundedShape(){
+    /** Standard RECTANGLE */
+    public static BoundedShape RECTANGLE = new BoundedShape(){
         public Shape getShape() {
             return new Rectangle2D.Double(0,0,1,1);
         }
     };
     
     /** Standard circle/ellipse */
-    public static BoundedShape Ellipse = new BoundedShape(){
+    public static BoundedShape ELLIPSE = new BoundedShape(){
         public Shape getShape() {
             return new Ellipse2D.Double(0,0,1,1);
         }
     };
     
     /** Horizontal line */
-    public static BoundedShape HorizontalLine = new BoundedShape(){
+    public static BoundedShape LINE_HORIZONTAL = new BoundedShape(){
         public Shape getShape() {
             return new Line2D.Double(0,.5,1,.5);
         }
@@ -64,7 +64,7 @@ public abstract class BoundedShape {
     };
     
     /** Horizontal line */
-    public static BoundedShape VerticalLine = new BoundedShape(){
+    public static BoundedShape LINE_VERTICAL = new BoundedShape(){
         public Shape getShape() {
             return new Line2D.Double(.5,0,.5,1);
         }
@@ -73,7 +73,7 @@ public abstract class BoundedShape {
     };
     
     /** "Diamond" shape: <|> */
-    public static BoundedShape Diamond = new BoundedShape(){
+    public static BoundedShape DIAMOND = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
             result.moveTo(.5,0);
@@ -85,8 +85,8 @@ public abstract class BoundedShape {
         }
     };   
     
-    /** "Bowtie" shape: |><| */
-    public static BoundedShape Bowtie = new BoundedShape(){
+    /** "BOWTIE" shape: |><| */
+    public static BoundedShape BOWTIE = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
             result.moveTo(0,0);
@@ -101,11 +101,28 @@ public abstract class BoundedShape {
     };   
     
     
+    // PEN SHAPES
+    
+    /** Pen (vertical bar) */
+    public static BoundedShape PEN_SHAPE = new BoundedShape(){
+        @Override
+        public Shape getShape() {
+            Path2D.Double result=new Path2D.Double();
+            result.moveTo(0,1);
+            result.lineTo(.25,1);
+            result.lineTo(1,.25);
+            result.lineTo(.75,0);
+            result.lineTo(0,.75);
+            result.closePath();
+            return result;
+        }        
+    };
+    
     
     // ANIMATION CONTROL SHAPES
     
     /** Triangle as appears on a "play" symbol: > */
-    public static BoundedShape PlayTriangle = new BoundedShape(){
+    public static BoundedShape PLAY_TRIANGLE = new BoundedShape(){
         @Override
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
@@ -118,7 +135,7 @@ public abstract class BoundedShape {
     };
     
     /** Pause style shape: || */
-    public static BoundedShape PlayPause = new BoundedShape(){
+    public static BoundedShape PLAY_PAUSE = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
             result.append(new Rectangle2D.Double(.1,0,.25,1),false);
@@ -127,32 +144,32 @@ public abstract class BoundedShape {
         }
     };
     
-    /** "FastForward" shape: >> */    
-    public static BoundedShape FastForward = new BoundedShape(){
+    /** "PLAY_FF" shape: >> */    
+    public static BoundedShape PLAY_FF = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
-            result.append(PlayTriangle.getBoundedShape(0,0,.5,1,0),false);
-            result.append(PlayTriangle.getBoundedShape(.5,0,.5,1,0),false);
+            result.append(PLAY_TRIANGLE.getBoundedShape(0,0,.5,1,0),false);
+            result.append(PLAY_TRIANGLE.getBoundedShape(.5,0,.5,1,0),false);
             return result;
         }
     };
     
     /** "Slow Play" shape: |> */  
-    public static BoundedShape PlaySlow = new BoundedShape(){
+    public static BoundedShape PLAY_SLOW = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
             result.append(new Rectangle2D.Double(.1,0,.25,1),false);
-            result.append(PlayTriangle.getBoundedShape(.5,0,.5,1,0),false);
+            result.append(PLAY_TRIANGLE.getBoundedShape(.5,0,.5,1,0),false);
             return result;
         }
     };
     
     /** "Restart" shape: |<- */  
-    public static BoundedShape PlayRestart = new BoundedShape(){
+    public static BoundedShape PLAY_RESTART = new BoundedShape(){
         public Shape getShape() {
             Path2D.Double result=new Path2D.Double();
             result.append(new Rectangle2D.Double(0,0,.25,1),false);
-            result.append(PlayTriangle.getBoundedShape(.65,0,-.45,1,0),false);
+            result.append(PLAY_TRIANGLE.getBoundedShape(.65,0,-.45,1,0),false);
             result.append(new Rectangle2D.Double(.6,.4,.4,.2),false);
             return result;
         }

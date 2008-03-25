@@ -141,32 +141,32 @@ public class NumberSlider extends VisualControlGroup {
     public void updateStyle(){
         switch(style.getValue()){
             case STYLE_LINE:
-                handle.setBackgroundShape(BoundedShape.Ellipse); 
-                setBackgroundShape(isHorizontal()?BoundedShape.HorizontalLine:BoundedShape.VerticalLine);
+                handle.setBackgroundShape(BoundedShape.ELLIPSE); 
+                setBackgroundShape(isHorizontal()?BoundedShape.LINE_HORIZONTAL:BoundedShape.LINE_VERTICAL);
                 break;
             case STYLE_BOX:
-                handle.setBackgroundShape(BoundedShape.Rectangle);
-                setBackgroundShape(BoundedShape.Rectangle);
+                handle.setBackgroundShape(BoundedShape.RECTANGLE);
+                setBackgroundShape(BoundedShape.RECTANGLE);
                 break;
             case STYLE_RBOX:
                 handle.setBackgroundShape(new BoundedWidthShape.RoundRectangle(8));
                 setBackgroundShape(new BoundedWidthShape.RoundRectangle(8));
                 break;
             case STYLE_CIRCLE:
-                handle.setBackgroundShape(BoundedShape.Ellipse);
+                handle.setBackgroundShape(BoundedShape.ELLIPSE);
                 setBackgroundShape(new BoundedWidthShape.RoundRectangle(handle.getWidth()));
                 break;
             case STYLE_DIAMOND:
-                handle.setBackgroundShape(BoundedShape.Ellipse);
-                setBackgroundShape(BoundedShape.Diamond);
+                handle.setBackgroundShape(BoundedShape.ELLIPSE);
+                setBackgroundShape(BoundedShape.DIAMOND);
                 break;
             case STYLE_BOWTIE:
-                handle.setBackgroundShape(BoundedShape.Ellipse); 
-                setBackgroundShape(BoundedShape.Bowtie);
+                handle.setBackgroundShape(BoundedShape.ELLIPSE); 
+                setBackgroundShape(BoundedShape.BOWTIE);
                 break;
             case STYLE_DOTS:
             default:
-                handle.setBackgroundShape(BoundedShape.Ellipse); 
+                handle.setBackgroundShape(BoundedShape.ELLIPSE); 
                 setBackgroundShape(new BoundedWidthShape.DotDotDot(1));
                 break;
         }

@@ -20,6 +20,8 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
+import scio.coordinate.R2;
+import sequor.event.MouseVisometryEvent;
 import specto.DynamicPlottable;
 import specto.visometry.Euclidean2;
 
@@ -61,6 +63,8 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     private Point2D.Double min;
     private Point2D.Double max;
     
+    /** Used to generate the values for the spacing. */
+    private NiceRangeGenerator spacing;
     
     // CONSTANTS
        
@@ -73,6 +77,7 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     public Grid2D(){
         super();
+        spacing=new NiceRangeGenerator.StandardRange();
         color.setValue(Color.getHSBColor(0.6f,0.5f,0.6f));
     }
     
@@ -105,41 +110,12 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     /** Sets the spacing of the grid using the underlying visometry */
     public void initGrid(Euclidean2 v){
-        xGrid=niceRange(v.getActualMin().x,v.getActualMax().x,(double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
+        xGrid=spacing.niceRange(v.getActualMin().x,v.getActualMax().x,(double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
         xGridWin=new Vector<Double>();for(double d:xGrid){xGridWin.add(v.toWindowX(d));}
-        yGrid=niceRange(v.getActualMin().y,v.getActualMax().y,(double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());
+        yGrid=spacing.niceRange(v.getActualMin().y,v.getActualMax().y,(double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());
         yGridWin=new Vector<Double>();for(double d:yGrid){yGridWin.add(v.toWindowY(d));}
     }
     
-    /**
-     * Takes in a range of values in min/max/step format and returns a "rounded" version of that range of doubles.
-     * The range is in Euclidean2 coordinates (not window coordinates!)
-     **/
-    private Vector<Double> niceRange(double min,double max,double idealStep) {
-        if(min>max){double temp=min;min=max;max=temp;}
-        if(idealStep<0){idealStep=-idealStep;}
-        if(idealStep==0){return new Vector<Double>();}
-        // first, put the range in between 1 and 10
-        double tempx=idealStep;
-        while(tempx>10){tempx/=10;}
-        while(tempx<1){tempx*=10;}
-        
-        // initialize factor to be the power of 10 just computed
-        double factor=idealStep/tempx;
-        // now set the factor as that times 1,2,2.5, or 5
-        if(tempx<1.8){}
-        if(tempx<2.2){factor*=2;} else if(tempx<3.5){factor*=2.5;} else if(tempx<7.5){factor*=5;} else{factor*=10;}
-        
-        double minx=factor*Math.ceil(min/factor);
-        double maxx=factor*Math.floor(max/factor);
-        Vector<Double> elements=new Vector<Double>();
-        do{
-            elements.add(minx);
-            minx+=factor;
-        }while(minx<maxx+factor);
-        
-        return elements;
-    }
 
     // STYLES
     
@@ -150,7 +126,8 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     // METHODS: DRAWING ALL ELEMENTS
     
     @Override
-    public void recompute(){}
+    public void recompute(){
+    }
     
     /** Repaints the component on the given panel, using the given visometry. */
     public void paintComponent(Graphics2D g,Euclidean2 v) {
@@ -167,6 +144,9 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
             g.setStroke(BASIC_STROKE);
             paintAxes(g);
         }
+        if(mouseLoc!=null){
+            g.drawString(mouseLoc.toString(),(float)v.toWindowX(mouseLoc.x),(float)v.toWindowY(mouseLoc.y));
+        }
     }
     
     /** Paints set of horizontal lines specified by yGrid between xMin and xMax */
@@ -180,7 +160,6 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     public void paintAxes(Graphics2D g){
         switch(style.getValue()){
         case AXES_CROSS:
-            Point2D.Double origin=new Point2D.Double(this.origin.x,this.origin.y);
             boolean xRight=false;
             boolean yTop=false;
             if(origin.x<min.x){origin.x=min.x;}else if(origin.x>max.x){origin.x=max.x;xRight=true;}
@@ -311,4 +290,27 @@ public class Grid2D extends DynamicPlottable<Euclidean2> implements ActionListen
     final static String[] styleStrings={"Cross-Style Axes","Box-Style Axes","L-Style Axes","Inverted T-Style Axes"};
     @Override
     public String[] getStyleStrings() {return styleStrings;}
+    
+    
+    // MOUSE EVENTS
+    
+    public R2 mouseLoc;
+
+    @Override
+    public void mouseEntered(MouseVisometryEvent<Euclidean2> e) {
+        mouseLoc=(R2)e.getCoordinate();
+        fireStateChanged();
+    }
+
+    @Override
+    public void mouseExited(MouseVisometryEvent<Euclidean2> e) {
+        mouseLoc=null;
+        fireStateChanged();
+    }
+
+    @Override
+    public void mouseMoved(MouseVisometryEvent<Euclidean2> e) {
+        mouseLoc=(R2)e.getCoordinate();
+        fireStateChanged();
+    }    
 }

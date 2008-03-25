@@ -1,9 +1,12 @@
 package scio.random;
 
+import java.util.Vector;
 import scio.coordinate.R2;
+import scio.function.Function;
+import scio.function.FunctionValueException;
 
 /**
- * <b>PRandom.java</b><br>
+ * <b>Random2D.java</b><br>
  * Author: <i>Elisha Peterson</i><br>
  * Created on <i>February 17, 2007, 11:27 AM</i><br><br>
  * 
@@ -12,12 +15,12 @@ import scio.coordinate.R2;
  * 
  * Methods for both one-dimensional and two-dimensional distributions.
  */
-public class PRandom {
+public class Random2D {
     
     /**
-     * Creates a new instance of PRandom
+     * Creates a new instance of Random2D
      */
-    public PRandom() {
+    public Random2D() {
     }
     
     // ONE-DIMENSIONAL DISTRIBUTIONS
@@ -109,4 +112,24 @@ public class PRandom {
         double randTheta=between(0,2*Math.PI);
         return new R2(Math.cos(randTheta),Math.sin(randTheta));
     }
+    
+    
+    // FUNCTIONS
+    
+    public abstract static class RandomDistribution implements Function<Double,Double> {
+        public Vector<Double> getValue(Vector<Double> x) throws FunctionValueException {return null;}
+        public Double minValue() {return 0.0;}
+        public Double maxValue() {return 1.0;}
+    }
+    public abstract static class OneParameterDistribution extends RandomDistribution {
+        
+    }
+    
+    public Function<Double,Double> normalDistribution=new RandomDistribution(){
+        public Double getValue(Double x) throws FunctionValueException {return normal();}
+    };
+    public Function<Double,Double> uniformDistribution=new RandomDistribution(){
+        
+        public Double getValue(Double x) throws FunctionValueException {return normal();}
+    };
 }

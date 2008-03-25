@@ -34,14 +34,11 @@ import sequor.VisualControl;
 import sequor.component.AddMenu;
 import sequor.component.RangeTimer;
 import sequor.control.AnimationControl;
-import sequor.control.BoundedShape;
-import sequor.control.ButtonBox;
 import sequor.control.DrawnPath;
-import sequor.control.ToggleButton;
+import sequor.control.MarkerBox;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
-import specto.plottable.HiddenText2D;
 
 /**
  * This is a superclass for plot windows. It implements component handling and drawing
@@ -108,27 +105,11 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         controls=new HashSet<VisualControl>();
         AnimationControl ac=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE);
         add(ac,3,2);
-        {
-            ButtonBox markerBox=new ButtonBox(0,0,50,50,ButtonBox.LAYOUT_BOX);
-            final DrawnPath marker=new DrawnPath(Color.YELLOW,DrawnPath.HIGHLIGHTER);
-            markerBox.add(new ToggleButton(
-                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker.setVisible(true);}},
-                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker.setVisible(false);}},
-                    BoundedShape.Diamond,
-                    Color.YELLOW));
-            final DrawnPath marker2=new DrawnPath(Color.RED,DrawnPath.HIGHLIGHTER);
-            markerBox.add(new ToggleButton(
-                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker2.setVisible(true);}},
-                    new ActionListener(){public void actionPerformed(ActionEvent e) {marker2.setVisible(false);}},
-                    BoundedShape.Diamond,
-                    Color.RED));
-            markerBox.getButtonStyle().setValue(ButtonBox.STYLE_RBOX);
-            markerBox.adjustBounds();
-            markerBox.performLayout();
-            add(markerBox,3,0);  
-            add(marker);
-            add(marker2); 
-        }
+        MarkerBox markerBox=new MarkerBox(Color.YELLOW,DrawnPath.HIGHLIGHTER);
+        markerBox.addMarker(Color.BLUE, DrawnPath.MARKER);
+        markerBox.addMarker(Color.RED, DrawnPath.PEN);
+        markerBox.addMarker(Color.BLACK, DrawnPath.PENCIL);
+        add(markerBox,3,0);
         baseComponents=new PlottableGroup<V>();
         components=new PlottableGroup<V>();
         baseComponents.addChangeListener(this);
@@ -339,18 +320,33 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     @Override
     public void mouseMoved(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        for(Plottable p:baseComponents.getElements()){
+            if(p instanceof DynamicPlottable){
+                ((DynamicPlottable)p).mouseMoved(mve);
+            }
+        }
         visometry.mouseMoved(mve);
     }
 
     @Override
     public void mouseEntered(MouseEvent e){        
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        for(Plottable p:baseComponents.getElements()){
+            if(p instanceof DynamicPlottable){
+                ((DynamicPlottable)p).mouseEntered(mve);
+            }
+        }
         visometry.mouseEntered(mve);
     }
 
     @Override
     public void mouseExited(MouseEvent e){
         MouseVisometryEvent mve=new MouseVisometryEvent(e,visometry);
+        for(Plottable p:baseComponents.getElements()){
+            if(p instanceof DynamicPlottable){
+                ((DynamicPlottable)p).mouseExited(mve);
+            }
+        }
         visometry.mouseExited(mve);
     }
 

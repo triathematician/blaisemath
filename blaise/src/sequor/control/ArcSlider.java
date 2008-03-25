@@ -119,7 +119,7 @@ public class ArcSlider extends VisualControlGroup {
     // STYLE SETTINGS
     
     private void initStyle() {
-        handle.setBackgroundShape(BoundedShape.Ellipse);
+        handle.setBackgroundShape(BoundedShape.ELLIPSE);
         setBackgroundShape(new BoundedWidthShape.Ring((0.5*getWidth()-handleSize)/(double)getWidth()));
     }
     private void updateStyle() {

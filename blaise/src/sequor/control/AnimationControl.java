@@ -33,12 +33,12 @@ public class AnimationControl extends ButtonBox {
     }
     
     void initButtons(){
-        add(new VisualButton("restart",timer,BoundedShape.PlayRestart));
-        add(new VisualButton("slower",timer,BoundedShape.PlaySlow));
-        add(new VisualButton("play",timer,BoundedShape.PlayTriangle));
-        add(new VisualButton("faster",timer,BoundedShape.FastForward));
-        add(new ToggleButton("pause",timer,BoundedShape.PlayPause));
-        add(new VisualButton("stop",timer,BoundedShape.Rectangle));
+        add(new VisualButton("restart",timer,BoundedShape.PLAY_RESTART));
+        add(new VisualButton("slower",timer,BoundedShape.PLAY_SLOW));
+        add(new VisualButton("play",timer,BoundedShape.PLAY_TRIANGLE));
+        add(new VisualButton("faster",timer,BoundedShape.PLAY_FF));
+        add(new ToggleButton("pause",timer,BoundedShape.PLAY_PAUSE));
+        add(new VisualButton("stop",timer,BoundedShape.RECTANGLE));
         buttonStyle.setValue(STYLE_RBOX);
         adjustBounds();
         performLayout();
