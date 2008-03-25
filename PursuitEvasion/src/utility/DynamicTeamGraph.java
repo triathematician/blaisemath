@@ -15,7 +15,7 @@ import simulation.Team;
 import specto.Animatable;
 import specto.Plottable;
 import scio.coordinate.R2;
-import sequor.component.IntegerRangeTimer;
+import sequor.component.RangeTimer;
 import specto.visometry.Euclidean2;
 
 /**
@@ -37,13 +37,13 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     public void paintComponent(Graphics2D g,Euclidean2 v) {}
 
     /** Draws graph corresponding to current step. */
-    public void paintComponent(Graphics2D g,Euclidean2 v,IntegerRangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(pathSize()==0){return;}
         g.setColor(team.getColor().brighter().brighter());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
-        g.draw(getEdges(v,t.getModel().getValue()));
+        g.draw(getEdges(v,t.getCurrentIntValue()));
         for(Goal goal:team.getGoals()){
-            g.draw(getTargetEdges(v,goal,t.getModel().getValue()));
+            g.draw(getTargetEdges(v,goal,t.getCurrentIntValue()));
         }
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
     }   

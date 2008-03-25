@@ -14,6 +14,8 @@ import analysis.DataLog;
 import analysis.Metrics;
 import analysis.Metrics.SplitContribution;
 import java.util.HashSet;
+import sequor.control.AnimationControl;
+import sequor.control.ButtonBox;
 import simulation.Agent;
 import specto.plottable.PlaneFunction2D;
 

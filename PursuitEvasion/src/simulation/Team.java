@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 import sequor.Settings;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
@@ -379,7 +379,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         /** Team size */
         private IntegerRangeModel size=new IntegerRangeModel(3,1,100);
         /** Starting positions to use */
-        private ComboBoxRangeModel start=new ComboBoxRangeModel(START_STRINGS,START_RANDOM,0,4);
+        private StringRangeModel start=new StringRangeModel(START_STRINGS,START_RANDOM,0,4);
         
         /** Default sensor range [in ft]. */
         private DoubleRangeModel sensorRange=new DoubleRangeModel(20,0,5000);
@@ -388,7 +388,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         /** Default speed [in ft/s]. */
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
-        private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
+        private StringRangeModel behavior=Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
         private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
         /** Position function if required for myBehavior */

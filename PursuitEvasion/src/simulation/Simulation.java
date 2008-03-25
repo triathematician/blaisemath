@@ -23,7 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.event.EventListenerList;
 import javax.swing.JPanel;
 import sequor.Settings;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.SettingsProperty;
 import specto.PlotPanel;
@@ -264,7 +264,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     public JPanel getPanel(){return ss.getPanel();}
     public JMenu getMenu(String s){JMenu jm=ss.getMenu();jm.setText(s);return jm;}
-    public ComboBoxRangeModel getGameTypeModel(){return ss.gameType;}
+    public StringRangeModel getGameTypeModel(){return ss.gameType;}
     
     // SUBCLASSES
     
@@ -273,7 +273,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         /** Number of teams */
         private IntegerRangeModel numTeams=new IntegerRangeModel(2,1,100);
         /** Type of game involved */
-        private ComboBoxRangeModel gameType=SimulationFactory.comboBoxRangeModel();
+        private StringRangeModel gameType=SimulationFactory.comboBoxRangeModel();
         /** Pitch size */
         private DoubleRangeModel pitchSize=new DoubleRangeModel(60,0,50000,1);
         /** Time taken by a single step [in seconds] */

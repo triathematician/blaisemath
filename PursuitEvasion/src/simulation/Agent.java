@@ -29,7 +29,7 @@ import goal.Goal;
 import goal.TaskGenerator;
 import sequor.Settings;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
 
@@ -276,7 +276,7 @@ public class Agent implements TaskGenerator {
         /** Default speed [in ft/s]. */
         private DoubleRangeModel topSpeed=new DoubleRangeModel(5,0,50,.05);
         /** Default behavioral setting */
-        private ComboBoxRangeModel behavior=Behavior.getComboBoxModel();
+        private StringRangeModel behavior=Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
         private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
         /** Position function if required for myBehavior */

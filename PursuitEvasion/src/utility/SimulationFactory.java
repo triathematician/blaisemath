@@ -12,7 +12,7 @@ import java.awt.Color;
 import java.util.Vector;
 import simulation.Simulation;
 import goal.Goal;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 
 /**
  * This class provides preset simulations to load into a program.
@@ -42,7 +42,7 @@ public class SimulationFactory {
 
     // STATIC FACTORY METHODS
     
-    public static ComboBoxRangeModel comboBoxRangeModel(){return new ComboBoxRangeModel(GAME_STRINGS,SIMPLE_PE,0,6);}
+    public static StringRangeModel comboBoxRangeModel(){return new StringRangeModel(GAME_STRINGS,SIMPLE_PE,0,6);}
     
     public static void setSimulation(Simulation sim,int simCode){
         String name;

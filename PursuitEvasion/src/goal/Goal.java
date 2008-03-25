@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 import scio.function.Function;
 import sequor.Settings;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.SettingsProperty;
 import simulation.Team;
 import simulation.Agent;
@@ -192,7 +192,7 @@ public class Goal implements Function<DistanceTable,Double>{
         /** Specifies the weighting/priority of the goal. */
         private DoubleRangeModel weight=new DoubleRangeModel(1,0,1,.01);
         /** Specifies whether goal is pursuit (0) or evade (1). */
-        private ComboBoxRangeModel type=new ComboBoxRangeModel(TYPE_STRINGS,SEEK,0,2);
+        private StringRangeModel type=new StringRangeModel(TYPE_STRINGS,SEEK,0,2);
         /** 
          * Another parameter to use in specifying the goal. Usually the "target"
          * distance required to reach the goal.
@@ -200,7 +200,7 @@ public class Goal implements Function<DistanceTable,Double>{
         private DoubleRangeModel threshhold=new DoubleRangeModel(1,0,1000,.1);
 
         /** The team's tasking algorithm default */
-        private ComboBoxRangeModel tasking=new ComboBoxRangeModel(Tasking.TASKING_STRINGS,Tasking.AUTO_CLOSEST,Tasking.FIRST,Tasking.LAST);
+        private StringRangeModel tasking=new StringRangeModel(Tasking.TASKING_STRINGS,Tasking.AUTO_CLOSEST,Tasking.FIRST,Tasking.LAST);
 
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable,Double> value;

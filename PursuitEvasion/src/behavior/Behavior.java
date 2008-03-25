@@ -5,7 +5,7 @@
 
 package behavior;
 
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import simulation.Agent;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
@@ -29,8 +29,8 @@ public abstract class Behavior {
     public static final int RANDOMPATH=5;
     public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading","Approach Path","Random Path"};
 
-    public static ComboBoxRangeModel getComboBoxModel(){
-        return new ComboBoxRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,5);
+    public static StringRangeModel getComboBoxModel(){
+        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,5);
     }
     
 // CONSTRUCTORS    
