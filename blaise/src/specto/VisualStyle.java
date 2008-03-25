@@ -5,7 +5,7 @@
 
 package specto;
 
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 
 /**
  * Contains a list of style parameters for general use; automatically generates menus and comboboxes for selection.
@@ -13,7 +13,7 @@ import sequor.model.ComboBoxRangeModel;
  * 
  * @author Elisha Peterson
  */
-public class VisualStyle extends ComboBoxRangeModel{
+public class VisualStyle extends StringRangeModel{
     public VisualStyle(){super();}
     public VisualStyle(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
     public void cycleStyle(){

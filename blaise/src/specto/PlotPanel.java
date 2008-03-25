@@ -31,6 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
+import sequor.component.AddMenu;
 import sequor.component.RangeTimer;
 import sequor.control.AnimationControl;
 import sequor.control.BoundedShape;
@@ -40,6 +41,7 @@ import sequor.control.ToggleButton;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
+import specto.plottable.HiddenText2D;
 
 /**
  * This is a superclass for plot windows. It implements component handling and drawing
@@ -158,6 +160,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         contextMenu=new JPopupMenu();
         optionsMenu=new JMenu("Options");
         contextMenu.add(optionsMenu);
+        contextMenu.add(new AddMenu(this));
         setComponentPopupMenu(contextMenu);        
     }
     

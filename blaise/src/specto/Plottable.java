@@ -8,13 +8,19 @@ package specto;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import sequor.control.NumberSlider;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
+import specto.dynamicplottable.Point2D;
 
 /**
  * This abstract class includes basic functionality for the plotting of some object on
@@ -61,7 +67,7 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     /** Color used by the element. */
     protected ColorModel color;
     /** Style setting used by the element. */
-    public ComboBoxRangeModel style;
+    public StringRangeModel style;
     /** Style strings used to select a style. */
     public abstract String[] getStyleStrings();
     /** Returns adjuster which can be used to modify the style. */
@@ -80,7 +86,7 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
         color.addChangeListener(this);
         String[] styles=getStyleStrings();
         if(styles==null || styles.length==0){return;}
-        style=new ComboBoxRangeModel(styles,0,0,styles.length-1);
+        style=new StringRangeModel(styles,0,0,styles.length-1);
         style.addChangeListener(this);
     }
     
@@ -106,4 +112,13 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     
     /** Returns button which when pressed opens a color palette to change the color of the given item. */
     public Component getColorMenuItem(){return color.getMenuItem();}
+    
+    /** Returns "add" menu item. */
+    public JMenuItem getAddMenuItem(final PlotPanel<V> panel){
+        JMenuItem mi=new JMenuItem(toString());
+        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e) {
+                    panel.add(Plottable.this);
+            }});
+        return mi;
+    }
 }

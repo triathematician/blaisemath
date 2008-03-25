@@ -8,10 +8,11 @@ package scio.coordinate;
 import java.util.Vector;
 
 /**
- *
+ * This class describes a generic vector of real numbers.
+ * 
  * @author Elisha Peterson
  */
-public class Euclidean implements Coordinate {
+public class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceElement {
     Vector<Double> coord;
     
     public Euclidean(int n){
@@ -23,13 +24,13 @@ public class Euclidean implements Coordinate {
         coord=new Vector<Double>(values.length);
         for(int i=0;i<values.length;i++){coord.add(values[i]);}
     }
+    
+    
+    // BEAN PATTERNS
 
     public void setElement(int position,double value){coord.set(position, value);}
     public double getElement(int position){return coord.get(position);}
-    
-    public boolean equals(Coordinate c2) {
-        return (c2 instanceof Euclidean && ((Euclidean)c2).coord.equals(coord));
-    }
+    public int length(){return coord.size();}
     
     
     // TRANSFORMATIONS, RETURNING COPY OF THIS POINT
@@ -39,9 +40,30 @@ public class Euclidean implements Coordinate {
     public double dotProduct(Euclidean p2){return 0;}
     
     
-    // TRANSFORMATIONS RETURNING A NEW POINT
+    // REQUIRED FOR VECTOR SPACE
     
-    public Euclidean plus(Euclidean p2){return new Euclidean(coord.size());}
-    public Euclidean minus(Euclidean p2){return new Euclidean(coord.size());}
-    public Euclidean times(double d){return new Euclidean(coord.size());}    
+    public Coordinate zero(){return new Euclidean(coord.size());}
+    public Coordinate plus(Coordinate p2){return new Euclidean(coord.size());}
+    public Coordinate minus(Coordinate p2){return new Euclidean(coord.size());}
+    public Coordinate times(double d){return new Euclidean(coord.size());}
+
+    
+    // REQUIRED TO MAKE THIS A METRIC SPACE
+    
+    public boolean equals(Coordinate c2) {
+        return (c2 instanceof Euclidean && ((Euclidean)c2).coord.equals(coord));
+    }
+    
+    public double coordDistanceSq(double x1,double x2){return (x1-x2)*(x1-x2);}
+    
+    public double distance(Coordinate p2) {
+        if(!(p2 instanceof Euclidean)){return -1;}
+        Euclidean e2=(Euclidean)p2;
+        int n=Math.min(length(),e2.length());
+        double result=0;
+        for(int i=0;i<n;i++){
+            result+=coordDistanceSq(getElement(i),e2.getElement(i));
+        }
+        return Math.sqrt(result);
+    }
 }

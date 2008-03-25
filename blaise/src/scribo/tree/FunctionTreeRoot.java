@@ -11,6 +11,7 @@
 package scribo.tree;
 
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -19,15 +20,16 @@ import scio.coordinate.R1;
 import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
 import scio.function.FunctionValueException;
+import scio.function.ParameterFunction;
 import scribo.parser.Parser;
 
 /**
  * This class represents the root of a FunctionTree. In particular, every tree which is constructed passes all
  * information through a root node, which is this one.
  * <p>
- * The class stores a list of variables (whose values are "unknowns") and parameters (whose values are "knowns" although
+ * The class stores a list of variables (whose values are "parameters") and parameters (whose values are "knowns" although
  * they can be changed). The distinction is important because fundamentally the function f(x)=a*sin(b(x+c))+d should be
- * plotted in two-dimensions, although nominally there are five unknowns on the righthand side. Other classes which use
+ * plotted in two-dimensions, although nominally there are five parameters on the righthand side. Other classes which use
  * this one should be able to "observe" this fact and know what to do with the parameters and the variables automatically.
  * This, the part that is important for any class which utilizes this one is (i) how to get at and adjust parameters, (ii) how
  * to get at the variables, and (iii) how to evaluate the function at a particular value or range of values.
@@ -38,7 +40,7 @@ import scribo.parser.Parser;
  * </p>
  * @author Elisha Peterson
  */
-public class FunctionTreeRoot extends FunctionTreeFunctionNode {
+public class FunctionTreeRoot extends FunctionTreeFunctionNode implements FunctionRoot {
     
     
     // VARIABLES
@@ -48,7 +50,7 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
      * the values will be looked up in this table.
      */
-    TreeMap<String,Double> unknowns;
+    TreeMap<String,Double> parameters;
     
     
     // CONSTRUCTORS
@@ -60,7 +62,7 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     public FunctionTreeRoot(FunctionTreeNode c){
         addSubNode(c);
         variables=c.getUnknowns();
-        unknowns=new TreeMap<String,Double>();
+        parameters=new TreeMap<String,Double>();
     }    
     
     
@@ -68,9 +70,18 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
 
     /** Sets up an entire list of parameters. */
     public void setUnknowns(TreeMap<String,Double> values){
-        unknowns.putAll(values);
+        parameters.putAll(values);
         variables.removeAll(values.keySet());
     }
+    
+    /** Returns current list of variables. */
+    public Set<String> getVariables(){return variables;}    
+    /** Returns current list of parameters. */
+    public Set<String> getParameters(){return parameters.keySet();}
+    /** Returns number of variables. */
+    public int getNumVariables(){return variables.size();}
+    /** Returns number of parameters. */
+    public int getNumParameters(){return parameters.size();}
     
     
     // OVERRIDE SUBMETHODS FROM FUNCTIONTREEFUNCTIONNODE
@@ -78,7 +89,7 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     @Override
     public String toString(){
         return "Root "
-                + (unknowns==null?"":(" , "+unknowns.toString()));
+                + (parameters==null?"":(" , "+parameters.toString()));
     }
     @Override
     public FunctionTreeNode derivativeTree(Variable v){
@@ -102,12 +113,12 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     
     @Override
     public Double getValue(TreeMap<String, Double> table) throws FunctionValueException {
-        table.putAll(unknowns);
+        table.putAll(parameters);
         return argumentValue(table);
     }
     @Override
     public Double getValue(String s, Double d) throws FunctionValueException {
-        if(unknowns==null||unknowns.isEmpty()){return argumentValue(s,d);}
+        if(parameters==null||parameters.isEmpty()){return argumentValue(s,d);}
         TreeMap<String,Double> table=new TreeMap<String,Double>();
         table.put(s,d);
         return getValue(table);
@@ -115,9 +126,9 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
     @Override
     public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
         // TODO make more efficient!
-        if(unknowns==null||unknowns.isEmpty()){return argumentValue(s,d);}
+        if(parameters==null||parameters.isEmpty()){return argumentValue(s,d);}
         TreeMap<String,Double> table=new TreeMap<String,Double>();
-        table.putAll(unknowns);
+        table.putAll(parameters);
         Vector<Double> result=new Vector<Double>(d.size());
         for(Double x:d){
             table.put(s,x);
@@ -130,6 +141,9 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
 
     // FUNCTION INTERFACE METHODS
     
+    public Function getFunction(){return getDoubleFunction();}
+    public ParameterFunction getParameterFunction(){return null;}
+    
     /** Returns a generic function corresponding to this tree. The type of the function will depend on the number of inputs. */
     public Function<Euclidean,Double> getDoubleFunction() {
         int n=variables.size();
@@ -141,14 +155,14 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode {
                 for(int i=0;i<variables.size();i++){                    
                     table.put((String)iter.next(),x.getElement(i));
                 }
-                table.putAll(unknowns);
+                table.putAll(parameters);
                 return FunctionTreeRoot.this.getValue(table);
             }      
             @Override
             public Vector<Double> getValue(Vector<Euclidean> x) throws FunctionValueException {
                 Vector<Double> result=new Vector<Double>();
                 TreeMap<String,Double> table=new TreeMap<String,Double>();
-                table.putAll(unknowns);
+                table.putAll(parameters);
                 Iterator iter=variables.iterator();
                 for(int i=0;i<x.size();i++){
                     for(int j=0;j<variables.size();j++){                    

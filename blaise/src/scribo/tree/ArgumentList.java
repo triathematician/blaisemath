@@ -17,6 +17,7 @@ import scio.function.FunctionValueException;
  * @author Elisha Peterson
  */
 public class ArgumentList extends FunctionTreeNode {
+    public ArgumentList(){super();}
     public ArgumentList(Vector<FunctionTreeNode> arguments){super();addSubNodes(arguments);}    
     public Vector<FunctionTreeNode> arguments(){return children;}
     @Override

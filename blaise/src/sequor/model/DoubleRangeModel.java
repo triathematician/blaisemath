@@ -35,7 +35,8 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     
     @Override
     public boolean setStep(Double step){
-        if(step<getRange()&& !this.step.equals(step)){
+        step=Math.abs(step);
+        if(step<getRange() && ((this.step==null) || !this.step.equals(step))){
             this.step=step;
             return true;
         }

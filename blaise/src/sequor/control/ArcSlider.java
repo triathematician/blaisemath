@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
 import sequor.VisualControlGroup;
 import sequor.model.BoundedRangeModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.StepControlledRangeModel;
 

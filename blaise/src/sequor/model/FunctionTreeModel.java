@@ -30,6 +30,7 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     public FunctionTreeModel(FunctionTreeNode ftn) {this(new FunctionTreeRoot(ftn));}
     public FunctionTreeModel(FunctionTreeRoot ftr){this.ftr=ftr;}
     public FunctionTreeModel(String text,String var){setValue(text);}
+    public FunctionTreeModel(String text) {this(text,"");}
     
     // BEAN patterns
     

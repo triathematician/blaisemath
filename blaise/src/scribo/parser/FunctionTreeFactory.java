@@ -65,16 +65,16 @@ public class FunctionTreeFactory {
     }
     
     /** Returns parsed tree for the function */
-    public static FunctionTreeRoot getFunction(String s) throws FunctionSyntaxException{
+    public static FunctionRoot getFunction(String s) throws FunctionSyntaxException{
         FunctionTreeNode result=Parser.parseExpression(s);
-        if(result instanceof ArgumentList){throw new FunctionSyntaxException(FunctionSyntaxException.INCOMPLETE_INPUT);}
+        if(result instanceof ArgumentList){return new VectorFunctionRoot(result);}
         return new FunctionTreeRoot(result);
     }
     
     /** Returns a function object corresponding to the given string and variable. */
     public static Function<Double,Double> getFunctionObject(final String s,final Variable v) throws FunctionSyntaxException{
         return new Function<Double,Double>(){
-            final FunctionTreeNode compiled=getFunction(s);
+            final FunctionTreeNode compiled=(FunctionTreeNode) getFunction(s);
             @Override
             public Double getValue(Double x) throws FunctionValueException{return compiled.getValue(v,x);}
             public Vector<Double> getValue(Vector<Double> xs) throws FunctionValueException{return compiled.getValue(v,xs);}

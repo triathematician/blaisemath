@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 
 /**
  * This class wraps a Point2D as a coordinate.
- * <br><br>
+ * 
  * @author Elisha Peterson
  */
 public class R2 extends Point2D.Double implements Coordinate {
@@ -76,5 +76,17 @@ public class R2 extends Point2D.Double implements Coordinate {
         return new R2(point1.x+t*(point2.x-point1.x),point1.y+t*(point2.y-point1.y));           
     }
 
-    public boolean equals(Coordinate c2){return (x==((R2)c2).x)&&(y==((R2)c2).y);}
+
+    
+    // FOR COORDINATE INTERFACE
+    
+    public boolean equals(Coordinate c2){
+        if(!(c2 instanceof R2)){return false;}
+        return (x==((R2)c2).x)&&(y==((R2)c2).y);
+    }
+
+//    public double distance(Coordinate p2) {
+//        if(!(p2 instanceof R2)){return -1;}
+//        return super.distance((R2)p2);
+//    }
 }

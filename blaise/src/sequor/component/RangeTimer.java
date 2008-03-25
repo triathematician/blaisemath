@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 import javax.swing.event.EventListenerList;
 import sequor.model.BoundedRangeModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import specto.*;
 
 /**
@@ -21,7 +21,7 @@ import specto.*;
  * 
  * @author Elisha Peterson
  */
-public class RangeTimer<N extends Number> extends ComboBoxRangeModel implements ActionListener {
+public class RangeTimer<N extends Number> extends StringRangeModel implements ActionListener {
     /** Determines what values the timer contains. */
     BoundedRangeModel<N> rangeValues;
  
@@ -176,6 +176,7 @@ public class RangeTimer<N extends Number> extends ComboBoxRangeModel implements 
             if(isPlaying()){
                 // increment value unless set to not loop
                 if(rangeValues.increment(looping)&&!looping){stop();}
+                System.out.println("val: "+rangeValues.getValue());
                 fireActionPerformed(e);
                 return;
             }

@@ -34,8 +34,8 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     private String sy="sin(t)";
     public ParametricModel(){
         try {
-            fx = FunctionTreeFactory.getFunction(sx);
-            fy = FunctionTreeFactory.getFunction(sy);
+            fx = (FunctionTreeRoot) FunctionTreeFactory.getFunction(sx);
+            fy = (FunctionTreeRoot) FunctionTreeFactory.getFunction(sy);
         } catch (FunctionSyntaxException ex) {            
         }
     }
@@ -46,13 +46,13 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
     public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
     public void setXString(String s){
         try {
-            fx=FunctionTreeFactory.getFunction(s);
+            fx=(FunctionTreeRoot) FunctionTreeFactory.getFunction(s);
             sx=s;
         } catch (FunctionSyntaxException ex){}
     }
     public void setYString(String s){
         try {
-            fy=FunctionTreeFactory.getFunction(s);
+            fy=(FunctionTreeRoot) FunctionTreeFactory.getFunction(s);
             sy=s;
         } catch (FunctionSyntaxException ex){}
     }

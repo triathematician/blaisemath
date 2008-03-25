@@ -21,14 +21,14 @@ import javax.swing.JRadioButtonMenuItem;
  * <br><br>
  * @author Elisha Peterson
  */
-public class ComboBoxRangeModel extends IntegerRangeModel{
+public class StringRangeModel extends IntegerRangeModel{
     String[] s;
-    public ComboBoxRangeModel(){
+    public StringRangeModel(){
         String[] test={"test1","test2","test3"};
         s=test;
         setRangeProperties(1,0,2);
     }
-    public ComboBoxRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
+    public StringRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
 
     public String[] getStrings(){return s;}
     @Override

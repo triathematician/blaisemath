@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
 import sequor.VisualControlGroup;
 import sequor.model.BoundedRangeModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.StepControlledRangeModel;
 
@@ -120,7 +120,7 @@ public class NumberSlider extends VisualControlGroup {
     
     // STYLE SETTINGS
     
-    ComboBoxRangeModel style;
+    StringRangeModel style;
     public static final int STYLE_LINE=0;
     public static final int STYLE_CIRCLE=1;
     public static final int STYLE_BOX=2;
@@ -130,10 +130,10 @@ public class NumberSlider extends VisualControlGroup {
     public static final int STYLE_DOTS=6;
     
     public static String[] styleStrings={"Line","Circular","Rectangular","Rounded","Bowtie","Diamond","Dots"};
-    public ComboBoxRangeModel getStyle(){return style;}
+    public StringRangeModel getStyle(){return style;}
 
     private void initStyle() {
-        style=new ComboBoxRangeModel(styleStrings,STYLE_CIRCLE,0,6);
+        style=new StringRangeModel(styleStrings,STYLE_CIRCLE,0,6);
         updateStyle();
         style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){updateStyle();}});
     }

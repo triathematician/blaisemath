@@ -20,12 +20,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
-import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
 import specto.plottable.Rectangle2D;
 
@@ -98,7 +95,21 @@ public class Euclidean2 extends Visometry<R2> {
     public double getDrawAspect(){return getDrawWidth()/getDrawHeight();}
     public AffineTransform getAffineTransformation(){return at;}
     
-    public void setAspectRatio(double newValue){if(newValue!=aspectRatio){aspectRatio=newValue;computeTransformation();}}
+    public void setAspectRatio(final double newValue){
+        if(newValue!=aspectRatio){
+            final double oldValue=aspectRatio;
+            final DoubleRangeModel drm=new DoubleRangeModel(oldValue,oldValue,newValue,(newValue-oldValue)/200);
+            Thread runner=new Thread(new Runnable(){
+                public void run() {
+                    while(drm.increment(false,(newValue>oldValue)?1:-1)){
+                        try{Thread.sleep(1);}catch(Exception e){}
+                        aspectRatio=drm.getValue();computeTransformation();                             
+                    }
+                }            
+            });
+            runner.start();
+        }
+    }
     public void setDesiredMin(R2 newValue){setDesiredBounds(newValue,desiredMax);}
     public void setDesiredMax(R2 newValue){setDesiredBounds(desiredMin,newValue);}
     public void setDesiredBounds(R2 newMin,R2 newMax){
@@ -259,7 +270,7 @@ public class Euclidean2 extends Visometry<R2> {
         mouseDragged(e);
         if(pressedAt!=null&&mode.equals("Alt+Button1")){
             container.remove(zoomBox);
-            setDesiredBounds(zoomBox.getMin(),zoomBox.getMax());
+            zoomBoxAnimated(zoomBox);
             zoomBox=null;
         }
         pressedAt=null;
@@ -296,24 +307,44 @@ public class Euclidean2 extends Visometry<R2> {
         double cy=.1*p.y+.9*getActualCenter().y;
         setDesiredBounds(new R2(cx-factor*getDrawWidth()/2,cy-factor*getDrawHeight()/2),new R2(cx+factor*getDrawWidth()/2,cy+factor*getDrawHeight()/2));
     }
-    public void zoomCenter(double factor){zoomPoint(getActualCenter(),factor);}
+    public void zoomCenter(double factor){zoomPointAnimated(getActualCenter(),factor);}
     /** Creates an animating zoom using a particular timer. */
-    public void zoomPointAnimated(R2 p,double factor){
-        // TODO Fix this method!!
+    public void zoomPointAnimated(R2 p,final double factor){
         final double cx=.1*p.x+.9*getActualCenter().x;
         final double cy=.1*p.y+.9*getActualCenter().y;
-        final double xMultiplier=factor*getDrawWidth()/2;
-        final double yMultiplier=factor*getDrawHeight()/2;
-        final DoubleRangeModel drm=new DoubleRangeModel(0.1,0.1,1.0,0.1);
-        drm.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e) {
-                setDesiredBounds(new R2(cx-drm.getValue()*xMultiplier,cy-drm.getValue()*yMultiplier),
-                        new R2(cx+drm.getValue()*xMultiplier,cy+drm.getValue()*yMultiplier));   
-            }
+        final double xMultiplier=getDrawWidth()/2;
+        final double yMultiplier=getDrawHeight()/2;
+        final DoubleRangeModel drm=new DoubleRangeModel();
+        drm.setRangeProperties(1.0,1.0,factor,(factor-1.0)/100);
+        Thread runner=new Thread(new Runnable(){
+            public void run() {
+                while(drm.increment(false,(factor>1)?1:-1)){
+                    try{Thread.sleep(1);}catch(Exception e){}
+                    setDesiredBounds(new R2(cx-drm.getValue()*xMultiplier,cy-drm.getValue()*yMultiplier),
+                        new R2(cx+drm.getValue()*xMultiplier,cy+drm.getValue()*yMultiplier));                                         
+                }
+            }            
         });
-        RangeTimer t=new RangeTimer(drm);
-        t.setLooping(false);
-        t.actionPerformed(new ActionEvent(this,0,"play"));
+        runner.start();
+    }
+    /** Zooms to the boundaries of a particular box. */
+    public void zoomBoxAnimated(final Rectangle2D boundary){
+        final R2 min1=getActualMin();
+        final R2 max1=getActualMax();
+        final DoubleRangeModel drm=new DoubleRangeModel(0.0,0.0,1.0,.01);
+        Thread runner=new Thread(new Runnable(){
+            public void run() {
+                while(drm.increment(false)){
+                    try{Thread.sleep(1);}catch(Exception e){}
+                    setDesiredBounds(
+                            min1.x+(boundary.getMin().x-min1.x)*drm.getValue(),
+                            min1.y+(boundary.getMin().y-min1.y)*drm.getValue(),
+                            max1.x+(boundary.getMax().x-max1.x)*drm.getValue(),
+                            max1.y+(boundary.getMax().y-max1.y)*drm.getValue());
+                }
+            }            
+        });
+        runner.start();
     }
         
 
@@ -330,7 +361,7 @@ public class Euclidean2 extends Visometry<R2> {
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){zoomCenter(2);}});
         sub.add(mi);
         mi=new JMenuItem("Default Zoom");
-        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setDesiredBounds(-10,-10,10,10);}});
+        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){zoomBoxAnimated(new Rectangle2D(-10,-10,10,10));}});
         sub.add(mi);
         result.add(sub);
         
@@ -386,7 +417,7 @@ public class Euclidean2 extends Visometry<R2> {
     
     /** Says whether a given point is contained within the visometry window. */
     public boolean contains(R2 point){
-        return (point.x>=actualMin.x)&&(point.x<=actualMax.x)&&(point.y>=actualMin.x)&&(point.y<=actualMax.x);
+        return (point.x>=actualMin.x)&&(point.x<=actualMax.x)&&(point.y>=actualMin.y)&&(point.y<=actualMax.y);
     }
     
     /** Returns points at which the ray beginning at p1 and passing through p2 intersects the boundary of the window. */
@@ -522,7 +553,11 @@ public class Euclidean2 extends Visometry<R2> {
         return path;
     }
     
+    
+    
+    
     // ABSOLUTE DISTANCE METHODS
+    // REFER TO THE ABSOLUTE COORDINATES OF THE WINDOW
     
     /** Returns window coordinate point at an offset of given distance and angle from a particular one. */
     public java.awt.geom.Point2D.Double getPointOffsetAngle(java.awt.geom.Point2D.Double point,double angle,double distance){

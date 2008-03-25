@@ -17,17 +17,17 @@ import javax.swing.event.ChangeListener;
  * @author Elisha Peterson
  */
 public class ComboBoxEditor extends DefaultComboBoxModel implements ChangeListener{
-    ComboBoxRangeModel cbrm;
+    StringRangeModel cbrm;
     public ComboBoxEditor(){super();initializeModels();}
-    public ComboBoxEditor(ComboBoxRangeModel cbrm){super(cbrm.getStrings());initializeModels(cbrm);}
+    public ComboBoxEditor(StringRangeModel cbrm){super(cbrm.getStrings());initializeModels(cbrm);}
     
     @Override
     public void setSelectedItem(Object anObject){cbrm.setValue(this.getIndexOf(anObject));}
     @Override
     public Object getSelectedItem(){return getElementAt(cbrm.getValue());}    
    
-    public void initializeModels(){if(cbrm==null){cbrm=new ComboBoxRangeModel();}cbrm.addChangeListener(this);}
-    public void initializeModels(ComboBoxRangeModel cbrm){this.cbrm=cbrm;cbrm.addChangeListener(this);}
+    public void initializeModels(){if(cbrm==null){cbrm=new StringRangeModel();}cbrm.addChangeListener(this);}
+    public void initializeModels(StringRangeModel cbrm){this.cbrm=cbrm;cbrm.addChangeListener(this);}
     
     @Override
     public void stateChanged(ChangeEvent e){}

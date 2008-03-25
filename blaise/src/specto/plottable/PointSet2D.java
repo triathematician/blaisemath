@@ -17,7 +17,7 @@ import javax.swing.event.ChangeListener;
 import specto.Animatable;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Plottable;
 import specto.dynamicplottable.Point2D;
@@ -121,12 +121,12 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public static final int ANIMATE_TRAIL=3;
     
     static final String[] animateStyleStrings={"Draw path","Moving dot","Trace path","Draw with trail"};
-    public ComboBoxRangeModel animateStyle;
+    public StringRangeModel animateStyle;
 
     @Override
     public void initStyle(){
         super.initStyle();
-        animateStyle=new ComboBoxRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
+        animateStyle=new StringRangeModel(animateStyleStrings,ANIMATE_TRAIL,0,3);
         animateStyle.addChangeListener(this);
     }    
     @Override

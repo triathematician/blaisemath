@@ -28,12 +28,7 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     
     // BASIC CONSTRUCTOR
     
-    public BoundedRangeModel(N value,N minimum,N maximum,N step){
-        this.minimum=minimum;
-        this.maximum=maximum;
-        this.value=value;
-        this.step=step;
-    }
+    public BoundedRangeModel(N value,N minimum,N maximum,N step){setRangeProperties(minimum,maximum,value,step);}
     
     
     // PRIMARY GETTERS AND SETTERS

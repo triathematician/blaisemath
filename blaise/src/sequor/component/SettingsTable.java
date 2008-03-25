@@ -20,7 +20,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import sequor.editor.ColorEditor;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.FiresChangeEvents;
 import sequor.model.FunctionTreeModel;
@@ -59,7 +59,7 @@ public class SettingsTable extends JTable {
         switch(sp.getEditorType()){
             case Settings.EDIT_BOOLEAN: return new DefaultCellEditor(new JCheckBox());
             case Settings.EDIT_COLOR: return new ColorEditor((ColorModel)sp.getModel());
-            case Settings.EDIT_COMBO: return new DefaultCellEditor(((ComboBoxRangeModel)sp.getModel()).getComboBox());
+            case Settings.EDIT_COMBO: return new DefaultCellEditor(((StringRangeModel)sp.getModel()).getComboBox());
             // TODO write custom double cell editor
             case Settings.EDIT_DOUBLE_SLIDER:
             case Settings.EDIT_DOUBLE: return new TableSpinner((DoubleRangeModel)sp.getModel());
@@ -101,7 +101,7 @@ public class SettingsTable extends JTable {
                     setBackground(((ColorModel)sp.getModel()).getValue());
                     break;
                 case Settings.EDIT_COMBO:
-                    setText(((ComboBoxRangeModel)sp.getModel()).toString());
+                    setText(((StringRangeModel)sp.getModel()).toString());
                     break;
                 case Settings.EDIT_DOUBLE_SLIDER:
                 case Settings.EDIT_DOUBLE:

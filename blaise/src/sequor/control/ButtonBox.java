@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import sequor.VisualControl;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 
 /**
  * ButtonBox is a collection of VisualButton'label which can be displayed in a variety of formats.
@@ -150,22 +150,22 @@ public class ButtonBox extends VisualControlGroup {
     
     // LAYOUT OPTIONS
     
-    ComboBoxRangeModel layoutType;
+    StringRangeModel layoutType;
     public static final int LAYOUT_BOX=0;
     public static final int LAYOUT_HLINE=1;
     public static final int LAYOUT_VLINE=2;
     public static String[] layoutStrings={"Box","Horizontal","Vertical"};
-    public ComboBoxRangeModel getLayoutModel(){return layoutType;}
+    public StringRangeModel getLayoutModel(){return layoutType;}
     public void setOrientation(int newOrientation){layoutType.setValue(newOrientation);}
     
     // STYLE OPTIONS
     
-    ComboBoxRangeModel buttonStyle;
+    StringRangeModel buttonStyle;
     public static final int STYLE_CIRCLE=0;
     public static final int STYLE_BOX=1;
     public static final int STYLE_RBOX=2;
     public static String[] styleStrings={"Circular","Square","Rounded"};
-    public ComboBoxRangeModel getButtonStyle(){return buttonStyle;}
+    public StringRangeModel getButtonStyle(){return buttonStyle;}
     public BoundedShape getButtonShape(){
         switch(buttonStyle.getValue()){
             case STYLE_BOX:
@@ -180,7 +180,7 @@ public class ButtonBox extends VisualControlGroup {
     }
 
     private void initStyle() {
-        layoutType=new ComboBoxRangeModel(layoutStrings,LAYOUT_BOX,0,2);
+        layoutType=new StringRangeModel(layoutStrings,LAYOUT_BOX,0,2);
         layoutType.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 adjustWidth();
@@ -189,7 +189,7 @@ public class ButtonBox extends VisualControlGroup {
                 fireStateChanged();
             }            
         });
-        buttonStyle=new ComboBoxRangeModel(styleStrings,STYLE_CIRCLE,0,2);
+        buttonStyle=new StringRangeModel(styleStrings,STYLE_CIRCLE,0,2);
         buttonStyle.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 for(int i=0;i<elements.size();i++){

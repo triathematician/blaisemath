@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 
 /**
  * A JMenu with several editors determined by a particular Settings class. Currently, only colors and combobox's are supported. 
@@ -49,7 +49,7 @@ public class SettingsMenu extends JMenu {
         for(SettingsProperty sp:s){
             switch(sp.getEditorType()){
                 case Settings.EDIT_COMBO : 
-                    for(JMenuItem mi:((ComboBoxRangeModel)sp.getModel()).getMenuItems()){add(mi);}
+                    for(JMenuItem mi:((StringRangeModel)sp.getModel()).getMenuItems()){add(mi);}
                     break;
                 case Settings.EDIT_COLOR :
                     if (sp.getModel() instanceof ColorModel){

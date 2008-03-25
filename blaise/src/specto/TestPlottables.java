@@ -28,6 +28,7 @@ import specto.dynamicplottable.RandomPoint2D;
 import specto.dynamicplottable.RandomWalk2D;
 import specto.dynamicplottable.Triangle2D;
 import specto.plottable.Function2D;
+import specto.plottable.HiddenText2D;
 import specto.plottable.Parametric2D;
 import specto.plottable.PlaneFunction2D;
 import specto.plottable.Rectangle2D;
@@ -87,6 +88,7 @@ public class TestPlottables extends javax.swing.JFrame {
         Triangle2D tri1=new Triangle2D(-10,-2,-8,-8,-3,-5);
         plot2D5.add(tri1);
         plot2D5.add(SliderBox.getStyleAdjusters(100,10,15,plot2D5.getPlottables(),plot2D5));
+        plot2D5.add(new HiddenText2D());
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){

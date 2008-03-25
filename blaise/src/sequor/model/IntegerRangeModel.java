@@ -26,7 +26,8 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     
     @Override
     public boolean setStep(Integer step){
-        if(step<getRange()&& !this.step.equals(step)){
+        step=Math.abs(step);
+        if(step<getRange() && ((this.step==null) || !this.step.equals(step))){
             this.step=step;
             return true;
         }

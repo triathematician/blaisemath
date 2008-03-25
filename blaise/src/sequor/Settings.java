@@ -268,7 +268,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
             case EDIT_INTEGER_SLIDER:
                 return getSlider((IntegerRangeModel) sp.getModel());
             case EDIT_COMBO:
-                return ((ComboBoxRangeModel) sp.getModel()).getComboBox();
+                return ((StringRangeModel) sp.getModel()).getComboBox();
             case EDIT_STRING:
                 return new JTextField();
             case EDIT_COLOR:
@@ -371,7 +371,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         addProperty("double (spinner)",drm,Settings.EDIT_DOUBLE);
         addProperty("double (slider)",drm,Settings.EDIT_DOUBLE_SLIDER);
         addSeparator();
-        addProperty("combo",new ComboBoxRangeModel(),Settings.EDIT_COMBO);
+        addProperty("combo",new StringRangeModel(),Settings.EDIT_COMBO);
         addProperty("function",new FunctionTreeModel(),Settings.EDIT_FUNCTION);
         addProperty("parametric",new ParametricModel(),Settings.EDIT_PARAMETRIC);
         //addProperty("parameter",new ParameterListModel(),Settings.EDIT_PARAMETER);
