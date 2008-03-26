@@ -19,7 +19,7 @@ import scio.matrix.HashMatrix;
  * @author Elisha Peterson
  */
 public class Markov<V,W> {
-    
+
     /** Implements forward Viterbi algorithm for computing most likely underlying states in a Markov model.
      * @param observations the set of observations
      * @param hiddenStates the set of hidden states available in the model, as a set of Strings

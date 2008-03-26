@@ -1,9 +1,9 @@
 /**
- * Gestures.java
+ * Gesture.java
  * Created on Mar 25, 2008
  */
 
-package sequor.control;
+package sequor.control.gestures;
 
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
@@ -14,12 +14,34 @@ import scio.coordinate.R2;
 import scio.function.Function;
 import scio.function.FunctionValueException;
 import scio.matrix.HashMatrix;
+import scio.random.Markov;
 
 /**
  * Class contains code for implementing mouse gestures.
  * @author Elisha Peterson
  */
-public class Gestures {
+public abstract class Gesture {
+    
+    public abstract  String[] getStates();
+    public abstract HashMap<String,Double> getStartProb();
+    public abstract HashMatrix<String,Double> getTransProb();
+    public abstract HashMap<String,Function<R2,Double>> getEmitProb();
+    
+    public Vector<String> computePath(R2[] observations) throws FunctionValueException{
+//        System.out.println("OBS: "+observations);
+//        System.out.println("HS: "+getStates());
+//        System.out.println("StP: "+getStartProb());
+//        System.out.println("TrP: "+getTransProb());
+        return new Markov<String,R2>().forwardViterbi(
+                observations, 
+                getStates(), 
+                getStartProb(), 
+                getTransProb(), 
+                getEmitProb()).vitPath;
+    }
+    
+    
+    
     
     // REQUIRED ELEMENTS FOR THE MARKOV MODEL
     
@@ -59,7 +81,7 @@ public class Gestures {
     }
     
     /** Emission probabilities for give states. */
-    public static HashMap<String,Function<R2,Double>> getEmitProb(){
+    public static HashMap<String,Function<R2,Double>> getEmitsProb(){
         HashMap<String,Function<R2,Double>> result=new HashMap<String,Function<R2,Double>>();
         result.put("none",staticFunction);
         result.put("left",new AngleFunction(Math.PI,Math.PI/3));
@@ -89,12 +111,12 @@ public class Gestures {
     // POST-PROCESSING
     
     /** Clips path to just the essential elements. */
-    public static Vector<String> clipOutput(Vector<String> output){
+    public static Vector<String> clipOutput(Vector<String> output,String noneState){
         Vector<String> result=new Vector<String>();
         String curState=null;
         int i=0;
         while(i<output.size()){
-            while(i<output.size() && (output.get(i).equals(curState) || output.get(i).equals("none"))){i++;}
+            while(i<output.size() && (output.get(i).equals(curState) || output.get(i).equals(noneState))){i++;}
             if(i<output.size()){
                 curState=output.get(i);
                 result.add(curState);

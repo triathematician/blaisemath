@@ -5,6 +5,7 @@
 
 package sequor.control;
 
+import sequor.control.gestures.Gesture;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -17,6 +18,7 @@ import scio.coordinate.R2;
 import scio.random.Markov;
 import scio.random.Markov.CurrentState;
 import sequor.VisualControl;
+import sequor.control.gestures.AngleGesture;
 
 /**
  * Draws and stores a mouse path.
@@ -115,22 +117,15 @@ public class DrawnPath extends VisualControl {
                 observations[i-1]=observed.get(i).minus(observed.get(i-1));
             }
             
-//            System.out.println(hiddenStates.toString());
-            System.out.println(observations.toString());
-//            System.out.println(startProb.toString());
-//            System.out.println(transProb.toString());
-//            System.out.println(emitProb.toString());
+            System.out.println(observations.toString());            
+            System.out.println(Gesture.clipOutput(new AngleGesture.UpDown().computePath(observations),"0"));
+            System.out.println(Gesture.clipOutput(new AngleGesture.LeftRight().computePath(observations),"0"));
+            System.out.println(Gesture.clipOutput(new AngleGesture.FourDir().computePath(observations),"0"));
+            System.out.println(Gesture.clipOutput(new AngleGesture.EightDir().computePath(observations),"0"));            
             
-            CurrentState result = new Markov<String,R2>().forwardViterbi(
-                    observations,
-                    Gestures.moveStates,
-                    Gestures.getStartProb(0.2),
-                    Gestures.getTransProb(0.1,0.4,0.1,0.1),
-                    Gestures.getEmitProb());
-            System.out.println(result.toString());
-            Vector<String> gesture=Gestures.clipOutput(result.vitPath);
-            System.out.println(gesture.toString());
-            tempShape=Gestures.checkGesture(gesture);
+            Vector<String> result = new AngleGesture.EightDir().computePath(observations);
+            Vector<String> gesture=Gesture.clipOutput(result,"0");
+            tempShape=Gesture.checkGesture(gesture);
             if(tempShape!=null){fireStateChanged();}
         } catch (Exception e) {
         }

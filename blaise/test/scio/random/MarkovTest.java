@@ -11,7 +11,7 @@ import scio.coordinate.R2;
 import scio.function.Function;
 import scio.matrix.HashMatrix;
 import scio.random.Markov.CurrentState;
-import sequor.control.Gestures;
+import sequor.control.gestures.Gesture;
 
 /**
  *
@@ -51,10 +51,10 @@ public class MarkovTest extends TestCase {
             new R2(15,0),
             new R2(10,-20),
             new R2(90,1)};              
-        String[] hiddenStates=Gestures.moveStates;
-        startProb=Gestures.getStartProb(0.2);
-        transProb=Gestures.getTransProb(0.1,0.4,0.1,0.1);
-        emitProb=Gestures.getEmitProb();
+        String[] hiddenStates=Gesture.moveStates;
+        startProb=Gesture.getStartProb(0.2);
+        transProb=Gesture.getTransProb(0.1,0.4,0.1,0.1);
+        emitProb=Gesture.getEmitProb();
         
         System.out.println(hiddenStates.toString());
         System.out.println(observations.toString());
@@ -67,6 +67,6 @@ public class MarkovTest extends TestCase {
         System.out.println(result.toString());
             
         assertEquals("[right, right, right, none, left, down, none, none, up, none]", result.toString());
-        assertEquals("[right, left, down, up]", Gestures.clipOutput(result.vitPath).toString());
+        assertEquals("[right, left, down, up]", Gesture.clipOutput(result.vitPath).toString());
     }
 }
