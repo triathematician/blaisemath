@@ -173,11 +173,13 @@ public class Simulation implements ChangeListener {
         }
         switch(getPAlgorithm()){
             case SimSettings.PURSUE_DJ:
+                
+                newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);
                 // insert your algorithm here
                 // you can pass pDirections and eDirections to the algorithm in addition to the parameters shown above and below
                 // each of these vectors contains +1,0,-1, depending upon whether the direction is in the positive x-direction, negative x-direction, or not moving
                 // be sure to uncomment the "break" line below.
-                //break;
+                break;
             case SimSettings.PURSUE_CLOSEST:
             default:
                 newPPos=Algorithms.pursuersTowardClosest(getPursuerPositions(), getEvaderPositions(), this, curStep);

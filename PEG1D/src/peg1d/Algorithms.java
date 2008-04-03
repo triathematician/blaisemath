@@ -53,6 +53,13 @@ public class Algorithms {
         return result;
     }
     
+    public static Vector<Double> pursuers_DJ (Vector<Double> pursuerPosition,Vector<Double> evaderPosition, Vector<Double> evaderDirection, Simulation sim, int curStep) {
+        Vector<Double> result=new Vector<Double> ();
+        //fill in with algorithm
+        //System.out.println(result.toString());        
+        return result;
+    }
+    
     
     // UTILITY METHODS
 
