@@ -1,24 +1,22 @@
 /*
- * AngleGesture.java
+ * AngleGestureGenerator.java
  * Created on Mar 25, 2008
  */
 
 package sequor.control.gestures;
 
 import java.util.HashMap;
-import java.util.Vector;
 import scio.coordinate.R2;
 import scio.function.Function;
-import scio.function.FunctionValueException;
 import scio.matrix.HashMatrix;
 
 /**
- * AngleGesture is a class which can be used to construct objects based on mouse input (gestures).
+ * AngleGestureGenerator is a class which can be used to construct objects based on mouse input (gestures).
  * This class supports multiple angles of movement.
  * 
  * @author Elisha Peterson
  */
-public class AngleGesture extends Gesture {
+public class AngleGestureGenerator extends GestureGenerator {
     /** The set of angles. Should be in increasing/cyclic order. */
     double[] angles;
     /** The set of labels for the angles. */
@@ -39,7 +37,7 @@ public class AngleGesture extends Gesture {
     // CONSTRUCTORS
     
     /** Constructor requires labels and angles. */    
-    public AngleGesture(double[] angles,String[] labels){
+    public AngleGestureGenerator(double[] angles,String[] labels){
         this.angles=angles;
         this.labels=labels;
     }
@@ -104,28 +102,37 @@ public class AngleGesture extends Gesture {
     
     // STATIC INSTANCES OF THIS CLASS
     
-    public static class UpDown extends AngleGesture {
+    public static class UpDown extends AngleGestureGenerator {
         static String[] lab={"0","S","N"};
         static double[] ang={0.5*Math.PI,1.5*Math.PI};
         public UpDown(){super(ang,lab);moveSame=.55;moveAdjacent=.35;}
     }
     
-    public static class LeftRight extends AngleGesture {
+    public static class LeftRight extends AngleGestureGenerator {
         static String[] lab={"0","E","W"};
         static double[] ang={0.0,Math.PI};
         public LeftRight(){super(ang,lab);moveSame=.55;moveAdjacent=.35;}
     }
     
-    public static class FourDir extends AngleGesture {
+    public static class FourDir extends AngleGestureGenerator {
         static String[] lab={"0","E","S","W","N"};
         static double[] ang={0.0,0.5*Math.PI,Math.PI,1.5*Math.PI};
         public FourDir(){super(ang,lab);}
     }    
     
-    public static class EightDir extends AngleGesture {
+    public static class EightDir extends AngleGestureGenerator {
         static String[] lab={"0","E","SE","S","SW","W","NW","N","NE"};
         static double[] ang={0.0,0.25*Math.PI,0.5*Math.PI,0.75*Math.PI,1.0*Math.PI,1.25*Math.PI,1.5*Math.PI,1.75*Math.PI};
         public EightDir(){super(ang,lab);moveSame=.35;moveAdjacent=.15;}
+    }
+    
+    public static class SixteenDir extends AngleGestureGenerator {
+        static String[] lab={"0","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW","N","NNE","NE","ENE"};
+        static double[] ang={
+            0.0,Math.PI/8,2*Math.PI/8,3*Math.PI/8,4*Math.PI/8,5*Math.PI/8,6*Math.PI/8,7*Math.PI/8,
+            8*Math.PI/8,9*Math.PI/8,10*Math.PI/8,11*Math.PI/8,12*Math.PI/8,13*Math.PI/8,14*Math.PI/8,15*Math.PI/8
+        };        
+        public SixteenDir(){super(ang,lab);moveSame=.15;moveAdjacent=.05;}
     }
 
 }

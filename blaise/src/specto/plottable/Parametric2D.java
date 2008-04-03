@@ -58,6 +58,7 @@ public class Parametric2D extends PointSet2D {
         };
         
     public Parametric2D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
+    public Parametric2D(String string) {this();}
     /** Constructor for use with a particular function and range of t values */
     public Parametric2D(BoundedFunction<Double,R2> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
@@ -152,7 +153,7 @@ public class Parametric2D extends PointSet2D {
         }
         
         /** Returns data model which can be used to control the time of this point. */
-        public DoubleRangeModel getModel(){return tModel;}
+        public DoubleRangeModel getTimeModel(){return tModel;}
         
         @Override
         public void recompute() {

@@ -5,6 +5,7 @@
 
 package sequor.event;
 
+import java.util.EventListener;
 import specto.Visometry;
 
 /**
@@ -13,7 +14,7 @@ import specto.Visometry;
  * </p>
  * @author Elisha Peterson
  */
-public interface MouseVisometryListener<V extends Visometry> {
+public interface MouseVisometryListener<V extends Visometry> extends EventListener {
     public static final int CLICK_EDIT_RANGE=8;
     
     public void setAdjusting(boolean newValue);

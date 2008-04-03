@@ -19,8 +19,8 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     
     public PointRangeModel(){this(0,0);}
     public PointRangeModel(DoubleRangeModel xModel,DoubleRangeModel yModel){
-        this.xModel=(DoubleRangeModel) xModel.clone();
-        this.yModel=(DoubleRangeModel) yModel.clone();
+        this.xModel=xModel;
+        this.yModel=yModel;
     }
     public PointRangeModel(double x,double y){
         initializeModels();

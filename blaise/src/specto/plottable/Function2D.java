@@ -35,6 +35,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
         
     public Function2D(){this(new FunctionTreeModel());}
     public Function2D(Function<Double,Double> function){this.function=function;}
+    public Function2D(String string) {this(new FunctionTreeModel(string));}
     public Function2D(FunctionTreeModel ftm, Color color) {this(ftm);setColor(color);}
     public Function2D(final FunctionTreeModel functionModel){
         function=functionModel.getRoot();

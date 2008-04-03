@@ -11,6 +11,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.Vector;
+import javax.print.attribute.Size2DSyntax;
 
 /**
  * This class generates shapes which can be used to draw rulers. The shape may contain
@@ -45,21 +46,15 @@ public class Ruler {
         return result;
     }
     /** Returns set of horizontal lines at specified y-values of given length. */
-    public static Shape getHorizontalLines(double x,Vector<Double> ys,double length){
-        Path2D.Double result=new Path2D.Double();
-        for(Double y:ys){
-            result.moveTo(x,y);
-            result.lineTo(x+length,y);
-        }
+    public static Line2D.Double[] getHorizontalLines(double x,Vector<Double> ys,double length){
+        Line2D.Double[] result=new Line2D.Double[ys.size()];
+        for(int i=0;i<ys.size();i++){result[i]=new Line2D.Double(x,ys.get(i),x+length,ys.get(i));}
         return result;
     }
     /** Returns set of vertiocal lines at specified x-values of given length. */
-    public static Shape getVerticalLines(Vector<Double> xs,double y,double length){
-        Path2D.Double result=new Path2D.Double();
-        for(Double x:xs){
-            result.moveTo(x,y);
-            result.lineTo(x,y+length);
-        }
+    public static Line2D.Double[] getVerticalLines(Vector<Double> xs,double y,double length){
+        Line2D.Double[] result=new Line2D.Double[xs.size()];
+        for(int i=0;i<xs.size();i++){result[i]=new Line2D.Double(xs.get(i),y,xs.get(i),y+length);}
         return result;
     }
     

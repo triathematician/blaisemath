@@ -5,27 +5,22 @@
 
 package sequor.control;
 
-import sequor.control.gestures.Gesture;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.util.Vector;
 import scio.coordinate.R2;
-import scio.random.Markov;
-import scio.random.Markov.CurrentState;
 import sequor.VisualControl;
-import sequor.control.gestures.AngleGesture;
 
 /**
  * Draws and stores a mouse path.
  * @author Elisha Peterson
  */
 public class DrawnPath extends VisualControl {
-    Path2D.Double path;
+    protected Path2D.Double path;
 
     // CONSTRUCTOR
     
@@ -40,7 +35,6 @@ public class DrawnPath extends VisualControl {
     public static final int MARKER=2;
     public static final int HIGHLIGHTER=3;
     
-    Shape tempShape;
     
     @Override
     public void paintComponent(Graphics2D g, float opacity) {
@@ -102,32 +96,9 @@ public class DrawnPath extends VisualControl {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        markovOutput();
-    }
+    public void mouseReleased(MouseEvent e) {}
     
 
-    Vector<R2> observed=new Vector<R2>();
-    
-    /**  Outputs left/right sequence of a path */
-    public void markovOutput(){
-        try {
-            R2[] observations = new R2[observed.size()-1];
-            for(int i=1;i<observed.size();i++){
-                observations[i-1]=observed.get(i).minus(observed.get(i-1));
-            }
-            
-            System.out.println(observations.toString());            
-            System.out.println(Gesture.clipOutput(new AngleGesture.UpDown().computePath(observations),"0"));
-            System.out.println(Gesture.clipOutput(new AngleGesture.LeftRight().computePath(observations),"0"));
-            System.out.println(Gesture.clipOutput(new AngleGesture.FourDir().computePath(observations),"0"));
-            System.out.println(Gesture.clipOutput(new AngleGesture.EightDir().computePath(observations),"0"));            
-            
-            Vector<String> result = new AngleGesture.EightDir().computePath(observations);
-            Vector<String> gesture=Gesture.clipOutput(result,"0");
-            tempShape=Gesture.checkGesture(gesture);
-            if(tempShape!=null){fireStateChanged();}
-        } catch (Exception e) {
-        }
-    }
+    public Vector<R2> observed=new Vector<R2>();
+    public Path2D.Double tempShape;
 }

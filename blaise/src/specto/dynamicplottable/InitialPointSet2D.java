@@ -30,10 +30,12 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     protected PointSet2D path;
 
     public InitialPointSet2D(){super();path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
+    public InitialPointSet2D(Color value) {super(value);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(PointRangeModel prm){super(prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(Point2D parent){super(parent.prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(Point2D parent,Vector<R2> points,Color c){
         super(parent.prm);
+        parent.setColor(c);
         path=new PointSet2D(points,parent.getColor());
         length=new IntegerRangeModel(100,0,50000,1);
     }
@@ -42,6 +44,8 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     
     public IntegerRangeModel getLengthModel(){return length;}
     
+    /** Returns path. */
+    public Vector<R2> getPath(){return path.getPath();}
     /** Replaces the path contained here with a new one. */
     public void setPath(Vector<R2> newPoints){path.setPath(newPoints);length.setValue(newPoints.size());}
     /** Replaces the path's color with current color. */
@@ -52,9 +56,17 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     }
     
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v) {g.setColor(path.getColor());path.paintComponent(g,v);}
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        super.paintComponent(g,v);
+        g.setColor(path.getColor());
+        path.paintComponent(g,v);
+    }
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){g.setColor(path.getColor());path.paintComponent(g,v,t);}
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+        super.paintComponent(g,v);
+        g.setColor(path.getColor());
+        path.paintComponent(g,v,t);
+    }
     @Override
     public JMenu getOptionsMenu() {return path.getOptionsMenu();}
     public int getAnimatingSteps() {return path.getAnimatingSteps();}

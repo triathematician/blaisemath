@@ -95,7 +95,7 @@ public class Random2D {
      * centered at (x,y).
      **/
     public static R2 diskNormal(double std){
-        double randRadius=normal(0,std);
+        double randRadius=normal()*std;
         double randTheta=between(0,2*Math.PI);
         return new R2(randRadius*Math.cos(randTheta),randRadius*Math.sin(randTheta));
     }
@@ -104,6 +104,8 @@ public class Random2D {
     /** Returns Gaussian random point in diskNormal radius 0->r centered at point. */
     public static R2 diskNormal(R2 point,double std){return diskNormal(std).plus(point);}
     
+    /** Separate x and y normal distributions. */
+    public static R2 rectNormal(double stdx,double stdy){return new R2(normal()*stdx,normal()*stdy);}
     
     /**
      * Returns a uniformly distributed direction

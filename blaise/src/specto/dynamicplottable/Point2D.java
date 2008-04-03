@@ -33,8 +33,9 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     /** Default constructor places point at the origin. */
     public Point2D(){this(new PointRangeModel());}
     /** Constructor places point at a given location. */
-    public Point2D(R2 value){this(new PointRangeModel(value));}
+    public Point2D(R2 value){this(new PointRangeModel(value));}    
     public Point2D(double x, double y) {this(new PointRangeModel(x,y));}
+    public Point2D(Color c){this();setColor(c);}
     public Point2D(double x, double y,Color c) {this(new PointRangeModel(x,y));setColor(c);}
     /** Constructor given a PointRangeModel and a particular color. */
     public Point2D(PointRangeModel prm,Color c){this(prm);setColor(c);}
@@ -58,6 +59,7 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
     
     public R2 getPoint(){return prm.getPoint();}    
     public void setPoint(R2 newValue){prm.setTo(newValue);}
+    public PointRangeModel getModel(){return prm;}
     public void setModel(PointRangeModel prm){
         this.prm.removeChangeListener(this);
         this.prm=prm;

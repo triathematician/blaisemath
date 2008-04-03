@@ -10,6 +10,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -33,27 +34,52 @@ public class Clock2D extends Point2D implements Animatable<Euclidean2> {
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
         R2 center=getPoint();
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
-        g.setColor(new Color(255-(255-color.getValue().getRed())/3,255-(255-color.getValue().getGreen())/3,255-(255-color.getValue().getBlue())/3));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.6f));
+        g.setColor(Color.WHITE);
         g.fill(v.dot(center, radius));
+        g.setColor(new Color(255-(255-color.getValue().getRed())/3,255-(255-color.getValue().getGreen())/3,255-(255-color.getValue().getBlue())/3));
+        g.draw(v.dot(center, radius));
         g.setColor(color.getValue());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        // g.setStroke(new BasicStroke(4.0f));
-       // g.draw(visometry.dot(center,radius));
         Calendar calendar=new GregorianCalendar();
         double hrAngle=calendar.get(Calendar.HOUR)*2*Math.PI/12-Math.PI/2;
         double minAngle=calendar.get(Calendar.MINUTE)*2*Math.PI/60.0-Math.PI/2;
-        double secAngle=calendar.get(Calendar.SECOND)*2*Math.PI/60.0-Math.PI/2;        
+        double secAngle=calendar.get(Calendar.SECOND)*2*Math.PI/60.0-Math.PI/2;
+        //paintTicks(g,v,center);
+        paintStylishHands(g,v,center,hrAngle,minAngle,secAngle);
+        //paintDate(g,v,center,calendar);
+    }
+    
+    public void paintTicks(Graphics2D g,Euclidean2 v,R2 center) {      
         g.setStroke(new BasicStroke(1.0f));
-        g.draw(v.winArrow(center,secAngle,0.9*radius,4.0));
         for(double ticks=-Math.PI/2;ticks<3*Math.PI;ticks+=Math.PI/6){
             g.draw(v.winLineAtRadius(center,ticks,0.85*radius, 0.95*radius));
         }
+    }
+    
+    public void paintStylishHands(Graphics2D g,Euclidean2 v,R2 center,double hrAngle,double minAngle,double secAngle) {
+        Shape hand=new BasicStroke(10.0f).createStrokedShape(v.winLineAtRadius(center,hrAngle,0,.5*radius));
+        g.setStroke(new BasicStroke(1.0f));
+        g.setColor(new Color(255-(255-color.getValue().getRed())/3,255-(255-color.getValue().getGreen())/3,255-(255-color.getValue().getBlue())/3));
+        g.fill(hand);
+        g.setColor(getColor());
+        g.draw(hand);
+        hand=new BasicStroke(10.0f).createStrokedShape(v.winLineAtRadius(center,minAngle,0,.8*radius));
+        g.setStroke(new BasicStroke(1.0f));
+        g.setColor(new Color(255-(255-color.getValue().getRed())/3,255-(255-color.getValue().getGreen())/3,255-(255-color.getValue().getBlue())/3));
+        g.fill(hand);
+        g.setColor(getColor());
+        g.draw(hand);
+    }
+    
+    public void paintRegularHands(Graphics2D g,Euclidean2 v,R2 center,double hrAngle,double minAngle,double secAngle) {     
+        g.setStroke(new BasicStroke(1.0f));
+        g.draw(v.winArrow(center,secAngle,0.9*radius,4.0));
         g.setStroke(new BasicStroke(2.0f));
-        // hour hand
         g.draw(v.winArrow(center,hrAngle,0.5*radius,5.0));
-        // minute hand
         g.draw(v.winArrow(center,minAngle,0.8*radius,5.0));
+    }
+    public void paintDate(Graphics2D g,Euclidean2 v,R2 center,Calendar calendar){
         // date
         String day=Integer.toString(calendar.get(Calendar.DATE));
         String month=calendar.getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.getDefault());

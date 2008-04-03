@@ -7,6 +7,7 @@ package specto;
  */
 
 
+import java.awt.Color;
 import scio.coordinate.R2;
 import sequor.control.ArcSlider;
 import sequor.control.SliderBox;
@@ -21,8 +22,10 @@ import specto.dynamicplottable.Segment2D;
 import specto.dynamicplottable.DynamicPointSet2D;
 import specto.dynamicplottable.FractalEdge2D;
 import specto.dynamicplottable.Point2D;
+import specto.dynamicplottable.RandomFlame2D;
 import specto.dynamicplottable.RandomPoint2D;
 import specto.dynamicplottable.RandomWalk2D;
+import specto.dynamicplottable.SpaceFillingCurve2D;
 import specto.dynamicplottable.Triangle2D;
 import specto.gridplottable.NewGrid2D;
 import specto.plottable.Function2D;
@@ -55,6 +58,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D1.add(cp1);
         Point2D cp2=f1.getPointSlope();
         plot2D1.add(cp2);
+        plot2D1.add(new RandomFlame2D(cp2.getModel(),80,20));
         DoubleRangeModel drm1=fss.getModel();
         plot2D1.add(SliderBox.getStyleAdjusters(100,10,15,plot2D1.getPlottables(),plot2D1));
         BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
@@ -93,20 +97,26 @@ public class TestPlottables extends javax.swing.JFrame {
         for(double x=0;x<20;x+=.5){
             dps1.add(.2*x*Math.cos(x/3.0),.2*x*Math.sin(x/3.0));
         }
+        plot2D6.add(dps1);
         FractalEdge2D fe1=new FractalEdge2D(new R2(-3,3),new R2(-2,3));
         fe1.add(-2-1/3.,3);
         fe1.add(-2-1/3.,3+1/3.);
         fe1.add(-2-2/3.,3+1/3.);
         fe1.add(-2-2/3.,3);
-        plot2D6.add(dps1);
-        plot2D6.add(fe1);
+        plot2D6.add(fe1); 
+        SpaceFillingCurve2D sfc1=new SpaceFillingCurve2D();
+        plot2D6.add(sfc1);
+        SliderBox nab5=new SliderBox();
+        nab5.add(new NumberSlider(210,10,fe1.getIterModel()));
+        nab5.add(new NumberSlider(210,10,sfc1.getIterModel()));
+        plot2D6.add(nab5,3,1);
         plot2D6.add(SliderBox.getStyleAdjusters(100,10,15,plot2D6.getPlottables(),plot2D6));
         
         final Parametric2D par1=new Parametric2D();
         Parametric2D.ParametricPoint cp5=(Parametric2D.ParametricPoint) par1.getPointSlope();
         polarPlot2D1.add(cp5);
         polarPlot2D1.add(par1);
-        ArcSlider da1=new ArcSlider(10,70,cp5.getModel());
+        ArcSlider da1=new ArcSlider(10,70,cp5.getTimeModel());
         //da1.getStyle().setValue(NumberSlider.STYLE_DOTS);
         polarPlot2D1.add(da1,3,1);
         //polarPlot2D1.add(SliderBox.getStyleAdjusters(100,10,15,polarPlot2D1.getPlottables(),polarPlot2D1));
@@ -118,7 +128,16 @@ public class TestPlottables extends javax.swing.JFrame {
         DoubleRangeModel drm2=par1.getModel();
         polarPlot2D1.add(new BoundedRangeSliderBox(320,10,drm2),3,4);
         
-        
+        RandomFlame2D rf5=new RandomFlame2D(-12,0,100,100);
+        RandomFlame2D rf2=new RandomFlame2D(-18,0,90,20);
+        RandomFlame2D rf4=new RandomFlame2D(-14,0,70,60);
+        RandomFlame2D rf3=new RandomFlame2D(-16,0,60,5);
+        RandomFlame2D rf1=new RandomFlame2D(-20,0,50,10);
+        plot2D2.add(rf5);
+        plot2D2.add(rf2);
+        plot2D2.add(rf4);
+        plot2D2.add(rf3);
+        plot2D2.add(rf1);
         RandomPoint2D rp1=new RandomPoint2D();
         plot2D2.add(rp1);
         RandomWalk2D rw1=new RandomWalk2D();
@@ -133,6 +152,8 @@ public class TestPlottables extends javax.swing.JFrame {
         nab3.add(new NumberSlider(320,30,rw1.getAngleParameterModel()));
         nab3.add(new NumberSlider(320,50,rw1.getDistancePerTimeModel()));
         plot2D2.add(nab3,3,5);
+        
+        plot2D2.setBackground(Color.BLACK);
     }
     
     /** This method is called from within the constructor to

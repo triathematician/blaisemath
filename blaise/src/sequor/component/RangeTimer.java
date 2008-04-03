@@ -176,7 +176,7 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
             if(isPlaying()){
                 // increment value unless set to not loop
                 if(rangeValues.increment(looping)&&!looping){stop();}
-                System.out.println("val: "+rangeValues.getValue());
+                //System.out.println("val: "+rangeValues.getValue());
                 fireActionPerformed(e);
                 return;
             }

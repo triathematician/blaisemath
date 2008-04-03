@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
+import sequor.model.IntegerRangeModel;
 import specto.Plottable;
 import specto.plottable.PointSet2D;
 import specto.visometry.Euclidean2;
@@ -25,7 +26,7 @@ import specto.visometry.Euclidean2;
  */
 public class FractalEdge2D extends DynamicPointSet2D {
     
-    public static final int MAX_ITERATIONS=5;
+    protected IntegerRangeModel maxIter;
 
     /** base points determining the fractal (need at least three). */
     Vector<Point2D> points;
@@ -34,6 +35,7 @@ public class FractalEdge2D extends DynamicPointSet2D {
     
     public FractalEdge2D(R2 p1,R2 p2){
         points=new Vector<Point2D>();
+        maxIter=new IntegerRangeModel(5,0,6);
         setColor(Color.BLUE);
         add(p1);
         add(p2);
@@ -94,7 +96,7 @@ public class FractalEdge2D extends DynamicPointSet2D {
             result.add(new R2(0,0));
             result.addAll(generators);
             result.add(new R2(1,0));
-            for(int i=0;i<MAX_ITERATIONS;i++){
+            for(int i=0;i<maxIter.getValue();i++){
                 temp.clear();
                 for(int j=0;j<result.size()-1;j++){
                     temp.add(result.get(j));
@@ -123,6 +125,8 @@ public class FractalEdge2D extends DynamicPointSet2D {
     R2Transform getStandardTransform(R2 first,R2 last){
         return new R2Transform(last.x-first.x,last.y-first.y,-last.y+first.y,last.x-first.x,first.x,first.y);
     }
+    
+    public IntegerRangeModel getIterModel(){return maxIter;}    
 
     @Override
     public JMenu getOptionsMenu() {

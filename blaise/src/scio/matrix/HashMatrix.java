@@ -38,6 +38,7 @@ public class HashMatrix<W,V> extends Matrix<V> {
     
     public HashMatrix(int nr,int nc){super(nr,nc);}
     
+    public HashMap<W,Integer> getMap(){return map;}
     public V get(W row,W col){return super.get(map.get(row),map.get(col));}
     public void put(W row,W col,V cell){super.put(map.get(row),map.get(col),cell);}
     

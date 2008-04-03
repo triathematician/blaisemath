@@ -52,7 +52,7 @@ public class Markov<V,W> {
                 CurrentState mostLikely=new CurrentState();                
                 // Check through all possible current states to determine the most likely
                 for(int sourceState=0;sourceState<ns;sourceState++){                    
-                    CurrentState temp=tt.get(sourceState);
+                    CurrentState temp=new CurrentState(tt.get(sourceState));
                     double tp = emitProb.get(hiddenStates[sourceState]).getValue(observations[obs])
                             * transProb.get(hiddenStates[sourceState],hiddenStates[nextState]);
                     temp.totalProb*=tp;
@@ -67,7 +67,11 @@ public class Markov<V,W> {
                 }
                 uu.add(mostLikely);
             }
+            // store computation and normalize probabilities
             tt=uu;
+            //double maxProb=0.0;
+            //for(int i=0;i<ns;i++){maxProb=Math.max(maxProb,tt.get(i).vitProb);}
+            //for(int i=0;i<ns;i++){tt.get(i).vitProb/=maxProb;}
         }
         
         /** Constructs the resulting path. */
@@ -76,7 +80,9 @@ public class Markov<V,W> {
             result.totalProb += tt.get(st).totalProb;
             result.replaceIfGreater(tt.get(st));
         }
-        result.vitPath.removeElementAt(result.vitPath.size()-1);
+        if(result.vitPath.size()>1){
+            result.vitPath.removeElementAt(result.vitPath.size()-1);
+        }
         return result;
     }
     
@@ -84,6 +90,7 @@ public class Markov<V,W> {
     public class CurrentState{
         public CurrentState(){vitPath=new Vector<V>();}
         public CurrentState(double p,Vector<V> path,double vp){totalProb=p;vitPath=path;vitProb=vp;}
+        private CurrentState(CurrentState copee){totalProb=copee.totalProb;vitPath=copee.vitPath;vitProb=copee.vitProb;}
         private CurrentState(HashMap<V,Double> startProb, V s){this(startProb.get(s),s,startProb.get(s));}
         private CurrentState(double p, V s, double vp) {
             totalProb=p;

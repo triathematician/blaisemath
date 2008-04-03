@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 import java.util.Vector;
 import sequor.control.Ruler;
 import sequor.style.VisualStyle;
@@ -49,8 +50,10 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
                 (double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());        
         g.setColor(getColor());
         g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
-        g.draw(Ruler.getHorizontalLines(0,v.toWindowY(yGrid),v.getWindowWidth()));
-        g.draw(Ruler.getVerticalLines(v.toWindowX(xGrid),0,v.getWindowHeight()));
+        Line2D.Double[] lines=Ruler.getHorizontalLines(0,v.toWindowY(yGrid),v.getWindowWidth());
+        for(int i=0;i<lines.length;i++){g.draw(lines[i]);}
+        lines=Ruler.getVerticalLines(v.toWindowX(xGrid),0,v.getWindowHeight());
+        for(int i=0;i<lines.length;i++){g.draw(lines[i]);}
     }
 
     

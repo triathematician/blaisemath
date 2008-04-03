@@ -268,7 +268,7 @@ public abstract class SnapRule {
             Point result=new Point(
                     (int)(x+(r+ir*dr)*Math.cos(theta+itheta*dtheta)),
                     (int)(y-(r+ir*dr)*Math.sin(theta+itheta*dtheta)));
-            System.out.println("result: "+result.toString());
+//            System.out.println("result: "+result.toString());
             setForceSnap(true);
             if(forceSnap || result.distance(input)<snapRange){
                 input.setLocation(result);

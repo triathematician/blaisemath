@@ -34,6 +34,7 @@ public class NumberSlider extends VisualControlGroup {
     
     // CONSTRUCTORS
     
+    public NumberSlider(BoundedRangeModel model){this(0,0,model);}
     public NumberSlider(Point position,BoundedRangeModel model){this(position.x,position.y,model);}
     public NumberSlider(int x,int y,BoundedRangeModel model){this(x,y,100,15,STYLE_CIRCLE,model);}
     public NumberSlider(int x,int y,int width,int height,int style,BoundedRangeModel model){
