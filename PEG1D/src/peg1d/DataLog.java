@@ -6,10 +6,11 @@
 package peg1d;
 
 import java.awt.Color;
+import specto.dynamicplottable.Point2D;
 import java.text.DecimalFormat;
 import java.util.Vector;
 import javax.swing.JTextArea;
-import specto.Plottable;
+import scio.coordinate.R2;
 import specto.PlottableGroup;
 import specto.dynamicplottable.InitialPointSet2D;
 import specto.plotpanel.Plot2D;
@@ -59,13 +60,13 @@ public class DataLog {
         for(InitialPointSet2D p:sim.pursuers){pursuerDisplayGroup.add(p);}
         for(InitialPointSet2D p:sim.evaders){evaderDisplayGroup.add(p);}
         recolor();
-        captureGroup=new PlottableGroup<Euclidean2>();
         goalGroup=new PlottableGroup<Euclidean2>();
         goalGroup.add(sim.getGoalLine());
+        captureGroup=new PlottableGroup<Euclidean2>();
+        mainPlot.add(captureGroup);
         mainPlot.add(pursuerDisplayGroup);
         mainPlot.add(evaderDisplayGroup);
         mainPlot.add(goalGroup);
-        mainPlot.add(captureGroup);
     }
     
     /** Called when the number of <b>players</b> is changed in any way. If the number of teams is used, teh DataLog must be completely reinitialized. */
@@ -86,13 +87,16 @@ public class DataLog {
     /** Called when the simulation is run again with the same teams. */
     public void preRun(){
         significantEvents.clear();
-        captureGroup.clear();
+        if(captureGroup!=null){captureGroup.clear();}
     }
     
     /** Logs captures of a specified team over another team, within the specified distance.
      */
     public void logCapture(int pursuer,int evader,double pos,double time){
-        significantEvents.add(new SignificantEvent(pursuer,evader,pos,time,"Capture"));
+        significantEvents.add(new SignificantEvent(pursuer,evader,pos,time,"Capture"));            
+        Point2D where=new Point2D(new R2(pos,time),Color.YELLOW,false);
+        where.style.setValue(Point2D.CIRCLE);
+        if(captureGroup!=null){captureGroup.add(where);}
     }
     
     /** Called after the simulation is completed. */

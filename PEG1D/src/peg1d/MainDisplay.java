@@ -24,6 +24,7 @@ public class MainDisplay extends javax.swing.JFrame {
         jPanel2.setLayout(new BorderLayout());
         jPanel2.add(simulation1.getPanel(),BorderLayout.CENTER);
         plot2D1.add(simulation1.getSpeedBox(), 3, 6);
+        simulation1.outputArea=jTextArea1;
     }
     
     /** This method is called from within the constructor to

@@ -13,10 +13,14 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import javax.swing.text.BadLocationException;
 import scio.coordinate.R2;
 import sequor.Settings;
 import sequor.control.NumberSlider;
@@ -39,6 +43,8 @@ public class Simulation implements ChangeListener {
     Vector<InitialPointSet2D> evaders;
     Vector<Double> pDirections;
     Vector<Double> eDirections;
+    
+    JTextArea outputArea;
     
     public Simulation(){
         settings=new SimSettings();
@@ -126,10 +132,21 @@ public class Simulation implements ChangeListener {
     /** Runs the simulation. */
     void runSimulation(int steps){
         clearPaths();
-        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(pursuers.get(i).getPoint()));}
-        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(evaders.get(i).getPoint()));}
-        for(int i=0;i<steps;i++){loopSimulation(i);}
-        //fireStateChanged();
+        log.preRun();
+        for (int i = 0; i < getNP(); i++) {
+            getPPath(i).add(new R2(pursuers.get(i).getPoint()));
+        }
+        for (int i = 0; i < getNE(); i++) {
+            getEPath(i).add(new R2(evaders.get(i).getPoint()));
+        }
+        for (int i = 0; i < steps; i++) {
+            loopSimulation(i);
+        }
+        if (outputArea != null) {
+            try {outputArea.getDocument().remove(0, outputArea.getDocument().getLength()-1);}catch(Exception e){}
+            outputArea.append("--New Simulation--\n");
+            log.output(outputArea);
+        }
     }
     
     /** Runs with current number of steps. */
