@@ -24,7 +24,8 @@ public class clpapplet extends javax.swing.JApplet {
                 public void run() {
                     initComponents();
                     plot2D1.getVisometry().setBounds(new R2(-15,-3),new R2(15,23));
-                    simulation1.addToPanel(plot2D1);
+                    simulation1.log.initialize(simulation1, plot2D1);
+                    jButton2.addActionListener(plot2D1.getTimer());
                     jScrollPane1.setViewportView(simulation1.getPanel());
                 }
             });
@@ -90,11 +91,6 @@ public class clpapplet extends javax.swing.JApplet {
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
         jToolBar1.add(jButton2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -122,29 +118,13 @@ public class clpapplet extends javax.swing.JApplet {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        simulation1.randomize();
+        simulation1.randomizePositions();
         simulation1.run();
         plot2D1.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(plot2D1.getTimer().isRunning()){
-            plot2D1.getTimer().stop();
-        }else{
-            plot2D1.getTimer().start();
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
-        if(evt.getActionCommand().equals("redraw")){
-            plot2D1.repaint();
-        }
-        else if(evt.getActionCommand().equals("reset")){
-            plot2D1.removeAll();
-            simulation1.addToPanel(plot2D1);
-            plot2D1.rebuildOptionsMenu();
-            plot2D1.repaint();
-        }
+        plot2D1.repaint();
     }//GEN-LAST:event_simulation1ActionPerformed
     
     

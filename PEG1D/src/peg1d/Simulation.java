@@ -17,107 +17,79 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import specto.PlotPanel;
 import scio.coordinate.R2;
 import sequor.Settings;
+import sequor.control.NumberSlider;
+import sequor.control.SliderBox;
 import sequor.model.ColorModel;
-import sequor.model.ComboBoxRangeModel;
+import sequor.model.StringRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
-import specto.dynamicplottable.Point2D;
-import specto.plottable.PointSet2D;
-import specto.visometry.Euclidean2;
+import specto.dynamicplottable.InitialPointSet2D;
 
 /**
  *
  * @author ae3263
  */
 public class Simulation implements ChangeListener {    
+    public DataLog log;
     SimSettings settings;
-    Vector<PointRangeModel> pStartsAt;
-    Vector<PointRangeModel> eStartsAt;
-    Vector<PointSet2D> pPaths;
-    Vector<PointSet2D> ePaths;
+    Vector<InitialPointSet2D> pursuers;
+    Vector<InitialPointSet2D> evaders;
     Vector<Double> pDirections;
     Vector<Double> eDirections;
     
     public Simulation(){
         settings=new SimSettings();
-        pStartsAt=new Vector<PointRangeModel>(getNP());
-        pPaths=new Vector<PointSet2D>(getNP());
+        initializeAll();
+        reset();
+        run();
+    }
+    
+    void initializeAll(){
+        log=new DataLog(this);
+        pursuers=new Vector<InitialPointSet2D>(getNP());
         pDirections=new Vector<Double>(getNP());
-        eStartsAt=new Vector<PointRangeModel>(getNE());
-        ePaths=new Vector<PointSet2D>(getNE());
+        evaders=new Vector<InitialPointSet2D>(getNE());
         eDirections=new Vector<Double>(getNE());
     }
     
     /** resets the entire simulation */
-    void reset(Euclidean2 vis){
-        initDataModels(vis);
-        randomize();    
+    void reset(){
+        pursuers.clear();
+        for(int i=0;i<getNP();i++){pursuers.add(new InitialPointSet2D(settings.colorPursuer.getValue()));}
+        for(int i=0;i<getNP();i++){pursuers.get(i).setLabel("P"+i);}
+        evaders.clear();
+        for(int i=0;i<getNE();i++){evaders.add(new InitialPointSet2D(settings.colorEvader.getValue()));}
+        for(int i=0;i<getNE();i++){evaders.get(i).setLabel("E"+i);}
+        randomizePositions();    
         initListening();
-        run();
     }
     
-    /** Sets up data models which can then be placed on a PlotPanel. */    
-    void initDataModels(Euclidean2 vis){
-        PointRangeModel addThis;
-        pStartsAt.clear();
-        pPaths.clear();
-        for(int i=0;i<getNP();i++){
-            addThis=new PointRangeModel();
-            pStartsAt.add(addThis);
-            pPaths.add(new PointSet2D(settings.colorPursuer.getValue()));
-        }
-        eStartsAt.clear();
-        ePaths.clear();
-        for(int i=0;i<getNE();i++){
-            addThis=new PointRangeModel();
-            eStartsAt.add(addThis);
-            ePaths.add(new PointSet2D(settings.colorEvader.getValue()));
-        }
-    }
+    boolean adjusting=false;
     
-    void initListening(){
-        for(PointRangeModel prm:pStartsAt){
-            prm.addChangeListener(this);
-        }
-        for(PointRangeModel prm:eStartsAt){
-            prm.addChangeListener(this);
-        }
-    }
-    
-    /** Returns plottables to add to the PlotPanel. */
-    public void addToPanel(PlotPanel<Euclidean2> p){
-        reset(p.getVisometry());
-        if(pStartsAt==null||pPaths==null||eStartsAt==null||ePaths==null){return;}
-        for(PointRangeModel prm:pStartsAt){p.add(new Point2D(prm,settings.colorPursuer.getValue()));}
-        for(PointRangeModel prm:eStartsAt){p.add(new Point2D(prm,settings.colorEvader.getValue()));}
-        for(PointSet2D ps:pPaths){p.add(ps);}
-        for(PointSet2D ps:ePaths){p.add(ps);}
+    void initListening(){        
+        for(InitialPointSet2D ips:pursuers){ips.addChangeListener(this);}
+        for(InitialPointSet2D ips:evaders){ips.addChangeListener(this);}
     }
     
     /** Randomizes positions */
-    public void randomize(){initRandom(10,10);}
+    public void randomizePositions(){randomizePositions(10,10);}
     /** Places points at random along the ``starting line'' */
-    void initRandom(double maxp,double maxe){
+    void randomizePositions(double maxp,double maxe){
+        adjusting=true;
         for(int i=0;i<getNP();i++){                        
             // place somewhere between x=-max and x=+max and at y=0
-            pStartsAt.get(i).setTo(Math.random()*2*maxp-maxp,0.0);
-            pStartsAt.get(i).setBounds(-2*maxp,0,2*maxp,0);
+            pursuers.get(i).setPoint(new R2(Math.random()*2*maxp-maxp,0.0));
+            pursuers.get(i).getModel().setBounds(-2*maxp,0.0,2*maxp,0.0);
         }
         for(int i=0;i<getNE();i++){                        
             // place somewhere between x=-max and x=+max and at y=0
-            eStartsAt.get(i).setTo(Math.random()*2*maxp-maxp,0.0);
-            eStartsAt.get(i).setBounds(-2*maxp,0,2*maxp,0);
+            evaders.get(i).setPoint(new R2(Math.random()*2*maxe-maxe,0.0));
+            evaders.get(i).getModel().setBounds(-2*maxe,0.0,2*maxe,0.0);
         }
-    }
-    
-    /** Clears all paths. */
-    void clearPaths(){
-        for(int i=0;i<getNP();i++){getPPath(i).clear();}
-        for(int i=0;i<getNE();i++){getEPath(i).clear();}
+        adjusting=false;
     }
     
     /** Returns last current position. */
@@ -129,9 +101,9 @@ public class Simulation implements ChangeListener {
     /** Returns previous pursuer position. */
     Double lastEPos(int i){if(getEPath(i).size()<=1){return null;}else{return getEPath(i).get(getEPath(i).size()-1).x;}}
     /** Returns ith pursuer path. */
-    Vector<R2> getPPath(int i){return pPaths.get(i).getPath();}    
+    Vector<R2> getPPath(int i){return pursuers.get(i).getPath();}
     /** Returns ith evader path. */
-    Vector<R2> getEPath(int i){return ePaths.get(i).getPath();}   
+    Vector<R2> getEPath(int i){return evaders.get(i).getPath();}
     /** Returns vector of pursuer positions. */
     Vector<Double> getPursuerPositions(){
         Vector<Double> result=new Vector<Double>();
@@ -145,11 +117,17 @@ public class Simulation implements ChangeListener {
         return result;
     }
     
+    /** Clears all paths. */
+    void clearPaths(){
+        for(int i=0;i<getNP();i++){getPPath(i).clear();}
+        for(int i=0;i<getNE();i++){getEPath(i).clear();}
+    }
+    
     /** Runs the simulation. */
     void runSimulation(int steps){
         clearPaths();
-        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(pStartsAt.get(i).getPoint()));}
-        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(eStartsAt.get(i).getPoint()));}
+        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(pursuers.get(i).getPoint()));}
+        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(evaders.get(i).getPoint()));}
         for(int i=0;i<steps;i++){loopSimulation(i);}
         //fireStateChanged();
     }
@@ -187,7 +165,7 @@ public class Simulation implements ChangeListener {
         }
         
         // moves captured players outside the playing field
-        moveCapturedPlayersToInfinity(newPPos,newEPos);
+        moveCapturedPlayersToInfinity(newPPos,newEPos,curStep*getStepSize());
         
         // add new points onto the displayed paths
         for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
@@ -223,11 +201,12 @@ public class Simulation implements ChangeListener {
     }
     
     /** Moves captured players to infinity. */
-    void moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions){
+    void moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions,double time){
         // if any two elements are closer than capture distance, remove to infinity.
         for(int i=0;i<getNP();i++){
             for(int j=0;j<getNE();j++){
                 if(Math.abs(pursuerPositions.get(i)-evaderPositions.get(j))<getCaptureRange()){
+                    log.logCapture(i,j,pursuerPositions.get(i),time);
                     pursuerPositions.set(i,Double.POSITIVE_INFINITY);
                     evaderPositions.set(j,Double.NEGATIVE_INFINITY);
                 }
@@ -242,17 +221,45 @@ public class Simulation implements ChangeListener {
     public double getESpeed(){return settings.speedEvader.getValue();}
     public int getPAlgorithm(){return settings.algorithmPursuer.getValue();}
     public int getEAlgorithm(){return settings.algorithmEvader.getValue();}
+    public Color getPColor(){return settings.colorPursuer.getValue();}
+    public Color getEColor(){return settings.colorEvader.getValue();}
     public double getGoal(){return settings.goalPosition.getValue();}
     public double getCaptureRange(){return settings.captureRegion.getValue();}
     public double getStepSize(){return settings.stepSize.getValue();}
     public int getNumSteps(){return settings.numSteps.getValue();}
+    
+    /** Returns line corresponding to the evader's goal. */
+    public InitialPointSet2D getGoalLine(){
+        final InitialPointSet2D result=new InitialPointSet2D(
+                new PointRangeModel(settings.goalPosition,
+                new DoubleRangeModel(0,0,0,0)));
+        result.setColor(Color.DARK_GRAY);
+        result.style.setValue(InitialPointSet2D.CIRCLE);
+        settings.goalPosition.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                Vector<R2> path=new Vector<R2>();
+                path.add(result.getPoint());
+                path.add(result.getPoint().plus(new R2(0,999999)));
+                result.setPath(path);
+            }
+        });
+        return result;
+    }
+    
+    /** Returns control box with pursuer/evader speeds. */
+    public SliderBox getSpeedBox(){
+        SliderBox result=new SliderBox();
+        result.add(new NumberSlider(settings.speedPursuer));
+        result.add(new NumberSlider(settings.speedEvader));
+        return result;
+    }
     
     /** Contains all the initial settings for the simulation. */
     private class SimSettings extends Settings {
         /** Number of pursuers */
         private IntegerRangeModel numPursuer=new IntegerRangeModel(3,1,50);
         /** Speed of pursuers */
-        private DoubleRangeModel speedPursuer=new DoubleRangeModel(1,0,10,.05);
+        private DoubleRangeModel speedPursuer=new DoubleRangeModel(1,0,5,.05);
         /** Pursuer color */
         private ColorModel colorPursuer=new ColorModel(Color.RED);
         /** Pursuit algorithm strings */
@@ -260,19 +267,19 @@ public class Simulation implements ChangeListener {
         public static final int PURSUE_CLOSEST=0;
         public static final int PURSUE_DJ=1;
         /** Choice of algorithm */
-        private ComboBoxRangeModel algorithmPursuer=new ComboBoxRangeModel(PURSUIT_STRINGS,PURSUE_CLOSEST,0,PURSUIT_STRINGS.length-1);
+        private StringRangeModel algorithmPursuer=new StringRangeModel(PURSUIT_STRINGS,PURSUE_CLOSEST,0,PURSUIT_STRINGS.length-1);
         
         /** Number of evaders */
         private IntegerRangeModel numEvader=new IntegerRangeModel(3,1,50);
         /** Speed of evaders */
-        private DoubleRangeModel speedEvader=new DoubleRangeModel(1,0,10,.05);
+        private DoubleRangeModel speedEvader=new DoubleRangeModel(1,0,5,.05);
         /** Evader color */
         private ColorModel colorEvader=new ColorModel(Color.BLUE);
         /** Evader algorithm strings */
         public final String[] EVADER_STRINGS={"Head to Goal"};
         public static final int EVADE_TO_GOAL=0;
         /** Choice of algorithm */
-        private ComboBoxRangeModel algorithmEvader=new ComboBoxRangeModel(EVADER_STRINGS,EVADE_TO_GOAL,0,EVADER_STRINGS.length-1);
+        private StringRangeModel algorithmEvader=new StringRangeModel(EVADER_STRINGS,EVADE_TO_GOAL,0,EVADER_STRINGS.length-1);
         
         /** Position of goal */
         private DoubleRangeModel goalPosition=new DoubleRangeModel(0,-1000,1000,.05);
@@ -307,14 +314,12 @@ public class Simulation implements ChangeListener {
         
         @Override
         public void stateChanged(ChangeEvent e){
-            if(e.getSource()==colorEvader){
-                for(PointSet2D es:ePaths){es.setColor(colorEvader.getValue());}
-                fireActionPerformed("reset");
-            }else if(e.getSource()==colorPursuer){        
-                for(PointSet2D ps:pPaths){ps.setColor(colorPursuer.getValue());}
-                fireActionPerformed("reset");
+            if(e.getSource()==colorEvader || e.getSource()==colorPursuer){
+                log.recolor();
+                fireActionPerformed("redraw");
             }else if(e.getSource()==numPursuer||e.getSource()==numEvader){
-                fireActionPerformed("reset");
+                reset();
+                log.initializeNumbersOnly();
                 run();
                 fireActionPerformed("redraw");
             }else{
@@ -328,7 +333,7 @@ public class Simulation implements ChangeListener {
     public JPanel getPanel(){return settings.getPanel();}
     
     // EVENT HANDLING
-    public void stateChanged(ChangeEvent e){run();}
+    public void stateChanged(ChangeEvent e){if(adjusting){return;}run();}
     
     // Remaining code deals with action listening
     protected ActionEvent actionEvent=null;
@@ -337,6 +342,7 @@ public class Simulation implements ChangeListener {
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
     protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));}
     protected void fireActionPerformed(ActionEvent e){
+        if(adjusting){return;}
         actionEvent=e;
         Object[] listeners=listenerList.getListenerList();
         for(int i=listeners.length-2;i>=0;i-=2){
