@@ -10,6 +10,7 @@
 
 package peg1d;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -62,10 +63,35 @@ public class Algorithms {
          * can go after 2 Evaders, assign Evaders in a way that minimizes the 
          * total distance between Pursuer and Evader.
          */
+        System.out.println(evaderDirection);
         
+           HashMap<Integer,Vector<Integer>> pursuerTable = new HashMap<Integer,Vector<Integer>> ();
+           int p = sim.getNP();
+           int e = sim.getNE();
+           for (int i = 0; i < p; i++) {
+            Vector<Integer> evaderList = new Vector<Integer>();
+               for (int j = 0; j < e; j++) {
+                   if(Math.signum(pursuerPosition.get(i) - evaderPosition.get(j)) == Math.signum(evaderDirection.get(j))) {
+                       evaderList.add (j);
+                   }
+               }
+           pursuerTable.put(i,evaderList);
+           }
+          HashMap<Integer,Integer> finalAssignment = new HashMap<Integer,Integer> (); 
+          for (int i = 0; i < p; i++) {
+              for (int j = 0; j < e; j++) {
+                  if(pursuerTable.get(i).size() == 1) {
+                      finalAssignment.put(i,j);
+                      for (int k = 0; k < p; k++) {
+                          pursuerTable.get(k).remove(j);
+                      }
+                  }
+              }
+          }
+
         
-        //System.out.println(result.toString());        
-        return result;
+        System.out.println(pursuerTable.toString());        
+        return pursuersTowardClosest(pursuerPosition, evaderPosition, sim, curStep);
     }
     
     

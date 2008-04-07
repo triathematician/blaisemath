@@ -103,9 +103,9 @@ public class Simulation implements ChangeListener {
     /** Returns evader's current position. */
     Double curEPos(int i){return getEPath(i).lastElement().x;}  
     /** Returns previous pursuer position. */
-    Double lastPPos(int i){if(getPPath(i).size()<=1){return null;}else{return getPPath(i).get(getPPath(i).size()-1).x;}}
+    Double lastPPos(int i){if(getPPath(i).size()<=1){return null;}else{return getPPath(i).get(getPPath(i).size()-2).x;}}
     /** Returns previous pursuer position. */
-    Double lastEPos(int i){if(getEPath(i).size()<=1){return null;}else{return getEPath(i).get(getEPath(i).size()-1).x;}}
+    Double lastEPos(int i){if(getEPath(i).size()<=1){return null;}else{return getEPath(i).get(getEPath(i).size()-2).x;}}
     /** Returns ith pursuer path. */
     Vector<R2> getPPath(int i){return pursuers.get(i).getPath();}
     /** Returns ith evader path. */
@@ -153,7 +153,7 @@ public class Simulation implements ChangeListener {
     public void run(){runSimulation(getNumSteps());} 
     
     /** Main loop for the simulation. Performs one iteration. */
-    void loopSimulation(int curStep){     
+    void loopSimulation(int curStep){  
         // compute directions of all players for use in algorithms
         computeDirections();        
         
