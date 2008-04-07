@@ -55,7 +55,15 @@ public class Algorithms {
     
     public static Vector<Double> pursuers_DJ (Vector<Double> pursuerPosition,Vector<Double> evaderPosition, Vector<Double> evaderDirection, Simulation sim, int curStep) {
         Vector<Double> result=new Vector<Double> ();
-        //fill in with algorithm
+        /**Each Pursuer looks to see the directions of all the Evaders.  He then
+         * generates a table with values representing every Evader that is 
+         * moving towards him.  Once all tables are generated, solve so that 
+         * each Pursuer pursues a different Evader.  In the case that 2 Pursuers
+         * can go after 2 Evaders, assign Evaders in a way that minimizes the 
+         * total distance between Pursuer and Evader.
+         */
+        
+        
         //System.out.println(result.toString());        
         return result;
     }
