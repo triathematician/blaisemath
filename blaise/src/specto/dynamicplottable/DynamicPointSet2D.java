@@ -7,6 +7,7 @@ package specto.dynamicplottable;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 import java.util.Vector;
 import javax.swing.JMenu;
 import scio.coordinate.R2;
@@ -30,6 +31,20 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
         add(point);
     }
     public void add(double x,double y){add(new R2(x,y));}
+    
+    public R2 getPoint(int i) throws ArrayIndexOutOfBoundsException {
+        return ((Point2D)plottables.get(i)).getPoint();
+    }
+    
+    public Path2D.Double getPath(boolean closed){
+        Vector<R2> points=new Vector<R2>();
+        for(int i=0;i<plottables.size();i++){points.add(getPoint(i));}
+        Path2D.Double path=new Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
+        path.moveTo(points.firstElement().x, points.firstElement().y);
+        for(R2 p:points){path.lineTo(p.x,p.y);}
+        if(closed){path.lineTo(points.firstElement().x, points.firstElement().y);}
+        return path;
+    }
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {

@@ -20,12 +20,11 @@ import specto.decoration.DESolution2D;
 import specto.decoration.FunctionSampleSet;
 import specto.dynamicplottable.Segment2D;
 import specto.dynamicplottable.DynamicPointSet2D;
-import specto.dynamicplottable.FractalEdge2D;
+import specto.dynamicplottable.FractalShape2D;
 import specto.dynamicplottable.Point2D;
 import specto.dynamicplottable.RandomFlame2D;
 import specto.dynamicplottable.RandomPoint2D;
 import specto.dynamicplottable.RandomWalk2D;
-import specto.dynamicplottable.SpaceFillingCurve2D;
 import specto.dynamicplottable.Triangle2D;
 import specto.gridplottable.NewGrid2D;
 import specto.plottable.Function2D;
@@ -95,20 +94,24 @@ public class TestPlottables extends javax.swing.JFrame {
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
-            dps1.add(.2*x*Math.cos(x/3.0),.2*x*Math.sin(x/3.0));
+            dps1.add(3+.2*x*Math.cos(x/3.0),-3+.2*x*Math.sin(x/3.0));
         }
         plot2D6.add(dps1);
-        FractalEdge2D fe1=new FractalEdge2D(new R2(-3,3),new R2(-2,3));
-        fe1.add(-2-1/3.,3);
-        fe1.add(-2-1/3.,3+1/3.);
+        FractalShape2D.Edges fe1=new FractalShape2D.Edges(new R2(-3,3),new R2(-2-2/3.,3));
         fe1.add(-2-2/3.,3+1/3.);
-        fe1.add(-2-2/3.,3);
+        fe1.add(-2-1/3.,3+1/3.);
+        fe1.add(-2-1/3.,3);
+        fe1.add(-2,3);
         plot2D6.add(fe1); 
-        SpaceFillingCurve2D sfc1=new SpaceFillingCurve2D();
+        FractalShape2D.SpaceFilling sfc1=new FractalShape2D.SpaceFilling(new R2(4,4),new R2(4,5));
+        sfc1.add(5,5);sfc1.add(5,4);        
         plot2D6.add(sfc1);
+        FractalShape2D.Sierpinski fsp1=new FractalShape2D.Sierpinski(new R2(-4,-4),new R2(-3,-4+Math.sqrt(3)),new R2(-2,-4));
+        plot2D6.add(fsp1);
         SliderBox nab5=new SliderBox();
         nab5.add(new NumberSlider(210,10,fe1.getIterModel()));
         nab5.add(new NumberSlider(210,10,sfc1.getIterModel()));
+        nab5.add(new NumberSlider(210,10,fsp1.getIterModel()));
         plot2D6.add(nab5,3,1);
         plot2D6.add(SliderBox.getStyleAdjusters(100,10,15,plot2D6.getPlottables(),plot2D6));
         
