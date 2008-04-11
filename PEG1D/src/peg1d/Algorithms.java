@@ -88,25 +88,15 @@ public class Algorithms {
                   }
               }
           }
-          for (int i = 1; i < p; i++) {
-              for (int j = 1; j < e; j++) {
-                  if(pursuerTable.get(i) == pursuerTable.get(i-1) && pursuerTable.get(j) == pursuerTable.get(j-1)) {
-                      if((pursuerPosition.get(i) - evaderPosition.get(j))*(pursuerPosition.get(i) - evaderPosition.get(j)) < (pursuerPosition.get(i-1) - evaderPosition.get(j-1))*(pursuerPosition.get(i-1) - evaderPosition.get(j-1))) {
-                          finalAssignment.put(i,j);
-                          for (int k = 0; k < p; k++) {
-                              pursuerTable.get(k).remove(j);
-                          }
-                      }
-                      else {
-                       finalAssignment.put(i-1,j-1);
-                          for (int k = 0; k < p; k++) {
-                              pursuerTable.get(k).remove(j);
-                          }
-                      }
-                  }
-              }
+          
+          for (int i = 0; i < e; i++) {
+            if(getUniquePursuer(pursuerTable,i) != null){
+                finalAssignment.put(getUniquePursuer(pursuerTable,i),i);
+                for (int j = 0; j < p; j++) {
+                    pursuerTable.get(j).remove(i);
+                }
+            }
         }
-
 
         
         System.out.println(pursuerTable.toString());
@@ -128,5 +118,21 @@ public class Algorithms {
             }
         }
         return opponentPositions.get(minIndex);
+    }
+
+    public static Integer getUniquePursuer(HashMap<Integer,Vector<Integer>> pursuerTable, Integer evader){
+        Integer result = null;
+        for(Integer i:pursuerTable.keySet()) {
+            if(pursuerTable.get(i).contains(evader)){
+                if(result==null){
+                    result = i;
+                }
+                else{
+                    return null;
+                }
+            }
+        }
+
+        return result;
     }
 }
