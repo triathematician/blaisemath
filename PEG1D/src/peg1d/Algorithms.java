@@ -88,9 +88,29 @@ public class Algorithms {
                   }
               }
           }
+          for (int i = 1; i < p; i++) {
+              for (int j = 1; j < e; j++) {
+                  if(pursuerTable.get(i) == pursuerTable.get(i-1) && pursuerTable.get(j) == pursuerTable.get(j-1)) {
+                      if((pursuerPosition.get(i) - evaderPosition.get(j))*(pursuerPosition.get(i) - evaderPosition.get(j)) < (pursuerPosition.get(i-1) - evaderPosition.get(j-1))*(pursuerPosition.get(i-1) - evaderPosition.get(j-1))) {
+                          finalAssignment.put(i,j);
+                          for (int k = 0; k < p; k++) {
+                              pursuerTable.get(k).remove(j);
+                          }
+                      }
+                      else {
+                       finalAssignment.put(i-1,j-1);
+                          for (int k = 0; k < p; k++) {
+                              pursuerTable.get(k).remove(j);
+                          }
+                      }
+                  }
+              }
+        }
+
 
         
-        System.out.println(pursuerTable.toString());        
+        System.out.println(pursuerTable.toString());
+        System.out.println(finalAssignment.toString());
         return pursuersTowardClosest(pursuerPosition, evaderPosition, sim, curStep);
     }
     
