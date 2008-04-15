@@ -97,8 +97,10 @@ public class Algorithms {
                 }
             }
         }
-
+          
         
+
+
         System.out.println(pursuerTable.toString());
         System.out.println(finalAssignment.toString());
         return pursuersTowardClosest(pursuerPosition, evaderPosition, sim, curStep);
@@ -133,6 +135,23 @@ public class Algorithms {
             }
         }
 
+        return result;
+    }
+    class TableData {
+        Double distance = Double.MAX_VALUE;
+        HashMap currentTable = new HashMap<Integer,Integer> ();
+    }
+    
+    public static TableData getBestDistance(HashMap<Integer,Vector<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition) {
+        TableData result = null;
+        HashMap<Integer,Vector<Integer>> otherTable = new HashMap<Integer,Vector<Integer>> ();
+        HashMap<Integer,Integer> bestYet = new HashMap<Integer,Integer> ();
+        HashMap<Integer,Integer> current = new HashMap<Integer,Integer> ();
+        otherTable.putAll(pursuerTable);
+        for(Integer i:otherTable.keySet()) {
+            current.put(i,otherTable.get(i).firstElement());
+            otherTable.remove(i);
+        }
         return result;
     }
 }
