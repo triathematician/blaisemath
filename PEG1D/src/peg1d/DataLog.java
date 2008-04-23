@@ -24,6 +24,8 @@ public class DataLog {
     Simulation sim;
     Plot2D mainPlot;
     Vector<SignificantEvent> significantEvents;
+    Boolean pursuersWin = null;
+    Double time = null;
     
     /** Stores the paths of the agents */
     PlottableGroup<Euclidean2> pursuerDisplayGroup;
@@ -87,6 +89,7 @@ public class DataLog {
     /** Called when the simulation is run again with the same teams. */
     public void preRun(){
         significantEvents.clear();
+        pursuersWin = null;
         if(captureGroup!=null){captureGroup.clear();}
     }
     
@@ -94,13 +97,14 @@ public class DataLog {
      */
     public void logCapture(int pursuer,int evader,double pos,double time){
         significantEvents.add(new SignificantEvent(pursuer,evader,pos,time,"Capture"));            
-        Point2D where=new Point2D(new R2(pos,time),Color.YELLOW,false);
-        where.style.setValue(Point2D.CIRCLE);
+        Point2D where=new Point2D(new R2(pos,time),Color.CYAN,false);
+        where.style.setValue(Point2D.CONCENTRIC);
         if(captureGroup!=null){captureGroup.add(where);}
     }
     
     /** Called after the simulation is completed. */
-    public void postRun(){}
+    public void postRun(){
+    }
     
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){
@@ -118,11 +122,11 @@ public class DataLog {
      * capture of a particular player, communications, etc. It stores a string to describe
      * the event, the two agents, and the time at which it occurred.
      */
-    class SignificantEvent{
-        int pursuer;
-        int evader;
-        double position;
-        double time;
+    static class SignificantEvent{
+        Integer pursuer;
+        Integer evader;
+        Double position;
+        Double time;
         String description;
 
         public SignificantEvent(int pursuer, int evader, double position, double time, String description) {
@@ -132,9 +136,16 @@ public class DataLog {
             this.time = time;
             this.description = description;
         }
+        SignificantEvent(double time, String description) {
+            this.time = time;
+            this.description = description;
+        }
         
         @Override
         public String toString(){
+            if(pursuer==null){
+                return description+" at time "+DecimalFormat.getNumberInstance().format(time);
+            }
             return description+" at time "+DecimalFormat.getNumberInstance().format(time)
                     +" and position "+DecimalFormat.getNumberInstance().format(position)
                     +" (Pursuer "+pursuer+" >> Evader "+evader+")";

@@ -13,14 +13,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import javax.swing.text.BadLocationException;
 import scio.coordinate.R2;
 import sequor.Settings;
 import sequor.control.NumberSlider;
@@ -129,8 +126,12 @@ public class Simulation implements ChangeListener {
         for(int i=0;i<getNE();i++){getEPath(i).clear();}
     }
     
-    /** Runs the simulation. */
-    void runSimulation(int steps){
+    /** Runs the simulation.
+     * @param steps the maximum number of steps to allow the simulation to run
+     * @return true if a team won, otherwise false
+     */
+    boolean runSimulation(int steps){
+        boolean winner=false;
         clearPaths();
         log.preRun();
         for (int i = 0; i < getNP(); i++) {
@@ -140,20 +141,23 @@ public class Simulation implements ChangeListener {
             getEPath(i).add(new R2(evaders.get(i).getPoint()));
         }
         for (int i = 0; i < steps; i++) {
-            loopSimulation(i);
+            if(loopSimulation(i)){winner=true;break;}
         }
         if (outputArea != null) {
             try {outputArea.getDocument().remove(0, outputArea.getDocument().getLength()-1);}catch(Exception e){}
             outputArea.append("--New Simulation--\n");
             log.output(outputArea);
         }
+        return winner;
     }
     
-    /** Runs with current number of steps. */
-    public void run(){runSimulation(getNumSteps());} 
+    /** Runs with current number of steps.
+     * @return true if a team won, otherwise false
+     */
+    public boolean run(){return runSimulation(getNumSteps());} 
     
     /** Main loop for the simulation. Performs one iteration. */
-    void loopSimulation(int curStep){  
+    boolean loopSimulation(int curStep){  
         // compute directions of all players for use in algorithms
         computeDirections();        
         
@@ -167,13 +171,8 @@ public class Simulation implements ChangeListener {
                 break;
         }
         switch(getPAlgorithm()){
-            case SimSettings.PURSUE_DJ:
-                
-                newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);
-                // insert your algorithm here
-                // you can pass pDirections and eDirections to the algorithm in addition to the parameters shown above and below
-                // each of these vectors contains +1,0,-1, depending upon whether the direction is in the positive x-direction, negative x-direction, or not moving
-                // be sure to uncomment the "break" line below.
+            case SimSettings.PURSUE_DJ:                
+                newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);                
                 break;
             case SimSettings.PURSUE_CLOSEST:
             default:
@@ -187,12 +186,16 @@ public class Simulation implements ChangeListener {
         // add new points onto the displayed paths
         for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
         for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));}
+          
+        // checks for victory, returns true if the simulation should stop
+        return checkVictoryConditions(newPPos,newEPos,curStep*getStepSize());
     }
     
     /** Computes directions in which each player is heading. Returns +1,0, or -1. If not enough data to determine a direction, returns 0. */
     void computeDirections(){
         pDirections.clear();
         for(int i=0;i<getNP();i++){
+            //System.out.println("cur: "+curPPos(i)+", last: "+lastPPos(i));
             if(lastPPos(i)==null){
                 pDirections.add(0.0);
             }else if(lastPPos(i)<curPPos(i)){
@@ -205,6 +208,7 @@ public class Simulation implements ChangeListener {
         }
         eDirections.clear();
         for(int i=0;i<getNE();i++){
+            //System.out.println("cur: "+curEPos(i)+", last: "+lastEPos(i));
             if(lastEPos(i)==null){
                 eDirections.add(0.0);
             }else if(lastEPos(i)<curEPos(i)){
@@ -229,6 +233,29 @@ public class Simulation implements ChangeListener {
                 }
             }
         }
+    }
+    
+    /** Checks to see if either team has won. Returns true if either team has won. */
+    boolean checkVictoryConditions(Vector<Double> pursuerPositions,Vector<Double> evaderPositions,double time){
+        boolean pursuersWin=true;
+        boolean evadersWin=false;
+        
+        for(Double d:evaderPositions){
+            if(!d.equals(Double.NEGATIVE_INFINITY)){pursuersWin=false;}
+            if(Math.abs(d-getGoal())<getCaptureRange()){evadersWin=true;break;}
+        }
+        
+        if(pursuersWin){
+            log.significantEvents.add(new DataLog.SignificantEvent(time,"Pursuers win"));              
+            log.pursuersWin=true;
+            log.time=time;
+        }else if(evadersWin){
+            log.significantEvents.add(new DataLog.SignificantEvent(time,"Evaders win"));  
+            log.pursuersWin=false;
+            log.time=time;
+        }
+        
+        return pursuersWin || evadersWin;
     }
     
     // Bean patterns

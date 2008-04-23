@@ -40,10 +40,13 @@ public class MainDisplay extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         plot2D1 = new specto.plotpanel.Plot2D();
@@ -96,6 +99,19 @@ public class MainDisplay extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton3);
 
+        jButton4.setFont(new java.awt.Font("Tahoma", 0, 12));
+        jButton4.setText("Run 1000");
+        jButton4.setToolTipText("Performs a batch run (not currently functional)");
+        jButton4.setFocusable(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton4);
+
         jSplitPane1.setDividerLocation(400);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
@@ -105,6 +121,12 @@ public class MainDisplay extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jTabbedPane1.addTab("Results", jScrollPane1);
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane2.setViewportView(jTextArea2);
+
+        jTabbedPane1.addTab("Data", jScrollPane2);
 
         jSplitPane1.setBottomComponent(jTabbedPane1);
 
@@ -120,7 +142,7 @@ public class MainDisplay extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
+            .addGap(0, 558, Short.MAX_VALUE)
         );
 
         plot2D1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -132,12 +154,12 @@ public class MainDisplay extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE))
+                .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+            .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -171,8 +193,16 @@ public class MainDisplay extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jTextArea1.append("This button is not currently functional!\n");
+        Statistics stat=new Statistics(simulation1);
+        stat.runSeveral(100);
+        stat.output(jTextArea1,jTextArea2);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Statistics stat=new Statistics(simulation1);
+        stat.runSeveral(1000);
+        stat.output(jTextArea1,jTextArea2);
+    }//GEN-LAST:event_jButton4ActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -189,12 +219,15 @@ public class MainDisplay extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JToolBar jToolBar1;
     private specto.plotpanel.Plot2D plot2D1;
     private peg1d.Simulation simulation1;
