@@ -144,6 +144,7 @@ public class Algorithms {
     
     public static TableData getBestDistance(HashMap<Integer,Vector<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition) {
         TableData result = null;
+        Integer dist = null;
         HashMap<Integer,Vector<Integer>> otherTable = new HashMap<Integer,Vector<Integer>> ();
         HashMap<Integer,Integer> bestYet = new HashMap<Integer,Integer> ();
         HashMap<Integer,Integer> current = new HashMap<Integer,Integer> ();
