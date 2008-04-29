@@ -55,7 +55,6 @@ public class ParameterPlotter extends javax.swing.JFrame {
         settings1.addProperty("f(x)=",ftm,Settings.EDIT_FUNCTION);
         settings1.addProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION);
         settingsBar1.updateBar();
-        animationControlPanel1.setTimer(plot2D1.getTimer());
         plot2D1.repaint();
     }
     
@@ -70,7 +69,6 @@ public class ParameterPlotter extends javax.swing.JFrame {
         settings1 = new sequor.Settings();
         settings2 = new sequor.Settings();
         plot2D1 = new specto.plotpanel.Plot2D();
-        animationControlPanel1 = new sequor.component.AnimationControlPanel();
         settingsPanel2 = new sequor.component.SettingsPanel(settings2);
         settingsBar1 = new sequor.component.SettingsBar(settings1);
 
@@ -81,7 +79,8 @@ public class ParameterPlotter extends javax.swing.JFrame {
         plot2D1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         plot2D1.setPreferredSize(new java.awt.Dimension(400, 250));
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
-        getContentPane().add(animationControlPanel1, java.awt.BorderLayout.PAGE_END);
+
+        settingsPanel2.setPreferredSize(new java.awt.Dimension(152, 302));
         getContentPane().add(settingsPanel2, java.awt.BorderLayout.LINE_END);
 
         settingsBar1.setFloatable(false);
@@ -103,7 +102,6 @@ public class ParameterPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sequor.component.AnimationControlPanel animationControlPanel1;
     private specto.plotpanel.Plot2D plot2D1;
     private sequor.Settings settings1;
     private sequor.Settings settings2;

@@ -6,16 +6,8 @@
 
 package potw;
 
-import java.util.TreeMap;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import scio.coordinate.R2;
-import scio.function.Function;
-import scio.function.FunctionValueException;
-import scribo.parser.FunctionSyntaxException;
-import scribo.parser.Parser;
-import scribo.tree.FunctionTreeRoot;
 
 /**
  *
@@ -32,40 +24,32 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
                         initComponents();
                         parametric2D1.setFunction("10*cos(2*pi*t)", "10*sin(2*pi*t)");
                         plot2D1.add(parametric2D1);
-                        vectorField2D1.setFunction(new Function<R2, R2>() {
-                            FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
-                            FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
-
-                            public R2 getValue(R2 x) {
-                                try {
-                                    TreeMap<String, Double> inTable = new TreeMap<String, Double>();
-                                    inTable.put("x", x.x);
-                                    inTable.put("y", x.y);
-                                    return new R2(vfx.getValue(inTable), vfy.getValue(inTable));
-                                } catch (FunctionValueException ex) {
-                                    return new R2();
-                                }
-                            }
-
-                            @Override
-                            public Vector<R2> getValue(Vector<R2> x) {
-                                Vector<R2> result = new Vector<R2>(x.size());
-                                for (R2 d : x) {
-                                    result.add(getValue(d));
-                                }
-                                return result;
-                            }
-
-                            public R2 minValue() {
-                                return null;
-                            }
-
-                            public R2 maxValue() {
-                                return null;
-                            }
-                        });
+//                        vectorField2D1.setFunction(new Function<R2, R2>() {
+//                            FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
+//                            FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
+//
+//                            public R2 getValue(R2 x) {
+//                                try {
+//                                    TreeMap<String, Double> inTable = new TreeMap<String, Double>();
+//                                    inTable.put("x", x.x);
+//                                    inTable.put("y", x.y);
+//                                    return new R2(vfx.getValue(inTable), vfy.getValue(inTable));
+//                                } catch (FunctionValueException ex) {
+//                                    return new R2();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public Vector<R2> getValue(Vector<R2> x) {
+//                                Vector<R2> result = new Vector<R2>(x.size());
+//                                for (R2 d : x) {
+//                                    result.add(getValue(d));
+//                                }
+//                                return result;
+//                            }
+//                        });
                         plot2D1.add(vectorField2D1);
-                    } catch (FunctionSyntaxException ex) {
+                    } catch (Exception ex) {
                         Logger.getLogger(CircularChaseRotatedField.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
