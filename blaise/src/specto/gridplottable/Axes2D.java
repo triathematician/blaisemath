@@ -46,7 +46,7 @@ public class Axes2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean2 v) {
-        NiceRangeGenerator spacing=NiceRangeGenerator.PI;
+        NiceRangeGenerator spacing=new NiceRangeGenerator.StandardRange();
         Vector<Double> xGrid=spacing.niceRange(
                 v.getActualMin().x,v.getActualMax().x,
                 (double)IDEAL_TICK_SPACE*v.getDrawWidth()/v.getWindowWidth());

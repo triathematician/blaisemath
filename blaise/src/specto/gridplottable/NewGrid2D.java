@@ -41,7 +41,7 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean2 v) {
-        NiceRangeGenerator spacing=NiceRangeGenerator.PI;
+        NiceRangeGenerator spacing=new NiceRangeGenerator.StandardRange();
         Vector<Double> xGrid=spacing.niceRange(
                 v.getActualMin().x,v.getActualMax().x,
                 (double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
@@ -49,7 +49,8 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
                 v.getActualMin().y,v.getActualMax().y,
                 (double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());        
         g.setColor(getColor());
-        g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
+        //        g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
+        g.setStroke(VisualStyle.VERY_THIN_STROKE);
         Line2D.Double[] lines=Ruler.getHorizontalLines(0,v.toWindowY(yGrid),v.getWindowWidth());
         for(int i=0;i<lines.length;i++){g.draw(lines[i]);}
         lines=Ruler.getVerticalLines(v.toWindowX(xGrid),0,v.getWindowHeight());

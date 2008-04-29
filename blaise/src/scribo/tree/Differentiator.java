@@ -23,7 +23,7 @@ public class Differentiator extends Operator {
     public Differentiator(){this(Constant.ZERO,new Variable("x"),1);}
     public Differentiator(FunctionTreeNode argument,String s){this(argument,new Variable(s),1);}
     public Differentiator(FunctionTreeNode argument,Variable x){this(argument,x,1);}
-    public Differentiator(FunctionTreeNode argument,Variable x,int n){super(argument);this.x=x;setDegree(n);initDArg();}
+    public Differentiator(FunctionTreeNode argument,Variable x,int n){super(argument);this.nodeName="d";this.x=x;setDegree(n);initDArg();}
     
     @Override
     public String toString(){return nodeName+(n==1?"":"^"+n)+x.toString()+"("+argumentString()+")";}
@@ -51,15 +51,16 @@ public class Differentiator extends Operator {
         return dArg.getValue(table);
     }
 
-
     @Override
     public Double getValue(String s, Double d) throws FunctionValueException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        initDArg();
+        return dArg.getValue(s, d);
     }
 
     @Override
     public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        initDArg();
+        return dArg.getValue(s, d);
     }
         
         
@@ -83,7 +84,5 @@ public class Differentiator extends Operator {
     }
 
     @Override
-    public boolean isValidSubNode() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public boolean isValidSubNode() {return true;}
 }

@@ -38,6 +38,7 @@ public class LineStyle extends VisStyle {
     public static final int ANIMATE_TRACE=2;
     public static final int ANIMATE_TRAIL=3;
     
+    public static final Stroke VERY_THIN_STROKE=new BasicStroke(0.5f);
     public static final Stroke THIN_STROKE=new BasicStroke(1.0f);
     public static final Stroke BASIC_STROKE=new BasicStroke(2.0f);
     public static final Stroke MEDIUM_STROKE=new BasicStroke(3.0f);

@@ -7,7 +7,6 @@
 
 package scio.algebra.permutation;
 
-import scio.algebra.permutation.Permutation;
 import junit.framework.*;
 
 /**

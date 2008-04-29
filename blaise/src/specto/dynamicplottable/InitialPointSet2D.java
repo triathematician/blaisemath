@@ -34,8 +34,7 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     public InitialPointSet2D(PointRangeModel prm){super(prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(Point2D parent){super(parent.prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(Point2D parent,Vector<R2> points,Color c){
-        super(parent.prm);
-        parent.setColor(c);
+        super(parent.prm,c);
         path=new PointSet2D(points,parent.getColor());
         length=new IntegerRangeModel(100,0,50000,1);
     }
