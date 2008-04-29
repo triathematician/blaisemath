@@ -210,7 +210,7 @@ public class Simulation implements ChangeListener {
         for(int i=0;i<getNE();i++){
             //System.out.println("cur: "+curEPos(i)+", last: "+lastEPos(i));
             if(lastEPos(i)==null){
-                eDirections.add(0.0);
+                eDirections.add(1.0);
             }else if(lastEPos(i)<curEPos(i)){
                 eDirections.add(1.0);
             }else if(lastEPos(i)>curEPos(i)){

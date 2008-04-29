@@ -9,6 +9,7 @@
 package peg1d;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 /**
@@ -61,11 +62,11 @@ public class Algorithms {
          */
         System.out.println(evaderDirection);
 
-        HashMap<Integer, Vector<Integer>> pursuerTable = new HashMap<Integer, Vector<Integer>>();
+        HashMap<Integer, HashSet<Integer>> pursuerTable = new HashMap<Integer, HashSet<Integer>>();
         int p = sim.getNP();
         int e = sim.getNE();
         for (int i = 0; i < p; i++) {
-            Vector<Integer> evaderList = new Vector<Integer>();
+            HashSet<Integer> evaderList = new HashSet<Integer>();
             for (int j = 0; j < e; j++) {
                 if (Math.signum(pursuerPosition.get(i) - evaderPosition.get(j)) == Math.signum(evaderDirection.get(j))) {
                     evaderList.add(j);
@@ -93,11 +94,23 @@ public class Algorithms {
                 }
             }
         }
-        finalAssignment.putAll(getBestDistance(pursuerTable,pursuerPosition,evaderPosition).currentTable);
-
-        System.out.println(pursuerTable.toString());
+        finalAssignment.putAll(getBestDistance(pursuerTable, pursuerPosition, evaderPosition).currentTable);
+        
         System.out.println(finalAssignment.toString());
-        return pursuersTowardClosest(pursuerPosition, evaderPosition, sim, curStep);
+        
+        Vector<Double> move = new Vector<Double>();
+        for (Integer i : finalAssignment.keySet()) {
+                Double assignedEvaderPosition = evaderPosition.get(finalAssignment.get(i));
+                if (assignedEvaderPosition < pursuerPosition.get(i)) {
+                    move.add(pursuerPosition.get(i) - sim.getPSpeed() * sim.getStepSize());
+                } else {
+                    move.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
+                }
+        }
+
+
+        
+        return move;
     }
 
     // UTILITY METHODS
@@ -114,7 +127,7 @@ public class Algorithms {
         return opponentPositions.get(minIndex);
     }
 
-    public static Integer getUniquePursuer(HashMap<Integer, Vector<Integer>> pursuerTable, Integer evader) {
+    public static Integer getUniquePursuer(HashMap<Integer, HashSet<Integer>> pursuerTable, Integer evader) {
         Integer result = null;
         for (Integer i : pursuerTable.keySet()) {
             if (pursuerTable.get(i).contains(evader)) {
@@ -135,14 +148,15 @@ public class Algorithms {
         HashMap currentTable = new HashMap<Integer, Integer>();
     }
 
-    public static TableData getBestDistance(HashMap<Integer, Vector<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition) {
-        HashMap<Integer, Vector<Integer>> otherTable = new HashMap<Integer, Vector<Integer>>();
-        if(pursuerTable.size()==1){
+    public static TableData getBestDistance(HashMap<Integer, HashSet<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition) {
+        HashMap<Integer, HashSet<Integer>> otherTable = new HashMap<Integer, HashSet<Integer>>();
+        if (pursuerTable.size() == 1) {
             TableData result = new TableData();
-            for(Integer i:pursuerTable.keySet()){
-                result.currentTable.put(i, pursuerTable.get(i).firstElement());
-                result.distance = Math.abs(pursuerPosition.get(i) - evaderPosition.get(pursuerTable.get(i).firstElement()));
-            }  
+            for (Integer i : pursuerTable.keySet()) {
+                int j=pursuerTable.get(i).iterator().next();
+                result.currentTable.put(i, j);
+                result.distance = Math.abs(pursuerPosition.get(i) - evaderPosition.get(j));
+            }
             return result;
         }
         TableData bestYet = new TableData();
@@ -151,7 +165,7 @@ public class Algorithms {
         for (Integer i : pursuerTable.keySet()) {
             for (Integer j : pursuerTable.get(i)) {
                 otherTable.remove(i);
-                for (Integer k : pursuerTable.keySet()) {
+                for (Integer k : otherTable.keySet()) {
                     otherTable.get(k).remove(j);
                 }
                 current = getBestDistance(otherTable, pursuerPosition, evaderPosition);
