@@ -53,9 +53,7 @@ public class Simulation implements ChangeListener {
     void initializeAll(){
         log=new DataLog(this);
         pursuers=new Vector<InitialPointSet2D>(getNP());
-        pDirections=new Vector<Double>(getNP());
         evaders=new Vector<InitialPointSet2D>(getNE());
-        eDirections=new Vector<Double>(getNE());
     }
     
     /** resets the entire simulation */
@@ -133,6 +131,8 @@ public class Simulation implements ChangeListener {
     boolean runSimulation(int steps){
         boolean winner=false;
         clearPaths();
+        pDirections=null;
+        eDirections=null;
         log.preRun();
         for (int i = 0; i < getNP(); i++) {
             getPPath(i).add(new R2(pursuers.get(i).getPoint()));
@@ -157,10 +157,7 @@ public class Simulation implements ChangeListener {
     public boolean run(){return runSimulation(getNumSteps());} 
     
     /** Main loop for the simulation. Performs one iteration. */
-    boolean loopSimulation(int curStep){  
-        // compute directions of all players for use in algorithms
-        computeDirections();        
-        
+    boolean loopSimulation(int curStep){ 
         // determine new positions of all players... use the current algorithm settings.
         Vector<Double> newEPos;
         Vector<Double> newPPos;
@@ -172,7 +169,11 @@ public class Simulation implements ChangeListener {
         }
         switch(getPAlgorithm()){
             case SimSettings.PURSUE_DJ:                
-                newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);                
+                if(eDirections!=null){
+                    newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);
+                }else{
+                    newPPos=Algorithms.pursuersTowardClosest(getPursuerPositions(), getEvaderPositions(), this, curStep);
+                }    
                 break;
             case SimSettings.PURSUE_CLOSEST:
             default:
@@ -180,12 +181,21 @@ public class Simulation implements ChangeListener {
                 break;
         }
         
+        // checks to see if algorithm failed to give complete assignment
+        if(newEPos.size()<getNE() || newPPos==null || newPPos.size()<getNP()){
+            System.out.println("Algorithm failed to give complete assignment.");
+            return true;
+        }
+        
         // moves captured players outside the playing field
         moveCapturedPlayersToInfinity(newPPos,newEPos,curStep*getStepSize());
         
         // add new points onto the displayed paths
         for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
-        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));}
+        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));} 
+        
+        // compute directions of all players for use in algorithms
+        computeDirections();                
           
         // checks for victory, returns true if the simulation should stop
         return checkVictoryConditions(newPPos,newEPos,curStep*getStepSize());
@@ -193,7 +203,7 @@ public class Simulation implements ChangeListener {
     
     /** Computes directions in which each player is heading. Returns +1,0, or -1. If not enough data to determine a direction, returns 0. */
     void computeDirections(){
-        pDirections.clear();
+        if(pDirections==null){pDirections=new Vector<Double>(getNP());}else{pDirections.clear();}
         for(int i=0;i<getNP();i++){
             //System.out.println("cur: "+curPPos(i)+", last: "+lastPPos(i));
             if(lastPPos(i)==null){
@@ -206,11 +216,11 @@ public class Simulation implements ChangeListener {
                 pDirections.add(0.0);
             }
         }
-        eDirections.clear();
+        if(eDirections==null){eDirections=new Vector<Double>(getNE());}else{eDirections.clear();}
         for(int i=0;i<getNE();i++){
             //System.out.println("cur: "+curEPos(i)+", last: "+lastEPos(i));
             if(lastEPos(i)==null){
-                eDirections.add(1.0);
+                eDirections.add(0.0);
             }else if(lastEPos(i)<curEPos(i)){
                 eDirections.add(1.0);
             }else if(lastEPos(i)>curEPos(i)){

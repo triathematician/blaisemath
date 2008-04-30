@@ -10,6 +10,7 @@ package peg1d;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
@@ -74,6 +75,9 @@ public class Algorithms {
             }
             pursuerTable.put(i, evaderList);
         }
+        
+        System.out.println(" 1: "+pursuerTable.toString());
+        
         HashMap<Integer, Integer> finalAssignment = new HashMap<Integer, Integer>();
         for (int i = 0; i < p; i++) {
             for (int j = 0; j < e; j++) {
@@ -86,6 +90,8 @@ public class Algorithms {
             }
         }
 
+        System.out.println(" 2: "+pursuerTable.toString() + " and "+finalAssignment.toString());
+
         for (int i = 0; i < e; i++) {
             if (getUniquePursuer(pursuerTable, i) != null) {
                 finalAssignment.put(getUniquePursuer(pursuerTable, i), i);
@@ -94,9 +100,17 @@ public class Algorithms {
                 }
             }
         }
-        finalAssignment.putAll(getBestDistance(pursuerTable, pursuerPosition, evaderPosition).currentTable);
         
-        System.out.println(finalAssignment.toString());
+        System.out.println(" 3: "+pursuerTable.toString() + " and "+finalAssignment.toString());
+        
+        try{
+            finalAssignment.putAll(getBestDistance(pursuerTable, pursuerPosition, evaderPosition).currentTable);
+        }catch(NoSuchElementException ex){       
+            System.out.println("No possible assignment!");
+            return null;
+        }
+        
+        System.out.println(" 4: "+pursuerTable.toString() + " and "+finalAssignment.toString());
         
         Vector<Double> move = new Vector<Double>();
         for (Integer i : finalAssignment.keySet()) {
@@ -107,8 +121,6 @@ public class Algorithms {
                     move.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
                 }
         }
-
-
         
         return move;
     }
@@ -148,7 +160,9 @@ public class Algorithms {
         HashMap currentTable = new HashMap<Integer, Integer>();
     }
 
-    public static TableData getBestDistance(HashMap<Integer, HashSet<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition) {
+    private static TableData getBestDistance(HashMap<Integer, HashSet<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition)
+            throws NoSuchElementException {
+        System.out.println("   table input to getBestDistance: "+pursuerTable);
         HashMap<Integer, HashSet<Integer>> otherTable = new HashMap<Integer, HashSet<Integer>>();
         if (pursuerTable.size() == 1) {
             TableData result = new TableData();
@@ -166,8 +180,8 @@ public class Algorithms {
             for (Integer j : pursuerTable.get(i)) {
                 otherTable.remove(i);
                 for (Integer k : otherTable.keySet()) {
-                    otherTable.get(k).remove(j);
-                }
+                        otherTable.get(k).remove(j);
+                    }
                 current = getBestDistance(otherTable, pursuerPosition, evaderPosition);
                 current.distance += Math.abs(pursuerPosition.get(i) - evaderPosition.get(j));
                 current.currentTable.put(i, j);
