@@ -5,8 +5,8 @@
 
 package behavior;
 
-import goal.Goal;
-import goal.Task;
+import valuation.Goal;
+import tasking.Task;
 import java.util.Vector;
 import simulation.Agent;
 import scio.coordinate.R2;

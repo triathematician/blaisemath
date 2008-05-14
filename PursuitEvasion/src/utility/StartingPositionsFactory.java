@@ -7,7 +7,7 @@ package utility;
 
 import java.util.Vector;
 import scio.coordinate.R2;
-import scio.random.PRandom;
+import scio.random.Random2D;
 import simulation.Agent;
 
 /**
@@ -23,7 +23,7 @@ public class StartingPositionsFactory {
     
     /** Places team members at random within a rectangle.
      * @param spread sets the rectangle to [-spread,-spread]->[spread,spread] */
-    public static void startRandom(Vector<Agent> team,double spread){for(Agent agent:team){agent.getPointModel().setTo(PRandom.rectangle(spread));}}
+    public static void startRandom(Vector<Agent> team,double spread){for(Agent agent:team){agent.getPointModel().setTo(Random2D.rectangle(spread));}}
     
     /** Places team members along a line.
      * @param p1   position of the first agent

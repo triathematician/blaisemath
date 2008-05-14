@@ -5,14 +5,18 @@
 
 package analysis;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import scio.function.FunctionValueException;
 import utility.*;
-import goal.Goal;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JTextArea;
+import metrics.Goal;
+import metrics.Valuation;
 import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
@@ -25,7 +29,6 @@ import specto.dynamicplottable.InitialPointSet2D;
 import specto.dynamicplottable.Point2D;
 import specto.plotpanel.Plot2D;
 import specto.plottable.PointSet2D;
-import specto.style.PointStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -45,7 +48,7 @@ public class DataLog extends FiresChangeEvents {
     Plot2D mainPlot;
     Plot2D valuePlot;
     HashMap<Agent,Vector<R2>> agentPaths;
-    HashMap<Team,Vector<R2>> teamValues;
+    HashMap<Valuation,Vector<R2>> teamMetrics;
     Vector<SignificantEvent> significantEvents;
     
     /** This stores the value of primary interest in a particular simulation, such as the time to capture, whether capture has occurred, etc. */
@@ -67,13 +70,14 @@ public class DataLog extends FiresChangeEvents {
     /** Initializes to the agents/teams of a particular simulation. */
     public DataLog(Simulation sim){
         initialize(sim,null,null);
-        logAll(0);
+        logAll(0,null);
     }
     
 
     // BEAN PATTERNS    
 
     public Double getPrimaryOutput() {return primaryOutput;}
+
     public void setPrimaryOutput(Double primaryOutput) {this.primaryOutput = primaryOutput;}    
     
     /** Returns position of agent at a particular time. */
@@ -114,14 +118,16 @@ public class DataLog extends FiresChangeEvents {
         valuePlot=valueDisplay;
         
         // initializes vectors
-        teamValues=new HashMap<Team,Vector<R2>>();
+        teamMetrics=new HashMap<Valuation,Vector<R2>>();
         significantEvents=new Vector<SignificantEvent>();        
         agentPaths=new HashMap<Agent,Vector<R2>>();
         for(Team t:s.getTeams()){
             for(Agent a:t){
                 agentPaths.put(a,new Vector<R2>(s.getNumSteps()));
             }
-            teamValues.put(t,new Vector<R2>(s.getNumSteps()));
+            for(Valuation v:t.metrics){
+                teamMetrics.put(v,new Vector<R2>(s.getNumSteps()));
+            }
         }
         
         if(mainDisplay!=null){
@@ -144,7 +150,9 @@ public class DataLog extends FiresChangeEvents {
             valueDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){
                 PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>();
-                valueGroup.add(new PointSet2D(teamValues.get(t),t.getColor()));
+                for(Valuation v:t.metrics){
+                    valueGroup.add(new PointSet2D(teamMetrics.get(v),t.getColor()));
+                }                
                 valueDisplay.add(valueGroup);
                 valueDisplayGroup.put(t, valueGroup);
             }
@@ -159,8 +167,10 @@ public class DataLog extends FiresChangeEvents {
             for(Agent a:t){
                 agentPaths.put(a,new Vector<R2>(sim.getNumSteps()));
             }
-            if(teamValues.get(t)==null){
-                teamValues.put(t, new Vector<R2>(sim.getNumSteps()));
+            for(Valuation v:t.metrics){
+                if(teamMetrics.get(v)==null){
+                    teamMetrics.put(v, new Vector<R2>(sim.getNumSteps()));
+                }
             }
         }
         // preRun the agent visuals; the team display groups do not change!
@@ -193,19 +203,25 @@ public class DataLog extends FiresChangeEvents {
     /** Called when the simulation is run again with the same teams. */
     public void preRun(){
         for(Vector<R2> vv:agentPaths.values()){vv.clear();}
-        for(Vector<R2> vv:teamValues.values()){vv.clear();}
+        for(Vector<R2> vv:teamMetrics.values()){vv.clear();}
         significantEvents.clear();
         captureGroup.clear();
-        logAll(0);
+        logAll(0,null);
     }
     
     /** Goes through all agents/teams in list and logs desired values. */
-    public void logAll(int timeStep){
+    public void logAll(int timeStep,DistanceTable dt){
         for(Agent a:agentPaths.keySet()){
             agentPaths.get(a).add(new R2(a.getPosition()));
         }
-        for(Team t:teamValues.keySet()){
-            teamValues.get(t).add(new R2(timeStep,t.getValue()));
+        if(dt!=null){
+            for(Valuation v:teamMetrics.keySet()){
+                try {
+                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt)));
+                } catch (FunctionValueException ex) {
+                    Logger.getLogger(DataLog.class.getName()).log(Level.SEVERE, null, ex);
+                }                
+            }
         }
     }
     
@@ -218,7 +234,7 @@ public class DataLog extends FiresChangeEvents {
     public void logCaptures(DistanceTable dt,Goal g,double time){
         AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
         while((closest!=null)&&(closest.getDistance()<g.getThreshhold())){
-            significantEvents.add(new SignificantEvent(g.getOwner(),closest.getFirst(),g.getTarget(),closest.getSecond(),"Capture",time));
+            logEvent(g.getOwner(),closest.getFirst(),g.getTarget(),closest.getSecond(),"Capture",time);
             Point2D adder=new Point2D(closest.getFirst().loc.plus(closest.getSecond().loc).multipliedBy(0.5),Color.RED,false);
             adder.style.setValue(Point2D.CIRCLE);
             captureGroup.add(adder);
@@ -231,6 +247,11 @@ public class DataLog extends FiresChangeEvents {
     
     /** Called after the simulation is completed. */
     public void postRun(){}
+
+    /** Adds a significant event. */
+    public void logEvent(Team owner, Agent first, Team target, Agent second, String string, double time) {
+        significantEvents.add(new SignificantEvent(owner,first,target,second,string,time));
+    }
     
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){

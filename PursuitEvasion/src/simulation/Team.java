@@ -11,10 +11,12 @@ package simulation;
 
 import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
-import goal.Goal;
+import valuation.Goal;
 import behavior.*;
+import valuation.CaptureCondition;
 import utility.DistanceTable;
-import goal.TaskGenerator;
+import valuation.Valuation;
+import valuation.VictoryCondition;
 import java.beans.PropertyChangeEvent;
 import java.util.Vector;
 import java.awt.Color;
@@ -33,6 +35,8 @@ import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
 import scio.coordinate.R2;
+import tasking.Task;
+import tasking.TaskGenerator;
 import utility.StartingPositionsFactory;
 
 /**
@@ -41,16 +45,28 @@ import utility.StartingPositionsFactory;
  * Handles routines dealing with an entire team of players.
  * Includes cooperative/control algorithms, broadcast methods for instructing team's agents, etc.
  */
-public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,PropertyChangeListener {
+public class Team extends Vector<Agent> implements ActionListener,PropertyChangeListener {
         
     // PROPERTIES
     
     /** The team's settings */
     public TeamSettings tes;
-    /** The team's goals */
-    private Vector<Goal> goals;
-    /** The goals which involve "capturing" */
-    private HashSet<Goal> captureGoals;
+    
+    /** Capture conditions of the team. */
+    public Vector<CaptureCondition> capture;
+    /** Value metrics of the team. */
+    public Vector<Valuation> metrics;
+    /** Victory condition of the team. */
+    public VictoryCondition victory;
+//    
+//    /** The team's goals */
+//    private Vector<Goal> goals;
+//    /** The goals which involve "capturing" */
+//    private HashSet<Goal> captureGoals;
+    
+    /** Control agent. */
+    private Agent control;
+    
     /** Active agents */
     private HashSet<Agent> activeAgents;
     /** Agents which start the simulation as active. */
@@ -73,7 +89,12 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         initLists();
         tes=new TeamSettings();
     }
-    public Team(Team team){this(team.tes);}    
+    public Team(Team team){this(team.tes);}
+
+    public Team(String string, int size, int start, int behavior, Color color) {
+        this(size,start,behavior,color);
+        setString(string);
+    }
     Team(TeamSettings tes){
         super();
         value=Double.MAX_VALUE;
@@ -101,20 +122,41 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     
     /** Initializes all the vectors. */
     public void initLists(){
-        goals=new Vector<Goal>();
-        captureGoals=new HashSet<Goal>();
+        //goals=new Vector<Goal>();
+        capture=new Vector<CaptureCondition>();
+        metrics=new Vector<Valuation>();
+        //captureGoals=new HashSet<Goal>();
         activeAgents=new HashSet<Agent>();
         startAgents=new HashSet<Agent>();
         valueAgents=new HashSet<Agent>();
         activeValueAgents=new HashSet<Agent>();
+        control=new Agent();
     }
     
     /** Adds a goal. */        
-    public void addGoal(double weight,Team target,int type,int tasking,double threshhold){
+    public void addAutoGoal(double weight,Team target,int type,int tasking,double threshhold){
         Goal g=new Goal(weight,this,target,type,tasking,threshhold);
-        goals.add(g);
+        addControlTask(g);
+        //goals.add(g);
         tes.addChild(g.gs,Settings.PROPERTY_INDEPENDENT);
-        if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
+        //if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
+    }
+    /** Adds a capture condition. */
+    public void addCaptureCondition(Team target,double captureDistance){
+        capture.add(new CaptureCondition(this,target,captureDistance));        
+    }
+    /** Adds a valuation metric. */
+    public void addValuation(Valuation val){
+        metrics.add(val);
+        tes.addChild(val.vs,Settings.PROPERTY_INDEPENDENT);
+    }
+    /** Assigns a victory condition. */
+    public void setVictoryCondition(VictoryCondition vic){
+        this.victory = vic;
+    }
+    /** Adds a "control agent". */
+    public void addControlTask(TaskGenerator tag){
+        control.addTaskGenerator(tag);
     }
         
     /** Resets all agents to their initial positions; clears all paths */
@@ -127,9 +169,9 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         for(Agent a:this){
             a.reset();
         }
-        for(Goal g:goals){
-            g.reset();
-        }
+//        for(Goal g:goals){
+//            g.reset();
+//        }
     }
     
     /** Activate all. */
@@ -206,7 +248,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     /** Returns all goals which require capture checks.
      * @return      Vector of Goals representing those which involve capturing and removing player from the field.
      */
-    public HashSet<Goal> getCaptureGoals(){return captureGoals;}
+//    public HashSet<Goal> getCaptureGoals(){return captureGoals;}
     
     /** Returns list of active agents.
      * @return      Vector of agents which are still active in the simualtion
@@ -243,12 +285,13 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
         }
     }
     /** Assigns tasks to the agents. */
-    public void assignTasks(){
+    public void assignTasks(DistanceTable table){
         for(Agent a:activeAgents){
             a.tasks.clear();
         }
-        for(Goal g:goals){
-            g.assignTasks();
+        control.generateTasks(this,table);
+        for(Agent a:activeAgents){
+            a.generateTasks(this,table);
         }
     }
     /** Generates directions for each team member based on their task and myBehavior.
@@ -271,18 +314,18 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     
     // BOOLEAN-GENERATING METHODS TESTING FOR WHETHER GOAL HAS BEEN REACHED
     
-    /**
-     * Checks to see if default value of goal has changed.
-     * @param d     the global distance table
-     */
-    public void checkGoal(DistanceTable d,double time){  
-        if(goals.isEmpty()){return;}
-        double newValue=0;
-        for(Goal g:goals){
-            newValue+=g.getValue(d);
-        }
-        value=newValue;
-    }
+//    /**
+//     * Checks to see if default value of goal has changed.
+//     * @param d     the global distance table
+//     */
+//    public void checkGoal(DistanceTable d,double time){  
+//        if(goals.isEmpty()){return;}
+//        double newValue=0;
+//        for(Goal g:goals){
+//            newValue+=g.getValue(d);
+//        }
+//        value=newValue;
+//    }
     
     
     // EVENT LISTENING
@@ -317,7 +360,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
     
     public int getSize(){return tes.size.getValue();}
     public int getStart(){return tes.start.getValue();}
-    public Collection<Goal> getGoals(){return goals;}
+//    public Collection<Goal> getGoals(){return goals;}
     @Override
     public String toString(){return tes.toString();}
     
@@ -439,7 +482,7 @@ public class Team extends Vector<Agent> implements TaskGenerator,ActionListener,
                 ac="teamSetupChange";
             } else if(evt.getSource()==size){       initAgentNumber();      ac="teamAgentsChange";
             } else if(evt.getSource()==start){                              ac="teamSetupChange";
-            } else if(evt.getSource()==goals){                              ac="teamSetupChange";
+//            } else if(evt.getSource()==goals){                              ac="teamSetupChange";
             } else if(evt.getSource()==topSpeed){   copySpeedtoTeam();      ac="teamSetupChange";
             } else if(evt.getSource()==sensorRange){copySensorRangetoTeam();ac="teamSetupChange";
             } else if(evt.getSource()==commRange){  copyCommRangetoTeam();  ac="teamSetupChange";

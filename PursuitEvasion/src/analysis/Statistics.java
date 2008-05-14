@@ -11,12 +11,11 @@ import java.text.DecimalFormat;
 import java.util.Vector;
 import javax.swing.JTextArea;
 import scio.coordinate.R2;
-import scio.function.Function;
 import scio.function.FunctionValueException;
 import sequor.FiresChangeEvents;
 import specto.plottable.PlaneFunction2D;
-import specto.visometry.Euclidean2;
 import analysis.DataLog;
+import scio.function.BoundedFunction;
 
 /**
  * Static library of methods to perform batch runs of simulations for a variety of initial conditions.
@@ -30,7 +29,7 @@ public class Statistics extends FiresChangeEvents {
     public Statistics(int n) {reset(n);}
     
     /** This function computes the output value of a simulation given an input of initial starting location of a particular agent. */
-    public class InitialPositionTestFunction implements Function<R2,Double>{
+    public class InitialPositionTestFunction implements BoundedFunction<R2,Double>{
         Simulation sim;
         public InitialPositionTestFunction(Simulation sim){this.sim=sim;}        
         public Double getValue(R2 x) throws FunctionValueException {
@@ -49,9 +48,8 @@ public class Statistics extends FiresChangeEvents {
             return result;
         }
         public Double minValue() {return 0.0;}
-        public Double maxValue() {return 50.0;}
-        
-    }
+        public Double maxValue() {return 50.0;}        
+    } // INNER CLASS Statistics.InitialPositionTestFunction
     
     /** Returns PlaneFunction2D corresponding to the above value function. */
     public PlaneFunction2D getInitialPositionTestPlot(Simulation sim){

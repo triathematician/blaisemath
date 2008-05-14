@@ -9,7 +9,7 @@ import simulation.Agent;
 import simulation.Team;
 import tasking.AutoGradient;
 import java.util.TreeMap;
-import goal.Goal;
+import metrics.Goal;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
 import utility.DistanceTable;

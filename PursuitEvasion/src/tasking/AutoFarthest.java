@@ -5,9 +5,11 @@
 
 package tasking;
 
+import scio.coordinate.V2;
 import simulation.Agent;
-import goal.Goal;
+import valuation.Goal;
 import java.util.Vector;
+import simulation.Team;
 import utility.DistanceTable;
 
 /**
@@ -15,17 +17,30 @@ import utility.DistanceTable;
  * <br><br>
  * @author Elisha Peterson
  */
-public class AutoFarthest extends Autonomy {
+public class AutoFarthest extends AutonomousTaskGenerator {
 
-    public AutoFarthest(){}
-        
-    /** Performs tasking based on a preset goal.
-     * @param team the team to assign tasks to
-     * @param goal the goal used for task assignment */
-    public void assign(Vector<Agent> team,Goal goal,double weight){
-        DistanceTable dist=new DistanceTable(team,goal.getTarget());
-        for(Agent p:team){
-            p.assignTask(null,dist.maxVisible(p,goal.getTarget()).getSecondLoc(),goal,weight);
+    public AutoFarthest(Team target,int type){ super(target,type);}
+
+    @Override
+    public V2 generate(Agent agent, DistanceTable table) {
+        if(target.size()==1) {
+            if(agent.sees(target.firstElement())){
+                return target.firstElement().loc;
+            } else {
+                return new V2();
+            }
+        } else {
+            return table.maxVisible(agent,target).getSecondLoc();
         }
     }
+        
+//    /** Performs tasking based on a preset goal.
+//     * @param team the team to assign tasks to
+//     * @param goal the goal used for task assignment */
+//    public void assign(Vector<Agent> team,Goal goal,double weight){
+//        DistanceTable dist=new DistanceTable(team,goal.getTarget());
+//        for(Agent p:team){
+//            p.assignTask(null,dist.maxVisible(p,goal.getTarget()).getSecondLoc(),weight);
+//        }
+//    }
 }

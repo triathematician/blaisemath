@@ -11,7 +11,7 @@
 package simulation;
 
 import analysis.Statistics;
-import goal.Goal;
+import valuation.Goal;
 import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -26,9 +26,9 @@ import sequor.Settings;
 import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.SettingsProperty;
-import specto.PlotPanel;
-import specto.visometry.Euclidean2;
 import analysis.DataLog;
+import valuation.CaptureCondition;
+import valuation.VictoryCondition;
 import utility.DistanceTable;
 import utility.SimulationFactory;
 
@@ -43,8 +43,10 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Contains all settings used to run the simulation. */
     public SimSettings ss;
+    
     /** Contains list of teams involved. */
     Vector<Team> teams;
+    
     /** The team responsible for returning data for statistical runs. */
     Team primary;
     /** Table of distances (for speed of simulation) */
@@ -132,9 +134,9 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Runs default number of steps */
     public void run(){run(getNumSteps());}
+    
     /** Tells the simulation to get going!
      * @param numSteps  how many time steps to run the simulation
-     * @return          value of the simulated run according to the given team...
      */
     public void run(int numSteps){
         reset();
@@ -143,12 +145,12 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         for(int i=0;i<numSteps;i++){
             time=i*getStepTime();
             iterate(time);
-            log.logAll(i);
-            for(Team t:teams){
-                for(Goal g:t.getCaptureGoals()){
-                    log.logCaptures(dist,g,time);                    
-                }
-            }
+            log.logAll(i,dist);
+//            for(Team t:teams){
+//                for(Goal g:t.getCaptureGoals()){
+//                    log.logCaptures(dist,g,time);                    
+//                }
+//            }
         }
         log.setPrimaryOutput(primary.getValue());
         actionPerformed(new ActionEvent(log,0,"log"));
@@ -157,23 +159,53 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Runs a single iteration of the scenario */
     public void iterate(double time){
+        
+        // Step 1. Recalculate the table of distances
         dist.recalculate();
-        // TODO check for capture here
+        
+        // Step 2. Check for captures and remove associated playerd
         for(Team t:teams){
-            t.checkGoal(dist,time);
+            for(CaptureCondition cc:t.capture){
+                cc.check(dist, log, time);
+            }
         }
+
+        // Step 3. Check for victory
         for(Team t:teams){
-            if(!t.getGoals().isEmpty()){
+            VictoryCondition vc=t.victory;
+            if (vc!=null) {
+                int result=vc.check(dist, log, time);
+                if(result!=VictoryCondition.NEITHER && vc.endGame){
+                    log.logEvent(null,null,null,null,"Simulation ended",time);
+                    // end the simulation here
+                }
+            }
+        }
+//        for(Team t:teams){
+//           t.checkGoal(dist,time);
+//        }
+        
+        // Step 4. Collect/communicate data
+        for(Team t:teams){
+//            if(!t.getGoals().isEmpty()){
                 t.gatherSensoryData(dist);
                 t.communicateSensoryData(dist);
                 t.fuseAgentPOV();
-                t.assignTasks();
-            }
+//            }
         }
+        
+        // Step 5. Perform tasking
+        for(Team t:teams){
+//            if(!t.getGoals().isEmpty()){
+                t.assignTasks(dist);
+//            }
+        }
+        
+        // Step 6. Fuse tasks
         for(Team t:teams){t.planPaths(time,getStepTime());}
+        
+        // Step 7. Move agents
         for(Team t:teams){t.move();}
-        //bird.remember();
-        time+=getStepTime();
     }
     
     // METHODS FOR RUNNING STATS ON THE SIMULATION

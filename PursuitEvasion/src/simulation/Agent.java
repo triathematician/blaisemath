@@ -6,13 +6,11 @@
 package simulation;
 
 import behavior.ApproachPath;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
-import goal.Task;
+import tasking.Task;
 import utility.DistanceTable;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
@@ -25,8 +23,9 @@ import java.util.Collection;
 import javax.swing.event.EventListenerList;
 import javax.swing.JPanel;
 import behavior.TaskFusion;
-import goal.Goal;
-import goal.TaskGenerator;
+import behavior.TrustMap;
+import valuation.Goal;
+import tasking.TaskGenerator;
 import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
@@ -42,25 +41,29 @@ import sequor.SettingsProperty;
  * 
  * @author Elisha Peterson
  */
-public class Agent implements TaskGenerator {
+public class Agent {
     
-    // PROPERTIES
-    
-    /** Location */
-    public V2 loc;
-    
+    // STATIC PROPERTIES
+        
     /** Agent's settings */
-    AgentSettings ags;
-    
-    /** Agent's current list of tasks (changes over time) */
-    Vector<Task> tasks;
-    /** Behavior corresponding to current task */
-    Behavior myBehavior;
-    
+    AgentSettings ags;    
     /** Agent's initial position */
     PointRangeModel initialPosition;
+    /** Agents trusted by this agent */
+    TrustMap trusted;
+    /** Task generators associated with this agent */
+    Vector<TaskGenerator> taskGenerators;
+    
+    // CHANGING PROPERTIES
+    
+    /** Location */
+    public V2 loc;    
+    /** Agent's current list of tasks (changes over time) */
+    Vector<Task> tasks;    
+    /** Behavior corresponding to current task */
+    Behavior myBehavior;
     /** Agent's view of the playing field */
-    Vector<Agent> pov;
+    Vector<Agent> pov;    
     /** Communications regarding the playing field */
     Vector<Agent> commpov;
     
@@ -88,6 +91,14 @@ public class Agent implements TaskGenerator {
         copySettingsFrom(team);
         initialize();
     }
+
+    
+    // PROPERTY INTERFACE METHODS
+    
+    public void addTaskGenerator(TaskGenerator tag){
+        taskGenerators.add(tag);
+    }
+    
     
     
     // METHODS: INITIALIZATION HELPERS
@@ -99,6 +110,7 @@ public class Agent implements TaskGenerator {
         initialPosition=null;
         pov=new Vector<Agent>();
         commpov=new Vector<Agent>();
+        taskGenerators=new Vector<TaskGenerator>();
     }
     
     /** Resets before another run of the simulation. */
@@ -145,14 +157,25 @@ public class Agent implements TaskGenerator {
     
     // METHODS: TASKING
         
-    /** Sets single task to seek/flee a given agent.
-     * @param agent     the target agent of the task
-     * @param g         the goal underlying the task
-     * @param weight    the weighting of the task
-     */
-    public void assignTask(TaskGenerator tg,V2 agent,Goal g,double weight){
-        if(agent!=null){
-            tasks.add(new Task(tg,g,agent,weight));
+//    /** Sets single task to seek/flee a given agent.
+//     * @param agent     the target agent of the task
+//     * @param g         the goal underlying the task
+//     * @param weight    the weighting of the task
+//     */
+//    public void assignTask(TaskGenerator tg,V2 agent,double weight){
+//        if(agent!=null){
+//            tasks.add(new Task(tg,this,agent,weight));
+//        }
+//    }
+    
+    public void assign(Task t){
+        tasks.add(t);
+        //System.out.println(this+" assigned "+t);
+    }
+
+    public void generateTasks(Team team,DistanceTable table) {
+        for(TaskGenerator tag:taskGenerators){
+            tag.generate(team, table, 1.0);
         }
     }
     
@@ -173,7 +196,7 @@ public class Agent implements TaskGenerator {
      * @param team the agent's team
      * @param dist the global table of distances */
     public void generateSensoryEvents(Team team,DistanceTable dist){
-        for(Agent a:dist.getAgentsInRadius(this,team,getCommRange())){
+        for(Agent a:dist.getAgentsInRadius(this,team.getActiveAgents(),getCommRange())){
             a.acceptSensoryEvent(pov);
         }
     }

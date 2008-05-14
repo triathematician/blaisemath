@@ -6,7 +6,8 @@
 package utility;
 
 import analysis.DataLog;
-import goal.Goal;
+import valuation.CaptureCondition;
+import valuation.Goal;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
@@ -16,6 +17,7 @@ import specto.Animatable;
 import specto.Plottable;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
+import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -40,10 +42,11 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(pathSize()==0){return;}
         g.setColor(team.getColor().brighter().brighter());
+        g.setStroke(LineStyle.THIN_STROKE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
         g.draw(getEdges(v,t.getCurrentIntValue()));
-        for(Goal goal:team.getGoals()){
-            g.draw(getTargetEdges(v,goal,t.getCurrentIntValue()));
+        for(CaptureCondition cc:team.capture){
+            g.draw(getTargetEdges(v,cc,t.getCurrentIntValue()));
         }
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
     }   
@@ -69,15 +72,15 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     } 
     
     /** Gets edges for each target in range. */
-    public Path2D.Double getTargetEdges(Euclidean2 v,Goal g,int time){
-        if(g.getTarget()==null){return new Path2D.Double();}
+    public Path2D.Double getTargetEdges(Euclidean2 v,CaptureCondition cc,int time){
+        if(cc.target==null){return new Path2D.Double();}
         int timeB=time<0?0:(time>=pathSize()?pathSize()-1:time);
         Path2D.Double result=new Path2D.Double();
         R2 p1;
         R2 p2;
         for(int i=0;i<team.size();i++){
             p1=log.agentAt(team.get(i),timeB);
-            for(Agent a:g.getTarget()){
+            for(Agent a:cc.target){
                 p2=log.agentAt(a,timeB);
                 if(p1.distance(p2)<team.getSensorRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));

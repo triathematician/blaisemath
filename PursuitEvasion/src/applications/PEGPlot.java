@@ -113,15 +113,15 @@ public class PEGPlot extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
-            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                .addGap(8, 8, 8)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
@@ -138,7 +138,7 @@ public class PEGPlot extends javax.swing.JFrame {
         statusBar.setLayout(statusBarLayout);
         statusBarLayout.setHorizontalGroup(
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusText, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+            .addComponent(statusText, javax.swing.GroupLayout.DEFAULT_SIZE, 928, Short.MAX_VALUE)
         );
         statusBarLayout.setVerticalGroup(
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +157,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jToolBar1.add(jComboBox1);
         jToolBar1.add(jSeparator1);
 
-        resetButton.setFont(new java.awt.Font("Tahoma", 1, 14));
+        resetButton.setFont(new java.awt.Font("Tahoma", 1, 12));
         resetButton.setText("RANDOMIZE");
         resetButton.setToolTipText("Click here to reset the simulation and re-randomize starting positions.");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -167,7 +167,7 @@ public class PEGPlot extends javax.swing.JFrame {
         });
         jToolBar1.add(resetButton);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12));
         jButton1.setText("BATCH");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -179,7 +179,8 @@ public class PEGPlot extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        jButton3.setText("jButton3");
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 12));
+        jButton3.setText("COOPERATION");
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

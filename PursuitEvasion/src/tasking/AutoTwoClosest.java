@@ -6,34 +6,39 @@
 package tasking;
 
 import simulation.Agent;
-import goal.Goal;
-import java.util.Vector;
 import scio.coordinate.V2;
+import simulation.Team;
 import utility.DistanceTable;
 
 /**
  * @author Elisha Peterson
  */
-public class AutoTwoClosest extends Autonomy {
+public class AutoTwoClosest extends AutonomousTaskGenerator {
 
-    public AutoTwoClosest(){}
-        
-    /** Performs tasking based on a preset goal.
-     * @param team the team to assign tasks to
-     * @param goal the goal used for task assignment */
-    public void assign(Vector<Agent> team,Goal goal,double weight){        
-        DistanceTable dist=new DistanceTable(team,goal.getTarget());
-        Agent one,two;
-        for(Agent p:team){
-            V2 bPERP=new V2();
-            one=dist.minVisible(p,goal.getTarget()).getSecond();
-            dist.get(p).remove(one);
-            two=dist.minVisible(p,goal.getTarget()).getSecond();
-            try{
-                bPERP.setLocation(p.loc.closestOnLine(one.loc,two.loc));
-                p.assignTask(null,bPERP,goal,weight);
-            }catch(NullPointerException e){}
-        }
-
+    public AutoTwoClosest(Team target,int type){ super(target,type); }
+          
+    @Override
+    public V2 generate(Agent agent, DistanceTable table) {
+        return new V2();
     }
+
+//    /** Performs tasking based on a preset goal.
+//     * @param team the team to assign tasks to
+//     * @param goal the goal used for task assignment */
+//    public void assign(Vector<Agent> team,Goal goal,double weight){        
+//        Collection<Agent> temp=goal.getTarget();
+//        DistanceTable dist=new DistanceTable(team,temp);
+//        Agent one,two;
+//        for(Agent p:team){
+//            V2 bPERP=new V2();
+//            one=dist.minVisible(p,temp).getSecond();
+//            temp.remove(one);
+//            two=dist.minVisible(p,temp).getSecond();
+//            temp.add(one);
+//            try{
+//                bPERP.setLocation(p.loc.closestOnLine(one.loc,two.loc));
+//                p.assignTask(null,bPERP,weight);
+//            }catch(NullPointerException e){}
+//        }
+//    }
 }

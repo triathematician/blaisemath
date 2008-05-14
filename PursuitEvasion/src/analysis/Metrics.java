@@ -6,13 +6,14 @@
 package analysis;
 
 import java.util.HashSet;
-import java.util.Vector;
 import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
 
 /**
- *
+ * The purpose of this class is to compute metrics based on particular initial configurations of players and parameters.
+ * This may require running a simulation multiple times with a subset of the team.
+ * 
  * @author Elisha Peterson
  */
 public class Metrics {

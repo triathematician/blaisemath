@@ -7,7 +7,8 @@ package tasking;
 
 import simulation.Agent;
 import java.util.Vector;
-import goal.Goal;
+import valuation.Goal;
+import simulation.Team;
 import utility.AgentPair;
 import utility.DistanceTable;
 
@@ -16,14 +17,10 @@ import utility.DistanceTable;
  * <br><br>
  * This class
  */
-public class ControlClosest extends Control {
+public class ControlClosest extends TaskGenerator {
 
-// CONSTRUCTORS
-
-    /** Default constructor */
-    public ControlClosest(){}
-
-// METHODS:
+    public ControlClosest(Team target,int type){ super(target,type); }
+    
    /** Assigns tasks (prey) to n/k pursuers. The algorithm uses the complete table
      * of distances between pursuers and evaders to map the closest
      * pursuer-prey pair. This process is repeated until there are no more
@@ -32,21 +29,24 @@ public class ControlClosest extends Control {
      * @param team pursuing team
      * @param goal the goal to work with
      */
-    public void assign(Vector<Agent> team,Goal goal,double weight){
-        DistanceTable dist=new DistanceTable(team,goal.getTarget());            
+    @Override
+    public void generate(Vector<Agent> team, DistanceTable table, double priority) {
+        DistanceTable dist=new DistanceTable(team,target);            
         // assign prey by closest-to-pursuer first
         Vector<Agent> ps=new Vector<Agent>(team);
-        Vector<Agent> es=new Vector<Agent>(goal.getTarget());
+        Vector<Agent> es=new Vector<Agent>(target);
         AgentPair closest;
-        while(!ps.isEmpty()&&!es.isEmpty()){
+        do{        
             closest=dist.min(ps,es);
-            closest.getFirst().assignTask(null,closest.getSecondLoc(),goal,weight);
-            ps.remove(closest.getFirst());
-            es.remove(closest.getSecond());
-        }
+            if(closest!=null){
+                closest.getFirst().assign(new Task(this,closest.getSecondLoc(),goalType,priority));
+                ps.remove(closest.getFirst());
+                es.remove(closest.getSecond());
+            }
+        }while(!ps.isEmpty()&&!es.isEmpty()&&closest!=null);
         // assign remaining pursuers to closest prey
         for(Agent p:ps){
-            p.assignTask(null,dist.minVisible(p,goal.getTarget()).getSecondLoc(),goal,weight);
+            p.assign(new Task(this,dist.minVisible(p,target).getSecondLoc(),goalType,priority));
         }
     }
 }
