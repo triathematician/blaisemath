@@ -61,12 +61,15 @@ public class Algorithms {
          * can go after 2 Evaders, assign Evaders in a way that minimizes the 
          * total distance between Pursuer and Evader.
          */
-        System.out.println(evaderDirection);
+//        System.out.println(evaderDirection);
 
         HashMap<Integer, HashSet<Integer>> pursuerTable = new HashMap<Integer, HashSet<Integer>>();
         int p = sim.getNP();
         int e = sim.getNE();
         for (int i = 0; i < p; i++) {
+            if (pursuerPosition.get(i).equals(Double.POSITIVE_INFINITY)) {
+                continue;
+            }
             HashSet<Integer> evaderList = new HashSet<Integer>();
             for (int j = 0; j < e; j++) {
                 if (Math.signum(pursuerPosition.get(i) - evaderPosition.get(j)) == Math.signum(evaderDirection.get(j))) {
@@ -76,11 +79,13 @@ public class Algorithms {
             pursuerTable.put(i, evaderList);
         }
 
-        System.out.println(" 1: " + pursuerTable.toString());
+//        System.out.println(" 1: " + pursuerTable.toString());
 
-        HashMap<Integer, Integer> finalAssignment = new HashMap<Integer, Integer>();
-        for (int i = 0; i < p; i++) {
-            for (int j = 0; j < e; j++) {
+        try {
+
+            HashMap<Integer, Integer> finalAssignment = new HashMap<Integer, Integer>();
+            for (int i : ((HashMap<Integer, HashSet<Integer>>) pursuerTable.clone()).keySet()) {
+                int j = pursuerTable.get(i).iterator().next();
                 if (pursuerTable.get(i).size() == 1) {
                     finalAssignment.put(i, j);
                     pursuerTable.remove(i);
@@ -88,42 +93,50 @@ public class Algorithms {
                         pursuerTable.get(k).remove(j);
                     }
                 }
+
             }
-        }
 
-        System.out.println(" 2: " + pursuerTable.toString() + " and " + finalAssignment.toString());
+//            System.out.println(" 2: " + pursuerTable.toString() + " and " + finalAssignment.toString());
 
-        for (int i = 0; i < e; i++) {
-            if (getUniquePursuer(pursuerTable, i) != null) {
-                finalAssignment.put(getUniquePursuer(pursuerTable, i), i);
-                for (int j = 0; j < p; j++) {
-                    pursuerTable.get(j).remove(i);
+            for (int i = 0; i < e; i++) {
+                if (getUniquePursuer(pursuerTable, i) != null) {
+                    finalAssignment.put(getUniquePursuer(pursuerTable, i), i);
+                    pursuerTable.remove(getUniquePursuer(pursuerTable, i));
+                    for (int j : pursuerTable.keySet()) {
+                        pursuerTable.get(j).remove(i);
+                        
+                    }
                 }
             }
-        }
 
-        System.out.println(" 3: " + pursuerTable.toString() + " and " + finalAssignment.toString());
+//            System.out.println(" 3: " + pursuerTable.toString() + " and " + finalAssignment.toString());
 
-        try {
+
             finalAssignment.putAll(getBestDistance(pursuerTable, pursuerPosition, evaderPosition).currentTable);
+
+
+//            System.out.println(" 4: " + pursuerTable.toString() + " and " + finalAssignment.toString());
+
+            Vector<Double> move = new Vector<Double>();
+            for (int i = 0; i < p; i++) {
+                if (finalAssignment.keySet().contains(i)) {
+                    Double assignedEvaderPosition = evaderPosition.get(finalAssignment.get(i));
+                    if (assignedEvaderPosition < pursuerPosition.get(i)) {
+                        move.add(pursuerPosition.get(i) - sim.getPSpeed() * sim.getStepSize());
+                    } else {
+                        move.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
+                    }
+                }
+                else{
+                    move.add(pursuerPosition.get(i));
+                }
+            }
+
+            return move;
         } catch (NoSuchElementException ex) {
-            System.out.println("No possible assignment!");
+//            System.out.println("No possible assignment!");
             return null;
         }
-
-        System.out.println(" 4: " + pursuerTable.toString() + " and " + finalAssignment.toString());
-
-        Vector<Double> move = new Vector<Double>();
-        for (Integer i : finalAssignment.keySet()) {
-            Double assignedEvaderPosition = evaderPosition.get(finalAssignment.get(i));
-            if (assignedEvaderPosition < pursuerPosition.get(i)) {
-                move.add(pursuerPosition.get(i) - sim.getPSpeed() * sim.getStepSize());
-            } else {
-                move.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
-            }
-        }
-
-        return move;
     }
 
     // UTILITY METHODS
@@ -163,22 +176,28 @@ public class Algorithms {
 
     private static TableData getBestDistance(HashMap<Integer, HashSet<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition)
             throws NoSuchElementException {
-        System.out.println("   table input to getBestDistance: " + pursuerTable);
+//        System.out.println("   table input to getBestDistance: " + pursuerTable);
+        if (pursuerTable.size() == 0){
+            return new TableData();
+        }
         HashMap<Integer, HashSet<Integer>> otherTable = new HashMap<Integer, HashSet<Integer>>();
         if (pursuerTable.size() == 1) {
             TableData result = new TableData();
-            for (Integer i : pursuerTable.keySet()) {
-                int j = pursuerTable.get(i).iterator().next();
+            int i = pursuerTable.keySet().iterator().next();
+            for (Integer j : pursuerTable.get(i)) {
                 result.currentTable.put(i, j);
                 result.distance = Math.abs(pursuerPosition.get(i) - evaderPosition.get(j));
             }
+//            System.out.println(result.currentTable);
             return result;
         }
         TableData bestYet = new TableData();
         TableData current = new TableData();
-        otherTable.putAll(pursuerTable);
-        for (Integer i : pursuerTable.keySet()) {
-            int j = pursuerTable.get(i).iterator().next();
+        int i = pursuerTable.keySet().iterator().next();
+        for (Integer j : pursuerTable.get(i)) {
+            for (Integer k : pursuerTable.keySet()) {
+                otherTable.put(k, (HashSet<Integer>) pursuerTable.get(k).clone());
+            }
             otherTable.remove(i);
             for (Integer k : otherTable.keySet()) {
                 otherTable.get(k).remove(j);
@@ -191,6 +210,7 @@ public class Algorithms {
             }
 
         }
+//        System.out.println(bestYet.currentTable);
         return bestYet;
     }
 }

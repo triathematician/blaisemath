@@ -181,10 +181,10 @@ public class Simulation implements ChangeListener {
                 break;
         }
         
-        // checks to see if algorithm failed to give complete assignment
-        if(newEPos.size()<getNE() || newPPos==null || newPPos.size()<getNP()){
-            System.out.println("Algorithm failed to give complete assignment.");
-            return true;
+       //  checks to see if algorithm failed to give complete assignment
+        if(newPPos==null){
+//            System.out.println("Algorithm failed to give complete assignment.");
+            return false;
         }
         
         // moves captured players outside the playing field
@@ -236,10 +236,14 @@ public class Simulation implements ChangeListener {
         // if any two elements are closer than capture distance, remove to infinity.
         for(int i=0;i<getNP();i++){
             for(int j=0;j<getNE();j++){
+                try {
                 if(Math.abs(pursuerPositions.get(i)-evaderPositions.get(j))<getCaptureRange()){
                     log.logCapture(i,j,pursuerPositions.get(i),time);
                     pursuerPositions.set(i,Double.POSITIVE_INFINITY);
                     evaderPositions.set(j,Double.NEGATIVE_INFINITY);
+                }
+                } catch (NullPointerException e){
+                    
                 }
             }
         }

@@ -32,6 +32,8 @@ public class Statistics {
             sim.randomizePositions();
             if(sim.run()){
                 results.add(new SingleRun(sim.log.pursuersWin?+1:-1,sim.log.time));
+            }else{
+                results.add(new SingleRun(-1,0));
             }
         }
     }
@@ -40,14 +42,21 @@ public class Statistics {
     public void output(JTextArea mainArea,JTextArea dataArea){
         int npWin=0;
         int neWin=0;
+        int neEasyWin = 0;
         for(SingleRun sr:results){
             if(sr.winner==1){npWin++;}
-            else if(sr.winner==-1){neWin++;}
+            else if(sr.winner==-1){
+                if(sr.time==0){
+                    neEasyWin++;
+                }else{
+                    neWin++;
+                }
+            }
         }
         try {mainArea.getDocument().remove(0, mainArea.getDocument().getLength()-1);}catch(Exception e){}
         mainArea.append("--New Statistical Data--\n");
         mainArea.append("With "+numRuns+" runs, the pursuers won "+npWin+" times "+
-                "and the evaders won "+neWin+" times.\n");
+                "and the evaders won "+neWin+" times. In "+neEasyWin+" cases, evaders automatically won.\n");
         
         try {dataArea.getDocument().remove(0, mainArea.getDocument().getLength()-1);}catch(Exception e){}
         dataArea.append("Team \tTime\n");
