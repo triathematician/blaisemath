@@ -7,7 +7,6 @@ package tasking;
 
 import simulation.Agent;
 import java.util.Vector;
-import valuation.Goal;
 import simulation.Team;
 import utility.AgentPair;
 import utility.DistanceTable;
@@ -27,14 +26,13 @@ public class ControlClosest extends TaskGenerator {
      * pursuers or prey available. If there are leftover pursuers, they are
      * assigned to the closest prey.
      * @param team pursuing team
-     * @param goal the goal to work with
      */
     @Override
     public void generate(Vector<Agent> team, DistanceTable table, double priority) {
         DistanceTable dist=new DistanceTable(team,target);            
         // assign prey by closest-to-pursuer first
         Vector<Agent> ps=new Vector<Agent>(team);
-        Vector<Agent> es=new Vector<Agent>(target);
+        Vector<Agent> es=new Vector<Agent>(target.getActiveAgents());
         AgentPair closest;
         do{        
             closest=dist.min(ps,es);

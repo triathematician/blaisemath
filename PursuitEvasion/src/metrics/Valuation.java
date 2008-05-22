@@ -8,6 +8,8 @@ package metrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.event.EventListenerList;
 import scio.function.Function;
@@ -16,6 +18,8 @@ import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.DoubleRangeModel;
 import sequor.model.StringRangeModel;
+import simulation.Agent;
+import simulation.Simulation;
 import simulation.Team;
 import utility.DistanceTable;
 
@@ -34,41 +38,67 @@ public class Valuation implements Function<DistanceTable,Double> {
     public Team owner;
     public Team target;
     
-    public Valuation(Team owner, Team target, double threshold) {
-        this.owner = owner;
-        this.target = target;
-        vs = new ValuationSettings(owner, target, DIST_MIN, threshold);
-        addActionListener(owner);
-    }
-    public Valuation(Team owner, Team target, int type){
+    public Valuation(Team owner, Team target, double threshold) { this(owner, target, DIST_MIN, threshold); }
+    public Valuation(Team owner, Team target, int type){ this(owner, target, type, 0.0); }
+    public Valuation(Team owner, Team target, int type, double threshold){
         this.owner = owner;
         this.target = target;
         vs = new ValuationSettings(owner, target, type, 0.0);
+        vs.threshold.setValue(threshold);
         addActionListener(owner);
+    }    
+    
+    /** Returns team's valuation of the current status of the game.
+     * @param dt table of distances between players
+     * @return Double value representing the measure, or NaN if there is no possible measure.
+     * @throws scio.function.FunctionValueException
+     */
+    public Double getValue(DistanceTable dt) throws FunctionValueException { return getValue(dt, owner); }    
+    
+    /** Returns team's valuation of the current status of the game.
+     * @param dt table of distances between players
+     * @return Double value representing the measure, or NaN if there is no possible measure.
+     * @throws scio.function.FunctionValueException
+     */
+    public Double getValue(Simulation sim, Collection<Agent> subset) throws FunctionValueException {
+        return getValue(sim.getDistanceTable(), subset);
     }
     
-    public Double getValue(DistanceTable dt) throws FunctionValueException {
-        switch(vs.type.getValue()){
-            case DIST_MIN:
-                return dt.min(owner.getActiveAgents(),target.getActiveAgents()).getDistance();
-            case DIST_MAX:
-                return dt.max(owner.getActiveAgents(),target.getActiveAgents()).getDistance();
-            case DIST_AVG:
-                return dt.average(owner.getActiveAgents(),target.getActiveAgents());
-            case NUM_TEAM:
-                return (double)owner.getActiveAgents().size();
-            case NUM_OPPONENT:
-                return (double)target.getActiveAgents().size();
-            case NUM_CAP:
-                return (double)(target.getSize()-target.getActiveAgents().size());
-            case NUM_DIFF:
-                return (double)(owner.getActiveAgents().size()-target.getActiveAgents().size());
-            case TIME_TOTAL:
-                return -1.0;
-            case TIME_SINCE_CAP:
-                return -1.0;
+    /** Returns current valuation of the game, as viewed by a particular subset.
+     * @param subset subset of agents "measuring" the value of the simulation
+     * @param dt table of distances between players
+     * @return Double value representing the measure, or NaN if there is no possible measure.
+     * @throws scio.function.FunctionValueException
+     */
+    public Double getValue(DistanceTable dt, Collection<Agent> subset) throws FunctionValueException {
+        try {
+            HashSet<Agent> activeSubset = new HashSet<Agent>();
+            activeSubset.addAll(owner.getActiveAgents());
+            activeSubset.retainAll(subset);
+            switch(vs.type.getValue()){
+                case DIST_MIN:
+                    return dt.min(activeSubset,target.getActiveAgents()).getDistance();
+                case DIST_MAX:
+                    return dt.max(activeSubset,target.getActiveAgents()).getDistance();
+                case DIST_AVG:
+                    return dt.average(activeSubset,target.getActiveAgents());
+                case NUM_TEAM:
+                    return (double)activeSubset.size();
+                case NUM_OPPONENT:
+                    return (double)target.getActiveAgents().size();
+                case NUM_CAP:
+                    return (double)(target.size()-target.getActiveAgents().size());
+                case NUM_DIFF:
+                    return (double)(activeSubset.size()-target.getActiveAgents().size());
+                case TIME_TOTAL:
+                    return dt.getTime();
+                case TIME_SINCE_CAP:
+                default:
+                    return Double.NaN;
+            }
+        } catch (NullPointerException e){
+            return Double.NaN;
         }
-        return -1.0;
     }
     
     public Vector<Double> getValue(Vector<DistanceTable> xx) throws FunctionValueException {return null;}    
@@ -95,6 +125,8 @@ public class Valuation implements Function<DistanceTable,Double> {
     
     public double getThreshold(){return vs.threshold.getValue();}
             
+    @Override
+    public String toString(){ return vs.type.toString() + " (" + owner.toString() + ")"; }
     
     // CONSTANTS
     
@@ -109,9 +141,9 @@ public class Valuation implements Function<DistanceTable,Double> {
     public static final int TIME_SINCE_CAP = 8;
     
     public static final String[] typeStrings = {
-        "Minimum distance between teams", "Maximum distance between teams", "Average distance between teams",
-        "Team size", "Opponent team size", "Opponents captured", "Advantage in player numbers",
-        "Time of simulation", "Time since last capture"
+        "Min. distance",        "Max. distance",        "Avg. distance",
+        "# Active Agents",      "# Active Opponents",   "# Opponents captured",        "Player # advantage",   
+        "Simulation time",      "Time since capture"
     };    
     
     
@@ -119,7 +151,7 @@ public class Valuation implements Function<DistanceTable,Double> {
     // SUB-CLASS ValuationSettings
     
     /** Wrapper for the static settings of the goal. */
-    private class ValuationSettings extends Settings {
+    public class ValuationSettings extends Settings {
         
         /** The team owning this goal. */
         private Team owner;  

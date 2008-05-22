@@ -7,14 +7,14 @@ package utility;
 
 import simulation.Team;
 import behavior.Behavior;
-import zDeprecated.Tasking;
 import java.awt.Color;
 import java.util.Vector;
+import metrics.Goal;
+import metrics.Valuation;
+import metrics.VictoryCondition;
 import simulation.Simulation;
-import valuation.Goal;
-import valuation.Valuation;
-import valuation.VictoryCondition;
 import sequor.model.StringRangeModel;
+import specto.style.ColorStyle;
 import tasking.TaskGenerator;
 
 /**
@@ -75,14 +75,12 @@ public class SimulationFactory {
         Vector<Team> teams=new Vector<Team>();
         //                      NAME        #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team bugTeam=new Team(  "Bugs",     4,   Team.START_RANDOM,  Behavior.LEADING,   Color.DARK_GRAY);
-        Team lightTeam=new Team("Light",    1,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.GREEN);
+        Team lightTeam=new Team("Light",    1,   Team.START_RANDOM,  Behavior.STRAIGHT,  ColorStyle.DARK_GREEN);
         
-        Valuation val=new Valuation(bugTeam, lightTeam, Valuation.DIST_MIN);
-        
-        bugTeam.setVictoryCondition(new VictoryCondition.Basic(val,VictoryCondition.NEITHER,VictoryCondition.WON));        
+        bugTeam.setVictoryCondition(new VictoryCondition(bugTeam, lightTeam,
+                Valuation.DIST_MIN, 5.0, VictoryCondition.NEITHER, VictoryCondition.WON));        
         bugTeam.addCaptureCondition(lightTeam,1.0);
         
-        bugTeam.addValuation(val);     
         bugTeam.addValuation(new Valuation(bugTeam, lightTeam, Valuation.NUM_OPPONENT));
         lightTeam.addValuation(new Valuation(lightTeam, bugTeam, Valuation.TIME_TOTAL));
         
@@ -100,11 +98,10 @@ public class SimulationFactory {
         Team copTeam=new Team(      "Cops",     5,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLUE);
         Team robberTeam=new Team(   "Robbers",  4,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.ORANGE);
         
-        Valuation val=new Valuation(copTeam, robberTeam, Valuation.NUM_CAP);
-        copTeam.setVictoryCondition(new VictoryCondition.Basic(val,VictoryCondition.NEITHER,VictoryCondition.WON));
+        copTeam.setVictoryCondition(new VictoryCondition(copTeam, robberTeam,
+                Valuation.NUM_CAP, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         copTeam.addCaptureCondition(robberTeam,5.0);
         
-        copTeam.addValuation(val);
         copTeam.addValuation(new Valuation(copTeam, robberTeam, Valuation.DIST_AVG));
         
         robberTeam.addAutoGoal(1.0, copTeam,   Goal.FLEE,  TaskGenerator.AUTO_GRADIENT,1.0);

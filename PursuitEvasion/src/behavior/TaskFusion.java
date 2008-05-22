@@ -5,7 +5,7 @@
 
 package behavior;
 
-import valuation.Goal;
+import metrics.Goal;
 import tasking.Task;
 import java.util.Vector;
 import simulation.Agent;

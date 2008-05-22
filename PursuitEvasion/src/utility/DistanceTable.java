@@ -33,6 +33,9 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
     /** The min/max values in the table. */
     double min,max;
     
+    /** The current timestep */
+    double time = 0.0;
+    
     
 // CONSTRUCTORS    
 
@@ -42,7 +45,7 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
      */
     public DistanceTable(Collection<Agent> keya,Collection<Agent> keyb){
         super(keya.toArray(),keyb.toArray());
-        recalculate();
+        recalculate(0.0);
     }
     /** Constructs the table based upon several different teams (or collections of agents). The algorithm will compute the distances between
      * every pair of agents for any team, including the team to itself. Values may be looked up by the object identifier corresponding to any
@@ -54,11 +57,11 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
         HashSet<Agent> keys = new HashSet<Agent>();
         for(Team t:teams){keys.addAll(t);}
         super.init(keys.toArray(),keys.toArray());
-        recalculate();
+        recalculate(0.0);
     }
     
     
-// BEAN PATTERNS
+    // BEAN PATTERNS
     
     /** Override... says if the table is empty, i.e. if either keySet is null
      * @return  true if empty, otherwise false.
@@ -67,11 +70,15 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
         return getNumCols()==0 || getNumRows()==0;
     }
     
+    /** Returns current time. */
+    public double getTime() { return time; }
     
-// METHODS    
+    
+    // METHODS    
 
     /** Recalculates all distances in the table */
-    public void recalculate(){
+    public void recalculate(double time){
+        this.time = time;
         for(Agent a:getRows()){
             for(Agent b:getCols()){
                 put(a,b,a.loc.distance(b.loc));
@@ -79,18 +86,31 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
         }
     }
     
+    /** Removes single agent from the table. */
+    public void removeAgent(Agent a){
+        deleteRow(a);
+        deleteCol(a);
+    }
+    
     /** Removes specified agent pair from the table.
      * @param agents the pair of Agents to be removed
      */
     public void removeAgents(AgentPair agents){
-        deleteRow(agents.first);
-        deleteRow(agents.second);        
-        deleteCol(agents.first);
-        deleteCol(agents.second);
+        removeAgent(agents.first);
+        removeAgent(agents.second);
     }
     
     
-// BASIC QUERY METHODS
+    // BASIC QUERY METHODS
+    
+    @Override
+    public Double get(Agent row, Agent col) {
+        try {
+            return super.get(row, col);
+        } catch (NullPointerException e) {
+            return Double.POSITIVE_INFINITY;
+        }
+    }
     
     /** Returns minimum between two collections of agents
      * @param ta the first collection of agents
@@ -103,8 +123,7 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
                 result.replaceIfLessBy(a,b,get(a,b));
             }
         }
-        if(result.first==null){return null;}
-        return result;
+        return (result.first == null) ? null : result;
     }
     
     /** Returns maximum between two collections of agents

@@ -6,8 +6,7 @@
 package utility;
 
 import analysis.DataLog;
-import valuation.CaptureCondition;
-import valuation.Goal;
+import metrics.CaptureCondition;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
@@ -59,8 +58,10 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         R2 p1;
         R2 p2;
         for(int i=0;i<team.size();i++){
+            if(!team.getActiveAgents().contains(team.get(i))){ continue; }
             p1=log.agentAt(team.get(i),timeB);
             for(int j=i+1;j<team.size();j++){
+                if(!team.getActiveAgents().contains(team.get(j))){ continue; }
                 p2=log.agentAt(team.get(j),timeB);
                 if(p1.distance(p2)<team.getCommRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));
@@ -79,8 +80,9 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         R2 p1;
         R2 p2;
         for(int i=0;i<team.size();i++){
+            if(!team.getActiveAgents().contains(team.get(i))){ continue; }
             p1=log.agentAt(team.get(i),timeB);
-            for(Agent a:cc.target){
+            for(Agent a:cc.target.getActiveAgents()){
                 p2=log.agentAt(a,timeB);
                 if(p1.distance(p2)<team.getSensorRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));

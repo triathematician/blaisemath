@@ -11,19 +11,15 @@ package simulation;
 
 import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
-import valuation.Goal;
+import metrics.*;
 import behavior.*;
-import valuation.CaptureCondition;
 import utility.DistanceTable;
-import valuation.Valuation;
-import valuation.VictoryCondition;
 import java.beans.PropertyChangeEvent;
 import java.util.Vector;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JPanel;
@@ -35,7 +31,6 @@ import sequor.model.IntegerRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
 import scio.coordinate.R2;
-import tasking.Task;
 import tasking.TaskGenerator;
 import utility.StartingPositionsFactory;
 
@@ -49,8 +44,14 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         
     // PROPERTIES
     
-    /** The team's settings */
+    /** Global team settings */
     public TeamSettings tes;
+    /** Agent settings */
+    public AgentGroupSettings ags;
+    /** Metrics settings group */
+    public MetricSettings mets;
+    /** Tasking settings group */
+    public TaskingSettings tass;
     
     /** Capture conditions of the team. */
     public Vector<CaptureCondition> capture;
@@ -71,10 +72,10 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     private HashSet<Agent> activeAgents;
     /** Agents which start the simulation as active. */
     private HashSet<Agent> startAgents;
-    /** Agents used to measure a team's value function. */
-    private HashSet<Agent> valueAgents;
-    /** Active agents used to measure team's value function. */
-    private HashSet<Agent> activeValueAgents;
+//    /** Agents used to measure a team's value function. */
+//    private HashSet<Agent> valueAgents;
+//    /** Active agents used to measure team's value function. */
+//    private HashSet<Agent> activeValueAgents;
     
     /** Whether to forward action events */
     private boolean editing=false;
@@ -84,13 +85,14 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     
     
     // CONSTRUCTORS
+
     public Team(){
         super();
         initLists();
-        tes=new TeamSettings();
+        initSettings();
     }
-    public Team(Team team){this(team.tes);}
 
+    public Team(Team team){this(team.tes);}
     public Team(String string, int size, int start, int behavior, Color color) {
         this(size,start,behavior,color);
         setString(string);
@@ -99,7 +101,8 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         super();
         value=Double.MAX_VALUE;
         initLists();
-        this.tes=tes;
+        initSettings();
+        this.tes = tes;
         initAgentNumber();
     }
     public Team(int size,int start,int behavior,Color color){
@@ -107,7 +110,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         editing=true;
         value=Double.MAX_VALUE;
         initLists();
-        tes=new TeamSettings();
+        initSettings();
         setSize(size);
         setStart(start);
         setBehavior(behavior);
@@ -120,6 +123,17 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     
     // METHODS: HELP FOR INITIALIZAITON
     
+    /** Initializes settings. */
+    public void initSettings() {
+        tes = new TeamSettings();
+        ags = new AgentGroupSettings();
+        mets = new MetricSettings();
+        tass = new TaskingSettings();
+        tes.addChild(ags, Settings.PROPERTY_INDEPENDENT);
+        tes.addChild(tass, Settings.PROPERTY_INDEPENDENT);
+        tes.addChild(mets, Settings.PROPERTY_INDEPENDENT);
+    }
+    
     /** Initializes all the vectors. */
     public void initLists(){
         //goals=new Vector<Goal>();
@@ -128,8 +142,8 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         //captureGoals=new HashSet<Goal>();
         activeAgents=new HashSet<Agent>();
         startAgents=new HashSet<Agent>();
-        valueAgents=new HashSet<Agent>();
-        activeValueAgents=new HashSet<Agent>();
+//        valueAgents=new HashSet<Agent>();
+//        activeValueAgents=new HashSet<Agent>();
         control=new Agent();
     }
     
@@ -138,21 +152,24 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         Goal g=new Goal(weight,this,target,type,tasking,threshhold);
         addControlTask(g);
         //goals.add(g);
-        tes.addChild(g.gs,Settings.PROPERTY_INDEPENDENT);
+        tass.addChild(g.gs, Settings.PROPERTY_INDEPENDENT);
         //if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
     /** Adds a capture condition. */
     public void addCaptureCondition(Team target,double captureDistance){
-        capture.add(new CaptureCondition(this,target,captureDistance));        
+        CaptureCondition cc = new CaptureCondition(this,target,captureDistance);
+        capture.add(cc);
+        tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
     }
     /** Adds a valuation metric. */
     public void addValuation(Valuation val){
         metrics.add(val);
-        tes.addChild(val.vs,Settings.PROPERTY_INDEPENDENT);
+        mets.addChild(val.vs, Settings.PROPERTY_INDEPENDENT);
     }
     /** Assigns a victory condition. */
     public void setVictoryCondition(VictoryCondition vic){
         this.victory = vic;
+        tes.addChild(vic.vs, Settings.PROPERTY_INDEPENDENT);
     }
     /** Adds a "control agent". */
     public void addControlTask(TaskGenerator tag){
@@ -164,10 +181,13 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         value=Double.MAX_VALUE;
         activeAgents.clear();
         activeAgents.addAll(startAgents);
-        activeValueAgents.clear();
-        activeValueAgents.addAll(valueAgents);
+//        activeValueAgents.clear();
+//        activeValueAgents.addAll(valueAgents);
         for(Agent a:this){
             a.reset();
+        }
+        if(victory!=null){
+            victory.reset();
         }
 //        for(Goal g:goals){
 //            g.reset();
@@ -180,10 +200,10 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         startAgents.addAll(this);
         activeAgents.clear();
         activeAgents.addAll(startAgents);
-        valueAgents.clear();
-        valueAgents.addAll(startAgents);
-        activeValueAgents.clear();
-        activeValueAgents.addAll(valueAgents);        
+//        valueAgents.clear();
+//        valueAgents.addAll(startAgents);
+//        activeValueAgents.clear();
+//        activeValueAgents.addAll(valueAgents);        
     }
     
     /** Changes the number of agents, resets starting locations. */
@@ -200,7 +220,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
             a.setString("Agent "+(size()+1));
             add(a);
             a.addActionListener(this);
-            tes.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
+            ags.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
         }
         initAllActive();
         editing=false;
@@ -255,10 +275,10 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
      */
     public HashSet<Agent> getActiveAgents(){return activeAgents;}
     public HashSet<Agent> getStartAgents(){return startAgents;}
-    public void setStartAgents(HashSet<Agent> agents){startAgents=agents;}
-    public HashSet<Agent> getValueAgents(){return valueAgents;}
-    public void setValueAgents(HashSet<Agent> agents){valueAgents=agents;}
-    public HashSet<Agent> getActiveValueAgents(){return activeValueAgents;}
+    public void setStartAgents(HashSet<Agent> agents){ startAgents = agents; }
+//    public HashSet<Agent> getValueAgents(){return valueAgents;}
+//    public void setValueAgents(HashSet<Agent> agents){valueAgents=agents;}
+//    public HashSet<Agent> getActiveValueAgents(){return activeValueAgents;}
     
     
     
@@ -307,7 +327,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     /** Deactivates a particular agent. */
     public void deactivate(Agent a){
         activeAgents.remove(a);
-        activeValueAgents.remove(a);
+//        activeValueAgents.remove(a);
         a.deactivate();
     }
     
@@ -415,6 +435,27 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     
     
     // SUBCLASSES
+    
+    /** Encapsulates a group of agents. */
+    private class AgentGroupSettings extends Settings {
+        public AgentGroupSettings() {
+            setName("Agents");
+        }        
+    }
+    
+    /** Encapsulates a group of metrics. */
+    private class MetricSettings extends Settings {
+        public MetricSettings() {
+            setName("Metrics");
+        }        
+    }
+    
+    /** Encapsulates a group of agents. */
+    private class TaskingSettings extends Settings {
+        public TaskingSettings() {
+            setName("Taskings");
+        }        
+    }
     
     /** Contains all the initial settings for the simulation. Everything else is used while the simulation is running. */
     private class TeamSettings extends Settings {

@@ -23,7 +23,7 @@ public class AgentPair {
     
     // CONSTRUCTORS    
     
-    public AgentPair(){this(null,null,Double.MAX_VALUE);}
+    public AgentPair(){this(null,null,Double.POSITIVE_INFINITY);}
     public AgentPair(double d){this(null,null,d);}
     public AgentPair(Agent a,Agent b,double d){first=a;second=b;distance=d;}
     
@@ -35,7 +35,7 @@ public class AgentPair {
     public V2 getSecondLoc(){return second==null?null:second.loc;}
     public double getDistance(){return distance;}    
     
-// METHODS TO CHANGE THE AGENTS STORED HERE
+    // METHODS TO CHANGE THE AGENTS STORED HERE
     
     public void replaceIfLessBy(Agent a,Agent b,double d){
         if(d<distance){
@@ -51,4 +51,9 @@ public class AgentPair {
             distance=d;
         }
     }
+    
+    
+    // STATIC CLASS WITHOUT A MINIMUM
+    
+    public static AgentPair NO_MINIMUM = new AgentPair(null, null, Double.POSITIVE_INFINITY);
 }

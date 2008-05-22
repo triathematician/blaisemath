@@ -5,16 +5,18 @@
 
 package analysis;
 
+import metrics.Valuation;
 import simulation.*;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JTextArea;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
 import sequor.FiresChangeEvents;
 import specto.plottable.PlaneFunction2D;
-import analysis.DataLog;
 import scio.function.BoundedFunction;
 
 /**
@@ -23,33 +25,9 @@ import scio.function.BoundedFunction;
  */
 public class Statistics extends FiresChangeEvents {
     
-    Vector<Double> primaryOutputs;
+    HashMap<Valuation,Vector<Double>> resultMetrics;
 
-    public Statistics() {reset();}
-    public Statistics(int n) {reset(n);}
-    
-    /** This function computes the output value of a simulation given an input of initial starting location of a particular agent. */
-    public class InitialPositionTestFunction implements BoundedFunction<R2,Double>{
-        Simulation sim;
-        public InitialPositionTestFunction(Simulation sim){this.sim=sim;}        
-        public Double getValue(R2 x) throws FunctionValueException {
-            sim.getPrimaryAgent().getPointModel().setTo(x);
-            return sim.getPrimaryValue();
-        }
-        public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
-            Agent changes=sim.getPrimaryAgent();
-            Vector<Double> result=new Vector<Double>();
-            sim.setBatchProcessing(true);
-            for(R2 point:x){
-                changes.getPointModel().setTo(point);
-                result.add(sim.getPrimaryValue()>0.5?50.0:0.0); // threshhold
-            }
-            sim.setBatchProcessing(false);
-            return result;
-        }
-        public Double minValue() {return 0.0;}
-        public Double maxValue() {return 50.0;}        
-    } // INNER CLASS Statistics.InitialPositionTestFunction
+    public Statistics() {}
     
     /** Returns PlaneFunction2D corresponding to the above value function. */
     public PlaneFunction2D getInitialPositionTestPlot(Simulation sim){
@@ -57,15 +35,11 @@ public class Statistics extends FiresChangeEvents {
     }
     
     
-    /** Resets the statistical data. */
-    public void reset(){reset(-1);}
-    public void reset(int n){
-        if(primaryOutputs==null){
-            if(n!=-1){primaryOutputs=new Vector<Double>(n);
-            }else{primaryOutputs=new Vector<Double>();}
-        }else{
-            primaryOutputs.clear();
-            if(n!=-1){primaryOutputs.ensureCapacity(n);}
+    /** Resets the statistical data with a given collection of valuations, and a given size. */
+    public void reset(Collection<Valuation> vals,int n){
+        resultMetrics = new HashMap<Valuation,Vector<Double>>();
+        for(Valuation v:vals) {
+            resultMetrics.put(v, new Vector<Double>(n));
         }
     }
     
@@ -74,21 +48,52 @@ public class Statistics extends FiresChangeEvents {
      * @param dl The DataLog captured during the simulation
      */
     public void captureData(DataLog dl){
-        primaryOutputs.add(dl.getPrimaryOutput());
+        for(Valuation v:resultMetrics.keySet()) {
+            resultMetrics.get(v).add(dl.teamMetrics.get(v).lastElement().y);
+        }
+    }
+    
+    /** Outputs results of a particular valuation. */
+    public void outputValuation(Valuation val, JTextArea textArea){
+        int numRuns = resultMetrics.get(val).size();
+        double total = 0.0;
+        int numNulls = 0;
+        for(Double d : resultMetrics.get(val)) {
+            if (d == null || d.isInfinite() || d.isNaN()) {
+                numNulls++;
+            } else {
+                if(d > 10000) { System.out.println(d); }
+                total += d;
+            }
+        }
+        total /= (numRuns - numNulls);
+        textArea.append(val.toString() + ": average " + DecimalFormat.getNumberInstance().format(total)
+                 + " over " + numRuns + " runs (" + numNulls + " null values)." + "\n");
     }
     
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){
-        double total=0.0;
-        int numNulls=0;
-        for(Double d:primaryOutputs){
-            if(d!=null){total+=d;
-            }else{numNulls++;}
+        textArea.append("-----\n");
+        for(Valuation val : resultMetrics.keySet()) {
+            outputValuation (val, textArea);
         }
-        total=total/(primaryOutputs.size()-numNulls);
-        textArea.append("Result of "+primaryOutputs.size()+" run is an average of "
-                +DecimalFormat.getNumberInstance().format(total)
-                +" and "+numNulls+" times with no catch.\n");
+    }
+    
+    /** Outputs results of entire data run. */
+    public void outputData(JTextArea textArea){
+        int numTimes = 0;
+        for(Valuation v: resultMetrics.keySet()) { numTimes = resultMetrics.get(v).size(); break; }
+        for(Valuation v: resultMetrics.keySet()) {
+            textArea.append(v.toString() + "\t");
+        }
+        textArea.append("\n");
+        for(int n=0; n<numTimes; n++) {
+            for(Valuation v: resultMetrics.keySet()) {
+                textArea.append(resultMetrics.get(v).get(n) + "\t");
+            }
+            textArea.append("\n");
+        }
+        textArea.append("\n");
     }
 
     
@@ -113,4 +118,30 @@ public class Statistics extends FiresChangeEvents {
     public PropertyChangeEvent getChangeEvent(String s) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    
+    
+    /** This function computes the output value of a simulation given an input of initial starting location of a particular agent. */
+    public class InitialPositionTestFunction implements BoundedFunction<R2,Double>{
+        Simulation sim;
+        public InitialPositionTestFunction(Simulation sim){this.sim=sim;}        
+        public Double getValue(R2 x) throws FunctionValueException {
+            return 0.0;
+            //sim.getPrimaryAgent().getPointModel().setTo(x);
+            //return sim.getPrimaryValue();
+        }
+        public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
+            //Agent changes=sim.getPrimaryAgent();
+            Vector<Double> result=new Vector<Double>();
+            sim.setBatchProcessing(true);
+            for(R2 point:x){
+                //changes.getPointModel().setTo(point);
+                //result.add(sim.getPrimaryValue()>0.5?50.0:0.0); // threshhold
+            }
+            sim.setBatchProcessing(false);
+            return result;
+        }
+        public Double minValue() {return 0.0;}
+        public Double maxValue() {return 50.0;}        
+    } // INNER CLASS Statistics.InitialPositionTestFunction
 }

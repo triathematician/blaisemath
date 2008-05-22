@@ -11,7 +11,6 @@
 package simulation;
 
 import analysis.Statistics;
-import valuation.Goal;
 import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -27,8 +26,9 @@ import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.SettingsProperty;
 import analysis.DataLog;
-import valuation.CaptureCondition;
-import valuation.VictoryCondition;
+import metrics.*;
+import java.util.HashSet;
+import javax.swing.JTextArea;
 import utility.DistanceTable;
 import utility.SimulationFactory;
 
@@ -43,12 +43,8 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Contains all settings used to run the simulation. */
     public SimSettings ss;
-    
     /** Contains list of teams involved. */
     Vector<Team> teams;
-    
-    /** The team responsible for returning data for statistical runs. */
-    Team primary;
     /** Table of distances (for speed of simulation) */
     DistanceTable dist;
     
@@ -80,7 +76,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         setString(name);
         setNumTeams(numTeams);
         initTeams(teams);
-        setPrimary(primaryTeam);
     }
     
     /** Intializes to a given list of teams. */
@@ -97,8 +92,18 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }        
     }
     
+    
+    // BEAN PATTERNS
+    
+    /** Returns current distance table. */
+    public DistanceTable getDistanceTable() { return this.dist; }
+    
+    /** Returns current data log. */
+    public DataLog getLog() { return this.log; }
+    
     /** Returns list of teams used in the simulation. */
     public Vector<Team> getTeams(){return teams;}
+    
     
     // METHODS: DEPLOY SIMULATION
     
@@ -116,8 +121,18 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** Runs several times and computes average result. */
     public void runSeveral(int numTimes){
-        Statistics stats=new Statistics(numTimes);
-        batchProcessing=true;
+        
+        // Initialize for data collection   
+        Statistics stats=new Statistics();
+        HashSet<Valuation> vals = new HashSet<Valuation> ();
+        for(Team team:teams){
+            if(team.victory != null) { vals.add(team.victory); }
+            vals.addAll(team.metrics);
+        }     
+        stats.reset(vals, numTimes);
+        
+        // Run the simulations
+        batchProcessing=true;        
         for(int i=0;i<numTimes;i++){
             for(Team team:teams){
                 team.initStartingLocations(getPitchSize());
@@ -139,29 +154,26 @@ public class Simulation implements ActionListener,PropertyChangeListener {
      * @param numSteps  how many time steps to run the simulation
      */
     public void run(int numSteps){
+        boolean quit = false;
         reset();
         log.preRun();
         double time=0;
         for(int i=0;i<numSteps;i++){
             time=i*getStepTime();
-            iterate(time);
+            quit = iterate(time);
             log.logAll(i,dist);
-//            for(Team t:teams){
-//                for(Goal g:t.getCaptureGoals()){
-//                    log.logCaptures(dist,g,time);                    
-//                }
-//            }
+            if(quit){break;}
         }
-        log.setPrimaryOutput(primary.getValue());
+        //log.setPrimaryOutput(primary.getValue());
         actionPerformed(new ActionEvent(log,0,"log"));
         actionPerformed(new ActionEvent(this,0,"redraw"));
     }
     
     /** Runs a single iteration of the scenario */
-    public void iterate(double time){
+    public boolean iterate(double time){
         
         // Step 1. Recalculate the table of distances
-        dist.recalculate();
+        dist.recalculate(time);
         
         // Step 2. Check for captures and remove associated playerd
         for(Team t:teams){
@@ -177,7 +189,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
                 int result=vc.check(dist, log, time);
                 if(result!=VictoryCondition.NEITHER && vc.endGame){
                     log.logEvent(null,null,null,null,"Simulation ended",time);
-                    // end the simulation here
+                    return true;
                 }
             }
         }
@@ -206,22 +218,12 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         
         // Step 7. Move agents
         for(Team t:teams){t.move();}
+        
+        return false;
     }
     
     // METHODS FOR RUNNING STATS ON THE SIMULATION
     
-    /** Returns one agent whose position may be changed automatically. */
-    public Agent getPrimaryAgent(){return primary.firstElement();}
-    /** Returns primary team. */
-    public Team getPrimaryTeam(){return primary;}
-    
-    /** Runs simulation and returns the primary "value" of the simulation. */
-    public Double getPrimaryValue(){    
-        for(Team team:teams){team.reset();}
-        dist=new DistanceTable(teams);
-        run();
-        return primary.getValue();
-    }
     public void setBatchProcessing(boolean b) {batchProcessing=b;}
     
     // EVENT HANDLING
@@ -290,8 +292,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
     public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
     public void setString(String newValue){ss.setName(newValue);}
-    public void setPrimary(Team newValue){primary=newValue;}
-    public void setPrimary(int newIndex){if(newIndex<teams.size()){primary=teams.get(newIndex);}}
     public void setDataLog(DataLog dl){this.log=dl;}
     
     public JPanel getPanel(){return ss.getPanel();}

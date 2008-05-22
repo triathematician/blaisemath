@@ -24,7 +24,6 @@ import javax.swing.event.EventListenerList;
 import javax.swing.JPanel;
 import behavior.TaskFusion;
 import behavior.TrustMap;
-import valuation.Goal;
 import tasking.TaskGenerator;
 import sequor.Settings;
 import sequor.model.ColorModel;
@@ -196,7 +195,7 @@ public class Agent {
      * @param team the agent's team
      * @param dist the global table of distances */
     public void generateSensoryEvents(Team team,DistanceTable dist){
-        for(Agent a:dist.getAgentsInRadius(this,team.getActiveAgents(),getCommRange())){
+        for(Agent a:dist.getAgentsInRadius(this, team.getActiveAgents(), getCommRange())){
             a.acceptSensoryEvent(pov);
         }
     }

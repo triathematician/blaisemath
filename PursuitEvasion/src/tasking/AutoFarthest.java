@@ -7,8 +7,6 @@ package tasking;
 
 import scio.coordinate.V2;
 import simulation.Agent;
-import valuation.Goal;
-import java.util.Vector;
 import simulation.Team;
 import utility.DistanceTable;
 

@@ -14,8 +14,6 @@ import analysis.DataLog;
 import analysis.Metrics;
 import analysis.Metrics.SplitContribution;
 import java.util.HashSet;
-import sequor.control.AnimationControl;
-import sequor.control.ButtonBox;
 import simulation.Agent;
 import specto.plottable.PlaneFunction2D;
 
@@ -55,6 +53,8 @@ public class PEGPlot extends javax.swing.JFrame {
         plot2D2 = new specto.plotpanel.Plot2D();
         jScrollPane5 = new javax.swing.JScrollPane();
         notificationWindow = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         plot2D1 = new specto.plotpanel.Plot2D();
@@ -98,23 +98,36 @@ public class PEGPlot extends javax.swing.JFrame {
 
         jSplitPane2.setDividerLocation(450);
 
+        jTabbedPane1.setToolTipText("See information regarding the simulations.");
         jTabbedPane1.setMaximumSize(new java.awt.Dimension(450, 600));
+
+        plot2D2.setToolTipText("See all valuation metrics on a plot over time.");
         jTabbedPane1.addTab("Goal Functions", plot2D2);
 
         notificationWindow.setColumns(20);
         notificationWindow.setEditable(false);
         notificationWindow.setRows(5);
+        notificationWindow.setToolTipText("See information about simulations which have been run.");
         jScrollPane5.setViewportView(notificationWindow);
 
         jTabbedPane1.addTab("Log", jScrollPane5);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setToolTipText("See a table of data obtained from the last simulation.");
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jTabbedPane1.addTab("Data", jScrollPane1);
+
+        jScrollPane3.setToolTipText("Communications network of the teams.");
         jTabbedPane1.addTab("Network View", jScrollPane3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
-            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,7 +299,7 @@ public class PEGPlot extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    simulation1.runSeveral(100);
+    simulation1.runSeveral(1000);
 }//GEN-LAST:event_jButton1ActionPerformed
 
 private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
@@ -325,6 +338,7 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             ((DataLog)evt.getSource()).output(notificationWindow);
         }else if(evt.getSource() instanceof Statistics){
             ((Statistics)evt.getSource()).output(notificationWindow);
+            ((Statistics)evt.getSource()).outputData(jTextArea1);
         }
     }
     else{
@@ -341,10 +355,10 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         HashSet<Agent> subset=new HashSet<Agent>();
-        subset.add(simulation1.getPrimaryAgent());
-        SplitContribution result=Metrics.subsetContribution(simulation1,simulation1.getPrimaryTeam(),subset);
-        notificationWindow.append(result.toString()+"\n");
-        simulation1.getPrimaryTeam().initAllActive();
+        subset.add(simulation1.getTeams().firstElement().firstElement());
+        SplitContribution result=Metrics.subsetContribution(simulation1, simulation1.getTeams().firstElement().victory, subset);
+        notificationWindow.append(result.toString());
+        simulation1.getTeams().firstElement().initAllActive();
         simulation1.run();
     }//GEN-LAST:event_jButton3ActionPerformed
     
@@ -382,12 +396,14 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private javax.swing.JTextArea notificationWindow;

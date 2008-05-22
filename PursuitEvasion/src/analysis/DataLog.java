@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JTextArea;
-import metrics.Goal;
 import metrics.Valuation;
 import simulation.Agent;
 import simulation.Simulation;
@@ -50,10 +49,7 @@ public class DataLog extends FiresChangeEvents {
     HashMap<Agent,Vector<R2>> agentPaths;
     HashMap<Valuation,Vector<R2>> teamMetrics;
     Vector<SignificantEvent> significantEvents;
-    
-    /** This stores the value of primary interest in a particular simulation, such as the time to capture, whether capture has occurred, etc. */
-    Double primaryOutput;
-    
+        
     /** Stores the paths of the agents */
     HashMap<Team,PlottableGroup<Euclidean2>> mainDisplayGroup;
     HashMap<Team,PlottableGroup<Euclidean2>> valueDisplayGroup;
@@ -75,10 +71,6 @@ public class DataLog extends FiresChangeEvents {
     
 
     // BEAN PATTERNS    
-
-    public Double getPrimaryOutput() {return primaryOutput;}
-
-    public void setPrimaryOutput(Double primaryOutput) {this.primaryOutput = primaryOutput;}    
     
     /** Returns position of agent at a particular time. */
     public R2 agentAt(Agent a,int step){
@@ -128,6 +120,9 @@ public class DataLog extends FiresChangeEvents {
             for(Valuation v:t.metrics){
                 teamMetrics.put(v,new Vector<R2>(s.getNumSteps()));
             }
+            if(t.victory != null){
+                teamMetrics.put(t.victory,new Vector<R2>(s.getNumSteps()));
+            }
         }
         
         if(mainDisplay!=null){
@@ -150,9 +145,17 @@ public class DataLog extends FiresChangeEvents {
             valueDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){
                 PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>();
+                PointSet2D temp;
                 for(Valuation v:t.metrics){
-                    valueGroup.add(new PointSet2D(teamMetrics.get(v),t.getColor()));
-                }                
+                    temp = new PointSet2D(teamMetrics.get(v),t.getColor());
+                    temp.style.setValue(PointSet2D.THIN);
+                    valueGroup.add(temp);
+                }              
+                if(t.victory != null) {
+                    temp = new PointSet2D(teamMetrics.get(t.victory),t.getColor());
+                    temp.style.setValue(PointSet2D.THIN);
+                    valueGroup.add(temp);
+                }
                 valueDisplay.add(valueGroup);
                 valueDisplayGroup.put(t, valueGroup);
             }
@@ -171,6 +174,9 @@ public class DataLog extends FiresChangeEvents {
                 if(teamMetrics.get(v)==null){
                     teamMetrics.put(v, new Vector<R2>(sim.getNumSteps()));
                 }
+            }
+            if(t.victory != null && teamMetrics.get(t.victory) == null){
+                teamMetrics.put(t.victory, new Vector<R2>(sim.getNumSteps()));
             }
         }
         // preRun the agent visuals; the team display groups do not change!
@@ -231,18 +237,11 @@ public class DataLog extends FiresChangeEvents {
      * @param g             The Goal representing the capturing
      * @param capDistance   The distance within which capture occurs
      */
-    public void logCaptures(DistanceTable dt,Goal g,double time){
-        AgentPair closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
-        while((closest!=null)&&(closest.getDistance()<g.getThreshhold())){
-            logEvent(g.getOwner(),closest.getFirst(),g.getTarget(),closest.getSecond(),"Capture",time);
-            Point2D adder=new Point2D(closest.getFirst().loc.plus(closest.getSecond().loc).multipliedBy(0.5),Color.RED,false);
-            adder.style.setValue(Point2D.CIRCLE);
-            captureGroup.add(adder);
-            dt.removeAgents(closest);
-            g.getOwner().deactivate(closest.getFirst());
-            g.getTarget().deactivate(closest.getSecond());
-            closest=dt.min(g.getOwner().getActiveAgents(),g.getTarget().getActiveAgents());
-        }
+    public void logCaptureEvent(Team owner, Agent first, Team target, Agent second, String string, DistanceTable dt, double time) {
+        logEvent(owner, first, target, second, string, time);
+        Point2D adder=new Point2D(second.loc,Color.RED,false);
+        adder.style.setValue(Point2D.CIRCLE);
+        captureGroup.add(adder);
     }
     
     /** Called after the simulation is completed. */
@@ -256,7 +255,7 @@ public class DataLog extends FiresChangeEvents {
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){
         for(SignificantEvent se:significantEvents){
-            textArea.append(se.toString()+"\n");
+            textArea.append("  " + se.toString() + "\n");
         }
     }
     

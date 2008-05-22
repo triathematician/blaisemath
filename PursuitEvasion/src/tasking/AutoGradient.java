@@ -6,8 +6,6 @@
 package tasking;
 
 import simulation.Agent;
-import valuation.Goal;
-import java.util.Vector;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
 import simulation.Team;

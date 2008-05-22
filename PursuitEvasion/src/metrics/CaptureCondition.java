@@ -20,9 +20,13 @@ import utility.DistanceTable;
  */
 public class CaptureCondition extends Valuation {
     
+    /** Whether to remove both players from the field when this occurs, or just the target. */
+    boolean removeBoth = false;
+    
     /** Initialize with specified capture distance. */    
     public CaptureCondition(Team owner,Team target,double captureDistance){
         super(owner,target,captureDistance);
+        vs.setName("Capture Condition");
     }
     
     /** Checks to see whether capture has occurred in the given DistanceTable. If it has, captured agents are
@@ -34,11 +38,16 @@ public class CaptureCondition extends Valuation {
         Vector<R2> result=new Vector<R2>();
         AgentPair closest=dt.min(owner.getActiveAgents(),target.getActiveAgents());
         while((closest != null) && (closest.getDistance() < getThreshold())){
-            log.logEvent(owner,closest.getFirst(),target,closest.getSecond(),"Capture",time);
-            result.add(closest.getFirst().loc.plus(closest.getSecond().loc).multipliedBy(0.5));
-            dt.removeAgents(closest);
-            owner.deactivate(closest.getFirst());
-            owner.deactivate(closest.getSecond());
+            log.logCaptureEvent(owner,closest.getFirst(),target,closest.getSecond(),"Capture",dt,time);
+            result.add(closest.getSecond().loc);
+            if(removeBoth) {
+                dt.removeAgents(closest);
+                owner.deactivate(closest.getFirst());
+                target.deactivate(closest.getSecond());
+            } else {
+                dt.removeAgent(closest.getSecond());
+                target.deactivate(closest.getSecond());
+            }
             closest=dt.min(owner.getActiveAgents(),target.getActiveAgents());
         }
         return result;

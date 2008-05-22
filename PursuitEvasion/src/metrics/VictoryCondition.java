@@ -7,22 +7,52 @@ package metrics;
 
 import analysis.DataLog;
 import scio.function.FunctionValueException;
+import simulation.Team;
 import utility.DistanceTable;
 
 /**
  * This class is used to determine when a particular team has "won" or "lost" the simulation.
  * @author Elisha Peterson
  */
-public abstract class VictoryCondition {
-    
-    /** Whether this victory condition forces the end of the game. */
-    public boolean endGame=false;
+public class VictoryCondition extends Valuation {
     
     // CONSTANTS
     
-    public static final int NEITHER=0;
-    public static final int WON=1;
-    public static final int LOST=2;    
+    public static final int NEITHER = 0;
+    public static final int WON = 1;
+    public static final int LOST = 2;   
+    
+    /** Stores the status if the value is more than the threshold value (win/loss/neither) */
+    int moreResult;
+    /** Stores the status if the value is less than the threshold value (win/loss/neither) */
+    int lessResult;
+    
+    /** Whether this victory condition forces the end of the game. */
+    public boolean endGame = false;
+    
+    /** Stores whether this value has been triggered from neither to "win" or "loss" */
+    boolean triggered = false;
+    
+    
+    // CONSTRUCTORS
+    
+    /** Main constructor */
+    public VictoryCondition(Team owner, Team target, int type, double threshold,int moreResult,int lessResult){
+        super(owner, target, type, threshold);
+        vs.setName("Victory Condition");
+        this.moreResult = moreResult;
+        this.lessResult = lessResult;
+        reset();
+    } 
+    
+    // INITIALIZERS
+    
+    public void reset() {
+        triggered = false;
+    }
+    
+    
+    // DETERMINES WHETHER VICTORY HAS OCCURRED
     
     /** Checks to see if victory condition has been met; outputs info to log if victory has been achieved.
      * @param dt the table of distances
@@ -31,46 +61,25 @@ public abstract class VictoryCondition {
      * @return status integer representing win, loss, or neither
      */
     public int check(DistanceTable dt,DataLog log,double time){
-        int result=check(dt);
-        switch(result){
-            case NEITHER:
-                break;
-            case WON:
-                log.logEvent(null,null,null,null,"Victory",time);
-                break;
-            case LOST:
-                log.logEvent(null,null,null,null,"Defeat",time);
-        }
-        return result;
-    }
-    
-    /** Abstract method to determine victory. */
-    public abstract int check(DistanceTable dt);
-    
-    
-    // INNER CLASSES
-    
-    /** Basic victory condition, based simply on whether the valuation is greater than
-     * or less than the threshold.
-     */
-    public static class Basic extends VictoryCondition {
-        int moreResult;
-        int lessResult;
-        Valuation goal;
-        
-        public Basic(Valuation goal,int moreResult,int lessResult){
-            this.goal = goal;
-            this.moreResult = moreResult;
-            this.lessResult = lessResult;
-        }
-
-        @Override
-        public int check(DistanceTable dt) {
-            try {
-                return goal.getValue(dt) > 0 ? moreResult : lessResult;
-            } catch (FunctionValueException ex) {
-                return NEITHER;
+        try {
+            //System.out.println("value: "+getValue(dt)+", thresh: "+getThreshold()+", more: "+moreResult+", less: "+lessResult);
+            int result = getValue(dt) >= getThreshold() ? moreResult : lessResult;
+            if(triggered) { return result; }
+            switch (result) {
+                case NEITHER:
+                    break;
+                case WON:
+                    triggered = true;
+                    log.logEvent(null, null, null, null, "Victory", time);
+                    break;
+                case LOST:
+                    triggered = false;
+                    log.logEvent(null, null, null, null, "Defeat", time);
+                    break;
             }
+            return result;
+        } catch (FunctionValueException ex) {
+            return NEITHER;
         }
-    } // INNER CLASS VictoryCondition.Basic
+    }
 }

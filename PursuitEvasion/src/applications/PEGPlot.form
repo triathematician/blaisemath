@@ -190,8 +190,8 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" alignment="0" pref="366" max="32767" attributes="1"/>
-                  <Component id="simulationSettingsPanel1" alignment="0" pref="366" max="32767" attributes="1"/>
+                  <Component id="jTabbedPane1" alignment="0" pref="449" max="32767" attributes="1"/>
+                  <Component id="simulationSettingsPanel1" alignment="0" pref="449" max="32767" attributes="1"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -207,6 +207,7 @@
           <SubComponents>
             <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
               <Properties>
+                <Property name="toolTipText" type="java.lang.String" value="See information regarding the simulations."/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[450, 600]"/>
                 </Property>
@@ -215,6 +216,9 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
                 <Component class="specto.plotpanel.Plot2D" name="plot2D2">
+                  <Properties>
+                    <Property name="toolTipText" type="java.lang.String" value="See all valuation metrics on a plot over time."/>
+                  </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Goal Functions">
@@ -239,11 +243,38 @@
                         <Property name="columns" type="int" value="20"/>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="rows" type="int" value="5"/>
+                        <Property name="toolTipText" type="java.lang.String" value="See information about simulations which have been run."/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Data">
+                        <Property name="tabTitle" type="java.lang.String" value="Data"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTextArea" name="jTextArea1">
+                      <Properties>
+                        <Property name="columns" type="int" value="20"/>
+                        <Property name="rows" type="int" value="5"/>
+                        <Property name="toolTipText" type="java.lang.String" value="See a table of data obtained from the last simulation."/>
                       </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+                  <Properties>
+                    <Property name="toolTipText" type="java.lang.String" value="Communications network of the teams."/>
+                  </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Network View">
