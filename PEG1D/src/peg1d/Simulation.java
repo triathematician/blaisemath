@@ -367,7 +367,6 @@ public class Simulation implements ChangeListener {
             addProperty("Capture Distance",captureRegion,Settings.EDIT_DOUBLE);
             addProperty(" Step Size",stepSize,Settings.EDIT_DOUBLE);
             addProperty(" # Steps",numSteps,Settings.EDIT_INTEGER);
-            initEventListening();
         }
         
         @Override
