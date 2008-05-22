@@ -120,7 +120,5 @@ public class BooleanModelGroup extends FiresChangeEvents implements ChangeListen
     }
 
     @Override
-    public PropertyChangeEvent getChangeEvent(String s) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }    
+    public PropertyChangeEvent getChangeEvent(String s) {return new PropertyChangeEvent(this,s,null,null);}
 }

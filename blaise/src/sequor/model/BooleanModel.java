@@ -8,6 +8,7 @@ package sequor.model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JCheckBox;
 import sequor.FiresChangeEvents;
 
 /**
@@ -16,7 +17,7 @@ import sequor.FiresChangeEvents;
  * @author Elisha Peterson
  */
 public class BooleanModel extends FiresChangeEvents {
-    boolean value;
+    Boolean value;
     
     public BooleanModel(boolean value){
         this.value=value;
@@ -32,7 +33,8 @@ public class BooleanModel extends FiresChangeEvents {
     }
     
     public boolean isTrue(){return value;}
-    public void setValue(boolean newValue){
+    public Boolean getValue(){return value;}
+    public void setValue(Boolean newValue){
         if(newValue!=value){
             value=newValue;
             fireStateChanged();
@@ -56,5 +58,26 @@ public class BooleanModel extends FiresChangeEvents {
     /** Returns listener which can be used to toggle the value of the model */
     public ActionListener getToggleListener(){
         return new ActionListener(){public void actionPerformed(ActionEvent e) {toggleValue();}};
+    }
+    
+    /** Returns check box controlled by this model. */
+    public JCheckBox getCheckBox() { return new MyCheckBox(this); }
+    
+    
+    // Check box for the model
+    
+    public static class MyCheckBox extends JCheckBox {  
+        BooleanModel bm;
+        
+        public MyCheckBox(BooleanModel bm) {
+            this.bm = bm;
+            super.setSelected(bm.isTrue());
+            addActionListener(bm.getToggleListener());
+        }
+
+        @Override
+        public void setSelected(boolean b) { bm.setValue(b); }
+        @Override
+        public boolean isSelected() { return bm.isTrue(); }
     }
 }

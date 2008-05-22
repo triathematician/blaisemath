@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Vector;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -91,12 +92,17 @@ import sequor.model.*;
 public class Settings extends Vector<SettingsProperty> implements ChangeListener, PropertyChangeListener {
 
     // PROPERTIES
+    
     /** Name of this collection of settings. */
     private String name="SettingsGroup";
+    /** Type of inheritance */
+    private Integer inheriting = PROPERTY_INDEPENDENT;
     /** Parent classes. */
     private Vector<Settings> parents;
     /** Child classes. */
-    private HashMap<Settings,Integer> children;
+    private Vector<Settings> children;
+    
+    // CONSTANTS
     
     /** A relationship between Settings classes whose properties are completely independent. */
     public static final int PROPERTY_INDEPENDENT=0;
@@ -127,6 +133,8 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public static final int EDIT_STRING = 6;
     /** Adds a checkbox for boolean editing (okay for menu) */
     public static final int EDIT_BOOLEAN = 7;
+    /** Adds group of boolean elements for editing (converts to several checkboxes). */
+    public static final int EDIT_BOOLEAN_GROUP = 77;
     /** Adds field for function editing */
     public static final int EDIT_FUNCTION = 101;
     /** Adds two fields for parametric function editing */
@@ -143,7 +151,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public Settings() {
         super();
         parents = new Vector<Settings>();
-        children = new HashMap<Settings,Integer>();
+        children = new Vector<Settings>();
     }
     
     
@@ -151,29 +159,61 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     @Override
     public String toString() {return name;}
     public void setName(String name) {this.name = name;}
-    public HashMap<Settings,Integer> getChildren(){return children;}
+    public Vector<Settings> getChildren(){return children;}
     public void removeChild(Settings s){children.remove(s);}
     public Color getColor(){return Color.BLACK;}
+    public Integer getInheriting(){return inheriting;}
+    public void setInheriting(Integer inheriting){this.inheriting = inheriting;}
     
     // METHODS FOR ADDING PROPERTIES    
     
     /** Static property representing a horizontal bar or separator of some sort. */
     public static final SettingsProperty PROPERTY_SEPARATOR = new SettingsProperty(null, null, EDIT_SEPARATOR);
+
     /** Adds a separator */
     public void addSeparator(){add(PROPERTY_SEPARATOR);}
+
+    /** Adds group of several properties (Displayed many times, events handled once) */
+    public void addGroup(final String evtName, final FiresChangeEvents e, int type, String tooltipText) {
+        switch(type) {
+            case EDIT_BOOLEAN_GROUP:
+                if (e instanceof SubsetModel) {
+                    for(Object o : ((SubsetModel)e).getSet()) {
+                        super.add(new SettingsProperty(o.toString(), ((SubsetModel)e).getModel(o), EDIT_BOOLEAN, tooltipText));
+                    }
+                } else {
+                    for(BooleanModel bm : ((BooleanModelGroup)e).getModels()) {
+                        super.add(new SettingsProperty(bm.toString(), e, EDIT_BOOLEAN, tooltipText));
+                    }
+                }
+                e.addChangeListener(new ChangeListener(){
+                    public void stateChanged(ChangeEvent ce) {               
+                        propertyChange(e.getChangeEvent(evtName));
+                    }                    
+                });
+            default:
+                break;
+        }
+    }
+    
     /** Adds a property */
-    public void addProperty(String s,FiresChangeEvents e,int type){add(new SettingsProperty(s,e,type));}
+    public void addProperty(String s,FiresChangeEvents e,int type){addProperty(s,e,type,null);}
+
     /** Adds a property with tooltip text */
-    public void addProperty(String s,FiresChangeEvents e,int type,String tooltipText){add(new SettingsProperty(s,e,type,tooltipText));}
+    public void addProperty(String s, FiresChangeEvents e, int type, String tooltipText){
+        add(new SettingsProperty(s, e, type, tooltipText));
+    }
+    
     /** Adds a generic property. Adds this class as a ChangeListener if the model is not null. */
     @Override
     public boolean add(SettingsProperty sp){
         boolean result=super.add(sp);
-        if(sp.getModel()!=null){
+        if(sp.getModel() != null){
             sp.getModel().addChangeListener(this);
         }
         return result;
     }
+    
     /** Changes type of editor of a particular property which is identified by name */
     public void setPropertyEditor(String s, int newType) {
         for (SettingsProperty sp : this) {
@@ -191,7 +231,8 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     /** Adds a child node, and implements appropriate event handling procedures. */
     public void addChild(Settings child,int relationship){
-        children.put(child,relationship);
+        children.add(child);
+        child.setInheriting(relationship);
         //child.addParent(this,relationship);
         switch(relationship){
             case PROPERTY_PROPAGATE : // copy parent's properties to this class
@@ -222,15 +263,6 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     // EVENT HANDLING SUPPORT
     
-    /** Sets up event listening. Should be called by the constructor!! */
-    public void initEventListening() {
-        for (SettingsProperty sp : this) {
-            if (sp.getModel() == null) {
-                continue;
-            }
-            sp.getModel().addChangeListener(this);
-        }
-    }
     /** Fires a change event by renaming the ChangeEvent and passing it to the PropertyChangeSupport class. */
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -243,6 +275,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
             }
         }
     }
+    
     /** Utility class for handling bean property changes. */
     protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     /**Add a property change listener for a specific property. */
@@ -259,26 +292,28 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     /** Gets component corresponding to a particular SettingsProperty. */
     public static JComponent getComponent(SettingsProperty sp){
         switch(sp.getEditorType()){
-            case EDIT_INTEGER:
-                return getSpinner((IntegerRangeModel)sp.getModel());
+            case EDIT_BOOLEAN:
+                return ((BooleanModel) sp.getModel()).getCheckBox();
+            case EDIT_COLOR:
+                return new ColorEditor((ColorModel) sp.getModel()).getButton();
+            case EDIT_COMBO:
+                return ((StringRangeModel) sp.getModel()).getComboBox();
             case EDIT_DOUBLE:
                 return getSpinner((DoubleRangeModel)sp.getModel());
             case EDIT_DOUBLE_SLIDER:
                 return new DoubleSlider((DoubleRangeModel)sp.getModel());
-            case EDIT_INTEGER_SLIDER:
-                return getSlider((IntegerRangeModel) sp.getModel());
-            case EDIT_COMBO:
-                return ((StringRangeModel) sp.getModel()).getComboBox();
-            case EDIT_STRING:
-                return new JTextField();
-            case EDIT_COLOR:
-                return new ColorEditor((ColorModel) sp.getModel()).getButton();
-            case EDIT_PARAMETER:
-                return new ParameterEditor((ParameterListModel)sp.getModel()).getButton();
             case EDIT_FUNCTION:
                 return new FunctionTextComboBox((FunctionTreeModel)sp.getModel());
+            case EDIT_INTEGER:
+                return getSpinner((IntegerRangeModel)sp.getModel());
+            case EDIT_INTEGER_SLIDER:
+                return getSlider((IntegerRangeModel) sp.getModel());
+            case EDIT_PARAMETER:
+                return new ParameterEditor((ParameterListModel)sp.getModel()).getButton();
             case EDIT_PARAMETRIC:
                 return new BParametricFunctionPanel((ParametricModel) sp.getModel());
+            case EDIT_STRING:
+                return new JTextField();
         }     
         return null;
     }
@@ -301,7 +336,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     /** Generates tree node. */
     public DefaultMutableTreeNode getTreeNode(){
         DefaultMutableTreeNode result=new DefaultMutableTreeNode(this);
-        for(Settings s:children.keySet()){result.add(s.getTreeNode());}
+        for(Settings s:children){result.add(s.getTreeNode());}
         return result;
     }
     
@@ -375,7 +410,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         addProperty("function",new FunctionTreeModel(),Settings.EDIT_FUNCTION);
         addProperty("parametric",new ParametricModel(),Settings.EDIT_PARAMETRIC);
         //addProperty("parameter",new ParameterListModel(),Settings.EDIT_PARAMETER);
-            //addProperty("boolean",null,Settings.EDIT_BOOLEAN);
+        addProperty("boolean",new BooleanModel(true),Settings.EDIT_BOOLEAN);
             //addProperty("separator",null,Settings.EDIT_SEPARATOR);
             //addProperty("string",null,Settings.EDIT_STRING);
             //addProperty("noedit",null,Settings.NO_EDIT);

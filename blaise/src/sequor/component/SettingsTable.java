@@ -28,6 +28,7 @@ import sequor.model.IntegerRangeModel;
 import sequor.editor.ParameterEditor;
 import sequor.model.ParameterListModel;
 import sequor.SettingsProperty;
+import sequor.model.BooleanModel;
 import sequor.model.ParametricModel;
 
 /**
@@ -57,7 +58,7 @@ public class SettingsTable extends JTable {
         if(column!=VALUE_COLUMN){return super.getCellEditor(row,column);}
         SettingsProperty sp=(SettingsProperty) ((SettingsTableModel)getModel()).getValueAt(row,column);
         switch(sp.getEditorType()){
-            case Settings.EDIT_BOOLEAN: return new DefaultCellEditor(new JCheckBox());
+            case Settings.EDIT_BOOLEAN: return new DefaultCellEditor(((BooleanModel)sp.getModel()).getCheckBox());
             case Settings.EDIT_COLOR: return new ColorEditor((ColorModel)sp.getModel());
             case Settings.EDIT_COMBO: return new DefaultCellEditor(((StringRangeModel)sp.getModel()).getComboBox());
             // TODO write custom double cell editor
@@ -79,7 +80,9 @@ public class SettingsTable extends JTable {
 
     @Override
     public TableCellRenderer getCellRenderer(int row, int column) {
-        if(column!=VALUE_COLUMN){return super.getCellRenderer(row,column);}
+        if(column!=VALUE_COLUMN){
+            return super.getCellRenderer(row,column);
+        }
         return new SettingsRenderer();
     }
     
@@ -91,11 +94,13 @@ public class SettingsTable extends JTable {
     /** Custom cell renderer for the table. */    
     public class SettingsRenderer extends DefaultTableCellRenderer {        
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object settingsProperty,boolean isSelected, boolean hasFocus,int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object settingsProperty, boolean isSelected, boolean hasFocus, int row, int column) {
             SettingsProperty sp=(SettingsProperty)settingsProperty;
             setForeground(Color.BLACK);
             setHorizontalAlignment(CENTER);
             switch(sp.getEditorType()){
+                case Settings.EDIT_BOOLEAN:
+                    return super.getTableCellRendererComponent(table, ((BooleanModel)sp.getModel()).getValue(), isSelected, hasFocus, row, column);
                 case Settings.EDIT_COLOR:
                     setText("EDIT");
                     setBackground(((ColorModel)sp.getModel()).getValue());

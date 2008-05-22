@@ -77,6 +77,7 @@ public class SettingsPanel extends JPanel {
                     continue;
                 }
                 JLabel label=new JLabel(sp.getName());
+                label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
                 JComponent component = Settings.getComponent(sp);
                 if(component!=null){
                     label.setToolTipText(sp.getTooltipText());
