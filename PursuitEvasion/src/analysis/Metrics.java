@@ -52,7 +52,8 @@ public class Metrics {
             dl2 = sim.getLog();
             trial3 = val.getValue(sim, complement);            
             sim.setBatchProcessing(false);
-            return new SplitContribution(owner, subset, val, trial1-trial2, trial2-trial3);
+            return new SplitContribution(owner, subset, val, trial2-trial1, trial3-trial2);
+            //return new SplitContribution(owner, subset, val, trial1-trial2, trial2-trial3);
         } catch (FunctionValueException e) {
             return new SplitContribution();            
         }

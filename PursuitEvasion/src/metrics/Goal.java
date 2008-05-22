@@ -207,7 +207,6 @@ public class Goal extends TaskGenerator {
             add(new SettingsProperty("Goal Weight",this.weight,Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Goal Cutoff",this.threshhold,Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Tasking",this.tasking,Settings.EDIT_COMBO));
-            initEventListening();
         }
         
         /** Listens for changes to settings */

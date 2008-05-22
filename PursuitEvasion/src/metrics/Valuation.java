@@ -5,6 +5,8 @@
 
 package metrics;
 
+import analysis.Metrics;
+import analysis.Metrics.SplitContribution;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -18,6 +20,7 @@ import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.DoubleRangeModel;
 import sequor.model.StringRangeModel;
+import sequor.model.SubsetModel;
 import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
@@ -53,7 +56,9 @@ public class Valuation implements Function<DistanceTable,Double> {
      * @return Double value representing the measure, or NaN if there is no possible measure.
      * @throws scio.function.FunctionValueException
      */
-    public Double getValue(DistanceTable dt) throws FunctionValueException { return getValue(dt, owner); }    
+    public Double getValue(DistanceTable dt) throws FunctionValueException {
+        return getValue(dt, vs.valueAgents.getSubset());
+    }    
     
     /** Returns team's valuation of the current status of the game.
      * @param dt table of distances between players
@@ -102,6 +107,17 @@ public class Valuation implements Function<DistanceTable,Double> {
     }
     
     public Vector<Double> getValue(Vector<DistanceTable> xx) throws FunctionValueException {return null;}    
+    
+    /** Returns subset contribution given a simulation (runs the simulation to compute it). */
+    public SplitContribution getCooperationMetric(Simulation sim) {
+        return Metrics.subsetContribution(sim, this, getSubset());
+    }
+    
+    /** Returns subset of agents evaluating this particular metric. */
+    public HashSet<Agent> getSubset() { 
+        return vs.valueAgents.getSubset();
+    }
+    
     
     // EVENT HANDLING
     
@@ -154,7 +170,9 @@ public class Valuation implements Function<DistanceTable,Double> {
     public class ValuationSettings extends Settings {
         
         /** The team owning this goal. */
-        private Team owner;  
+        private Team owner; 
+        /** Subset of team measuring the goal. */
+        private SubsetModel<Agent> valueAgents;
         /** The target of this goal. */
         private Team target;
     
@@ -172,9 +190,10 @@ public class Valuation implements Function<DistanceTable,Double> {
             this.target = target;
             this.threshold.setValue(threshold);
             this.type.setValue(type);
-            add(new SettingsProperty("Threshhold",this.threshold,Settings.EDIT_DOUBLE));
-            add(new SettingsProperty("Type",this.type,Settings.EDIT_COMBO));
-            initEventListening();
+            add(new SettingsProperty("Threshhold", this.threshold, Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Type", this.type, Settings.EDIT_COMBO));
+            valueAgents = new SubsetModel<Agent> (owner);
+            addGroup("Subset", valueAgents, Settings.EDIT_BOOLEAN_GROUP, "Select agents used for valuation.");
         }
         
         /** Listens for changes to settings */
@@ -183,6 +202,7 @@ public class Valuation implements Function<DistanceTable,Double> {
             String ac=null;
             if(evt.getSource()==threshold){ac="teamSetupChange";}
             else if(evt.getSource()==type){ac="teamSetupChange";}
+            else if(evt.getSource()==valueAgents){ac="teamSetupChange";}
             fireActionPerformed(ac);
         }
         

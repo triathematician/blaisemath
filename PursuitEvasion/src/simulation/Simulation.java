@@ -250,7 +250,9 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         if(batchProcessing){return;}
         String es=e.getActionCommand();
         // otherwise, go ahead and redraw/recolor/etc. as appropriate
-        if(es.equals("simulationRun")){ // routine run of the simulation
+        if(es==null){
+            fireActionPerformed(e);
+        }else if(es.equals("simulationRun")){ // routine run of the simulation
             fireActionPerformed("redraw");
         }
         // cosmetic change only
@@ -323,7 +325,6 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             gameType.addChangeListener(this);
             //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
             //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
-            initEventListening();
         }
         
         @Override

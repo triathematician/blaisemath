@@ -14,7 +14,9 @@ import analysis.DataLog;
 import analysis.Metrics;
 import analysis.Metrics.SplitContribution;
 import java.util.HashSet;
+import metrics.Valuation;
 import simulation.Agent;
+import simulation.Team;
 import specto.plottable.PlaneFunction2D;
 
 /**
@@ -354,12 +356,14 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        HashSet<Agent> subset=new HashSet<Agent>();
-        subset.add(simulation1.getTeams().firstElement().firstElement());
-        SplitContribution result=Metrics.subsetContribution(simulation1, simulation1.getTeams().firstElement().victory, subset);
-        notificationWindow.append(result.toString());
-        simulation1.getTeams().firstElement().initAllActive();
-        simulation1.run();
+        for (Team t : simulation1.getTeams()) {
+            if (t.victory != null) {
+                notificationWindow.append(t.victory.getCooperationMetric(simulation1).toString());
+            }
+            for (Valuation v : t.metrics) {
+                notificationWindow.append(v.getCooperationMetric(simulation1).toString());
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
     
     /**

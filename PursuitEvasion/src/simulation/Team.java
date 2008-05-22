@@ -493,7 +493,6 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
             add(new SettingsProperty("Lead Factor",leadFactor,Settings.NO_EDIT));
             add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
             add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
-            initEventListening();
         }
         
         /**public JPanel getPanel(){
