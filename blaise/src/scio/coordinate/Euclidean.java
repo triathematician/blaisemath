@@ -42,10 +42,10 @@ public class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceEleme
     
     // REQUIRED FOR VECTOR SPACE
     
-    public Coordinate zero(){return new Euclidean(coord.size());}
-    public Coordinate plus(Coordinate p2){return new Euclidean(coord.size());}
-    public Coordinate minus(Coordinate p2){return new Euclidean(coord.size());}
-    public Coordinate times(double d){return new Euclidean(coord.size());}
+    public VectorSpaceElement zero(){return new Euclidean(coord.size());}
+    public VectorSpaceElement plus(VectorSpaceElement p2){return new Euclidean(coord.size());}
+    public VectorSpaceElement minus(VectorSpaceElement p2){return new Euclidean(coord.size());}
+    public VectorSpaceElement times(double d){return new Euclidean(coord.size());}
 
     
     // REQUIRED TO MAKE THIS A METRIC SPACE

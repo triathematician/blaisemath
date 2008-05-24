@@ -15,8 +15,8 @@ package scio.coordinate;
  * @author Elisha Peterson
  */
 public interface VectorSpaceElement extends Coordinate {
-    public Coordinate zero();
-    public Coordinate plus(Coordinate p2);
-    public Coordinate minus(Coordinate p2);
-    public Coordinate times(double d);
+    public VectorSpaceElement zero();
+    public VectorSpaceElement plus(VectorSpaceElement p2);
+    public VectorSpaceElement minus(VectorSpaceElement p2);
+    public VectorSpaceElement times(double d);
 }

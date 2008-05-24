@@ -33,7 +33,7 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
     
     // CONSTRUCTOR
     public NewGrid2D(){
-        setColor(Color.getHSBColor(.4f,.5f,.7f));
+        setColor(Color.getHSBColor(.4f,.3f,0.9f));
     }
     
     
