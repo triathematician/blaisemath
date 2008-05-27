@@ -31,7 +31,7 @@ public class SubsetModel<V> extends BooleanModelGroup {
     /** Initializes this model to a particular set of elements.
      * @param set a collection of objects representing the complete set to choose from.
      */
-    void initSet(Collection<V> set) {
+    public void initSet(Collection<V> set) {
         models.clear();
         if(modelMap == null) { 
             modelMap = new HashMap<V, BooleanModel> ();
@@ -64,6 +64,17 @@ public class SubsetModel<V> extends BooleanModelGroup {
         HashSet<V> result = new HashSet<V>();
         for(V v: modelMap.keySet()){
             if(modelMap.get(v).isTrue()) { result.add(v); }
+        }
+        return result;
+    }
+    
+    /** Returns subset represented by this class.
+     * @return HashSet of given data type
+     */
+    public HashSet<V> getComplement() {
+        HashSet<V> result = new HashSet<V>();
+        for(V v: modelMap.keySet()){
+            if(!modelMap.get(v).isTrue()) { result.add(v); }
         }
         return result;
     }
