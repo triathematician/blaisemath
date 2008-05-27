@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JTextArea;
 import metrics.Valuation;
@@ -48,6 +49,7 @@ public class DataLog extends FiresChangeEvents {
     Plot2D valuePlot;
     HashMap<Agent,Vector<R2>> agentPaths;
     HashMap<Valuation,Vector<R2>> teamMetrics;
+    HashMap<Valuation,Vector<R2>> partialTeamMetrics;
     Vector<SignificantEvent> significantEvents;
         
     /** Stores the paths of the agents */
@@ -110,7 +112,8 @@ public class DataLog extends FiresChangeEvents {
         valuePlot=valueDisplay;
         
         // initializes vectors
-        teamMetrics=new HashMap<Valuation,Vector<R2>>();
+        teamMetrics = new HashMap<Valuation,Vector<R2>>();
+        partialTeamMetrics = new HashMap<Valuation,Vector<R2>>();
         significantEvents=new Vector<SignificantEvent>();        
         agentPaths=new HashMap<Agent,Vector<R2>>();
         for(Team t:s.getTeams()){
@@ -119,9 +122,11 @@ public class DataLog extends FiresChangeEvents {
             }
             for(Valuation v:t.metrics){
                 teamMetrics.put(v,new Vector<R2>(s.getNumSteps()));
+                partialTeamMetrics.put(v,new Vector<R2>(s.getNumSteps()));
             }
             if(t.victory != null){
                 teamMetrics.put(t.victory,new Vector<R2>(s.getNumSteps()));
+                partialTeamMetrics.put(t.victory,new Vector<R2>(s.getNumSteps()));
             }
         }
         
@@ -150,9 +155,15 @@ public class DataLog extends FiresChangeEvents {
                     temp = new PointSet2D(teamMetrics.get(v),t.getColor());
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
+                    temp = new PointSet2D(partialTeamMetrics.get(v),t.getColor());
+                    temp.style.setValue(PointSet2D.THIN);
+                    valueGroup.add(temp);
                 }              
                 if(t.victory != null) {
                     temp = new PointSet2D(teamMetrics.get(t.victory),t.getColor());
+                    temp.style.setValue(PointSet2D.THIN);
+                    valueGroup.add(temp);
+                    temp = new PointSet2D(partialTeamMetrics.get(t.victory),t.getColor());
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
                 }
@@ -174,9 +185,15 @@ public class DataLog extends FiresChangeEvents {
                 if(teamMetrics.get(v)==null){
                     teamMetrics.put(v, new Vector<R2>(sim.getNumSteps()));
                 }
+                if(partialTeamMetrics.get(v)==null){
+                    partialTeamMetrics.put(v, new Vector<R2>(sim.getNumSteps()));
+                }                
             }
             if(t.victory != null && teamMetrics.get(t.victory) == null){
                 teamMetrics.put(t.victory, new Vector<R2>(sim.getNumSteps()));
+            }
+            if(t.victory != null && partialTeamMetrics.get(t.victory) == null){
+                partialTeamMetrics.put(t.victory, new Vector<R2>(sim.getNumSteps()));
             }
         }
         // preRun the agent visuals; the team display groups do not change!
@@ -210,6 +227,7 @@ public class DataLog extends FiresChangeEvents {
     public void preRun(){
         for(Vector<R2> vv:agentPaths.values()){vv.clear();}
         for(Vector<R2> vv:teamMetrics.values()){vv.clear();}
+        for(Vector<R2> vv:partialTeamMetrics.values()){vv.clear();}
         significantEvents.clear();
         captureGroup.clear();
         logAll(0,null);
@@ -223,7 +241,8 @@ public class DataLog extends FiresChangeEvents {
         if(dt!=null){
             for(Valuation v:teamMetrics.keySet()){
                 try {
-                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt)));
+                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getOwner())));
+                    partialTeamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getComplement())));
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(DataLog.class.getName()).log(Level.SEVERE, null, ex);
                 }                

@@ -156,8 +156,8 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         //if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
     /** Adds a capture condition. */
-    public void addCaptureCondition(Team target,double captureDistance){
-        CaptureCondition cc = new CaptureCondition(this,target,captureDistance);
+    public void addCaptureCondition(Vector<Team> teams, Team target, double captureDistance){
+        CaptureCondition cc = new CaptureCondition(teams, this, target, captureDistance);
         capture.add(cc);
         tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
     }
@@ -222,6 +222,9 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
             a.addActionListener(this);
             ags.addChild(a.ags,Settings.PROPERTY_INDEPENDENT);
         }
+        if(victory != null) { victory.resetTeam(); }
+        for(CaptureCondition cc:capture) { cc.resetTeam(); }
+        for(Valuation v:metrics) { v.resetTeam(); }
         initAllActive();
         editing=false;
     }

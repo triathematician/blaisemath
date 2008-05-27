@@ -6,7 +6,9 @@
 package metrics;
 
 import analysis.DataLog;
+import java.util.Vector;
 import scio.function.FunctionValueException;
+import simulation.Simulation;
 import simulation.Team;
 import utility.DistanceTable;
 
@@ -37,8 +39,8 @@ public class VictoryCondition extends Valuation {
     // CONSTRUCTORS
     
     /** Main constructor */
-    public VictoryCondition(Team owner, Team target, int type, double threshold,int moreResult,int lessResult){
-        super(owner, target, type, threshold);
+    public VictoryCondition(Vector<Team> teams, Team owner, Team target, int type, double threshold,int moreResult,int lessResult){
+        super(teams, owner, target, type, threshold);
         vs.setName("Victory Condition");
         this.moreResult = moreResult;
         this.lessResult = lessResult;

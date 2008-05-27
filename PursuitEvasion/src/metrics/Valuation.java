@@ -18,6 +18,7 @@ import scio.function.Function;
 import scio.function.FunctionValueException;
 import sequor.Settings;
 import sequor.SettingsProperty;
+import sequor.model.BooleanModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.StringRangeModel;
 import sequor.model.SubsetModel;
@@ -38,15 +39,11 @@ import utility.DistanceTable;
 public class Valuation implements Function<DistanceTable,Double> {
     
     public ValuationSettings vs;
-    public Team owner;
-    public Team target;
     
-    public Valuation(Team owner, Team target, double threshold) { this(owner, target, DIST_MIN, threshold); }
-    public Valuation(Team owner, Team target, int type){ this(owner, target, type, 0.0); }
-    public Valuation(Team owner, Team target, int type, double threshold){
-        this.owner = owner;
-        this.target = target;
-        vs = new ValuationSettings(owner, target, type, 0.0);
+    public Valuation(Vector<Team> teams, Team owner, Team target, double threshold) { this(teams, owner, target, DIST_MIN, threshold); }
+    public Valuation(Vector<Team>  teams, Team owner, Team target, int type){ this(teams, owner, target, type, 0.0); }
+    public Valuation(Vector<Team>  teams, Team owner, Team target, int type, double threshold){
+        vs = new ValuationSettings(teams, owner, target, type, 0.0);
         vs.threshold.setValue(threshold);
         addActionListener(owner);
     }    
@@ -78,23 +75,23 @@ public class Valuation implements Function<DistanceTable,Double> {
     public Double getValue(DistanceTable dt, Collection<Agent> subset) throws FunctionValueException {
         try {
             HashSet<Agent> activeSubset = new HashSet<Agent>();
-            activeSubset.addAll(owner.getActiveAgents());
+            activeSubset.addAll(vs.owner.getActiveAgents());
             activeSubset.retainAll(subset);
             switch(vs.type.getValue()){
                 case DIST_MIN:
-                    return dt.min(activeSubset,target.getActiveAgents()).getDistance();
+                    return dt.min(activeSubset,vs.target.getActiveAgents()).getDistance();
                 case DIST_MAX:
-                    return dt.max(activeSubset,target.getActiveAgents()).getDistance();
+                    return dt.max(activeSubset,vs.target.getActiveAgents()).getDistance();
                 case DIST_AVG:
-                    return dt.average(activeSubset,target.getActiveAgents());
+                    return dt.average(activeSubset,vs.target.getActiveAgents());
                 case NUM_TEAM:
                     return (double)activeSubset.size();
                 case NUM_OPPONENT:
-                    return (double)target.getActiveAgents().size();
+                    return (double)vs.target.getActiveAgents().size();
                 case NUM_CAP:
-                    return (double)(target.size()-target.getActiveAgents().size());
+                    return (double)(vs.target.size()-vs.target.getActiveAgents().size());
                 case NUM_DIFF:
-                    return (double)(activeSubset.size()-target.getActiveAgents().size());
+                    return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
                     return dt.getTime();
                 case TIME_SINCE_CAP:
@@ -117,7 +114,12 @@ public class Valuation implements Function<DistanceTable,Double> {
     public HashSet<Agent> getSubset() { 
         return vs.valueAgents.getSubset();
     }
-    
+
+    /** Resets the subset model for the given team. */
+    public void resetTeam() {
+        vs.initModels();
+    }
+
     
     // EVENT HANDLING
     
@@ -137,12 +139,18 @@ public class Valuation implements Function<DistanceTable,Double> {
     }   
     
     
-    // SETTINGS
+    // BEAN PATTERNS
     
     public double getThreshold(){return vs.threshold.getValue();}
+    public int getType(){return vs.type.getValue();}
+    public Team getOwner(){return vs.owner;}
+    public Team getTarget(){return vs.target;}
+    public boolean isCooperationTesting() { return vs.testsCooperation.getValue(); }
+    
+    public HashSet<Agent> getComplement(){ return vs.valueAgents.getComplement(); }
             
     @Override
-    public String toString(){ return vs.type.toString() + " (" + owner.toString() + ")"; }
+    public String toString(){ return vs.type.toString() + " (" + vs.owner.toString() + ")"; }
     
     // CONSTANTS
     
@@ -169,12 +177,18 @@ public class Valuation implements Function<DistanceTable,Double> {
     /** Wrapper for the static settings of the goal. */
     public class ValuationSettings extends Settings {
         
+        /** List of potential teams. */
+        private Vector<Team> teams;
         /** The team owning this goal. */
-        private Team owner; 
+        protected Team owner; 
         /** Subset of team measuring the goal. */
         private SubsetModel<Agent> valueAgents;
+        /** Model for potential targets. */
+        private StringRangeModel opponentModel;
         /** The target of this goal. */
-        private Team target;
+        protected Team target;
+        /** Whether this valuation is analyzed for "cooperation" */
+        private BooleanModel testsCooperation = new BooleanModel(false);
     
         /** 
          * Another parameter to use in specifying the goal. Usually the "target"
@@ -184,14 +198,24 @@ public class Valuation implements Function<DistanceTable,Double> {
         /** Parameter describing the type of valuation. */
         private StringRangeModel type = new StringRangeModel(typeStrings,0,0,7);
         
-        public ValuationSettings(Team owner,Team target,int type,double threshold){
+        public ValuationSettings(Vector<Team> teams, Team owner, Team target, int type, double threshold){
             setName("Valuation");
+            this.teams = teams;
             this.owner = owner;
             this.target = target;
             this.threshold.setValue(threshold);
             this.type.setValue(type);
+            initModels();
+        }
+        
+        /** Reinitializes all models. */
+        void initModels() {
+            super.removeAllElements();
+            opponentModel = new StringRangeModel(Simulation.getTeamStrings(teams), teams.indexOf(target), 0, teams.size());
+            add(new SettingsProperty("Opponent", opponentModel, Settings.EDIT_COMBO));
             add(new SettingsProperty("Threshhold", this.threshold, Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Type", this.type, Settings.EDIT_COMBO));
+            add(new SettingsProperty("Cooperation", this.testsCooperation, Settings.EDIT_BOOLEAN));
             valueAgents = new SubsetModel<Agent> (owner);
             addGroup("Subset", valueAgents, Settings.EDIT_BOOLEAN_GROUP, "Select agents used for valuation.");
         }
@@ -199,10 +223,10 @@ public class Valuation implements Function<DistanceTable,Double> {
         /** Listens for changes to settings */
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            String ac=null;
-            if(evt.getSource()==threshold){ac="teamSetupChange";}
-            else if(evt.getSource()==type){ac="teamSetupChange";}
-            else if(evt.getSource()==valueAgents){ac="teamSetupChange";}
+            String ac="teamSetupChange";
+            if(evt.getSource()==opponentModel){
+                setTarget(teams.get(opponentModel.getValue()));
+            }
             fireActionPerformed(ac);
         }
         

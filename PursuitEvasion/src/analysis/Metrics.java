@@ -30,7 +30,7 @@ public class Metrics {
      */
     public static SplitContribution subsetContribution(Simulation sim, Valuation val, HashSet<Agent> subset){
         HashSet<Agent> team=new HashSet<Agent>();
-        Team owner = val.owner;
+        Team owner = val.getOwner();
         team.addAll(owner);
         HashSet<Agent> complement=new HashSet<Agent>();
         for(Agent a:owner){
@@ -38,19 +38,17 @@ public class Metrics {
         }
         try {
             double trial1, trial2, trial3;
-            DataLog dl1, dl2;
             sim.setBatchProcessing(true);
-            // entire team participates
-            val.owner.setStartAgents(team);
-            sim.run();
-            dl1 = sim.getLog();
-            trial1 = val.getValue(sim, team);
-            trial2 = val.getValue(sim, complement);
             // subset participates
-            val.owner.setStartAgents(complement);
+            owner.setStartAgents(complement);
             sim.run();
-            dl2 = sim.getLog();
-            trial3 = val.getValue(sim, complement);            
+            trial3 = val.getValue(sim, complement);    
+            // entire team participates
+            owner.setStartAgents(team);
+            sim.run();
+            trial1 = val.getValue(sim, team);
+            trial2 = val.getValue(sim, complement);  
+            // return values
             sim.setBatchProcessing(false);
             return new SplitContribution(owner, subset, val, trial2-trial1, trial3-trial2);
             //return new SplitContribution(owner, subset, val, trial1-trial2, trial2-trial3);
@@ -58,15 +56,6 @@ public class Metrics {
             return new SplitContribution();            
         }
     }
-    
-//    /** Obtains value of simulation with a restricted set of players; value is that obtained by a particular subset as well. */
-//    public static double runSubsetSimulation(Simulation sim, Valuation val, HashSet<Agent> activeAgents, HashSet<Agent> valueAgents) throws FunctionValueException{
-//        val.owner.setStartAgents(activeAgents);
-//        sim.setBatchProcessing(true);
-//        sim.run();
-//        sim.setBatchProcessing(false);
-//        return val.getValue(sim, valueAgents);
-//    }
     
     
     // INNER CLASSES

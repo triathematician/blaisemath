@@ -8,6 +8,7 @@ package metrics;
 import analysis.DataLog;
 import java.util.Vector;
 import scio.coordinate.R2;
+import simulation.Simulation;
 import simulation.Team;
 import utility.AgentPair;
 import utility.DistanceTable;
@@ -24,8 +25,8 @@ public class CaptureCondition extends Valuation {
     boolean removeBoth = false;
     
     /** Initialize with specified capture distance. */    
-    public CaptureCondition(Team owner,Team target,double captureDistance){
-        super(owner,target,captureDistance);
+    public CaptureCondition(Vector<Team> teams,Team owner,Team target,double captureDistance){
+        super(teams,owner,target,captureDistance);
         vs.setName("Capture Condition");
     }
     
@@ -36,19 +37,19 @@ public class CaptureCondition extends Valuation {
      */
     public Vector<R2> check(DistanceTable dt,DataLog log,double time){        
         Vector<R2> result=new Vector<R2>();
-        AgentPair closest=dt.min(owner.getActiveAgents(),target.getActiveAgents());
+        AgentPair closest=dt.min(vs.owner.getActiveAgents(),vs.target.getActiveAgents());
         while((closest != null) && (closest.getDistance() < getThreshold())){
-            log.logCaptureEvent(owner,closest.getFirst(),target,closest.getSecond(),"Capture",dt,time);
+            log.logCaptureEvent(vs.owner,closest.getFirst(),vs.target,closest.getSecond(),"Capture",dt,time);
             result.add(closest.getSecond().loc);
             if(removeBoth) {
                 dt.removeAgents(closest);
-                owner.deactivate(closest.getFirst());
-                target.deactivate(closest.getSecond());
+                vs.owner.deactivate(closest.getFirst());
+                vs.target.deactivate(closest.getSecond());
             } else {
                 dt.removeAgent(closest.getSecond());
-                target.deactivate(closest.getSecond());
+                vs.target.deactivate(closest.getSecond());
             }
-            closest=dt.min(owner.getActiveAgents(),target.getActiveAgents());
+            closest=dt.min(vs.owner.getActiveAgents(),vs.target.getActiveAgents());
         }
         return result;
     }

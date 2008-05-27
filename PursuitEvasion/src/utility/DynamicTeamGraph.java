@@ -74,7 +74,7 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     
     /** Gets edges for each target in range. */
     public Path2D.Double getTargetEdges(Euclidean2 v,CaptureCondition cc,int time){
-        if(cc.target==null){return new Path2D.Double();}
+        if(cc.getTarget()==null){return new Path2D.Double();}
         int timeB=time<0?0:(time>=pathSize()?pathSize()-1:time);
         Path2D.Double result=new Path2D.Double();
         R2 p1;
@@ -82,7 +82,7 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         for(int i=0;i<team.size();i++){
             if(!team.getActiveAgents().contains(team.get(i))){ continue; }
             p1=log.agentAt(team.get(i),timeB);
-            for(Agent a:cc.target.getActiveAgents()){
+            for(Agent a:cc.getTarget().getActiveAgents()){
                 p2=log.agentAt(a,timeB);
                 if(p1.distance(p2)<team.getSensorRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));

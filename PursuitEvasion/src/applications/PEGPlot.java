@@ -11,11 +11,9 @@ import scio.coordinate.R2;
 import sequor.editor.ComboBoxEditor;
 import analysis.Statistics;
 import analysis.DataLog;
-import analysis.Metrics;
-import analysis.Metrics.SplitContribution;
-import java.util.HashSet;
 import metrics.Valuation;
-import simulation.Agent;
+import sequor.Settings;
+import sequor.model.IntegerRangeModel;
 import simulation.Team;
 import specto.plottable.PlaneFunction2D;
 
@@ -49,6 +47,7 @@ public class PEGPlot extends javax.swing.JFrame {
         simulation1 = new simulation.Simulation();
         menuSimModeGroup = new javax.swing.ButtonGroup();
         dataLog1 = new analysis.DataLog();
+        numBatchRunsModel = new sequor.model.IntegerRangeModel(100,0,100000);
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -66,11 +65,12 @@ public class PEGPlot extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JToolBar.Separator();
-        resetButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        randomizeButton = new javax.swing.JButton();
+        batchButton = new javax.swing.JButton();
+        numBatchRunsSpinner = Settings.getSpinner(numBatchRunsModel);
+        cooperationButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        jButton2 = new javax.swing.JButton();
+        addDotsButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
@@ -172,51 +172,54 @@ public class PEGPlot extends javax.swing.JFrame {
         jToolBar1.add(jComboBox1);
         jToolBar1.add(jSeparator1);
 
-        resetButton.setFont(new java.awt.Font("Tahoma", 1, 12));
-        resetButton.setText("RANDOMIZE");
-        resetButton.setToolTipText("Click here to reset the simulation and re-randomize starting positions.");
-        resetButton.addActionListener(new java.awt.event.ActionListener() {
+        randomizeButton.setFont(new java.awt.Font("Tahoma", 1, 12));
+        randomizeButton.setText("RANDOMIZE");
+        randomizeButton.setToolTipText("Click here to reset the simulation and re-randomize starting positions.");
+        randomizeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetButtonActionPerformed(evt);
+                randomizeButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(resetButton);
+        jToolBar1.add(randomizeButton);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jButton1.setText("BATCH");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        batchButton.setFont(new java.awt.Font("Tahoma", 1, 12));
+        batchButton.setText("BATCH");
+        batchButton.setFocusable(false);
+        batchButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        batchButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        batchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                batchButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton1);
+        jToolBar1.add(batchButton);
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jButton3.setText("COOPERATION");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        numBatchRunsSpinner.setMaximumSize(new java.awt.Dimension(70, 32767));
+        jToolBar1.add(numBatchRunsSpinner);
+
+        cooperationButton.setFont(new java.awt.Font("Tahoma", 1, 12));
+        cooperationButton.setText("COOPERATION");
+        cooperationButton.setFocusable(false);
+        cooperationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cooperationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        cooperationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                cooperationButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton3);
+        jToolBar1.add(cooperationButton);
         jToolBar1.add(jSeparator3);
 
-        jButton2.setText("Add Dots");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        addDotsButton.setText("Add Dots");
+        addDotsButton.setFocusable(false);
+        addDotsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addDotsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addDotsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                addDotsButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton2);
+        jToolBar1.add(addDotsButton);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
@@ -251,7 +254,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jMenuItem13.setText("Randomize Starting Locations");
         jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetButtonActionPerformed(evt);
+                randomizeButtonActionPerformed(evt);
             }
         });
         simulationMenu.add(jMenuItem13);
@@ -300,18 +303,18 @@ public class PEGPlot extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    simulation1.runSeveral(1000);
-}//GEN-LAST:event_jButton1ActionPerformed
+    private void batchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchButtonActionPerformed
+    simulation1.runSeveral(numBatchRunsModel.getValue());
+}//GEN-LAST:event_batchButtonActionPerformed
 
 private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
     System.exit(0);
 }//GEN-LAST:event_jMenuItem12ActionPerformed
 
-private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+private void randomizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeButtonActionPerformed
     simulation1.initStartingLocations();
     simulation1.run();
-}//GEN-LAST:event_resetButtonActionPerformed
+}//GEN-LAST:event_randomizeButtonActionPerformed
 
     @SuppressWarnings("unchecked")
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
@@ -349,13 +352,13 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
 }//GEN-LAST:event_simulation1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void addDotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDotsButtonActionPerformed
         PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
         pf.style.setValue(PlaneFunction2D.DOTS);
         plot2D1.add(pf);
-    }//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_addDotsButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void cooperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationButtonActionPerformed
         for (Team t : simulation1.getTeams()) {
             if (t.victory != null) {
                 notificationWindow.append(t.victory.getCooperationMetric(simulation1).toString());
@@ -364,7 +367,7 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 notificationWindow.append(v.getCooperationMetric(simulation1).toString());
             }
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+}//GEN-LAST:event_cooperationButtonActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -379,12 +382,12 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ModeMenu;
+    private javax.swing.JButton addDotsButton;
     private javax.swing.JMenu appearanceMenu;
+    private javax.swing.JButton batchButton;
+    private javax.swing.JButton cooperationButton;
     private analysis.DataLog dataLog1;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
@@ -411,9 +414,11 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private javax.swing.JTextArea notificationWindow;
+    private sequor.model.IntegerRangeModel numBatchRunsModel;
+    private javax.swing.JSpinner numBatchRunsSpinner;
     private specto.plotpanel.Plot2D plot2D1;
     private specto.plotpanel.Plot2D plot2D2;
-    private javax.swing.JButton resetButton;
+    private javax.swing.JButton randomizeButton;
     private javax.swing.JMenu settingsMenu;
     private simulation.Simulation simulation1;
     private javax.swing.JMenu simulationMenu;

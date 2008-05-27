@@ -75,20 +75,20 @@ public class SimulationFactory {
         Vector<Team> teams=new Vector<Team>();
         //                      NAME        #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team bugTeam=new Team(  "Bugs",     4,   Team.START_RANDOM,  Behavior.LEADING,   Color.DARK_GRAY);
-        Team lightTeam=new Team("Light",    1,   Team.START_RANDOM,  Behavior.STRAIGHT,  ColorStyle.DARK_GREEN);
+        Team lightTeam=new Team("Light",    1,   Team.START_RANDOM,  Behavior.STRAIGHT,  ColorStyle.DARK_GREEN);        
+        teams.add(bugTeam);
+        teams.add(lightTeam);
         
-        bugTeam.setVictoryCondition(new VictoryCondition(bugTeam, lightTeam,
+        bugTeam.setVictoryCondition(new VictoryCondition(teams, bugTeam, lightTeam,
                 Valuation.DIST_MIN, 5.0, VictoryCondition.NEITHER, VictoryCondition.WON));        
-        bugTeam.addCaptureCondition(lightTeam,1.0);
+        bugTeam.addCaptureCondition(teams, lightTeam,1.0);
         
-        bugTeam.addValuation(new Valuation(bugTeam, lightTeam, Valuation.NUM_OPPONENT));
-        lightTeam.addValuation(new Valuation(lightTeam, bugTeam, Valuation.TIME_TOTAL));
+        bugTeam.addValuation(new Valuation(teams, bugTeam, lightTeam, Valuation.NUM_OPPONENT));
+        lightTeam.addValuation(new Valuation(teams, lightTeam, bugTeam, Valuation.TIME_TOTAL));
         
         bugTeam.addAutoGoal(1.0,lightTeam,Goal.SEEK,TaskGenerator.AUTO_CLOSEST,1.0);
         lightTeam.addAutoGoal(1.0,bugTeam,Goal.FLEE,TaskGenerator.AUTO_GRADIENT,1.0);
         
-        teams.add(bugTeam);
-        teams.add(lightTeam);
         return teams;
     }
     
@@ -96,19 +96,19 @@ public class SimulationFactory {
         Vector<Team> teams=new Vector<Team>();        
         //                                      #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team copTeam=new Team(      "Cops",     5,   Team.START_RANDOM,  Behavior.LEADING,   Color.BLUE);
-        Team robberTeam=new Team(   "Robbers",  4,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.ORANGE);
+        Team robberTeam=new Team(   "Robbers",  4,   Team.START_RANDOM,  Behavior.STRAIGHT,  Color.ORANGE);        
+        teams.add(copTeam);
+        teams.add(robberTeam);
         
-        copTeam.setVictoryCondition(new VictoryCondition(copTeam, robberTeam,
+        copTeam.setVictoryCondition(new VictoryCondition(teams, copTeam, robberTeam,
                 Valuation.NUM_CAP, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));
-        copTeam.addCaptureCondition(robberTeam,5.0);
+        copTeam.addCaptureCondition(teams, robberTeam,5.0);
         
-        copTeam.addValuation(new Valuation(copTeam, robberTeam, Valuation.DIST_AVG));
+        copTeam.addValuation(new Valuation(teams, copTeam, robberTeam, Valuation.DIST_AVG));
         
         robberTeam.addAutoGoal(1.0, copTeam,   Goal.FLEE,  TaskGenerator.AUTO_GRADIENT,1.0);
         copTeam.addAutoGoal(   1.0, robberTeam,Goal.CAPTURE,  TaskGenerator.CONTROL_CLOSEST, 1.0);
         
-        teams.add(copTeam);
-        teams.add(robberTeam);
         return teams;
     }
     

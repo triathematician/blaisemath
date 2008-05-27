@@ -96,13 +96,20 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     // BEAN PATTERNS
     
     /** Returns current distance table. */
-    public DistanceTable getDistanceTable() { return this.dist; }
-    
+    public DistanceTable getDistanceTable() { return this.dist; }    
     /** Returns current data log. */
-    public DataLog getLog() { return this.log; }
-    
+    public DataLog getLog() { return this.log; }    
     /** Returns list of teams used in the simulation. */
     public Vector<Team> getTeams(){return teams;}
+    
+    /** Returns string list of teams. */
+    public static String[] getTeamStrings(Vector<Team> teams){
+        String[] result = new String[teams.size()];
+        for (int i = 0; i < teams.size(); i++) {
+            result[i] = teams.get(i).toString();
+        }
+        return result;
+    }
     
     
     // METHODS: DEPLOY SIMULATION
@@ -140,7 +147,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             }
             dist=new DistanceTable(teams);
             run();
-            stats.captureData(log);
+            stats.captureData(log, log);
         }
         batchProcessing=false;
         fireActionPerformed(new ActionEvent(stats,0,"log"));
