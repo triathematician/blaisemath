@@ -4,8 +4,10 @@
          
 package sequor.model;
 
+import javax.swing.event.ChangeEvent;
 import sequor.FiresChangeEvents;
 import java.util.Vector;
+import javax.swing.event.ChangeListener;
 
 /**
  * Based on the source code for DefaultBoundedRangeModel 
@@ -49,7 +51,12 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
         setValue((int)Math.round(minimum+percent*(maximum-minimum)));
     }
     @Override
-    public Integer getRange(){return (maximum-minimum);}
+    public Integer getRange(){
+        if (maximum.equals(Integer.MAX_VALUE) || minimum.equals(-Integer.MAX_VALUE)){
+            return Integer.MAX_VALUE;
+        }
+        return (maximum-minimum);
+    }
 
         
     // MORE ADVANCED METHODS
@@ -106,4 +113,28 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     
     @Override
     public FiresChangeEvents clone(){return new IntegerRangeModel(value,minimum,maximum,step);}
+
+    // CREATE new models to use for min/max adjustments
+    
+    @Override
+    public BoundedRangeModel getMinModel() {
+        final IntegerRangeModel result = new IntegerRangeModel(minimum, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1);
+        result.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                setMinimum(result.getValue());
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public BoundedRangeModel getMaxModel() {
+        final IntegerRangeModel result = new IntegerRangeModel(maximum, -Integer.MAX_VALUE, Integer.MAX_VALUE, 1);
+        result.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                setMaximum(result.getValue());
+            }
+        });
+        return result;
+    }
 }

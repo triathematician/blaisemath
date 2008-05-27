@@ -9,12 +9,12 @@ package specto.plottable;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
-import javax.swing.JMenu;
-import scio.function.Function;
 import scio.function.FunctionValueException;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
+import scio.function.MeshRoot2D;
+import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -23,9 +23,15 @@ import specto.visometry.Euclidean2;
  */
 public class PlaneFunction2D extends Plottable<Euclidean2>{
     BoundedFunction<R2,Double> function;
+    
+    
+    /** Default function used for testing the method. */
     private static final BoundedFunction<R2,Double> DEFAULT_FUNCTION=new BoundedFunction<R2,Double>(){
         @Override
-        public Double getValue(R2 p){return 2-Math.cos(p.x)*Math.cos(p.x)-Math.sin(p.y)*Math.sin(p.y);}
+        public Double getValue(R2 p){return 
+                //p.x;}
+                //p.x*p.x + Math.cos(p.y)*Math.exp(p.y); }
+                2-Math.cos(p.x)*Math.cos(p.x)-Math.sin(p.y)*Math.sin(p.y);}
         @Override
         public Double minValue(){return 0.0;}
         @Override
@@ -36,7 +42,9 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             for(R2 r:x){result.add(getValue(r));}
             return result;
         }
-        };
+    };
+        
+        
     public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
     public PlaneFunction2D(BoundedFunction<R2,Double> function){
         this.function=function;
@@ -49,29 +57,46 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     public void paintComponent(Graphics2D g,Euclidean2 v){
         try {
             g.setColor(getColor());
-            Vector<R2> inputs = new Vector<R2>();
-            for (double px : v.getSparseXRange(20)) {
-                for (double py : v.getSparseYRange(20)) {
-                    inputs.add(new R2(px, py));
-                }
-            }
-            Vector<Double> result = function.getValue(inputs);
+            Vector<R2> inputs;
+            Vector<Double> result;
             double WEIGHT=10/(function.maxValue()-function.minValue());
             double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
             switch (style.getValue()) {
                 case DOTS:
+                    inputs = new Vector<R2>();
+                    for (double px : v.getSparseXRange(20)) {
+                        for (double py : v.getSparseYRange(20)) {
+                            inputs.add(new R2(px, py));
+                        }
+                    }
+                    result = function.getValue(inputs);
                     for(int i=0;i<inputs.size();i++){
                         g.fill(v.dot(inputs.get(i),getRadius(result.get(i),1.5*WEIGHT,SHIFT)));
                     }
-                    break;
-                case CONTOURS:
-                case DENSITY:                    
+                    break;                    
                 case COLORS:
-                default:
+                    inputs = new Vector<R2>();
+                    for (double px : v.getSparseXRange(20)) {
+                        for (double py : v.getSparseYRange(20)) {
+                            inputs.add(new R2(px, py));
+                        }
+                    }
+                    result = function.getValue(inputs);
                     for(int i=0;i<inputs.size();i++){
                         g.setColor(Color.getHSBColor(1.0f-(float)getRadius(result.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
                         g.fill(v.squareDot(inputs.get(i),10.0));
                     }
+                    break;
+                case CONTOURS:
+                    g.setStroke(LineStyle.THIN_STROKE);
+                    for (double zValue = function.minValue() ; zValue <= function.maxValue() ; zValue += 1/(2*WEIGHT) ) {
+                        g.draw( MeshRoot2D.findRoots(function, zValue, v.getActualMin(), v.getActualMax(),
+                                10*v.getDrawWidth()/v.getWindowWidth(), 0.01, 100)
+                                .createTransformedShape(v.getAffineTransformation()) );
+                    }
+                    break;
+                case DENSITY:
+                default:
                     break;
             }
         } catch (FunctionValueException ex) {}
@@ -90,7 +115,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     public static final int CONTOURS=2;
     public static final int DENSITY=3;
     
-    public static final String[] styleStrings={"Dots","Color Boxes"};
+    public static final String[] styleStrings={"Dots","Color Boxes","Contours"};
     @Override
     public String[] getStyleStrings() {return styleStrings;}
     @Override

@@ -2,6 +2,8 @@ package sequor.model;
 
 import sequor.FiresChangeEvents;
 import java.util.Vector;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * <b>DoubleRangeModel.java</b><br>
@@ -113,4 +115,28 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
     
     public boolean contains(double x){return x>=minimum && x<=maximum;}
+
+    // CREATE new models to use for min/max adjustments
+    
+    @Override
+    public BoundedRangeModel getMinModel() {
+        final DoubleRangeModel result = new DoubleRangeModel(minimum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
+        result.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                setMinimum(result.getValue());
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public BoundedRangeModel getMaxModel() {
+        final DoubleRangeModel result = new DoubleRangeModel(maximum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
+        result.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                setMaximum(result.getValue());
+            }
+        });
+        return result;
+    }
 }

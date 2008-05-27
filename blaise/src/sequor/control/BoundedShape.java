@@ -37,6 +37,20 @@ public abstract class BoundedShape {
         return new AffineTransform(wid,0,0,ht,x,y);
     }
     
+    /** Returns a new shape, rotated by given angle. */
+    public BoundedShape rotated(final double angle){
+        return new BoundedShape() {
+            @Override
+            public Shape getShape() {
+                AffineTransform at = new AffineTransform();
+                at.translate(.5, .5);
+                at.rotate(angle*Math.PI/180);
+                at.translate(-.5, -.5);
+                return at.createTransformedShape(BoundedShape.this.getShape());
+            }            
+        };
+    }
+    
     
     // BASIC SHAPES
     

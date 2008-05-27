@@ -5,28 +5,67 @@
 
 package specto.specialty.grid;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import scio.coordinate.I2;
-import specto.Plottable;
+import sequor.event.MouseVisometryEvent;
+import specto.DynamicPlottable;
 
 /**
  * A grid which can be placed atop a Grid2 visometry.
  * @author Elisha Peterson
  */
-public class Grid2Grid extends Plottable<Grid2> {
+public class Grid2Grid extends DynamicPlottable<Grid2> {
+    
+    /** Location of currently selected coordinate (if any) */    
+    I2 selected;
+    
+    public Grid2Grid(){
+        super();
+        selected=new I2(0,0);
+        setColor(Color.LIGHT_GRAY);
+    }
+    
+    // PAINT METHODS
+    
     @Override
-    public void paintComponent(Graphics2D g, Grid2 v) {
-        Point2D.Double center;
+    public void paintComponent(Graphics2D g, Grid2 v) {        
+        g.setColor(getColor());
         for(Integer i:v.xBounds.getValueRange(true,0)){
             for(Integer j:v.yBounds.getValueRange(true,0)){
-                center=v.toWindow(new I2(i,j));
-                g.fill(new Ellipse2D.Double(center.x-5,center.y-5,10,10));
+                drawDot(g,v,new I2(i,j),5,false);
             }
+        }
+        if(selected!=null){
+            g.setColor(new Color(178,178,255));
+            drawDot(g,v,selected,5,true);
         }
     }
 
+    public void drawDot(Graphics2D g, Grid2 v, I2 point,double radius,boolean showCoord){
+        Point2D.Double center=v.toWindow(point);
+        g.draw(new Ellipse2D.Double(center.x-radius,center.y-radius,2*radius,2*radius));
+        if(showCoord){g.drawString(point.toString(),(float)(center.x+radius),(float)(center.y-radius));}
+    }
+    
+    
+    // MOUSE EVENT HANDLING
+
+    @Override
+    public void mouseMoved(MouseVisometryEvent<Grid2> e) {
+        super.mouseMoved(e);
+        selected=(I2)e.getCoordinate();
+        fireStateChanged();
+    }
+    
+    
+    // REQUIRED ELEMENTS
+    
     @Override
     public String[] getStyleStrings() {return null;}
+    
+    @Override
+    public String toString() { return "Grid"; }
 }

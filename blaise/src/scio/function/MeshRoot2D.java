@@ -5,11 +5,12 @@
 
 package scio.function;
 
+import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.util.Vector;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
-import scio.coordinate.VectorSpaceElement;
 
 /**
  * This class is intended to solve equations of the form f(x,y)=C. Returns a path of points representing the solution curve.
@@ -18,31 +19,114 @@ import scio.coordinate.VectorSpaceElement;
  */
 public class MeshRoot2D {
     
-    /** Returns complete solution curve to f(x,y)=C, as approximated by the <b>flatTriangleRoot</b> method below. */
-    public static Path2D.Double findRoots(Function<R2, Double> function,
+    public static Path2D.Double findRoots(Function<R2, Double> function, double zValue, R2 p1, R2 p2, double refinement, double precision, int maxIterations) throws FunctionValueException {
+        return findRoots(function, zValue, p1.x, p1.y, p2.x, p2.y, refinement, precision, maxIterations);
+    }
+    
+    /** Returns complete solution curve to f(x,y)=C, as approximated by the <b>addFlatTriangles</b> method below. */
+    public static Path2D.Double findRoots(Function<R2, Double> function, double zValue,
             double x1, double y1, double x2, double y2,
-            double refinement, double precision, int maxIterations) {
-        // TODO add code
-        return null;
+            double refinement, double precision, int maxIterations) throws FunctionValueException {
+      
+        int xSteps = (int) Math.ceil((x2-x1)/refinement);
+        int ySteps = (int) Math.ceil((y2-y1)/refinement);
+        
+        Vector<R2> inputs = new Vector<R2> (xSteps*ySteps);        
+        for (int i = 0; i <= xSteps; i++) {
+            for (int j = 0; j <= ySteps; j++) {
+                inputs.add(new R2(x1+refinement*i, y1+refinement*j));
+            }
+        }        
+        Vector<Double> outputs = function.getValue(inputs);
+        
+        Vector<R2> midInputs = new Vector<R2>((xSteps-1)*(ySteps-1));        
+        for (int i = 0; i < xSteps; i++) {
+            for (int j = 0; j < ySteps; j++) {
+                midInputs.add(new R2(x1+refinement*(i+.5),y1+refinement*(j+.5)));
+            }
+        }
+        Vector<Double> midOutputs = function.getValue(midInputs);
+
+        // TODO use above function values to compute the "flat triangle" elements below...
+        
+        Path2D.Double path = new Path2D.Double();        
+        for (double x = x1; x <= x2; x += refinement) {
+            for (double y = y1; y <= y2; y += refinement) {
+                addFlatTriangles(path, function, zValue, x, y, x+refinement, y+refinement);
+            }
+        }
+        
+        return path;
     }
    
     /** Returns solution to f(x,y)=C on a given rectangle, where the function is approximated by four planes in space,
      * corresponding to four triangles of the rectangle. */
-    public static Path2D.Double flatTriangleRoot(Function<R2, Double> function, double x1, double y1, double x2, double y2) throws FunctionValueException{
-        Path2D.Double result = new Path2D.Double();
-        double zll = function.getValue(new R2(x1,y1));
-        double zul = function.getValue(new R2(x1,y2));
-        double zur = function.getValue(new R2(x2,y2));
-        double zlr = function.getValue(new R2(x2,y1));
-        double zmid = function.getValue(new R2((x1+x2)/2,(y1+y2)/2));
+    public static Path2D.Double addFlatTriangles(Path2D.Double path,
+            Function<R2, Double> function, double zValue, 
+            double x1, double y1, double x2, double y2) throws FunctionValueException {
+        //System.out.println("Inputs: z=" + zValue + " and (" + x1 + "," + y1 + ") and (" + x2 + "," + y2 + ")");
+
+        // initialize points
         
-        // call lineOnPlane method below four times, once for each plane.
-        //
-        // rethinking this... perhaps it would be better to find points of intersection of z=C with the eight lines between the five        
-        // specified points. Unless the plane is completely flat, there should be either 0 or 2 points of intersection in each triangle.
-        // then we merely combine the points to form the path
+        R3 pll = new R3(x1,y1,function.getValue(new R2(x1,y1)));
+        R3 pul = new R3(x1,y2,function.getValue(new R2(x1,y2)));
+        R3 pur = new R3(x2,y2,function.getValue(new R2(x2,y2)));
+        R3 plr = new R3(x2,y1,function.getValue(new R2(x2,y1)));
+        R3 pmid = new R3((x1+x2)/2,(y1+y2)/2,function.getValue(new R2((x1+x2)/2,(y1+y2)/2)));
         
-        return result;
+        // find points of intersection
+        
+        R2 upper = findPointOnSegment(pul, pur, zValue);
+        R2 right = findPointOnSegment(pur, plr, zValue);
+        R2 lower = findPointOnSegment(plr, pll, zValue);
+        R2 left = findPointOnSegment(pll, pul, zValue);
+        R2 upperLeft = findPointOnSegment(pmid, pul, zValue);
+        R2 upperRight = findPointOnSegment(pmid, pur, zValue);
+        R2 lowerRight = findPointOnSegment(pmid, plr, zValue);
+        R2 lowerLeft = findPointOnSegment(pmid, pll, zValue);
+        
+        // construct result
+                
+        addSegment(path,upperLeft,upper,upperRight);
+        addSegment(path,upperRight,right,lowerRight);
+        addSegment(path,lowerRight,lower,lowerLeft);                
+        addSegment(path,lowerLeft,left,upperLeft);
+        
+        return path;
+    }
+    
+    /** Returns point along line segment between p1 and p2 at which z=C, or null if the point is not on the segment.
+     * @param p1 first point of segment
+     * @param p2 second point of segment
+     * @param zValue z value
+     * @return point along segment at given z value, or null if no such value exists
+     */
+    public static R2 findPointOnSegment(R3 p1, R3 p2, double zValue) {
+        //System.out.println("p1: " + p1 + ", p2: " + p2 + ", z: " + zValue);
+        if (p1.getZ() == p2.getZ()) {
+            return p1.getZ() == zValue ? p1.projectXY() : null;
+        } else {
+            double t = (zValue-p1.getZ())/(p2.getZ()-p1.getZ());
+            if (t < 0 || t > 1){ return null; }
+            return ((R3) p1.plus(p2.minus(p1).times(t))).projectXY();
+        }
+    }
+    
+    /** Returns segment between two of three points (if not null) */
+    public static Shape addSegment(Path2D.Double shape,R2 p1, R2 p2, R2 p3) {
+        try {
+            if (p1 == null) {
+                shape.append(new Line2D.Double(p2, p3), false);
+                //System.out.println("appending: "+p2 +", "+p3);
+            } else if (p2 == null) {
+                shape.append(new Line2D.Double(p1, p3), false);           
+                //System.out.println("appending: "+p1 +", "+p3);
+            } else if (p3 == null) {
+                shape.append(new Line2D.Double(p1, p2), false);
+                //System.out.println("appending: "+p1 +", "+p2);
+            }
+        } catch (NullPointerException e) { }
+        return shape;
     }
     
     /** Returns segment of intersection of z=C with the portion of a plane bounded by three particular points. */

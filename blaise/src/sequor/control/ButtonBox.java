@@ -130,8 +130,15 @@ public class ButtonBox extends VisualControlGroup {
      * buttons horizontally, and adjusts the height of the box accordingly.
      */
     public void adjustBounds(){
-        int nCols=getNumCols();
-        int nRows=(int)Math.ceil(elements.size()/(double)nCols);
+        int nCols;
+        int nRows;
+        if (elements.size() < getNumCols()) {
+            nCols = elements.size();
+            nRows = 1;
+        } else {
+            nCols=getNumCols();
+            nRows=(int)Math.ceil(elements.size()/(double)nCols);        
+        }
         setBounds(getX(),getY(),nCols*(buttonSize+spacing)+2*padding-spacing,nRows*(buttonSize+spacing)+2*padding-spacing);
     }
     

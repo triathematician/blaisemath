@@ -25,9 +25,6 @@ public class Grid2 extends Visometry<I2> {
     
     protected IntegerRangeModel xBounds;
     protected IntegerRangeModel yBounds;
-    
-    /** Determines the margin around the window before the grid starts. */    
-    int margin=10;
         
     /** The transformation between Grid coordinates and the window */
     private AffineTransform at;
@@ -39,23 +36,38 @@ public class Grid2 extends Visometry<I2> {
         yBounds=new IntegerRangeModel(0,0,5,1);
         xBounds.addChangeListener(this);
         yBounds.addChangeListener(this);
+        super.initContainer(container);
     }
     public Grid2(PlotPanel p){
-        super(p);
+        super();
         at=new AffineTransform();
         xBounds=new IntegerRangeModel(0,0,5,1);
         yBounds=new IntegerRangeModel(0,0,5,1);
         xBounds.addChangeListener(this);
         yBounds.addChangeListener(this);
+        initContainer(p);
     }
     
     
     // CONVERSION FUNCTIONS
 
     @Override
-    public Point2D.Double toWindow(I2 cp) {return new Point2D.Double(at.getScaleX()*cp.x+at.getTranslateX(),at.getScaleY()*cp.y+at.getTranslateY());}
+    public Point2D.Double toWindow(I2 cp) {
+        Point2D.Double result = new Point2D.Double(
+                at.getScaleX()*(cp.x-xBounds.getMinimum())+at.getTranslateX(),
+                at.getScaleY()*(cp.y-yBounds.getMinimum())+at.getTranslateY());
+        //System.out.println("input: "+cp+" and output: "+result);
+        //System.out.println(" at: "+at);
+        return result;
+    }
     @Override
-    public I2 toGeometry(Point wp) {return new I2((int)((wp.x-at.getTranslateX())/at.getScaleX()),(int)((wp.y-at.getTranslateY())/at.getScaleY()));}
+    public I2 toGeometry(Point wp) {
+        I2 result = new I2(
+                (int)Math.round((wp.x-at.getTranslateX())/at.getScaleX()),
+                (int)Math.round((wp.y-at.getTranslateY())/at.getScaleY()));
+        //System.out.println("input: "+wp+" and output: "+result);
+        return result;
+    }
 
     @Override
     public void setBounds(I2 minPoint, I2 maxPoint) {
@@ -70,12 +82,15 @@ public class Grid2 extends Visometry<I2> {
      */
     @Override
     public double computeTransformation() {
-        at.setToIdentity();        
-        at.scale((getWindowWidth()-2*margin)/xBounds.getRange(),(getWindowHeight()-2*margin)/yBounds.getRange());
-        at.translate(-xBounds.getMinimum(),-yBounds.getMaximum());
+        at.setToIdentity(); 
+        at.scale(getWindowWidth()/(1+xBounds.getRange()),-getWindowHeight()/(1+yBounds.getRange()));
+        at.translate(.5,-yBounds.getRange()-.5);
+        //System.out.println("WinSize: "+getWindowWidth()+","+getWindowHeight()+", xBounds: "+xBounds.toLongString()+", yBounds: "+yBounds.toLongString());
+        //System.out.println(" AT: "+at);
         fireStateChanged();
         return 1;
     }
+    
     
     
     // EVENT HANDLING
@@ -88,7 +103,6 @@ public class Grid2 extends Visometry<I2> {
             super.stateChanged(e);
         }
     }
-    
     
     
     

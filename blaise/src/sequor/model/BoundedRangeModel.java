@@ -44,6 +44,12 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     public abstract boolean setStep(N step);   
     
     
+    // MODEL GENERATION FOR MAX/MIN
+    
+    public abstract BoundedRangeModel getMinModel();
+    public abstract BoundedRangeModel getMaxModel();
+    
+    
     // ADVANCED PROPERTY SETTINGS
     
     public void setRangeProperties(N newValue,N newMin,N newMax){setRangeProperties(newValue,newMin,newMax,step);}

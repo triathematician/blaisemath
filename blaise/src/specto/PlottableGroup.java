@@ -78,24 +78,23 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     @Override
     public JMenu getOptionsMenu() {
-        JMenu result=new JMenu();
+        JMenu result=new JMenu(toString() + " Options");   
+        result.setForeground(getColor());
+        result.add(getColorMenuItem());  
         for(Plottable p:plottables){
-            try{
-                for(Component c:p.getOptionsMenu().getComponents()){
-                    result.add(c);                    
-                }
-            }catch(NullPointerException e){}
+            result.add(p.getOptionsMenu());
         }
-        if(result.getComponentCount()==0){return null;}
-        return result;
+        if(style==null){return result;}
+        return style.appendToMenu(result);
     }
 
     @Override
     public String[] getStyleStrings() {return null;}
     
-    // mouse event handling
     
-    MouseVisometryListener<V> mover;
+    // MOUSE HANDLING
+    
+    protected MouseVisometryListener<V> mover;
     
     @Override
     public boolean clicked(MouseVisometryEvent<V> e) {
@@ -107,7 +106,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         return false;
     }
             
-    Vector<MouseVisometryListener<V>> getHits(MouseVisometryEvent<V> e){
+    protected Vector<MouseVisometryListener<V>> getHits(MouseVisometryEvent<V> e){
         Vector<MouseVisometryListener<V>> result=new Vector<MouseVisometryListener<V>>();
         for (Plottable<V> dp:plottables){
             if (dp instanceof DynamicPlottable && ((DynamicPlottable<V>)dp).clicked(e)){
