@@ -12,7 +12,7 @@ import java.util.Vector;
  * 
  * @author Elisha Peterson
  */
-public class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceElement {
+public abstract class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceElement {
     Vector<Double> coord;
     
     public Euclidean(int n){
@@ -32,6 +32,9 @@ public class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceEleme
     public double getElement(int position){return coord.get(position);}
     public int length(){return coord.size();}
     
+    @Override
+    public String toString() { return coord.toString(); }
+    
     
     // TRANSFORMATIONS, RETURNING COPY OF THIS POINT
     
@@ -39,15 +42,7 @@ public class Euclidean implements Coordinate,MetricSpaceElement,VectorSpaceEleme
     public Euclidean multiplyBy(double d){return this;}
     public double dotProduct(Euclidean p2){return 0;}
     
-    
-    // REQUIRED FOR VECTOR SPACE
-    
-    public VectorSpaceElement zero(){return new Euclidean(coord.size());}
-    public VectorSpaceElement plus(VectorSpaceElement p2){return new Euclidean(coord.size());}
-    public VectorSpaceElement minus(VectorSpaceElement p2){return new Euclidean(coord.size());}
-    public VectorSpaceElement times(double d){return new Euclidean(coord.size());}
-
-    
+   
     // REQUIRED TO MAKE THIS A METRIC SPACE
     
     public boolean equals(Coordinate c2) {

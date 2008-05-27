@@ -46,6 +46,10 @@ public class R2 extends Point2D.Double implements Coordinate {
     public R2 normalized(){return scaledToLength(1.0);}
     public R2 multipliedBy(double c){return new R2(c*x,c*y);}
     
+    // STATIC METHODS
+    
+    public static double angle(double x,double y){return (x<0?Math.PI:0)+Math.atan(y/x); }
+    
     /**
      * Returns point along the line between point1 and point2 which is closest
      * to itself, aka. the point which makes a perpendicular with the line.

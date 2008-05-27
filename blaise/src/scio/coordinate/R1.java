@@ -21,4 +21,22 @@ public class R1 extends Euclidean {
     
     public Double getValue(){return coord.get(0);}
     public void setValue(Double value){setElement(0,value);}
+
+    // VECTOR SPACE METHODS
+    
+    public VectorSpaceElement zero() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement plus(VectorSpaceElement p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement minus(VectorSpaceElement p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement times(double d) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
