@@ -28,6 +28,7 @@ public class Statistics {
     public void runSeveral(int num){
         numRuns=num;
         results=new Vector<SingleRun>(num);
+        sim.batchProcessing = true;
         for (int i = 0; i < num; i++) {
             sim.randomizePositions();
             if(sim.run()){
@@ -36,6 +37,7 @@ public class Statistics {
                 results.add(new SingleRun(-1,0));
             }
         }
+        sim.batchProcessing = false;
     }
     
     /** Outputs results to standard output. */
@@ -53,12 +55,12 @@ public class Statistics {
                 }
             }
         }
-        try {mainArea.getDocument().remove(0, mainArea.getDocument().getLength()-1);}catch(Exception e){}
-        mainArea.append("--New Statistical Data--\n");
+        //try {mainArea.getDocument().remove(0, mainArea.getDocument().getLength()-1);}catch(Exception e){}
+        mainArea.append("\n--New Statistical Data--\n");
         mainArea.append("With "+numRuns+" runs, the pursuers won "+npWin+" times "+
                 "and the evaders won "+neWin+" times. In "+neEasyWin+" cases, evaders automatically won.\n");
         
-        try {dataArea.getDocument().remove(0, mainArea.getDocument().getLength()-1);}catch(Exception e){}
+        try {dataArea.getDocument().remove(0, dataArea.getDocument().getLength()-1);}catch(Exception e){}
         dataArea.append("Team \tTime\n");
         for(SingleRun sr:results){
             dataArea.append(sr.toString());

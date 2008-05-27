@@ -23,36 +23,30 @@ public class Algorithms {
     /** Computes new evader positions... in this case they all head to the origin. */
     public static Vector<Double> evadersTowardOrigin(Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Simulation sim, int curStep) {
         Vector<Double> result = new Vector<Double>();
+        double testValue;
+        double ePos;
+        double unitStep = sim.getStepSize() * sim.getESpeed();
         // evading elements always head to origin
         for (int i = 0; i < evaderPosition.size(); i++) {
-            if (Math.abs(evaderPosition.get(i) - sim.getGoal()) < sim.getCaptureRange()) {
-                result.add(evaderPosition.get(i));
-            } else if (evaderPosition.get(i) < sim.getGoal()) {
-                result.add(evaderPosition.get(i) + sim.getStepSize() * sim.getESpeed());
-            } else {
-                result.add(evaderPosition.get(i) - sim.getStepSize() * sim.getESpeed());
-            }
+            ePos = evaderPosition.get(i);
+            testValue = ePos - sim.getGoal();
+            if (Math.abs(testValue) < sim.getCaptureRange()) { result.add(ePos);
+            } else { result.add( ePos + ( (testValue < 0) ? unitStep : -unitStep ) ); }
         }
         return result;
     }
 
     // PURSUER ALGORITHMS      
     /** Decide pursuer directions */
-    public static Vector<Double> pursuersTowardClosest(Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Simulation sim, int curStep) {
-        // pursuing elements chase closest evader
-        Vector<Double> result = new Vector<Double>();
+    public static HashMap<Integer,Integer> pursuersTowardClosest(Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Simulation sim, int curStep) {
+        HashMap<Integer, Integer> assignment = new HashMap<Integer, Integer>();
         for (int i = 0; i < pursuerPosition.size(); i++) {
-            Double closestEvader = getClosestTo(evaderPosition, pursuerPosition.get(i));
-            if (closestEvader < pursuerPosition.get(i)) {
-                result.add(pursuerPosition.get(i) - sim.getPSpeed() * sim.getStepSize());
-            } else {
-                result.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
-            }
+            assignment.put(i, getClosestTo(evaderPosition, pursuerPosition.get(i)));
         }
-        return result;
+        return assignment;
     }
 
-    public static Vector<Double> pursuers_DJ(Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Vector<Double> evaderDirection, Simulation sim, int curStep) {
+    public static HashMap<Integer,Integer> pursuers_DJ(Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Vector<Double> evaderDirection, Simulation sim, int curStep) {
         Vector<Double> result = new Vector<Double>();
         /**Each Pursuer looks to see the directions of all the Evaders.  He then
          * generates a table with values representing every Evader that is 
@@ -117,22 +111,7 @@ public class Algorithms {
 
 //            System.out.println(" 4: " + pursuerTable.toString() + " and " + finalAssignment.toString());
 
-            Vector<Double> move = new Vector<Double>();
-            for (int i = 0; i < p; i++) {
-                if (finalAssignment.keySet().contains(i)) {
-                    Double assignedEvaderPosition = evaderPosition.get(finalAssignment.get(i));
-                    if (assignedEvaderPosition < pursuerPosition.get(i)) {
-                        move.add(pursuerPosition.get(i) - sim.getPSpeed() * sim.getStepSize());
-                    } else {
-                        move.add(pursuerPosition.get(i) + sim.getPSpeed() * sim.getStepSize());
-                    }
-                }
-                else{
-                    move.add(pursuerPosition.get(i));
-                }
-            }
-
-            return move;
+            return finalAssignment;
         } catch (NoSuchElementException ex) {
 //            System.out.println("No possible assignment!");
             return null;
@@ -140,8 +119,9 @@ public class Algorithms {
     }
 
     // UTILITY METHODS
+    
     /** Returns closest in a list of doubles to the double given. */
-    public static Double getClosestTo(Vector<Double> opponentPositions, Double position) {
+    public static int getClosestTo(Vector<Double> opponentPositions, Double position) {
         Double minDist = Double.POSITIVE_INFINITY;
         int minIndex = 0;
         for (int j = 0; j < opponentPositions.size(); j++) {
@@ -150,7 +130,29 @@ public class Algorithms {
                 minIndex = j;
             }
         }
-        return opponentPositions.get(minIndex);
+        return minIndex;
+    }
+    
+    /** Assigns pursuers given list of pursuer-evader assignments. */
+    public static Vector<Double> getNewPursuerPositions(HashMap<Integer, Integer> assignment,
+            Vector<Double> pursuerPosition, Vector<Double> evaderPosition, Simulation sim) {
+        Vector<Double> result = new Vector<Double>();
+        
+        if (assignment == null) { return null; }
+        double unitStep = sim.getPSpeed() * sim.getStepSize();
+        double pPos;
+        double assignedEvaderPosition;
+        for (int i = 0; i < pursuerPosition.size(); i++) {
+            pPos = pursuerPosition.get(i);
+            if (assignment.keySet().contains(i)) {
+                 assignedEvaderPosition = evaderPosition.get(assignment.get(i));
+                result.add ( pPos + ( (assignedEvaderPosition < pPos) ? -unitStep : unitStep) );
+            }
+            else{
+                result.add( pPos );
+            }
+        }
+        return result;
     }
 
     public static Integer getUniquePursuer(HashMap<Integer, HashSet<Integer>> pursuerTable, Integer evader) {
@@ -174,13 +176,14 @@ public class Algorithms {
         HashMap currentTable = new HashMap<Integer, Integer>();
     }
 
+    /** Returns minimal pursuer-evader assignment possible with given pursuerTable. */
     private static TableData getBestDistance(HashMap<Integer, HashSet<Integer>> pursuerTable, Vector<Double> pursuerPosition, Vector<Double> evaderPosition)
             throws NoSuchElementException {
 //        System.out.println("   table input to getBestDistance: " + pursuerTable);
         if (pursuerTable.size() == 0){
             return new TableData();
         }
-        HashMap<Integer, HashSet<Integer>> otherTable = new HashMap<Integer, HashSet<Integer>>();
+        HashMap<Integer, HashSet<Integer>> tempPursuerTable = new HashMap<Integer, HashSet<Integer>>();
         if (pursuerTable.size() == 1) {
             TableData result = new TableData();
             int i = pursuerTable.keySet().iterator().next();
@@ -196,13 +199,13 @@ public class Algorithms {
         int i = pursuerTable.keySet().iterator().next();
         for (Integer j : pursuerTable.get(i)) {
             for (Integer k : pursuerTable.keySet()) {
-                otherTable.put(k, (HashSet<Integer>) pursuerTable.get(k).clone());
+                tempPursuerTable.put(k, (HashSet<Integer>) pursuerTable.get(k).clone());
             }
-            otherTable.remove(i);
-            for (Integer k : otherTable.keySet()) {
-                otherTable.get(k).remove(j);
+            tempPursuerTable.remove(i);
+            for (Integer k : tempPursuerTable.keySet()) {
+                tempPursuerTable.get(k).remove(j);
             }
-            current = getBestDistance(otherTable, pursuerPosition, evaderPosition);
+            current = getBestDistance(tempPursuerTable, pursuerPosition, evaderPosition);
             current.distance += Math.abs(pursuerPosition.get(i) - evaderPosition.get(j));
             current.currentTable.put(i, j);
             if (current.distance < bestYet.distance) {

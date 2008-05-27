@@ -12,6 +12,7 @@ package peg1d;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -40,6 +41,7 @@ public class Simulation implements ChangeListener {
     Vector<InitialPointSet2D> evaders;
     Vector<Double> pDirections;
     Vector<Double> eDirections;
+    public boolean batchProcessing = false;
     
     JTextArea outputArea;
     
@@ -131,8 +133,13 @@ public class Simulation implements ChangeListener {
     boolean runSimulation(int steps){
         boolean winner=false;
         clearPaths();
-        pDirections=null;
-        eDirections=null;
+        pDirections = null;
+        eDirections = null;
+        curPPos = null;
+        newPPos = null;
+        curEPos = null;
+        newEPos = null;
+        curTime = 0;
         log.preRun();
         for (int i = 0; i < getNP(); i++) {
             getPPath(i).add(new R2(pursuers.get(i).getPoint()));
@@ -140,12 +147,16 @@ public class Simulation implements ChangeListener {
         for (int i = 0; i < getNE(); i++) {
             getEPath(i).add(new R2(evaders.get(i).getPoint()));
         }
+        Boolean stateChange = true;     // used to determine whether algorithm needs to be re-run in a given step
         for (int i = 0; i < steps; i++) {
-            if(loopSimulation(i)){winner=true;break;}
+            if(loopSimulation(i, stateChange)){
+                winner=true;
+                break;
+            }
         }
-        if (outputArea != null) {
-            try {outputArea.getDocument().remove(0, outputArea.getDocument().getLength()-1);}catch(Exception e){}
-            outputArea.append("--New Simulation--\n");
+        if (!batchProcessing && outputArea != null) {
+            //try {outputArea.getDocument().remove(0, outputArea.getDocument().getLength()-1);}catch(Exception e){}
+            outputArea.append("\n--New Simulation--\n");
             log.output(outputArea);
         }
         return winner;
@@ -156,97 +167,92 @@ public class Simulation implements ChangeListener {
      */
     public boolean run(){return runSimulation(getNumSteps());} 
     
+    Vector<Double> curPPos;
+    Vector<Double> newPPos;
+    Vector<Double> curEPos;
+    Vector<Double> newEPos;
+    double curTime;
+    
     /** Main loop for the simulation. Performs one iteration. */
-    boolean loopSimulation(int curStep){ 
+    boolean loopSimulation(int curStep, Boolean stateChange){ 
+        curTime = getStepSize() * curStep;
         // determine new positions of all players... use the current algorithm settings.
-        Vector<Double> newEPos;
-        Vector<Double> newPPos;
+        HashMap<Integer, Integer> pursuerAssignment = new HashMap<Integer, Integer> ();
+        curPPos = (newPPos == null ? getPursuerPositions() : newPPos);
+        curEPos = (newEPos == null ? getEvaderPositions() : newEPos);
         switch(getEAlgorithm()){
             case SimSettings.EVADE_TO_GOAL:
             default:
-                newEPos=Algorithms.evadersTowardOrigin(getPursuerPositions(), getEvaderPositions(), this, curStep);
+                newEPos = Algorithms.evadersTowardOrigin(curPPos, curEPos, this, curStep);
                 break;
         }
-        switch(getPAlgorithm()){
-            case SimSettings.PURSUE_DJ:                
-                if(eDirections!=null){
-                    newPPos=Algorithms.pursuers_DJ(getPursuerPositions(), getEvaderPositions(), eDirections, this, curStep);
-                }else{
-                    newPPos=Algorithms.pursuersTowardClosest(getPursuerPositions(), getEvaderPositions(), this, curStep);
-                }    
-                break;
-            case SimSettings.PURSUE_CLOSEST:
-            default:
-                newPPos=Algorithms.pursuersTowardClosest(getPursuerPositions(), getEvaderPositions(), this, curStep);
-                break;
+        
+        // only use the algorithm if the simulation status has changed
+        if(stateChange) {
+            switch(getPAlgorithm()){
+                case SimSettings.PURSUE_DJ:                
+                    if(eDirections!=null){
+                        pursuerAssignment=Algorithms.pursuers_DJ(curPPos, curEPos, eDirections, this, curStep);
+                    }else{
+                        pursuerAssignment=Algorithms.pursuersTowardClosest(curPPos, curEPos, this, curStep);
+                    }    
+                    break;
+                case SimSettings.PURSUE_CLOSEST:
+                default:
+                    pursuerAssignment=Algorithms.pursuersTowardClosest(curPPos, curEPos, this, curStep);
+                    break;
+            }
         }
         
        //  checks to see if algorithm failed to give complete assignment
-        if(newPPos==null){
-//            System.out.println("Algorithm failed to give complete assignment.");
-            return false;
-        }
+        newPPos = Algorithms.getNewPursuerPositions(pursuerAssignment, curPPos, curEPos, this);
+        if(newPPos==null) { return false; }
         
         // moves captured players outside the playing field
-        moveCapturedPlayersToInfinity(newPPos,newEPos,curStep*getStepSize());
+        stateChange = moveCapturedPlayersToInfinity(newPPos, newEPos, curTime);
         
         // add new points onto the displayed paths
-        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curStep*getStepSize()));}
-        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curStep*getStepSize()));} 
+        for(int i=0;i<getNP();i++){getPPath(i).add(new R2(newPPos.get(i),curTime));}
+        for(int i=0;i<getNE();i++){getEPath(i).add(new R2(newEPos.get(i),curTime));} 
         
         // compute directions of all players for use in algorithms
         computeDirections();                
           
         // checks for victory, returns true if the simulation should stop
-        return checkVictoryConditions(newPPos,newEPos,curStep*getStepSize());
+        return checkVictoryConditions(newPPos,newEPos,curTime);
     }
     
     /** Computes directions in which each player is heading. Returns +1,0, or -1. If not enough data to determine a direction, returns 0. */
     void computeDirections(){
         if(pDirections==null){pDirections=new Vector<Double>(getNP());}else{pDirections.clear();}
-        for(int i=0;i<getNP();i++){
-            //System.out.println("cur: "+curPPos(i)+", last: "+lastPPos(i));
-            if(lastPPos(i)==null){
-                pDirections.add(0.0);
-            }else if(lastPPos(i)<curPPos(i)){
-                pDirections.add(1.0);
-            }else if(lastPPos(i)>curPPos(i)){
-                pDirections.add(-1.0);
-            }else{
-                pDirections.add(0.0);
-            }
+        for(int i=0;i<newPPos.size();i++){
+            pDirections.add(Math.signum(newPPos.get(i)-curPPos.get(i)));
         }
         if(eDirections==null){eDirections=new Vector<Double>(getNE());}else{eDirections.clear();}
-        for(int i=0;i<getNE();i++){
-            //System.out.println("cur: "+curEPos(i)+", last: "+lastEPos(i));
-            if(lastEPos(i)==null){
-                eDirections.add(0.0);
-            }else if(lastEPos(i)<curEPos(i)){
-                eDirections.add(1.0);
-            }else if(lastEPos(i)>curEPos(i)){
-                eDirections.add(-1.0);
-            }else{
-                eDirections.add(0.0);
-            }
+        for(int i=0;i<newEPos.size();i++){
+            eDirections.add(Math.signum(newEPos.get(i)-curEPos.get(i)));
         }
     }
     
-    /** Moves captured players to infinity. */
-    void moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions,double time){
-        // if any two elements are closer than capture distance, remove to infinity.
-        for(int i=0;i<getNP();i++){
-            for(int j=0;j<getNE();j++){
+    /** Moves captured players to infinity. Returns true if any players were captured, otherwise false. */
+    boolean moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions,double time){
+        boolean capture = false;
+        double capRange = getCaptureRange();
+        // if any two elements are closer than capture distance, remove to infinity.        
+        for(int i=0;i<pursuerPositions.size();i++){
+            for(int j=0;j<evaderPositions.size();j++){
                 try {
-                if(Math.abs(pursuerPositions.get(i)-evaderPositions.get(j))<getCaptureRange()){
+                if(Math.abs(pursuerPositions.get(i)-evaderPositions.get(j))<capRange){
                     log.logCapture(i,j,pursuerPositions.get(i),time);
                     pursuerPositions.set(i,Double.POSITIVE_INFINITY);
                     evaderPositions.set(j,Double.NEGATIVE_INFINITY);
+                    capture = true;
                 }
-                } catch (NullPointerException e){
-                    
+                } catch (NullPointerException e){                    
                 }
             }
         }
+        return capture;
     }
     
     /** Checks to see if either team has won. Returns true if either team has won. */
@@ -254,9 +260,10 @@ public class Simulation implements ChangeListener {
         boolean pursuersWin=true;
         boolean evadersWin=false;
         
+        double capRange = getCaptureRange();
         for(Double d:evaderPositions){
             if(!d.equals(Double.NEGATIVE_INFINITY)){pursuersWin=false;}
-            if(Math.abs(d-getGoal())<getCaptureRange()){evadersWin=true;break;}
+            if(Math.abs(d-getGoal()) < capRange){evadersWin=true;break;}
         }
         
         if(pursuersWin){
