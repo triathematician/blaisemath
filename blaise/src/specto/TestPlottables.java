@@ -26,7 +26,7 @@ import specto.dynamicplottable.RandomFlame2D;
 import specto.dynamicplottable.RandomPoint2D;
 import specto.dynamicplottable.RandomWalk2D;
 import specto.dynamicplottable.Triangle2D;
-import specto.gridplottable.NewGrid2D;
+import specto.gridplottable.StandardGrid2D;
 import specto.plottable.Function2D;
 import specto.plottable.HiddenText2D;
 import specto.plottable.Parametric2D;
@@ -62,7 +62,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D1.add(SliderBox.getStyleAdjusters(100,10,15,plot2D1.getPlottables(),plot2D1));
         BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
         plot2D1.add(nra1,3,5);
-        plot2D1.add(new NewGrid2D());
+        plot2D1.add(new StandardGrid2D());
 
         VectorField2D vf=new VectorField2D();
         plot2D3.add(vf);

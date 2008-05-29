@@ -7,7 +7,7 @@ package specto.plotpanel;
 
 import specto.PlotPanel;
 import specto.gridplottable.Axes2D;
-import specto.gridplottable.NewGrid2D;
+import specto.gridplottable.StandardGrid2D;
 import specto.visometry.Euclidean2;
 
 /**
@@ -19,7 +19,7 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     /** Default constructor */
     public Plot2D(){
         super(new Euclidean2());
-        addBase(new NewGrid2D());
+        addBase(new StandardGrid2D());
         addBase(new Axes2D());
     }
 }

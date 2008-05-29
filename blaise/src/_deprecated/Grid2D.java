@@ -3,8 +3,9 @@
  * Created on Sep 14, 2007, 8:23:42 AM
  */
 
-package specto.gridplottable;
+package _deprecated;
 
+import specto.gridplottable.*;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

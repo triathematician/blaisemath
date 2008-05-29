@@ -1,5 +1,5 @@
 /*
- * NewGrid2D.java
+ * StandardGrid2D.java
  * Created on Mar 22, 2008
  */
 
@@ -20,11 +20,11 @@ import specto.visometry.Euclidean2;
 
 /**
  * <p>
- * NewGrid2D is ...
+ * StandardGrid2D is ...
  * </p>
  * @author Elisha Peterson
  */
-public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionListener {
+public class StandardGrid2D extends DynamicPlottable<Euclidean2> implements ActionListener {
 
     // CONSTANTS
     
@@ -32,7 +32,7 @@ public class NewGrid2D extends DynamicPlottable<Euclidean2> implements ActionLis
 
     
     // CONSTRUCTOR
-    public NewGrid2D(){
+    public StandardGrid2D(){
         setColor(Color.getHSBColor(.4f,.3f,0.9f));
     }
     

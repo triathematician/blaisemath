@@ -11,7 +11,6 @@
 package specto.transformer;
 
 import specto.PlotPanel;
-import specto.gridplottable.Grid2D;
 import specto.transformer.LogarithmicTransformer;
 import specto.transformer.TransformedVisometry;
 import specto.visometry.Euclidean2;
