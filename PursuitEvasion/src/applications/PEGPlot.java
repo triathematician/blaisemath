@@ -353,9 +353,9 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_simulation1ActionPerformed
 
     private void addDotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDotsButtonActionPerformed
-        PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
-        pf.style.setValue(PlaneFunction2D.DOTS);
-        plot2D1.add(pf);
+        //PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
+        //pf.style.setValue(PlaneFunction2D.DOTS);
+        //plot2D1.add(pf);
 }//GEN-LAST:event_addDotsButtonActionPerformed
 
     private void cooperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationButtonActionPerformed
