@@ -339,7 +339,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     
 //    /**
 //     * Checks to see if default value of goal has changed.
-//     * @param d     the global distance table
+//     * @param d     the global distanceTo table
 //     */
 //    public void checkGoal(DistanceTable d,double time){  
 //        if(goals.isEmpty()){return;}

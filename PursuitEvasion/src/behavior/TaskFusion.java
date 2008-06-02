@@ -16,8 +16,8 @@ import scio.coordinate.R2;
  * conflicting taskings, e.g. head towards goal G while avoiding player P.
  * <br><br>
  * There are a few ways to do this. One is the "breach of radii" technique, whereby
- * the task is dependent on the distance to goal. Another is the "gradient" technique,
- * whereby the gradient is computed in order to minimize/maximize the total distance
+ * the task is dependent on the distanceTo to goal. Another is the "gradient" technique,
+ * whereby the gradient is computed in order to minimize/maximize the total distanceTo
  * to goal.
  * <br><br>
  * @author ae3263
@@ -44,7 +44,7 @@ public class TaskFusion {
     }
 
     /**
-     * Find the direction which MAXIMIZES the sum of distance powers between the agent at loc and the
+     * Find the direction which MAXIMIZES the sum of distanceTo powers between the agent at loc and the
      * specified points.
      */
     public static R2 gradient(R2 loc,Vector<WR2> points){

@@ -26,7 +26,7 @@ public class Cooperation {
 
     // TODO make this compatible with current tasking/DistanceTable implementation
     /** Initial communication algorithm:
-     * 1) Agents rank desired prey (within view)... perhaps by distance?
+     * 1) Agents rank desired prey (within view)... perhaps by distanceTo?
      * 2) Agents communicate intentions with other nearby agents.
      * 3) Agents request changes to current situations.
      * 4) Matching swaps are agreed upon and enacted.

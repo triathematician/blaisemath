@@ -168,6 +168,6 @@ public class Statistics extends FiresChangeEvents {
             return result;
         }
         public Double minValue() {return 0.0;}
-        public Double maxValue() {return 50.0;}        
+        public Double maxValue() {return 50.0;}
     } // INNER CLASS Statistics.InitialPositionTestFunction
 }

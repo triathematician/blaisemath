@@ -181,7 +181,7 @@ public class Agent {
     
     // METHODS DEALING WITH UNDERSTANDING OF PLAYING FIELD (POV)
     
-    /** Gathers sensory data based on distance table.
+    /** Gathers sensory data based on distanceTo table.
      * @param dist the global table of distances */
     public void gatherSensoryData(DistanceTable dist){
         pov.clear();

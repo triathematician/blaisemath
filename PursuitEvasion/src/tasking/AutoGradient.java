@@ -42,7 +42,7 @@ public class AutoGradient extends AutonomousTaskGenerator {
 //            R2 dir=new R2();
 //            for(Agent b:goal.getTarget()){
 //                if(a.sees(b)){
-//                    dir.translate(new R2(b.loc.x-a.loc.x,b.loc.y-a.loc.y).multipliedBy(Math.pow(a.loc.distance(b.loc),POWER-1)));
+//                    dir.translate(new R2(b.loc.x-a.loc.x,b.loc.y-a.loc.y).multipliedBy(Math.pow(a.loc.distanceTo(b.loc),POWER-1)));
 //                }
 //            }
 //            a.assignTask(null,new V2(a.loc.plus(dir)),weight);
@@ -56,7 +56,7 @@ public class AutoGradient extends AutonomousTaskGenerator {
 //        R2 dir=new R2();
 //        for(Agent b:goal.getTarget()){
 //            if(a.sees(goal.getTarget().get(0))){
-//                dir.translate(new R2(b.loc.x-a.loc.x,b.loc.y-a.loc.y).multipliedBy(Math.pow(a.loc.distance(b.loc),POWER-1)));
+//                dir.translate(new R2(b.loc.x-a.loc.x,b.loc.y-a.loc.y).multipliedBy(Math.pow(a.loc.distanceTo(b.loc),POWER-1)));
 //            }
 //        }
 //        a.assignTask(null,new V2(a.loc.plus(dir)),weight);

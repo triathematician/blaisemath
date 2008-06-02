@@ -250,11 +250,11 @@ public class DataLog extends FiresChangeEvents {
         }
     }
     
-    /** Logs captures of a specified team over another team, within the specified distance.
+    /** Logs captures of a specified team over another team, within the specified distanceTo.
      * Also removes the captured elements from activity.
      * @param dt            The DistanceTable containing the distances
      * @param g             The Goal representing the capturing
-     * @param capDistance   The distance within which capture occurs
+     * @param capDistance   The distanceTo within which capture occurs
      */
     public void logCaptureEvent(Team owner, Agent first, Team target, Agent second, String string, DistanceTable dt, double time) {
         logEvent(owner, first, target, second, string, time);

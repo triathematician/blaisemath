@@ -103,7 +103,7 @@ public class Valuation implements Function<DistanceTable,Double> {
         }
     }
     
-    public Vector<Double> getValue(Vector<DistanceTable> xx) throws FunctionValueException {return null;}    
+    public Vector<Double> getValue(Vector<DistanceTable> xx) throws FunctionValueException {return null;}  
     
     /** Returns subset contribution given a simulation (runs the simulation to compute it). */
     public SplitContribution getCooperationMetric(Simulation sim) {
