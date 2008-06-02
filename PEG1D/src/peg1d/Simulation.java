@@ -238,7 +238,7 @@ public class Simulation implements ChangeListener {
     boolean moveCapturedPlayersToInfinity(Vector<Double> pursuerPositions,Vector<Double> evaderPositions,double time){
         boolean capture = false;
         double capRange = getCaptureRange();
-        // if any two elements are closer than capture distance, remove to infinity.        
+        // if any two elements are closer than capture distanceTo, remove to infinity.        
         for(int i=0;i<pursuerPositions.size();i++){
             for(int j=0;j<evaderPositions.size();j++){
                 try {

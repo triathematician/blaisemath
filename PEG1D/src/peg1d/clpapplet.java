@@ -7,7 +7,6 @@
 package peg1d;
 
 import scio.coordinate.R2;
-import specto.gridplottable.Grid2D;
 
 /**
  *
