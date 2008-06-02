@@ -44,8 +44,6 @@ public class ParameterPlotter extends javax.swing.JFrame {
                 settingsBar1.validate();
             }
         });
-        plot2D1.add(new Function2D(ftm2,Color.lightGray));
-        plot2D1.add(new Function2D(ftm));
         plm.addChangeListener(ftm);  
         plm.addChangeListener(ftm2);
         plm.setParameterValue("a",1.0);
@@ -55,6 +53,11 @@ public class ParameterPlotter extends javax.swing.JFrame {
         settings1.addProperty("f(x)=",ftm,Settings.EDIT_FUNCTION);
         settings1.addProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION);
         settingsBar1.updateBar();
+        
+        plot2D1.add(new Function2D(ftm2,Color.lightGray));
+        Function2D f1 = new Function2D(ftm);
+        plot2D1.add(f1);
+        plot2D1.add(f1.getPointSlope());
         plot2D1.repaint();
     }
     

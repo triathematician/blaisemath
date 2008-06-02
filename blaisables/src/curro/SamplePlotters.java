@@ -23,14 +23,13 @@ public class SamplePlotters extends javax.swing.JFrame {
     /** Creates new form BlaisePlotter */
     public SamplePlotters() {
         initComponents();
-        plot2D1.add(new Function2D());
-        plot2D2.add(new Parametric2D());
-        VectorField2D vf1=new VectorField2D();
-        plot2D3.add(vf1);
-        plot2D3.add(new DESolution2D(vf1));
-        Point2D p2=new Point2D();
-        plot2D3.add(new DESolution2D(vf1));
-        plot2D4.add(new PlaneFunction2D());
+        basicPlot.add(new Function2D(basicInput.getFunctionModel(0)));
+        parametricPlot.add(new Parametric2D(parametricInput.getFunctionModel(0),parametricInput.getFunctionModel(1)));
+        VectorField2D vf1=new VectorField2D(vectorFieldInput.getFunctionModel(0),vectorFieldInput.getFunctionModel(1));
+        vectorFieldPlot.add(vf1);
+        vectorFieldPlot.add(new DESolution2D(vf1));
+        vectorFieldPlot.add(new DESolution2D(vf1));
+        surfacePlot.add(new PlaneFunction2D(surfaceInput.getFunctionModel(0)));
     }
     
     /** This method is called from within the constructor to
@@ -41,12 +40,16 @@ public class SamplePlotters extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        surfaceInput = new sequor.component.FunctionPanel();
+        vectorFieldInput = new sequor.component.FunctionPanel(2);
+        parametricInput = new sequor.component.FunctionPanel(2);
+        jSplitPane1 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D1 = new specto.plotpanel.Plot2D();
-        plot2D2 = new specto.plotpanel.Plot2D();
-        plot2D3 = new specto.plotpanel.Plot2D();
-        plot2D4 = new specto.plotpanel.Plot2D();
-        plot3D1 = new specto.plotpanel.Plot3D();
+        basicPlot = new specto.plotpanel.Plot2D();
+        parametricPlot = new specto.plotpanel.Plot2D();
+        vectorFieldPlot = new specto.plotpanel.Plot2D();
+        surfacePlot = new specto.plotpanel.Plot2D();
+        basicInput = new sequor.component.FunctionPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -64,58 +67,69 @@ public class SamplePlotters extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+        jSplitPane1.setDividerLocation(50);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout basicPlotLayout = new javax.swing.GroupLayout(basicPlot);
+        basicPlot.setLayout(basicPlotLayout);
+        basicPlotLayout.setHorizontalGroup(
+            basicPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
         );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+        basicPlotLayout.setVerticalGroup(
+            basicPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 247, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Basic", plot2D1);
+        jTabbedPane1.addTab("Basic", basicPlot);
 
-        javax.swing.GroupLayout plot2D2Layout = new javax.swing.GroupLayout(plot2D2);
-        plot2D2.setLayout(plot2D2Layout);
-        plot2D2Layout.setHorizontalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+        javax.swing.GroupLayout parametricPlotLayout = new javax.swing.GroupLayout(parametricPlot);
+        parametricPlot.setLayout(parametricPlotLayout);
+        parametricPlotLayout.setHorizontalGroup(
+            parametricPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
         );
-        plot2D2Layout.setVerticalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Parametric", plot2D2);
-
-        javax.swing.GroupLayout plot2D3Layout = new javax.swing.GroupLayout(plot2D3);
-        plot2D3.setLayout(plot2D3Layout);
-        plot2D3Layout.setHorizontalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        plot2D3Layout.setVerticalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+        parametricPlotLayout.setVerticalGroup(
+            parametricPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 247, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Field", plot2D3);
+        jTabbedPane1.addTab("Parametric", parametricPlot);
 
-        javax.swing.GroupLayout plot2D4Layout = new javax.swing.GroupLayout(plot2D4);
-        plot2D4.setLayout(plot2D4Layout);
-        plot2D4Layout.setHorizontalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+        javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
+        vectorFieldPlot.setLayout(vectorFieldPlotLayout);
+        vectorFieldPlotLayout.setHorizontalGroup(
+            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
         );
-        plot2D4Layout.setVerticalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+        vectorFieldPlotLayout.setVerticalGroup(
+            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 247, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Surface", plot2D4);
-        jTabbedPane1.addTab("tab5", plot3D1);
+        jTabbedPane1.addTab("Field", vectorFieldPlot);
+
+        javax.swing.GroupLayout surfacePlotLayout = new javax.swing.GroupLayout(surfacePlot);
+        surfacePlot.setLayout(surfacePlotLayout);
+        surfacePlotLayout.setHorizontalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 392, Short.MAX_VALUE)
+        );
+        surfacePlotLayout.setVerticalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 247, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Surface", surfacePlot);
+
+        jSplitPane1.setRightComponent(jTabbedPane1);
+        jSplitPane1.setLeftComponent(basicInput);
 
         fileMenu.setText("File");
 
@@ -170,11 +184,11 @@ public class SamplePlotters extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
         );
 
         pack();
@@ -183,6 +197,18 @@ public class SamplePlotters extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        if(jTabbedPane1.getSelectedComponent() == basicPlot) {
+            jSplitPane1.setTopComponent(basicInput);
+        } else if(jTabbedPane1.getSelectedComponent() == surfacePlot) {
+            jSplitPane1.setTopComponent(surfaceInput);
+        } else if(jTabbedPane1.getSelectedComponent() == parametricPlot) {
+            jSplitPane1.setTopComponent(parametricInput);
+        } else if(jTabbedPane1.getSelectedComponent() == vectorFieldPlot) {
+            jSplitPane1.setTopComponent(vectorFieldInput);
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
     
     /**
      * @param args the command line arguments
@@ -197,6 +223,8 @@ public class SamplePlotters extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private sequor.component.FunctionPanel basicInput;
+    private specto.plotpanel.Plot2D basicPlot;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -205,17 +233,19 @@ public class SamplePlotters extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
+    private sequor.component.FunctionPanel parametricInput;
+    private specto.plotpanel.Plot2D parametricPlot;
     private javax.swing.JMenuItem pasteMenuItem;
-    private specto.plotpanel.Plot2D plot2D1;
-    private specto.plotpanel.Plot2D plot2D2;
-    private specto.plotpanel.Plot2D plot2D3;
-    private specto.plotpanel.Plot2D plot2D4;
-    private specto.plotpanel.Plot3D plot3D1;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private sequor.component.FunctionPanel surfaceInput;
+    private specto.plotpanel.Plot2D surfacePlot;
+    private sequor.component.FunctionPanel vectorFieldInput;
+    private specto.plotpanel.Plot2D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     
 }
