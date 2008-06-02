@@ -26,6 +26,7 @@ import sequor.model.StringRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.SettingsProperty;
 import analysis.DataLog;
+import java.util.HashMap;
 import metrics.*;
 import java.util.HashSet;
 import javax.swing.JTextArea;
@@ -138,6 +139,14 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }     
         stats.reset(vals, numTimes);
         
+        // Compile list of partial simulations which must be run
+        HashMap<Valuation, HashSet<Agent>> coopVals = new HashMap<Valuation, HashSet<Agent>> ();
+        for (Valuation v : vals) {
+            if(v.isCooperationTesting()) {
+                coopVals.put(v, v.getComplement());
+            }
+        }
+        
         // Run the simulations
         batchProcessing=true;        
         for(int i=0;i<numTimes;i++){
@@ -147,7 +156,15 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             }
             dist=new DistanceTable(teams);
             run();
-            stats.captureData(log, log);
+            // capture full data
+            for (Valuation v : vals) { stats.captureData(v, log, null); }
+            // capture partial data
+            for (Valuation v : coopVals.keySet()) {
+                v.getOwner().setStartAgents(coopVals.get(v));
+                run();
+                stats.captureData(v, null, log);
+                v.getOwner().setStartAgents(v.getOwner());
+            }
         }
         batchProcessing=false;
         fireActionPerformed(new ActionEvent(stats,0,"log"));

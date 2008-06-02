@@ -32,10 +32,7 @@ public class Metrics {
         HashSet<Agent> team=new HashSet<Agent>();
         Team owner = val.getOwner();
         team.addAll(owner);
-        HashSet<Agent> complement=new HashSet<Agent>();
-        for(Agent a:owner){
-            if(!subset.contains(a)){complement.add(a);}
-        }
+        HashSet<Agent> complement=val.getComplement();
         try {
             double trial1, trial2, trial3;
             sim.setBatchProcessing(true);

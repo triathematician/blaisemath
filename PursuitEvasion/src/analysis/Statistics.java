@@ -26,9 +26,12 @@ import scio.function.BoundedFunction;
  */
 public class Statistics extends FiresChangeEvents {
     
-    HashMap<Valuation,Vector<Double>> fullResultMetrics;
-    HashMap<Valuation,Vector<Double>> partialResultMetrics;
-    HashMap<Valuation,Vector<Double>> partialRunMetrics;
+    /** Basic simulation. */
+    HashMap<Valuation,Vector<Double>> fullMetrics;
+    /** Simulation evaluated by subset of players. */
+    HashMap<Valuation,Vector<Double>> subsetMetrics;
+    /** For simulation restricted to a few players. */
+    HashMap<Valuation,Vector<Double>> partialMetrics;
 
     public Statistics() {}
     
@@ -40,13 +43,13 @@ public class Statistics extends FiresChangeEvents {
     
     /** Resets the statistical data with a given collection of valuations, and a given size. */
     public void reset(Collection<Valuation> vals,int n){
-        fullResultMetrics = new HashMap<Valuation,Vector<Double>>();
-        partialResultMetrics = new HashMap<Valuation,Vector<Double>>();
-        partialRunMetrics = new HashMap<Valuation,Vector<Double>>();
+        fullMetrics = new HashMap<Valuation,Vector<Double>>();
+        subsetMetrics = new HashMap<Valuation,Vector<Double>>();
+        partialMetrics = new HashMap<Valuation,Vector<Double>>();
         for(Valuation v:vals) {
-            fullResultMetrics.put(v, new Vector<Double>(n));
-            partialResultMetrics.put(v, new Vector<Double>(n));
-            partialRunMetrics.put(v, new Vector<Double>(n));
+            fullMetrics.put(v, new Vector<Double>(n));
+            subsetMetrics.put(v, new Vector<Double>(n));
+            partialMetrics.put(v, new Vector<Double>(n));
         }
     }
     
@@ -54,68 +57,84 @@ public class Statistics extends FiresChangeEvents {
      * for statistical data output.
      * @param dl The DataLog captured during the simulation
      */
-    public void captureData(DataLog fullRunData, DataLog partialRunData){
-        for(Valuation v:fullResultMetrics.keySet()) {
-            fullResultMetrics.get(v).add(fullRunData.teamMetrics.get(v).lastElement().y);
-            partialResultMetrics.get(v).add(fullRunData.partialTeamMetrics.get(v).lastElement().y);
-            partialRunMetrics.get(v).add(partialRunData.teamMetrics.get(v).lastElement().y);
+    public void captureData(Valuation v,DataLog fullRunData, DataLog partialRunData){
+        if (fullRunData != null) {
+            fullMetrics.get(v).add(fullRunData.teamMetrics.get(v).lastElement().y);
+            subsetMetrics.get(v).add(fullRunData.partialTeamMetrics.get(v).lastElement().y);
+        }
+        if (partialRunData != null) {
+            partialMetrics.get(v).add(partialRunData.teamMetrics.get(v).lastElement().y);
         }
     }
     
     // formatter
     final static NumberFormat formatter = DecimalFormat.getNumberInstance();
     
+    private static class AverageData { double avg; int nulls; }
+    
+    /** computes total, average, # nulls */
+    private static AverageData computeAverages(Collection<Double> values, double max) {
+        AverageData result = new AverageData();
+        result.avg = 0.0;
+        result.nulls = 0;
+        for(Double d : values) {
+            if (d == null || d.isInfinite() || d.isNaN()) {
+                result.nulls++;
+            } else {
+                if(d > max) { System.out.println(d); }
+                result.avg += d;
+            }
+        }
+        result.avg /= (values.size() - result.nulls);
+        return result;
+    }
+    
     /** Outputs results of a particular valuation. */
     public void outputValuation(Valuation val, JTextArea textArea){
-        int numRuns = fullResultMetrics.get(val).size();
-        double fullTotal = 0.0;
-        int numFullNulls = 0;
-        for(Double d : fullResultMetrics.get(val)) {
-            if (d == null || d.isInfinite() || d.isNaN()) {
-                numFullNulls++;
-            } else {
-                if(d > 10000) { System.out.println(d); }
-                fullTotal += d;
-            }
-        }
-        double partialTotal = 0.0;
-        int numPartialNulls = 0;
-        for(Double d : partialResultMetrics.get(val)) {
-            if (d == null || d.isInfinite() || d.isNaN()) {
-                numPartialNulls++;
-            } else {
-                if(d > 10000) { System.out.println(d); }
-                partialTotal += d;
-            }
-        }
-        textArea.append(val.toString() + " (full): average " + formatter.format(fullTotal / (numRuns - numFullNulls))
-                 + " over " + numRuns + " runs (" + numFullNulls + " null values)." + "\n"
+        int numRuns = fullMetrics.get(val).size();
+        AverageData full = computeAverages(fullMetrics.get(val), 100000);
+        AverageData subset = computeAverages(subsetMetrics.get(val), 10000);
+        AverageData partial = computeAverages(partialMetrics.get(val), 100000);
+        textArea.append("Metric " + val.toString() + ":\n"
+                 + "  FULL: average " + formatter.format(full.avg)
+                 + " over " + numRuns + " runs (" + full.nulls + " null values)." + "\n"
                  + (val.isCooperationTesting() ? 
-                     val.toString() + " (partial): average " + formatter.format(partialTotal / (numRuns - numPartialNulls))
-                    + " over " + numRuns + " runs (" + numPartialNulls + " null values)." + "\n"
+                      "  SUBSET: average " + formatter.format(subset.avg) + "\n"
+                    + "  PARTIAL: average " + formatter.format(partial.avg)
+                    + " over " + numRuns + " runs (" + partial.nulls + " null values)." + "\n"
+                    + "  SELFISH COOPERATION: average " + formatter.format(subset.avg - full.avg) + "\n"
+                    + "  ALTRUISTIC COOPERATION: average " + formatter.format(partial.avg - subset.avg) + "\n"
+                    + "  TOTAL COOPERATION: average " + formatter.format(partial.avg - full.avg) + "\n"
                     : ""));
     }
     
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){
         textArea.append("-----\n");
-        for(Valuation val : fullResultMetrics.keySet()) {
+        for(Valuation val : fullMetrics.keySet()) {
             outputValuation (val, textArea);
         }
     }
     
     /** Outputs results of entire data run. */
     public void outputData(JTextArea textArea){
+        // delete previous content
+        try {textArea.getDocument().remove(0, textArea.getDocument().getLength()-1);}catch(Exception e){}
+        textArea.append("This data may be copy/pasted directly into Microsoft Excel.\n To do so, hit Ctrl+A, then Ctrl+C," +
+                "\n and then paste into an (empty) Excel worksheet.\n ---- \n");
         int numTimes = 0;
-        for(Valuation v: fullResultMetrics.keySet()) { numTimes = fullResultMetrics.get(v).size(); break; }
-        for(Valuation v: fullResultMetrics.keySet()) {
-            textArea.append(v.toString() + (v.isCooperationTesting() ? "\t\t" : "\t"));
+        for(Valuation v: fullMetrics.keySet()) { numTimes = fullMetrics.get(v).size(); break; }
+        for(Valuation v: fullMetrics.keySet()) {
+            textArea.append(v.toString() + (v.isCooperationTesting() ? "\t(subset)\t(partial)\t" : "\t"));
         }
         textArea.append("\n");
         for(int n=0; n<numTimes; n++) {
-            for(Valuation v: fullResultMetrics.keySet()) {
-                textArea.append(formatter.format(fullResultMetrics.get(v).get(n)) + "\t"
-                        + (v.isCooperationTesting() ? formatter.format(partialResultMetrics.get(v).get(n)) + "\t" : ""));
+            for(Valuation v: fullMetrics.keySet()) {
+                textArea.append(formatter.format(fullMetrics.get(v).get(n)) + "\t"
+                        + (v.isCooperationTesting() ?
+                            formatter.format(subsetMetrics.get(v).get(n)) + "\t"
+                            + formatter.format(partialMetrics.get(v).get(n)) + "\t"
+                            : ""));
             }
             textArea.append("\n");
         }

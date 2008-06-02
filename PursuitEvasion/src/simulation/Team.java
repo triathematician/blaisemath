@@ -15,11 +15,11 @@ import metrics.*;
 import behavior.*;
 import utility.DistanceTable;
 import java.beans.PropertyChangeEvent;
-import java.util.Vector;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JPanel;
@@ -278,7 +278,11 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
      */
     public HashSet<Agent> getActiveAgents(){return activeAgents;}
     public HashSet<Agent> getStartAgents(){return startAgents;}
-    public void setStartAgents(HashSet<Agent> agents){ startAgents = agents; }
+    public void setStartAgents(Collection<Agent> agents){
+        if (startAgents == null) { startAgents = new HashSet<Agent>(); }
+        startAgents.clear();
+        startAgents.addAll(agents);
+    }
 //    public HashSet<Agent> getValueAgents(){return valueAgents;}
 //    public void setValueAgents(HashSet<Agent> agents){valueAgents=agents;}
 //    public HashSet<Agent> getActiveValueAgents(){return activeValueAgents;}
