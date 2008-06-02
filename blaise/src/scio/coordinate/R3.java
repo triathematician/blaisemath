@@ -33,23 +33,7 @@ public class R3 extends Euclidean {
     public void setZ(double z){ setElement(2,z); }
     
     public void setTo(double x, double y, double z){ setX(x); setY(y); setZ(z); }
-    
-    
-    // VECTOR SPACE METHODS    
-
-    public VectorSpaceElement zero() { return new R3(0,0,0); }
-    public VectorSpaceElement plus(VectorSpaceElement p2) {
-        R3 p2r3 = (R3) p2;
-        return new R3( getX() + p2r3.getX(), getY() + p2r3.getY(), getZ() + p2r3.getZ() );
-    }
-    public VectorSpaceElement minus(VectorSpaceElement p2) {
-        R3 p2r3 = (R3) p2;
-        return new R3( getX() - p2r3.getX(), getY() - p2r3.getY(), getZ() - p2r3.getZ() );
-    }
-    public VectorSpaceElement times(double d) {
-        return new R3( d * getX(), d * getY(), d * getZ() );
-    }
-    
+        
     
     // METHODS FOR VECTORS IN R3
     

@@ -33,7 +33,13 @@ public class Matrix<V> implements Coordinate {
      * @param v the object to be placed in every position
      */
     public Matrix(int nr,int nc,V v){fillMatrix(nr,nc,v);}
-    /** Initializes
+    /** Initializes to specified matrix. */
+    public Matrix(Matrix <V> matrix){
+        data = new Vector<Vector<V>> ();
+        for(int i=0; i<matrix.getNumRows(); i++) {
+            data.add(matrix.getRow(i));
+        }
+    }
     
     
     // INITIALIZERS       
@@ -112,5 +118,7 @@ public class Matrix<V> implements Coordinate {
             }
         }
         return true;
-    }    
+    }
+
+    public Coordinate copy() { return new Matrix<V>(this); }
 }

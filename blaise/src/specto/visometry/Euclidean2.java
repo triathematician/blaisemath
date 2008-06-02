@@ -492,7 +492,18 @@ public class Euclidean2 extends Visometry<R2> {
     /** Returns a rectangle in the current geometry */
     public Shape rectangle(R2 p1,R2 p2){return rectangle(p1.x,p1.y,p2.x,p2.y);}
     
-    /** Returns a rectangle in the current geometry */
+    /** Returns a triangle in the current geometry */
+    public Shape triangle(double x1,double y1,double x2,double y2,double x3,double y3){   
+        java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
+        path.moveTo(x1,y1);
+        path.lineTo(x2,y2);
+        path.lineTo(x3,y3);
+        path.lineTo(x1,y1);
+        path.transform(getAffineTransformation());
+        return path;
+    }
+    
+    /** Returns a trapezoid in the current geometry */
     public Shape trapezoid(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4){   
         java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double();
         path.moveTo(x1,y1);
@@ -561,7 +572,7 @@ public class Euclidean2 extends Visometry<R2> {
     
     // ABSOLUTE DISTANCE METHODS (USE THE WINDOW COORDINATES)
     
-    /** Returns window coordinate point at an offset of given distance and angle from a particular one. */
+    /** Returns window coordinate point at an offset of given distanceTo and angle from a particular one. */
     public java.awt.geom.Point2D.Double getPointOffsetAngle(java.awt.geom.Point2D.Double point,double angle,double distance){
         return new java.awt.geom.Point2D.Double(point.x+distance*Math.cos(angle),point.y+distance*Math.sin(angle));
     }

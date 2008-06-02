@@ -60,6 +60,6 @@ public class PathUtilities {
         }
         public Vector<R2> getValue(Vector<Double> xx) throws FunctionValueException {throw new UnsupportedOperationException("Not supported yet.");}
         public R2 minValue() {throw new UnsupportedOperationException("Not supported yet.");}
-        public R2 maxValue() {throw new UnsupportedOperationException("Not supported yet.");}            
+        public R2 maxValue() {throw new UnsupportedOperationException("Not supported yet.");}   
     }
 }

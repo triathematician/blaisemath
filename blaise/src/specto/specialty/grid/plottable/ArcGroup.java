@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.util.Vector;
 import javax.swing.event.ChangeEvent;
-import scio.coordinate.I2;
+import scio.coordinate.Z2;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import specto.Plottable;
@@ -70,7 +70,7 @@ public class ArcGroup extends PlottableGroup<Grid2> {
         Vector<MouseVisometryListener<Grid2>> hits=getHits(e);
         if(hits.isEmpty()){    
             if((e.getModifiersEx() & (InputEvent.SHIFT_DOWN_MASK)) == InputEvent.SHIFT_DOWN_MASK) {
-                I2 point = (I2) e.getCoordinate();
+                Z2 point = (Z2) e.getCoordinate();
                 mover = null;
                 adder = new GridArc(point.x,point.y,45,point.x,point.y,-45);
                 fireStateChanged();
@@ -85,7 +85,7 @@ public class ArcGroup extends PlottableGroup<Grid2> {
     @Override
     public void mouseDragged(MouseVisometryEvent<Grid2> e) {
         if(adder != null){
-            I2 point = (I2) e.getCoordinate();
+            Z2 point = (Z2) e.getCoordinate();
             adder.setStop(point.x,point.y,-45);
             fireStateChanged();
         } else {

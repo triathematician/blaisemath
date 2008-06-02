@@ -7,6 +7,7 @@ package specto.plottable;
 
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
+import sequor.model.FunctionTreeModel;
 import sequor.model.PointRangeModel;
 import specto.dynamicplottable.*;
 import java.awt.Color;
@@ -36,13 +37,13 @@ public class Parametric2D extends PointSet2D {
     // PROPERTIES
     
     /** Function which takes in a double and returns a pair of doubles = a point in the plane. */
-    BoundedFunction<Double,R2> function;
+    Function<Double,R2> function;
 
     /** Range of t values. */
     DoubleRangeModel tRange;
     
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
-    private static final BoundedFunction<Double,R2> DEFAULT_FUNCTION=new BoundedFunction<Double,R2>(){
+    private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
         @Override
         public R2 getValue(Double x){return new R2(2*Math.cos(x),2*Math.sin(2*x));}
         @Override
@@ -51,25 +52,57 @@ public class Parametric2D extends PointSet2D {
             for(Double d:x){result.add(getValue(d));}
             return result;
         }
-        @Override
-        public R2 minValue(){return new R2(-2,-2);}
-        @Override
-        public R2 maxValue(){return new R2(2,2);}
-        };
+    };
         
     public Parametric2D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
     public Parametric2D(String string) {this();}
     /** Constructor for use with a particular function and range of t values */
-    public Parametric2D(BoundedFunction<Double,R2> function,double tMin,double tMax,int samplePoints){
+    public Parametric2D(Function<Double,R2> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(tMin,tMin,tMax);
         tRange.setNumSteps(samplePoints,true);
     }
+    public Parametric2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
+        tRange = new DoubleRangeModel (0.0, 0.0, 2*Math.PI);
+        tRange.setNumSteps(1000, true);
+        function = getParametricFunction(
+                (Function<Double, Double>) functionModel1.getRoot().getFunction(1),
+                (Function<Double, Double>) functionModel2.getRoot().getFunction(1));
+        ChangeListener cl = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                function = getParametricFunction(
+                        (Function<Double, Double>) functionModel1.getRoot().getFunction(1),
+                        (Function<Double, Double>) functionModel2.getRoot().getFunction(1));
+                fireStateChanged();
+            }
+        };
+        functionModel1.addChangeListener(cl);
+        functionModel2.addChangeListener(cl);
+    }
+    
+    // HELPERS
+    
+    public static Function<Double, R2> getParametricFunction(final Function<Double,Double> fx, final Function<Double,Double> fy) {
+        return new Function<Double, R2>() {
+            public R2 getValue(Double x) throws FunctionValueException { return new R2(fx.getValue(x), fy.getValue(x)); }
+            public Vector<R2> getValue(Vector<Double> xx) throws FunctionValueException {
+                Vector<Double> xs = fx.getValue(xx);
+                Vector<Double> ys = fy.getValue(xx);
+                Vector<R2> result = new Vector<R2>(xs.size());
+                for(int i=0; i<xs.size(); i++){
+                    result.add(new R2(xs.get(i),ys.get(i)));
+                }
+                return result;
+            }
+        };
+    }
     
     
     // BEAN PATTERNS
     
+    public Function<Double,R2> getFunction(){return function;}
     public void setFunction(String fx,String fy){
         this.function=new ParametricModel(fx,fy).getFunction();
     }
@@ -80,6 +113,7 @@ public class Parametric2D extends PointSet2D {
     /** Draws the path. */
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
+        if (function == null) { return; }
         try {
             computePath();
             super.paintComponent(g,v);
@@ -90,11 +124,7 @@ public class Parametric2D extends PointSet2D {
     public void computePath() throws FunctionValueException{
         points=function.getValue(tRange.getValueRange(true,0.0));
     }    
-
     
-    // BEAN PATTERNS
-    
-    public BoundedFunction<Double,R2> getFunction(){return function;}
     
     // STYLE
         
@@ -118,7 +148,7 @@ public class Parametric2D extends PointSet2D {
      * from the particular point.
      * @return Point2D object which can be added to a plot
      */
-    public Point2D getPointSlope() {return new ParametricPoint(getConstraintModel());}
+    public Point2D getPointSlope() { return new ParametricPoint(); }
     
     
     // INNER CLASSES
@@ -130,9 +160,9 @@ public class Parametric2D extends PointSet2D {
         
         DoubleRangeModel tModel;
         
-        public ParametricPoint(PointRangeModel prm){
-            setModel(prm);
-            tModel=new DoubleRangeModel(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
+        public ParametricPoint(){
+            setModel(getConstraintModel());
+            tModel = new DoubleRangeModel(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
             tModel.addChangeListener(new ChangeListener(){
                 public void stateChanged(ChangeEvent e) {
                     if(adjusting){return;}
@@ -150,6 +180,8 @@ public class Parametric2D extends PointSet2D {
                     }
                 }
             });
+            
+            Parametric2D.this.addChangeListener(this);
         }
         
         /** Returns data model which can be used to control the time of this point. */
@@ -168,9 +200,11 @@ public class Parametric2D extends PointSet2D {
 
         @Override
         public void paintComponent(Graphics2D g, Euclidean2 v) {
+            R2 position=getPoint();
+            g.setColor(Color.BLACK);
+            g.draw(v.arrow(new R2(),position,8.0));
             super.paintComponent(g,v);
             g.setStroke(LineStyle.BASIC_STROKE);
-            R2 position=getPoint();
             if(velocity!=null){
                 g.setColor(Color.RED);
                 g.draw(v.arrow(position,position.plus(velocity),8.0));
@@ -179,8 +213,6 @@ public class Parametric2D extends PointSet2D {
                 g.setColor(Color.PINK);
                 g.draw(v.arrow(position,position.plus(acceleration),8.0));
             }
-            g.setColor(Color.BLACK);
-            g.draw(v.arrow(new R2(),position,8.0));
         } 
             
         @Override
@@ -193,5 +225,13 @@ public class Parametric2D extends PointSet2D {
         }
 
         public int getAnimatingSteps() {return Parametric2D.this.getAnimatingSteps();}
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (!e.getSource().equals(this)) {
+                changeEvent = e;
+                redraw();
+            }
+        }
     } // class Parametric2D.ParametricPoint
 }

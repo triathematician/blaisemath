@@ -15,15 +15,12 @@ import sequor.editor.SliderIntegerEditor;
 import sequor.editor.ParameterEditor;
 import sequor.editor.ColorEditor;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.HashMap;
 import java.util.Vector;
-import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -214,6 +211,14 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         return result;
     }
     
+    /** Removes a generic property. */
+    public void remove(SettingsProperty sp){
+        if(contains(sp)) {
+            super.remove(sp);
+            sp.getModel().removeChangeListener(this);
+        }
+    }
+    
     /** Changes type of editor of a particular property which is identified by name */
     public void setPropertyEditor(String s, int newType) {
         for (SettingsProperty sp : this) {
@@ -285,7 +290,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     /** Handles property change events fired from a few properties */
     @Override
     public void propertyChange(PropertyChangeEvent e) {pcs.firePropertyChange(e);}
-
+    
     
     // GUI METHODS
     

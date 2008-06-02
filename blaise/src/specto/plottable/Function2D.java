@@ -5,12 +5,14 @@
 
 package specto.plottable;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import sequor.model.PointRangeModel;
 import specto.dynamicplottable.*;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
@@ -22,6 +24,7 @@ import sequor.model.FunctionTreeModel;
 import specto.Animatable;
 import specto.Constrains2D;
 import specto.Decoration;
+import specto.style.LineStyle;
 import specto.visometry.Euclidean2;
 
 /**
@@ -38,10 +41,13 @@ public class Function2D extends PointSet2D implements Constrains2D{
     public Function2D(String string) {this(new FunctionTreeModel(string));}
     public Function2D(FunctionTreeModel ftm, Color color) {this(ftm);setColor(color);}
     public Function2D(final FunctionTreeModel functionModel){
-        function=functionModel.getRoot();
+        function=(Function<Double, Double>) functionModel.getRoot().getFunction(1);
         functionModel.addChangeListener(new ChangeListener(){
             @Override
-            public void stateChanged(ChangeEvent e) {function=functionModel.getRoot();fireStateChanged();}
+            public void stateChanged(ChangeEvent e) {
+                function = (Function<Double, Double>) functionModel.getRoot().getFunction(1);
+                fireStateChanged();
+            }
         });
     }
     
@@ -58,6 +64,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+        if (function == null) { return; }
         try {
             computePath(v);
             super.paintComponent(g,v,t);
@@ -66,6 +73,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
+        if (function == null) { return; }
         try{
             computePath(v);
             super.paintComponent(g,v);
@@ -145,6 +153,14 @@ public class Function2D extends PointSet2D implements Constrains2D{
         @Override
         public void paintComponent(Graphics2D g, Euclidean2 v) {
             vector.paintComponent(g,v);
+            g.setStroke(LineStyle.VERY_DOTTED_STROKE);
+            g.draw(v.lineSegment(prm.getX(), 0, prm.getX(), prm.getY()));
+            g.setStroke(LineStyle.THIN_STROKE);
+            Shape s = v.triangle(prm.getX(), prm.getY(), prm.getX() + 1, prm.getY() + slope, prm.getX() + 1, prm.getY() );
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            g.fill(s);
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+            g.draw(s);
             super.paintComponent(g,v);
         }
             

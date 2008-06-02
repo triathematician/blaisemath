@@ -4,7 +4,7 @@
  * Created on March 3, 2008, 10:22 AM
  */
 
-package sequor;
+package _deprecated;
 
 import java.awt.event.ActionEvent;
 import sequor.component.*;

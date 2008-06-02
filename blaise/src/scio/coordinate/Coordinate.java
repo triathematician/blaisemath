@@ -15,4 +15,5 @@ package scio.coordinate;
  */
 public interface Coordinate {
     public boolean equals(Coordinate c2);
+    public Coordinate copy();
 }

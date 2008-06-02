@@ -6,7 +6,7 @@
 
 package specto.specialty.grid;
 
-import scio.coordinate.I2;
+import scio.coordinate.Z2;
 import sequor.control.PlusMinusBox;
 import specto.specialty.grid.plottable.GridArc;
 import specto.specialty.grid.plottable.ArcGroup;
@@ -22,7 +22,7 @@ public class TestGridVisometry extends javax.swing.JFrame {
     public TestGridVisometry() {
         initComponents();
         
-        grid2Panel1.add(new GridVertex(new I2(2,2),50.));
+        grid2Panel1.add(new GridVertex(new Z2(2,2),50.));
         
         grid2Panel1.add(new GridArc(0,5,90,1,4,180));
         

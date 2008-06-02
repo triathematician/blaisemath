@@ -76,6 +76,8 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     // set methods
     public void setTo(double x0,double y0){xModel.setValue(x0);yModel.setValue(y0);}
     public void setTo(R2 point){setTo(point.x,point.y);}
+    public void update(){setTo(xModel.value, yModel.value);}
+
     
     // string methods
     @Override

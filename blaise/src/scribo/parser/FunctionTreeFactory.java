@@ -7,9 +7,7 @@ package scribo.parser;
 
 import scribo.tree.*;
 import scio.function.FunctionValueException;
-import scribo.parser.FunctionSyntaxException;
 import java.util.Vector;
-import scribo.parser.*;
 import scio.function.Function;
 
 /**

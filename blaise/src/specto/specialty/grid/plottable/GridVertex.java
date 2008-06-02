@@ -11,7 +11,7 @@ import java.awt.event.InputEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import scio.coordinate.I2;
+import scio.coordinate.Z2;
 import scio.coordinate.R2;
 import sequor.event.MouseVisometryEvent;
 import specto.DynamicPlottable;
@@ -26,14 +26,14 @@ import specto.style.LineStyle;
  */
 public class GridVertex extends DynamicPlottable<Grid2> {
     
-    I2 coordinate;
+    Z2 coordinate;
     Double angle = null;
     int dist = 1;
     
-    public GridVertex(){this(new I2());}    
-    public GridVertex(I2 coordinate){this(coordinate,null);}
-    GridVertex(int x, int y, double angle) {this(new I2(x,y),angle);}
-    public GridVertex(I2 coordinate,Double angle){
+    public GridVertex(){this(new Z2());}    
+    public GridVertex(Z2 coordinate){this(coordinate,null);}
+    GridVertex(int x, int y, double angle) {this(new Z2(x,y),angle);}
+    public GridVertex(Z2 coordinate,Double angle){
         this.coordinate = coordinate;
         this.angle = angle;
         setColor(Color.GREEN);
@@ -125,7 +125,7 @@ public class GridVertex extends DynamicPlottable<Grid2> {
                     fireStateChanged();
                 }
             } else {
-                setTo(((I2)e.getCoordinate()).x,((I2)e.getCoordinate()).y);
+                setTo(((Z2)e.getCoordinate()).x,((Z2)e.getCoordinate()).y);
             }
         }        
     }

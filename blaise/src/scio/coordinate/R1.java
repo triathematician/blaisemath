@@ -1,6 +1,11 @@
 /*
  * R1.java
- * Created on Feb 11, 2008
+ * Created on May 30, 2008
+ */
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package scio.coordinate;
@@ -12,31 +17,8 @@ package scio.coordinate;
  * @author Elisha Peterson
  */
 public class R1 extends Euclidean {
-
-    // CONSTRUCTORS
-    public R1(){super(1);setValue(0.0);}
-    public R1(double v){super(1);setValue(v);}
-    
-    // GETTERS & SETTERS
-    
-    public Double getValue(){return coord.get(0);}
-    public void setValue(Double value){setElement(0,value);}
-
-    // VECTOR SPACE METHODS
-    
-    public VectorSpaceElement zero() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public VectorSpaceElement plus(VectorSpaceElement p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public VectorSpaceElement minus(VectorSpaceElement p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public VectorSpaceElement times(double d) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public R1() { super(1); }
+    public R1(double d) { super(1); setValue(d); }
+    public Double getValue() { return getElement(0); }
+    public void setValue(Double d) { setElement(0, d); }
 }

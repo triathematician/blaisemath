@@ -67,9 +67,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
                 break;
             case ANIMATE_TRAIL:
             default:
-                g.setColor(color.getValue().brighter());
                 g.draw(drawPath(v,0,curVal));
-                g.setColor(color.getValue().darker());
                 g.draw(drawPath(v,curVal-5,curVal));
                 g.fill(drawDot(v,curVal));
                 break;
@@ -169,7 +167,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
 
     class PathPointModel extends PointRangeModel {
         public PathPointModel(){super.setTo(0,0);}
-
+        @Override
+        public void setTo(R2 point) {
+            R2 closest = getClosestPoint(point.x,point.y);
+            super.setTo(closest.x,closest.y);
+        }
         @Override
         public void setTo(double x0, double y0) {
             R2 closest=getClosestPoint(x0,y0);

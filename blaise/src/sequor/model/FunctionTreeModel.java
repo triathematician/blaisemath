@@ -9,6 +9,7 @@ import sequor.FiresChangeEvents;
 import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import scio.function.BoundedFunction;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 import scribo.tree.FunctionTreeNode;
@@ -25,6 +26,7 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     FunctionTreeRoot ftr;
     /** Whether the current text is valid or not. */
     boolean valid=true;
+    /** Stores variables used in the underlying FunctionTree. */
 
     public FunctionTreeModel(){setValue("cos(x)");}
     public FunctionTreeModel(FunctionTreeNode ftn) {this(new FunctionTreeRoot(ftn));}
@@ -49,6 +51,9 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
             valid=false;
         }
     }
+        
+    public BoundedFunction<?,Double> getFunction(){ return ftr.getFunction(); }
+    public BoundedFunction<?,Double> getFunction(int n){ return ftr.getFunction(n); }
     
     // REQUIRED METHODS
     
@@ -72,7 +77,7 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     public void stateChanged(ChangeEvent e) {
         if(e.getSource() instanceof ParameterListModel){
             ParameterListModel plm=(ParameterListModel)e.getSource();
-            ftr.setUnknowns(plm.getParameterList());
+            ftr.setParameters(plm.getParameterList());
             fireStateChanged();
         }
     }

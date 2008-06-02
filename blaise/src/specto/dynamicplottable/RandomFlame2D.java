@@ -51,7 +51,7 @@ public class RandomFlame2D extends Point2D {
     }
 
     // Variables for random motion
-    // Note: x coordinates are x coords, y coordinates are "widths" or distance between edges of the flame (should be positive)
+    // Note: x coordinates are x coords, y coordinates are "widths" or distanceTo between edges of the flame (should be positive)
     
     R2 top;
     R2 upper;

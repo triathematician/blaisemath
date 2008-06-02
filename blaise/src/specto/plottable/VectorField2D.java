@@ -11,9 +11,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.util.Vector;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.function.FunctionValueException;
+import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
@@ -45,6 +47,45 @@ public class VectorField2D extends Plottable<Euclidean2> implements ChangeListen
     public VectorField2D(BoundedFunction<R2,R2> function){
         setColor(Color.GRAY);
         this.function=function;
+    }
+    public VectorField2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
+        Vector<String> vars = new Vector<String>();
+        vars.add("x"); vars.add("y");
+        functionModel1.getRoot().setVariables(vars);
+        functionModel2.getRoot().setVariables(vars);
+        function = getVectorFunction(
+                (BoundedFunction<R2,Double>) functionModel1.getRoot().getFunction(2),
+                (BoundedFunction<R2,Double>) functionModel2.getRoot().getFunction(2));
+        ChangeListener cl = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                function = getVectorFunction(
+                        (BoundedFunction<R2,Double>) functionModel1.getRoot().getFunction(2),
+                        (BoundedFunction<R2,Double>) functionModel2.getRoot().getFunction(2));
+                fireStateChanged();
+            }
+        };
+        functionModel1.addChangeListener(cl);
+        functionModel2.addChangeListener(cl);        
+    }
+    
+    // HELPERS
+    
+    public static BoundedFunction<R2, R2> getVectorFunction(final BoundedFunction<R2,Double> fx, final BoundedFunction<R2,Double> fy) {
+        return new BoundedFunction<R2, R2>() {
+            public R2 getValue(R2 x) throws FunctionValueException { return new R2(fx.getValue(x), fy.getValue(x)); }
+            public Vector<R2> getValue(Vector<R2> xx) throws FunctionValueException {
+                Vector<Double> xs = fx.getValue(xx);
+                Vector<Double> ys = fy.getValue(xx);
+                Vector<R2> result = new Vector<R2>(xs.size());
+                for(int i=0; i<xs.size(); i++){
+                    result.add(new R2(xs.get(i),ys.get(i)));
+                }
+                return result;
+            }
+            public R2 minValue() { return new R2(fx.minValue(),fy.minValue()); }
+            public R2 maxValue() { return new R2(fx.maxValue(),fy.maxValue()); }
+        };
     }
     
     

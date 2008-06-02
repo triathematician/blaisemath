@@ -50,7 +50,7 @@ public abstract class BoundedWidthShape extends BoundedShape {
         public Ring(double parameter){super(parameter);}
         public Shape getShape() {
             Area a=new Area(new Ellipse2D.Double(0,0,1,1));
-            a.exclusiveOr(new Area(new Ellipse2D.Double(.5-parameter/2,.5-parameter/2,parameter,parameter)));
+            a.exclusiveOr(new Area(new Ellipse2D.Double(.5-parameter,.5-parameter,2*parameter,2*parameter)));
             return a;
         }
     };

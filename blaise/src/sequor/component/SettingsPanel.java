@@ -7,8 +7,12 @@ package sequor.component;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -78,10 +82,12 @@ public class SettingsPanel extends JPanel {
                 }
                 JLabel label=new JLabel(sp.getName());
                 label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+                label.setInheritsPopupMenu(true);
                 JComponent component = Settings.getComponent(sp);
                 if(component!=null){
                     label.setToolTipText(sp.getTooltipText());
                     component.setToolTipText(sp.getTooltipText());
+                    component.setInheritsPopupMenu(true);
                     jp.add(label);
                     jp.add(component);
                 }
@@ -90,12 +96,32 @@ public class SettingsPanel extends JPanel {
             jp.setMinimumSize(new Dimension(50,numComponents*25));
             jp.setPreferredSize(new Dimension(100,numComponents*30));
             jp.setMaximumSize(new Dimension(800,numComponents*35));
+            jp.setInheritsPopupMenu(true);
             JScrollPane container=new JScrollPane();
             container.setViewportView(jp);
+            container.setInheritsPopupMenu(true);
             add(container);
         }
         setToolTipText(s.toString());
         setName(s.toString());
         validate();
+    }
+    
+    
+
+    
+    // CONTEXT MENU SUPPORT
+    
+    public JMenu getDeleteMenu() { 
+        JMenu result = new JMenu("Remove Setting");
+        for(final SettingsProperty sp: s){
+            result.add(new JMenuItem(sp.getName())).addActionListener( new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    s.remove(sp);
+                    updatePanel();
+                }                
+            });
+        }
+        return result;
     }
 }

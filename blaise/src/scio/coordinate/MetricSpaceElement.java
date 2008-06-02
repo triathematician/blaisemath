@@ -6,10 +6,10 @@
 package scio.coordinate;
 
 /**
- * This interface says that a given coord
+ * This interface defines what is required for metric spaces... a distanceTo function.
  * 
  * @author Elisha Peterson
  */
-public interface MetricSpaceElement {
-    public double distance(Coordinate p2);
+public interface MetricSpaceElement extends Coordinate {
+    public double distanceTo(Coordinate p2);
 }

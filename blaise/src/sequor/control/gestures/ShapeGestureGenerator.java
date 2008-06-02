@@ -28,8 +28,7 @@ public class ShapeGestureGenerator {
                 return table[Math.abs(x)];
             }catch(Exception e){return 0.0;}
         }
-
-        public Vector<Double> getValue(Vector<Integer> xx) throws FunctionValueException {return null;}
+        public Vector<Double> getValue(Vector<Integer> xx) throws FunctionValueException {return null;}    
     };
         
     public static Function<Integer,Double> arcRightProb = new Function<Integer,Double>(){

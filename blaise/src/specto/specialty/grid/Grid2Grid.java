@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import scio.coordinate.I2;
+import scio.coordinate.Z2;
 import sequor.event.MouseVisometryEvent;
 import specto.DynamicPlottable;
 
@@ -20,11 +20,11 @@ import specto.DynamicPlottable;
 public class Grid2Grid extends DynamicPlottable<Grid2> {
     
     /** Location of currently selected coordinate (if any) */    
-    I2 selected;
+    Z2 selected;
     
     public Grid2Grid(){
         super();
-        selected=new I2(0,0);
+        selected=new Z2(0,0);
         setColor(Color.LIGHT_GRAY);
     }
     
@@ -35,7 +35,7 @@ public class Grid2Grid extends DynamicPlottable<Grid2> {
         g.setColor(getColor());
         for(Integer i:v.xBounds.getValueRange(true,0)){
             for(Integer j:v.yBounds.getValueRange(true,0)){
-                drawDot(g,v,new I2(i,j),5,false);
+                drawDot(g,v,new Z2(i,j),5,false);
             }
         }
         if(selected!=null){
@@ -44,7 +44,7 @@ public class Grid2Grid extends DynamicPlottable<Grid2> {
         }
     }
 
-    public void drawDot(Graphics2D g, Grid2 v, I2 point,double radius,boolean showCoord){
+    public void drawDot(Graphics2D g, Grid2 v, Z2 point,double radius,boolean showCoord){
         Point2D.Double center=v.toWindow(point);
         g.draw(new Ellipse2D.Double(center.x-radius,center.y-radius,2*radius,2*radius));
         if(showCoord){g.drawString(point.toString(),(float)(center.x+radius),(float)(center.y-radius));}
@@ -56,7 +56,7 @@ public class Grid2Grid extends DynamicPlottable<Grid2> {
     @Override
     public void mouseMoved(MouseVisometryEvent<Grid2> e) {
         super.mouseMoved(e);
-        selected=(I2)e.getCoordinate();
+        selected=(Z2)e.getCoordinate();
         fireStateChanged();
     }
     

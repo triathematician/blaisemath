@@ -215,7 +215,7 @@ public abstract class GestureGenerator {
     /** Function representing no movement. */
     public static Function<R2,Double> staticFunction=new Function<R2,Double>(){
         public Double getValue(R2 pt) throws FunctionValueException {return Math.max(0.0,0.4*(1-pt.magnitude()/5));}
-        public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {return null;}
+        public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {return null;}        
     };
     
     /** Returns function representing movement at a particular angle. */
@@ -224,6 +224,6 @@ public abstract class GestureGenerator {
         double sens;
         public AngleFunction(double theta,double sens){this.theta=theta;this.sens=sens;}
         public Double getValue(R2 x) throws FunctionValueException {return getMoveProb(x)*getThetaProb(x,theta,sens);}
-        public Vector<Double> getValue(Vector<R2> xx) throws FunctionValueException {return null;}
+        public Vector<Double> getValue(Vector<R2> xx) throws FunctionValueException {return null;}  
     }
 }

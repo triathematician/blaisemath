@@ -13,7 +13,7 @@ import java.text.NumberFormat;
  * 
  * @author Elisha Peterson
  */
-public class R2 extends Point2D.Double implements Coordinate {
+public class R2 extends Point2D.Double implements EuclideanElement {
     public static final R2 Origin=new R2(0,0);
     
     public R2(){super(0,0);}
@@ -23,8 +23,7 @@ public class R2 extends Point2D.Double implements Coordinate {
     // OPERATIONS WHICH CHANGE THE POINT
     
     public void translate(R2 b){x+=b.x;y+=b.y;}
-    public void translate(double x,double y){this.x+=x;this.y+=y;}
-    public void multiplyBy(double c){x*=c;y*=c;}
+    public void translate(double x,double y){this.x+=x;this.y+=y;}    
     public void invertInCircleOfRadius(double r){multiplyBy(r/magnitudeSq());}
     
     // OPERATIONS WHICH DO NOT CHANGE THE POINT
@@ -53,7 +52,7 @@ public class R2 extends Point2D.Double implements Coordinate {
     /**
      * Returns point along the line between point1 and point2 which is closest
      * to itself, aka. the point which makes a perpendicular with the line.
-     * Mathematically this can be computed by minimizing the distance between
+     * Mathematically this can be computed by minimizing the distanceTo between
      * (x,y) and p1+t*(p2-p1) as t varies. Mathematically, the result is
      *
      *       (p1-p).(p1-p2)
@@ -90,9 +89,9 @@ public class R2 extends Point2D.Double implements Coordinate {
         return (x==((R2)c2).x)&&(y==((R2)c2).y);
     }
 
-//    public double distance(Coordinate p2) {
+//    public double distanceTo(Coordinate p2) {
 //        if(!(p2 instanceof R2)){return -1;}
-//        return super.distance((R2)p2);
+//        return super.distanceTo((R2)p2);
 //    }
     
     /** Overwrite default string */    
@@ -100,5 +99,39 @@ public class R2 extends Point2D.Double implements Coordinate {
     public String toString(){
         NumberFormat nf=NumberFormat.getInstance();
         return "("+nf.format(x)+", "+nf.format(y)+")";
+    }
+    
+    
+    // REQUIRED METHODS FROM SUPERTYPE
+
+    public Coordinate copy() { return (Coordinate) clone(); }
+
+    public int getLength() { return 2; }
+    public double getElement(int position) { return (position == 0) ? x : y; }    
+    public void setElement(int position, double value) { if (position == 0) { x = value; } else { y = value; } }
+    public void addToElement(int position, double value) { if (position == 0) { x += value; } else { y += value; } }
+    public void multiplyElement(int position, double value) { if (position == 0) { x *= value; } else { y *= value; } }
+    public double dotProduct(InnerProductSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+        EuclideanElement p2e = (EuclideanElement) p2;
+        if (p2e.getLength() == 2) {
+            return p2e.getElement(0)*x + p2e.getElement(1)*y;
+        }
+        throw new ArrayIndexOutOfBoundsException();
+    }
+    public double distanceTo(Coordinate p2) {
+        return ((Point2D.Double)p2).distance(this);
+    }
+    public VectorSpaceElement zero() { return new R2(); }
+    public VectorSpaceElement plus(VectorSpaceElement p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public VectorSpaceElement minus(VectorSpaceElement p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public VectorSpaceElement translateBy(VectorSpaceElement p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public VectorSpaceElement multiplyBy(double d) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

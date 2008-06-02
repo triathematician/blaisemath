@@ -9,7 +9,10 @@ package specto.plottable;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import scio.function.FunctionValueException;
+import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
@@ -43,18 +46,42 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             return result;
         }
     };
-        
+    
+    // CONSTRUCTORS
         
     public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
     public PlaneFunction2D(BoundedFunction<R2,Double> function){
         this.function=function;
         setColor(Color.ORANGE);
     }
+    public PlaneFunction2D(FunctionTreeModel functionModel) {
+        initFunction(functionModel);
+    }
+    
+    public void initFunction(final FunctionTreeModel functionModel) {
+        Vector<String> vars = new Vector<String>();
+        vars.add("x"); vars.add("y");
+        functionModel.getRoot().setVariables(vars);
+        function = (BoundedFunction<R2, Double>) functionModel.getFunction();
+        functionModel.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                function = (BoundedFunction<R2, Double>) functionModel.getFunction(2);
+                fireStateChanged();
+            }
+        });
+    }
+    
+    // INTIALIZERS
+    public BoundedFunction<R2,Double> getFunction() { return function; }
+    public BoundedFunction<R2,R2> getGradientFunction() { return getGradient(function); }
+    
     
     // DRAW METHODS
         
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v){
+        if (function == null) { return; }
         try {
             g.setColor(getColor());
             Vector<R2> inputs;
@@ -120,5 +147,28 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     public String[] getStyleStrings() {return styleStrings;}
     @Override
     public String toString(){return "Plane Function";}
+    
+    
+    
+    // STATIC METHODS
+    
+    /** Generate gradient vector field. */
+    public static BoundedFunction<R2,R2> getGradient(final BoundedFunction<R2,Double> input) {
+        return new BoundedFunction<R2,R2>() {
+            public R2 minValue() { return new R2(-1,-1); }
+            public R2 maxValue() { return new R2(1,1); }
+            public R2 getValue(R2 x) throws FunctionValueException {
+                R2 xShift = new R2(x.x + .0001, x.y);
+                R2 yShift = new R2(x.x, x.y + .0001);
+                double value = input.getValue(x);
+                return new R2((input.getValue(xShift)-value)/.0001,(input.getValue(yShift)-value)/.0001);
+            }
+            public Vector<R2> getValue(Vector<R2> xx) throws FunctionValueException {
+                Vector<R2> result = new Vector<R2>();
+                for(R2 x : xx) { result.add(getValue(x)); }
+                return result;
+            }           
+        };
+    }
 }
 

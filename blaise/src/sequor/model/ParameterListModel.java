@@ -88,10 +88,7 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     
     
     // GUI INPUT/OUTPUTS
-    
-    /** Returns panel containing all the parameters. */
-    public JPanel getPanel(){return updatePanel(null);}
-    
+        
     /** Updates a panel to contain the settings here. */
     public JPanel updatePanel(final SettingsPanel jp){
         Settings s=new Settings();

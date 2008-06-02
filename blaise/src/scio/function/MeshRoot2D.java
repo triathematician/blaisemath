@@ -9,6 +9,7 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.Vector;
+import scio.coordinate.Euclidean;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
 
@@ -108,7 +109,8 @@ public class MeshRoot2D {
         } else {
             double t = (zValue-p1.getZ())/(p2.getZ()-p1.getZ());
             if (t < 0 || t > 1){ return null; }
-            return ((R3) p1.plus(p2.minus(p1).times(t))).projectXY();
+            Euclidean rTemp = (Euclidean) p1.plus(p2.minus(p1).times(t));
+            return new R2(rTemp.getElement(0),rTemp.getElement(1));
         }
     }
     

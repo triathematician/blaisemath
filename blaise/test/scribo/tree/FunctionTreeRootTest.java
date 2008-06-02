@@ -46,19 +46,19 @@ public class FunctionTreeRootTest extends TestCase {
     }
 
     /**
-     * Test of setUnknowns method, of class FunctionTreeRoot.
+     * Test of setParameters method, of class FunctionTreeRoot.
      */
     public void testSetUnknowns() {
         System.out.println("setUnknowns");
         TreeMap<String, Double> values = new TreeMap<String,Double>();
         values.put("t",5.0);
-        test1.setUnknowns(values);
+        test1.setParameters(values);
         assertEquals("[x]",test1.variables.toString());
-        test2.setUnknowns(values);
+        test2.setParameters(values);
         assertEquals("[x, y]",test2.variables.toString());
-        test3.setUnknowns(values);
+        test3.setParameters(values);
         assertEquals("[x, y, z]",test3.variables.toString());
-        test4.setUnknowns(values);
+        test4.setParameters(values);
         assertEquals("[y]",test4.variables.toString());
     }
 
@@ -122,7 +122,7 @@ public class FunctionTreeRootTest extends TestCase {
         }
         TreeMap<String, Double> values = new TreeMap<String,Double>();
         values.put("t",-5.0);
-        test4.setUnknowns(values);
+        test4.setParameters(values);
         assertEquals(-5.9899924966004454,test4.getValue(1.0));
         
         System.out.println("getValue(String,double)");
@@ -142,7 +142,7 @@ public class FunctionTreeRootTest extends TestCase {
     }
 
     /**
-     * Test of getDoubleFunction method, of class FunctionTreeRoot.
+     * Test of getFunction method, of class FunctionTreeRoot.
      */
     public void testGetDoubleFunction() {
         System.out.println("getDoubleFunction");
@@ -154,10 +154,10 @@ public class FunctionTreeRootTest extends TestCase {
         assertEquals(2, test4.variables.size());
 
         System.out.println("...functions...");
-        Function fun1 = test1.getDoubleFunction();
-        Function fun2 = test2.getDoubleFunction();
-        Function fun3 = test3.getDoubleFunction();
-        Function fun4 = test4.getDoubleFunction();
+        Function fun1 = test1.getFunction();
+        Function fun2 = test2.getFunction();
+        Function fun3 = test3.getFunction();
+        Function fun4 = test4.getFunction();
 
         R1 x = new R1(0.0);
         Double[] xxyy = {1.5, 2.0};
@@ -171,7 +171,7 @@ public class FunctionTreeRootTest extends TestCase {
             assertEquals(-0.9899924966004454, fun3.getValue(xyz));
             TreeMap<String, Double> values = new TreeMap<String,Double>();
             values.put("t",-5.0);
-            test4.setUnknowns(values);
+            test4.setParameters(values);
             assertEquals(-5.9899924966004454, fun4.getValue(new R1(1.0)));
         } catch (FunctionValueException ex) {
             assertEquals(true,false);

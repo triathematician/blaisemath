@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
-import scio.coordinate.I2;
+import scio.coordinate.Z2;
 import sequor.model.IntegerRangeModel;
 import specto.PlotPanel;
 import specto.Visometry;
@@ -21,7 +21,7 @@ import specto.Visometry;
  * 
  * @author Elisha Peterson
  */
-public class Grid2 extends Visometry<I2> {
+public class Grid2 extends Visometry<Z2> {
     
     protected IntegerRangeModel xBounds;
     protected IntegerRangeModel yBounds;
@@ -52,7 +52,7 @@ public class Grid2 extends Visometry<I2> {
     // CONVERSION FUNCTIONS
 
     @Override
-    public Point2D.Double toWindow(I2 cp) {
+    public Point2D.Double toWindow(Z2 cp) {
         Point2D.Double result = new Point2D.Double(
                 at.getScaleX()*(cp.x-xBounds.getMinimum())+at.getTranslateX(),
                 at.getScaleY()*(cp.y-yBounds.getMinimum())+at.getTranslateY());
@@ -61,8 +61,8 @@ public class Grid2 extends Visometry<I2> {
         return result;
     }
     @Override
-    public I2 toGeometry(Point wp) {
-        I2 result = new I2(
+    public Z2 toGeometry(Point wp) {
+        Z2 result = new Z2(
                 (int)Math.round((wp.x-at.getTranslateX())/at.getScaleX()),
                 (int)Math.round((wp.y-at.getTranslateY())/at.getScaleY()));
         //System.out.println("input: "+wp+" and output: "+result);
@@ -70,7 +70,7 @@ public class Grid2 extends Visometry<I2> {
     }
 
     @Override
-    public void setBounds(I2 minPoint, I2 maxPoint) {
+    public void setBounds(Z2 minPoint, Z2 maxPoint) {
         xBounds.setRangeProperties(minPoint.x,minPoint.x,maxPoint.x);
         yBounds.setRangeProperties(minPoint.y,minPoint.y,maxPoint.y);
     }
