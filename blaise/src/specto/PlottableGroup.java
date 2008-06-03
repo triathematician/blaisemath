@@ -30,7 +30,12 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     public PlottableGroup() {plottables=new Vector<Plottable>();}
     
-    public void clear(){plottables.clear();}    
+    public void clear(){
+        for(Plottable p : plottables) {
+            p.removeChangeListener(this);
+        }
+        plottables.clear();
+    }    
     public void add(Plottable<V> p){
         plottables.add(p);
         p.addChangeListener(this);

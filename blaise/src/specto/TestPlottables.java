@@ -26,6 +26,7 @@ import specto.dynamicplottable.RandomFlame2D;
 import specto.dynamicplottable.RandomPoint2D;
 import specto.dynamicplottable.RandomWalk2D;
 import specto.dynamicplottable.Triangle2D;
+import specto.dynamicplottable.Voronoi2D;
 import specto.gridplottable.StandardGrid2D;
 import specto.plottable.Function2D;
 import specto.plottable.HiddenText2D;
@@ -109,6 +110,7 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D6.add(sfc1);
         FractalShape2D.Sierpinski fsp1=new FractalShape2D.Sierpinski(new R2(-4,-4),new R2(-3,-4+Math.sqrt(3)),new R2(-2,-4));
         plot2D6.add(fsp1);
+        plot2D6.add(new Voronoi2D());
         SliderBox nab5=new SliderBox();
         nab5.add(new NumberSlider(210,10,fe1.getIterModel()));
         nab5.add(new NumberSlider(210,10,sfc1.getIterModel()));
@@ -226,11 +228,11 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGap(0, 666, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Basic", plot2D1);
@@ -239,11 +241,11 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D3.setLayout(plot2D3Layout);
         plot2D3Layout.setHorizontalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGap(0, 666, Short.MAX_VALUE)
         );
         plot2D3Layout.setVerticalGroup(
             plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Field", plot2D3);
@@ -252,11 +254,11 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D4.setLayout(plot2D4Layout);
         plot2D4Layout.setHorizontalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGap(0, 666, Short.MAX_VALUE)
         );
         plot2D4Layout.setVerticalGroup(
             plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Surface", plot2D4);
@@ -267,11 +269,11 @@ public class TestPlottables extends javax.swing.JFrame {
         polarPlot2D1.setLayout(polarPlot2D1Layout);
         polarPlot2D1Layout.setHorizontalGroup(
             polarPlot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGap(0, 666, Short.MAX_VALUE)
         );
         polarPlot2D1Layout.setVerticalGroup(
             polarPlot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Polar", polarPlot2D1);
@@ -280,11 +282,11 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D2.setLayout(plot2D2Layout);
         plot2D2Layout.setHorizontalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGap(0, 666, Short.MAX_VALUE)
         );
         plot2D2Layout.setVerticalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Random", plot2D2);
@@ -436,11 +438,11 @@ public class TestPlottables extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
         );
 
         pack();

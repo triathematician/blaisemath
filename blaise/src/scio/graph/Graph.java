@@ -5,6 +5,7 @@
 
 package scio.graph;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -31,6 +32,8 @@ public class Graph<V> extends HashSet<V>{
         edges=new HashSet<Edge<V>>();
     }
     
+    public Collection<Edge<V>> getEdges() { return edges; }
+    
     public class Edge<V>{
         public Edge(V v1,V v2){this.v1=v1;this.v2=v2;}
         V v1;
@@ -43,5 +46,7 @@ public class Graph<V> extends HashSet<V>{
             }
             return false;
         }
+        public V getSource() { return v1; }
+        public V getSink() { return v2; }
     }
 }

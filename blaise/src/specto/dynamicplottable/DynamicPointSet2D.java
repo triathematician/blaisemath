@@ -45,6 +45,12 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
         if(closed){path.lineTo(points.firstElement().x, points.firstElement().y);}
         return path;
     }
+    
+    /** Sets path to the specified list of points. */
+    public void setPath(Vector<R2> path) {
+        clear();
+        for (R2 p : path) { add(p); }
+    }
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {

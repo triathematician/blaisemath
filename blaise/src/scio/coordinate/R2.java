@@ -5,7 +5,6 @@
 
 package scio.coordinate;
 
-import java.awt.geom.Point2D;
 import java.text.NumberFormat;
 
 /**
@@ -13,12 +12,13 @@ import java.text.NumberFormat;
  * 
  * @author Elisha Peterson
  */
-public class R2 extends Point2D.Double implements EuclideanElement {
-    public static final R2 Origin=new R2(0,0);
+public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement {
+    public static final R2 ORIGIN = new R2(0,0);
+    public static final R2 INFINITY = new R2(java.lang.Double.POSITIVE_INFINITY,java.lang.Double.POSITIVE_INFINITY);
     
     public R2(){super(0,0);}
     public R2(double x,double y){super(x,y);}
-    public R2(Point2D.Double p){x=p.x;y=p.y;}
+    public R2(java.awt.geom.Point2D.Double p){x=p.x;y=p.y;}
 
     // OPERATIONS WHICH CHANGE THE POINT
     
@@ -46,9 +46,29 @@ public class R2 extends Point2D.Double implements EuclideanElement {
     public R2 multipliedBy(double c){return new R2(c*x,c*y);}
     
     // STATIC METHODS
-    
+
+    /** Returns angle formed by given vector. */
     public static double angle(double x,double y){return (x<0?Math.PI:0)+Math.atan(y/x); }
-    
+
+    /** Returns center of circle passing through three points. */
+    public static R2 threePointCircleCenter(R2 p1, R2 p2, R2 p3) {
+        java.lang.Double m12 = (p2.y-p1.y)/(p2.x-p1.x);
+        java.lang.Double m23 = (p3.y-p2.y)/(p3.x-p2.x);
+        
+        // points are colinear
+        if (m12.equals(m23) || m12.equals(-m23)) {
+            return R2.INFINITY;
+        }        
+        
+        // points are not colinear
+        java.lang.Double xCenter = ( m12 * m23 * (p1.y - p3.y) + m23 * (p1.x + p2.x) - m12 * (p2.x + p3.x) ) / (2 * (m23 - m12));
+        java.lang.Double yCenter = (xCenter - (p1.x + p2.x) / 2) / m12 + (p1.y + p2.y) / 2;
+        
+        return new R2(xCenter, yCenter);
+        
+        // TODO account for situation when lines are verticle or m12==0
+    }
+
     /**
      * Returns point along the line between point1 and point2 which is closest
      * to itself, aka. the point which makes a perpendicular with the line.
@@ -119,7 +139,7 @@ public class R2 extends Point2D.Double implements EuclideanElement {
         throw new ArrayIndexOutOfBoundsException();
     }
     public double distanceTo(Coordinate p2) {
-        return ((Point2D.Double)p2).distance(this);
+        return ((java.awt.geom.Point2D.Double)p2).distance(this);
     }
     public VectorSpaceElement zero() { return new R2(); }
     public VectorSpaceElement plus(VectorSpaceElement p2) {
