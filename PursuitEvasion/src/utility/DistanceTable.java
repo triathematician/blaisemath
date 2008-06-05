@@ -72,6 +72,8 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
     
     /** Returns current time. */
     public double getTime() { return time; }
+
+    
     
     
     // METHODS    
@@ -174,6 +176,11 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
     public AgentPair minVisible(Agent a,Collection<Agent> tb){
         AgentPair result=new AgentPair();
         for(Agent b:tb){if(a.sees(b)){result.replaceIfLessBy(a,b,get(a,b));}}
+        return result;
+    }
+     public AgentPair min(Agent a,Collection<Agent> tb){
+        AgentPair result=new AgentPair();
+        for(Agent b:tb){result.replaceIfLessBy(a,b,get(a,b));}
         return result;
     }
     

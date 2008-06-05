@@ -127,7 +127,7 @@ public class Goal extends TaskGenerator {
 
     @Override
     public void generate(Vector<Agent> team, DistanceTable table, double priority) {
-        tasker.generate(team, table, priority);
+        tasker.generate(team, table, priority*getWeight());
     }
     
     

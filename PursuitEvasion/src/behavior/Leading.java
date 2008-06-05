@@ -2,7 +2,6 @@
  * Leading.java 
  * Created on Aug 28, 2007, 11:21:25 AM
  */
-
 package behavior;
 
 import simulation.Agent;
@@ -14,7 +13,8 @@ import scio.coordinate.V2;
  * 
  * Moves towards a position in front of the target which depends upon the leadFactor.
  */
-public class Leading extends behavior.Behavior {    
+public class Leading extends behavior.Behavior {
+
     /**
      * Computes desired direction of travel
      * @param self      the agent exhibiting this myBehavior
@@ -22,9 +22,18 @@ public class Leading extends behavior.Behavior {
      * @param t         the current time stamp
      * @return          the direction of travel corresponding to this myBehavior
      */
-    public R2 direction(Agent self,V2 target,double t){
-        if(target==null){return new R2();}
-        if(self.loc.v.magnitude()==0||target.v.magnitude()==0){return target.minus(self.loc).normalized();}
-        return (target.plus(target.v.multipliedBy(self.getLeadFactor()*self.loc.distance(target)/self.loc.v.magnitude()))).minus(self.loc).normalized();
+    public R2 direction(Agent self, V2 target, double t) {
+        if (target == null) {
+            return new R2();
+        }
+        if (target.v.magnitude() == 0) {
+            if (self.loc.distance(target) < 10) {
+                return R2.ORIGIN;
+            }
+            return target.minus(self.loc).normalized();
+        } else {
+            return (target.plus(target.v.multipliedBy(self.getLeadFactor() * self.loc.distance(target) / self.getTopSpeed()))).minus(self.loc).normalized();
+        }
+
     }
 }

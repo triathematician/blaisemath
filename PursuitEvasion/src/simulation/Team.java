@@ -156,10 +156,10 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         //if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
     /** Adds a capture condition. */
-    public void addCaptureCondition(Vector<Team> teams, Team target, double captureDistance){
-        CaptureCondition cc = new CaptureCondition(teams, this, target, captureDistance);
+    public void addCaptureCondition(Vector<Team> teams, Team target, double captureDistance, int removal){
+        CaptureCondition cc = new CaptureCondition(teams, this, target, captureDistance, removal);
         capture.add(cc);
-        tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
+                tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
     }
     /** Adds a valuation metric. */
     public void addValuation(Valuation val){
@@ -316,9 +316,9 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         for(Agent a:activeAgents){
             a.tasks.clear();
         }
-        control.generateTasks(this,table);
+        control.generateTasks(this,table, 1.0);
         for(Agent a:activeAgents){
-            a.generateTasks(this,table);
+            a.generateTasks(this,table, 1.0);
         }
     }
     /** Generates directions for each team member based on their task and myBehavior.

@@ -172,9 +172,9 @@ public class Agent {
         //System.out.println(this+" assigned "+t);
     }
 
-    public void generateTasks(Team team,DistanceTable table) {
+    public void generateTasks(Team team,DistanceTable table, double priority) {
         for(TaskGenerator tag:taskGenerators){
-            tag.generate(team, table, 1.0);
+            tag.generate(team, table, priority);
         }
     }
     
