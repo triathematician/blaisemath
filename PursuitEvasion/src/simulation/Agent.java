@@ -266,7 +266,7 @@ public class Agent {
         try {
             return new R2(ags.pm.getValue(t));
         } catch (FunctionValueException ex) {
-            return R2.Origin;
+            return R2.ORIGIN;
         }
     }
     public boolean isActive(){return active;}

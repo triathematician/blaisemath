@@ -405,7 +405,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
         try {
             return new R2(tes.pm.getValue(t));
         } catch (FunctionValueException ex) {
-            return R2.Origin;
+            return R2.ORIGIN;
         }
 }
     public Double getValue(){return value;}
