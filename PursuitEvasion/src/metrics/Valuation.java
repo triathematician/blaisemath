@@ -94,6 +94,9 @@ public class Valuation implements Function<DistanceTable,Double> {
                     return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
                     return dt.getTime();
+                case EVERY_CAPTURE:
+                    return (double)((vs.owner.size()> vs.target.size())?
+                        (vs.target.size()-vs.owner.size()+vs.owner.getActiveAgents().size()):(vs.owner.getActiveAgents().size()));
                 case TIME_SINCE_CAP:
                 default:
                     return Double.NaN;
@@ -163,11 +166,12 @@ public class Valuation implements Function<DistanceTable,Double> {
     public static final int NUM_DIFF = 6;
     public static final int TIME_TOTAL = 7;
     public static final int TIME_SINCE_CAP = 8;
+    public static final int EVERY_CAPTURE = 9;
     
     public static final String[] typeStrings = {
         "Min. distance",        "Max. distance",        "Avg. distance",
         "# Active Agents",      "# Active Opponents",   "# Opponents captured",        "Player # advantage",   
-        "Simulation time",      "Time since capture"
+        "Simulation time",      "Time since capture",   "Everyone Captures/Captured"
     };    
     
     
@@ -196,7 +200,7 @@ public class Valuation implements Function<DistanceTable,Double> {
          */
         private DoubleRangeModel threshold = new DoubleRangeModel(1,0,1000,.1);
         /** Parameter describing the type of valuation. */
-        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,7);
+        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,9);
         
         public ValuationSettings(Vector<Team> teams, Team owner, Team target, int type, double threshold){
             setName("Valuation");
