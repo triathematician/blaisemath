@@ -28,7 +28,8 @@ import sequor.model.StringRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
-import specto.dynamicplottable.InitialPointSet2D;
+import specto.euclidean2.InitialPointSet2D;
+import specto.style.PointStyle;
 
 /**
  *
@@ -299,7 +300,7 @@ public class Simulation implements ChangeListener {
                 new PointRangeModel(settings.goalPosition,
                 new DoubleRangeModel(0,0,0,0)));
         result.setColor(Color.DARK_GRAY);
-        result.style.setValue(InitialPointSet2D.CIRCLE);
+        result.style.setValue(PointStyle.RING);
         settings.goalPosition.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 Vector<R2> path=new Vector<R2>();

@@ -56,7 +56,7 @@ public class clpapplet extends javax.swing.JApplet {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
 
         simulation1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,7 +222,7 @@ public class clpapplet extends javax.swing.JApplet {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JToolBar jToolBar1;
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     private peg1d.Simulation simulation1;
     // End of variables declaration//GEN-END:variables
     

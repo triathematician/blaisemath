@@ -6,15 +6,16 @@
 package peg1d;
 
 import java.awt.Color;
-import specto.dynamicplottable.Point2D;
+import specto.euclidean2.Point2D;
 import java.text.DecimalFormat;
 import java.util.Vector;
 import javax.swing.JTextArea;
 import scio.coordinate.R2;
 import specto.PlottableGroup;
-import specto.dynamicplottable.InitialPointSet2D;
-import specto.plotpanel.Plot2D;
-import specto.visometry.Euclidean2;
+import specto.euclidean2.InitialPointSet2D;
+import specto.euclidean2.Plot2D;
+import specto.euclidean2.Euclidean2;
+import specto.style.PointStyle;
 
 /**
  * Logs data from a simulation's run.
@@ -98,7 +99,7 @@ public class DataLog {
     public void logCapture(int pursuer,int evader,double pos,double time){
         significantEvents.add(new SignificantEvent(pursuer,evader,pos,time,"Capture"));            
         Point2D where=new Point2D(new R2(pos,time),Color.CYAN,false);
-        where.style.setValue(Point2D.CONCENTRIC);
+        where.style.setValue(PointStyle.CONCENTRIC);
         if(captureGroup!=null){captureGroup.add(where);}
     }
     
