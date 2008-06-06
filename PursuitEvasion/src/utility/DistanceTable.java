@@ -105,6 +105,11 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
     
     // BASIC QUERY METHODS
     
+    /** Returns distance between agent i and evader j
+     * @param row ith agent 
+     * @param col jth evader
+     * @return distance
+     */
     @Override
     public Double get(Agent row, Agent col) {
         try {

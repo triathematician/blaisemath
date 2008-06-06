@@ -31,7 +31,7 @@ public class SimulationFactory {
     /** Specifies simple game with three teams, pursuers, pursuers/evaders, and evaders */
     public static final int SIMPLE_PPE = 2;
     /** Specifies game with two teams, pursuers, and evaders, with evaders seeking a goal */
-    public static final int GOAL_PE = 3;
+    public static final int SAHARA_PE = 3;
     /** Lots of teams!! */
     public static final int LOTS_OF_FUN = 4;
     /** For looking at lead factors. */
@@ -64,7 +64,7 @@ public class SimulationFactory {
                 teams = threeTeamSimulation();
                 primary = 1;
                 break;
-            case GOAL_PE:                
+            case SAHARA_PE:                
                 name = "Sahara";
                 teams = twoPlusGoalSimulation();
                 primary = 0;
@@ -154,7 +154,7 @@ public class SimulationFactory {
         Vector<Team> teams = new Vector<Team>();
         //                      #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team lionTeam = new Team(3, Team.START_RANDOM, Behavior.LEADING, Color.ORANGE);
-        lionTeam.setTopSpeed(7.0);
+        lionTeam.setTopSpeed(5.5);
         Team wildebeastTeam = new Team(4, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
         Team wateringHole = new Team(1, Team.START_RANDOM, Behavior.STATIONARY, Color.BLUE);
         lionTeam.addAutoGoal(1.0, wildebeastTeam, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 1.0);
@@ -167,7 +167,7 @@ public class SimulationFactory {
         teams.add(lionTeam);
         teams.add(wildebeastTeam);
         teams.add(wateringHole);
-        lionTeam.addCaptureCondition(teams, wildebeastTeam, 5.0, CaptureCondition.REMOVEBOTH);
+        lionTeam.addCaptureCondition(teams, wildebeastTeam, 1.0, CaptureCondition.REMOVEBOTH);
         wildebeastTeam.addCaptureCondition(teams, wateringHole, 1.0, CaptureCondition.REMOVEAGENT);
         wildebeastTeam.setVictoryCondition(new VictoryCondition(teams, wildebeastTeam, wateringHole,
                 Valuation.NUM_TEAM, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));

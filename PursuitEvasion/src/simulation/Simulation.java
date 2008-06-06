@@ -58,12 +58,12 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     // CONSTRUCTORS
     
     /** Standard constructor */
-    public Simulation(){this(SimulationFactory.SIMPLE_PE);}
+    public Simulation(){this(SimulationFactory.SAHARA_PE);}
     /** Constructs given a type of game
      * @param gameType the type of game to simulate */
     public Simulation(int gameType){
-        ss=new SimSettings();
-        setGameType(gameType);
+        ss=new SimSettings(gameType);
+        
         SimulationFactory.setSimulation(this,gameType);
         dist=null;
         batchProcessing=false;
@@ -337,7 +337,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         /** Time taken by a single step [in seconds] */
         private DoubleRangeModel stepTime=new DoubleRangeModel(.1,0,15,.01);
         /** Number of steps to run the simulation before quitting. */
-        private IntegerRangeModel numSteps=new IntegerRangeModel(100,0,10000);
+        private IntegerRangeModel numSteps=new IntegerRangeModel(350,0,10000);
         /** If stop is based on reaching a goal, this is the max # of steps to allow. */
         private IntegerRangeModel maxSteps=new IntegerRangeModel(1000,0,10000000);
         
@@ -347,6 +347,17 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE,"Change the time taken for each iteration of the algorithm"));
             add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER,"Change the number of steps in the simulation"));
             gameType.addChangeListener(this);
+            //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
+            //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
+        }
+
+        private SimSettings(int gameType) {
+         super();
+            add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE,"Change the boundaries of the random positions (nonfunctional)"));
+            add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE,"Change the time taken for each iteration of the algorithm"));
+            add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER,"Change the number of steps in the simulation"));
+            this.gameType.setValue(gameType);
+            this.gameType.addChangeListener(this);
             //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
             //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
         }
