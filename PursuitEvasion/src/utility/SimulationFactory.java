@@ -93,7 +93,7 @@ public class SimulationFactory {
         Vector<Team> teams = new Vector<Team>();
         //                      NAME        #    STARTING POS        BEHAVIOR ALGORITHM          COLOR
         Team bugTeam = new Team("Bugs", 4, Team.START_RANDOM, Behavior.LEADING, Color.DARK_GRAY);
-        Team lightTeam = new Team("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, ColorStyle.DARK_GREEN);        
+        Team lightTeam = new Team("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, VisualStyle.DARK_GREEN);        
         teams.add(bugTeam);
         teams.add(lightTeam);
         bugTeam.setVictoryCondition(new VictoryCondition(teams, bugTeam, lightTeam,
