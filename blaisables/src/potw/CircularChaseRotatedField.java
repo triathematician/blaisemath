@@ -67,9 +67,9 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        vectorField2D1 = new specto.plottable.VectorField2D();
-        parametric2D1 = new specto.plottable.Parametric2D();
-        plot2D1 = new specto.plotpanel.Plot2D();
+        vectorField2D1 = new specto.euclidean2.VectorField2D();
+        parametric2D1 = new specto.euclidean2.Parametric2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
@@ -96,9 +96,9 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private specto.plottable.Parametric2D parametric2D1;
-    private specto.plotpanel.Plot2D plot2D1;
-    private specto.plottable.VectorField2D vectorField2D1;
+    private specto.euclidean2.Parametric2D parametric2D1;
+    private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean2.VectorField2D vectorField2D1;
     // End of variables declaration//GEN-END:variables
     
 }

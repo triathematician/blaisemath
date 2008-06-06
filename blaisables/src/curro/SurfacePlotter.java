@@ -7,7 +7,7 @@
 package curro;
 
 import sequor.model.FunctionTreeModel;
-import specto.plottable.PlaneFunction2D;
+import specto.euclidean2.PlaneFunction2D;
 
 /**
  *
@@ -32,7 +32,7 @@ public class SurfacePlotter extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
         functionInputBar1 = new sequor.component.FunctionPanel(1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -82,7 +82,7 @@ public class SurfacePlotter extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sequor.component.FunctionPanel functionInputBar1;
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables
     
 }

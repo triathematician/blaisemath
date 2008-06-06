@@ -13,7 +13,7 @@ import sequor.Settings;
 import sequor.model.FunctionTreeModel;
 import sequor.model.ParameterListModel;
 import sequor.SettingsProperty;
-import specto.plottable.Function2D;
+import specto.euclidean2.Function2D;
 
 /**
  *
@@ -71,7 +71,7 @@ public class ParameterPlotter extends javax.swing.JFrame {
 
         settings1 = new sequor.Settings();
         settings2 = new sequor.Settings();
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
         settingsPanel2 = new sequor.component.SettingsPanel(settings2);
         settingsBar1 = new sequor.component.SettingsBar(settings1);
 
@@ -105,7 +105,7 @@ public class ParameterPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     private sequor.Settings settings1;
     private sequor.Settings settings2;
     private sequor.component.SettingsBar settingsBar1;

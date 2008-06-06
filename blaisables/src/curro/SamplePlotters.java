@@ -6,13 +6,13 @@
 
 package curro;
 
-import specto.decoration.DESolution2D;
-import specto.dynamicplottable.Point2D;
-import specto.plottable.Function2D;
-import specto.plottable.Parametric2D;
-import specto.plottable.PlaneFunction2D;
-import specto.plottable.VectorField2D;
-import specto.visometry.Euclidean2;
+import specto.euclidean2.DESolution2D;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.Function2D;
+import specto.euclidean2.Parametric2D;
+import specto.euclidean2.PlaneFunction2D;
+import specto.euclidean2.VectorField2D;
+import specto.euclidean2.Euclidean2;
 
 /**
  *
@@ -45,10 +45,10 @@ public class SamplePlotters extends javax.swing.JFrame {
         parametricInput = new sequor.component.FunctionPanel(2);
         jSplitPane1 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        basicPlot = new specto.plotpanel.Plot2D();
-        parametricPlot = new specto.plotpanel.Plot2D();
-        vectorFieldPlot = new specto.plotpanel.Plot2D();
-        surfacePlot = new specto.plotpanel.Plot2D();
+        basicPlot = new specto.euclidean2.Plot2D();
+        parametricPlot = new specto.euclidean2.Plot2D();
+        vectorFieldPlot = new specto.euclidean2.Plot2D();
+        surfacePlot = new specto.euclidean2.Plot2D();
         basicInput = new sequor.component.FunctionPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -224,7 +224,7 @@ public class SamplePlotters extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private sequor.component.FunctionPanel basicInput;
-    private specto.plotpanel.Plot2D basicPlot;
+    private specto.euclidean2.Plot2D basicPlot;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -238,14 +238,14 @@ public class SamplePlotters extends javax.swing.JFrame {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private sequor.component.FunctionPanel parametricInput;
-    private specto.plotpanel.Plot2D parametricPlot;
+    private specto.euclidean2.Plot2D parametricPlot;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private sequor.component.FunctionPanel surfaceInput;
-    private specto.plotpanel.Plot2D surfacePlot;
+    private specto.euclidean2.Plot2D surfacePlot;
     private sequor.component.FunctionPanel vectorFieldInput;
-    private specto.plotpanel.Plot2D vectorFieldPlot;
+    private specto.euclidean2.Plot2D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     
 }

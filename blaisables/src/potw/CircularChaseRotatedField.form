@@ -4,7 +4,7 @@
   <NonVisualComponents>
     <Component class="specto.plottable.VectorField2D" name="vectorField2D1">
     </Component>
-    <Component class="specto.plottable.Parametric2D" name="parametric2D1">
+    <Component class="specto.euclidean2.Parametric2D" name="parametric2D1">
     </Component>
   </NonVisualComponents>
   <AuxValues>

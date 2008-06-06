@@ -7,8 +7,8 @@
 package curro;
 
 import sequor.model.FunctionTreeModel;
-import specto.plottable.Function2D;
-import specto.plottable.PlaneFunction2D;
+import specto.euclidean2.Function2D;
+import specto.euclidean2.PlaneFunction2D;
 
 /**
  *
@@ -34,7 +34,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
         jLabel1 = new javax.swing.JLabel();
         functionTextComboBox1 = new sequor.editor.FunctionTextComboBox(ftm);
 
@@ -94,7 +94,7 @@ public class FunctionPlotter extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sequor.editor.FunctionTextComboBox functionTextComboBox1;
     private javax.swing.JLabel jLabel1;
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables
     
 }
