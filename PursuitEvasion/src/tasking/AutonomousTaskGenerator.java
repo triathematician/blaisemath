@@ -5,6 +5,7 @@
 
 package tasking;
 
+import java.util.Collection;
 import java.util.Vector;
 import scio.coordinate.V2;
 import simulation.Agent;
@@ -22,7 +23,7 @@ public abstract class AutonomousTaskGenerator extends TaskGenerator {
 
     public abstract V2 generate(Agent agent, DistanceTable table);
     
-    public void generate(Vector<Agent> team, DistanceTable table, double priority) {
+    public void generate(Collection<Agent> team, DistanceTable table, double priority) {
         for(Agent a:team){
             a.assign(new Task(this,generate(a,table),goalType,priority));
         }

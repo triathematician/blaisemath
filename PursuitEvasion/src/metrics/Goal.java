@@ -10,6 +10,7 @@ import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.util.Collection;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 import scio.function.Function;
@@ -124,7 +125,7 @@ public class Goal extends TaskGenerator {
 //    }  
 
     @Override
-    public void generate(Vector<Agent> team, DistanceTable table, double priority) {
+    public void generate(Collection<Agent> team, DistanceTable table, double priority) {
         tasker.generate(team, table, priority*getWeight());
     }
     
@@ -187,8 +188,7 @@ public class Goal extends TaskGenerator {
         private DoubleRangeModel threshhold=new DoubleRangeModel(1,0,1000,.1);
 
         /** The team's tasking algorithm default */
-        private StringRangeModel tasking=new StringRangeModel(
-                TaskGenerator.TASKING_STRINGS, TaskGenerator.AUTO_CLOSEST, TaskGenerator.FIRST, TaskGenerator.LAST);
+        private StringRangeModel tasking=new StringRangeModel(TaskGenerator.TASKING_STRINGS);
 
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable,Double> value;
