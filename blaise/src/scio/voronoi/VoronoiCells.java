@@ -27,21 +27,20 @@ public class VoronoiCells {
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
                 for (int k = j+1; k < points.size(); k++) {
-                    equis.add(new Equidistant(points, i, j, k));
+                    equis.add(new Equidistant(points.get(i), points.get(j), points.get(k)));
                 }
             }
         }
-        System.out.println("equis: " + equis);
+        //System.out.println("equis: " + equis);
         
         // Step 2: toss unnecessary points        
         HashSet<Equidistant> remove = new HashSet<Equidistant>();
         for (Equidistant ep : equis) {
-            for (int i = 0; i < points.size(); i++) { 
-                if (ep.closerTo(points, i)) { remove.add(ep); }
+            for (R2 pt : points) { 
+                if (ep.closerTo(pt)) { remove.add(ep); }
             }
         }
         equis.removeAll(remove);
-        System.out.println("equis: " + equis);
         
         // Step 3: construct graph with connections supplied by equidistant points
         connections = new Graph<Equidistant>();
@@ -52,6 +51,7 @@ public class VoronoiCells {
                 }
             }
         }
+        //System.out.println("equis: " + equis);
         
         // Step 4: add rays
     }
@@ -64,31 +64,30 @@ public class VoronoiCells {
     
     /** Inner class stores the point which is equidistant from three other specified points. */
     public static class Equidistant {
-        int i,j,k;
+        Vector<R2> points;
         public R2 point;
         double distance;
 
-        public Equidistant(Vector<R2> points, int i, int j, int k) {
-            this.i = i;
-            this.j = j;
-            this.k = k;
-            this.point = R2.threePointCircleCenter(points.get(i), points.get(j), points.get(k));
-            distance = points.get(i).distance(point);
+        public Equidistant(R2 p1, R2 p2, R2 p3) {
+            points = new Vector<R2>();
+            points.add(p1);
+            points.add(p2);
+            points.add(p3);
+            this.point = R2.threePointCircleCenter(p1, p2, p3);
+            distance = p1.distance(point);
         }
         
         /** Returns true if the specified point is within distance of this equidistant point. */
-        public boolean closerTo(Vector<R2> points, int l) {
-            if (l==i || l==j || l==k) { return false; }
-            return points.get(l).distanceTo(point) < distance;
+        public boolean closerTo(R2 pt) {
+            if (points.contains(pt)) { return false; }
+            return pt.distanceTo(point) < distance;
         }
         
         /** Returns true if this point is adjacent to another. */
         public boolean adjacent(Equidistant e2) {
-            if (e2.i != i) {
-                return e2.j == j && e2.k == k;
-            } else {
-                return e2.j == j || e2.k == k;
-            }
+            return (points.contains(e2.points.get(0))) ?
+                ( points.contains(e2.points.get(1)) || points.contains(e2.points.get(2)) ) :
+                ( points.contains(e2.points.get(1)) && points.contains(e2.points.get(2)) ) ;
         }
         
         /** Returns string representation of the point. */

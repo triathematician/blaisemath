@@ -169,6 +169,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     // COMPONENT HANDLING
         
    public void addToContextMenu(Vector<JMenuItem> mis){
+       if(mis==null){return;}
        getComponentPopupMenu().addSeparator();
        for(JMenuItem mi:mis){
             if(mi==null){getComponentPopupMenu().addSeparator();}

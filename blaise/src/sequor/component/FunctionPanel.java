@@ -12,8 +12,8 @@ import javax.swing.JPopupMenu;
 import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.FunctionTreeModel;
-import specto.plotpanel.Plot2D;
-import specto.plottable.Function2D;
+import specto.euclidean2.Plot2D;
+import specto.euclidean2.Function2D;
 
 /**
  * Contains several functions and function models which can be controlled at once. Displays via a SettingsPanel.

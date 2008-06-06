@@ -21,53 +21,86 @@ import specto.PlottableGroup;
 import specto.Visometry;
 
 /**
- * Represents a group of plottables of type V2 which are placed on a visometry of type V1.
- * The transformers "transformer" method converts from its natural coordinate type (V2) to the alternate coordinate type (V1).
+ * Represents a group of plottables of type V1 which are placed on a visometry of type V2.
+ * This is accomplished by storing a V1 visometry within this class. It is expected that this method
+ * may override the standard visometry in order to specify a subset of a window, etc. rather than the
+ * entire window. Thus, the way in which the transformation is computed within V1 may be quite different.
+ * <br><br>
+ * To make this class work, the user should therefore override the visometry V1 with specified instructions
+ * on how to handle coordinates to/from the window.
  * 
  * @author Elisha Peterson
  */
-public class TransformedGroup<V1 extends Visometry,V2 extends Visometry> extends PlottableGroup<V1> implements Animatable<V1>,ChangeListener {
+public class TransformedGroup <V1 extends Visometry, V2 extends Visometry> extends PlottableGroup<V2> implements Animatable<V2>, ChangeListener {
+    
     /** The actual elements. */
-    protected PlottableGroup<V2> tPlottables;
+    protected PlottableGroup<V1> transforming;
+    /** The visometry used to plot the elements. */
+    V1 drawVisometry;
 
-    public TransformedGroup() {tPlottables=new PlottableGroup<V2>();}
+    
+    // CONSTRUCTORS
+    
+    public TransformedGroup(V1 drawVisometry) {
+        transforming = new PlottableGroup<V1>();
+        this.drawVisometry = drawVisometry;
+    }
+    
+    
+    // METHODS FOR HANDLING PLOTTABLE ELEMENTS
     
     @Override
-    public void clear(){tPlottables.clear();}    
+    public void clear(){
+        super.clear();
+        transforming.clear();
+    }   
+    
+    public void addTransforming(Plottable<V1> p){
+        transforming.add(p);
+        p.addChangeListener(this);
+    }
+    public void removeTransforming(Plottable<V1> p){
+        p.removeChangeListener(this);
+        transforming.remove(p);
+    }
+    
+    
+    // BEANS
+    
+    public PlottableGroup<V1> getTransformingElements(){return transforming;}
     @Override
-    public void add(Plottable<V1> p){}
-    //public void add(Plottable<V2> p){tPlottables.add(p);}
+    public void setColor(Color newValue) {transforming.setColor(newValue);}
+    
+    
+    // COMPUTATIONS
+    
     @Override
-    public void remove(Plottable<V1> p){}
-    //public void remove(Plottable<V2> p){tPlottables.remove(p);}
-    public PlottableGroup<V2> getTransformableElements(){return tPlottables;}
-    @Override
-    public void setColor(Color newValue) {tPlottables.setColor(newValue);}
-    @Override
-    public void recompute(boolean recomputeAll){tPlottables.recompute(recomputeAll);}
-    @Override
-    public void recompute() {tPlottables.recompute();}
-    @Override
-    public void paintComponent(Graphics2D g,V1 v) {
-        for (Plottable p:tPlottables.getElements()){
-            g.setColor(p.getColor());
-            p.paintComponent(g,v);
-        }
+    public void recompute(boolean recomputeAll){
+        super.recompute(recomputeAll);
+        transforming.recompute(recomputeAll);
     }
     @Override
-    public void paintComponent(Graphics2D g,V1 v,RangeTimer t) {
-        for (Plottable p:tPlottables.getElements()){
-            g.setColor(p.getColor());
-            if(p instanceof Animatable){
-                ((Animatable)p).paintComponent(g,v,t);
-            }else{
-                p.paintComponent(g,v);
-            }
-        }
+    public void recompute() {
+        super.recompute();
+        transforming.recompute();
+    }
+    
+    
+    // PAINT METHODS
+    
+    @Override
+    public void paintComponent(Graphics2D g,V2 v) {
+        super.paintComponent(g, v);
+        transforming.paintComponent(g, drawVisometry);
+    }
+    @Override
+    public void paintComponent(Graphics2D g,V2 v,RangeTimer t) {
+        super.paintComponent(g, v, t);
+        transforming.paintComponent(g, drawVisometry, t);
     }
 
     @Override
-    public JMenu getOptionsMenu(){return tPlottables.getOptionsMenu();}
+    public JMenu getOptionsMenu(){return transforming.getOptionsMenu();}
     @Override
-    public int getAnimatingSteps(){return tPlottables.getAnimatingSteps();}
+    public int getAnimatingSteps(){return transforming.getAnimatingSteps();}
 }

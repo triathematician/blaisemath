@@ -209,7 +209,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Container class="specto.plotpanel.PolarPlot2D" name="polarPlot2D1">
+        <Container class="specto.euclidean2.PolarPlot2D" name="polarPlot2D1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Polar">

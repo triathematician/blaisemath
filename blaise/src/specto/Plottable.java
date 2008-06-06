@@ -20,7 +20,7 @@ import javax.swing.event.EventListenerList;
 import sequor.control.NumberSlider;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
-import specto.dynamicplottable.Point2D;
+import specto.euclidean2.Point2D;
 
 /**
  * This abstract class includes basic functionality for the plotting of some object on
@@ -86,7 +86,7 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
         color.addChangeListener(this);
         String[] styles=getStyleStrings();
         if(styles==null || styles.length==0){return;}
-        style=new StringRangeModel(styles,0,0,styles.length-1);
+        style=new StringRangeModel(styles);
         style.addChangeListener(this);
     }
     

@@ -12,9 +12,9 @@ package sequor.component;
 
 import javax.swing.JMenu;
 import specto.PlotPanel;
-import specto.dynamicplottable.Point2D;
-import specto.dynamicplottable.Segment2D;
-import specto.plottable.Function2D;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.Segment2D;
+import specto.euclidean2.Function2D;
 
 /**
  *

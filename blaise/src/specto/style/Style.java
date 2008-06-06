@@ -1,10 +1,11 @@
 /*
- * VisStyle.java
+ * Style.java
  * Created on Feb 20, 2008
  */
 
 package specto.style;
 
+import java.awt.Graphics2D;
 import sequor.model.StringRangeModel;
 
 /**
@@ -13,9 +14,10 @@ import sequor.model.StringRangeModel;
  * 
  * @author Elisha Peterson
  */
-public class VisStyle extends StringRangeModel{
-    public VisStyle(){super();}
-    public VisStyle(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
+public abstract class Style extends StringRangeModel {
+    public Style(){super();}
+    public Style(String[] s){super(s);}
+    public Style(String[] s,int newValue,int newMin,int newMax){super(s,newValue,newMin,newMax);}
     public void cycleStyle(){
         if(getValue()==getMaximum()){
             setValue(getMinimum());
@@ -23,4 +25,5 @@ public class VisStyle extends StringRangeModel{
             setValue(getValue()+1);
         }
     }
+    public abstract void apply(Graphics2D g);
 }

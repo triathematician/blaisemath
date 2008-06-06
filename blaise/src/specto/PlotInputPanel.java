@@ -10,7 +10,7 @@ import java.awt.Color;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import specto.plotpanel.Plot2D;
+import specto.euclidean2.Plot2D;
 
 /**
  * This class is a wrapper for the typical PlotPanel contents. It uses a BorderLayout

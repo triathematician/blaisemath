@@ -10,9 +10,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import sequor.control.DrawnPath;
-import specto.dynamicplottable.Segment2D;
-import specto.plottable.Function2D;
-import specto.plottable.Parametric2D;
+import specto.euclidean2.Segment2D;
+import specto.euclidean2.Function2D;
+import specto.euclidean2.Parametric2D;
 
 /**
  *
@@ -52,7 +52,7 @@ public class _GestureTest extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,7 +93,7 @@ public class _GestureTest extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     // End of variables declaration//GEN-END:variables
     
 }

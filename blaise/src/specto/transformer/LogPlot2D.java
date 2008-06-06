@@ -3,26 +3,21 @@
  * Created on Mar 6, 2008
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package specto.transformer;
 
 import specto.PlotPanel;
-import specto.transformer.LogarithmicTransformer;
-import specto.transformer.TransformedVisometry;
-import specto.visometry.Euclidean2;
+import specto.euclidean2.Euclidean2;
 
 /**
  * <p>
- * LogPlot2D is ...
+ * LogPlot2D is a plot which displays logarithmic functions.
  * </p>
  * @author Elisha Peterson
  */
-public class LogPlot2D extends PlotPanel<TransformedVisometry<Euclidean2,Euclidean2>> {
+public class LogPlot2D extends PlotPanel<Euclidean2> {
     public LogPlot2D() {
-        super(new TransformedVisometry(new Euclidean2(),new LogarithmicTransformer(true,false)));
+        super(new LogVisometry());
+        addBase(new specto.euclidean2.StandardGrid2D());
+        addBase(new specto.euclidean2.Axes2D());
     }
 }

@@ -28,6 +28,7 @@ public class StringRangeModel extends IntegerRangeModel{
         s=test;
         setRangeProperties(1,0,2);
     }
+    public StringRangeModel(String[] s){this(s,0,0,s.length-1);}
     public StringRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
 
     public String[] getStrings(){return s;}

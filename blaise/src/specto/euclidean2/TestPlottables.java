@@ -1,4 +1,4 @@
-package specto;
+package specto.euclidean2;
 
 /*
  * BlaisePlotter.java
@@ -14,26 +14,26 @@ import sequor.control.SliderBox;
 import sequor.control.BoundedRangeSliderBox;
 import sequor.control.NumberSlider;
 import sequor.model.DoubleRangeModel;
-import specto.dynamicplottable.CirclePoint2D;
-import specto.dynamicplottable.Clock2D;
-import specto.decoration.DESolution2D;
-import specto.decoration.FunctionSampleSet;
-import specto.dynamicplottable.Segment2D;
-import specto.dynamicplottable.DynamicPointSet2D;
-import specto.dynamicplottable.FractalShape2D;
-import specto.dynamicplottable.Point2D;
-import specto.dynamicplottable.RandomFlame2D;
-import specto.dynamicplottable.RandomPoint2D;
-import specto.dynamicplottable.RandomWalk2D;
-import specto.dynamicplottable.Triangle2D;
-import specto.dynamicplottable.Voronoi2D;
-import specto.gridplottable.StandardGrid2D;
-import specto.plottable.Function2D;
-import specto.plottable.HiddenText2D;
-import specto.plottable.Parametric2D;
-import specto.plottable.PlaneFunction2D;
-import specto.plottable.Rectangle2D;
-import specto.plottable.VectorField2D;
+import specto.euclidean2.CirclePoint2D;
+import specto.euclidean2.Clock2D;
+import specto.euclidean2.DESolution2D;
+import specto.euclidean2.FunctionSampleSet;
+import specto.euclidean2.Segment2D;
+import specto.euclidean2.DynamicPointSet2D;
+import specto.euclidean2.FractalShape2D;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.RandomFlame2D;
+import specto.euclidean2.RandomPoint2D;
+import specto.euclidean2.RandomWalk2D;
+import specto.euclidean2.Triangle2D;
+import specto.euclidean2.Voronoi2D;
+import specto.euclidean2.StandardGrid2D;
+import specto.euclidean2.Function2D;
+import specto.euclidean2.HiddenText2D;
+import specto.euclidean2.Parametric2D;
+import specto.euclidean2.PlaneFunction2D;
+import specto.euclidean2.Rectangle2D;
+import specto.euclidean2.VectorField2D;
 
 /**
  *
@@ -171,13 +171,13 @@ public class TestPlottables extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D1 = new specto.plotpanel.Plot2D();
-        plot2D3 = new specto.plotpanel.Plot2D();
-        plot2D4 = new specto.plotpanel.Plot2D();
-        plot2D5 = new specto.plotpanel.Plot2D();
-        plot2D6 = new specto.plotpanel.Plot2D();
-        polarPlot2D1 = new specto.plotpanel.PolarPlot2D();
-        plot2D2 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
+        plot2D3 = new specto.euclidean2.Plot2D();
+        plot2D4 = new specto.euclidean2.Plot2D();
+        plot2D5 = new specto.euclidean2.Plot2D();
+        plot2D6 = new specto.euclidean2.Plot2D();
+        polarPlot2D1 = new specto.euclidean2.PolarPlot2D();
+        plot2D2 = new specto.euclidean2.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -501,13 +501,13 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem pasteMenuItem1;
     private javax.swing.JMenuItem pasteMenuItem2;
-    private specto.plotpanel.Plot2D plot2D1;
-    private specto.plotpanel.Plot2D plot2D2;
-    private specto.plotpanel.Plot2D plot2D3;
-    private specto.plotpanel.Plot2D plot2D4;
-    private specto.plotpanel.Plot2D plot2D5;
-    private specto.plotpanel.Plot2D plot2D6;
-    private specto.plotpanel.PolarPlot2D polarPlot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D2;
+    private specto.euclidean2.Plot2D plot2D3;
+    private specto.euclidean2.Plot2D plot2D4;
+    private specto.euclidean2.Plot2D plot2D5;
+    private specto.euclidean2.Plot2D plot2D6;
+    private specto.euclidean2.PolarPlot2D polarPlot2D1;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem1;
     private javax.swing.JMenuItem saveAsMenuItem2;

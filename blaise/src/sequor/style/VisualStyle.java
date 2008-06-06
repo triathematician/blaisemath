@@ -38,23 +38,44 @@ public class VisualStyle {
     }
     
     
-    // STANDARD STROKES
+    // LINE STYLES
+    
+    public static final String[] LINE_STYLE_STRINGS = {
+        "Very thin", "Thin", "Medium", "Thick", "Very thick", "Dotted", "Very Dotted"
+    };
     
     public static final Stroke VERY_THIN_STROKE=new BasicStroke(0.5f);
     public static final Stroke THIN_STROKE=new BasicStroke(1.0f);
-    public static final Stroke BASIC_STROKE=new BasicStroke(2.0f);
-    public static final Stroke MEDIUM_STROKE=new BasicStroke(3.0f);
-    public static final Stroke THICK_STROKE=new BasicStroke(4.0f);
+    public static final Stroke MEDIUM_STROKE=new BasicStroke(2.0f);
+    public static final Stroke THICK_STROKE=new BasicStroke(3.0f);
+    public static final Stroke VERY_THICK_STROKE=new BasicStroke(4.0f);
     public static final float[] dash2={2.0f,4.0f};
     public static final Stroke DOTTED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash2,0.0f);
     public static final float[] dash3={4.0f,4.0f};
     public static final Stroke VERY_DOTTED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash3,0.0f);  
+    
+    
+    // POINT STYLES
+    
+    public static final String[] POINT_STYLE_STRINGS = {
+        "Small", "Medium", "Large", "Ring", "Concentric"
+    };
+    
+    
+    // ANIMATING LINE STYLES
+    
+    public static final String[] ANIMATE_LINE_STYLE_STRINGS = {
+        "Draw", "Move", "Trace", "Trail"
+    };
+            
+    
     
     // ADDITIONAL COLORS
     
     public static final Color LIGHT_BLUE=new Color(50,50,200);
     public static final Color LIGHT_GREEN=new Color(50,200,50);
     public static final Color LIGHT_RED=new Color(200,50,50);
+    public final static Color DARK_GREEN = new Color(0.0f, 0.5f, 0.0f);
     
     // OPACITY COMPOSITES
     

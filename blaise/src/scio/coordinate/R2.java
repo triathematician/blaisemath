@@ -45,29 +45,7 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public R2 normalized(){return scaledToLength(1.0);}
     public R2 multipliedBy(double c){return new R2(c*x,c*y);}
     
-    // STATIC METHODS
-
-    /** Returns angle formed by given vector. */
-    public static double angle(double x,double y){return (x<0?Math.PI:0)+Math.atan(y/x); }
-
-    /** Returns center of circle passing through three points. */
-    public static R2 threePointCircleCenter(R2 p1, R2 p2, R2 p3) {
-        java.lang.Double m12 = (p2.y-p1.y)/(p2.x-p1.x);
-        java.lang.Double m23 = (p3.y-p2.y)/(p3.x-p2.x);
-        
-        // points are colinear
-        if (m12.equals(m23) || m12.equals(-m23)) {
-            return R2.INFINITY;
-        }        
-        
-        // points are not colinear
-        java.lang.Double xCenter = ( m12 * m23 * (p1.y - p3.y) + m23 * (p1.x + p2.x) - m12 * (p2.x + p3.x) ) / (2 * (m23 - m12));
-        java.lang.Double yCenter = (xCenter - (p1.x + p2.x) / 2) / m12 + (p1.y + p2.y) / 2;
-        
-        return new R2(xCenter, yCenter);
-        
-        // TODO account for situation when lines are verticle or m12==0
-    }
+    // MORE GENERAL METHODS
 
     /**
      * Returns point along the line between point1 and point2 which is closest
@@ -153,5 +131,42 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     }
     public VectorSpaceElement multiplyBy(double d) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    
+    // STATIC METHODS
+    
+    /** Returns point at infinity at the given angle, approximated as a very, very large point. */
+    public static R2 atInfiniteAngle(double angle) {
+        return new R2(java.lang.Double.MAX_VALUE*Math.cos(angle), java.lang.Double.MAX_VALUE*Math.sin(angle));
+    }
+    
+    /** Returns slope between two points. */
+    public static java.lang.Double slope(R2 p1, R2 p2) { return (p2.y-p1.y)/(p2.x-p1.x); }
+
+    /** Returns angle formed by given vector. */
+    public static double angle(double x,double y){return (x<0?Math.PI:0)+Math.atan(y/x); }
+
+    /** Returns center of circle passing through three points. Center is at infinity if points are colinear. */
+    public static R2 threePointCircleCenter(R2 p1, R2 p2, R2 p3) {
+        java.lang.Double m12 = slope(p1,p2);
+        java.lang.Double m23 = slope(p2,p3);
+        
+        // points are colinear, or one of the slopes is infinite
+        if (m12.equals(m23) || m12.isInfinite() && m23.isInfinite()) {
+            return R2.INFINITY;
+        } else if (m12.isInfinite()) {
+            return threePointCircleCenter(p2, p3, p1);
+        } else if (m23.isInfinite()) {
+            return threePointCircleCenter(p3, p1, p2);
+        }
+        
+        // points are not colinear
+        java.lang.Double xCenter = ( m12 * m23 * (p1.y - p3.y) + m23 * (p1.x + p2.x) - m12 * (p2.x + p3.x) ) / (2 * (m23 - m12));        
+        java.lang.Double yCenter = ( m12.equals(0.0) ) ?
+            (-xCenter + (p1.x + p2.x) / 2) / m12 + (p1.y + p2.y) / 2 :
+            (-xCenter + (p2.x + p3.x) / 2) / m23 + (p2.y + p3.y) / 2 ;
+        
+        return new R2(xCenter, yCenter);
     }
 }

@@ -6,7 +6,7 @@
 package specto;
 
 import sequor.model.PointRangeModel;
-import specto.dynamicplottable.Point2D;
+import specto.euclidean2.Point2D;
 
 /**
  * Constrains2D is an interface for plottable elements which are able to return PointRangeModel's for points restricted to their space.
