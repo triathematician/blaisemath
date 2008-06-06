@@ -18,9 +18,7 @@ import sequor.model.StringRangeModel;
 import sequor.SettingsProperty;
 import simulation.Team;
 import simulation.Agent;
-import tasking.Task;
 import tasking.TaskGenerator;
-import utility.AgentPair;
 import utility.DistanceTable;
 
 /**

@@ -13,9 +13,7 @@ import analysis.Statistics;
 import analysis.DataLog;
 import metrics.Valuation;
 import sequor.Settings;
-import sequor.model.IntegerRangeModel;
 import simulation.Team;
-import specto.plottable.PlaneFunction2D;
 
 /**
  *
@@ -44,21 +42,21 @@ public class PEGPlot extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        simulation1 = new simulation.Simulation();
         menuSimModeGroup = new javax.swing.ButtonGroup();
-        dataLog1 = new analysis.DataLog();
         numBatchRunsModel = new sequor.model.IntegerRangeModel(100,0,100000);
+        simulation1 = new simulation.Simulation();
+        dataLog1 = new analysis.DataLog();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D2 = new specto.plotpanel.Plot2D();
+        infoPane = new javax.swing.JTabbedPane();
+        plot2D2 = new specto.euclidean2.Plot2D();
         jScrollPane5 = new javax.swing.JScrollPane();
         notificationWindow = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
         statusBar = new javax.swing.JPanel();
         statusText = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
@@ -100,11 +98,21 @@ public class PEGPlot extends javax.swing.JFrame {
 
         jSplitPane2.setDividerLocation(450);
 
-        jTabbedPane1.setToolTipText("See information regarding the simulations.");
-        jTabbedPane1.setMaximumSize(new java.awt.Dimension(450, 600));
+        infoPane.setToolTipText("See information regarding the simulations.");
+        infoPane.setMaximumSize(new java.awt.Dimension(450, 600));
 
-        plot2D2.setToolTipText("See all valuation metrics on a plot over time.");
-        jTabbedPane1.addTab("Goal Functions", plot2D2);
+        javax.swing.GroupLayout plot2D2Layout = new javax.swing.GroupLayout(plot2D2);
+        plot2D2.setLayout(plot2D2Layout);
+        plot2D2Layout.setHorizontalGroup(
+            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 444, Short.MAX_VALUE)
+        );
+        plot2D2Layout.setVerticalGroup(
+            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 251, Short.MAX_VALUE)
+        );
+
+        infoPane.addTab("Metrics", plot2D2);
 
         notificationWindow.setColumns(20);
         notificationWindow.setEditable(false);
@@ -112,34 +120,46 @@ public class PEGPlot extends javax.swing.JFrame {
         notificationWindow.setToolTipText("See information about simulations which have been run.");
         jScrollPane5.setViewportView(notificationWindow);
 
-        jTabbedPane1.addTab("Log", jScrollPane5);
+        infoPane.addTab("Log", jScrollPane5);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jTextArea1.setToolTipText("See a table of data obtained from the last simulation.");
         jScrollPane1.setViewportView(jTextArea1);
 
-        jTabbedPane1.addTab("Data", jScrollPane1);
+        infoPane.addTab("Data", jScrollPane1);
 
         jScrollPane3.setToolTipText("Communications network of the teams.");
-        jTabbedPane1.addTab("Network View", jScrollPane3);
+        infoPane.addTab("Network View", jScrollPane3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(infoPane, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
             .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                .addGap(8, 8, 8)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(infoPane, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
+
+        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
+        plot2D1.setLayout(plot2D1Layout);
+        plot2D1Layout.setHorizontalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 474, Short.MAX_VALUE)
+        );
+        plot2D1Layout.setVerticalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 509, Short.MAX_VALUE)
+        );
+
         jSplitPane2.setRightComponent(plot2D1);
 
         getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
@@ -388,6 +408,7 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JButton cooperationButton;
     private analysis.DataLog dataLog1;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JTabbedPane infoPane;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
@@ -409,15 +430,14 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private javax.swing.JTextArea notificationWindow;
     private sequor.model.IntegerRangeModel numBatchRunsModel;
     private javax.swing.JSpinner numBatchRunsSpinner;
-    private specto.plotpanel.Plot2D plot2D1;
-    private specto.plotpanel.Plot2D plot2D2;
+    private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D2;
     private javax.swing.JButton randomizeButton;
     private javax.swing.JMenu settingsMenu;
     private simulation.Simulation simulation1;

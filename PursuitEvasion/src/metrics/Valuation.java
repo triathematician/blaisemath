@@ -5,8 +5,8 @@
 
 package metrics;
 
-import analysis.Metrics;
-import analysis.Metrics.SplitContribution;
+import analysis.Cooperation;
+import analysis.Cooperation.SplitContribution;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -110,7 +110,7 @@ public class Valuation implements Function<DistanceTable,Double> {
     
     /** Returns subset contribution given a simulation (runs the simulation to compute it). */
     public SplitContribution getCooperationMetric(Simulation sim) {
-        return Metrics.subsetContribution(sim, this, getSubset());
+        return Cooperation.subsetContribution(sim, this, getSubset());
     }
     
     /** Returns subset of agents evaluating this particular metric. */

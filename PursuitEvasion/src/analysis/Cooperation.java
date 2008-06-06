@@ -1,5 +1,5 @@
 /**
- * Metrics.java
+ * Cooperation.java
  * Created on Mar 7, 2008
  */
 
@@ -20,7 +20,7 @@ import simulation.Team;
  * 
  * @author Elisha Peterson
  */
-public class Metrics {
+public class Cooperation {
     
     /** Measures contributions of a particular subset of players, divided into altruistic and selfish contributions.
      * @param sim the simulation used to compute the metrics

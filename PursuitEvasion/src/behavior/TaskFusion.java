@@ -2,7 +2,6 @@
  * GoalFusion.java
  * Created on Aug 28, 2007, 10:28:54 AM
  */
-
 package behavior;
 
 import metrics.Goal;
@@ -26,19 +25,19 @@ public class TaskFusion {
 
     public TaskFusion() {
     }
-    
+
     /** 
      * Returns a unit vector in the direction corresponding to the fusion of the tasks shown.
      * I do not currently have a way in which to manipulate how the tasks are fused. I'll go with
      * the gradient to start.
      */
-    public static R2 getVector(Agent agent,Vector<Task> tasks,double time){
-        R2 result=new R2();
+    public static R2 getVector(Agent agent, Vector<Task> tasks, double time) {
+        R2 result = new R2();
         double multiplier;
-        for(Task t:tasks){
+        for (Task t : tasks) {
             // translate... distinguish between seek and flee behaviors here
-            multiplier=(t.getGoalType()==Goal.FLEE?-1:1)*(agent.getBehaviorType()==Behavior.REVERSE?-1:1);
-            result.translate(agent.getBehavior().direction(agent,t.getTarget(),time).multipliedBy(multiplier*t.getPriority()));
+            multiplier = (t.getGoalType() == Goal.FLEE ? -1 : 1) * (agent.getBehaviorType() == Behavior.REVERSE ? -1 : 1);
+            result.translate(agent.getBehavior().direction(agent, t.getTarget(), time).multipliedBy(multiplier * t.getPriority()));
         }
         return result.normalized();
     }
@@ -47,33 +46,42 @@ public class TaskFusion {
      * Find the direction which MAXIMIZES the sum of distanceTo powers between the agent at loc and the
      * specified points.
      */
-    public static R2 gradient(R2 loc,Vector<WR2> points){
-        R2 dir=new R2();
-        for(WR2 p:points){
-            dir=dir.plus(new R2(p.x-loc.x,p.y-loc.y).scaledToLength(Math.pow(p.distance(loc),p.weight-1.0)));
-        }        
+    public static R2 gradient(R2 loc, Vector<WR2> points) {
+        R2 dir = new R2();
+        for (WR2 p : points) {
+            dir = dir.plus(new R2(p.x - loc.x, p.y - loc.y).scaledToLength(Math.pow(p.distance(loc), p.weight - 1.0)));
+        }
         return dir;
     }
-    
+
     /**
      * Returns the direction to the highest weighted element
      */
-    public static R2 highest(R2 loc,Vector<WR2> points){
-        double hWeight=0;
-        R2 dir=new R2(0,0);
-        for(WR2 p:points){
-            if(p.weight>hWeight){
-                hWeight=p.weight;
-                dir=p.minus(loc);
+    public static R2 highest(R2 loc, Vector<WR2> points) {
+        double hWeight = 0;
+        R2 dir = new R2(0, 0);
+        for (WR2 p : points) {
+            if (p.weight > hWeight) {
+                hWeight = p.weight;
+                dir = p.minus(loc);
             }
         }
         return dir;
     }
-    
+
     /** A weighted point. */
-    public class WR2 extends R2{
+    public class WR2 extends R2 {
+
         public double weight;
-        public WR2(R2 pt,double w){super(pt);weight=w;}
-        public WR2(double x,double y,double w){super(x,y);weight=w;}
+
+        public WR2(R2 pt, double w) {
+            super(pt);
+            weight = w;
+        }
+
+        public WR2(double x, double y, double w) {
+            super(x, y);
+            weight = w;
+        }
     } // Inner Class TaskFusion.WR2
 }

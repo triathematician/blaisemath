@@ -14,7 +14,7 @@ import metrics.Valuation;
 import metrics.VictoryCondition;
 import simulation.Simulation;
 import sequor.model.StringRangeModel;
-import specto.style.ColorStyle;
+import sequor.style.VisualStyle;
 import tasking.TaskGenerator;
 
 /**
@@ -96,7 +96,6 @@ public class SimulationFactory {
         Team lightTeam = new Team("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, ColorStyle.DARK_GREEN);        
         teams.add(bugTeam);
         teams.add(lightTeam);
-        
         bugTeam.setVictoryCondition(new VictoryCondition(teams, bugTeam, lightTeam,
                 Valuation.DIST_MIN, 5.0, VictoryCondition.NEITHER, VictoryCondition.WON));        
         bugTeam.addCaptureCondition(teams, lightTeam, 1.0, CaptureCondition.REMOVEAGENT);

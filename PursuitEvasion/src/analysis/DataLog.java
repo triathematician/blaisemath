@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JTextArea;
 import metrics.Valuation;
@@ -24,12 +23,13 @@ import scio.coordinate.R2;
 import sequor.FiresChangeEvents;
 import specto.Plottable;
 import specto.PlottableGroup;
-import specto.dynamicplottable.CirclePoint2D;
-import specto.dynamicplottable.InitialPointSet2D;
-import specto.dynamicplottable.Point2D;
-import specto.plotpanel.Plot2D;
-import specto.plottable.PointSet2D;
-import specto.visometry.Euclidean2;
+import specto.euclidean2.CirclePoint2D;
+import specto.euclidean2.InitialPointSet2D;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.Plot2D;
+import specto.euclidean2.PointSet2D;
+import specto.euclidean2.Euclidean2;
+import specto.style.PointStyle;
 
 /**
  * Logs data from a simulation's run. Can be used to plot various results.
@@ -135,6 +135,7 @@ public class DataLog extends FiresChangeEvents {
             mainDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
             for(Team t:s.getTeams()){            
                 PlottableGroup<Euclidean2> teamGroup=new PlottableGroup<Euclidean2>();
+                teamGroup.setName(t.toString());
                 addAgentVisuals(t,teamGroup);
                 teamGroup.add(new DynamicTeamGraph(t,this));
                 mainDisplay.add(teamGroup);
@@ -142,6 +143,7 @@ public class DataLog extends FiresChangeEvents {
             }
             // initializes capture groups
             captureGroup=new PlottableGroup<Euclidean2>();
+            captureGroup.setName("Captures");
             mainDisplay.add(captureGroup);
         }
         
@@ -259,7 +261,7 @@ public class DataLog extends FiresChangeEvents {
     public void logCaptureEvent(Team owner, Agent first, Team target, Agent second, String string, DistanceTable dt, double time) {
         logEvent(owner, first, target, second, string, time);
         Point2D adder=new Point2D(second.loc,Color.RED,false);
-        adder.style.setValue(Point2D.CIRCLE);
+        adder.style.setValue(PointStyle.RING);
         captureGroup.add(adder);
     }
     

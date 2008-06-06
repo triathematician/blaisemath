@@ -386,6 +386,7 @@ public class Team extends Vector<Agent> implements ActionListener,PropertyChange
     // BEAN PATTERNS FOR INITIAL SETTINGS
     
     public int getSize(){return tes.size.getValue();}
+    public int getNumActive(){return getActiveAgents().size();}
     public int getStart(){return tes.start.getValue();}
 //    public Collection<Goal> getGoals(){return goals;}
     @Override

@@ -17,7 +17,6 @@ import javax.swing.JTextArea;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
 import sequor.FiresChangeEvents;
-import specto.plottable.PlaneFunction2D;
 import scio.function.BoundedFunction;
 
 /**
@@ -70,12 +69,35 @@ public class Statistics extends FiresChangeEvents {
     // formatter
     final static NumberFormat formatter = DecimalFormat.getNumberInstance();
     
-    private static class AverageData { double avg; int nulls; }
+    private static class AverageData { 
+        double avg; double std; int runs; int nulls; 
+        @Override
+        public String toString() {
+            return "avg/std/var (runs/nulls): "
+                    + formatter.format(avg) + "/" + formatter.format(std) + "/" + formatter.format(std*std)
+                    + " (" + runs + "/" + nulls + ")";
+        }
+        
+        public final static String[] PROPERTIES = {"avg", "std", "var", "runs", "nulls"};
+        
+        public double getProperty(int n) {
+            switch(n){
+                case 0: return avg;
+                case 1: return std;
+                case 2: return std*std;
+                case 3: return runs;
+                case 4: return nulls;
+            }
+            return -1;
+        }
+    }
     
     /** computes total, average, # nulls */
     private static AverageData computeAverages(Collection<Double> values, double max) {
         AverageData result = new AverageData();
         result.avg = 0.0;
+        result.std = 0.0;
+        result.runs = values.size();
         result.nulls = 0;
         for(Double d : values) {
             if (d == null || d.isInfinite() || d.isNaN()) {
@@ -83,9 +105,11 @@ public class Statistics extends FiresChangeEvents {
             } else {
                 if(d > max) { System.out.println(d); }
                 result.avg += d;
+                result.std += d*d;
             }
         }
-        result.avg /= (values.size() - result.nulls);
+        result.avg /= (result.runs - result.nulls);
+        result.std = Math.sqrt(result.std / (result.runs - result.nulls) - result.avg*result.avg);
         return result;
     }
     
@@ -95,13 +119,11 @@ public class Statistics extends FiresChangeEvents {
         AverageData full = computeAverages(fullMetrics.get(val), 100000);
         AverageData subset = computeAverages(subsetMetrics.get(val), 10000);
         AverageData partial = computeAverages(partialMetrics.get(val), 100000);
-        textArea.append("Metric " + val.toString() + ":\n"
-                 + "  FULL: average " + formatter.format(full.avg)
-                 + " over " + numRuns + " runs (" + full.nulls + " null values)." + "\n"
+        textArea.append("Metric " + val + ":\n"
+                 + "  FULL: " + full + "\n"
                  + (val.isCooperationTesting() ? 
-                      "  SUBSET: average " + formatter.format(subset.avg) + "\n"
-                    + "  PARTIAL: average " + formatter.format(partial.avg)
-                    + " over " + numRuns + " runs (" + partial.nulls + " null values)." + "\n"
+                      "  SUBSET: " + subset + "\n"
+                    + "  PARTIAL: " + partial + "\n"
                     + "  SELFISH COOPERATION: average " + formatter.format(subset.avg - full.avg) + "\n"
                     + "  ALTRUISTIC COOPERATION: average " + formatter.format(partial.avg - subset.avg) + "\n"
                     + "  TOTAL COOPERATION: average " + formatter.format(partial.avg - full.avg) + "\n"
@@ -117,26 +139,48 @@ public class Statistics extends FiresChangeEvents {
     }
     
     /** Outputs results of entire data run. */
-    public void outputData(JTextArea textArea){
+    public void outputData(JTextArea textArea){        
+        HashMap<Valuation,AverageData> fullData = new HashMap<Valuation,AverageData>();
+        HashMap<Valuation,AverageData> subsetData = new HashMap<Valuation,AverageData>();
+        HashMap<Valuation,AverageData> partialData = new HashMap<Valuation,AverageData>();
+        for(Valuation val : fullMetrics.keySet()) { fullData.put(val, computeAverages(fullMetrics.get(val), 100000)); }
+        for(Valuation val : subsetMetrics.keySet()) { subsetData.put(val, computeAverages(subsetMetrics.get(val), 100000)); }
+        for(Valuation val : partialMetrics.keySet()) { partialData.put(val, computeAverages(partialMetrics.get(val), 100000)); }
+        
         // delete previous content
         try {textArea.getDocument().remove(0, textArea.getDocument().getLength()-1);}catch(Exception e){}
+        // helpful comments
         textArea.append("This data may be copy/pasted directly into Microsoft Excel.\n To do so, hit Ctrl+A, then Ctrl+C," +
                 "\n and then paste into an (empty) Excel worksheet.\n ---- \n");
-        int numTimes = 0;
-        for(Valuation v: fullMetrics.keySet()) { numTimes = fullMetrics.get(v).size(); break; }
+        // header rows
+        textArea.append("\t");
         for(Valuation v: fullMetrics.keySet()) {
             textArea.append(v.toString() + (v.isCooperationTesting() ? "\t(subset)\t(partial)\t" : "\t"));
         }
         textArea.append("\n");
-        for(int n=0; n<numTimes; n++) {
+        // data
+        int numIterationsPerformed = 0;
+        for(Valuation v: fullMetrics.keySet()) { numIterationsPerformed = fullMetrics.get(v).size(); break; }
+        for(int n=0; n<numIterationsPerformed; n++) {
+            textArea.append((n+1)+"\t");
             for(Valuation v: fullMetrics.keySet()) {
                 textArea.append(formatter.format(fullMetrics.get(v).get(n)) + "\t"
                         + (v.isCooperationTesting() ?
-                            formatter.format(subsetMetrics.get(v).get(n)) + "\t"
-                            + formatter.format(partialMetrics.get(v).get(n)) + "\t"
+                            formatter.format(subsetMetrics.get(v).get(n)) + "\t" + formatter.format(partialMetrics.get(v).get(n)) + "\t"
                             : ""));
             }
             textArea.append("\n");
+        }
+        // summary information
+        for(int i=0;i<=4;i++) {
+            textArea.append("\n"+AverageData.PROPERTIES[i]);
+            for(Valuation v:fullMetrics.keySet()) {
+                textArea.append("\t" + formatter.format(fullData.get(v).getProperty(i))
+                        + (v.isCooperationTesting() ?
+                              "\t" + formatter.format(subsetData.get(v).getProperty(i))
+                            + "\t" + formatter.format(partialData.get(v).getProperty(i))
+                            : ""));
+            }
         }
         textArea.append("\n");
     }

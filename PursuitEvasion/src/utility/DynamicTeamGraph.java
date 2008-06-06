@@ -16,8 +16,8 @@ import specto.Animatable;
 import specto.Plottable;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
-import specto.style.LineStyle;
-import specto.visometry.Euclidean2;
+import sequor.style.VisualStyle;
+import specto.euclidean2.Euclidean2;
 
 /**
  * Displays team communication graph at a given time.
@@ -41,7 +41,7 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(pathSize()==0){return;}
         g.setColor(team.getColor().brighter().brighter());
-        g.setStroke(LineStyle.THIN_STROKE);
+        g.setStroke(VisualStyle.THIN_STROKE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
         g.draw(getEdges(v,t.getCurrentIntValue()));
         for(CaptureCondition cc:team.capture){
@@ -92,9 +92,15 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         }
         return result;        
     }
+    
+    
+    // BEANS
 
     public int getAnimatingSteps() {return 2;}
 
     @Override
     public String[] getStyleStrings() {return null;}
+    
+    @Override
+    public String toString() { return "Sensor/Comm Graph"; }
 }
