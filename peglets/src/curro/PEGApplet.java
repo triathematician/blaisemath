@@ -69,7 +69,7 @@ public class PEGApplet extends javax.swing.JApplet {
         jToolBar1 = new javax.swing.JToolBar();
         resetButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
-        plot2D1 = new specto.plotpanel.Plot2D();
+        plot2D1 = new specto.euclidean2.Plot2D();
 
         jSplitPane2.setDividerLocation(300);
 
@@ -220,7 +220,7 @@ public class PEGApplet extends javax.swing.JApplet {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTree1;
-    private specto.plotpanel.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D1;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton runButton;
     // End of variables declaration//GEN-END:variables
