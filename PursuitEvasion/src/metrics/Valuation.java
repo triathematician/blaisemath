@@ -86,10 +86,12 @@ public class Valuation implements Function<DistanceTable,Double> {
                     return dt.average(activeSubset,vs.target.getActiveAgents());
                 case NUM_TEAM:
                     return (double)activeSubset.size();
+                case NUM_TEAM_SAFE:
+                    return (double)vs.owner.getNumberSafe();
                 case NUM_OPPONENT:
                     return (double)vs.target.getActiveAgents().size();
                 case NUM_CAP:
-                    return (double)(vs.target.size()-vs.target.getActiveAgents().size());
+                    return (double)(vs.target.getNumberCapturedBy(vs.owner));
                 case NUM_DIFF:
                     return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
@@ -161,19 +163,51 @@ public class Valuation implements Function<DistanceTable,Double> {
     public static final int DIST_MAX = 1;
     public static final int DIST_AVG = 2;
     public static final int NUM_TEAM = 3;
-    public static final int NUM_OPPONENT = 4;
-    public static final int NUM_CAP = 5;
-    public static final int NUM_DIFF = 6;
-    public static final int TIME_TOTAL = 7;
-    public static final int TIME_SINCE_CAP = 8;
-    public static final int EVERY_CAPTURE = 9;
+    public static final int NUM_TEAM_SAFE = 4;
+    public static final int NUM_OPPONENT = 5;
+    public static final int NUM_CAP = 6;
+    public static final int NUM_DIFF = 7;
+    public static final int EVERY_CAPTURE = 8;
+    public static final int TIME_TOTAL = 9;
+    public static final int TIME_SINCE_CAP = 10;
     
     public static final String[] typeStrings = {
         "Min. distance",        "Max. distance",        "Avg. distance",
-        "# Active Agents",      "# Active Opponents",   "# Opponents captured",        "Player # advantage",   
-        "Simulation time",      "Time since capture",   "Everyone Captures/Captured"
+        "# Active Agents",      "# Team Safe",
+        "# Active Opponents",   "# Opponents captured",
+        "Player # advantage",   "Everyone Captures/Captured",
+        "Simulation time",      "Time since capture"
     };    
     
+    public String explain() { return explain(vs.type.getValue()); }
+    public String explain(int type) {
+        switch(type){
+            case DIST_MIN:
+                return "Represents minimum distance between team "+vs.owner+" and opposing team "+vs.target;
+            case DIST_MAX:
+                return "Represents the maximum distancec between team "+vs.owner+" and opposing team "+vs.target;
+            case DIST_AVG:
+                return "Represents the average distancec between team "+vs.owner+" and opposing team "+vs.target;
+            case NUM_TEAM:
+                return "Represents the number of agents on the team "+vs.owner;
+            case NUM_TEAM_SAFE:
+                return "Represents the number of agents on the team "+vs.owner+" which have reached safety";
+            case NUM_OPPONENT:
+                return "Represents the number of agents on the opposing team "+vs.target;
+            case NUM_CAP:
+                return "Represents the number of opposing agents on team "+vs.target+" which have been captured by team "+vs.owner;
+            case NUM_DIFF:
+                return "Represents the number of agents on team "+vs.target+" minus the number on opposing team "+vs.target;
+            case TIME_TOTAL:
+                return "Represents the total time of the simulation";
+            case TIME_SINCE_CAP:
+                return "Represents the time since a member of team "+vs.owner+" last captured a member of team "+vs.target;
+            case EVERY_CAPTURE:
+                return "Returns the number of potential captures which can be made by team "+vs.owner+" of opponents on team "+vs.target
+                        + ", minus the number of captures which have been made";
+        }
+        return "Type not supported";
+    }
     
     
     // SUB-CLASS ValuationSettings

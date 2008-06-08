@@ -38,6 +38,14 @@ public abstract class TaskGenerator {
     public String toString(){
         return super.toString()+", target="+target+", type="+goalType;
     }
+
+    public Team getTarget() {
+        return target;
+    }
+
+    public void setTarget(Team target) {
+        this.target = target;
+    }
     
     
     // STATIC CONSTANTS

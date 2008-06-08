@@ -48,15 +48,16 @@ public class CaptureCondition extends Valuation {
                 dt.removeAgents(closest);
                 vs.owner.deactivate(closest.getFirst());
                 vs.target.deactivate(closest.getSecond());
+                vs.target.addOneCapturedBy(vs.owner);
             } else if (removal == REMOVETARGET) {
                 dt.removeAgent(closest.getSecond());
                 vs.target.deactivate(closest.getSecond());
+                vs.target.addOneCapturedBy(vs.owner);
             } else {
                 dt.removeAgent(closest.getFirst());
                 vs.owner.deactivate(closest.getFirst());
+                vs.owner.addOneReachedSafety();
             }
-
-
             closest = dt.min(vs.owner.getActiveAgents(), vs.target.getActiveAgents());
         }
         return result;
