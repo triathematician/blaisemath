@@ -1,4 +1,4 @@
-#labels Module-PEG
+#labels Featured
 This page describes the structure used to implement the pursuit/evasion simulations.
 
 = Iteration Structure Steps =
