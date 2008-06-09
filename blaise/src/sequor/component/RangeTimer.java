@@ -12,7 +12,6 @@ import javax.swing.Timer;
 import javax.swing.event.EventListenerList;
 import sequor.model.BoundedRangeModel;
 import sequor.model.StringRangeModel;
-import specto.*;
 
 /**
  * This class extends the timer class to permit firing a sequence of doubles OR a sequence
@@ -54,6 +53,10 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
     
     // BEAN PATTERNS
     
+    public BoundedRangeModel<N> getModel() { return rangeValues; }
+    public void setModel(BoundedRangeModel<N> timerModel) {
+        this.rangeValues = timerModel;
+    }
     public boolean isPlaying(){return getValue()==PLAYING;}
     public boolean isPaused(){return getValue()==PAUSED;}
     public boolean isStopped(){return getValue()==STOPPED;}

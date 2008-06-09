@@ -49,6 +49,9 @@ public class NumberSlider extends VisualControlGroup {
     
     // BEAN PATTERNS
     
+    /** Gets model for the slider. */
+    public BoundedRangeModel getModel() { return this.model; }
+    /** Sets model for the slider. */
     public void setModel(BoundedRangeModel model){
         if(model!=null && !model.equals(this.model)){
             if(this.model!=null){this.model.removeChangeListener(this);}

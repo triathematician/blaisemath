@@ -5,6 +5,7 @@
 
 package specto.euclidean2;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -19,6 +20,7 @@ import scio.coordinate.R2;
 import sequor.component.RangeTimer;
 import sequor.model.StringRangeModel;
 import sequor.model.PointRangeModel;
+import sequor.style.VisualStyle;
 import specto.Plottable;
 
 /**
@@ -26,7 +28,10 @@ import specto.Plottable;
  * @author Elisha Peterson
  */
 public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>,ChangeListener{
+    
     Vector<R2> points;
+    private String label;
+    
     public PointSet2D(){this(new Vector<R2>(),Color.BLACK);}
     public PointSet2D(Color c){this(new Vector<R2>(),c);}
     public PointSet2D(Vector<R2> points,Color c){
@@ -35,8 +40,12 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         this.points=points;
     }
     
+    
+    // BEAN PATTERNS
+    
     public Vector<R2> getPath(){return points;}
     public void setPath(Vector<R2> path){points=path;}
+    public void setLabel(String s){label=s;}
     
     
     // DRAW METHODS
@@ -46,6 +55,12 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         if(points.size()==0){return;}
         g.setStroke(strokes[style.getValue()]);
         g.draw(drawPath(v,0,points.size()));
+        if(label!=null){
+            java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
+            g.setComposite(AlphaComposite.SrcOver);
+        }
     }
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
@@ -69,7 +84,18 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
                 g.draw(drawPath(v,curVal-5,curVal));
                 g.fill(drawDot(v,curVal));
                 break;
-        }        
+        }  
+        if (curVal >= points.size()) { curVal = points.size() - 1; }
+        java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
+        g.setComposite(VisualStyle.COMPOSITE5);
+        g.drawString(points.get(curVal).toString(),(float)labelCenter.x+5,(float)labelCenter.y-5);
+        g.setComposite(AlphaComposite.SrcOver);
+        if(label!=null){
+            java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
+            g.setComposite(AlphaComposite.SrcOver);
+        }    
     }
     
     public Shape drawDot(Euclidean2 v,int pos){
@@ -164,7 +190,14 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     // INNER CLASSES
 
     class PathPointModel extends PointRangeModel {
-        public PathPointModel(){super.setTo(0,0);}
+        public PathPointModel(){
+            try{
+                super.setTo(points.get(0));
+            }catch(Exception e){
+                super.setTo(R2.ORIGIN);
+            }
+                super.setTo(R2.ORIGIN);
+        }
         @Override
         public void setTo(R2 point) {
             R2 closest = getClosestPoint(point.x,point.y);

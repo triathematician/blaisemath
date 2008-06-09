@@ -25,7 +25,15 @@ public class CirclePoint2D extends Point2D {
     }
     public CirclePoint2D(Point2D parent) {this(parent.prm);}
 
-    public void addRadius(double r){radii.add(r);}
+    /** Removes all radii decorating the point. */
+    public void deleteRadii() {
+        radii.clear();
+    }
+    /** Adds radius to the point. */
+    public void addRadius(double r){
+        radii.add(r);
+    }
+
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {

@@ -17,8 +17,6 @@ import sequor.control.NumberSlider;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Animatable;
-import specto.euclidean2.PointSet2D;
-import specto.euclidean2.Euclidean2;
 
 /**
  * This class represents any path which depends upon an initial point. A call to recompute() is made whenever the initial point is moved.
@@ -34,9 +32,10 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     public InitialPointSet2D(Color value) {super(value);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(PointRangeModel prm){super(prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
     public InitialPointSet2D(Point2D parent){super(parent.prm);path=new PointSet2D();length=new IntegerRangeModel(100,0,50000,1);}
-    public InitialPointSet2D(Point2D parent,Vector<R2> points,Color c){
-        super(parent.prm,c);
-        path=new PointSet2D(points,parent.getColor());
+    public InitialPointSet2D(Point2D parent,Vector<R2> points,Color c){this(parent.prm,points,c);}
+    public InitialPointSet2D(PointRangeModel prm,Vector<R2> points,Color c){
+        super(prm,c);
+        path=new PointSet2D(points,c);
         length=new IntegerRangeModel(100,0,50000,1);
     }
     
@@ -44,6 +43,8 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     
     public IntegerRangeModel getLengthModel(){return length;}
     
+    /** Returns plottable path element. */
+    public PointSet2D getPathPlottable(){return path; }
     /** Returns path. */
     public Vector<R2> getPath(){return path.getPath();}
     /** Replaces the path contained here with a new one. */

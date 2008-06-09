@@ -36,6 +36,7 @@ import sequor.component.RangeTimer;
 import sequor.control.AnimationControl;
 import sequor.control.DrawnPath;
 import sequor.control.MarkerBox;
+import sequor.control.NumberSlider;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
@@ -105,11 +106,13 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         controls=new HashSet<VisualControl>();
         AnimationControl ac=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE);
         add(ac,3,2);
+        add(new NumberSlider(210,10,timer.getModel()),3,5);
         MarkerBox markerBox=new MarkerBox(Color.YELLOW,DrawnPath.HIGHLIGHTER);
         markerBox.addMarker(Color.BLUE, DrawnPath.MARKER);
         markerBox.addMarker(Color.RED, DrawnPath.PEN);
         markerBox.addMarker(Color.BLACK, DrawnPath.PENCIL);
-        add(markerBox,3,0);
+        add(markerBox,3,0);        
+        
         baseComponents=new PlottableGroup<V>();
         components=new PlottableGroup<V>();
         baseComponents.addChangeListener(this);
@@ -148,10 +151,38 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
-    public V getVisometry(){return visometry;}
+    /** Returns timer used with this plot. */
     public RangeTimer getTimer(){return timer;}
-    public void setTimer(RangeTimer timer){this.timer=timer;}
     
+    /** Sets timer for use with this plot to that specified. */
+    public void setTimer(RangeTimer timer){
+        if(this.timer != timer) {
+            for(VisualControl vc : controls) {
+                if (vc instanceof AnimationControl) {
+                    ((AnimationControl)vc).setTimer(timer);
+                }
+                if (vc instanceof NumberSlider && ((NumberSlider)vc).getModel()==this.timerModel){
+                    ((NumberSlider)vc).setModel(timer.getModel());
+                }
+            }
+            timerModel.removeChangeListener(this);
+            timerModel = (IntegerRangeModel) timer.getModel();
+            timerModel.addChangeListener(this);
+            this.timer.removeActionListener(this);
+            this.timer = timer;
+            timer.addActionListener(this);
+        }
+    }
+    
+    /** Sets timer based on another plot window. */
+    public void synchronizeTimerWith(PlotPanel pp) {
+        setTimer(pp.getTimer());
+    }
+    
+    /** Returns visometry used for this panel. */
+    public V getVisometry(){return visometry;}
+    
+    /** Sets the timer to that specified. */    
     private void initVisometry(V newValue){
         visometry=newValue;
         visometry.initContainer(this);

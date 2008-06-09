@@ -6,6 +6,7 @@
 package sequor.control;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeEvent;
 import sequor.component.RangeTimer;
 
@@ -32,6 +33,22 @@ public class AnimationControl extends ButtonBox {
         stateChanged(new ChangeEvent(timer));
     }
     
+    /** Changes the underlying timer. */
+    public void setTimer(RangeTimer timer){
+        if(this.timer != timer) {
+            this.timer.removeChangeListener(this);
+            this.timer.removeActionListener(this);
+            for(int i = 0; i < 6; i++) {
+                getElement(i).removeActionListener(this.timer);
+                getElement(i).addActionListener(timer);
+            }
+            this.timer = timer;
+            timer.addChangeListener(this);
+            timer.addActionListener(this);
+        }
+    }
+    
+    /** Initializes buttons with shapes and the actions they perform. */
     void initButtons(){
         add(new VisualButton("restart",timer,BoundedShape.PLAY_RESTART));
         add(new VisualButton("slower",timer,BoundedShape.PLAY_SLOW));
@@ -47,24 +64,22 @@ public class AnimationControl extends ButtonBox {
     @Override
     public void stateChanged(ChangeEvent e){
         if(e.getSource().equals(timer)){
-//            if(timer.isStopped()){
-//                getElement(1).setActive(false);
-//                getElement(3).setActive(false);
-//                getElement(4).setActive(false);
-//                getElement(5).setActive(false);
-//            }else{
-//                getElement(1).setActive(true);
-//                getElement(3).setActive(true);
-//                getElement(4).setActive(true);
-//                getElement(5).setActive(true);
-//            }
             getElement(2).setPressed(!timer.isStopped());
             getElement(4).setPressed(timer.isPaused());
             getElement(1).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
-            getElement(3).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
+            getElement(3).setForeground(timer.isPlaying()?Color.BLACK:Color.LIGHT_GRAY);
             getElement(4).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
             getElement(5).setForeground(timer.isStopped()?Color.LIGHT_GRAY:Color.BLACK);
         }
         super.stateChanged(e);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
+        getElement(2).setPressed(!timer.isStopped());
+        getElement(4).setPressed(timer.isPaused());
+    }
+    
+    
 }
