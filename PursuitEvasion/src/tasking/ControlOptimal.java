@@ -58,7 +58,7 @@ public class ControlOptimal extends TaskGenerator {
 
             //  This defines (how many constaints, how many variables)
             SizableProblemI prob = new Problem(numberOfPursuers + numberOfEvaders, numberOfPursuers * numberOfEvaders);
-            prob.getMetadata().put("lp.isMinimize", "true");
+            prob.getMetadata().put("lp.isMaximize", "false");
 
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
@@ -77,7 +77,7 @@ public class ControlOptimal extends TaskGenerator {
             if (numberOfPursuers >= numberOfEvaders) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
-                        prob.newConstraint(j + "is chased").setType(GTE).setRightHandSide(1.0);
+                        prob.newConstraint(j + "is chased").setType(EQL).setRightHandSide(1.0);
                     } catch (DuplicateException ex) {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -98,6 +98,14 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                for (int j = 0; j < numberOfEvaders; j++) {
+                    try {
+                        prob.newConstraint(j + "only chased by one").setType(LTE).setRightHandSide(1.0);
+                    } catch (DuplicateException ex) {
+                        Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
             }
 
             for (int i = 0; i < numberOfPursuers; i++) {
@@ -110,6 +118,7 @@ public class ControlOptimal extends TaskGenerator {
                     }
                     try {
                         prob.setCoefficientAt(i + "is chasing", "x" + i + " " + j, 1.0);
+                        prob.setCoefficientAt(j +"only chased by one", "x" + i + " " + j, 1.0);
                     } catch (NotFoundException ex) {
                        // Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
