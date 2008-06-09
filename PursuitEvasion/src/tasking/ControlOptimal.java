@@ -30,9 +30,11 @@ import simulation.Team;
 import utility.DistanceTable;
 
 /**
- * @author Elisha Peterson
+ * @author Lucas Gebhart w/ help of Dr. Elisha Peterson and the following package
+ * drasys.or.mp.lp  Freeware, available at http://opsresearch.com
+ *
  * <br><br>
- * This class
+ * This class 
  */
 public class ControlOptimal extends TaskGenerator {
 
@@ -41,10 +43,9 @@ public class ControlOptimal extends TaskGenerator {
     }
 
     /** Assigns tasks (prey) to n/k pursuers. The algorithm uses the complete table
-     * of distances between pursuers and evaders to map the closest
-     * pursuer-prey pair. This process is repeated until there are no more
-     * pursuers or prey available. If there are leftover pursuers, they are
-     * assigned to the closest prey.
+     * of distances between pursuers and evaders to map the optimal set of pursuers and evaders. The simplex
+     * method is used to generate the optimal pairing of pursuers to evaders based on minimizing overall distance
+     * Each pursuer chases its assigned evader until all of the pursuers or evaders are inactive
      * @param team pursuing team
      */
     @Override
@@ -52,15 +53,21 @@ public class ControlOptimal extends TaskGenerator {
         try {
             Vector<Agent> ps = new Vector<Agent>(team);
             Vector<Agent> es = new Vector<Agent>(target.getActiveAgents());
+//  Table has distances for every active pursuer to every active evader. 
+  // this allows for the calculations in the algorithm to go quickly.
             DistanceTable dist = new DistanceTable(ps, es);
+//   ps and es . size are defined elsewhere as the # of active members of the pursueing and evading teams
             int numberOfPursuers = ps.size();
             int numberOfEvaders = es.size();
+//            This ends the program when there are no pursuers or evaders remaining. Fixes convergence issues.
             if(numberOfPursuers == 0 || numberOfEvaders == 0) { return; }
-
-            //  This defines (how many constaints, how many variables)
+ //  This defines (how many constaints, how many variables)
             SizableProblemI prob = new Problem(numberOfPursuers + numberOfEvaders, numberOfPursuers * numberOfEvaders);
             prob.getMetadata().put("lp.isMaximize", "false");
-
+// For every pursuer, iterate through every evader and create a variable
+            //the variable takes the name x i j  where i and j are the number of the pursuer and
+            // evader respectively. The coefficient in the objective constraint is equal to the distance from
+            // the distance table discussed above. This will be minimized later.
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
@@ -74,7 +81,9 @@ public class ControlOptimal extends TaskGenerator {
             final byte LTE = Constraint.LESS;
             final byte GTE = Constraint.GREATER;
             final byte EQL = Constraint.EQUAL;
-
+// creates a constraint, in the case that there are more pursuers than evaders
+            //that every evader is chased by exactly one pursuer. Extra pursuers are not given an assignment
+            // in this algorithm, but perform another tasking in the more than one goal case.
             if (numberOfPursuers >= numberOfEvaders) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
@@ -83,6 +92,8 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+  // creates a constraint, in the case that there are more pursuers than evaders
+  //that every pursuer can only chase, at the most, one evader.
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
                         prob.newConstraint(i + "can only chase one evader").setType(LTE).setRightHandSide(1.0);
@@ -90,6 +101,9 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+     // if there are less pursuers than evaders, the constraints are different.
+   // every pursuer must chase someone, and every evader can only be chased by one pursuer.
+   // this fixed an issue of under constrained problem, where pursuers would chase the same evader.
             } else {
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
@@ -108,7 +122,8 @@ public class ControlOptimal extends TaskGenerator {
                     
                 }
             }
-
+// the following lines assign the coefficient to respective variables in their relevant constraints.
+         
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
@@ -125,9 +140,14 @@ public class ControlOptimal extends TaskGenerator {
                     }
                 }
             }
+   // solves the above defined LP using the Simplex method
             LinearProgrammingI lp = new DenseSimplex(prob);
             double ans = lp.solve();
             VectorI solution = lp.getSolution();
+            
+// The solution vector is a series of 1's and 0's. 1's represent a given pursuer chasing a given evader.
+// once assigned someone to chase, the evader moves out in the direction of that evader.
+            
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     if (solution.elementAt(j + i * numberOfEvaders)==1) {
