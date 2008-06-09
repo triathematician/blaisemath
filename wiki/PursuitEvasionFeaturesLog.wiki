@@ -1,0 +1,5 @@
+#summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
+#labels Featured,Module-PEG
+
+==== 9-June 2008 ====
+_Updated the taskings settings window to permit the opponent to be changed._ -Elisha
