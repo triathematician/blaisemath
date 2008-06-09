@@ -1,5 +1,25 @@
 #summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
 #labels Featured,Module-PEG
 
-==== 9-June 2008 ====
-_Updated the taskings settings window to permit the opponent to be changed._ -Elisha
+==== Week of June 8-14, 2008 ====
+ * _Can now output starting locations with new button in the application window titled *GET START POSITIONS*. The locations are given in the *Log* window and the *Code* window. The custom starting locations may be saved by three steps shown below._ --Elisha
+  # Register a new `static int` for the simulation in the `SimulationFactory` file
+{{{
+    public static final int CUSTOM_START_SAHARA = 6;
+}}}
+  # Add a `String` in the proper location to the `GAME_STRINGS` array in the same file
+{{{
+    public static final String[] GAME_STRINGS = {
+        "Follow the Light", "Cops & Robbers", "Antarctica",
+        "Sahara", "Swallowed", "Jurassic",
+        "Custom Start Sahara", "Custom"};
+}}}
+  # Copy the code snippet under the *Code* window in the application, and paste it under a case statement in the `getTeams` method, still in the `SimulatonFactory` file:
+{{{
+    case CUSTOM_START_:
+         Vector<Team> teams = appropriateSimulation();
+         --paste code here--
+         return teams;
+}}}
+
+ * _Updated the taskings settings window to permit the opponent to be changed._ --Elisha
