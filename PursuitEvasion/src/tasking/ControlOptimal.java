@@ -55,6 +55,7 @@ public class ControlOptimal extends TaskGenerator {
             DistanceTable dist = new DistanceTable(ps, es);
             int numberOfPursuers = ps.size();
             int numberOfEvaders = es.size();
+            if(numberOfPursuers == 0 || numberOfEvaders == 0) { return; }
 
             //  This defines (how many constaints, how many variables)
             SizableProblemI prob = new Problem(numberOfPursuers + numberOfEvaders, numberOfPursuers * numberOfEvaders);
