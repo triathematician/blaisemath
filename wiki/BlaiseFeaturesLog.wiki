@@ -3,5 +3,11 @@
 
 ==== Week of June 8-14 ====
 
-* _Added ability of `PlotPanel`s to synchronize their `RangeTimer`s._ --Elisha
-* _Added ability to label paths (`PointSet2D`), and to display the current point when animating._ --Elisha
+ * _Added ability of `PlotPanel` to synchronize `RangeTimer` with another `PlotPanel`._ --Elisha
+ * _Added ability to label paths (`PointSet2D`), and to display the current point when animating._ --Elisha
+
+==== Week of June 1-7 and earlier ====
+
+ * _Restructured `blaise` package to organize `Plottable` elements by their corresponding `Visometry`._ --Elisha
+ * _Began work on `Voronoi2D` which will plot Voronoi tesselations. It works with the exception of rays going to infinity._ --Elisha
+ * _Wrote a working version of a contour plot for 2 input/1 output functions. It works, but it's rather slow._ --Elisha
