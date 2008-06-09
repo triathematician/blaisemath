@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Polygon
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/rect2/Point.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect2/Range.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Polygon.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom.rect2</FONT>
+<BR>
+Class  Polygon</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../../drasys/or/geom/rect2/Rect2.html">drasys.or.geom.rect2.Rect2</A>
+        |
+        +--<B>drasys.or.geom.rect2.Polygon</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>Polygon</B><DT>extends <A HREF="../../../../drasys/or/geom/rect2/Rect2.html">Rect2</A><DT>implements <A HREF="../../../../drasys/or/geom/rect2/PolygonI.html">PolygonI</A>, java.io.Serializable</DL>
+
+<P>
+An implementation of a polygon with optional holes in the 2D rectangular coordinate system.
+This polygon is a container object, it holds the points that define the vertices of the polygon.
+The points must be objects that implement the PointI interface and have immutable coordinates.
+The polygon also contains a set of polygons that represent holes in the polygon.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../serialized-form.html#drasys.or.geom.rect2.Polygon">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#Polygon(drasys.or.geom.rect2.PointI[])">Polygon</A></B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>[]&nbsp;vertices)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#Polygon(drasys.or.geom.rect2.PointI[], drasys.or.geom.rect2.PolygonI[])">Polygon</A></B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>[]&nbsp;vertices,
+        <A HREF="../../../../drasys/or/geom/rect2/PolygonI.html">PolygonI</A>[]&nbsp;holes)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#centroid()">centroid</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the point at the mean X and Y for the vertices, the holes are ignored.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#distanceProxyTo(drasys.or.geom.rect2.PointI)">distanceProxyTo</A></B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an easily computable proxy that can be used to compare the distance from the polygon border to the point argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#distanceTo(drasys.or.geom.rect2.PointI)">distanceTo</A></B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the distance from the polygon border to the point argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#equals(java.lang.Object)">equals</A></B>(java.lang.Object&nbsp;o)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the points and all the holes in each polygon are equal.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#getPoint(int)">getPoint</A></B>(int&nbsp;index)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the point at 'index' from the polygon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#hashCode()">hashCode</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#holes()">holes</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration on the holes of the polygon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#length()">length</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the length of the border of the polygon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#nearestPointTo(drasys.or.geom.rect2.PointI)">nearestPointTo</A></B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the point along the polygon border that is closest to the argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#point(int)">point</A></B>(int&nbsp;index)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the point at 'index';</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#range()">range</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#sizeOfHoles()">sizeOfHoles</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of holes in the polygon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#sizeOfVertices()">sizeOfVertices</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of vertices in the polygon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#toString()">toString</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect2/Polygon.html#vertices()">vertices</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration on the vertices of the polygon.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.geom.rect2.Rect2"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.geom.rect2.<A HREF="../../../../drasys/or/geom/rect2/Rect2.html">Rect2</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/geom/rect2/Rect2.html#coordinateSystem()">coordinateSystem</A>, 
+<A HREF="../../../../drasys/or/geom/rect2/Rect2.html#getCentroid()">getCentroid</A>, 
+<A HREF="../../../../drasys/or/geom/rect2/Rect2.html#getDistanceProxyTo(drasys.or.geom.PointI)">getDistanceProxyTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect2/Rect2.html#getDistanceTo(drasys.or.geom.PointI)">getDistanceTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect2/Rect2.html#getNearestPointTo(drasys.or.geom.PointI)">getNearestPointTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect2/Rect2.html#getRange()">getRange</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Polygon(drasys.or.geom.rect2.PointI[])"><!-- --></A><H3>
+Polygon</H3>
+<PRE>
+public <B>Polygon</B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>[]&nbsp;vertices)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="Polygon(drasys.or.geom.rect2.PointI[], drasys.or.geom.rect2.PolygonI[])"><!-- --></A><H3>
+Polygon</H3>
+<PRE>
+public <B>Polygon</B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>[]&nbsp;vertices,
+               <A HREF="../../../../drasys/or/geom/rect2/PolygonI.html">PolygonI</A>[]&nbsp;holes)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="point(int)"><!-- --></A><H3>
+point</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A> <B>point</B>(int&nbsp;index)</PRE>
+<DL>
+<DD>Returns the point at 'index';<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect2/PolygonI.html#point(int)">point</A> in interface <A HREF="../../../../drasys/or/geom/rect2/PolygonI.html">PolygonI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="range()"><!-- --></A><H3>
+range</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A> <B>range</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="centroid()"><!-- --></A><H3>
+centroid</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A> <B>centroid</B>()</PRE>
+<DL>
+<DD>Returns the point at the mean X and Y for the vertices, the holes are ignored.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfVertices()"><!-- --></A><H3>
+sizeOfVertices</H3>
+<PRE>
+public int <B>sizeOfVertices</B>()</PRE>
+<DL>
+<DD>Returns the number of vertices in the polygon. 
+The count includes the vertices in all the polygons in the hole tree.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfHoles()"><!-- --></A><H3>
+sizeOfHoles</H3>
+<PRE>
+public int <B>sizeOfHoles</B>()</PRE>
+<DL>
+<DD>Returns the number of holes in the polygon. 
+The count includes the holes in all the polygons in the hole tree.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPoint(int)"><!-- --></A><H3>
+getPoint</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPoint</B>(int&nbsp;index)</PRE>
+<DL>
+<DD>Returns the point at 'index' from the polygon.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="vertices()"><!-- --></A><H3>
+vertices</H3>
+<PRE>
+public java.util.Enumeration <B>vertices</B>()</PRE>
+<DL>
+<DD>Returns an enumeration on the vertices of the polygon.
+The objects returned implement 'drasys.or.geom.PointI'.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="holes()"><!-- --></A><H3>
+holes</H3>
+<PRE>
+public java.util.Enumeration <B>holes</B>()</PRE>
+<DL>
+<DD>Returns an enumeration on the holes of the polygon.
+The objects returned implement 'drasys.or.geom.PolygonI'.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="nearestPointTo(drasys.or.geom.rect2.PointI)"><!-- --></A><H3>
+nearestPointTo</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A> <B>nearestPointTo</B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns the point along the polygon border that is closest to the argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="distanceTo(drasys.or.geom.rect2.PointI)"><!-- --></A><H3>
+distanceTo</H3>
+<PRE>
+public double <B>distanceTo</B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns the distance from the polygon border to the point argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="distanceProxyTo(drasys.or.geom.rect2.PointI)"><!-- --></A><H3>
+distanceProxyTo</H3>
+<PRE>
+public double <B>distanceProxyTo</B>(<A HREF="../../../../drasys/or/geom/rect2/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns an easily computable proxy that can be used to compare the distance from the polygon border to the point argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="length()"><!-- --></A><H3>
+length</H3>
+<PRE>
+public double <B>length</B>()</PRE>
+<DL>
+<DD>Returns the length of the border of the polygon.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="hashCode()"><!-- --></A><H3>
+hashCode</H3>
+<PRE>
+public int <B>hashCode</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>hashCode in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(java.lang.Object)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(java.lang.Object&nbsp;o)</PRE>
+<DL>
+<DD>Returns true if the points and all the holes in each polygon are equal.
+The points are tested using the 'Point.equals()' static method.<DD><DL>
+<DT><B>Overrides:</B><DD>equals in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="toString()"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public java.lang.String <B>toString</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>toString in class java.lang.Object</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/rect2/Point.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect2/Range.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Polygon.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

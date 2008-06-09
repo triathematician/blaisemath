@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  CompressedMatrix
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedColumnMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CompressedMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.matrix</FONT>
+<BR>
+Class  CompressedMatrix</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/matrix/RealContainer.html">drasys.or.matrix.RealContainer</A>
+        |
+        +--<A HREF="../../../drasys/or/matrix/Matrix.html">drasys.or.matrix.Matrix</A>
+              |
+              +--<B>drasys.or.matrix.CompressedMatrix</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../drasys/or/matrix/CompressedColumnMatrix.html">CompressedColumnMatrix</A>, <A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html">CompressedRowMatrix</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public abstract class <B>CompressedMatrix</B><DT>extends <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A><DT>implements <A HREF="../../../drasys/or/matrix/SizableMatrixI.html">SizableMatrixI</A></DL>
+
+<P>
+Abstract base class for compressed matrices.
+A compressed matrix is a sparse matrix which stores only the non-null elements in the matrix.
+The values are stored in a single memory block and three additional memory blocks
+are used to store integer indices.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.matrix.CompressedMatrix">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="fields_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Fields inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#_epsilon">_epsilon</A>,  
+<A HREF="../../../drasys/or/matrix/RealContainer.html#_globalEpsilon">_globalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#CompressedMatrix()">CompressedMatrix</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#CompressedMatrix(double)">CompressedMatrix</A></B>(double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#CompressedMatrix(double[][])">CompressedMatrix</A></B>(double[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#CompressedMatrix(double[][], double)">CompressedMatrix</A></B>(double[][]&nbsp;array,
+                 double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#getValueArray()">getValueArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the internal array that is used to hold the element values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#setCapacityOfElements(int)">setCapacityOfElements</A></B>(int&nbsp;capacityOfElements)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Allocates memory so the matrix can hold this many elements without reallocating memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#setElements(double)">setElements</A></B>(double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of all the non-null elements.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#sizeOfColumns()">sizeOfColumns</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of columns in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#sizeOfRows()">sizeOfRows</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of rows in the matrix.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.Matrix"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/Matrix.html#columnElements(int)">columnElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#elements()">elements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(drasys.or.matrix.MatrixI)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(java.lang.Object)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#getArray()">getArray</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#rowElements(int)">rowElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setColumn(int, drasys.or.matrix.VectorI)">setColumn</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setDiagonal(drasys.or.matrix.VectorI)">setDiagonal</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setRow(int, drasys.or.matrix.VectorI)">setRow</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum()">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int, int, int, int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares()">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#toString()">toString</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#equals(double, double)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getEpsilon()">getEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getGlobalEpsilon()">getGlobalEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setEpsilon(double)">setEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setGlobalEpsilon(double)">setGlobalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="CompressedMatrix()"><!-- --></A><H3>
+CompressedMatrix</H3>
+<PRE>
+public <B>CompressedMatrix</B>()</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="CompressedMatrix(double)"><!-- --></A><H3>
+CompressedMatrix</H3>
+<PRE>
+public <B>CompressedMatrix</B>(double&nbsp;epsilon)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="CompressedMatrix(double[][], double)"><!-- --></A><H3>
+CompressedMatrix</H3>
+<PRE>
+public <B>CompressedMatrix</B>(double[][]&nbsp;array,
+                        double&nbsp;epsilon)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="CompressedMatrix(double[][])"><!-- --></A><H3>
+CompressedMatrix</H3>
+<PRE>
+public <B>CompressedMatrix</B>(double[][]&nbsp;array)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="setCapacityOfElements(int)"><!-- --></A><H3>
+setCapacityOfElements</H3>
+<PRE>
+public void <B>setCapacityOfElements</B>(int&nbsp;capacityOfElements)</PRE>
+<DL>
+<DD>Allocates memory so the matrix can hold this many elements without reallocating memory.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setElements(double)"><!-- --></A><H3>
+setElements</H3>
+<PRE>
+public void <B>setElements</B>(double&nbsp;value)</PRE>
+<DL>
+<DD>Sets the value of all the non-null elements.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getValueArray()"><!-- --></A><H3>
+getValueArray</H3>
+<PRE>
+public double[] <B>getValueArray</B>()</PRE>
+<DL>
+<DD>Returns the internal array that is used to hold the element values.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfRows()"><!-- --></A><H3>
+sizeOfRows</H3>
+<PRE>
+public int <B>sizeOfRows</B>()</PRE>
+<DL>
+<DD>Returns the number of rows in the matrix.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfColumns()"><!-- --></A><H3>
+sizeOfColumns</H3>
+<PRE>
+public int <B>sizeOfColumns</B>()</PRE>
+<DL>
+<DD>Returns the number of columns in the matrix.<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedColumnMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CompressedMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

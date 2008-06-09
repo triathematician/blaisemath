@@ -28,6 +28,7 @@ public class PEGPlot extends javax.swing.JFrame {
         plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
         plot2D2.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
         plot2D2.getVisometry().setAspectRatio(2);
+        plot2D2.synchronizeTimerWith(plot2D1);
         dataLog1.initialize(simulation1, plot2D1, plot2D2);
         simulation1.run();
         settingsMenu.add(simulation1.getMenu("Simulation"));
@@ -51,9 +52,11 @@ public class PEGPlot extends javax.swing.JFrame {
         infoPane = new javax.swing.JTabbedPane();
         plot2D2 = new specto.euclidean2.Plot2D();
         jScrollPane5 = new javax.swing.JScrollPane();
-        notificationWindow = new javax.swing.JTextArea();
+        logWindow = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        dataWindow = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        codeWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         plot2D1 = new specto.euclidean2.Plot2D();
@@ -67,6 +70,7 @@ public class PEGPlot extends javax.swing.JFrame {
         batchButton = new javax.swing.JButton();
         numBatchRunsSpinner = Settings.getSpinner(numBatchRunsModel);
         cooperationButton = new javax.swing.JButton();
+        startingPositionsButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         addDotsButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -114,20 +118,26 @@ public class PEGPlot extends javax.swing.JFrame {
 
         infoPane.addTab("Metrics", plot2D2);
 
-        notificationWindow.setColumns(20);
-        notificationWindow.setEditable(false);
-        notificationWindow.setRows(5);
-        notificationWindow.setToolTipText("See information about simulations which have been run.");
-        jScrollPane5.setViewportView(notificationWindow);
+        logWindow.setColumns(20);
+        logWindow.setEditable(false);
+        logWindow.setRows(5);
+        logWindow.setToolTipText("See information about simulations which have been run.");
+        jScrollPane5.setViewportView(logWindow);
 
         infoPane.addTab("Log", jScrollPane5);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setToolTipText("See a table of data obtained from the last simulation.");
-        jScrollPane1.setViewportView(jTextArea1);
+        dataWindow.setColumns(20);
+        dataWindow.setRows(5);
+        dataWindow.setToolTipText("See a table of data obtained from the last simulation.");
+        jScrollPane1.setViewportView(dataWindow);
 
         infoPane.addTab("Data", jScrollPane1);
+
+        codeWindow.setColumns(20);
+        codeWindow.setRows(5);
+        jScrollPane2.setViewportView(codeWindow);
+
+        infoPane.addTab("Code", jScrollPane2);
 
         jScrollPane3.setToolTipText("Communications network of the teams.");
         infoPane.addTab("Network View", jScrollPane3);
@@ -228,6 +238,18 @@ public class PEGPlot extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(cooperationButton);
+
+        startingPositionsButton.setFont(new java.awt.Font("Tahoma", 1, 12));
+        startingPositionsButton.setText("GET START POSITIONS");
+        startingPositionsButton.setFocusable(false);
+        startingPositionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        startingPositionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        startingPositionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startingPositionsButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(startingPositionsButton);
         jToolBar1.add(jSeparator3);
 
         addDotsButton.setText("Add Dots");
@@ -332,6 +354,7 @@ private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_jMenuItem12ActionPerformed
 
 private void randomizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeButtonActionPerformed
+    logWindow.append("\nNEW SIMULATION\n");
     simulation1.initStartingLocations();
     simulation1.run();
 }//GEN-LAST:event_randomizeButtonActionPerformed
@@ -360,14 +383,14 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
     else if(evt.getActionCommand().equals("log")){
         if(evt.getSource() instanceof DataLog){
-            ((DataLog)evt.getSource()).output(notificationWindow);
+            ((DataLog)evt.getSource()).output(logWindow);
         }else if(evt.getSource() instanceof Statistics){
-            ((Statistics)evt.getSource()).output(notificationWindow);
-            ((Statistics)evt.getSource()).outputData(jTextArea1);
+            ((Statistics)evt.getSource()).output(logWindow);
+            ((Statistics)evt.getSource()).outputData(dataWindow);
         }
     }
     else{
-        notificationWindow.append(evt.getActionCommand()+"\n");
+        logWindow.append(evt.getActionCommand()+"\n");
         statusText.setText(evt.getActionCommand());
     }
 }//GEN-LAST:event_simulation1ActionPerformed
@@ -381,13 +404,17 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private void cooperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationButtonActionPerformed
         for (Team t : simulation1.getTeams()) {
             if (t.victory != null) {
-                notificationWindow.append(t.victory.getCooperationMetric(simulation1).toString());
+                logWindow.append(t.victory.getCooperationMetric(simulation1).toString());
             }
             for (Valuation v : t.metrics) {
-                notificationWindow.append(v.getCooperationMetric(simulation1).toString());
+                logWindow.append(v.getCooperationMetric(simulation1).toString());
             }
         }
 }//GEN-LAST:event_cooperationButtonActionPerformed
+
+private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startingPositionsButtonActionPerformed
+    dataLog1.printStartingLocations(logWindow, codeWindow);
+}//GEN-LAST:event_startingPositionsButtonActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -405,8 +432,10 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JButton addDotsButton;
     private javax.swing.JMenu appearanceMenu;
     private javax.swing.JButton batchButton;
+    private javax.swing.JTextArea codeWindow;
     private javax.swing.JButton cooperationButton;
     private analysis.DataLog dataLog1;
+    private javax.swing.JTextArea dataWindow;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTabbedPane infoPane;
     private javax.swing.JComboBox jComboBox1;
@@ -425,15 +454,15 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JTextArea logWindow;
     private javax.swing.ButtonGroup menuSimModeGroup;
-    private javax.swing.JTextArea notificationWindow;
     private sequor.model.IntegerRangeModel numBatchRunsModel;
     private javax.swing.JSpinner numBatchRunsSpinner;
     private specto.euclidean2.Plot2D plot2D1;
@@ -443,6 +472,7 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private simulation.Simulation simulation1;
     private javax.swing.JMenu simulationMenu;
     private applications.SimulationSettingsPanel simulationSettingsPanel1;
+    private javax.swing.JButton startingPositionsButton;
     private javax.swing.JPanel statusBar;
     private javax.swing.JLabel statusText;
     // End of variables declaration//GEN-END:variables

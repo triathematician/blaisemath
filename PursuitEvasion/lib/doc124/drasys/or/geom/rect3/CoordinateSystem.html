@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  CoordinateSystem
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/LineSegment.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CoordinateSystem.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom.rect3</FONT>
+<BR>
+Class  CoordinateSystem</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.geom.rect3.CoordinateSystem</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>CoordinateSystem</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A>, java.io.Serializable</DL>
+
+<P>
+The object that describes the 3D rectangular coordinate system.
+The constructor for this class is private and an instance can be obtained with CoordinateSystem.getInstance();
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../serialized-form.html#drasys.or.geom.rect3.CoordinateSystem">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#_accuracy">_accuracy</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#dimensionName(int)">dimensionName</A></B>(int&nbsp;i)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns dimension names by ordinality.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#equals(double, double)">equals</A></B>(double&nbsp;a,
+       double&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the arguments are equal to with in the accuracy of the coordinate system.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#equals(java.lang.Object)">equals</A></B>(java.lang.Object&nbsp;o)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getAccuracy()">getAccuracy</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the absolute accuracy required in this coordinate system.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;<A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getInstance()">getInstance</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getPointInstance(double[])">getPointInstance</A></B>(double[]&nbsp;coordinates)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a point object initialized to the coordinates.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getPointInstance(drasys.or.geom.PointI)">getPointInstance</A></B>(<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a point object initialized to point.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getPointInstance(drasys.or.matrix.VectorI)">getPointInstance</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coordinates)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a point object initialized to the coordinates.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getRangeInstance(drasys.or.geom.PointI, drasys.or.geom.PointI)">getRangeInstance</A></B>(<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;a,
+                 <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a range object initialized to include the argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#getRangeInstance(drasys.or.geom.RangeI)">getRangeInstance</A></B>(<A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a range object initialized to include the arguments.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#isSymmetric()">isSymmetric</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retuns true if distances are symmetric.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#setAccuracy(double)">setAccuracy</A></B>(double&nbsp;accuracy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the absolute accuracy required in this coordinate system.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#sizeOfDimensions()">sizeOfDimensions</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of dimensions in the coordinate system.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html#toString()">toString</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="_accuracy"><!-- --></A><H3>
+_accuracy</H3>
+<PRE>
+protected static double <B>_accuracy</B></PRE>
+<DL>
+</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getInstance()"><!-- --></A><H3>
+getInstance</H3>
+<PRE>
+public static <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A> <B>getInstance</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getAccuracy()"><!-- --></A><H3>
+getAccuracy</H3>
+<PRE>
+public double <B>getAccuracy</B>()</PRE>
+<DL>
+<DD>Returns the absolute accuracy required in this coordinate system.
+The accuracy is used globally for equality tests and to terminate numerical methods.
+The default absolute accuracy for this coordinate system is '1.0E-6'.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getAccuracy()">getAccuracy</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setAccuracy(double)"><!-- --></A><H3>
+setAccuracy</H3>
+<PRE>
+public static void <B>setAccuracy</B>(double&nbsp;accuracy)</PRE>
+<DL>
+<DD>Sets the absolute accuracy required in this coordinate system.
+The accuracy is used globally for equality tests and to terminate numerical methods.
+The default absolute accuracy for this coordinate system is '1.0E-6'.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(double, double)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(double&nbsp;a,
+                      double&nbsp;b)</PRE>
+<DL>
+<DD>Returns true if the arguments are equal to with in the accuracy of the coordinate system.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#equals(double, double)">equals</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="toString()"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public java.lang.String <B>toString</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>toString in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfDimensions()"><!-- --></A><H3>
+sizeOfDimensions</H3>
+<PRE>
+public int <B>sizeOfDimensions</B>()</PRE>
+<DL>
+<DD>Returns the number of dimensions in the coordinate system.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#sizeOfDimensions()">sizeOfDimensions</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dimensionName(int)"><!-- --></A><H3>
+dimensionName</H3>
+<PRE>
+public java.lang.String <B>dimensionName</B>(int&nbsp;i)</PRE>
+<DL>
+<DD>Returns dimension names by ordinality.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#dimensionName(int)">dimensionName</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isSymmetric()"><!-- --></A><H3>
+isSymmetric</H3>
+<PRE>
+public boolean <B>isSymmetric</B>()</PRE>
+<DL>
+<DD>Retuns true if distances are symmetric.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#isSymmetric()">isSymmetric</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPointInstance(drasys.or.geom.PointI)"><!-- --></A><H3>
+getPointInstance</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPointInstance</B>(<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns an instance of a point object initialized to point.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getPointInstance(drasys.or.geom.PointI)">getPointInstance</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPointInstance(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+getPointInstance</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPointInstance</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coordinates)</PRE>
+<DL>
+<DD>Returns an instance of a point object initialized to the coordinates.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getPointInstance(drasys.or.matrix.VectorI)">getPointInstance</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPointInstance(double[])"><!-- --></A><H3>
+getPointInstance</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPointInstance</B>(double[]&nbsp;coordinates)</PRE>
+<DL>
+<DD>Returns an instance of a point object initialized to the coordinates.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getPointInstance(double[])">getPointInstance</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getRangeInstance(drasys.or.geom.RangeI)"><!-- --></A><H3>
+getRangeInstance</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A> <B>getRangeInstance</B>(<A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</PRE>
+<DL>
+<DD>Returns an instance of a range object initialized to include the arguments.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getRangeInstance(drasys.or.geom.RangeI)">getRangeInstance</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getRangeInstance(drasys.or.geom.PointI, drasys.or.geom.PointI)"><!-- --></A><H3>
+getRangeInstance</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/RangeI.html">RangeI</A> <B>getRangeInstance</B>(<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;a,
+                               <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;b)</PRE>
+<DL>
+<DD>Returns an instance of a range object initialized to include the argument.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/CoordinateSystemI.html#getRangeInstance(drasys.or.geom.PointI, drasys.or.geom.PointI)">getRangeInstance</A> in interface <A HREF="../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(java.lang.Object)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(java.lang.Object&nbsp;o)</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>equals in class java.lang.Object</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/LineSegment.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CoordinateSystem.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

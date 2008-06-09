@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  PoissonDistribution
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/prob/NormalDistribution.Pdf.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PoissonDistribution.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.prob</FONT>
+<BR>
+Class  PoissonDistribution</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/prob/Distribution.html">drasys.or.prob.Distribution</A>
+        |
+        +--<A HREF="../../../drasys/or/prob/DiscreteDistribution.html">drasys.or.prob.DiscreteDistribution</A>
+              |
+              +--<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html">drasys.or.prob.PoissonDistributionBase</A>
+                    |
+                    +--<B>drasys.or.prob.PoissonDistribution</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>PoissonDistribution</B><DT>extends <A HREF="../../../drasys/or/prob/PoissonDistributionBase.html">PoissonDistributionBase</A><DT>implements <A HREF="../../../drasys/or/prob/DiscreteDistributionI.html">DiscreteDistributionI</A></DL>
+
+<P>
+An implementation of the Poisson probability distribution.
+The Poisson probability distribution models the number of events that occur in a fixed interval.
+The interval can be measured by time, space, volume, etc.
+The single parameter is the mean rate that the events happen.
+<BR>
+<BR>
+For example, if a street intersection averages two accidents per week, a Poisson distribution to model the intersection would have a mean of 2.
+The probability distribution function 'pdf(x)' gives the probability that there will be exactly x accidents in one week.
+The cumulative distribution function 'cdf(x)' gives the probability that there will x or fewer accidents in one week.
+The method 'getRandomScaler' will return the number of accidents for a random week at the intersection and their average will be 2.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0201896842"HREF="http://www.amazon.com/exec/obidos/ISBN=0201896842/opsresearchcomA/" TARGET="amazon.com">The Art of Computer Programming: Seminumerical Algorithms (Vol 2, 3rd Ed)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Donald Ervin Knuth; Hardcover<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="020111366X"HREF="http://www.amazon.com/exec/obidos/ISBN=020111366X/opsresearchcomA/" TARGET="amazon.com">Probability and Statistics</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Morris H. Degroot / Hardcover / Published 1986<BR><B><A NAME="0534209165"HREF="http://www.amazon.com/exec/obidos/ISBN=0534209165/opsresearchcomA/" TARGET="amazon.com">Mathematical Statistics With Applications</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Dennis D. Wackerly, et al / Hardcover / Published 1996<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.prob.PoissonDistribution">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/PoissonDistribution.html#PoissonDistribution(double)">PoissonDistribution</A></B>(double&nbsp;mean)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/PoissonDistribution.html#PoissonDistribution(double, drasys.or.FunctionsI)">PoissonDistribution</A></B>(double&nbsp;mean,
+                    <A HREF="../../../drasys/or/FunctionsI.html">FunctionsI</A>&nbsp;functions)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The functions objects will be used for the 'lnGamma' and 'lnFactorial' methods.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/PoissonDistribution.html#PoissonDistribution(double, long)">PoissonDistribution</A></B>(double&nbsp;mean,
+                    long&nbsp;seed)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/PoissonDistribution.html#cdf(int)">cdf</A></B>(int&nbsp;x)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value of the cumulative distribution function at x;
+The standard edition iterates the pdf (x+1) times.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/PoissonDistribution.html#probability(int, int)">probability</A></B>(int&nbsp;x1,
+            int&nbsp;x2)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the probability that x >= x1 and x <= x2.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.prob.PoissonDistributionBase"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.prob.<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html">PoissonDistributionBase</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#equals(java.lang.Object)">equals</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#getRandomInteger()">getRandomInteger</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#mean()">mean</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#pdf(int)">pdf</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#setParameters(double)">setParameters</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#std()">std</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#toString()">toString</A>, 
+<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#variance()">variance</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.prob.DiscreteDistribution"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.prob.<A HREF="../../../drasys/or/prob/DiscreteDistribution.html">DiscreteDistribution</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/prob/DiscreteDistribution.html#cdf(double)">cdf</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#getRandomArray(int)">getRandomArray</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#getRandomArray(int, int)">getRandomArray</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#getRandomScaler()">getRandomScaler</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#pdf(double)">pdf</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#probability(double)">probability</A>, 
+<A HREF="../../../drasys/or/prob/DiscreteDistribution.html#probability(double, double)">probability</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.prob.Distribution"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.prob.<A HREF="../../../drasys/or/prob/Distribution.html">Distribution</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/prob/Distribution.html#getRandomMatrix(int, int)">getRandomMatrix</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#getRandomNumberGenerator()">getRandomNumberGenerator</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#getRandomVector(int)">getRandomVector</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setElements(drasys.or.matrix.VectorI)">setElements</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setRandomNumberGenerator(drasys.or.prob.RandomI)">setRandomNumberGenerator</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setSeed(long)">setSeed</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="PoissonDistribution(double)"><!-- --></A><H3>
+PoissonDistribution</H3>
+<PRE>
+public <B>PoissonDistribution</B>(double&nbsp;mean)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="PoissonDistribution(double, long)"><!-- --></A><H3>
+PoissonDistribution</H3>
+<PRE>
+public <B>PoissonDistribution</B>(double&nbsp;mean,
+                           long&nbsp;seed)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="PoissonDistribution(double, drasys.or.FunctionsI)"><!-- --></A><H3>
+PoissonDistribution</H3>
+<PRE>
+public <B>PoissonDistribution</B>(double&nbsp;mean,
+                           <A HREF="../../../drasys/or/FunctionsI.html">FunctionsI</A>&nbsp;functions)</PRE>
+<DL>
+<DD>The functions objects will be used for the 'lnGamma' and 'lnFactorial' methods.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="cdf(int)"><!-- --></A><H3>
+cdf</H3>
+<PRE>
+public double <B>cdf</B>(int&nbsp;x)</PRE>
+<DL>
+<DD>Returns the value of the cumulative distribution function at x;
+The standard edition iterates the pdf (x+1) times.
+The professional edition uses the incomplete gamma function.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/prob/DiscreteDistributionI.html#cdf(int)">cdf</A> in interface <A HREF="../../../drasys/or/prob/DiscreteDistributionI.html">DiscreteDistributionI</A><DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#cdf(int)">cdf</A> in class <A HREF="../../../drasys/or/prob/PoissonDistributionBase.html">PoissonDistributionBase</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if x < 0;</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="probability(int, int)"><!-- --></A><H3>
+probability</H3>
+<PRE>
+public double <B>probability</B>(int&nbsp;x1,
+                          int&nbsp;x2)</PRE>
+<DL>
+<DD>Returns the probability that x >= x1 and x <= x2.
+The standard edition iterates the pdf (x2-x1+1) times.
+The professional edition uses the incomplete gamma function.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/prob/DiscreteDistributionI.html#probability(int, int)">probability</A> in interface <A HREF="../../../drasys/or/prob/DiscreteDistributionI.html">DiscreteDistributionI</A><DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/prob/PoissonDistributionBase.html#probability(int, int)">probability</A> in class <A HREF="../../../drasys/or/prob/PoissonDistributionBase.html">PoissonDistributionBase</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if x2 < x1 or x1 < 0;</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/prob/NormalDistribution.Pdf.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/prob/PoissonDistributionBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PoissonDistribution.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

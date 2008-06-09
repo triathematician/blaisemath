@@ -1,0 +1,572 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  GammaDistribution
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/prob/FDistribution.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/prob/IncompleteBeta.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="GammaDistribution.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.prob</FONT>
+<BR>
+Class  GammaDistribution</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/prob/Distribution.html">drasys.or.prob.Distribution</A>
+        |
+        +--<A HREF="../../../drasys/or/prob/ContinuousDistribution.html">drasys.or.prob.ContinuousDistribution</A>
+              |
+              +--<B>drasys.or.prob.GammaDistribution</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>GammaDistribution</B><DT>extends <A HREF="../../../drasys/or/prob/ContinuousDistribution.html">ContinuousDistribution</A><DT>implements <A HREF="../../../drasys/or/prob/ContinuousDistributionI.html">ContinuousDistributionI</A>, <A HREF="../../../drasys/or/nonlinear/FunctionI.html">FunctionI</A></DL>
+
+<P>
+An implementation of the Gamma probability distribution.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0201896842"HREF="http://www.amazon.com/exec/obidos/ISBN=0201896842/opsresearchcomA/" TARGET="amazon.com">The Art of Computer Programming: Seminumerical Algorithms (Vol 2, 3rd Ed)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Donald Ervin Knuth; Hardcover<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="020111366X"HREF="http://www.amazon.com/exec/obidos/ISBN=020111366X/opsresearchcomA/" TARGET="amazon.com">Probability and Statistics</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Morris H. Degroot / Hardcover / Published 1986<BR><B><A NAME="0534209165"HREF="http://www.amazon.com/exec/obidos/ISBN=0534209165/opsresearchcomA/" TARGET="amazon.com">Mathematical Statistics With Applications</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Dennis D. Wackerly, et al / Hardcover / Published 1996<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.prob.GammaDistribution">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#GammaDistribution()">GammaDistribution</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#GammaDistribution(double, double)">GammaDistribution</A></B>(double&nbsp;alpha,
+                  double&nbsp;beta)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#GammaDistribution(double, double, drasys.or.nonlinear.IntegrationI)">GammaDistribution</A></B>(double&nbsp;alpha,
+                  double&nbsp;beta,
+                  <A HREF="../../../drasys/or/nonlinear/IntegrationI.html">IntegrationI</A>&nbsp;integration)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The argument integration will be used to compute the cdf from the pdf.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#GammaDistribution(double, double, long)">GammaDistribution</A></B>(double&nbsp;alpha,
+                  double&nbsp;beta,
+                  long&nbsp;seed)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#alpha()">alpha</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value of the alpha parameter.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#beta()">beta</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value of the beta parameter.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#cdf(double)">cdf</A></B>(double&nbsp;x)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the cdf by numerical integration using the pdf.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#equals(java.lang.Object)">equals</A></B>(java.lang.Object&nbsp;o)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#function(double)">function</A></B>(double&nbsp;x)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#getRandomScaler()">getRandomScaler</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a random number from the gamma distribution.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#mean()">mean</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the mean of the distribution.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#pdf(double)">pdf</A></B>(double&nbsp;x)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value of the probability distribution function at x;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#probability(double, double)">probability</A></B>(double&nbsp;x1,
+            double&nbsp;x2)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the the probability that x will be between x1 and x2 by numerical integration using the pdf.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#setParameters(double, double)">setParameters</A></B>(double&nbsp;alpha,
+              double&nbsp;beta)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the distribution parameters.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#setParameters(double, double, double)">setParameters</A></B>(double&nbsp;alpha,
+              double&nbsp;beta,
+              double&nbsp;coefficient)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the distribution parameters.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#std()">std</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the standard deviation of the distribution.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#toString()">toString</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/prob/GammaDistribution.html#variance()">variance</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the variance of the distribution.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.prob.ContinuousDistribution"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.prob.<A HREF="../../../drasys/or/prob/ContinuousDistribution.html">ContinuousDistribution</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/prob/ContinuousDistribution.html#inverseCdf(double)">inverseCdf</A>, 
+<A HREF="../../../drasys/or/prob/ContinuousDistribution.html#probability(double)">probability</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.prob.Distribution"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.prob.<A HREF="../../../drasys/or/prob/Distribution.html">Distribution</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/prob/Distribution.html#getRandomMatrix(int, int)">getRandomMatrix</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#getRandomNumberGenerator()">getRandomNumberGenerator</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#getRandomVector(int)">getRandomVector</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setElements(drasys.or.matrix.VectorI)">setElements</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setRandomNumberGenerator(drasys.or.prob.RandomI)">setRandomNumberGenerator</A>, 
+<A HREF="../../../drasys/or/prob/Distribution.html#setSeed(long)">setSeed</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="GammaDistribution()"><!-- --></A><H3>
+GammaDistribution</H3>
+<PRE>
+public <B>GammaDistribution</B>()</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="GammaDistribution(double, double)"><!-- --></A><H3>
+GammaDistribution</H3>
+<PRE>
+public <B>GammaDistribution</B>(double&nbsp;alpha,
+                         double&nbsp;beta)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="GammaDistribution(double, double, long)"><!-- --></A><H3>
+GammaDistribution</H3>
+<PRE>
+public <B>GammaDistribution</B>(double&nbsp;alpha,
+                         double&nbsp;beta,
+                         long&nbsp;seed)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="GammaDistribution(double, double, drasys.or.nonlinear.IntegrationI)"><!-- --></A><H3>
+GammaDistribution</H3>
+<PRE>
+public <B>GammaDistribution</B>(double&nbsp;alpha,
+                         double&nbsp;beta,
+                         <A HREF="../../../drasys/or/nonlinear/IntegrationI.html">IntegrationI</A>&nbsp;integration)</PRE>
+<DL>
+<DD>The argument integration will be used to compute the cdf from the pdf.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="function(double)"><!-- --></A><H3>
+function</H3>
+<PRE>
+public double <B>function</B>(double&nbsp;x)</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/nonlinear/FunctionI.html#function(double)">function</A> in interface <A HREF="../../../drasys/or/nonlinear/FunctionI.html">FunctionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setParameters(double, double, double)"><!-- --></A><H3>
+setParameters</H3>
+<PRE>
+public void <B>setParameters</B>(double&nbsp;alpha,
+                          double&nbsp;beta,
+                          double&nbsp;coefficient)</PRE>
+<DL>
+<DD>Sets the distribution parameters. This method uses the coefficient argument in the pdf: '1/[gamma(alpha+1)*beta^(alpha+1)]'.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if alpha <= -1.0 or beta <= 0.0.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setParameters(double, double)"><!-- --></A><H3>
+setParameters</H3>
+<PRE>
+public void <B>setParameters</B>(double&nbsp;alpha,
+                          double&nbsp;beta)</PRE>
+<DL>
+<DD>Sets the distribution parameters. This method uses the 'lnGamma' method in 'functions' to compute the coefficient in the pdf: '1/[gamma(alpha+1)*beta^(alpha+1)]'.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if alpha <= 0.0 or beta <= 0.0.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="alpha()"><!-- --></A><H3>
+alpha</H3>
+<PRE>
+public double <B>alpha</B>()</PRE>
+<DL>
+<DD>Returns the value of the alpha parameter.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="beta()"><!-- --></A><H3>
+beta</H3>
+<PRE>
+public double <B>beta</B>()</PRE>
+<DL>
+<DD>Returns the value of the beta parameter.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="mean()"><!-- --></A><H3>
+mean</H3>
+<PRE>
+public double <B>mean</B>()</PRE>
+<DL>
+<DD>Returns the mean of the distribution.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="variance()"><!-- --></A><H3>
+variance</H3>
+<PRE>
+public double <B>variance</B>()</PRE>
+<DL>
+<DD>Returns the variance of the distribution.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="std()"><!-- --></A><H3>
+std</H3>
+<PRE>
+public double <B>std</B>()</PRE>
+<DL>
+<DD>Returns the standard deviation of the distribution.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getRandomScaler()"><!-- --></A><H3>
+getRandomScaler</H3>
+<PRE>
+public double <B>getRandomScaler</B>()</PRE>
+<DL>
+<DD>Returns a random number from the gamma distribution.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/prob/ContinuousDistribution.html#getRandomScaler()">getRandomScaler</A> in class <A HREF="../../../drasys/or/prob/ContinuousDistribution.html">ContinuousDistribution</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="pdf(double)"><!-- --></A><H3>
+pdf</H3>
+<PRE>
+public double <B>pdf</B>(double&nbsp;x)</PRE>
+<DL>
+<DD>Returns the value of the probability distribution function at x;<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if x < 0.0.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="cdf(double)"><!-- --></A><H3>
+cdf</H3>
+<PRE>
+public double <B>cdf</B>(double&nbsp;x)</PRE>
+<DL>
+<DD>Computes the cdf by numerical integration using the pdf.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD>StatError - if the integration fails.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="probability(double, double)"><!-- --></A><H3>
+probability</H3>
+<PRE>
+public double <B>probability</B>(double&nbsp;x1,
+                          double&nbsp;x2)</PRE>
+<DL>
+<DD>Computes the the probability that x will be between x1 and x2 by numerical integration using the pdf.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../drasys/or/InvalidArgumentError.html">InvalidArgumentError</A> - if x2 < x1 or x1 < 0.0.<DD>StatError - if the integration fails.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(java.lang.Object)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(java.lang.Object&nbsp;o)</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>equals in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="toString()"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public java.lang.String <B>toString</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>toString in class java.lang.Object</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/prob/FDistribution.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/prob/IncompleteBeta.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="GammaDistribution.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

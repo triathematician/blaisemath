@@ -1,0 +1,503 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Ellipsoid
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/geo/CoordinateSystem.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/geo/Geo.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Ellipsoid.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom.geo</FONT>
+<BR>
+Class  Ellipsoid</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.geom.geo.Ellipsoid</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>Ellipsoid</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A>, java.io.Serializable</DL>
+
+<P>
+An implementation of an elipsoid.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0748403035"HREF="http://www.amazon.com/exec/obidos/ISBN=0748403035/opsresearchcomA/" TARGET="amazon.com">Map Projections : A Reference Manual</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Lev M. Bugayevskiy, John P. Snyder / Hardcover / Published 1995<BR><B><A NAME="0226767477"HREF="http://www.amazon.com/exec/obidos/ISBN=0226767477/opsresearchcomA/" TARGET="amazon.com">Flattening the Earth : Two Thousand Years of Map Projections</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;John P. Synder, John P. Snyder / Paperback / Published 1997<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../serialized-form.html#drasys.or.geom.geo.Ellipsoid">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#Ellipsoid(java.lang.String, double, double)">Ellipsoid</A></B>(java.lang.String&nbsp;name,
+          double&nbsp;equatorialRadius,
+          double&nbsp;flattening)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct a custom ellipsoid.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getEccentricity()">getEccentricity</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the eccentricity of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getEccentricitySquared()">getEccentricitySquared</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the square of the eccentricity of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getEllipsoidNames()">getEllipsoidNames</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an array containing the names of the available ellipsoids.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getEquatorialRadius()">getEquatorialRadius</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the equatorial radius of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getFlattening()">getFlattening</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the flattening of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;<A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html">Ellipsoid</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getInstance(java.lang.String)">getInstance</A></B>(java.lang.String&nbsp;name)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an instance of a standard ellipsoid by name.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getInverseMeridinalDistance(double)">getInverseMeridinalDistance</A></B>(double&nbsp;distance)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the latitude in radians that is 'distance' from the equator.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getMeanRadius()">getMeanRadius</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the mean radius of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getMeridinalDistance(double)">getMeridinalDistance</A></B>(double&nbsp;radians)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the meridinal distance from the equator to a latitude given in radians.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getMeridinalDistance(double, double, double)">getMeridinalDistance</A></B>(double&nbsp;radians,
+                     double&nbsp;sin,
+                     double&nbsp;cos)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the meridinal distance from the equator to a latitude.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getName()">getName</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the name used to identify the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#getPolarRadius()">getPolarRadius</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the polar radius of the ellipsoid.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#greatCircleAngle(drasys.or.geom.geo.PointI, drasys.or.geom.geo.PointI)">greatCircleAngle</A></B>(<A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point1,
+                 <A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point2)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the great circle angle in radians.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html#greatCircleSphericalDistance(drasys.or.geom.geo.PointI, drasys.or.geom.geo.PointI)">greatCircleSphericalDistance</A></B>(<A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point1,
+                             <A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point2)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the great circle distance in the units of the ellipsoid.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Ellipsoid(java.lang.String, double, double)"><!-- --></A><H3>
+Ellipsoid</H3>
+<PRE>
+public <B>Ellipsoid</B>(java.lang.String&nbsp;name,
+                 double&nbsp;equatorialRadius,
+                 double&nbsp;flattening)</PRE>
+<DL>
+<DD>Construct a custom ellipsoid.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getInstance(java.lang.String)"><!-- --></A><H3>
+getInstance</H3>
+<PRE>
+public static <A HREF="../../../../drasys/or/geom/geo/Ellipsoid.html">Ellipsoid</A> <B>getInstance</B>(java.lang.String&nbsp;name)</PRE>
+<DL>
+<DD>Returns an instance of a standard ellipsoid by name.
+The radius values are in meters.
+The available ellipsoids are:<BR>
+"WGS 84",                 6378137.000, 1.0/298.257223563<BR>
+"WGS 72",                 6378135.000, 1.0/298.26<BR>
+"WGS 66",                 6378145.000, 1.0/298.25<BR>
+"WGS 60",                 6378165.000, 1.0/298.30<BR>
+"South American 1969",    6378160.000, 1.0/298.25<BR>
+"Krassovsky 1940",        6378245.000, 1.0/298.30<BR>
+"Hough 1956",             6378270.000, 1.0/297.00<BR>
+"GRS 1980",               6378137.000, 1.0/298.257222101<BR>
+"GRS 1975",               6378140.000, 1.0/298.257<BR>
+"GRS 1967",               6378160.000, 1.0/298.247167427<BR>
+"Fischer 1968",           6378150.000, 1.0/298.30<BR>
+"Fischer 1960",           6378166.000, 1.0/298.30<BR>
+"Everest 1830",           6377276.345, 1.0/300.8017<BR>
+"Clarke 1880",            6378249.145, 1.0/293.465<BR>
+"Clarke 1866",            6378206.400, 1.0/294.9786982<BR>
+"Bessel 1841",            6377397.155, 1.0/299.1528128<BR>
+"Airy 1830",              6377563.396, 1.0/299.3249646<BR><DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEllipsoidNames()"><!-- --></A><H3>
+getEllipsoidNames</H3>
+<PRE>
+public static java.lang.String[] <B>getEllipsoidNames</B>()</PRE>
+<DL>
+<DD>Returns an array containing the names of the available ellipsoids.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getName()"><!-- --></A><H3>
+getName</H3>
+<PRE>
+public java.lang.String <B>getName</B>()</PRE>
+<DL>
+<DD>Returns the name used to identify the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getName()">getName</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getFlattening()"><!-- --></A><H3>
+getFlattening</H3>
+<PRE>
+public double <B>getFlattening</B>()</PRE>
+<DL>
+<DD>Returns the flattening of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getFlattening()">getFlattening</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEccentricity()"><!-- --></A><H3>
+getEccentricity</H3>
+<PRE>
+public double <B>getEccentricity</B>()</PRE>
+<DL>
+<DD>Returns the eccentricity of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getEccentricity()">getEccentricity</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEccentricitySquared()"><!-- --></A><H3>
+getEccentricitySquared</H3>
+<PRE>
+public double <B>getEccentricitySquared</B>()</PRE>
+<DL>
+<DD>Returns the square of the eccentricity of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getEccentricitySquared()">getEccentricitySquared</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPolarRadius()"><!-- --></A><H3>
+getPolarRadius</H3>
+<PRE>
+public double <B>getPolarRadius</B>()</PRE>
+<DL>
+<DD>Returns the polar radius of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getPolarRadius()">getPolarRadius</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEquatorialRadius()"><!-- --></A><H3>
+getEquatorialRadius</H3>
+<PRE>
+public double <B>getEquatorialRadius</B>()</PRE>
+<DL>
+<DD>Returns the equatorial radius of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getEquatorialRadius()">getEquatorialRadius</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getMeanRadius()"><!-- --></A><H3>
+getMeanRadius</H3>
+<PRE>
+public double <B>getMeanRadius</B>()</PRE>
+<DL>
+<DD>Returns the mean radius of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getMeanRadius()">getMeanRadius</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getMeridinalDistance(double)"><!-- --></A><H3>
+getMeridinalDistance</H3>
+<PRE>
+public double <B>getMeridinalDistance</B>(double&nbsp;radians)</PRE>
+<DL>
+<DD>Returns the meridinal distance from the equator to a latitude given in radians.
+The arguments are the sin and cos of the latitude.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getMeridinalDistance(double)">getMeridinalDistance</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getMeridinalDistance(double, double, double)"><!-- --></A><H3>
+getMeridinalDistance</H3>
+<PRE>
+public double <B>getMeridinalDistance</B>(double&nbsp;radians,
+                                   double&nbsp;sin,
+                                   double&nbsp;cos)</PRE>
+<DL>
+<DD>Returns the meridinal distance from the equator to a latitude.
+The arguments are the sin and cos of the latitude.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getMeridinalDistance(double, double, double)">getMeridinalDistance</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getInverseMeridinalDistance(double)"><!-- --></A><H3>
+getInverseMeridinalDistance</H3>
+<PRE>
+public double <B>getInverseMeridinalDistance</B>(double&nbsp;distance)</PRE>
+<DL>
+<DD>Returns the latitude in radians that is 'distance' from the equator.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#getInverseMeridinalDistance(double)">getInverseMeridinalDistance</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="greatCircleSphericalDistance(drasys.or.geom.geo.PointI, drasys.or.geom.geo.PointI)"><!-- --></A><H3>
+greatCircleSphericalDistance</H3>
+<PRE>
+public double <B>greatCircleSphericalDistance</B>(<A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point1,
+                                           <A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point2)</PRE>
+<DL>
+<DD>Returns the great circle distance in the units of the ellipsoid.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html#greatCircleSphericalDistance(drasys.or.geom.geo.PointI, drasys.or.geom.geo.PointI)">greatCircleSphericalDistance</A> in interface <A HREF="../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="greatCircleAngle(drasys.or.geom.geo.PointI, drasys.or.geom.geo.PointI)"><!-- --></A><H3>
+greatCircleAngle</H3>
+<PRE>
+public static double <B>greatCircleAngle</B>(<A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point1,
+                                      <A HREF="../../../../drasys/or/geom/geo/PointI.html">PointI</A>&nbsp;point2)</PRE>
+<DL>
+<DD>Returns the great circle angle in radians.<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/geo/CoordinateSystem.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/geo/Geo.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Ellipsoid.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

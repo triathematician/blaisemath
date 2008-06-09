@@ -1,0 +1,3482 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Array
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../drasys/or/util/ComplexArray.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Array.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.util</FONT>
+<BR>
+Class  Array</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.util.Array</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>Array</B><DT>extends java.lang.Object</DL>
+
+<P>
+Array utility class.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#Array()">Array</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, boolean[], int, int, boolean)">copy</A></B>(int&nbsp;n,
+     boolean[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     boolean&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, boolean[], int, int, boolean[], int, int)">copy</A></B>(int&nbsp;n,
+     boolean[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     boolean[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, byte[], int, int, byte)">copy</A></B>(int&nbsp;n,
+     byte[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     byte&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, byte[], int, int, byte[], int, int)">copy</A></B>(int&nbsp;n,
+     byte[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     byte[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, double[], int, int, double)">copy</A></B>(int&nbsp;n,
+     double[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     double&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, double[], int, int, double[], int, int)">copy</A></B>(int&nbsp;n,
+     double[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     double[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, float[], int, int, float)">copy</A></B>(int&nbsp;n,
+     float[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     float&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, float[], int, int, float[], int, int)">copy</A></B>(int&nbsp;n,
+     float[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     float[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, int[], int, int, int)">copy</A></B>(int&nbsp;n,
+     int[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     int&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, int[], int, int, int[], int, int)">copy</A></B>(int&nbsp;n,
+     int[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     int[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, long[], int, int, long)">copy</A></B>(int&nbsp;n,
+     long[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     long&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, long[], int, int, long[], int, int)">copy</A></B>(int&nbsp;n,
+     long[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     long[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, java.lang.Object[], int, int, java.lang.Object)">copy</A></B>(int&nbsp;n,
+     java.lang.Object[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.Object&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, java.lang.Object[], int, int, java.lang.Object[], int, int)">copy</A></B>(int&nbsp;n,
+     java.lang.Object[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.Object[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, short[], int, int, short)">copy</A></B>(int&nbsp;n,
+     short[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     short&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, short[], int, int, short[], int, int)">copy</A></B>(int&nbsp;n,
+     short[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     short[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, java.lang.String[], int, int, java.lang.String)">copy</A></B>(int&nbsp;n,
+     java.lang.String[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.String&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#copy(int, java.lang.String[], int, int, java.lang.String[], int, int)">copy</A></B>(int&nbsp;n,
+     java.lang.String[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.String[]&nbsp;y,
+     int&nbsp;begY,
+     int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, boolean[], int, int, boolean)">count</A></B>(int&nbsp;n,
+      boolean[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      boolean&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, byte[], int, int, byte, byte)">count</A></B>(int&nbsp;n,
+      byte[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      byte&nbsp;low,
+      byte&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, double[], int, int, double, double)">count</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      double&nbsp;low,
+      double&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, float[], int, int, float, float)">count</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      float&nbsp;low,
+      float&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, int[], int, int, int, int)">count</A></B>(int&nbsp;n,
+      int[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      int&nbsp;low,
+      int&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, long[], int, int, long, long)">count</A></B>(int&nbsp;n,
+      long[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      long&nbsp;low,
+      long&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, java.lang.Object[], int, int, java.lang.Object)">count</A></B>(int&nbsp;n,
+      java.lang.Object[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      java.lang.Object&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, short[], int, int, short, short)">count</A></B>(int&nbsp;n,
+      short[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      short&nbsp;low,
+      short&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#count(int, java.lang.String[], int, int, java.lang.String, java.lang.String)">count</A></B>(int&nbsp;n,
+      java.lang.String[]&nbsp;x,
+      int&nbsp;begX,
+      int&nbsp;incX,
+      java.lang.String&nbsp;low,
+      java.lang.String&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, boolean[], int, int, boolean[], int, int)">equals</A></B>(int&nbsp;n,
+       boolean[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       boolean[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, byte[], int, int, byte[], int, int)">equals</A></B>(int&nbsp;n,
+       byte[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       byte[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, double[], int, int, double[], int, int, double)">equals</A></B>(int&nbsp;n,
+       double[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       double[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY,
+       double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, float[], int, int, float[], int, int, float)">equals</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       float[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY,
+       float&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, int[], int, int, int[], int, int)">equals</A></B>(int&nbsp;n,
+       int[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       int[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, long[], int, int, long[], int, int)">equals</A></B>(int&nbsp;n,
+       long[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       long[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, java.lang.Object[], int, int, java.lang.Object[], int, int)">equals</A></B>(int&nbsp;n,
+       java.lang.Object[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       java.lang.Object[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, short[], int, int, short[], int, int)">equals</A></B>(int&nbsp;n,
+       short[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       short[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#equals(int, java.lang.String[], int, int, java.lang.String[], int, int)">equals</A></B>(int&nbsp;n,
+       java.lang.String[]&nbsp;x,
+       int&nbsp;begX,
+       int&nbsp;incX,
+       java.lang.String[]&nbsp;y,
+       int&nbsp;begY,
+       int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, boolean[], int, int, boolean)">find</A></B>(int&nbsp;n,
+     boolean[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     boolean&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, byte[], int, int, byte, byte)">find</A></B>(int&nbsp;n,
+     byte[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     byte&nbsp;low,
+     byte&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, double[], int, int, double, double)">find</A></B>(int&nbsp;n,
+     double[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     double&nbsp;low,
+     double&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, float[], int, int, float, float)">find</A></B>(int&nbsp;n,
+     float[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     float&nbsp;low,
+     float&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, int[], int, int, int, int)">find</A></B>(int&nbsp;n,
+     int[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     int&nbsp;low,
+     int&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, long[], int, int, long, long)">find</A></B>(int&nbsp;n,
+     long[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     long&nbsp;low,
+     long&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, java.lang.Object[], int, int, java.lang.Object)">find</A></B>(int&nbsp;n,
+     java.lang.Object[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.Object&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, short[], int, int, short, short)">find</A></B>(int&nbsp;n,
+     short[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     short&nbsp;low,
+     short&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#find(int, java.lang.String[], int, int, java.lang.String, java.lang.String)">find</A></B>(int&nbsp;n,
+     java.lang.String[]&nbsp;x,
+     int&nbsp;begX,
+     int&nbsp;incX,
+     java.lang.String&nbsp;low,
+     java.lang.String&nbsp;high)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#position(int[], int)">position</A></B>(int[]&nbsp;a,
+         int&nbsp;v)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finds the position of the first instance of 'v' in the array 'a'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, boolean[])">resize</A></B>(int&nbsp;n,
+       boolean[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, boolean[][])">resize</A></B>(int&nbsp;n,
+       boolean[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;boolean[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, boolean[], boolean)">resize</A></B>(int&nbsp;n,
+       boolean[]&nbsp;array,
+       boolean&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, byte[])">resize</A></B>(int&nbsp;n,
+       byte[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, byte[][])">resize</A></B>(int&nbsp;n,
+       byte[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, byte[], byte)">resize</A></B>(int&nbsp;n,
+       byte[]&nbsp;array,
+       byte&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, double[])">resize</A></B>(int&nbsp;n,
+       double[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, double[][])">resize</A></B>(int&nbsp;n,
+       double[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, double[], double)">resize</A></B>(int&nbsp;n,
+       double[]&nbsp;array,
+       double&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;float[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, float[])">resize</A></B>(int&nbsp;n,
+       float[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;float[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, float[][])">resize</A></B>(int&nbsp;n,
+       float[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;float[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, float[], float)">resize</A></B>(int&nbsp;n,
+       float[]&nbsp;array,
+       float&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, int[])">resize</A></B>(int&nbsp;n,
+       int[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, int[][])">resize</A></B>(int&nbsp;n,
+       int[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, int[], int)">resize</A></B>(int&nbsp;n,
+       int[]&nbsp;array,
+       int&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, long[])">resize</A></B>(int&nbsp;n,
+       long[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, long[][])">resize</A></B>(int&nbsp;n,
+       long[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, long[], long)">resize</A></B>(int&nbsp;n,
+       long[]&nbsp;array,
+       long&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.Object[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.Object[])">resize</A></B>(int&nbsp;n,
+       java.lang.Object[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.Object[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.Object[][])">resize</A></B>(int&nbsp;n,
+       java.lang.Object[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.Object[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.Object[], java.lang.Object)">resize</A></B>(int&nbsp;n,
+       java.lang.Object[]&nbsp;array,
+       java.lang.Object&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;short[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, short[])">resize</A></B>(int&nbsp;n,
+       short[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;short[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, short[][])">resize</A></B>(int&nbsp;n,
+       short[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;short[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, short[], short)">resize</A></B>(int&nbsp;n,
+       short[]&nbsp;array,
+       short&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.String[])">resize</A></B>(int&nbsp;n,
+       java.lang.String[]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.String[][])">resize</A></B>(int&nbsp;n,
+       java.lang.String[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize an array of arrays.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#resize(int, java.lang.String[], java.lang.String)">resize</A></B>(int&nbsp;n,
+       java.lang.String[]&nbsp;array,
+       java.lang.String&nbsp;fill)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resize and initialize an array.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, byte[], int, int)">sum</A></B>(int&nbsp;n,
+    byte[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, double[], int, int)">sum</A></B>(int&nbsp;n,
+    double[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, float[], int, int)">sum</A></B>(int&nbsp;n,
+    float[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, int[], int, int)">sum</A></B>(int&nbsp;n,
+    int[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, long[], int, int)">sum</A></B>(int&nbsp;n,
+    long[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sum(int, short[], int, int)">sum</A></B>(int&nbsp;n,
+    short[]&nbsp;x,
+    int&nbsp;begX,
+    int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, byte[], int, int, byte[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              byte[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              byte[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, double[], int, int, double[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              double[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              double[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, float[], int, int, float[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              float[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              float[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, int[], int, int, int[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              int[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              int[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, long[], int, int, long[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              long[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              long[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfProducts(int, short[], int, int, short[], int, int)">sumOfProducts</A></B>(int&nbsp;n,
+              short[]&nbsp;x,
+              int&nbsp;begX,
+              int&nbsp;incX,
+              short[]&nbsp;y,
+              int&nbsp;begY,
+              int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, byte[], int, int, byte)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        byte[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        byte&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, byte[], int, int, byte[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        byte[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        byte[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, double[], int, int, double)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        double[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        double&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, double[], int, int, double[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        double[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        double[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, float[], int, int, float)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        float[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        float&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, float[], int, int, float[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        float[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        float[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, int[], int, int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        int[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        int&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, int[], int, int, int[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        int[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        int[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, long[], int, int, long)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        long[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        long&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, long[], int, int, long[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        long[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        long[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, short[], int, int, short)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        short[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        short&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquaredDifferences(int, short[], int, int, short[], int, int)">sumOfSquaredDifferences</A></B>(int&nbsp;n,
+                        short[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        short[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, byte[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             byte[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, double[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             double[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, float[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             float[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, int[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             int[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, long[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             long[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#sumOfSquares(int, short[], int, int)">sumOfSquares</A></B>(int&nbsp;n,
+             short[]&nbsp;x,
+             int&nbsp;begX,
+             int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toObject(int, java.lang.Object[], int, int)">toObject</A></B>(int&nbsp;n,
+         java.lang.Object[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a Object representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, boolean[], int, int)">toString</A></B>(int&nbsp;n,
+         boolean[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a boolean representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, byte[], int, int)">toString</A></B>(int&nbsp;n,
+         byte[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, double[], int, int)">toString</A></B>(int&nbsp;n,
+         double[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, float[], int, int)">toString</A></B>(int&nbsp;n,
+         float[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, int[], int, int)">toString</A></B>(int&nbsp;n,
+         int[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, long[], int, int)">toString</A></B>(int&nbsp;n,
+         long[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, short[], int, int)">toString</A></B>(int&nbsp;n,
+         short[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#toString(int, java.lang.String[], int, int)">toString</A></B>(int&nbsp;n,
+         java.lang.String[]&nbsp;x,
+         int&nbsp;begX,
+         int&nbsp;incX)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a string representation of the array elements x[i].</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#union(byte[], byte[])">union</A></B>(byte[]&nbsp;a,
+      byte[]&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the union of the two sets of bytes.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#union(int[], int[])">union</A></B>(int[]&nbsp;a,
+      int[]&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the union of the two sets of integers.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;long[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#union(long[], long[])">union</A></B>(long[]&nbsp;a,
+      long[]&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the union of the two sets of longs.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;short[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#union(short[], short[])">union</A></B>(short[]&nbsp;a,
+      short[]&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the union of the two sets of shorts.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;java.lang.String[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/util/Array.html#union(java.lang.String[], java.lang.String[])">union</A></B>(java.lang.String[]&nbsp;a,
+      java.lang.String[]&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the union of the two sets of Strings.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Array()"><!-- --></A><H3>
+Array</H3>
+<PRE>
+public <B>Array</B>()</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="resize(int, float[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static float[] <B>resize</B>(int&nbsp;n,
+                             float[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, float[], float)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static float[] <B>resize</B>(int&nbsp;n,
+                             float[]&nbsp;array,
+                             float&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, float[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static float[][] <B>resize</B>(int&nbsp;n,
+                               float[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, float[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        float[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, float[], int, int, float[], int, int, float)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             float[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             float[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY,
+                             float&nbsp;epsilon)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, float[], int, int, float, float)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        float[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        float&nbsp;low,
+                        float&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, float[], int, int, float, float)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       float[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       float&nbsp;low,
+                       float&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        float[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        float[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, float[], int, int, float)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        float[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        float&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, float[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static double <B>sum</B>(int&nbsp;n,
+                         float[]&nbsp;x,
+                         int&nbsp;begX,
+                         int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, float[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static double <B>sumOfSquares</B>(int&nbsp;n,
+                                  float[]&nbsp;x,
+                                  int&nbsp;begX,
+                                  int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, float[], int, int, float)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static double <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                             float[]&nbsp;x,
+                                             int&nbsp;begX,
+                                             int&nbsp;incX,
+                                             float&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static double <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                             float[]&nbsp;x,
+                                             int&nbsp;begX,
+                                             int&nbsp;incX,
+                                             float[]&nbsp;y,
+                                             int&nbsp;begY,
+                                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static double <B>sumOfProducts</B>(int&nbsp;n,
+                                   float[]&nbsp;x,
+                                   int&nbsp;begX,
+                                   int&nbsp;incX,
+                                   float[]&nbsp;y,
+                                   int&nbsp;begY,
+                                   int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="resize(int, double[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static double[] <B>resize</B>(int&nbsp;n,
+                              double[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, double[], double)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static double[] <B>resize</B>(int&nbsp;n,
+                              double[]&nbsp;array,
+                              double&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, double[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static double[][] <B>resize</B>(int&nbsp;n,
+                                double[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, double[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        double[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR>
+Repeated elements are not printed.</DL>
+<HR>
+
+<A NAME="equals(int, double[], int, int, double[], int, int, double)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             double[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             double[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY,
+                             double&nbsp;epsilon)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, double[], int, int, double, double)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        double[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        double&nbsp;low,
+                        double&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, double[], int, int, double, double)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       double[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       double&nbsp;low,
+                       double&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        double[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        double[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, double[], int, int, double)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        double[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        double&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, double[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static double <B>sum</B>(int&nbsp;n,
+                         double[]&nbsp;x,
+                         int&nbsp;begX,
+                         int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, double[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static double <B>sumOfSquares</B>(int&nbsp;n,
+                                  double[]&nbsp;x,
+                                  int&nbsp;begX,
+                                  int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, double[], int, int, double)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static double <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                             double[]&nbsp;x,
+                                             int&nbsp;begX,
+                                             int&nbsp;incX,
+                                             double&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static double <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                             double[]&nbsp;x,
+                                             int&nbsp;begX,
+                                             int&nbsp;incX,
+                                             double[]&nbsp;y,
+                                             int&nbsp;begY,
+                                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static double <B>sumOfProducts</B>(int&nbsp;n,
+                                   double[]&nbsp;x,
+                                   int&nbsp;begX,
+                                   int&nbsp;incX,
+                                   double[]&nbsp;y,
+                                   int&nbsp;begY,
+                                   int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="union(byte[], byte[])"><!-- --></A><H3>
+union</H3>
+<PRE>
+public static byte[] <B>union</B>(byte[]&nbsp;a,
+                           byte[]&nbsp;b)</PRE>
+<DL>
+<DD>Returns the union of the two sets of bytes.
+The arguments 'a' and 'b' will be in ascending order after the method returns.
+The returned array will be in ascending order.</DL>
+<HR>
+
+<A NAME="resize(int, byte[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static byte[] <B>resize</B>(int&nbsp;n,
+                            byte[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, byte[], byte)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static byte[] <B>resize</B>(int&nbsp;n,
+                            byte[]&nbsp;array,
+                            byte&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, byte[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static byte[][] <B>resize</B>(int&nbsp;n,
+                              byte[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, byte[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        byte[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, byte[], int, int, byte[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             byte[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             byte[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, byte[], int, int, byte, byte)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        byte[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        byte&nbsp;low,
+                        byte&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, byte[], int, int, byte, byte)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       byte[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       byte&nbsp;low,
+                       byte&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, byte[], int, int, byte[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        byte[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        byte[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, byte[], int, int, byte)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        byte[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        byte&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, byte[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static int <B>sum</B>(int&nbsp;n,
+                      byte[]&nbsp;x,
+                      int&nbsp;begX,
+                      int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, byte[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static int <B>sumOfSquares</B>(int&nbsp;n,
+                               byte[]&nbsp;x,
+                               int&nbsp;begX,
+                               int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, byte[], int, int, byte)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          byte[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          byte&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, byte[], int, int, byte[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          byte[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          byte[]&nbsp;y,
+                                          int&nbsp;begY,
+                                          int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, byte[], int, int, byte[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static int <B>sumOfProducts</B>(int&nbsp;n,
+                                byte[]&nbsp;x,
+                                int&nbsp;begX,
+                                int&nbsp;incX,
+                                byte[]&nbsp;y,
+                                int&nbsp;begY,
+                                int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="union(short[], short[])"><!-- --></A><H3>
+union</H3>
+<PRE>
+public static short[] <B>union</B>(short[]&nbsp;a,
+                            short[]&nbsp;b)</PRE>
+<DL>
+<DD>Returns the union of the two sets of shorts.
+The arguments 'a' and 'b' will be in ascending order after the method returns.
+The returned array will be in ascending order.</DL>
+<HR>
+
+<A NAME="resize(int, short[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static short[] <B>resize</B>(int&nbsp;n,
+                             short[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, short[], short)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static short[] <B>resize</B>(int&nbsp;n,
+                             short[]&nbsp;array,
+                             short&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, short[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static short[][] <B>resize</B>(int&nbsp;n,
+                               short[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, short[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        short[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, short[], int, int, short[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             short[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             short[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, short[], int, int, short, short)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        short[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        short&nbsp;low,
+                        short&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, short[], int, int, short, short)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       short[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       short&nbsp;low,
+                       short&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, short[], int, int, short[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        short[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        short[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, short[], int, int, short)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        short[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        short&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, short[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static int <B>sum</B>(int&nbsp;n,
+                      short[]&nbsp;x,
+                      int&nbsp;begX,
+                      int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, short[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static int <B>sumOfSquares</B>(int&nbsp;n,
+                               short[]&nbsp;x,
+                               int&nbsp;begX,
+                               int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, short[], int, int, short)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          short[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          short&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, short[], int, int, short[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          short[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          short[]&nbsp;y,
+                                          int&nbsp;begY,
+                                          int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, short[], int, int, short[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static int <B>sumOfProducts</B>(int&nbsp;n,
+                                short[]&nbsp;x,
+                                int&nbsp;begX,
+                                int&nbsp;incX,
+                                short[]&nbsp;y,
+                                int&nbsp;begY,
+                                int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="position(int[], int)"><!-- --></A><H3>
+position</H3>
+<PRE>
+public static int <B>position</B>(int[]&nbsp;a,
+                           int&nbsp;v)</PRE>
+<DL>
+<DD>Finds the position of the first instance of 'v' in the array 'a'.
+Returns -1 if 'v' isn't found.</DL>
+<HR>
+
+<A NAME="union(int[], int[])"><!-- --></A><H3>
+union</H3>
+<PRE>
+public static int[] <B>union</B>(int[]&nbsp;a,
+                          int[]&nbsp;b)</PRE>
+<DL>
+<DD>Returns the union of the two sets of integers.
+The arguments 'a' and 'b' will be in ascending order after the method returns.
+The returned array will be in ascending order.</DL>
+<HR>
+
+<A NAME="resize(int, int[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static int[] <B>resize</B>(int&nbsp;n,
+                           int[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, int[], int)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static int[] <B>resize</B>(int&nbsp;n,
+                           int[]&nbsp;array,
+                           int&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, int[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static int[][] <B>resize</B>(int&nbsp;n,
+                             int[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, int[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        int[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, int[], int, int, int[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             int[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             int[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, int[], int, int, int, int)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        int[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        int&nbsp;low,
+                        int&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, int[], int, int, int, int)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       int[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       int&nbsp;low,
+                       int&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, int[], int, int, int[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        int[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        int[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, int[], int, int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        int[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        int&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, int[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static int <B>sum</B>(int&nbsp;n,
+                      int[]&nbsp;x,
+                      int&nbsp;begX,
+                      int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, int[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static int <B>sumOfSquares</B>(int&nbsp;n,
+                               int[]&nbsp;x,
+                               int&nbsp;begX,
+                               int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, int[], int, int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          int[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          int&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, int[], int, int, int[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static int <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                          int[]&nbsp;x,
+                                          int&nbsp;begX,
+                                          int&nbsp;incX,
+                                          int[]&nbsp;y,
+                                          int&nbsp;begY,
+                                          int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, int[], int, int, int[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static int <B>sumOfProducts</B>(int&nbsp;n,
+                                int[]&nbsp;x,
+                                int&nbsp;begX,
+                                int&nbsp;incX,
+                                int[]&nbsp;y,
+                                int&nbsp;begY,
+                                int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="union(long[], long[])"><!-- --></A><H3>
+union</H3>
+<PRE>
+public static long[] <B>union</B>(long[]&nbsp;a,
+                           long[]&nbsp;b)</PRE>
+<DL>
+<DD>Returns the union of the two sets of longs.
+The arguments 'a' and 'b' will be in ascending order after the method returns.
+The returned array will be in ascending order.</DL>
+<HR>
+
+<A NAME="resize(int, long[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static long[] <B>resize</B>(int&nbsp;n,
+                            long[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, long[], long)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static long[] <B>resize</B>(int&nbsp;n,
+                            long[]&nbsp;array,
+                            long&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, long[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static long[][] <B>resize</B>(int&nbsp;n,
+                              long[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, long[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        long[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, long[], int, int, long[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             long[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             long[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, long[], int, int, long, long)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        long[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        long&nbsp;low,
+                        long&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, long[], int, int, long, long)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       long[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       long&nbsp;low,
+                       long&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, long[], int, int, long[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        long[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        long[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, long[], int, int, long)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        long[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        long&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sum(int, long[], int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public static long <B>sum</B>(int&nbsp;n,
+                       long[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquares(int, long[], int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public static long <B>sumOfSquares</B>(int&nbsp;n,
+                                long[]&nbsp;x,
+                                int&nbsp;begX,
+                                int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns sum(x[i]^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, long[], int, int, long)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static long <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                           long[]&nbsp;x,
+                                           int&nbsp;begX,
+                                           int&nbsp;incX,
+                                           long&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns sum((x[i]-scaler)^2) for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, long[], int, int, long[], int, int)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public static long <B>sumOfSquaredDifferences</B>(int&nbsp;n,
+                                           long[]&nbsp;x,
+                                           int&nbsp;begX,
+                                           int&nbsp;incX,
+                                           long[]&nbsp;y,
+                                           int&nbsp;begY,
+                                           int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum((x[i]-y[j])^2) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="sumOfProducts(int, long[], int, int, long[], int, int)"><!-- --></A><H3>
+sumOfProducts</H3>
+<PRE>
+public static long <B>sumOfProducts</B>(int&nbsp;n,
+                                 long[]&nbsp;x,
+                                 int&nbsp;begX,
+                                 int&nbsp;incX,
+                                 long[]&nbsp;y,
+                                 int&nbsp;begY,
+                                 int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns sum(x[i]*y[j]) for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="union(java.lang.String[], java.lang.String[])"><!-- --></A><H3>
+union</H3>
+<PRE>
+public static java.lang.String[] <B>union</B>(java.lang.String[]&nbsp;a,
+                                       java.lang.String[]&nbsp;b)</PRE>
+<DL>
+<DD>Returns the union of the two sets of Strings.
+The arguments 'a' and 'b' will be in ascending order after the method returns.
+The returned array will be in ascending order.</DL>
+<HR>
+
+<A NAME="resize(int, java.lang.String[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.String[] <B>resize</B>(int&nbsp;n,
+                                        java.lang.String[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, java.lang.String[], java.lang.String)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.String[] <B>resize</B>(int&nbsp;n,
+                                        java.lang.String[]&nbsp;array,
+                                        java.lang.String&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, java.lang.String[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.String[][] <B>resize</B>(int&nbsp;n,
+                                          java.lang.String[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, java.lang.String[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        java.lang.String[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a string representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, java.lang.String[], int, int, java.lang.String[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             java.lang.String[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             java.lang.String[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, java.lang.String[], int, int, java.lang.String, java.lang.String)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        java.lang.String[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.String&nbsp;low,
+                        java.lang.String&nbsp;high)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, java.lang.String[], int, int, java.lang.String, java.lang.String)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       java.lang.String[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       java.lang.String&nbsp;low,
+                       java.lang.String&nbsp;high)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, java.lang.String[], int, int, java.lang.String[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        java.lang.String[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.String[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, java.lang.String[], int, int, java.lang.String)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        java.lang.String[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.String&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="resize(int, java.lang.Object[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.Object[] <B>resize</B>(int&nbsp;n,
+                                        java.lang.Object[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, java.lang.Object[], java.lang.Object)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.Object[] <B>resize</B>(int&nbsp;n,
+                                        java.lang.Object[]&nbsp;array,
+                                        java.lang.Object&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, java.lang.Object[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static java.lang.Object[][] <B>resize</B>(int&nbsp;n,
+                                          java.lang.Object[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toObject(int, java.lang.Object[], int, int)"><!-- --></A><H3>
+toObject</H3>
+<PRE>
+public static java.lang.String <B>toObject</B>(int&nbsp;n,
+                                        java.lang.Object[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a Object representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, java.lang.Object[], int, int, java.lang.Object[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             java.lang.Object[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             java.lang.Object[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, java.lang.Object[], int, int, java.lang.Object)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        java.lang.Object[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.Object&nbsp;key)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, java.lang.Object[], int, int, java.lang.Object)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       java.lang.Object[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       java.lang.Object&nbsp;key)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, java.lang.Object[], int, int, java.lang.Object[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        java.lang.Object[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.Object[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, java.lang.Object[], int, int, java.lang.Object)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        java.lang.Object[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        java.lang.Object&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="resize(int, boolean[])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static boolean[] <B>resize</B>(int&nbsp;n,
+                               boolean[]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, boolean[], boolean)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static boolean[] <B>resize</B>(int&nbsp;n,
+                               boolean[]&nbsp;array,
+                               boolean&nbsp;fill)</PRE>
+<DL>
+<DD>Resize and initialize an array.
+If the array is larger than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the array is smaller than 'n' then
+a new array is created, initialized with the contents of 'array', 
+and any new elements are initialized with fill.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="resize(int, boolean[][])"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public static boolean[][] <B>resize</B>(int&nbsp;n,
+                                 boolean[][]&nbsp;array)</PRE>
+<DL>
+<DD>Resize an array of arrays. If the array is larger or smaller than 'n' then
+a new array is created and initialized with the contents of 'array'.
+If the length of 'array' is 'n' then 'array' is returned.</DL>
+<HR>
+
+<A NAME="toString(int, boolean[], int, int)"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public static java.lang.String <B>toString</B>(int&nbsp;n,
+                                        boolean[]&nbsp;x,
+                                        int&nbsp;begX,
+                                        int&nbsp;incX)</PRE>
+<DL>
+<DD>Returns a boolean representation of the array elements x[i].
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="equals(int, boolean[], int, int, boolean[], int, int)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public static boolean <B>equals</B>(int&nbsp;n,
+                             boolean[]&nbsp;x,
+                             int&nbsp;begX,
+                             int&nbsp;incX,
+                             boolean[]&nbsp;y,
+                             int&nbsp;begY,
+                             int&nbsp;incY)</PRE>
+<DL>
+<DD>Returns true if abs(x[i]-y[j]) <= epsilon for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="count(int, boolean[], int, int, boolean)"><!-- --></A><H3>
+count</H3>
+<PRE>
+public static int <B>count</B>(int&nbsp;n,
+                        boolean[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        boolean&nbsp;key)</PRE>
+<DL>
+<DD>Returns the number of elements where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<HR>
+
+<A NAME="find(int, boolean[], int, int, boolean)"><!-- --></A><H3>
+find</H3>
+<PRE>
+public static int <B>find</B>(int&nbsp;n,
+                       boolean[]&nbsp;x,
+                       int&nbsp;begX,
+                       int&nbsp;incX,
+                       boolean&nbsp;key)</PRE>
+<DL>
+<DD>Returns the index of the first element where:<BR>
+low <= x[i] <= high<BR>
+i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR><DD><DL>
+<DT><B>Returns:</B><DD>-1 if no match is found.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="copy(int, boolean[], int, int, boolean[], int, int)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        boolean[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        boolean[]&nbsp;y,
+                        int&nbsp;begY,
+                        int&nbsp;incY)</PRE>
+<DL>
+<DD>Sets x[i] = y[j] for all i,j<BR>
+Where: i = begX + k*incX<BR>
+j = begY + k*incY<BR>
+k = {0,..,n-1}<BR></DL>
+<HR>
+
+<A NAME="copy(int, boolean[], int, int, boolean)"><!-- --></A><H3>
+copy</H3>
+<PRE>
+public static void <B>copy</B>(int&nbsp;n,
+                        boolean[]&nbsp;x,
+                        int&nbsp;begX,
+                        int&nbsp;incX,
+                        boolean&nbsp;scaler)</PRE>
+<DL>
+<DD>Sets x[i] = 'scaler' for all i<BR>
+Where: i = begX + k*incX<BR>
+k = 0,1,..,n-1<BR></DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../drasys/or/util/ComplexArray.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Array.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

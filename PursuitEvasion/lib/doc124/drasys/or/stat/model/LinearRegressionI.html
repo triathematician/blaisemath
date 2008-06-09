@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  LinearRegressionI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/stat/model/GeneralLinearModelI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LinearRegressionI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.stat.model</FONT>
+<BR>
+Interface  LinearRegressionI</H2>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../../drasys/or/stat/model/LinearRegression.html">LinearRegression</A>, <A HREF="../../../../drasys/or/stat/model/StepwiseLinear.html">StepwiseLinear</A>, <A HREF="../../../../drasys/or/stat/model/ReverseLinear.html">ReverseLinear</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>LinearRegressionI</B></DL>
+
+<P>
+The interface implemented by linear regression models.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#allVariables()">allVariables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A convenience method that returns an array that selects all of the independent variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getCoefficients()">getCoefficients</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the selected variable coefficients.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getEnteringThreshold()">getEnteringThreshold</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the p-value threshold used to select entering variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getEnteringVariables()">getEnteringVariables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the internal array describing entering variable set.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getExitingThreshold()">getExitingThreshold</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the p-value threshold used to select exiting variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getF()">getF</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the 'F' statistic for the currrent model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getFPV()">getFPV</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the one-sided p-value for the current 'F' statistic.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/stat/model/GeneralLinearModelI.html">GeneralLinearModelI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getGLM()">getGLM</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the underlying general linear model used for solving the regression.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getLowerBounds(double)">getLowerBounds</A></B>(double&nbsp;confidenceLevel)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the selected variable lower bounds.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getRequiredVariables()">getRequiredVariables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the internal array describing required variable set.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getSelectedVariables()">getSelectedVariables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the internal array describing current variable set.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getT()">getT</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the 'T' statistics for the selected variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getTPV()">getTPV</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the two-sided p-values for the 'T' statistics of the selected variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getTStatistic(double)">getTStatistic</A></B>(double&nbsp;pValue)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the the 'T' statistic for a given p-value;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#getUpperBounds(double)">getUpperBounds</A></B>(double&nbsp;confidenceLevel)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the selected variable upper bounds.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#setEnteringThreshold(double)">setEnteringThreshold</A></B>(double&nbsp;pValue)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the p-value threshold used to select entering variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#setEnteringVariables(int[])">setEnteringVariables</A></B>(int[]&nbsp;variables)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the set of variables allowed to enter the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#setExitingThreshold(double)">setExitingThreshold</A></B>(double&nbsp;pValue)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the p-value threshold used to select exiting variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#setRequiredVarables(int[])">setRequiredVarables</A></B>(int[]&nbsp;variables)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the set of variables that are forced into the final model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#setSelectedVariables(int[])">setSelectedVariables</A></B>(int[]&nbsp;variables)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the current variable set and and solves the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/stat/model/LinearRegressionI.html#solve()">solve</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Solve for the significant variables and coefficients.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="solve()"><!-- --></A><H3>
+solve</H3>
+<PRE>
+public int <B>solve</B>()</PRE>
+<DL>
+<DD>Solve for the significant variables and coefficients.
+Returns the number of independent variables selected in the final model.</DL>
+<HR>
+
+<A NAME="getGLM()"><!-- --></A><H3>
+getGLM</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/stat/model/GeneralLinearModelI.html">GeneralLinearModelI</A> <B>getGLM</B>()</PRE>
+<DL>
+<DD>Returns the underlying general linear model used for solving the regression.
+The ANOVA statistics can be obtained directly from the GLM.</DL>
+<HR>
+
+<A NAME="allVariables()"><!-- --></A><H3>
+allVariables</H3>
+<PRE>
+public int[] <B>allVariables</B>()</PRE>
+<DL>
+<DD>A convenience method that returns an array that selects all of the independent variables.
+Returns - {0,1,2,...,n-1}.</DL>
+<HR>
+
+<A NAME="setEnteringVariables(int[])"><!-- --></A><H3>
+setEnteringVariables</H3>
+<PRE>
+public void <B>setEnteringVariables</B>(int[]&nbsp;variables)</PRE>
+<DL>
+<DD>Selects the set of variables allowed to enter the model.
+The default setting is {0,1,2,...,n-1} which allows all variables to enter.</DL>
+<HR>
+
+<A NAME="setRequiredVarables(int[])"><!-- --></A><H3>
+setRequiredVarables</H3>
+<PRE>
+public void <B>setRequiredVarables</B>(int[]&nbsp;variables)</PRE>
+<DL>
+<DD>Selects the set of variables that are forced into the final model.
+The default setting is {} which does not force any variables into the model.</DL>
+<HR>
+
+<A NAME="setEnteringThreshold(double)"><!-- --></A><H3>
+setEnteringThreshold</H3>
+<PRE>
+public void <B>setEnteringThreshold</B>(double&nbsp;pValue)</PRE>
+<DL>
+<DD>Sets the p-value threshold used to select entering variables.
+The default value is '0.05'.</DL>
+<HR>
+
+<A NAME="getEnteringThreshold()"><!-- --></A><H3>
+getEnteringThreshold</H3>
+<PRE>
+public double <B>getEnteringThreshold</B>()</PRE>
+<DL>
+<DD>Returns the p-value threshold used to select entering variables.</DL>
+<HR>
+
+<A NAME="setExitingThreshold(double)"><!-- --></A><H3>
+setExitingThreshold</H3>
+<PRE>
+public void <B>setExitingThreshold</B>(double&nbsp;pValue)</PRE>
+<DL>
+<DD>Sets the p-value threshold used to select exiting variables.
+The default value is '0.05'.</DL>
+<HR>
+
+<A NAME="getExitingThreshold()"><!-- --></A><H3>
+getExitingThreshold</H3>
+<PRE>
+public double <B>getExitingThreshold</B>()</PRE>
+<DL>
+<DD>Returns the p-value threshold used to select exiting variables.</DL>
+<HR>
+
+<A NAME="setSelectedVariables(int[])"><!-- --></A><H3>
+setSelectedVariables</H3>
+<PRE>
+public void <B>setSelectedVariables</B>(int[]&nbsp;variables)</PRE>
+<DL>
+<DD>Selects the current variable set and and solves the model.
+Immediately after construction all the variables are selected and the model is solved.
+The subclass search algorithms use this method to test diferent variable sets for each iteration.</DL>
+<HR>
+
+<A NAME="getF()"><!-- --></A><H3>
+getF</H3>
+<PRE>
+public double <B>getF</B>()</PRE>
+<DL>
+<DD>Returns the 'F' statistic for the currrent model.</DL>
+<HR>
+
+<A NAME="getFPV()"><!-- --></A><H3>
+getFPV</H3>
+<PRE>
+public double <B>getFPV</B>()</PRE>
+<DL>
+<DD>Returns the one-sided p-value for the current 'F' statistic.</DL>
+<HR>
+
+<A NAME="getCoefficients()"><!-- --></A><H3>
+getCoefficients</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getCoefficients</B>()</PRE>
+<DL>
+<DD>Returns the selected variable coefficients.
+The coefficient at index 'n' corresponds to the column indexed by 'selection[n]'. 
+If a constant intercept term is included, its value will be in the last element.</DL>
+<HR>
+
+<A NAME="getLowerBounds(double)"><!-- --></A><H3>
+getLowerBounds</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getLowerBounds</B>(double&nbsp;confidenceLevel)</PRE>
+<DL>
+<DD>Returns the selected variable lower bounds.
+The coefficient at index 'n' corresponds to the column indexed by 'selection[n]'. 
+If a constant intercept term is included, its value will be in the last element.</DL>
+<HR>
+
+<A NAME="getUpperBounds(double)"><!-- --></A><H3>
+getUpperBounds</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getUpperBounds</B>(double&nbsp;confidenceLevel)</PRE>
+<DL>
+<DD>Returns the selected variable upper bounds.
+The coefficient at index 'n' corresponds to the column indexed by 'selection[n]'. 
+If a constant intercept term is included, its value will be in the last element.</DL>
+<HR>
+
+<A NAME="getT()"><!-- --></A><H3>
+getT</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getT</B>()</PRE>
+<DL>
+<DD>Returns the 'T' statistics for the selected variables.
+The statistic at index 'n' corresponds to the column indexed by 'selection[n]'.</DL>
+<HR>
+
+<A NAME="getTPV()"><!-- --></A><H3>
+getTPV</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getTPV</B>()</PRE>
+<DL>
+<DD>Returns the two-sided p-values for the 'T' statistics of the selected variables.
+The p-value at index 'n' corresponds to the column indexed by 'selection[n]'.</DL>
+<HR>
+
+<A NAME="getTStatistic(double)"><!-- --></A><H3>
+getTStatistic</H3>
+<PRE>
+public double <B>getTStatistic</B>(double&nbsp;pValue)</PRE>
+<DL>
+<DD>Returns the the 'T' statistic for a given p-value;</DL>
+<HR>
+
+<A NAME="getSelectedVariables()"><!-- --></A><H3>
+getSelectedVariables</H3>
+<PRE>
+public int[] <B>getSelectedVariables</B>()</PRE>
+<DL>
+<DD>Returns the internal array describing current variable set.
+This array should not be directly modified.</DL>
+<HR>
+
+<A NAME="getEnteringVariables()"><!-- --></A><H3>
+getEnteringVariables</H3>
+<PRE>
+public int[] <B>getEnteringVariables</B>()</PRE>
+<DL>
+<DD>Returns the internal array describing entering variable set.
+This array should not be directly modified.</DL>
+<HR>
+
+<A NAME="getRequiredVariables()"><!-- --></A><H3>
+getRequiredVariables</H3>
+<PRE>
+public int[] <B>getRequiredVariables</B>()</PRE>
+<DL>
+<DD>Returns the internal array describing required variable set.
+This array should not be directly modified.</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/stat/model/GeneralLinearModelI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LinearRegressionI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

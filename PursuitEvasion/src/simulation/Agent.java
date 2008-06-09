@@ -253,6 +253,8 @@ public class Agent {
     
     // BEAN PATTERNS: INITIAL SETTINGS
     
+    public void setInitialPosition(R2 point){getPointModel().setTo(point);}
+    public void setInitialPosition(double x,double y){getPointModel().setTo(x,y);}
     public R2 getInitialPosition(){return new R2(initialPosition.getX(),initialPosition.getY());}
     public double getSensorRange(){return ags.sensorRange.getValue();}
     public double getCommRange(){return ags.commRange.getValue();}
@@ -319,6 +321,7 @@ public class Agent {
             add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
         }
         
+        @Override
         public void stateChanged(ChangeEvent e){
             if(e.getSource()==behavior){
                 myBehavior=Behavior.getBehavior(behavior.getValue());
@@ -336,6 +339,7 @@ public class Agent {
             }
             if(e.getSource()==color){
                 fireActionPerformed("agentDisplayChange");
+            // initial positions of players has changed
             }else{
                 fireActionPerformed("agentSetupChange");
             }

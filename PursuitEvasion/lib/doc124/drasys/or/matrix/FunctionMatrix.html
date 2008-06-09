@@ -1,0 +1,514 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  FunctionMatrix
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/DenseVector.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/Matrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="FunctionMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.matrix</FONT>
+<BR>
+Class  FunctionMatrix</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/matrix/RealContainer.html">drasys.or.matrix.RealContainer</A>
+        |
+        +--<A HREF="../../../drasys/or/matrix/Matrix.html">drasys.or.matrix.Matrix</A>
+              |
+              +--<B>drasys.or.matrix.FunctionMatrix</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../drasys/or/stat/model/PolynomialMatrix.html">PolynomialMatrix</A>, <A HREF="../../../drasys/or/stat/model/QuadraticMatrix.html">QuadraticMatrix</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public abstract class <B>FunctionMatrix</B><DT>extends <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A><DT>implements <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+
+<P>
+A matrix that computes some or all of the elements with the abstract method 'functionElementAt' that must be defined in a subclass.
+It is typically used to extend the rows or columns of a matrix with computations based on the exsisting rows and columns.
+The subclass constructor must set the two inherited variables '_sizeOfRows' and '_sizeOfColumns'.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.matrix.FunctionMatrix">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#_sizeOfColumns">_sizeOfColumns</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#_sizeOfRows">_sizeOfRows</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="fields_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Fields inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#_epsilon">_epsilon</A>,  
+<A HREF="../../../drasys/or/matrix/RealContainer.html#_globalEpsilon">_globalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#FunctionMatrix()">FunctionMatrix</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#elementAt(int, int)">elementAt</A></B>(int&nbsp;row,
+          int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value of the element at 'row' and 'column' by calling 'functionElementAt' after checking the validity of the indices.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>abstract &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#functionElementAt(int, int)">functionElementAt</A></B>(int&nbsp;row,
+                  int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the value of the element at 'row' and 'column'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#isColumnMajor()">isColumnMajor</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value from the underlying matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#isNull(int, int)">isNull</A></B>(int&nbsp;row,
+       int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value from the underlying matrix if 'row' and 'column' are in its range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#isRowMajor()">isRowMajor</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value from the underlying matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#setElementAt(int, int, double)">setElementAt</A></B>(int&nbsp;row,
+             int&nbsp;column,
+             double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value in the underlying matrix if 'row' and 'column' are in its range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#setElements(double)">setElements</A></B>(double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of all the non-null elements in the underlying matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#sizeOfColumns()">sizeOfColumns</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of columns in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#sizeOfElements()">sizeOfElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of non-null elements in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/FunctionMatrix.html#sizeOfRows()">sizeOfRows</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of rows in the matrix.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.Matrix"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/Matrix.html#columnElements(int)">columnElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#elements()">elements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(drasys.or.matrix.MatrixI)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(java.lang.Object)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#getArray()">getArray</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#rowElements(int)">rowElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setColumn(int, drasys.or.matrix.VectorI)">setColumn</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setDiagonal(drasys.or.matrix.VectorI)">setDiagonal</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setRow(int, drasys.or.matrix.VectorI)">setRow</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum()">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int, int, int, int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares()">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#toString()">toString</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#equals(double, double)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getEpsilon()">getEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getGlobalEpsilon()">getGlobalEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setEpsilon(double)">setEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setGlobalEpsilon(double)">setGlobalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="_sizeOfRows"><!-- --></A><H3>
+_sizeOfRows</H3>
+<PRE>
+protected int <B>_sizeOfRows</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_sizeOfColumns"><!-- --></A><H3>
+_sizeOfColumns</H3>
+<PRE>
+protected int <B>_sizeOfColumns</B></PRE>
+<DL>
+</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="FunctionMatrix()"><!-- --></A><H3>
+FunctionMatrix</H3>
+<PRE>
+public <B>FunctionMatrix</B>()</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="setElements(double)"><!-- --></A><H3>
+setElements</H3>
+<PRE>
+public void <B>setElements</B>(double&nbsp;value)</PRE>
+<DL>
+<DD>Sets the value of all the non-null elements in the underlying matrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#setElements(double)">setElements</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfRows()"><!-- --></A><H3>
+sizeOfRows</H3>
+<PRE>
+public int <B>sizeOfRows</B>()</PRE>
+<DL>
+<DD>Returns the number of rows in the matrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#sizeOfRows()">sizeOfRows</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfColumns()"><!-- --></A><H3>
+sizeOfColumns</H3>
+<PRE>
+public int <B>sizeOfColumns</B>()</PRE>
+<DL>
+<DD>Returns the number of columns in the matrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#sizeOfColumns()">sizeOfColumns</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isNull(int, int)"><!-- --></A><H3>
+isNull</H3>
+<PRE>
+public boolean <B>isNull</B>(int&nbsp;row,
+                      int&nbsp;column)</PRE>
+<DL>
+<DD>Returns the value from the underlying matrix if 'row' and 'column' are in its range.
+Otherwise; it returns 'false';<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#isNull(int, int)">isNull</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setElementAt(int, int, double)"><!-- --></A><H3>
+setElementAt</H3>
+<PRE>
+public void <B>setElementAt</B>(int&nbsp;row,
+                         int&nbsp;column,
+                         double&nbsp;value)</PRE>
+<DL>
+<DD>Sets the value in the underlying matrix if 'row' and 'column' are in its range.
+Otherwise; it has no effect.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#setElementAt(int, int, double)">setElementAt</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfElements()"><!-- --></A><H3>
+sizeOfElements</H3>
+<PRE>
+public int <B>sizeOfElements</B>()</PRE>
+<DL>
+<DD>Returns the number of non-null elements in the matrix.
+The functional elements are all counted as non-null.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#sizeOfElements()">sizeOfElements</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isRowMajor()"><!-- --></A><H3>
+isRowMajor</H3>
+<PRE>
+public boolean <B>isRowMajor</B>()</PRE>
+<DL>
+<DD>Returns the value from the underlying matrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#isRowMajor()">isRowMajor</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isColumnMajor()"><!-- --></A><H3>
+isColumnMajor</H3>
+<PRE>
+public boolean <B>isColumnMajor</B>()</PRE>
+<DL>
+<DD>Returns the value from the underlying matrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#isColumnMajor()">isColumnMajor</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="elementAt(int, int)"><!-- --></A><H3>
+elementAt</H3>
+<PRE>
+public double <B>elementAt</B>(int&nbsp;row,
+                        int&nbsp;column)</PRE>
+<DL>
+<DD>Gets the value of the element at 'row' and 'column' by calling 'functionElementAt' after checking the validity of the indices.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/MatrixI.html#elementAt(int, int)">elementAt</A> in interface <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></DL>
+</DD>
+<DD><B>Tags copied from interface: <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></B></DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>zero is the element is null</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="functionElementAt(int, int)"><!-- --></A><H3>
+functionElementAt</H3>
+<PRE>
+public abstract double <B>functionElementAt</B>(int&nbsp;row,
+                                         int&nbsp;column)</PRE>
+<DL>
+<DD>Computes the value of the element at 'row' and 'column'.<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/DenseVector.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/Matrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="FunctionMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

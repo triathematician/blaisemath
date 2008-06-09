@@ -1,0 +1,106 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <title>RowMajorMatrix - Real</title>
+</head>
+<body>
+
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<center>
+<h1>
+RowMajorMatrix - Real</h1></center>
+
+<h2>
+
+<hr WIDTH="100%"></h2>
+The RowMajorMatrix is a dense row-major matrix of double values.The elements
+are store contiguously in a single java array. This matrix is efficient
+for numerical computing, especially row-wise computations.
+<p>Here is an example of a dense matrix with two rows and two columns:
+<br>&nbsp;
+<table BORDER >
+<tr ALIGN=CENTER VALIGN=CENTER>
+<td></td>
+
+<td>Col-0</td>
+
+<td>Col-1</td>
+</tr>
+
+<tr ALIGN=CENTER VALIGN=CENTER>
+<td>Row-0</td>
+
+<td>1.5</td>
+
+<td>2.6</td>
+</tr>
+
+<tr ALIGN=CENTER VALIGN=CENTER>
+<td>Row-1</td>
+
+<td>3.7</td>
+
+<td>4.8</td>
+</tr>
+</table>
+
+<p>This is how the 2x2 matrix would be stored in a RowMajorMatrix with
+a row capacity of three and a column capacity of three:
+<br>&nbsp;
+<table BORDER >
+<caption>Values</caption>
+
+<tr ALIGN=CENTER VALIGN=CENTER>
+<td>&nbsp;Index&nbsp;</td>
+
+<td>&nbsp; 0&nbsp;</td>
+
+<td>&nbsp; 1&nbsp;</td>
+
+<td>&nbsp; 2&nbsp;</td>
+
+<td>&nbsp; 3&nbsp;</td>
+
+<td>&nbsp; 4&nbsp;</td>
+
+<td>&nbsp; 5&nbsp;</td>
+
+<td>&nbsp; 6&nbsp;</td>
+
+<td>&nbsp; 7&nbsp;</td>
+
+<td>&nbsp; 8&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER VALIGN=CENTER>
+<td>&nbsp;Value&nbsp;</td>
+
+<td>1.5</td>
+
+<td>2.6</td>
+
+<td>.</td>
+
+<td>&nbsp;3.7</td>
+
+<td>4.8</td>
+
+<td>.</td>
+
+<td>.</td>
+
+<td>.</td>
+
+<td>.</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br>Copyright(C)1997-99 by DRA Systems all rights reserved.
+</body>
+</html>

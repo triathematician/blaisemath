@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  PropertiesI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/graph/GraphI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/graph/RemoveEdgeI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PropertiesI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.graph</FONT>
+<BR>
+Interface  PropertiesI</H2>
+<DL>
+<DT><B>All Known Subinterfaces:</B> <DD><A HREF="../../../drasys/or/graph/tw/TimeWindowPropertiesI.html">TimeWindowPropertiesI</A></DD>
+</DL>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../drasys/or/graph/PropertiesAdapter.html">PropertiesAdapter</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>PropertiesI</B><DT>extends <A HREF="../../../drasys/or/graph/VertexPropertiesI.html">VertexPropertiesI</A>, <A HREF="../../../drasys/or/graph/EdgePropertiesI.html">EdgePropertiesI</A></DL>
+
+<P>
+The interface used by algorithms to obtain vertex, edge and graph properties.
+The properties used by an algorithm can be tailored by implementing this interface and calling setProperties() in the algorithm's interface.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/graph/PropertiesI.html#getConnectionCost(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)">getConnectionCost</A></B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                  <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                  <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the cost of crossing a vertex between two explicit edges.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/graph/PropertiesI.html#getConnectionTime(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)">getConnectionTime</A></B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                  <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                  <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the time to cross a vertex between two explicit edges.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/graph/PropertiesI.html#isConnectionRestricted(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)">isConnectionRestricted</A></B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                       <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                       <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prevents the algorithm from crossing a vertex from the inEdge to the OutEdge.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.graph.VertexPropertiesI"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from interface drasys.or.graph.<A HREF="../../../drasys/or/graph/VertexPropertiesI.html">VertexPropertiesI</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/graph/VertexPropertiesI.html#getVertexCost(drasys.or.graph.VertexI)">getVertexCost</A>, 
+<A HREF="../../../drasys/or/graph/VertexPropertiesI.html#getVertexDemand(drasys.or.graph.VertexI)">getVertexDemand</A>, 
+<A HREF="../../../drasys/or/graph/VertexPropertiesI.html#getVertexTime(drasys.or.graph.VertexI)">getVertexTime</A>, 
+<A HREF="../../../drasys/or/graph/VertexPropertiesI.html#isVertexRestricted(drasys.or.graph.VertexI)">isVertexRestricted</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.graph.EdgePropertiesI"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from interface drasys.or.graph.<A HREF="../../../drasys/or/graph/EdgePropertiesI.html">EdgePropertiesI</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/graph/EdgePropertiesI.html#getEdgeCost(drasys.or.graph.EdgeI, boolean)">getEdgeCost</A>, 
+<A HREF="../../../drasys/or/graph/EdgePropertiesI.html#getEdgeDistance(drasys.or.graph.EdgeI, boolean)">getEdgeDistance</A>, 
+<A HREF="../../../drasys/or/graph/EdgePropertiesI.html#getEdgeTime(drasys.or.graph.EdgeI, boolean)">getEdgeTime</A>, 
+<A HREF="../../../drasys/or/graph/EdgePropertiesI.html#isEdgeRestricted(drasys.or.graph.EdgeI, boolean)">isEdgeRestricted</A>, 
+<A HREF="../../../drasys/or/graph/EdgePropertiesI.html#isSymmetric()">isSymmetric</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="isConnectionRestricted(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)"><!-- --></A><H3>
+isConnectionRestricted</H3>
+<PRE>
+public boolean <B>isConnectionRestricted</B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                                      <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                                      <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</PRE>
+<DL>
+<DD>Prevents the algorithm from crossing a vertex from the inEdge to the OutEdge.
+This attribute can be used to implement turn restrictions in a graph with out the overhead of artificial elements.
+Some algorithms don't use this attribute and return false for 'usesConnectionProperties()".<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>inEdge</CODE> - the edge traversed to reach the vertex.<DD><CODE>vertex</CODE> - the vertex.<DD><CODE>outEdge</CODE> - the edge traversed to leave the vertex.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getConnectionCost(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)"><!-- --></A><H3>
+getConnectionCost</H3>
+<PRE>
+public double <B>getConnectionCost</B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                                <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                                <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</PRE>
+<DL>
+<DD>Returns the cost of crossing a vertex between two explicit edges.
+This attribute can be used to implement turn penalties in a graph with out the overhead of artificial elements.
+Some algorithms don't use this attribute and return false for 'usesConnectionProperties()".<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>inEdge</CODE> - the edge traversed to reach the vertex.<DD><CODE>vertex</CODE> - the vertex.<DD><CODE>outEdge</CODE> - the edge traversed to leave the vertex.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getConnectionTime(drasys.or.graph.EdgeI, drasys.or.graph.VertexI, drasys.or.graph.EdgeI)"><!-- --></A><H3>
+getConnectionTime</H3>
+<PRE>
+public double <B>getConnectionTime</B>(<A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;inEdge,
+                                <A HREF="../../../drasys/or/graph/VertexI.html">VertexI</A>&nbsp;vertex,
+                                <A HREF="../../../drasys/or/graph/EdgeI.html">EdgeI</A>&nbsp;outEdge)</PRE>
+<DL>
+<DD>Returns the time to cross a vertex between two explicit edges.
+This attribute can be used to implement turn delays in a graph with out the overhead of artificial elements.
+Some algorithms don't use this attribute and return false for 'usesConnectionProperties()".<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>inEdge</CODE> - the edge traversed to reach the vertex.<DD><CODE>vertex</CODE> - the vertex.<DD><CODE>outEdge</CODE> - the edge traversed to leave the vertex.</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/graph/GraphI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/graph/RemoveEdgeI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PropertiesI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

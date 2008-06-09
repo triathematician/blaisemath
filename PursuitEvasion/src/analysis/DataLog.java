@@ -5,11 +5,13 @@
 
 package analysis;
 
+import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import scio.function.FunctionValueException;
 import utility.*;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -89,9 +91,10 @@ public class DataLog extends FiresChangeEvents {
     
     /** Called by the initialization methods */
     private void addAgentVisuals(Team t, PlottableGroup<Euclidean2> teamGroup) {
-        for (Agent a : t) {
+        InitialPointSet2D ip;
+        for (final Agent a : t) {
             // add the dynamic point
-            CirclePoint2D cp = new CirclePoint2D(a.getPointModel());
+            final CirclePoint2D cp = new CirclePoint2D(a.getPointModel());
             cp.setLabel(a.toString());
             cp.setColor(a.getColor());
             cp.addRadius(a.getCommRange());
@@ -100,8 +103,17 @@ public class DataLog extends FiresChangeEvents {
             teamGroup.add(cp);
             // add path attached to the point
             teamGroup.add(new InitialPointSet2D(cp, agentPaths.get(a), a.getColor()));
-        }
-    }    
+            a.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getActionCommand().equals("agentSetupChange")){
+                        cp.deleteRadii();
+                        cp.addRadius(a.getCommRange());
+                        cp.addRadius(a.getSensorRange());
+                    }
+                }
+            });
+        }        
+    }
     
     /** Called when the simulation is first initialized ONLY. */
     public void initialize(Simulation s,Plot2D mainDisplay,Plot2D valueDisplay){
@@ -155,17 +167,21 @@ public class DataLog extends FiresChangeEvents {
                 PointSet2D temp;
                 for(Valuation v:t.metrics){
                     temp = new PointSet2D(teamMetrics.get(v),t.getColor());
+                    temp.setLabel(v.toString());
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
                     temp = new PointSet2D(partialTeamMetrics.get(v),t.getColor());
+                    temp.setLabel(v.toString()+" (partial)");
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
                 }              
                 if(t.victory != null) {
                     temp = new PointSet2D(teamMetrics.get(t.victory),t.getColor());
+                    temp.setLabel(t.victory.toString());
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
                     temp = new PointSet2D(partialTeamMetrics.get(t.victory),t.getColor());
+                    temp.setLabel(t.victory.toString()+" (partial)");
                     temp.style.setValue(PointSet2D.THIN);
                     valueGroup.add(temp);
                 }
@@ -273,10 +289,30 @@ public class DataLog extends FiresChangeEvents {
         significantEvents.add(new SignificantEvent(owner,first,target,second,string,time));
     }
     
+    
+    // PRINTING RESULTS TO WINDOW
+    
     /** Outputs results to standard output. */
     public void output(JTextArea textArea){
+        textArea.append(": Significant Events\n");
         for(SignificantEvent se:significantEvents){
-            textArea.append("  " + se.toString() + "\n");
+            textArea.append("   * " + se.toString() + "\n");
+        }
+    }
+
+    /** Outputs starting locations of teams. */
+    public void printStartingLocations(JTextArea logWindow, JTextArea codeWindow) {
+        logWindow.append(": Starting Locations\n");
+        codeWindow.append("CODE SNIPPET: cut/paste the lines below:\n\n");
+        for(Team t : sim.getTeams()) {
+            logWindow.append("   * "+t+": "+t.getStartingLocations()+"\n");
+            codeWindow.append("R2[] "+t+"Positions = { ");
+            for(Agent a : t) {
+                codeWindow.append("new R2"+a.getInitialPosition()+" ");
+                if(!t.lastElement().equals(a)) { codeWindow.append(", "); }
+            }
+            codeWindow.append("};\n");
+            codeWindow.append("teams.get("+sim.getTeams().indexOf(t)+").setStartingLocations("+t+"Positions);\n");
         }
     }
     

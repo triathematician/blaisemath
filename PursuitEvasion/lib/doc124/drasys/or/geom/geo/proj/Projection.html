@@ -1,0 +1,774 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Projection
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../../drasys/or/geom/geo/proj/Mercator.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Projection.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom.geo.proj</FONT>
+<BR>
+Class  Projection</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.geom.geo.proj.Projection</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../../../drasys/or/geom/geo/proj/Conic.html">Conic</A>, <A HREF="../../../../../drasys/or/geom/geo/proj/Mercator.html">Mercator</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public abstract class <B>Projection</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+
+<P>
+A base class shared by all projection classes.
+The ellipsoid used for the projection is initialized to the current ellipsoid in 'geo.CordinateSystem'.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_e">_e</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_e2">_e2</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_easting">_easting</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;<A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_ellipsoid">_ellipsoid</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_er">_er</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_halfE">_halfE</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_northing">_northing</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#_oneMinusE2">_oneMinusE2</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#Projection()">Projection</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct the base projection.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#forward(drasys.or.geom.geo.RangeI)">forward</A></B>(<A HREF="../../../../../drasys/or/geom/geo/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a projected range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#forwardTransform(drasys.or.geom.PointI)">forwardTransform</A></B>(<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a transformed point.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#forwardTransform(drasys.or.geom.RangeI)">forwardTransform</A></B>(<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a transformed range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#getEasting()">getEasting</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the easting value for the projection.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#getEllipsoid()">getEllipsoid</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the ellipsoid used by the projection.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#getNorthing()">getNorthing</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the northing value for the projection.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#inputCoordinateSystem()">inputCoordinateSystem</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Always returns 'geo.CoordinateSystem';</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/geo/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#inverse(drasys.or.geom.rect2.RangeI)">inverse</A></B>(<A HREF="../../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an inverse projected range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#inverseTransform(drasys.or.geom.PointI)">inverseTransform</A></B>(<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an inverse transformed point.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#inverseTransform(drasys.or.geom.RangeI)">inverseTransform</A></B>(<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an inverse transformed range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#msfn(double)">msfn</A></B>(double&nbsp;radians)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#msfn(double, double)">msfn</A></B>(double&nbsp;sin,
+     double&nbsp;cos)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#outputCoordinateSystem()">outputCoordinateSystem</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Always returns 'rect2.CoordinateSystem';</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#phi1(double)">phi1</A></B>(double&nbsp;qs)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#phi2(double)">phi2</A></B>(double&nbsp;ts)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#qsfn(double)">qsfn</A></B>(double&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#setEasting(double)">setEasting</A></B>(double&nbsp;easting)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the easting value for the projection.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#setEllipsoid(drasys.or.geom.geo.EllipsoidI)">setEllipsoid</A></B>(<A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A>&nbsp;ellipsoid)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the ellipsoid used by projections.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#setNorthing(double)">setNorthing</A></B>(double&nbsp;northing)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the northing value for the projection.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#tsfn(double)">tsfn</A></B>(double&nbsp;radians)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../drasys/or/geom/geo/proj/Projection.html#tsfn(double, double)">tsfn</A></B>(double&nbsp;radians,
+     double&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="_easting"><!-- --></A><H3>
+_easting</H3>
+<PRE>
+protected double <B>_easting</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_northing"><!-- --></A><H3>
+_northing</H3>
+<PRE>
+protected double <B>_northing</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_e"><!-- --></A><H3>
+_e</H3>
+<PRE>
+protected double <B>_e</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_e2"><!-- --></A><H3>
+_e2</H3>
+<PRE>
+protected double <B>_e2</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_er"><!-- --></A><H3>
+_er</H3>
+<PRE>
+protected double <B>_er</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_halfE"><!-- --></A><H3>
+_halfE</H3>
+<PRE>
+protected double <B>_halfE</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_oneMinusE2"><!-- --></A><H3>
+_oneMinusE2</H3>
+<PRE>
+protected double <B>_oneMinusE2</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_ellipsoid"><!-- --></A><H3>
+_ellipsoid</H3>
+<PRE>
+protected <A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A> <B>_ellipsoid</B></PRE>
+<DL>
+</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Projection()"><!-- --></A><H3>
+Projection</H3>
+<PRE>
+public <B>Projection</B>()</PRE>
+<DL>
+<DD>Construct the base projection. 
+The initial ellipsoid will be ellipsoid returned from 'geo.CoordinateSystem.getEllipsoid()'.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="setEasting(double)"><!-- --></A><H3>
+setEasting</H3>
+<PRE>
+public void <B>setEasting</B>(double&nbsp;easting)</PRE>
+<DL>
+<DD>Sets the easting value for the projection. 
+The easting value will be added to all projected 'x' coordinates after the transform 
+and subtracted from from all inverse projected 'x' 
+coordinates before the inverse transform.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#setEasting(double)">setEasting</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEasting()"><!-- --></A><H3>
+getEasting</H3>
+<PRE>
+public double <B>getEasting</B>()</PRE>
+<DL>
+<DD>Gets the easting value for the projection. 
+The easting value will be added to all projected 'x' coordinates after the transform 
+and subtracted from from all inverse projected 'x' 
+coordinates before the inverse transform.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#getEasting()">getEasting</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setNorthing(double)"><!-- --></A><H3>
+setNorthing</H3>
+<PRE>
+public void <B>setNorthing</B>(double&nbsp;northing)</PRE>
+<DL>
+<DD>Sets the northing value for the projection. 
+The northing value will be added to all projected 'y' coordinates after the transform 
+and subtracted from from all inverse projected 'y' 
+coordinates before the inverse transform.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#setNorthing(double)">setNorthing</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getNorthing()"><!-- --></A><H3>
+getNorthing</H3>
+<PRE>
+public double <B>getNorthing</B>()</PRE>
+<DL>
+<DD>Gets the northing value for the projection. 
+The northing value will be added to all projected 'y' coordinates after the transform 
+and subtracted from from all inverse projected 'y' 
+coordinates before the inverse transform.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#getNorthing()">getNorthing</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEllipsoid()"><!-- --></A><H3>
+getEllipsoid</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A> <B>getEllipsoid</B>()</PRE>
+<DL>
+<DD>Gets the ellipsoid used by the projection.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setEllipsoid(drasys.or.geom.geo.EllipsoidI)"><!-- --></A><H3>
+setEllipsoid</H3>
+<PRE>
+public void <B>setEllipsoid</B>(<A HREF="../../../../../drasys/or/geom/geo/EllipsoidI.html">EllipsoidI</A>&nbsp;ellipsoid)</PRE>
+<DL>
+<DD>Gets the ellipsoid used by projections.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#setEllipsoid(drasys.or.geom.geo.EllipsoidI)">setEllipsoid</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="inputCoordinateSystem()"><!-- --></A><H3>
+inputCoordinateSystem</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A> <B>inputCoordinateSystem</B>()</PRE>
+<DL>
+<DD>Always returns 'geo.CoordinateSystem';<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="outputCoordinateSystem()"><!-- --></A><H3>
+outputCoordinateSystem</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A> <B>outputCoordinateSystem</B>()</PRE>
+<DL>
+<DD>Always returns 'rect2.CoordinateSystem';<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardTransform(drasys.or.geom.PointI)"><!-- --></A><H3>
+forwardTransform</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A> <B>forwardTransform</B>(<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)
+                        throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns a transformed point.
+Converts from the input coordinate system to the output coordinate system.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="inverseTransform(drasys.or.geom.PointI)"><!-- --></A><H3>
+inverseTransform</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A> <B>inverseTransform</B>(<A HREF="../../../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)
+                        throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns an inverse transformed point.  
+Converts from the output coordinate system to the input coordinate system.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardTransform(drasys.or.geom.RangeI)"><!-- --></A><H3>
+forwardTransform</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A> <B>forwardTransform</B>(<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)
+                        throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns a transformed range.  
+Converts from the input coordinate system to the output coordinate system.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="inverseTransform(drasys.or.geom.RangeI)"><!-- --></A><H3>
+inverseTransform</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A> <B>inverseTransform</B>(<A HREF="../../../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)
+                        throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns an inverse transformed range.  
+Converts from the output coordinate system to the input coordinate system.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forward(drasys.or.geom.geo.RangeI)"><!-- --></A><H3>
+forward</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A> <B>forward</B>(<A HREF="../../../../../drasys/or/geom/geo/RangeI.html">RangeI</A>&nbsp;range)
+               throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns a projected range.  
+Converts from the 'geo' coordinate system to the 'rect2' coordinate system.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#forward(drasys.or.geom.geo.RangeI)">forward</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="inverse(drasys.or.geom.rect2.RangeI)"><!-- --></A><H3>
+inverse</H3>
+<PRE>
+public <A HREF="../../../../../drasys/or/geom/geo/RangeI.html">RangeI</A> <B>inverse</B>(<A HREF="../../../../../drasys/or/geom/rect2/RangeI.html">RangeI</A>&nbsp;range)
+               throws <A HREF="../../../../../drasys/or/geom/GeomException.html">GeomException</A></PRE>
+<DL>
+<DD>Returns an inverse projected range.  
+Converts from the 'rect2' coordinate system to the 'geo' coordinate system.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html#inverse(drasys.or.geom.rect2.RangeI)">inverse</A> in interface <A HREF="../../../../../drasys/or/geom/geo/proj/ProjectionI.html">ProjectionI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="msfn(double)"><!-- --></A><H3>
+msfn</H3>
+<PRE>
+protected double <B>msfn</B>(double&nbsp;radians)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="msfn(double, double)"><!-- --></A><H3>
+msfn</H3>
+<PRE>
+protected double <B>msfn</B>(double&nbsp;sin,
+                      double&nbsp;cos)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="tsfn(double)"><!-- --></A><H3>
+tsfn</H3>
+<PRE>
+protected double <B>tsfn</B>(double&nbsp;radians)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="tsfn(double, double)"><!-- --></A><H3>
+tsfn</H3>
+<PRE>
+protected double <B>tsfn</B>(double&nbsp;radians,
+                      double&nbsp;sin)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="phi2(double)"><!-- --></A><H3>
+phi2</H3>
+<PRE>
+protected double <B>phi2</B>(double&nbsp;ts)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="phi1(double)"><!-- --></A><H3>
+phi1</H3>
+<PRE>
+protected double <B>phi1</B>(double&nbsp;qs)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="qsfn(double)"><!-- --></A><H3>
+qsfn</H3>
+<PRE>
+protected double <B>qsfn</B>(double&nbsp;sin)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../../drasys/or/geom/geo/proj/Mercator.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Projection.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

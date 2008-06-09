@@ -78,7 +78,10 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     * The value of this team itself represents the number which make it to "safety".
     */
     private HashMap<Team,Integer> captures;
-   
+
+    /** Stores initial positions (if specific) */
+    R2[] positions;
+    
     // CONSTRUCTORS
     public Team() {
         super();
@@ -118,6 +121,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         initAgentNumber();
         editing = false;
     }
+    
     // METHODS: HELP FOR INITIALIZAITON
     /** Initializes settings. */
     public void initSettings() {
@@ -236,6 +240,12 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         initAllActive();
         editing = false;
     }
+    
+    /** Sets initial locations to a particular vector of points. */
+    public void setStartingLocations(R2[] positions) {
+        this.positions = positions;
+        setStart(START_SPECIFIC);
+    }
 
     /** Re-initializes agent starting locations. */
     public void initStartingLocations(double pitchSize) {
@@ -253,13 +263,19 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
             case START_ARC:
                 StartingPositionsFactory.startArc(this, new R2(), pitchSize, Math.PI / 3, 5 * Math.PI / 3);
                 break;
+            case START_SPECIFIC:
+                StartingPositionsFactory.startSpecific(this, positions);
+                break;
             default:
                 StartingPositionsFactory.startZero(this);
                 break;
         }
         editing = false;
     }
+    
+    
     // BEAN PATTERNS: GETTERS & SETTERS
+    
     /** Returns center of mass of the team
      * @return center of mass */
     public R2 getCenterOfMass() {
@@ -275,28 +291,18 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         //System.out.println("center:"+center.x+"+"+center.y);
         return center;
     }
-//    /** Generates tree given list of goals and agents */
-//    public DefaultMutableTreeNode getTreeNode(){
-//        DefaultMutableTreeNode result=new DefaultMutableTreeNode(this);
-//        for(Goal g:goals){result.add(new DefaultMutableTreeNode(g));}
-//        for(Agent agent:this){result.add(new DefaultMutableTreeNode(agent));}
-//        return result;
-//    }
-    /** Returns all goals which require capture checks.
-     * @return      Vector of Goals representing those which involve capturing and removing player from the field.
-     */
-//    public HashSet<Goal> getCaptureGoals(){return captureGoals;}
-    /** Returns list of active agents.
-     * @return      Vector of agents which are still active in the simualtion
-     */
+    
+    /** Returns current set of active agents. */
     public HashSet<Agent> getActiveAgents() {
         return activeAgents;
     }
 
+    /** Returns set of agents which start the simulation. */
     public HashSet<Agent> getStartAgents() {
         return startAgents;
     }
 
+    /** Sets agents which are used in the simulation to a smaller subset. */
     public void setStartAgents(Collection<Agent> agents) {
         if (startAgents == null) {
             startAgents = new HashSet<Agent>();
@@ -304,6 +310,18 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         startAgents.clear();
         startAgents.addAll(agents);
     }
+    
+    /** Returns vector of agent starting positions. */
+    public Vector<R2> getStartingLocations() {
+        Vector<R2> result = new Vector<R2>();
+        for(Agent a:this) {
+            result.add(a.getInitialPosition());
+        }
+        return result;
+    }
+    
+    
+    // LOG EVENTS
     
     /** Logs a capture by a particular opposing team. */
     public void addOneCapturedBy(Team opponent) {
@@ -435,7 +453,9 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     public void propertyChange(PropertyChangeEvent evt) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
     // BEAN PATTERNS FOR INITIAL SETTINGS
+    
     public int getSize() {
         return tes.size.getValue();
     }
@@ -575,13 +595,20 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         for (Agent a : this) {
             a.setFixedPath(tes.pm.getStringX(), tes.pm.getStringY());
         }
-    }    // CONSTANTS FOR INITIAL SETTINGS
+    }
+    
+    // CONSTANTS FOR INITIAL SETTINGS
+    
     public static final int START_ZERO = 0;
     public static final int START_RANDOM = 1;
     public static final int START_LINE = 2;
     public static final int START_CIRCLE = 3;
     public static final int START_ARC = 4;
-    public static final String[] START_STRINGS = {"All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc"};
+    public static final int START_SPECIFIC = 5;
+    
+    /** String with labels for initial conditions. */
+    public static final String[] START_STRINGS = {"All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc", "Specific Locations"};
+    
     // SUBCLASSES
     /** Encapsulates a group of agents. */
     private class AgentGroupSettings extends Settings {
@@ -613,11 +640,11 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         /** Team size */
         private IntegerRangeModel size = new IntegerRangeModel(3, 1, 100);
         /** Starting positions to use */
-        private StringRangeModel start = new StringRangeModel(START_STRINGS, START_RANDOM, 0, 4);
+        private StringRangeModel start = new StringRangeModel(START_STRINGS);
         /** Default sensor range [in ft]. */
-        private DoubleRangeModel sensorRange = new DoubleRangeModel(20, 0, 5000);
+        private DoubleRangeModel sensorRange = new DoubleRangeModel(20, 0, 5000, .5);
         /** Default communications range [in ft]. */
-        private DoubleRangeModel commRange = new DoubleRangeModel(50, 0, 5000);
+        private DoubleRangeModel commRange = new DoubleRangeModel(50, 0, 5000, .5);
         /** Default speed [in ft/s]. */
         private DoubleRangeModel topSpeed = new DoubleRangeModel(5, 0, 50, .05);
         /** Default behavioral setting */
@@ -677,7 +704,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
                 initAgentNumber();
                 ac = "teamAgentsChange";
             } else if (evt.getSource() == start) {
-                ac = "teamSetupChange";
+                ac = "teamAgentsChange";
 //            } else if(evt.getSource()==goals){                              ac="teamSetupChange";
             } else if (evt.getSource() == topSpeed) {
                 copySpeedtoTeam();

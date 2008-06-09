@@ -1,0 +1,508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  ProblemI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/mp/ConstraintI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/mp/SizableProblemI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ProblemI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.mp</FONT>
+<BR>
+Interface  ProblemI</H2>
+<DL>
+<DT><B>All Known Subinterfaces:</B> <DD><A HREF="../../../drasys/or/mp/SizableProblemI.html">SizableProblemI</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>ProblemI</B><DT>extends <A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A></DL>
+
+<P>
+Defines a mathematical programming problem container.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#coefficients()">coefficients</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a mutable 'Enumeration' of the sparse in the problem.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#constraints()">constraints</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an 'Enumeration' of the constraints.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getCoefficientAt(int, int)">getCoefficientAt</A></B>(int&nbsp;constraintIndex,
+                 int&nbsp;variableIndex)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets a matrix coefficient by index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getCoefficientAt(java.lang.String, java.lang.String)">getCoefficientAt</A></B>(java.lang.String&nbsp;constraintName,
+                 java.lang.String&nbsp;variableName)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets a matrix coefficient by name.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getCoefficientMatrix()">getCoefficientMatrix</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the matrx used to hold the coefficients.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/mp/ConstraintI.html">ConstraintI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getConstraint(int)">getConstraint</A></B>(int&nbsp;rowIndex)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a constraint by row index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/mp/ConstraintI.html">ConstraintI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getConstraint(java.lang.String)">getConstraint</A></B>(java.lang.String&nbsp;name)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a constraint by name.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/util/Metadata.html">Metadata</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getMetadata()">getMetadata</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the metadata container for the problem.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/mp/VariableI.html">VariableI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getVariable(int)">getVariable</A></B>(int&nbsp;columnIndex)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a variable by column index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/mp/VariableI.html">VariableI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#getVariable(java.lang.String)">getVariable</A></B>(java.lang.String&nbsp;name)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a variable by name.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#relaxInteger()">relaxInteger</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changes all INTEGER or BOOLEAN variables to REAL variables.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#setCoefficientAt(int, int, double)">setCoefficientAt</A></B>(int&nbsp;constraintIndex,
+                 int&nbsp;variableIndex,
+                 double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a matrix coefficient by index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#setCoefficientAt(java.lang.String, java.lang.String, double)">setCoefficientAt</A></B>(java.lang.String&nbsp;constraintName,
+                 java.lang.String&nbsp;variableName,
+                 double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets a matrix coefficient by name.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#sizeOfCoefficients()">sizeOfCoefficients</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of non-null coefficients in the problem.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#sizeOfConstraints()">sizeOfConstraints</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of constraints in the problem.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#sizeOfVariables()">sizeOfVariables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of variable in the problem.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/mp/ProblemI.html#variables()">variables</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an 'Enumeration' of the variables.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.RealContainerI"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from interface drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainerI.html#equals(double, double)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainerI.html#getEpsilon()">getEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainerI.html#setEpsilon(double)">setEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getMetadata()"><!-- --></A><H3>
+getMetadata</H3>
+<PRE>
+public <A HREF="../../../drasys/or/util/Metadata.html">Metadata</A> <B>getMetadata</B>()</PRE>
+<DL>
+<DD>Returns the metadata container for the problem.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfConstraints()"><!-- --></A><H3>
+sizeOfConstraints</H3>
+<PRE>
+public int <B>sizeOfConstraints</B>()</PRE>
+<DL>
+<DD>Returns the number of constraints in the problem.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfVariables()"><!-- --></A><H3>
+sizeOfVariables</H3>
+<PRE>
+public int <B>sizeOfVariables</B>()</PRE>
+<DL>
+<DD>Returns the number of variable in the problem.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfCoefficients()"><!-- --></A><H3>
+sizeOfCoefficients</H3>
+<PRE>
+public int <B>sizeOfCoefficients</B>()</PRE>
+<DL>
+<DD>Returns the number of non-null coefficients in the problem.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getVariable(java.lang.String)"><!-- --></A><H3>
+getVariable</H3>
+<PRE>
+public <A HREF="../../../drasys/or/mp/VariableI.html">VariableI</A> <B>getVariable</B>(java.lang.String&nbsp;name)</PRE>
+<DL>
+<DD>Returns a variable by name.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getVariable(int)"><!-- --></A><H3>
+getVariable</H3>
+<PRE>
+public <A HREF="../../../drasys/or/mp/VariableI.html">VariableI</A> <B>getVariable</B>(int&nbsp;columnIndex)</PRE>
+<DL>
+<DD>Returns a variable by column index.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getConstraint(java.lang.String)"><!-- --></A><H3>
+getConstraint</H3>
+<PRE>
+public <A HREF="../../../drasys/or/mp/ConstraintI.html">ConstraintI</A> <B>getConstraint</B>(java.lang.String&nbsp;name)</PRE>
+<DL>
+<DD>Returns a constraint by name.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getConstraint(int)"><!-- --></A><H3>
+getConstraint</H3>
+<PRE>
+public <A HREF="../../../drasys/or/mp/ConstraintI.html">ConstraintI</A> <B>getConstraint</B>(int&nbsp;rowIndex)</PRE>
+<DL>
+<DD>Returns a constraint by row index.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setCoefficientAt(int, int, double)"><!-- --></A><H3>
+setCoefficientAt</H3>
+<PRE>
+public void <B>setCoefficientAt</B>(int&nbsp;constraintIndex,
+                             int&nbsp;variableIndex,
+                             double&nbsp;value)</PRE>
+<DL>
+<DD>Sets a matrix coefficient by index.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setCoefficientAt(java.lang.String, java.lang.String, double)"><!-- --></A><H3>
+setCoefficientAt</H3>
+<PRE>
+public void <B>setCoefficientAt</B>(java.lang.String&nbsp;constraintName,
+                             java.lang.String&nbsp;variableName,
+                             double&nbsp;value)
+                      throws <A HREF="../../../drasys/or/mp/NotFoundException.html">NotFoundException</A></PRE>
+<DL>
+<DD>Sets a matrix coefficient by name.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCoefficientAt(int, int)"><!-- --></A><H3>
+getCoefficientAt</H3>
+<PRE>
+public double <B>getCoefficientAt</B>(int&nbsp;constraintIndex,
+                               int&nbsp;variableIndex)</PRE>
+<DL>
+<DD>Gets a matrix coefficient by index.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCoefficientAt(java.lang.String, java.lang.String)"><!-- --></A><H3>
+getCoefficientAt</H3>
+<PRE>
+public double <B>getCoefficientAt</B>(java.lang.String&nbsp;constraintName,
+                               java.lang.String&nbsp;variableName)
+                        throws <A HREF="../../../drasys/or/mp/NotFoundException.html">NotFoundException</A></PRE>
+<DL>
+<DD>Gets a matrix coefficient by name.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCoefficientMatrix()"><!-- --></A><H3>
+getCoefficientMatrix</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A> <B>getCoefficientMatrix</B>()</PRE>
+<DL>
+<DD>Returns the matrx used to hold the coefficients.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="coefficients()"><!-- --></A><H3>
+coefficients</H3>
+<PRE>
+public java.util.Enumeration <B>coefficients</B>()</PRE>
+<DL>
+<DD>Returns a mutable 'Enumeration' of the sparse in the problem.
+The 'Enumeration' returns elements which implement <A HREF="../../../drasys/or/matrix/MatrixElementI.html"><CODE>MatrixElementI</CODE></A>. 
+The contents of a returned element must be used before getting the next element
+because the same object is modified and reused for each 'nextElement' call.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="variables()"><!-- --></A><H3>
+variables</H3>
+<PRE>
+public java.util.Enumeration <B>variables</B>()</PRE>
+<DL>
+<DD>Returns an 'Enumeration' of the variables.
+The 'Enumeration' returns elements which implement <A HREF="../../../drasys/or/mp/VariableI.html"><CODE>VariableI</CODE></A>.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constraints()"><!-- --></A><H3>
+constraints</H3>
+<PRE>
+public java.util.Enumeration <B>constraints</B>()</PRE>
+<DL>
+<DD>Returns an 'Enumeration' of the constraints.
+The 'Enumeration' returns elements which implement <A HREF="../../../drasys/or/mp/ConstraintI.html"><CODE>ConstraintI</CODE></A>.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="relaxInteger()"><!-- --></A><H3>
+relaxInteger</H3>
+<PRE>
+public int <B>relaxInteger</B>()</PRE>
+<DL>
+<DD>Changes all INTEGER or BOOLEAN variables to REAL variables.
+When a BOOLEAN variable is changed, the lower bound is set to 0.0 and
+the upper bound is set to 1.0.<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/mp/ConstraintI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/mp/SizableProblemI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ProblemI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

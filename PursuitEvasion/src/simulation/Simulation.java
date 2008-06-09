@@ -29,7 +29,6 @@ import analysis.DataLog;
 import java.util.HashMap;
 import metrics.*;
 import java.util.HashSet;
-import javax.swing.JTextArea;
 import utility.DistanceTable;
 import utility.SimulationFactory;
 
@@ -73,15 +72,15 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     // METHODS: INITIALIZERS
     
     /** PRimary Initializer */
-    public void mainInitialize(String name,int numTeams,Vector<Team> teams,int primaryTeam){
+    public void mainInitialize(String name,Vector<Team> teams){
         setString(name);
-        setNumTeams(numTeams);
         initTeams(teams);
     }
     
     /** Intializes to a given list of teams. */
     public void initTeams(Vector<Team> newTeams){
         if(newTeams!=null){
+            setNumTeams(newTeams.size());
             if(teams!=null){for(Team t:teams){t.removeActionListener(this);}}
             teams=newTeams;
             ss.getChildren().clear();
