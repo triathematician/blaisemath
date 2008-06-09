@@ -1,0 +1,7 @@
+#summary Contains listing of feature additions to Blaise.
+#labels Featured,Module-Blaise
+
+==== Week of June 8-14 ====
+
+* _Added ability of `PlotPanel`s to synchronize their `RangeTimer`s._ --Elisha
+* _Added ability to label paths (`PointSet2D`), and to display the current point when animating._ --Elisha
