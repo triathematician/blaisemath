@@ -1,0 +1,554 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <title>MPS Stream Format</title>
+</head>
+<body>
+
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<center>
+<h1>
+MPS Stream Format</h1></center>
+
+<hr WIDTH="100%">
+<p>The MPS stream format is line oriented with one record per line. There
+are two predominate versions of the MPS format. An older format that uses
+fixed field records and a newer format that uses white-space delimited
+records. The fixed record format limits row/column names to eight characters
+and the delimited format allows names of arbitrary length. An MPS reader
+that reads delimited records can read fixed records with no changes if
+the row/column names don't contain embedded spaces.
+<p>The 'MPSReader' class in OR-Objects reads MPS records using the newer
+delimited format which allows it to read both MPS versions. The 'MPSWriter'
+class in OR-Objects writes records in the fixed format if the names contain
+eight or fewer characters and in the delimited format if they contain more.
+This produces MPS streams that can be read by older fixed format readers
+if the name lengths permit.
+<h2>
+<a NAME="recordFormats"></a>Record Formats</h2>
+Table-1 shows the details of the MPS records. The column numbers only apply
+to fixed format records. Any line with a leading '*' is taken as a comment.
+The 'MPSReader' class parses comment lines for embedded <a href="#commentMetadata">metadata</a>
+before discarding the line.
+<br>&nbsp;
+<table BORDER CELLPADDING=4 >
+<caption>Table 1 - Fixed Record Field Formats</caption>
+
+<tr ALIGN=CENTER>
+<td>Record Description</td>
+
+<td><b>Field-1</b>
+<br>2 - 3</td>
+
+<td ALIGN=CENTER><b>Field-2</b>
+<br>5-12</td>
+
+<td><b>Field-3</b>
+<br>15-22</td>
+
+<td><b>Field-4</b>
+<br>25-36</td>
+
+<td><b>Field-5</b>
+<br>40-47</td>
+
+<td><b>Field-6</b>
+<br>50-61</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#nameRecord">Name Record</a></b></td>
+
+<td>NAME</td>
+
+<td><font size=-1>problemName</font></td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#rowsSection">Row Section</a></b></td>
+
+<td>ROWS</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><font size=-1>Row Data</font></td>
+
+<td><font size=-1>constraintType</font></td>
+
+<td><font size=-1>rowName</font></td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#columnsSection">Column Section</a></b></td>
+
+<td>COLUMNS</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><font size=-1>Column Data</font></td>
+
+<td>&nbsp;</td>
+
+<td><font size=-1>columnName</font></td>
+
+<td><font size=-1>rowName</font></td>
+
+<td><font size=-1>value</font></td>
+
+<td><font size=-1>[rowName</font></td>
+
+<td><font size=-1>value]</font></td>
+</tr>
+
+<tr>
+<td><font size=-1>Integer Origin Marker</font></td>
+
+<td>&nbsp;</td>
+
+<td ALIGN=CENTER>
+<center><font size=-1>markerName</font></center>
+</td>
+
+<td ALIGN=CENTER>
+<center><font size=-1>'MARKER'</font></center>
+</td>
+
+<td>
+<center><font size=-1>'INTORG'</font></center>
+</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><font size=-1>Integer End Marker</font></td>
+
+<td>&nbsp;</td>
+
+<td ALIGN=CENTER>
+<center><font size=-1>markerName</font></center>
+</td>
+
+<td>
+<center><font size=-1>'MARKER'</font></center>
+</td>
+
+<td>
+<center><font size=-1>'INTEND'</font></center>
+</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#rhsSection">Right-Hand-Side Section</a></b></td>
+
+<td>RHS</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><font size=-1>Right-Hand-Side Data</font></td>
+
+<td>&nbsp;</td>
+
+<td><font size=-1>rhsName</font></td>
+
+<td><font size=-1>rowName</font></td>
+
+<td><font size=-1>value</font></td>
+
+<td><font size=-1>[rowName</font></td>
+
+<td><font size=-1>value]</font></td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#rangesSection">Range Section</a></b></td>
+
+<td>RANGES</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><font size=-1>Range Data</font></td>
+
+<td>&nbsp;</td>
+
+<td><font size=-1>rangeName</font></td>
+
+<td><font size=-1>rowname</font></td>
+
+<td><font size=-1>value</font></td>
+
+<td><font size=-1>[rowName</font></td>
+
+<td><font size=-1>value]</font></td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b><a href="#boundsSection">Bound Section</a></b></td>
+
+<td>BOUNDS</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><font size=-1>Bound Data</font></td>
+
+<td><font size=-1>boundType</font></td>
+
+<td><font size=-1>boundName</font></td>
+
+<td><font size=-1>columnName</font></td>
+
+<td><font size=-1>value</font></td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td ALIGN=LEFT><b>End of Data</b></td>
+
+<td>ENDATA</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><a href="#commentMetadata">Comments and Metadata</a></td>
+
+<td ALIGN=CENTER>*</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="nameRecord"></a>Name Record</h2>
+The name record specifies the name of the problem. The name starts in field-2
+and extends to the last character on the line. All embedded spaces are
+included in the name and all leading and trailing spaces are truncated.
+<h2>
+<a NAME="rowsSection"></a>Rows Section</h2>
+Each row data record defines a new constraint row. The field-1 specifies
+the constraint type and field-2 specifies its name. All rows must be defined
+before they can be referenced in the other sections that follow.
+<br>&nbsp;
+<table BORDER CELLPADDING=4 >
+<caption>Table 2 - Constraint Type Definitions</caption>
+
+<tr ALIGN=CENTER>
+<td>&nbsp;<b>'constraintType'</b></td>
+
+<td><b>Row Type Definition</b></td>
+</tr>
+
+<tr>
+<td ALIGN=CENTER>&nbsp;L&nbsp;</td>
+
+<td>Less Than Constraint</td>
+</tr>
+
+<tr>
+<td ALIGN=CENTER>&nbsp;G&nbsp;</td>
+
+<td>Greater Than Constraint</td>
+</tr>
+
+<tr>
+<td ALIGN=CENTER>&nbsp;E&nbsp;</td>
+
+<td>Equal To Constraint</td>
+</tr>
+
+<tr>
+<td ALIGN=CENTER>&nbsp;N</td>
+
+<td>Free Row (The first one will become the objective.)</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="columnsSection"></a>Columns Section</h2>
+The column data records must be grouped together by column. Each group
+defines a new decision variable and its coefficients. Field-2 contains
+the column name and the first record in the group defines the column. Field-3
+and field-4 specify a row name and value for a coefficient. Field-5 and
+field-6 are optional and if present define an additional coeficient. An
+objective function coefficient is specified by using the row name of the
+objective function, which is the first row defined with a type 'N'.
+<p>The default type for a variable is REAL. The integer origin and integer
+end column records can be used to designate INTEGER type variables. A block
+of variables is desinated as INTEGER by putting an integer origin marker
+record before the first column deifinition in the block and an integer
+end marker record after the last column.
+<h2>
+<a NAME="rhsSection"></a>Right-Hand-Side (RHS) Section</h2>
+The right-hand-side (rhs) data records define the rhs values for the constraints.
+The rhs column name is defined by the first record and any additional columns
+will be ignored. The data records are analagous to those in the columns
+section.
+<h2>
+<a NAME="rangesSection"></a>Ranges Section</h2>
+The range data records define the range values for the constraints. The
+range column name is defined by the first record and any additional columns
+will be ignored. The data records are analagous to those in the columns
+section. Table-3 shows how the range values are applied to different constraint
+types.
+<br>&nbsp;
+<table BORDER CELLPADDING=4 >
+<caption>Table 3 - Range Value Usage</caption>
+
+<tr>
+<td><b>'rowType'</b></td>
+
+<td><b>Range Sign</b></td>
+
+<td><b>Lower Range</b></td>
+
+<td><b>Upper Range</b></td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td>E</td>
+
+<td>positive</td>
+
+<td>rhs</td>
+
+<td>rhs + range</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td>E</td>
+
+<td>negative</td>
+
+<td>rhs + range</td>
+
+<td>rhs</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td>G</td>
+
+<td>either</td>
+
+<td>rhs</td>
+
+<td>rhs + |range|</td>
+</tr>
+
+<tr ALIGN=CENTER>
+<td>L</td>
+
+<td>either</td>
+
+<td>rhs - |range|</td>
+
+<td>rhs</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="boundsSection"></a>Bounds section</h2>
+Each bound data record defines a bound on a decision variable. Some bound
+types change the type of the decision variable. The bound row name is defined
+by the first record and any additional rows will be ignored. Field-1 defines
+the bound type, Field-2 specifies the bound row name, Field-3 identifies
+the bounded variable and field-4 specifies the bound value.
+<br>&nbsp;
+<table BORDER CELLPADDING=4 >
+<caption>Table 4 - Bound Type Definitions</caption>
+
+<tr>
+<td><b>'boundType'</b></td>
+
+<td><b>Bound Type Definition</b></td>
+</tr>
+
+<tr>
+<td ALIGN=CENTER>LO</td>
+
+<td>Set lower bound.</td>
+</tr>
+
+<tr>
+<td>
+<center>UP</center>
+</td>
+
+<td>Set upper bound.</td>
+</tr>
+
+<tr>
+<td>
+<center>LI</center>
+</td>
+
+<td>Make integer and set lower bound.</td>
+</tr>
+
+<tr>
+<td>
+<center>UI</center>
+</td>
+
+<td>Make integer and set upper bound.</td>
+</tr>
+
+<tr>
+<td>
+<center>BV</center>
+</td>
+
+<td>Make boolean.</td>
+</tr>
+
+<tr>
+<td>
+<center>FX</center>
+</td>
+
+<td>Fix the value.</td>
+</tr>
+
+<tr>
+<td>
+<center>FR</center>
+</td>
+
+<td>Free the variable.</td>
+</tr>
+
+<tr>
+<td>
+<center>MI</center>
+</td>
+
+<td>Set lower bound to minus infinity</td>
+</tr>
+
+<tr>
+<td>
+<center>PL</center>
+</td>
+
+<td>Set upper bound to plus infinity</td>
+</tr>
+</table>
+
+<h2>
+<a NAME="commentMetadata"></a>Comments and Metadata</h2>
+Any line with a leading '*' is interpreted as a comment line. When a comment
+line is parsed for an embedded metadatum definition before being discarded.
+Metadata is data that is outside the scope of the problem formulation but
+provides meaningful information about the problem. The metadata can be
+used by algorithms to set internal parameters or as hints to gain insights
+into a problem's characteristics.&nbsp; A metadatum is defined with the
+keyword 'Metadatum' followed by a key string and value strings. The value
+string may be enclosed in quotes to include spaces.
+<p>Here are some examples of metadata embedded in comments:
+<p>* Metadatum&nbsp; lp.epsilon&nbsp; 1.0E-6
+<br>* Metadatum&nbsp; lp.description&nbsp; "A problem I need to solve."
+<br>* Metadatum&nbsp; mip.searchAlgorithm&nbsp;&nbsp; branch-and-bound
+<p>
+<hr WIDTH="100%">
+<br>Copyright(C)1997-99 by DRA Systems all rights reserved.
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

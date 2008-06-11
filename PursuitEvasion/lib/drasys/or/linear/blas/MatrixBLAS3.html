@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  MatrixBLAS3
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/MatrixBLAS2.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/SmpBLAS1.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="MatrixBLAS3.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.linear.blas</FONT>
+<BR>
+Class  MatrixBLAS3</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.linear.blas.MatrixBLAS3</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>MatrixBLAS3</B><DT>extends java.lang.Object</DL>
+
+<P>
+BLAS3 layer that operates on contiguous
+<A HREF="../../../../drasys/or/matrix/ContiguousVectorI.html"><CODE>vectors</CODE></A> and
+<A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html"><CODE>matrices</CODE></A>.
+For a traditional and more feature rich implementation of the BLAS see
+<A HREF="../../../../drasys/or/linear/blas/BLAS1.html"><CODE>BLAS1</CODE></A>, <A HREF="../../../../drasys/or/linear/blas/BLAS2.html"><CODE>BLAS2</CODE></A> and <A HREF="../../../../drasys/or/linear/blas/BLAS3.html"><CODE>BLAS3</CODE></A>.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0155510053"HREF="http://www.amazon.com/exec/obidos/ISBN=0155510053/opsresearchcomA/" TARGET="amazon.com">Linear Algebra and Its Applications</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gilbert Strang / Hardcover / Published 1988<BR><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR>
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/MatrixBLAS3.html#MatrixBLAS3()">MatrixBLAS3</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a matrix BLAS with the default BLAS implementation and a base index of '0'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/MatrixBLAS3.html#MatrixBLAS3(int)">MatrixBLAS3</A></B>(int&nbsp;base)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a matrix BLAS with a default BLAS implementation and an explicit base index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/MatrixBLAS3.html#MatrixBLAS3(int, drasys.or.linear.blas.BLAS3I)">MatrixBLAS3</A></B>(int&nbsp;base,
+            <A HREF="../../../../drasys/or/linear/blas/BLAS3I.html">BLAS3I</A>&nbsp;blas3)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a matrix BLAS with an explicit BLAS implementation and an explicit base index.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/MatrixBLAS3.html#dgemm(boolean, boolean, double, drasys.or.matrix.ContiguousMatrixI, drasys.or.matrix.ContiguousMatrixI, double, drasys.or.matrix.ContiguousMatrixI)">dgemm</A></B>(boolean&nbsp;transposeA,
+      boolean&nbsp;transposeB,
+      double&nbsp;alpha,
+      <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;A,
+      <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;B,
+      double&nbsp;beta,
+      <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;C)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes: C = alpha*A*B + beta*C.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/MatrixBLAS3.html#zgemm(boolean, boolean, drasys.or.ComplexI, drasys.or.matrix.complex.ContiguousMatrixI, drasys.or.matrix.complex.ContiguousMatrixI, drasys.or.ComplexI, drasys.or.matrix.complex.ContiguousMatrixI)">zgemm</A></B>(boolean&nbsp;transposeA,
+      boolean&nbsp;transposeB,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+      <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;A,
+      <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;B,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;beta,
+      <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;C)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes: C = alpha*A*B + beta*C.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="MatrixBLAS3()"><!-- --></A><H3>
+MatrixBLAS3</H3>
+<PRE>
+public <B>MatrixBLAS3</B>()</PRE>
+<DL>
+<DD>Create a matrix BLAS with the default BLAS implementation and a base index of '0'.
+All computations will use elements A[0...(nrow-1)][0...(ncol-1)].</DL>
+<HR>
+
+<A NAME="MatrixBLAS3(int)"><!-- --></A><H3>
+MatrixBLAS3</H3>
+<PRE>
+public <B>MatrixBLAS3</B>(int&nbsp;base)</PRE>
+<DL>
+<DD>Create a matrix BLAS with a default BLAS implementation and an explicit base index.
+Typically 'base' will be '0' or '1'.
+All computations will use elements A[base...(nrow-1)][base...(ncol-1)].</DL>
+<HR>
+
+<A NAME="MatrixBLAS3(int, drasys.or.linear.blas.BLAS3I)"><!-- --></A><H3>
+MatrixBLAS3</H3>
+<PRE>
+public <B>MatrixBLAS3</B>(int&nbsp;base,
+                   <A HREF="../../../../drasys/or/linear/blas/BLAS3I.html">BLAS3I</A>&nbsp;blas3)</PRE>
+<DL>
+<DD>Create a matrix BLAS with an explicit BLAS implementation and an explicit base index.
+Typically 'base' will be '0' or '1'.
+All computations will use elements A[base...(nrow-1)][base...(ncol-1)].</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="dgemm(boolean, boolean, double, drasys.or.matrix.ContiguousMatrixI, drasys.or.matrix.ContiguousMatrixI, double, drasys.or.matrix.ContiguousMatrixI)"><!-- --></A><H3>
+dgemm</H3>
+<PRE>
+public void <B>dgemm</B>(boolean&nbsp;transposeA,
+                  boolean&nbsp;transposeB,
+                  double&nbsp;alpha,
+                  <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;A,
+                  <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;B,
+                  double&nbsp;beta,
+                  <A HREF="../../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;C)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes: C = alpha*A*B + beta*C.</DL>
+<HR>
+
+<A NAME="zgemm(boolean, boolean, drasys.or.ComplexI, drasys.or.matrix.complex.ContiguousMatrixI, drasys.or.matrix.complex.ContiguousMatrixI, drasys.or.ComplexI, drasys.or.matrix.complex.ContiguousMatrixI)"><!-- --></A><H3>
+zgemm</H3>
+<PRE>
+public void <B>zgemm</B>(boolean&nbsp;transposeA,
+                  boolean&nbsp;transposeB,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+                  <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;A,
+                  <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;B,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;beta,
+                  <A HREF="../../../../drasys/or/matrix/complex/ContiguousMatrixI.html">ContiguousMatrixI</A>&nbsp;C)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes: C = alpha*A*B + beta*C.</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/MatrixBLAS2.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/SmpBLAS1.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="MatrixBLAS3.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

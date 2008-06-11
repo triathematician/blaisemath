@@ -1,0 +1,582 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Composite
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/CheapestInsertion.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/ConstructBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Composite.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.graph.tsp</FONT>
+<BR>
+Class  Composite</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.graph.tsp.Composite</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../../drasys/or/graph/tsp/Genius.html">Genius</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public class <B>Composite</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+
+<P>
+This class implements a composite TSP algorithm by combining a construction algorithm with an improvement algorithm.
+A composite TSP algorithm is one that has a construction phase followed by an improvement phase.
+In the TSP package all basic algorithms are implemented as either
+a pure construction or improvement class with the associated interface.
+This class implements the composite algorithm by constructing an initial tour using the construction algorithm
+and then improving it with the improvement algorithm.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#Composite(drasys.or.graph.tsp.ConstructI, drasys.or.graph.tsp.ImproveI)">Composite</A></B>(<A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A>&nbsp;construct,
+          <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improve)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#Composite(drasys.or.graph.tsp.ConstructI, drasys.or.graph.tsp.ImproveI, drasys.or.graph.GraphI)">Composite</A></B>(<A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A>&nbsp;construct,
+          <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improve,
+          <A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#constructClosedTour()">constructClosedTour</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct a closed tour solution.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#constructOpenTour()">constructOpenTour</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct an open tour solution with arbitrary end points.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#constructOpenTour(java.lang.Object, java.lang.Object)">constructOpenTour</A></B>(java.lang.Object&nbsp;originKey,
+                  java.lang.Object&nbsp;destinationKey)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct a tour with explicit end points.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#constructOpenTourFrom(java.lang.Object)">constructOpenTourFrom</A></B>(java.lang.Object&nbsp;originKey)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct an open tour solution with an explicit origin and arbitrary destination.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#constructOpenTourTo(java.lang.Object)">constructOpenTourTo</A></B>(java.lang.Object&nbsp;destinationKey)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Construct an open tour solution with an explicit destination and arbitrary origin.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#getConstructAlgorithm()">getConstructAlgorithm</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#getCost()">getCost</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the cost of the solution tour.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#getImproveAlgorithm()">getImproveAlgorithm</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Vector</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#getTour()">getTour</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the solution tour.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Vector</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#rotateClosedTour(java.util.Vector, java.lang.Object)">rotateClosedTour</A></B>(java.util.Vector&nbsp;tour,
+                 java.lang.Object&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rotates the closed tour until the vertex that matches key is the vertex that is repeated on both ends.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#selectVertex(boolean)">selectVertex</A></B>(boolean&nbsp;select)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects all of the vertices in the graph to be in the tour if 'select' is true.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#selectVertex(boolean[])">selectVertex</A></B>(boolean[]&nbsp;select)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects all of the vertices whose corresponding element in 'select' is true.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#selectVertex(java.lang.Object, boolean)">selectVertex</A></B>(java.lang.Object&nbsp;key,
+             boolean&nbsp;select)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selects the vertex to be in the tour if 'select' is true.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#setEdgeKey(java.lang.Object)">setEdgeKey</A></B>(java.lang.Object&nbsp;edgeKey)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the edge key for the construction and improvement algorithms.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#setGraph(drasys.or.graph.GraphI)">setGraph</A></B>(<A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the graph for the construction and improvement algorithms.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Composite.html#setProperties(drasys.or.graph.PropertiesI)">setProperties</A></B>(<A HREF="../../../../drasys/or/graph/PropertiesI.html">PropertiesI</A>&nbsp;properties)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the edge properties object for the construction and improvement algorithms.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Composite(drasys.or.graph.tsp.ConstructI, drasys.or.graph.tsp.ImproveI)"><!-- --></A><H3>
+Composite</H3>
+<PRE>
+public <B>Composite</B>(<A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A>&nbsp;construct,
+                 <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improve)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="Composite(drasys.or.graph.tsp.ConstructI, drasys.or.graph.tsp.ImproveI, drasys.or.graph.GraphI)"><!-- --></A><H3>
+Composite</H3>
+<PRE>
+public <B>Composite</B>(<A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A>&nbsp;construct,
+                 <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improve,
+                 <A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getConstructAlgorithm()"><!-- --></A><H3>
+getConstructAlgorithm</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A> <B>getConstructAlgorithm</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getImproveAlgorithm()"><!-- --></A><H3>
+getImproveAlgorithm</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A> <B>getImproveAlgorithm</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setGraph(drasys.or.graph.GraphI)"><!-- --></A><H3>
+setGraph</H3>
+<PRE>
+public void <B>setGraph</B>(<A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</PRE>
+<DL>
+<DD>Sets the graph for the construction and improvement algorithms.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setProperties(drasys.or.graph.PropertiesI)"><!-- --></A><H3>
+setProperties</H3>
+<PRE>
+public void <B>setProperties</B>(<A HREF="../../../../drasys/or/graph/PropertiesI.html">PropertiesI</A>&nbsp;properties)</PRE>
+<DL>
+<DD>Sets the edge properties object for the construction and improvement algorithms.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setEdgeKey(java.lang.Object)"><!-- --></A><H3>
+setEdgeKey</H3>
+<PRE>
+public void <B>setEdgeKey</B>(java.lang.Object&nbsp;edgeKey)</PRE>
+<DL>
+<DD>Sets the edge key for the construction and improvement algorithms.
+The default value for 'edgeKey' is null.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCost()"><!-- --></A><H3>
+getCost</H3>
+<PRE>
+public double <B>getCost</B>()</PRE>
+<DL>
+<DD>Returns the cost of the solution tour.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/GraphError.html">GraphError</A> - if no solution was created.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getTour()"><!-- --></A><H3>
+getTour</H3>
+<PRE>
+public java.util.Vector <B>getTour</B>()</PRE>
+<DL>
+<DD>Returns the solution tour.<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/GraphError.html">GraphError</A> - if no solution was created.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constructOpenTour(java.lang.Object, java.lang.Object)"><!-- --></A><H3>
+constructOpenTour</H3>
+<PRE>
+public double <B>constructOpenTour</B>(java.lang.Object&nbsp;originKey,
+                                java.lang.Object&nbsp;destinationKey)
+                         throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A>,
+                                <A HREF="../../../../drasys/or/graph/VertexNotFoundException.html">VertexNotFoundException</A></PRE>
+<DL>
+<DD>Construct a tour with explicit end points.
+An open tour is one where the origin and destination vertices are different.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#constructOpenTour(java.lang.Object, java.lang.Object)">constructOpenTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A> - if the tour can not be constructed.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constructOpenTourFrom(java.lang.Object)"><!-- --></A><H3>
+constructOpenTourFrom</H3>
+<PRE>
+public double <B>constructOpenTourFrom</B>(java.lang.Object&nbsp;originKey)
+                             throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A>,
+                                    <A HREF="../../../../drasys/or/graph/VertexNotFoundException.html">VertexNotFoundException</A></PRE>
+<DL>
+<DD>Construct an open tour solution with an explicit origin and arbitrary destination.
+An open tour is one where the origin and destination vertices are different.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#constructOpenTourFrom(java.lang.Object)">constructOpenTourFrom</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A> - if the tour can not be constructed.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constructOpenTourTo(java.lang.Object)"><!-- --></A><H3>
+constructOpenTourTo</H3>
+<PRE>
+public double <B>constructOpenTourTo</B>(java.lang.Object&nbsp;destinationKey)
+                           throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A>,
+                                  <A HREF="../../../../drasys/or/graph/VertexNotFoundException.html">VertexNotFoundException</A></PRE>
+<DL>
+<DD>Construct an open tour solution with an explicit destination and arbitrary origin.
+An open tour is one where the origin and destination vertices are different.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#constructOpenTourTo(java.lang.Object)">constructOpenTourTo</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A> - if the tour can not be constructed.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constructOpenTour()"><!-- --></A><H3>
+constructOpenTour</H3>
+<PRE>
+public double <B>constructOpenTour</B>()
+                         throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD>Construct an open tour solution with arbitrary end points.
+An open tour is one where the origin and destination vertices are different.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#constructOpenTour()">constructOpenTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A> - if the tour can not be constructed.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="constructClosedTour()"><!-- --></A><H3>
+constructClosedTour</H3>
+<PRE>
+public double <B>constructClosedTour</B>()
+                           throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD>Construct a closed tour solution.
+A closed tour is one where the origin and destination vertices are the same.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#constructClosedTour()">constructClosedTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A> - if the tour can not be constructed.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectVertex(boolean[])"><!-- --></A><H3>
+selectVertex</H3>
+<PRE>
+public void <B>selectVertex</B>(boolean[]&nbsp;select)</PRE>
+<DL>
+<DD>Selects all of the vertices whose corresponding element in 'select' is true.
+Unselects all of the vertices whose corresponding element in 'select' is false.
+All of the vertices are selected by default when the algorithm is constructed.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#selectVertex(boolean[])">selectVertex</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectVertex(boolean)"><!-- --></A><H3>
+selectVertex</H3>
+<PRE>
+public void <B>selectVertex</B>(boolean&nbsp;select)</PRE>
+<DL>
+<DD>Selects all of the vertices in the graph to be in the tour if 'select' is true.
+Unselects all of the vertices if 'select' is false.
+All of the vertices are selected by default when the algorithm is constructed.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#selectVertex(boolean)">selectVertex</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectVertex(java.lang.Object, boolean)"><!-- --></A><H3>
+selectVertex</H3>
+<PRE>
+public void <B>selectVertex</B>(java.lang.Object&nbsp;key,
+                         boolean&nbsp;select)
+                  throws <A HREF="../../../../drasys/or/graph/VertexNotFoundException.html">VertexNotFoundException</A></PRE>
+<DL>
+<DD>Selects the vertex to be in the tour if 'select' is true.
+Unselects the vertex if 'select' is false.
+All of the vertices are selected by default when the algorithm is constructed.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ConstructI.html#selectVertex(java.lang.Object, boolean)">selectVertex</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ConstructI.html">ConstructI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="rotateClosedTour(java.util.Vector, java.lang.Object)"><!-- --></A><H3>
+rotateClosedTour</H3>
+<PRE>
+public java.util.Vector <B>rotateClosedTour</B>(java.util.Vector&nbsp;tour,
+                                         java.lang.Object&nbsp;key)
+                                  throws <A HREF="../../../../drasys/or/graph/VertexNotFoundException.html">VertexNotFoundException</A></PRE>
+<DL>
+<DD>Rotates the closed tour until the vertex that matches key is the vertex that is repeated on both ends.<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/CheapestInsertion.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/ConstructBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Composite.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

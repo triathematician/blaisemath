@@ -1,0 +1,906 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  CompressedRowMatrix
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CompressedRowMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.matrix</FONT>
+<BR>
+Class  CompressedRowMatrix</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/matrix/RealContainer.html">drasys.or.matrix.RealContainer</A>
+        |
+        +--<A HREF="../../../drasys/or/matrix/Matrix.html">drasys.or.matrix.Matrix</A>
+              |
+              +--<A HREF="../../../drasys/or/matrix/CompressedMatrix.html">drasys.or.matrix.CompressedMatrix</A>
+                    |
+                    +--<B>drasys.or.matrix.CompressedRowMatrix</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>CompressedRowMatrix</B><DT>extends <A HREF="../../../drasys/or/matrix/CompressedMatrix.html">CompressedMatrix</A></DL>
+
+<P>
+A sparse <a href="../../html/CompressedRowMatrix.html">compressed</a> resizable row-major matrix of double values.
+This matrix is efficient for numerical computing, especially row-wise computations.
+Its also efficient for adding new rows and new elements to the last row.<BR>
+<BR>
+The most efficient way to build this matrix is row-wise by adding elements only to the last row.
+This reduces the memory copying caused by adding elements at the head of the arrays.
+The attribute 'fillInSpace' can be used to reserve some extra elements for each row fill-in is unavoidable. 
+If the matrix is constructed strictly row-wise then 'fillInSpace' should be set to zero to conserve memory.<BR>
+<BR>
+There is more detailed information available about the
+<a href="../../html/CompressedRowMatrix.html">internal storage format</a>.
+
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.matrix.CompressedRowMatrix">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="fields_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Fields inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#_epsilon">_epsilon</A>,  
+<A HREF="../../../drasys/or/matrix/RealContainer.html#_globalEpsilon">_globalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(double[][], int)">CompressedRowMatrix</A></B>(double[][]&nbsp;array,
+                    int&nbsp;fillInSpace)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a sparse matrix from the contents of 'array'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(double[][], int, double)">CompressedRowMatrix</A></B>(double[][]&nbsp;array,
+                    int&nbsp;fillInSpace,
+                    double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates a sparse matrix from the contents of 'array'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(int, int, int)">CompressedRowMatrix</A></B>(int&nbsp;capacityOfRows,
+                    int&nbsp;sizeOfColumns,
+                    int&nbsp;fillInSpace)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constructs a compressed sparse row-major matrix with an explicit row capacity and column size.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(int, int, int, int)">CompressedRowMatrix</A></B>(int&nbsp;capacityOfRows,
+                    int&nbsp;sizeOfColumns,
+                    int&nbsp;fillInSpace,
+                    int&nbsp;capacityOfElements)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(drasys.or.matrix.MatrixI, int)">CompressedRowMatrix</A></B>(<A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;matrix,
+                    int&nbsp;fillInSpace)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#CompressedRowMatrix(drasys.or.matrix.VectorI, int)">CompressedRowMatrix</A></B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector,
+                    int&nbsp;fillInSpace)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#addColumn(drasys.or.matrix.VectorI)">addColumn</A></B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a new column and any non-null elements in vector to the end of the matrix .</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#addRow(drasys.or.matrix.VectorI)">addRow</A></B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a new row and any non-null elements in vector to the end of the matrix .</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#buildColumnIndex()">buildColumnIndex</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build the column index structure.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#capacityOfColumns()">capacityOfColumns</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of columns the matrix can hold without allocating more memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#capacityOfRows()">capacityOfRows</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of rows the matrix can hold without allocating more memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#columnElements(int)">columnElements</A></B>(int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in a column.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#deleteColumnIndex()">deleteColumnIndex</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delete the column index structure.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#elementAt(int, int)">elementAt</A></B>(int&nbsp;row,
+          int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets an element's value from the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#elements()">elements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getArray()">getArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a new two-dimensional array containing the values in matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getColumnEndArray()">getColumnEndArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to indicate the end of each column in the column index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getColumnIndexArray()">getColumnIndexArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to hold the column indices.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getRowBeginArray()">getRowBeginArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to hold the index of the first element in each row.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getRowIndexArray()">getRowIndexArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to hold the row indices for the column index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getRowSizeArray()">getRowSizeArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to hold the number of elements in each row.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#getValueIndexArray()">getValueIndexArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return the array used to hold the value indices for the column index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#isColumnMajor()">isColumnMajor</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the matrix is column-major.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#isNull(int, int)">isNull</A></B>(int&nbsp;row,
+       int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if an element has no value associated with it.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#isRowMajor()">isRowMajor</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the matrix is row-major.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#rowElements(int)">rowElements</A></B>(int&nbsp;row)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in a row.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#setCapacity(int, int)">setCapacity</A></B>(int&nbsp;capacityOfRows,
+            int&nbsp;capacityOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Allocates memory so the matrix can hold this many rows and columns without reallocating memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#setElementAt(int, int, double)">setElementAt</A></B>(int&nbsp;row,
+             int&nbsp;column,
+             double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets an element's value in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#setSize(int, int)">setSize</A></B>(int&nbsp;sizeOfRows,
+        int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the number of rows and columns in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#sizeOfElements()">sizeOfElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of non-null elements in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#sum(int, int, int, int)">sum</A></B>(int&nbsp;rowBegin,
+    int&nbsp;rowEnd,
+    int&nbsp;columnBegin,
+    int&nbsp;columnEnd)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A></B>(int&nbsp;rowBegin,
+                        int&nbsp;rowEnd,
+                        int&nbsp;columnBegin,
+                        int&nbsp;columnEnd,
+                        double&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of the squared differences between the elements and a scaler.<BR>
+Computes sum((a[i][j]-scaler)^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A></B>(int&nbsp;rowBegin,
+             int&nbsp;rowEnd,
+             int&nbsp;columnBegin,
+             int&nbsp;columnEnd)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of the squares of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.CompressedMatrix"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/CompressedMatrix.html">CompressedMatrix</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/CompressedMatrix.html#getValueArray()">getValueArray</A>, 
+<A HREF="../../../drasys/or/matrix/CompressedMatrix.html#setCapacityOfElements(int)">setCapacityOfElements</A>, 
+<A HREF="../../../drasys/or/matrix/CompressedMatrix.html#setElements(double)">setElements</A>, 
+<A HREF="../../../drasys/or/matrix/CompressedMatrix.html#sizeOfColumns()">sizeOfColumns</A>, 
+<A HREF="../../../drasys/or/matrix/CompressedMatrix.html#sizeOfRows()">sizeOfRows</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.Matrix"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/Matrix.html#equals(drasys.or.matrix.MatrixI)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(java.lang.Object)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setColumn(int, drasys.or.matrix.VectorI)">setColumn</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setDiagonal(drasys.or.matrix.VectorI)">setDiagonal</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setRow(int, drasys.or.matrix.VectorI)">setRow</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum()">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares()">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#toString()">toString</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#equals(double, double)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getEpsilon()">getEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getGlobalEpsilon()">getGlobalEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setEpsilon(double)">setEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setGlobalEpsilon(double)">setGlobalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="CompressedRowMatrix(int, int, int)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(int&nbsp;capacityOfRows,
+                           int&nbsp;sizeOfColumns,
+                           int&nbsp;fillInSpace)</PRE>
+<DL>
+<DD>Constructs a compressed sparse row-major matrix with an explicit row capacity and column size.
+The initial row size is zero.</DL>
+<HR>
+
+<A NAME="CompressedRowMatrix(int, int, int, int)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(int&nbsp;capacityOfRows,
+                           int&nbsp;sizeOfColumns,
+                           int&nbsp;fillInSpace,
+                           int&nbsp;capacityOfElements)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="CompressedRowMatrix(double[][], int)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(double[][]&nbsp;array,
+                           int&nbsp;fillInSpace)</PRE>
+<DL>
+<DD>Creates a sparse matrix from the contents of 'array'.
+All of the elements will be added.</DL>
+<HR>
+
+<A NAME="CompressedRowMatrix(double[][], int, double)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(double[][]&nbsp;array,
+                           int&nbsp;fillInSpace,
+                           double&nbsp;epsilon)</PRE>
+<DL>
+<DD>Creates a sparse matrix from the contents of 'array'.
+Elements in 'array' which equal 0.0 to within 'epsilon'
+will not be added.
+The matrix epsilon will be set to 'epsilon'.</DL>
+<HR>
+
+<A NAME="CompressedRowMatrix(drasys.or.matrix.MatrixI, int)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(<A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;matrix,
+                           int&nbsp;fillInSpace)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="CompressedRowMatrix(drasys.or.matrix.VectorI, int)"><!-- --></A><H3>
+CompressedRowMatrix</H3>
+<PRE>
+public <B>CompressedRowMatrix</B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector,
+                           int&nbsp;fillInSpace)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="sizeOfElements()"><!-- --></A><H3>
+sizeOfElements</H3>
+<PRE>
+public int <B>sizeOfElements</B>()</PRE>
+<DL>
+<DD>Returns the number of non-null elements in the matrix.</DL>
+<HR>
+
+<A NAME="capacityOfRows()"><!-- --></A><H3>
+capacityOfRows</H3>
+<PRE>
+public int <B>capacityOfRows</B>()</PRE>
+<DL>
+<DD>Returns the number of rows the matrix can hold without allocating more memory.</DL>
+<HR>
+
+<A NAME="capacityOfColumns()"><!-- --></A><H3>
+capacityOfColumns</H3>
+<PRE>
+public int <B>capacityOfColumns</B>()</PRE>
+<DL>
+<DD>Returns the number of columns the matrix can hold without allocating more memory.</DL>
+<HR>
+
+<A NAME="getColumnIndexArray()"><!-- --></A><H3>
+getColumnIndexArray</H3>
+<PRE>
+public int[] <B>getColumnIndexArray</B>()</PRE>
+<DL>
+<DD>Return the array used to hold the column indices.</DL>
+<HR>
+
+<A NAME="getRowSizeArray()"><!-- --></A><H3>
+getRowSizeArray</H3>
+<PRE>
+public int[] <B>getRowSizeArray</B>()</PRE>
+<DL>
+<DD>Return the array used to hold the number of elements in each row.</DL>
+<HR>
+
+<A NAME="getRowBeginArray()"><!-- --></A><H3>
+getRowBeginArray</H3>
+<PRE>
+public int[] <B>getRowBeginArray</B>()</PRE>
+<DL>
+<DD>Return the array used to hold the index of the first element in each row.</DL>
+<HR>
+
+<A NAME="deleteColumnIndex()"><!-- --></A><H3>
+deleteColumnIndex</H3>
+<PRE>
+public void <B>deleteColumnIndex</B>()</PRE>
+<DL>
+<DD>Delete the column index structure.</DL>
+<HR>
+
+<A NAME="buildColumnIndex()"><!-- --></A><H3>
+buildColumnIndex</H3>
+<PRE>
+public void <B>buildColumnIndex</B>()</PRE>
+<DL>
+<DD>Build the column index structure.</DL>
+<HR>
+
+<A NAME="getRowIndexArray()"><!-- --></A><H3>
+getRowIndexArray</H3>
+<PRE>
+public int[] <B>getRowIndexArray</B>()</PRE>
+<DL>
+<DD>Return the array used to hold the row indices for the column index.<DD><DL>
+<DT><B>Returns:</B><DD>null if the column index is not built.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getColumnEndArray()"><!-- --></A><H3>
+getColumnEndArray</H3>
+<PRE>
+public int[] <B>getColumnEndArray</B>()</PRE>
+<DL>
+<DD>Return the array used to indicate the end of each column in the column index.<DD><DL>
+<DT><B>Returns:</B><DD>null if the column index is not built.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getValueIndexArray()"><!-- --></A><H3>
+getValueIndexArray</H3>
+<PRE>
+public int[] <B>getValueIndexArray</B>()</PRE>
+<DL>
+<DD>Return the array used to hold the value indices for the column index.<DD><DL>
+<DT><B>Returns:</B><DD>null if the column index is not built.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isRowMajor()"><!-- --></A><H3>
+isRowMajor</H3>
+<PRE>
+public boolean <B>isRowMajor</B>()</PRE>
+<DL>
+<DD>Returns true if the matrix is row-major.</DL>
+<HR>
+
+<A NAME="isColumnMajor()"><!-- --></A><H3>
+isColumnMajor</H3>
+<PRE>
+public boolean <B>isColumnMajor</B>()</PRE>
+<DL>
+<DD>Returns true if the matrix is column-major.</DL>
+<HR>
+
+<A NAME="addRow(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+addRow</H3>
+<PRE>
+public void <B>addRow</B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</PRE>
+<DL>
+<DD>Adds a new row and any non-null elements in vector to the end of the matrix .
+If 'vector' is null then no new elements will be modified in the new row.</DL>
+<HR>
+
+<A NAME="addColumn(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+addColumn</H3>
+<PRE>
+public void <B>addColumn</B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</PRE>
+<DL>
+<DD>Adds a new column and any non-null elements in vector to the end of the matrix .
+If 'vector' is null then no new elements will be changed in the new column.</DL>
+<HR>
+
+<A NAME="setSize(int, int)"><!-- --></A><H3>
+setSize</H3>
+<PRE>
+public void <B>setSize</B>(int&nbsp;sizeOfRows,
+                    int&nbsp;sizeOfColumns)</PRE>
+<DL>
+<DD>Sets the number of rows and columns in the matrix.
+If the new size is smaller than the original then the
+matrix will be emptied.</DL>
+<HR>
+
+<A NAME="setCapacity(int, int)"><!-- --></A><H3>
+setCapacity</H3>
+<PRE>
+public void <B>setCapacity</B>(int&nbsp;capacityOfRows,
+                        int&nbsp;capacityOfColumns)</PRE>
+<DL>
+<DD>Allocates memory so the matrix can hold this many rows and columns without reallocating memory.</DL>
+<HR>
+
+<A NAME="setElementAt(int, int, double)"><!-- --></A><H3>
+setElementAt</H3>
+<PRE>
+public void <B>setElementAt</B>(int&nbsp;row,
+                         int&nbsp;column,
+                         double&nbsp;value)</PRE>
+<DL>
+<DD>Sets an element's value in the matrix.</DL>
+<HR>
+
+<A NAME="isNull(int, int)"><!-- --></A><H3>
+isNull</H3>
+<PRE>
+public boolean <B>isNull</B>(int&nbsp;row,
+                      int&nbsp;column)</PRE>
+<DL>
+<DD>Returns true if an element has no value associated with it.
+Elements which have no value assigned return 0.0 when accessed.</DL>
+<HR>
+
+<A NAME="elementAt(int, int)"><!-- --></A><H3>
+elementAt</H3>
+<PRE>
+public double <B>elementAt</B>(int&nbsp;row,
+                        int&nbsp;column)</PRE>
+<DL>
+<DD>Gets an element's value from the matrix.<DD><B>Tags copied from interface: <A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A></B></DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>zero is the element is null</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getArray()"><!-- --></A><H3>
+getArray</H3>
+<PRE>
+public double[][] <B>getArray</B>()</PRE>
+<DL>
+<DD>Returns a new two-dimensional array containing the values in matrix.
+The rows of the array hold the rows of the matrix.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#getArray()">getArray</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="rowElements(int)"><!-- --></A><H3>
+rowElements</H3>
+<PRE>
+public java.util.Enumeration <B>rowElements</B>(int&nbsp;row)</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in a row.
+The elements are enumerated in random order.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#rowElements(int)">rowElements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are of type MatrixElementI</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="columnElements(int)"><!-- --></A><H3>
+columnElements</H3>
+<PRE>
+public java.util.Enumeration <B>columnElements</B>(int&nbsp;column)</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in a column.
+The elements are enumerated in random order.
+This method will build the column index if it doesn't exist.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#columnElements(int)">columnElements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are of type MatrixElementI</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="elements()"><!-- --></A><H3>
+elements</H3>
+<PRE>
+public java.util.Enumeration <B>elements</B>()</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in the matrix.
+The elements are enumerated in random order.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#elements()">elements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are of type MatrixElementI</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sum(int, int, int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public double <B>sum</B>(int&nbsp;rowBegin,
+                  int&nbsp;rowEnd,
+                  int&nbsp;columnBegin,
+                  int&nbsp;columnEnd)</PRE>
+<DL>
+<DD>Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sum(int, int, int, int)">sum</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sumOfSquares(int, int, int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public double <B>sumOfSquares</B>(int&nbsp;rowBegin,
+                           int&nbsp;rowEnd,
+                           int&nbsp;columnBegin,
+                           int&nbsp;columnEnd)</PRE>
+<DL>
+<DD>Returns the sum of the squares of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, int, int, int, double)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public double <B>sumOfSquaredDifferences</B>(int&nbsp;rowBegin,
+                                      int&nbsp;rowEnd,
+                                      int&nbsp;columnBegin,
+                                      int&nbsp;columnEnd,
+                                      double&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns the sum of the squared differences between the elements and a scaler.<BR>
+Computes sum((a[i][j]-scaler)^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="CompressedRowMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

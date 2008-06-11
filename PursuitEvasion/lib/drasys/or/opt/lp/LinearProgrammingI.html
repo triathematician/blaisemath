@@ -1,0 +1,532 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  LinearProgrammingI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LinearProgrammingI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.opt.lp</FONT>
+<BR>
+Interface  LinearProgrammingI</H2>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html">DenseLPBase</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>LinearProgrammingI</B></DL>
+
+<P>
+The interface used by all algorithms to access linear programming models.
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#EQUAL">EQUAL</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates an equality constraint: '=='</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#GREATER">GREATER</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates a greater than or equal to constraint: '>='</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;byte</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#LESS">LESS</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates a less than or equal to constraint: '<='</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#addConstraint(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI, byte[])">addConstraint</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;coefficients,
+              <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rightHandSides,
+              byte[]&nbsp;type)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a set of constraints to the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#addConstraint(drasys.or.matrix.VectorI, double, byte)">addConstraint</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coefficients,
+              double&nbsp;rightHandSide,
+              byte&nbsp;type)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a single constraint to the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#ensureCapacity(int, int)">ensureCapacity</A></B>(int&nbsp;sizeOfRows,
+               int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensures the algorithm has room to hold this many rows and columns.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getMaxAbsoluteValue()">getMaxAbsoluteValue</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets largest absolute value in the equations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getMinAbsoluteValue()">getMinAbsoluteValue</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value in the equations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getObjectiveValue()">getObjectiveValue</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the optimized value of the objective function.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getRangeMax()">getRangeMax</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value the algorithm will accept.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getRangeMin()">getRangeMin</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value the algorithm will accept.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getSolution()">getSolution</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the solution vector.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#maximize()">maximize</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the solution that maximizes the objective function.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#minimize()">minimize</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the solution that minimizes the objective function.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#removeAllElements()">removeAllElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removes all of the coefficients from the algorithm's data structures.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#resize(int, int)">resize</A></B>(int&nbsp;sizeOfRows,
+       int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changes the size of the model the algorithm can solve.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setAutomaticScaling(boolean)">setAutomaticScaling</A></B>(boolean&nbsp;automaticallyScale)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enables automatic scaling.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setEqualityFuzz(double)">setEqualityFuzz</A></B>(double&nbsp;fuzz)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value that is used to relax equailty tests.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setMaxIterations(int)">setMaxIterations</A></B>(int&nbsp;maxIterations)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the maximum number of iterations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setObjective(drasys.or.matrix.VectorI)">setObjective</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;objective)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the objective function for the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setRange(double, double)">setRange</A></B>(double&nbsp;minAbsoluteValue,
+         double&nbsp;maxAbsoluteValue)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets smallest and largest absolute value the algorithm will accept.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="LESS"><!-- --></A><H3>
+LESS</H3>
+<PRE>
+public static final byte <B>LESS</B></PRE>
+<DL>
+<DD>Indicates a less than or equal to constraint: '<='</DL>
+<HR>
+
+<A NAME="EQUAL"><!-- --></A><H3>
+EQUAL</H3>
+<PRE>
+public static final byte <B>EQUAL</B></PRE>
+<DL>
+<DD>Indicates an equality constraint: '=='</DL>
+<HR>
+
+<A NAME="GREATER"><!-- --></A><H3>
+GREATER</H3>
+<PRE>
+public static final byte <B>GREATER</B></PRE>
+<DL>
+<DD>Indicates a greater than or equal to constraint: '>='</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="setEqualityFuzz(double)"><!-- --></A><H3>
+setEqualityFuzz</H3>
+<PRE>
+public void <B>setEqualityFuzz</B>(double&nbsp;fuzz)</PRE>
+<DL>
+<DD>Sets the value that is used to relax equailty tests.
+This value may be updated each time a new constrtaint is added, so set this after the last constraint.</DL>
+<HR>
+
+<A NAME="setMaxIterations(int)"><!-- --></A><H3>
+setMaxIterations</H3>
+<PRE>
+public void <B>setMaxIterations</B>(int&nbsp;maxIterations)</PRE>
+<DL>
+<DD>Sets the maximum number of iterations.</DL>
+<HR>
+
+<A NAME="setRange(double, double)"><!-- --></A><H3>
+setRange</H3>
+<PRE>
+public void <B>setRange</B>(double&nbsp;minAbsoluteValue,
+                     double&nbsp;maxAbsoluteValue)</PRE>
+<DL>
+<DD>Sets smallest and largest absolute value the algorithm will accept.</DL>
+<HR>
+
+<A NAME="getRangeMin()"><!-- --></A><H3>
+getRangeMin</H3>
+<PRE>
+public double <B>getRangeMin</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value the algorithm will accept.</DL>
+<HR>
+
+<A NAME="getRangeMax()"><!-- --></A><H3>
+getRangeMax</H3>
+<PRE>
+public double <B>getRangeMax</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value the algorithm will accept.</DL>
+<HR>
+
+<A NAME="getMinAbsoluteValue()"><!-- --></A><H3>
+getMinAbsoluteValue</H3>
+<PRE>
+public double <B>getMinAbsoluteValue</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value in the equations.</DL>
+<HR>
+
+<A NAME="getMaxAbsoluteValue()"><!-- --></A><H3>
+getMaxAbsoluteValue</H3>
+<PRE>
+public double <B>getMaxAbsoluteValue</B>()</PRE>
+<DL>
+<DD>Gets largest absolute value in the equations.</DL>
+<HR>
+
+<A NAME="setAutomaticScaling(boolean)"><!-- --></A><H3>
+setAutomaticScaling</H3>
+<PRE>
+public void <B>setAutomaticScaling</B>(boolean&nbsp;automaticallyScale)</PRE>
+<DL>
+<DD>Enables automatic scaling.
+Automatic scaling is disabled by default.</DL>
+<HR>
+
+<A NAME="removeAllElements()"><!-- --></A><H3>
+removeAllElements</H3>
+<PRE>
+public void <B>removeAllElements</B>()</PRE>
+<DL>
+<DD>Removes all of the coefficients from the algorithm's data structures.</DL>
+<HR>
+
+<A NAME="resize(int, int)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public void <B>resize</B>(int&nbsp;sizeOfRows,
+                   int&nbsp;sizeOfColumns)</PRE>
+<DL>
+<DD>Changes the size of the model the algorithm can solve.</DL>
+<HR>
+
+<A NAME="ensureCapacity(int, int)"><!-- --></A><H3>
+ensureCapacity</H3>
+<PRE>
+public void <B>ensureCapacity</B>(int&nbsp;sizeOfRows,
+                           int&nbsp;sizeOfColumns)</PRE>
+<DL>
+<DD>Ensures the algorithm has room to hold this many rows and columns.</DL>
+<HR>
+
+<A NAME="addConstraint(drasys.or.matrix.VectorI, double, byte)"><!-- --></A><H3>
+addConstraint</H3>
+<PRE>
+public void <B>addConstraint</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coefficients,
+                          double&nbsp;rightHandSide,
+                          byte&nbsp;type)</PRE>
+<DL>
+<DD>Adds a single constraint to the model.</DL>
+<HR>
+
+<A NAME="addConstraint(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI, byte[])"><!-- --></A><H3>
+addConstraint</H3>
+<PRE>
+public void <B>addConstraint</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;coefficients,
+                          <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rightHandSides,
+                          byte[]&nbsp;type)</PRE>
+<DL>
+<DD>Adds a set of constraints to the model.</DL>
+<HR>
+
+<A NAME="setObjective(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+setObjective</H3>
+<PRE>
+public void <B>setObjective</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;objective)</PRE>
+<DL>
+<DD>Sets the objective function for the model.</DL>
+<HR>
+
+<A NAME="maximize()"><!-- --></A><H3>
+maximize</H3>
+<PRE>
+public double <B>maximize</B>()
+                throws <A HREF="../../../../drasys/or/opt/lp/NoSolutionException.html">NoSolutionException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/UnboundedException.html">UnboundedException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/ConvergenceException.html">ConvergenceException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/ScaleException.html">ScaleException</A></PRE>
+<DL>
+<DD>Find the solution that maximizes the objective function.<DD><DL>
+<DT><B>Returns:</B><DD>the optimized value of the objective function.<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/opt/lp/ScaleException.html">ScaleException</A> - if autoscaling is disabled and a coefficient is outside the allowable range.<DD><A HREF="../../../../drasys/or/opt/lp/UnboundedException.html">UnboundedException</A> - if the constraints allow the objective to go to infinity.<DD><A HREF="../../../../drasys/or/opt/lp/NoSolutionException.html">NoSolutionException</A> - if there is no feasible solution.<DD><A HREF="../../../../drasys/or/opt/lp/ConvergenceException.html">ConvergenceException</A> - if the algorithm doesn't converge after the maximum iterations.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="minimize()"><!-- --></A><H3>
+minimize</H3>
+<PRE>
+public double <B>minimize</B>()
+                throws <A HREF="../../../../drasys/or/opt/lp/NoSolutionException.html">NoSolutionException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/UnboundedException.html">UnboundedException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/ConvergenceException.html">ConvergenceException</A>,
+                       <A HREF="../../../../drasys/or/opt/lp/ScaleException.html">ScaleException</A></PRE>
+<DL>
+<DD>Find the solution that minimizes the objective function.<DD><DL>
+<DT><B>Returns:</B><DD>the optimized value of the objective function.<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/opt/lp/ScaleException.html">ScaleException</A> - if autoscaling is disabled and a coefficient is outside the allowable range.<DD><A HREF="../../../../drasys/or/opt/lp/UnboundedException.html">UnboundedException</A> - if the constraints allow the objective to go to infinity.<DD><A HREF="../../../../drasys/or/opt/lp/NoSolutionException.html">NoSolutionException</A> - if there is no feasible solution.<DD><A HREF="../../../../drasys/or/opt/lp/ConvergenceException.html">ConvergenceException</A> - if the algorithm doesn't converge after the maximum iterations.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getObjectiveValue()"><!-- --></A><H3>
+getObjectiveValue</H3>
+<PRE>
+public double <B>getObjectiveValue</B>()</PRE>
+<DL>
+<DD>Returns the optimized value of the objective function.</DL>
+<HR>
+
+<A NAME="getSolution()"><!-- --></A><H3>
+getSolution</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A> <B>getSolution</B>()</PRE>
+<DL>
+<DD>Returns the solution vector.</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LinearProgrammingI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

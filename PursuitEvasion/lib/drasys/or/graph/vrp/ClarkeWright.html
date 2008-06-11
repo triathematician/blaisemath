@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  ClarkeWright
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/vrp/BestOfAll.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/graph/vrp/ClarkeWrightBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ClarkeWright.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#methods_inherited_from_class_drasys.or.graph.vrp.Randomizer">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;METHOD</FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.graph.vrp</FONT>
+<BR>
+Class  ClarkeWright</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html">drasys.or.graph.vrp.Randomizer</A>
+        |
+        +--<B>drasys.or.graph.vrp.ClarkeWright</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>ClarkeWright</B><DT>extends <A HREF="../../../../drasys/or/graph/vrp/Randomizer.html">Randomizer</A><DT>implements <A HREF="../../../../drasys/or/graph/vrp/ConstructI.html">ConstructI</A></DL>
+
+<P>
+A randomized greedy VRP construction algorithm based on the algorithm described by Clarke and Wright.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0471948225"HREF="http://www.amazon.com/exec/obidos/ISBN=0471948225/opsresearchcomA/" TARGET="amazon.com">Local Search in Combinatorial Optimization</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Jan Karel Lenstra (Editor), Emile Aarts (Editor) / Paperback / Published 1997<BR><B><A NAME="0471904139"HREF="http://www.amazon.com/exec/obidos/ISBN=0471904139/opsresearchcomA/" TARGET="amazon.com">The Traveling Salesman Problem : A Guided Tour of Combinatorial Optimization</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;E.L. Lawler (Editor) / Paperback / Published 1985<BR>
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/vrp/ClarkeWright.html#ClarkeWright()">ClarkeWright</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/vrp/ClarkeWright.html#ClarkeWright(int)">ClarkeWright</A></B>(int&nbsp;count)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/vrp/ClarkeWright.html#ClarkeWright(int, int)">ClarkeWright</A></B>(int&nbsp;count,
+             int&nbsp;strength)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/vrp/ClarkeWright.html#ClarkeWright(int, int, drasys.or.graph.tsp.ImproveI)">ClarkeWright</A></B>(int&nbsp;count,
+             int&nbsp;strength,
+             <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improveSubalgorithm)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="methods_inherited_from_class_drasys.or.graph.vrp.Randomizer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.graph.vrp.<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html">Randomizer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#addIterations(int, int)">addIterations</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#constructClosedTours(java.lang.Object)">constructClosedTours</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#constructInboundTours(java.lang.Object)">constructInboundTours</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#constructOutboundTours(java.lang.Object)">constructOutboundTours</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#getCost()">getCost</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#getCosts()">getCosts</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#getLoads()">getLoads</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#getRandom()">getRandom</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#getTours()">getTours</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#selectVertex(boolean)">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#selectVertex(boolean[])">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#selectVertex(java.lang.Object, boolean)">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setCapacityConstraint(double)">setCapacityConstraint</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setCostConstraint(double)">setCostConstraint</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setEdgeKey(java.lang.Object)">setEdgeKey</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setGraph(drasys.or.graph.GraphI)">setGraph</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setProperties(drasys.or.graph.PropertiesI)">setProperties</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setRandom(drasys.or.prob.RandomI)">setRandom</A>, 
+<A HREF="../../../../drasys/or/graph/vrp/Randomizer.html#setVehicleCost(double)">setVehicleCost</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="ClarkeWright()"><!-- --></A><H3>
+ClarkeWright</H3>
+<PRE>
+public <B>ClarkeWright</B>()
+             throws <A HREF="../../../../drasys/or/graph/vrp/VRPException.html">VRPException</A></PRE>
+<DL>
+<DD>Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.
+There are no initial iterations added to the randomizer, so they must be added before use.
+The random number generator defaults to 'MultiplicativeCongruential'.</DL>
+<HR>
+
+<A NAME="ClarkeWright(int)"><!-- --></A><H3>
+ClarkeWright</H3>
+<PRE>
+public <B>ClarkeWright</B>(int&nbsp;count)
+             throws <A HREF="../../../../drasys/or/graph/vrp/VRPException.html">VRPException</A></PRE>
+<DL>
+<DD>Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.
+One iteration is added at strength '0' and 'count' iterations are added at strength '4'.
+The random number generator defaults to 'MultiplicativeCongruential'.</DL>
+<HR>
+
+<A NAME="ClarkeWright(int, int)"><!-- --></A><H3>
+ClarkeWright</H3>
+<PRE>
+public <B>ClarkeWright</B>(int&nbsp;count,
+                    int&nbsp;strength)
+             throws <A HREF="../../../../drasys/or/graph/vrp/VRPException.html">VRPException</A></PRE>
+<DL>
+<DD>Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.
+One iteration is added at strength '0' and 'count' iterations are added at strength 'strength'.
+The random number generator defaults to 'MultiplicativeCongruential'.</DL>
+<HR>
+
+<A NAME="ClarkeWright(int, int, drasys.or.graph.tsp.ImproveI)"><!-- --></A><H3>
+ClarkeWright</H3>
+<PRE>
+public <B>ClarkeWright</B>(int&nbsp;count,
+                    int&nbsp;strength,
+                    <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A>&nbsp;improveSubalgorithm)
+             throws <A HREF="../../../../drasys/or/graph/vrp/VRPException.html">VRPException</A></PRE>
+<DL>
+<DD>Constructs a randomized version of the ClarkeWright algorithm using the Randomizer object.
+One iteration is added at strength '0' and 'count' iterations are added at strength 'strength'.
+The random number generator defaults to 'MultiplicativeCongruential'.
+The subalgorithm is set to 'improveSubalgorithm'.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/vrp/BestOfAll.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/graph/vrp/ClarkeWrightBase.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ClarkeWright.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#methods_inherited_from_class_drasys.or.graph.vrp.Randomizer">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;METHOD</FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

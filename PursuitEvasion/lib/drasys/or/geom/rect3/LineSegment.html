@@ -1,0 +1,646 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  LineSegment
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/Point.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LineSegment.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom.rect3</FONT>
+<BR>
+Class  LineSegment</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../../drasys/or/geom/rect3/Rect3.html">drasys.or.geom.rect3.Rect3</A>
+        |
+        +--<B>drasys.or.geom.rect3.LineSegment</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>LineSegment</B><DT>extends <A HREF="../../../../drasys/or/geom/rect3/Rect3.html">Rect3</A><DT>implements <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A>, java.io.Serializable</DL>
+
+<P>
+An implementation of a line segment in the 3D rectangular coordinate system.
+This lineSegment is a container object, it hold the points that define the ends of the line segment.
+The points must be objects that implement the PointI interface and have immutable coordinates.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../serialized-form.html#drasys.or.geom.rect3.LineSegment">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#LineSegment(double, double, double, double, double, double)">LineSegment</A></B>(double&nbsp;x1,
+            double&nbsp;y1,
+            double&nbsp;z1,
+            double&nbsp;x2,
+            double&nbsp;y2,
+            double&nbsp;z2)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#LineSegment(drasys.or.geom.rect3.PointI, drasys.or.geom.rect3.PointI)">LineSegment</A></B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;from,
+            <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;to)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#centroid()">centroid</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#distanceProxyTo(drasys.or.geom.rect3.PointI)">distanceProxyTo</A></B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an easily computable proxy that can be used to compare the distance from this line segment to the point argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#distanceTo(drasys.or.geom.rect3.PointI)">distanceTo</A></B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the distance from this line segment to the point argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#equals(java.lang.Object)">equals</A></B>(java.lang.Object&nbsp;o)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the two corresponding points in each line segment are equal.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#from()">from</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the from point of the line segment.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#getPoint1()">getPoint1</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the from point of the line segment.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#getPoint2()">getPoint2</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the to point of the line segment.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#hashCode()">hashCode</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#length()">length</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the length of the line segment.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#nearestPointTo(drasys.or.geom.rect3.PointI)">nearestPointTo</A></B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the point along the segment that is closest to the argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#point1()">point1</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#point2()">point2</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/rect3/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#range()">range</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/geom/PointI.html">PointI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#to()">to</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the to point of the line segment.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.String</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#toString()">toString</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#x1()">x1</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#x2()">x2</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#y1()">y1</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#y2()">y2</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#z1()">z1</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/geom/rect3/LineSegment.html#z2()">z2</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.geom.rect3.Rect3"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.geom.rect3.<A HREF="../../../../drasys/or/geom/rect3/Rect3.html">Rect3</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/geom/rect3/Rect3.html#coordinateSystem()">coordinateSystem</A>, 
+<A HREF="../../../../drasys/or/geom/rect3/Rect3.html#getCentroid()">getCentroid</A>, 
+<A HREF="../../../../drasys/or/geom/rect3/Rect3.html#getDistanceProxyTo(drasys.or.geom.PointI)">getDistanceProxyTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect3/Rect3.html#getDistanceTo(drasys.or.geom.PointI)">getDistanceTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect3/Rect3.html#getNearestPointTo(drasys.or.geom.PointI)">getNearestPointTo</A>, 
+<A HREF="../../../../drasys/or/geom/rect3/Rect3.html#getRange()">getRange</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="LineSegment(double, double, double, double, double, double)"><!-- --></A><H3>
+LineSegment</H3>
+<PRE>
+public <B>LineSegment</B>(double&nbsp;x1,
+                   double&nbsp;y1,
+                   double&nbsp;z1,
+                   double&nbsp;x2,
+                   double&nbsp;y2,
+                   double&nbsp;z2)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="LineSegment(drasys.or.geom.rect3.PointI, drasys.or.geom.rect3.PointI)"><!-- --></A><H3>
+LineSegment</H3>
+<PRE>
+public <B>LineSegment</B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;from,
+                   <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;to)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getPoint1()"><!-- --></A><H3>
+getPoint1</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPoint1</B>()</PRE>
+<DL>
+<DD><B>Description copied from interface: <A HREF="../../../../drasys/or/geom/LineSegmentI.html">LineSegmentI</A></B></DD>
+<DD>Returns the from point of the line segment.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getPoint2()"><!-- --></A><H3>
+getPoint2</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>getPoint2</B>()</PRE>
+<DL>
+<DD><B>Description copied from interface: <A HREF="../../../../drasys/or/geom/LineSegmentI.html">LineSegmentI</A></B></DD>
+<DD>Returns the to point of the line segment.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="point1()"><!-- --></A><H3>
+point1</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A> <B>point1</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#point1()">point1</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="point2()"><!-- --></A><H3>
+point2</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A> <B>point2</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#point2()">point2</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="x1()"><!-- --></A><H3>
+x1</H3>
+<PRE>
+public double <B>x1</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#x1()">x1</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="y1()"><!-- --></A><H3>
+y1</H3>
+<PRE>
+public double <B>y1</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#y1()">y1</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="z1()"><!-- --></A><H3>
+z1</H3>
+<PRE>
+public double <B>z1</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#z1()">z1</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="x2()"><!-- --></A><H3>
+x2</H3>
+<PRE>
+public double <B>x2</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#x2()">x2</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="y2()"><!-- --></A><H3>
+y2</H3>
+<PRE>
+public double <B>y2</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#y2()">y2</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="z2()"><!-- --></A><H3>
+z2</H3>
+<PRE>
+public double <B>z2</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html#z2()">z2</A> in interface <A HREF="../../../../drasys/or/geom/rect3/LineSegmentI.html">LineSegmentI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="from()"><!-- --></A><H3>
+from</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>from</B>()</PRE>
+<DL>
+<DD>Returns the from point of the line segment.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="to()"><!-- --></A><H3>
+to</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/PointI.html">PointI</A> <B>to</B>()</PRE>
+<DL>
+<DD>Returns the to point of the line segment.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="range()"><!-- --></A><H3>
+range</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect3/RangeI.html">RangeI</A> <B>range</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="centroid()"><!-- --></A><H3>
+centroid</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A> <B>centroid</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="nearestPointTo(drasys.or.geom.rect3.PointI)"><!-- --></A><H3>
+nearestPointTo</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A> <B>nearestPointTo</B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns the point along the segment that is closest to the argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="distanceTo(drasys.or.geom.rect3.PointI)"><!-- --></A><H3>
+distanceTo</H3>
+<PRE>
+public double <B>distanceTo</B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns the distance from this line segment to the point argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="distanceProxyTo(drasys.or.geom.rect3.PointI)"><!-- --></A><H3>
+distanceProxyTo</H3>
+<PRE>
+public double <B>distanceProxyTo</B>(<A HREF="../../../../drasys/or/geom/rect3/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns an easily computable proxy that can be used to compare the distance from this line segment to the point argument.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="length()"><!-- --></A><H3>
+length</H3>
+<PRE>
+public double <B>length</B>()</PRE>
+<DL>
+<DD>Returns the length of the line segment.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="hashCode()"><!-- --></A><H3>
+hashCode</H3>
+<PRE>
+public int <B>hashCode</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>hashCode in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(java.lang.Object)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(java.lang.Object&nbsp;o)</PRE>
+<DL>
+<DD>Returns true if the two corresponding points in each line segment are equal.
+The equality is tested using the 'Point.equals()' method.<DD><DL>
+<DT><B>Overrides:</B><DD>equals in class java.lang.Object</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="toString()"><!-- --></A><H3>
+toString</H3>
+<PRE>
+public java.lang.String <B>toString</B>()</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD>toString in class java.lang.Object</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/CoordinateSystem.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/geom/rect3/Point.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="LineSegment.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

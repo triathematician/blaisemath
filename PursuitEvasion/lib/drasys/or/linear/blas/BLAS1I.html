@@ -1,0 +1,1427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  BLAS1I
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/BLAS2I.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="BLAS1I.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.linear.blas</FONT>
+<BR>
+Interface  BLAS1I</H2>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../../drasys/or/linear/blas/SmpBLAS1.html">SmpBLAS1</A>, <A HREF="../../../../drasys/or/linear/blas/BLAS1.html">BLAS1</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>BLAS1I</B></DL>
+
+<P>
+Defines an array based BLAS1 for Java.
+'BLAS1' operates on Java arrays and supports sub-vectors which allows it to work with both '0' and '1' based indexing.
+The arrays containing complex elements store each complex element in two adjacent array positions. 
+The real component has the even index and the imaginary component has the next higher index.
+The 'beg*' and 'inc*' arguments to the complex methods specify the logical index of the complex element, these are multiplied
+by two internally to obtain the offset into the array.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../drasys/or/matrix/DenseVector.html"><CODE>DenseVector</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/RowMajorMatrix.html"><CODE>RowMajorMatrix</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/ColumnMajorMatrix.html"><CODE>ColumnMajorMatrix</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/RowArrayMatrix.html"><CODE>RowArrayMatrix</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/ColumnArrayMatrix.html"><CODE>ColumnArrayMatrix</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/complex/DenseVector.html"><CODE>DenseVector</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/complex/RowMajorMatrix.html"><CODE>RowMajorMatrix</CODE></A>, 
+<A HREF="../../../../drasys/or/matrix/complex/ColumnMajorMatrix.html"><CODE><P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0155510053"HREF="http://www.amazon.com/exec/obidos/ISBN=0155510053/opsresearchcomA/" TARGET="amazon.com">Linear Algebra and Its Applications</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gilbert Strang / Hardcover / Published 1988<BR><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR></CODE></A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#caxpy(int, drasys.or.ComplexI, float[], int, int, float[], int, int)">caxpy</A></B>(int&nbsp;n,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constant times a vector plus a vector: y = y + alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#ccopy(int, float[], int, int, float[], int, int)">ccopy</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copies vector x to vector y: y = x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/Complex.html">Complex</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#cdotc(int, float[], int, int, float[], int, int, drasys.or.Complex)">cdotc</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy,
+      <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/Complex.html">Complex</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#cdotu(int, float[], int, int, float[], int, int, drasys.or.Complex)">cdotu</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy,
+      <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#cscal(int, drasys.or.ComplexI, float[], int, int)">cscal</A></B>(int&nbsp;n,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#csscal(int, float, float[], int, int)">csscal</A></B>(int&nbsp;n,
+       float&nbsp;alpha,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#cswap(int, float[], int, int, float[], int, int)">cswap</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interchange two vectors: x <-> y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dasum(int, double[], int, int)">dasum</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the sum of the absolute values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#daxpy(int, double, double[], int, int, double[], int, int)">daxpy</A></B>(int&nbsp;n,
+      double&nbsp;alpha,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constant times a vector plus a vector: y = y + alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dcopy(int, double[], int, int, double[], int, int)">dcopy</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copies vector x to vector y: y = x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#ddot(int, double[], int, int, double[], int, int)">ddot</A></B>(int&nbsp;n,
+     double[]&nbsp;x,
+     int&nbsp;begx,
+     int&nbsp;incx,
+     double[]&nbsp;y,
+     int&nbsp;begy,
+     int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dnrm2(int, double[], int, int)">dnrm2</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the euclidean norm of the vector: sqrt(sum(xi^2))</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#drot(int, double[], int, int, double[], int, int, double, double)">drot</A></B>(int&nbsp;n,
+     double[]&nbsp;x,
+     int&nbsp;begx,
+     int&nbsp;incx,
+     double[]&nbsp;y,
+     int&nbsp;begy,
+     int&nbsp;incy,
+     double&nbsp;cos,
+     double&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies a plane rotation: x = cos*x + sin*y & y = cos*y + sin*x</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#drotg(drasys.or.Real, drasys.or.Real, drasys.or.Real, drasys.or.Real)">drotg</A></B>(<A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;da,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;db,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;cos,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generates the parmseters cos and sin for a plane rotation.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dscal(int, double, double[], int, int)">dscal</A></B>(int&nbsp;n,
+      double&nbsp;alpha,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dsdot(int, float[], int, int, float[], int, int)">dsdot</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the sum of the absolute values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dswap(int, double[], int, int, double[], int, int)">dswap</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interchange two vectors: x <-> y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dzasum(int, double[], int, int)">dzasum</A></B>(int&nbsp;n,
+       double[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the sum of the absolute values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#dznrm2(int, double[], int, int)">dznrm2</A></B>(int&nbsp;n,
+       double[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the euclidean norm of the vector: sqrt(sum(xi^2))</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#icamax(int, float[], int, int)">icamax</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finds the index of the element with the maximum absolute value.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#idamax(int, double[], int, int)">idamax</A></B>(int&nbsp;n,
+       double[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finds the index of the element with the maximum absolute value.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#isamax(int, float[], int, int)">isamax</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finds the index of the element with the maximum absolute value.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#izamax(int, double[], int, int)">izamax</A></B>(int&nbsp;n,
+       double[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finds the index of the element with the maximum absolute value.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#sasum(int, float[], int, int)">sasum</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the sum of the absolute values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#saxpy(int, float, float[], int, int, float[], int, int)">saxpy</A></B>(int&nbsp;n,
+      float&nbsp;alpha,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constant times a vector plus a vector: y = y + alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#scasum(int, float[], int, int)">scasum</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the sum of the absolute values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#scnrm2(int, float[], int, int)">scnrm2</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the euclidean norm of the vector: sqrt(sum(xi^2))</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#scopy(int, float[], int, int, float[], int, int)">scopy</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copies vector x to vector y: y = x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#sdot(int, float[], int, int, float[], int, int)">sdot</A></B>(int&nbsp;n,
+     float[]&nbsp;x,
+     int&nbsp;begx,
+     int&nbsp;incx,
+     float[]&nbsp;y,
+     int&nbsp;begy,
+     int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#sdsdot(int, float[], int, int, float[], int, int)">sdsdot</A></B>(int&nbsp;n,
+       float[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx,
+       float[]&nbsp;y,
+       int&nbsp;begy,
+       int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;float</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#snrm2(int, float[], int, int)">snrm2</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the euclidean norm of the vector: sqrt(sum(xi^2))</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#srot(int, float[], int, int, float[], int, int, float, float)">srot</A></B>(int&nbsp;n,
+     float[]&nbsp;x,
+     int&nbsp;begx,
+     int&nbsp;incx,
+     float[]&nbsp;y,
+     int&nbsp;begy,
+     int&nbsp;incy,
+     float&nbsp;cos,
+     float&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Applies a plane rotation: x = cos*x + sin*y & y = cos*y + sin*x</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#srotg(drasys.or.Real, drasys.or.Real, drasys.or.Real, drasys.or.Real)">srotg</A></B>(<A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;da,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;db,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;cos,
+      <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;sin)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generates the parmseters cos and sin for a plane rotation.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#sscal(int, float, float[], int, int)">sscal</A></B>(int&nbsp;n,
+      float&nbsp;alpha,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#sswap(int, float[], int, int, float[], int, int)">sswap</A></B>(int&nbsp;n,
+      float[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      float[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interchange two vectors: x <-> y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zaxpy(int, drasys.or.ComplexI, double[], int, int, double[], int, int)">zaxpy</A></B>(int&nbsp;n,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Constant times a vector plus a vector: y = y + alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zcopy(int, double[], int, int, double[], int, int)">zcopy</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copies vector x to vector y: y = x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/Complex.html">Complex</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zdotc(int, double[], int, int, double[], int, int, drasys.or.Complex)">zdotc</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy,
+      <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/Complex.html">Complex</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zdotu(int, double[], int, int, double[], int, int, drasys.or.Complex)">zdotu</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy,
+      <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computes the dot product of two vectors: alpha = x (.) y.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zdscal(int, double, double[], int, int)">zdscal</A></B>(int&nbsp;n,
+       double&nbsp;alpha,
+       double[]&nbsp;x,
+       int&nbsp;begx,
+       int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zscal(int, drasys.or.ComplexI, double[], int, int)">zscal</A></B>(int&nbsp;n,
+      <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scale a vector by a constant: x = alpha * x.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/blas/BLAS1I.html#zswap(int, double[], int, int, double[], int, int)">zswap</A></B>(int&nbsp;n,
+      double[]&nbsp;x,
+      int&nbsp;begx,
+      int&nbsp;incx,
+      double[]&nbsp;y,
+      int&nbsp;begy,
+      int&nbsp;incy)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Interchange two vectors: x <-> y.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="dasum(int, double[], int, int)"><!-- --></A><H3>
+dasum</H3>
+<PRE>
+public double <B>dasum</B>(int&nbsp;n,
+                    double[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the sum of the absolute values.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector element<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="daxpy(int, double, double[], int, int, double[], int, int)"><!-- --></A><H3>
+daxpy</H3>
+<PRE>
+public void <B>daxpy</B>(int&nbsp;n,
+                  double&nbsp;alpha,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Constant times a vector plus a vector: y = y + alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - constant multiplier of 'x'.<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dcopy(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+dcopy</H3>
+<PRE>
+public void <B>dcopy</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Copies vector x to vector y: y = x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="ddot(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+ddot</H3>
+<PRE>
+public double <B>ddot</B>(int&nbsp;n,
+                   double[]&nbsp;x,
+                   int&nbsp;begx,
+                   int&nbsp;incx,
+                   double[]&nbsp;y,
+                   int&nbsp;begy,
+                   int&nbsp;incy)
+            throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="drot(int, double[], int, int, double[], int, int, double, double)"><!-- --></A><H3>
+drot</H3>
+<PRE>
+public void <B>drot</B>(int&nbsp;n,
+                 double[]&nbsp;x,
+                 int&nbsp;begx,
+                 int&nbsp;incx,
+                 double[]&nbsp;y,
+                 int&nbsp;begy,
+                 int&nbsp;incy,
+                 double&nbsp;cos,
+                 double&nbsp;sin)
+          throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Applies a plane rotation: x = cos*x + sin*y & y = cos*y + sin*x<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements<DD><CODE>alpha</CODE> - constant<DD><CODE>beta</CODE> - constant</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dscal(int, double, double[], int, int)"><!-- --></A><H3>
+dscal</H3>
+<PRE>
+public void <B>dscal</B>(int&nbsp;n,
+                  double&nbsp;alpha,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dswap(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+dswap</H3>
+<PRE>
+public void <B>dswap</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Interchange two vectors: x <-> y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dnrm2(int, double[], int, int)"><!-- --></A><H3>
+dnrm2</H3>
+<PRE>
+public double <B>dnrm2</B>(int&nbsp;n,
+                    double[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the euclidean norm of the vector: sqrt(sum(xi^2))<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="idamax(int, double[], int, int)"><!-- --></A><H3>
+idamax</H3>
+<PRE>
+public int <B>idamax</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Finds the index of the element with the maximum absolute value.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sasum(int, float[], int, int)"><!-- --></A><H3>
+sasum</H3>
+<PRE>
+public float <B>sasum</B>(int&nbsp;n,
+                   float[]&nbsp;x,
+                   int&nbsp;begx,
+                   int&nbsp;incx)
+            throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the sum of the absolute values.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector element<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="saxpy(int, float, float[], int, int, float[], int, int)"><!-- --></A><H3>
+saxpy</H3>
+<PRE>
+public void <B>saxpy</B>(int&nbsp;n,
+                  float&nbsp;alpha,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Constant times a vector plus a vector: y = y + alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - constant multiplier of 'x'.<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="scopy(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+scopy</H3>
+<PRE>
+public void <B>scopy</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Copies vector x to vector y: y = x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sdot(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+sdot</H3>
+<PRE>
+public float <B>sdot</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="srot(int, float[], int, int, float[], int, int, float, float)"><!-- --></A><H3>
+srot</H3>
+<PRE>
+public void <B>srot</B>(int&nbsp;n,
+                 float[]&nbsp;x,
+                 int&nbsp;begx,
+                 int&nbsp;incx,
+                 float[]&nbsp;y,
+                 int&nbsp;begy,
+                 int&nbsp;incy,
+                 float&nbsp;cos,
+                 float&nbsp;sin)
+          throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Applies a plane rotation: x = cos*x + sin*y & y = cos*y + sin*x<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements<DD><CODE>alpha</CODE> - constant<DD><CODE>beta</CODE> - constant</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sscal(int, float, float[], int, int)"><!-- --></A><H3>
+sscal</H3>
+<PRE>
+public void <B>sscal</B>(int&nbsp;n,
+                  float&nbsp;alpha,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sswap(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+sswap</H3>
+<PRE>
+public void <B>sswap</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Interchange two vectors: x <-> y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="snrm2(int, float[], int, int)"><!-- --></A><H3>
+snrm2</H3>
+<PRE>
+public float <B>snrm2</B>(int&nbsp;n,
+                   float[]&nbsp;x,
+                   int&nbsp;begx,
+                   int&nbsp;incx)
+            throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the euclidean norm of the vector: sqrt(sum(xi^2))<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isamax(int, float[], int, int)"><!-- --></A><H3>
+isamax</H3>
+<PRE>
+public int <B>isamax</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Finds the index of the element with the maximum absolute value.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dzasum(int, double[], int, int)"><!-- --></A><H3>
+dzasum</H3>
+<PRE>
+public double <B>dzasum</B>(int&nbsp;n,
+                     double[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the sum of the absolute values.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector element<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zaxpy(int, drasys.or.ComplexI, double[], int, int, double[], int, int)"><!-- --></A><H3>
+zaxpy</H3>
+<PRE>
+public void <B>zaxpy</B>(int&nbsp;n,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Constant times a vector plus a vector: y = y + alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - constant multiplier of 'x'.<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zcopy(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+zcopy</H3>
+<PRE>
+public void <B>zcopy</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Copies vector x to vector y: y = x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zdotu(int, double[], int, int, double[], int, int, drasys.or.Complex)"><!-- --></A><H3>
+zdotu</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/Complex.html">Complex</A> <B>zdotu</B>(int&nbsp;n,
+                     double[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx,
+                     double[]&nbsp;y,
+                     int&nbsp;begy,
+                     int&nbsp;incy,
+                     <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zdotc(int, double[], int, int, double[], int, int, drasys.or.Complex)"><!-- --></A><H3>
+zdotc</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/Complex.html">Complex</A> <B>zdotc</B>(int&nbsp;n,
+                     double[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx,
+                     double[]&nbsp;y,
+                     int&nbsp;begy,
+                     int&nbsp;incy,
+                     <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zscal(int, drasys.or.ComplexI, double[], int, int)"><!-- --></A><H3>
+zscal</H3>
+<PRE>
+public void <B>zscal</B>(int&nbsp;n,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zswap(int, double[], int, int, double[], int, int)"><!-- --></A><H3>
+zswap</H3>
+<PRE>
+public void <B>zswap</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  double[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Interchange two vectors: x <-> y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="scasum(int, float[], int, int)"><!-- --></A><H3>
+scasum</H3>
+<PRE>
+public float <B>scasum</B>(int&nbsp;n,
+                    float[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the sum of the absolute values.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector element<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="caxpy(int, drasys.or.ComplexI, float[], int, int, float[], int, int)"><!-- --></A><H3>
+caxpy</H3>
+<PRE>
+public void <B>caxpy</B>(int&nbsp;n,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Constant times a vector plus a vector: y = y + alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - constant multiplier of 'x'.<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="ccopy(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+ccopy</H3>
+<PRE>
+public void <B>ccopy</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Copies vector x to vector y: y = x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="cdotu(int, float[], int, int, float[], int, int, drasys.or.Complex)"><!-- --></A><H3>
+cdotu</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/Complex.html">Complex</A> <B>cdotu</B>(int&nbsp;n,
+                     float[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx,
+                     float[]&nbsp;y,
+                     int&nbsp;begy,
+                     int&nbsp;incy,
+                     <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="cdotc(int, float[], int, int, float[], int, int, drasys.or.Complex)"><!-- --></A><H3>
+cdotc</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/Complex.html">Complex</A> <B>cdotc</B>(int&nbsp;n,
+                     float[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx,
+                     float[]&nbsp;y,
+                     int&nbsp;begy,
+                     int&nbsp;incy,
+                     <A HREF="../../../../drasys/or/Complex.html">Complex</A>&nbsp;results)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="cscal(int, drasys.or.ComplexI, float[], int, int)"><!-- --></A><H3>
+cscal</H3>
+<PRE>
+public void <B>cscal</B>(int&nbsp;n,
+                  <A HREF="../../../../drasys/or/ComplexI.html">ComplexI</A>&nbsp;alpha,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="cswap(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+cswap</H3>
+<PRE>
+public void <B>cswap</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx,
+                  float[]&nbsp;y,
+                  int&nbsp;begy,
+                  int&nbsp;incy)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Interchange two vectors: x <-> y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dsdot(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+dsdot</H3>
+<PRE>
+public double <B>dsdot</B>(int&nbsp;n,
+                    float[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx,
+                    float[]&nbsp;y,
+                    int&nbsp;begy,
+                    int&nbsp;incy)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the sum of the absolute values.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector element<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sdsdot(int, float[], int, int, float[], int, int)"><!-- --></A><H3>
+sdsdot</H3>
+<PRE>
+public float <B>sdsdot</B>(int&nbsp;n,
+                    float[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx,
+                    float[]&nbsp;y,
+                    int&nbsp;begy,
+                    int&nbsp;incy)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the dot product of two vectors: alpha = x (.) y.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the 'x' vector elements<DD><CODE>begx</CODE> - offset of the first 'x' vector element<DD><CODE>incx</CODE> - the distance between 'x' vector elements<DD><CODE>y</CODE> - array containing the 'y' vector elements<DD><CODE>begy</CODE> - offset of the first 'y' vector element<DD><CODE>incy</CODE> - the distance between 'y' vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="izamax(int, double[], int, int)"><!-- --></A><H3>
+izamax</H3>
+<PRE>
+public int <B>izamax</B>(int&nbsp;n,
+                  double[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Finds the index of the element with the maximum absolute value.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="icamax(int, float[], int, int)"><!-- --></A><H3>
+icamax</H3>
+<PRE>
+public int <B>icamax</B>(int&nbsp;n,
+                  float[]&nbsp;x,
+                  int&nbsp;begx,
+                  int&nbsp;incx)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Finds the index of the element with the maximum absolute value.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="dznrm2(int, double[], int, int)"><!-- --></A><H3>
+dznrm2</H3>
+<PRE>
+public double <B>dznrm2</B>(int&nbsp;n,
+                     double[]&nbsp;x,
+                     int&nbsp;begx,
+                     int&nbsp;incx)
+              throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the euclidean norm of the vector: sqrt(sum(xi^2))<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="scnrm2(int, float[], int, int)"><!-- --></A><H3>
+scnrm2</H3>
+<PRE>
+public float <B>scnrm2</B>(int&nbsp;n,
+                    float[]&nbsp;x,
+                    int&nbsp;begx,
+                    int&nbsp;incx)
+             throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Computes the euclidean norm of the vector: sqrt(sum(xi^2))<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="drotg(drasys.or.Real, drasys.or.Real, drasys.or.Real, drasys.or.Real)"><!-- --></A><H3>
+drotg</H3>
+<PRE>
+public void <B>drotg</B>(<A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;da,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;db,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;cos,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;sin)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Generates the parmseters cos and sin for a plane rotation.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>da</CODE> - &nbsp;<DD><CODE>db</CODE> - &nbsp;<DD><CODE>cos</CODE> - cosine return value<DD><CODE>sin</CODE> - sine return value</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="srotg(drasys.or.Real, drasys.or.Real, drasys.or.Real, drasys.or.Real)"><!-- --></A><H3>
+srotg</H3>
+<PRE>
+public void <B>srotg</B>(<A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;da,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;db,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;cos,
+                  <A HREF="../../../../drasys/or/Real.html">Real</A>&nbsp;sin)
+           throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Generates the parmseters cos and sin for a plane rotation.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>da</CODE> - &nbsp;<DD><CODE>db</CODE> - &nbsp;<DD><CODE>cos</CODE> - cosine return value<DD><CODE>sin</CODE> - sine return value</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="zdscal(int, double, double[], int, int)"><!-- --></A><H3>
+zdscal</H3>
+<PRE>
+public void <B>zdscal</B>(int&nbsp;n,
+                   double&nbsp;alpha,
+                   double[]&nbsp;x,
+                   int&nbsp;begx,
+                   int&nbsp;incx)
+            throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="csscal(int, float, float[], int, int)"><!-- --></A><H3>
+csscal</H3>
+<PRE>
+public void <B>csscal</B>(int&nbsp;n,
+                   float&nbsp;alpha,
+                   float[]&nbsp;x,
+                   int&nbsp;begx,
+                   int&nbsp;incx)
+            throws <A HREF="../../../../drasys/or/linear/blas/BlasException.html">BlasException</A></PRE>
+<DL>
+<DD>Scale a vector by a constant: x = alpha * x.<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>n</CODE> - number of vector elements<DD><CODE>alpha</CODE> - scale factor<DD><CODE>x</CODE> - array containing the vector elements<DD><CODE>begx</CODE> - offset of the first vector element<DD><CODE>incx</CODE> - the distance between vector elements</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/blas/BLAS2I.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="BLAS1I.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

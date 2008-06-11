@@ -1,0 +1,858 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  Us
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/TwoOpt.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Us.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.graph.tsp</FONT>
+<BR>
+Class  Us</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html">drasys.or.graph.tsp.TSPBase</A>
+        |
+        +--<A HREF="../../../../drasys/or/graph/tsp/Geni.html">drasys.or.graph.tsp.Geni</A>
+              |
+              +--<B>drasys.or.graph.tsp.Us</B>
+</PRE>
+<HR>
+<DL>
+<DT>public class <B>Us</B><DT>extends <A HREF="../../../../drasys/or/graph/tsp/Geni.html">Geni</A><DT>implements <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A></DL>
+
+<P>
+An implementation of the 'US' improvement portion of the composite TSP heuristic 'GENIUS'.
+The 'GENIUS' algorithm is described in a paper by 
+Michel Gendreau, Alain Hertz, Gilbert Laporte which was published in
+'Operations Research' Vol.40, No.6, November-December 1992.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../drasys/or/graph/tsp/Genius.html"><CODE>Genius</CODE></A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#Us(int)">Us</A></B>(int&nbsp;sizeOfNeighborhood)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the neighborhood to the argument.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#Us(int, drasys.or.graph.GraphI)">Us</A></B>(int&nbsp;sizeOfNeighborhood,
+   <A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the neighborhood and the target graph.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardFindBestRemove(drasys.or.graph.tsp.Geni.Vert)">forwardFindBestRemove</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardRemoveType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardRemoveType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardReplaceType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardReplaceType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardReplaceType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardReplaceType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardSaveForRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardSaveForRemoveType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vk)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardSaveForRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardSaveForRemoveType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vl)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#forwardSequenceRemove(drasys.or.graph.tsp.Geni.Vert)">forwardSequenceRemove</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;head)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#improve()">improve</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#improveClosedTour(java.util.Vector)">improveClosedTour</A></B>(java.util.Vector&nbsp;tour)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Improve a closed tour solution.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#improveOpenTour(java.util.Vector)">improveOpenTour</A></B>(java.util.Vector&nbsp;tour)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Improve an open tour solution with arbitrary end points.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#improveOpenTour(java.util.Vector, boolean, boolean)">improveOpenTour</A></B>(java.util.Vector&nbsp;tour,
+                boolean&nbsp;fixedOrigin,
+                boolean&nbsp;fixedDestination)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Improve an open tour solution with fixed end points.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#initTourUS(int, int)">initTourUS</A></B>(int&nbsp;head,
+           int&nbsp;tail)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#removeType0(drasys.or.graph.tsp.Geni.Vert)">removeType0</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#replaceType0(drasys.or.graph.tsp.Geni.Vert)">replaceType0</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseFindBestRemove(drasys.or.graph.tsp.Geni.Vert)">reverseFindBestRemove</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseRemoveType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseRemoveType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseReplaceType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseReplaceType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseReplaceType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseReplaceType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                    drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseSaveForRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseSaveForRemoveType1</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vk)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseSaveForRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseSaveForRemoveType2</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                          drasys.or.graph.tsp.Geni.Vert&nbsp;vl)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#reverseSequenceRemove(drasys.or.graph.tsp.Geni.Vert)">reverseSequenceRemove</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;tail)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/graph/tsp/Us.html#saveForRemoveType0(drasys.or.graph.tsp.Geni.Vert)">saveForRemoveType0</A></B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.graph.tsp.Geni"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.graph.tsp.<A HREF="../../../../drasys/or/graph/tsp/Geni.html">Geni</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/graph/tsp/Geni.html#addNeighbor(drasys.or.graph.tsp.Geni.Vert)">addNeighbor</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#addToTour(drasys.or.graph.tsp.Geni.Vert)">addToTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#applyForwardType1(drasys.or.graph.tsp.Geni.Vert)">applyForwardType1</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#applyForwardType2(drasys.or.graph.tsp.Geni.Vert)">applyForwardType2</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#applyReverseType1(drasys.or.graph.tsp.Geni.Vert)">applyReverseType1</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#applyReverseType2(drasys.or.graph.tsp.Geni.Vert)">applyReverseType2</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#applyType0(drasys.or.graph.tsp.Geni.Vert)">applyType0</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#calcCost()">calcCost</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#calcTour()">calcTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#checkList()">checkList</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#construct()">construct</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#constructClosedTour()">constructClosedTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#constructOpenTour()">constructOpenTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#constructOpenTour(java.lang.Object, java.lang.Object)">constructOpenTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#constructOpenTourFrom(java.lang.Object)">constructOpenTourFrom</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#constructOpenTourTo(java.lang.Object)">constructOpenTourTo</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#costOfType0(int, drasys.or.graph.tsp.Geni.Vert)">costOfType0</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#forwardCostOfInsertType1(int, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardCostOfInsertType1</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#forwardCostOfInsertType2(int, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardCostOfInsertType2</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#forwardFindBestInsert(drasys.or.graph.tsp.Geni.Vert)">forwardFindBestInsert</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#forwardFlip(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">forwardFlip</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#forwardSequenceInsert(drasys.or.graph.tsp.Geni.Vert)">forwardSequenceInsert</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#initTourGENI(int, int)">initTourGENI</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#newForwardEdge(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">newForwardEdge</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#newReverseEdge(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">newReverseEdge</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#reverseCostOfInsertType1(int, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseCostOfInsertType1</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#reverseCostOfInsertType2(int, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseCostOfInsertType2</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#reverseFindBestInsert(drasys.or.graph.tsp.Geni.Vert)">reverseFindBestInsert</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#reverseFlip(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)">reverseFlip</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#reverseSequenceInsert(drasys.or.graph.tsp.Geni.Vert)">reverseSequenceInsert</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#selectVertex(boolean)">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#selectVertex(boolean[])">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#selectVertex(java.lang.Object, boolean)">selectVertex</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/Geni.html#toString()">toString</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.graph.tsp.TSPBase"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.graph.tsp.<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html">TSPBase</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#checkChangeCount()">checkChangeCount</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#countVertices()">countVertices</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#forwardCost(int, int)">forwardCost</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#getCost()">getCost</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#getTour()">getTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#initVertices(int, int)">initVertices</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#initVertices(java.util.Vector)">initVertices</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#reverseCost(int, int)">reverseCost</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#rotateClosedTour(java.util.Vector, java.lang.Object)">rotateClosedTour</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#setEdgeKey(java.lang.Object)">setEdgeKey</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#setGraph(drasys.or.graph.GraphI)">setGraph</A>, 
+<A HREF="../../../../drasys/or/graph/tsp/TSPBase.html#setProperties(drasys.or.graph.PropertiesI)">setProperties</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="Us(int)"><!-- --></A><H3>
+Us</H3>
+<PRE>
+public <B>Us</B>(int&nbsp;sizeOfNeighborhood)</PRE>
+<DL>
+<DD>Sets the neighborhood to the argument.
+The graph must be set with 'setGraph()' before constructing a tour.</DL>
+<HR>
+
+<A NAME="Us(int, drasys.or.graph.GraphI)"><!-- --></A><H3>
+Us</H3>
+<PRE>
+public <B>Us</B>(int&nbsp;sizeOfNeighborhood,
+          <A HREF="../../../../drasys/or/graph/GraphI.html">GraphI</A>&nbsp;graph)</PRE>
+<DL>
+<DD>Sets the neighborhood and the target graph.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="improveOpenTour(java.util.Vector)"><!-- --></A><H3>
+improveOpenTour</H3>
+<PRE>
+public double <B>improveOpenTour</B>(java.util.Vector&nbsp;tour)
+                       throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD>Improve an open tour solution with arbitrary end points.
+An open tour is one where the origin and destination vertices are different.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ImproveI.html#improveOpenTour(java.util.Vector)">improveOpenTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="improveOpenTour(java.util.Vector, boolean, boolean)"><!-- --></A><H3>
+improveOpenTour</H3>
+<PRE>
+public double <B>improveOpenTour</B>(java.util.Vector&nbsp;tour,
+                              boolean&nbsp;fixedOrigin,
+                              boolean&nbsp;fixedDestination)
+                       throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD>Improve an open tour solution with fixed end points.
+An open tour is one where the origin and destination vertices are different.
+The arguments can be used to fix either end.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ImproveI.html#improveOpenTour(java.util.Vector, boolean, boolean)">improveOpenTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="improveClosedTour(java.util.Vector)"><!-- --></A><H3>
+improveClosedTour</H3>
+<PRE>
+public double <B>improveClosedTour</B>(java.util.Vector&nbsp;tour)
+                         throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD>Improve a closed tour solution.
+An closed tour is one where the origin and destination vertices are the same.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/graph/tsp/ImproveI.html#improveClosedTour(java.util.Vector)">improveClosedTour</A> in interface <A HREF="../../../../drasys/or/graph/tsp/ImproveI.html">ImproveI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="initTourUS(int, int)"><!-- --></A><H3>
+initTourUS</H3>
+<PRE>
+protected void <B>initTourUS</B>(int&nbsp;head,
+                          int&nbsp;tail)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="improve()"><!-- --></A><H3>
+improve</H3>
+<PRE>
+protected void <B>improve</B>()
+                throws <A HREF="../../../../drasys/or/graph/tsp/TourNotFoundException.html">TourNotFoundException</A></PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="removeType0(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+removeType0</H3>
+<PRE>
+protected void <B>removeType0</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="replaceType0(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+replaceType0</H3>
+<PRE>
+protected void <B>replaceType0</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardRemoveType1</H3>
+<PRE>
+protected void <B>forwardRemoveType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardReplaceType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardReplaceType1</H3>
+<PRE>
+protected void <B>forwardReplaceType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardRemoveType2</H3>
+<PRE>
+protected void <B>forwardRemoveType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardReplaceType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardReplaceType2</H3>
+<PRE>
+protected void <B>forwardReplaceType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseRemoveType1</H3>
+<PRE>
+protected void <B>reverseRemoveType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseReplaceType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseReplaceType1</H3>
+<PRE>
+protected void <B>reverseReplaceType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseRemoveType2</H3>
+<PRE>
+protected void <B>reverseRemoveType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                                  drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseReplaceType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseReplaceType2</H3>
+<PRE>
+protected void <B>reverseReplaceType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vj1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vk1,
+                                   drasys.or.graph.tsp.Geni.Vert&nbsp;vl1)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="saveForRemoveType0(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+saveForRemoveType0</H3>
+<PRE>
+protected void <B>saveForRemoveType0</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardSaveForRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardSaveForRemoveType1</H3>
+<PRE>
+protected void <B>forwardSaveForRemoveType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vk)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardSaveForRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardSaveForRemoveType2</H3>
+<PRE>
+protected void <B>forwardSaveForRemoveType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vl)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseSaveForRemoveType1(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseSaveForRemoveType1</H3>
+<PRE>
+protected void <B>reverseSaveForRemoveType1</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vk)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseSaveForRemoveType2(drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert, drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseSaveForRemoveType2</H3>
+<PRE>
+protected void <B>reverseSaveForRemoveType2</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vj,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vk,
+                                         drasys.or.graph.tsp.Geni.Vert&nbsp;vl)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardFindBestRemove(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardFindBestRemove</H3>
+<PRE>
+protected void <B>forwardFindBestRemove</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseFindBestRemove(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseFindBestRemove</H3>
+<PRE>
+protected void <B>reverseFindBestRemove</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;vv)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="forwardSequenceRemove(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+forwardSequenceRemove</H3>
+<PRE>
+protected void <B>forwardSequenceRemove</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;head)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="reverseSequenceRemove(drasys.or.graph.tsp.Geni.Vert)"><!-- --></A><H3>
+reverseSequenceRemove</H3>
+<PRE>
+protected void <B>reverseSequenceRemove</B>(drasys.or.graph.tsp.Geni.Vert&nbsp;tail)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../../drasys/or/graph/tsp/TwoOpt.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;NEXT CLASS</FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="Us.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

@@ -1,0 +1,369 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  RealContainer
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/Matrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/RowArrayMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="RealContainer.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.matrix</FONT>
+<BR>
+Class  RealContainer</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.matrix.RealContainer</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A>, <A HREF="../../../drasys/or/mp/Problem.html">Problem</A>, <A HREF="../../../drasys/or/matrix/Vect.html">Vect</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public class <B>RealContainer</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A>, java.io.Serializable</DL>
+
+<P>
+Real container implementation.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.matrix.RealContainer">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#_epsilon">_epsilon</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#_globalEpsilon">_globalEpsilon</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#RealContainer()">RealContainer</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a real container with using the global epsilon.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#RealContainer(double)">RealContainer</A></B>(double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a real container with explicit epsilon.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#equals(double, double)">equals</A></B>(double&nbsp;a,
+       double&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if two scalers are equal to within the equality fuzz.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#getEpsilon()">getEpsilon</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the value that is used to relax the element equality test in the equals method.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#getGlobalEpsilon()">getGlobalEpsilon</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets the global matrix default equality fuzz factor.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#setEpsilon(double)">setEpsilon</A></B>(double&nbsp;epsilon)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value that is used to relax the element equality test in the equals method.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/RealContainer.html#setGlobalEpsilon(double)">setGlobalEpsilon</A></B>(double&nbsp;fuzz)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the global matrix default equality fuzz value.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="_globalEpsilon"><!-- --></A><H3>
+_globalEpsilon</H3>
+<PRE>
+protected static double <B>_globalEpsilon</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_epsilon"><!-- --></A><H3>
+_epsilon</H3>
+<PRE>
+protected double <B>_epsilon</B></PRE>
+<DL>
+</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="RealContainer()"><!-- --></A><H3>
+RealContainer</H3>
+<PRE>
+public <B>RealContainer</B>()</PRE>
+<DL>
+<DD>Create a real container with using the global epsilon.</DL>
+<HR>
+
+<A NAME="RealContainer(double)"><!-- --></A><H3>
+RealContainer</H3>
+<PRE>
+public <B>RealContainer</B>(double&nbsp;epsilon)</PRE>
+<DL>
+<DD>Create a real container with explicit epsilon.</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="getGlobalEpsilon()"><!-- --></A><H3>
+getGlobalEpsilon</H3>
+<PRE>
+public static double <B>getGlobalEpsilon</B>()</PRE>
+<DL>
+<DD>Gets the global matrix default equality fuzz factor.
+Each new matrix starts with this value for its local epsilon.
+The initial global epsilon value is 1.0E-12.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setGlobalEpsilon(double)"><!-- --></A><H3>
+setGlobalEpsilon</H3>
+<PRE>
+public static void <B>setGlobalEpsilon</B>(double&nbsp;fuzz)</PRE>
+<DL>
+<DD>Sets the global matrix default equality fuzz value.
+Each new matrix starts with this value for its local epsilon.
+The initial global epsilon value is 1.0E-12.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getEpsilon()"><!-- --></A><H3>
+getEpsilon</H3>
+<PRE>
+public double <B>getEpsilon</B>()</PRE>
+<DL>
+<DD>Gets the value that is used to relax the element equality test in the equals method.
+The default value is the global epsilon which is initially set to 1.0E-6.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/RealContainerI.html#getEpsilon()">getEpsilon</A> in interface <A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setEpsilon(double)"><!-- --></A><H3>
+setEpsilon</H3>
+<PRE>
+public void <B>setEpsilon</B>(double&nbsp;epsilon)</PRE>
+<DL>
+<DD>Sets the value that is used to relax the element equality test in the equals method.
+The default value is the global epsilon which is initially set to 1.0E-6.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/RealContainerI.html#setEpsilon(double)">setEpsilon</A> in interface <A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="equals(double, double)"><!-- --></A><H3>
+equals</H3>
+<PRE>
+public boolean <B>equals</B>(double&nbsp;a,
+                      double&nbsp;b)</PRE>
+<DL>
+<DD>Returns true if two scalers are equal to within the equality fuzz.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/RealContainerI.html#equals(double, double)">equals</A> in interface <A HREF="../../../drasys/or/matrix/RealContainerI.html">RealContainerI</A></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/Matrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/RowArrayMatrix.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="RealContainer.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

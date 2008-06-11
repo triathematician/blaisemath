@@ -1,0 +1,744 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  ContiguousMatrix
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrix.Sub.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ContiguousMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;<A HREF="#inner_class_summary">INNER</A>&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.matrix</FONT>
+<BR>
+Class  ContiguousMatrix</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<A HREF="../../../drasys/or/matrix/RealContainer.html">drasys.or.matrix.RealContainer</A>
+        |
+        +--<A HREF="../../../drasys/or/matrix/Matrix.html">drasys.or.matrix.Matrix</A>
+              |
+              +--<B>drasys.or.matrix.ContiguousMatrix</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../drasys/or/matrix/ColumnMajorMatrix.html">ColumnMajorMatrix</A>, <A HREF="../../../drasys/or/matrix/RowMajorMatrix.html">RowMajorMatrix</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public abstract class <B>ContiguousMatrix</B><DT>extends <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A><DT>implements <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A>, <A HREF="../../../drasys/or/matrix/SizableMatrixI.html">SizableMatrixI</A></DL>
+
+<P>
+Abstract base class for contiguous matrices.
+A contiguous matrix is a dense matrix structure where all the elements are stored in a 
+single one dimensional array.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../serialized-form.html#drasys.or.matrix.ContiguousMatrix">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+<A NAME="inner_class_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Inner Class Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>static&nbsp;class</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.Sub.html">ContiguousMatrix.Sub</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="fields_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Fields inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#_epsilon">_epsilon</A>,  
+<A HREF="../../../drasys/or/matrix/RealContainer.html#_globalEpsilon">_globalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#ContiguousMatrix(double[][])">ContiguousMatrix</A></B>(double[][]&nbsp;array)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#ContiguousMatrix(int, int, int, int)">ContiguousMatrix</A></B>(int&nbsp;sizeOfRows,
+                 int&nbsp;sizeOfColumns,
+                 int&nbsp;capacityOfRows,
+                 int&nbsp;capacityOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#ContiguousMatrix(drasys.or.matrix.MatrixI)">ContiguousMatrix</A></B>(<A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;matrix)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#ContiguousMatrix(drasys.or.matrix.VectorI)">ContiguousMatrix</A></B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#capacityOfColumns()">capacityOfColumns</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of columns the matrix can hold without allocating more memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#capacityOfRows()">capacityOfRows</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of rows the matrix can hold without allocating more memory.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#columnElements(int)">columnElements</A></B>(int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in a column.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#columnVector(int)">columnVector</A></B>(int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a reference to the column.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#diagonalVector()">diagonalVector</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a reference to the diagonal.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#elements()">elements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#getValueArray()">getValueArray</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the internal array that is used to hold the element values.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#isNull(int, int)">isNull</A></B>(int&nbsp;row,
+       int&nbsp;column)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Always returns false.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#rowElements(int)">rowElements</A></B>(int&nbsp;row)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration of the non-null elements in a row.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#rowVector(int)">rowVector</A></B>(int&nbsp;row)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a reference to the row.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#setElements(double)">setElements</A></B>(double&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value of all the non-null elements.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sizeOfColumns()">sizeOfColumns</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of columns in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sizeOfElements()">sizeOfElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of non-null elements in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sizeOfRows()">sizeOfRows</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of rows in the matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#submatrix(int, int)">submatrix</A></B>(int&nbsp;beginRow,
+          int&nbsp;beginColumn)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a reference to the submatrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#submatrix(int, int, int, int)">submatrix</A></B>(int&nbsp;beginRow,
+          int&nbsp;endRow,
+          int&nbsp;beginColumn,
+          int&nbsp;endColumn)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns a reference to the submatrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sum(int, int, int, int)">sum</A></B>(int&nbsp;rowBegin,
+    int&nbsp;rowEnd,
+    int&nbsp;columnBegin,
+    int&nbsp;columnEnd)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A></B>(int&nbsp;rowBegin,
+                        int&nbsp;rowEnd,
+                        int&nbsp;columnBegin,
+                        int&nbsp;columnEnd,
+                        double&nbsp;scaler)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of the squared differences between the elements and a scaler.<BR>
+Computes sum((a[i][j]-scaler)^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/matrix/ContiguousMatrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A></B>(int&nbsp;rowBegin,
+             int&nbsp;rowEnd,
+             int&nbsp;columnBegin,
+             int&nbsp;columnEnd)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.Matrix"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/Matrix.html#equals(drasys.or.matrix.MatrixI)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#equals(java.lang.Object)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#getArray()">getArray</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setColumn(int, drasys.or.matrix.VectorI)">setColumn</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setDiagonal(drasys.or.matrix.VectorI)">setDiagonal</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setElements(drasys.or.matrix.MatrixI)">setElements</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#setRow(int, drasys.or.matrix.VectorI)">setRow</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum()">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sum(int)">sum</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, double)">sumOfSquaredDifferences</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares()">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int)">sumOfSquares</A>, 
+<A HREF="../../../drasys/or/matrix/Matrix.html#toString()">toString</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_drasys.or.matrix.RealContainer"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class drasys.or.matrix.<A HREF="../../../drasys/or/matrix/RealContainer.html">RealContainer</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../drasys/or/matrix/RealContainer.html#equals(double, double)">equals</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getEpsilon()">getEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#getGlobalEpsilon()">getGlobalEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setEpsilon(double)">setEpsilon</A>, 
+<A HREF="../../../drasys/or/matrix/RealContainer.html#setGlobalEpsilon(double)">setGlobalEpsilon</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="ContiguousMatrix(int, int, int, int)"><!-- --></A><H3>
+ContiguousMatrix</H3>
+<PRE>
+public <B>ContiguousMatrix</B>(int&nbsp;sizeOfRows,
+                        int&nbsp;sizeOfColumns,
+                        int&nbsp;capacityOfRows,
+                        int&nbsp;capacityOfColumns)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="ContiguousMatrix(double[][])"><!-- --></A><H3>
+ContiguousMatrix</H3>
+<PRE>
+public <B>ContiguousMatrix</B>(double[][]&nbsp;array)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="ContiguousMatrix(drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+ContiguousMatrix</H3>
+<PRE>
+public <B>ContiguousMatrix</B>(<A HREF="../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;matrix)</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="ContiguousMatrix(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+ContiguousMatrix</H3>
+<PRE>
+public <B>ContiguousMatrix</B>(<A HREF="../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;vector)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="submatrix(int, int)"><!-- --></A><H3>
+submatrix</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A> <B>submatrix</B>(int&nbsp;beginRow,
+                                   int&nbsp;beginColumn)</PRE>
+<DL>
+<DD>Returns a reference to the submatrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#submatrix(int, int)">submatrix</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="submatrix(int, int, int, int)"><!-- --></A><H3>
+submatrix</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A> <B>submatrix</B>(int&nbsp;beginRow,
+                                   int&nbsp;endRow,
+                                   int&nbsp;beginColumn,
+                                   int&nbsp;endColumn)</PRE>
+<DL>
+<DD>Returns a reference to the submatrix.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#submatrix(int, int, int, int)">submatrix</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="rowElements(int)"><!-- --></A><H3>
+rowElements</H3>
+<PRE>
+public java.util.Enumeration <B>rowElements</B>(int&nbsp;row)</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in a row.
+The Enumeration is free to reuse the same object for each call to 'nextElement',
+so the contents must be use before getting another element.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#rowElements(int)">rowElements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are mutable and of type 'MatrixElementI'</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="columnElements(int)"><!-- --></A><H3>
+columnElements</H3>
+<PRE>
+public java.util.Enumeration <B>columnElements</B>(int&nbsp;column)</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in a column.
+The Enumeration is free to reuse the same object for each call to 'nextElement',
+so the contents must be use before getting another element.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#columnElements(int)">columnElements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are mutable and of type 'MatrixElementI'</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="elements()"><!-- --></A><H3>
+elements</H3>
+<PRE>
+public java.util.Enumeration <B>elements</B>()</PRE>
+<DL>
+<DD>Returns an enumeration of the non-null elements in the matrix.
+The Enumeration is free to reuse the same object for each call to 'nextElement',
+so the contents must be use before getting another element.<DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#elements()">elements</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Returns:</B><DD>an enumeration whose elements are mutable and of type 'MatrixElementI'</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setElements(double)"><!-- --></A><H3>
+setElements</H3>
+<PRE>
+public void <B>setElements</B>(double&nbsp;value)</PRE>
+<DL>
+<DD>Sets the value of all the non-null elements.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getValueArray()"><!-- --></A><H3>
+getValueArray</H3>
+<PRE>
+public double[] <B>getValueArray</B>()</PRE>
+<DL>
+<DD>Returns the internal array that is used to hold the element values.
+The element values are stored in a single contiguous block of memory in this array.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#getValueArray()">getValueArray</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="rowVector(int)"><!-- --></A><H3>
+rowVector</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A> <B>rowVector</B>(int&nbsp;row)</PRE>
+<DL>
+<DD>Returns a reference to the row.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#rowVector(int)">rowVector</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="columnVector(int)"><!-- --></A><H3>
+columnVector</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A> <B>columnVector</B>(int&nbsp;column)</PRE>
+<DL>
+<DD>Returns a reference to the column.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#columnVector(int)">columnVector</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="diagonalVector()"><!-- --></A><H3>
+diagonalVector</H3>
+<PRE>
+public <A HREF="../../../drasys/or/matrix/ContiguousVectorI.html">ContiguousVectorI</A> <B>diagonalVector</B>()</PRE>
+<DL>
+<DD>Returns a reference to the diagonal.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html#diagonalVector()">diagonalVector</A> in interface <A HREF="../../../drasys/or/matrix/ContiguousMatrixI.html">ContiguousMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="isNull(int, int)"><!-- --></A><H3>
+isNull</H3>
+<PRE>
+public boolean <B>isNull</B>(int&nbsp;row,
+                      int&nbsp;column)</PRE>
+<DL>
+<DD>Always returns false.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfRows()"><!-- --></A><H3>
+sizeOfRows</H3>
+<PRE>
+public int <B>sizeOfRows</B>()</PRE>
+<DL>
+<DD>Returns the number of rows in the matrix.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfColumns()"><!-- --></A><H3>
+sizeOfColumns</H3>
+<PRE>
+public int <B>sizeOfColumns</B>()</PRE>
+<DL>
+<DD>Returns the number of columns in the matrix.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sizeOfElements()"><!-- --></A><H3>
+sizeOfElements</H3>
+<PRE>
+public int <B>sizeOfElements</B>()</PRE>
+<DL>
+<DD>Returns the number of non-null elements in the matrix.<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="capacityOfRows()"><!-- --></A><H3>
+capacityOfRows</H3>
+<PRE>
+public int <B>capacityOfRows</B>()</PRE>
+<DL>
+<DD>Returns the number of rows the matrix can hold without allocating more memory.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/SizableMatrixI.html#capacityOfRows()">capacityOfRows</A> in interface <A HREF="../../../drasys/or/matrix/SizableMatrixI.html">SizableMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="capacityOfColumns()"><!-- --></A><H3>
+capacityOfColumns</H3>
+<PRE>
+public int <B>capacityOfColumns</B>()</PRE>
+<DL>
+<DD>Returns the number of columns the matrix can hold without allocating more memory.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../drasys/or/matrix/SizableMatrixI.html#capacityOfColumns()">capacityOfColumns</A> in interface <A HREF="../../../drasys/or/matrix/SizableMatrixI.html">SizableMatrixI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sum(int, int, int, int)"><!-- --></A><H3>
+sum</H3>
+<PRE>
+public double <B>sum</B>(int&nbsp;rowBegin,
+                  int&nbsp;rowEnd,
+                  int&nbsp;columnBegin,
+                  int&nbsp;columnEnd)</PRE>
+<DL>
+<DD>Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sum(int, int, int, int)">sum</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sumOfSquares(int, int, int, int)"><!-- --></A><H3>
+sumOfSquares</H3>
+<PRE>
+public double <B>sumOfSquares</B>(int&nbsp;rowBegin,
+                           int&nbsp;rowEnd,
+                           int&nbsp;columnBegin,
+                           int&nbsp;columnEnd)</PRE>
+<DL>
+<DD>Returns the sum of all of the elements in the sub-matrix.<BR>
+Computes sum(a[i][j]^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquares(int, int, int, int)">sumOfSquares</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="sumOfSquaredDifferences(int, int, int, int, double)"><!-- --></A><H3>
+sumOfSquaredDifferences</H3>
+<PRE>
+public double <B>sumOfSquaredDifferences</B>(int&nbsp;rowBegin,
+                                      int&nbsp;rowEnd,
+                                      int&nbsp;columnBegin,
+                                      int&nbsp;columnEnd,
+                                      double&nbsp;scaler)</PRE>
+<DL>
+<DD>Returns the sum of the squared differences between the elements and a scaler.<BR>
+Computes sum((a[i][j]-scaler)^2).<BR>
+Where: i = {rowBegin,...,(rowEnd-1)}<BR>
+j = {columBegin,...,(columnEnd-1)}<BR><DD><DL>
+<DT><B>Overrides:</B><DD><A HREF="../../../drasys/or/matrix/Matrix.html#sumOfSquaredDifferences(int, int, int, int, double)">sumOfSquaredDifferences</A> in class <A HREF="../../../drasys/or/matrix/Matrix.html">Matrix</A></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/matrix/CompressedRowMatrix.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/matrix/ContiguousMatrix.Sub.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="ContiguousMatrix.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;<A HREF="#inner_class_summary">INNER</A>&nbsp;|&nbsp;<A HREF="#fields_inherited_from_class_drasys.or.matrix.RealContainer">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

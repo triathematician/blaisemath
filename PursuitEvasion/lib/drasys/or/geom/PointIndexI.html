@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  PointIndexI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/geom/PointI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/geom/PolygonI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PointIndexI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.geom</FONT>
+<BR>
+Interface  PointIndexI</H2>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../drasys/or/geom/KDTree.html">KDTree</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>PointIndexI</B></DL>
+
+<P>
+A generic interface to an index with point keys.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../drasys/or/geom/KDTree.html"><CODE>KDTree</CODE></A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#coordinateSystem()">coordinateSystem</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the coordinate system that the index is using.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#elements()">elements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration to access all of the elements in random order.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.lang.Object</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#get(drasys.or.geom.PointI)">get</A></B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;key)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the value of the element whose key exactly matches 'key'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/PairI.html">PairI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#getNearestNeighborTo(drasys.or.geom.PointI)">getNearestNeighborTo</A></B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the element with the nearest key.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#put(drasys.or.geom.PointI, java.lang.Object)">put</A></B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;key,
+    java.lang.Object&nbsp;value)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Put a new element into the index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../drasys/or/geom/RangeI.html">RangeI</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#range()">range</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the range of points in the index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#removeAllElements()">removeAllElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removes all of the elements from the index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;java.util.Enumeration</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#selectedElements()">selectedElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns an enumeration to access the selected elements in random order.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#selectNearestNeighbors(drasys.or.geom.PointI, int)">selectNearestNeighbors</A></B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point,
+                       int&nbsp;n)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select the 'n' elements whose keys are closest to 'point'.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#selectRange(drasys.or.geom.RangeI)">selectRange</A></B>(<A HREF="../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select the elements whose keys are in the range.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#setCoordinateSystem(drasys.or.geom.CoordinateSystemI)">setCoordinateSystem</A></B>(<A HREF="../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A>&nbsp;coordinateSystem)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the coordinate system for the index after first removing all the elements.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#size()">size</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements in the index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#sizeOfSelected()">sizeOfSelected</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the number of elements selected in the index.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../drasys/or/geom/PointIndexI.html#supportsDuplicateKeys()">supportsDuplicateKeys</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns true if the index can contain duplicate keys.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="size()"><!-- --></A><H3>
+size</H3>
+<PRE>
+public int <B>size</B>()</PRE>
+<DL>
+<DD>Returns the number of elements in the index.</DL>
+<HR>
+
+<A NAME="sizeOfSelected()"><!-- --></A><H3>
+sizeOfSelected</H3>
+<PRE>
+public int <B>sizeOfSelected</B>()</PRE>
+<DL>
+<DD>Returns the number of elements selected in the index.</DL>
+<HR>
+
+<A NAME="removeAllElements()"><!-- --></A><H3>
+removeAllElements</H3>
+<PRE>
+public void <B>removeAllElements</B>()</PRE>
+<DL>
+<DD>Removes all of the elements from the index.</DL>
+<HR>
+
+<A NAME="setCoordinateSystem(drasys.or.geom.CoordinateSystemI)"><!-- --></A><H3>
+setCoordinateSystem</H3>
+<PRE>
+public void <B>setCoordinateSystem</B>(<A HREF="../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A>&nbsp;coordinateSystem)</PRE>
+<DL>
+<DD>Sets the coordinate system for the index after first removing all the elements.<DD><DL>
+<DT><B>Returns:</B><DD>'null' if the index is not set.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="coordinateSystem()"><!-- --></A><H3>
+coordinateSystem</H3>
+<PRE>
+public <A HREF="../../../drasys/or/geom/CoordinateSystemI.html">CoordinateSystemI</A> <B>coordinateSystem</B>()</PRE>
+<DL>
+<DD>Returns the coordinate system that the index is using.<DD><DL>
+<DT><B>Returns:</B><DD>'null' if the coordinate system is not set.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="supportsDuplicateKeys()"><!-- --></A><H3>
+supportsDuplicateKeys</H3>
+<PRE>
+public boolean <B>supportsDuplicateKeys</B>()</PRE>
+<DL>
+<DD>Returns true if the index can contain duplicate keys.</DL>
+<HR>
+
+<A NAME="put(drasys.or.geom.PointI, java.lang.Object)"><!-- --></A><H3>
+put</H3>
+<PRE>
+public void <B>put</B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;key,
+                java.lang.Object&nbsp;value)</PRE>
+<DL>
+<DD>Put a new element into the index.<DD><DL>
+<DT><B>Returns:</B><DD>A PairI interface where PairI.getFirst() returns the key and PairI.getSecond() returns the value.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="get(drasys.or.geom.PointI)"><!-- --></A><H3>
+get</H3>
+<PRE>
+public java.lang.Object <B>get</B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;key)</PRE>
+<DL>
+<DD>Returns the value of the element whose key exactly matches 'key'.</DL>
+<HR>
+
+<A NAME="getNearestNeighborTo(drasys.or.geom.PointI)"><!-- --></A><H3>
+getNearestNeighborTo</H3>
+<PRE>
+public <A HREF="../../../drasys/or/PairI.html">PairI</A> <B>getNearestNeighborTo</B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point)</PRE>
+<DL>
+<DD>Returns the element with the nearest key.<DD><DL>
+<DT><B>Returns:</B><DD>A PairI interface where PairI.getFirst() returns the key and PairI.getSecond() returns the value.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectNearestNeighbors(drasys.or.geom.PointI, int)"><!-- --></A><H3>
+selectNearestNeighbors</H3>
+<PRE>
+public int <B>selectNearestNeighbors</B>(<A HREF="../../../drasys/or/geom/PointI.html">PointI</A>&nbsp;point,
+                                  int&nbsp;n)</PRE>
+<DL>
+<DD>Select the 'n' elements whose keys are closest to 'point'.
+A call to this method may invalidate previous selection enumerations.<DD><DL>
+<DT><B>Returns:</B><DD>the number of elements selected.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectRange(drasys.or.geom.RangeI)"><!-- --></A><H3>
+selectRange</H3>
+<PRE>
+public int <B>selectRange</B>(<A HREF="../../../drasys/or/geom/RangeI.html">RangeI</A>&nbsp;range)</PRE>
+<DL>
+<DD>Select the elements whose keys are in the range.
+A call to this method may invalidate previous selection enumerations.
+Calling this method may invalidate any previously returned enumerations.<DD><DL>
+<DT><B>Returns:</B><DD>the number of elements selected.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="elements()"><!-- --></A><H3>
+elements</H3>
+<PRE>
+public java.util.Enumeration <B>elements</B>()</PRE>
+<DL>
+<DD>Returns an enumeration to access all of the elements in random order.<DD><DL>
+<DT><B>Returns:</B><DD>An enumeration of PairI interfaces where PairI.getFirst() returns the key and PairI.getSecond() returns the value.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="selectedElements()"><!-- --></A><H3>
+selectedElements</H3>
+<PRE>
+public java.util.Enumeration <B>selectedElements</B>()</PRE>
+<DL>
+<DD>Returns an enumeration to access the selected elements in random order.<DD><DL>
+<DT><B>Returns:</B><DD>An enumeration of PairI interfaces where PairI.getFirst() returns the key and PairI.getSecond() returns the value.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="range()"><!-- --></A><H3>
+range</H3>
+<PRE>
+public <A HREF="../../../drasys/or/geom/RangeI.html">RangeI</A> <B>range</B>()</PRE>
+<DL>
+<DD>Returns the range of points in the index.</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../drasys/or/geom/PointI.html"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../drasys/or/geom/PolygonI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="PointIndexI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

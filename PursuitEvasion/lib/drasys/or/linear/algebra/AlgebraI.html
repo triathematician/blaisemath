@@ -1,0 +1,394 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Interface  AlgebraI
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/algebra/DecompositionI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="AlgebraI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.linear.algebra</FONT>
+<BR>
+Interface  AlgebraI</H2>
+<DL>
+<DT><B>All Known Implementing Classes:</B> <DD><A HREF="../../../../drasys/or/linear/algebra/Algebra.html">Algebra</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public interface <B>AlgebraI</B></DL>
+
+<P>
+Smart linear algebra operations.
+These algebraic operations are analagous to the 
+<A HREF="../../../../drasys/or/linear/blas/package-summary.html">drasys.or.linear.blas</A>, but operate on all
+<A HREF="../../../../drasys/or/matrix/VectorI.html"><CODE>vector</CODE></A> and
+<A HREF="../../../../drasys/or/matrix/MatrixI.html"><CODE>matrix</CODE></A> classes.
+Each method checks the class type and sparcity of the arguments to determine the
+best way to perform the operation.
+<P><FONT COLOR="#CC0000"><FONT SIZE=+1>References:</FONT></FONT><FONT SIZE=+1></FONT><P><B><A NAME="0155510053"HREF="http://www.amazon.com/exec/obidos/ISBN=0155510053/opsresearchcomA/" TARGET="amazon.com">Linear Algebra and Its Applications</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gilbert Strang / Hardcover / Published 1988<BR><B><A NAME="0801854148"HREF="http://www.amazon.com/exec/obidos/ISBN=0801854148/opsresearchcomA/" TARGET="amazon.com">Matrix Computations (Johns Hopkins Studies in the Mathematical Sciences)</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;Gene H. Golub, Charles F. Van Loan (Contributor) / Paperback / Published 1996<BR><B><A NAME="0521431085"HREF="http://www.amazon.com/exec/obidos/ISBN=0521431085/opsresearchcomA/" TARGET="amazon.com">Numerical Recipes in C : The Art of Scientific Computing</A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;William H. Press, et al / Hardcover / Published 1993<BR><B><A NAME="0898712602"HREF="http://www.amazon.com/exec/obidos/ISBN=0898712602/opsresearchcomA/" TARGET="amazon.com">Parallel Algorithms for Matrix Computations </A></B><BR>&nbsp;&nbsp;&nbsp;&nbsp;K.A. Gallivan / Paperback / Published 1990<BR>
+<P>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#add(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)">add</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+    <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add two matrices.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#add(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)">add</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+    <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add two vectors.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#invert(drasys.or.matrix.MatrixI)">invert</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Invert a matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#matrixProduct(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)">matrixProduct</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;columnVector,
+              <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rowVector)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compute the matrix product of a column and row vector.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#multiply(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)">multiply</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+         <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multiply two matrices.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#multiply(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI)">multiply</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+         <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multiply a matrix by column vector.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#multiply(drasys.or.matrix.VectorI, drasys.or.matrix.MatrixI)">multiply</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+         <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multiply a row vector by matrix.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#scalerProduct(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)">scalerProduct</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+              <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compute the dot product two vectors.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#subtract(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)">subtract</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+         <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subtract two matrices.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#subtract(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)">subtract</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+         <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subtract two vectors.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/linear/algebra/AlgebraI.html#transpose(drasys.or.matrix.MatrixI)">transpose</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transpose matrix.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="add(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+add</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>add</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+                       <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)
+                throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Add two matrices.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="subtract(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+subtract</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>subtract</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Subtract two matrices.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="multiply(drasys.or.matrix.MatrixI, drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+multiply</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>multiply</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Multiply two matrices.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="multiply(drasys.or.matrix.VectorI, drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+multiply</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A> <B>multiply</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Multiply a row vector by matrix.<DD><DL>
+<DT><B>Returns:</B><DD>a column vector.<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="multiply(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI)"><!-- --></A><H3>
+multiply</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A> <B>multiply</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Multiply a matrix by column vector.<DD><DL>
+<DT><B>Returns:</B><DD>a row vector.<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="transpose(drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+transpose</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>transpose</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a)</PRE>
+<DL>
+<DD>Transpose matrix.</DL>
+<HR>
+
+<A NAME="invert(drasys.or.matrix.MatrixI)"><!-- --></A><H3>
+invert</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>invert</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;a)
+                   throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Invert a matrix.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the matrix isn't square or the inverse doesn't exist.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="add(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)"><!-- --></A><H3>
+add</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A> <B>add</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+                       <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)
+                throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Add two vectors.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="subtract(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)"><!-- --></A><H3>
+subtract</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseVector.html">DenseVector</A> <B>subtract</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Subtract two vectors.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="scalerProduct(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)"><!-- --></A><H3>
+scalerProduct</H3>
+<PRE>
+public double <B>scalerProduct</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;a,
+                            <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;b)
+                     throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Compute the dot product two vectors.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="matrixProduct(drasys.or.matrix.VectorI, drasys.or.matrix.VectorI)"><!-- --></A><H3>
+matrixProduct</H3>
+<PRE>
+public <A HREF="../../../../drasys/or/matrix/DenseMatrix.html">DenseMatrix</A> <B>matrixProduct</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;columnVector,
+                                 <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rowVector)
+                          throws <A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A></PRE>
+<DL>
+<DD>Compute the matrix product of a column and row vector.<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/linear/algebra/AlgebraException.html">AlgebraException</A> - if the sizes don't match.</DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/linear/algebra/DecompositionI.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="AlgebraI.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>

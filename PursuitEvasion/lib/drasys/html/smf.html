@@ -1,0 +1,54 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <title>SMF - Simple Matrix Format</title>
+</head>
+<body>
+
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<center>
+<h1>
+SMF - Simple Matrix Format</h1></center>
+
+<hr WIDTH="100%">
+<p>An <b>SMF</b> stream contains two types of records, a <b>size</b> record
+and an <b>element</b> record<b>. </b>The size record contains the row and
+column sizes of the matrix and the element record contains the indices
+and value for one element. The stream can contain multiple input matrices
+where each matrix is defined by a size record followed by its element records.
+The size record is optional for the first matrix.
+<p>A <b>size</b> record has two white-space delimited integer fields. The
+first field holds the number of rows in the matrix and the second holds
+the number of columns. The size record if present must precede the element
+records for a matrix.
+<p>An <b>element</b> record has four white-space delimited fields. The
+first two are integer and hold the row and column index respectively. The
+third field holds the real part of the element. The fourth field is optional
+and holds the imaginary part of the element.
+<p>A any line with a leading '#' is taken as a <b>comment</b> and ignored.
+<p>Here is an example SMF input stream:
+<p># ---------------------------------
+<br># The first matrix - dense 2x2
+<br># ---------------------------------
+<br>2&nbsp; 2
+<br>0&nbsp; 0&nbsp; 2.3
+<br>0&nbsp; 1&nbsp; 4.5&nbsp; 0.5
+<br>1&nbsp; 0&nbsp; 5.8
+<br>1&nbsp; 1&nbsp; 0.0&nbsp; 6.7
+<p># -------------------------------------------
+<br># The second matrix - sparse 100x100
+<br># -------------------------------------------
+<br>100&nbsp; 100
+<br>&nbsp; 0&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp; 34.6&nbsp; 7.6
+<br>55&nbsp; 45&nbsp;&nbsp; 49.0&nbsp; 3.4
+<br>99&nbsp; 99&nbsp;&nbsp; 32.4
+<br>18 92&nbsp;&nbsp; 32.8
+<p>
+<hr WIDTH="100%">
+<br>Copyright(C)1997-99 by DRA Systems all rights reserved.
+</body>
+</html>

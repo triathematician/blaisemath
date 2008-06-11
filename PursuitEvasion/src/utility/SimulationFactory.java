@@ -200,14 +200,14 @@ public class SimulationFactory {
         // Victory Conditions
         //                      ( TEAMS, THIS TEAM, OPPOSING TEAM, METRIC FOR VICTORY, THRESHOLD , WHAT HAPPENS IF LESS , WHAT HAPPENS IF MORE )
         wildebeastTeam.setVictoryCondition(new VictoryCondition(teams, wildebeastTeam, wateringHole,
-                Valuation.NUM_TEAM, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         lionTeam.setVictoryCondition(new VictoryCondition(teams, lionTeam, wildebeastTeam,
-                Valuation.NUM_TEAM, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
-        lionTeam.addAutoGoal(1.0, teams, wildebeastTeam, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        lionTeam.addAutoGoal(.01, teams, wateringHole, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 7.0);
+        lionTeam.addAutoGoal(1.0, teams, wildebeastTeam, Goal.CAPTURE, TaskGenerator.CONTROL_OPTIMAL, 1.0);
+        lionTeam.addAutoGoal(.01, teams, wateringHole, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 7.0);
         wildebeastTeam.addAutoGoal(0.5, teams, lionTeam, Goal.FLEE, TaskGenerator.AUTO_GRADIENT, 1.0);
         wildebeastTeam.addAutoGoal(1.0, teams, wateringHole, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
         

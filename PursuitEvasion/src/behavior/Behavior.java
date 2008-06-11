@@ -25,12 +25,13 @@ public abstract class Behavior {
     public static final int STRAIGHT=1;
     public static final int REVERSE=2;
     public static final int LEADING=3;
-    public static final int APPROACHPATH=4;
-    public static final int RANDOMPATH=5;
-    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading","Approach Path","Random Path"};
+    private static final int LEADINGWITHOUTKNOWLEDGE=4;
+    public static final int APPROACHPATH=5;
+    public static final int RANDOMPATH=6;
+    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Leading Without Knowledge","Approach Path","Random Path"};
 
     public static StringRangeModel getComboBoxModel(){
-        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,5);
+        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,6);
     }
     
 // CONSTRUCTORS    
@@ -40,12 +41,13 @@ public abstract class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-        case STATIONARY:    return new behavior.Stationary();
-        case STRAIGHT:      return new behavior.Straight();
-        case REVERSE:       return new behavior.Straight();
-        case LEADING:       return new behavior.Leading();
-        case APPROACHPATH:  return new behavior.ApproachPath();
-        case RANDOMPATH:    return new behavior.RandomPath();
+        case STATIONARY:                return new behavior.Stationary();
+        case STRAIGHT:                  return new behavior.Straight();
+        case REVERSE:                   return new behavior.Straight();
+        case LEADING:                   return new behavior.Leading();
+        case LEADINGWITHOUTKNOWLEDGE:   return new behavior.LeadingWithoutKnowledge();
+        case APPROACHPATH:              return new behavior.ApproachPath();
+        case RANDOMPATH:                return new behavior.RandomPath();
         }     
         return null;
     }

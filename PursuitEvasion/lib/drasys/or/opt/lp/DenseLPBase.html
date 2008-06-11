@@ -1,0 +1,793 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+DRA Systems: OR-Objects 1.2.4: Class  DenseLPBase
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+</HEAD>
+<BODY BGCOLOR="white">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_top"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/opt/lp/DenseSimplex.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="DenseLPBase.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+drasys.or.opt.lp</FONT>
+<BR>
+Class  DenseLPBase</H2>
+<PRE>
+java.lang.Object
+  |
+  +--<B>drasys.or.opt.lp.DenseLPBase</B>
+</PRE>
+<DL>
+<DT><B>Direct Known Subclasses:</B> <DD><A HREF="../../../../drasys/or/opt/lp/DenseSimplex.html">DenseSimplex</A></DD>
+</DL>
+<HR>
+<DL>
+<DT>public abstract class <B>DenseLPBase</B><DT>extends java.lang.Object<DT>implements <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A>, java.io.Serializable</DL>
+
+<P>
+The interface used by all algorithms to access linear programming models.
+<P>
+<DL>
+<DT><B>See Also: </B><DD><A HREF="../../../../serialized-form.html#drasys.or.opt.lp.DenseLPBase">Serialized Form</A></DL>
+<HR>
+
+<P>
+<!-- ======== INNER CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+<A NAME="field_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Field Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_autoScale">_autoScale</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double[][]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_cof">_cof</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_fuzz">_fuzz</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_maxAbsVal">_maxAbsVal</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_maxIt">_maxIt</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_maxRange">_maxRange</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_maxRows">_maxRows</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_minAbsVal">_minAbsVal</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_minRange">_minRange</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_nonZeroCnt">_nonZeroCnt</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_obj">_obj</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;double[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_rhs">_rhs</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_sizeOfColumns">_sizeOfColumns</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_sizeOfRows">_sizeOfRows</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;boolean</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_solved">_solved</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#_typ">_typ</A></B></CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="fields_inherited_from_class_drasys.or.opt.lp.LinearProgrammingI"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Fields inherited from interface drasys.or.opt.lp.<A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#EQUAL">EQUAL</A>,  
+<A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#GREATER">GREATER</A>,  
+<A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#LESS">LESS</A></CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#DenseLPBase()">DenseLPBase</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#DenseLPBase(int, int)">DenseLPBase</A></B>(int&nbsp;maxRows,
+            int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#addConstraint(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI, byte[])">addConstraint</A></B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;coefficients,
+              <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rightHandSides,
+              byte[]&nbsp;type)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a set of constraints to the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#addConstraint(drasys.or.matrix.VectorI, double, byte)">addConstraint</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coefficients,
+              double&nbsp;rightHandSide,
+              byte&nbsp;type)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adds a single constraint to the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#ensureCapacity(int, int)">ensureCapacity</A></B>(int&nbsp;maxRows,
+               int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensures the algorithm has room to hold this many rows.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#getMaxAbsoluteValue()">getMaxAbsoluteValue</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets largest absolute value in the equations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#getMinAbsoluteValue()">getMinAbsoluteValue</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value in the equations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#getRangeMax()">getRangeMax</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value the algorithm will accept.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;double</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#getRangeMin()">getRangeMin</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gets smallest absolute value the algorithm will accept.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#removeAllElements()">removeAllElements</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removes all of the coefficients from the algorithm's data structures.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#resize(int, int)">resize</A></B>(int&nbsp;maxRows,
+       int&nbsp;sizeOfColumns)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removes all the coefficients and changes the size of the model the algorithm can solve.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#setAutomaticScaling(boolean)">setAutomaticScaling</A></B>(boolean&nbsp;automaticallyScale)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enables automatic scaling.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#setEqualityFuzz(double)">setEqualityFuzz</A></B>(double&nbsp;fuzz)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the value that is used to relax equailty tests.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#setMaxIterations(int)">setMaxIterations</A></B>(int&nbsp;maxIterations)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set the maximum number of iterations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#setObjective(drasys.or.matrix.VectorI)">setObjective</A></B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;objective)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets the objective function for the model.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../drasys/or/opt/lp/DenseLPBase.html#setRange(double, double)">setRange</A></B>(double&nbsp;minAbsoluteValue,
+         double&nbsp;maxAbsoluteValue)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sets smallest and largest absolute value the algorithm will accept.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TD><B>Methods inherited from class java.lang.Object</B></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, 
+equals, 
+finalize, 
+getClass, 
+hashCode, 
+notify, 
+notifyAll, 
+toString, 
+wait, 
+wait, 
+wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ FIELD DETAIL =========== -->
+
+<A NAME="field_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="_maxRows"><!-- --></A><H3>
+_maxRows</H3>
+<PRE>
+protected int <B>_maxRows</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_sizeOfRows"><!-- --></A><H3>
+_sizeOfRows</H3>
+<PRE>
+protected int <B>_sizeOfRows</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_sizeOfColumns"><!-- --></A><H3>
+_sizeOfColumns</H3>
+<PRE>
+protected int <B>_sizeOfColumns</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_maxIt"><!-- --></A><H3>
+_maxIt</H3>
+<PRE>
+protected int <B>_maxIt</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_nonZeroCnt"><!-- --></A><H3>
+_nonZeroCnt</H3>
+<PRE>
+protected int <B>_nonZeroCnt</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_fuzz"><!-- --></A><H3>
+_fuzz</H3>
+<PRE>
+protected double <B>_fuzz</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_minRange"><!-- --></A><H3>
+_minRange</H3>
+<PRE>
+protected double <B>_minRange</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_maxRange"><!-- --></A><H3>
+_maxRange</H3>
+<PRE>
+protected double <B>_maxRange</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_minAbsVal"><!-- --></A><H3>
+_minAbsVal</H3>
+<PRE>
+protected double <B>_minAbsVal</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_maxAbsVal"><!-- --></A><H3>
+_maxAbsVal</H3>
+<PRE>
+protected double <B>_maxAbsVal</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_typ"><!-- --></A><H3>
+_typ</H3>
+<PRE>
+protected byte[] <B>_typ</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_obj"><!-- --></A><H3>
+_obj</H3>
+<PRE>
+protected double[] <B>_obj</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_rhs"><!-- --></A><H3>
+_rhs</H3>
+<PRE>
+protected double[] <B>_rhs</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_cof"><!-- --></A><H3>
+_cof</H3>
+<PRE>
+protected double[][] <B>_cof</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_solved"><!-- --></A><H3>
+_solved</H3>
+<PRE>
+protected boolean <B>_solved</B></PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="_autoScale"><!-- --></A><H3>
+_autoScale</H3>
+<PRE>
+protected boolean <B>_autoScale</B></PRE>
+<DL>
+</DL>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="DenseLPBase()"><!-- --></A><H3>
+DenseLPBase</H3>
+<PRE>
+public <B>DenseLPBase</B>()</PRE>
+<DL>
+</DL>
+<HR>
+
+<A NAME="DenseLPBase(int, int)"><!-- --></A><H3>
+DenseLPBase</H3>
+<PRE>
+public <B>DenseLPBase</B>(int&nbsp;maxRows,
+                   int&nbsp;sizeOfColumns)</PRE>
+<DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+
+<A NAME="removeAllElements()"><!-- --></A><H3>
+removeAllElements</H3>
+<PRE>
+public void <B>removeAllElements</B>()</PRE>
+<DL>
+<DD>Removes all of the coefficients from the algorithm's data structures.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#removeAllElements()">removeAllElements</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="resize(int, int)"><!-- --></A><H3>
+resize</H3>
+<PRE>
+public void <B>resize</B>(int&nbsp;maxRows,
+                   int&nbsp;sizeOfColumns)</PRE>
+<DL>
+<DD>Removes all the coefficients and changes the size of the model the algorithm can solve.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#resize(int, int)">resize</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setEqualityFuzz(double)"><!-- --></A><H3>
+setEqualityFuzz</H3>
+<PRE>
+public void <B>setEqualityFuzz</B>(double&nbsp;fuzz)</PRE>
+<DL>
+<DD>Sets the value that is used to relax equailty tests.
+This value may be updated each time a new constrtaint is added, so set this after the last constraint.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setEqualityFuzz(double)">setEqualityFuzz</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setMaxIterations(int)"><!-- --></A><H3>
+setMaxIterations</H3>
+<PRE>
+public void <B>setMaxIterations</B>(int&nbsp;maxIterations)</PRE>
+<DL>
+<DD>Set the maximum number of iterations.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setMaxIterations(int)">setMaxIterations</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setRange(double, double)"><!-- --></A><H3>
+setRange</H3>
+<PRE>
+public void <B>setRange</B>(double&nbsp;minAbsoluteValue,
+                     double&nbsp;maxAbsoluteValue)</PRE>
+<DL>
+<DD>Sets smallest and largest absolute value the algorithm will accept.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setRange(double, double)">setRange</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/opt/lp/LPError.html">LPError</A> - if the arguments are less then zero or maxAbsoluteValue <= minAbsoluteValue.</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getRangeMin()"><!-- --></A><H3>
+getRangeMin</H3>
+<PRE>
+public double <B>getRangeMin</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value the algorithm will accept.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getRangeMin()">getRangeMin</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getRangeMax()"><!-- --></A><H3>
+getRangeMax</H3>
+<PRE>
+public double <B>getRangeMax</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value the algorithm will accept.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getRangeMax()">getRangeMax</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getMinAbsoluteValue()"><!-- --></A><H3>
+getMinAbsoluteValue</H3>
+<PRE>
+public double <B>getMinAbsoluteValue</B>()</PRE>
+<DL>
+<DD>Gets smallest absolute value in the equations.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getMinAbsoluteValue()">getMinAbsoluteValue</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/opt/lp/LPError.html">LPError</A> - if there are no constraints</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getMaxAbsoluteValue()"><!-- --></A><H3>
+getMaxAbsoluteValue</H3>
+<PRE>
+public double <B>getMaxAbsoluteValue</B>()</PRE>
+<DL>
+<DD>Gets largest absolute value in the equations.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#getMaxAbsoluteValue()">getMaxAbsoluteValue</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+<DD><DL>
+<DT><B>Throws:</B><DD><A HREF="../../../../drasys/or/opt/lp/LPError.html">LPError</A> - if there are no constraints</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setAutomaticScaling(boolean)"><!-- --></A><H3>
+setAutomaticScaling</H3>
+<PRE>
+public void <B>setAutomaticScaling</B>(boolean&nbsp;automaticallyScale)</PRE>
+<DL>
+<DD>Enables automatic scaling.
+Automatic scaling is disabled by default.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setAutomaticScaling(boolean)">setAutomaticScaling</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="ensureCapacity(int, int)"><!-- --></A><H3>
+ensureCapacity</H3>
+<PRE>
+public void <B>ensureCapacity</B>(int&nbsp;maxRows,
+                           int&nbsp;sizeOfColumns)</PRE>
+<DL>
+<DD>Ensures the algorithm has room to hold this many rows.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#ensureCapacity(int, int)">ensureCapacity</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="addConstraint(drasys.or.matrix.VectorI, double, byte)"><!-- --></A><H3>
+addConstraint</H3>
+<PRE>
+public void <B>addConstraint</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;coefficients,
+                          double&nbsp;rightHandSide,
+                          byte&nbsp;type)</PRE>
+<DL>
+<DD>Adds a single constraint to the model.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#addConstraint(drasys.or.matrix.VectorI, double, byte)">addConstraint</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="addConstraint(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI, byte[])"><!-- --></A><H3>
+addConstraint</H3>
+<PRE>
+public void <B>addConstraint</B>(<A HREF="../../../../drasys/or/matrix/MatrixI.html">MatrixI</A>&nbsp;coefficients,
+                          <A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;rightHandSides,
+                          byte[]&nbsp;type)</PRE>
+<DL>
+<DD>Adds a set of constraints to the model.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#addConstraint(drasys.or.matrix.MatrixI, drasys.or.matrix.VectorI, byte[])">addConstraint</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setObjective(drasys.or.matrix.VectorI)"><!-- --></A><H3>
+setObjective</H3>
+<PRE>
+public void <B>setObjective</B>(<A HREF="../../../../drasys/or/matrix/VectorI.html">VectorI</A>&nbsp;objective)</PRE>
+<DL>
+<DD>Sets the objective function for the model.<DD><DL>
+<DT><B>Specified by: </B><DD><A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html#setObjective(drasys.or.matrix.VectorI)">setObjective</A> in interface <A HREF="../../../../drasys/or/opt/lp/LinearProgrammingI.html">LinearProgrammingI</A></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../overview-summary.html"><FONT ID="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-summary.html"><FONT ID="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT ID="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../deprecated-list.html"><FONT ID="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../index-all.html"><FONT ID="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../../help-doc.html"><FONT ID="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;PREV CLASS&nbsp;
+&nbsp;<A HREF="../../../../drasys/or/opt/lp/DenseSimplex.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../../index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="DenseLPBase.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY: &nbsp;INNER&nbsp;|&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+Copyright(C)1997-2000 by DRA Systems all rights reserved. <A HREF=http://OpsResearch.com TARGET=HOME>OpsResearch.com</A>
+</BODY>
+</HTML>
