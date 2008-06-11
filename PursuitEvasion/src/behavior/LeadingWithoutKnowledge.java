@@ -14,8 +14,8 @@ import scio.coordinate.V2;
  * Moves towards a position in front of the target which depends upon the leadFactor.
  */
 public class LeadingWithoutKnowledge extends behavior.Behavior {
-
-    double counter = 0.0;
+double counter = 0.0;
+   
 
     /**
      * Computes desired direction of travel
@@ -39,13 +39,15 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
                 x = -1 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
 
                 y = self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
-                counter++;
+              
                 return new R2(x, y);
-            } else {
+            } 
+            else {
                 return R2.ORIGIN;
             }
+            counter = 0.0;
         }
-
+       
         if (target.v.magnitude() == 0) {
             if (self.loc.distance(target) < 15) {
                 return R2.ORIGIN;
@@ -54,6 +56,9 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
         } else {
             return (target.plus(target.v.multipliedBy(self.getLeadFactor() * self.loc.distance(target) / self.getTopSpeed()))).minus(self.loc).normalized();
         }
-
     }
 }
+
+
+    
+
