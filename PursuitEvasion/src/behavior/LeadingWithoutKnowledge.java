@@ -33,15 +33,18 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
 
                 y = .5 * self.getSensorRange() - .5 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
                 counter++;
+                 R2 dir = new R2(x, y);
+                return dir;
             }
             while (counter > (Math.PI * .5 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
                 x = -1 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
 
                 y = self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
                 counter++;
+                 R2 dir = new R2(x, y);
+                 return dir;
             }
-            R2 dir = new R2(x, y);
-            return dir.normalized();
+           
        }
 
         if (target.v.magnitude() == 0) {

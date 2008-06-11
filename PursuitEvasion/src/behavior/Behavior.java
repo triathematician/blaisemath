@@ -25,7 +25,7 @@ public abstract class Behavior {
     public static final int STRAIGHT=1;
     public static final int REVERSE=2;
     public static final int LEADING=3;
-    private static final int LEADINGWITHOUTKNOWLEDGE=4;
+    public static final int LEADINGWITHOUTKNOWLEDGE=4;
     public static final int APPROACHPATH=5;
     public static final int RANDOMPATH=6;
     public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Leading Without Knowledge","Approach Path","Random Path"};
