@@ -3,6 +3,8 @@
 
 ==== Week of June 8-14, 2008 ====
 
+ * _Moved labels from the plots themselves to a legend box which can be moved around the screen._ --Elisha
+
  * _Added labels to metrics window display & synchronized timers between the two windows. Also added display of points to animating paths. The slider at the bottom of the page can be used to control the animation when the animation is playing/paused._ --Elisha
 
  * _Can now output starting locations with new button in the application window titled *GET START POSITIONS*. The locations are given in the *Log* window and the *Code* window. The custom starting locations may be saved by three steps shown below._ --Elisha
