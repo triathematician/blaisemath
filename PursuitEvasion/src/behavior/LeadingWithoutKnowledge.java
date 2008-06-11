@@ -15,6 +15,8 @@ import scio.coordinate.V2;
  */
 public class LeadingWithoutKnowledge extends behavior.Behavior {
 
+    double counter = 0.0;
+
     /**
      * Computes desired direction of travel
      * @param self      the agent exhibiting this myBehavior
@@ -23,29 +25,26 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
      * @return          the direction of travel corresponding to this myBehavior
      */
     public R2 direction(Agent self, V2 target, double t) {
-        double counter;
-        counter = 0.0;
         double x = 0;
         double y = 0;
-       while (target == null) {
-            while (counter >= 0 && counter <= (Math.PI * .5 * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+        //System.out.println("counter: "+counter);
+        if (target == null) {
+            if (counter >= 0 && counter <= (Math.PI * .5 * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
                 x = .5 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
 
                 y = .5 * self.getSensorRange() - .5 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
                 counter++;
-                 R2 dir = new R2(x, y);
-                return dir;
-            }
-            while (counter > (Math.PI * .5 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+                return new R2(x, y);
+            } else if (counter > (Math.PI * .5 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
                 x = -1 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
 
                 y = self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
                 counter++;
-                 R2 dir = new R2(x, y);
-                 return dir;
+                return new R2(x, y);
+            } else {
+                return R2.ORIGIN;
             }
-           
-       }
+        }
 
         if (target.v.magnitude() == 0) {
             if (self.loc.distance(target) < 15) {
