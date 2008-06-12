@@ -98,19 +98,24 @@ public class Euclidean2 extends Visometry<R2> {
     public AffineTransform getAffineTransformation(){return at;}
     public PointRangeModel getBounds(){return bounds;}
     
-    public void setAspectRatio(final double newValue){
-        if(newValue!=aspectRatio){
-            final double oldValue=aspectRatio;
-            final DoubleRangeModel drm=new DoubleRangeModel(oldValue,oldValue,newValue,(newValue-oldValue)/200);
+    public void setAspectRatio(double newValue){
+        if(Math.abs(newValue/aspectRatio-1)>.05){
+            double oldValue=aspectRatio;
+            final boolean up = (newValue > oldValue);
+            final DoubleRangeModel drm = up ?
+                new DoubleRangeModel(oldValue,oldValue,newValue,(newValue-oldValue)/200) :
+                new DoubleRangeModel(oldValue,newValue,oldValue,(oldValue-newValue)/200);
             Thread runner=new Thread(new Runnable(){
                 public void run() {
-                    while(drm.increment(false,(newValue>oldValue)?1:-1)){
+                    while(drm.increment(false, up ? +1 : -1)){
                         try{Thread.sleep(1);}catch(Exception e){}
-                        aspectRatio=drm.getValue();computeTransformation();                             
+                        aspectRatio=drm.getValue();
+                        computeTransformation();                             
                     }
                 }            
             });
             runner.start();
+            aspectRatio=newValue;
         }
     }
     public void setDesiredMin(R2 newValue){setDesiredBounds(newValue,desiredMax);}
@@ -132,7 +137,12 @@ public class Euclidean2 extends Visometry<R2> {
         }
     }
     public void setDesiredBounds(double minx,double miny,double maxx,double maxy){setDesiredBounds(new R2(minx,miny),new R2(maxx,maxy));}
-    public void setWindowAspect(double newValue){if(newValue!=windowAspect){windowAspect=newValue;computeTransformation();}}
+    public void setWindowAspect(double newValue){
+        if(newValue!=windowAspect){
+            windowAspect=newValue;
+            computeTransformation();
+        }
+    }
     
     
     // COMMANDS GENERATING RANGES OF VALUE WITHIN THE WINDOW
@@ -245,7 +255,7 @@ public class Euclidean2 extends Visometry<R2> {
     @Override
     public void mousePressed(MouseEvent e){
         pressedAt=e.getPoint();
-        mode=e.getModifiersExText(e.getModifiersEx());
+        mode=MouseEvent.getModifiersExText(e.getModifiersEx());
         if(mode.equals("Alt+Button1")){
             zoomBox=new Rectangle2D(toGeometry(pressedAt),toGeometry(pressedAt));
             container.add(zoomBox);
@@ -359,14 +369,20 @@ public class Euclidean2 extends Visometry<R2> {
         mi=new JRadioButtonMenuItem("10:1");
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(10);}});
         sub.add(mi);rbg.add(mi);
+        mi=new JRadioButtonMenuItem("5:1");
+        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(5);}});
+        sub.add(mi);rbg.add(mi);
         mi=new JRadioButtonMenuItem("2:1");
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(2);}});
         sub.add(mi);rbg.add(mi);
-        mi=new JRadioButtonMenuItem("1:1");
+        mi=new JRadioButtonMenuItem("1:1");mi.setSelected(true);
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(1);}});
         sub.add(mi);rbg.add(mi);mi.setSelected(true);
         mi=new JRadioButtonMenuItem("1:2");
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(.5);}});
+        sub.add(mi);rbg.add(mi);
+        mi=new JRadioButtonMenuItem("1:5");
+        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(.2);}});
         sub.add(mi);rbg.add(mi);
         mi=new JRadioButtonMenuItem("1:10");
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(.1);}});

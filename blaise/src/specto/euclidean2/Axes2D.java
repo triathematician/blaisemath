@@ -53,7 +53,7 @@ public class Axes2D extends DynamicPlottable<Euclidean2> implements ActionListen
                 (double)IDEAL_TICK_SPACE*v.getDrawWidth()/v.getWindowWidth());
         Vector<Double> yGrid=spacing.niceRange(
                 v.getActualMin().y,v.getActualMax().y,
-                (double)IDEAL_TICK_SPACE*v.getDrawWidth()/v.getWindowWidth());             
+                (double)IDEAL_TICK_SPACE*v.getDrawHeight()/v.getWindowHeight());             
         Vector<String> xLabels=new Vector<String>();
         for(Double d:xGrid){xLabels.add(nf.format(d));}
         Vector<String> yLabels=new Vector<String>();

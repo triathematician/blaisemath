@@ -61,8 +61,12 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
     public void setSnappingOff(){snapRule=null;}
     public void setSnapRule(SnapRule rule){snapRule=rule;}
     public void setStickySnap(boolean sticky){this.stickySnap=sticky;}
-    public void enableSnapping(final JPanel p,int padding,int stickyPoint){SnapRule.enableSnapping(this,p,padding,stickyPoint);}
-    public void enableSnapping(final JPanel p){SnapRule.enableSnapping(this,p,5);}
+    public void enableSnapping(final JPanel p,int padding,int stickyPoint){
+        SnapRule.enableSnapping(this,p,padding,stickyPoint);
+    }
+    public void enableSnapping(final JPanel p){
+        SnapRule.enableSnapping(this,p,5);
+    }
     
     // BEAN PATTERNS (POSITION/SIZE)
     
@@ -99,6 +103,8 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
     // PAINTING
        
     public static final Stroke DEFAULT_STROKE=new BasicStroke(1.0f);
+    protected boolean paintBorder = true;
+    protected boolean paintBackground = true;
     
     public void paintComponent(Graphics2D g){
         paintComponent(g,0.5f);
@@ -110,11 +116,11 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,opacity));
         Paint p=g.getPaint();
         g.setPaint(new GradientPaint(0,0,getBackground()==null?Color.BLACK:getBackground(),100,0,Color.GRAY));
-        g.fill(s);
+        if(paintBackground){g.fill(s);}
         g.setPaint(p);
         g.setColor(getForeground());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        g.draw(s);
+        if(paintBorder){g.draw(s);}
     }
     public void paintComponent(Graphics2D g,int x,int y){
         setLocation(x,y);

@@ -37,9 +37,10 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     
     @Override
     public boolean setStep(Double step){
-        if(step==null){return false;}
+        if(step==null || getRange()==0){ step=0.1; }
         step=Math.abs(step);
-        if(step<getRange() && ((this.step==null) || !this.step.equals(step))){
+        if(step>getRange()) { step = getRange(); }
+        if(!step.equals(this.step)){
             this.step=step;
             return true;
         }
@@ -90,9 +91,11 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
      * @return Vector of Double's containing the values
      */
     public Vector<Double> getValueRange(boolean inclusive,Double shift){
-        Vector<Double> result=new Vector<Double>();
-        if(inclusive){result.add(minimum-shift*step);}else{result.add(minimum+step/2-shift*step);}
-        while(result.lastElement()<=(maximum-step-shift*step)){result.add(result.lastElement()+step);}
+        Vector<Double> result=new Vector<Double>(1000);
+        result.add(minimum-shift*step+(inclusive ? 0 : step/2));
+        while(result.lastElement()<=(maximum-step-shift*step)){// && result.size()<100000){
+            result.add(result.lastElement()+step);
+        }
         return result;
     }
     

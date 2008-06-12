@@ -24,7 +24,7 @@ public class AddMenu extends JMenu {
     public AddMenu(final PlotPanel panel){
         super("Add");
         add(new Point2D().getAddMenuItem(panel));
-        add(new Segment2D().getAddMenuItem(panel));
-        add(new Function2D().getAddMenuItem(panel));
+        //add(new Segment2D().getAddMenuItem(panel));
+        //add(new Function2D().getAddMenuItem(panel));
     }
 }

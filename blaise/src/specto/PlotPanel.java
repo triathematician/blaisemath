@@ -106,7 +106,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         controls=new HashSet<VisualControl>();
         AnimationControl ac=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE);
         add(ac,3,2);
-        add(new NumberSlider(210,10,timer.getModel()),3,5);
+        add(new NumberSlider(210,10,timer.getModel()),3,4);
         MarkerBox markerBox=new MarkerBox(Color.YELLOW,DrawnPath.HIGHLIGHTER);
         markerBox.addMarker(Color.BLUE, DrawnPath.MARKER);
         markerBox.addMarker(Color.RED, DrawnPath.PEN);
@@ -194,7 +194,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     public Collection<Plottable> getBasePlottables(){return baseComponents.getElements();}
     public Collection<Plottable> getPlottables(){return components.getElements();}
         
-        
+    public Collection<VisualControl> getControls(){return controls;}    
     
     
     // COMPONENT HANDLING
@@ -208,8 +208,16 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
        }
    }
    
-   public void add(VisualControl vc){if(vc!=null){controls.add(vc);vc.addChangeListener(this);}}
-   public void add(VisualControl vc,int padding,int stickyPoint){add(vc);vc.enableSnapping(this,padding,stickyPoint);}
+   public void add(VisualControl vc){
+       if(vc!=null){
+           controls.add(vc);
+           vc.addChangeListener(this);
+       }
+   }
+   public void add(VisualControl vc,int padding,int stickyPoint){
+       add(vc);
+       vc.enableSnapping(this,padding,stickyPoint);
+   }
    public void remove(VisualControl vc){controls.remove(vc);vc.removeChangeListener(this);}
     
    public void addBase(Plottable<V> pv){baseComponents.add(pv);rebuildOptionsMenu();}

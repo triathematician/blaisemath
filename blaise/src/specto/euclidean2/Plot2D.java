@@ -5,6 +5,9 @@
 
 package specto.euclidean2;
 
+import java.util.HashSet;
+import javax.swing.event.ChangeEvent;
+import sequor.VisualControl;
 import specto.PlotPanel;
 
 /**

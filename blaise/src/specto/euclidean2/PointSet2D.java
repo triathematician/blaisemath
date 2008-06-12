@@ -15,6 +15,7 @@ import java.awt.geom.Path2D;
 import java.util.Vector;
 import javax.swing.JMenu;
 import javax.swing.event.ChangeListener;
+import sequor.model.ColorModel;
 import specto.Animatable;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
@@ -37,6 +38,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public PointSet2D(Vector<R2> points,Color c){
         initStyle();
         setColor(c);
+        this.points=points;
+    }
+    public PointSet2D(Vector<R2> points, ColorModel colorModel) {
+        initStyle();
+        setColorModel(colorModel);
         this.points=points;
     }
     

@@ -48,6 +48,12 @@ public class Point2D extends DynamicPlottable<Euclidean2> implements ChangeListe
         if(editable){this.prm.addChangeListener(this);}
         setColor(Color.BLUE);
     }
+    /** Constructor given a PointRangeModel and a ColorModel. */
+    public Point2D(PointRangeModel prm, ColorModel colorModel){
+        this.prm=prm; 
+        if(editable){this.prm.addChangeListener(this);}
+        setColorModel(colorModel);
+    }
     public Point2D(double x, double y, Color color, boolean editable) {
         this.editable=editable;
         if(editable){prm=new PointRangeModel(x,y);

@@ -116,7 +116,8 @@ public class NumberSlider extends VisualControlGroup {
     // PAINT METHOD
     
     @Override
-    public void paintComponent(Graphics2D g) {
+    public void paintComponent(Graphics2D g) {  
+        updateHandleLocation();
         super.paintComponent(g,0.5f);
         g.drawString(model.toString(),(float)handle.getX()+handle.getWidth()+5,(float)handle.getY()+handle.getHeight()-2);
     }

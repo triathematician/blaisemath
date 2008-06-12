@@ -108,7 +108,7 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     @Override
     public String toString(){return NumberFormat.getInstance().format(value);}
     @Override
-    public String toLongString(){return ""+minimum+"<="+value+"<="+maximum;}
+    public String toLongString(){return ""+minimum+"<="+value+"<="+maximum+"(step "+step+")";}
     @Override
     public void copyValuesFrom(FiresChangeEvents parent) {
         BoundedRangeModel<N> brm=(BoundedRangeModel<N>)parent;

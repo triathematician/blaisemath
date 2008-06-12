@@ -78,7 +78,7 @@ public class VisualControlGroup extends VisualControl implements ActionListener 
     
     
     // PAINT METHODS
-    
+        
     @Override
     public void paintComponent(Graphics2D g) {
         super.paintComponent(g,0.2f);

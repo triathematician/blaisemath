@@ -97,6 +97,12 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     public Color getColor(){return color.getValue();}
     /** Sets the color of the element. */
     public void setColor(Color newValue){color.setValue(newValue);}
+    /** Sets the color model. */
+    public void setColorModel(ColorModel model){this.color = model;}
+    /** Returns the color model. */
+    public ColorModel getColorModel(){return color;}
+    /** Synchronizes color model with another plottable. */
+    public void synchronizeColorsWith(Plottable p){setColorModel(p.getColorModel());}
     
     
     // CONTEXT MENU

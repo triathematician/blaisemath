@@ -8,6 +8,7 @@ package specto.euclidean2;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.Vector;
+import sequor.model.ColorModel;
 import sequor.model.PointRangeModel;
 import specto.euclidean2.Euclidean2;
 import specto.style.PointStyle;
@@ -24,6 +25,10 @@ public class CirclePoint2D extends Point2D {
         radii=new Vector<Double>();
     }
     public CirclePoint2D(Point2D parent) {this(parent.prm);}
+    public CirclePoint2D(PointRangeModel prm, ColorModel colorModel) {
+        super(prm, colorModel);
+        radii=new Vector<Double>();
+    }
 
     /** Removes all radii decorating the point. */
     public void deleteRadii() {

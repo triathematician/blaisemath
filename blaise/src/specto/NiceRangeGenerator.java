@@ -49,7 +49,7 @@ public interface NiceRangeGenerator {
             if(factor==0){return new Vector<Double>();}
             return new DoubleRangeModel(0,
                     factor*Math.ceil(min/factor),
-                    factor*Math.floor(max/factor)*1.001
+                    factor*Math.floor(max/factor)*1.0001
                     ,factor)
                     .getValueRange(true,0.0);
         }

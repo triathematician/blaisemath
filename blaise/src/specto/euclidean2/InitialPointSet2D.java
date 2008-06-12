@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
 import sequor.component.RangeTimer;
 import sequor.control.NumberSlider;
+import sequor.model.ColorModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Animatable;
@@ -37,6 +38,11 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
         super(prm,c);
         path=new PointSet2D(points,c);
         length=new IntegerRangeModel(100,0,50000,1);
+    }
+    public InitialPointSet2D(Point2D parent, Vector<R2> points, ColorModel colorModel) {
+        super(parent.prm);
+        path=new PointSet2D(points,colorModel);
+        setColorModel(colorModel);
     }
     
     // BEAN PATTERNS

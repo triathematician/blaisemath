@@ -13,9 +13,11 @@ package specto;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.image.ColorModel;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.component.RangeTimer;
 import sequor.event.MouseVisometryEvent;
@@ -101,7 +103,8 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu(toString() + " Options");   
         result.setForeground(getColor());
-        result.add(getColorMenuItem());  
+        result.add(getColorMenuItem());
+        color.addChangeListener(this);
         for(Plottable p:plottables){
             result.add(p.getOptionsMenu());
         }
@@ -111,6 +114,16 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     @Override
     public String[] getStyleStrings() {return null;}
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if(e.getSource().equals(color)){
+            for(Plottable p:plottables){
+                p.setColor(color.getValue());
+            }
+        }
+        super.stateChanged(e);
+    }
     
     
     // MOUSE HANDLING
