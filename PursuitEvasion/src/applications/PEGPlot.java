@@ -27,7 +27,6 @@ public class PEGPlot extends javax.swing.JFrame {
         initComponents();
         plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
         plot2D2.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
-        plot2D2.getVisometry().setAspectRatio(2);
         plot2D2.synchronizeTimerWith(plot2D1);
         dataLog1.initialize(simulation1, plot2D1, plot2D2);
         simulation1.run();

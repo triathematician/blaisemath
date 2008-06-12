@@ -10,6 +10,7 @@ import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
+import behavior.LeadingWithoutKnowledge;
 import tasking.Task;
 import utility.DistanceTable;
 import scio.coordinate.R2;
@@ -129,7 +130,7 @@ public class Agent {
         setTopSpeed(team.getTopSpeed());
         setBehavior(team.getBehavior());
         setLeadFactor(team.getLeadFactor());
-        setColor(team.getColor());
+        setColor(team.getColorModel().getValue());
     }
     
     
@@ -261,7 +262,7 @@ public class Agent {
     public double getTopSpeed(){return ags.topSpeed.getValue();}
     public int getBehaviorType(){return ags.behavior.getValue();}
     public double getLeadFactor(){return ags.leadFactor.getValue();}
-    public Color getColor(){return ags.color.getValue();}
+    public ColorModel getColorModel(){return ags.color;}
     @Override
     public String toString(){return ags.toString();}
     public R2 getPositionTime(double t){

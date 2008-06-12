@@ -64,6 +64,7 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
                 
             } else {
                 counter =0.0;
+                counter = 0;
                 return R2.ORIGIN;
             }
         }

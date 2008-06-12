@@ -16,5 +16,7 @@ import scio.coordinate.V2;
  * Follows the path as best as possible. If unable to follow the path, heads towards where it SHOULD be at that time.
  */
 public class ApproachPath extends Behavior {  
-    public R2 direction(Agent self,V2 target,double t){return self.getPositionTime(t).minus(self.loc).normalized();}
+    public R2 direction(Agent self,V2 target,double t){
+        return self.getPositionTime(t).minus(self.loc).normalized();
+    }
 }

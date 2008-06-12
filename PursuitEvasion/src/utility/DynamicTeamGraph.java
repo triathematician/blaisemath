@@ -29,7 +29,11 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     Team team;
     DataLog log;
     
-    public DynamicTeamGraph(Team t,DataLog l){team=t;log=l;}
+    public DynamicTeamGraph(Team t,DataLog l){
+        team=t;
+        log=l;
+        setColorModel(t.getColorModel());
+    }
     
     public int pathSize(){
         return log.size();
@@ -40,7 +44,6 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     /** Draws graph corresponding to current step. */
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(pathSize()==0){return;}
-        g.setColor(team.getColor().brighter().brighter());
         g.setStroke(VisualStyle.THIN_STROKE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
         g.draw(getEdges(v,t.getCurrentIntValue()));

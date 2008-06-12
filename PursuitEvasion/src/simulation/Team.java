@@ -116,8 +116,8 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         setSize(size);
         setStart(start);
         setBehavior(behavior);
-        setColor(color);
         clear();
+        setColor(color);
         initAgentNumber();
         editing = false;
     }
@@ -502,8 +502,8 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         return tes.leadFactor.getValue();
     }
 
-    public Color getColor() {
-        return tes.color.getValue();
+    public ColorModel getColorModel() {
+        return tes.color;
     }
 
     public R2 getPositionTime(double t) {
@@ -581,7 +581,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
 
     public void copyColortoTeam() {
         for (Agent a : this) {
-            a.setColor(getColor());
+            a.setColor(tes.getColor());
         }
     }
 
@@ -654,7 +654,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         /** Position function if required for myBehavior */
         private ParametricModel pm = new ParametricModel();
         /** Default color. */
-        private ColorModel color = new ColorModel(Color.BLUE);
+        private ColorModel color = new ColorModel(Color.GREEN);
 
         /** Returns the color */
         @Override
