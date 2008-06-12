@@ -34,6 +34,10 @@ public class TaskFusion {
     public static R2 getVector(Agent agent, Vector<Task> tasks, double time) {
         R2 result = new R2();
         double multiplier;
+        // if no tasks, generate a null task to use
+        if (tasks.size() == 0) {
+            return agent.getBehavior().direction(agent, null, time).normalized();
+        } 
         for (Task t : tasks) {
             // translate... distinguish between seek and flee behaviors here
             multiplier = (t.getGoalType() == Goal.FLEE ? -1 : 1) * (agent.getBehaviorType() == Behavior.REVERSE ? -1 : 1);
