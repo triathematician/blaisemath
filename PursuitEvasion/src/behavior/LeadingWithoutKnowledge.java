@@ -20,7 +20,6 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
 // agent moves during each size.
     double counter = 0.0;
     double stepSize = 0.1;
-    double startCircleFactor = 0.5;
     double newCircleFactor =.5;
 
     /**
@@ -36,32 +35,28 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
         //System.out.println("counter: "+counter);
         if (target == null) {
             counter++;
-            if (counter >= 0 && counter <= (Math.PI * startCircleFactor * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
-                x = startCircleFactor * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (startCircleFactor* self.getSensorRange()));
+            if (counter >= 0 && counter <= ((Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1))) {
+                x =  (.5*self.getSensorRange() )* Math.sin((counter * self.getTopSpeed() * .1) / (.5* self.getSensorRange()));
 
-                y = startCircleFactor * self.getSensorRange() - startCircleFactor * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()));
+                y =  .5*self.getSensorRange() - (.5 * self.getSensorRange() )* Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
                 
                 return new R2(x, y);
             
-            } else if (counter > (Math.PI *2* startCircleFactor * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 2*startCircleFactor*self.getSensorRange()) / (self.getTopSpeed() * .1)) {
-                x = -2*startCircleFactor * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - Math.PI);
+            } else if (counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (2*Math.PI *self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+                x = (-2*self.getSensorRange())*Math.sin((counter * self.getTopSpeed() * .1) / (.5*self.getSensorRange()) - 1.5*Math.PI);
 
-                y = 2*startCircleFactor*self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - Math.PI);
+                y = ( 2*self.getSensorRange())*Math.cos((counter * self.getTopSpeed() * .1) / ( .5*self.getSensorRange()) - 1.5*Math.PI);
 
                 return new R2(x, y);
             
-            } else if (counter > (Math.PI * 2*startCircleFactor*self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 3*startCircleFactor*self.getSensorRange()))  {  
+            } else if (counter > (Math.PI * 2*self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 3*self.getSensorRange()))  {  
                 
-                x = -3*startCircleFactor * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - Math.PI);
+                x = -3*.5 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
                 
-                y= startCircleFactor*self.getSensorRange()+3*startCircleFactor*self.getSensorRange()*Math.cos((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - Math.PI);
-                    
-               
-            } else if ( counter> (Math.PI * 3*startCircleFactor*self.getSensorRange()) && counter <=(Math.PI * 5*startCircleFactor*self.getSensorRange())){
-                x=-4*startCircleFactor * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - 1.5*Math.PI);
-                
-                y=4*startCircleFactor*self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (startCircleFactor * self.getSensorRange()) - 1.5*Math.PI);
-                
+                y= .5*self.getSensorRange()+3*.5*self.getSensorRange()*Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()) - Math.PI);
+                 
+              
+                            
             } else {
                 counter =0.0;
                 counter = 0;
