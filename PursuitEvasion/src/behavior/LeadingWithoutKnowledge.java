@@ -48,21 +48,31 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
 
                 return new R2(x, y);
 
-            } else if (counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (2 * Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+            } else if (counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (3 * Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
                 x = (-2 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()) );
 
                 y = (2 * self.getSensorRange()) * Math.cos((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()));
 
                 return new R2(x, y);
 
-            } else if (counter > (Math.PI * 2 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
+            } else if (counter > (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
 
-                x = -3 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3 );
+                x = -3 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) +.5*Math.PI );
 
-                y = 3 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3);
+                y = 3 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + .5*Math.PI);
 
                 return new R2(x, y);
 
+                
+                } else if (counter > (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 10 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
+
+                x = -4 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) +Math.PI );
+
+                y = 4 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) + Math.PI);
+
+                return new R2(x, y);
+           
+            
             } else {
                 counter = 0.0;
                 return R2.ORIGIN;
