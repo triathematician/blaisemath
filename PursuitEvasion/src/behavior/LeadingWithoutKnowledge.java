@@ -18,13 +18,12 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
 // factors refer to a factor of the sensor radius, allowing for easy change to the size of the circles
 // stepSize refers to the amount of time each step represents. With velocity, this determines how far an
 // agent moves during each size.
-    
     double counter = 0.0;
     double stepSize = 0.1;
     double newCircleFactor = .5;
-    
+
     @Override
-    public void reset(){
+    public void reset() {
         counter = 0.0;
     }
 
@@ -49,30 +48,30 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
                 return new R2(x, y);
 
             } else if (counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (3 * Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
-                x = (-2 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()) );
+                x = (-2 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()));
 
                 y = (2 * self.getSensorRange()) * Math.cos((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()));
 
                 return new R2(x, y);
 
-            } else if (counter > (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
+            } else if (counter > (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
 
-                x = -3 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) +.5*Math.PI );
+                x = -3 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + .5 * Math.PI);
 
-                y = 3 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + .5*Math.PI);
+                y = 3 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + .5 * Math.PI);
 
                 return new R2(x, y);
 
-                
-                } else if (counter > (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 10 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
 
-                x = -4 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) +Math.PI );
+            } else if (counter > (Math.PI * 6 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 10 * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+
+                x = -4 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) + Math.PI);
 
                 y = 4 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) + Math.PI);
 
                 return new R2(x, y);
-           
-            
+
+
             } else {
                 counter = 0.0;
                 return R2.ORIGIN;
@@ -80,13 +79,16 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
         }
         counter = 0.0;
         if (target.v.magnitude() == 0) {
-            if (self.loc.distance(target) < 15) {
-                return R2.ORIGIN;
+            if (self.loc.distance(target) <= .5 * self.getSensorRange()) {
+                return new R2(0, 0);
             }
             return target.minus(self.loc).normalized();
         } else {
+            counter = 0.0;
+
             return (target.plus(target.v.multipliedBy(self.getLeadFactor() * self.loc.distance(target) / self.getTopSpeed()))).minus(self.loc).normalized();
         }
+
     }
 }
 
