@@ -69,9 +69,6 @@ public class Agent {
     
     /** Whether the agent is still in play. */
     boolean active=true;
-    /** Counter associated with the agent. */
-    public double counter=0.0;
-    
     
     // CONSTRUCTORS
     
@@ -121,7 +118,7 @@ public class Agent {
         tasks.clear();
         pov.clear();
         commpov.clear();
-        counter=0.0;
+        myBehavior.reset();
     }
     
     /** Moves the agent. */

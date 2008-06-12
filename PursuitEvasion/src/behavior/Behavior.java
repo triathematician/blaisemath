@@ -54,6 +54,9 @@ public abstract class Behavior {
     
 // METHODS    
     
+    /** Resets behavior. */
+    public void reset(){}
+    
     /**Computes desired direction of travel
      * @param self      the agent exhibiting this behavior
      * @param target    the agent targeted by the behavior

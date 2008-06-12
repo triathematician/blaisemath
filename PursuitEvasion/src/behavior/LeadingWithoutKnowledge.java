@@ -18,8 +18,15 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
 // factors refer to a factor of the sensor radius, allowing for easy change to the size of the circles
 // stepSize refers to the amount of time each step represents. With velocity, this determines how far an
 // agent moves during each size.
+    
+    double counter = 0.0;
     double stepSize = 0.1;
     double newCircleFactor = .5;
+    
+    @Override
+    public void reset(){
+        counter = 0.0;
+    }
 
     /**
      * Computes desired direction of travel
@@ -33,35 +40,35 @@ public class LeadingWithoutKnowledge extends behavior.Behavior {
         double y = 0;
         //System.out.println("selfcounter: "+selfcounter);
         if (target == null) {
-            self.counter++;
-            if (self.counter >= 0 && self.counter <= ((Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1))) {
-                x = (.5 * self.getSensorRange()) * Math.sin((self.counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
+            counter++;
+            if (counter >= 0 && counter <= ((Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1))) {
+                x = (.5 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
 
-                y = .5 * self.getSensorRange() - (.5 * self.getSensorRange()) * Math.cos((self.counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
-
-                return new R2(x, y);
-
-            } else if (self.counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && self.counter <= (2 * Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
-                x = (-2 * self.getSensorRange()) * Math.sin((self.counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()) );
-
-                y = (2 * self.getSensorRange()) * Math.cos((self.counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()));
+                y = .5 * self.getSensorRange() - (.5 * self.getSensorRange()) * Math.cos((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
 
                 return new R2(x, y);
 
-            } else if (self.counter > (Math.PI * 2 * self.getSensorRange()) / (self.getTopSpeed() * .1) && self.counter <= (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
+            } else if (counter > (Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (2 * Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) {
+                x = (-2 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()) );
 
-                x = -3 * self.getSensorRange() * Math.sin((self.counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3 );
+                y = (2 * self.getSensorRange()) * Math.cos((counter * self.getTopSpeed() * .1) / (2 * self.getSensorRange()));
 
-                y = 3 * self.getSensorRange() * Math.cos((self.counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3);
+                return new R2(x, y);
+
+            } else if (counter > (Math.PI * 2 * self.getSensorRange()) / (self.getTopSpeed() * .1) && counter <= (Math.PI * 3 * self.getSensorRange()) / (self.getTopSpeed() * .1) ) {
+
+                x = -3 * self.getSensorRange() * Math.sin((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3 );
+
+                y = 3 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (3 * self.getSensorRange()) + Math.PI/3);
 
                 return new R2(x, y);
 
             } else {
-                self.counter = 0.0;
+                counter = 0.0;
                 return R2.ORIGIN;
             }
         }
-        self.counter = 0.0;
+        counter = 0.0;
         if (target.v.magnitude() == 0) {
             if (self.loc.distance(target) < 15) {
                 return R2.ORIGIN;
