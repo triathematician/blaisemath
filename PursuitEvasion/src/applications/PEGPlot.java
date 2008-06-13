@@ -48,6 +48,8 @@ public class PEGPlot extends javax.swing.JFrame {
         dataLog1 = new analysis.DataLog();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         infoPane = new javax.swing.JTabbedPane();
         plot2D2 = new specto.euclidean2.Plot2D();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -57,7 +59,6 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         codeWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         plot2D1 = new specto.euclidean2.Plot2D();
         statusBar = new javax.swing.JPanel();
         statusText = new javax.swing.JLabel();
@@ -101,6 +102,10 @@ public class PEGPlot extends javax.swing.JFrame {
 
         jSplitPane2.setDividerLocation(450);
 
+        jSplitPane1.setDividerLocation(300);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setTopComponent(simulationSettingsPanel1);
+
         infoPane.setToolTipText("See information regarding the simulations.");
         infoPane.setMaximumSize(new java.awt.Dimension(450, 600));
 
@@ -108,11 +113,11 @@ public class PEGPlot extends javax.swing.JFrame {
         plot2D2.setLayout(plot2D2Layout);
         plot2D2Layout.setHorizontalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 444, Short.MAX_VALUE)
+            .addGap(0, 442, Short.MAX_VALUE)
         );
         plot2D2Layout.setVerticalGroup(
             plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGap(0, 188, Short.MAX_VALUE)
         );
 
         infoPane.addTab("Metrics", plot2D2);
@@ -141,19 +146,17 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane3.setToolTipText("Communications network of the teams.");
         infoPane.addTab("Network View", jScrollPane3);
 
+        jSplitPane1.setRightComponent(infoPane);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(infoPane, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
-            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(infoPane, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
@@ -166,7 +169,7 @@ public class PEGPlot extends javax.swing.JFrame {
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 509, Short.MAX_VALUE)
+            .addGap(0, 462, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(plot2D1);
@@ -458,6 +461,7 @@ private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent e
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextArea logWindow;
