@@ -25,10 +25,11 @@ public abstract class Behavior {
     public static final int STRAIGHT=1;
     public static final int REVERSE=2;
     public static final int LEADING=3;
-    public static final int LEADINGWITHOUTKNOWLEDGE=4;
-    public static final int APPROACHPATH=5;
-    public static final int RANDOMPATH=6;
-    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Leading Without Knowledge","Approach Path","Random Path"};
+    public static final int LARGECIRCLESEARCH=4;
+    public static final int SMALLCIRCLESEARCH=5;
+    public static final int APPROACHPATH=6;
+    public static final int RANDOMPATH=7;
+    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Large Circle Search","Small Circle Search","Approach Path","Random Path"};
 
     public static StringRangeModel getComboBoxModel(){
         return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,6);
@@ -45,7 +46,8 @@ public abstract class Behavior {
         case STRAIGHT:                  return new behavior.Straight();
         case REVERSE:                   return new behavior.Straight();
         case LEADING:                   return new behavior.Leading();
-        case LEADINGWITHOUTKNOWLEDGE:   return new behavior.LeadingWithoutKnowledge();
+        case LARGECIRCLESEARCH:         return new behavior.LargeCircleSearch();
+        case SMALLCIRCLESEARCH:         return new behavior.SmallCircleSearch(); 
         case APPROACHPATH:              return new behavior.ApproachPath();
         case RANDOMPATH:                return new behavior.RandomPath();
         }     
