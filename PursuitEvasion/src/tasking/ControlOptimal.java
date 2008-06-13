@@ -84,7 +84,7 @@ public class ControlOptimal extends TaskGenerator {
 // creates a constraint, in the case that there are more pursuers than evaders
             //that every evader is chased by exactly one pursuer. Extra pursuers are not given an assignment
             // in this algorithm, but perform another tasking in the more than one goal case.
-            if (numberOfPursuers >= numberOfEvaders) {
+            if (numberOfPursuers > numberOfEvaders) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
                         prob.newConstraint(j + "is chased").setType(EQL).setRightHandSide(1.0);
@@ -101,10 +101,29 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+            }
+            else if (numberOfPursuers == numberOfEvaders) {
+                for (int j = 0; j < numberOfEvaders; j++) {
+                    try {
+                        prob.newConstraint(j + "is chased").setType(EQL).setRightHandSide(1.0);
+                    } catch (DuplicateException ex) {
+                        Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+  // creates a constraint, in the case that there are more pursuers than evaders
+  //that every pursuer can only chase, at the most, one evader.
+                for (int i = 0; i < numberOfPursuers; i++) {
+                    try {
+                        prob.newConstraint(i + "can only chase one evader").setType(EQL).setRightHandSide(1.0);
+                    } catch (DuplicateException ex) {
+                        Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
      // if there are less pursuers than evaders, the constraints are different.
    // every pursuer must chase someone, and every evader can only be chased by one pursuer.
    // this fixed an issue of under constrained problem, where pursuers would chase the same evader.
-            } else {
+                else {
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
 
