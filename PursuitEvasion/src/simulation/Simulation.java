@@ -336,7 +336,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         /** Time taken by a single step [in seconds] */
         private DoubleRangeModel stepTime=new DoubleRangeModel(.1,0,15,.01);
         /** Number of steps to run the simulation before quitting. */
-        private IntegerRangeModel numSteps=new IntegerRangeModel(350,0,10000);
+        private IntegerRangeModel numSteps=new IntegerRangeModel(250,0,10000);
         /** If stop is based on reaching a goal, this is the max # of steps to allow. */
         private IntegerRangeModel maxSteps=new IntegerRangeModel(1000,0,10000000);
         

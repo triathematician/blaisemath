@@ -87,7 +87,7 @@ public class ControlOptimal extends TaskGenerator {
             if (numberOfPursuers > numberOfEvaders) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
-                        prob.newConstraint(j + "is chased").setType(EQL).setRightHandSide(1.0);
+                        prob.newConstraint(j + "is chased").setType(GTE).setRightHandSide(1.0);
                     } catch (DuplicateException ex) {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -96,7 +96,7 @@ public class ControlOptimal extends TaskGenerator {
   //that every pursuer can only chase, at the most, one evader.
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
-                        prob.newConstraint(i + "can only chase one evader").setType(LTE).setRightHandSide(1.0);
+                        prob.newConstraint(i + "can only chase one evader").setType(EQL).setRightHandSide(1.0);
                     } catch (DuplicateException ex) {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }

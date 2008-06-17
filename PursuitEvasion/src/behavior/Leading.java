@@ -27,7 +27,7 @@ public class Leading extends behavior.Behavior {
             return new R2();
         }
         if (target.v.magnitude() == 0) {
-            if (self.loc.distance(target) < 15) {
+            if (self.loc.distance(target) < .5*self.getSensorRange()) {
                 return R2.ORIGIN;
             }
             return target.minus(self.loc).normalized();

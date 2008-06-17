@@ -184,8 +184,8 @@ public class SimulationFactory {
         // Teams
         Vector<Team> teams = new Vector<Team>();
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team lionTeam = new Team("Lions", 3, Team.START_RANDOM, Behavior.LEADINGWITHOUTKNOWLEDGE, Color.ORANGE);
-        lionTeam.setTopSpeed(5.5);
+        Team lionTeam = new Team("Lions", 4, Team.START_RANDOM, Behavior.LARGECIRCLESEARCH, Color.ORANGE);
+        lionTeam.setTopSpeed(6.5);
         Team wildebeastTeam = new Team("Wildebeast", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
         Team wateringHole = new Team("Water", 1, Team.START_RANDOM, Behavior.STATIONARY, Color.BLUE);
         teams.add(lionTeam);
@@ -207,7 +207,7 @@ public class SimulationFactory {
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
         lionTeam.addAutoGoal(1.0, teams, wildebeastTeam, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        lionTeam.addAutoGoal(.01, teams, wateringHole, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 7.0);
+        lionTeam.addAutoGoal(.01, teams, wateringHole, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 2.0);
         wildebeastTeam.addAutoGoal(0.5, teams, lionTeam, Goal.FLEE, TaskGenerator.AUTO_GRADIENT, 1.0);
         wildebeastTeam.addAutoGoal(1.0, teams, wateringHole, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
         

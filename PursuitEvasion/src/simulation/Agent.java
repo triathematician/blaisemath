@@ -10,7 +10,7 @@ import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
-import behavior.LeadingWithoutKnowledge;
+import behavior.LargeCircleSearch;
 import tasking.Task;
 import utility.DistanceTable;
 import scio.coordinate.R2;
