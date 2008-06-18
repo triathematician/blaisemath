@@ -45,7 +45,7 @@ public class ControlClosest extends TaskGenerator {
         }while(!ps.isEmpty()&&!es.isEmpty()&&closest!=null);
         // assign remaining pursuers to closest prey
         for(Agent p:ps){
-            p.assign(new Task(this,dist.min(p,target).getSecondLoc(),goalType,priority));
+            p.assign(new Task(this,dist.min(p,target.getActiveAgents()).getSecondLoc(),goalType,priority));
         }
     }
 }
