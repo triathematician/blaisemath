@@ -79,6 +79,22 @@ public class OriginConverge extends behavior.Behavior {
                     }
                     return new R2(x, y);
                 }
+                else if (counter >= (self.getSensorRange()/(self.getTopSpeed()*.1)+(.5*Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)) && counter < ((self.getSensorRange()/(self.getTopSpeed()*.1))+(self.getSensorRange()/(self.getTopSpeed()*.1)+(.5*Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1)))){
+                    if (self.toString().equals("Agent 1")) {
+                        x = 0;
+                        y = self.getSensorRange();
+                    } else if (self.toString().equals("Agent 2")) {
+                        x = -self.getSensorRange();
+                        y = 0;
+                    } else if (self.toString().equals("Agent 3")) {
+                        x = 0;
+                        y = -self.getSensorRange();
+                    } else if (self.toString().equals("Agent 4")) {
+                        x = self.getSensorRange();
+                        y = 0;
+                    }
+                    return new R2(x, y);
+                }
                 
                 
                 
