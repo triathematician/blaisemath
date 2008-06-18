@@ -12,7 +12,7 @@ import scio.coordinate.V2;
 /**
  * @author Elisha Peterson<br><br>
  * 
- * Behavior moving directly towards the origin to look for targets when they aren't present..
+ * Behavior moving directly towards the origin and then circling, searching for targets
  */
 public class OriginConverge extends behavior.Behavior { 
     double start = 0.0;
@@ -21,15 +21,18 @@ public class OriginConverge extends behavior.Behavior {
         double x = 0.0;
         double y = 0.0;
         if (target == null){
-        if((self.loc) == (0,0)){
-            start++;           
+        if (self.loc.magnitude() < 1) {
+            start++;        
+        }   
+        if (start == 0.0){
+            
+                return R2.ORIGIN.minus(self.loc);
+            
         }
         
-        if (start =0.0) {
-             return (target.plus(target.v.multipliedBy(self.getLeadFactor() * self.loc.distance(target) / self.getTopSpeed()))).minus(self.loc).normalized();
-        }
-        else if(start>0){
+        if(start>0){
             counter++;
+        }
             if (counter >= 0 && counter <= ((Math.PI * self.getSensorRange()) / (self.getTopSpeed() * .1))) {
                 x = (.5 * self.getSensorRange()) * Math.sin((counter * self.getTopSpeed() * .1) / (.5 * self.getSensorRange()));
 
@@ -60,15 +63,15 @@ public class OriginConverge extends behavior.Behavior {
                 y = 4 * self.getSensorRange() * Math.cos((counter * self.getTopSpeed() * .1) / (4 * self.getSensorRange()) + Math.PI);
 
                 return new R2(x, y);
-
-
-            } else {
-                start = 0.0;
-                counter = 0.0;
+            } 
+            else{
+                counter =0.0;
+                return R2.ORIGIN;
+                
             }
+            
         }
-        start = 0.0;
-        counter = 0.0;
+      
         if (target.v.magnitude() == 0) {
             if (self.loc.distance(target) <= .5 * self.getSensorRange()) {
                 return new R2(0, 0);
@@ -76,12 +79,13 @@ public class OriginConverge extends behavior.Behavior {
             return target.minus(self.loc).normalized();
         } else {
             counter = 0.0;
-
+            start = 0.0; 
             return (target.plus(target.v.multipliedBy(self.getLeadFactor() * self.loc.distance(target) / self.getTopSpeed()))).minus(self.loc).normalized();
         }
         }
-           start = 0.0;     
-        if(target==null){return new R2();}
-        return target.minus(self.loc).normalized();
-    }
+           
+                
+      
+}
+
 
