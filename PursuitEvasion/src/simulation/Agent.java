@@ -317,7 +317,7 @@ public class Agent {
             add(new SettingsProperty("Sensor Range",sensorRange,Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Comm Range",commRange,Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Behavior",behavior,Settings.EDIT_COMBO));
-            add(new SettingsProperty("Lead Factor",leadFactor,Settings.NO_EDIT));
+            add(new SettingsProperty("Lead Factor",leadFactor,Settings.EDIT_DOUBLE_SLIDER));
             add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
             add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
         }
@@ -326,15 +326,10 @@ public class Agent {
         public void stateChanged(ChangeEvent e){
             if(e.getSource()==behavior){
                 myBehavior=Behavior.getBehavior(behavior.getValue());
-                if(behavior.getValue()==Behavior.LEADING){
-                    setPropertyEditor("Lead Factor",Settings.EDIT_DOUBLE_SLIDER);
-                    setPropertyEditor("Position(t)",Settings.NO_EDIT);
-                }else if(behavior.getValue()==Behavior.APPROACHPATH){
+                if(behavior.getValue()==Behavior.APPROACHPATH){
                     setPropertyEditor("Position(t)",Settings.EDIT_PARAMETRIC);
-                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
                 }else{
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
-                    setPropertyEditor("Lead Factor",Settings.NO_EDIT);
                 }
                 fireActionPerformed("agentBehaviorChange");
             }

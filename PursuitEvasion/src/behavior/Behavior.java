@@ -32,7 +32,7 @@ public abstract class Behavior {
     public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Large Circle Search","Small Circle Search","Approach Path","Random Path"};
 
     public static StringRangeModel getComboBoxModel(){
-        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,6);
+        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,7);
     }
     
 // CONSTRUCTORS    
