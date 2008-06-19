@@ -27,13 +27,14 @@ public abstract class Behavior {
     public static final int LEADING=3;
     public static final int LARGECIRCLESEARCH=4;
     public static final int SMALLCIRCLESEARCH=5;
-    public static final int ORIGINCONVERGE=6;
-    public static final int APPROACHPATH=7;
-    public static final int RANDOMPATH=8;
-    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Large Circle Search","Small Circle Search", "Origin Converge","Approach Path","Random Path"};
+    public static final int QUADRANTSEARCHLARGE=6;
+    public static final int QUADRANTSEARCHSMALL=7;
+    public static final int APPROACHPATH=8;
+    public static final int RANDOMPATH=9;
+    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Large Circle Search","Small Circle Search", "Quadrant Search Large", "Quadrant Search Small","Approach Path","Random Path"};
 
     public static StringRangeModel getComboBoxModel(){
-        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,8);
+        return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,9);
     }
     
 // CONSTRUCTORS    
@@ -49,7 +50,8 @@ public abstract class Behavior {
         case LEADING:                   return new behavior.Leading();
         case LARGECIRCLESEARCH:         return new behavior.LargeCircleSearch();
         case SMALLCIRCLESEARCH:         return new behavior.SmallCircleSearch();
-        case ORIGINCONVERGE:            return new behavior.OriginConverge();
+        case QUADRANTSEARCHLARGE:       return new behavior.QuadrantSearchLarge();
+        case QUADRANTSEARCHSMALL:       return new behavior.QuadrantSearchSmall();
         case APPROACHPATH:              return new behavior.ApproachPath();
         case RANDOMPATH:                return new behavior.RandomPath();
         }     

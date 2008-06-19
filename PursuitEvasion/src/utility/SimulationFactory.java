@@ -184,7 +184,7 @@ public class SimulationFactory {
         // Teams
         Vector<Team> teams = new Vector<Team>();
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team lionTeam = new Team("Lions", 4, Team.START_RANDOM, Behavior.LARGECIRCLESEARCH, Color.ORANGE);
+        Team lionTeam = new Team("Lions", 4, Team.START_RANDOM, Behavior.QUADRANTSEARCHSMALL, Color.ORANGE);
         lionTeam.setTopSpeed(6.5);
         Team wildebeastTeam = new Team("Wildebeast", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
         Team wateringHole = new Team("Water", 1, Team.START_RANDOM, Behavior.STATIONARY, Color.BLUE);
