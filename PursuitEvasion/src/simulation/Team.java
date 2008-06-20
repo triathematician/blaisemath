@@ -266,6 +266,9 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
             case START_SPECIFIC:
                 StartingPositionsFactory.startSpecific(this, positions);
                 break;
+            case START_FOOTBALL:
+                StartingPositionsFactory.startFootball(this, positions);
+                break;
             default:
                 StartingPositionsFactory.startZero(this);
                 break;
@@ -605,9 +608,10 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     public static final int START_CIRCLE = 3;
     public static final int START_ARC = 4;
     public static final int START_SPECIFIC = 5;
+    public static final int START_FOOTBALL = 6;
     
     /** String with labels for initial conditions. */
-    public static final String[] START_STRINGS = {"All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc", "Specific Locations"};
+    public static final String[] START_STRINGS = {"All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc", "Specific Locations", "Football Locations"};
     
     // SUBCLASSES
     /** Encapsulates a group of agents. */

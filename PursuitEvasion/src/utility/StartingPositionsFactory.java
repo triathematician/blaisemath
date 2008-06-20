@@ -9,6 +9,8 @@ import java.util.Vector;
 import scio.coordinate.R2;
 import scio.random.Random2D;
 import simulation.Agent;
+import simulation.Team;
+import simulation.Team;
 
 /**
  *
@@ -87,10 +89,54 @@ public class StartingPositionsFactory {
             }
         }
     }
-    
+        
     /** Example utilizing the above specific starting locations. */
     public static void startSpecificTest(Vector<Agent> team) {
         R2[] starts = { new R2(-30,10), new R2(-20,10), new R2(-10,10), new R2(0,10), new R2(10,10), new R2(20,10), new R2(30,10) };
         startSpecific(team, starts);
     }
+    
+    public static void startFootball(Vector<Agent> team, R2[] locations){
+        double x;
+        double y;
+        double ymax = 0.0;
+        double xmax = 0.0;
+        x= xmax/team.size();
+        y= ymax/team.size() ;  
+      
+   
+         
+//        //leftSideline
+//         for( int i =0; i<team.size();){  
+//            if (team.toString()= "leftSideline"){
+//             R2[] starts = { new R2(i*x, ymax)};
+//             i++;            
+//             }  
+//        //rightSideline
+//             else if (team.toString()="rightSideline"){ 
+//             R2[] starts = { new R2(i*x, -1*ymax)};
+//             i++;
+//             }
+//        //endzone
+//             else if (team.toString()="endzone"){
+//             R2[] starts = { new R2(-1*xmax, ymax- i*y)};
+//              i++;
+//             }
+//           
+//        //offense
+//             else if(team.toString() = "offense"){
+//             R2[] starts = { new R2(-1*xmax + .25*xmax, ymax - i*y)};
+//             i++;
+//             }
+//        
+//        //defense
+//             else if(team.toString() = "defense"){  
+//             R2[] starts = { new R2(-1*xmax + .75*xmax, ymax - i*y)};
+//             i++;
+//             }
+//             
+//    }
+      
+  }
 }
+    
