@@ -275,21 +275,19 @@ public class SimulationFactory {
          //teams, offense is evading
          Vector<Team> teams = new Vector<Team>();
           //                             ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )    
-         Team leftSideline = new Team("Left Sideline", 4, Team.START_FOOTBALL, Behavior.STATIONARY, Color.RED);
-         Team rightSideline = new Team("Right Sideline", 4, Team.START_FOOTBALL, Behavior.STATIONARY, Color.RED);
-         Team endzone = new Team("Endzone", 4, Team.START_FOOTBALL, Behavior.STATIONARY, Color.GREEN);
-         Team offense = new Team("Offense", 4, Team.START_FOOTBALL, Behavior.STRAIGHT, Color.BLACK);
-         Team defense = new Team("Defense", 4, Team.START_FOOTBALL, Behavior.LEADING, Color.YELLOW);
-         teams.add(leftSideline);
+         Team leftSideline = new Team("Left Sideline", 10, Team.START_LEFTSIDELINE, Behavior.STATIONARY, Color.RED);
+         Team rightSideline = new Team("Right Sideline", 10, Team.START_RIGHTSIDELINE, Behavior.STATIONARY, Color.RED);
+         Team endzone = new Team("Endzone", 9, Team.START_ENDZONE, Behavior.STATIONARY, Color.GREEN);
+         Team offense = new Team("Offense", 6, Team.START_OFFENSE, Behavior.STRAIGHT, Color.BLACK);
+         Team defense = new Team("Defense", 6, Team.START_DEFENSE, Behavior.LEADING, Color.YELLOW);
          teams.add(rightSideline);
+         teams.add(leftSideline);
          teams.add(endzone);
          teams.add(offense);
          teams.add(defense);
         
          // Capture Conditions
         //                      ( TEAMS , OPPONENT , CAPTURE RANGE , WHAT HAPPENS UPON CAPTURE ) 
-        leftSideline.addCaptureCondition(teams, offense, 1.0, CaptureCondition.REMOVETARGET);
-        rightSideline.addCaptureCondition(teams, offense, 1.0, CaptureCondition.REMOVETARGET);
         offense.addCaptureCondition(teams, endzone, 1.0, CaptureCondition.REMOVEAGENT);
         defense.addCaptureCondition(teams, offense, 1.0, CaptureCondition.REMOVEBOTH);
         
@@ -303,13 +301,12 @@ public class SimulationFactory {
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
-        offense.addAutoGoal(1.0, teams, leftSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        offense.addAutoGoal(.01, teams, rightSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        offense.addAutoGoal(0.5, teams, endzone, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
+        offense.addAutoGoal(.2, teams, rightSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
+        offense.addAutoGoal(.2, teams, leftSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
+        offense.addAutoGoal(.7, teams, defense, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
+        offense.addAutoGoal(0.7, teams, endzone, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
         defense.addAutoGoal(1.0, teams, offense, Goal.CAPTURE, TaskGenerator.CONTROL_OPTIMAL, 1.0);
-        rightSideline.addAutoGoal(1.0, teams, offense, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 0.0);
-        leftSideline.addAutoGoal(.01, teams, offense, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 0.0);
-        
+            
         return teams;
     }
 
