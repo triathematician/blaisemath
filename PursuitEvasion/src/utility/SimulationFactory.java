@@ -275,13 +275,11 @@ public class SimulationFactory {
          //teams, offense is evading
          Vector<Team> teams = new Vector<Team>();
           //                             ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )    
-         Team leftSideline = new Team("Left Sideline", 10, Team.START_LEFTSIDELINE, Behavior.STATIONARY, Color.RED);
-         Team rightSideline = new Team("Right Sideline", 10, Team.START_RIGHTSIDELINE, Behavior.STATIONARY, Color.RED);
+         Team sideline = new Team("Sidelines", 20, Team.START_SIDELINE, Behavior.STATIONARY, Color.RED);
          Team endzone = new Team("Endzone", 9, Team.START_ENDZONE, Behavior.STATIONARY, Color.GREEN);
-         Team offense = new Team("Offense", 6, Team.START_OFFENSE, Behavior.STRAIGHT, Color.BLACK);
-         Team defense = new Team("Defense", 6, Team.START_DEFENSE, Behavior.LEADING, Color.YELLOW);
-         teams.add(rightSideline);
-         teams.add(leftSideline);
+         Team offense = new Team("Army", 6, Team.START_OFFENSE, Behavior.STRAIGHT, Color.BLACK);
+         Team defense = new Team("Navy", 6, Team.START_DEFENSE, Behavior.LEADING, Color.blue);
+         teams.add(sideline);
          teams.add(endzone);
          teams.add(offense);
          teams.add(defense);
@@ -301,10 +299,9 @@ public class SimulationFactory {
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
-        offense.addAutoGoal(.2, teams, rightSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        offense.addAutoGoal(.2, teams, leftSideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
+        offense.addAutoGoal(.3, teams, sideline, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
         offense.addAutoGoal(.7, teams, defense, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1.0);
-        offense.addAutoGoal(0.7, teams, endzone, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
+        offense.addAutoGoal(1.0, teams, endzone, Goal.CAPTURE, TaskGenerator.CONTROL_CLOSEST, 1.0);
         defense.addAutoGoal(1.0, teams, offense, Goal.CAPTURE, TaskGenerator.CONTROL_OPTIMAL, 1.0);
             
         return teams;

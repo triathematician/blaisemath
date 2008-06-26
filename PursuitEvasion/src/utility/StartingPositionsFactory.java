@@ -97,21 +97,13 @@ public class StartingPositionsFactory {
     }
 
 
-    public static void startLeftSideline(Vector<Agent> team, R2[] locations) {
+    public static void startSideline(Vector<Agent> team, R2[] locations) {
              for (int i = 0; i < team.size();) {
-             team.get(i).setInitialPosition(-45+10*i, 100);
+             team.get(i).setInitialPosition(-45+5*i, (Math.pow(-1, i))*50+50);
              i++;
            }
     }
    
-    public static void startRightSideline(Vector<Agent> team, R2[] locations) {
-             for (int i = 0; i < team.size();) {
-             team.get(i).setInitialPosition(-45+10*i, 0);
-             i++;
-           }
-    }
-
-
     public static void startEndzone(Vector<Agent> team, R2[] locations) {
            for (int i = 0; i < team.size();) {
            team.get(i).setInitialPosition(-50, 10+i*10);
