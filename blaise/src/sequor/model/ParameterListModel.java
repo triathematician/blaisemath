@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlRootElement;
 import sequor.Settings;
 import sequor.component.SettingsPanel;
 
@@ -27,6 +28,7 @@ import sequor.component.SettingsPanel;
  * 
  * @author ae3263
  */
+@XmlRootElement(name="parameterList")
 public class ParameterListModel extends FiresChangeEvents implements ChangeListener {
     TreeMap<String,DoubleRangeModel> values;
     boolean added=false;

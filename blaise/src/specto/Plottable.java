@@ -37,10 +37,16 @@ import specto.euclidean2.Point2D;
 public abstract class Plottable<V extends Visometry> implements ChangeListener {
     public Plottable() {initStyle();}
 
-
-    public void recompute(){}
+    /** Used when the function must be recomputed, typically within paintComponent. */
+    public void recompute(V v){}
+    /** Called when the plottable is redrawn. */
     public void redraw(){fireStateChanged();}
+    /** When the state is changed, should redraw this plottable. */
     public void stateChanged(ChangeEvent e){if(e.getSource().equals(this)){return;}changeEvent=e;redraw();}
+    /** Method that paints the plottable. Uses either already-stored values computed by "recompute" or computes
+     * new values if necessary.
+     * @param g the graphics object
+     * @param v the visometry */
     public abstract void paintComponent(Graphics2D g,V v);           
     
     

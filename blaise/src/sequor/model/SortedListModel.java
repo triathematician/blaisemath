@@ -8,15 +8,18 @@ package sequor.model;
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.xml.bind.annotation.XmlRootElement;
 import sequor.FiresChangeEvents;
 
 /**
  * Maintains a sorted list of elements.
  * @author Elisha Peterson
  */
+@XmlRootElement(name="sortedListModel")
 public class SortedListModel<O> extends FiresChangeEvents {
     public TreeSet<O> list;
     
+    public SortedListModel(){super();}
     public SortedListModel(Set<O> objects){setList(objects);}
     
     

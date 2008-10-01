@@ -8,6 +8,7 @@ package sequor.model;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This class maintains a subset of a collection of elements. This can be done as an extension of the
@@ -15,11 +16,16 @@ import java.util.HashSet;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="subsetModel")
 public class SubsetModel<V> extends BooleanModelGroup {
     
     /** Stores selection values of each element in the underlying set. */
     HashMap<V,BooleanModel> modelMap;
 
+    public SubsetModel(){
+        super();
+    }
+    
     /** Default constructor
      * @param set a collection of objects representing the complete set to choose from
      */

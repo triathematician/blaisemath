@@ -11,9 +11,7 @@
 package specto;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.image.ColorModel;
 import java.util.Collection;
 import java.util.Vector;
 import javax.swing.JMenu;
@@ -22,6 +20,7 @@ import javax.swing.event.ChangeListener;
 import sequor.component.RangeTimer;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
+import specto.euclidean2.Euclidean2;
 
 /**
  *
@@ -69,17 +68,17 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     public void setName(String name) { this.name = name; }
     
     
-    public void recompute(boolean recomputeAll){
+    public void recompute(V v,boolean recomputeAll){
         if(recomputeAll){
-            recompute();
+            recompute(v);
         }else{
             for(Plottable p:plottables){
-                if(p instanceof Animatable){p.recompute();}
+                if(p instanceof Animatable){p.recompute(v);}
             }
         }
     }
     @Override
-    public void recompute() {for (Plottable p:plottables){p.recompute();}}
+    public void recompute(V v) {for (Plottable p:plottables){p.recompute(v);}}
     @Override
     public void paintComponent(Graphics2D g,V v) {
         for (Plottable p:plottables){

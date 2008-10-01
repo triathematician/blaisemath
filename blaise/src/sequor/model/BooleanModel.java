@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JCheckBox;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import sequor.FiresChangeEvents;
 
 /**
@@ -16,9 +18,12 @@ import sequor.FiresChangeEvents;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="boolean")
 public class BooleanModel extends FiresChangeEvents {
+    @XmlAttribute
     Boolean value;
     
+    public BooleanModel(){this(false);}    
     public BooleanModel(boolean value){
         this.value=value;
     }

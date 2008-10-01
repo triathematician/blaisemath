@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import sequor.Settings;
+import sequor.SettingsFactory;
 import sequor.SettingsProperty;
 
 /**
@@ -23,11 +24,13 @@ public class SettingsBar extends JToolBar {
     
     public SettingsBar(){
         s=new Settings();
+        setOrientation(VERTICAL);
         s.addDefaultItems();
         updateBar();
     }
     public SettingsBar(Settings s){
         this.s=s;
+        setOrientation(VERTICAL);
         updateBar();
     }
     
@@ -45,7 +48,7 @@ public class SettingsBar extends JToolBar {
                 continue;
             }
             JLabel label=new JLabel(sp.getName());
-            JComponent component = Settings.getComponent(sp);
+            JComponent component = SettingsFactory.getEditor(sp);
             if(component!=null){
                 label.setToolTipText(sp.getTooltipText());
                 component.setToolTipText(sp.getTooltipText());

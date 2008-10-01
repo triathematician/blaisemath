@@ -3,6 +3,7 @@ import sequor.FiresChangeEvents;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.xml.bind.annotation.XmlRootElement;
 import scio.coordinate.R2;
 
 /**
@@ -14,6 +15,7 @@ import scio.coordinate.R2;
  *   within a GUI. It is intended for this class to be used to store the actual
  *   data, and for the GUI modifiers to reference this class in order to change.
  */
+@XmlRootElement(name="pointRangeModel")
 public class PointRangeModel extends FiresChangeEvents implements ChangeListener{
     public DoubleRangeModel xModel,yModel;
     

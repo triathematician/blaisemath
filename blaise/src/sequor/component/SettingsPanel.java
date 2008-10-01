@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SpringLayout;
 import sequor.Settings;
+import sequor.SettingsFactory;
 import sequor.SettingsProperty;
 
 /**
@@ -83,7 +84,7 @@ public class SettingsPanel extends JPanel {
                 JLabel label=new JLabel(sp.getName());
                 label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
                 label.setInheritsPopupMenu(true);
-                JComponent component = Settings.getComponent(sp);
+                JComponent component = SettingsFactory.getEditor(sp);
                 if(component!=null){
                     label.setToolTipText(sp.getTooltipText());
                     component.setToolTipText(sp.getTooltipText());

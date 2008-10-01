@@ -10,12 +10,15 @@ import java.text.NumberFormat;
 import sequor.FiresChangeEvents;
 import java.util.Vector;
 import javax.swing.event.ChangeEvent;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Abstract class for models which have the ability to increment their value and get/set the number of steps. These should eventually be compatible with
  * the RangeTimer method.
  * @author Elisha Peterson
  */
+@XmlRootElement(name="boundedRangeModel")
 public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEvents {    
     
     // VALUES
@@ -28,21 +31,34 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     
     // BASIC CONSTRUCTOR
     
+    public BoundedRangeModel(){this(null,null,null,null);}
     public BoundedRangeModel(N value,N minimum,N maximum,N step){setRangeProperties(value,minimum,maximum,step);}
     
     
-    // PRIMARY GETTERS AND SETTERS
+    // BEAN PATTERNS
     
-    public N getMaximum(){return maximum;}
-    public N getValue(){return value;}
-    public N getMinimum(){return minimum;}
-    public N getStep(){return step;}
-    
-    public void setMaximum(N maximum){setRangeProperties(value,minimum,maximum,step);}
-    public void setValue(N value){setRangeProperties(value,minimum,maximum,step);}
+    @XmlTransient
     public void setMinimum(N minimum){setRangeProperties(value,minimum,maximum,step);}
+    public N getMinimum(){return minimum;}
+    
+    @XmlTransient
+    public N getMaximum(){return maximum;}
+    public void setMaximum(N maximum){setRangeProperties(value,minimum,maximum,step);}
+    
+    @XmlTransient
+    public N getValue(){return value;}
+    public void setValue(N value){setRangeProperties(value,minimum,maximum,step);}
+    
+    @XmlTransient
+    public N getStep(){return step;}    
     public abstract boolean setStep(N step);   
     
+    @XmlTransient
+    /** Returns how far along the range of values the current value is, as a number between 0 and 1. */
+    public double getValuePercent(){
+        return getStepNumber()/(double)getNumSteps();
+    }
+    public abstract void setValuePercent(double percent);
     
     // MODEL GENERATION FOR MAX/MIN
     
@@ -76,7 +92,6 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     public abstract void setNumSteps(int numSteps,boolean inclusive);
     public boolean increment(boolean loop){return increment(loop,1);}
     public abstract boolean increment(boolean loop,int n);
-    public abstract void setValuePercent(double percent);
     public abstract void doubleStep();
     public abstract void halfStep();
     
@@ -89,10 +104,6 @@ public abstract class BoundedRangeModel<N extends Number> extends FiresChangeEve
     /** Returns closest percent to the specified percent. */
     public double closestPercent(double percent){
         return ((int)Math.round(percent*getNumSteps()))/(double)getNumSteps();
-    }
-    /** Returns how far along the range of values the current value is, as a number between 0 and 1. */
-    public double getValuePercent(){
-        return getStepNumber()/(double)getNumSteps();
     }
 
     /* Gets at the range of values contained in this data model.

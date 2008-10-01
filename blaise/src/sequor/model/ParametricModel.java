@@ -14,6 +14,8 @@ import sequor.FiresChangeEvents;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.FunctionTreeFactory;
@@ -26,10 +28,14 @@ import scio.function.BoundedFunction;
  * <br><br>
  * @author Elisha Peterson
  */
+@XmlRootElement(name="parametricFunction")
 public class ParametricModel extends FiresChangeEvents implements ActionListener{
     FunctionTreeRoot fx,fy;
     private String sx="cos(t)";
     private String sy="sin(t)";
+    
+    // CONSTRUCTORS
+    
     public ParametricModel(){
         try {
             fx = (FunctionTreeRoot) FunctionTreeFactory.getFunction(sx);
@@ -41,23 +47,31 @@ public class ParametricModel extends FiresChangeEvents implements ActionListener
         setXString(sx);
         setYString(sy);
     }
-    public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
+    
+    // BEAN PATTERNS
+    
+    @XmlAttribute
+    public String getXString(){return sx;}
     public void setXString(String s){
         try {
             fx=(FunctionTreeRoot) FunctionTreeFactory.getFunction(s);
             sx=s;
         } catch (FunctionSyntaxException ex){}
     }
+    
+    @XmlAttribute
+    public String getYString(){return sy;}
     public void setYString(String s){
         try {
             fy=(FunctionTreeRoot) FunctionTreeFactory.getFunction(s);
             sy=s;
         } catch (FunctionSyntaxException ex){}
     }
+    
+    public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
+    
     public FunctionTreeRoot getTreeX(){return fx;}
     public FunctionTreeRoot getTreeY(){return fy;}
-    public String getStringX(){return sx;}
-    public String getStringY(){return sy;}
     public R2 getValue(double t) throws FunctionValueException{return new R2(fx.getValue(t),fy.getValue(t));}
     public BoundedFunction<Double,R2> getFunction(){
         return new BoundedFunction<Double,R2>(){

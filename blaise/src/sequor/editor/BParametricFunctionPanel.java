@@ -33,8 +33,8 @@ public class BParametricFunctionPanel extends JPanel{
     public BParametricFunctionPanel(ParametricModel pm){
         fx=new FunctionTextField(new FunctionTreeModel(pm.getTreeX()));
         fy=new FunctionTextField(new FunctionTreeModel(pm.getTreeY()));
-        fx.setText(pm.getStringX());
-        fy.setText(pm.getStringY());
+        fx.setText(pm.getXString());
+        fy.setText(pm.getYString());
         add(new JLabel("x(t)="));
         add(fx);
         add(new JLabel("y(t)="));

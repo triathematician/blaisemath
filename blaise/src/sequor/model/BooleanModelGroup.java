@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Vector;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlRootElement;
 import sequor.FiresChangeEvents;
 
 /**
@@ -16,6 +17,7 @@ import sequor.FiresChangeEvents;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="booleanGroup")
 public class BooleanModelGroup extends FiresChangeEvents implements ChangeListener {
     
     Vector<BooleanModel> models;

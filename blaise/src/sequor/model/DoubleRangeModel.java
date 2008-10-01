@@ -4,6 +4,9 @@ import sequor.FiresChangeEvents;
 import java.util.Vector;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * <b>DoubleRangeModel.java</b><br>
@@ -14,6 +17,7 @@ import javax.swing.event.ChangeListener;
  * Java website), this class stores its value as a double, rather than an int.
  **/
 
+@XmlRootElement(name="doubleRangeModel")
 public class DoubleRangeModel extends BoundedRangeModel<Double> {
     
     /** Default initializer. */
@@ -33,7 +37,20 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     public DoubleRangeModel(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
     
     
-    // GETTERS & SETTERS
+    // BEAN PATTERNS
+    
+    @XmlAttribute @Override
+    public Double getMaximum() {return super.getMaximum();}
+
+    @XmlAttribute @Override
+    public Double getMinimum() {return super.getMinimum();}
+
+    @XmlAttribute @Override
+    public Double getStep() {return super.getStep();}
+
+    @XmlAttribute
+    public Double getDValue() {return super.getValue();}
+    public void setDValue(Double d) {super.setValue(d);}
     
     @Override
     public boolean setStep(Double step){
@@ -58,6 +75,7 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     public void setValue(String s) {setValue(Double.valueOf(s));}
     /** Sets value as a percentage of length. */
     @Override
+    @XmlTransient
     public void setValuePercent(double percent){
         setValue(minimum+percent*(maximum-minimum));
     }

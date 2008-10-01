@@ -7,7 +7,6 @@
 package sequor;
 
 import sequor.component.*;
-import sequor.component.SettingsTable;
 
 /**
  *

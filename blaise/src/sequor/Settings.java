@@ -4,38 +4,25 @@
  */
 package sequor;
 
-import sequor.editor.FunctionTextComboBox;
-import sequor.editor.BParametricFunctionPanel;
 import sequor.component.*;
-import sequor.SettingsProperty;
-import sequor.FiresChangeEvents;
-import sequor.editor.SpinnerIntegerEditor;
-import sequor.editor.SpinnerDoubleEditor;
-import sequor.editor.SliderIntegerEditor;
-import sequor.editor.ParameterEditor;
-import sequor.editor.ColorEditor;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Vector;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
 import sequor.model.*;
 
 /**
@@ -86,6 +73,7 @@ import sequor.model.*;
  * </p>
  * @author Elisha Peterson
  */
+@XmlRootElement
 public class Settings extends Vector<SettingsProperty> implements ChangeListener, PropertyChangeListener {
 
     // PROPERTIES
@@ -97,7 +85,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     /** Parent classes. */
     private Vector<Settings> parents;
     /** Child classes. */
-    private Vector<Settings> children;
+    @XmlElement private Vector<Settings> children;
     
     // CONSTANTS
     
@@ -153,14 +141,49 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     
     // BEAN PATTERNS
+    
     @Override
     public String toString() {return name;}
+    
+    @XmlAttribute
+    public String getName() {return name;}
     public void setName(String name) {this.name = name;}
+    
     public Vector<Settings> getChildren(){return children;}
     public void removeChild(Settings s){children.remove(s);}
+    
     public Color getColor(){return Color.BLACK;}
+    
+    @XmlAttribute
     public Integer getInheriting(){return inheriting;}
     public void setInheriting(Integer inheriting){this.inheriting = inheriting;}
+    
+    /** Returns the total number of rows required to display the setting. */
+    public int getNumRows(){
+        int result = 0;
+        for(SettingsProperty sp : this) {
+            result += sp.getNumRows();
+        }
+        return result;
+    }
+    /** Returns the total number of rows, excluding separators. */
+    public int getNumDataRows(){
+        int result = 0;
+        for(SettingsProperty sp : this) {
+            if (sp.getEditorType() == EDIT_SEPARATOR) { continue; }
+            result += sp.getNumRows();
+        }
+        return result;
+    }
+    
+    /** Returns list of properties. */
+    @XmlElement(name="property")
+    public Vector<SettingsProperty> getProperties(){ return (Vector<SettingsProperty>)this; }
+    public void setProperties(Vector<SettingsProperty> sps){
+        for(SettingsProperty sp:this){remove(sp);}
+        for(SettingsProperty sp:sps){add(sp);}
+    }
+    
     
     // METHODS FOR ADDING PROPERTIES    
     
@@ -293,35 +316,6 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     
     // GUI METHODS
-    
-    /** Gets component corresponding to a particular SettingsProperty. */
-    public static JComponent getComponent(SettingsProperty sp){
-        switch(sp.getEditorType()){
-            case EDIT_BOOLEAN:
-                return ((BooleanModel) sp.getModel()).getCheckBox();
-            case EDIT_COLOR:
-                return new ColorEditor((ColorModel) sp.getModel()).getButton();
-            case EDIT_COMBO:
-                return ((StringRangeModel) sp.getModel()).getComboBox();
-            case EDIT_DOUBLE:
-                return getSpinner((DoubleRangeModel)sp.getModel());
-            case EDIT_DOUBLE_SLIDER:
-                return new DoubleSlider((DoubleRangeModel)sp.getModel());
-            case EDIT_FUNCTION:
-                return new FunctionTextComboBox((FunctionTreeModel)sp.getModel());
-            case EDIT_INTEGER:
-                return getSpinner((IntegerRangeModel)sp.getModel());
-            case EDIT_INTEGER_SLIDER:
-                return getSlider((IntegerRangeModel) sp.getModel());
-            case EDIT_PARAMETER:
-                return new ParameterEditor((ParameterListModel)sp.getModel()).getButton();
-            case EDIT_PARAMETRIC:
-                return new BParametricFunctionPanel((ParametricModel) sp.getModel());
-            case EDIT_STRING:
-                return new JTextField();
-        }     
-        return null;
-    }
 
     /** Generates a JPanel with the Settings and IRM/DRM displayed as JSpinner's. */
     public JPanel getPanel(){return new SettingsPanel(this,SettingsPanel.DISPLAY_SPINNERS);}    
@@ -352,54 +346,6 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     
 
-    // GUI HANDLING SUPPORT
-
-    /** Generates a spinner given a range model and a step size. */
-    public static JSpinner getSpinner(DoubleRangeModel drm) {
-        JSpinner result = new JSpinner(new SpinnerDoubleEditor(drm));
-        //result.setMinimumSize(new Dimension(20, 20));
-        //result.setPreferredSize(new Dimension(50, 25));
-        //result.setMaximumSize(new Dimension(50, 25));
-        return result;
-    }
-
-    public static JSpinner getSpinner(IntegerRangeModel irm) {
-        JSpinner result = new JSpinner(new SpinnerIntegerEditor(irm));
-        //result.setMinimumSize(new Dimension(20, 20));
-        //result.setPreferredSize(new Dimension(50, 25));
-        //result.setMaximumSize(new Dimension(50, 25));
-        return result;
-    }
-    
-    public static JSlider getSlider(IntegerRangeModel irm) {
-        JSlider result = new JSlider(new SliderIntegerEditor(irm));
-        result.setMajorTickSpacing(10);
-        result.setMinorTickSpacing(5);
-        result.setPaintTicks(true);
-        result.setPaintLabels(true);
-        //result.setMinimumSize(new Dimension(20, 20));
-        //result.setPreferredSize(new Dimension(100, 25));
-        //result.setMaximumSize(new Dimension(100, 25));
-        return result;
-    }
-    
-    public static JMenuItem getMenuItem(final String name,final ColorModel cm){
-        // TODO test this method; really not sure if it's going to work. 
-        final JMenuItem menuItem=new JMenuItem(name);
-        menuItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JColorChooser colorChooser=new JColorChooser();
-                if (name.equals(e.getActionCommand())){
-                    colorChooser.setColor(cm.getValue());
-                    JDialog dialog = JColorChooser.createDialog(menuItem,"Pick a Color",true,colorChooser,this,null);
-                    dialog.setVisible(true);
-                }else{
-                    cm.setValue(colorChooser.getColor());}
-                }
-        });
-        return menuItem;
-    }
     
     public void addDefaultItems(){
         addProperty("color",new ColorModel(Color.BLUE),Settings.EDIT_COLOR);

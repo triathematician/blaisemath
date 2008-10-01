@@ -145,6 +145,14 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         optionsMenu=new JMenu("Options");
         contextMenu.add(optionsMenu);
         contextMenu.add(new AddMenu(this));
+        JMenuItem mi=new JMenuItem("test XML output");
+        mi.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("\nGenerating XML Output...\n----\n\n");
+                System.out.println("\n----\nEnd of XML Output...\n\n");
+            }
+        });
+        contextMenu.add(mi);
         setComponentPopupMenu(contextMenu);        
     }
     
@@ -254,8 +262,8 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         Graphics2D g=(Graphics2D)gb;        
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         // Recompute any necessary elements before plotting
-        baseComponents.recompute(recomputeAll);
-        components.recompute(recomputeAll);
+        baseComponents.recompute(visometry,recomputeAll);
+        components.recompute(visometry,recomputeAll);
         if(timer!=null&&!timer.isStopped()){            
             baseComponents.paintComponent(g,visometry,timer);
             components.paintComponent(g,visometry,timer);

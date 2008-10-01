@@ -8,15 +8,18 @@ import javax.swing.event.ChangeEvent;
 import sequor.FiresChangeEvents;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Based on the source code for DefaultBoundedRangeModel 
  * @author Elisha Peterson
  */
 
+@XmlRootElement(name="integerRangeModel")
 public class IntegerRangeModel extends BoundedRangeModel<Integer> {
-    
-    
+        
     // CONSTRUCTORS
     
     public IntegerRangeModel(){super(0,-10,10,1);}
@@ -24,7 +27,20 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     public IntegerRangeModel(int newValue,int newMin,int newMax,int step){super(newValue,newMin,newMax,step);}
     
     
-    // GETTERS & SETTERS
+    // BEAN PATTERNS
+    
+    @XmlAttribute @Override
+    public Integer getMaximum() {return super.getMaximum();}
+
+    @XmlAttribute @Override
+    public Integer getMinimum() {return super.getMinimum();}
+
+    @XmlAttribute @Override
+    public Integer getStep() {return super.getStep();}
+
+    @XmlAttribute
+    public Integer getIValue() {return super.getValue();}
+    public void setIValue(Integer i) {super.setValue(i);}
     
     @Override
     public boolean setStep(Integer step){
@@ -43,10 +59,11 @@ public class IntegerRangeModel extends BoundedRangeModel<Integer> {
     public int getStepNumber() {
         return (int)((value-minimum)/(double)step);
     }
-    @Override
+    @XmlTransient
     public void setValue(String s) {setValue(Integer.valueOf(s));}
     /** Sets value as a percentage of length. */
     @Override
+    @XmlTransient
     public void setValuePercent(double percent){
         setValue((int)Math.round(minimum+percent*(maximum-minimum)));
     }

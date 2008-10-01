@@ -7,6 +7,8 @@ package sequor.model;
 
 import java.beans.PropertyChangeEvent;
 import java.util.TreeSet;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
 import scribo.tree.FunctionRoot;
@@ -19,10 +21,13 @@ import sequor.FiresChangeEvents;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="ultimateFunctionModel")
 public class UltimateFunctionModel extends FiresChangeEvents {
     FunctionRoot function;
     SortedListModel<String> variables;
     SortedListModel<String> parameters;
+    
+    public UltimateFunctionModel() throws FunctionSyntaxException {this("sin(x)");}
     
     public UltimateFunctionModel(String text) throws FunctionSyntaxException{
         function=new FunctionTreeRoot(text);
@@ -33,6 +38,7 @@ public class UltimateFunctionModel extends FiresChangeEvents {
     
     // BEAN PATTERNS
     
+    @XmlAttribute
     public void setFunction(String newFunction){
         try{
             function=new FunctionTreeRoot(newFunction);
@@ -41,8 +47,9 @@ public class UltimateFunctionModel extends FiresChangeEvents {
             fireStateChanged();
         }catch(FunctionSyntaxException e){}
     }
+    public String getFunction(){return function.toString();}
     
-    public Function getFunction(){return function.getFunction();}    
+    public Function getFunctionObject(){return function.getFunction();}    
     public TreeSet<String> getVariables(){return variables.getList();}
     public TreeSet<String> getParameters(){return parameters.getList();}
 

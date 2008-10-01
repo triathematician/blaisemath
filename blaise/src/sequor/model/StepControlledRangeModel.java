@@ -7,6 +7,7 @@ package sequor.model;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Uses "steps" to adjust the value of an underlying range model. By default has three settings for adjusting
@@ -14,9 +15,11 @@ import javax.swing.event.ChangeListener;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="stepControlledRangeModel")
 public class StepControlledRangeModel extends IntegerRangeModel {
     BoundedRangeModel parent;
     
+    public StepControlledRangeModel(){this(new DoubleRangeModel());}
     public StepControlledRangeModel(final BoundedRangeModel parent){
         super(0,-3,3,1);
         this.parent=parent;     

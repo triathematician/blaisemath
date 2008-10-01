@@ -9,6 +9,9 @@ import sequor.FiresChangeEvents;
 import java.beans.PropertyChangeEvent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import scio.function.BoundedFunction;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
@@ -21,6 +24,7 @@ import scribo.tree.FunctionTreeRoot;
  * 
  * @author Elisha Peterson
  */
+@XmlRootElement(name="function")
 public class FunctionTreeModel extends FiresChangeEvents implements ChangeListener {
     /** Stores the implemented function tree. */
     FunctionTreeRoot ftr;
@@ -38,8 +42,12 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     
     public boolean isValid(){return valid;}
     
+    @XmlTransient
     public FunctionTreeRoot getRoot(){return ftr;}
     public void setRoot(FunctionTreeRoot ftr){setValue(ftr.argumentString());}
+    
+    @XmlAttribute
+    public String getValue() { return toString(); }
     @Override
     public void setValue(String s) {
         try {

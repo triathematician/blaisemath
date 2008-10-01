@@ -18,20 +18,45 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JMenuItem;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * This class
  * <br><br>
  * @author Elisha Peterson
  */
+@XmlRootElement(name="color")
 public class ColorModel extends FiresChangeEvents {
     private Color c;
+    
+    // CONSTRUCTORS
     public ColorModel(){}
     public ColorModel(Color c){setValue(c);}
-    @Override
-    public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
+    
+    // BEAN PATTERNS
+    
+    @XmlTransient
     public Color getValue(){return c;}
     public void setValue(Color newValue){if(newValue!=c){c=newValue;fireStateChanged();}}
+
+    @Override
+    public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
+
+    @XmlAttribute
+    public int getRed(){return c.getRed();}
+    public void setRed(int red){setValue(new Color(red, getGreen(), getBlue(), getAlpha()));}
+    @XmlAttribute
+    public int getGreen(){return c.getGreen();}
+    public void setGreen(int green){setValue(new Color(getRed(), green, getBlue(), getAlpha()));}
+    @XmlAttribute
+    public int getBlue(){return c.getBlue();}
+    public void setBlue(int blue){setValue(new Color(getRed(), getGreen(), blue, getAlpha()));}
+    @XmlAttribute
+    public int getAlpha(){return c.getAlpha();}
+    public void setAlpha(int alpha){setValue(new Color(getRed(), getGreen(), getBlue(), alpha));}
+    
     @Override
     public String toLongString(){throw new UnsupportedOperationException("Not supported yet.");}
     @Override

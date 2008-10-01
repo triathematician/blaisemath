@@ -5,9 +5,17 @@
 
 package sequor.component;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import sequor.Settings;
+import sequor.SettingsFactory;
 import sequor.SettingsProperty;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
@@ -45,6 +53,18 @@ public class SettingsMenu extends JMenu {
     /** Places the settings on a given panel, and performs proper layout. */
     public void updateMenu(){     
         removeAll();   
+        JMenuItem mi2=new JMenuItem("Text XML Output...");
+        mi2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    JAXBContext jc = JAXBContext.newInstance(Settings.class);
+                    jc.createMarshaller().marshal(s,System.out);
+                } catch (JAXBException ex) {
+                    Logger.getLogger(SettingsMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }                
+            }
+        });
+        add(mi2);
         super.setText(s.toString());
         for(SettingsProperty sp:s){
             switch(sp.getEditorType()){
@@ -53,7 +73,7 @@ public class SettingsMenu extends JMenu {
                     break;
                 case Settings.EDIT_COLOR :
                     if (sp.getModel() instanceof ColorModel){
-                        add(Settings.getMenuItem(sp.getName(),(ColorModel)sp.getModel()));
+                        add(SettingsFactory.getMenuItem(sp.getName(),(ColorModel)sp.getModel()));
                     }
                     break;
                 default :

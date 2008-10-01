@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
@@ -23,6 +22,7 @@ import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.FiresChangeEvents;
+import sequor.SettingsFactory;
 import sequor.model.FunctionTreeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.editor.ParameterEditor;
@@ -187,9 +187,9 @@ public class SettingsTable extends JTable {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             if(model instanceof DoubleRangeModel){
-                return Settings.getSpinner((DoubleRangeModel)model);
+                return SettingsFactory.getSpinner((DoubleRangeModel)model);
             }else if(model instanceof IntegerRangeModel){
-                return Settings.getSpinner((IntegerRangeModel)model);
+                return SettingsFactory.getSlider((IntegerRangeModel)model);
             }
             return null;
         }
