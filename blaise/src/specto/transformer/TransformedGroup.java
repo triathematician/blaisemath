@@ -75,14 +75,14 @@ public class TransformedGroup <V1 extends Visometry, V2 extends Visometry> exten
     // COMPUTATIONS
     
     @Override
-    public void recompute(boolean recomputeAll){
-        super.recompute(recomputeAll);
-        transforming.recompute(recomputeAll);
+    public void recompute(V2 v2,boolean recomputeAll){
+        transforming.recompute(drawVisometry,recomputeAll);
+        super.recompute(v2,recomputeAll);
     }
     @Override
-    public void recompute() {
-        super.recompute();
-        transforming.recompute();
+    public void recompute(V2 v2) {
+        super.recompute(v2);
+        transforming.recompute(drawVisometry);
     }
     
     
