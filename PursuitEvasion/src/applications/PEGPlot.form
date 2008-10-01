@@ -474,7 +474,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="Settings.getSpinner(numBatchRunsModel)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="SettingsFactory.getSpinner(numBatchRunsModel)"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="cooperationButton">

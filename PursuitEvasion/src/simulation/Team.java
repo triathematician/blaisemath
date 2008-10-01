@@ -607,7 +607,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
 
     public void copyPathtoTeam() {
         for (Agent a : this) {
-            a.setFixedPath(tes.pm.getStringX(), tes.pm.getStringY());
+            a.setFixedPath(tes.pm.getXString(), tes.pm.getYString());
         }
     }
     

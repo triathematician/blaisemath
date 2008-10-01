@@ -25,13 +25,16 @@ import scio.function.BoundedFunction;
  */
 public class Statistics extends FiresChangeEvents {
     
-    /** Basic simulation. */
+    /** Stores metrics given the standard simulation. */
     HashMap<Valuation,Vector<Double>> fullMetrics;
-    /** Simulation evaluated by subset of players. */
+    /** Stores metrics as perceived by chosen subset of players. */
     HashMap<Valuation,Vector<Double>> subsetMetrics;
-    /** For simulation restricted to a few players. */
+    /** Stores metrics of the game when a subset of players participates. */
     HashMap<Valuation,Vector<Double>> partialMetrics;
-
+    
+    /** Stores starting values of teams for each run. */
+    HashMap<Team,Vector<Vector<R2>>> startingLoc;
+    
     public Statistics() {}
     
 //    /** Returns PlaneFunction2D corresponding to the above value function. */
@@ -41,20 +44,35 @@ public class Statistics extends FiresChangeEvents {
     
     
     /** Resets the statistical data with a given collection of valuations, and a given size. */
-    public void reset(Collection<Valuation> vals,int n){
+    public void reset(Collection<Valuation> vals,Collection<Team> teams,int n){
         fullMetrics = new HashMap<Valuation,Vector<Double>>();
         subsetMetrics = new HashMap<Valuation,Vector<Double>>();
         partialMetrics = new HashMap<Valuation,Vector<Double>>();
+        startingLoc = new HashMap<Team,Vector<Vector<R2>>>();
         for(Valuation v:vals) {
             fullMetrics.put(v, new Vector<Double>(n));
             subsetMetrics.put(v, new Vector<Double>(n));
             partialMetrics.put(v, new Vector<Double>(n));
         }
+        for(Team t:teams) {
+            startingLoc.put(t, new Vector<Vector<R2>>(n));
+        }
+    }
+
+    /** This method stores the starting positions for each team for a particular simulation.
+     * @param teams the collection of teams in the simulation
+     */
+    public void captureLocs(Collection<Team> teams){
+        for(Team t:teams){
+            startingLoc.get(t).add(t.getStartingLocations());
+        }
     }
     
     /** This method takes the data stored in the DataLog class for a particular simulation and stores it in this class, to allow
      * for statistical data output.
-     * @param dl The DataLog captured during the simulation
+     * @param v the particular valuation to store data for
+     * @param fullRunData the DataLog captured during the simulation with all players
+     * @param partialRunData the datalog captured during the simulation with only part of the players
      */
     public void captureData(Valuation v,DataLog fullRunData, DataLog partialRunData){
         if (fullRunData != null) {
@@ -152,13 +170,16 @@ public class Statistics extends FiresChangeEvents {
         // helpful comments
         textArea.append("This data may be copy/pasted directly into Microsoft Excel.\n To do so, hit Ctrl+A, then Ctrl+C," +
                 "\n and then paste into an (empty) Excel worksheet.\n ---- \n");
-        // header rows
+        // print the header row
         textArea.append("\t");
         for(Valuation v: fullMetrics.keySet()) {
             textArea.append(v.toString() + (v.isCooperationTesting() ? "\t(subset)\t(partial)\t" : "\t"));
         }
+        for(Team t: startingLoc.keySet()){
+            textArea.append(t.toString()+"\t");
+        }
         textArea.append("\n");
-        // data
+        // print the data
         int numIterationsPerformed = 0;
         for(Valuation v: fullMetrics.keySet()) { numIterationsPerformed = fullMetrics.get(v).size(); break; }
         for(int n=0; n<numIterationsPerformed; n++) {
@@ -168,6 +189,9 @@ public class Statistics extends FiresChangeEvents {
                         + (v.isCooperationTesting() ?
                             formatter.format(subsetMetrics.get(v).get(n)) + "\t" + formatter.format(partialMetrics.get(v).get(n)) + "\t"
                             : ""));
+            }
+            for(Team t: startingLoc.keySet()){
+                textArea.append(startingLoc.get(t).get(n)+"\t");
             }
             textArea.append("\n");
         }

@@ -13,6 +13,7 @@ import analysis.Statistics;
 import analysis.DataLog;
 import metrics.Valuation;
 import sequor.Settings;
+import sequor.SettingsFactory;
 import simulation.Team;
 
 /**
@@ -68,7 +69,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JToolBar.Separator();
         randomizeButton = new javax.swing.JButton();
         batchButton = new javax.swing.JButton();
-        numBatchRunsSpinner = Settings.getSpinner(numBatchRunsModel);
+        numBatchRunsSpinner = SettingsFactory.getSpinner(numBatchRunsModel);
         cooperationButton = new javax.swing.JButton();
         startingPositionsButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();

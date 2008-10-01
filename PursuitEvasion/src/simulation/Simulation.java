@@ -10,27 +10,30 @@
 
 package simulation;
 
+import analysis.DataLog;
 import analysis.Statistics;
-import sequor.model.DoubleRangeModel;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.event.EventListenerList;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.EventListenerList;
+import metrics.CaptureCondition;
+import metrics.Valuation;
+import metrics.VictoryCondition;
 import sequor.Settings;
-import sequor.model.StringRangeModel;
-import sequor.model.IntegerRangeModel;
 import sequor.SettingsProperty;
-import analysis.DataLog;
-import java.util.HashMap;
-import metrics.*;
-import java.util.HashSet;
+import sequor.model.DoubleRangeModel;
+import sequor.model.IntegerRangeModel;
+import sequor.model.StringRangeModel;
 import utility.DistanceTable;
 import utility.SimulationFactory;
+
 
 /**
  *
@@ -136,7 +139,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             if(team.victory != null) { vals.add(team.victory); }
             vals.addAll(team.metrics);
         }     
-        stats.reset(vals, numTimes);
+        stats.reset(vals, teams, numTimes);
         
         // Compile list of partial simulations which must be run
         HashMap<Valuation, HashSet<Agent>> coopVals = new HashMap<Valuation, HashSet<Agent>> ();
@@ -153,6 +156,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
                 team.initStartingLocations(getPitchSize());
                 team.reset();
             }
+            stats.captureLocs(teams);
             dist=new DistanceTable(teams);
             run();
             // capture full data
