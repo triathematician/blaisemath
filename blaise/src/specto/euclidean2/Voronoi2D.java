@@ -46,7 +46,7 @@ public class Voronoi2D extends DynamicPointSet2D {
     }
 
     @Override
-    public void recompute() {
+    public void recompute(Euclidean2 v) {
         Vector<R2> points = new Vector<R2> ();
         for ( Plottable p : plottables ) {
             if ( p instanceof Point2D ) { points.add(((Point2D)p).getPoint()); }
@@ -70,7 +70,6 @@ public class Voronoi2D extends DynamicPointSet2D {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        recompute();
         super.stateChanged(e);
     }
     

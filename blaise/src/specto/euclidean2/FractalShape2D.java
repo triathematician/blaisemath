@@ -95,7 +95,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
         }    
 
         @Override
-        public void recompute() {   
+        public void recompute(Euclidean2 v) {   
             try{
                 Path2D.Double initialCurve=getPath(false);
                 AffineTransform at=getStandardTransform();
@@ -138,7 +138,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
 
         /** Recomputes the shape. */
         @Override
-        public void recompute(){
+        public void recompute(Euclidean2 v){
             try{
                 Path2D.Double initialCurve=getPath(false);
                 AffineTransform at=getStandardTransform();
@@ -174,7 +174,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
 
         /** Recomputes the shape. */
         @Override
-        public void recompute(){
+        public void recompute(Euclidean2 v){
             try{
                 Path2D.Double initialCurve=getPath(true);
                 AffineTransform at=getStandardTransform();

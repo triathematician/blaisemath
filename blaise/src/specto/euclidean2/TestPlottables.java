@@ -74,9 +74,12 @@ public class TestPlottables extends javax.swing.JFrame {
         plot2D3.add(SliderBox.getStyleAdjusters(100,10,15,plot2D3.getPlottables(),plot2D3));
 
         PlaneFunction2D pf1=new PlaneFunction2D();
-        plot2D4.add(pf1);
-        plot2D4.add(new VectorField2D(pf1.getGradientFunction()));
+        plot2D4.add(pf1);    
+        VectorField2D vf1=new VectorField2D(pf1.getGradientFunction());
+        plot2D4.add(vf1);
+        plot2D4.add(new DESolution2D(vf1));
         plot2D4.add(SliderBox.getStyleAdjusters(100,10,15,plot2D4.getPlottables(),plot2D4));
+        plot2D4.add(new PlaneFunctionVector2D(pf1));    
 
         Segment2D s1=new Segment2D(-8,5,2,-1);
         CirclePoint2D cirp1=new CirclePoint2D(s1.getConstraintModel());

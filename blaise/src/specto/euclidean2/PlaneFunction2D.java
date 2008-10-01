@@ -9,6 +9,8 @@ package specto.euclidean2;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scio.function.FunctionValueException;
@@ -26,7 +28,8 @@ import specto.euclidean2.Euclidean2;
  */
 public class PlaneFunction2D extends Plottable<Euclidean2>{
     BoundedFunction<R2,Double> function;
-    
+    Vector<R2> inputs;
+    Vector<Double> currentValues;
     
     /** Default function used for testing the method. */
     private static final BoundedFunction<R2,Double> DEFAULT_FUNCTION=new BoundedFunction<R2,Double>(){
@@ -75,7 +78,25 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     // INTIALIZERS
     public BoundedFunction<R2,Double> getFunction() { return function; }
     public BoundedFunction<R2,R2> getGradientFunction() { return getGradient(function); }
+    public BoundedFunction<Double,Double> getFunctionX(double y) { return getPartial1(y,function); }
+    public BoundedFunction<Double,Double> getFunctionY(double x) { return getPartial2(x,function); }
     
+    
+    // VALUE COMPUTATIONS
+    
+    /** Recomputes the current grid of values of the function. This is needed for particular computations below. */
+    @Override
+    public void recompute(Euclidean2 v) {
+        try {
+            inputs = new Vector<R2>();
+            for (double px : v.getSparseXRange(20)) {
+                for (double py : v.getSparseYRange(20)) {
+                    inputs.add(new R2(px, py));
+                }
+            }
+            currentValues = function.getValue(inputs);
+        } catch (FunctionValueException ex) {}
+    }
     
     // DRAW METHODS
         
@@ -84,33 +105,17 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         if (function == null) { return; }
         try {
             g.setColor(getColor());
-            Vector<R2> inputs;
-            Vector<Double> result;
             double WEIGHT=10/(function.maxValue()-function.minValue());
             double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
             switch (style.getValue()) {
                 case DOTS:
-                    inputs = new Vector<R2>();
-                    for (double px : v.getSparseXRange(20)) {
-                        for (double py : v.getSparseYRange(20)) {
-                            inputs.add(new R2(px, py));
-                        }
-                    }
-                    result = function.getValue(inputs);
                     for(int i=0;i<inputs.size();i++){
-                        g.fill(v.dot(inputs.get(i),getRadius(result.get(i),1.5*WEIGHT,SHIFT)));
+                        g.fill(v.dot(inputs.get(i),getRadius(currentValues.get(i),1.5*WEIGHT,SHIFT)));
                     }
                     break;                    
                 case COLORS:
-                    inputs = new Vector<R2>();
-                    for (double px : v.getSparseXRange(20)) {
-                        for (double py : v.getSparseYRange(20)) {
-                            inputs.add(new R2(px, py));
-                        }
-                    }
-                    result = function.getValue(inputs);
                     for(int i=0;i<inputs.size();i++){
-                        g.setColor(Color.getHSBColor(1.0f-(float)getRadius(result.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
+                        g.setColor(Color.getHSBColor(1.0f-(float)getRadius(currentValues.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
                         g.fill(v.squareDot(inputs.get(i),10.0));
                     }
                     break;
@@ -166,6 +171,38 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             public Vector<R2> getValue(Vector<R2> xx) throws FunctionValueException {
                 Vector<R2> result = new Vector<R2>();
                 for(R2 x : xx) { result.add(getValue(x)); }
+                return result;
+            }           
+        };
+    }
+    
+    /** Generates a partial function (one value is fixed). */
+    public static BoundedFunction<Double,Double> getPartial1(final double x2,final BoundedFunction<R2,Double> input) {
+        return new BoundedFunction<Double,Double>() {
+            public Double minValue() { return -1.0; }
+            public Double maxValue() { return 1.0; }
+            public Double getValue(Double x) throws FunctionValueException {
+                return input.getValue(new R2(x,x2));
+            }
+            public Vector<Double> getValue(Vector<Double> xx) throws FunctionValueException {
+                Vector<Double> result = new Vector<Double>();
+                for(Double x : xx) { result.add(input.getValue(new R2(x,x2))); }
+                return result;
+            }           
+        };
+    }    
+    
+    /** Generates a partial function (one value is fixed). */
+    public static BoundedFunction<Double,Double> getPartial2(final double x1,final BoundedFunction<R2,Double> input) {
+        return new BoundedFunction<Double,Double>() {
+            public Double minValue() { return -1.0; }
+            public Double maxValue() { return 1.0; }
+            public Double getValue(Double x) throws FunctionValueException {
+                return input.getValue(new R2(x1,x));
+            }
+            public Vector<Double> getValue(Vector<Double> xx) throws FunctionValueException {
+                Vector<Double> result = new Vector<Double>();
+                for(Double x : xx) { result.add(input.getValue(new R2(x1,x))); }
                 return result;
             }           
         };

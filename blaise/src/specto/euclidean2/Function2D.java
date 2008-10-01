@@ -135,11 +135,12 @@ public class Function2D extends PointSet2D implements Constrains2D{
             endVector=new PointRangeModel(prm.getX(),prm.getY());
             vector=new Segment2D(prm,endVector);
             vector.style.setValue(Segment2D.LINE_VECTOR);
+            vector.setEditable(false);
             vector.addChangeListener(this);
         }
         
         @Override
-        public void recompute() {
+        public void recompute(Euclidean2 v) {
             try {
                 slope = Derivative.approximateDerivative(function, prm.getX(), .0001);
                 endVector.setTo(getPoint().plus(new R2(1.,slope).multipliedBy(1/Math.sqrt(1+slope*slope))));

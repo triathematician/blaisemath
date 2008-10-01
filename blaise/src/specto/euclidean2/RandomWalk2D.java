@@ -36,7 +36,7 @@ public class RandomWalk2D extends InitialPointSet2D {
     public DoubleRangeModel getDistancePerTimeModel(){return distancePerTime;}
 
     @Override
-    public void recompute() {
+    public void recompute(Euclidean2 v) {
         Vector<R2> newPath=new Vector<R2>();
         newPath.add(getPoint());
         double theta=0;

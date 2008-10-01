@@ -114,7 +114,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     }
 
     @Override
-    public void recompute() {
+    public void recompute(Euclidean2 v) {
         try {
             initSolutionCurves();
             switch(algorithm){

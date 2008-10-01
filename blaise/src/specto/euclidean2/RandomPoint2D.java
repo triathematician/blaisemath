@@ -42,7 +42,7 @@ public class RandomPoint2D extends Point2D{
     // PAINTING
     
     @Override
-    public void recompute() {
+    public void recompute(Euclidean2 v) {
         points.clear();
         double x=getPoint().getX();
         double y=getPoint().getY();

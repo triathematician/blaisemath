@@ -185,7 +185,7 @@ public class Parametric2D extends PointSet2D {
         public DoubleRangeModel getTimeModel(){return tModel;}
         
         @Override
-        public void recompute() {
+        public void recompute(Euclidean2 v) {
             try {
                 super.setLabel("t="+NumberFormat.getInstance().format(tModel.getValue()));
                 velocity = Derivative.approximateDerivative(function, tModel.getValue(), .001);

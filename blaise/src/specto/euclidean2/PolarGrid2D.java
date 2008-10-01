@@ -34,10 +34,7 @@ public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     }
     
     // DRAW METHODS
-        
-    @Override
-    public void recompute(){}
-    
+            
     double THETA_STEPS=24;
     
     public void paintComponent(Graphics2D g,Euclidean2 v) {    
