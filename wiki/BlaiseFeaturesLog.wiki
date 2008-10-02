@@ -1,6 +1,14 @@
 #summary Contains listing of feature additions to Blaise.
 #labels Featured,Module-Blaise
 
+==== Week of Sept 28-Oct 4 ====
+
+ * _Added bean patterns to `PlotPanel`s for the marker box and animation control, so they can be hidden or shown in the Netbeans GUI builder._ --Elisha
+
+ * _Added bean pattern for the axis type to `Plot2D` for the Netbeans GUI builder._ --Elisha
+
+ * _Began work on automatic XML output from the `Settings` class._ --Elisha
+
 ==== Week of June 8-14 ====
 
  * _Added an `FLabel` class displaying any/all of some text, a color, a stroke. Also added an `FLabelBox` class to contain a group of these elements, suitable for a legend on a graph._ --Elisha
