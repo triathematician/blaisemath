@@ -7,8 +7,10 @@ package metrics;
 
 import analysis.DataLog;
 import java.util.Vector;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import scio.function.FunctionValueException;
-import simulation.Simulation;
 import simulation.Team;
 import utility.DistanceTable;
 
@@ -16,6 +18,7 @@ import utility.DistanceTable;
  * This class is used to determine when a particular team has "won" or "lost" the simulation.
  * @author Elisha Peterson
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class VictoryCondition extends Valuation {
     
     // CONSTANTS
@@ -24,19 +27,24 @@ public class VictoryCondition extends Valuation {
     public static final int WON = 1;
     public static final int LOST = 2;   
     
-    /** Stores the status if the value is more than the threshold value (win/loss/neither) */
-    int moreResult;
-    /** Stores the status if the value is less than the threshold value (win/loss/neither) */
-    int lessResult;
+    // SIMULATION PARAMETERS
     
+    /** Stores the status according to above codes if the value is more than the threshold value (win/loss/neither) */
+    int moreResult = NEITHER;
+    /** Stores the status according to above codes if the value is less than the threshold value (win/loss/neither) */
+    int lessResult = NEITHER;    
     /** Whether this victory condition forces the end of the game. */
-    public boolean endGame = false;
+    public boolean gameEnding = false;
+    
+    // DYNAMIC PARAMETERS
     
     /** Stores whether this value has been triggered from neither to "win" or "loss" */
-    boolean triggered = false;
-    
+    boolean triggered = false;    
     
     // CONSTRUCTORS
+
+    public VictoryCondition(){
+    }
     
     /** Main constructor */
     public VictoryCondition(Vector<Team> teams, Team owner, Team target, int type, double threshold,int moreResult,int lessResult){
@@ -84,4 +92,19 @@ public class VictoryCondition extends Valuation {
             return NEITHER;
         }
     }
+    
+    // BEAN PATTERNS
+
+    @XmlAttribute(name="eventLessCode")
+    public int getLessResult() { return lessResult; }
+    public void setLessResult(int lessResult) { this.lessResult = lessResult; }
+
+    @XmlAttribute(name="eventGreaterCode")
+    public int getMoreResult() { return moreResult; }
+    public void setMoreResult(int moreResult) { this.moreResult = moreResult; }
+
+    @XmlAttribute
+    public boolean isGameEnding() { return gameEnding; }
+    public void setGameEnding(boolean endGame) { this.gameEnding = endGame; }    
+    
 }

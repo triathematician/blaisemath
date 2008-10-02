@@ -12,6 +12,10 @@ import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import scio.function.Function;
 import sequor.Settings;
 import sequor.model.StringRangeModel;
@@ -31,21 +35,35 @@ import utility.DistanceTable;
  * <br><br>
  * @author Elisha Peterson
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class Goal extends TaskGenerator {
-    // PROPERTIES
-    /** Static settings. */
-    public GoalSettings gs;
-    /** Tasking class. */
-    private TaskGenerator tasker;
-    /** Whether or not the goal has been achieved. */
-    private boolean achieved = false;
-    /** The agent which achieved the goal. */
-    private Agent which = null;    // CONSTANTS
+    
+    // CONSTANTS
+
     public static final int SEEK = 0;
     public static final int CAPTURE = 1;
     public static final int FLEE = 2;
     public static final String[] TYPE_STRINGS = {"Seek", "Capture", "Flee"};
+    
+    // SIMULATION ATTRIBUTES
+    
+    /** Static settings. */
+    public GoalSettings gs;
+    
+    // DYNAMIC ATTRIBUTES
+    
+    /** Tasking class. */
+    private TaskGenerator tasker;    
+    /** Whether or not the goal has been achieved. */
+    private boolean achieved = false;
+    /** The agent which achieved the goal. */
+    private Agent which = null;    // CONSTANTS
+
     // CONSTRUCTORS & INITIALIZERS   
+    
+    public Goal(){        
+    }
+    
     /** 
      * Default initializer requires several parameters.
      * @param weight    a constant factor (between 0 and 1) associated with the goal
@@ -60,6 +78,16 @@ public class Goal extends TaskGenerator {
         gs = new GoalSettings(weight, teams, owner, target, type, tasking, thresh);
         tasker = gs.getTasking();
         addActionListener(owner);
+    }
+    /** Constructs with a settings class.
+     * @param s a settings class, hopefully of type "GoalSettings"
+     */
+    public Goal(Settings s) {
+        if(s instanceof GoalSettings){
+            gs = (GoalSettings) s;
+            tasker = gs.getTasking();
+            addActionListener(gs.owner);
+        }
     }
 
     /**
@@ -100,57 +128,45 @@ public class Goal extends TaskGenerator {
     }
     
     // BEAN PATTERNS  
-    public int getType() {
-        return gs.type.getValue();
-    }
+    
+    @XmlAttribute
+    public int getType() { return gs.type.getValue(); }
+    public void setType(int newValue) { gs.type.setValue(newValue); }
+    
+    @XmlAttribute
+    public int getAlgorithm() { return gs.algorithm.getValue(); }
+    public void setAlgorithm(int newValue) { gs.algorithm.setValue(newValue); }
 
-    public double getWeight() {
-        return gs.weight.getValue();
-    }
+    @XmlAttribute
+    public double getWeight() { return gs.weight.getValue(); }
+    public void setWeight(double newValue) { gs.weight.setValue(newValue); }
 
-    public double getThreshhold() {
-        return gs.threshhold.getValue();
-    }
+    @XmlAttribute
+    public double getThreshhold() { return gs.threshhold.getValue(); }
+    public void setThreshhold(double newValue) { gs.threshhold.setValue(newValue); }
 
-    public Team getOwner() {
-        return gs.owner;
-    }
+    public String getOwnerName(){return gs.owner.getName();}
+    
+    @XmlAttribute(name="target")
+    public String getTargetName(){return gs.target.getName();}
+    
+    public Team getOwner() { return gs.owner; }
+    public void setOwner(Team newValue) { gs.setOwner(newValue); }
 
-    public Team getTarget() {
-        return gs.target;
-    }
+    public Team getTarget() { return gs.target; }
+    public void setTarget(Team newValue) { gs.setTarget(newValue); }
 
-    public boolean isAchieved() {
-        return achieved;
-    }
+    public boolean isAchieved() { return achieved; }
 
-    public Agent getAgent() {
-        return which;
-    }
-
-    public void setType(int newValue) {
-        gs.type.setValue(newValue);
-    }
-
-    public void setWeight(double newValue) {
-        gs.weight.setValue(newValue);
-    }
-
-    public void setThreshhold(double newValue) {
-        gs.threshhold.setValue(newValue);
-    }
-
-    public void setOwner(Team newValue) {
-        gs.setOwner(newValue);
-    }
-
-    public void setTarget(Team newValue) {
-        gs.setTarget(newValue);
-    }
+    public Agent getAgent() { return which; }
 
     public JPanel getPanel() {
         return gs.getPanel();
-    }    // EVENT HANDLING
+    }   
+    
+    
+    // EVENT HANDLING
+    
     boolean editing;
     // Remaining code deals with action listening
     protected EventListenerList listenerList = new EventListenerList();
@@ -174,7 +190,10 @@ public class Goal extends TaskGenerator {
             }
         }
     }
+    
+    
     // SUB-CLASS GoalSettings
+    
     /** Wrapper for the static settings of the goal. */
     private class GoalSettings extends Settings {
 
@@ -196,7 +215,7 @@ public class Goal extends TaskGenerator {
          */
         private DoubleRangeModel threshhold = new DoubleRangeModel(1, 0, 1000, .1);
         /** The team's tasking algorithm default */
-        private StringRangeModel tasking=new StringRangeModel(TaskGenerator.TASKING_STRINGS);
+        private StringRangeModel algorithm=new StringRangeModel(TaskGenerator.TASKING_STRINGS);
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable, Double> value;
 
@@ -207,7 +226,7 @@ public class Goal extends TaskGenerator {
             this.owner = owner;
             this.target = target;
             this.type.setValue(type);
-            this.tasking.setValue(tasking);
+            this.algorithm.setValue(tasking);
             this.threshhold.setValue(threshhold);
             initModels();
         }
@@ -219,7 +238,7 @@ public class Goal extends TaskGenerator {
             add(new SettingsProperty("Goal Type", this.type, Settings.EDIT_COMBO));
             add(new SettingsProperty("Goal Weight", this.weight, Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Goal Cutoff", this.threshhold, Settings.EDIT_DOUBLE));
-            add(new SettingsProperty("Tasking", this.tasking, Settings.EDIT_COMBO));
+            add(new SettingsProperty("Tasking", this.algorithm, Settings.EDIT_COMBO));
         }
 
         /** Listens for changes to settings */
@@ -232,7 +251,7 @@ public class Goal extends TaskGenerator {
                 ac = "teamSetupChange";
             } else if (evt.getSource() == threshhold) {
                 ac = "teamSetupChange";
-            } else if (evt.getSource() == tasking) {
+            } else if (evt.getSource() == algorithm) {
                 tasker = getTasking();
                 ac = "teamSetupChange";
             } else if (evt.getSource() == opponentModel) {
@@ -243,7 +262,7 @@ public class Goal extends TaskGenerator {
         }
 
         private TaskGenerator getTasking() {
-            return TaskGenerator.getTasking(target, type.getValue(), tasking.getValue());
+            return TaskGenerator.getTasking(target, type.getValue(), algorithm.getValue());
         }
 
         public void setOwner(Team newValue) {

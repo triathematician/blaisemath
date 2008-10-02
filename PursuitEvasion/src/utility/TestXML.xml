@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<simulation stepTime="0.1" pitchSize="60.0" numTeams="3" numSteps="250" name="Sahara" maxSteps="1000" gameType="3">
+    <team topSpeed="6.5" startCode="1" size="4" sensorRange="20.0" name="Lions" leadFactor="0.0" commRange="50.0" behaviorCode="7">
+        <capture removalCode="0" type="0" threshold="1.0" target="Wildebeast" cooperationOn="false"/>
+        <metrics/>
+        <victory eventGreaterCode="1" eventLessCode="0" gameEnding="false" type="8" threshold="0.0" target="Wildebeast" cooperationOn="false"/>
+        <agents>
+            <agent topSpeed="6.5" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorCode="7">
+                <color red="255" green="200" blue="0" alpha="255"/>
+                <start>
+                    <x>45.13532670837142</x>
+                    <y>-44.58835633605338</y>
+                </start>
+            </agent>
+            <agent topSpeed="6.5" sensorRange="20.0" name="Agent 2" leadFactor="0.0" commRange="50.0" behaviorCode="7">
+                <color red="255" green="200" blue="0" alpha="255"/>
+                <start>
+                    <x>2.661237629809996</x>
+                    <y>-3.4291189342984225</y>
+                </start>
+            </agent>
+            <agent topSpeed="6.5" sensorRange="20.0" name="Agent 3" leadFactor="0.0" commRange="50.0" behaviorCode="7">
+                <color red="255" green="200" blue="0" alpha="255"/>
+                <start>
+                    <x>17.53028177750781</x>
+                    <y>-3.923290037323305</y>
+                </start>
+            </agent>
+            <agent topSpeed="6.5" sensorRange="20.0" name="Agent 4" leadFactor="0.0" commRange="50.0" behaviorCode="7">
+                <color red="255" green="200" blue="0" alpha="255"/>
+                <start>
+                    <x>-42.399623702005975</x>
+                    <y>23.055312595135675</y>
+                </start>
+            </agent>
+        </agents>
+        <color red="255" green="200" blue="0" alpha="255"/>
+        <taskings>
+            <task weight="1.0" type="1" threshhold="1.0" target="Wildebeast" algorithm="1"/>
+            <task weight="0.01" type="1" threshhold="2.0" target="Water" algorithm="1"/>
+        </taskings>
+    </team>
+    <team topSpeed="5.0" startCode="1" size="4" sensorRange="20.0" name="Wildebeast" leadFactor="0.0" commRange="50.0" behaviorCode="1">
+        <capture removalCode="2" type="0" threshold="1.0" target="Water" cooperationOn="false"/>
+        <metrics/>
+        <victory eventGreaterCode="1" eventLessCode="0" gameEnding="false" type="8" threshold="0.0" target="Water" cooperationOn="false"/>
+        <agents>
+            <agent topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorCode="1">
+                <color red="128" green="128" blue="128" alpha="255"/>
+                <start>
+                    <x>6.228025879457164</x>
+                    <y>46.34791123405945</y>
+                </start>
+            </agent>
+            <agent topSpeed="5.0" sensorRange="20.0" name="Agent 2" leadFactor="0.0" commRange="50.0" behaviorCode="1">
+                <color red="128" green="128" blue="128" alpha="255"/>
+                <start>
+                    <x>13.805206105604327</x>
+                    <y>34.074712053632524</y>
+                </start>
+            </agent>
+            <agent topSpeed="5.0" sensorRange="20.0" name="Agent 3" leadFactor="0.0" commRange="50.0" behaviorCode="1">
+                <color red="128" green="128" blue="128" alpha="255"/>
+                <start>
+                    <x>7.632381938952534</x>
+                    <y>-59.66042162458247</y>
+                </start>
+            </agent>
+            <agent topSpeed="5.0" sensorRange="20.0" name="Agent 4" leadFactor="0.0" commRange="50.0" behaviorCode="1">
+                <color red="128" green="128" blue="128" alpha="255"/>
+                <start>
+                    <x>-56.95424076887953</x>
+                    <y>-24.339645346106664</y>
+                </start>
+            </agent>
+        </agents>
+        <color red="128" green="128" blue="128" alpha="255"/>
+        <taskings>
+            <task weight="0.5" type="2" threshhold="1.0" target="Lions" algorithm="5"/>
+            <task weight="1.0" type="1" threshhold="1.0" target="Water" algorithm="6"/>
+        </taskings>
+    </team>
+    <team topSpeed="5.0" startCode="1" size="1" sensorRange="20.0" name="Water" leadFactor="0.0" commRange="50.0" behaviorCode="0">
+        <metrics/>
+        <agents>
+            <agent topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorCode="0">
+                <color red="0" green="0" blue="255" alpha="255"/>
+                <start>
+                    <x>14.714547472844657</x>
+                    <y>11.772802588364726</y>
+                </start>
+            </agent>
+        </agents>
+        <color red="0" green="0" blue="255" alpha="255"/>
+        <taskings/>
+    </team>
+</simulation>

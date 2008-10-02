@@ -6,8 +6,10 @@ package metrics;
 
 import analysis.DataLog;
 import java.util.Vector;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import scio.coordinate.R2;
-import simulation.Simulation;
 import simulation.Team;
 import utility.AgentPair;
 import utility.DistanceTable;
@@ -18,13 +20,24 @@ import utility.DistanceTable;
  * 
  * @author Elisha Peterson
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class CaptureCondition extends Valuation {
 
+    // CONSTANTS
+    
     public static final int REMOVEBOTH = 0;
     public static final int REMOVETARGET = 1;
     public static final int REMOVEAGENT = 2;
+    
+    // SIMULATION PARAMETERS
+    
     /** Whether to remove both players from the field when this occurs, or just the target, or just the agent. */
-    int removal;
+    int removal = REMOVEBOTH;
+    
+    // CONSTRUCTORS
+
+    public CaptureCondition() {        
+    }
 
     /** Initialize with specified capture distance. */
     public CaptureCondition(Vector<Team> teams, Team owner, Team target, double captureDistance, int removal) {
@@ -62,4 +75,10 @@ public class CaptureCondition extends Valuation {
         }
         return result;
     }
+    
+    // BEAN PATTERNS
+    
+    @XmlAttribute(name="removalCode")
+    public int getRemoval() { return removal; }
+    public void setRemoval(int removal) { this.removal = removal; }
 }

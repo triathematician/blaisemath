@@ -327,9 +327,11 @@ public class DataLog extends FiresChangeEvents {
     /** Outputs starting locations of teams. */
     public void printStartingLocations(JTextArea logWindow, JTextArea codeWindow) {
         logWindow.append(": Starting Locations\n");
-        codeWindow.append("CODE SNIPPET: cut/paste the lines below:\n\n");
+        codeWindow.append("// CODE SNIPPET: cut/paste the lines below:\n\n");
         for(Team t : sim.getTeams()) {
-            logWindow.append("   * "+t+": "+t.getStartingLocations()+"\n");
+            Vector<R2> vr=new Vector<R2>();
+            for (int i = 0; i < t.getStartingLocations().length; i++) {vr.add(t.getStartingLocations()[i]);}
+            logWindow.append("   * "+t+": "+vr+"\n");
             codeWindow.append("R2[] "+t+"Positions = { ");
             for(Agent a : t) {
                 codeWindow.append("new R2"+a.getInitialPosition()+" ");

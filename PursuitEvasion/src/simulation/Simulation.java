@@ -23,6 +23,12 @@ import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.EventListenerList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import metrics.CaptureCondition;
 import metrics.Valuation;
 import metrics.VictoryCondition;
@@ -39,19 +45,23 @@ import utility.SimulationFactory;
  *
  * @author ae3263
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class Simulation implements ActionListener,PropertyChangeListener {
     
     
     // PROPERTIES
     
     /** Contains all settings used to run the simulation. */
+    @XmlTransient
     public SimSettings ss;
     /** Contains list of teams involved. */
+    @XmlElement(name="team")
     Vector<Team> teams;
     /** Table of distances (for speed of simulation) */
     DistanceTable dist;
     
-    /** The data collected in a simulation. */
+    /** The data collected in a simulation. */ 
     DataLog log;
     /** Whether a batch of several runs is currently processing. */
     boolean batchProcessing;
@@ -76,7 +86,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     /** PRimary Initializer */
     public void mainInitialize(String name,Vector<Team> teams){
-        setString(name);
+        setName(name);
         initTeams(teams);
     }
     
@@ -193,7 +203,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }
         //log.setPrimaryOutput(primary.getValue());
         actionPerformed(new ActionEvent(log,0,"log"));
-        actionPerformed(new ActionEvent(this,0,"redraw"));
+        if(!batchProcessing){actionPerformed(new ActionEvent(this,0,"redraw"));}
     }
     
     /** Runs a single iteration of the scenario */
@@ -214,7 +224,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             VictoryCondition vc=t.victory;
             if (vc!=null) {
                 int result=vc.check(dist, log, time);
-                if(result!=VictoryCondition.NEITHER && vc.endGame){
+                if(result!=VictoryCondition.NEITHER && vc.gameEnding){
                     log.logEvent(null,null,null,null,"Simulation ended",time);
                     return true;
                 }
@@ -305,31 +315,49 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
-    public int getNumTeams(){return ss.numTeams.getValue();}
+    @XmlAttribute
+    public String getName(){return ss.getName();}
+    public void setName(String newValue){ss.setName(newValue);}
+    
+    @XmlAttribute
     public int getGameType(){return ss.gameType.getValue();}
-    public double getPitchSize(){return ss.pitchSize.getValue();}
+    public void setGameType(int newValue){ss.gameType.setValue(newValue);}
+    
+    @XmlAttribute
+    public int getNumTeams(){return ss.numTeams.getValue();}
+    public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
+    
+    @XmlAttribute
     public double getStepTime(){return ss.stepTime.getValue();}
+    public void setStepTime(double newValue){ss.stepTime.setValue(newValue);}
+    
+    @XmlAttribute
     public int getNumSteps(){return ss.numSteps.getValue();}
+    public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
+    
+    @XmlAttribute
     public int getMaxSteps(){return ss.maxSteps.getValue();}
+    public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
+    
+    @XmlAttribute
+    public double getPitchSize(){return ss.pitchSize.getValue();}
+    public void setPitchType(double newValue){ss.pitchSize.setValue(newValue);}
+
+        
     @Override
     public String toString(){return ss.toString();}
-    
-    public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
-    public void setGameType(int newValue){ss.gameType.setValue(newValue);}
-    public void setPitchType(double newValue){ss.pitchSize.setValue(newValue);}
-    public void setStepTime(double newValue){ss.stepTime.setValue(newValue);}
-    public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
-    public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
-    public void setString(String newValue){ss.setName(newValue);}
+
     public void setDataLog(DataLog dl){this.log=dl;}
-    
+
     public JPanel getPanel(){return ss.getPanel();}
+
     public JMenu getMenu(String s){JMenu jm=ss.getMenu();jm.setText(s);return jm;}
+
     public StringRangeModel getGameTypeModel(){return ss.gameType;}
     
     // SUBCLASSES
     
-    private class SimSettings extends Settings{
+    public class SimSettings extends Settings{
         
         /** Number of teams */
         private IntegerRangeModel numTeams=new IntegerRangeModel(2,1,100);

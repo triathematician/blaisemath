@@ -7,13 +7,21 @@
 
 package applications;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import scio.coordinate.R2;
 import sequor.editor.ComboBoxEditor;
 import analysis.Statistics;
 import analysis.DataLog;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.io.OutputStream;
+import javax.swing.JOptionPane;
+import javax.xml.bind.JAXBContext;
 import metrics.Valuation;
-import sequor.Settings;
 import sequor.SettingsFactory;
+import simulation.Simulation;
 import simulation.Team;
 
 /**
@@ -26,13 +34,13 @@ public class PEGPlot extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     public PEGPlot() {
         initComponents();
-        plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
-        plot2D2.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
-        plot2D2.synchronizeTimerWith(plot2D1);
-        dataLog1.initialize(simulation1, plot2D1, plot2D2);
+        simulationPlot.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
+        metricsPlot.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
+        metricsPlot.synchronizeTimerWith(simulationPlot);
+        dataLog1.initialize(simulation1, simulationPlot, metricsPlot);
         simulation1.run();
-        settingsMenu.add(simulation1.getMenu("Simulation"));
-        jComboBox1.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
+        jMenuBar1.add(simulation1.getMenu("Simulation"));
+        simulationComboBox.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
     }
     
     /** This method is called from within the constructor to
@@ -52,7 +60,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         infoPane = new javax.swing.JTabbedPane();
-        plot2D2 = new specto.euclidean2.Plot2D();
+        metricsPlot = new specto.euclidean2.Plot2D();
         jScrollPane5 = new javax.swing.JScrollPane();
         logWindow = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -60,12 +68,12 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         codeWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        plot2D1 = new specto.euclidean2.Plot2D();
+        simulationPlot = new specto.euclidean2.Plot2D();
         statusBar = new javax.swing.JPanel();
         statusText = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        simulationComboBox = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         randomizeButton = new javax.swing.JButton();
         batchButton = new javax.swing.JButton();
@@ -74,6 +82,7 @@ public class PEGPlot extends javax.swing.JFrame {
         startingPositionsButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         addDotsButton = new javax.swing.JButton();
+        testXmlButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
@@ -81,7 +90,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
         simulationMenu = new javax.swing.JMenu();
-        jMenuItem13 = new javax.swing.JMenuItem();
+        randomizeMenuItem = new javax.swing.JMenuItem();
         settingsMenu = new javax.swing.JMenu();
         ModeMenu = new javax.swing.JMenu();
         jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
@@ -110,18 +119,21 @@ public class PEGPlot extends javax.swing.JFrame {
         infoPane.setToolTipText("See information regarding the simulations.");
         infoPane.setMaximumSize(new java.awt.Dimension(450, 600));
 
-        javax.swing.GroupLayout plot2D2Layout = new javax.swing.GroupLayout(plot2D2);
-        plot2D2.setLayout(plot2D2Layout);
-        plot2D2Layout.setHorizontalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        metricsPlot.setAnimatorVisible(false);
+        metricsPlot.setMarkerBoxVisible(false);
+
+        javax.swing.GroupLayout metricsPlotLayout = new javax.swing.GroupLayout(metricsPlot);
+        metricsPlot.setLayout(metricsPlotLayout);
+        metricsPlotLayout.setHorizontalGroup(
+            metricsPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 442, Short.MAX_VALUE)
         );
-        plot2D2Layout.setVerticalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 188, Short.MAX_VALUE)
+        metricsPlotLayout.setVerticalGroup(
+            metricsPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 141, Short.MAX_VALUE)
         );
 
-        infoPane.addTab("Metrics", plot2D2);
+        infoPane.addTab("Metrics", metricsPlot);
 
         logWindow.setColumns(20);
         logWindow.setEditable(false);
@@ -153,34 +165,36 @@ public class PEGPlot extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
 
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        simulationPlot.setAxisStyle(1);
+
+        javax.swing.GroupLayout simulationPlotLayout = new javax.swing.GroupLayout(simulationPlot);
+        simulationPlot.setLayout(simulationPlotLayout);
+        simulationPlotLayout.setHorizontalGroup(
+            simulationPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 474, Short.MAX_VALUE)
         );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 462, Short.MAX_VALUE)
+        simulationPlotLayout.setVerticalGroup(
+            simulationPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 475, Short.MAX_VALUE)
         );
 
-        jSplitPane2.setRightComponent(plot2D1);
+        jSplitPane2.setRightComponent(simulationPlot);
 
         getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
         statusBar.setBackground(new java.awt.Color(255, 255, 255));
         statusBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        statusText.setText("Status: nonfunctional status bar.");
+        statusText.setText("Awaiting user instructions.");
 
         javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
         statusBar.setLayout(statusBarLayout);
@@ -200,9 +214,9 @@ public class PEGPlot extends javax.swing.JFrame {
         jLabel1.setText("Game Preset:  ");
         jToolBar1.add(jLabel1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setMaximumSize(new java.awt.Dimension(150, 20));
-        jToolBar1.add(jComboBox1);
+        simulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        simulationComboBox.setMaximumSize(new java.awt.Dimension(150, 20));
+        jToolBar1.add(simulationComboBox);
         jToolBar1.add(jSeparator1);
 
         randomizeButton.setFont(new java.awt.Font("Tahoma", 1, 12));
@@ -256,6 +270,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jToolBar1.add(jSeparator3);
 
         addDotsButton.setText("Add Dots");
+        addDotsButton.setEnabled(false);
         addDotsButton.setFocusable(false);
         addDotsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addDotsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -265,6 +280,17 @@ public class PEGPlot extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(addDotsButton);
+
+        testXmlButton.setText("Test XML");
+        testXmlButton.setFocusable(false);
+        testXmlButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        testXmlButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        testXmlButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testXmlButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(testXmlButton);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
@@ -295,14 +321,14 @@ public class PEGPlot extends javax.swing.JFrame {
 
         simulationMenu.setText("Simulation");
 
-        jMenuItem13.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem13.setText("Randomize Starting Locations");
-        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+        randomizeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        randomizeMenuItem.setText("Randomize Starting Locations");
+        randomizeMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 randomizeButtonActionPerformed(evt);
             }
         });
-        simulationMenu.add(jMenuItem13);
+        simulationMenu.add(randomizeMenuItem);
 
         jMenuBar1.add(simulationMenu);
 
@@ -349,39 +375,48 @@ public class PEGPlot extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void batchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_batchButtonActionPerformed
-    simulation1.runSeveral(numBatchRunsModel.getValue());
+        statusText.setText("Batching "+numBatchRunsModel.getValue()+" runs... this may take a while!");
+        simulation1.runSeveral(numBatchRunsModel.getValue());
 }//GEN-LAST:event_batchButtonActionPerformed
 
 private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+    statusText.setText("Goodbye!");
     System.exit(0);
 }//GEN-LAST:event_jMenuItem12ActionPerformed
 
 private void randomizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeButtonActionPerformed
+    statusText.setText("Randomizing starting locations...");
     logWindow.append("\nNEW SIMULATION\n");
     simulation1.initStartingLocations();
     simulation1.run();
+    success();
 }//GEN-LAST:event_randomizeButtonActionPerformed
+
+private void success(){
+    statusText.setText("Success! Awaiting further instructions.");
+}
 
     @SuppressWarnings("unchecked")
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
     //System.out.println("pegplot action performed: "+evt.getActionCommand());
     if(evt.getActionCommand().equals("redraw")){
-        plot2D1.repaint();
-        plot2D2.repaint();
+        simulationPlot.repaint();
+        metricsPlot.repaint();
     }
     else if(evt.getActionCommand().equals("recolor")){
         dataLog1.recolor();
-        plot2D1.repaint();
-        plot2D2.repaint();
+        simulationPlot.repaint();
+        metricsPlot.repaint();
         simulationSettingsPanel1.repaint();
     }
     // simulation has changed in some fundamental way
     else if(evt.getActionCommand().equals("reset")){
-        plot2D1.clearPlottables();
-        plot2D2.clearPlottables();
-        plot2D1.rebuildOptionsMenu();
-        plot2D2.rebuildOptionsMenu();
-        dataLog1.initialize(simulation1, plot2D1, plot2D2);
+        statusText.setText("Resetting simulation...");
+        simulationPlot.clearPlottables();
+        metricsPlot.clearPlottables();
+        simulationPlot.rebuildOptionsMenu();
+        metricsPlot.rebuildOptionsMenu();
+        dataLog1.initialize(simulation1, simulationPlot, metricsPlot);
         simulationSettingsPanel1.setTree(simulation1.ss);
     }
     else if(evt.getActionCommand().equals("log")){
@@ -389,7 +424,13 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             ((DataLog)evt.getSource()).output(logWindow);
         }else if(evt.getSource() instanceof Statistics){
             ((Statistics)evt.getSource()).output(logWindow);
-            ((Statistics)evt.getSource()).outputData(dataWindow);
+            // copy stats to dataWindow and then to clipboard
+            statusText.setText("Copying stats to clipboard...");
+            ((Statistics)evt.getSource()).outputData(dataWindow); 
+            StringSelection data = new StringSelection(dataWindow.getText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(data, data);
+            // display happy message            
+            statusText.setText("Success! The batch data has been copied to the clipboard.");
         }
     }
     else{
@@ -399,12 +440,14 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_simulation1ActionPerformed
 
     private void addDotsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDotsButtonActionPerformed
-        //PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
+        JOptionPane.showMessageDialog(this, "Sorry, dots are currently unavailable.","Functionality unavailable",JOptionPane.ERROR_MESSAGE);
+//PlaneFunction2D pf=new Statistics().getInitialPositionTestPlot(simulation1);
         //pf.style.setValue(PlaneFunction2D.DOTS);
         //plot2D1.add(pf);
 }//GEN-LAST:event_addDotsButtonActionPerformed
 
     private void cooperationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationButtonActionPerformed
+        statusText.setText("Printing cooperation metrics...");
         for (Team t : simulation1.getTeams()) {
             if (t.victory != null) {
                 logWindow.append(t.victory.getCooperationMetric(simulation1).toString());
@@ -412,12 +455,43 @@ private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             for (Valuation v : t.metrics) {
                 logWindow.append(v.getCooperationMetric(simulation1).toString());
             }
-        }
+        }    
+        statusText.setText("Success! Check the log window for cooperation metrics.");
 }//GEN-LAST:event_cooperationButtonActionPerformed
 
 private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startingPositionsButtonActionPerformed
+    try {codeWindow.getDocument().remove(0, codeWindow.getDocument().getLength()-1);}catch(Exception e){}
     dataLog1.printStartingLocations(logWindow, codeWindow);
+    StringSelection data = new StringSelection(codeWindow.getText());
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(data, data);
+    // display result message
+    statusText.setText("Success! The starting positions are in the log."
+            + " The Java code to re-initialize teams to these positions is in the clipboard and the code window.");
 }//GEN-LAST:event_startingPositionsButtonActionPerformed
+
+private void testXmlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testXmlButtonActionPerformed
+    statusText.setText("Generating XML file for the simulation...");
+    // clear the text on the window
+    try {codeWindow.getDocument().remove(0, codeWindow.getDocument().getLength()-1);}catch(Exception e){}
+    try {
+        // output the xml
+        JAXBContext.newInstance(Simulation.class).createMarshaller().marshal(simulation1,
+            new OutputStream() {
+                public void write(int b) {
+                    byte[] bs = new byte[1]; bs[0] = (byte) b;
+                    codeWindow.append(new String(bs));
+                }
+            }); 
+            // copy to the clipboard
+            StringSelection data = new StringSelection(codeWindow.getText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(data, data);
+            // display result message
+            statusText.setText("Success! The XML has been output to the code window\n and copied to the clipboard.");
+    } catch (JAXBException ex) {
+        Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
+        statusText.setText("Something went wrong outputting the XML!");
+    }
+}//GEN-LAST:event_testXmlButtonActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -441,14 +515,12 @@ private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent e
     private javax.swing.JTextArea dataWindow;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTabbedPane infoPane;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem9;
@@ -467,17 +539,20 @@ private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent e
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextArea logWindow;
     private javax.swing.ButtonGroup menuSimModeGroup;
+    private specto.euclidean2.Plot2D metricsPlot;
     private sequor.model.IntegerRangeModel numBatchRunsModel;
     private javax.swing.JSpinner numBatchRunsSpinner;
-    private specto.euclidean2.Plot2D plot2D1;
-    private specto.euclidean2.Plot2D plot2D2;
     private javax.swing.JButton randomizeButton;
+    private javax.swing.JMenuItem randomizeMenuItem;
     private javax.swing.JMenu settingsMenu;
     private simulation.Simulation simulation1;
+    private javax.swing.JComboBox simulationComboBox;
     private javax.swing.JMenu simulationMenu;
+    private specto.euclidean2.Plot2D simulationPlot;
     private applications.SimulationSettingsPanel simulationSettingsPanel1;
     private javax.swing.JButton startingPositionsButton;
     private javax.swing.JPanel statusBar;
     private javax.swing.JLabel statusText;
+    private javax.swing.JButton testXmlButton;
     // End of variables declaration//GEN-END:variables
 }

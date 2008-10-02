@@ -14,6 +14,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.event.EventListenerList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import scio.function.Function;
 import scio.function.FunctionValueException;
 import sequor.Settings;
@@ -36,9 +40,14 @@ import utility.DistanceTable;
  * 
  * @author Elisha Peterson
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class Valuation implements Function<DistanceTable,Double> {
     
     public ValuationSettings vs;
+
+    public Valuation() {
+        this(null,null,null,DIST_MIN,0.0);
+    }
     
     public Valuation(Vector<Team> teams, Team owner, Team target, double threshold) { this(teams, owner, target, DIST_MIN, threshold); }
     public Valuation(Vector<Team>  teams, Team owner, Team target, int type){ this(teams, owner, target, type, 0.0); }
@@ -146,12 +155,27 @@ public class Valuation implements Function<DistanceTable,Double> {
     
     // BEAN PATTERNS
     
+    @XmlAttribute
     public double getThreshold(){return vs.threshold.getValue();}
-    public int getType(){return vs.type.getValue();}
-    public Team getOwner(){return vs.owner;}
-    public Team getTarget(){return vs.target;}
-    public boolean isCooperationTesting() { return vs.testsCooperation.getValue(); }
+    public void setThreshold(double t){vs.threshold.setValue(t);}
     
+    @XmlAttribute(name="type")
+    public int getType(){return vs.type.getValue();}
+    public void setType(int t){vs.type.setValue(t);}
+
+    public String getOwnerName(){return vs.owner.getName();}
+    
+    @XmlAttribute(name="target")
+    public String getTargetName(){return vs.target.getName();}
+    
+    public Team getOwner(){return vs.owner;}
+    
+    public Team getTarget(){return vs.target;}
+    
+    @XmlAttribute(name="cooperationOn")
+    public boolean isCooperationTesting() { return vs.testsCooperation.getValue(); }
+    public void setCooperationTesting(boolean ct){vs.testsCooperation.setValue(ct);}
+        
     public HashSet<Agent> getComplement(){ return vs.valueAgents.getComplement(); }
             
     @Override

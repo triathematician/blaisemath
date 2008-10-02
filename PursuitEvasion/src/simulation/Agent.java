@@ -6,11 +6,9 @@
 package simulation;
 
 import behavior.ApproachPath;
-import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
-import behavior.LargeCircleSearch;
 import tasking.Task;
 import utility.DistanceTable;
 import scio.coordinate.R2;
@@ -22,9 +20,15 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.Collection;
 import javax.swing.event.EventListenerList;
-import javax.swing.JPanel;
 import behavior.TaskFusion;
 import behavior.TrustMap;
+import javax.swing.JPanel;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import metrics.Goal;
+import scio.function.FunctionValueException;
 import tasking.TaskGenerator;
 import sequor.Settings;
 import sequor.model.ColorModel;
@@ -41,6 +45,7 @@ import sequor.SettingsProperty;
  * 
  * @author Elisha Peterson
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class Agent {
     
     // STATIC PROPERTIES
@@ -97,6 +102,15 @@ public class Agent {
     public void addTaskGenerator(TaskGenerator tag){
         taskGenerators.add(tag);
     }
+    public Vector<Goal> getGoals(){
+        Vector<Goal> result=new Vector<Goal>();
+        for(TaskGenerator tg:taskGenerators){
+            if(tg instanceof Goal){
+                result.add((Goal)tg);
+            }
+        }
+        return result;
+    }
     
     
     
@@ -104,7 +118,7 @@ public class Agent {
 
     /** First initialization of the agent. */
     public void initialize(){
-        myBehavior=Behavior.getBehavior(getBehaviorType());
+        myBehavior=Behavior.getBehavior(getBehaviorCode());
         tasks=new Vector<Task>();
         initialPosition=null;
         pov=new Vector<Agent>();
@@ -128,19 +142,11 @@ public class Agent {
         setSensorRange(team.getSensorRange());
         setCommRange(team.getCommRange());
         setTopSpeed(team.getTopSpeed());
-        setBehavior(team.getBehavior());
+        setBehaviorCode(team.getBehavior());
         setLeadFactor(team.getLeadFactor());
         setColor(team.getColorModel().getValue());
     }
     
-    
-    // BEAN PATTERNS: GETTERS & SETTERS
-    
-    public Behavior getBehavior(){return myBehavior;}
-    public R2 getPosition(){return loc.getStart();}
-    private void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}
-    private void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
-    // See just before settings subclass for the rest!
     
     
     // BEAN PATTERNS: RESULTS
@@ -251,20 +257,55 @@ public class Agent {
         }
     }
     
+    // BEAN PATTERNS: GETTERS & SETTERS
+        
+    @XmlAttribute
+    public String getName(){return ags.getName();}
+    public void setName(String newValue){ags.setName(newValue);}
     
-    // BEAN PATTERNS: INITIAL SETTINGS
-    
+    @XmlElement(name="start")
+    public R2 getInitialPosition(){return new R2(initialPosition.getX(),initialPosition.getY());}
     public void setInitialPosition(R2 point){getPointModel().setTo(point);}
     public void setInitialPosition(double x,double y){getPointModel().setTo(x,y);}
-    public R2 getInitialPosition(){return new R2(initialPosition.getX(),initialPosition.getY());}
+    
+    @XmlAttribute
     public double getSensorRange(){return ags.sensorRange.getValue();}
+    public void setSensorRange(double newValue){ags.sensorRange.setValue(newValue);}
+    
+    @XmlAttribute
     public double getCommRange(){return ags.commRange.getValue();}
+    public void setCommRange(double newValue){ags.commRange.setValue(newValue);}
+    
+    @XmlAttribute
     public double getTopSpeed(){return ags.topSpeed.getValue();}
-    public int getBehaviorType(){return ags.behavior.getValue();}
+    public void setTopSpeed(double newValue){ags.topSpeed.setValue(newValue);}
+
+    @XmlAttribute
     public double getLeadFactor(){return ags.leadFactor.getValue();}
+    public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
+
+    @XmlElement(name="color")
     public ColorModel getColorModel(){return ags.color;}
+    public void setColorModel(ColorModel cm) { ags.color.copyValuesFrom(cm); }  
+    
+    public void setColor(Color newValue){ags.color.setValue(newValue);}
+    
+    @XmlAttribute(name="behaviorCode")
+    public int getBehaviorCode(){return ags.behavior.getValue();}
+    public void setBehaviorCode(int newValue){
+        ags.behavior.setValue(newValue);
+        if(newValue==Behavior.APPROACHPATH){}
+    }
+    
+    public Behavior getBehavior(){return myBehavior;}
+    
+    public R2 getPosition(){return loc.getStart();}
+    private void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
+    private void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}   
+        
     @Override
-    public String toString(){return ags.toString();}
+    public String toString(){return getName();}
+    
     public R2 getPositionTime(double t){
         try {
             return new R2(ags.pm.getValue(t));
@@ -272,19 +313,10 @@ public class Agent {
             return R2.ORIGIN;
         }
     }
-    public boolean isActive(){return active;}
     
+    public boolean isActive(){return active;}    
     public void deactivate(){active=false;}
-    public void setSensorRange(double newValue){ags.sensorRange.setValue(newValue);}
-    public void setCommRange(double newValue){ags.commRange.setValue(newValue);}
-    public void setTopSpeed(double newValue){ags.topSpeed.setValue(newValue);}
-    public void setBehavior(int newValue){
-        ags.behavior.setValue(newValue);
-        if(newValue==Behavior.APPROACHPATH){}
-    }
-    public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
-    public void setColor(Color newValue){ags.color.setValue(newValue);}
-    public void setString(String newValue){ags.setName(newValue);}
+    
     public void setFixedPath(String xt,String yt){ags.pm.setXString(xt);ags.pm.setYString(yt);}
     
     public JPanel getPanel(){return ags.getPanel();}

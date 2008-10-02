@@ -6,7 +6,8 @@
 package tasking;
 
 import java.util.Collection;
-import java.util.Vector;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import simulation.Agent;
 import simulation.Team;
 import utility.DistanceTable;
@@ -16,11 +17,37 @@ import utility.DistanceTable;
  * <br><br>
  * @author ae3263
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class TaskGenerator {
     
-    Team target;
-    int goalType;    
+    // CONSTANTS
     
+    public static final int NO_TASKING=0;
+    public static final int AUTO_CLOSEST=1;
+    public static final int AUTO_TWO_LINE=2;
+    public static final int AUTO_FARTHEST=3;
+    public static final int AUTO_COM=4;
+    public static final int AUTO_GRADIENT=5;
+    public static final int CONTROL_CLOSEST=6;
+    public static final int CONTROL_OPTIMAL=7;
+    public static final String[] TASKING_STRINGS=
+    {"None","Autonomous Closest","Autonomous Two Closest","Autonomous Farthest",
+     "Autonomous Center-of-Mass","Autonomous Gradient","Control Closest", "Control Optimal"};
+    
+    // ATTRIBUTES
+    
+    /** The target team for the task. */
+    Team target;
+    
+    /** Determines the type of tasking. */
+    int goalType = NO_TASKING;
+    
+    // CONSTRUCTORS
+    
+    /** Default constructor. */
+    public TaskGenerator(){ target = null; }
+    
+    /** Constructs with given properties. */
     public TaskGenerator(Team target,int type){
         this.target = target;
         this.goalType = type;
@@ -46,21 +73,6 @@ public abstract class TaskGenerator {
     public void setTarget(Team target) {
         this.target = target;
     }
-    
-    
-    // STATIC CONSTANTS
-    
-    public static final int NO_TASKING=0;
-    public static final int AUTO_CLOSEST=1;
-    public static final int AUTO_TWO_LINE=2;
-    public static final int AUTO_FARTHEST=3;
-    public static final int AUTO_COM=4;
-    public static final int AUTO_GRADIENT=5;
-    public static final int CONTROL_CLOSEST=6;
-    public static final int CONTROL_OPTIMAL=7;
-    public static final String[] TASKING_STRINGS=
-    {"None","Autonomous Closest","Autonomous Two Closest","Autonomous Farthest",
-     "Autonomous Center-of-Mass","Autonomous Gradient","Control Closest", "Control Optimal"};
     
     // STATIC FACTORY METHODS    
     
