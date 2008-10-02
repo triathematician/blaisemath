@@ -16,10 +16,27 @@ import specto.PlotPanel;
  * @author Elisha Peterson
  */
 public class Plot2D extends PlotPanel<Euclidean2> {
+    
+    // NATIVE OBJECTS
+    
+    /** Axes object */
+    Axes2D axes;
+    /** Grid object */
+    StandardGrid2D grid;
+    
+    // CONSTRUCTOR
+    
     /** Default constructor */
     public Plot2D(){
         super(new Euclidean2());
-        addBase(new StandardGrid2D());
-        addBase(new Axes2D());
+        axes=new Axes2D();
+        add(axes);
+        grid=new StandardGrid2D();
+        add(grid);
     }
+    
+    // BEAN PATTERNS
+    
+    public int getAxisStyle(){return axes.style.getValue();}
+    public void setAxisStyle(int newValue){axes.style.setValue(newValue);}
 }

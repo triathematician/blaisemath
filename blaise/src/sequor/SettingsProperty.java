@@ -28,7 +28,6 @@ public class SettingsProperty {
     /** The type of editor associated with the data model. */   
     int editorType;
     /** The underlying data model. */
-    @XmlElementRef
     FiresChangeEvents model;
     
     /** Flag specifying whether data can be edited. */

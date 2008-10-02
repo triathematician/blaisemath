@@ -12,6 +12,7 @@ import java.text.NumberFormat;
  * 
  * @author Elisha Peterson
  */
+//@XmlAccessorType(XmlAccessType.NONE)
 public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement {
     public static final R2 ORIGIN = new R2(0,0);
     public static final R2 INFINITY = new R2(java.lang.Double.POSITIVE_INFINITY,java.lang.Double.POSITIVE_INFINITY);
@@ -20,6 +21,13 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public R2(double x,double y){super(x,y);}
     public R2(java.awt.geom.Point2D.Double p){x=p.x;y=p.y;}
 
+    // BEAN PATTERNS
+//    @XmlAttribute @Override public double getX() { return x; }
+//    public void setX(double x){this.x = x;}
+//    @XmlAttribute @Override public double getY() { return y; }
+//    public void setY(double y){this.y = y;}
+    
+    
     // OPERATIONS WHICH CHANGE THE POINT
     
     public void translate(R2 b){x+=b.x;y+=b.y;}

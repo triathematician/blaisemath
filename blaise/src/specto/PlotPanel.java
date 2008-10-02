@@ -72,17 +72,29 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     /** The options sub-menu of the context menu. */
     private JMenu optionsMenu;
     
+    /** Standard layout components. */
+    private AnimationControl animator;
+    private NumberSlider timerBar;
+    private MarkerBox markerBox;    
+    
     /** Layout elements. */
     private JToolBar toolBar;
     private JPanel propertyPanel;
     private JPanel inputPanel;
     private JPanel statusPanel;
     private JPanel mainPanel;
+
+    // SETTINGS
     
     /** Determines whether all components should be recomputed. If true, all elements are recomputed.
-     * If false, just the animatable's are "recomputed".
-     */
-    private boolean recomputeAll=false;
+     * If false, just the animatable's are "recomputed". */
+    private boolean recomputeAll = false;
+    
+    /** Determines whether or not animation controls are shown. */
+    private boolean showAnimator = true;
+    
+    /** Determines whether or not markers are shown. */
+    private boolean showMarkers = true;
         
     // CONSTRUCTORS
     
@@ -103,15 +115,10 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         timer.setLooping(true);
         timer.addActionListener(this);
         initContextMenu();
+        
         controls=new HashSet<VisualControl>();
-        AnimationControl ac=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE);
-        add(ac,3,2);
-        add(new NumberSlider(210,10,timer.getModel()),3,4);
-        MarkerBox markerBox=new MarkerBox(Color.YELLOW,DrawnPath.HIGHLIGHTER);
-        markerBox.addMarker(Color.BLUE, DrawnPath.MARKER);
-        markerBox.addMarker(Color.RED, DrawnPath.PEN);
-        markerBox.addMarker(Color.BLACK, DrawnPath.PENCIL);
-        add(markerBox,3,0);        
+        if(showAnimator){ addAnimationControls(); }
+        if(showMarkers){ addMarkerBox(); }
         
         baseComponents=new PlottableGroup<V>();
         components=new PlottableGroup<V>();
@@ -120,6 +127,30 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+    }
+    
+    private void addAnimationControls(){
+        if(animator==null){ animator=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE); }
+        if(!controls.contains(animator)){ add(animator,3,2); }
+        if(timerBar==null){ timerBar = new NumberSlider(210,10,timer.getModel());}
+        if(!controls.contains(timerBar)){ add(timerBar,3,4); }        
+    }
+    private void removeAnimationControls(){
+        if(controls.remove(animator)){animator.removeChangeListener(this);}
+        if(controls.remove(timerBar)){timerBar.removeChangeListener(this);}
+    }
+    
+    private void addMarkerBox(){
+        if(markerBox==null){
+            markerBox=new MarkerBox(Color.YELLOW,DrawnPath.HIGHLIGHTER);
+            markerBox.addMarker(Color.BLUE, DrawnPath.MARKER);
+            markerBox.addMarker(Color.RED, DrawnPath.PEN);
+            markerBox.addMarker(Color.BLACK, DrawnPath.PENCIL);
+        }
+        if(!controls.contains(markerBox)){ add(markerBox,3,0); }
+    }
+    private void removeMarkerBox(){
+        if(controls.remove(markerBox)){markerBox.removeChangeListener(this);}
     }
     
     private void initLayout(){
@@ -159,20 +190,30 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     // BEAN PATTERNS: GETTERS & SETTERS
     
+    public boolean isAnimatorVisible(){return showAnimator;}
+    public void setAnimatorVisible(boolean newValue){
+        if(newValue!=showAnimator){
+            if(newValue==true){showAnimator=true;addAnimationControls();}
+            if(newValue==false){showAnimator=false;removeAnimationControls();}
+        }
+    }
+    
+    public boolean isMarkerBoxVisible(){return showMarkers;}
+    public void setMarkerBoxVisible(boolean newValue){
+        if(newValue!=showMarkers){
+            if(newValue==true){showMarkers=true;addMarkerBox();}
+            if(newValue==false){showMarkers=false;removeMarkerBox();}
+        }
+    }
+    
     /** Returns timer used with this plot. */
     public RangeTimer getTimer(){return timer;}
     
     /** Sets timer for use with this plot to that specified. */
     public void setTimer(RangeTimer timer){
         if(this.timer != timer) {
-            for(VisualControl vc : controls) {
-                if (vc instanceof AnimationControl) {
-                    ((AnimationControl)vc).setTimer(timer);
-                }
-                if (vc instanceof NumberSlider && ((NumberSlider)vc).getModel()==this.timerModel){
-                    ((NumberSlider)vc).setModel(timer.getModel());
-                }
-            }
+            if(animator!=null){animator.setTimer(timer);}
+            if(timerBar!=null){timerBar.setModel(timer.getModel());}
             timerModel.removeChangeListener(this);
             timerModel = (IntegerRangeModel) timer.getModel();
             timerModel.addChangeListener(this);
