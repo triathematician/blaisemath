@@ -6,15 +6,11 @@
 
 package curro;
 
-import java.awt.Color;
-import java.awt.Component;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
+import analysis.MainVisuals;
+import analysis.SimulationLog;
 import scio.coordinate.R2;
+import sequor.editor.ComboBoxEditor;
+import simulation.Simulation;
 
 /**
  *
@@ -22,7 +18,8 @@ import scio.coordinate.R2;
  */
 public class PEGApplet extends javax.swing.JApplet {
     
-    simulation.Simulation simulation1;
+    Simulation simulation1;
+    SimulationLog dataLog1;
     
     /** Initializes the applet PEGApplet */
     public void init() {
@@ -30,19 +27,18 @@ public class PEGApplet extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     simulation1=new simulation.Simulation();
-
+                    dataLog1 = new analysis.SimulationLog();
+                    initComponents();    
+                    dataLog1.initialize(simulation1);   
+                    plot2D1.add(new MainVisuals(simulation1));
+                    plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
                     simulation1.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                             simulation1ActionPerformed(evt);
                         }
                     });
-                    initComponents();        
-                    jTree1.setModel(simulation1.getTreeModel());
-                    plot2D1.getVisometry().setBounds(new R2(-50,-50),new R2(50,50));
-                    simulation1.setAnimationCycle(plot2D1);
+                    simulationComboBox.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
                     simulation1.run();
-                    simulation1.placeInitialPointsOn(plot2D1);
-                    simulation1.placeGraphsOn(plot2D1);
                 }
             });
         } catch (Exception ex) {
@@ -60,48 +56,26 @@ public class PEGApplet extends javax.swing.JApplet {
 
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
-        jScrollPane2 = new javax.swing.JScrollPane();
         jToolBar1 = new javax.swing.JToolBar();
+        jLabel1 = new javax.swing.JLabel();
+        simulationComboBox = new javax.swing.JComboBox();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         resetButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
+        simulationSettingsPanel1 = new applications.SimulationSettingsPanel(simulation1.ss);
         plot2D1 = new specto.euclidean2.Plot2D();
 
-        jSplitPane2.setDividerLocation(300);
-
-        jTabbedPane1.setMaximumSize(new java.awt.Dimension(450, 600));
-
-        jScrollPane3.setViewportView(simulation1.getPanel());
-        jTabbedPane1.addTab("Simulation", jScrollPane3);
-
-        jSplitPane1.setDividerLocation(130);
-        jSplitPane1.setResizeWeight(0.5);
-        jSplitPane1.setContinuousLayout(true);
-        jSplitPane1.setMaximumSize(new java.awt.Dimension(500, 324));
-        jSplitPane1.setOneTouchExpandable(true);
-
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(100, 23));
-
-        jTree1.setCellRenderer(new MyTreeCellRenderer(createImageIcon("images/teamicon.gif"),createImageIcon("images/teamicon2.gif"),createImageIcon("images/agenticon.gif")));
-        jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                jTree1ValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTree1);
-
-        jSplitPane1.setLeftComponent(jScrollPane1);
-
-        jScrollPane2.setMinimumSize(new java.awt.Dimension(100, 23));
-        jSplitPane1.setRightComponent(jScrollPane2);
-
-        jTabbedPane1.addTab("Teams/Agents", jSplitPane1);
+        jSplitPane2.setDividerLocation(350);
 
         jToolBar1.setFloatable(false);
+
+        jLabel1.setText("Scenario:");
+        jToolBar1.add(jLabel1);
+
+        simulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        simulationComboBox.setMaximumSize(new java.awt.Dimension(150, 20));
+        jToolBar1.add(simulationComboBox);
+        jToolBar1.add(jSeparator1);
 
         resetButton.setFont(new java.awt.Font("Tahoma", 1, 14));
         resetButton.setText("RESET");
@@ -123,19 +97,21 @@ public class PEGApplet extends javax.swing.JApplet {
         });
         jToolBar1.add(runButton);
 
+        simulationSettingsPanel1.setDividerLocation(100);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+            .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
+                .addComponent(simulationSettingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
@@ -144,11 +120,11 @@ public class PEGApplet extends javax.swing.JApplet {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 350, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 405, Short.MAX_VALUE)
+            .addGap(0, 348, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(plot2D1);
@@ -161,44 +137,27 @@ public class PEGApplet extends javax.swing.JApplet {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
         //System.out.println("action performed: "+evt.getActionCommand());
-        if(evt.getActionCommand()=="redraw"){
-            simulation1.placePathsOn(plot2D1);
+        if(evt.getActionCommand().equals("redraw")){
             plot2D1.repaint();
-        } else if(evt.getActionCommand()=="reset"){
-            simulation1.placeInitialPointsOn(plot2D1);
-            simulation1.placeGraphsOn(plot2D1);
-            jTree1.setModel(simulation1.getTreeModel());
-            if(evt.getSource()==simulation1){jScrollPane2.setViewportView(null);}
-            simulation1.setAnimationCycle(plot2D1);
-        } else if(evt.getActionCommand()=="animation"){
-            simulation1.setAnimationCycle(plot2D1);
+        }
+        else if(evt.getActionCommand().equals("recolor")){
+            plot2D1.repaint();
+            simulationSettingsPanel1.repaint();
+        }
+        // simulation has changed in some fundamental way
+        else if(evt.getActionCommand().equals("reset")){
+            plot2D1.clearPlottables();
+            plot2D1.rebuildOptionsMenu();
+            dataLog1.initialize(simulation1);   
+            plot2D1.add(new MainVisuals(simulation1));
         }
     }//GEN-LAST:event_simulation1ActionPerformed
-
-    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-        javax.swing.JPanel result=new javax.swing.JPanel();
-        result.setLayout(new BoxLayout(result,BoxLayout.PAGE_AXIS));
-        // result.setPreferredSize(new Dimension(200,200));
-        // result.setMaximumSize(new Dimension(300,300));
-        DefaultMutableTreeNode node=(DefaultMutableTreeNode)jTree1.getLastSelectedPathComponent();
-        if(node==null){return;}
-        switch(node.getDepth()){
-        case 0:
-            result.add(((simulation.Agent)node.getUserObject()).getPanel());
-            break;
-        case 1:
-            result.add(((simulation.Team)node.getUserObject()).getPanel());
-            break;
-        case 2:
-        }
-        jScrollPane2.setViewportView(result);
-    }//GEN-LAST:event_jTree1ValueChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         simulation1.initStartingLocations();
@@ -211,62 +170,16 @@ public class PEGApplet extends javax.swing.JApplet {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTree jTree1;
     private specto.euclidean2.Plot2D plot2D1;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton runButton;
+    private javax.swing.JComboBox simulationComboBox;
+    private applications.SimulationSettingsPanel simulationSettingsPanel1;
     // End of variables declaration//GEN-END:variables
         
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = PEGApplet.class.getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    } 
-    
-    static class MyTreeCellRenderer extends DefaultTreeCellRenderer {
-        MyTreeCellRenderer(){super();}
-        MyTreeCellRenderer(Icon t,Icon t2,Icon a){
-            super();
-            teamIcon=t;teamIcon2=t2;agentIcon=a;
-            if(t!=null){this.setOpenIcon(t);}
-            if(t2!=null){this.setClosedIcon(t2);}
-            if(a!=null){setLeafIcon(a);}
-        }
-        private Icon teamIcon=null;
-        private Icon teamIcon2=null;
-        private Icon agentIcon=null;
-        private DefaultMutableTreeNode curNode=null;
-        //public Icon getLeafIcon(){return (agentIcon==null)?agentIcon:super.getLeafIcon();}
-        public Color getTextSelectionColor(){
-            if(curNode!=null){
-                if(curNode.getUserObject() instanceof simulation.Team){return ((simulation.Team)curNode.getUserObject()).getColor();}
-                if(curNode.getUserObject() instanceof simulation.Agent){return ((simulation.Agent)curNode.getUserObject()).getColor();}
-            }
-            return super.getTextSelectionColor();
-        }
-        public Color getTextNonSelectionColor() {
-            if(curNode!=null){
-                if(curNode.getUserObject() instanceof simulation.Team){return ((simulation.Team)curNode.getUserObject()).getColor();}
-                if(curNode.getUserObject() instanceof simulation.Agent){return ((simulation.Agent)curNode.getUserObject()).getColor();}
-            }
-            return super.getTextNonSelectionColor();
-        }
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus){
-            if(value instanceof DefaultMutableTreeNode){curNode=(DefaultMutableTreeNode)value;}
-            return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        }
-    }
 }
