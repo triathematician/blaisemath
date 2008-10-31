@@ -19,29 +19,39 @@ import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import scio.coordinate.R2;
 import sequor.Settings;
 import sequor.control.NumberSlider;
 import sequor.control.SliderBox;
 import sequor.model.ColorModel;
-import sequor.model.StringRangeModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
+import sequor.model.StringRangeModel;
 import specto.euclidean2.InitialPointSet2D;
 import specto.style.PointStyle;
+
+
 
 /**
  *
  * @author ae3263
  */
-public class Simulation implements ChangeListener {    
+@XmlRootElement
+public class Simulation implements ChangeListener { 
+    @XmlTransient
     public DataLog log;
-    SimSettings settings;
+    @XmlElementRef
+    Settings settings;
     Vector<InitialPointSet2D> pursuers;
     Vector<InitialPointSet2D> evaders;
     Vector<Double> pDirections;
     Vector<Double> eDirections;
+    @XmlTransient
     public boolean batchProcessing = false;
     
     JTextArea outputArea;
@@ -62,10 +72,10 @@ public class Simulation implements ChangeListener {
     /** resets the entire simulation */
     void reset(){
         pursuers.clear();
-        for(int i=0;i<getNP();i++){pursuers.add(new InitialPointSet2D(settings.colorPursuer.getValue()));}
+        for(int i=0;i<getNP();i++){pursuers.add(new InitialPointSet2D(getPColor()));}
         for(int i=0;i<getNP();i++){pursuers.get(i).setLabel("P"+i);}
         evaders.clear();
-        for(int i=0;i<getNE();i++){evaders.add(new InitialPointSet2D(settings.colorEvader.getValue()));}
+        for(int i=0;i<getNE();i++){evaders.add(new InitialPointSet2D(getEColor()));}
         for(int i=0;i<getNE();i++){evaders.get(i).setLabel("E"+i);}
         randomizePositions();    
         initListening();
@@ -85,13 +95,13 @@ public class Simulation implements ChangeListener {
         adjusting=true;
         for(int i=0;i<getNP();i++){                        
             // place somewhere between x=-max and x=+max and at y=0
-            pursuers.get(i).setPoint(new R2(Math.random()*2*maxp-maxp,0.0));
             pursuers.get(i).getModel().setBounds(-2*maxp,0.0,2*maxp,0.0);
+            pursuers.get(i).setPoint(new R2(Math.random()*2*maxp-maxp,0.0));
         }
         for(int i=0;i<getNE();i++){                        
             // place somewhere between x=-max and x=+max and at y=0
-            evaders.get(i).setPoint(new R2(Math.random()*2*maxe-maxe,0.0));
             evaders.get(i).getModel().setBounds(-2*maxe,0.0,2*maxe,0.0);
+            evaders.get(i).setPoint(new R2(Math.random()*2*maxe-maxe,0.0));
         }
         adjusting=false;
     }
@@ -280,28 +290,63 @@ public class Simulation implements ChangeListener {
         return pursuersWin || evadersWin;
     }
     
-    // Bean patterns
-    public int getNP(){return settings.numPursuer.getValue();}
-    public int getNE(){return settings.numEvader.getValue();}
-    public double getPSpeed(){return settings.speedPursuer.getValue();}
-    public double getESpeed(){return settings.speedEvader.getValue();}
-    public int getPAlgorithm(){return settings.algorithmPursuer.getValue();}
-    public int getEAlgorithm(){return settings.algorithmEvader.getValue();}
-    public Color getPColor(){return settings.colorPursuer.getValue();}
-    public Color getEColor(){return settings.colorEvader.getValue();}
-    public double getGoal(){return settings.goalPosition.getValue();}
-    public double getCaptureRange(){return settings.captureRegion.getValue();}
-    public double getStepSize(){return settings.stepSize.getValue();}
-    public int getNumSteps(){return settings.numSteps.getValue();}
+    // BEAN PATTERNS
+    
+    public int getNP(){return ((SimSettings)settings).numPursuer.getValue();}
+    public int getNE(){return ((SimSettings)settings).numEvader.getValue();}
+    public double getPSpeed(){return ((SimSettings)settings).speedPursuer.getValue();}
+    public double getESpeed(){return ((SimSettings)settings).speedEvader.getValue();}
+    public int getPAlgorithm(){return ((SimSettings)settings).algorithmPursuer.getValue();}
+    public int getEAlgorithm(){return ((SimSettings)settings).algorithmEvader.getValue();}
+    public Color getPColor(){return ((SimSettings)settings).colorPursuer.getValue();}
+    public Color getEColor(){return ((SimSettings)settings).colorEvader.getValue();}
+    public double getGoal(){return ((SimSettings)settings).goalPosition.getValue();}
+    public double getCaptureRange(){return ((SimSettings)settings).captureRegion.getValue();}
+    public double getStepSize(){return ((SimSettings)settings).stepSize.getValue();}
+    public int getNumSteps(){return ((SimSettings)settings).numSteps.getValue();}
+    
+    
+    // BEAN PATTERNS
+
+    @XmlAttribute
+    public Vector<Double> getInitialPursuerPositions(){            
+        Vector<Double> result=new Vector<Double>();
+        for (int i = 0; i < getNP(); i++) { result.add(pursuers.get(i).getPoint().x); }
+        return result;
+    }
+    public void setInitialPursuerPositions(Vector<Double> pos){
+        if(pos!=null){
+            adjusting=true;
+            ((SimSettings)settings).numPursuer.setValue(pos.size());
+            pursuers.clear();
+            for(int i=0;i<pos.size();i++){pursuers.add(new InitialPointSet2D(getPColor()));}
+            for(int i=0;i<pos.size();i++){pursuers.get(i).setPoint(new R2(pos.get(i),0));pursuers.get(i).setLabel("P"+i);}                
+        }
+    }   
+    @XmlAttribute
+    public Vector<Double> getInitialEvaderPositions(){            
+        Vector<Double> result=new Vector<Double>();
+        for (int i = 0; i < getNE(); i++) { result.add(evaders.get(i).getPoint().x); }
+        return result;
+    }
+    public void setInitialEvaderPositions(Vector<Double> pos){
+        if(pos!=null){
+            adjusting=true;
+            ((SimSettings)settings).numEvader.setValue(pos.size());
+            evaders.clear();
+            for(int i=0;i<pos.size();i++){evaders.add(new InitialPointSet2D(getEColor()));}
+            for(int i=0;i<pos.size();i++){evaders.get(i).setPoint(new R2(pos.get(i),0));evaders.get(i).setLabel("E"+i);}                
+        }
+    }        
     
     /** Returns line corresponding to the evader's goal. */
     public InitialPointSet2D getGoalLine(){
         final InitialPointSet2D result=new InitialPointSet2D(
-                new PointRangeModel(settings.goalPosition,
+                new PointRangeModel(((SimSettings)settings).goalPosition,
                 new DoubleRangeModel(0,0,0,0)));
         result.setColor(Color.DARK_GRAY);
         result.style.setValue(PointStyle.RING);
-        settings.goalPosition.addChangeListener(new ChangeListener(){
+        ((SimSettings)settings).goalPosition.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 Vector<R2> path=new Vector<R2>();
                 path.add(result.getPoint());
@@ -315,13 +360,13 @@ public class Simulation implements ChangeListener {
     /** Returns control box with pursuer/evader speeds. */
     public SliderBox getSpeedBox(){
         SliderBox result=new SliderBox();
-        result.add(new NumberSlider(settings.speedPursuer));
-        result.add(new NumberSlider(settings.speedEvader));
+        result.add(new NumberSlider(((SimSettings)settings).speedPursuer));
+        result.add(new NumberSlider(((SimSettings)settings).speedEvader));
         return result;
     }
     
     /** Contains all the initial settings for the simulation. */
-    private class SimSettings extends Settings {
+    public class SimSettings extends Settings {
         /** Number of pursuers */
         private IntegerRangeModel numPursuer=new IntegerRangeModel(3,1,50);
         /** Speed of pursuers */
@@ -357,8 +402,9 @@ public class Simulation implements ChangeListener {
         /** Number of steps in simulation */
         private IntegerRangeModel numSteps=new IntegerRangeModel(1000,0,999999,1);
         
+        // CONSTRUCTOR
         
-        SimSettings(){
+        public SimSettings(){
             setName("Simulation");
             addProperty("# Pursuers",numPursuer,Settings.EDIT_INTEGER);
             addProperty(" Pursuer Speed",speedPursuer,Settings.EDIT_DOUBLE);
@@ -376,6 +422,9 @@ public class Simulation implements ChangeListener {
             addProperty(" Step Size",stepSize,Settings.EDIT_DOUBLE);
             addProperty(" # Steps",numSteps,Settings.EDIT_INTEGER);
         }
+        
+        
+        // EVENT HANDLING
         
         @Override
         public void stateChanged(ChangeEvent e){

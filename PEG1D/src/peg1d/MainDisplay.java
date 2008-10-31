@@ -7,7 +7,13 @@
 package peg1d;
 
 import java.awt.BorderLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import scio.coordinate.R2;
+import sequor.Settings;
+import sequor.component.SettingsMenu;
 
 /**
  *
@@ -41,6 +47,7 @@ public class MainDisplay extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -112,6 +119,17 @@ public class MainDisplay extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton4);
+
+        jButton5.setText("Output");
+        jButton5.setFocusable(false);
+        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton5);
 
         jSplitPane1.setDividerLocation(280);
         jSplitPane1.setContinuousLayout(true);
@@ -203,6 +221,15 @@ public class MainDisplay extends javax.swing.JFrame {
         stat.runSeveral(1000);
         stat.output(jTextArea1,jTextArea2);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+                try {
+                    JAXBContext jc = JAXBContext.newInstance(Simulation.class);
+                    jc.createMarshaller().marshal(simulation1,System.out);
+                } catch (JAXBException ex) {
+                    Logger.getLogger(SettingsMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }                
+}//GEN-LAST:event_jButton5ActionPerformed
     
     /**
      * @param args the command lineSegment arguments
@@ -220,6 +247,7 @@ public class MainDisplay extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
