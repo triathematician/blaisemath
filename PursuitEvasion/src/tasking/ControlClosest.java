@@ -30,7 +30,7 @@ public class ControlClosest extends TaskGenerator {
      */
     @Override
     public void generate(Collection<Agent> team, DistanceTable table, double priority) {
-        DistanceTable dist=new DistanceTable(team,target);            
+        DistanceTable dist=new DistanceTable(team,target.agents);            
         // assign prey by closest-to-pursuer first
         Vector<Agent> ps=new Vector<Agent>(team);
         Vector<Agent> es=new Vector<Agent>(target.getActiveAgents());

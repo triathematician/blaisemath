@@ -15,7 +15,6 @@ import metrics.VictoryCondition;
 import scio.coordinate.R2;
 import sequor.model.StringRangeModel;
 import sequor.style.VisualStyle;
-import simulation.Simulation;
 import tasking.TaskGenerator;
 
 /**
@@ -27,30 +26,30 @@ public class SimulationFactory {
     
     // CONSTANTS
     
+    /** Custom game */
+    public static final int CUSTOM = 0;
     /** n-on-1 game */
-    public static final int SIMPLE_PE = 0;
+    public static final int SIMPLE_PE = 1;
     /** Specifies simple game with two teams, pursuers and evaders */
-    public static final int TWOTEAM = 1;
+    public static final int TWOTEAM = 2;
     /** Specifies simple game with three teams, pursuers, pursuers/evaders, and evaders */
-    public static final int SIMPLE_PPE = 2;
+    public static final int SIMPLE_PPE = 3;
     /** Specifies game with two teams, pursuers, and evaders, with evaders seeking a goal */
-    public static final int SAHARA_PE = 3;
+    public static final int SAHARA_PE = 4;
     /** Lots of teams!! */
-    public static final int LOTS_OF_FUN = 4;
+    public static final int LOTS_OF_FUN = 5;
     /** For looking at lead factors. */
-    public static final int LEAD_FACTOR = 5;
+    public static final int LEAD_FACTOR = 6;
     /** Custom starting locations */
-    public static final int CUSTOM_START_SAHARA = 6;
-    /** Custom */
-    public static final int FOOTBALL_GAME =7;
+    public static final int CUSTOM_START_SAHARA = 7;
     /** Evaders go to endzone. Has sidelines and obstacles. */
-    public static final int CUSTOM = 7;
+    public static final int FOOTBALL_GAME = 8;
     
     /** Strings corresponding to each preset simulation. */
     public static final String[] GAME_STRINGS = {
-        "Follow the Light", "Cops & Robbers", "Antarctica",
+        "Custom", "Follow the Light", "Cops & Robbers", "Antarctica",
         "Sahara", "Swallowed", "Jurassic",
-        "Custom Start Sahara","Football Game", "Custom"};
+        "Custom Start Sahara","Football Game"};
     
     
     // STATIC FACTORY METHODS
@@ -86,18 +85,15 @@ public class SimulationFactory {
     
     // METHODS FOR INITIALIZING SIMULATION
     
-    /** Initializes the specified simulation to the settings specified by the given code. */
-    public static void setSimulation(Simulation sim, int simCode) {
-        sim.mainInitialize(GAME_STRINGS[simCode], getTeams(simCode));
-    }
-    
     /** Simulation representing an n-on-1 scenario. */
     public static Vector<Team> lightSimulation() {        
         // Teams
         Vector<Team> teams = new Vector<Team>();
+        Team bugTeam = new Team(); teams.add(bugTeam);
+        Team lightTeam = new Team(); teams.add(lightTeam);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team bugTeam = new Team("Bugs", 4, Team.START_RANDOM, Behavior.LEADING, Color.DARK_GRAY);
-        Team lightTeam = new Team("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, VisualStyle.DARK_GREEN);        
+        bugTeam.initSettings("Bugs", 4, Team.START_RANDOM, Behavior.LEADING, Color.DARK_GRAY);
+        lightTeam.initSettings("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, VisualStyle.DARK_GREEN);        
         teams.add(bugTeam);
         teams.add(lightTeam);
         
@@ -131,11 +127,11 @@ public class SimulationFactory {
     public static Vector<Team> twoTeamSimulation() {        
         // Teams
         Vector<Team> teams = new Vector<Team>();
+        Team copTeam = new Team(); teams.add(copTeam);
+        Team robberTeam = new Team(); teams.add(robberTeam);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team copTeam = new Team("Cops", 5, Team.START_RANDOM, Behavior.LEADING, Color.BLUE);
-        Team robberTeam = new Team("Robbers", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.ORANGE);        
-        teams.add(copTeam);
-        teams.add(robberTeam);
+        copTeam.initSettings("Cops", 5, Team.START_RANDOM, Behavior.LEADING, Color.BLUE);
+        robberTeam.initSettings("Robbers", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.ORANGE);        
         
         // Capture Conditions
         //                      ( TEAMS , OPPONENT , CAPTURE RANGE , WHAT HAPPENS UPON CAPTURE ) 
@@ -161,13 +157,13 @@ public class SimulationFactory {
     public static Vector<Team> threeTeamSimulation() {        
         // Teams
         Vector<Team> teams = new Vector<Team>();
+        Team sealTeam = new Team(); teams.add(sealTeam);
+        Team penguinTeam = new Team(); teams.add(penguinTeam);
+        Team fishTeam = new Team(); teams.add(fishTeam);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team sealTeam = new Team("Seals", 3, Team.START_RANDOM, Behavior.LEADING, Color.BLUE);
-        Team penguinTeam = new Team("Penguins", 4, Team.START_RANDOM, Behavior.LEADING, Color.BLACK);
-        Team fishTeam = new Team("Fish", 5, Team.START_RANDOM, Behavior.STRAIGHT, Color.GREEN);
-        teams.add(sealTeam);
-        teams.add(penguinTeam);
-        teams.add(fishTeam);
+        sealTeam.initSettings("Seals", 3, Team.START_RANDOM, Behavior.LEADING, Color.BLUE);
+        penguinTeam.initSettings("Penguins", 4, Team.START_RANDOM, Behavior.LEADING, Color.BLACK);
+        fishTeam.initSettings("Fish", 5, Team.START_RANDOM, Behavior.STRAIGHT, Color.GREEN);
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
@@ -186,14 +182,14 @@ public class SimulationFactory {
         
         // Teams
         Vector<Team> teams = new Vector<Team>();
+        Team lionTeam = new Team(); teams.add(lionTeam);
+        Team wildebeastTeam = new Team(); teams.add(wildebeastTeam);
+        Team wateringHole = new Team(); teams.add(wateringHole);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team lionTeam = new Team("Lions", 4, Team.START_RANDOM, Behavior.QUADRANTSEARCHSMALL, Color.ORANGE);
+        lionTeam.initSettings("Lions", 4, Team.START_RANDOM, Behavior.QUADRANTSEARCHSMALL, Color.ORANGE);
         lionTeam.setTopSpeed(6.5);
-        Team wildebeastTeam = new Team("Wildebeast", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
-        Team wateringHole = new Team("Water", 1, Team.START_RANDOM, Behavior.STATIONARY, Color.BLUE);
-        teams.add(lionTeam);
-        teams.add(wildebeastTeam);
-        teams.add(wateringHole);
+        wildebeastTeam.initSettings("Wildebeast", 4, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
+        wateringHole.initSettings("Water", 1, Team.START_RANDOM, Behavior.STATIONARY, Color.BLUE);
                 
         // Capture Conditions
         //                      ( TEAMS , OPPONENT , CAPTURE RANGE , WHAT HAPPENS UPON CAPTURE ) 
@@ -222,20 +218,20 @@ public class SimulationFactory {
         
         // Teams
         Vector<Team> teams = new Vector<Team>();
+        Team raptors = new Team(); teams.add(raptors);
+        Team mathematicians = new Team(); teams.add(mathematicians);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        Team raptors = new Team("Velociraptors", 11, Team.START_ZERO, Behavior.LEADING, Color.DARK_GRAY);
-        Team mathematicians = new Team("Mathematician", 1, Team.START_RANDOM, Behavior.APPROACHPATH, Color.GREEN);
-        teams.add(raptors);
-        teams.add(mathematicians);
+        raptors.initSettings("Velociraptors", 11, Team.START_ZERO, Behavior.LEADING, Color.DARK_GRAY);
+        mathematicians.initSettings("Mathematician", 1, Team.START_RANDOM, Behavior.APPROACHPATH, Color.GREEN);
         
         // Special Settings
         mathematicians.setFixedPath("20cos(t/4)", "20sin(t/2)");
-        for (int i = 0; i < raptors.size(); i++) {
-            raptors.get(i).setColor(new Color(100 + 15 * i, 25 * i, 25 * i));
-            raptors.get(i).setLeadFactor(i / 10.0);
+        for (int i = 0; i < raptors.agents.size(); i++) {
+            raptors.agents.get(i).setColorValue(new Color(100 + 15 * i, 25 * i, 25 * i));
+            raptors.agents.get(i).setLeadFactor(i / 10.0);
         }
-        raptors.get(0).setColor(Color.DARK_GRAY);
-        raptors.get(raptors.size() - 1).setColor(new Color(100, 100, 250));
+        raptors.agents.get(0).setColorValue(Color.DARK_GRAY);
+        raptors.agents.get(raptors.agents.size() - 1).setColorValue(new Color(100, 100, 250));
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
@@ -248,18 +244,18 @@ public class SimulationFactory {
     public static Vector<Team> bigSimulation() {
         
         // Teams
-        Vector<Team> teams = new Vector<Team>();
+        Vector<Team> teams = new Vector<Team>(10);
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        teams.add(new Team("Old Lady", 1, Team.START_RANDOM, Behavior.LEADING, Color.RED));
-        teams.add(new Team("Horses", 4, Team.START_RANDOM, Behavior.LEADING, Color.ORANGE));
-        teams.add(new Team("Cows", 3, Team.START_LINE, Behavior.LEADING, Color.YELLOW));
-        teams.add(new Team("Goats", 5, Team.START_ARC, Behavior.LEADING, Color.GREEN));
-        teams.add(new Team("Dogs", 6, Team.START_RANDOM, Behavior.LEADING, Color.CYAN));
-        teams.add(new Team("Cats", 3, Team.START_CIRCLE, Behavior.LEADING, Color.BLUE));
-        teams.add(new Team("Birds", 2, Team.START_RANDOM, Behavior.LEADING, Color.MAGENTA));
-        teams.add(new Team("Spiders", 4, Team.START_CIRCLE, Behavior.STRAIGHT, Color.PINK));
-        teams.add(new Team("Flies", 2, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY));
-        teams.add(new Team("Why", 2, Team.START_RANDOM, Behavior.STATIONARY, Color.BLACK));
+        teams.get(0).initSettings("Old Lady", 1, Team.START_RANDOM, Behavior.LEADING, Color.RED);
+        teams.get(1).initSettings("Horses", 4, Team.START_RANDOM, Behavior.LEADING, Color.ORANGE);
+        teams.get(2).initSettings("Cows", 3, Team.START_LINE, Behavior.LEADING, Color.YELLOW);
+        teams.get(3).initSettings("Goats", 5, Team.START_ARC, Behavior.LEADING, Color.GREEN);
+        teams.get(4).initSettings("Dogs", 6, Team.START_RANDOM, Behavior.LEADING, Color.CYAN);
+        teams.get(5).initSettings("Cats", 3, Team.START_CIRCLE, Behavior.LEADING, Color.BLUE);
+        teams.get(6).initSettings("Birds", 2, Team.START_RANDOM, Behavior.LEADING, Color.MAGENTA);
+        teams.get(7).initSettings("Spiders", 4, Team.START_CIRCLE, Behavior.STRAIGHT, Color.PINK);
+        teams.get(8).initSettings("Flies", 2, Team.START_RANDOM, Behavior.STRAIGHT, Color.GRAY);
+        teams.get(9).initSettings("Why", 2, Team.START_RANDOM, Behavior.STATIONARY, Color.BLACK);
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
@@ -274,15 +270,15 @@ public class SimulationFactory {
          
          //teams, offense is evading
          Vector<Team> teams = new Vector<Team>();
+        Team sideline = new Team(); teams.add(sideline);
+        Team endzone = new Team(); teams.add(endzone);
+        Team offense = new Team(); teams.add(offense);
+        Team defense = new Team(); teams.add(defense);
           //                             ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )    
-         Team sideline = new Team("Sidelines", 20, Team.START_SIDELINE, Behavior.STATIONARY, Color.RED);
-         Team endzone = new Team("Endzone", 9, Team.START_ENDZONE, Behavior.STATIONARY, Color.GREEN);
-         Team offense = new Team("Army", 6, Team.START_OFFENSE, Behavior.STRAIGHT, Color.BLACK);
-         Team defense = new Team("Navy", 6, Team.START_DEFENSE, Behavior.LEADING, Color.blue);
-         teams.add(sideline);
-         teams.add(endzone);
-         teams.add(offense);
-         teams.add(defense);
+         sideline.initSettings("Sidelines", 20, Team.START_SIDELINE, Behavior.STATIONARY, Color.RED);
+         endzone.initSettings("Endzone", 9, Team.START_ENDZONE, Behavior.STATIONARY, Color.GREEN);
+         offense.initSettings("Army", 6, Team.START_OFFENSE, Behavior.STRAIGHT, Color.BLACK);
+         defense.initSettings("Navy", 6, Team.START_DEFENSE, Behavior.LEADING, Color.blue);
         
          // Capture Conditions
         //                      ( TEAMS , OPPONENT , CAPTURE RANGE , WHAT HAPPENS UPON CAPTURE ) 

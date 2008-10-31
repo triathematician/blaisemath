@@ -27,16 +27,16 @@ public class AutoTwoClosest extends AutonomousTaskGenerator {
                     return (int) Math.signum(table.get(agent, o1) - table.get(agent, o2));
                 }
         });
-        for(Agent a : target) {
+        for(Agent a : target.agents) {
             if (agent.sees(a)) { closest.add(a); }
         }
         try {
             V2 result = new V2(agent.loc.closestOnLine(closest.pollFirst().loc,closest.pollFirst().loc));
             return result;
         } catch (Exception e) {
-            if(target.size()==1) {
-                if(agent.sees(target.firstElement())){
-                    return target.firstElement().loc;
+            if(target.agents.size()==1) {
+                if(agent.sees(target.agents.firstElement())){
+                    return target.agents.firstElement().loc;
                 } else {
                     return null;
                 }

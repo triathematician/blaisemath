@@ -14,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,132 +43,137 @@ import utility.StartingPositionsFactory;
  * Includes cooperative/control algorithms, broadcast methods for instructing team's agents, etc.
  */
 @XmlAccessorType(XmlAccessType.NONE)
-public class Team extends Vector<Agent> implements ActionListener, PropertyChangeListener {
-    // PROPERTIES
+public class Team implements ActionListener {
+    
+    //
+    // CONTROL VARIABLES (define the simulation)
+    //
+        
     /** Global team settings */
-    public TeamSettings tes;
+    public TeamSettings tes;    
     /** Agent settings */
-    public AgentGroupSettings ags;
+    public Settings ags;    
     /** Metrics settings group */
-    public MetricSettings mets;
+    public Settings mets;    
     /** Tasking settings group */
-    public TaskingSettings tass;
-    /** Capture conditions of the team. */
-    @XmlElement
-    public Vector<CaptureCondition> capture;
-    /** Value metrics of the team. */
-    @XmlElementWrapper(name="metrics")
-    @XmlElement(name="metric")
-    public Vector<Valuation> metrics;
-    /** Victory condition of the team. */
-    @XmlElement
-    public VictoryCondition victory;
-//    
-//    /** The team's goals */
-//    private Vector<Goal> goals;
-//    /** The goals which involve "capturing" */
-//    private HashSet<Goal> captureGoals;
-    /** Control agent. */
-    private Agent control;
-    /** Active agents */
-    private HashSet<Agent> activeAgents;
-    /** Agents which start the simulation as active. */
-    private HashSet<Agent> startAgents;
-//    /** Agents used to measure a team's value function. */
-//    private HashSet<Agent> valueAgents;
-//    /** Active agents used to measure team's value function. */
-//    private HashSet<Agent> activeValueAgents;
-    /** Whether to forward action events */
-    private boolean editing = false;
-    /** Result of the simulation if it should be recorded. Defaults to time at which goal is reached. */
-   private double value;
-   
-   /** Stores number of agents which have been captured by opposing teams.
-    * The value of this team itself represents the number which make it to "safety".
-    */
-    private HashMap<Team,Integer> captures;
+    public Settings tass;
 
     /** Stores initial positions (if specific) */
     R2[] positions;
+        
+    /** The agents on the team. */
+    public Vector<Agent> agents;
+    /** Control agent. */
+    private Agent control;
     
+    /** Capture conditions of the team. */
+    @XmlElement(name="capture")
+    public Vector<CaptureCondition> capture;    
+    /** Value metrics of the team. */
+    @XmlElement(name="metric")
+    public Vector<Valuation> metrics;    
+    /** Victory condition of the team. */
+    @XmlElement(name="victory")
+    public VictoryCondition victory;
+    
+    
+    //
+    // STATE VARIABLES (change during simulation)
+    //
+    
+    /** Active agents */
+    private HashSet<Agent> activeAgents;
+    
+    /** Agents which start the simulation as active. */
+    private HashSet<Agent> startAgents;
+    
+    /** Whether to forward action events */
+    private boolean editing = false;
+    
+    /** Result of the simulation if it should be recorded. Defaults to time at which goal is reached. */
+    private double value = Double.MAX_VALUE;
+   
+    /** Stores number of agents which have been captured by opposing teams.
+    * The value of this team itself represents the number which make it to "safety".
+    */
+    private HashMap<Team,Integer> captures;
+    
+    //
     // CONSTRUCTORS
+    //
+    
+    /** Default constructor. */    
     public Team() {
-        super();
-        initLists();
-        initSettings();
-    }
-
-    public Team(Team team) {
-        this(team.tes);
-    }
-
-    public Team(String string, int size, int start, int behavior, Color color) {
-        this(size, start, behavior, color);
-        setName(string);
-    }
-
-    Team(TeamSettings tes) {
-        super();
-        value = Double.MAX_VALUE;
-        initLists();
-        initSettings();
-        this.tes = tes;
+        initControlVariables();
+        initStateVariables();
         initAgentNumber();
     }
 
-    public Team(int size, int start, int behavior, Color color) {
-        super();
-        editing = true;
-        value = Double.MAX_VALUE;
-        initLists();
-        initSettings();
-        setSize(size);
-        setStartCode(start);
-        setBehavior(behavior);
-        clear();
-        setColor(color);
+    /** Initializes based on another team's settings. */    
+    public Team(Team t2) {
+        initControlVariables();
+        tes = t2.tes;
+        initStateVariables();
         initAgentNumber();
-        editing = false;
+    }
+
+    /** Set up certain settings. */
+    public void initSettings(String name, int size, int startCode, int behaviorCode, Color color) {
+        if(name!=null){setName(name);}
+        setAgentNumber(size);
+        setStartCode(startCode);
+        setBehavior(behaviorCode);
+        setColorValue(color);   
     }
     
-    // METHODS: HELP FOR INITIALIZAITON
+    //
+    // METHODS: INITIALIZERS
+    //
+    
     /** Initializes settings. */
-    public void initSettings() {
+    public void initControlVariables() {
         tes = new TeamSettings();
-        ags = new AgentGroupSettings();
-        mets = new MetricSettings();
-        tass = new TaskingSettings();
+        ags = new Settings("Agents");
         tes.addChild(ags, Settings.PROPERTY_INDEPENDENT);
+        tass = new Settings("Taskings");
         tes.addChild(tass, Settings.PROPERTY_INDEPENDENT);
+        mets = new Settings("Metrics");
         tes.addChild(mets, Settings.PROPERTY_INDEPENDENT);
-    }
-
-    /** Initializes all the vectors. */
-    public void initLists() {
-        //goals=new Vector<Goal>();
+              
+        agents = new Vector<Agent>();
+        control = new Agent();
         capture = new Vector<CaptureCondition>();
         metrics = new Vector<Valuation>();
-        //captureGoals=new HashSet<Goal>();
-        activeAgents = new HashSet<Agent>();
-        startAgents = new HashSet<Agent>();
-//        valueAgents=new HashSet<Agent>();
-//        activeValueAgents=new HashSet<Agent>();
-        control = new Agent();
-        captures = new HashMap<Team,Integer>();
+    }
+    
+    /** Initializes all the vectors. */
+    public void initStateVariables() {
+        if(startAgents==null){ startAgents = new HashSet<Agent>(); }
+        if(activeAgents==null){ activeAgents = new HashSet<Agent>(); }
+        activeAgents.clear();
+        activeAgents.addAll(startAgents);
+        if(captures==null){ captures = new HashMap<Team,Integer>(); } else { captures.clear(); }
+        for (Agent a : agents) { a.initStateVariables(); }
+        if (victory != null) { victory.initStateVariables(); }
     }
 
+    
+    //
+    // METHODS: ADDING ELEMENTS TO THE TEAM
+    //
+    
     /** Adds a goal. */
     public void addAutoGoal(double weight, Vector<Team> teams, Team target, int type, int tasking, double threshhold) {
         Goal g = new Goal(weight, teams, this, target, type, tasking, threshhold);
         addControlTask(g);
-        //goals.add(g);
-        tass.addChild(g.gs, Settings.PROPERTY_INDEPENDENT);
-    //if(g.getType()==Goal.CAPTURE){captureGoals.add(g);}
     }
 
     /** Adds a capture condition. */
     public void addCaptureCondition(Vector<Team> teams, Team target, double captureDistance, int removal) {
-        CaptureCondition cc = new CaptureCondition(teams, this, target, captureDistance, removal);
+        addCaptureCondition(new CaptureCondition(teams, this, target, captureDistance, removal));
+    }
+    /** Adds a capture condition. */
+    public void addCaptureCondition(CaptureCondition cc){
         capture.add(cc);
         tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
     }
@@ -180,63 +184,53 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         mets.addChild(val.vs, Settings.PROPERTY_INDEPENDENT);
     }
 
-    /** Assigns a victory condition. */
-    public void setVictoryCondition(VictoryCondition vic) {
-        this.victory = vic;
-        tes.addChild(vic.vs, Settings.PROPERTY_INDEPENDENT);
-    }
-
     /** Adds a "control agent". */
     public void addControlTask(TaskGenerator tag) {
         control.addTaskGenerator(tag);
-    }
-
-    /** Resets all agents to their initial positions; clears all paths */
-    public void reset() {
-        value = Double.MAX_VALUE;
-        activeAgents.clear();
-        activeAgents.addAll(startAgents);
-//        activeValueAgents.clear();
-//        activeValueAgents.addAll(valueAgents);
-        for (Agent a : this) {
-            a.reset();
+        if(tag instanceof Goal){
+            tass.addChild(((Goal)tag).gs, Settings.PROPERTY_INDEPENDENT);
         }
-        if (victory != null) {
-            victory.reset();
-        }
-//        for(Goal g:goals){
-//            g.reset();
-//        }
-        captures.clear();
     }
 
     /** Activate all. */
-    public void initAllActive() {
+    public void activateAllAgents() {
         startAgents.clear();
-        startAgents.addAll(this);
+        startAgents.addAll(agents);
         activeAgents.clear();
-        activeAgents.addAll(startAgents);
-//        valueAgents.clear();
-//        valueAgents.addAll(startAgents);
-//        activeValueAgents.clear();
-//        activeValueAgents.addAll(valueAgents);        
+        activeAgents.addAll(agents);     
+    }
+
+    /** Adds an agent to the team. */
+    public synchronized boolean add(Agent a) {
+        a.addActionListener(this);
+        ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
+        boolean result = agents.add(a);
+        setAgentNumber(agents.size());
+        return result;
+    }
+    
+    /** Adds a group of agents to the team. */
+    public synchronized void addAll(Collection<Agent> newAgents) {
+        for (Agent a:newAgents){agents.add(a);}
+    }
+    
+    /** Removes an agent from the team. */
+    public synchronized boolean remove(Agent a) {
+        a.removeActionListener(this);
+        ags.removeChild(a.ags);
+        tes.removeChild(a.ags);
+        return agents.remove(a);
     }
 
     /** Changes the number of agents, resets starting locations. */
     public void initAgentNumber() {
         editing = true;
-        while (size() > getSize()) {
-            Agent a = get(size() - 1);
-            a.removeActionListener(this);
-            tes.removeChild(a.ags);
-            remove(size() - 1);
+        int targetSize = getAgentNumber();
+        while (agents.size() > targetSize) {
+            remove(agents.lastElement());
         }
-        while (size() < getSize()) {
-            Agent a = new Agent(this);
-            a.setName("Agent " + (size() + 1));
-            add(a);
-            a.addActionListener(this);
-            ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
+        while (agents.size() < targetSize) {
+            add(new Agent(this,"Agent "+(agents.size()+1)));
         }
         if (victory != null) {
             victory.resetTeam();
@@ -247,7 +241,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
         for (Valuation v : metrics) {
             v.resetTeam();
         }
-        initAllActive();
+        activateAllAgents();
         editing = false;
     }
 
@@ -255,37 +249,40 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     public void initStartingLocations(double pitchSize) {
         editing = true;
         switch (getStartCode()) {
+            case START_ZERO:
+                StartingPositionsFactory.startZero(agents);
+                break;
             case START_RANDOM:
-                StartingPositionsFactory.startRandom(this, pitchSize);
+                StartingPositionsFactory.startRandom(agents, pitchSize);
                 break;
             case START_LINE:
-                StartingPositionsFactory.startLine(this, new R2(-pitchSize, pitchSize), new R2(pitchSize, -pitchSize));
+                StartingPositionsFactory.startLine(agents, new R2(-pitchSize, pitchSize), new R2(pitchSize, -pitchSize));
                 break;
             case START_CIRCLE:
-                StartingPositionsFactory.startCircle(this, new R2(), pitchSize);
+                StartingPositionsFactory.startCircle(agents, new R2(), pitchSize);
                 break;
             case START_ARC:
-                StartingPositionsFactory.startArc(this, new R2(), pitchSize, Math.PI / 3, 5 * Math.PI / 3);
+                StartingPositionsFactory.startArc(agents, new R2(), pitchSize, Math.PI / 3, 5 * Math.PI / 3);
                 break;
             case START_SPECIFIC:
-                StartingPositionsFactory.startSpecific(this, positions);
+                StartingPositionsFactory.startSpecific(agents, positions);
                 break;
             case START_SIDELINE:
-                StartingPositionsFactory.startSideline(this, positions);
+                StartingPositionsFactory.startSideline(agents);
                 break;
            
             case START_ENDZONE:
-                StartingPositionsFactory.startEndzone(this, positions);
+                StartingPositionsFactory.startEndzone(agents);
                 break;
             case START_OFFENSE:
-                StartingPositionsFactory.startOffense(this, positions);
+                StartingPositionsFactory.startOffense(agents);
                 break;
             case START_DEFENSE:
-                StartingPositionsFactory.startDefense(this, positions);
+                StartingPositionsFactory.startDefense(agents);
                 break;
                 
             default:
-                StartingPositionsFactory.startZero(this);
+                StartingPositionsFactory.startCustom(agents);
                 break;
         }
         editing = false;
@@ -297,7 +294,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     /** Returns center of mass of the team
      * @return center of mass */
     public R2 getCenterOfMass() {
-        if (this.size() == 0) {
+        if (agents.size() == 0) {
             return null;
         }
         R2 center = new R2(0, 0);
@@ -305,7 +302,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
             center.translate(agent.loc);
         //System.out.println("agent:"+agent.x+"+"+agent.y);
         }
-        center.multiplyBy(1.0 / this.size());
+        center.multiplyBy(1.0 /agents.size());
         //System.out.println("center:"+center.x+"+"+center.y);
         return center;
     }
@@ -331,9 +328,9 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     
     /** Returns vector of agent starting positions. */
     public R2[] getStartingLocations() {
-        R2[] result = new R2[size()];
+        R2[] result = new R2[agents.size()];
         for (int i = 0; i < result.length; i++) {
-            result[i]=get(i).getInitialPosition();
+            result[i]=agents.get(i).getInitialPosition();
         }
         return result;
     }
@@ -432,19 +429,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
 //        activeValueAgents.remove(a);
         a.deactivate();
     }
-    // BOOLEAN-GENERATING METHODS TESTING FOR WHETHER GOAL HAS BEEN REACHED
-//    /**
-//     * Checks to see if default value of goal has changed.
-//     * @param d     the global distanceTo table
-//     */
-//    public void checkGoal(DistanceTable d,double time){  
-//        if(goals.isEmpty()){return;}
-//        double newValue=0;
-//        for(Goal g:goals){
-//            newValue+=g.getValue(d);
-//        }
-//        value=newValue;
-//    }
+    
     // EVENT LISTENING
     /** Receives and re-broadcasts action events from agents on the team */
     public void actionPerformed(ActionEvent evt) {
@@ -455,6 +440,7 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     protected EventListenerList listenerList = new EventListenerList();
 
     public void addActionListener(ActionListener l) {
+        listenerList.remove(ActionListener.class, l);
         listenerList.add(ActionListener.class, l);
     }
 
@@ -473,23 +459,18 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
             }
         }
     }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
     // BEAN PATTERNS FOR INITIAL SETTINGS
     
-    @XmlAttribute
-    public int getSize() { return tes.size.getValue(); }
-    @Override
-    public void setSize(int newValue) { tes.size.setValue(newValue); }
+    @XmlAttribute // not necessary to make this an attribute... comes in as the number of agents in the team
+    public int getAgentNumber() { return tes.size.getValue(); }
+    public void setAgentNumber(int newValue) { tes.size.setValue(newValue); }
     
     @XmlAttribute
     public String getName(){ return toString(); }
     public void setName(String newValue) { tes.setName(newValue); }
 
-    @XmlAttribute
+    // @XmlAttribute Should not be saved as saving stores the agent positions.
     public int getStartCode() { return tes.start.getValue(); }
     public void setStartCode(int newValue) { tes.start.setValue(newValue); }
     
@@ -513,37 +494,96 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     public double getLeadFactor() { return tes.leadFactor.getValue(); }
     public void setLeadFactor(double newValue) { tes.leadFactor.setValue(newValue); }
 
+    
+//    @XmlElement(name="victory")
+//    public VictoryCondition getVictoryCondition(){return victory;}
+    public void setVictoryCondition(VictoryCondition vic) {
+        this.victory = vic;
+        tes.addChild(vic.vs, Settings.PROPERTY_INDEPENDENT);
+    }
+    
+    @XmlElement(name="tasking")
+    public Vector<Goal> getTaskings(){
+        Vector<Goal> result = new Vector<Goal>();
+        for (TaskGenerator tg:control.getTaskGenerators()){
+            if(tg instanceof Goal){result.add((Goal) tg);}
+        }
+        return result;
+    }
+    public void setTaskings(Vector<Goal> goals){
+        if(goals!=null){
+            control.taskGenerators.clear();
+            for(Goal g:goals){addControlTask(g);}
+        }
+    }
+
     @XmlElementWrapper(name="agents")
     @XmlElement(name="agent")
-    public Vector<Agent> getAllAgents() { return (Vector<Agent>)this; }
-    public void setAllAgents(Vector<Agent> agents) {
-        if(agents!=null){
+    public Vector<Agent> getAllAgents() { return agents; }
+    public void setAllAgents(Vector<Agent> newAgents) {  
+        if(newAgents==null){return;}
+        if(newAgents==agents){
+           //System.out.println("here");            
+        } else {
+            System.out.println("old positions for team "+getName()+":");
+            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
+            System.out.println("new positions:");
+            for(Agent a:newAgents){System.out.println(" "+a.getInitialPosition());}
             editing = true;
-            for(Agent a:this){a.removeActionListener(this);tes.removeChild(a.ags);}            
-            clear();
-            for(Agent a:agents){
-                a.setName("Agent "+(size()+1));
-                add(a);
-                a.addActionListener(this);
-                ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
-                if(victory!=null){victory.resetTeam();}
-                for (CaptureCondition cc:capture){cc.resetTeam();}
-                for (Valuation v:metrics){v.resetTeam();}
-                initAllActive();
-                editing=false;
-            }
+            for(Agent a:agents){a.removeActionListener(this);tes.removeChild(a.ags);}            
+            agents.clear();
+            for(Agent a:newAgents){add(a);}
+            if(victory!=null){victory.resetTeam();}
+            for (CaptureCondition cc:capture){cc.resetTeam();}
+            for (Valuation v:metrics){v.resetTeam();}
+            activateAllAgents();
+            editing=false;
+            System.out.println("newer positions:");
+            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
         }
     }
     
-    @XmlElementWrapper(name="taskings")
-    @XmlElement(name="task")
-    public Vector<Goal> getTasks(){return control.getGoals();}
+    /** Reloads the settings tree, and updates the team names for subsidiary settings. */
+    public void update(Vector<Team> teams){
+        tes.getChildren().clear();
+        tass.getChildren().clear();
+        ags.getChildren().clear();
+        mets.getChildren().clear();
+        tes.addChild(ags, Settings.PROPERTY_INDEPENDENT);
+        tes.addChild(tass, Settings.PROPERTY_INDEPENDENT);
+        tes.addChild(mets, Settings.PROPERTY_INDEPENDENT);
+        for(CaptureCondition v:capture){
+            v.update(teams,this);
+            tes.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
+        }
+        for(Valuation v:metrics){
+            v.update(teams,this);
+            tes.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
+        }
+        for(TaskGenerator g:control.getTaskGenerators()){
+            ((Goal)g).update(teams,this);
+            tass.addChild(((Goal)g).gs, Settings.PROPERTY_INDEPENDENT);
+        }
+        if(victory!=null){
+            victory.update(teams,this);
+            tes.addChild(victory.vs, Settings.PROPERTY_INDEPENDENT);
+        }        
+        for(Agent a:agents){
+            a.addActionListener(this);
+            ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
+        }
+    }
+
     
-    @XmlElement(name="color")
+    @XmlAttribute
+    public String getColor(){return tes.color.getHexString();}
+    public void setColor(String s){tes.color.setHexString(s);}
+    
+    //@XmlElement(name="color")
     public ColorModel getColorModel() { return tes.color; }        
     public void setColorModel(ColorModel cm) { tes.color.copyValuesFrom(cm); }    
     
-    public void setColor(Color newValue) { tes.color.setValue(newValue); }
+    public void setColorValue(Color newValue) { tes.color.setValue(newValue); }
 
     public int getNumActive() { return getActiveAgents().size(); }
     public Double getValue() { return value; }
@@ -572,95 +612,43 @@ public class Team extends Vector<Agent> implements ActionListener, PropertyChang
     
     // BROADCAST METHODS: CHANGE SETTINGS OF AGENTS ON TEAM
     
-    public void copySpeedtoTeam() {
-        for (Agent a : this) {
-            a.setTopSpeed(getTopSpeed());
-        }
-    }
-
-    public void copySensorRangetoTeam() {
-        for (Agent a : this) {
-            a.setSensorRange(getSensorRange());
-        }
-    }
-
-    public void copyCommRangetoTeam() {
-        for (Agent a : this) {
-            a.setCommRange(getCommRange());
-        }
-    }
-
-    public void copyBehaviortoTeam() {
-        for (Agent a : this) {
-            a.setBehaviorCode(getBehavior());
-        }
-    }
-
-    public void copyColortoTeam() {
-        for (Agent a : this) {
-            a.setColor(tes.getColor());
-        }
-    }
-
-    public void copyLeadFactortoTeam() {
-        for (Agent a : this) {
-            a.setLeadFactor(getLeadFactor());
-        }
-    }
-
-    public void copyPathtoTeam() {
-        for (Agent a : this) {
-            a.setFixedPath(tes.pm.getXString(), tes.pm.getYString());
-        }
-    }
+    public void copySpeedtoTeam() { for (Agent a : agents) { a.setTopSpeed(getTopSpeed()); } }
+    public void copySensorRangetoTeam() { for (Agent a : agents) { a.setSensorRange(getSensorRange()); } }
+    public void copyCommRangetoTeam() { for (Agent a : agents) { a.setCommRange(getCommRange()); } }
+    public void copyBehaviortoTeam() { for (Agent a : agents) { a.setBehaviorCode(getBehavior()); } }
+    public void copyColortoTeam() { for (Agent a : agents) { a.setColorValue(tes.getColor()); } }
+    public void copyLeadFactortoTeam() { for (Agent a : agents) { a.setLeadFactor(getLeadFactor()); } }
+    public void copyPathtoTeam() { for (Agent a : agents) { a.setFixedPath(tes.pm.getXString(), tes.pm.getYString()); } }
     
     // CONSTANTS FOR INITIAL SETTINGS
     
-    public static final int START_ZERO = 0;
-    public static final int START_RANDOM = 1;
-    public static final int START_LINE = 2;
-    public static final int START_CIRCLE = 3;
-    public static final int START_ARC = 4;
-    public static final int START_SPECIFIC = 5;
-    public static final int START_SIDELINE=6;
-    public static final int START_ENDZONE = 7;
-    public static final int START_OFFENSE = 8;
-    public static final int START_DEFENSE = 9;
+    public static final int START_CUSTOM = 0;
+    public static final int START_ZERO = 1;
+    public static final int START_RANDOM = 2;
+    public static final int START_LINE = 3;
+    public static final int START_CIRCLE = 4;
+    public static final int START_ARC = 5;
+    public static final int START_SPECIFIC = 6;
+    public static final int START_SIDELINE=7;
+    public static final int START_ENDZONE = 8;
+    public static final int START_OFFENSE = 9;
+    public static final int START_DEFENSE = 10;
     
     /** String with labels for initial conditions. */
-    public static final String[] START_STRINGS = {"All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc", "Specific Locations", "Sideline Locations", "Endzone Locations", "Offense Locations", "Defense Locations"};
+    public static final String[] START_STRINGS = {"Custom", "All at Zero", "Random Positions", "Along a Line", "Around a Circle", "Along a Circular Arc", "Specific Locations", "Sideline Locations", "Endzone Locations", "Offense Locations", "Defense Locations"};
+
     
+    //    
     // SUBCLASSES
-    /** Encapsulates a group of agents. */
-    private class AgentGroupSettings extends Settings {
-
-        public AgentGroupSettings() {
-            setName("Agents");
-        }
-    }
-
-    /** Encapsulates a group of metrics. */
-    private class MetricSettings extends Settings {
-
-        public MetricSettings() {
-            setName("Metrics");
-        }
-    }
-
-    /** Encapsulates the collection of taskings for the team. */
-    private class TaskingSettings extends Settings {
-        public TaskingSettings() {
-            setName("Taskings");
-        }
-    }
-
+    //
+    
     /** Contains all the initial settings for the simulation. Everything else is used while the simulation is running. */
     private class TeamSettings extends Settings {
 
         /** Team size */
         private IntegerRangeModel size = new IntegerRangeModel(3, 1, 100);
         /** Starting positions to use */
-        private StringRangeModel start = new StringRangeModel(START_STRINGS);
+        private StringRangeModel start = new StringRangeModel(START_STRINGS, START_CUSTOM);
         /** Default sensor range [in ft]. */
         private DoubleRangeModel sensorRange = new DoubleRangeModel(20, 0, 5000, .5);
         /** Default communications range [in ft]. */

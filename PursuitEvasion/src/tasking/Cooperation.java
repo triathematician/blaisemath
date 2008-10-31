@@ -69,18 +69,18 @@ public class Cooperation {
      */
     public static TreeMap<Agent,R2> assignInvertedPlaneEvade(Team ta,Team tb,double weight){
         TreeMap<Agent,R2> result=new TreeMap<Agent,R2>();
-        DistanceTable dist=new DistanceTable(ta,tb);
-        for(Agent a:ta){
+        DistanceTable dist=new DistanceTable(ta.agents,tb.agents);
+        for(Agent a:ta.agents){
             // TODO smart assignment of cat!
-            V2 cat=tb.get(0).loc;
+            V2 cat=tb.agents.get(0).loc;
             // invert all in circle of radius 1 centered about the cat
-            for(Agent agent:ta){
+            for(Agent agent:ta.agents){
                 agent.loc.translate(-cat.x,-cat.y);
                 agent.loc.invertInCircleOfRadius(1);
             }
             // go through each team member and perform combo evasion
             // assign goal positions
-            for(Agent aa:ta){
+            for(Agent aa:ta.agents){
                 Team temp=new Team(ta);
                 temp.remove(aa);
                 aa.loc.v=new R2(aa.loc);
@@ -89,7 +89,7 @@ public class Cooperation {
             }
             
             // now perform inversion again... both points
-            for(Agent aa:ta){
+            for(Agent aa:ta.agents){
                 aa.loc.invertInCircleOfRadius(1);aa.loc.translate(cat.x,cat.y);
                 aa.loc.v.invertInCircleOfRadius(1);aa.loc.v.translate(cat.x,cat.y);
             }

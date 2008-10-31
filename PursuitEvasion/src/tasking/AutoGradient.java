@@ -25,7 +25,7 @@ public class AutoGradient extends AutonomousTaskGenerator {
     public V2 generate(Agent agent, DistanceTable table) {
         int POWER = -1;
         R2 dir = new R2();
-        for(Agent b:target){
+        for(Agent b:target.agents){
             if(agent.sees(b)){
                 dir.translate(new R2(b.loc.x-agent.loc.x,b.loc.y-agent.loc.y).multipliedBy(Math.pow(agent.loc.distance(b.loc),POWER-1)));
             }

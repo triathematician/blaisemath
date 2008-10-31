@@ -27,6 +27,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import metrics.Goal;
 import scio.function.FunctionValueException;
 import tasking.TaskGenerator;
@@ -52,8 +54,6 @@ public class Agent {
         
     /** Agent's settings */
     AgentSettings ags;    
-    /** Agent's initial position */
-    PointRangeModel initialPosition;
     /** Agents trusted by this agent */
     TrustMap trusted;
     /** Task generators associated with this agent */
@@ -96,22 +96,17 @@ public class Agent {
         initialize();
     }
 
+    /** Constructs with a given team and specified name. */
+    Agent(Team team, String name) {
+        this(team);
+        setName(name);
+    }
+
     
     // PROPERTY INTERFACE METHODS
     
-    public void addTaskGenerator(TaskGenerator tag){
-        taskGenerators.add(tag);
-    }
-    public Vector<Goal> getGoals(){
-        Vector<Goal> result=new Vector<Goal>();
-        for(TaskGenerator tg:taskGenerators){
-            if(tg instanceof Goal){
-                result.add((Goal)tg);
-            }
-        }
-        return result;
-    }
-    
+    public void addTaskGenerator(TaskGenerator tag){taskGenerators.add(tag);}
+    public Vector<TaskGenerator> getTaskGenerators(){return taskGenerators;}    
     
     
     // METHODS: INITIALIZATION HELPERS
@@ -120,15 +115,14 @@ public class Agent {
     public void initialize(){
         myBehavior=Behavior.getBehavior(getBehaviorCode());
         tasks=new Vector<Task>();
-        initialPosition=null;
         pov=new Vector<Agent>();
         commpov=new Vector<Agent>();
         taskGenerators=new Vector<TaskGenerator>();
     }
     
     /** Resets before another run of the simulation. */
-    public void reset(){
-        setPosition(initialPosition.getX(),initialPosition.getY());
+    public void initStateVariables(){
+        setPosition(getX(),getY());
         tasks.clear();
         pov.clear();
         commpov.clear();
@@ -144,7 +138,7 @@ public class Agent {
         setTopSpeed(team.getTopSpeed());
         setBehaviorCode(team.getBehavior());
         setLeadFactor(team.getLeadFactor());
-        setColor(team.getColorModel().getValue());
+        setColorValue(team.getColorModel().getValue());
     }
     
     
@@ -154,11 +148,7 @@ public class Agent {
     /** Returns the initial position model
      * @return model with the agent's color at the initial position */
     public PointRangeModel getPointModel(){
-        if(initialPosition==null){
-            initialPosition=new PointRangeModel(loc.x,loc.y);
-            initialPosition.addChangeListener(ags);
-        }
-        return initialPosition;
+        return new PointRangeModel(ags.startX,ags.startY);
     }    
     
     // METHODS: TASKING
@@ -263,10 +253,20 @@ public class Agent {
     public String getName(){return ags.getName();}
     public void setName(String newValue){ags.setName(newValue);}
     
-    @XmlElement(name="start")
-    public R2 getInitialPosition(){return new R2(initialPosition.getX(),initialPosition.getY());}
+    /** Returns initial starting location of the agent. */
+    //@XmlElement(name="start")
+    //@XmlJavaTypeAdapter(MyR2Adapter.class)
+    public R2 getInitialPosition(){return new R2(getX(),getY());}
     public void setInitialPosition(R2 point){getPointModel().setTo(point);}
     public void setInitialPosition(double x,double y){getPointModel().setTo(x,y);}
+    
+    @XmlAttribute
+    public double getX(){return ags.startX.getDValue();}
+    public void setX(double x){ags.startX.setValue(x);}
+    
+    @XmlAttribute
+    public double getY(){return ags.startY.getDValue();}
+    public void setY(double y){ags.startY.setValue(y);}
     
     @XmlAttribute
     public double getSensorRange(){return ags.sensorRange.getValue();}
@@ -284,11 +284,15 @@ public class Agent {
     public double getLeadFactor(){return ags.leadFactor.getValue();}
     public void setLeadFactor(double newValue){ags.leadFactor.setValue(newValue);}
 
-    @XmlElement(name="color")
+    @XmlAttribute
+    public String getColor(){return ags.color.getHexString();}
+    public void setColor(String s){ags.color.setHexString(s);}
+    
+    //@XmlElement(name="color")
     public ColorModel getColorModel(){return ags.color;}
     public void setColorModel(ColorModel cm) { ags.color.copyValuesFrom(cm); }  
     
-    public void setColor(Color newValue){ags.color.setValue(newValue);}
+    public void setColorValue(Color newValue){ags.color.setValue(newValue);}
     
     @XmlAttribute(name="behaviorCode")
     public int getBehaviorCode(){return ags.behavior.getValue();}
@@ -299,6 +303,7 @@ public class Agent {
     
     public Behavior getBehavior(){return myBehavior;}
     
+    /** Returns current position. */
     public R2 getPosition(){return loc.getStart();}
     private void setPosition(R2 newValue){loc.x=newValue.x;loc.y=newValue.y;}
     private void setPosition(double newX,double newY){loc.x=newX;loc.y=newY;}   
@@ -326,6 +331,11 @@ public class Agent {
     /** Contains all the initial settings for the simulation. Everything else is used while the simulation is running. */
     private class AgentSettings extends Settings {
         
+        /** Starting Position. */
+        private DoubleRangeModel startX=new DoubleRangeModel(0.0,-500.0,500.0,1.0);
+        /** Starting Position. */
+        private DoubleRangeModel startY=new DoubleRangeModel(0.0,-500.0,500.0,1.0);
+        
         /** Default sensor range [in ft]. */
         private DoubleRangeModel sensorRange=new DoubleRangeModel(20,0,5000,1.0);
         /** Default communications range [in ft]. */
@@ -352,6 +362,8 @@ public class Agent {
             add(new SettingsProperty("Lead Factor",leadFactor,Settings.EDIT_DOUBLE_SLIDER));
             add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
             add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
+            add(new SettingsProperty("x",startX,Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("y",startY,Settings.EDIT_DOUBLE));
         }
         
         @Override

@@ -10,17 +10,15 @@
 
 package simulation;
 
-import analysis.DataLog;
+import analysis.SimulationLog;
 import analysis.Statistics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JMenu;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.EventListenerList;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,73 +45,136 @@ import utility.SimulationFactory;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Simulation implements ActionListener,PropertyChangeListener {
+public class Simulation implements ActionListener {
     
-    
-    // PROPERTIES
+    //
+    // CONTROL VARIABLES (define the simulation)
+    //
     
     /** Contains all settings used to run the simulation. */
     @XmlTransient
     public SimSettings ss;
-    /** Contains list of teams involved. */
-    @XmlElement(name="team")
+    
+    /** Contains list of teams involved (mixture of control and state variables). */
+    @XmlElement
     Vector<Team> teams;
+    
+    
+    //
+    // STATE VARIABLES (change during simulation)
+    //
+    
     /** Table of distances (for speed of simulation) */
-    DistanceTable dist;
+    public DistanceTable dist;   
     
     /** The data collected in a simulation. */ 
-    DataLog log;
+    public SimulationLog log;
+    
+    
+    //
+    // BASIC PROPERTIES (unrelated to simulation)
+    //    
+    
     /** Whether a batch of several runs is currently processing. */
     boolean batchProcessing;
     
     
+    //
     // CONSTRUCTORS
+    //
     
     /** Standard constructor */
-    public Simulation(){this(SimulationFactory.SAHARA_PE);}
+    public Simulation(){
+        initControlVariables();
+        initProperties();
+        initStateVariables();
+    }
+    
     /** Constructs given a type of game
      * @param gameType the type of game to simulate */
     public Simulation(int gameType){
-        ss=new SimSettings(gameType);
-        
-        SimulationFactory.setSimulation(this,gameType);
-        dist=null;
-        batchProcessing=false;
+        initControlVariables();
+        initProperties();
+        setGameType(gameType);
+        initStateVariables();
     }
     
     
+    //
     // METHODS: INITIALIZERS
+    //
     
-    /** PRimary Initializer */
-    public void mainInitialize(String name,Vector<Team> teams){
-        setName(name);
-        initTeams(teams);
+    /** Initializes control variables. */
+    public void initControlVariables() {
+        ss = new SimSettings();
+        teams = new Vector<Team>(getNumTeams());
     }
     
-    /** Intializes to a given list of teams. */
-    public void initTeams(Vector<Team> newTeams){
-        if(newTeams!=null){
-            setNumTeams(newTeams.size());
-            if(teams!=null){for(Team t:teams){t.removeActionListener(this);}}
-            teams=newTeams;
-            ss.getChildren().clear();
-            for(Team t:teams){
-                t.addActionListener(this);
-                t.initStartingLocations(getPitchSize());
-                ss.addChild(t.tes,Settings.PROPERTY_INDEPENDENT);
-            }
-        }        
+    /** Initializes state variables. Also resets any state variables, so can
+     * before a simulation is run. */
+    public void initStateVariables() {
+        for (Team t : teams) { t.initStateVariables(); }
+        dist = new DistanceTable(teams);
+        if(log==null) { log = new SimulationLog(this); }
+        log.preRun();
+    }
+    
+    /** Initializes properties. */
+    public void initProperties() {
+        batchProcessing = false;
+    }
+    
+    /** Resets the starting positions. Useful when positions are initialized randomly. */
+    public void initStartingLocations(){
+        for(Team team:teams){team.initStartingLocations(getPitchSize());}
     }
     
     
-    // BEAN PATTERNS
+    //   
+    // BEAN PATTERNS (control variables)
+    //
     
-    /** Returns current distance table. */
-    public DistanceTable getDistanceTable() { return this.dist; }    
-    /** Returns current data log. */
-    public DataLog getLog() { return this.log; }    
+    @XmlAttribute
+    public String getName(){return ss.getName();}
+    public void setName(String newValue){ss.setName(newValue);}
+    
+    // @XmlAttribute not an attribute since game type when loaded will always be custom
+    public int getGameType(){return ss.gameType.getValue();}
+    public void setGameType(int newValue){ss.gameType.setValue(newValue);}
+    
+    // @XmlAttribute not necessary to make this an attribute
+    public int getNumTeams(){return ss.numTeams.getValue();}
+    public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
+    
+    @XmlAttribute
+    public double getStepTime(){return ss.stepTime.getValue();}
+    public void setStepTime(double newValue){ss.stepTime.setValue(newValue);}
+    
+    @XmlAttribute
+    public int getNumSteps(){return ss.numSteps.getValue();}
+    public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
+    
+    @XmlAttribute
+    public int getMaxSteps(){return ss.maxSteps.getValue();}
+    public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
+    
+    @XmlAttribute
+    public double getPitchSize(){return ss.pitchSize.getValue();}
+    public void setPitchSize(double newValue){ss.pitchSize.setValue(newValue);}
+        
     /** Returns list of teams used in the simulation. */
     public Vector<Team> getTeams(){return teams;}
+    public void setTeams(Vector<Team> newTeams){ if(newTeams!=null){ teams = newTeams; } }
+    
+    
+    //   
+    // BEAN PATTERNS (others)
+    //
+            
+    @Override
+    public String toString(){return ss.toString();}
+    
+    public void setBatchProcessing(boolean b) {batchProcessing=b;}
     
     /** Returns string list of teams. */
     public static String[] getTeamStrings(Vector<Team> teams){
@@ -123,21 +184,40 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         }
         return result;
     }
+
+    /** Returns custom menu for this simulation. */
+    public JMenu getMenu(String s){JMenu jm=ss.getMenu();jm.setText(s);return jm;}
+
+    /** Returns data model for selecting preset game types, suitable for use with a combobox. */
+    public StringRangeModel getGameTypeModel(){return ss.gameType;}
     
     
+    //
+    // ACCESSOR METHODS FOR TEAM VECTOR
+    //    
+    
+    /** Initializes listening for the current list of teams. Should
+     * be called once, after all the teams are loaded in.
+     */
+    public void update() {
+        batchProcessing = true;
+        ss.removeAllChildren();
+        for(Team t:teams){            
+            t.addActionListener(this);
+            ss.addChild(t.tes,Settings.PROPERTY_INDEPENDENT);
+            t.initStartingLocations(getPitchSize());
+            t.update(teams);
+        }
+        setNumTeams(teams.size());
+        if(log==null){ log = new SimulationLog(); }
+        log.initialize(Simulation.this);
+        batchProcessing = false;
+    }
+    
+    
+    //
     // METHODS: DEPLOY SIMULATION
-    
-    /** Delete paths and get ready to start another simulation. */
-    public void reset(){
-        for(Team team:teams){team.reset();}
-        dist=new DistanceTable(teams);
-    }
-    
-    /** Resets the starting positions. Useful when positions are initialized randomly. */
-    public void initStartingLocations(){
-        for(Team team:teams){team.initStartingLocations(getPitchSize());}
-        dist=new DistanceTable(teams);
-    }
+    //
     
     /** Runs several times and computes average result. */
     public void runSeveral(int numTimes){
@@ -164,7 +244,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         for(int i=0;i<numTimes;i++){
             for(Team team:teams){
                 team.initStartingLocations(getPitchSize());
-                team.reset();
+                team.initStateVariables();
             }
             stats.captureLocs(teams);
             dist=new DistanceTable(teams);
@@ -176,7 +256,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
                 v.getOwner().setStartAgents(coopVals.get(v));
                 run();
                 stats.captureData(v, null, log);
-                v.getOwner().setStartAgents(v.getOwner());
+                v.getOwner().setStartAgents(v.getOwner().agents);
             }
         }
         batchProcessing=false;
@@ -192,11 +272,10 @@ public class Simulation implements ActionListener,PropertyChangeListener {
      */
     public void run(int numSteps){
         boolean quit = false;
-        reset();
-        log.preRun();
+        initStateVariables();
         double time=0;
         for(int i=0;i<numSteps;i++){
-            time=i*getStepTime();
+            time = i*getStepTime();
             quit = iterate(time);
             log.logAll(i,dist);
             if(quit){break;}
@@ -258,12 +337,11 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         
         return false;
     }
+        
     
-    // METHODS FOR RUNNING STATS ON THE SIMULATION
-    
-    public void setBatchProcessing(boolean b) {batchProcessing=b;}
-    
+    //
     // EVENT HANDLING
+    //
     
     // Remaining code deals with action listening
     protected ActionEvent actionEvent=null;
@@ -272,6 +350,7 @@ public class Simulation implements ActionListener,PropertyChangeListener {
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
     protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));}
     protected void fireActionPerformed(ActionEvent e){
+        System.out.println(e.getActionCommand());
         actionEvent=e;
         Object[] listeners=listenerList.getListenerList();
         for(int i=listeners.length-2;i>=0;i-=2){
@@ -289,12 +368,8 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         // otherwise, go ahead and redraw/recolor/etc. as appropriate
         if(es==null){
             fireActionPerformed(e);
-        }else if(es.equals("simulationRun")){ // routine run of the simulation
+        }else if(es.equals("simulationRun")||es.equals("agentDisplayChange")||es.equals("teamDisplayChange")){ // routine run of the simulation
             fireActionPerformed("redraw");
-        }
-        // cosmetic change only
-        else if(es.equals("agentDisplayChange")||es.equals("teamDisplayChange")){ 
-            fireActionPerformed("recolor");
         // change in parameters for a particular player or team
         }else if(es.equals("agentSetupChange")||es.equals("teamSetupChange")){ 
             run();
@@ -303,61 +378,26 @@ public class Simulation implements ActionListener,PropertyChangeListener {
             log.initializeNumbersOnly();
             fireActionPerformed("reset");
             run();
-            fireActionPerformed("redraw");
-        }else {fireActionPerformed(e);
+        }else {
+            fireActionPerformed(e);
         }
     }
     
-    public void propertyChange(PropertyChangeEvent evt) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
-    
-    // BEAN PATTERNS: GETTERS & SETTERS
-    
-    @XmlAttribute
-    public String getName(){return ss.getName();}
-    public void setName(String newValue){ss.setName(newValue);}
-    
-    @XmlAttribute
-    public int getGameType(){return ss.gameType.getValue();}
-    public void setGameType(int newValue){ss.gameType.setValue(newValue);}
-    
-    @XmlAttribute
-    public int getNumTeams(){return ss.numTeams.getValue();}
-    public void setNumTeams(int newValue){ss.numTeams.setValue(newValue);}
-    
-    @XmlAttribute
-    public double getStepTime(){return ss.stepTime.getValue();}
-    public void setStepTime(double newValue){ss.stepTime.setValue(newValue);}
-    
-    @XmlAttribute
-    public int getNumSteps(){return ss.numSteps.getValue();}
-    public void setNumSteps(int newValue){ss.numSteps.setValue(newValue);}
-    
-    @XmlAttribute
-    public int getMaxSteps(){return ss.maxSteps.getValue();}
-    public void setMaxSteps(int newValue){ss.maxSteps.setValue(newValue);}
-    
-    @XmlAttribute
-    public double getPitchSize(){return ss.pitchSize.getValue();}
-    public void setPitchType(double newValue){ss.pitchSize.setValue(newValue);}
 
-        
-    @Override
-    public String toString(){return ss.toString();}
 
-    public void setDataLog(DataLog dl){this.log=dl;}
-
-    public JPanel getPanel(){return ss.getPanel();}
-
-    public JMenu getMenu(String s){JMenu jm=ss.getMenu();jm.setText(s);return jm;}
-
-    public StringRangeModel getGameTypeModel(){return ss.gameType;}
-    
+    //
+    //
     // SUBCLASSES
+    //
+    //
     
-    public class SimSettings extends Settings{
+    /** Stores the control variables for the simulation. Ex: determining how long to run the simulation,
+     * the area of interest in the simulation, and so on.
+     */
+    public class SimSettings extends Settings {
+        
+        // BASIC PROPERTIES
         
         /** Number of teams */
         private IntegerRangeModel numTeams=new IntegerRangeModel(2,1,100);
@@ -372,41 +412,39 @@ public class Simulation implements ActionListener,PropertyChangeListener {
         /** If stop is based on reaching a goal, this is the max # of steps to allow. */
         private IntegerRangeModel maxSteps=new IntegerRangeModel(1000,0,10000000);
         
-        SimSettings(){
+        // CONSTRUCTORS
+        
+        /** Default constructor */
+        public SimSettings(){
             super();
-            add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE,"Change the boundaries of the random positions (nonfunctional)"));
-            add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE,"Change the time taken for each iteration of the algorithm"));
-            add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER,"Change the number of steps in the simulation"));
-            gameType.addChangeListener(this);
-            //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
-            //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
+            initProperties();
+            setName("Custom");
         }
-
-        private SimSettings(int gameType) {
-         super();
+        
+        /** Initialize the properties. */
+        public void initProperties(){
             add(new SettingsProperty("Pitch Size",pitchSize,Settings.EDIT_DOUBLE,"Change the boundaries of the random positions (nonfunctional)"));
             add(new SettingsProperty("Step Time",stepTime,Settings.EDIT_DOUBLE,"Change the time taken for each iteration of the algorithm"));
             add(new SettingsProperty("# of Steps",numSteps,Settings.EDIT_INTEGER,"Change the number of steps in the simulation"));
-            this.gameType.setValue(gameType);
-            this.gameType.addChangeListener(this);
-            //addProperty("max Steps",maxSteps,Settings.EDIT_INTEGER);
-            //addProperty("# of Teams",numTeams,Settings.EDIT_INTEGER);
+            // we want the game type to also fire changes, but not show up in the simulation window as an editable property
+            gameType.addChangeListener(this);
         }
         
         @Override
         public void stateChanged(ChangeEvent e) {
-            //System.out.println("simulation prop change: "+e.getPropertyName());
-            if(e.getSource()==stepTime){      fireActionPerformed("animation");run();
-            } else if(e.getSource()==numSteps){fireActionPerformed("animation");run();
-            } else if(e.getSource()==pitchSize){initStartingLocations();run();
-            } else if(e.getSource()==maxSteps){System.out.println("nonfunctional!");
-            } else if(e.getSource()==numTeams){System.out.println("nonfunctional!");
+            if(e.getSource()==stepTime || e.getSource()==numSteps){      
+                fireActionPerformed("animation");
+            } else if(e.getSource()==pitchSize){
+                initStartingLocations();
             } else if(e.getSource()==gameType){
-                SimulationFactory.setSimulation(Simulation.this,getGameType());
+                setName(SimulationFactory.GAME_STRINGS[getGameType()]);
+                setTeams(SimulationFactory.getTeams(getGameType()));
+                update();
                 fireActionPerformed("reset");
-                dist=null;
-                run();                
+            } else {
+                return;
             }
+            run();
         }
     }
 }

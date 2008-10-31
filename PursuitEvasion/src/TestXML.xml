@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<simulation stepTime="0.1" pitchSize="60.0" numSteps="250" name="Sahara" maxSteps="1000">
+    <team topSpeed="6.5" sensorRange="20.0" name="Lions" leadFactor="0.0" commRange="50.0" color="ffc800" behaviorCode="7" agentNumber="4">
+        <capture removalCode="0" type="0" threshold="1.0" target="SettingsGroup" cooperationOn="false"/>
+        <metrics/>
+        <victory eventGreaterCode="1" eventLessCode="0" gameEnding="false" type="8" threshold="0.0" target="SettingsGroup" cooperationOn="false"/>
+        <agents/>
+        <taskings/>
+    </team>
+    <team topSpeed="5.0" sensorRange="20.0" name="Wildebeast" leadFactor="0.0" commRange="50.0" color="808080" behaviorCode="1" agentNumber="4">
+        <capture removalCode="2" type="0" threshold="1.0" target="SettingsGroup" cooperationOn="false"/>
+        <metrics/>
+        <victory eventGreaterCode="1" eventLessCode="0" gameEnding="false" type="8" threshold="0.0" target="SettingsGroup" cooperationOn="false"/>
+        <agents>
+            <agent y="0.0" x="0.0" topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" color="808080" behaviorCode="1"/>
+            <agent y="0.0" x="0.0" topSpeed="5.0" sensorRange="20.0" name="Agent 2" leadFactor="0.0" commRange="50.0" color="808080" behaviorCode="1"/>
+            <agent y="0.0" x="0.0" topSpeed="5.0" sensorRange="20.0" name="Agent 3" leadFactor="0.0" commRange="50.0" color="808080" behaviorCode="1"/>
+            <agent y="0.0" x="0.0" topSpeed="5.0" sensorRange="20.0" name="Agent 4" leadFactor="0.0" commRange="50.0" color="808080" behaviorCode="1"/>
+        </agents>
+        <taskings/>
+    </team>
+    <team topSpeed="5.0" sensorRange="20.0" name="Water" leadFactor="0.0" commRange="50.0" color="0000ff" behaviorCode="0" agentNumber="1">
+        <metrics/>
+        <agents>
+            <agent y="0.0" x="0.0" topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" color="0000ff" behaviorCode="0"/>
+        </agents>
+        <taskings/>
+    </team>
+</simulation>

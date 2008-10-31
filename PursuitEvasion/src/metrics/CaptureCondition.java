@@ -4,7 +4,7 @@
  */
 package metrics;
 
-import analysis.DataLog;
+import analysis.SimulationLog;
 import java.util.Vector;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -36,7 +36,8 @@ public class CaptureCondition extends Valuation {
     
     // CONSTRUCTORS
 
-    public CaptureCondition() {        
+    public CaptureCondition() {   
+        vs.setName("Capture Condition");     
     }
 
     /** Initialize with specified capture distance. */
@@ -51,7 +52,7 @@ public class CaptureCondition extends Valuation {
      * @param log the log storing significant events for the simulation
      * @return vector of locations at which capture has occurred
      */
-    public Vector<R2> check(DistanceTable dt, DataLog log, double time) {
+    public Vector<R2> check(DistanceTable dt, SimulationLog log, double time) {
         Vector<R2> result = new Vector<R2>();
         AgentPair closest = dt.min(vs.owner.getActiveAgents(), vs.target.getActiveAgents());
         while ((closest != null) && (closest.getDistance() < getThreshold())) {

@@ -3,9 +3,9 @@
  * Created on Oct 16, 2007, 2:14:06 PM
  */
 
-package utility;
+package analysis;
 
-import analysis.DataLog;
+import analysis.SimulationLog;
 import metrics.CaptureCondition;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -27,9 +27,9 @@ import specto.euclidean2.Euclidean2;
  */
 public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatable<Euclidean2> {
     Team team;
-    DataLog log;
+    SimulationLog log;
     
-    public DynamicTeamGraph(Team t,DataLog l){
+    public DynamicTeamGraph(Team t,SimulationLog l){
         team=t;
         log=l;
         setColorModel(t.getColorModel());
@@ -60,12 +60,12 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         Path2D.Double result=new Path2D.Double();
         R2 p1;
         R2 p2;
-        for(int i=0;i<team.size();i++){
-            if(!team.getActiveAgents().contains(team.get(i))){ continue; }
-            p1=log.agentAt(team.get(i),timeB);
-            for(int j=i+1;j<team.size();j++){
-                if(!team.getActiveAgents().contains(team.get(j))){ continue; }
-                p2=log.agentAt(team.get(j),timeB);
+        for(int i=0;i<team.agents.size();i++){
+            if(!team.getActiveAgents().contains(team.agents.get(i))){ continue; }
+            p1=log.agentAt(team.agents.get(i),timeB);
+            for(int j=i+1;j<team.agents.size();j++){
+                if(!team.getActiveAgents().contains(team.agents.get(j))){ continue; }
+                p2=log.agentAt(team.agents.get(j),timeB);
                 if(p1.distance(p2)<team.getCommRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));
                     result.lineTo(v.toWindowX(p2.x),v.toWindowY(p2.y));
@@ -82,9 +82,9 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         Path2D.Double result=new Path2D.Double();
         R2 p1;
         R2 p2;
-        for(int i=0;i<team.size();i++){
-            if(!team.getActiveAgents().contains(team.get(i))){ continue; }
-            p1=log.agentAt(team.get(i),timeB);
+        for(int i=0;i<team.agents.size();i++){
+            if(!team.getActiveAgents().contains(team.agents.get(i))){ continue; }
+            p1=log.agentAt(team.agents.get(i),timeB);
             for(Agent a:cc.getTarget().getActiveAgents()){
                 p2=log.agentAt(a,timeB);
                 if(p1.distance(p2)<team.getSensorRange()){

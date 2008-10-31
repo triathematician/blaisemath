@@ -64,17 +64,20 @@ public class Statistics extends FiresChangeEvents {
      */
     public void captureLocs(Collection<Team> teams){
         for(Team t:teams){
-            startingLoc.get(t).add(t.getStartingLocations());
+            R2[] sl=t.getStartingLocations();
+            Vector<R2> vr=new Vector<R2>();
+            for (int i = 0; i < sl.length; i++) {vr.add(sl[i]);}
+            startingLoc.get(t).add(vr);
         }
     }
     
-    /** This method takes the data stored in the DataLog class for a particular simulation and stores it in this class, to allow
+    /** This method takes the data stored in the SimulationLog class for a particular simulation and stores it in this class, to allow
      * for statistical data output.
      * @param v the particular valuation to store data for
-     * @param fullRunData the DataLog captured during the simulation with all players
+     * @param fullRunData the SimulationLog captured during the simulation with all players
      * @param partialRunData the datalog captured during the simulation with only part of the players
      */
-    public void captureData(Valuation v,DataLog fullRunData, DataLog partialRunData){
+    public void captureData(Valuation v,SimulationLog fullRunData, SimulationLog partialRunData){
         if (fullRunData != null) {
             fullMetrics.get(v).add(fullRunData.teamMetrics.get(v).lastElement().y);
             subsetMetrics.get(v).add(fullRunData.partialTeamMetrics.get(v).lastElement().y);

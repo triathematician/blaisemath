@@ -32,7 +32,7 @@ public class Cooperation {
     public static SplitContribution subsetContribution(Simulation sim, Valuation val, HashSet<Agent> subset){
         HashSet<Agent> team=new HashSet<Agent>();
         Team owner = val.getOwner();
-        team.addAll(owner);
+        team.addAll(owner.agents);
         HashSet<Agent> complement=val.getComplement();
         try {
             double trial1, trial2, trial3;

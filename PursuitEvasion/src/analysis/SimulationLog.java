@@ -1,5 +1,5 @@
 /*
- * DataLog.java
+ * SimulationLog.java
  * Created on Nov 5, 2007, 10:26:59 AM
  */
 
@@ -24,55 +24,39 @@ import simulation.Simulation;
 import simulation.Team;
 import scio.coordinate.R2;
 import sequor.FiresChangeEvents;
-import sequor.VisualControl;
-import sequor.control.FLabel;
-import sequor.control.FLabelBox;
-import specto.PlottableGroup;
-import specto.euclidean2.CirclePoint2D;
-import specto.euclidean2.InitialPointSet2D;
-import specto.euclidean2.Point2D;
-import specto.euclidean2.Plot2D;
-import specto.euclidean2.PointSet2D;
-import specto.euclidean2.Euclidean2;
-import specto.style.PointStyle;
 
 /**
  * Logs data from a simulation's run. Can be used to plot various results.
  * <p>
  * The log contains the following information:
- * <li>
- * <ul>Paths of all players throughout the simulation;
- * <ul>Value functions of all teams throughout the simulation;
- * <ul>Significant event for one or two agents = String + Agent + Agent + time
- * </li>
+ * <ul>
+ * <li>Paths of all players throughout the simulation;</li>
+ * <li>Value functions of all teams throughout the simulation;</li>
+ * <li>Significant event for one or two agents = String + Agent + Agent + time</li>
+ * </ul>
  * </p>
  * @author ae3263
  */
-public class DataLog extends FiresChangeEvents {
+public class SimulationLog extends FiresChangeEvents {
+    
     Simulation sim;
-    Plot2D mainPlot;
-    Plot2D valuePlot;
+    
     HashMap<Agent,Vector<R2>> agentPaths;
     HashMap<Valuation,Vector<R2>> teamMetrics;
     HashMap<Valuation,Vector<R2>> partialTeamMetrics;
     Vector<SignificantEvent> significantEvents;
+    Vector<R2> capturePoints;
         
-    /** Stores the paths of the agents */
-    HashMap<Team,PlottableGroup<Euclidean2>> mainDisplayGroup;
-    HashMap<Team,PlottableGroup<Euclidean2>> valueDisplayGroup;
-    
-    /** Stores positions of captures */
-    PlottableGroup<Euclidean2> captureGroup;
-    
     
     // CONSTRUCTORS
     
     /** Basic initializer */
-    public DataLog(){}
+    public SimulationLog(){        
+    }
     
     /** Initializes to the agents/teams of a particular simulation. */
-    public DataLog(Simulation sim){
-        initialize(sim,null,null);
+    public SimulationLog(Simulation sim){
+        initialize(sim);
         logAll(0,null);
     }
     
@@ -89,49 +73,27 @@ public class DataLog extends FiresChangeEvents {
         return agentPaths.values().iterator().next().size();
     }
     
-    
-    // OTHER METHODS    
-    
-    /** Called by the initialization methods */
-    private void addAgentVisuals(Team t, PlottableGroup<Euclidean2> teamGroup) {
-        InitialPointSet2D ip;
-        for (final Agent a : t) {
-            // add the dynamic point
-            final CirclePoint2D cp = new CirclePoint2D(a.getPointModel(),a.getColorModel());
-            cp.setLabel(a.toString());
-            // add radii around the point
-            cp.addRadius(a.getCommRange());
-            cp.addRadius(a.getSensorRange());
-            a.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    if(e.getActionCommand().equals("agentSetupChange")){
-                        cp.deleteRadii();
-                        cp.addRadius(a.getCommRange());
-                        cp.addRadius(a.getSensorRange());
-                    }
-                }
-            });
-            // add point and path to plot
-            teamGroup.add(cp);
-            teamGroup.add(new PointSet2D(agentPaths.get(a), a.getColorModel()));
-        }        
+    /** Returns path of a particular agent. */
+    public Vector<R2> pathOf(Agent a){
+        return agentPaths.get(a);
     }
     
+    // OTHER METHODS    
+        
     /** Called when the simulation is first initialized ONLY. */
-    public void initialize(Simulation s,Plot2D mainDisplay,Plot2D valueDisplay){
+    public void initialize(Simulation s){
         // tells simulation to refer to this class
-        s.setDataLog(this);
-        sim=s;
-        mainPlot=mainDisplay;
-        valuePlot=valueDisplay;
+        s.log = this;
+        sim = s;
         
         // initializes vectors
         teamMetrics = new HashMap<Valuation,Vector<R2>>();
         partialTeamMetrics = new HashMap<Valuation,Vector<R2>>();
         significantEvents=new Vector<SignificantEvent>();        
         agentPaths=new HashMap<Agent,Vector<R2>>();
+        capturePoints=new Vector<R2>();
         for(Team t:s.getTeams()){
-            for(Agent a:t){
+            for(Agent a:t.agents){
                 agentPaths.put(a,new Vector<R2>(s.getNumSteps()));
             }
             for(Valuation v:t.metrics){
@@ -143,83 +105,14 @@ public class DataLog extends FiresChangeEvents {
                 partialTeamMetrics.put(t.victory,new Vector<R2>(s.getNumSteps()));
             }
         }
-        
-        if(mainDisplay!=null){
-            // initializes the main display groups
-            mainDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
-            for(Team t:s.getTeams()){            
-                PlottableGroup<Euclidean2> teamGroup=new PlottableGroup<Euclidean2>();
-                teamGroup.setColorModel(t.getColorModel());
-                teamGroup.setName(t.toString());
-                addAgentVisuals(t,teamGroup);
-                teamGroup.add(new DynamicTeamGraph(t,this));
-                mainDisplay.add(teamGroup);
-                mainDisplayGroup.put(t, teamGroup);
-            }
-            // initializes capture groups
-            captureGroup=new PlottableGroup<Euclidean2>();
-            captureGroup.setName("Captures");
-            captureGroup.setColor(Color.RED);
-            mainDisplay.add(captureGroup);
-        }
-        
-        if(valueDisplay!=null){
-            // initializes the secondary display group
-            valueDisplayGroup=new HashMap<Team,PlottableGroup<Euclidean2>>(s.getNumTeams());
-            FLabelBox legend = new FLabelBox(0, 0, 0, 0);
-            for(final Team t:s.getTeams()){
-                PlottableGroup<Euclidean2> valueGroup=new PlottableGroup<Euclidean2>();  
-                valueGroup.setName(t.toString());
-                PointSet2D temp;
-                for(final Valuation v:t.metrics){
-                    temp = new PointSet2D(teamMetrics.get(v),t.getColorModel());
-                    temp.style.setValue(PointSet2D.THIN);
-                    valueGroup.add(temp);
-                    temp = new PointSet2D(partialTeamMetrics.get(v),t.getColorModel());
-                    temp.style.setValue(PointSet2D.DOTTED);
-                    valueGroup.add(temp);
-                    final FLabel label = new FLabel(v, t.getColorModel(), null);
-                    v.addActionListener(new ActionListener(){
-                        public void actionPerformed(ActionEvent e) {
-                            label.setText(v.toString());
-                        }
-                    });
-                    legend.add(label);
-                }              
-                if(t.victory != null) {
-                    temp = new PointSet2D(teamMetrics.get(t.victory),t.getColorModel());
-                    temp.style.setValue(PointSet2D.THIN);
-                    valueGroup.add(temp);
-                    temp = new PointSet2D(partialTeamMetrics.get(t.victory),t.getColorModel());
-                    temp.style.setValue(PointSet2D.DOTTED);
-                    valueGroup.add(temp);
-                    final FLabel label = new FLabel(t.victory, t.getColorModel(), null);
-                    t.victory.addActionListener(new ActionListener(){
-                        public void actionPerformed(ActionEvent e) {
-                            label.setText(t.victory.toString());
-                        }
-                    });
-                    legend.add(label);
-                }
-                valueDisplayGroup.put(t, valueGroup);
-                valueDisplay.add(valueGroup);
-                HashSet<VisualControl> removeThese = new HashSet<VisualControl>();
-                for(VisualControl vc: valueDisplay.getControls()){
-                    if(vc instanceof FLabelBox){removeThese.add(vc);}
-                }
-                for(VisualControl vc:removeThese){valueDisplay.remove(vc);}
-                valueDisplay.add(legend,3,6);
-                legend.performLayout();
-            }
-        }
     }
     
-    /** Called when the number of <b>players</b> is changed in any way. If the number of teams is used, teh DataLog must be completely reinitialized. */
+    /** Called when the number of <b>players</b> is changed in any way. If the number of teams is used, teh SimulationLog must be completely reinitialized. */
     public void initializeNumbersOnly(){
         // preRun agent path vectors, since the number of players may change
         agentPaths.clear();
         for(Team t:sim.getTeams()){
-            for(Agent a:t){
+            for(Agent a:t.agents){
                 agentPaths.put(a,new Vector<R2>(sim.getNumSteps()));
             }
             for(Valuation v:t.metrics){
@@ -237,32 +130,6 @@ public class DataLog extends FiresChangeEvents {
                 partialTeamMetrics.put(t.victory, new Vector<R2>(sim.getNumSteps()));
             }
         }
-        // preRun the agent visuals; the team display groups do not change!
-        if(mainPlot!=null){
-            for(Team t:sim.getTeams()){            
-                PlottableGroup<Euclidean2> teamGroup=mainDisplayGroup.get(t);
-                if(teamGroup==null){
-                    teamGroup=new PlottableGroup<Euclidean2>();
-                }else{
-                    teamGroup.clear();
-                }
-                teamGroup.setColorModel(t.getColorModel());
-                addAgentVisuals(t,teamGroup);
-                teamGroup.add(new DynamicTeamGraph(t,this));
-            }
-        }
-    }
-    
-    /** Resets colors of all points and paths. */
-    public void recolor(){
-//        for(Team t:mainDisplayGroup.keySet()){
-//            for(Plottable p:mainDisplayGroup.get(t).getElements()){                
-//                p.setColor(t.getColor());
-//            }
-//            for(Plottable p:valueDisplayGroup.get(t).getElements()){
-//                p.setColor(t.getColor());
-//            }
-//        }
     }
     
     /** Called when the simulation is run again with the same teams. */
@@ -271,7 +138,7 @@ public class DataLog extends FiresChangeEvents {
         for(Vector<R2> vv:teamMetrics.values()){vv.clear();}
         for(Vector<R2> vv:partialTeamMetrics.values()){vv.clear();}
         significantEvents.clear();
-        captureGroup.clear();
+        capturePoints.clear();
         logAll(0,null);
     }
     
@@ -283,10 +150,10 @@ public class DataLog extends FiresChangeEvents {
         if(dt!=null){
             for(Valuation v:teamMetrics.keySet()){
                 try {
-                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getOwner())));
+                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getOwner().agents)));
                     partialTeamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getComplement())));
                 } catch (FunctionValueException ex) {
-                    Logger.getLogger(DataLog.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SimulationLog.class.getName()).log(Level.SEVERE, null, ex);
                 }                
             }
         }
@@ -300,9 +167,7 @@ public class DataLog extends FiresChangeEvents {
      */
     public void logCaptureEvent(Team owner, Agent first, Team target, Agent second, String string, DistanceTable dt, double time) {
         logEvent(owner, first, target, second, string, time);
-        Point2D adder=new Point2D(second.loc,captureGroup.getColor(),false);
-        adder.style.setValue(PointStyle.RING);
-        captureGroup.add(adder);
+        capturePoints.add(new R2(second.loc));
     }
     
     /** Called after the simulation is completed. */
@@ -333,9 +198,9 @@ public class DataLog extends FiresChangeEvents {
             for (int i = 0; i < t.getStartingLocations().length; i++) {vr.add(t.getStartingLocations()[i]);}
             logWindow.append("   * "+t+": "+vr+"\n");
             codeWindow.append("R2[] "+t+"Positions = { ");
-            for(Agent a : t) {
+            for(Agent a : t.agents) {
                 codeWindow.append("new R2"+a.getInitialPosition()+" ");
-                if(!t.lastElement().equals(a)) { codeWindow.append(", "); }
+                if(!t.agents.lastElement().equals(a)) { codeWindow.append(", "); }
             }
             codeWindow.append("};\n");
             codeWindow.append("teams.get("+sim.getTeams().indexOf(t)+").setStartingLocations("+t+"Positions);\n");
@@ -372,7 +237,7 @@ public class DataLog extends FiresChangeEvents {
             return description+" at time "+DecimalFormat.getNumberInstance().format(time)
                     +" ("+teamOriginator+":"+originator+" >> "+teamReceiver+":"+receiver+")";
         }
-    } // CLASS DataLog.SignificantEvent //
+    } // CLASS SimulationLog.SignificantEvent //
 
     
     // UNSUPPORTED OPERATIONS

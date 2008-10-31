@@ -61,7 +61,9 @@ public class Goal extends TaskGenerator {
 
     // CONSTRUCTORS & INITIALIZERS   
     
-    public Goal(){        
+    public Goal(){ 
+        gs = new GoalSettings();
+        tasker = gs.getTasking();
     }
     
     /** 
@@ -103,7 +105,7 @@ public class Goal extends TaskGenerator {
      */
     public void assignTasks(DistanceTable table) {
         if (tasker != null) {
-            tasker.generate(gs.owner, table, getWeight());
+            tasker.generate(gs.owner.agents, table, getWeight());
         }
     }
 
@@ -147,8 +149,23 @@ public class Goal extends TaskGenerator {
 
     public String getOwnerName(){return gs.owner.getName();}
     
+    String targetName="";
+    
     @XmlAttribute(name="target")
     public String getTargetName(){return gs.target.getName();}
+    public void setTargetName(String name){targetName=name;}
+    public void update(Vector<Team> teams,Team owner){
+        gs.teams=teams;
+        gs.owner=owner;
+        gs.initModels();
+        for(Team t:gs.teams){
+            if(t.getName().equals(targetName)){
+                gs.setTarget(t);
+                break;
+            }
+        }
+    }
+
     
     public Team getOwner() { return gs.owner; }
     public void setOwner(Team newValue) { gs.setOwner(newValue); }
@@ -219,6 +236,10 @@ public class Goal extends TaskGenerator {
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable, Double> value;
 
+        private GoalSettings() {
+            this(0.0, new Vector<Team>(), new Team(), new Team(), SEEK, TaskGenerator.AUTO_CLOSEST, 0.0);
+        }
+        
         public GoalSettings(double weight, Vector<Team> teams, Team owner, Team target, int type, int tasking, double threshhold) {
             setName("Tasking");
             this.teams = teams;

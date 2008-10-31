@@ -5,7 +5,7 @@
 
 package metrics;
 
-import analysis.DataLog;
+import analysis.SimulationLog;
 import java.util.Vector;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -44,6 +44,7 @@ public class VictoryCondition extends Valuation {
     // CONSTRUCTORS
 
     public VictoryCondition(){
+        vs.setName("Victory Condition");
     }
     
     /** Main constructor */
@@ -52,12 +53,12 @@ public class VictoryCondition extends Valuation {
         vs.setName("Victory Condition");
         this.moreResult = moreResult;
         this.lessResult = lessResult;
-        reset();
+        initStateVariables();
     } 
     
     // INITIALIZERS
     
-    public void reset() {
+    public void initStateVariables() {
         triggered = false;
     }
     
@@ -70,7 +71,7 @@ public class VictoryCondition extends Valuation {
      * @param time the current time for the simulation
      * @return status integer representing win, loss, or neither
      */
-    public int check(DistanceTable dt,DataLog log,double time){
+    public int check(DistanceTable dt,SimulationLog log,double time){
         try {
             //System.out.println("value: "+getValue(dt)+", thresh: "+getThreshold()+", more: "+moreResult+", less: "+lessResult);
             int result = getValue(dt) >= getThreshold() ? moreResult : lessResult;

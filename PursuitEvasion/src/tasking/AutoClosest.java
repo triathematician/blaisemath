@@ -37,14 +37,14 @@ public class AutoClosest extends AutonomousTaskGenerator {
 
     @Override
     public V2 generate(Agent agent, DistanceTable table) {
-        if(target.size()==1) {
-            if(agent.sees(target.firstElement())){
-                return target.firstElement().loc;
+        if(target.getAgentNumber()==1) {
+            if(agent.sees(target.agents.firstElement())){
+                return target.agents.firstElement().loc;
             } else {
                 return null;
             }
         } else {
-            return table.minVisible(agent,target).getSecondLoc();
+            return table.minVisible(agent,target.agents).getSecondLoc();
         }
     }
 }

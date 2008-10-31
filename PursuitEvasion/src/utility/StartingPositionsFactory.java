@@ -18,6 +18,11 @@ import simulation.Team;
 public class StartingPositionsFactory {
 
     // METHODS FOR SETTING INITIAL POSITIONS OF TEAM MEMBERS
+    
+    /** Places all team members at zero if position not already defined. */
+    public static void startCustom(Vector<Agent> team) {
+    }
+    
     /** Places all team members at zero. */
     public static void startZero(Vector<Agent> team) {
         for (Agent agent : team) {
@@ -97,28 +102,28 @@ public class StartingPositionsFactory {
     }
 
 
-    public static void startSideline(Vector<Agent> team, R2[] locations) {
+    public static void startSideline(Vector<Agent> team) {
              for (int i = 0; i < team.size();) {
              team.get(i).setInitialPosition(-45+5*i, (Math.pow(-1, i))*50+50);
              i++;
            }
     }
    
-    public static void startEndzone(Vector<Agent> team, R2[] locations) {
+    public static void startEndzone(Vector<Agent> team) {
            for (int i = 0; i < team.size();) {
            team.get(i).setInitialPosition(-50, 10+i*10);
           i ++;
         }
     }
 
-    public static void startOffense(Vector<Agent> team, R2[] locations) {
+    public static void startOffense(Vector<Agent> team) {
         for (int i = 0; i < team.size();) {
            team.get(i).setInitialPosition(40, 15+i*8);
            i++;
         }
     }
 
-    public static void startDefense(Vector<Agent> team, R2[] locations) {
+    public static void startDefense(Vector<Agent> team) {
         for (int i = 0; i < team.size();) {
            team.get(i).setInitialPosition(-20, 15+i*8);
            i++;

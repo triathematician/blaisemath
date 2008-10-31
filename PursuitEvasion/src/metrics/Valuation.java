@@ -46,7 +46,7 @@ public class Valuation implements Function<DistanceTable,Double> {
     public ValuationSettings vs;
 
     public Valuation() {
-        this(null,null,null,DIST_MIN,0.0);
+        this(new Vector<Team>(),new Team(),new Team(),DIST_MIN,0.0);
     }
     
     public Valuation(Vector<Team> teams, Team owner, Team target, double threshold) { this(teams, owner, target, DIST_MIN, threshold); }
@@ -72,7 +72,7 @@ public class Valuation implements Function<DistanceTable,Double> {
      * @throws scio.function.FunctionValueException
      */
     public Double getValue(Simulation sim, Collection<Agent> subset) throws FunctionValueException {
-        return getValue(sim.getDistanceTable(), subset);
+        return getValue(sim.dist, subset);
     }
     
     /** Returns current valuation of the game, as viewed by a particular subset.
@@ -106,8 +106,8 @@ public class Valuation implements Function<DistanceTable,Double> {
                 case TIME_TOTAL:
                     return dt.getTime();
                 case EVERY_CAPTURE:
-                    return (double)((vs.owner.size()> vs.target.size())?
-                        (vs.target.size()-vs.owner.size()+vs.owner.getActiveAgents().size()):(vs.owner.getActiveAgents().size()));
+                    return (double)((vs.owner.getAgentNumber()> vs.target.getAgentNumber())?
+                        (vs.target.getAgentNumber()-vs.owner.getAgentNumber()+vs.owner.getActiveAgents().size()):(vs.owner.getActiveAgents().size()));
                 case TIME_SINCE_CAP:
                 default:
                     return Double.NaN;
@@ -165,8 +165,27 @@ public class Valuation implements Function<DistanceTable,Double> {
 
     public String getOwnerName(){return vs.owner.getName();}
     
+    String targetName="";
+    
     @XmlAttribute(name="target")
     public String getTargetName(){return vs.target.getName();}
+    public void setTargetName(String name){
+        if(vs.teams!=null){
+            for(Team t:vs.teams){
+                if(t.getName().equals(name)){
+                    vs.setTarget(t);
+                    break;
+                }
+            }
+        }
+        targetName=name;
+    }
+    public void update(Vector<Team> teams,Team owner){
+        vs.teams=teams;
+        vs.owner=owner;
+        vs.initModels();
+        setTargetName(targetName);
+    }
     
     public Team getOwner(){return vs.owner;}
     
@@ -278,7 +297,7 @@ public class Valuation implements Function<DistanceTable,Double> {
             add(new SettingsProperty("Threshhold", this.threshold, Settings.EDIT_DOUBLE));
             add(new SettingsProperty("Type", this.type, Settings.EDIT_COMBO));
             add(new SettingsProperty("Cooperation", this.testsCooperation, Settings.EDIT_BOOLEAN));
-            valueAgents = new SubsetModel<Agent> (owner);
+            valueAgents = new SubsetModel<Agent> (owner.agents);
             addGroup("Subset", valueAgents, Settings.EDIT_BOOLEAN_GROUP, "Select agents used for valuation.");
         }
         

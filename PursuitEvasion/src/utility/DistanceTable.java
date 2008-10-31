@@ -55,7 +55,7 @@ public class DistanceTable extends HashHashMatrix<Agent,Agent,Double> {
     public DistanceTable(Collection<Team> teams){
         super(0,0);
         HashSet<Agent> keys = new HashSet<Agent>();
-        for(Team t:teams){keys.addAll(t);}
+        for(Team t:teams){keys.addAll(t.agents);}
         super.init(keys.toArray(),keys.toArray());
         recalculate(0.0);
     }
