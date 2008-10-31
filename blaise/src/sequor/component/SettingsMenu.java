@@ -53,18 +53,18 @@ public class SettingsMenu extends JMenu {
     /** Places the settings on a given panel, and performs proper layout. */
     public void updateMenu(){     
         removeAll();   
-        JMenuItem mi2=new JMenuItem("Text XML Output...");
-        mi2.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    JAXBContext jc = JAXBContext.newInstance(Settings.class);
-                    jc.createMarshaller().marshal(s,System.out);
-                } catch (JAXBException ex) {
-                    Logger.getLogger(SettingsMenu.class.getName()).log(Level.SEVERE, null, ex);
-                }                
-            }
-        });
-        add(mi2);
+//        JMenuItem mi2=new JMenuItem("Text XML Output...");
+//        mi2.addActionListener(new ActionListener(){
+//            public void actionPerformed(ActionEvent e) {
+//                try {
+//                    JAXBContext jc = JAXBContext.newInstance(Settings.class);
+//                    jc.createMarshaller().marshal(s,System.out);
+//                } catch (JAXBException ex) {
+//                    Logger.getLogger(SettingsMenu.class.getName()).log(Level.SEVERE, null, ex);
+//                }                
+//            }
+//        });
+//        add(mi2);
         super.setText(s.toString());
         for(SettingsProperty sp:s){
             switch(sp.getEditorType()){

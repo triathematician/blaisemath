@@ -42,8 +42,9 @@ public class VectorField2D extends Plottable<Euclidean2> implements ChangeListen
         
     public VectorField2D(){this(DEFAULT_FUNCTION);}
     public VectorField2D(BoundedFunction<R2,R2> function){
-        setColor(Color.GRAY);
         this.function=function;
+        setColor(Color.GRAY);
+        style.setValue(ARROWS);
     }
     public VectorField2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
         Vector<String> vars = new Vector<String>();
@@ -63,7 +64,9 @@ public class VectorField2D extends Plottable<Euclidean2> implements ChangeListen
             }
         };
         functionModel1.addChangeListener(cl);
-        functionModel2.addChangeListener(cl);        
+        functionModel2.addChangeListener(cl);   
+        setColor(Color.GRAY); 
+        style.setValue(ARROWS);    
     }
     
     // HELPERS

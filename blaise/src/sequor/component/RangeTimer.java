@@ -88,8 +88,8 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
     // TIMER METHODS
     
     /** Starts sending out timer events; turns off pause if on. */
-    void start(){play();}
-    void play(){
+    public void start(){play();}
+    public void play(){
         if(getStatus()!=PLAYING){
             if(getStatus()==STOPPED){fireActionPerformed("restart");}
             setValue(PLAYING);
@@ -98,7 +98,7 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
         }
     }
     /** Pauses the timer if running; does nothing otherwise. */
-    void pause(){
+    public void pause(){
         if(getStatus()==PLAYING){
             setValue(PAUSED);
             timer.start();
@@ -106,7 +106,7 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
         }
     }
     /** Pauses the timer if running; starts playing if paused. */
-    void togglePause(){
+    public void togglePause(){
         if(getStatus()==PLAYING){
             pause();
         }else if(getStatus()==PAUSED){
@@ -114,7 +114,7 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
         }
     }
     /** Stops the timer completely. */
-    void stop(){
+    public void stop(){
         if(getStatus()!=STOPPED){
             setValue(STOPPED);
             timer.stop();
@@ -122,13 +122,13 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
         }
     }
     /** Resets the animation to the beginning; starts if stopped or paused. */
-    void restart(){
+    public void restart(){
         stop();
         rangeValues.setValue(rangeValues.getMinimum());
         start();
     }
     /** Makes the animation run slower. */
-    void slower(){
+    public void slower(){
         speed--;
         if(timer.getDelay()==0){ // if delay is bottomed out, create a default delay value.
             if(initialStepSize==null){
@@ -147,7 +147,7 @@ public class RangeTimer<N extends Number> extends StringRangeModel implements Ac
         }
     }
     /** Makes the animation run faster. */
-    void faster(){     
+    public void faster(){     
         speed++;
         if(timer.getDelay()==0){ // if delay is bottomed out, change the stepsize of the model down to at fewest ten steps
             if(rangeValues.getNumSteps()>10){

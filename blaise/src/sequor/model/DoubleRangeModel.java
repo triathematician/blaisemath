@@ -21,7 +21,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public class DoubleRangeModel extends BoundedRangeModel<Double> {
     
     /** Default initializer. */
-    public DoubleRangeModel(){super(0.0,-1.0,1.0,0.1);}
+    public DoubleRangeModel(){this(0.0,-1.0,1.0,0.1);}
+    public DoubleRangeModel(double d){this(d,-Double.MAX_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);}
     /** Initializes with particular values. The stepsize is by default 0.1.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible

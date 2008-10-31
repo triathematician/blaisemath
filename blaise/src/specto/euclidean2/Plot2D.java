@@ -39,4 +39,14 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     
     public int getAxisStyle(){return axes.style.getValue();}
     public void setAxisStyle(int newValue){axes.style.setValue(newValue);}
+
+    
+    // OVERRIDES
+    
+    @Override
+    public void clearPlottables() {
+        super.clearPlottables();
+        add(axes);
+        add(grid);
+    } 
 }

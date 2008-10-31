@@ -36,6 +36,7 @@ public class StringRangeModel extends IntegerRangeModel{
         setRangeProperties(1,0,2);
     }
     public StringRangeModel(String[] s){super();setStrings(s);}
+    public StringRangeModel(String[] s, int newValue) {super();setStrings(s);setValue(newValue);}
     public StringRangeModel(String[] s,int newValue,int newMin,int newMax){this.s=s;setRangeProperties(newValue,newMin,newMax);}
 
     

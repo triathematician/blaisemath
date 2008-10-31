@@ -49,7 +49,10 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         plottables.remove(p);
         p.removeChangeListener(this);
     }
-    
+    public void addAll(Collection<? extends Plottable<V>> ps) {
+        plottables.addAll(ps);        
+        for (Plottable<V> p:ps){p.addChangeListener(this);}
+    }    
     
     // BEANS
     

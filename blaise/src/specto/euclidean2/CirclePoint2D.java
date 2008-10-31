@@ -20,6 +20,11 @@ import specto.style.PointStyle;
 public class CirclePoint2D extends Point2D {
     Vector<Double> radii;
 
+    public CirclePoint2D() {
+        super(new PointRangeModel());
+        radii = new Vector<Double>();
+    }
+
     public CirclePoint2D(PointRangeModel prm){
         super(prm);
         radii=new Vector<Double>();

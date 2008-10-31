@@ -42,6 +42,7 @@ public class FLabelBox extends VisualControlGroup {
     
     // ADD/REMOVE METHODS
 
+    /** Only accept additions of labels. */
     @Override
     public void add(VisualControl vc) {
         if(!(vc instanceof FLabel)){return;}
@@ -50,6 +51,10 @@ public class FLabelBox extends VisualControlGroup {
             ((FLabel)vc).computeTextSize(fm);
         }
         performLayout();
+    }
+    
+    public void clear() {
+        super.elements.clear();
     }
     
 

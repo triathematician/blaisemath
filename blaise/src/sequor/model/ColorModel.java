@@ -44,18 +44,29 @@ public class ColorModel extends FiresChangeEvents {
     @Override
     public void setValue(String s){throw new UnsupportedOperationException("Not supported yet.");}
 
-    @XmlAttribute
+    //@XmlAttribute
     public int getRed(){return c.getRed();}
     public void setRed(int red){setValue(new Color(red, getGreen(), getBlue(), getAlpha()));}
-    @XmlAttribute
+    
+    //@XmlAttribute
     public int getGreen(){return c.getGreen();}
     public void setGreen(int green){setValue(new Color(getRed(), green, getBlue(), getAlpha()));}
-    @XmlAttribute
+    
+    //@XmlAttribute
     public int getBlue(){return c.getBlue();}
     public void setBlue(int blue){setValue(new Color(getRed(), getGreen(), blue, getAlpha()));}
-    @XmlAttribute
+    
+    //@XmlAttribute
     public int getAlpha(){return c.getAlpha();}
     public void setAlpha(int alpha){setValue(new Color(getRed(), getGreen(), getBlue(), alpha));}
+    
+    @XmlAttribute
+    public String getHexString(){
+        String rgb = Integer.toHexString(c.getRGB());
+        return rgb.substring(2,rgb.length());
+    }
+    public void setHexString(String s){c = Color.decode("#"+s);}
+
     
     @Override
     public String toLongString(){throw new UnsupportedOperationException("Not supported yet.");}

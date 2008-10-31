@@ -42,6 +42,7 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     }
     public PointRangeModel(R2 point,double range){this(point,-range,-range,range,range);}
 
+
     private void initializeModels(){
         xModel=new DoubleRangeModel();
         xModel.addChangeListener(this);
@@ -59,7 +60,11 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     public R2 getCenter(){return new R2((xModel.getMinimum()+xModel.getMaximum())/2.0,(yModel.getMinimum()+yModel.getMaximum())/2.0);}
     
     public double getX(){return xModel.getValue();}
+    public void setX(double x){xModel.setValue(x);}
+    
     public double getY(){return yModel.getValue();}
+    public void setY(double y){yModel.setValue(y);}
+    
     public double getMinX(){return xModel.getMinimum();}
     public double getMinY(){return yModel.getMinimum();}
     public double getMaxX(){return xModel.getMaximum();}

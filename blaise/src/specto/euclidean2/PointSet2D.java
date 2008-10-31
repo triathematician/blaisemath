@@ -40,8 +40,20 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         setColor(c);
         this.points=points;
     }
+    public PointSet2D(Vector<R2> points,Color c, int style){
+        initStyle();
+        this.style.setValue(style);
+        setColor(c);
+        this.points=points;
+    }
     public PointSet2D(Vector<R2> points, ColorModel colorModel) {
         initStyle();
+        setColorModel(colorModel);
+        this.points=points;
+    }
+    public PointSet2D(Vector<R2> points, ColorModel colorModel, int style) {
+        initStyle();
+        this.style.setValue(style);
         setColorModel(colorModel);
         this.points=points;
     }
@@ -57,10 +69,14 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     // DRAW METHODS
 
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v){
-        if(points.size()==0){return;}
+    public void paintComponent(Graphics2D g,Euclidean2 v){        
+        if(points==null || points.size()==0){return;}
         g.setStroke(strokes[style.getValue()]);
-        g.draw(drawPath(v,0,points.size()));
+        if(style.getValue().equals(POINTS_ONLY)){
+            for(int i=0;i<points.size();i++){ g.fill(drawDot(v,i)); }
+        } else {
+            g.draw(drawPath(v,0,points.size()));
+        }
         if(label!=null){
             java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
             g.setComposite(VisualStyle.COMPOSITE5);
@@ -70,31 +86,35 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     }
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
-        if(points.size()==0){return;}
-        int curVal=t.getCurrentIntValue();
-        g.setStroke(strokes[style.getValue()]);
-        switch(animateStyle.getValue()){
-            case ANIMATE_DRAW:
-                g.draw(drawPath(v,t.getFirstIntValue(),curVal));
-                break;
-            case ANIMATE_DOT:
-                g.fill(drawDot(v,curVal));
-                break;
-            case ANIMATE_TRACE:
-                g.draw(drawPath(v,0,points.size()));
-                g.fill(drawDot(v,curVal));
-                break;
-            case ANIMATE_TRAIL:
-            default:
-                g.draw(drawPath(v,0,curVal));
-                g.draw(drawPath(v,curVal-5,curVal));
-                g.fill(drawDot(v,curVal));
-                break;
-        }  
-        if (curVal >= points.size()) { curVal = points.size() - 1; }
-        java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
-        g.setComposite(VisualStyle.COMPOSITE5);
-        g.drawString(points.get(curVal).toString(),(float)labelCenter.x+5,(float)labelCenter.y-5);
+        if(points==null || points.size()==0){return;}
+        if(style.getValue().equals(POINTS_ONLY)){
+            for(int i=0;i<points.size();i++){ g.fill(drawDot(v,i)); }
+        } else {
+            int curVal=t.getCurrentIntValue();
+            g.setStroke(strokes[style.getValue()]);
+            switch(animateStyle.getValue()){
+                case ANIMATE_DRAW:
+                    g.draw(drawPath(v,t.getFirstIntValue(),curVal));
+                    break;
+                case ANIMATE_DOT:
+                    g.fill(drawDot(v,curVal));
+                    break;
+                case ANIMATE_TRACE:
+                    g.draw(drawPath(v,0,points.size()));
+                    g.fill(drawDot(v,curVal));
+                    break;
+                case ANIMATE_TRAIL:
+                default:
+                    g.draw(drawPath(v,0,curVal));
+                    g.draw(drawPath(v,curVal-5,curVal));
+                    g.fill(drawDot(v,curVal));
+                    break;
+            }  
+            if (curVal >= points.size()) { curVal = points.size() - 1; }
+            java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.drawString(points.get(curVal).toString(),(float)labelCenter.x+5,(float)labelCenter.y-5);
+        }
         g.setComposite(AlphaComposite.SrcOver);
         if(label!=null){
             java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
@@ -128,6 +148,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public static final int THICK=3;
     public static final int DOTTED=4;
     public static final int SKETCH=5;    
+    public static final int POINTS_ONLY=6;
 
     public static final float[] dash2={1.0f,4.0f};
     public static final float[] dash3={2.0f,6.0f};
@@ -137,9 +158,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         new BasicStroke(3.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
         new BasicStroke(4.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL),
         new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash2,0.0f),
-        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash3,0.0f)};
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,10.0f,dash3,0.0f),
+        new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL)
+    };
     
-    public static final String[] styleStrings={"Regular","Thin","Medium","Thick","Dotted","Sketch"};
+    public static final String[] styleStrings={"Regular","Thin","Medium","Thick","Dotted","Sketch","Points Only"};
     @Override
     public String[] getStyleStrings() {return styleStrings;}
     

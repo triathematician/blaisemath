@@ -138,6 +138,11 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         parents = new Vector<Settings>();
         children = new Vector<Settings>();
     }
+
+    public Settings(String string) {
+        this();
+        setName(string);
+    }
     
     
     // BEAN PATTERNS
@@ -259,6 +264,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     
     /** Adds a child node, and implements appropriate event handling procedures. */
     public void addChild(Settings child,int relationship){
+        //if(children.contains(child)){return;}
         children.add(child);
         child.setInheriting(relationship);
         //child.addParent(this,relationship);
@@ -273,6 +279,12 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
                 break;
         }
     }
+
+    
+    public void removeAllChildren() {
+        children.clear();
+    }
+        
     /** Copies settings from another class; adds event handling procedures. */
     public void copySettingsFrom(Settings s){
         for(SettingsProperty sp:s){
@@ -344,9 +356,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         return new DefaultTreeModel(getTreeNode());
     }
     
-    
-
-    
+    /** Used to generate a default list of displayed properties. */
     public void addDefaultItems(){
         addProperty("color",new ColorModel(Color.BLUE),Settings.EDIT_COLOR);
         addSeparator();
