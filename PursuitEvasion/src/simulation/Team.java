@@ -525,21 +525,21 @@ public class Team implements ActionListener {
         if(newAgents==agents){
            //System.out.println("here");            
         } else {
-            System.out.println("old positions for team "+getName()+":");
-            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
-            System.out.println("new positions:");
-            for(Agent a:newAgents){System.out.println(" "+a.getInitialPosition());}
-            editing = true;
-            for(Agent a:agents){a.removeActionListener(this);tes.removeChild(a.ags);}            
-            agents.clear();
-            for(Agent a:newAgents){add(a);}
-            if(victory!=null){victory.resetTeam();}
-            for (CaptureCondition cc:capture){cc.resetTeam();}
-            for (Valuation v:metrics){v.resetTeam();}
-            activateAllAgents();
-            editing=false;
-            System.out.println("newer positions:");
-            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
+//            System.out.println("old positions for team "+getName()+":");
+//            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
+//            System.out.println("new positions:");
+//            for(Agent a:newAgents){System.out.println(" "+a.getInitialPosition());}
+//            editing = true;
+//            for(Agent a:agents){a.removeActionListener(this);tes.removeChild(a.ags);}            
+//            agents.clear();
+//            for(Agent a:newAgents){add(a);}
+//            if(victory!=null){victory.resetTeam();}
+//            for (CaptureCondition cc:capture){cc.resetTeam();}
+//            for (Valuation v:metrics){v.resetTeam();}
+//            activateAllAgents();
+//            editing=false;
+//            System.out.println("newer positions:");
+//            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
         }
     }
     
@@ -572,6 +572,8 @@ public class Team implements ActionListener {
             a.addActionListener(this);
             ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
         }
+        startAgents.clear();
+        startAgents.addAll(agents);
     }
 
     

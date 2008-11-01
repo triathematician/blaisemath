@@ -245,6 +245,7 @@ public class SimulationFactory {
         
         // Teams
         Vector<Team> teams = new Vector<Team>(10);
+        for(int i=0;i<10;i++){teams.add(new Team());}
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
         teams.get(0).initSettings("Old Lady", 1, Team.START_RANDOM, Behavior.LEADING, Color.RED);
         teams.get(1).initSettings("Horses", 4, Team.START_RANDOM, Behavior.LEADING, Color.ORANGE);

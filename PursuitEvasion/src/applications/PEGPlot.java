@@ -504,7 +504,10 @@ private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 statusText.setText("Opening: " + file.getName() + ".");
                 simulation1 = XmlHandler.unmarshal(file);
                 mainVisuals1.setSim(simulation1);
-                metricVisuals1.setSim(simulation1);
+                metricVisuals1.setSim(simulation1);        
+                simulation1.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) { simulation1ActionPerformed(evt); }
+                });
                 simulation1.run();
                 simulationComboBox.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
                 simulationPlot.rebuildOptionsMenu();
