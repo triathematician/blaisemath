@@ -86,6 +86,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
     
     /** Iterates a given edge structure many times. Based off of the underlying points. */
     public static class Edges extends FractalShape2D{
+        /** Initializes with given points. */
         public Edges(R2 p1,R2 p2){
             maxIter=new IntegerRangeModel(0,0,5);
             setColor(Color.BLUE);
@@ -122,7 +123,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
          * @param p2
          */
         public SpaceFilling(R2 p1, R2 p2) {
-            maxIter=new IntegerRangeModel(4,0,7);
+            maxIter=new IntegerRangeModel(4,0,6);
             setColor(Color.BLUE);
             add(p1);
             add(p2);

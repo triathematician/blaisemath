@@ -98,6 +98,8 @@ public class Euclidean2 extends Visometry<R2> {
     public AffineTransform getAffineTransformation(){return at;}
     public PointRangeModel getBounds(){return bounds;}
     
+    public R2 getRandomPoint(){ return bounds.getRandom(); }
+    
     public void setAspectRatio(double newValue){
         if(Math.abs(newValue/aspectRatio-1)>.05){
             double oldValue=aspectRatio;

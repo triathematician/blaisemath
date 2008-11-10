@@ -28,6 +28,7 @@ public class Voronoi2D extends DynamicPointSet2D {
     DynamicPointSet2D tessPoints;
 
     public Voronoi2D() {
+        setName("Voronoi");
         tessPoints = new DynamicPointSet2D();
         tessPoints.style.setValue(STYLE_POINTS_ONLY);
         for (int i = 0; i < 15; i++) { add(Random2D.rectangle(-15,-15,-10,-10)); }

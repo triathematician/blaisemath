@@ -31,6 +31,11 @@ public class Clock2D extends Point2D implements Animatable<Euclidean2> {
     public Clock2D(Point2D center,double radius){super(center.prm);this.radius=radius;}
     public Clock2D(double x,double y,double radius){super(x,y);this.radius=radius;}
 
+    /** Whether this element animates. */    
+    public boolean animationOn=true;
+    public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+    public boolean isAnimationOn() { return animationOn; }
+    
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
         R2 center=getPoint();

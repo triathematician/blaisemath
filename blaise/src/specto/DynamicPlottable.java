@@ -25,6 +25,7 @@ import sequor.event.MouseVisometryListener;
  */
 public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V> implements MouseVisometryListener<V> {
     
+    public boolean adjusting=false;
     public boolean editable=true;
 
     // BEAN PATTERNS
@@ -36,7 +37,6 @@ public abstract class DynamicPlottable<V extends Visometry> extends Plottable<V>
     
     // HANDLING MOUSE EVENTS
     
-    public boolean adjusting=false;
     public boolean clicked(MouseVisometryEvent<V> e) {return false;}
     public boolean withinClickRange(MouseVisometryEvent<V> e,Coordinate c){
         java.awt.geom.Point2D.Double point=e.getSourceVisometry().toWindow(c);

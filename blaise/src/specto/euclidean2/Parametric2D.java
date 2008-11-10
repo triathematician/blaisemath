@@ -7,6 +7,7 @@ package specto.euclidean2;
 
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
+import scribo.parser.FunctionSyntaxException;
 import sequor.model.FunctionTreeModel;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,6 +17,8 @@ import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.Derivative;
+import scribo.parser.Parser;
+import scribo.tree.FunctionTreeRoot;
 import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
 import sequor.model.ParametricModel;
@@ -60,6 +63,14 @@ public class Parametric2D extends PointSet2D {
         tRange=new DoubleRangeModel(tMin,tMin,tMax);
         tRange.setNumSteps(samplePoints,true);
     }
+
+    Parametric2D(Function<Double, R2> function, DoubleRangeModel drm,int samplePoints) {
+        setColor(Color.BLUE);
+        this.function=function;
+        tRange=new DoubleRangeModel(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
+        tRange.setNumSteps(samplePoints,true);
+    }
+    
     public Parametric2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
         tRange = new DoubleRangeModel (0.0, 0.0, 2*Math.PI);
         tRange.setNumSteps(1000, true);
@@ -100,8 +111,10 @@ public class Parametric2D extends PointSet2D {
     // BEAN PATTERNS
     
     public Function<Double,R2> getFunction(){return function;}
-    public void setFunction(String fx,String fy){
-        this.function=new ParametricModel(fx,fy).getFunction();
+    public void setFunction(String fx,String fy) throws FunctionSyntaxException{
+        function=getParametricFunction(
+                (Function<Double, Double>) new FunctionTreeRoot(fx).getFunction(),
+                (Function<Double, Double>) new FunctionTreeRoot(fy).getFunction());
     }
     public DoubleRangeModel getModel(){return tRange;}
     
@@ -180,6 +193,11 @@ public class Parametric2D extends PointSet2D {
             
             Parametric2D.this.addChangeListener(this);
         }
+        
+        /** Whether this element animates. */    
+        public boolean animationOn=true;
+        public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+        public boolean isAnimationOn() { return animationOn; }
         
         /** Returns data model which can be used to control the time of this point. */
         public DoubleRangeModel getTimeModel(){return tModel;}

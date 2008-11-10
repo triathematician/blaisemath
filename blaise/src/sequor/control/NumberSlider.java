@@ -119,7 +119,7 @@ public class NumberSlider extends VisualControlGroup {
     public void paintComponent(Graphics2D g) {  
         updateHandleLocation();
         super.paintComponent(g,0.5f);
-        g.drawString(model.toString(),(float)handle.getX()+handle.getWidth()+5,(float)handle.getY()+handle.getHeight()-2);
+        g.drawString((getName()==null?"":getName()+": ")+model.toString(),(float)handle.getX()+handle.getWidth()+5,(float)handle.getY()+handle.getHeight()-2);
     }
     
     

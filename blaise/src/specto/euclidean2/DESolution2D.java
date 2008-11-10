@@ -5,6 +5,8 @@
 
 package specto.euclidean2;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import scio.function.FunctionValueException;
 import java.awt.Graphics2D;
 import java.util.Vector;
@@ -12,6 +14,7 @@ import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
+import sequor.style.VisualStyle;
 import specto.Decoration;
 
 /**
@@ -34,10 +37,12 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     public DESolution2D(Point2D point,VectorField2D parent){
         super(point);
         this.parent=parent;
+        setColor(new Color(.5f,0,.5f));
     }
     public DESolution2D(VectorField2D parent){
         super();
         this.parent=parent;
+        setColor(new Color(.5f,0,.5f));
     }
     
     // DECORATION METHODS
@@ -71,6 +76,22 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
             result.add(last.plus(getScaledVector(field,last,stepSize)));
         }
         return result;
+    }    
+    
+    /** Re-calculates the solution curves, using Newton's Method. Instead of using a starting
+     * point, uses a starting vector; removes "steps" number of points from the beginning, and
+     * adds the same number onto the end of the vector.
+     * @param steps     The number of iterations.
+     * @param stepSize  The size of path added at each step.
+     */
+    public static Vector<R2> calcNewton(Function<R2,R2> field,Vector<R2> flow,int steps,double stepSize) throws FunctionValueException{
+        R2 last;
+        for(int i=0;i<steps;i++){
+            last=flow.lastElement();
+            flow.add(last.plus(getScaledVector(field,last,stepSize)));
+            flow.remove(0);
+        }
+        return flow;
     }
     
     /** Re-calculates solution curves using Runge-Kutta 4th order.
@@ -104,13 +125,21 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
         if(path!=null){path.paintComponent(g,v);}
-        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,v);}
+        if(showReverse&&reversePath!=null){
+            g.setComposite(VisualStyle.COMPOSITE2);
+            reversePath.paintComponent(g,v);
+            g.setComposite(AlphaComposite.SrcOver);
+        }
     }
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         if(path!=null){path.paintComponent(g,v,t);}
-        if(showReverse&&reversePath!=null){reversePath.paintComponent(g,v,t);}
+        if(showReverse&&reversePath!=null){
+            g.setComposite(VisualStyle.COMPOSITE2);
+            reversePath.paintComponent(g,v,t);
+            g.setComposite(AlphaComposite.SrcOver);
+        }
     }
 
     @Override

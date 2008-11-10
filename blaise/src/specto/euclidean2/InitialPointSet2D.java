@@ -47,6 +47,11 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     
     // BEAN PATTERNS
     
+    /** Whether this element animates. */    
+    public boolean animationOn=true;
+    public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+    public boolean isAnimationOn() { return animationOn; }
+
     public IntegerRangeModel getLengthModel(){return length;}
     
     /** Returns plottable path element. */

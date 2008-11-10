@@ -10,8 +10,7 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.ChangeEvent;
@@ -20,7 +19,6 @@ import javax.swing.event.EventListenerList;
 import sequor.control.NumberSlider;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
-import specto.euclidean2.Point2D;
 
 /**
  * This abstract class includes basic functionality for the plotting of some object on
@@ -35,6 +33,9 @@ import specto.euclidean2.Point2D;
  * @author Elisha Peterson
  */
 public abstract class Plottable<V extends Visometry> implements ChangeListener {
+    
+    boolean visible = true;
+    
     public Plottable() {initStyle();}
 
     /** Used when the function must be recomputed, typically within paintComponent. */
@@ -48,6 +49,14 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
      * @param g the graphics object
      * @param v the visometry */
     public abstract void paintComponent(Graphics2D g,V v);           
+    
+    
+    // BEAN PATTERNS
+    
+    /** Sets whether plot is visible. */
+    public void setVisible(boolean newValue){visible=newValue;}
+    /** Returns visibility status. */
+    public boolean isVisible(){return visible;}
     
     
     // EVENT HANDLING
@@ -117,9 +126,22 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     public JMenu getOptionsMenu(){
         JMenu result=new JMenu(toString()+" Options");       
         result.setForeground(getColor());
+        result.add(getVisibleMenuItem());
         result.add(getColorMenuItem());  
         if(style==null){return result;}
         return style.appendToMenu(result);
+    }
+    
+    /** Returns check box with label that shows/hides the plottable. */
+    public Component getVisibleMenuItem(){
+        JCheckBox result = new JCheckBox("Visible",visible);
+        result.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                visible=!visible;
+                fireStateChanged();
+            }
+        });
+        return result;
     }
     
     /** Returns button which when pressed opens a color palette to change the color of the given item. */

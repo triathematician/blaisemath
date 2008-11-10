@@ -61,6 +61,11 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     
     // BEAN PATTERNS
     
+    /** Whether this element animates. */    
+    public boolean animationOn=true;
+    public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+    public boolean isAnimationOn() { return animationOn; }
+    
     public Vector<R2> getPath(){return points;}
     public void setPath(Vector<R2> path){points=path;}
     public void setLabel(String s){label=s;}

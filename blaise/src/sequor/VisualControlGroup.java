@@ -76,6 +76,16 @@ public class VisualControlGroup extends VisualControl implements ActionListener 
         } 
     }
     
+    public void remove(VisualControl vc){
+        if(vc!=null){
+            elements.remove(vc);
+            vc.removeChangeListener(this);
+            if(vc instanceof VisualButton){
+                ((VisualButton)vc).removeActionListener(this);
+            }
+        } 
+    }
+    
     
     // PAINT METHODS
         

@@ -48,11 +48,19 @@ public class FunctionPanel extends SettingsPanel {
             p.add(new Function2D((FunctionTreeModel)sp.getModel()));
         }
     }
-    
+        
     /** Returns the i'th function model contained herein. */
-    public FunctionTreeModel getFunctionModel(int i) { 
-        return ((FunctionTreeModel)s.get(i).getModel());
-    }
+    public FunctionTreeModel getFunctionModel(int i) { return ((FunctionTreeModel)s.get(i).getModel()); }
+    /** Sets the i'th function model. */
+    public void setFunctionModel(int i,FunctionTreeModel ftm){ if (i < s.size()) { s.get(i).setModel(ftm); updatePanel();  } }
+    /** Returns the i'th function name. */
+    public String getFunctionName(int i){ return s.get(i).getName(); }
+    /** Sets the i'th function name. */
+    public void setFunctionName(int i,String name){ if (i < s.size()) { s.get(i).setName(name); updatePanel(); } }
+    /** Sets the i'th function by string. */
+    public void setFunction(int i,String newFunction){ if (i < s.size()) { getFunctionModel(i).setValue(newFunction); } }
+    /** Sets the i'th function name and value. */
+    public void setFunction(int i,String name,String newFunction){ setFunctionName(i,name); setFunction(i, newFunction); }
     
     /** Updates the panel. */
     @Override

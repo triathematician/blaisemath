@@ -42,7 +42,7 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
     protected boolean stickySnap=false;
     /** If true, component can be dragged around the screen. */
     protected boolean draggable=false;
-        
+    
     
     // CONSTRUCTORS
     
@@ -54,7 +54,7 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
     }
     
     // BEAN PATTERNS
-    
+        
     public SnapRule getSnapRule(){return snapRule;}
     
     public void setDraggable(boolean draggable){this.draggable=draggable;}

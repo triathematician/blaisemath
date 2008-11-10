@@ -21,7 +21,9 @@ import specto.style.PointStyle;
  * @author Elisha Peterson
  */
 public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
-    public DynamicPointSet2D(){}
+    public DynamicPointSet2D(){
+        setName("Dynamic Point Set");
+    }
 
     @Override
     public void add(Plottable<Euclidean2> p) {if(p instanceof Point2D){super.add(p);}}
@@ -100,10 +102,9 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
     @Override
     public String[] getStyleStrings(){return styleStrings;}
     @Override
-    public String toString(){return "Point Set";}
-    @Override
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu(toString()+" Options");       
+        result.add(getVisibleMenuItem());
         result.setForeground(getColor());
         result.add(getColorMenuItem());  
         if(style==null){return result;}

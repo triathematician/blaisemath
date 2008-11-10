@@ -13,20 +13,44 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scio.function.FunctionValueException;
 import sequor.model.FunctionTreeModel;
-import specto.Plottable;
 import scio.coordinate.R2;
+import scio.coordinate.R3;
 import scio.function.BoundedFunction;
-import scio.function.MeshRoot2D;
-import sequor.style.VisualStyle;
+import scio.function.Function;
+import sequor.model.DoubleRangeModel;
+import specto.PlottableGroup;
 
 /**
  * Draws a two-input/one-output function on the Cartesian Plane. Requires such a function to work. Multiple style settings will be supported.
  * @author ae3263
  */
-public class PlaneFunction2D extends Plottable<Euclidean2>{
-    BoundedFunction<R2,Double> function;
-    Vector<R2> inputs;
-    Vector<Double> currentValues;
+public class PlaneFunction2DProjected extends PlottableGroup<Euclidean2>{
+    BoundedFunction<R2,Double> function;   
+    DoubleRangeModel xRange;
+    DoubleRangeModel yRange;
+    
+    Function<R3,R2> projection = new Function<R3,R2>(){
+        final R2 xhat = new R2(-.8,-.6);
+        final R2 yhat = new R2(.8,-.6);
+        final R2 zhat = new R2(0,1);        
+        public R2 getValue(R3 pt) throws FunctionValueException {
+            return new R2(
+                    xhat.x*pt.getX()+yhat.x*pt.getY()+zhat.x*pt.getZ(),
+                    xhat.y*pt.getX()+yhat.y*pt.getY()+zhat.y*pt.getZ()
+                    );
+        }
+
+        public Vector<R2> getValue(Vector<R3> pts) throws FunctionValueException {
+            Vector<R2> result = new Vector<R2>();
+            for(R3 pt : pts) {
+                result.add(new R2(
+                    xhat.x*pt.getX()+yhat.x*pt.getY()+zhat.x*pt.getZ(),
+                    xhat.y*pt.getX()+yhat.y*pt.getY()+zhat.y*pt.getZ()
+                    ));
+            }
+            return result;
+        }    
+    };
     
     /** Default function used for testing the method. */
     private static final BoundedFunction<R2,Double> DEFAULT_FUNCTION=new BoundedFunction<R2,Double>(){
@@ -49,13 +73,15 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     
     // CONSTRUCTORS
         
-    public PlaneFunction2D(){this(DEFAULT_FUNCTION);}
-    public PlaneFunction2D(BoundedFunction<R2,Double> function){
+    public PlaneFunction2DProjected(){this(DEFAULT_FUNCTION);}
+    public PlaneFunction2DProjected(BoundedFunction<R2,Double> function){
         this.function=function;
         setColor(Color.ORANGE);
+        initCurves();
     }
-    public PlaneFunction2D(FunctionTreeModel functionModel) {
+    public PlaneFunction2DProjected(FunctionTreeModel functionModel) {
         initFunction(functionModel);
+        initCurves();
     }
     
     public void initFunction(final FunctionTreeModel functionModel) {
@@ -72,83 +98,26 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         });
     }
     
+    /** Sets up the curves used to draw the figure. */
+    public void initCurves(){
+        xRange = new DoubleRangeModel(1,-5,5,.5);
+        yRange = new DoubleRangeModel(1,-5,5,.5);
+        
+        clear();
+        
+        for (double x : xRange.getValueRange(true, 0.0)) {
+            add(new Parametric2D(getProjectedPartial2(x, function, projection),yRange,100));
+        }
+        for (double y : yRange.getValueRange(true, 0.0)) {
+            add(new Parametric2D(getProjectedPartial1(y, function, projection),xRange,100));
+        }
+    }
+    
     // INTIALIZERS
     public BoundedFunction<R2,Double> getFunction() { return function; }
     public BoundedFunction<R2,R2> getGradientFunction() { return getGradient(function); }
     public BoundedFunction<Double,Double> getFunctionX(double y) { return getPartial1(y,function); }
     public BoundedFunction<Double,Double> getFunctionY(double x) { return getPartial2(x,function); }
-    
-    
-    // VALUE COMPUTATIONS
-    
-    /** Recomputes the current grid of values of the function. This is needed for particular computations below. */
-    @Override
-    public void recompute(Euclidean2 v) {
-        try {
-            inputs = new Vector<R2>();
-            for (double px : v.getSparseXRange(20)) {
-                for (double py : v.getSparseYRange(20)) {
-                    inputs.add(new R2(px, py));
-                }
-            }
-            currentValues = function.getValue(inputs);
-        } catch (FunctionValueException ex) {}
-    }
-    
-    // DRAW METHODS
-        
-    @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v){
-        if (function == null) { return; }
-        try {
-            g.setColor(getColor());
-            double WEIGHT=10/(function.maxValue()-function.minValue());
-            double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
-            switch (style.getValue()) {
-                case DOTS:
-                    for(int i=0;i<inputs.size();i++){
-                        g.fill(v.dot(inputs.get(i),getRadius(currentValues.get(i),1.5*WEIGHT,SHIFT)));
-                    }
-                    break;                    
-                case COLORS:
-                    for(int i=0;i<inputs.size();i++){
-                        g.setColor(Color.getHSBColor(1.0f-(float)getRadius(currentValues.get(i),WEIGHT/10,SHIFT),0.5f,1.0f));
-                        g.fill(v.squareDot(inputs.get(i),10.0));
-                    }
-                    break;
-                case CONTOURS:
-                    g.setStroke(VisualStyle.THIN_STROKE);
-                    for (double zValue = function.minValue() ; zValue <= function.maxValue() ; zValue += 1/(2*WEIGHT) ) {
-                        g.draw( MeshRoot2D.findRoots(function, zValue, v.getActualMin(), v.getActualMax(),
-                                10*v.getDrawWidth()/v.getWindowWidth(), 0.01, 100)
-                                .createTransformedShape(v.getAffineTransformation()) );
-                    }
-                    break;
-                case DENSITY:
-                default:
-                    break;
-            }
-        } catch (FunctionValueException ex) {}
-    }
-    
-    /** Computes radius of a given point with specified multiplier and shift. */
-    public double getRadius(double value,double weight,double shift) throws FunctionValueException{
-        value=value*weight+shift;
-        return(value<0)?0:value;
-    }
-
-    // STYLE METHODS
-
-    public static final int DOTS=0;
-    public static final int COLORS=1;
-    public static final int CONTOURS=2;
-    public static final int DENSITY=3;
-    
-    public static final String[] styleStrings={"Dots","Color Boxes","Contours"};
-    @Override
-    public String[] getStyleStrings() {return styleStrings;}
-    @Override
-    public String toString(){return "Plane Function";}
     
     
     
@@ -190,6 +159,20 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     }    
     
     /** Generates a partial function (one value is fixed). */
+    public static Function<Double,R2> getProjectedPartial1(final double x2,final BoundedFunction<R2,Double> input,final Function<R3,R2> projection) {
+        return new Function<Double, R2>() {
+            public R2 getValue(Double x) throws FunctionValueException {
+                return projection.getValue(new R3(x,x2,input.getValue(new R2(x,x2))));
+            }
+            public Vector<R2> getValue(Vector<Double> xx) throws FunctionValueException {
+                Vector<R3> inputs = new Vector<R3>();
+                for(Double x : xx) { inputs.add(new R3(x,x2,input.getValue(new R2(x,x2)))); }
+                return projection.getValue(inputs);
+            }
+        };
+    }    
+    
+    /** Generates a partial function (one value is fixed). */
     public static BoundedFunction<Double,Double> getPartial2(final double x1,final BoundedFunction<R2,Double> input) {
         return new BoundedFunction<Double,Double>() {
             public Double minValue() { return -1.0; }
@@ -204,5 +187,19 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
             }           
         };
     }
+    
+    /** Generates a partial function (one value is fixed). */
+    public static Function<Double,R2> getProjectedPartial2(final double x1,final BoundedFunction<R2,Double> input,final Function<R3,R2> projection) {
+        return new Function<Double, R2>() {
+            public R2 getValue(Double x) throws FunctionValueException {
+                return projection.getValue(new R3(x1,x,input.getValue(new R2(x1,x))));
+            }
+            public Vector<R2> getValue(Vector<Double> xx) throws FunctionValueException {
+                Vector<R3> inputs = new Vector<R3>();
+                for(Double x : xx) { inputs.add(new R3(x1,x,input.getValue(new R2(x1,x)))); }
+                return projection.getValue(inputs);
+            }
+        };
+    }      
 }
 

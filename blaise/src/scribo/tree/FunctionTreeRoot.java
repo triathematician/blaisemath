@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 import scio.coordinate.Euclidean;
 import scio.coordinate.EuclideanElement;
+import scio.coordinate.R1;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
 import scribo.parser.FunctionSyntaxException;
@@ -272,9 +273,9 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
     }
 
     /** Default value function for Function<Double,Double>. Required as part of FunctionTreeFunctionNode. */
-    public Double getValue(Double x) throws FunctionValueException { return 0.0; }
-//        int n=variables.size();
-//        if(n!=1){throw new FunctionValueException();}
-//        return getFunction().getValue(new R1(x));
-//    }
+    public Double getValue(Double x) throws FunctionValueException {
+        int n=variables.size();
+        if(n!=1){throw new FunctionValueException();}
+        return ((BoundedFunction<Double,Double>)getFunction()).getValue(x);
+    }
 }

@@ -19,4 +19,8 @@ public interface Animatable<V extends Visometry> {
     public abstract void paintComponent(Graphics2D g,V v,RangeTimer t);    
     /** Returns number of steps used in the animation. */
     public abstract int getAnimatingSteps();
+    /** Sets animation properties. */
+    public void setAnimationOn(boolean newValue);
+    /** Gets animation properties. */
+    public boolean isAnimationOn();
 }

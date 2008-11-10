@@ -47,79 +47,81 @@ public class TestPlottables extends javax.swing.JFrame {
         
         Function2D f1=new Function2D();
         FunctionSampleSet fss=new FunctionSampleSet(f1);
-        plot2D1.add(fss);
-        plot2D1.add(f1);
+        functionPlot.add(fss);
+        functionPlot.add(f1);
         Point2D cp0=f1.getConstrainedPoint();
         cp0.setPoint(new R2(3,0));
         Point2D cp1=f1.getConstrainedPoint();
         cp1.setPoint(new R2(2,0));
-        plot2D1.add(new Segment2D.Line(cp0, cp1));
-        plot2D1.add(cp0);
-        plot2D1.add(cp1);
+        functionPlot.add(new Segment2D.Line(cp0, cp1));
+        functionPlot.add(cp0);
+        functionPlot.add(cp1);
         Point2D cp2=f1.getPointSlope();
-        plot2D1.add(cp2);
-        plot2D1.add(new RandomFlame2D(cp2.getModel(),80,20));
+        functionPlot.add(cp2);
+        functionPlot.add(new RandomFlame2D(cp2.getModel(),80,20));
         DoubleRangeModel drm1=fss.getModel();
-        plot2D1.add(SliderBox.getStyleAdjusters(100,10,15,plot2D1.getPlottables(),plot2D1));
+        functionPlot.add(SliderBox.getStyleAdjusters(100,10,15,functionPlot.getPlottables(),functionPlot));
         BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
-        plot2D1.add(nra1,3,5);
-        plot2D1.add(new StandardGrid2D());
+        functionPlot.add(nra1,3,5);
+        functionPlot.add(new StandardGrid2D());
 
         VectorField2D vf=new VectorField2D();
-        plot2D3.add(vf);
+        vectorFieldPlot.add(vf);
         DESolution2D de1=new DESolution2D(vf);
         DESolution2D de2=new DESolution2D(vf);
-        plot2D3.add(de1);
-        plot2D3.add(de2);
-        plot2D3.add(SliderBox.getStyleAdjusters(100,10,15,plot2D3.getPlottables(),plot2D3));
+        vectorFieldPlot.add(de1);
+        vectorFieldPlot.add(de2);
+        vectorFieldPlot.add(SliderBox.getStyleAdjusters(100,10,15,vectorFieldPlot.getPlottables(),vectorFieldPlot));
 
         PlaneFunction2D pf1=new PlaneFunction2D();
-        plot2D4.add(pf1);    
+        surfacePlot.add(pf1);    
         VectorField2D vf1=new VectorField2D(pf1.getGradientFunction());
-        plot2D4.add(vf1);
-        plot2D4.add(new DESolution2D(vf1));
-        plot2D4.add(SliderBox.getStyleAdjusters(100,10,15,plot2D4.getPlottables(),plot2D4));
-        plot2D4.add(new PlaneFunctionVector2D(pf1));    
+        surfacePlot.add(vf1);
+        surfacePlot.add(new DESolution2D(vf1));
+        surfacePlot.add(SliderBox.getStyleAdjusters(100,10,15,surfacePlot.getPlottables(),surfacePlot));
+        surfacePlot.add(new PlaneFunctionVector2D(pf1));    
+        
+        threeDPlot.add(new PlaneFunction2DProjected(pf1.function));
 
         Segment2D s1=new Segment2D(-8,5,2,-1);
         CirclePoint2D cirp1=new CirclePoint2D(s1.getConstraintModel());
         cirp1.addRadius(1.0);
         cirp1.addRadius(1.5);
         cirp1.addRadius(2.5);
-        plot2D5.add(s1);
-        plot2D5.add(cirp1);
+        pointSetPlot.add(s1);
+        pointSetPlot.add(cirp1);
         Clock2D clock1=new Clock2D(8,5,50);
-        plot2D5.add(clock1);
+        pointSetPlot.add(clock1);
         Rectangle2D rect1=new Rectangle2D(3,-2,9,-8);
-        plot2D5.add(rect1);
+        pointSetPlot.add(rect1);
         Triangle2D tri1=new Triangle2D(-10,-2,-8,-8,-3,-5);
-        plot2D5.add(tri1);
-        plot2D5.add(SliderBox.getStyleAdjusters(100,10,15,plot2D5.getPlottables(),plot2D5));
-        plot2D5.add(new HiddenText2D());
+        pointSetPlot.add(tri1);
+        pointSetPlot.add(SliderBox.getStyleAdjusters(100,10,15,pointSetPlot.getPlottables(),pointSetPlot));
+        pointSetPlot.add(new HiddenText2D());
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
             dps1.add(3+.2*x*Math.cos(x/3.0),-3+.2*x*Math.sin(x/3.0));
         }
-        plot2D6.add(dps1);
+        fractalPlot.add(dps1);
         FractalShape2D.Edges fe1=new FractalShape2D.Edges(new R2(-3,3),new R2(-2-2/3.,3));
         fe1.add(-2-2/3.,3+1/3.);
         fe1.add(-2-1/3.,3+1/3.);
         fe1.add(-2-1/3.,3);
         fe1.add(-2,3);
-        plot2D6.add(fe1); 
+        fractalPlot.add(fe1); 
         FractalShape2D.SpaceFilling sfc1=new FractalShape2D.SpaceFilling(new R2(4,4),new R2(4,5));
         sfc1.add(5,5);sfc1.add(5,4);        
-        plot2D6.add(sfc1);
+        fractalPlot.add(sfc1);
         FractalShape2D.Sierpinski fsp1=new FractalShape2D.Sierpinski(new R2(-4,-4),new R2(-3,-4+Math.sqrt(3)),new R2(-2,-4));
-        plot2D6.add(fsp1);
-        plot2D6.add(new Voronoi2D());
+        fractalPlot.add(fsp1);
+        fractalPlot.add(new Voronoi2D());
         SliderBox nab5=new SliderBox();
         nab5.add(new NumberSlider(210,10,fe1.getIterModel()));
         nab5.add(new NumberSlider(210,10,sfc1.getIterModel()));
         nab5.add(new NumberSlider(210,10,fsp1.getIterModel()));
-        plot2D6.add(nab5,3,1);
-        plot2D6.add(SliderBox.getStyleAdjusters(100,10,15,plot2D6.getPlottables(),plot2D6));
+        fractalPlot.add(nab5,3,1);
+        fractalPlot.add(SliderBox.getStyleAdjusters(100,10,15,fractalPlot.getPlottables(),fractalPlot));
         
         final Parametric2D par1=new Parametric2D();
         Parametric2D.ParametricPoint cp5=(Parametric2D.ParametricPoint) par1.getPointSlope();
@@ -142,27 +144,27 @@ public class TestPlottables extends javax.swing.JFrame {
         RandomFlame2D rf4=new RandomFlame2D(-14,0,70,60);
         RandomFlame2D rf3=new RandomFlame2D(-16,0,60,5);
         RandomFlame2D rf1=new RandomFlame2D(-20,0,50,10);
-        plot2D2.add(rf5);
-        plot2D2.add(rf2);
-        plot2D2.add(rf4);
-        plot2D2.add(rf3);
-        plot2D2.add(rf1);
+        randomPlot.add(rf5);
+        randomPlot.add(rf2);
+        randomPlot.add(rf4);
+        randomPlot.add(rf3);
+        randomPlot.add(rf1);
         RandomPoint2D rp1=new RandomPoint2D();
-        plot2D2.add(rp1);
+        randomPlot.add(rp1);
         RandomWalk2D rw1=new RandomWalk2D();
-        plot2D2.add(rw1);
-        plot2D2.add(SliderBox.getStyleAdjusters(100,10,15,plot2D2.getPlottables(),plot2D2));
+        randomPlot.add(rw1);
+        randomPlot.add(SliderBox.getStyleAdjusters(100,10,15,randomPlot.getPlottables(),randomPlot));
         SliderBox nab2=new SliderBox();
         nab2.add(new NumberSlider(210,10,rp1.getNumPointsModel()));
         nab2.add(new NumberSlider(210,30,rp1.getParameterModel()));
-        plot2D2.add(nab2,3,1);
+        randomPlot.add(nab2,3,1);
         SliderBox nab3=new SliderBox();
         nab3.add(new NumberSlider(320,10,rw1.getLengthModel()));
         nab3.add(new NumberSlider(320,30,rw1.getAngleParameterModel()));
         nab3.add(new NumberSlider(320,50,rw1.getDistancePerTimeModel()));
-        plot2D2.add(nab3,3,5);
+        randomPlot.add(nab3,3,5);
         
-        plot2D2.setBackground(Color.BLACK);
+        randomPlot.setBackground(Color.BLACK);
     }
     
     /** This method is called from within the constructor to
@@ -174,13 +176,14 @@ public class TestPlottables extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D1 = new specto.euclidean2.Plot2D();
-        plot2D3 = new specto.euclidean2.Plot2D();
-        plot2D4 = new specto.euclidean2.Plot2D();
-        plot2D5 = new specto.euclidean2.Plot2D();
-        plot2D6 = new specto.euclidean2.Plot2D();
+        functionPlot = new specto.euclidean2.Plot2D();
         polarPlot2D1 = new specto.euclidean2.PolarPlot2D();
-        plot2D2 = new specto.euclidean2.Plot2D();
+        surfacePlot = new specto.euclidean2.Plot2D();
+        vectorFieldPlot = new specto.euclidean2.Plot2D();
+        randomPlot = new specto.euclidean2.Plot2D();
+        pointSetPlot = new specto.euclidean2.Plot2D();
+        fractalPlot = new specto.euclidean2.Plot2D();
+        threeDPlot = new specto.euclidean2.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -227,72 +230,113 @@ public class TestPlottables extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Demo of 2D Plottables");
 
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 666, Short.MAX_VALUE)
+        javax.swing.GroupLayout functionPlotLayout = new javax.swing.GroupLayout(functionPlot);
+        functionPlot.setLayout(functionPlotLayout);
+        functionPlotLayout.setHorizontalGroup(
+            functionPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
         );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Basic", plot2D1);
-
-        javax.swing.GroupLayout plot2D3Layout = new javax.swing.GroupLayout(plot2D3);
-        plot2D3.setLayout(plot2D3Layout);
-        plot2D3Layout.setHorizontalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 666, Short.MAX_VALUE)
-        );
-        plot2D3Layout.setVerticalGroup(
-            plot2D3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+        functionPlotLayout.setVerticalGroup(
+            functionPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Field", plot2D3);
-
-        javax.swing.GroupLayout plot2D4Layout = new javax.swing.GroupLayout(plot2D4);
-        plot2D4.setLayout(plot2D4Layout);
-        plot2D4Layout.setHorizontalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 666, Short.MAX_VALUE)
-        );
-        plot2D4Layout.setVerticalGroup(
-            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Surface", plot2D4);
-        jTabbedPane1.addTab("Points", plot2D5);
-        jTabbedPane1.addTab("Point Set", plot2D6);
+        jTabbedPane1.addTab("Functions", functionPlot);
 
         javax.swing.GroupLayout polarPlot2D1Layout = new javax.swing.GroupLayout(polarPlot2D1);
         polarPlot2D1.setLayout(polarPlot2D1Layout);
         polarPlot2D1Layout.setHorizontalGroup(
             polarPlot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 666, Short.MAX_VALUE)
+            .addGap(0, 669, Short.MAX_VALUE)
         );
         polarPlot2D1Layout.setVerticalGroup(
             polarPlot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+            .addGap(0, 426, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Polar", polarPlot2D1);
 
-        javax.swing.GroupLayout plot2D2Layout = new javax.swing.GroupLayout(plot2D2);
-        plot2D2.setLayout(plot2D2Layout);
-        plot2D2Layout.setHorizontalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 666, Short.MAX_VALUE)
+        javax.swing.GroupLayout surfacePlotLayout = new javax.swing.GroupLayout(surfacePlot);
+        surfacePlot.setLayout(surfacePlotLayout);
+        surfacePlotLayout.setHorizontalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
         );
-        plot2D2Layout.setVerticalGroup(
-            plot2D2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+        surfacePlotLayout.setVerticalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Random", plot2D2);
+        jTabbedPane1.addTab("Surfaces", surfacePlot);
+
+        javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
+        vectorFieldPlot.setLayout(vectorFieldPlotLayout);
+        vectorFieldPlotLayout.setHorizontalGroup(
+            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        vectorFieldPlotLayout.setVerticalGroup(
+            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Vector Fields", vectorFieldPlot);
+
+        javax.swing.GroupLayout randomPlotLayout = new javax.swing.GroupLayout(randomPlot);
+        randomPlot.setLayout(randomPlotLayout);
+        randomPlotLayout.setHorizontalGroup(
+            randomPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        randomPlotLayout.setVerticalGroup(
+            randomPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Random Functions", randomPlot);
+
+        javax.swing.GroupLayout pointSetPlotLayout = new javax.swing.GroupLayout(pointSetPlot);
+        pointSetPlot.setLayout(pointSetPlotLayout);
+        pointSetPlotLayout.setHorizontalGroup(
+            pointSetPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        pointSetPlotLayout.setVerticalGroup(
+            pointSetPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Point Sets", pointSetPlot);
+
+        javax.swing.GroupLayout fractalPlotLayout = new javax.swing.GroupLayout(fractalPlot);
+        fractalPlot.setLayout(fractalPlotLayout);
+        fractalPlotLayout.setHorizontalGroup(
+            fractalPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        fractalPlotLayout.setVerticalGroup(
+            fractalPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Fractal Stuff", fractalPlot);
+
+        threeDPlot.setAxisStyle(1);
+        threeDPlot.setAxisVisible(false);
+        threeDPlot.setGridVisible(false);
+
+        javax.swing.GroupLayout threeDPlotLayout = new javax.swing.GroupLayout(threeDPlot);
+        threeDPlot.setLayout(threeDPlotLayout);
+        threeDPlotLayout.setHorizontalGroup(
+            threeDPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        threeDPlotLayout.setVerticalGroup(
+            threeDPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("3D Stuff", threeDPlot);
 
         fileMenu.setText("File"); // NOI18N
 
@@ -491,6 +535,8 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu fileMenu1;
     private javax.swing.JMenu fileMenu2;
+    private specto.euclidean2.Plot2D fractalPlot;
+    private specto.euclidean2.Plot2D functionPlot;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu helpMenu1;
     private javax.swing.JMenu helpMenu2;
@@ -504,19 +550,18 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem pasteMenuItem1;
     private javax.swing.JMenuItem pasteMenuItem2;
-    private specto.euclidean2.Plot2D plot2D1;
-    private specto.euclidean2.Plot2D plot2D2;
-    private specto.euclidean2.Plot2D plot2D3;
-    private specto.euclidean2.Plot2D plot2D4;
-    private specto.euclidean2.Plot2D plot2D5;
-    private specto.euclidean2.Plot2D plot2D6;
+    private specto.euclidean2.Plot2D pointSetPlot;
     private specto.euclidean2.PolarPlot2D polarPlot2D1;
+    private specto.euclidean2.Plot2D randomPlot;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem1;
     private javax.swing.JMenuItem saveAsMenuItem2;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenuItem saveMenuItem1;
     private javax.swing.JMenuItem saveMenuItem2;
+    private specto.euclidean2.Plot2D surfacePlot;
+    private specto.euclidean2.Plot2D threeDPlot;
+    private specto.euclidean2.Plot2D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     
 }

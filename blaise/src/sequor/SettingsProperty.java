@@ -86,7 +86,11 @@ public class SettingsProperty {
 
     @XmlTransient
     public FiresChangeEvents getModel() { return model; }
-    public void setModel(FiresChangeEvents model) { this.model = model; }
+    public void setModel(FiresChangeEvents model) {
+        if (model != null && model != this.model) {
+            this.model = model;
+        }
+    }
 
     @XmlAttribute
     public String getName() { return name; }

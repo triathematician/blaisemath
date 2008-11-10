@@ -130,10 +130,11 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     }
     
     private void addAnimationControls(){
-        if(animator==null){ animator=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE); }
-        if(!controls.contains(animator)){ add(animator,3,2); }
+        if(animator==null){ animator=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_VLINE); }
+        if(!controls.contains(animator)){ add(animator,3,7); }
         if(timerBar==null){ timerBar = new NumberSlider(210,10,timer.getModel());}
-        if(!controls.contains(timerBar)){ add(timerBar,3,4); }        
+        timerBar.setName("Timer");
+        if(!controls.contains(timerBar)){ add(timerBar,3,6); }        
     }
     private void removeAnimationControls(){
         if(controls.remove(animator)){animator.removeChangeListener(this);}

@@ -29,12 +29,13 @@ import specto.euclidean2.Euclidean2;
 public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> implements Animatable<V>,ChangeListener {
     /** Elements in the group. */
     protected Vector<Plottable> plottables;
-    /** Name of the group. */
-   protected String name;
+    /** Name of the group. */    
+    protected String name;
 
 
     public PlottableGroup() {plottables=new Vector<Plottable>();}
     
+    /** Remove all plottables from the group. */
     public void clear(){
         for(Plottable p : plottables) {
             p.removeChangeListener(this);
@@ -46,8 +47,8 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         p.addChangeListener(this);
     }
     public void remove(Plottable<V> p){
-        plottables.remove(p);
         p.removeChangeListener(this);
+        plottables.remove(p);
     }
     public void addAll(Collection<? extends Plottable<V>> ps) {
         plottables.addAll(ps);        
@@ -63,6 +64,11 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         super.setColor(newValue);
         for(Plottable p:plottables){p.setColor(newValue);}
     }
+
+    /** Whether this element animates. */    
+    public boolean animationOn=true;
+    public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+    public boolean isAnimationOn() { return animationOn; }
     
     /** Return name. */
     @Override
@@ -85,6 +91,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     @Override
     public void paintComponent(Graphics2D g,V v) {
         for (Plottable p:plottables){
+            if(!p.isVisible()){continue;}
             g.setColor(p.getColor());
             p.paintComponent(g,v);
         }
@@ -92,8 +99,9 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     @Override
     public void paintComponent(Graphics2D g,V v,RangeTimer t) {
         for (Plottable p:plottables){
+            if(!p.isVisible()){continue;}
             g.setColor(p.getColor());
-            if(p instanceof Animatable){
+            if(p instanceof Animatable && ((Animatable)p).isAnimationOn()){
                 ((Animatable)p).paintComponent(g,v,t);
             }else{
                 p.paintComponent(g,v);
@@ -104,6 +112,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
     @Override
     public JMenu getOptionsMenu() {
         JMenu result=new JMenu(toString() + " Options");   
+        result.add(getVisibleMenuItem());
         result.setForeground(getColor());
         result.add(getColorMenuItem());
         color.addChangeListener(this);

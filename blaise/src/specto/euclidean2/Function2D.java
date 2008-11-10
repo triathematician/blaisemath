@@ -38,16 +38,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
     public Function2D(Function<Double,Double> function){this.function=function;}
     public Function2D(String string) {this(new FunctionTreeModel(string));}
     public Function2D(FunctionTreeModel ftm, Color color) {this(ftm);setColor(color);}
-    public Function2D(final FunctionTreeModel functionModel){
-        function=(Function<Double, Double>) functionModel.getRoot().getFunction(1);
-        functionModel.addChangeListener(new ChangeListener(){
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                function = (Function<Double, Double>) functionModel.getRoot().getFunction(1);
-                fireStateChanged();
-            }
-        });
-    }
+    public Function2D(FunctionTreeModel functionModel){setFunctionModel(functionModel);}
     
     // BEAN PATTERNS
     
@@ -58,7 +49,28 @@ public class Function2D extends PointSet2D implements Constrains2D{
         return new R2(input,function.getValue(input));
     }
     
+    /** Sets function based on model. */
+    public void setFunctionModel(final FunctionTreeModel functionModel){
+        function=(Function<Double, Double>) functionModel.getRoot().getFunction(1);
+        functionModel.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                function = (Function<Double, Double>) functionModel.getRoot().getFunction(1);
+                fireStateChanged();
+            }
+        });
+    }
+    
     // PAINT METHODS
+    
+    @Override
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        if (function == null) { return; }
+        try{
+            computePath(v);
+            super.paintComponent(g,v);
+        }catch(FunctionValueException e){}
+    }
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
@@ -69,14 +81,6 @@ public class Function2D extends PointSet2D implements Constrains2D{
         } catch (FunctionValueException ex) {}
     }
     
-    @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v) {
-        if (function == null) { return; }
-        try{
-            computePath(v);
-            super.paintComponent(g,v);
-        }catch(FunctionValueException e){}
-    }
     public void computePath(Euclidean2 v) throws FunctionValueException {
         Vector<Double> xValues=v.getXRange();
         points.clear();
@@ -138,6 +142,11 @@ public class Function2D extends PointSet2D implements Constrains2D{
             vector.setEditable(false);
             vector.addChangeListener(this);
         }
+        
+        /** Whether this element animates. */    
+        public boolean animationOn=true;
+        public void setAnimationOn(boolean newValue) { animationOn=newValue; }
+        public boolean isAnimationOn() { return animationOn; }
         
         @Override
         public void recompute(Euclidean2 v) {

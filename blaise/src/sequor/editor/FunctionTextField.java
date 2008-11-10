@@ -48,7 +48,10 @@ public class FunctionTextField extends JTextField implements ChangeListener {
         ftm.addChangeListener(this);
     }
 
-    // BEAN PATTERNS
+    // BEAN PATTERNS    
+
+    public FunctionTreeModel getFunctionTreeModel() { return ftm; }
+    public void setFunctionTreeModel(FunctionTreeModel ftm) { this.ftm = ftm; }
     
     /** Calls up the function corresponding to the underlying text tree. */
     public FunctionTreeRoot getF(){return ftm.getRoot();}

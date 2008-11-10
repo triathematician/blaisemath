@@ -5,6 +5,7 @@ import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.xml.bind.annotation.XmlRootElement;
 import scio.coordinate.R2;
+import scio.random.Random2D;
 
 /**
  * <b>PointRangeModel.java</b><br>
@@ -58,7 +59,8 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     public R2 getMinimum(){return new R2(xModel.getMinimum(),yModel.getMinimum());}
     public R2 getMaximum(){return new R2(xModel.getMaximum(),yModel.getMaximum());}
     public R2 getCenter(){return new R2((xModel.getMinimum()+xModel.getMaximum())/2.0,(yModel.getMinimum()+yModel.getMaximum())/2.0);}
-    
+    public R2 getRandom() {return Random2D.rectangle(xModel.getMinimum(),yModel.getMinimum(),xModel.getMaximum(),yModel.getMaximum());}
+
     public double getX(){return xModel.getValue();}
     public void setX(double x){xModel.setValue(x);}
     
