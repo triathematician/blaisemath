@@ -15,6 +15,7 @@ import sequor.control.FLabel;
 import sequor.control.FLabelBox;
 import simulation.Simulation;
 import simulation.Team;
+import specto.Plottable;
 import specto.PlottableGroup;
 import specto.euclidean2.Euclidean2;
 import specto.euclidean2.PointSet2D;
@@ -66,6 +67,11 @@ public class MetricVisuals extends PlottableGroup<Euclidean2> implements ActionL
     /** Initializes to given set of teams. */
     public void setTeams(Collection<Team> teams){
         if(teams == null){ return; }
+        for (Plottable p : plottables) {
+            if (p instanceof TeamValueVisuals) { 
+                ((TeamValueVisuals)p).t.removeActionListener((TeamValueVisuals)p);
+            }
+        }
         clear();
         legend.clear();
         for (Team t : sim.getTeams()) { add(new TeamValueVisuals(t)); }
@@ -98,20 +104,23 @@ public class MetricVisuals extends PlottableGroup<Euclidean2> implements ActionL
     class TeamValueVisuals extends PlottableGroup<Euclidean2> implements ActionListener {
         
         Team t;
+        HashSet<FLabel> tLabels;
         
         TeamValueVisuals(Team t) {
+            tLabels=new HashSet<FLabel>();
             setTeam(t);
         }
         
         public void setTeam(final Team t) {
             if (t==null) { return; }
+            if (this.t!=null){ this.t.removeActionListener(this); }   
+            this.t = t;         
+            t.addActionListener(this);
             setColorModel(t.getColorModel());
             setName(t.getName());
-            // fix 
-            if (this.t!=null){ t.removeActionListener(this); }
-            t.addActionListener(this);
-            this.t = t;
             clear();
+            for(FLabel fl:tLabels){legend.remove(fl);}
+            tLabels.clear();
             // add metrics
             for(final Valuation v:t.metrics) {
                 add(new PointSet2D(sim.log.teamMetrics.get(v),t.getColorModel(),PointSet2D.THIN));
@@ -121,6 +130,7 @@ public class MetricVisuals extends PlottableGroup<Euclidean2> implements ActionL
                     public void actionPerformed(ActionEvent e) { label.setText(v.toString()); }
                 });
                 legend.add(label);
+                tLabels.add(label);
             }
             // add victory metric
             if(t.victory != null) {
@@ -131,6 +141,7 @@ public class MetricVisuals extends PlottableGroup<Euclidean2> implements ActionL
                     public void actionPerformed(ActionEvent e) { label.setText(t.victory.toString()); }
                 });
                 legend.add(label);
+                tLabels.add(label);
             }
         }
 

@@ -218,24 +218,25 @@ public class SimulationFactory {
         
         // Teams
         Vector<Team> teams = new Vector<Team>();
-        Team raptors = new Team(); teams.add(raptors);
         Team mathematicians = new Team(); teams.add(mathematicians);
-        //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
-        raptors.initSettings("Velociraptors", 11, Team.START_ZERO, Behavior.LEADING, Color.DARK_GRAY);
-        mathematicians.initSettings("Mathematician", 1, Team.START_RANDOM, Behavior.APPROACHPATH, Color.GREEN);
+        mathematicians.initSettings("Mathematician", 1, Team.START_ZERO, Behavior.APPROACHPATH, Color.GREEN);
+//        mathematicians.setFixedPath("20cos(t/4)", "20sin(t/2)");
         
-        // Special Settings
-        mathematicians.setFixedPath("20cos(t/4)", "20sin(t/2)");
-        for (int i = 0; i < raptors.agents.size(); i++) {
-            raptors.agents.get(i).setColorValue(new Color(100 + 15 * i, 25 * i, 25 * i));
-            raptors.agents.get(i).setLeadFactor(i / 10.0);
+        for (int i = 0; i < 1; i++) {
+            Team raptor = new Team(); teams.add(raptor);
+            raptor.initSettings("Velociraptors", 11, Team.START_SPECIFIC, Behavior.LEADING, Color.DARK_GRAY);
+            raptor.setSensorRange(100.0);
+            raptor.setTopSpeed(5.5);
+            for (int j = 0; j < 11; j++) {
+                if (j > 0) { raptor.agents.get(j).synchronizePointModelWith(raptor.agents.get(0)); }
+                raptor.agents.get(j).setLeadFactor(j/10.0);
+                raptor.agents.get(j).setColorValue(Color.getHSBColor(0.2f+j/12.0f, 1.0f, 1.0f));
+            }
+            raptor.addAutoGoal(1.0, teams, mathematicians, Goal.SEEK, TaskGenerator.AUTO_CLOSEST, 1.0);
+            raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MIN));
+            raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MIN_AGENT));
+            raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MAX));
         }
-        raptors.agents.get(0).setColorValue(Color.DARK_GRAY);
-        raptors.agents.get(raptors.agents.size() - 1).setColorValue(new Color(100, 100, 250));
-        
-        // Goals (Taskings)
-        //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
-        raptors.addAutoGoal(1.0, teams, mathematicians, Goal.SEEK, TaskGenerator.AUTO_CLOSEST, 1.0);
         
         return teams;
     }

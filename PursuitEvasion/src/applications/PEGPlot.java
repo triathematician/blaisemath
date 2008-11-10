@@ -8,6 +8,7 @@
 package applications;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -18,13 +19,11 @@ import analysis.SimulationLog;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.io.OutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.xml.bind.JAXBContext;
+import javax.swing.filechooser.FileFilter;
 import metrics.Valuation;
 import sequor.SettingsFactory;
-import simulation.Simulation;
 import simulation.Team;
 import utility.XmlHandler;
 
@@ -34,22 +33,43 @@ import utility.XmlHandler;
  */
 public class PEGPlot extends javax.swing.JFrame {
     
-    final JFileChooser fc = new JFileChooser();
+    final JFileChooser fc = new JFileChooser();    /*
+     * Get the extension of a file.
+     */  
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 &&  i < s.length() - 1) {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
+    }
+
     
     /** Creates new form PEGPlot */
     @SuppressWarnings("unchecked")
     public PEGPlot() {
-        initComponents();
+        initComponents();        
         simulationPlot.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
-        metricsPlot.getVisometry().setBounds(new R2(-10,-100),new R2(200,100));
+        metricsPlot.getVisometry().setBounds(new R2(-10,-10),new R2(500,150));
         metricsPlot.synchronizeTimerWith(simulationPlot);
         mainVisuals1.setSim(simulation1);
         metricVisuals1.setSim(simulation1);
         simulationPlot.add(mainVisuals1);
         metricsPlot.add(metricVisuals1);
-        metricsPlot.add(metricVisuals1.getLegend(),5,6);
+        metricsPlot.add(metricVisuals1.getLegend(),5,2);
         simulation1.run();
         simulationComboBox.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
+        fc.addChoosableFileFilter(new FileFilter(){
+            public boolean accept(File f) {
+                return (f.isDirectory())
+                        || getExtension(f).equals("xml");
+            }
+            @Override
+            public String getDescription() { return "XML Simulation File (.xml)"; }
+        });
     }
     
     /** This method is called from within the constructor to
@@ -517,7 +537,9 @@ private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (IOException ex) {
+                Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
+            } 
     } else {
         statusText.setText("Open command cancelled by user.");
     }
@@ -535,7 +557,9 @@ private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
             } catch (JAXBException ex) {
                 Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (IOException ex) {
+                Logger.getLogger(PEGPlot.class.getName()).log(Level.SEVERE, null, ex);
+            } 
     } else {
         statusText.setText("Save command cancelled by user.");
     }

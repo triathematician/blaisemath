@@ -333,7 +333,7 @@ public class Simulation implements ActionListener {
         for(Team t:teams){t.planPaths(time,getStepTime());}
         
         // Step 7. Move agents
-        for(Team t:teams){t.move();}
+        for(Team t:teams){t.move(getStepTime());}
         
         return false;
     }
@@ -350,7 +350,7 @@ public class Simulation implements ActionListener {
     public void removeActionListener(ActionListener l){listenerList.remove(ActionListener.class, l);}
     protected void fireActionPerformed(String s){fireActionPerformed(new ActionEvent(this,ActionEvent.ACTION_PERFORMED,s));}
     protected void fireActionPerformed(ActionEvent e){
-        System.out.println(e.getActionCommand());
+        //System.out.println(e.getActionCommand());
         actionEvent=e;
         Object[] listeners=listenerList.getListenerList();
         for(int i=listeners.length-2;i>=0;i-=2){

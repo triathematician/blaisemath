@@ -106,4 +106,7 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
     
     @Override
     public String toString() { return "Sensor/Comm Graph"; }
+
+    public void setAnimationOn(boolean newValue) {}
+    public boolean isAnimationOn() {return true;}
 }

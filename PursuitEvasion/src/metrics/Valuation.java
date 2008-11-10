@@ -89,6 +89,8 @@ public class Valuation implements Function<DistanceTable,Double> {
             switch(vs.type.getValue()){
                 case DIST_MIN:
                     return dt.min(activeSubset,vs.target.getActiveAgents()).getDistance();
+                case DIST_MIN_AGENT:
+                    return (double) vs.owner.agents.indexOf(dt.min(activeSubset,vs.target.getActiveAgents()).getFirst());
                 case DIST_MAX:
                     return dt.max(activeSubset,vs.target.getActiveAgents()).getDistance();
                 case DIST_AVG:
@@ -203,23 +205,31 @@ public class Valuation implements Function<DistanceTable,Double> {
     // CONSTANTS
     
     public static final int DIST_MIN = 0;
-    public static final int DIST_MAX = 1;
-    public static final int DIST_AVG = 2;
-    public static final int NUM_TEAM = 3;
-    public static final int NUM_TEAM_SAFE = 4;
-    public static final int NUM_OPPONENT = 5;
-    public static final int NUM_CAP = 6;
-    public static final int NUM_DIFF = 7;
-    public static final int EVERY_CAPTURE = 8;
-    public static final int TIME_TOTAL = 9;
-    public static final int TIME_SINCE_CAP = 10;
+    public static final int DIST_MIN_AGENT = 1;
+    public static final int DIST_MAX = 2;
+    public static final int DIST_AVG = 3;
+    public static final int NUM_TEAM = 4;
+    public static final int NUM_TEAM_SAFE = 5;
+    public static final int NUM_OPPONENT = 6;
+    public static final int NUM_CAP = 7;
+    public static final int NUM_DIFF = 8;
+    public static final int EVERY_CAPTURE = 9;
+    public static final int TIME_TOTAL = 10;
+    public static final int TIME_SINCE_CAP = 11;
     
     public static final String[] typeStrings = {
-        "Min. distance",        "Max. distance",        "Avg. distance",
-        "# Active Agents",      "# Team Safe",
-        "# Active Opponents",   "# Opponents captured",
-        "Player # advantage",   "Everyone Captures/Captured",
-        "Simulation time",      "Time since capture"
+        "Min. distance",   
+        "Closest agent number",
+        "Max. distance",        
+        "Avg. distance",
+        "# Active Agents",      
+        "# Team Safe",
+        "# Active Opponents",   
+        "# Opponents captured",
+        "Player # advantage",   
+        "Everyone Captures/Captured",
+        "Simulation time",      
+        "Time since capture"
     };    
     
     public String explain() { return explain(vs.type.getValue()); }

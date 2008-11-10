@@ -417,9 +417,9 @@ public class Team implements ActionListener {
     }
 
     /** Moves all agents on the team using their assigned directions. */
-    public void move() {
+    public void move(double stepTime) {
         for (Agent a : activeAgents) {
-            a.move();
+            a.move(stepTime);
         }
     }
 

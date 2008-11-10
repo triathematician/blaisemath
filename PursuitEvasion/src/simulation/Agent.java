@@ -130,7 +130,10 @@ public class Agent {
     }
     
     /** Moves the agent. */
-    public void move(){setPosition(loc.getEnd());}
+    public void move(double stepTime){
+        loc.x+=loc.v.x*stepTime;
+        loc.y+=loc.v.y*stepTime;
+    }
     
     public void copySettingsFrom(Team team){
         setSensorRange(team.getSensorRange());
@@ -141,15 +144,6 @@ public class Agent {
         setColorValue(team.getColorModel().getValue());
     }
     
-    
-    
-    // BEAN PATTERNS: RESULTS
-    
-    /** Returns the initial position model
-     * @return model with the agent's color at the initial position */
-    public PointRangeModel getPointModel(){
-        return new PointRangeModel(ags.startX,ags.startY);
-    }    
     
     // METHODS: TASKING
         
@@ -219,11 +213,15 @@ public class Agent {
      */
     public void planPath(double time,double stepTime){
         if(myBehavior instanceof ApproachPath){
-            loc.v=myBehavior.direction(this,null,time).multipliedBy(stepTime*getTopSpeed());
+            loc.v=myBehavior.direction(this,null,time).multipliedBy(getTopSpeed());
         }else{
-            loc.v=TaskFusion.getVector(this,tasks,time).multipliedBy(stepTime*getTopSpeed());
+            loc.v=TaskFusion.getVector(this,tasks,time).multipliedBy(getTopSpeed());
         }
-        if(java.lang.Double.isNaN(loc.v.x)){System.out.println("nan in path planning "+loc.v.toString()+" and pos x="+loc.x+" y="+loc.y);}
+        if(java.lang.Double.isNaN(loc.v.x)){
+            System.out.println("nan in path planning "+loc.v.toString()+" and pos x="+loc.x+" y="+loc.y);
+            loc.v.x=0;
+            loc.v.y=0;
+        }
     }
     
     
@@ -318,6 +316,20 @@ public class Agent {
             return R2.ORIGIN;
         }
     }
+        
+    /** Returns the initial position model
+     * @return model with the agent's color at the initial position */
+    public PointRangeModel getPointModel(){
+        return new PointRangeModel(ags.startX,ags.startY);
+    }    
+    public void setPointModel(PointRangeModel prm){
+        ags.setPointModel(prm.xModel, prm.yModel);
+    }
+    public void synchronizePointModelWith(Agent otherAgent){
+        ags.setPointModel(otherAgent.ags.startX, otherAgent.ags.startY);
+        ags.startX.removeChangeListener(ags);
+        ags.startY.removeChangeListener(ags);
+    }
     
     public boolean isActive(){return active;}    
     public void deactivate(){active=false;}
@@ -333,8 +345,10 @@ public class Agent {
         
         /** Starting Position. */
         private DoubleRangeModel startX=new DoubleRangeModel(0.0,-500.0,500.0,1.0);
+        private SettingsProperty xProperty;
         /** Starting Position. */
         private DoubleRangeModel startY=new DoubleRangeModel(0.0,-500.0,500.0,1.0);
+        private SettingsProperty yProperty;
         
         /** Default sensor range [in ft]. */
         private DoubleRangeModel sensorRange=new DoubleRangeModel(20,0,5000,1.0);
@@ -347,7 +361,7 @@ public class Agent {
         /** Lead factor if required for myBehavior */
         private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
         /** Position function if required for myBehavior */
-        private ParametricModel pm=new ParametricModel("10cos(t)","10sin(t)");
+        private ParametricModel pm=new ParametricModel("100+t/100","50+t/100");
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
         /** Returns the color */
@@ -362,8 +376,26 @@ public class Agent {
             add(new SettingsProperty("Lead Factor",leadFactor,Settings.EDIT_DOUBLE_SLIDER));
             add(new SettingsProperty("Position(t)",pm,Settings.NO_EDIT));
             add(new SettingsProperty("Color",color,Settings.EDIT_COLOR));
-            add(new SettingsProperty("x",startX,Settings.EDIT_DOUBLE));
-            add(new SettingsProperty("y",startY,Settings.EDIT_DOUBLE));
+            xProperty = new SettingsProperty("x",startX,Settings.EDIT_DOUBLE);
+            yProperty = new SettingsProperty("y",startY,Settings.EDIT_DOUBLE);
+            add(xProperty);
+            add(yProperty);
+        }
+        
+        /** initializes position to given model */
+        public void setPointModel(DoubleRangeModel xModel, DoubleRangeModel yModel) {
+            if (xModel != null && xModel != startX) {
+                remove(xProperty);
+                startX = xModel;
+                xProperty = new SettingsProperty("x",xModel,Settings.EDIT_DOUBLE);
+                add(xProperty);
+            }
+            if (yModel != null && yModel != startY) {
+                remove(yProperty);
+                startY = yModel;
+                yProperty = new SettingsProperty("y",yModel,Settings.EDIT_DOUBLE);
+                add(yProperty);
+            }
         }
         
         @Override
