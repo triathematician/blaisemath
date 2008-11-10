@@ -25,7 +25,13 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="specto.plotpanel.Plot2D" name="plot2D1">
+    <Container class="specto.euclidean2.Plot2D" name="plot2D1">
+      <Properties>
+        <Property name="animatorVisible" type="boolean" value="false"/>
+        <Property name="axisVisible" type="boolean" value="false"/>
+        <Property name="gridVisible" type="boolean" value="false"/>
+        <Property name="markerBoxVisible" type="boolean" value="false"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">

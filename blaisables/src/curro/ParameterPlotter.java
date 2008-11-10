@@ -41,7 +41,7 @@ public class ParameterPlotter extends javax.swing.JFrame {
                 try{
                     ftm2.setValue(ftm.getRoot().derivativeTree("x").fullSimplified().toString());
                 }catch(NullPointerException exc){}
-                settingsBar1.validate();
+                //settingsBar1.validate();
             }
         });
         plm.addChangeListener(ftm);  
@@ -52,7 +52,7 @@ public class ParameterPlotter extends javax.swing.JFrame {
         plm.setParameterValue("d",-1.0);
         settings1.addProperty("f(x)=",ftm,Settings.EDIT_FUNCTION);
         settings1.addProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION);
-        settingsBar1.updateBar();
+        //settingsBar1.updateBar();
         
         plot2D1.add(new Function2D(ftm2,Color.lightGray));
         Function2D f1 = new Function2D(ftm);
@@ -71,24 +71,16 @@ public class ParameterPlotter extends javax.swing.JFrame {
 
         settings1 = new sequor.Settings();
         settings2 = new sequor.Settings();
-        plot2D1 = new specto.euclidean2.Plot2D();
         settingsPanel2 = new sequor.component.SettingsPanel(settings2);
-        settingsBar1 = new sequor.component.SettingsBar(settings1);
+        plot2D4 = new specto.euclidean2.Plot2D();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Function Plotter with Parameters");
         setMinimumSize(new java.awt.Dimension(600, 300));
 
-        plot2D1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        plot2D1.setPreferredSize(new java.awt.Dimension(400, 250));
-        getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
-
         settingsPanel2.setPreferredSize(new java.awt.Dimension(152, 302));
         getContentPane().add(settingsPanel2, java.awt.BorderLayout.LINE_END);
-
-        settingsBar1.setFloatable(false);
-        settingsBar1.setRollover(true);
-        getContentPane().add(settingsBar1, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(plot2D4, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -106,9 +98,11 @@ public class ParameterPlotter extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean2.Plot2D plot2D2;
+    private specto.euclidean2.Plot2D plot2D3;
+    private specto.euclidean2.Plot2D plot2D4;
     private sequor.Settings settings1;
     private sequor.Settings settings2;
-    private sequor.component.SettingsBar settingsBar1;
     private sequor.component.SettingsPanel settingsPanel2;
     // End of variables declaration//GEN-END:variables
     

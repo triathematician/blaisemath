@@ -4,7 +4,7 @@
  * Created on November 9, 2007, 1:36 PM
  */
 
-package curro;
+
 
 import specto.euclidean2.DESolution2D;
 import specto.euclidean2.Point2D;
@@ -45,10 +45,6 @@ public class SamplePlotters extends javax.swing.JFrame {
         parametricInput = new sequor.component.FunctionPanel(2);
         jSplitPane1 = new javax.swing.JSplitPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        basicPlot = new specto.euclidean2.Plot2D();
-        parametricPlot = new specto.euclidean2.Plot2D();
-        vectorFieldPlot = new specto.euclidean2.Plot2D();
-        surfacePlot = new specto.euclidean2.Plot2D();
         basicInput = new sequor.component.FunctionPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -75,59 +71,6 @@ public class SamplePlotters extends javax.swing.JFrame {
                 jTabbedPane1StateChanged(evt);
             }
         });
-
-        javax.swing.GroupLayout basicPlotLayout = new javax.swing.GroupLayout(basicPlot);
-        basicPlot.setLayout(basicPlotLayout);
-        basicPlotLayout.setHorizontalGroup(
-            basicPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
-        );
-        basicPlotLayout.setVerticalGroup(
-            basicPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 247, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Basic", basicPlot);
-
-        javax.swing.GroupLayout parametricPlotLayout = new javax.swing.GroupLayout(parametricPlot);
-        parametricPlot.setLayout(parametricPlotLayout);
-        parametricPlotLayout.setHorizontalGroup(
-            parametricPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
-        );
-        parametricPlotLayout.setVerticalGroup(
-            parametricPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 247, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Parametric", parametricPlot);
-
-        javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
-        vectorFieldPlot.setLayout(vectorFieldPlotLayout);
-        vectorFieldPlotLayout.setHorizontalGroup(
-            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
-        );
-        vectorFieldPlotLayout.setVerticalGroup(
-            vectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 247, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Field", vectorFieldPlot);
-
-        javax.swing.GroupLayout surfacePlotLayout = new javax.swing.GroupLayout(surfacePlot);
-        surfacePlot.setLayout(surfacePlotLayout);
-        surfacePlotLayout.setHorizontalGroup(
-            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 392, Short.MAX_VALUE)
-        );
-        surfacePlotLayout.setVerticalGroup(
-            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 247, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Surface", surfacePlot);
-
         jSplitPane1.setRightComponent(jTabbedPane1);
         jSplitPane1.setLeftComponent(basicInput);
 
@@ -224,7 +167,6 @@ public class SamplePlotters extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private sequor.component.FunctionPanel basicInput;
-    private specto.euclidean2.Plot2D basicPlot;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -238,14 +180,11 @@ public class SamplePlotters extends javax.swing.JFrame {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private sequor.component.FunctionPanel parametricInput;
-    private specto.euclidean2.Plot2D parametricPlot;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private sequor.component.FunctionPanel surfaceInput;
-    private specto.euclidean2.Plot2D surfacePlot;
     private sequor.component.FunctionPanel vectorFieldInput;
-    private specto.euclidean2.Plot2D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     
 }

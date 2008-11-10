@@ -6,8 +6,15 @@
 
 package potw;
 
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import scio.coordinate.R2;
+import scio.function.BoundedFunction;
+import scio.function.FunctionValueException;
+import scribo.parser.Parser;
+import scribo.tree.FunctionTreeRoot;
+import specto.euclidean2.DESolution2D;
 
 /**
  *
@@ -23,32 +30,28 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
                     try {
                         initComponents();
                         parametric2D1.setFunction("10*cos(2*pi*t)", "10*sin(2*pi*t)");
+                        vectorField2D1.setFunction(new BoundedFunction<R2,R2>() {
+                            FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
+                            FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
+
+                            public R2 getValue(R2 pt) throws FunctionValueException {
+                                return new R2(pt.y,-pt.x).times(Math.PI).plus(new R2(10-pt.x,-pt.y).normalized().times(5*Math.PI));
+                            }
+
+                            public Vector<R2> getValue(Vector<R2> pts) throws FunctionValueException {
+                                Vector<R2> result = new Vector<R2>();
+                                for (R2 pt : pts) {
+                                    result.add(new R2(pt.y,-pt.x).times(Math.PI).plus(new R2(10-pt.x,-pt.y).normalized().times(5*Math.PI)));
+                                }
+                                return result;
+                                
+                            }
+                            public R2 minValue(){return new R2(-5.0,-5.0);}
+                            public R2 maxValue(){return new R2(5.0,5.0);}
+                        });
+                        plot2D1.add(vectorField2D1);                                                
                         plot2D1.add(parametric2D1);
-//                        vectorField2D1.setFunction(new Function<R2, R2>() {
-//                            FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
-//                            FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
-//
-//                            public R2 getValue(R2 x) {
-//                                try {
-//                                    TreeMap<String, Double> inTable = new TreeMap<String, Double>();
-//                                    inTable.put("x", x.x);
-//                                    inTable.put("y", x.y);
-//                                    return new R2(vfx.getValue(inTable), vfy.getValue(inTable));
-//                                } catch (FunctionValueException ex) {
-//                                    return new R2();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public Vector<R2> getValue(Vector<R2> x) {
-//                                Vector<R2> result = new Vector<R2>(x.size());
-//                                for (R2 d : x) {
-//                                    result.add(getValue(d));
-//                                }
-//                                return result;
-//                            }
-//                        });
-                        plot2D1.add(vectorField2D1);
+                        plot2D1.add(new DESolution2D(vectorField2D1));
                     } catch (Exception ex) {
                         Logger.getLogger(CircularChaseRotatedField.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -67,9 +70,11 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        vectorField2D1 = new specto.euclidean2.VectorField2D();
         parametric2D1 = new specto.euclidean2.Parametric2D();
+        vectorField2D1 = new specto.euclidean2.VectorField2D();
         plot2D1 = new specto.euclidean2.Plot2D();
+
+        plot2D1.setAxisStyle(1);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);

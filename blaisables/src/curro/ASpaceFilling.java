@@ -1,5 +1,5 @@
 /*
- * SpaceFillingApplet.java
+ * ASpaceFilling.java
  *
  * Created on April 2, 2008, 9:03 AM
  */
@@ -15,27 +15,20 @@ import specto.euclidean2.FractalShape2D;
  *
  * @author  ae3263
  */
-public class SpaceFillingApplet extends javax.swing.JApplet {
+public class ASpaceFilling extends javax.swing.JApplet {
     
-    /** Initializes the applet SpaceFillingApplet */
+    /** Initializes the applet ASpaceFilling */
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-                    plot2D1.getVisometry().setDesiredBounds(-.5,-.2,1.5,1.5);
-                    FractalShape2D.Edges fe1=new FractalShape2D.Edges(new R2(-3,3),new R2(-2,3));
-                    fe1.add(-2-1/3.,3);
-                    fe1.add(-2-1/3.,3+1/3.);
-                    fe1.add(-2-2/3.,3+1/3.);
-                    fe1.add(-2-2/3.,3);
-                    plot2D1.add(fe1); 
                     FractalShape2D.SpaceFilling sfc1=new FractalShape2D.SpaceFilling();
                     plot2D1.add(sfc1);
-                    SliderBox nab5=new SliderBox();
-                    nab5.add(new NumberSlider(210,10,fe1.getIterModel()));
-                    nab5.add(new NumberSlider(210,10,sfc1.getIterModel()));
-                    plot2D1.add(nab5,3,1);
+                    NumberSlider ns = new NumberSlider(210,10,sfc1.getIterModel());
+                    ns.setName("Iterations");
+                    plot2D1.add(ns,3,5);
+                    plot2D1.getVisometry().setDesiredBounds(-.4,-.4,1.4,1.4);
                 }
             });
         } catch (Exception ex) {
@@ -52,6 +45,11 @@ public class SpaceFillingApplet extends javax.swing.JApplet {
     private void initComponents() {
 
         plot2D1 = new specto.euclidean2.Plot2D();
+
+        plot2D1.setAnimatorVisible(false);
+        plot2D1.setAxisVisible(false);
+        plot2D1.setGridVisible(false);
+        plot2D1.setMarkerBoxVisible(false);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
