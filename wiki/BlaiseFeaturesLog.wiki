@@ -1,9 +1,19 @@
 #summary Contains listing of feature additions to Blaise.
 #labels Featured,Module-Blaise
 
-==== Week of Oct 26-Nov 1 ====
+==== Week of Nov 9-15 ====
 
- * _Now have the ability to save and load simulations via menu options. The simulations are stored as XML files and can be easily edited without the simulation._ --Elisha
+ * _ _ *
+
+==== Week of Nov 2-8 ====
+
+ * _Moved animation toolbar to the left side of the plot window by default._ --Elisha
+
+ * _Implemented animation for vector fields, allowing them to be displayed as animating flows._ --Elisha
+
+ * _Added in rudimentary visualization of 3D plots (on top of the Euclidean2 visometry)._ --Elisha
+
+ * _Added ability to show/hide any plottable._ --Elisha
 
 ==== Week of Sept 28-Oct 4 ====
 
