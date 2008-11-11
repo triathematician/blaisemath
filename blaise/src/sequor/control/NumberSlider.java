@@ -21,7 +21,9 @@ import sequor.model.IntegerRangeModel;
 import sequor.model.StepControlledRangeModel;
 
 /**
+ * <p>
  * Contains a slider interfacing with an underlying RangeModel.
+ * </p>
  * 
  * @author Elisha Peterson
  */
@@ -104,7 +106,10 @@ public class NumberSlider extends VisualControlGroup {
     public void initHandle(){
         if(handle==null){handle=new VisualControl();}
         add(handle);
-        if(handle.getSnapRule()==null){handle.setSnapRule(new SnapRule.Grid());handle.getSnapRule().setForceSnap(true);}
+        if(handle.getSnapRule()==null){
+            handle.setSnapRule(new SnapRule.Grid());
+            handle.getSnapRule().setForceSnap(true);
+        }
         updateSnapLine();
         handle.setDraggable(true);    
         updateHandleLocation();
@@ -117,7 +122,7 @@ public class NumberSlider extends VisualControlGroup {
     
     @Override
     public void paintComponent(Graphics2D g) {  
-        updateHandleLocation();
+        if(adjusting){updateHandleLocation();}
         super.paintComponent(g,0.5f);
         g.drawString((getName()==null?"":getName()+": ")+model.toString(),(float)handle.getX()+handle.getWidth()+5,(float)handle.getY()+handle.getHeight()-2);
     }
@@ -140,7 +145,7 @@ public class NumberSlider extends VisualControlGroup {
     private void initStyle() {
         style=new StringRangeModel(styleStrings,STYLE_CIRCLE,0,6);
         updateStyle();
-        style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){updateStyle();}});
+        style.addChangeListener(new ChangeListener(){public void stateChanged(ChangeEvent e){updateStyle();fireStateChanged();}});
     }
     
     public void updateStyle(){
@@ -183,7 +188,10 @@ public class NumberSlider extends VisualControlGroup {
     @Override
     public void stateChanged(ChangeEvent e) {
         if(e.getSource()==model){
-            if(!handle.isAdjusting()){updateSnapLine();updateHandleLocation();}
+            if(!handle.isAdjusting()){
+                updateSnapLine();
+                updateHandleLocation();
+            }
             super.stateChanged(e);
         }else if(e.getSource()==style){
             fireStateChanged();
@@ -193,15 +201,25 @@ public class NumberSlider extends VisualControlGroup {
     /** Listener for when the control's handle is moved. */
     class HandleMoveListener implements ComponentListener{
         public void componentResized(ComponentEvent e) {}
-        public void componentMoved(ComponentEvent e) {if(handle.isAdjusting()){updateModelValue();}}
+        public void componentMoved(ComponentEvent e) {
+            if(handle.isAdjusting()){
+                updateModelValue();
+            }
+        }
         public void componentShown(ComponentEvent e) {}        
         public void componentHidden(ComponentEvent e) {} 
     }
     
     /** Listener for when the slider is resized. */    
     class SliderResizeListener implements ComponentListener{
-        public void componentResized(ComponentEvent e) {updateSnapLine();updateHandleLocation();}
-        public void componentMoved(ComponentEvent e) {updateSnapLine();updateHandleLocation();}
+        public void componentResized(ComponentEvent e) {
+            updateSnapLine();
+            updateHandleLocation();
+        }
+        public void componentMoved(ComponentEvent e) {
+            updateSnapLine();
+            updateHandleLocation();
+        }
         public void componentShown(ComponentEvent e) {}        
         public void componentHidden(ComponentEvent e) {} 
     }
@@ -217,8 +235,10 @@ public class NumberSlider extends VisualControlGroup {
     }       
 
     @Override
-    public boolean clicked(MouseEvent e) {return getBounds().contains(e.getPoint());}
-    
+    public boolean clicked(MouseEvent e) {
+        return getBounds().contains(e.getPoint());
+    }
+        
     @Override
     public void mouseReleased(MouseEvent e) {
         if(active==handle && model instanceof StepControlledRangeModel){

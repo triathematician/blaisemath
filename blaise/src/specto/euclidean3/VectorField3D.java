@@ -70,7 +70,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
         function = getVectorFunction(
                 (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3),
                 (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(3),
-                (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3)
+                (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(3)
                 );
         ChangeListener cl = new ChangeListener() {
             @Override
@@ -78,7 +78,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 function = getVectorFunction(
                         (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3),
                         (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(3),
-                        (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3)
+                        (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(3)
                         );
                 fireStateChanged();
             }

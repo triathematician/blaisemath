@@ -53,9 +53,9 @@ public abstract class SnapRule {
             public void componentShown(ComponentEvent e) {}
             public void componentHidden(ComponentEvent e) {}
         };
-        resnap.componentResized(new ComponentEvent(p, ComponentEvent.COMPONENT_RESIZED));
         vc.addComponentListener(resnap);
         p.addComponentListener(resnap);
+        resnap.componentResized(new ComponentEvent(p, ComponentEvent.COMPONENT_RESIZED));
     }    
     
     

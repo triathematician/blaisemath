@@ -23,6 +23,7 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
     // CONSTRUCTOR
     public Axes3D(){
         setColor(Color.GRAY);
+        style.setValue(1);
     }    
     
     // PAINT METHODS
@@ -40,9 +41,27 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean3 v) {
-        g.draw(v.lineSegment(new R3(0,0,0), new R3(10,0,0)));
-        g.draw(v.lineSegment(new R3(0,0,0), new R3(0,10,0)));
-        g.draw(v.lineSegment(new R3(0,0,0), new R3(0,0,10)));    
+        switch(style.getValue()) {
+            case 0 :
+                g.draw(v.lineSegment(new R3(0,0,0), new R3(6,0,0)));
+                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,6,0)));
+                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,0,6)));    
+                break;
+            case 1 :
+                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(6,-6,-6)));
+                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,6,-6)));
+                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,-6,6)));
+                g.draw(v.lineSegment(new R3(6,-6,-6), new R3(6,6,-6)));
+                g.draw(v.lineSegment(new R3(6,-6,-6), new R3(6,-6,6)));
+                g.draw(v.lineSegment(new R3(-6,6,-6), new R3(6,6,-6)));
+                g.draw(v.lineSegment(new R3(-6,6,-6), new R3(-6,6,6)));
+                g.draw(v.lineSegment(new R3(-6,-6,6), new R3(6,-6,6)));
+                g.draw(v.lineSegment(new R3(-6,-6,6), new R3(-6,6,6)));
+                g.draw(v.lineSegment(new R3(-6,6,6), new R3(6,6,6)));
+                g.draw(v.lineSegment(new R3(6,-6,6), new R3(6,6,6)));
+                g.draw(v.lineSegment(new R3(6,6,-6), new R3(6,6,6)));
+                break;
+        }
     }
     
     
@@ -53,7 +72,7 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
 
     @Override
     public String[] getStyleStrings() {
-        String[] result = {"Standard"};
+        String[] result = {"Standard", "Box"};
         return result;
     }
 }

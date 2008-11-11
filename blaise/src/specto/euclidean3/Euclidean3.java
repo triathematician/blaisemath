@@ -31,7 +31,7 @@ public class Euclidean3 extends Euclidean2 {
     DoubleRangeModel zRange = new DoubleRangeModel(0.0,-5.0,5.0,1.0);
     
     /** Determines rotation about the z axis. */
-    DoubleRangeModel theta = new DoubleRangeModel(Math.PI/4,0.0,2*Math.PI,.0001);
+    DoubleRangeModel theta = new DoubleRangeModel(0.5,0.0,2*Math.PI,.0001);
     /** Determines rotation about the y axis. */
     DoubleRangeModel phi = new DoubleRangeModel(Math.PI/2,0.0,Math.PI,.0001);
     /** Determines zoom factor relative to underlying xy coordinates. */
@@ -61,7 +61,7 @@ public class Euclidean3 extends Euclidean2 {
         ChangeListener cl = new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 resetProjectionFunction();
-                fireStateChanged();
+                //fireStateChanged();
             }            
         };
         theta.addChangeListener(cl);
@@ -72,7 +72,7 @@ public class Euclidean3 extends Euclidean2 {
     // METHODS: PROJECTION HANDLERS
     
     public void resetProjectionFunction() {
-        final double s2 = Math.sqrt(2)/2.0;
+        final double s2 = 0.5;
         final double z2 = Math.PI/2;
         proj = new Function<R3,R2>(){
             final R2 ihat = new R2(

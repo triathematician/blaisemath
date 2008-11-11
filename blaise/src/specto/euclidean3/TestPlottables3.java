@@ -7,6 +7,7 @@ package specto.euclidean3;
  */
 
 
+import javax.swing.event.ChangeEvent;
 import specto.euclidean3.VectorField3D;
 import specto.euclidean3.PlaneFunction3D;
 import specto.euclidean3.DESolution3D;

@@ -27,7 +27,8 @@ public class Plot3D extends PlotPanel<Euclidean3> {
     /** Default constructor */
     public Plot3D(){
         super(new Euclidean3());    
-        add(new Axes3D());
+        
+        addBase(new Axes3D());
         add(get3DControls(),5,2);
     }
 
