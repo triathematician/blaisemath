@@ -1,6 +1,16 @@
 #summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
 #labels Featured,Module-PEG
 
+==== Week of Nov 9-15 ====
+
+ * _Adjusted leading algorithm; added in a "Plucker Lead" algorithm. Each predicts the "future point" in a slightly different way._ --Elisha
+
+ * _Adjusted Jurassic simulation to bind all the points to the same underlying model, allowing them all to be used at once._ --Elisha
+
+==== Week of Oct 26-Nov 1 ====
+
+ * _Now have the ability to save and load simulations via menu options. The simulations are stored as XML files and can be easily edited without the simulation._ --Elisha
+
 ==== Week of Sept 28-Oct 4 ====
 
  * _Data log now includes starting positions of each team._ --Elisha
