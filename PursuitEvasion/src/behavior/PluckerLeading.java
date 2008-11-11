@@ -10,13 +10,13 @@ import scio.coordinate.V2;
 
 /**
  * <p>
- * This class defines leading as predicting the nearest point of intercept and heading to that point.
- * This is problematic when the point is very far away, so it is capped at a certain distance from
- * the present location.
+ * This class defines leading as heading to the point ahead of the evader defined such that
+ * the time it takes the evader to get there is the same as the time it would take the pursuer
+ * to reach the evader's initial location. This is as defined in Andrew's thesis.
  * </p>
- * @author Elisha Peterson
+ * @author Elisha Peterson, Andrew Plucker
  */
-public class Leading extends behavior.Behavior {
+public class PluckerLeading extends behavior.Behavior {
 
     /**
      * Computes desired direction of travel
@@ -29,21 +29,16 @@ public class Leading extends behavior.Behavior {
         if (target == null) {
             return new R2();
         }
-        if (target.v.magnitude() == 0) {
+        if (target.v.magnitude() == 0 || self.getTopSpeed() == 0) {
             if (self.loc.distance(target) < .5*self.getSensorRange()) {
                 return R2.ORIGIN;
             }
             return target.minus(self.loc).normalized();
         } else {           
             R2 diff = self.loc.minus(target);
-            double mu = self.getTopSpeed() / target.v.magnitude();
-            double costh = target.v.normalized().dot(diff);
+            double mui = target.v.magnitude() / self.getTopSpeed();
             // this is the distance from evader's current point to the hypothetical capture point
-            double dE =
-                    Math.abs(mu-1) < .01 ? Math.abs(diff.magnitudeSq() / (2 * costh))
-                        : (costh-Math.sqrt(costh*costh-(1-mu*mu)*diff.magnitudeSq()))/(1-mu*mu);
-            // modify by capping dE to within 100 time units (temporary restriction)
-            if (dE > self.getTopSpeed() * 100) { dE = self.getTopSpeed() * 100; }
+            double dE = diff.magnitude()*mui;
             R2 result = target.plus(target.v.scaledToLength(self.getLeadFactor()*dE)).minus(self.loc).normalized();
             return result;
         }

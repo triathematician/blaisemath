@@ -15,6 +15,7 @@ import simulation.Team;
 import specto.Animatable;
 import specto.Plottable;
 import scio.coordinate.R2;
+import scio.graph.Graph;
 import sequor.component.RangeTimer;
 import sequor.style.VisualStyle;
 import specto.euclidean2.Euclidean2;
@@ -53,6 +54,25 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
     }   
     
+    /** Returns communication graph within a team. */
+    public Graph<Agent> getCommGraph(int time) {
+        int timeB=time<0?0:(time>=pathSize()?pathSize()-1:time);
+        Graph<Agent> result = new Graph<Agent>();   
+        R2 p1, p2;
+        for(int i=0;i<team.agents.size();i++){
+            if(!team.getActiveAgents().contains(team.getAgent(i))){ continue; }
+            p1=log.agentAt(team.getAgent(i),timeB);
+            for(int j=i+1;j<team.agents.size();j++){
+                if(!team.getActiveAgents().contains(team.getAgent(j))){ continue; }
+                p2=log.agentAt(team.agents.get(j),timeB);
+                if(p1.distance(p2)<team.getCommRange()){
+                    result.addEdge(team.getAgent(i), team.getAgent(j));
+                }
+            }
+        }
+        return result;
+    }
+    
     
     /** Checks each pair of agents against team's range parameter, returns draw element. */    
     public Path2D.Double getEdges(Euclidean2 v,int time){
@@ -61,11 +81,11 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         R2 p1;
         R2 p2;
         for(int i=0;i<team.agents.size();i++){
-            if(!team.getActiveAgents().contains(team.agents.get(i))){ continue; }
-            p1=log.agentAt(team.agents.get(i),timeB);
+            if(!team.getActiveAgents().contains(team.getAgent(i))){ continue; }
+            p1=log.agentAt(team.getAgent(i),timeB);
             for(int j=i+1;j<team.agents.size();j++){
-                if(!team.getActiveAgents().contains(team.agents.get(j))){ continue; }
-                p2=log.agentAt(team.agents.get(j),timeB);
+                if(!team.getActiveAgents().contains(team.getAgent(j))){ continue; }
+                p2=log.agentAt(team.getAgent(j),timeB);
                 if(p1.distance(p2)<team.getCommRange()){
                     result.moveTo(v.toWindowX(p1.x),v.toWindowY(p1.y));
                     result.lineTo(v.toWindowX(p2.x),v.toWindowY(p2.y));
@@ -83,8 +103,8 @@ public class DynamicTeamGraph extends Plottable<Euclidean2> implements Animatabl
         R2 p1;
         R2 p2;
         for(int i=0;i<team.agents.size();i++){
-            if(!team.getActiveAgents().contains(team.agents.get(i))){ continue; }
-            p1=log.agentAt(team.agents.get(i),timeB);
+            if(!team.getActiveAgents().contains(team.getAgent(i))){ continue; }
+            p1=log.agentAt(team.getAgent(i),timeB);
             for(Agent a:cc.getTarget().getActiveAgents()){
                 p2=log.agentAt(a,timeB);
                 if(p1.distance(p2)<team.getSensorRange()){

@@ -21,17 +21,30 @@ public abstract class Behavior {
     
 // CONSTANTS
     
-    public static final int STATIONARY=0;
-    public static final int STRAIGHT=1;
-    public static final int REVERSE=2;
-    public static final int LEADING=3;
-    public static final int LARGECIRCLESEARCH=4;
-    public static final int SMALLCIRCLESEARCH=5;
-    public static final int QUADRANTSEARCHLARGE=6;
-    public static final int QUADRANTSEARCHSMALL=7;
-    public static final int APPROACHPATH=8;
-    public static final int RANDOMPATH=9;
-    public static final String[] BEHAVIOR_STRINGS={"Stationary","Straight","Reverse","Leading", "Large Circle Search","Small Circle Search", "Quadrant Search Large", "Quadrant Search Small","Approach Path","Random Path"};
+    public static final int STATIONARY=         0;
+    public static final int STRAIGHT=           1;
+    public static final int REVERSE=            2;
+    public static final int LEADING=            3;
+    public static final int PLUCKERLEAD=        4;
+    public static final int LARGECIRCLESEARCH=  5;
+    public static final int SMALLCIRCLESEARCH=  6;
+    public static final int QUADRANTSEARCHLARGE=7;
+    public static final int QUADRANTSEARCHSMALL=8;
+    public static final int APPROACHPATH=       9;
+    public static final int RANDOMPATH=         10;
+    public static final String[] BEHAVIOR_STRINGS={
+        "Stationary",
+        "Straight",
+        "Reverse",
+        "Leading", 
+        "Plucker Lead",
+        "Large Circle Search",
+        "Small Circle Search", 
+        "Quadrant Search Large", 
+        "Quadrant Search Small",
+        "Approach Path",
+        "Random Path"
+    };
 
     public static StringRangeModel getComboBoxModel(){
         return new StringRangeModel(BEHAVIOR_STRINGS,STATIONARY,0,9);
@@ -44,16 +57,17 @@ public abstract class Behavior {
      * @return a subclass of behavior with the desired algorithm */
     public static Behavior getBehavior(int behavior){
         switch(behavior){
-        case STATIONARY:                return new behavior.Stationary();
-        case STRAIGHT:                  return new behavior.Straight();
-        case REVERSE:                   return new behavior.Straight();
-        case LEADING:                   return new behavior.Leading();
-        case LARGECIRCLESEARCH:         return new behavior.LargeCircleSearch();
-        case SMALLCIRCLESEARCH:         return new behavior.SmallCircleSearch();
-        case QUADRANTSEARCHLARGE:       return new behavior.QuadrantSearchLarge();
-        case QUADRANTSEARCHSMALL:       return new behavior.QuadrantSearchSmall();
-        case APPROACHPATH:              return new behavior.ApproachPath();
-        case RANDOMPATH:                return new behavior.RandomPath();
+        case STATIONARY:                return new Stationary();
+        case STRAIGHT:                  return new Straight();
+        case REVERSE:                   return new Straight();
+        case LEADING:                   return new Leading();
+        case PLUCKERLEAD:               return new PluckerLeading();
+        case LARGECIRCLESEARCH:         return new LargeCircleSearch();
+        case SMALLCIRCLESEARCH:         return new SmallCircleSearch();
+        case QUADRANTSEARCHLARGE:       return new QuadrantSearchLarge();
+        case QUADRANTSEARCHSMALL:       return new QuadrantSearchSmall();
+        case APPROACHPATH:              return new ApproachPath();
+        case RANDOMPATH:                return new RandomPath();
         }     
         return null;
     }

@@ -465,7 +465,7 @@ public class Team implements ActionListener {
     @XmlAttribute // not necessary to make this an attribute... comes in as the number of agents in the team
     public int getAgentNumber() { return tes.size.getValue(); }
     public void setAgentNumber(int newValue) { tes.size.setValue(newValue); }
-    
+        
     @XmlAttribute
     public String getName(){ return toString(); }
     public void setName(String newValue) { tes.setName(newValue); }
@@ -517,6 +517,9 @@ public class Team implements ActionListener {
         }
     }
 
+    /** Returns a specific agent. */
+    public Agent getAgent(int i){return agents.get(i);}
+    
     @XmlElementWrapper(name="agents")
     @XmlElement(name="agent")
     public Vector<Agent> getAllAgents() { return agents; }
