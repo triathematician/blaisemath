@@ -3,19 +3,18 @@
  * Created on Oct 17, 2007, 3:01:18 PM
  */
 
-package specto.euclidean2;
+package specto.euclidean3;
 
-import java.awt.AlphaComposite;
+import specto.euclidean2.*;
 import java.awt.Color;
 import scio.function.FunctionValueException;
 import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.function.Function;
 import scio.coordinate.R2;
+import scio.coordinate.R3;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
-import sequor.model.PointRangeModel;
-import sequor.style.VisualStyle;
 import specto.Decoration;
 
 /**
@@ -24,60 +23,58 @@ import specto.Decoration;
  * <br><br>
  * @author ae3263
  */
-public class DESolution2D extends InitialPointSet2D implements Decoration<Euclidean2,VectorField2D> {
-    
+public class DESolution3D extends InitialPointSet3D implements Decoration<Euclidean3,VectorField3D> {
+        
+    /** The starting point. */
+    R3 point;
     /** The underlying vector field. */
-    VectorField2D parent;
+    VectorField3D parent;
     /** The backwards solution. */
-    PointSet2D reversePath;
+    //PointSet2D reversePath;
     /** Whether to show the "reverse path" */
     boolean showReverse=true;
     
     // CONSTRUCTOR
     
-    public DESolution2D(Point2D point,VectorField2D parent){
+    public DESolution3D(R3 point,VectorField3D parent){
         super(point);
         this.parent=parent;
+        this.point = new R3(1.0,1.0,1.0);
         setColor(new Color(.5f,0,.5f));
     }
-    public DESolution2D(VectorField2D parent){
+    public DESolution3D(VectorField3D parent){
         super();
-        this.parent=parent;
-        setColor(new Color(.5f,0,.5f));
-    }
-
-    DESolution2D(PointRangeModel initialPoint, VectorField2D parent) {
-        super(initialPoint);
+        point = new R3(1.0,1.0,1.0);
         this.parent=parent;
         setColor(new Color(.5f,0,.5f));
     }
     
     // DECORATION METHODS
 
-    public void setParent(VectorField2D parent) {this.parent=parent;}
-    public VectorField2D getParent() {return parent;}
+    public void setParent(VectorField3D parent) {this.parent=parent;}
+    public VectorField3D getParent() {return parent;}
     
     /** Initializes solution curve models. */
     void initSolutionCurves(){
         if(path==null){
-            path=new PointSet2D(parent.getColor());
+            path=new PointSet3D(parent.getColor());
         }
-        if(reversePath==null){
-            reversePath=new PointSet2D(parent.getColor());
-            reversePath.style.setValue(PointSet2D.DOTTED);
-        }
+//        if(reversePath==null){
+//            reversePath=new PointSet2D(parent.getColor());
+//            reversePath.style.setValue(PointSet2D.DOTTED);
+//        }
         path.getPath().clear();
-        reversePath.getPath().clear();
+//        reversePath.getPath().clear();
     }
     
     /** Re-calculates the solution curves, using Newton's Method.
      * @param steps     The number of iterations.
      * @param stepSize  The size of path added at each step.
      */
-    public static Vector<R2> calcNewton(Function<R2,R2> field,R2 start,int steps,double stepSize) throws FunctionValueException{
-        Vector<R2> result=new Vector<R2>();
+    public static Vector<R3> calcNewton(Function<R3,R3> field,R3 start,int steps,double stepSize) throws FunctionValueException{
+        Vector<R3> result=new Vector<R3>();
         result.add(start);
-        R2 last;
+        R3 last;
         for(int i=0;i<steps;i++){
             last=result.lastElement();
             result.add(last.plus(getScaledVector(field,last,stepSize)));
@@ -91,8 +88,8 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
      * @param steps     The number of iterations.
      * @param stepSize  The size of path added at each step.
      */
-    public static Vector<R2> calcNewton(Function<R2,R2> field,Vector<R2> flow,int steps,double stepSize) throws FunctionValueException{
-        R2 last;
+    public static Vector<R3> calcNewton(Function<R3,R3> field,Vector<R3> flow,int steps,double stepSize) throws FunctionValueException{
+        R3 last;
         for(int i=0;i<steps;i++){
             last=flow.lastElement();
             flow.add(last.plus(getScaledVector(field,last,stepSize)));
@@ -105,63 +102,66 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
      * @param steps the number of iteration
      * @param stepSize the change in t for each iteration
      */
-    public static Vector<R2> calcRungeKutta4(Function<R2,R2> field,R2 start,int steps,double stepSize) throws FunctionValueException{
-        Vector<R2> result=new Vector<R2>();
+    public static Vector<R3> calcRungeKutta4(Function<R3,R3> field,R3 start,int steps,double stepSize) throws FunctionValueException{
+        Vector<R3> result=new Vector<R3>();
         result.add(start);
-        R2 k1,k2,k3,k4;
-        R2 last;
+        R3 k1,k2,k3,k4;
+        R3 last;
         for(int i=0;i<steps;i++){
             last=result.lastElement();
             k1=getScaledVector(field,last,stepSize);
             k2=getScaledVector(field,last.plus(k1.multipliedBy(0.5)),stepSize);
             k3=getScaledVector(field,last.plus(k2.multipliedBy(0.5)),stepSize);
             k4=getScaledVector(field,last.plus(k3),stepSize);
-            result.add(new R2(last.x+(k1.x+2*k2.x+2*k3.x+k4.x)/6,last.y+(k1.y+2*k2.y+2*k3.y+k4.y)/6));
+            result.add(new R3(
+                    last.getX()+(k1.getX()+2*k2.getX()+2*k3.getX()+k4.getX())/6,
+                    last.getY()+(k1.getY()+2*k2.getY()+2*k3.getY()+k4.getY())/6,
+                    last.getZ()+(k1.getZ()+2*k2.getZ()+2*k3.getZ()+k4.getZ())/6));
             
         }
         return result;
     }
 
-    public static R2 getScaledVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
+    public static R3 getScaledVector(Function<R3,R3> field,R3 point,double size) throws FunctionValueException{
         return field.getValue(point).scaledToLength(size);
     }
-    public static R2 getMultipliedVector(BoundedFunction<R2,R2> field,R2 point,double size) throws FunctionValueException{
-        return field.getValue(point).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
+    public static R3 getMultipliedVector(BoundedFunction<R3,R3> field,R3 point,double size) throws FunctionValueException{
+        return field.getValue(point).multipliedBy(size/(field.maxValue().getX()+field.maxValue().getY()+field.maxValue().getZ()));
     }
     
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v) {
+    public void paintComponent(Graphics2D g,Euclidean3 v) {
         if(path!=null){path.paintComponent(g,v);}
-        if(showReverse&&reversePath!=null){
-            g.setComposite(VisualStyle.COMPOSITE2);
-            reversePath.paintComponent(g,v);
-            g.setComposite(AlphaComposite.SrcOver);
-        }
+//        if(showReverse&&reversePath!=null){
+//            g.setComposite(VisualStyle.COMPOSITE2);
+//            reversePath.paintComponent(g,v);
+//            g.setComposite(AlphaComposite.SrcOver);
+//        }
     }
 
     @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+    public void paintComponent(Graphics2D g,Euclidean3 v,RangeTimer t){
         if(path!=null){path.paintComponent(g,v,t);}
-        if(showReverse&&reversePath!=null){
-            g.setComposite(VisualStyle.COMPOSITE2);
-            reversePath.paintComponent(g,v,t);
-            g.setComposite(AlphaComposite.SrcOver);
-        }
+//        if(showReverse&&reversePath!=null){
+//            g.setComposite(VisualStyle.COMPOSITE2);
+//            reversePath.paintComponent(g,v,t);
+//            g.setComposite(AlphaComposite.SrcOver);
+//        }
     }
 
     @Override
-    public void recompute(Euclidean2 v) {
+    public void recompute(Euclidean3 v) {
         try {
             initSolutionCurves();
             switch(algorithm){
                 case ALGORITHM_RUNGE_KUTTA:
-                    path.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,.04));
-                    reversePath.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,-.04));
+                    path.setPath(calcRungeKutta4(parent.getFunction(),point,500,.04));
+//                    reversePath.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,-.04));
                     break;
                 case ALGORITHM_NEWTON:
                 default:
-                    path.setPath(calcNewton(parent.getFunction(),getPoint(),500,.04));
-                    reversePath.setPath(calcNewton(parent.getFunction(),getPoint(),500,-.04));
+                    path.setPath(calcNewton(parent.getFunction(),point,500,.04));
+//                    reversePath.setPath(calcNewton(parent.getFunction(),getPoint(),500,-.04));
                     break;
             }
         } catch (FunctionValueException ex) {}

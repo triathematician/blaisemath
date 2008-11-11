@@ -17,23 +17,43 @@ import java.util.HashSet;
  * @author ae3263
  */
 public class Graph<V> extends HashSet<V>{
+    
+    /** Stores the set of edges. */
     HashSet<Edge<V>> edges;
     
-    public void addEdge(V v1,V v2){
-        edges.add(new Edge<V>(v1,v2));
-    }
-    
-    public void removeEdge(V v1,V v2){
-        edges.remove(new Edge<V>(v1,v2));
-    }
-    
+    /** Constructs with an empty graph, no edges. */
     public Graph(){
         super();
         edges=new HashSet<Edge<V>>();
     }
     
-    public Collection<Edge<V>> getEdges() { return edges; }
+    /** Adds an edge between two of the vertices. */
+    public void addEdge(V v1,V v2){
+        edges.add(new Edge<V>(v1,v2));
+    }
     
+    /** Removes an edge between two of the vertices. */
+    public void removeEdge(V v1,V v2){
+        edges.remove(new Edge<V>(v1,v2));
+    }
+    
+    /** Returns the set of edges. */
+    public HashSet<Edge<V>> getEdges() { return edges; }
+    
+    /** Returns the set of vertices. */
+    public HashSet<V> getVertices() { 
+        HashSet<V> result = new HashSet<V>();
+        for (Edge<V> e : edges) {
+            result.add(e.getSink());
+            result.add(e.getSource());
+        }
+        return result;
+    }
+    
+    
+    // INNER CLASSES
+    
+    /** Represents an edge of the given type of vertex. */
     public class Edge<V>{
         public Edge(V v1,V v2){this.v1=v1;this.v2=v2;}
         V v1;

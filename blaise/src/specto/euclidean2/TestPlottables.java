@@ -7,7 +7,6 @@ package specto.euclidean2;
  */
 
 
-import java.awt.Color;
 import scio.coordinate.R2;
 import sequor.control.ArcSlider;
 import sequor.control.SliderBox;
@@ -60,28 +59,26 @@ public class TestPlottables extends javax.swing.JFrame {
         functionPlot.add(cp2);
         functionPlot.add(new RandomFlame2D(cp2.getModel(),80,20));
         DoubleRangeModel drm1=fss.getModel();
-        functionPlot.add(SliderBox.getStyleAdjusters(100,10,15,functionPlot.getPlottables(),functionPlot));
         BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
         functionPlot.add(nra1,3,5);
         functionPlot.add(new StandardGrid2D());
-
+        functionPlot.add(SliderBox.getStyleAdjusters(100,10,15,functionPlot.getPlottables(),functionPlot));
+        
         VectorField2D vf=new VectorField2D();
+        vectorFieldPlot.add(vf.getDivergence());
+        vectorFieldPlot.add(vf.getScalarCurl());
         vectorFieldPlot.add(vf);
-        DESolution2D de1=new DESolution2D(vf);
-        DESolution2D de2=new DESolution2D(vf);
-        vectorFieldPlot.add(de1);
-        vectorFieldPlot.add(de2);
-        vectorFieldPlot.add(SliderBox.getStyleAdjusters(100,10,15,vectorFieldPlot.getPlottables(),vectorFieldPlot));
+        vectorFieldPlot.add(vf.getFlowCurve());
+        vectorFieldPlot.add(vf.getFlowCurve());
+        vectorFieldPlot.add(SliderBox.getStyleAdjusters(100,10,15,vectorFieldPlot.getPlottables(),vectorFieldPlot));        
 
         PlaneFunction2D pf1=new PlaneFunction2D();
         surfacePlot.add(pf1);    
         VectorField2D vf1=new VectorField2D(pf1.getGradientFunction());
         surfacePlot.add(vf1);
         surfacePlot.add(new DESolution2D(vf1));
-        surfacePlot.add(SliderBox.getStyleAdjusters(100,10,15,surfacePlot.getPlottables(),surfacePlot));
         surfacePlot.add(new PlaneFunctionVector2D(pf1));    
-        
-        threeDPlot.add(new PlaneFunction2DProjected(pf1.function));
+        surfacePlot.add(SliderBox.getStyleAdjusters(100,10,15,surfacePlot.getPlottables(),surfacePlot));
 
         Segment2D s1=new Segment2D(-8,5,2,-1);
         CirclePoint2D cirp1=new CirclePoint2D(s1.getConstraintModel());
@@ -96,8 +93,8 @@ public class TestPlottables extends javax.swing.JFrame {
         pointSetPlot.add(rect1);
         Triangle2D tri1=new Triangle2D(-10,-2,-8,-8,-3,-5);
         pointSetPlot.add(tri1);
-        pointSetPlot.add(SliderBox.getStyleAdjusters(100,10,15,pointSetPlot.getPlottables(),pointSetPlot));
         pointSetPlot.add(new HiddenText2D());
+        pointSetPlot.add(SliderBox.getStyleAdjusters(100,10,15,pointSetPlot.getPlottables(),pointSetPlot));
         
         DynamicPointSet2D dps1=new DynamicPointSet2D();
         for(double x=0;x<20;x+=.5){
@@ -130,7 +127,6 @@ public class TestPlottables extends javax.swing.JFrame {
         ArcSlider da1=new ArcSlider(10,70,cp5.getTimeModel());
         //da1.getStyle().setValue(NumberSlider.STYLE_DOTS);
         polarPlot2D1.add(da1,3,1);
-        //polarPlot2D1.add(SliderBox.getStyleAdjusters(100,10,15,polarPlot2D1.getPlottables(),polarPlot2D1));
         SliderBox nab1=new SliderBox();
         //nab1.add(new NumberSlider(0,0,da1.getStyle()));
         nab1.add(new NumberSlider(0,0,da1.getSizeModel()));
@@ -138,6 +134,7 @@ public class TestPlottables extends javax.swing.JFrame {
         polarPlot2D1.add(nab1,3,8);
         DoubleRangeModel drm2=par1.getModel();
         polarPlot2D1.add(new BoundedRangeSliderBox(320,10,drm2),3,4);
+        polarPlot2D1.add(SliderBox.getStyleAdjusters(100,10,15,polarPlot2D1.getPlottables(),polarPlot2D1));
         
         RandomFlame2D rf5=new RandomFlame2D(-12,0,100,100);
         RandomFlame2D rf2=new RandomFlame2D(-18,0,90,20);
@@ -153,7 +150,6 @@ public class TestPlottables extends javax.swing.JFrame {
         randomPlot.add(rp1);
         RandomWalk2D rw1=new RandomWalk2D();
         randomPlot.add(rw1);
-        randomPlot.add(SliderBox.getStyleAdjusters(100,10,15,randomPlot.getPlottables(),randomPlot));
         SliderBox nab2=new SliderBox();
         nab2.add(new NumberSlider(210,10,rp1.getNumPointsModel()));
         nab2.add(new NumberSlider(210,30,rp1.getParameterModel()));
@@ -163,9 +159,11 @@ public class TestPlottables extends javax.swing.JFrame {
         nab3.add(new NumberSlider(320,30,rw1.getAngleParameterModel()));
         nab3.add(new NumberSlider(320,50,rw1.getDistancePerTimeModel()));
         randomPlot.add(nab3,3,5);
+        randomPlot.add(SliderBox.getStyleAdjusters(100,10,15,randomPlot.getPlottables(),randomPlot));
         
-        randomPlot.setBackground(Color.BLACK);
-    }
+        graphPlot.add(new Graph2D());
+        graphPlot.add(SliderBox.getStyleAdjusters(100,10,15,graphPlot.getPlottables(),graphPlot));
+     }
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -175,7 +173,7 @@ public class TestPlottables extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabs = new javax.swing.JTabbedPane();
         functionPlot = new specto.euclidean2.Plot2D();
         polarPlot2D1 = new specto.euclidean2.PolarPlot2D();
         surfacePlot = new specto.euclidean2.Plot2D();
@@ -183,7 +181,7 @@ public class TestPlottables extends javax.swing.JFrame {
         randomPlot = new specto.euclidean2.Plot2D();
         pointSetPlot = new specto.euclidean2.Plot2D();
         fractalPlot = new specto.euclidean2.Plot2D();
-        threeDPlot = new specto.euclidean2.Plot2D();
+        graphPlot = new specto.euclidean2.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -241,7 +239,7 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Functions", functionPlot);
+        tabs.addTab("Functions", functionPlot);
 
         javax.swing.GroupLayout polarPlot2D1Layout = new javax.swing.GroupLayout(polarPlot2D1);
         polarPlot2D1.setLayout(polarPlot2D1Layout);
@@ -254,7 +252,7 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Polar", polarPlot2D1);
+        tabs.addTab("Polar", polarPlot2D1);
 
         javax.swing.GroupLayout surfacePlotLayout = new javax.swing.GroupLayout(surfacePlot);
         surfacePlot.setLayout(surfacePlotLayout);
@@ -267,7 +265,9 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Surfaces", surfacePlot);
+        tabs.addTab("Surfaces", surfacePlot);
+
+        vectorFieldPlot.setAxisStyle(1);
 
         javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
         vectorFieldPlot.setLayout(vectorFieldPlotLayout);
@@ -280,7 +280,10 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Vector Fields", vectorFieldPlot);
+        tabs.addTab("Vector Fields", vectorFieldPlot);
+
+        randomPlot.setAxisVisible(false);
+        randomPlot.setGridVisible(false);
 
         javax.swing.GroupLayout randomPlotLayout = new javax.swing.GroupLayout(randomPlot);
         randomPlot.setLayout(randomPlotLayout);
@@ -293,7 +296,7 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Random Functions", randomPlot);
+        tabs.addTab("Random Functions", randomPlot);
 
         javax.swing.GroupLayout pointSetPlotLayout = new javax.swing.GroupLayout(pointSetPlot);
         pointSetPlot.setLayout(pointSetPlotLayout);
@@ -306,7 +309,7 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Point Sets", pointSetPlot);
+        tabs.addTab("Point Sets", pointSetPlot);
 
         javax.swing.GroupLayout fractalPlotLayout = new javax.swing.GroupLayout(fractalPlot);
         fractalPlot.setLayout(fractalPlotLayout);
@@ -319,24 +322,24 @@ public class TestPlottables extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Fractal Stuff", fractalPlot);
+        tabs.addTab("Fractal Stuff", fractalPlot);
 
-        threeDPlot.setAxisStyle(1);
-        threeDPlot.setAxisVisible(false);
-        threeDPlot.setGridVisible(false);
+        graphPlot.setAnimatorVisible(false);
+        graphPlot.setAxisVisible(false);
+        graphPlot.setGridVisible(false);
 
-        javax.swing.GroupLayout threeDPlotLayout = new javax.swing.GroupLayout(threeDPlot);
-        threeDPlot.setLayout(threeDPlotLayout);
-        threeDPlotLayout.setHorizontalGroup(
-            threeDPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout graphPlotLayout = new javax.swing.GroupLayout(graphPlot);
+        graphPlot.setLayout(graphPlotLayout);
+        graphPlotLayout.setHorizontalGroup(
+            graphPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 669, Short.MAX_VALUE)
         );
-        threeDPlotLayout.setVerticalGroup(
-            threeDPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        graphPlotLayout.setVerticalGroup(
+            graphPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("3D Stuff", threeDPlot);
+        tabs.addTab("Graphs", graphPlot);
 
         fileMenu.setText("File"); // NOI18N
 
@@ -485,11 +488,11 @@ public class TestPlottables extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
         );
 
         pack();
@@ -537,10 +540,10 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu2;
     private specto.euclidean2.Plot2D fractalPlot;
     private specto.euclidean2.Plot2D functionPlot;
+    private specto.euclidean2.Plot2D graphPlot;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu helpMenu1;
     private javax.swing.JMenu helpMenu2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuBar menuBar1;
     private javax.swing.JMenuBar menuBar2;
@@ -560,7 +563,7 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem1;
     private javax.swing.JMenuItem saveMenuItem2;
     private specto.euclidean2.Plot2D surfacePlot;
-    private specto.euclidean2.Plot2D threeDPlot;
+    private javax.swing.JTabbedPane tabs;
     private specto.euclidean2.Plot2D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     

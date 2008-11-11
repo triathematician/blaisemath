@@ -56,6 +56,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     }
     public PlaneFunction2D(FunctionTreeModel functionModel) {
         initFunction(functionModel);
+        setColor(Color.ORANGE);
     }
     
     public void initFunction(final FunctionTreeModel functionModel) {
@@ -74,6 +75,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     
     // INTIALIZERS
     public BoundedFunction<R2,Double> getFunction() { return function; }
+    public void setFunction(BoundedFunction<R2,Double> function) { this.function = function; fireStateChanged(); }
     public BoundedFunction<R2,R2> getGradientFunction() { return getGradient(function); }
     public BoundedFunction<Double,Double> getFunctionX(double y) { return getPartial1(y,function); }
     public BoundedFunction<Double,Double> getFunctionY(double x) { return getPartial2(x,function); }
@@ -103,11 +105,19 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
         try {
             g.setColor(getColor());
             double WEIGHT=10/(function.maxValue()-function.minValue());
-            double SHIFT=-10*function.minValue()/(function.maxValue()-function.minValue())+1;
+            double SHIFT=0.0;//-10*function.minValue()/(function.maxValue()-function.minValue())+1;
+            double rad;
             switch (style.getValue()) {
                 case DOTS:
                     for(int i=0;i<inputs.size();i++){
-                        g.fill(v.dot(inputs.get(i),getRadius(currentValues.get(i),1.5*WEIGHT,SHIFT)));
+                        rad = getRadius(currentValues.get(i),1.5*WEIGHT,SHIFT);
+                        if (rad < 0) {
+                            g.setColor(getColor().brighter());
+                            g.fill(v.dot(inputs.get(i),-rad));
+                            g.setColor(getColor());
+                        } else {
+                            g.fill(v.dot(inputs.get(i),rad));                            
+                        }
                     }
                     break;                    
                 case COLORS:
@@ -134,7 +144,7 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     /** Computes radius of a given point with specified multiplier and shift. */
     public double getRadius(double value,double weight,double shift) throws FunctionValueException{
         value=value*weight+shift;
-        return(value<0)?0:value;
+        return value;
     }
 
     // STYLE METHODS
@@ -148,8 +158,10 @@ public class PlaneFunction2D extends Plottable<Euclidean2>{
     @Override
     public String[] getStyleStrings() {return styleStrings;}
     @Override
-    public String toString(){return "Plane Function";}
+    public String toString(){return name;}
     
+    String name="Plane Function";
+        
     
     
     // STATIC METHODS

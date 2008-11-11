@@ -5,6 +5,8 @@
 
 package specto.euclidean3;
 
+import sequor.control.NumberSlider;
+import sequor.control.SliderBox;
 import specto.PlotPanel;
 
 /** The 3D plot window which should be used in applications. Will have support for drawing
@@ -12,23 +14,42 @@ import specto.PlotPanel;
  * <br><br>
  * @author Elisha Peterson
  */
-public class Plot3D extends PlotPanel {
+public class Plot3D extends PlotPanel<Euclidean3> {
 
-// PROPERTIES
+    // PROPERTIES
+    
+    // CONSTANTS
+   
 
 
-// CONSTANTS
-
-
-// CONSTRUCTORS
+    // CONSTRUCTORS
 
     /** Default constructor */
-    public Plot3D(){}
+    public Plot3D(){
+        super(new Euclidean3());    
+        add(new Axes3D());
+        add(get3DControls(),5,2);
+    }
 
 
-// BEAN PATTERNS: GETTERS & SETTERS
+    // BEAN PATTERNS: GETTERS & SETTERS
 
 
-// METHODS:
-
+    
+    // HELPER METHODS
+    
+    /** Returns box of sliders for adjusting visual elements. */
+    public SliderBox get3DControls(){
+        SliderBox sb = new SliderBox();
+        NumberSlider ns = new NumberSlider(visometry.theta);
+        ns.setName("theta");
+        sb.add(ns);
+        ns = new NumberSlider(visometry.phi);
+        ns.setName("phi");
+        sb.add(ns);
+        ns = new NumberSlider(visometry.zoom);
+        ns.setName("zoom");
+        sb.add(ns);
+        return sb;
+    }
 }

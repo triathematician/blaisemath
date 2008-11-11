@@ -23,8 +23,9 @@ import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
+import scribo.tree.FunctionTreeRoot;
+import sequor.model.PointRangeModel;
 import specto.Animatable;
-import specto.Visometry;
 
 /**
  * Draws a one-input/two-output curve on the Cartesian Plane. Requires two functions and a range of t-values.
@@ -34,6 +35,10 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     /** The underlying function for the vector field. */
     BoundedFunction<R2,R2> function;
+    /** The x function, as a tree. */
+    FunctionTreeModel xFunction;
+    /** The y function, as a tree. */
+    FunctionTreeModel yFunction;
     
     /** A default vector field to use */    
     public static final BoundedFunction<R2,R2> DEFAULT_FUNCTION=new BoundedFunction<R2,R2>(){
@@ -51,7 +56,11 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     // CONSTRUCTORS
         
-    public VectorField2D(){this(DEFAULT_FUNCTION);}
+    public VectorField2D(){
+        this(DEFAULT_FUNCTION);
+        xFunction = new FunctionTreeModel("2y");
+        yFunction = new FunctionTreeModel("-y-5sin(x)");
+    }
     public VectorField2D(BoundedFunction<R2,R2> function){
         this.function=function;
         setColor(Color.BLUE);
@@ -62,6 +71,8 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         vars.add("x"); vars.add("y");
         functionModel1.getRoot().setVariables(vars);
         functionModel2.getRoot().setVariables(vars);
+        xFunction = functionModel1;
+        yFunction = functionModel2;
         function = getVectorFunction(
                 (BoundedFunction<R2,Double>) functionModel1.getRoot().getFunction(2),
                 (BoundedFunction<R2,Double>) functionModel2.getRoot().getFunction(2));
@@ -84,7 +95,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     public static BoundedFunction<R2, R2> getVectorFunction(final BoundedFunction<R2,Double> fx, final BoundedFunction<R2,Double> fy) {
         return new BoundedFunction<R2, R2>() {
-            public R2 getValue(R2 x) throws FunctionValueException { return new R2(fx.getValue(x), fy.getValue(x)); }
+            public R2 getValue(R2 pt) throws FunctionValueException { return new R2(fx.getValue(pt), fy.getValue(pt)); }
             public Vector<R2> getValue(Vector<R2> xx) throws FunctionValueException {
                 Vector<Double> xs = fx.getValue(xx);
                 Vector<Double> ys = fy.getValue(xx);
@@ -275,6 +286,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     int NUM=10;
     
+    
     // STYLE METHODS
 
     public static final int LINES=0;            // lines in the direction of the curves
@@ -287,5 +299,84 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     public String[] getStyleStrings() {return styleStrings;}
     @Override
     public String toString(){return "Vector field";}
+    
+    
+    // DECORATIONS
+    
+    /** Returns solution to differential equation at a given point. */
+    public DESolution2D getFlowCurve() { return new DESolution2D(this); }
+    public DESolution2D getFlowCurve(PointRangeModel initialPoint) { return new DESolution2D(initialPoint, this); }
+    public PlaneFunction2D getDivergence() {
+        final PlaneFunction2D result = new PlaneFunction2D(getDivergence(xFunction, yFunction));
+        ChangeListener cl = new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                result.setFunction(getDivergence(xFunction, yFunction));
+            }            
+        };
+        xFunction.addChangeListener(cl);
+        yFunction.addChangeListener(cl);
+        result.setColor(Color.getHSBColor(0.5f,0.5f,0.9f));
+        result.name="Divergence";
+        return result;
+    }
+    public PlaneFunction2D getScalarCurl() { 
+        final PlaneFunction2D result = new PlaneFunction2D(getScalarCurl(xFunction, yFunction));
+        ChangeListener cl = new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                result.setFunction(getScalarCurl(xFunction, yFunction));
+            }            
+        };
+        xFunction.addChangeListener(cl);
+        yFunction.addChangeListener(cl);
+        result.setColor(Color.getHSBColor(0.2f,0.5f,0.9f));
+        result.name="Curl";
+        return result;
+    }
+    
+    // ADDONS
+    
+    /** Returns divergence of this field. */
+    public static BoundedFunction<R2, Double> getDivergence(final FunctionTreeModel fx, final FunctionTreeModel fy) {
+        return new BoundedFunction<R2, Double> () {
+            String[] vars = {"x", "y"};
+            BoundedFunction<R2, Double> fxx = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fx.getRoot().derivativeTree("x")).getFunction(vars);
+            BoundedFunction<R2, Double> fyy = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fy.getRoot().derivativeTree("y")).getFunction(vars);
+            public Double minValue() { return 0.0; }
+            public Double maxValue() { return 5.0; }
+            public Double getValue(R2 pt) throws FunctionValueException {
+                return fxx.getValue(pt) + fyy.getValue(pt);
+            }
+            public Vector<Double> getValue(Vector<R2> pts) throws FunctionValueException {
+                Vector<Double> resultx = fxx.getValue(pts);
+                Vector<Double> resulty = fyy.getValue(pts);
+                for(int i=0; i<resultx.size(); i++) {
+                    resultx.set(i, resultx.get(i)+resulty.get(i));
+                }
+                return resultx;
+            }            
+        };
+    }
+    
+    /** Returns curl of this field. */
+    public static BoundedFunction<R2, Double> getScalarCurl(final FunctionTreeModel fx, final FunctionTreeModel fy) {
+        return new BoundedFunction<R2, Double> () {
+            String[] vars = {"x", "y"};
+            BoundedFunction<R2, Double> fxy = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fx.getRoot().derivativeTree("y")).getFunction(vars);
+            BoundedFunction<R2, Double> fyx = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fy.getRoot().derivativeTree("x")).getFunction(vars);
+            public Double minValue() { return 0.0; }
+            public Double maxValue() { return 5.0; }
+            public Double getValue(R2 pt) throws FunctionValueException {
+                return fyx.getValue(pt) - fxy.getValue(pt);
+            }
+            public Vector<Double> getValue(Vector<R2> pts) throws FunctionValueException {
+                Vector<Double> resultx = fyx.getValue(pts);
+                Vector<Double> resulty = fxy.getValue(pts);
+                for(int i=0; i<resultx.size(); i++) {
+                    resultx.set(i, resultx.get(i)-resulty.get(i));
+                }
+                return resultx;
+            }            
+        };
+    }
 }
 

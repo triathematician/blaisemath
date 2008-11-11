@@ -183,6 +183,13 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
         return getFunction(variables.size());
     }
     
+    /** Returns a function of the specified list of variables. */
+    public BoundedFunction<?,Double> getFunction(final String[] vars) {        
+        variables.clear();
+        for (int i = 0; i < vars.length; i++) { variables.add(vars[i]); }
+        return getFunction(vars.length);
+    }
+    
     /** Returns a generic function corresponding to this tree. The type of the function will depend on the number of inputs. */
     public BoundedFunction<?,Double> getFunction(final int n) {
         if (variables.size() > n){ return null; }

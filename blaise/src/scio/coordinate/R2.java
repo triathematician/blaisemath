@@ -144,9 +144,14 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     
     // STATIC METHODS
     
+    /** Returns point constructed in polar coords. */
+    public static R2 getPolar(double radius, double angle) {
+        return new R2(radius*Math.cos(angle),radius*Math.sin(angle));
+    }
+    
     /** Returns point at infinity at the given angle, approximated as a very, very large point. */
     public static R2 atInfiniteAngle(double angle) {
-        return new R2(java.lang.Double.MAX_VALUE*Math.cos(angle), java.lang.Double.MAX_VALUE*Math.sin(angle));
+        return getPolar(java.lang.Double.MAX_VALUE, Math.cos(angle));
     }
     
     /** Returns slope between two points. */

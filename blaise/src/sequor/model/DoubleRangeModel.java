@@ -7,6 +7,7 @@ import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import scio.random.Random2D;
 
 /**
  * <b>DoubleRangeModel.java</b><br>
@@ -82,6 +83,8 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
     }
     @Override
     public Double getRange(){return (maximum-minimum);}
+    
+    public Double getRandom(){ return Random2D.between(getMinimum(), getMaximum()); }
     
     
     // MORE ADVANCED METHODS

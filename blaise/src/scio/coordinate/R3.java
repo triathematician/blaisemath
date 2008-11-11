@@ -35,6 +35,19 @@ public class R3 extends Euclidean {
     public void setTo(double x, double y, double z){ setX(x); setY(y); setZ(z); }
         
     
+    // ADJUSTMENTS TO THIS VECTOR
+    
+    public double magnitudeSq() { return getX()*getX()+getY()*getY()+getZ()*getZ(); }
+    public double magnitude() { return Math.sqrt(magnitudeSq()); }    
+    public R3 scaledToLength(double length){ double m = length/magnitude(); return new R3(getX()*m, getY()*m, getZ()*m); }
+    public R3 multipliedBy(double length){ return new R3(getX()*length, getY()*length, getZ()*length); }
+    
+    // OPERATIONS WITH MULTIPLE VECTORS
+    
+    public R3 plus(R3 pt) { return new R3(getX()+pt.getX(), getY()+pt.getY(), getZ()+pt.getZ()); }
+    public R3 minus(R3 pt) { return new R3(getX()-pt.getX(), getY()-pt.getY(), getZ()-pt.getZ()); }
+    
+      
     // METHODS FOR VECTORS IN R3
     
     /** Projects to plane, returning the first two coordinates only */

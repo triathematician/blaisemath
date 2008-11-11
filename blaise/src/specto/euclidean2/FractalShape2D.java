@@ -88,7 +88,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
     public static class Edges extends FractalShape2D{
         /** Initializes with given points. */
         public Edges(R2 p1,R2 p2){
-            maxIter=new IntegerRangeModel(0,0,5);
+            maxIter=new IntegerRangeModel(2,0,5);
             setColor(Color.BLUE);
             add(p1);
             add(p2);        
