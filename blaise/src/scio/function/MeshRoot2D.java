@@ -109,7 +109,7 @@ public class MeshRoot2D {
         } else {
             double t = (zValue-p1.getZ())/(p2.getZ()-p1.getZ());
             if (t < 0 || t > 1){ return null; }
-            Euclidean rTemp = (Euclidean) p1.plus(p2.minus(p1).times(t));
+            R3 rTemp = p1.plus(p2.minus(p1).times(t));
             return new R2(rTemp.getElement(0),rTemp.getElement(1));
         }
     }

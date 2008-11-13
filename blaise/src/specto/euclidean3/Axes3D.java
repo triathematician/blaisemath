@@ -9,7 +9,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import scio.coordinate.R2;
 import scio.coordinate.R3;
+import scio.function.FunctionValueException;
 import specto.DynamicPlottable;
 
 /**
@@ -41,13 +45,15 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean3 v) {
-        switch(style.getValue()) {
-            case 0 :
                 g.draw(v.lineSegment(new R3(0,0,0), new R3(6,0,0)));
+                java.awt.geom.Point2D.Double winCenter = v.toWindow(new R3(6,0,0));
+                g.drawString("x",(float)winCenter.x+5,(float)winCenter.y+5);
                 g.draw(v.lineSegment(new R3(0,0,0), new R3(0,6,0)));
-                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,0,6)));    
-                break;
-            case 1 :
+                winCenter = v.toWindow(new R3(0,6,0));
+                g.drawString("y",(float)winCenter.x+5,(float)winCenter.y+5);
+                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,0,6)));   
+                winCenter = v.toWindow(new R3(0,0,6));
+                g.drawString("z",(float)winCenter.x+5,(float)winCenter.y+5);
                 g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(6,-6,-6)));
                 g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,6,-6)));
                 g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,-6,6)));
@@ -60,7 +66,15 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
                 g.draw(v.lineSegment(new R3(-6,6,6), new R3(6,6,6)));
                 g.draw(v.lineSegment(new R3(6,-6,6), new R3(6,6,6)));
                 g.draw(v.lineSegment(new R3(6,6,-6), new R3(6,6,6)));
-                break;
+        // draws the scene's ellipse
+        double sp = v.proj.viewDist.getValue()*v.proj.sceneSize.getValue()/(v.proj.viewDist.getValue()+v.proj.sceneSize.getValue());
+        g.draw(v.ellipse(new R2(), v.proj.la * sp, v.proj.lb * sp));
+        try {
+            g.draw(v.dot(v.proj.getValue(new R3(v.proj.sceneSize.getValue(), 0, 0)), 5));
+            g.draw(v.dot(v.proj.getValue(new R3(0, v.proj.sceneSize.getValue(), 0)), 5));
+            g.draw(v.dot(v.proj.getValue(new R3(0, 0, v.proj.sceneSize.getValue() )), 5));
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Axes3D.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

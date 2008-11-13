@@ -42,14 +42,20 @@ public class Plot3D extends PlotPanel<Euclidean3> {
     /** Returns box of sliders for adjusting visual elements. */
     public SliderBox get3DControls(){
         SliderBox sb = new SliderBox();
-        NumberSlider ns = new NumberSlider(visometry.theta);
-        ns.setName("theta");
+        NumberSlider ns = new NumberSlider(visometry.proj.clipDist);
+        ns.setName("clipping");
         sb.add(ns);
-        ns = new NumberSlider(visometry.phi);
-        ns.setName("phi");
-        sb.add(ns);
-        ns = new NumberSlider(visometry.zoom);
+        ns = new NumberSlider(visometry.proj.viewDist);
         ns.setName("zoom");
+        sb.add(ns);
+        ns = new NumberSlider(visometry.proj.sceneSize);
+        ns.setName("scene dist");
+        sb.add(ns);
+        ns = new NumberSlider(visometry.proj.timerDelay);
+        ns.setName("timer delay");
+        sb.add(ns);
+        ns = new NumberSlider(visometry.proj.eyeSep);
+        ns.setName("eye separation");
         sb.add(ns);
         return sb;
     }

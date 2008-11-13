@@ -24,6 +24,7 @@ import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
+import sequor.style.VisualStyle;
 import specto.Animatable;
 import specto.Plottable;
 
@@ -170,6 +171,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v){
         R2 vector;
+        if (!v.proj.stereographic) {
         try {
         switch(style.getValue()){
             case DOT_LINES:
@@ -209,6 +211,69 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 break;
         }
         } catch (FunctionValueException e) {}
+        } else {
+            g.setComposite(VisualStyle.COMPOSITE5);
+        try {
+        switch(style.getValue()){
+            case DOT_LINES:
+                for (int i = 0; i < samplePoints.size(); i++) {
+                    g.setColor(Color.BLUE);
+                    g.fill(v.dot(v.proj.getValueLeft(samplePoints.get(i)),2));
+                    g.draw(v.lineSegment(
+                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))),
+                            v.proj.getValueLeft(samplePoints.get(i).minus(vectors.get(i)))));
+                    g.setColor(Color.RED);
+                    g.fill(v.dot(v.proj.getValueRight(samplePoints.get(i)),2));
+                    g.draw(v.lineSegment(
+                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))),
+                            v.proj.getValueRight(samplePoints.get(i).minus(vectors.get(i)))));
+                }
+                break;
+            case ARROWS:
+                Shape arrow;
+                for (int i = 0; i < samplePoints.size(); i++) {
+                    g.setColor(Color.BLUE);
+                    arrow = v.arrow(v.proj.getValueLeft(samplePoints.get(i)),
+                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))), 5.0);
+                    g.draw(arrow);
+                    g.fill(arrow);
+                    g.setColor(Color.RED);
+                    arrow = v.arrow(v.proj.getValueRight(samplePoints.get(i)),
+                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))), 5.0);
+                    g.draw(arrow);
+                    g.fill(arrow);
+                }
+                break;
+            case TRAILS:
+                try {
+                    for (int i = 0; i < samplePoints.size(); i++) {
+                        g.setColor(Color.BLUE);
+                        g.draw(v.path(v.proj.getValueLeft(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM))));
+                        g.draw(v.path(v.proj.getValueLeft(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM))));
+                        g.setColor(Color.RED);
+                        g.draw(v.path(v.proj.getValueRight(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM))));
+                        g.draw(v.path(v.proj.getValueRight(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM))));
+                    }
+                } catch (FunctionValueException ex) {
+                    Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case LINES:
+            default:
+                for (int i = 0; i < samplePoints.size(); i++) {
+                    g.setColor(Color.BLUE);
+                    g.draw(v.lineSegment(
+                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))),
+                            v.proj.getValueLeft(samplePoints.get(i).minus(vectors.get(i)))));
+                    g.setColor(Color.RED);
+                    g.draw(v.lineSegment(
+                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))),
+                            v.proj.getValueRight(samplePoints.get(i).minus(vectors.get(i)))));
+                }
+                break;
+        }
+        } catch (FunctionValueException e) {}            
+        }
     }
     
     /** Determines whether lines are drawn at random positions and recycled over time or drawn at fixed points. */
@@ -283,9 +348,19 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 }
             }       
             try {
-                for (int i = 0; i < flows.size(); i++) {
-                    g.draw(v.path(v.proj.getValue(flows.get(i))));
-                }   
+                if (! v.proj.stereographic) {
+                    for (int i = 0; i < flows.size(); i++) {
+                        g.draw(v.path(v.proj.getValue(flows.get(i))));
+                    }   
+                } else {
+                    g.setComposite(VisualStyle.COMPOSITE5);
+                    for (int i = 0; i < flows.size(); i++) {
+                        g.setColor(Color.RED);
+                        g.draw(v.path(v.proj.getValueLeft(flows.get(i))));
+                        g.setColor(Color.BLUE);
+                        g.draw(v.path(v.proj.getValueRight(flows.get(i))));
+                    }   
+                }
             } catch (FunctionValueException ex) {
                 Logger.getLogger(VectorField3D.class.getName()).log(Level.SEVERE, null, ex);
             }

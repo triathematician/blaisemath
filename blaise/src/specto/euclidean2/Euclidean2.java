@@ -54,8 +54,8 @@ public class Euclidean2 extends Visometry<R2> {
     private double windowAspect;
     
     /** Desired min,max of the containing panel. The plot MUST include these points!! */
-    private R2 desiredMin=new R2(-10,-10);
-    private R2 desiredMax=new R2(10,10);
+    protected R2 desiredMin=new R2(-10,-10);
+    protected R2 desiredMax=new R2(10,10);
     
     
     // CONSTRUCTORS
@@ -248,11 +248,11 @@ public class Euclidean2 extends Visometry<R2> {
     // EVENT HANDLING
     
     /** Press/release moves the plot window around */
-    Point pressedAt=null;
-    R2 oldMin=null;
-    R2 oldMax=null;
-    String mode=null;
-    Rectangle2D zoomBox=null;
+    protected Point pressedAt=null;
+    protected String mode=null;
+    protected R2 oldMin=null;
+    protected R2 oldMax=null;
+    protected Rectangle2D zoomBox=null;
     
     @Override
     public void mousePressed(MouseEvent e){
@@ -266,6 +266,20 @@ public class Euclidean2 extends Visometry<R2> {
             oldMax=new R2(desiredMax);
         }
     }
+    
+    @Override
+    public void mouseDragged(MouseEvent e){
+        if(pressedAt!=null){
+            if(mode.equals("Alt+Button1")){  
+                zoomBox.setMax(toGeometry(e.getPoint()));
+                container.repaint();
+            }else{
+                R2 delta=toGeometry(pressedAt).minus(toGeometry(e.getPoint()));
+                setBounds(oldMin.plus(delta),oldMax.plus(delta));
+            }
+        }
+    }
+    
     @Override
     public void mouseReleased(MouseEvent e){
         mouseDragged(e);
@@ -279,18 +293,7 @@ public class Euclidean2 extends Visometry<R2> {
         oldMax=null;
         mode=null;
     }
-    @Override
-    public void mouseDragged(MouseEvent e){
-        if(pressedAt!=null){
-            if(mode.equals("Alt+Button1")){  
-                zoomBox.setMax(toGeometry(e.getPoint()));
-                container.repaint();
-            }else{
-                R2 delta=toGeometry(pressedAt).minus(toGeometry(e.getPoint()));
-                setBounds(oldMin.plus(delta),oldMax.plus(delta));
-            }
-        }
-    }
+    
     /** Zoom operation */
     @Override
     public void mouseWheelMoved(MouseWheelEvent e){

@@ -10,10 +10,12 @@ package scio.coordinate;
  * <br><br>
  * @author Elisha Peterson
  */
-public class R3 extends Euclidean {
+public class R3 implements EuclideanElement {
+    
+    public double x,y,z;
     
     /** Default constructor. */
-    public R3(){super(3);}
+    public R3(){x=0; y=0; z=0;}
     
     /** Construct with coordinates. */
     public R3(double x, double y, double z){
@@ -24,13 +26,13 @@ public class R3 extends Euclidean {
 
     // GETTERS & SETTERS
     
-    public double getX(){ return getElement(0); }
-    public double getY(){ return getElement(1); }
-    public double getZ(){ return getElement(2); }
+    public double getX(){ return x; }
+    public double getY(){ return y; }
+    public double getZ(){ return z; }
     
-    public void setX(double x){ setElement(0,x); }
-    public void setY(double y){ setElement(1,y); }
-    public void setZ(double z){ setElement(2,z); }
+    public void setX(double x){ this.x=x; }
+    public void setY(double y){ this.y=y; }
+    public void setZ(double z){ this.z=z; }
     
     public void setTo(double x, double y, double z){ setX(x); setY(y); setZ(z); }
         
@@ -39,11 +41,13 @@ public class R3 extends Euclidean {
     
     public double magnitudeSq() { return getX()*getX()+getY()*getY()+getZ()*getZ(); }
     public double magnitude() { return Math.sqrt(magnitudeSq()); }    
+    public R3 normalized() { return times(1/magnitude()); }
     public R3 scaledToLength(double length){ double m = length/magnitude(); return new R3(getX()*m, getY()*m, getZ()*m); }
     public R3 multipliedBy(double length){ return new R3(getX()*length, getY()*length, getZ()*length); }
     
     // OPERATIONS WITH MULTIPLE VECTORS
     
+    public R3 times(double d) { return new R3(d*getX(), d*getY(), d*getZ()); }
     public R3 plus(R3 pt) { return new R3(getX()+pt.getX(), getY()+pt.getY(), getZ()+pt.getZ()); }
     public R3 minus(R3 pt) { return new R3(getX()-pt.getX(), getY()-pt.getY(), getZ()-pt.getZ()); }
     
@@ -51,15 +55,81 @@ public class R3 extends Euclidean {
     // METHODS FOR VECTORS IN R3
     
     /** Projects to plane, returning the first two coordinates only */
-    public R2 projectXY() { return new R2(getX(), getY()); }
+    public R2 projectXY() { return new R2(x,y); }
 
+    /** Returns the dot product of two vectors. */
+    public double dot(R3 pt2) { return x*pt2.x+y*pt2.y+z*pt2.z; }
+    
     /** Returns the cross product of two 3-vectors */
     public R3 cross(R3 p2) {
-        return new R3 (getY()*p2.getZ()-getZ()*p2.getY(), getZ()*p2.getX()-getX()*p2.getZ(), getX()*p2.getY()-getY()*p2.getX());
+        return new R3 (y*p2.z-z*p2.y, z*p2.x-x*p2.z, x*p2.y-y*p2.x);
     }
 
     /** Returns the (scalar) triple product of three 3-vectors */
     public static double tripleProduct(R3 p1, R3 p2, R3 p3) {
-        return p1.cross(p2).dotProduct(p3);
+        return p1.cross(p2).dot(p3);
+    }
+    
+    
+    // STRING HANDLERS
+    
+    @Override
+    public String toString(){ return "("+x+","+y+","+z+")"; }
+    
+
+    public void addToElement(int position, double value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double getElement(int position) {
+        return position==0 ? x : (position==1 ? y : (position==2 ? z : 0));
+    }
+
+    public int getLength() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void multiplyElement(int position, double value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setElement(int position, double value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double dotProduct(InnerProductSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean equals(Coordinate c2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Coordinate copy() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double distanceTo(Coordinate p2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement zero() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement plus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement minus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement translateBy(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public VectorSpaceElement multiplyBy(double d) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
