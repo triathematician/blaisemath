@@ -45,27 +45,49 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean3 v) {
-                g.draw(v.lineSegment(new R3(0,0,0), new R3(6,0,0)));
-                java.awt.geom.Point2D.Double winCenter = v.toWindow(new R3(6,0,0));
-                g.drawString("x",(float)winCenter.x+5,(float)winCenter.y+5);
-                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,6,0)));
-                winCenter = v.toWindow(new R3(0,6,0));
-                g.drawString("y",(float)winCenter.x+5,(float)winCenter.y+5);
-                g.draw(v.lineSegment(new R3(0,0,0), new R3(0,0,6)));   
-                winCenter = v.toWindow(new R3(0,0,6));
-                g.drawString("z",(float)winCenter.x+5,(float)winCenter.y+5);
-                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(6,-6,-6)));
-                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,6,-6)));
-                g.draw(v.lineSegment(new R3(-6,-6,-6), new R3(-6,-6,6)));
-                g.draw(v.lineSegment(new R3(6,-6,-6), new R3(6,6,-6)));
-                g.draw(v.lineSegment(new R3(6,-6,-6), new R3(6,-6,6)));
-                g.draw(v.lineSegment(new R3(-6,6,-6), new R3(6,6,-6)));
-                g.draw(v.lineSegment(new R3(-6,6,-6), new R3(-6,6,6)));
-                g.draw(v.lineSegment(new R3(-6,-6,6), new R3(6,-6,6)));
-                g.draw(v.lineSegment(new R3(-6,-6,6), new R3(-6,6,6)));
-                g.draw(v.lineSegment(new R3(-6,6,6), new R3(6,6,6)));
-                g.draw(v.lineSegment(new R3(6,-6,6), new R3(6,6,6)));
-                g.draw(v.lineSegment(new R3(6,6,-6), new R3(6,6,6)));
+        R3 center = new R3(0,0,0);
+        R3[] axes = { new R3(6,0,0), new R3(0,6,0), new R3(0,0,6) };
+        R3[] box = { new R3(-6,-6,-6), new R3(-6,-6,6), new R3(-6,6,-6), new R3(-6,6,6),  
+                    new R3(6,-6,-6), new R3(6,-6,6), new R3(6,6,-6), new R3(6,6,6) };
+        if (v.proj.stereographic) {            
+            v.drawLineSegmentStereo(g, center, axes[0]);
+            v.drawLineSegmentStereo(g, center, axes[1]);
+            v.drawLineSegmentStereo(g, center, axes[2]);
+            v.drawLineSegmentStereo(g, box[0], box[1]);
+            v.drawLineSegmentStereo(g, box[0], box[2]);
+            v.drawLineSegmentStereo(g, box[0], box[4]);
+            v.drawLineSegmentStereo(g, box[1], box[3]);
+            v.drawLineSegmentStereo(g, box[1], box[5]);
+            v.drawLineSegmentStereo(g, box[2], box[3]);
+            v.drawLineSegmentStereo(g, box[2], box[6]);
+            v.drawLineSegmentStereo(g, box[4], box[5]);
+            v.drawLineSegmentStereo(g, box[4], box[6]);
+            v.drawLineSegmentStereo(g, box[3], box[7]);
+            v.drawLineSegmentStereo(g, box[5], box[7]);
+            v.drawLineSegmentStereo(g, box[6], box[7]);
+        } else {
+            v.drawLineSegment(g, center, axes[0]);
+            v.drawLineSegment(g, center, axes[1]);
+            v.drawLineSegment(g, center, axes[2]);
+            v.drawLineSegment(g, box[0], box[1]);
+            v.drawLineSegment(g, box[0], box[2]);
+            v.drawLineSegment(g, box[0], box[4]);
+            v.drawLineSegment(g, box[1], box[3]);
+            v.drawLineSegment(g, box[1], box[5]);
+            v.drawLineSegment(g, box[2], box[3]);
+            v.drawLineSegment(g, box[2], box[6]);
+            v.drawLineSegment(g, box[4], box[5]);
+            v.drawLineSegment(g, box[4], box[6]);
+            v.drawLineSegment(g, box[3], box[7]);
+            v.drawLineSegment(g, box[5], box[7]);
+            v.drawLineSegment(g, box[6], box[7]);
+        }
+        java.awt.geom.Point2D.Double winCenter = v.toWindow(new R3(6,0,0));
+        g.drawString("x",(float)winCenter.x+5,(float)winCenter.y+5);
+        winCenter = v.toWindow(new R3(0,6,0));
+        g.drawString("y",(float)winCenter.x+5,(float)winCenter.y+5);
+        winCenter = v.toWindow(new R3(0,0,6));
+        g.drawString("z",(float)winCenter.x+5,(float)winCenter.y+5);
         // draws the scene's ellipse
         double sp = v.proj.viewDist.getValue()*v.proj.sceneSize.getValue()/(v.proj.viewDist.getValue()+v.proj.sceneSize.getValue());
         g.draw(v.ellipse(new R2(), v.proj.la * sp, v.proj.lb * sp));

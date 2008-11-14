@@ -5,6 +5,8 @@
 
 package specto.euclidean3;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
@@ -101,6 +103,22 @@ public class Euclidean3 extends Euclidean2 {
         }
     }
 
+    public void drawLineSegment(Graphics2D g,R3 pt1,R3 pt2) {
+        g.draw(lineSegment(pt1,pt2));
+    }
+
+    public void drawLineSegmentStereo(Graphics2D g,R3 pt1,R3 pt2) {
+        try {
+            g.setColor(Color.BLUE);
+            g.draw(lineSegment(proj.getValueLeft(pt1), proj.getValueLeft(pt2)));
+            g.setColor(Color.RED);
+            g.draw(lineSegment(proj.getValueRight(pt1), proj.getValueRight(pt2)));
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     
     
     // MOUSE EVENT HANDLING
@@ -184,7 +202,7 @@ public class Euclidean3 extends Euclidean2 {
         /** Determines whether stereographic projection mode is on. */
         boolean stereographic = true;
         /** Distance from the scene of interest */
-        DoubleRangeModel eyeSep = new DoubleRangeModel(2.0,0.01,20.0,0.02);
+        DoubleRangeModel eyeSep = new DoubleRangeModel(0.5,0.01,5.0,0.02);
         
         /** Central point of interest. */
         R3 center = new R3(0,0,0);

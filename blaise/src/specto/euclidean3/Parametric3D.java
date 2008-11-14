@@ -5,25 +5,18 @@
 
 package specto.euclidean3;
 
-import specto.euclidean2.*;
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import sequor.model.FunctionTreeModel;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.text.NumberFormat;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
-import scio.coordinate.R2;
 import scio.coordinate.R3;
-import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
-import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
-import sequor.style.VisualStyle;
-import specto.Animatable;
 
 /**
  * Draws a parametric function on the plane. In other words, it contains two functions which give the x and y coordinates

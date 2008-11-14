@@ -183,8 +183,8 @@ public class PointSet3D extends Plottable<Euclidean3> implements Animatable<Eucl
         Vector<R2> projPoints = new Vector<R2>();
         try {
             switch (eye) {
-                case 1: projPoints = v.proj.getValueLeft(points); break;
-                case 2: projPoints = v.proj.getValueRight(points); break;
+                case 2: projPoints = v.proj.getValueLeft(points); break;
+                case 1: projPoints = v.proj.getValueRight(points); break;
                 default: projPoints = v.proj.getValue(points);
             }
         } catch (FunctionValueException ex) { }
