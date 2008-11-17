@@ -123,6 +123,7 @@ public class Agent {
     /** Resets before another run of the simulation. */
     public void initStateVariables(){
         setPosition(getX(),getY());
+        active=true;
         tasks.clear();
         pov.clear();
         commpov.clear();

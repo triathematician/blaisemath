@@ -5,7 +5,7 @@
 
 // TODO synchronize timers in the two different plot windows.
 
-package applications;
+    package applications;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import metrics.Valuation;
+import scio.coordinate.R3;
 import sequor.SettingsFactory;
 import simulation.Team;
 import utility.XmlHandler;
@@ -51,13 +52,25 @@ public class PEGPlot extends javax.swing.JFrame {
     /** Creates new form PEGPlot */
     @SuppressWarnings("unchecked")
     public PEGPlot() {
-        initComponents();        
-        simulationPlot.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
+        initComponents();                
+        plot2D1.getVisometry().setBounds(new R2(-70,-70),new R2(70,70));
+        
+        plot3D1.getVisometry().setBounds(new R2(-150,-150),new R2(150,150));
+        plot3D1.getVisometry().setTDir(new R3(-.28,.73,-.623));
+        plot3D1.getVisometry().setNDir(new R3(.9,.436,0));
+        plot3D1.getVisometry().setBDir(new R3(-.272,.561,.779));
+        plot3D1.getVisometry().setSceneSize(100);
+        plot3D1.getVisometry().setViewDist(150);
+        
         metricsPlot.getVisometry().setBounds(new R2(-10,-10),new R2(500,150));
-        metricsPlot.synchronizeTimerWith(simulationPlot);
+        metricsPlot.synchronizeTimerWith(plot2D1);
+        plot3D1.synchronizeTimerWith(plot2D1);
+        
         mainVisuals1.setSim(simulation1);
+        mainVisuals3D1.setSim(simulation1);
         metricVisuals1.setSim(simulation1);
-        simulationPlot.add(mainVisuals1);
+        plot2D1.add(mainVisuals1);
+        plot3D1.add(mainVisuals3D1);
         metricsPlot.add(metricVisuals1);
         metricsPlot.add(metricVisuals1.getLegend(),5,2);
         simulation1.run();
@@ -85,7 +98,11 @@ public class PEGPlot extends javax.swing.JFrame {
         simulation1 = new simulation.Simulation();
         mainVisuals1 = new analysis.MainVisuals();
         metricVisuals1 = new analysis.MetricVisuals();
+        mainVisuals3D1 = new analysis.MainVisuals3D();
         jSplitPane2 = new javax.swing.JSplitPane();
+        mainViewPane = new javax.swing.JTabbedPane();
+        plot2D1 = new specto.euclidean2.Plot2D();
+        plot3D1 = new specto.euclidean3.Plot3D();
         jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         simulationSettingsPanel1 = new applications.SimulationSettingsPanel();
@@ -98,7 +115,6 @@ public class PEGPlot extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         codeWindow = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        simulationPlot = new specto.euclidean2.Plot2D();
         statusBar = new javax.swing.JPanel();
         statusText = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
@@ -142,6 +158,39 @@ public class PEGPlot extends javax.swing.JFrame {
         setTitle("Pursuit-Evasion Games");
 
         jSplitPane2.setDividerLocation(450);
+
+        plot2D1.setAxisStyle(1);
+
+        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
+        plot2D1.setLayout(plot2D1Layout);
+        plot2D1Layout.setHorizontalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 469, Short.MAX_VALUE)
+        );
+        plot2D1Layout.setVerticalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 447, Short.MAX_VALUE)
+        );
+
+        mainViewPane.addTab("2D View", plot2D1);
+
+        plot3D1.setZLabel("time");
+        plot3D1.setAxisStyle(3);
+
+        javax.swing.GroupLayout plot3D1Layout = new javax.swing.GroupLayout(plot3D1);
+        plot3D1.setLayout(plot3D1Layout);
+        plot3D1Layout.setHorizontalGroup(
+            plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 469, Short.MAX_VALUE)
+        );
+        plot3D1Layout.setVerticalGroup(
+            plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 447, Short.MAX_VALUE)
+        );
+
+        mainViewPane.addTab("3D View", plot3D1);
+
+        jSplitPane2.setRightComponent(mainViewPane);
 
         jSplitPane1.setDividerLocation(300);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -208,21 +257,6 @@ public class PEGPlot extends javax.swing.JFrame {
         );
 
         jSplitPane2.setLeftComponent(jPanel1);
-
-        simulationPlot.setAxisStyle(1);
-
-        javax.swing.GroupLayout simulationPlotLayout = new javax.swing.GroupLayout(simulationPlot);
-        simulationPlot.setLayout(simulationPlotLayout);
-        simulationPlotLayout.setHorizontalGroup(
-            simulationPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
-        );
-        simulationPlotLayout.setVerticalGroup(
-            simulationPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        jSplitPane2.setRightComponent(simulationPlot);
 
         getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
@@ -450,14 +484,16 @@ private void success(){
 private void simulation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulation1ActionPerformed
     //System.out.println("pegplot action performed: "+evt.getActionCommand());
     if(evt.getActionCommand().equals("redraw")){
-        simulationPlot.repaint();
+        plot2D1.repaint();
+        plot3D1.repaint();
         metricsPlot.repaint();
         simulationSettingsPanel1.repaint();
     }
     // simulation has changed in some fundamental way
     else if(evt.getActionCommand().equals("reset")){
         statusText.setText("Resetting simulation...");
-        simulationPlot.rebuildOptionsMenu();
+        plot2D1.rebuildOptionsMenu();
+        plot3D1.rebuildOptionsMenu();
         metricsPlot.rebuildOptionsMenu();
         simulationSettingsPanel1.setTree(simulation1.ss);
     }
@@ -512,7 +548,7 @@ private void startingPositionsButtonActionPerformed(java.awt.event.ActionEvent e
 }//GEN-LAST:event_startingPositionsButtonActionPerformed
 
 private void animateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_animateMenuItemActionPerformed
-    simulationPlot.getTimer().start();
+    plot2D1.getTimer().start();    
 }//GEN-LAST:event_animateMenuItemActionPerformed
 
 private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
@@ -524,13 +560,15 @@ private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
                 statusText.setText("Opening: " + file.getName() + ".");
                 simulation1 = XmlHandler.unmarshal(file);
                 mainVisuals1.setSim(simulation1);
+                mainVisuals3D1.setSim(simulation1);
                 metricVisuals1.setSim(simulation1);        
                 simulation1.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) { simulation1ActionPerformed(evt); }
                 });
                 simulation1.run();
                 simulationComboBox.setModel(new ComboBoxEditor(simulation1.getGameTypeModel()));
-                simulationPlot.rebuildOptionsMenu();
+                plot2D1.rebuildOptionsMenu();
+                plot3D1.rebuildOptionsMenu();
                 metricsPlot.rebuildOptionsMenu();
                 simulationSettingsPanel1.setTree(simulation1.ss);
             } catch (JAXBException ex) {
@@ -606,7 +644,9 @@ private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTextArea logWindow;
+    private javax.swing.JTabbedPane mainViewPane;
     private analysis.MainVisuals mainVisuals1;
+    private analysis.MainVisuals3D mainVisuals3D1;
     private javax.swing.ButtonGroup menuSimModeGroup;
     private analysis.MetricVisuals metricVisuals1;
     private specto.euclidean2.Plot2D metricsPlot;
@@ -614,6 +654,8 @@ private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private sequor.model.IntegerRangeModel numBatchRunsModel;
     private javax.swing.JSpinner numBatchRunsSpinner;
     private javax.swing.JMenuItem openMenuItem;
+    private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean3.Plot3D plot3D1;
     private javax.swing.JMenuItem quitMenuItem;
     private javax.swing.JButton randomizeButton;
     private javax.swing.JMenuItem randomizeMenuItem;
@@ -622,7 +664,6 @@ private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private simulation.Simulation simulation1;
     private javax.swing.JComboBox simulationComboBox;
     private javax.swing.JMenu simulationMenu;
-    private specto.euclidean2.Plot2D simulationPlot;
     private applications.SimulationSettingsPanel simulationSettingsPanel1;
     private javax.swing.JButton startingPositionsButton;
     private javax.swing.JPanel statusBar;

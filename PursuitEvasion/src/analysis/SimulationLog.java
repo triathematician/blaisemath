@@ -8,6 +8,7 @@ package analysis;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import scio.coordinate.R3;
 import scio.function.FunctionValueException;
 import utility.*;
 import java.awt.Color;
@@ -42,10 +43,12 @@ public class SimulationLog extends FiresChangeEvents {
     Simulation sim;
     
     HashMap<Agent,Vector<R2>> agentPaths;
+    HashMap<Agent,Vector<R3>> agentPaths3D;
     HashMap<Valuation,Vector<R2>> teamMetrics;
     HashMap<Valuation,Vector<R2>> partialTeamMetrics;
     Vector<SignificantEvent> significantEvents;
     Vector<R2> capturePoints;
+    Vector<R3> capturePoints3D;
         
     
     // CONSTRUCTORS
@@ -78,6 +81,11 @@ public class SimulationLog extends FiresChangeEvents {
         return agentPaths.get(a);
     }
     
+    /** Returns path of a particular agent with time coordinate. */
+    Vector<R3> path3DOf(Agent a) {
+        return agentPaths3D.get(a);
+    }
+    
     // OTHER METHODS    
         
     /** Called when the simulation is first initialized ONLY. */
@@ -91,10 +99,13 @@ public class SimulationLog extends FiresChangeEvents {
         partialTeamMetrics = new HashMap<Valuation,Vector<R2>>();
         significantEvents=new Vector<SignificantEvent>();        
         agentPaths=new HashMap<Agent,Vector<R2>>();
+        agentPaths3D=new HashMap<Agent,Vector<R3>>();
         capturePoints=new Vector<R2>();
+        capturePoints3D=new Vector<R3>();
         for(Team t:s.getTeams()){
             for(Agent a:t.agents){
                 agentPaths.put(a,new Vector<R2>(s.getNumSteps()));
+                agentPaths3D.put(a,new Vector<R3>(s.getNumSteps()));
             }
             for(Valuation v:t.metrics){
                 teamMetrics.put(v,new Vector<R2>(s.getNumSteps()));
@@ -111,9 +122,11 @@ public class SimulationLog extends FiresChangeEvents {
     public void initializeNumbersOnly(){
         // preRun agent path vectors, since the number of players may change
         agentPaths.clear();
+        agentPaths3D.clear();
         for(Team t:sim.getTeams()){
             for(Agent a:t.agents){
                 agentPaths.put(a,new Vector<R2>(sim.getNumSteps()));
+                agentPaths3D.put(a,new Vector<R3>(sim.getNumSteps()));
             }
             for(Valuation v:t.metrics){
                 if(teamMetrics.get(v)==null){
@@ -135,17 +148,22 @@ public class SimulationLog extends FiresChangeEvents {
     /** Called when the simulation is run again with the same teams. */
     public void preRun(){
         for(Vector<R2> vv:agentPaths.values()){vv.clear();}
+        for(Vector<R3> vv:agentPaths3D.values()){vv.clear();}
         for(Vector<R2> vv:teamMetrics.values()){vv.clear();}
         for(Vector<R2> vv:partialTeamMetrics.values()){vv.clear();}
         significantEvents.clear();
         capturePoints.clear();
+        capturePoints3D.clear();
         logAll(0,null);
     }
     
     /** Goes through all agents/teams in list and logs desired values. */
     public void logAll(int timeStep,DistanceTable dt){
         for(Agent a:agentPaths.keySet()){
-            agentPaths.get(a).add(new R2(a.getPosition()));
+            agentPaths.get(a).add(new R2(a.loc.x,a.loc.y));
+            if(timeStep==0 || a.isActive()) {
+                agentPaths3D.get(a).add(new R3(a.loc.x,a.loc.y,timeStep*sim.getStepTime()));
+            }
         }
         if(dt!=null){
             for(Valuation v:teamMetrics.keySet()){
@@ -168,6 +186,7 @@ public class SimulationLog extends FiresChangeEvents {
     public void logCaptureEvent(Team owner, Agent first, Team target, Agent second, String string, DistanceTable dt, double time) {
         logEvent(owner, first, target, second, string, time);
         capturePoints.add(new R2(second.loc));
+        capturePoints3D.add(new R3(second.loc.x,second.loc.y,time));
     }
     
     /** Called after the simulation is completed. */
