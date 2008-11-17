@@ -11,7 +11,10 @@ import javax.swing.event.ChangeEvent;
 import sequor.component.RangeTimer;
 
 /**
- * AnimationControl is ...
+ * <p>
+ * AnimationControl is a collection of buttons that can be used to run the default
+ * animation for a plot window.
+ * </p>
  * @author Elisha Peterson
  */
 public class AnimationControl extends ButtonBox {

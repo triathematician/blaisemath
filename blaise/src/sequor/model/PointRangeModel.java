@@ -42,6 +42,9 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
         setTo(point);
     }
     public PointRangeModel(R2 point,double range){this(point,-range,-range,range,range);}
+    public PointRangeModel(double uMin, double uMax, double vMin, double vMax) {
+        this(new DoubleRangeModel(uMin, uMax), new DoubleRangeModel(vMin, vMax) );
+    }
 
 
     private void initializeModels(){

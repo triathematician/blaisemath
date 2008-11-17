@@ -122,8 +122,8 @@ public class VisualButton extends VisualControl {
     @Override
     public void mouseReleased(MouseEvent e){
         pressed=false;
-        fireStateChanged();
         fireActionPerformed(actionCommand);
+        fireStateChanged();
     }
     
     

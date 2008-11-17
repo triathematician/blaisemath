@@ -6,6 +6,7 @@
 package specto.euclidean2;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import scio.function.FunctionValueException;
 import java.awt.Graphics2D;
@@ -14,9 +15,12 @@ import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
+import sequor.model.BooleanModel;
+import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import sequor.style.VisualStyle;
 import specto.Decoration;
+import specto.style.LineStyle;
 
 /**
  * Represents a solution curve to a differential equation. Visually consists of an initial point,
@@ -56,6 +60,20 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
 
     public void setParent(VectorField2D parent) {this.parent=parent;}
     public VectorField2D getParent() {return parent;}
+
+    public DESolution2D() {
+    }
+    
+    
+    // COMPUTING AND VISUALIZING
+    
+    /** Determines whether to use a box visualization of the solution. */
+    BooleanModel useBox = new BooleanModel(true);
+    /** Separation for the box solution. */
+    DoubleRangeModel boxSep = new DoubleRangeModel(.2,.001,5);
+    /** Solution curves for the box visualization of the solution. */
+    Vector<Vector<R2>> boxSolutions;
+    
     
     /** Initializes solution curve models. */
     void initSolutionCurves(){
@@ -67,8 +85,97 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
             reversePath.style.setValue(PointSet2D.DOTTED);
         }
         path.getPath().clear();
-        reversePath.getPath().clear();
+        reversePath.getPath().clear();    
     }
+
+    @Override
+    public void recompute(Euclidean2 v) {
+        R2 pt = getPoint();
+        BoundedFunction<R2,R2> fn = parent.getFunction();
+        try {
+            initSolutionCurves();
+            switch(algorithm){
+                case ALGORITHM_RUNGE_KUTTA:
+                    path.setPath(calcRungeKutta4(fn,pt,500,.04));
+                    reversePath.setPath(calcRungeKutta4(fn,pt,500,-.04));
+                    break;
+                case ALGORITHM_NEWTON:
+                default:
+                    path.setPath(calcNewton(fn,pt,500,.04));
+                    reversePath.setPath(calcNewton(fn,pt,500,-.04));
+                    break;
+            }
+            if (useBox.isTrue()) {
+                boxSolutions = new Vector<Vector<R2>>();
+                double sep = boxSep.getValue();
+                R2[] corner = {pt.plus(sep,sep), pt.plus(-sep,sep), pt.plus(-sep,-sep), pt.plus(sep,-sep)};
+                switch(algorithm){
+                    case ALGORITHM_RUNGE_KUTTA:
+                        for(int i=0;i<4;i++){
+                            boxSolutions.add(calcRungeKutta4(fn,corner[i],500,.04));
+                        }
+                        break;
+                    case ALGORITHM_NEWTON:
+                    default:
+                        for(int i=0;i<4;i++){
+                            boxSolutions.add(calcNewton(fn,corner[i],500,.04));
+                        }
+                        break;
+                }
+            } 
+        } catch (FunctionValueException ex) {}
+    }
+    
+    @Override
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
+        if(path!=null){path.paintComponent(g,v);}
+        if(showReverse&&reversePath!=null){
+            g.setComposite(VisualStyle.COMPOSITE2);
+            reversePath.paintComponent(g,v);
+            g.setComposite(AlphaComposite.SrcOver);
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
+        if(path!=null){path.paintComponent(g,v,t);}
+        if(useBox.isTrue()) {
+            int pos=t.getCurrentIntValue();
+            int posB=pos<0?0:(pos>=boxSolutions.get(0).size()?boxSolutions.get(0).size()-1:pos);
+            Vector<R2> rect = new Vector<R2>();
+            for (int i = 0; i < 4; i++) {
+                rect.add(boxSolutions.get(i).get(posB));
+            }
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.setColor(Color.YELLOW);
+            g.fill(v.closedPath(rect));
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(1.0f));
+            g.draw(v.closedPath(rect));
+            g.setComposite(AlphaComposite.SrcOver);
+        } else {
+            if(showReverse&&reversePath!=null){
+                g.setComposite(VisualStyle.COMPOSITE2);
+                reversePath.paintComponent(g,v,t);
+                g.setComposite(AlphaComposite.SrcOver);
+            }
+        }
+    }
+
+    // STYLE PARAMETERS
+
+    int algorithm=ALGORITHM_RUNGE_KUTTA;
+    public static final int ALGORITHM_NEWTON=0;
+    public static final int ALGORITHM_RUNGE_KUTTA=1;
+    
+    @Override
+    public String toString(){
+        return "DE Solution Curve "+(algorithm==1?"(RK)":"(Newton)");
+    }
+    
+    
+    
+    // STATIC METHODS FOR DE SOLVING    
     
     /** Re-calculates the solution curves, using Newton's Method.
      * @param steps     The number of iterations.
@@ -128,51 +235,4 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     public static R2 getMultipliedVector(BoundedFunction<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
     }
-    
-    @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v) {
-        if(path!=null){path.paintComponent(g,v);}
-        if(showReverse&&reversePath!=null){
-            g.setComposite(VisualStyle.COMPOSITE2);
-            reversePath.paintComponent(g,v);
-            g.setComposite(AlphaComposite.SrcOver);
-        }
-    }
-
-    @Override
-    public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
-        if(path!=null){path.paintComponent(g,v,t);}
-        if(showReverse&&reversePath!=null){
-            g.setComposite(VisualStyle.COMPOSITE2);
-            reversePath.paintComponent(g,v,t);
-            g.setComposite(AlphaComposite.SrcOver);
-        }
-    }
-
-    @Override
-    public void recompute(Euclidean2 v) {
-        try {
-            initSolutionCurves();
-            switch(algorithm){
-                case ALGORITHM_RUNGE_KUTTA:
-                    path.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,.04));
-                    reversePath.setPath(calcRungeKutta4(parent.getFunction(),getPoint(),500,-.04));
-                    break;
-                case ALGORITHM_NEWTON:
-                default:
-                    path.setPath(calcNewton(parent.getFunction(),getPoint(),500,.04));
-                    reversePath.setPath(calcNewton(parent.getFunction(),getPoint(),500,-.04));
-                    break;
-            }
-        } catch (FunctionValueException ex) {}
-    }
-
-    // STYLE PARAMETERS
-
-    int algorithm=ALGORITHM_NEWTON;
-    public static final int ALGORITHM_NEWTON=0;
-    public static final int ALGORITHM_RUNGE_KUTTA=1;
-    
-    @Override
-    public String toString(){return "DE Solution Curve";}
 }

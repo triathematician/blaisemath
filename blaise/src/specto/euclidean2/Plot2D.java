@@ -8,11 +8,7 @@ package specto.euclidean2;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.TransferHandler;
-import scribo.parser.FunctionSyntaxException;
-import scribo.tree.FunctionTreeRoot;
 import specto.PlotPanel;
 
 /**

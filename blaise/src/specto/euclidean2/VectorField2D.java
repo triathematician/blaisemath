@@ -303,9 +303,15 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     // DECORATIONS
     
-    /** Returns solution to differential equation at a given point. */
+    /** Returns solution to differential equation at a default initial point. */
     public DESolution2D getFlowCurve() { return new DESolution2D(this); }
-    public DESolution2D getFlowCurve(PointRangeModel initialPoint) { return new DESolution2D(initialPoint, this); }
+    
+    /** Returns solution to differential equation at a given initial point. */
+    public DESolution2D getFlowCurve(PointRangeModel initialPoint) { 
+        return new DESolution2D(initialPoint, this); 
+    }
+    
+    /** Returns a plottable function representing the divergence of this vector field. */
     public PlaneFunction2D getDivergence() {
         final PlaneFunction2D result = new PlaneFunction2D(getDivergence(xFunction, yFunction));
         ChangeListener cl = new ChangeListener() {
@@ -319,6 +325,8 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         result.name="Divergence";
         return result;
     }
+    
+    /** Returns a plottable function representing the (scalar) curl of this vector field... the z component of the curl */
     public PlaneFunction2D getScalarCurl() { 
         final PlaneFunction2D result = new PlaneFunction2D(getScalarCurl(xFunction, yFunction));
         ChangeListener cl = new ChangeListener() {
@@ -333,9 +341,10 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         return result;
     }
     
-    // ADDONS
     
-    /** Returns divergence of this field. */
+    // STATIC METHODS
+    
+    /** Returns divergence of the specified vector field. */
     public static BoundedFunction<R2, Double> getDivergence(final FunctionTreeModel fx, final FunctionTreeModel fy) {
         return new BoundedFunction<R2, Double> () {
             String[] vars = {"x", "y"};
@@ -357,7 +366,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         };
     }
     
-    /** Returns curl of this field. */
+    /** Returns curl of the specified vector field. */
     public static BoundedFunction<R2, Double> getScalarCurl(final FunctionTreeModel fx, final FunctionTreeModel fy) {
         return new BoundedFunction<R2, Double> () {
             String[] vars = {"x", "y"};

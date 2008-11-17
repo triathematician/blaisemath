@@ -30,6 +30,12 @@ public class ButtonBox extends VisualControlGroup {
     
     // CONSTRUCTORS
     
+    /** Intializes to defaults. */
+    public ButtonBox(){
+        super(10,10,10,10);
+        adjustBounds();
+        initStyle();
+    }    
     /** Intializes to size which depends on given button size. */
     public ButtonBox(int x,int y,int size){
         super(x,y,10,10);
@@ -98,6 +104,7 @@ public class ButtonBox extends VisualControlGroup {
         VisualButton vb=(VisualButton)vc;
         vb.setSize(buttonSize);
         super.add(vc);
+        adjustBounds();
     }
     
 
@@ -159,11 +166,11 @@ public class ButtonBox extends VisualControlGroup {
     
     // LAYOUT OPTIONS
     
-    StringRangeModel layoutType;
     public static final int LAYOUT_BOX=0;
     public static final int LAYOUT_HLINE=1;
     public static final int LAYOUT_VLINE=2;
     public static String[] layoutStrings={"Box","Horizontal","Vertical"};
+    StringRangeModel layoutType = new StringRangeModel(layoutStrings);
     public StringRangeModel getLayoutModel(){return layoutType;}
     public void setOrientation(int newOrientation){layoutType.setValue(newOrientation);}
     

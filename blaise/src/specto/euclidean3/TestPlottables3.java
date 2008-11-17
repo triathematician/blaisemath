@@ -7,9 +7,8 @@ package specto.euclidean3;
  */
 
 
-import javax.swing.event.ChangeEvent;
 import specto.euclidean3.VectorField3D;
-import specto.euclidean3.PlaneFunction3D;
+import specto.euclidean3.Function3D;
 import specto.euclidean3.DESolution3D;
 import sequor.control.SliderBox;
 
@@ -23,8 +22,9 @@ public class TestPlottables3 extends javax.swing.JFrame {
     public TestPlottables3() {
         initComponents();
         
-        PlaneFunction3D pf = new PlaneFunction3D();
-        defaultPlot.add(pf);
+        defaultPlot.add(new Function3D());
+        defaultPlot.add(new ParametricCurve3D());
+        defaultPlot.add(new ParametricSurface3D());
         defaultPlot.add(SliderBox.getStyleAdjusters(100,10,15,defaultPlot.getPlottables(),defaultPlot));
         
         VectorField3D vf3 = new VectorField3D();

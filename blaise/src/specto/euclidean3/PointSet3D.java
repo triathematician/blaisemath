@@ -80,20 +80,12 @@ public class PointSet3D extends Plottable<Euclidean3> implements Animatable<Eucl
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v){  
-        if(v.proj.stereographic){ g.setComposite(VisualStyle.COMPOSITE5); }
         if(points==null || points.size()==0){return;}
         g.setStroke(strokes[style.getValue()]);
         if(style.getValue().equals(POINTS_ONLY)){
-            for(int i=0;i<points.size();i++){ g.fill(drawDot(v,i)); }
+            for(int i=0;i<points.size();i++){ drawDot(g,v,i); }
         } else {
-            if (! v.proj.stereographic) {
-                g.draw(drawPath(v,0,points.size(),0));
-            } else {
-                g.setColor(Color.RED);
-                g.draw(drawPath(v,0,points.size(),1));
-                g.setColor(Color.BLUE);
-                g.draw(drawPath(v,0,points.size(),2));                
-            }
+            drawPath(g,v,0,points.size());
         }
         if(label!=null){
             java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
@@ -104,62 +96,30 @@ public class PointSet3D extends Plottable<Euclidean3> implements Animatable<Eucl
     }
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v,RangeTimer t){
-        if(v.proj.stereographic){ g.setComposite(VisualStyle.COMPOSITE5); }
         if(points==null || points.size()==0){return;}
         if(style.getValue().equals(POINTS_ONLY)){
-            for(int i=0;i<points.size();i++){ g.fill(drawDot(v,i)); }
+            for(int i=0;i<points.size();i++){ drawDot(g,v,i); }
         } else {
             int curVal=t.getCurrentIntValue();
             g.setStroke(strokes[style.getValue()]);
-            if (! v.proj.stereographic) {
-                switch(animateStyle.getValue()){
-                    case ANIMATE_DRAW:
-                        g.draw(drawPath(v,t.getFirstIntValue(),curVal,0));
-                        break;
-                    case ANIMATE_DOT:
-                        g.fill(drawDot(v,curVal));
-                        break;
-                    case ANIMATE_TRACE:
-                        g.draw(drawPath(v,0,points.size(),0));
-                        g.fill(drawDot(v,curVal));
-                        break;
-                    case ANIMATE_TRAIL:
-                    default:
-                        g.draw(drawPath(v,0,curVal,0));
-                        g.draw(drawPath(v,curVal-5,curVal,0));
-                        g.fill(drawDot(v,curVal));
-                        break;
-                }  
-            } else {
-                switch(animateStyle.getValue()){
-                    case ANIMATE_DRAW:
-                        g.setColor(Color.RED);
-                        g.draw(drawPath(v,t.getFirstIntValue(),curVal,1));
-                        g.setColor(Color.BLUE);
-                        g.draw(drawPath(v,t.getFirstIntValue(),curVal,2));
-                        break;
-                    case ANIMATE_DOT:
-                        g.fill(drawDot(v,curVal));
-                        break;
-                    case ANIMATE_TRACE:
-                        g.setColor(Color.RED);
-                        g.draw(drawPath(v,0,points.size(),1));
-                        g.setColor(Color.BLUE);
-                        g.draw(drawPath(v,0,points.size(),2));
-                        g.fill(drawDot(v,curVal));
-                        break;
-                    case ANIMATE_TRAIL:
-                    default:
-                        g.setColor(Color.RED);
-                        g.draw(drawPath(v,0,curVal,1));
-                        g.draw(drawPath(v,curVal-5,curVal,1));
-                        g.setColor(Color.BLUE);
-                        g.draw(drawPath(v,0,curVal,2));
-                        g.draw(drawPath(v,curVal-5,curVal,2));
-                        g.fill(drawDot(v,curVal));
-                        break;
-                }  
-            }
+            switch(animateStyle.getValue()){
+                case ANIMATE_DRAW:
+                    drawPath(g,v,t.getFirstIntValue(),curVal);
+                    break;
+                case ANIMATE_DOT:
+                    drawDot(g,v,curVal);
+                    break;
+                case ANIMATE_TRACE:
+                    drawPath(g,v,0,points.size());
+                    drawDot(g,v,curVal);
+                    break;
+                case ANIMATE_TRAIL:
+                default:
+                    drawPath(g,v,0,curVal);
+                    drawPath(g,v,curVal-5,curVal);
+                    drawDot(g,v,curVal);
+                    break;
+            }  
             if (curVal >= points.size()) { curVal = points.size() - 1; }
             java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
             g.setComposite(VisualStyle.COMPOSITE5);
@@ -174,17 +134,31 @@ public class PointSet3D extends Plottable<Euclidean3> implements Animatable<Eucl
         g.setComposite(AlphaComposite.SrcOver);  
     }
     
-    public Shape drawDot(Euclidean3 v,int pos){
+    /** Draws dot at given position. */
+    public void drawDot(Graphics2D g, Euclidean3 v, int pos){
         int posB=pos<0?0:(pos>=points.size()?points.size()-1:pos);
-        return v.dot(points.get(posB),3.0);
+        v.fillDot(g,points.get(posB),3.0);
+    }
+        
+    /** Draws path as either stereographic image or regular, between given start and end location*/
+    public void drawPath(Graphics2D g, Euclidean3 v, int start, int end){
+        if (v.isStereo()){
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.setColor(v.leftColor);
+            g.draw(drawPath(v, start, end, 1));
+            g.setColor(v.rightColor);
+            g.draw(drawPath(v, start, end, 2));
+        } else {
+            g.draw(drawPath(v, start, end, 0));
+        }
     }
         
     public Path2D.Double drawPath(Euclidean3 v,int start,int end,int eye){
         Vector<R2> projPoints = new Vector<R2>();
         try {
             switch (eye) {
-                case 2: projPoints = v.proj.getValueLeft(points); break;
-                case 1: projPoints = v.proj.getValueRight(points); break;
+                case 1: projPoints = v.proj.getValueLeft(points); break;
+                case 2: projPoints = v.proj.getValueRight(points); break;
                 default: projPoints = v.proj.getValue(points);
             }
         } catch (FunctionValueException ex) { }

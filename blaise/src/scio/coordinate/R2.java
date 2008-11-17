@@ -41,7 +41,9 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public double magnitudeSq(){return x*x+y*y;}
     public double angle(){return (x<0?Math.PI:0)+Math.atan(y/x);}
     public R2 plus(R2 b){return new R2(x+b.x,y+b.y);}
+    public R2 plus(double bx, double by){return new R2(x+bx,y+by);}
     public R2 minus(R2 b){return new R2(x-b.x,y-b.y);}
+    public R2 minus(double bx, double by){return new R2(x-bx,y-by);}
     public R2 times(double m){return new R2(m*x,m*y);}
     public R2 toXY(){return new R2(x*Math.cos(y),y*Math.sin(y));}
     public R2 toRTheta(){return new R2(magnitude(),angle());}

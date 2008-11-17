@@ -6,13 +6,15 @@
 package sequor.control;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.*;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import sequor.model.BooleanModel;
+import specto.euclidean3.Euclidean3;
 
-// TODO use a BooleanModel to store the "on/off" status of this button.
 /**     Changes to this status should force changes to "pressed"
  *      Changes to this status should lead to firing an ActionCommand
  *      Write in beans for the BooleanModel
@@ -42,10 +44,33 @@ public class ToggleButton extends VisualButton {
         super(shape);
         setForeground(c);
         state=new BooleanModel(status);
-        initEventListening();        
+        pressed=status;
+        actionCommand="toggle";  
+        initEventListening();      
+    }
+    public ToggleButton(BooleanModel state, BoundedShape shape) {
+        super(shape);
+        this.state = state;
+        pressed = state.getValue();
+        initEventListening();
     }
     public ToggleButton(String actionCommand,ActionListener al,BoundedShape shape){
         super(actionCommand,al,shape);
+        state=new BooleanModel(false);
+        pressed=false;
+        initEventListening();     
+    }
+    public ToggleButton(boolean status,String actionCommand,ActionListener al,BoundedShape shape){
+        super(actionCommand,al,shape);
+        state=new BooleanModel(status);
+        pressed=status;
+        initEventListening();     
+    }
+    public ToggleButton(BooleanModel stereo, String actionCommand,ActionListener al,BoundedShape shape) {
+        super(actionCommand,al,shape);
+        state=stereo;
+        pressed=stereo.getValue();
+        initEventListening();     
     }
     
     
@@ -53,8 +78,11 @@ public class ToggleButton extends VisualButton {
     
     /** Initializes event listeneing. */    
     public void initEventListening(){
-        state.addChangeListener(this);
-        actionCommand="toggle";
+        state.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                pressed = state.getValue();
+            }
+        });
         addActionListener(state.getToggleListener());
     }
 
@@ -64,28 +92,16 @@ public class ToggleButton extends VisualButton {
     public BooleanModel getModel(){return state;}
     
     
-    // EVENT HANDLING
-    
-    /** Called if underyling state is changed. */
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        pressed=state.isTrue();
-        super.stateChanged(e);
-    }
-    
-    
-    // MOUSE HANDLING
-
-    @Override
-    public void mouseClicked(MouseEvent e){}    
+    // ADJUST MOUSE PRESS HIGHLIGHTING BEHAVIOR
+        
     @Override
     public void mousePressed(MouseEvent e){
-        if(clicked(e)){
-            fireStateChanged();
-        }
+        if(clicked(e)){ fireStateChanged(); }
     }
+    
     @Override
     public void mouseReleased(MouseEvent e){
         fireActionPerformed(actionCommand);
+        fireStateChanged();
     }
 }

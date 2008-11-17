@@ -83,6 +83,7 @@ public class VisualStyle {
     public static final Composite COMPOSITE5=getComposite(0.5f);
     public static final Composite COMPOSITE2=getComposite(0.2f);
     public static final Composite COMPOSITE1=getComposite(0.1f);
+    public static final Composite COMPOSITE05=getComposite(0.05f);
     
     public static Composite getComposite(float f){return AlphaComposite.getInstance(AlphaComposite.SRC_OVER,f);}
     

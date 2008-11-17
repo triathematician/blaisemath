@@ -9,11 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import scio.coordinate.R2;
 import scio.coordinate.R3;
-import scio.function.FunctionValueException;
 import specto.DynamicPlottable;
 
 /**
@@ -45,70 +41,78 @@ public class Axes3D extends DynamicPlottable<Euclidean3> {
     
     @Override
     public void paintComponent(Graphics2D g, Euclidean3 v) {
-        R3 center = new R3(0,0,0);
-        R3[] axes = { new R3(6,0,0), new R3(0,6,0), new R3(0,0,6) };
-        R3[] box = { new R3(-6,-6,-6), new R3(-6,-6,6), new R3(-6,6,-6), new R3(-6,6,6),  
-                    new R3(6,-6,-6), new R3(6,-6,6), new R3(6,6,-6), new R3(6,6,6) };
-        if (v.proj.stereographic) {            
-            v.drawLineSegmentStereo(g, center, axes[0]);
-            v.drawLineSegmentStereo(g, center, axes[1]);
-            v.drawLineSegmentStereo(g, center, axes[2]);
-            v.drawLineSegmentStereo(g, box[0], box[1]);
-            v.drawLineSegmentStereo(g, box[0], box[2]);
-            v.drawLineSegmentStereo(g, box[0], box[4]);
-            v.drawLineSegmentStereo(g, box[1], box[3]);
-            v.drawLineSegmentStereo(g, box[1], box[5]);
-            v.drawLineSegmentStereo(g, box[2], box[3]);
-            v.drawLineSegmentStereo(g, box[2], box[6]);
-            v.drawLineSegmentStereo(g, box[4], box[5]);
-            v.drawLineSegmentStereo(g, box[4], box[6]);
-            v.drawLineSegmentStereo(g, box[3], box[7]);
-            v.drawLineSegmentStereo(g, box[5], box[7]);
-            v.drawLineSegmentStereo(g, box[6], box[7]);
-        } else {
-            v.drawLineSegment(g, center, axes[0]);
-            v.drawLineSegment(g, center, axes[1]);
-            v.drawLineSegment(g, center, axes[2]);
-            v.drawLineSegment(g, box[0], box[1]);
-            v.drawLineSegment(g, box[0], box[2]);
-            v.drawLineSegment(g, box[0], box[4]);
-            v.drawLineSegment(g, box[1], box[3]);
-            v.drawLineSegment(g, box[1], box[5]);
-            v.drawLineSegment(g, box[2], box[3]);
-            v.drawLineSegment(g, box[2], box[6]);
-            v.drawLineSegment(g, box[4], box[5]);
-            v.drawLineSegment(g, box[4], box[6]);
-            v.drawLineSegment(g, box[3], box[7]);
-            v.drawLineSegment(g, box[5], box[7]);
-            v.drawLineSegment(g, box[6], box[7]);
+        R3 center = v.getCenter();
+        double wid = v.getSceneSize();
+        R3[] axes = { center.plus(wid,0,0), center.plus(0,wid,0), center.plus(0,0,wid) };
+        R3[] axes2 = { center.plus(-wid,0,0), center.plus(0,-wid,0), center.plus(0,0,-wid) };
+        switch (style.getValue()){
+            case AXES_BOX:
+                R3[] box = { center.plus(-wid,-wid,-wid), center.plus(-wid,-wid,wid), center.plus(-wid,wid,-wid), center.plus(-wid,wid,wid),  
+                            center.plus(wid,-wid,-wid), center.plus(wid,-wid,wid), center.plus(wid,wid,-wid), center.plus(wid,wid,wid) };
+                v.drawLineSegment(g, box[0], box[1]);
+                v.drawLineSegment(g, box[0], box[2]);
+                v.drawLineSegment(g, box[0], box[4]);
+                v.drawLineSegment(g, box[1], box[3]);
+                v.drawLineSegment(g, box[1], box[5]);
+                v.drawLineSegment(g, box[2], box[3]);
+                v.drawLineSegment(g, box[2], box[6]);
+                v.drawLineSegment(g, box[4], box[5]);
+                v.drawLineSegment(g, box[4], box[6]);
+                v.drawLineSegment(g, box[3], box[7]);
+                v.drawLineSegment(g, box[5], box[7]);
+                v.drawLineSegment(g, box[6], box[7]);
+                break;
+            case AXES_OCTANT:
+                v.drawLineSegment(g, center, axes[0]);
+                v.drawLineSegment(g, center, axes[1]);
+                v.drawLineSegment(g, center, axes[2]);
+                break;
+            case AXES_TOPHALF:
+                v.drawLineSegment(g, axes2[0], axes[0]);
+                v.drawLineSegment(g, axes2[1], axes[1]);
+                v.drawLineSegment(g, center, axes[2]);
+                break;
+            case AXES_STANDARD:
+            default:
+                v.drawLineSegment(g, axes2[0], axes[0]);
+                v.drawLineSegment(g, axes2[1], axes[1]);
+                v.drawLineSegment(g, axes2[2], axes[2]);
+                break;
         }
-        java.awt.geom.Point2D.Double winCenter = v.toWindow(new R3(6,0,0));
-        g.drawString("x",(float)winCenter.x+5,(float)winCenter.y+5);
-        winCenter = v.toWindow(new R3(0,6,0));
-        g.drawString("y",(float)winCenter.x+5,(float)winCenter.y+5);
-        winCenter = v.toWindow(new R3(0,0,6));
-        g.drawString("z",(float)winCenter.x+5,(float)winCenter.y+5);
-        // draws the scene's ellipse
-        double sp = v.proj.viewDist.getValue()*v.proj.sceneSize.getValue()/(v.proj.viewDist.getValue()+v.proj.sceneSize.getValue());
-        g.draw(v.ellipse(new R2(), v.proj.la * sp, v.proj.lb * sp));
-        try {
-            g.draw(v.dot(v.proj.getValue(new R3(v.proj.sceneSize.getValue(), 0, 0)), 5));
-            g.draw(v.dot(v.proj.getValue(new R3(0, v.proj.sceneSize.getValue(), 0)), 5));
-            g.draw(v.dot(v.proj.getValue(new R3(0, 0, v.proj.sceneSize.getValue() )), 5));
-        } catch (FunctionValueException ex) {
-            Logger.getLogger(Axes3D.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        java.awt.geom.Point2D.Double winCenter = v.toWindow(axes[0]);
+        g.drawString(xLabel,(float)winCenter.x+5,(float)winCenter.y+5);
+        winCenter = v.toWindow(axes[1]);
+        g.drawString(yLabel,(float)winCenter.x+5,(float)winCenter.y+5);
+        winCenter = v.toWindow(axes[2]);
+        g.drawString(zLabel,(float)winCenter.x+5,(float)winCenter.y+5);
+        v.fillDot(g, axes[0], 3);
+        v.fillDot(g, axes[1], 3);
+        v.fillDot(g, axes[2], 3);
     }
     
     
     // STYLE SETTINGS    
     
-    @Override
-    public String toString(){return "Axes";}
+    public static final int AXES_STANDARD=0;
+    public static final int AXES_BOX=1;
+    public static final int AXES_OCTANT=2;
+    public static final int AXES_TOPHALF=3;
 
     @Override
     public String[] getStyleStrings() {
-        String[] result = {"Standard", "Box"};
+        String[] result = {"Standard", "Box", "First Octant", "Upper Half Space"};
         return result;
     }
+    
+    @Override
+    public String toString(){return "Axes";}
+
+    // BEAN PATTERNS
+    
+    public String getXLabel() { return xLabel; }
+    public void setXLabel(String xLabel) { this.xLabel = xLabel; }
+    public String getYLabel() { return yLabel; }
+    public void setYLabel(String yLabel) { this.yLabel = yLabel; }
+    public String getZLabel() { return zLabel; }
+    public void setZLabel(String zLabel) { this.zLabel = zLabel; }
 }

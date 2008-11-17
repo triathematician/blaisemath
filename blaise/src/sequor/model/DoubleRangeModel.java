@@ -37,6 +37,13 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
      * @param step the increment size
      */
     public DoubleRangeModel(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
+    /** Initializes with particular values.
+     * @param min the minimum value possible
+     * @param max the maximum value possible
+     */
+    DoubleRangeModel(double min, double max) {
+        this(min, min, max, 0.1);
+    }
     
     
     // BEAN PATTERNS

@@ -171,31 +171,24 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v){
         R2 vector;
-        if (!v.proj.stereographic) {
-        try {
         switch(style.getValue()){
             case DOT_LINES:
                 for (int i = 0; i < samplePoints.size(); i++) {
-                    g.fill(v.dot(v.proj.getValue(samplePoints.get(i)),2));
-                    g.draw(v.lineSegment(
-                            v.proj.getValue(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValue(samplePoints.get(i).minus(vectors.get(i)))));
+                    v.fillDot(g, samplePoints.get(i), 2);
+                    v.drawLineSegment(g, samplePoints.get(i).plus(vectors.get(i)), samplePoints.get(i).minus(vectors.get(i)));
                 }
                 break;
             case ARROWS:
                 Shape arrow;
                 for (int i = 0; i < samplePoints.size(); i++) {
-                    arrow = v.arrow(v.proj.getValue(samplePoints.get(i)),
-                            v.proj.getValue(samplePoints.get(i).plus(vectors.get(i))), 5.0);
-                    g.draw(arrow);
-                    g.fill(arrow);
+                    v.drawArrow(g, samplePoints.get(i), samplePoints.get(i).plus(vectors.get(i)), 5.0);
                 }
                 break;
             case TRAILS:
                 try {
                     for (int i = 0; i < samplePoints.size(); i++) {
-                        g.draw(v.path(v.proj.getValue(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM))));
-                        g.draw(v.path(v.proj.getValue(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM))));
+                        v.drawPath(g, DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                        v.drawPath(g, DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM));
                     }
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -204,75 +197,9 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
             case LINES:
             default:
                 for (int i = 0; i < samplePoints.size(); i++) {
-                    g.draw(v.lineSegment(
-                            v.proj.getValue(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValue(samplePoints.get(i).minus(vectors.get(i)))));
+                    v.drawLineSegment(g, samplePoints.get(i).plus(vectors.get(i)), samplePoints.get(i).minus(vectors.get(i)));
                 }
                 break;
-        }
-        } catch (FunctionValueException e) {}
-        } else {
-            g.setComposite(VisualStyle.COMPOSITE5);
-        try {
-        switch(style.getValue()){
-            case DOT_LINES:
-                for (int i = 0; i < samplePoints.size(); i++) {
-                    g.setColor(Color.BLUE);
-                    g.fill(v.dot(v.proj.getValueLeft(samplePoints.get(i)),2));
-                    g.draw(v.lineSegment(
-                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValueLeft(samplePoints.get(i).minus(vectors.get(i)))));
-                    g.setColor(Color.RED);
-                    g.fill(v.dot(v.proj.getValueRight(samplePoints.get(i)),2));
-                    g.draw(v.lineSegment(
-                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValueRight(samplePoints.get(i).minus(vectors.get(i)))));
-                }
-                break;
-            case ARROWS:
-                Shape arrow;
-                for (int i = 0; i < samplePoints.size(); i++) {
-                    g.setColor(Color.BLUE);
-                    arrow = v.arrow(v.proj.getValueLeft(samplePoints.get(i)),
-                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))), 5.0);
-                    g.draw(arrow);
-                    g.fill(arrow);
-                    g.setColor(Color.RED);
-                    arrow = v.arrow(v.proj.getValueRight(samplePoints.get(i)),
-                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))), 5.0);
-                    g.draw(arrow);
-                    g.fill(arrow);
-                }
-                break;
-            case TRAILS:
-                try {
-                    for (int i = 0; i < samplePoints.size(); i++) {
-                        g.setColor(Color.BLUE);
-                        g.draw(v.path(v.proj.getValueLeft(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM))));
-                        g.draw(v.path(v.proj.getValueLeft(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM))));
-                        g.setColor(Color.RED);
-                        g.draw(v.path(v.proj.getValueRight(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM))));
-                        g.draw(v.path(v.proj.getValueRight(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM))));
-                    }
-                } catch (FunctionValueException ex) {
-                    Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            case LINES:
-            default:
-                for (int i = 0; i < samplePoints.size(); i++) {
-                    g.setColor(Color.BLUE);
-                    g.draw(v.lineSegment(
-                            v.proj.getValueLeft(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValueLeft(samplePoints.get(i).minus(vectors.get(i)))));
-                    g.setColor(Color.RED);
-                    g.draw(v.lineSegment(
-                            v.proj.getValueRight(samplePoints.get(i).plus(vectors.get(i))),
-                            v.proj.getValueRight(samplePoints.get(i).minus(vectors.get(i)))));
-                }
-                break;
-        }
-        } catch (FunctionValueException e) {}            
         }
     }
     
@@ -346,24 +273,10 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorField3D.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }       
-            try {
-                if (! v.proj.stereographic) {
-                    for (int i = 0; i < flows.size(); i++) {
-                        g.draw(v.path(v.proj.getValue(flows.get(i))));
-                    }   
-                } else {
-                    g.setComposite(VisualStyle.COMPOSITE5);
-                    for (int i = 0; i < flows.size(); i++) {
-                        g.setColor(Color.RED);
-                        g.draw(v.path(v.proj.getValueLeft(flows.get(i))));
-                        g.setColor(Color.BLUE);
-                        g.draw(v.path(v.proj.getValueRight(flows.get(i))));
-                    }   
-                }
-            } catch (FunctionValueException ex) {
-                Logger.getLogger(VectorField3D.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }    
+            for (int i = 0; i < flows.size(); i++) {
+                v.drawPath(g, flows.get(i));
+            }   
         }
     }
 

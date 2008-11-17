@@ -21,7 +21,7 @@ import specto.PlottableGroup;
  * Draws a two-input/one-output function on the Cartesian Plane. Requires such a function to work. Multiple style settings will be supported.
  * @author ae3263
  */
-public class PlaneFunction3D extends PlottableGroup<Euclidean3>{
+public class Function3D extends PlottableGroup<Euclidean3>{
     BoundedFunction<R2,Double> function;   
     
     /** Default function used for testing the method. */
@@ -45,12 +45,12 @@ public class PlaneFunction3D extends PlottableGroup<Euclidean3>{
     
     // CONSTRUCTORS
         
-    public PlaneFunction3D(){this(DEFAULT_FUNCTION);}
-    public PlaneFunction3D(BoundedFunction<R2,Double> function){
+    public Function3D(){this(DEFAULT_FUNCTION);}
+    public Function3D(BoundedFunction<R2,Double> function){
         this.function=function;
         setColor(Color.ORANGE);
     }
-    public PlaneFunction3D(FunctionTreeModel functionModel) {
+    public Function3D(FunctionTreeModel functionModel) {
         initFunction(functionModel);
     }
     
@@ -90,12 +90,17 @@ public class PlaneFunction3D extends PlottableGroup<Euclidean3>{
         clear();
         
         for (double x : v.xRange.getValueRange(true, 0.0)) {
-            add(new Parametric3D(getPartial2(x, function),v.yRange,100));
+            add(new ParametricCurve3D(getPartial2(x, function),v.yRange,100));
         }
         for (double y : v.yRange.getValueRange(true, 0.0)) {
-            add(new Parametric3D(getPartial1(y, function),v.xRange,100));
+            add(new ParametricCurve3D(getPartial1(y, function),v.xRange,100));
         }
     }
+    
+    // STYLE
+    
+    @Override
+    public String toString() { return "Function"; }
     
     // INTIALIZERS
     

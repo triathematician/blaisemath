@@ -8,6 +8,7 @@ package specto.euclidean3;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -18,8 +19,10 @@ import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.Function;
 import scio.function.FunctionValueException;
+import sequor.model.BooleanModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
+import sequor.style.VisualStyle;
 import specto.euclidean2.Euclidean2;
 
 /**
@@ -32,9 +35,9 @@ public class Euclidean3 extends Euclidean2 {
 
     // PARAMETERS OF THE DISPLAY
 
-    DoubleRangeModel xRange = new DoubleRangeModel(0.0,-5.0,5.0,1.0);
-    DoubleRangeModel yRange = new DoubleRangeModel(0.0,-5.0,5.0,1.0);
-    DoubleRangeModel zRange = new DoubleRangeModel(0.0,-5.0,5.0,1.0);
+    DoubleRangeModel xRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
+    DoubleRangeModel yRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
+    DoubleRangeModel zRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
     
     
     /** The proj determining how the plot is displayed. */
@@ -58,9 +61,18 @@ public class Euclidean3 extends Euclidean2 {
                 fireStateChanged();
             }            
         };
+        stereo.addChangeListener(cl);
         proj.clipDist.addChangeListener(cl);
         proj.viewDist.addChangeListener(cl);
         proj.sceneSize.addChangeListener(cl);
+        proj.sceneSize.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                double ss = getSceneSize();
+                xRange.setRangeProperties(-ss, -ss, ss, 4*ss/10.0);
+                yRange.setRangeProperties(-ss, -ss, ss, 4*ss/10.0);
+                zRange.setRangeProperties(-ss, -ss, ss, 4*ss/10.0);
+            }
+        });
     }
 
     // VISOMETRY ADJUSTMENTS
@@ -84,40 +96,137 @@ public class Euclidean3 extends Euclidean2 {
     
     
     // DRAW METHODS
-    
-    Shape dot(R3 pt, double d) {
+
+    /** Draws solid dot at given point with specified pixel width */
+    void drawDot(Graphics2D g, R3 pt, double d) {
         try {
-            return dot(proj.getValue(pt), d);
+            if (isStereo()) {
+                g.setComposite(VisualStyle.COMPOSITE5);
+                    g.setColor(leftColor);
+                    g.draw(dot(proj.getValueLeft(pt), d));
+                    g.setColor(rightColor);
+                    g.draw(dot(proj.getValueRight(pt),d));
+            } else {
+                g.draw(dot(proj.getValue(pt), d));
+            }
         } catch (FunctionValueException ex) {
             Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    Shape lineSegment(R3 pt1, R3 pt2) {
-        try {
-            return lineSegment(proj.getValue(pt1), proj.getValue(pt2));
-        } catch (FunctionValueException ex) {
-            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
     }
 
+    /** Draws solid dot at given point with specified pixel width */
+    void fillDot(Graphics2D g, R3 pt, double d) {
+        try {
+            if (isStereo()) {
+                g.setComposite(VisualStyle.COMPOSITE5);
+                    g.setColor(leftColor);
+                    g.fill(dot(proj.getValueLeft(pt), d));
+                    g.setColor(rightColor);
+                    g.fill(dot(proj.getValueRight(pt),d));
+            } else {
+                g.fill(dot(proj.getValue(pt), d));
+            }
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /** Draws line segment between given points. */
     public void drawLineSegment(Graphics2D g,R3 pt1,R3 pt2) {
-        g.draw(lineSegment(pt1,pt2));
-    }
-
-    public void drawLineSegmentStereo(Graphics2D g,R3 pt1,R3 pt2) {
         try {
-            g.setColor(Color.BLUE);
-            g.draw(lineSegment(proj.getValueLeft(pt1), proj.getValueLeft(pt2)));
-            g.setColor(Color.RED);
-            g.draw(lineSegment(proj.getValueRight(pt1), proj.getValueRight(pt2)));
+            if (isStereo()) {
+                    g.setComposite(VisualStyle.COMPOSITE5);
+                    g.setColor(leftColor);
+                    g.draw(lineSegment(proj.getValueLeft(pt1), proj.getValueLeft(pt2)));
+                    g.setColor(rightColor);
+                    g.draw(lineSegment(proj.getValueRight(pt1), proj.getValueRight(pt2)));
+            } else {
+                g.draw(lineSegment(proj.getValue(pt1), proj.getValue(pt2)));
+            }
         } catch (FunctionValueException ex) {
             Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
+
+    /** Draws arrow on given graphics object. */
+    void drawArrow(Graphics2D g, R3 pt1, R3 pt2, double d) {
+        try {
+            if (isStereo()) {
+                g.setComposite(VisualStyle.COMPOSITE5);
+                g.setColor(leftColor);
+                Shape arrow = arrow(proj.getValueLeft(pt1), proj.getValueLeft(pt2), d);
+                g.fill(arrow);
+                g.draw(arrow);
+                g.setColor(rightColor);
+                arrow = arrow(proj.getValueRight(pt1), proj.getValueRight(pt2), d);
+                g.fill(arrow);
+                g.draw(arrow);
+                
+            } else {
+                Shape arrow = arrow(proj.getValue(pt1), proj.getValue(pt2), d);
+                g.fill(arrow);
+                g.draw(arrow);
+            }
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /** Draws a path on the graphics object. */
+    void drawPath(Graphics2D g, Vector<R3> pts) {
+        try {
+            if (isStereo()) {
+                g.setComposite(VisualStyle.COMPOSITE5);
+                g.setColor(leftColor);
+                Shape path = path(proj.getValueLeft(pts));
+                g.draw(path);
+                g.setColor(rightColor);
+                path = path(proj.getValueRight(pts));
+                g.draw(path);
+                
+            } else {
+                Shape path = path(proj.getValue(pts));
+                g.draw(path);
+            }
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /** Draws a filled path on the graphics object. */
+    void fillPath(Graphics2D g, Vector<R3> pts) {
+        try {
+            if (isStereo()) {
+                g.setComposite(VisualStyle.COMPOSITE2);
+                g.setColor(leftColor);
+                Shape path = path(proj.getValueLeft(pts));
+                g.fill(path);
+                g.setColor(rightColor);
+                path = path(proj.getValueRight(pts));
+                g.fill(path);
+                
+            } else {
+                g.setComposite(VisualStyle.COMPOSITE5);
+                Shape path = path(proj.getValue(pts));
+                g.fill(path);
+            }
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    // REGULAR EVENT HANDLING
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("stereo")) {
+            stereo.toggleValue();
+            fireStateChanged();
+        }
+        super.actionPerformed(e);
+    }
+    
 
     
     
@@ -185,24 +294,55 @@ public class Euclidean3 extends Euclidean2 {
         System.out.println("t,n,b:"+proj.tDir+","+proj.nDir+","+proj.bDir);
     }
     
+        
+    /** Determines whether stereographic projection mode is on. */
+    BooleanModel stereo = new BooleanModel(false);
+    /* Returns value of stereo. */
+    public boolean isStereo(){return stereo.getValue();}
+    /** Sets stereo status. */
+    public void setStereo(boolean newValue){stereo.setValue(newValue);}
     
+    /** Left color */
+    public final Color leftColor = Color.RED;
+    /** Right color */
+    public final Color rightColor = Color.BLUE;
+    
+    
+    // ACCESSOR METHODS
+    
+    public R3 getCenter() { return proj.center; }
+    public void setCenter(R3 center) { proj.center = center; }
+
+    public R3 getTDir() { return proj.tDir; }
+    public void setTDir(R3 tDir) { proj.tDir = tDir; }
+    public R3 getNDir() { return proj.nDir; }
+    public void setNDir(R3 nDir) { proj.nDir = nDir; }
+    public R3 getBDir() { return proj.bDir; }
+    public void setBDir(R3 bDir) { proj.bDir = bDir; }
+    
+    public double getClipDist() { return proj.clipDist.getValue(); }
+    public void setClipDist(double clipDist) { proj.clipDist.setValue(clipDist); }
+    public double getEyeSep() { return proj.eyeSep.getValue(); }
+    public void setEyeSep(double eyeSep) { proj.eyeSep.setValue(eyeSep); }
+    public double getSceneSize() { return proj.sceneSize.getValue(); }
+    public void setSceneSize(double sceneSize) { proj.sceneSize.setValue(sceneSize); }
+    public double getViewDist() { return proj.viewDist.getValue(); }
+    public void setViewDist(double viewDist) { proj.viewDist.setValue(viewDist); }
     
     // INNER CLASSES
     
     /** Handles the projection onto the viewing plane. */
-    public class ViewProjection implements Function<R3,R2> {
+    public class ViewProjection implements Function<R3,R2> {        
 
         /** Distance to clipping plane (in cm) */
         DoubleRangeModel clipDist = new DoubleRangeModel(2.0,0.1,10.0,0.1);
         /** Distance to view plane (in cm) */
-        DoubleRangeModel viewDist = new DoubleRangeModel(50.0,0.01,100.0,0.1);
+        DoubleRangeModel viewDist = new DoubleRangeModel(20.0,0.01,1000.0,0.1);
         /** Distance from the scene of interest */
-        DoubleRangeModel sceneSize = new DoubleRangeModel(5.0,0.01,100.0,0.1);
+        DoubleRangeModel sceneSize = new DoubleRangeModel(5.0,0.01,1000.0,0.1);
         
-        /** Determines whether stereographic projection mode is on. */
-        boolean stereographic = true;
         /** Distance from the scene of interest */
-        DoubleRangeModel eyeSep = new DoubleRangeModel(0.5,0.01,5.0,0.02);
+        DoubleRangeModel eyeSep = new DoubleRangeModel(0.35,0.01,3.0,0.01);
         
         /** Central point of interest. */
         R3 center = new R3(0,0,0);
@@ -212,7 +352,7 @@ public class Euclidean3 extends Euclidean2 {
         R3 nDir = new R3(-1/2.,3/4.,0);
         /** Binormal direction. */
         R3 bDir = new R3(-3*Math.sqrt(3)/16.,-Math.sqrt(3)/8.,13/16.);
-        
+      
         /** Controls speed of timer */
         IntegerRangeModel timerDelay = new IntegerRangeModel(50,1,500,1);
 
@@ -241,7 +381,7 @@ public class Euclidean3 extends Euclidean2 {
         /** Returns shifted stereo point (left eye) */
         public R2 getValueLeft(R3 pt) throws FunctionValueException {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
-                    .plus(nDir.times(-eyeSep.getValue()/2));
+                    .plus(nDir.times(+eyeSep.getValue()/2));
             R3 diff = pt.minus(cE);
             return new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir));
         }
@@ -249,7 +389,7 @@ public class Euclidean3 extends Euclidean2 {
         /** Returns projection of several 3d points into 2d */
         public Vector<R2> getValueLeft(Vector<R3> pts) throws FunctionValueException {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
-                    .plus(nDir.times(-eyeSep.getValue()/2));
+                    .plus(nDir.times(+eyeSep.getValue()/2));
             R3 diff;
             Vector<R2> result = new Vector<R2>();
             for (R3 pt : pts) {
@@ -262,7 +402,7 @@ public class Euclidean3 extends Euclidean2 {
         /** Returns shifted stereo point (right eye) */
         public R2 getValueRight(R3 pt) throws FunctionValueException {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
-                    .plus(nDir.times(eyeSep.getValue()/2));
+                    .plus(nDir.times(-eyeSep.getValue()/2));
             R3 diff = pt.minus(cE);
             return new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir));
         }
@@ -270,7 +410,7 @@ public class Euclidean3 extends Euclidean2 {
         /** Returns projection of several 3d points into 2d */
         public Vector<R2> getValueRight(Vector<R3> pts) throws FunctionValueException {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
-                    .plus(nDir.times(eyeSep.getValue()/2));
+                    .plus(nDir.times(-eyeSep.getValue()/2));
             R3 diff;
             Vector<R2> result = new Vector<R2>();
             for (R3 pt : pts) {
@@ -338,7 +478,12 @@ public class Euclidean3 extends Euclidean2 {
             R3 n = u1.cross(u2).normalized();
             double cosphi = u1.dot(u2)/(u1.magnitude()*u2.magnitude());
             double sinphi = Math.sqrt(1-cosphi*cosphi);
+            // don't rotate if the angle is too small
             if (Math.abs(sinphi) > .01) {
+                // lock rotation if within certain limits
+                if (Math.abs(n.x)>.9) { n = new R3(n.x/Math.abs(n.x),0,0); }
+                else if (Math.abs(n.y)>.9) { n = new R3(0,n.y/Math.abs(n.y),0); }
+                else if (Math.abs(n.z)>.9) { n = new R3(0,0,n.z/Math.abs(n.z)); }
                 rotating = true;
                 animateRotation(n, cosphi, sinphi);
             }

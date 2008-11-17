@@ -24,7 +24,7 @@ import sequor.model.DoubleRangeModel;
  * plotted are any function from Double->(Double,Double), and min/max values of t.
  * @author ElishaPeterson
  */
-public class Parametric3D extends PointSet3D {
+public class ParametricCurve3D extends PointSet3D {
     
     // PROPERTIES
     
@@ -46,24 +46,24 @@ public class Parametric3D extends PointSet3D {
         }
     };
         
-    public Parametric3D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
-    public Parametric3D(String string) {this();}
+    public ParametricCurve3D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
+    public ParametricCurve3D(String string) {this();}
     /** Constructor for use with a particular function and range of t values */
-    public Parametric3D(Function<Double,R3> function,double tMin,double tMax,int samplePoints){
+    public ParametricCurve3D(Function<Double,R3> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(tMin,tMin,tMax);
         tRange.setNumSteps(samplePoints,true);
     }
 
-    Parametric3D(Function<Double, R3> function, DoubleRangeModel drm,int samplePoints) {
+    public ParametricCurve3D(Function<Double, R3> function, DoubleRangeModel drm,int samplePoints) {
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
         tRange.setNumSteps(samplePoints,true);
     }
     
-    public Parametric3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
+    public ParametricCurve3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
         tRange = new DoubleRangeModel (0.0, 0.0, 2*Math.PI);
         tRange.setNumSteps(1000, true);
         function = getParametricFunction(
@@ -117,8 +117,6 @@ public class Parametric3D extends PointSet3D {
     }
     public DoubleRangeModel getModel(){return tRange;}
     
-    // TODO should not recompute path every time. Just when it's necessary
-
     /** Draws the path. */
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v) {
@@ -138,8 +136,6 @@ public class Parametric3D extends PointSet3D {
     // STYLE
         
     @Override
-    public String toString(){return "Parametric Function";}
+    public String toString(){return "Parametric Curve";}    
     
-    
-    // DECORATIONS
 }

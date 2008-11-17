@@ -12,6 +12,12 @@ package scio.coordinate;
  */
 public class R3 implements EuclideanElement {
     
+    public final static R3 ZERO = new R3();
+    public final static R3 I = new R3(1,0,0);
+    public final static R3 J = new R3(0,1,0);
+    public final static R3 K = new R3(0,0,1);
+    
+    
     public double x,y,z;
     
     /** Default constructor. */
@@ -29,6 +35,7 @@ public class R3 implements EuclideanElement {
     public double getX(){ return x; }
     public double getY(){ return y; }
     public double getZ(){ return z; }
+
     
     public void setX(double x){ this.x=x; }
     public void setY(double y){ this.y=y; }
@@ -47,9 +54,11 @@ public class R3 implements EuclideanElement {
     
     // OPERATIONS WITH MULTIPLE VECTORS
     
-    public R3 times(double d) { return new R3(d*getX(), d*getY(), d*getZ()); }
-    public R3 plus(R3 pt) { return new R3(getX()+pt.getX(), getY()+pt.getY(), getZ()+pt.getZ()); }
-    public R3 minus(R3 pt) { return new R3(getX()-pt.getX(), getY()-pt.getY(), getZ()-pt.getZ()); }
+    public R3 times(double d) { return new R3(d*x, d*y, d*z); }
+    public R3 plus(R3 pt) { return new R3(x+pt.x, y+pt.y, z+pt.z); }
+    public R3 plus(double bx,double by,double bz) { return new R3(x+bx,y+by,z+bz); }
+    public R3 minus(R3 pt) { return new R3(x-pt.x, y-pt.y, z-pt.z); }
+    public R3 minus(double bx,double by,double bz) { return new R3(x-bx,y-by,z-bz); }
     
       
     // METHODS FOR VECTORS IN R3
