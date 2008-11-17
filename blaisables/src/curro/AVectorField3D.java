@@ -8,7 +8,7 @@ package curro;
 
 import sequor.control.NumberSlider;
 import specto.euclidean3.DESolution3D;
-import specto.euclidean3.Parametric3D;
+import specto.euclidean3.ParametricCurve3D;
 import specto.euclidean3.VectorField3D;
 
 /**
@@ -39,10 +39,10 @@ public class AVectorField3D extends javax.swing.JApplet {
                     functionPanel2.setFunction(0, "x(t)=", "cos(t)+3");
                     functionPanel2.setFunction(1, "y(t)=", "sin(t)+3");
                     functionPanel2.setFunction(2, "y(t)=", "t");
-                    Parametric3D pp = new Parametric3D(functionPanel2.getFunctionModel(0),functionPanel2.getFunctionModel(1),functionPanel2.getFunctionModel(2));
+                    ParametricCurve3D pp = new ParametricCurve3D(functionPanel2.getFunctionModel(0),functionPanel2.getFunctionModel(1),functionPanel2.getFunctionModel(2));
                     pp.setVisible(false);
                     pp.setAnimationOn(false);
-                    plot3D1.add(pp);                   
+                    plot3D1.add(pp);     
                 }
             });
         } catch (Exception ex) {
