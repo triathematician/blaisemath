@@ -94,8 +94,6 @@ public class SimulationFactory {
         //                      ( NAME , # , STARTING POS , BEHAVIOR ALGORITHM , COLOR )
         bugTeam.initSettings("Bugs", 4, Team.START_RANDOM, Behavior.LEADING, Color.DARK_GRAY);
         lightTeam.initSettings("Light", 1, Team.START_RANDOM, Behavior.STRAIGHT, VisualStyle.DARK_GREEN);        
-        teams.add(bugTeam);
-        teams.add(lightTeam);
         
         // Set specific starting locations
         R2[] positions = { new R2(-30,30), new R2(-20,-20), new R2(50,10), new R2(10,10) };
