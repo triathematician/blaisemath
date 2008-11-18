@@ -10,11 +10,13 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import scio.coordinate.R2;
+import scio.coordinate.R3;
 import scio.function.BoundedFunction;
 import scio.function.FunctionValueException;
-import scribo.parser.Parser;
-import scribo.tree.FunctionTreeRoot;
 import specto.euclidean2.DESolution2D;
+import specto.euclidean2.VectorFieldTimed2D;
+import specto.euclidean3.DESolution3D;
+import specto.euclidean3.ParametricCurve3D;
 
 /**
  *
@@ -29,29 +31,64 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
                 public void run() {
                     try {
                         initComponents();
+                       // FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
+                       // FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
+                       // FunctionTreeRoot vfz = new FunctionTreeRoot(Parser.parseExpression("1"));
                         parametric2D1.setFunction("10*cos(2*pi*t)", "10*sin(2*pi*t)");
+                        ParametricCurve3D p3d = new ParametricCurve3D();
+                        p3d.setFunction("10*cos(2*pi*t)", "10*sin(2*pi*t)", "t");
                         vectorField2D1.setFunction(new BoundedFunction<R2,R2>() {
-                            FunctionTreeRoot vfx = new FunctionTreeRoot(Parser.parseExpression("pi*y+5*pi*(10-x)/sqrt(y^2+(10-x)^2)"));
-                            FunctionTreeRoot vfy = new FunctionTreeRoot(Parser.parseExpression("-pi*x-5*pi*y/sqrt(y^2+(10-x)^2)"));
-
                             public R2 getValue(R2 pt) throws FunctionValueException {
                                 return new R2(pt.y,-pt.x).times(Math.PI).plus(new R2(10-pt.x,-pt.y).normalized().times(5*Math.PI));
                             }
-
                             public Vector<R2> getValue(Vector<R2> pts) throws FunctionValueException {
                                 Vector<R2> result = new Vector<R2>();
                                 for (R2 pt : pts) {
                                     result.add(new R2(pt.y,-pt.x).times(Math.PI).plus(new R2(10-pt.x,-pt.y).normalized().times(5*Math.PI)));
                                 }
                                 return result;
-                                
                             }
                             public R2 minValue(){return new R2(-5.0,-5.0);}
                             public R2 maxValue(){return new R2(5.0,5.0);}
                         });
-                        plot2D1.add(vectorField2D1);                                                
-                        plot2D1.add(parametric2D1);
-                        plot2D1.add(new DESolution2D(vectorField2D1));
+                        vectorField3D1.setFunction(new BoundedFunction<R3,R3>() {
+                            public R3 getValue(R3 pt) throws FunctionValueException {
+                                return new R3(10*Math.cos(2*Math.PI*pt.z)-pt.x,10*Math.sin(2*Math.PI*pt.z)-pt.y,1).normalized().times(10.0);
+                            }
+                            public Vector<R3> getValue(Vector<R3> pts) throws FunctionValueException {
+                                Vector<R3> result = new Vector<R3>();
+                                for (R3 pt : pts) {
+                                    result.add(new R3(10*Math.cos(2*Math.PI*pt.z)-pt.x,10*Math.sin(2*Math.PI*pt.z)-pt.y,1).normalized().times(10.0));
+                                }
+                                return result;
+                            }
+                            public R3 minValue(){return new R3(-5.0,-5.0,-5.0);}
+                            public R3 maxValue(){return new R3(5.0,5.0,5.0);}
+                        });  
+                        VectorFieldTimed2D vft = new VectorFieldTimed2D(new BoundedFunction<R3,R2>(){
+                            public R2 getValue(R3 pt) throws FunctionValueException {
+                                return new R2(10*Math.cos(2*Math.PI*pt.z)-pt.x,10*Math.sin(2*Math.PI*pt.z)-pt.y).normalized();
+                            }
+                            public Vector<R2> getValue(Vector<R3> pts) throws FunctionValueException {
+                                Vector<R2> result = new Vector<R2>();
+                                for (R3 pt : pts) {
+                                    result.add(new R2(10*Math.cos(2*Math.PI*pt.z)-pt.x,10*Math.sin(2*Math.PI*pt.z)-pt.y).normalized());
+                                }
+                                return result;
+                            }
+                            public R2 minValue(){return new R2(-5.0,-5.0);}
+                            public R2 maxValue(){return new R2(5.0,5.0);}
+                        });
+                        changingVectorField.add(parametric2D1);
+                        changingVectorField.add(vft);
+                        staticVectorField.add(vectorField2D1);    
+                        staticVectorField.add(new DESolution2D(vectorField2D1));
+                        staticVectorField.add(new DESolution2D(vectorField2D1));
+                        threeDVectorField.getVisometry().setSceneSize(15.0);
+                        threeDVectorField.add(p3d);
+                        threeDVectorField.add(vectorField3D1);
+                        threeDVectorField.add(new DESolution3D(vectorField3D1));
+                        threeDVectorField.add(new DESolution3D(vectorField3D1));
                     } catch (Exception ex) {
                         Logger.getLogger(CircularChaseRotatedField.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -72,38 +109,79 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
 
         parametric2D1 = new specto.euclidean2.Parametric2D();
         vectorField2D1 = new specto.euclidean2.VectorField2D();
-        plot2D1 = new specto.euclidean2.Plot2D();
+        vectorField3D1 = new specto.euclidean3.VectorField3D();
+        parametricCurve3D1 = new specto.euclidean3.ParametricCurve3D();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        changingVectorField = new specto.euclidean2.Plot2D();
+        staticVectorField = new specto.euclidean2.Plot2D();
+        threeDVectorField = new specto.euclidean3.Plot3D();
 
-        plot2D1.setAxisStyle(1);
+        changingVectorField.setAxisStyle(1);
 
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        javax.swing.GroupLayout changingVectorFieldLayout = new javax.swing.GroupLayout(changingVectorField);
+        changingVectorField.setLayout(changingVectorFieldLayout);
+        changingVectorFieldLayout.setHorizontalGroup(
+            changingVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 395, Short.MAX_VALUE)
         );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        changingVectorFieldLayout.setVerticalGroup(
+            changingVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 272, Short.MAX_VALUE)
         );
+
+        jTabbedPane1.addTab("Changing Vector Field", changingVectorField);
+
+        javax.swing.GroupLayout staticVectorFieldLayout = new javax.swing.GroupLayout(staticVectorField);
+        staticVectorField.setLayout(staticVectorFieldLayout);
+        staticVectorFieldLayout.setHorizontalGroup(
+            staticVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 395, Short.MAX_VALUE)
+        );
+        staticVectorFieldLayout.setVerticalGroup(
+            staticVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 272, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Static Vector Field", staticVectorField);
+
+        threeDVectorField.setZLabel("t");
+        threeDVectorField.setAxisStyle(0);
+
+        javax.swing.GroupLayout threeDVectorFieldLayout = new javax.swing.GroupLayout(threeDVectorField);
+        threeDVectorField.setLayout(threeDVectorFieldLayout);
+        threeDVectorFieldLayout.setHorizontalGroup(
+            threeDVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 395, Short.MAX_VALUE)
+        );
+        threeDVectorFieldLayout.setVerticalGroup(
+            threeDVectorFieldLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 272, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("3D Vector Field", threeDVectorField);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(plot2D1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private specto.euclidean2.Plot2D changingVectorField;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private specto.euclidean2.Parametric2D parametric2D1;
-    private specto.euclidean2.Plot2D plot2D1;
+    private specto.euclidean3.ParametricCurve3D parametricCurve3D1;
+    private specto.euclidean2.Plot2D staticVectorField;
+    private specto.euclidean3.Plot3D threeDVectorField;
     private specto.euclidean2.VectorField2D vectorField2D1;
+    private specto.euclidean3.VectorField3D vectorField3D1;
     // End of variables declaration//GEN-END:variables
     
 }
