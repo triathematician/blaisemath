@@ -125,6 +125,9 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> {
         while(result.lastElement()<=(maximum-step-shift*step)){// && result.size()<100000){
             result.add(result.lastElement()+step);
         }
+        if (inclusive && result.lastElement()-maximum > step/2.0) {
+            result.add(maximum);
+        }
         return result;
     }
     

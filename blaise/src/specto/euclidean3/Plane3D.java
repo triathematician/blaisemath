@@ -44,9 +44,9 @@ public class Plane3D extends Point3D {
         this.dir1 = dir1;
         this.dir2 = dir2;
         d1 = new DoubleRangeModel(min1,min1,max1);
-        d1.setNumSteps(10, true);
+        d1.setNumSteps(11, true);
         d2 = new DoubleRangeModel(min2,min2,max2);
-        d2.setNumSteps(10, true);
+        d2.setNumSteps(11, true);
     }
     /** Generates with specified point and directions. */
     public Plane3D(R3 value, R3 dir1, DoubleRangeModel range1, R3 dir2, DoubleRangeModel range2) {

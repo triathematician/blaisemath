@@ -169,7 +169,7 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
 
     // STYLE PARAMETERS
 
-    int algorithm=ALGORITHM_NEWTON;
+    int algorithm=ALGORITHM_RUNGE_KUTTA;
     public static final int ALGORITHM_NEWTON=0;
     public static final int ALGORITHM_RUNGE_KUTTA=1;
     

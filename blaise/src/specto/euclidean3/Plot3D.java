@@ -5,6 +5,7 @@
 
 package specto.euclidean3;
 
+import java.awt.Color;
 import sequor.control.BoundedShape;
 import sequor.control.ButtonBox;
 import sequor.control.NumberSlider;
@@ -43,7 +44,7 @@ public class Plot3D extends PlotPanel<Euclidean3> {
         ButtonBox viewSettings = new ButtonBox();
         viewSettings.add(new ToggleButton(visometry.stereo, BoundedShape.BOWTIE));
         add(viewSettings,5,1);
-        
+        setBackground(Color.BLACK);
         //add(new ParametricSurface3D.Sphere(new R3(0,0,0), visometry.proj.sceneSize.getValue()));
     }
 

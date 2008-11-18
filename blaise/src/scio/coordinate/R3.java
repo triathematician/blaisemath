@@ -5,6 +5,8 @@
 
 package scio.coordinate;
 
+import java.text.NumberFormat;
+
 /**
  * This class handles three-dimensional coordinates in space.
  * <br><br>
@@ -81,9 +83,11 @@ public class R3 implements EuclideanElement {
     
     
     // STRING HANDLERS
+
+    final static NumberFormat nf=NumberFormat.getInstance();
     
     @Override
-    public String toString(){ return "("+x+","+y+","+z+")"; }
+    public String toString(){ return "("+nf.format(x)+", "+nf.format(y)+", "+nf.format(z)+")"; }
     
 
     public void addToElement(int position, double value) {

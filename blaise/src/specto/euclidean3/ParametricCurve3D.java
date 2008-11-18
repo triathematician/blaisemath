@@ -48,6 +48,13 @@ public class ParametricCurve3D extends PointSet3D {
         
     public ParametricCurve3D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,1000);}
     public ParametricCurve3D(String string) {this();}
+    public ParametricCurve3D(String fx, String fy, String fz) {
+        this();
+        try {
+            setFunction(fx, fy, fz);
+        } catch (Exception e) {            
+        }
+    }
     /** Constructor for use with a particular function and range of t values */
     public ParametricCurve3D(Function<Double,R3> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);

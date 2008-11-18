@@ -121,6 +121,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     public boolean isAnimationOn() { return animationOn; }
         
     public BoundedFunction<R3,R3> getFunction(){return function;}
+
     public void setFunction(BoundedFunction<R3,R3> function){this.function=function;}
     
         

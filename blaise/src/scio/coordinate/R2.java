@@ -102,10 +102,11 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
 //        return super.distanceTo((R2)p2);
 //    }
     
+    final static NumberFormat nf=NumberFormat.getInstance();
+        
     /** Overwrite default string */    
     @Override
     public String toString(){
-        NumberFormat nf=NumberFormat.getInstance();
         return "("+nf.format(x)+", "+nf.format(y)+")";
     }
     

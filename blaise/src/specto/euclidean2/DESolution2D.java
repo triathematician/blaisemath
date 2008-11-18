@@ -8,6 +8,7 @@ package specto.euclidean2;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import scio.coordinate.R3;
 import scio.function.FunctionValueException;
 import java.awt.Graphics2D;
 import java.util.Vector;
@@ -29,6 +30,7 @@ import specto.style.LineStyle;
  * @author ae3263
  */
 public class DESolution2D extends InitialPointSet2D implements Decoration<Euclidean2,VectorField2D> {
+
     
     /** The underlying vector field. */
     VectorField2D parent;
@@ -49,7 +51,6 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
         this.parent=parent;
         setColor(new Color(.5f,0,.5f));
     }
-
     DESolution2D(PointRangeModel initialPoint, VectorField2D parent) {
         super(initialPoint);
         this.parent=parent;
@@ -151,6 +152,8 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
             g.fill(v.closedPath(rect));
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(1.0f));
+//            g.draw(v.lineSegment(boxSolutions.get(0).get(posB),boxSolutions.get(2).get(posB)));
+//            g.draw(v.lineSegment(boxSolutions.get(1).get(posB),boxSolutions.get(3).get(posB)));
             g.draw(v.closedPath(rect));
             g.setComposite(AlphaComposite.SrcOver);
         } else {
@@ -181,7 +184,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
      * @param steps     The number of iterations.
      * @param stepSize  The size of path added at each step.
      */
-    public static Vector<R2> calcNewton(Function<R2,R2> field,R2 start,int steps,double stepSize) throws FunctionValueException{
+    public static Vector<R2> calcNewton(Function<R2,R2> field, R2 start, int steps, double stepSize) throws FunctionValueException{
         Vector<R2> result=new Vector<R2>();
         result.add(start);
         R2 last;
@@ -191,6 +194,18 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
         }
         return result;
     }    
+    
+    /** Recalculates solution curves using Newton's Method (time-dependent function. */
+    static Vector<R2> calcNewton(BoundedFunction<R3, R2> field, R2 start, int steps, double stepSize) throws FunctionValueException {
+        Vector<R2> result=new Vector<R2>();
+        result.add(start);
+        R2 last;
+        for(int i=0;i<steps;i++){
+            last=result.lastElement();
+            result.add(last.plus(getScaledVector(field,i*stepSize,last,stepSize)));
+        }
+        return result;
+    }
     
     /** Re-calculates the solution curves, using Newton's Method. Instead of using a starting
      * point, uses a starting vector; removes "steps" number of points from the beginning, and
@@ -203,6 +218,17 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
         for(int i=0;i<steps;i++){
             last=flow.lastElement();
             flow.add(last.plus(getScaledVector(field,last,stepSize)));
+            flow.remove(0);
+        }
+        return flow;
+    }
+    
+    /** Recalculates solution curves using Newton's Method (time-dependent function. */
+    static Vector<R2> calcNewton(BoundedFunction<R3, R2> field, Vector<R2> flow, int steps, double stepSize) throws FunctionValueException {
+        R2 last;
+        for(int i=0;i<steps;i++){
+            last=flow.lastElement();
+            flow.add(last.plus(getScaledVector(field,i*stepSize,last,stepSize)));
             flow.remove(0);
         }
         return flow;
@@ -229,10 +255,18 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
         return result;
     }
 
+    /** Returns vector pointing in the direction of the field. */
     public static R2 getScaledVector(Function<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).scaledToLength(size);
     }
+    /** Returns vector pointing in the direction of the field. */
+    public static R2 getScaledVector(Function<R3,R2> field,double time,R2 point,double size) throws FunctionValueException{
+        return field.getValue(new R3(point.x,point.y,time)).scaledToLength(size);
+    }
     public static R2 getMultipliedVector(BoundedFunction<R2,R2> field,R2 point,double size) throws FunctionValueException{
         return field.getValue(point).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
+    }
+    public static R2 getMultipliedVector(BoundedFunction<R3, R2> field, double time, R2 point, double size) throws FunctionValueException {
+        return field.getValue(new R3(point.x,point.y,time)).multipliedBy(size/(field.maxValue().x+field.maxValue().y));
     }
 }

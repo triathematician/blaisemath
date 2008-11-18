@@ -163,6 +163,8 @@ public class TestPlottables extends javax.swing.JFrame {
         
         graphPlot.add(new Graph2D());
         graphPlot.add(SliderBox.getStyleAdjusters(100,10,15,graphPlot.getPlottables(),graphPlot));
+        
+        dynamicVectorFieldPlot.add(new VectorFieldTimed2D());
      }
     
     /** This method is called from within the constructor to
@@ -182,6 +184,7 @@ public class TestPlottables extends javax.swing.JFrame {
         pointSetPlot = new specto.euclidean2.Plot2D();
         fractalPlot = new specto.euclidean2.Plot2D();
         graphPlot = new specto.euclidean2.Plot2D();
+        dynamicVectorFieldPlot = new specto.euclidean2.Plot2D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -340,6 +343,19 @@ public class TestPlottables extends javax.swing.JFrame {
         );
 
         tabs.addTab("Graphs", graphPlot);
+
+        javax.swing.GroupLayout dynamicVectorFieldPlotLayout = new javax.swing.GroupLayout(dynamicVectorFieldPlot);
+        dynamicVectorFieldPlot.setLayout(dynamicVectorFieldPlotLayout);
+        dynamicVectorFieldPlotLayout.setHorizontalGroup(
+            dynamicVectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        dynamicVectorFieldPlotLayout.setVerticalGroup(
+            dynamicVectorFieldPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        tabs.addTab("Dynamic Vector Fields", dynamicVectorFieldPlot);
 
         fileMenu.setText("File"); // NOI18N
 
@@ -529,6 +545,7 @@ public class TestPlottables extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenuItem deleteMenuItem1;
     private javax.swing.JMenuItem deleteMenuItem2;
+    private specto.euclidean2.Plot2D dynamicVectorFieldPlot;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu editMenu1;
     private javax.swing.JMenu editMenu2;
