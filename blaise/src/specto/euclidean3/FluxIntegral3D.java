@@ -87,13 +87,13 @@ public class FluxIntegral3D extends ParametricSurface3D {
     // COMPUTATION OF PARTICLE FLOW
     
     /** Stores scaling multiplier. */
-    double step = .1;    
+    double step = .05;    
     /** Stores paths representing flowlines. */
     Vector<Vector<R2>> flows;    
     /** The length of the flows. */
     int NUM=2;
     /** Determines the number of random flows. */
-    int NUM_RANDOM = 150;    
+    int NUM_RANDOM = 200;    
     /** Number to remove each time. */
     int RANDOM_TURNOVER = 2;
     

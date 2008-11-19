@@ -15,6 +15,8 @@ import sequor.model.FunctionTreeModel;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.BoundedFunction;
+import sequor.model.DoubleRangeModel;
+import specto.Plottable;
 import specto.PlottableGroup;
 
 /**
@@ -48,10 +50,11 @@ public class Function3D extends PlottableGroup<Euclidean3>{
     public Function3D(){this(DEFAULT_FUNCTION);}
     public Function3D(BoundedFunction<R2,Double> function){
         this.function=function;
-        setColor(Color.ORANGE);
+        setColor(new Color(100,100,100,200));        
     }
     public Function3D(FunctionTreeModel functionModel) {
         initFunction(functionModel);
+        setColor(new Color(100,100,100,200));        
     }
     
     // INITIALIZER METHODS
@@ -89,11 +92,22 @@ public class Function3D extends PlottableGroup<Euclidean3>{
     public void initCurves(Euclidean3 v){        
         clear();
         
-        for (double x : v.xRange.getValueRange(true, 0.0)) {
+        int SAMPLES = 11;
+        
+        DoubleRangeModel dx = new DoubleRangeModel(v.xRange.getMinimum(), v.xRange.getMinimum(), v.xRange.getMaximum());
+        dx.setNumSteps(SAMPLES, true);
+        DoubleRangeModel dy = new DoubleRangeModel(v.yRange.getMinimum(), v.yRange.getMinimum(), v.yRange.getMaximum());
+        dy.setNumSteps(SAMPLES, true);
+        
+        for (double x : dx.getValueRange(true, 0.0)) {
             add(new ParametricCurve3D(getPartial2(x, function),v.yRange,100));
         }
-        for (double y : v.yRange.getValueRange(true, 0.0)) {
+        for (double y : dy.getValueRange(true, 0.0)) {
             add(new ParametricCurve3D(getPartial1(y, function),v.xRange,100));
+        }
+        
+        for (Plottable p : plottables) {
+            p.setColor(getColor());
         }
     }
     

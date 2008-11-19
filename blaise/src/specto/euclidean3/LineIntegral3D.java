@@ -83,13 +83,13 @@ public class LineIntegral3D extends ParametricCurve3D {
     /** Stores the sample points. */
     Vector<R3> particles;    
     /** Stores scaling multiplier. */
-    double step = .1;    
+    double step = .05;    
     /** Stores paths representing flowlines. */
     Vector<Vector<Double>> flows;    
     /** The length of the flows. */
     int NUM=2;
     /** Determines the number of random flows. */
-    int NUM_RANDOM = 50;    
+    int NUM_RANDOM = 30;    
     /** Number to remove each time. */
     int RANDOM_TURNOVER = 2;
         

@@ -150,13 +150,15 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
         }
     }
 
+    double ARROW_SCALE = 0.1;
+    
     /** Returns sampling vectors used for the region... here the vectors point in the direction of the normal. */
     public Vector<R3[]> getSampleVectors(int options) {
         Vector<R3[]> result = new Vector<R3[]>();
         boolean inclusive = (options == 0);
         try {
             for (R2 pt : uvRange.getValueRange(inclusive, 0.0, 0.0)) {
-                R3[] temp = {function.getValue(pt), getNormal(function, pt.x, pt.y) };
+                R3[] temp = {function.getValue(pt), getNormal(function, pt.x, pt.y).times(ARROW_SCALE) };
                 result.add(temp);
             }
             return result;
@@ -423,7 +425,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
                 
         @Override
         public void paintComponent(Graphics2D g, Euclidean3 v) {
-            g.setColor(getColor());
+            g.setColor(new Color(255, 100, 100, 150));
             v.drawArrows(g, getSampleVectors(1), 5.0);
         }
 
