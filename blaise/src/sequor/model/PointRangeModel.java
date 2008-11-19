@@ -1,4 +1,6 @@
 package sequor.model;
+import java.util.Vector;
+import scio.coordinate.R3;
 import sequor.FiresChangeEvents;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -47,6 +49,7 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     }
 
 
+
     private void initializeModels(){
         xModel=new DoubleRangeModel();
         xModel.addChangeListener(this);
@@ -76,6 +79,15 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     public double getMaxY(){return yModel.getMaximum();}
     public double getXRange(){return xModel.getRange();}
     public double getYRange(){return yModel.getRange();}
+    public Vector<R2> getValueRange(boolean inclusive, double shiftX, double shiftY) {
+        Vector<R2> result = new Vector<R2>();
+        for(double x : xModel.getValueRange(inclusive, shiftX)) {
+            for (double y : yModel.getValueRange(inclusive, shiftY)) {
+                result.add(new R2(x,y));
+            }
+        }
+        return result;
+    }
     
     public void setBounds(double lx,double ly,double rx,double uy){
         xModel.setRangeProperties(xModel.getValue(),lx,rx);

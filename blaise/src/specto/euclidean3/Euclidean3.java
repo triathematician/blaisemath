@@ -101,11 +101,10 @@ public class Euclidean3 extends Euclidean2 {
     void drawDot(Graphics2D g, R3 pt, double d) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE5);
-                    g.setColor(leftColor);
-                    g.draw(dot(proj.getValueLeft(pt), d));
-                    g.setColor(rightColor);
-                    g.draw(dot(proj.getValueRight(pt),d));
+                g.setColor(leftColor);
+                g.draw(dot(proj.getValueLeft(pt), d));
+                g.setColor(rightColor);
+                g.draw(dot(proj.getValueRight(pt),d));
             } else {
                 g.draw(dot(proj.getValue(pt), d));
             }
@@ -118,11 +117,10 @@ public class Euclidean3 extends Euclidean2 {
     void fillDot(Graphics2D g, R3 pt, double d) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE5);
-                    g.setColor(leftColor);
-                    g.fill(dot(proj.getValueLeft(pt), d));
-                    g.setColor(rightColor);
-                    g.fill(dot(proj.getValueRight(pt),d));
+                g.setColor(leftColor);
+                g.fill(dot(proj.getValueLeft(pt), d));
+                g.setColor(rightColor);
+                g.fill(dot(proj.getValueRight(pt),d));
             } else {
                 g.fill(dot(proj.getValue(pt), d));
             }
@@ -135,11 +133,10 @@ public class Euclidean3 extends Euclidean2 {
     public void drawLineSegment(Graphics2D g,R3 pt1,R3 pt2) {
         try {
             if (isStereo()) {
-                    g.setComposite(VisualStyle.COMPOSITE5);
-                    g.setColor(leftColor);
-                    g.draw(lineSegment(proj.getValueLeft(pt1), proj.getValueLeft(pt2)));
-                    g.setColor(rightColor);
-                    g.draw(lineSegment(proj.getValueRight(pt1), proj.getValueRight(pt2)));
+                g.setColor(leftColor);
+                g.draw(lineSegment(proj.getValueLeft(pt1), proj.getValueLeft(pt2)));
+                g.setColor(rightColor);
+                g.draw(lineSegment(proj.getValueRight(pt1), proj.getValueRight(pt2)));
             } else {
                 g.draw(lineSegment(proj.getValue(pt1), proj.getValue(pt2)));
             }
@@ -152,7 +149,6 @@ public class Euclidean3 extends Euclidean2 {
     void drawArrow(Graphics2D g, R3 pt1, R3 pt2, double arrowSize) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE5);
                 g.setColor(leftColor);
                 Shape arrow = arrow(proj.getValueLeft(pt1), proj.getValueLeft(pt2), arrowSize);
                 g.fill(arrow);
@@ -171,12 +167,18 @@ public class Euclidean3 extends Euclidean2 {
             Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /** Draws arrows on graphics object. The arrows correspond to the vectors with given
+     * basepoint and displacement specified by vecs.  */
+    void drawArrows(Graphics2D g, Vector<R3[]> vecs, double arrowSize) {
+        for(R3[] v : vecs) {
+            drawArrow(g, v[0], v[0].plus(v[1]), arrowSize);
+        }
+    }
 
     /** Draws a path on the graphics object. */
     void drawPath(Graphics2D g, Vector<R3> pts) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE5);
                 g.setColor(leftColor);
                 Shape path = path(proj.getValueLeft(pts));
                 g.draw(path);
@@ -197,7 +199,7 @@ public class Euclidean3 extends Euclidean2 {
     void fillPath(Graphics2D g, Vector<R3> pts) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE2);
+                g.setComposite(VisualStyle.COMPOSITE5);
                 g.setColor(leftColor);
                 Shape path = path(proj.getValueLeft(pts));
                 g.fill(path);
@@ -206,7 +208,6 @@ public class Euclidean3 extends Euclidean2 {
                 g.fill(path);
                 
             } else {
-                g.setComposite(VisualStyle.COMPOSITE5);
                 Shape path = path(proj.getValue(pts));
                 g.fill(path);
             }
@@ -303,9 +304,9 @@ public class Euclidean3 extends Euclidean2 {
     public void setStereo(boolean newValue){stereo.setValue(newValue);}
     
     /** Left color */
-    public final Color leftColor = Color.RED;
+    public final Color leftColor = new Color (255, 0, 0, 64);
     /** Right color */
-    public final Color rightColor = Color.BLUE;
+    public final Color rightColor = new Color (0, 255, 255, 64);
     
     
     // ACCESSOR METHODS

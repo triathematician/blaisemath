@@ -117,6 +117,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     
     /** Whether this element animates. */    
     public boolean animationOn=true;
+
     public void setAnimationOn(boolean newValue) { animationOn=newValue; }
     public boolean isAnimationOn() { return animationOn; }
         
@@ -207,8 +208,11 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     /** Determines whether lines are drawn at random positions and recycled over time or drawn at fixed points. */
     boolean standardFlows = false;
     
+    /** The length of the flows. */
+    int NUM=10;
+    
     /** Determines the number of random flows. */
-    int NUM_RANDOM = 1000;
+    int NUM_RANDOM = 500;
     
     /** Number to remove each time. */
     int RANDOM_TURNOVER = 10;
@@ -284,7 +288,6 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     /** Only need a few steps for the animation */
     public int getAnimatingSteps() { return 10; }
     
-    int NUM=10;
     
     // STYLE METHODS
 
@@ -298,5 +301,14 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     public String[] getStyleStrings() {return styleStrings;}
     @Override
     public String toString(){return "Vector field";}
+    
+    
+    // STATIC METHODS
+        
+//    public static BoundedFunction<R3, R3> getCurlFunction(final BoundedFunction<R3,Double> fx, final BoundedFunction<R3,Double> fy, final BoundedFunction<R3,Double> fz) {
+//        return new BoundedFunction<R3, R3>() {
+//        };
+//    }
+    
 }
 

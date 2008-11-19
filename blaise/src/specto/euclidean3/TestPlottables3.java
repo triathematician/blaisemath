@@ -24,20 +24,29 @@ public class TestPlottables3 extends javax.swing.JFrame {
     public TestPlottables3() {
         initComponents();
         
-        defaultPlot.add(new Function3D());
-        defaultPlot.add(new ParametricCurve3D());
+        VectorField3D vf3 = new VectorField3D();
+        
+        //defaultPlot.add(new Function3D());
+        ParametricCurve3D pc1 = new ParametricCurve3D();
+        //defaultPlot.add(pc1);
+        defaultPlot.add(pc1.getTangentVectors());
         defaultPlot.add(SliderBox.getStyleAdjusters(100,10,15,defaultPlot.getPlottables(),defaultPlot));
-                
+        defaultPlot.add(new LineIntegral3D(vf3));
+        defaultPlot.add(vf3);
+        
         ParametricSurface3D ps1 = new ParametricSurface3D();
         surfacePlot.add(ps1);
+        surfacePlot.add(new FluxIntegral3D(vf3));
         ParametricSurface3D.SurfacePoint sfcPt = ps1.getSurfacePoint();
         surfacePlot.add(sfcPt);
         surfacePlot.add(SliderBox.getStyleAdjusters(100,10,15,surfacePlot.getPlottables(),surfacePlot));
         domainPlot.add(new Rectangle2D(sfcPt.getConstraintModel()));
+        surfacePlot.add(ps1.getNormalVectors());
+        surfacePlot.add(ps1.getSurfaceField(vf3));
+        surfacePlot.add(vf3);
         
         domainPlot.add(sfcPt.getConstrainedPoint());
         
-        VectorField3D vf3 = new VectorField3D();
         vectorFieldPlot.add(vf3);
         vectorFieldPlot.add(new DESolution3D(vf3));
         vectorFieldPlot.add(SliderBox.getStyleAdjusters(100,10,15,vectorFieldPlot.getPlottables(),vectorFieldPlot));
@@ -51,11 +60,12 @@ public class TestPlottables3 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tabs = new javax.swing.JTabbedPane();
+        stokesPlot = new javax.swing.JTabbedPane();
         defaultPlot = new specto.euclidean3.Plot3D();
         surfacePlot = new specto.euclidean3.Plot3D();
         domainPlot = new specto.euclidean2.Plot2D();
         vectorFieldPlot = new specto.euclidean3.Plot3D();
+        plot3D1 = new specto.euclidean3.Plot3D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -113,7 +123,7 @@ public class TestPlottables3 extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        tabs.addTab("General", defaultPlot);
+        stokesPlot.addTab("General", defaultPlot);
 
         domainPlot.setAnimatorVisible(false);
         domainPlot.setAxisStyle(1);
@@ -147,7 +157,7 @@ public class TestPlottables3 extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tabs.addTab("Surface", surfacePlot);
+        stokesPlot.addTab("Surface", surfacePlot);
 
         javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
         vectorFieldPlot.setLayout(vectorFieldPlotLayout);
@@ -160,7 +170,20 @@ public class TestPlottables3 extends javax.swing.JFrame {
             .addGap(0, 426, Short.MAX_VALUE)
         );
 
-        tabs.addTab("Vector Field", vectorFieldPlot);
+        stokesPlot.addTab("Vector Field", vectorFieldPlot);
+
+        javax.swing.GroupLayout plot3D1Layout = new javax.swing.GroupLayout(plot3D1);
+        plot3D1.setLayout(plot3D1Layout);
+        plot3D1Layout.setHorizontalGroup(
+            plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 669, Short.MAX_VALUE)
+        );
+        plot3D1Layout.setVerticalGroup(
+            plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 426, Short.MAX_VALUE)
+        );
+
+        stokesPlot.addTab("Stoke's", plot3D1);
 
         fileMenu.setText("File"); // NOI18N
 
@@ -309,11 +332,11 @@ public class TestPlottables3 extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+            .addComponent(stokesPlot, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+            .addComponent(stokesPlot, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
         );
 
         pack();
@@ -373,14 +396,15 @@ public class TestPlottables3 extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem pasteMenuItem1;
     private javax.swing.JMenuItem pasteMenuItem2;
+    private specto.euclidean3.Plot3D plot3D1;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem1;
     private javax.swing.JMenuItem saveAsMenuItem2;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenuItem saveMenuItem1;
     private javax.swing.JMenuItem saveMenuItem2;
+    private javax.swing.JTabbedPane stokesPlot;
     private specto.euclidean3.Plot3D surfacePlot;
-    private javax.swing.JTabbedPane tabs;
     private specto.euclidean3.Plot3D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables
     

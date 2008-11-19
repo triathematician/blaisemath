@@ -5,11 +5,14 @@
 
 package specto.euclidean3;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import scio.coordinate.Coordinate;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import javax.swing.event.ChangeListener;
+import scio.function.FunctionValueException;
 import sequor.event.MouseVisometryEvent;
 import specto.DynamicPlottable;
 import scio.coordinate.R3;
@@ -57,8 +60,19 @@ public class Point3D extends DynamicPlottable<Euclidean3> implements ChangeListe
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v) {
         java.awt.geom.Point2D.Double winCenter = v.toWindow(prm);
-        g.setColor(getColor());
-        ((PointStyle)style).draw(g, winCenter);
+        if (v.isStereo()) {
+            try {
+                g.setColor(v.leftColor);
+                ((PointStyle) style).draw(g, v.toWindow(v.proj.getValueLeft(prm)));
+                g.setColor(v.rightColor);
+                ((PointStyle) style).draw(g, v.toWindow(v.proj.getValueRight(prm)));
+            } catch (FunctionValueException ex) {
+                Logger.getLogger(Point3D.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            g.setColor(getColor());
+            ((PointStyle)style).draw(g, winCenter);
+        }
         if(label!=null){
             g.setComposite(VisualStyle.COMPOSITE5);
             g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);

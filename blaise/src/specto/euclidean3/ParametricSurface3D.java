@@ -21,11 +21,13 @@ import scio.coordinate.R3;
 import scio.function.BoundedFunction;
 import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
+import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import sequor.style.VisualStyle;
 import specto.Constrains2D;
 import specto.Decoration;
+import specto.Plottable;
 import specto.PlottableGroup;
 import specto.euclidean2.Point2D;
 
@@ -35,7 +37,7 @@ import specto.euclidean2.Point2D;
  * plotted are any function from Double->(Double,Double), and min/max values of t.
  * @author ElishaPeterson
  */
-public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
+public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements SampleSet3D, SampleVector3D {
     
     // PROPERTIES
     
@@ -61,7 +63,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     public ParametricSurface3D(String string) {this();}
     /** Constructor for use with a particular function and range of t values */
     public ParametricSurface3D(Function<R2,R3> function,double uMin,double uMax,double vMin,double vMax,int samplePoints){
-        setColor(Color.DARK_GRAY);        
+        setColor(new Color(100,100,100,200));        
         this.function=function;
         uvRange = new PointRangeModel(uMin,uMax,vMin,vMax);
         uvRange.xModel.setNumSteps(samplePoints,true);
@@ -69,7 +71,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     }
     /** Constructs with specified function. */
     public ParametricSurface3D(Function<R2, R3> function, DoubleRangeModel drmu, DoubleRangeModel drmv, int samplePoints) {
-        setColor(Color.DARK_GRAY);        
+        setColor(new Color(100,100,100,200));        
         this.function=function;
         uvRange = new PointRangeModel(drmu, drmv);
         uvRange.xModel.setNumSteps(samplePoints,true);
@@ -77,7 +79,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     }
     
     public ParametricSurface3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
-        setColor(Color.DARK_GRAY);        
+        setColor(new Color(100,100,100,200));        
         uvRange = new PointRangeModel(0.0, 10.0, 0.0, 10.0);
         uvRange.xModel.setNumSteps(10,true);
         uvRange.yModel.setNumSteps(10,true);
@@ -137,6 +139,49 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
 
     // HANDLES THE INDIVIDUAL CURVES AND DRAWING THE SURFACE
         
+    /** Return sampling points used for the region. */
+    public Vector<R3> getSampleSet(int options) {
+        boolean inclusive = (options == 0);
+        try {
+            return function.getValue(uvRange.getValueRange(inclusive, 0.0, 0.0));
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(ParametricSurface3D.class.getName()).log(Level.SEVERE, null, ex);
+            return new Vector<R3>();
+        }
+    }
+
+    /** Returns sampling vectors used for the region... here the vectors point in the direction of the normal. */
+    public Vector<R3[]> getSampleVectors(int options) {
+        Vector<R3[]> result = new Vector<R3[]>();
+        boolean inclusive = (options == 0);
+        try {
+            for (R2 pt : uvRange.getValueRange(inclusive, 0.0, 0.0)) {
+                R3[] temp = {function.getValue(pt), getNormal(function, pt.x, pt.y) };
+                result.add(temp);
+            }
+            return result;
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(ParametricSurface3D.class.getName()).log(Level.SEVERE, null, ex);
+            return new Vector<R3[]>();
+        }
+    }
+
+    /** Returns sampling vectors used for the region... here the vectors point in the direction of the normal. */
+    public Vector<R3[]> getSampleVectors(int options, Function<R3,R3> vectorField) {
+        Vector<R3[]> result = new Vector<R3[]>();
+        boolean inclusive = (options == 0);
+        try {
+            for (R2 pt : uvRange.getValueRange(inclusive, 0.0, 0.0)) {
+                R3[] temp = {function.getValue(pt), vectorField.getValue(function.getValue(pt))};
+                result.add(temp);
+            }
+            return result;
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(ParametricSurface3D.class.getName()).log(Level.SEVERE, null, ex);
+            return new Vector<R3[]>();
+        }
+    }
+    
     /** Sets up the curves used to draw the figure. */
     public void initCurves(Euclidean3 v){        
         clear();
@@ -146,6 +191,10 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
         }
         for (double y : uvRange.yModel.getValueRange(true, 0.0)) {
             add(new ParametricCurve3D(getSliceFixedY(y, function),uvRange.xModel,100));
+        }
+        
+        for (Plottable p : plottables) {
+            p.setColor(getColor());
         }
     }
 
@@ -160,7 +209,16 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
         super.recompute(v);
         initCurves(v);
     }
+
+    @Override
+    public void paintComponent(Graphics2D g, Euclidean3 v) {
+        super.paintComponent(g, v);
+    }
     
+    @Override
+    public void paintComponent(Graphics2D g, Euclidean3 v, RangeTimer t) {
+        super.paintComponent(g, v);
+    }
     
     // STYLE
         
@@ -242,6 +300,10 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     
     /** Returns a point on the surface. */
     public SurfacePoint getSurfacePoint() { return new SurfacePoint(uvRange); }    
+    /** Returns normal vector field. */
+    public SurfaceNormals getNormalVectors() { return new SurfaceNormals(); }
+    /** Returns vector field on the surface. */
+    public SurfaceField getSurfaceField(VectorField3D field) { return new SurfaceField(field); }
     
     /** A point which you can move around on the surface. */
     public class SurfacePoint extends Point3D implements Decoration<Euclidean3,ParametricSurface3D>, Constrains2D {
@@ -321,5 +383,62 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
             g.setComposite(VisualStyle.COMPOSITE10);
             super.paintComponent(g, v);
         }        
+    }
+    
+    
+    /** Draws a vector field on a surface... optionally displays also the curl of the field.
+     */
+    public class SurfaceField extends Plottable<Euclidean3> implements Decoration<Euclidean3,ParametricSurface3D> {
+
+        VectorField3D field;
+        
+        public SurfaceField(VectorField3D field) {
+            this.field = field;
+        }
+        
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean3 v) {
+            g.setColor(getColor());
+            v.drawArrows(g, getSampleVectors(1, field.getFunction()), 5.0);
+        }
+
+        @Override
+        public String[] getStyleStrings() {
+            String[] result = {};
+            return result;
+        }
+
+        public void setParent(ParametricSurface3D parent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public ParametricSurface3D getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+    
+    /** Draws normal vectors on the surface.
+     */
+    public class SurfaceNormals extends Plottable<Euclidean3> implements Decoration<Euclidean3,ParametricSurface3D> {
+                
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean3 v) {
+            g.setColor(getColor());
+            v.drawArrows(g, getSampleVectors(1), 5.0);
+        }
+
+        @Override
+        public String[] getStyleStrings() {
+            String[] result = {};
+            return result;
+        }
+
+        public void setParent(ParametricSurface3D parent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public ParametricSurface3D getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }

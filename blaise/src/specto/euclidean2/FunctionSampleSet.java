@@ -14,9 +14,6 @@ import scio.function.FunctionValueException;
 import sequor.model.DoubleRangeModel;
 import specto.Decoration;
 import specto.Plottable;
-import specto.euclidean2.Function2D;
-import specto.euclidean2.PointSet2D;
-import specto.euclidean2.Euclidean2;
 
 /**
  * FunctionSampleSet displays a finite set of values of a function in some way... for example, boxes for Riemann sums; sticks and dots;

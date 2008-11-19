@@ -5,6 +5,8 @@
 
 package specto.euclidean3;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
@@ -15,8 +17,11 @@ import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R3;
+import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
 import sequor.model.DoubleRangeModel;
+import specto.Decoration;
+import specto.Plottable;
 
 /**
  * Draws a parametric function on the plane. In other words, it contains two functions which give the x and y coordinates
@@ -24,7 +29,7 @@ import sequor.model.DoubleRangeModel;
  * plotted are any function from Double->(Double,Double), and min/max values of t.
  * @author ElishaPeterson
  */
-public class ParametricCurve3D extends PointSet3D {
+public class ParametricCurve3D extends PointSet3D implements SampleSet3D, SampleVector3D {
     
     // PROPERTIES
     
@@ -143,6 +148,77 @@ public class ParametricCurve3D extends PointSet3D {
     // STYLE
         
     @Override
-    public String toString(){return "Parametric Curve";}    
+    public String toString(){return "Parametric Curve";}
+
     
+    // RETURN LIST OF POINTS ALONG THE PATH
+    
+    /** Returns list of points along the path. */
+    public Vector<R3> getSampleSet(int options) {
+        DoubleRangeModel sampleRange = new DoubleRangeModel(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
+        sampleRange.setNumSteps(options, true);
+        try {
+            return function.getValue(sampleRange.getValueRange(true, 0.0));
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(ParametricCurve3D.class.getName()).log(Level.SEVERE, null, ex);
+            return new Vector<R3>();
+        }
+    }
+
+    /** Returns list of vectors along the path in the direction of the path. */
+    public Vector<R3[]> getSampleVectors(int options) {
+        DoubleRangeModel sampleRange = new DoubleRangeModel(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
+        sampleRange.setNumSteps(options, true);
+        try {
+            Vector<R3[]> result = new Vector<R3[]>();
+            for (Double t : sampleRange.getValueRange(true, 0.0)) {
+                R3[] temp = { function.getValue(t), getTangentVector(function, t) };
+                result.add(temp);
+            }
+            return result;
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(ParametricCurve3D.class.getName()).log(Level.SEVERE, null, ex);
+            return new Vector<R3[]>();
+        }
+    }
+    
+    
+    // STATIC METHODS
+    
+    /** Returns tangent vector in direction of x */
+    public static R3 getTangentVector(Function<Double,R3> function, double t) throws FunctionValueException {
+        return Derivative.approximateDerivative(function, t, .001);
+    }
+    
+    
+    // DECORATIONS
+    
+    /** Returns collection of tangent vectors */
+    public CurveTangents getTangentVectors() { return new CurveTangents(); }
+    
+    
+    /** Draws tangent vectors on the curve.
+     */
+    public class CurveTangents extends Plottable<Euclidean3> implements Decoration<Euclidean3,ParametricCurve3D> {
+                
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean3 v) {
+            g.setColor(getColor());
+            v.drawArrows(g, getSampleVectors(10), 5.0);
+        }
+
+        @Override
+        public String[] getStyleStrings() {
+            String[] result = {};
+            return result;
+        }
+
+        public void setParent(ParametricCurve3D parent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public ParametricCurve3D getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
 }
