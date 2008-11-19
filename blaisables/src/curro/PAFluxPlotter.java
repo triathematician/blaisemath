@@ -7,6 +7,9 @@
 package curro;
 
 import sequor.model.ParameterListModel;
+import specto.euclidean3.FluxIntegral3D;
+import specto.euclidean3.LineIntegral3D;
+import specto.euclidean3.ParametricCurve3D;
 import specto.euclidean3.ParametricSurface3D;
 import specto.euclidean3.VectorField3D;
 
@@ -18,8 +21,8 @@ public class PAFluxPlotter extends javax.swing.JApplet {
     
     String[][] functions = { 
         { "P(x,y,z)=" , "x*y", "x", "y", "z" },  { "Q(x,y,z)=" , "y*z", "x", "y", "z" },  { "R(x,y,z)=" , "-y/5", "x", "y", "z" },
-        { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "a cos(v)", "u", "v" }
-                };
+        { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "a cos(v)", "u", "v" },
+        { "rx(t)=" , "a cos(t)", "t" }, { "ry(t)=" , "a sin(t)", "t" }, { "rz(t)=" , "0" } };
     Object[][] parameters = { { "a", 1.0 }, { "b", 1.0 }, { "c", 0.0 }, { "d", -1.0 } };
 
     /** Initializes the applet AParameterPlotter */
@@ -30,8 +33,18 @@ public class PAFluxPlotter extends javax.swing.JApplet {
                     initComponents();
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
-                    plot3D1.add(new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2)));
-                    plot3D1.add(new ParametricSurface3D(functionPanel1.getFunctionModel(3), functionPanel1.getFunctionModel(4), functionPanel1.getFunctionModel(5)));
+                    VectorField3D vf3 = new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
+                    plot3D1.add(vf3);
+                    ParametricSurface3D ps1 = new ParametricSurface3D(functionPanel1.getFunctionModel(3), functionPanel1.getFunctionModel(4), functionPanel1.getFunctionModel(5));
+                    ps1.getDomainModel().xModel.setRangeProperties(0.0, 0.0, 2*Math.PI, Math.PI/6);
+                    ps1.getDomainModel().yModel.setRangeProperties(0.0, 0.0, Math.PI/2.0, Math.PI/12);
+                    ParametricCurve3D pc1 = new ParametricCurve3D(functionPanel1.getFunctionModel(6), functionPanel1.getFunctionModel(7), functionPanel1.getFunctionModel(8));
+                    pc1.getModel().setRangeProperties(0.0, 0.0, 2*Math.PI);
+                    plot3D1.add(ps1);
+                    plot3D1.add(new FluxIntegral3D(ps1, vf3));
+                    plot3D1.add(new LineIntegral3D(pc1, vf3));
+                    
+                    plot3D1.getVisometry().setSceneSize(1.5);
                     //plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
                     //plot2D1.repaint();
                 }
