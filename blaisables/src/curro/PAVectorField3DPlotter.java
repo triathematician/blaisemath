@@ -7,17 +7,17 @@
 package curro;
 
 import sequor.model.ParameterListModel;
-import specto.euclidean2.PlaneFunction2D;
-import specto.euclidean3.Function3D;
+import specto.euclidean3.DESolution3D;
+import specto.euclidean3.VectorField3D;
 
 /**
  *
  * @author  ae3263
  */
-public class PASurfacePlotter extends javax.swing.JApplet {
+public class PAVectorField3DPlotter extends javax.swing.JApplet {
     
-    String[][] functions = { { "f(x,y)=" , "a*exp(-x^2/b^2-y^2/c^2)", "x", "y" } };
-    Object[][] parameters = { { "a", 2.0 }, { "b", 5.0 }, { "c", 5.0 } };
+    String[][] functions = { { "P(x,y,z)=" , "-a*x+a*y", "x", "y", "z" }, { "Q(x,y,z)=", "b*x-y/10-x*z/10", "x", "y", "z" }, { "R(x,y,z)=", "-c*z+x*y/10", "x", "y", "z" } };
+    Object[][] parameters = { { "a", 1.0 }, { "b", 1.1 }, { "c", 0.2 } };
 
     /** Initializes the applet AParameterPlotter */
     public void init() {
@@ -27,10 +27,10 @@ public class PASurfacePlotter extends javax.swing.JApplet {
                     initComponents();
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
-                    plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
-                    plot2D1.repaint();
-                    
-                    plot3D1.add(new Function3D(functionPanel1.getFunctionModel(0)));
+                    VectorField3D vf1 = new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
+                    plot3D1.add(vf1);
+                    plot3D1.add(new DESolution3D(vf1));
+                    plot3D1.repaint();
                 }
             });
         } catch (Exception ex) {
@@ -50,53 +50,30 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         parameterListModel1 = new sequor.model.ParameterListModel();
         settingsPanel1 = new sequor.component.SettingsPanel();
         functionPanel1 = new sequor.component.FunctionPanel(functions);
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D1 = new specto.euclidean2.Plot2D();
         plot3D1 = new specto.euclidean3.Plot3D();
 
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
-        plot2D1.setAnimatorVisible(false);
-
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
-        );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("2D", plot2D1);
-
-        plot3D1.setAnimatorVisible(false);
-
         javax.swing.GroupLayout plot3D1Layout = new javax.swing.GroupLayout(plot3D1);
         plot3D1.setLayout(plot3D1Layout);
         plot3D1Layout.setHorizontalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 536, Short.MAX_VALUE)
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("3D", plot3D1);
-
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(plot3D1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sequor.component.FunctionPanel functionPanel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private sequor.model.ParameterListModel parameterListModel1;
-    private specto.euclidean2.Plot2D plot2D1;
     private specto.euclidean3.Plot3D plot3D1;
     private sequor.component.SettingsPanel settingsPanel1;
     // End of variables declaration//GEN-END:variables

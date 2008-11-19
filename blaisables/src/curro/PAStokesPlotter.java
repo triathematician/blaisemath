@@ -17,13 +17,13 @@ import specto.euclidean3.VectorField3D;
  *
  * @author  ae3263
  */
-public class PAFluxPlotter extends javax.swing.JApplet {
+public class PAStokesPlotter extends javax.swing.JApplet {
     
     String[][] functions = { 
-        { "P(x,y,z)=" , "x*y", "x", "y", "z" },  { "Q(x,y,z)=" , "y*z", "x", "y", "z" },  { "R(x,y,z)=" , "-y/5", "x", "y", "z" },
-        { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "a cos(v)", "u", "v" },
+        { "P(x,y,z)=" , "sin(c*x)*sin(c*y)+p*y/10", "x", "y", "z" },  { "Q(x,y,z)=" , "cos(c*x)*cos(c*y)+q*x/10", "x", "y", "z" },  { "R(x,y,z)=" , "d*z/10", "x", "y", "z" },
+        { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "b cos(v)", "u", "v" },
         { "rx(t)=" , "a cos(t)", "t" }, { "ry(t)=" , "a sin(t)", "t" }, { "rz(t)=" , "0" } };
-    Object[][] parameters = { { "a", 1.0 }, { "b", 1.0 }, { "c", 0.0 }, { "d", -1.0 } };
+    Object[][] parameters = { { "a", 1.5 }, { "b", 1.5 }, { "c", 1.0 }, { "d", 2.0 }, { "p", -2.0 }, { "q", 2.0 } };
 
     /** Initializes the applet AParameterPlotter */
     public void init() {
@@ -45,6 +45,9 @@ public class PAFluxPlotter extends javax.swing.JApplet {
                     plot3D1.add(new LineIntegral3D(pc1, vf3));
                     
                     plot3D1.getVisometry().setSceneSize(1.5);
+                    plot3D1.getVisometry().setViewDist(3.0);
+                    plot3D1.getVisometry().setEyeSep(0.2);
+                    plot3D1.getVisometry().setDesiredBounds(-3.0, -3.0, 3.0, 3.0);
                     //plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
                     //plot2D1.repaint();
                 }
@@ -83,7 +86,7 @@ public class PAFluxPlotter extends javax.swing.JApplet {
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 334, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot3D1, java.awt.BorderLayout.CENTER);

@@ -52,6 +52,8 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
         settingsPanel1 = new sequor.component.SettingsPanel();
         functionPanel1 = new sequor.component.FunctionPanel(functions);
 
+        plot2D1.setAxisStyle(1);
+
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
@@ -60,7 +62,7 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
