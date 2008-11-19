@@ -5,7 +5,7 @@
 package metrics;
 
 import java.util.Vector;
-import sequor.model.DoubleRangeModel;
+import sequor.event.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;

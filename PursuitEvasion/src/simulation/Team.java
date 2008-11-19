@@ -6,7 +6,7 @@
 // TODO Consolidate all "broadcast" methods
 package simulation;
 
-import sequor.model.DoubleRangeModel;
+import sequor.event.DoubleRangeModel;
 import metrics.*;
 import behavior.*;
 import utility.DistanceTable;

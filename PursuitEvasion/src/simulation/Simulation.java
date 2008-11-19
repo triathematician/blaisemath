@@ -32,7 +32,7 @@ import metrics.Valuation;
 import metrics.VictoryCondition;
 import sequor.Settings;
 import sequor.SettingsProperty;
-import sequor.model.DoubleRangeModel;
+import sequor.event.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.StringRangeModel;
 import utility.DistanceTable;

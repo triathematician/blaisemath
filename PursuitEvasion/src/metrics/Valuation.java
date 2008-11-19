@@ -23,7 +23,7 @@ import scio.function.FunctionValueException;
 import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.BooleanModel;
-import sequor.model.DoubleRangeModel;
+import sequor.event.DoubleRangeModel;
 import sequor.model.StringRangeModel;
 import sequor.model.SubsetModel;
 import simulation.Agent;

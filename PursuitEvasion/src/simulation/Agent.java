@@ -6,7 +6,7 @@
 package simulation;
 
 import behavior.ApproachPath;
-import sequor.model.DoubleRangeModel;
+import sequor.event.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
 import tasking.Task;
