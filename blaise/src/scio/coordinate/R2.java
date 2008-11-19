@@ -21,7 +21,9 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public R2(double x,double y){super(x,y);}
     public R2(java.awt.geom.Point2D.Double p){x=p.x;y=p.y;}
 
+
     // BEAN PATTERNS
+    public void setTo(R2 pt) { x=pt.x; y=pt.y; }
 //    @XmlAttribute @Override public double getX() { return x; }
 //    public void setX(double x){this.x = x;}
 //    @XmlAttribute @Override public double getY() { return y; }
