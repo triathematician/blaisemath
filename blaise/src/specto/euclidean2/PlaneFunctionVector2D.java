@@ -46,7 +46,7 @@ public class PlaneFunctionVector2D extends Vector2D.Unit implements Decoration<E
             R2 gradient = parent.getGradientFunction().getValue(getPoint1());
             dirDer = gradient.dot(getVector());
         } catch (FunctionValueException ex) {
-            System.out.println("error");
+                System.out.println("error computing derivative approximation");
         }
     }
 

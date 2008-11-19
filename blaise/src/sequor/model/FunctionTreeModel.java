@@ -7,6 +7,7 @@ package sequor.model;
 
 import sequor.FiresChangeEvents;
 import java.beans.PropertyChangeEvent;
+import java.util.Vector;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,7 +36,8 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     public FunctionTreeModel(){setValue("cos(x)");}
     public FunctionTreeModel(FunctionTreeNode ftn) {this(new FunctionTreeRoot(ftn));}
     public FunctionTreeModel(FunctionTreeRoot ftr){this.ftr=ftr;}
-    public FunctionTreeModel(String text,String var){setValue(text);}
+    public FunctionTreeModel(String text,String var){setValue(text,var);}
+    public FunctionTreeModel(String text,String[] vars){setValue(text,vars);}
     public FunctionTreeModel(String text) {this(text,"");}
     
     // BEAN patterns
@@ -59,6 +61,32 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
             valid=false;
         }
     }
+    public void setValue(String s, String var) {
+        try {
+            if(ftr==null){ftr=new FunctionTreeRoot(s);}
+            else{ftr.setArgumentNode(Parser.parseExpression(s));}
+            Vector<String> vars = new Vector<String>();
+            vars.add(var);
+            ftr.setVariables(vars);
+            valid=true;
+            fireStateChanged();
+        } catch (FunctionSyntaxException ex) {
+            valid=false;
+        }
+    }
+    public void setValue(String s, String[] vars) {
+        try {
+            if(ftr==null){ftr=new FunctionTreeRoot(s);}
+            else{ftr.setArgumentNode(Parser.parseExpression(s));}
+            Vector<String> vs = new Vector<String>();
+            for (int i = 0; i < vars.length; i++) { vs.add(vars[i]); }
+            ftr.setVariables(vs);
+            valid=true;
+            fireStateChanged();
+        } catch (FunctionSyntaxException ex) {
+            valid=false;
+        }
+    }
         
     public BoundedFunction<?,Double> getFunction(){ return ftr.getFunction(); }
     public BoundedFunction<?,Double> getFunction(int n){ return ftr.getFunction(n); }
@@ -67,6 +95,7 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     
     @Override
     public FiresChangeEvents clone() {return new FunctionTreeModel(ftr);}
+
     @Override
     public String toString(){return ftr.argumentString();}
     @Override

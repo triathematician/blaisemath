@@ -111,7 +111,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
         Function<Double,Double> function;
 
         public FunctionPointModel(Function<Double, Double> function) {this(function,0.0);}
-        public FunctionPointModel(Function<Double,Double> function,double x0){
+        public FunctionPointModel(Function<Double, Double> function,double x0){
             super();
             this.function = function;
             setTo(x0,0.0);        
@@ -154,7 +154,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
                 slope = Derivative.approximateDerivative(function, prm.getX(), .0001);
                 endVector.setTo(getPoint().plus(new R2(1.,slope).multipliedBy(1/Math.sqrt(1+slope*slope))));
             } catch (FunctionValueException ex) {
-                System.out.println("error");
+                System.out.println("error computing derivative approximation");
             }
         }
 

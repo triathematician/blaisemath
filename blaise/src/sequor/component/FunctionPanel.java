@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.model.FunctionTreeModel;
@@ -20,10 +22,33 @@ import specto.euclidean2.Function2D;
  * 
  * @author Elisha Peterson
  */
-public class FunctionPanel extends SettingsPanel {
+public class FunctionPanel extends SettingsPanel implements ChangeListener {
     
     /** Default constructor. */
     public FunctionPanel() { this(1); }
+
+    /** Initializes with specified list of function/variable pairs. If there is only a single element in
+     * one of the arrays, the function is created with default variables (found by parsing the function). If
+     * the array has two elements, a label is given to the function, e.g. f(x)=. If the array has three or
+     * more elements, the remaining elements are all treated as variables.
+     * @param functions
+     */
+    public FunctionPanel(String[][] functions) {
+        super(new Settings());
+        for (int i = 0; i < functions.length; i++) {
+            switch (functions[i].length) {
+                case 0: break;
+                case 1: addFunction(functions[i][0]); break;
+                case 2: addFunction(functions[i][0],functions[i][1]); break;
+                case 3: addFunction(functions[i][0],functions[i][1],functions[i][2]); break;
+                default:
+                    String[] vars = new String[functions[i].length-2];
+                    for (int j = 2; j < functions[i].length; j++) { vars[j-2] = functions[i][j]; }
+                    addFunction(functions[i][0],functions[i][1],vars); break;
+            }
+        }
+        updatePanel();
+    }
 
     /** Constructs with specified number of functions. */
     public FunctionPanel(int n){
@@ -37,8 +62,24 @@ public class FunctionPanel extends SettingsPanel {
     }
 
     /** Appends a function to the panel. */
+    public void addFunction(String value) { 
+        FunctionTreeModel ftm = new FunctionTreeModel(value);
+        String label = "f("+ftm.getRoot().getVariables().toString()+")=";
+        s.add(new SettingsProperty(label,ftm,Settings.EDIT_FUNCTION));        
+    }
+    /** Appends a function to the panel. */
     public void addFunction(String label, String value) { 
         FunctionTreeModel ftm = new FunctionTreeModel(value);
+        s.add(new SettingsProperty(label,ftm,Settings.EDIT_FUNCTION));        
+    }
+    /** Appends a function to the panel. */
+    public void addFunction(String label, String value, String var) {
+        FunctionTreeModel ftm = new FunctionTreeModel(value, var);
+        s.add(new SettingsProperty(label,ftm,Settings.EDIT_FUNCTION));        
+    }
+    /** Appends a function to the panel. */
+    public void addFunction(String label, String value, String[] vars) {
+        FunctionTreeModel ftm = new FunctionTreeModel(value, vars);
         s.add(new SettingsProperty(label,ftm,Settings.EDIT_FUNCTION));        
     }
     
@@ -82,5 +123,12 @@ public class FunctionPanel extends SettingsPanel {
         contextMenu.addSeparator();
         contextMenu.add(getDeleteMenu());        
         return contextMenu;
+    }
+
+    /** Called a change is made that should be forwarded to the underlying functions. */
+    public void stateChanged(ChangeEvent e) {
+        for (int i = 0; i < s.size(); i++) {
+            ((FunctionTreeModel)s.get(i).getModel()).stateChanged(e);
+        }
     }
 }

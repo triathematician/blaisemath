@@ -5,22 +5,29 @@
 
 package specto.euclidean3;
 
+import java.awt.Graphics2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import sequor.model.FunctionTreeModel;
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import scio.coordinate.R2;
 import scio.function.Function;
 import scio.coordinate.R3;
 import scio.function.BoundedFunction;
+import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
+import sequor.style.VisualStyle;
+import specto.Constrains2D;
+import specto.Decoration;
 import specto.PlottableGroup;
+import specto.euclidean2.Point2D;
 
 /**
  * Draws a parametric function on the plane. In other words, it contains two functions which give the x and y coordinates
@@ -41,7 +48,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     /** Defines a default function which is displayed. For now its the unit sphere */
     private static final Function<R2,R3> DEFAULT_FUNCTION=new Function<R2,R3>(){
         @Override
-        public R3 getValue(R2 uv){return new R3(Math.cos(uv.x)*Math.sin(uv.y),Math.sin(uv.x)*Math.sin(uv.y),Math.cos(uv.y));}
+        public R3 getValue(R2 uv){return new R3(Math.cos(uv.y)*Math.sin(uv.x),Math.sin(uv.y)*Math.sin(uv.x),Math.cos(uv.x));}
         @Override
         public Vector<R3> getValue(Vector<R2> pts) {
             Vector<R3> result=new Vector<R3>(pts.size());
@@ -50,7 +57,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
         }
     };
         
-    public ParametricSurface3D(){this(DEFAULT_FUNCTION,0.0,2*Math.PI,0.0,Math.PI,10);}
+    public ParametricSurface3D(){this(DEFAULT_FUNCTION,0.0,Math.PI/2.0,0.0,2*Math.PI,10);}
     public ParametricSurface3D(String string) {this();}
     /** Constructor for use with a particular function and range of t values */
     public ParametricSurface3D(Function<R2,R3> function,double uMin,double uMax,double vMin,double vMax,int samplePoints){
@@ -72,8 +79,8 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
     public ParametricSurface3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
         setColor(Color.DARK_GRAY);        
         uvRange = new PointRangeModel(0.0, 10.0, 0.0, 10.0);
-        uvRange.xModel.setNumSteps(1000,true);
-        uvRange.yModel.setNumSteps(1000,true);
+        uvRange.xModel.setNumSteps(10,true);
+        uvRange.yModel.setNumSteps(10,true);
         function = getParametricFunction(
                 (Function<R2, Double>) fm1.getRoot().getFunction(2),
                 (Function<R2, Double>) fm2.getRoot().getFunction(2),
@@ -193,7 +200,20 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
                 return result;
             }           
         };
-    } 
+    }
+    
+    /** Returns tangent vector in direction of x */
+    public static R3 getTangentX(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+        return Derivative.approximateDerivative(getSliceFixedY(y, function), x, .001);
+    }
+    /** Returns tangent vecotr in direction of y */
+    public static R3 getTangentY(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+        return Derivative.approximateDerivative(getSliceFixedX(x, function), y, .001);
+    }
+    /** Returns normal vector */
+    public static R3 getNormal(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+        return getTangentX(function, x, y).cross(getTangentY(function, x, y));
+    }
     
     
     // STANDARD SURFACES
@@ -215,5 +235,91 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> {
                     }
            },0.0,2*Math.PI,0.0,Math.PI,10);
         }
+    }
+    
+    
+    // DECORATIONS
+    
+    /** Returns a point on the surface. */
+    public SurfacePoint getSurfacePoint() { return new SurfacePoint(uvRange); }    
+    
+    /** A point which you can move around on the surface. */
+    public class SurfacePoint extends Point3D implements Decoration<Euclidean3,ParametricSurface3D>, Constrains2D {
+        
+        Segment3D normal;
+        Segment3D dx;
+        Segment3D dy;
+        PointRangeModel domain;
+        
+        public SurfacePoint(PointRangeModel prm){
+            super();
+            setColor(Color.RED);
+            domain=new PointRangeModel(prm.getX(),prm.getY());
+            domain.xModel.setRangeProperties(prm.getX(), prm.getMinX(), prm.getMaxX());
+            domain.yModel.setRangeProperties(prm.getY(), prm.getMinY(), prm.getMaxY());
+            domain.addChangeListener(new ChangeListener(){
+                public void stateChanged(ChangeEvent e) {
+                    try {
+                        R3 pt = function.getValue(domain.getPoint());
+                        SurfacePoint.super.setPoint(pt);
+                        R3 pdx = getTangentX(function, domain.getX(), domain.getY());
+                        R3 pdy = getTangentY(function, domain.getX(), domain.getY());
+                        R3 pn = pdx.cross(pdy);
+                        dx.setTo(pt.minus(pdx.times(.5)),pt.plus(pdx.times(.5)));
+                        dy.setTo(pt.minus(pdy.times(.5)),pt.plus(pdy.times(.5)));
+                        normal.setTo(pt,pt.plus(pn));
+                        fireStateChanged();
+                    } catch (FunctionValueException ex) {
+                        Logger.getLogger(ParametricSurface3D.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            normal=new Segment3D(this.prm, this.getPoint());
+            normal.style.setValue(Segment3D.LINE_VECTOR);
+            normal.setEditable(false);
+            normal.addChangeListener(this);
+            dx=new Segment3D(this.prm, this.getPoint());
+            dx.style.setValue(Segment3D.LINE_VECTOR);
+            dx.setEditable(false);
+            dx.addChangeListener(this);
+            dy=new Segment3D(this.prm, this.getPoint());
+            dy.style.setValue(Segment3D.LINE_VECTOR);
+            dy.setEditable(false);
+            dy.addChangeListener(this);
+        }
+        
+        // BEAN PATTERNS
+        
+        public PointRangeModel getConstraintModel() { return domain; }
+        public Point2D getConstrainedPoint() { Point2D result = new Point2D(domain); result.setColor(getColor()); return result; }
+        
+        public void setParent(ParametricSurface3D parent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public ParametricSurface3D getParent() {
+            return ParametricSurface3D.this;
+        }
+        
+        // PAINT METHODS
+
+        @Override
+        public void paintComponent(Graphics2D g, Euclidean3 v) {
+            g.setComposite(VisualStyle.COMPOSITE5);
+            g.setColor(Color.YELLOW);
+            Vector<R3> sfcPath = new Vector<R3>();
+            sfcPath.add(dx.getPoint1().plus(dy.getPoint1()).minus(getPoint()));
+            sfcPath.add(dx.getPoint1().plus(dy.getPoint2()).minus(getPoint()));
+            sfcPath.add(dx.getPoint2().plus(dy.getPoint2()).minus(getPoint()));
+            sfcPath.add(dx.getPoint2().plus(dy.getPoint1()).minus(getPoint()));
+            sfcPath.add(dx.getPoint1().plus(dy.getPoint1()).minus(getPoint()));
+            dx.paintComponent(g, v);
+            dy.paintComponent(g, v);
+            v.fillPath(g, sfcPath);
+            g.setColor(getColor());
+            normal.paintComponent(g, v);
+            g.setComposite(VisualStyle.COMPOSITE10);
+            super.paintComponent(g, v);
+        }        
     }
 }

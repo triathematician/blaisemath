@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -37,11 +38,36 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     public ParameterListModel(){
         values=new TreeMap<String,DoubleRangeModel>();
     }
+    public ParameterListModel(SettingsPanel sp) {
+        this();
+        initPanel(sp);
+    }
     public ParameterListModel(TreeMap<String,DoubleRangeModel> values){
         this.values=new TreeMap<String,DoubleRangeModel>();
         for(Entry<String,DoubleRangeModel> e:values.entrySet()){
             this.values.put(e.getKey(),e.getValue());
         }
+    }
+    
+    /** Parametrizes with a list of objects, which should be String/value pairings, and with a given panel storing the parameters. */
+    public ParameterListModel(Object[][] parameters, SettingsPanel sp) {
+        this(sp);
+        for (int i = 0; i < parameters.length; i++) {
+            if (parameters[i].length > 1 && parameters[i][0] instanceof String && parameters[i][1] instanceof Number) {
+                if (parameters[i][1] instanceof Double) {
+                    setParameterValue((String)parameters[i][0], (Double)parameters[i][1]);
+                } else if (parameters[i][1] instanceof Integer) {
+                    setParameterValue((String)parameters[i][0], (double)((Integer)parameters[i][1]));
+                }
+            }
+        }
+    }
+
+    /** Parametrizes with list of objects, the settings panel to display the parameters on, and a changelistener to handle parameter change events. */
+    public ParameterListModel(Object[][] parameters, SettingsPanel sp, ChangeListener cl) {
+        this(parameters, sp);
+        addChangeListener(cl);
+        cl.stateChanged(new ChangeEvent(this));
     }
     
     
@@ -84,13 +110,33 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     public void removeParameter(String s){
         if(values.containsKey(s)){
             values.get(s).removeChangeListener(this);
-            values.remove(s);
+            if (values.remove(s) != null) {
+                added = true;
+                fireStateChanged();
+            }
         }
+        added = false;
     }        
     
     
     // GUI INPUT/OUTPUTS
-        
+
+    /** Initializes a given settings panel with appropriate listening. */
+    public void initPanel(final SettingsPanel jp) {
+        addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) { if (added) { updatePanel(jp); } }
+        });    
+    }
+
+    /** Button to remove specific parameter. */
+    public JMenuItem getRemoveItem(final String parm) {
+        JMenuItem result = new JMenuItem(parm);
+        result.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) { removeParameter(parm); }
+        });
+        return result;
+    }
+
     /** Updates a panel to contain the settings here. */
     public JPanel updatePanel(final SettingsPanel jp){
         Settings s=new Settings();
@@ -120,6 +166,9 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
             });            
         }
         context.add(mi);
+        JMenu removeMenu = new JMenu("Remove parameter");
+        for (String var : getParameterList().keySet()) { removeMenu.add(getRemoveItem(var)); }
+        context.add(removeMenu);
         jp.setComponentPopupMenu(context);
         return jp;
     }

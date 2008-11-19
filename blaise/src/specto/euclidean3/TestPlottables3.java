@@ -11,6 +11,8 @@ import specto.euclidean3.VectorField3D;
 import specto.euclidean3.Function3D;
 import specto.euclidean3.DESolution3D;
 import sequor.control.SliderBox;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.Rectangle2D;
 
 /**
  *
@@ -24,8 +26,16 @@ public class TestPlottables3 extends javax.swing.JFrame {
         
         defaultPlot.add(new Function3D());
         defaultPlot.add(new ParametricCurve3D());
-        defaultPlot.add(new ParametricSurface3D());
         defaultPlot.add(SliderBox.getStyleAdjusters(100,10,15,defaultPlot.getPlottables(),defaultPlot));
+                
+        ParametricSurface3D ps1 = new ParametricSurface3D();
+        surfacePlot.add(ps1);
+        ParametricSurface3D.SurfacePoint sfcPt = ps1.getSurfacePoint();
+        surfacePlot.add(sfcPt);
+        surfacePlot.add(SliderBox.getStyleAdjusters(100,10,15,surfacePlot.getPlottables(),surfacePlot));
+        domainPlot.add(new Rectangle2D(sfcPt.getConstraintModel()));
+        
+        domainPlot.add(sfcPt.getConstrainedPoint());
         
         VectorField3D vf3 = new VectorField3D();
         vectorFieldPlot.add(vf3);
@@ -43,6 +53,8 @@ public class TestPlottables3 extends javax.swing.JFrame {
 
         tabs = new javax.swing.JTabbedPane();
         defaultPlot = new specto.euclidean3.Plot3D();
+        surfacePlot = new specto.euclidean3.Plot3D();
+        domainPlot = new specto.euclidean2.Plot2D();
         vectorFieldPlot = new specto.euclidean3.Plot3D();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -88,7 +100,7 @@ public class TestPlottables3 extends javax.swing.JFrame {
         aboutMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Demo of 2D Plottables");
+        setTitle("Demo of 3D Plottables");
 
         javax.swing.GroupLayout defaultPlotLayout = new javax.swing.GroupLayout(defaultPlot);
         defaultPlot.setLayout(defaultPlotLayout);
@@ -102,6 +114,40 @@ public class TestPlottables3 extends javax.swing.JFrame {
         );
 
         tabs.addTab("General", defaultPlot);
+
+        domainPlot.setAnimatorVisible(false);
+        domainPlot.setAxisStyle(1);
+        domainPlot.setMarkerBoxVisible(false);
+
+        javax.swing.GroupLayout domainPlotLayout = new javax.swing.GroupLayout(domainPlot);
+        domainPlot.setLayout(domainPlotLayout);
+        domainPlotLayout.setHorizontalGroup(
+            domainPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 172, Short.MAX_VALUE)
+        );
+        domainPlotLayout.setVerticalGroup(
+            domainPlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 101, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout surfacePlotLayout = new javax.swing.GroupLayout(surfacePlot);
+        surfacePlot.setLayout(surfacePlotLayout);
+        surfacePlotLayout.setHorizontalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, surfacePlotLayout.createSequentialGroup()
+                .addContainerGap(487, Short.MAX_VALUE)
+                .addComponent(domainPlot, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        surfacePlotLayout.setVerticalGroup(
+            surfacePlotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, surfacePlotLayout.createSequentialGroup()
+                .addContainerGap(314, Short.MAX_VALUE)
+                .addComponent(domainPlot, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        tabs.addTab("Surface", surfacePlot);
 
         javax.swing.GroupLayout vectorFieldPlotLayout = new javax.swing.GroupLayout(vectorFieldPlot);
         vectorFieldPlot.setLayout(vectorFieldPlotLayout);
@@ -305,6 +351,7 @@ public class TestPlottables3 extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenuItem deleteMenuItem1;
     private javax.swing.JMenuItem deleteMenuItem2;
+    private specto.euclidean2.Plot2D domainPlot;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu editMenu1;
     private javax.swing.JMenu editMenu2;
@@ -332,6 +379,7 @@ public class TestPlottables3 extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenuItem saveMenuItem1;
     private javax.swing.JMenuItem saveMenuItem2;
+    private specto.euclidean3.Plot3D surfacePlot;
     private javax.swing.JTabbedPane tabs;
     private specto.euclidean3.Plot3D vectorFieldPlot;
     // End of variables declaration//GEN-END:variables

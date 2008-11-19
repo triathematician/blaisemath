@@ -209,7 +209,7 @@ public class Parametric2D extends PointSet2D {
                 velocity = Derivative.approximateDerivative(function, tModel.getValue(), .001);
                 acceleration = Derivative.approximateDerivativeTwo(function, tModel.getValue(), .001);
             } catch (FunctionValueException ex) {
-                System.out.println("error");
+                System.out.println("error computing derivative approximation");
             }
         }
 

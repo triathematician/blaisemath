@@ -149,21 +149,21 @@ public class Euclidean3 extends Euclidean2 {
     }
 
     /** Draws arrow on given graphics object. */
-    void drawArrow(Graphics2D g, R3 pt1, R3 pt2, double d) {
+    void drawArrow(Graphics2D g, R3 pt1, R3 pt2, double arrowSize) {
         try {
             if (isStereo()) {
                 g.setComposite(VisualStyle.COMPOSITE5);
                 g.setColor(leftColor);
-                Shape arrow = arrow(proj.getValueLeft(pt1), proj.getValueLeft(pt2), d);
+                Shape arrow = arrow(proj.getValueLeft(pt1), proj.getValueLeft(pt2), arrowSize);
                 g.fill(arrow);
                 g.draw(arrow);
                 g.setColor(rightColor);
-                arrow = arrow(proj.getValueRight(pt1), proj.getValueRight(pt2), d);
+                arrow = arrow(proj.getValueRight(pt1), proj.getValueRight(pt2), arrowSize);
                 g.fill(arrow);
                 g.draw(arrow);
                 
             } else {
-                Shape arrow = arrow(proj.getValue(pt1), proj.getValue(pt2), d);
+                Shape arrow = arrow(proj.getValue(pt1), proj.getValue(pt2), arrowSize);
                 g.fill(arrow);
                 g.draw(arrow);
             }
@@ -337,9 +337,9 @@ public class Euclidean3 extends Euclidean2 {
         /** Distance to clipping plane (in cm) */
         DoubleRangeModel clipDist = new DoubleRangeModel(2.0,0.1,10.0,0.1);
         /** Distance to view plane (in cm) */
-        DoubleRangeModel viewDist = new DoubleRangeModel(20.0,0.01,1000.0,0.1);
+        DoubleRangeModel viewDist = new DoubleRangeModel(20.0,0.01,100.0,0.1);
         /** Distance from the scene of interest */
-        DoubleRangeModel sceneSize = new DoubleRangeModel(5.0,0.01,1000.0,0.1);
+        DoubleRangeModel sceneSize = new DoubleRangeModel(5.0,0.01,100.0,0.1);
         
         /** Distance from the scene of interest */
         DoubleRangeModel eyeSep = new DoubleRangeModel(0.35,0.01,3.0,0.01);

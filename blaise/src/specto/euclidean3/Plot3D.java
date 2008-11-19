@@ -44,7 +44,7 @@ public class Plot3D extends PlotPanel<Euclidean3> {
         ButtonBox viewSettings = new ButtonBox();
         viewSettings.add(new ToggleButton(visometry.stereo, BoundedShape.BOWTIE));
         add(viewSettings,5,1);
-        setBackground(Color.BLACK);
+        //setBackground(Color.BLACK);
         //add(new ParametricSurface3D.Sphere(new R3(0,0,0), visometry.proj.sceneSize.getValue()));
     }
 
