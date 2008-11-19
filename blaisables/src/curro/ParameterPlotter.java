@@ -6,13 +6,8 @@
 
 package curro;
 
-import java.awt.Color;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import sequor.Settings;
-import sequor.model.FunctionTreeModel;
 import sequor.model.ParameterListModel;
-import sequor.SettingsProperty;
 import specto.euclidean2.Function2D;
 
 /**
@@ -20,45 +15,21 @@ import specto.euclidean2.Function2D;
  * @author  ae3263
  */
 public class ParameterPlotter extends javax.swing.JFrame {
-    FunctionTreeModel ftm,ftm2;
-    ParameterListModel plm;
+    
+    String[][] functions = { { "f(x)=" , "a*sin(b*(x-c))+d", "x" } };
+    Object[][] parameters = { { "a", 1.0 }, { "b", 2.0 }, { "c", Math.PI/2 }, { "d", -1.0 } };
         
     /** Creates new form ParameterPlotter */
     public ParameterPlotter() {
-        plm=new ParameterListModel();
-        plm.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e) {
-                if((e.getSource() instanceof ParameterListModel)&&(((ParameterListModel)plm).isAdded())){
-                    ((ParameterListModel)plm).updatePanel(settingsPanel2);
-                }
-            }
-        });    
-        initComponents();  
-        ftm=new FunctionTreeModel("a*sin(b*(x-c))+d","x");
-        ftm2=new FunctionTreeModel(ftm.getRoot().derivativeTree("x").fullSimplified());
-        ftm.addChangeListener(new ChangeListener(){
-            public void stateChanged(ChangeEvent e){ 
-                try{
-                    ftm2.setValue(ftm.getRoot().derivativeTree("x").fullSimplified().toString());
-                }catch(NullPointerException exc){}
-                //settingsBar1.validate();
-            }
-        });
-        plm.addChangeListener(ftm);  
-        plm.addChangeListener(ftm2);
-        plm.setParameterValue("a",1.0);
-        plm.setParameterValue("b",2.0);
-        plm.setParameterValue("c",Math.PI/2);
-        plm.setParameterValue("d",-1.0);
-        settings1.addProperty("f(x)=",ftm,Settings.EDIT_FUNCTION);
-        settings1.addProperty("f'(x)=",ftm2,Settings.EDIT_FUNCTION);
-        //settingsBar1.updateBar();
+        initComponents();
+       
+        parameterListModel1=new ParameterListModel(parameters, settingsPanel2, functionPanel1);
         
-        plot2D1.add(new Function2D(ftm2,Color.lightGray));
-        Function2D f1 = new Function2D(ftm);
-        plot2D1.add(f1);
-        plot2D1.add(f1.getPointSlope());
-        plot2D1.repaint();
+        Function2D f1 = new Function2D(functionPanel1.getFunctionModel(0));
+        plot2D4.add(f1);
+        plot2D4.add(f1.getPointSlope());
+        
+        plot2D4.repaint();
     }
     
     /** This method is called from within the constructor to
@@ -69,10 +40,10 @@ public class ParameterPlotter extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        settings1 = new sequor.Settings();
-        settings2 = new sequor.Settings();
-        settingsPanel2 = new sequor.component.SettingsPanel(settings2);
+        parameterListModel1 = new sequor.model.ParameterListModel();
+        settingsPanel2 = new sequor.component.SettingsPanel();
         plot2D4 = new specto.euclidean2.Plot2D();
+        functionPanel1 = new sequor.component.FunctionPanel(functions);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Function Plotter with Parameters");
@@ -80,7 +51,20 @@ public class ParameterPlotter extends javax.swing.JFrame {
 
         settingsPanel2.setPreferredSize(new java.awt.Dimension(152, 302));
         getContentPane().add(settingsPanel2, java.awt.BorderLayout.LINE_END);
+
+        javax.swing.GroupLayout plot2D4Layout = new javax.swing.GroupLayout(plot2D4);
+        plot2D4.setLayout(plot2D4Layout);
+        plot2D4Layout.setHorizontalGroup(
+            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 636, Short.MAX_VALUE)
+        );
+        plot2D4Layout.setVerticalGroup(
+            plot2D4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 373, Short.MAX_VALUE)
+        );
+
         getContentPane().add(plot2D4, java.awt.BorderLayout.CENTER);
+        getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -97,12 +81,9 @@ public class ParameterPlotter extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private specto.euclidean2.Plot2D plot2D1;
-    private specto.euclidean2.Plot2D plot2D2;
-    private specto.euclidean2.Plot2D plot2D3;
+    private sequor.component.FunctionPanel functionPanel1;
+    private sequor.model.ParameterListModel parameterListModel1;
     private specto.euclidean2.Plot2D plot2D4;
-    private sequor.Settings settings1;
-    private sequor.Settings settings2;
     private sequor.component.SettingsPanel settingsPanel2;
     // End of variables declaration//GEN-END:variables
     

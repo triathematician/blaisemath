@@ -6,11 +6,17 @@
 
 package curro;
 
+import sequor.model.ParameterListModel;
+import specto.euclidean2.PlaneFunction2D;
+
 /**
  *
  * @author  ae3263
  */
-public class AParameterPlotter extends javax.swing.JApplet {
+public class PASurfacePlotter extends javax.swing.JApplet {
+    
+    String[][] functions = { { "f(x,y)=" , "a*x^2+b*y^2+c*x*y+d*x+k*y+l", "x", "y" } };
+    Object[][] parameters = { { "a", 1.0 }, { "b", 1.0 }, { "c", 0.0 }, { "d", -1.0 }, { "k", 0.0 }, { "l", 1.0 } };
 
     /** Initializes the applet AParameterPlotter */
     public void init() {
@@ -18,6 +24,10 @@ public class AParameterPlotter extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
+       
+                    parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
+                    plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
+                    plot2D1.repaint();
                 }
             });
         } catch (Exception ex) {
@@ -34,38 +44,35 @@ public class AParameterPlotter extends javax.swing.JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        parameterListModel1 = new sequor.model.ParameterListModel();
         plot2D1 = new specto.euclidean2.Plot2D();
+        settingsPanel1 = new sequor.component.SettingsPanel();
+        functionPanel1 = new sequor.component.FunctionPanel(functions);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 310, Short.MAX_VALUE)
+            .addGap(0, 536, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
+            .addGap(0, 334, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setRightComponent(plot2D1);
+        getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-        );
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
+        getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSplitPane jSplitPane1;
+    private sequor.component.FunctionPanel functionPanel1;
+    private sequor.model.ParameterListModel parameterListModel1;
     private specto.euclidean2.Plot2D plot2D1;
+    private sequor.component.SettingsPanel settingsPanel1;
     // End of variables declaration//GEN-END:variables
 
 }
