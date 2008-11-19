@@ -45,10 +45,17 @@ public class R3 implements EuclideanElement {
     
     public void setTo(double x, double y, double z){ setX(x); setY(y); setZ(z); }
         
+    // COMPARISONS
+    
+    public boolean equals(Coordinate c2) {
+        if (!(c2 instanceof R3)) return false;
+        R3 c2r = (R3)c2;
+        return x==c2r.x && y==c2r.y && z==c2r.z;
+    }
     
     // ADJUSTMENTS TO THIS VECTOR
     
-    public double magnitudeSq() { return getX()*getX()+getY()*getY()+getZ()*getZ(); }
+    public double magnitudeSq() { return x*x+y*y+z*z; }
     public double magnitude() { return Math.sqrt(magnitudeSq()); }    
     public R3 normalized() { return times(1/magnitude()); }
     public R3 scaledToLength(double length){ double m = length/magnitude(); return new R3(getX()*m, getY()*m, getZ()*m); }
@@ -56,6 +63,7 @@ public class R3 implements EuclideanElement {
     
     // OPERATIONS WITH MULTIPLE VECTORS
     
+    public double distance(R3 pt) { return this.minus(pt).magnitude(); }
     public R3 times(double d) { return new R3(d*x, d*y, d*z); }
     public R3 plus(R3 pt) { return new R3(x+pt.x, y+pt.y, z+pt.z); }
     public R3 plus(double bx,double by,double bz) { return new R3(x+bx,y+by,z+bz); }
@@ -114,9 +122,6 @@ public class R3 implements EuclideanElement {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean equals(Coordinate c2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public Coordinate copy() {
         throw new UnsupportedOperationException("Not supported yet.");
