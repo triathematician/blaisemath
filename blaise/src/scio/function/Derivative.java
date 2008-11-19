@@ -6,6 +6,7 @@
 package scio.function;
 
 import scio.coordinate.R2;
+import scio.coordinate.R3;
 
 /**
  *
@@ -52,6 +53,32 @@ public class Derivative {
         step1=0.1; 
         result=new R2(Double.MAX_VALUE,Double.MAX_VALUE);
         R2 rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
+        while(result.distance(rightResult)>tolerance){
+            result=rightResult;
+            step1=step1/10.;
+            rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
+        }
+        
+        if(leftResult.distance(rightResult)<tolerance){
+            return leftResult;
+        }
+        return null;
+    }
+    
+    public static R3 approximateDerivative(Function <Double,R3> function,double input,double tolerance) throws FunctionValueException{
+        double step1=0.1;
+        R3 value=function.getValue(input);
+        R3 result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
+        R3 leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
+        while(result.distance(leftResult)>tolerance){
+            result=leftResult;
+            step1=step1/10.;
+            leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
+        }
+        
+        step1=0.1; 
+        result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
+        R3 rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
         while(result.distance(rightResult)>tolerance){
             result=rightResult;
             step1=step1/10.;
