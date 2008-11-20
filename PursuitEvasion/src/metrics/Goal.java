@@ -5,7 +5,6 @@
 package metrics;
 
 import java.util.Vector;
-import sequor.event.DoubleRangeModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -15,11 +14,11 @@ import javax.swing.event.EventListenerList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import scio.function.Function;
 import sequor.Settings;
 import sequor.model.StringRangeModel;
 import sequor.SettingsProperty;
+import sequor.model.DoubleRangeModel;
 import simulation.Team;
 import simulation.Agent;
 import simulation.Simulation;

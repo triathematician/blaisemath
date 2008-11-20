@@ -6,7 +6,6 @@
 // TODO Consolidate all "broadcast" methods
 package simulation;
 
-import sequor.event.DoubleRangeModel;
 import metrics.*;
 import behavior.*;
 import utility.DistanceTable;
@@ -33,6 +32,7 @@ import sequor.model.ParametricModel;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
 import sequor.SettingsProperty;
+import sequor.model.DoubleRangeModel;
 import tasking.TaskGenerator;
 import utility.StartingPositionsFactory;
 

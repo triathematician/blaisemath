@@ -6,7 +6,6 @@
 package simulation;
 
 import behavior.ApproachPath;
-import sequor.event.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import behavior.Behavior;
 import tasking.Task;
@@ -26,10 +25,6 @@ import javax.swing.JPanel;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import metrics.Goal;
 import scio.function.FunctionValueException;
 import tasking.TaskGenerator;
 import sequor.Settings;
@@ -37,6 +32,7 @@ import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
+import sequor.model.DoubleRangeModel;
 
 /**
  * Represents a single participant in the pursuit-evasion game. May be a pursuer, an evader, a stationary goal
