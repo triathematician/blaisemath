@@ -45,30 +45,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Changing Vector Field">
-                <Property name="tabTitle" type="java.lang.String" value="Changing Vector Field"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="395" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="272" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-        </Container>
-        <Container class="specto.euclidean2.Plot2D" name="staticVectorField">
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Static Vector Field">
-                <Property name="tabTitle" type="java.lang.String" value="Static Vector Field"/>
+              <JTabbedPaneConstraints tabName="Original 2D">
+                <Property name="tabTitle" type="java.lang.String" value="Original 2D"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -89,12 +67,37 @@
         <Container class="specto.euclidean3.Plot3D" name="threeDVectorField">
           <Properties>
             <Property name="ZLabel" type="java.lang.String" value="t"/>
-            <Property name="axisStyle" type="int" value="0"/>
+            <Property name="axisStyle" type="int" value="3"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="3D Vector Field">
-                <Property name="tabTitle" type="java.lang.String" value="3D Vector Field"/>
+              <JTabbedPaneConstraints tabName="3D">
+                <Property name="tabTitle" type="java.lang.String" value="3D"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="395" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="272" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="specto.euclidean2.Plot2D" name="staticVectorField">
+          <Properties>
+            <Property name="axisStyle" type="int" value="1"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Static 2D">
+                <Property name="tabTitle" type="java.lang.String" value="Static 2D"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
