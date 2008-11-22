@@ -1,6 +1,10 @@
 #summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
 #labels Featured,Module-PEG
 
+==== Week of Nov 16-22 ====
+
+ * _Added in 3D visualization of pursuit games (with time on the vertical axis)._ --Elisha
+
 ==== Week of Nov 9-15 ====
 
  * _Adjusted leading algorithm; added in a "Plucker Lead" algorithm. Each predicts the "future point" in a slightly different way._ --Elisha
