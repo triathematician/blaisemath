@@ -1,9 +1,15 @@
 #summary Contains listing of feature additions to Blaise.
 #labels Featured,Module-Blaise
 
-==== Week of Nov 9-15 ====
+==== Weeks of Nov 9-22 ====
 
- * _TBA_
+ * _Perspective 3D visometry with stereographic display._ --Elisha
+
+ * _3D vector fields, parametric curves and surfaces, and more visuals._ --Elisha
+
+ * _Several applets demonstrating dynamic parameter capability. Also posted to web._ --Elisha
+
+ * _Particle flow models for constrained vector field models._ --Elisha
 
 ==== Week of Nov 2-8 ====
 
