@@ -13,7 +13,7 @@ import java.text.NumberFormat;
  * @author Elisha Peterson
  */
 //@XmlAccessorType(XmlAccessType.NONE)
-public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement {
+public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement<R2> {
     public static final R2 ORIGIN = new R2(0,0);
     public static final R2 INFINITY = new R2(java.lang.Double.POSITIVE_INFINITY,java.lang.Double.POSITIVE_INFINITY);
     
@@ -32,8 +32,9 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     
     // OPERATIONS WHICH CHANGE THE POINT
     
-    public void translate(R2 b){x+=b.x;y+=b.y;}
-    public void translate(double x,double y){this.x+=x;this.y+=y;}    
+    public R2 translateBy(R2 b){x+=b.x; y+=b.y; return this;}
+    public R2 translateBy(double x,double y){this.x+=x; this.y+=y; return this;}    
+    public R2 multiplyBy(double d) {this.x*=d; this.y*=d; return this;}
     public void invertInCircleOfRadius(double r){multiplyBy(r/magnitudeSq());}
     
     // OPERATIONS WHICH DO NOT CHANGE THE POINT
@@ -47,6 +48,7 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public R2 minus(R2 b){return new R2(x-b.x,y-b.y);}
     public R2 minus(double bx, double by){return new R2(x-bx,y-by);}
     public R2 times(double m){return new R2(m*x,m*y);}
+    public R2 multipliedBy(double m){return new R2(m*x,m*y);}
     public R2 toXY(){return new R2(x*Math.cos(y),y*Math.sin(y));}
     public R2 toRTheta(){return new R2(magnitude(),angle());}
     public R2 scaledToLength(double l){
@@ -55,7 +57,6 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
         return new R2(x*l/magnitude,y*l/magnitude);
     }
     public R2 normalized(){return scaledToLength(1.0);}
-    public R2 multipliedBy(double c){return new R2(c*x,c*y);}
     
     // MORE GENERAL METHODS
 
@@ -122,29 +123,17 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     public void setElement(int position, double value) { if (position == 0) { x = value; } else { y = value; } }
     public void addToElement(int position, double value) { if (position == 0) { x += value; } else { y += value; } }
     public void multiplyElement(int position, double value) { if (position == 0) { x *= value; } else { y *= value; } }
-    public double dotProduct(InnerProductSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+    public double dotProduct(R2 p2) throws ArrayIndexOutOfBoundsException {
         EuclideanElement p2e = (EuclideanElement) p2;
         if (p2e.getLength() == 2) {
             return p2e.getElement(0)*x + p2e.getElement(1)*y;
         }
         throw new ArrayIndexOutOfBoundsException();
     }
-    public double distanceTo(Coordinate p2) {
+    public double distanceTo(R2 p2) { 
         return ((java.awt.geom.Point2D.Double)p2).distance(this);
     }
-    public VectorSpaceElement zero() { return new R2(); }
-    public VectorSpaceElement plus(VectorSpaceElement p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    public VectorSpaceElement minus(VectorSpaceElement p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    public VectorSpaceElement translateBy(VectorSpaceElement p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    public VectorSpaceElement multiplyBy(double d) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public R2 zero() { return new R2(); }
     
     
     // STATIC METHODS

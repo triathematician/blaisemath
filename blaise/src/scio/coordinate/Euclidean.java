@@ -12,7 +12,7 @@ import java.util.Vector;
  * 
  * @author Elisha Peterson
  */
-public class Euclidean implements EuclideanElement {
+public class Euclidean implements EuclideanElement<Euclidean> {
     Vector<Double> coord;
     
     public Euclidean(int n){
@@ -51,7 +51,7 @@ public class Euclidean implements EuclideanElement {
         return (c2 instanceof Euclidean && ((Euclidean)c2).coord.equals(coord));
     }    
 
-    public Coordinate copy() {
+    public Euclidean copy() {
         return new Euclidean(this);
     }
     
@@ -60,7 +60,7 @@ public class Euclidean implements EuclideanElement {
     
     public double coordDistanceSq(double x1,double x2){return (x1-x2)*(x1-x2);}
 
-    public double distanceTo(Coordinate p2) {
+    public double distanceTo(Euclidean p2) {
         if(!(p2 instanceof Euclidean)){return -1;}
         Euclidean e2=(Euclidean)p2;
         int n=Math.min(getLength(),e2.getLength());
@@ -74,21 +74,13 @@ public class Euclidean implements EuclideanElement {
     
     // VECTOR SPACE METHODS
     
-    public VectorSpaceElement zero() {
-        return new Euclidean(getLength());
-    }
-    public VectorSpaceElement plus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
-        return ((EuclideanElement)p2.copy()).translateBy(this);
-    }
-    public VectorSpaceElement minus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
-        return ((EuclideanElement)p2.copy()).multiplyBy(-1.0).translateBy(this);
-    }
-    public VectorSpaceElement times(double d) {
-        return ((EuclideanElement)copy()).multiplyBy(d);
-    }
+    public Euclidean zero() { return new Euclidean(getLength()); }
+    public Euclidean plus(Euclidean p2) throws ArrayIndexOutOfBoundsException { return p2.copy().translateBy(this); }
+    public Euclidean minus(Euclidean p2) throws ArrayIndexOutOfBoundsException { return p2.copy().multiplyBy(-1.0).translateBy(this); }
+    public Euclidean times(double d) { return copy().multiplyBy(d); }
     
     /** Changes this point and returns it. */
-    public VectorSpaceElement translateBy(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+    public Euclidean translateBy(Euclidean p2) throws ArrayIndexOutOfBoundsException {
         EuclideanElement p2e = (EuclideanElement) p2;
         if( p2e.getLength() != getLength() ) { throw new ArrayIndexOutOfBoundsException(); }
         for (int i = 0; i < getLength(); i++) {
@@ -97,17 +89,19 @@ public class Euclidean implements EuclideanElement {
         return this;
     }
     /** Alters this point and returns it. */
-    public VectorSpaceElement multiplyBy(double d){
+    public Euclidean multiplyBy(double d){
         for (int i = 0; i < getLength(); i++) {
             multiplyElement(i, d);
         }
         return this;
     }
+    /** Scales to a given length. */
+    public Euclidean scaledToLength(double d) { return multiplyBy(d/magnitude()); }
 
 
     // INNER PRODUCT SPACE METHODS
     
-    public double dotProduct(InnerProductSpaceElement p2) throws ArrayIndexOutOfBoundsException {
+    public double dotProduct(Euclidean p2) throws ArrayIndexOutOfBoundsException {
         EuclideanElement p2e = (EuclideanElement) p2;
         if (p2e.getLength() != getLength()) { throw new ArrayIndexOutOfBoundsException(); }
         double result = 0;
@@ -115,5 +109,9 @@ public class Euclidean implements EuclideanElement {
             result += getElement(i) * p2e.getElement(i);
         }
         return result;
+    }
+
+    public double magnitude() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

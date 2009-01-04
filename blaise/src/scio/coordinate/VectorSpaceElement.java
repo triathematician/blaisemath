@@ -10,12 +10,14 @@ package scio.coordinate;
  * 
  * @author Elisha Peterson
  */
-public interface VectorSpaceElement extends Coordinate {
-    public VectorSpaceElement zero();
-    public VectorSpaceElement plus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException;
-    public VectorSpaceElement minus(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException;
-    public VectorSpaceElement times(double d);
+public interface VectorSpaceElement<C> extends Coordinate {
+    public C zero();
+    public double magnitude();
+    public C plus(C p2) throws ArrayIndexOutOfBoundsException;
+    public C minus(C p2) throws ArrayIndexOutOfBoundsException;
+    public C times(double d);
+    public C scaledToLength(double d);
     
-    public VectorSpaceElement translateBy(VectorSpaceElement p2) throws ArrayIndexOutOfBoundsException;
-    public VectorSpaceElement multiplyBy(double d);
+    public C translateBy(C p2) throws ArrayIndexOutOfBoundsException;
+    public C multiplyBy(double d);
 }

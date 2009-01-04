@@ -13,7 +13,7 @@ package scio.coordinate;
  * <br><br>
  * @author ae3263
  */
-public interface Coordinate {
+public interface Coordinate<C> {
     public boolean equals(Coordinate c2);
-    public Coordinate copy();
+    public C copy();
 }

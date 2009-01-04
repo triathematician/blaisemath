@@ -10,6 +10,6 @@ package scio.coordinate;
  * 
  * @author elisha
  */
-public interface InnerProductSpaceElement extends Coordinate {
-    double dotProduct(InnerProductSpaceElement p2) throws ArrayIndexOutOfBoundsException;
+public interface InnerProductSpaceElement<C> extends Coordinate {
+    double dotProduct(C p2) throws ArrayIndexOutOfBoundsException;
 }

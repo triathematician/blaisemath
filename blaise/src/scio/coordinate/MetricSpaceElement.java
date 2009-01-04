@@ -10,6 +10,6 @@ package scio.coordinate;
  * 
  * @author Elisha Peterson
  */
-public interface MetricSpaceElement extends Coordinate {
-    public double distanceTo(Coordinate p2);
+public interface MetricSpaceElement<C> extends Coordinate {
+    public double distanceTo(C p2);
 }

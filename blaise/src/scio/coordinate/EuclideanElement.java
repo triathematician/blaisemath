@@ -9,8 +9,7 @@ package scio.coordinate;
  * Necessary methods for defining an element of Euclidean space (ordered n-vector of doubles)
  * @author elisha
  */
-public interface EuclideanElement extends InnerProductSpaceElement, MetricSpaceElement, VectorSpaceElement {
-
+public interface EuclideanElement<C> extends InnerProductSpaceElement<C>, MetricSpaceElement<C>, VectorSpaceElement<C> {
     void addToElement(int position, double value);
 
     double getElement(int position);
