@@ -7,7 +7,7 @@
 package specto.euclidean3;
 
 import specto.euclidean2.*;
-import specto.euclidean3.DESolution3D;
+import specto.euclidean3.DESolution3D1;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;

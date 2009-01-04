@@ -23,7 +23,7 @@ public class Plot3D extends PlotPanel<Euclidean3> {
     // PROPERTIES
     
     StandardGrid3D grid;
-    Axes3D axes;
+    Axes3D2 axes;
     
     // CONSTANTS
 
@@ -37,7 +37,7 @@ public class Plot3D extends PlotPanel<Euclidean3> {
         
         grid = new StandardGrid3D();
         addBase(grid);
-        axes = new Axes3D();
+        axes = new Axes3D2();
         addBase(axes);
         add(get3DControls(),5,2);
         
