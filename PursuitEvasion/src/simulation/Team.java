@@ -299,7 +299,7 @@ public class Team implements ActionListener {
         }
         R2 center = new R2(0, 0);
         for (Agent agent : activeAgents) {
-            center.translate(agent.loc);
+            center.translateBy(agent.loc);
         //System.out.println("agent:"+agent.x+"+"+agent.y);
         }
         center.multiplyBy(1.0 /agents.size());

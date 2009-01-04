@@ -279,7 +279,7 @@ public class Simulation implements ActionListener {
             log.logAll(i,dist);
             if(quit){break;}
         }
-        //log.setPrimaryOutput(primary.getValue());
+        //log.setPrimaryOutput(primary.getRValue());
         actionPerformed(new ActionEvent(log,0,"log"));
         if(!batchProcessing){actionPerformed(new ActionEvent(this,0,"redraw"));}
     }
