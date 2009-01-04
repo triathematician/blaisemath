@@ -19,6 +19,7 @@ import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.Function;
 import scio.function.FunctionValueException;
+import scio.random.RandomGenerator;
 import sequor.model.BooleanModel;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
@@ -92,12 +93,13 @@ public class Euclidean3 extends Euclidean2 {
     
     // HELPER METHODS
     
-    public R3 getRandom() { return new R3(xRange.getRandom(), yRange.getRandom(), zRange.getRandom()); }
+    /** Returns a random point within the window. */
+    public R3 getR3Value() { return new R3(xRange.getRValue(), yRange.getRValue(), zRange.getRValue()); }
     
     
     // DRAW METHODS
 
-    /** Draws solid dot at given point with specified pixel width */
+    /** Draws solid dotProduct at given point with specified pixel width */
     void drawDot(Graphics2D g, R3 pt, double d) {
         try {
             if (isStereo()) {
@@ -113,7 +115,7 @@ public class Euclidean3 extends Euclidean2 {
         }
     }
 
-    /** Draws solid dot at given point with specified pixel width */
+    /** Draws solid dotProduct at given point with specified pixel width */
     void fillDot(Graphics2D g, R3 pt, double d) {
         try {
             if (isStereo()) {
@@ -364,7 +366,7 @@ public class Euclidean3 extends Euclidean2 {
         public R2 getValue(R3 pt) throws FunctionValueException {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()));
             R3 diff = pt.minus(cE);
-            return new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir));
+            return new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir));
         }
         
         /** Returns projection of several 3d points into 2d */
@@ -374,7 +376,7 @@ public class Euclidean3 extends Euclidean2 {
             Vector<R2> result = new Vector<R2>();
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
-                result.add(new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir)));
+                result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir)));
             }   
             return result;
         }
@@ -384,7 +386,7 @@ public class Euclidean3 extends Euclidean2 {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
                     .plus(nDir.times(+eyeSep.getValue()/2));
             R3 diff = pt.minus(cE);
-            return new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir));
+            return new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir));
         }
         
         /** Returns projection of several 3d points into 2d */
@@ -395,7 +397,7 @@ public class Euclidean3 extends Euclidean2 {
             Vector<R2> result = new Vector<R2>();
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
-                result.add(new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir)));
+                result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir)));
             }   
             return result;
         }
@@ -405,7 +407,7 @@ public class Euclidean3 extends Euclidean2 {
             R3 cE = center.minus(tDir.times(viewDist.getValue()+sceneSize.getValue()))
                     .plus(nDir.times(-eyeSep.getValue()/2));
             R3 diff = pt.minus(cE);
-            return new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir));
+            return new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir));
         }
         
         /** Returns projection of several 3d points into 2d */
@@ -416,7 +418,7 @@ public class Euclidean3 extends Euclidean2 {
             Vector<R2> result = new Vector<R2>();
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
-                result.add(new R2(diff.dot(nDir)*la, diff.dot(bDir)*lb).times(viewDist.getValue()/diff.dot(tDir)));
+                result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir)));
             }   
             return result;
         }
@@ -447,8 +449,8 @@ public class Euclidean3 extends Euclidean2 {
         public void rotate(R3 p1, R3 p2, R3 t0, R3 n0, R3 b0) {
             R3 u1 = p1.minus(center);
             R3 u2 = p2.minus(center);
-            R3 n = u1.cross(u2).normalized();
-            double cosphi = u1.dot(u2)/(u1.magnitude()*u2.magnitude());
+            R3 n = u1.crossProduct(u2).normalized();
+            double cosphi = u1.dotProduct(u2)/(u1.magnitude()*u2.magnitude());
             double sinphi = Math.sqrt(1-cosphi*cosphi);
             // can use either single or double rotation here
             tDir = doubleRotate(t0, n, cosphi, sinphi);
@@ -465,8 +467,8 @@ public class Euclidean3 extends Euclidean2 {
         /** Formula for the rotation about a specific axis given by a normal vector n */
         public R3 eulerRotation (R3 pt, R3 n, double cosphi, double sinphi) {
             return pt.times(cosphi)
-                    .plus( n.times(n.dot(pt)*(1-cosphi)) )
-                    .plus( (pt.cross(n)).times(sinphi) );
+                    .plus( n.times(n.dotProduct(pt)*(1-cosphi)) )
+                    .plus( (pt.crossProduct(n)).times(sinphi) );
         }
         
         
@@ -476,8 +478,8 @@ public class Euclidean3 extends Euclidean2 {
         public void animateRotation(R3 p1, R3 p2) {
             R3 u1 = p1.minus(center);
             R3 u2 = p2.minus(center);
-            R3 n = u1.cross(u2).normalized();
-            double cosphi = u1.dot(u2)/(u1.magnitude()*u2.magnitude());
+            R3 n = u1.crossProduct(u2).normalized();
+            double cosphi = u1.dotProduct(u2)/(u1.magnitude()*u2.magnitude());
             double sinphi = Math.sqrt(1-cosphi*cosphi);
             // don't rotate if the angle is too small
             if (Math.abs(sinphi) > .01) {
