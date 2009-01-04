@@ -70,6 +70,8 @@ public class PAParametricSurfacePlotter extends javax.swing.JApplet {
         plot3D1 = new specto.euclidean3.Plot3D();
         plot2D1 = new specto.euclidean2.Plot2D();
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
+        settingsPanel1.setToolTipText("Right-click to remove parameter");
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);

@@ -30,6 +30,7 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
                     VectorField2D vf1 = new VectorField2D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1));
                     plot2D1.add(vf1);
                     plot2D1.add(new DESolution2D(vf1));
+                    plot2D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
                     plot2D1.repaint();
                 }
             });
@@ -67,6 +68,7 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
 
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);

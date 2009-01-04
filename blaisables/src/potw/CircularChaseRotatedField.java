@@ -95,8 +95,12 @@ public class CircularChaseRotatedField extends javax.swing.JApplet {
                         threeDVectorField.getVisometry().setSceneSize(15.0);
                         threeDVectorField.add(vectorField3D1);
                         threeDVectorField.add(curve2);
-                        threeDVectorField.add(new DESolution3D(vectorField3D1,-5,5,0));
-                        threeDVectorField.add(new DESolution3D(vectorField3D1,10,-5,0));
+                        DESolution3D de31 = new DESolution3D(vectorField3D1,-5,5,0);
+                        DESolution3D de32 = new DESolution3D(vectorField3D1,10,-5,0);
+                        threeDVectorField.add(de31); threeDVectorField.add(de32);
+                        threeDVectorField.add(vectorField3D1.getStyleSlider("Field style",0,0),5,5);
+                        de31.NUM = 1000; de31.STEP = 0.1; de31.recompute(null);
+                        de32.NUM = 1000; de32.STEP = 0.1; de32.recompute(null);
                     } catch (Exception ex) {
                         Logger.getLogger(CircularChaseRotatedField.class.getName()).log(Level.SEVERE, null, ex);
                     }

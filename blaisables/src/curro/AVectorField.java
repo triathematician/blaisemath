@@ -31,9 +31,7 @@ public class AVectorField extends javax.swing.JApplet {
                     DESolution2D des = new DESolution2D(vf1);
                     des.setVisible(false);
                     plot2D1.add(des);
-                    NumberSlider ns = vf1.getStyleSlider(0,0);
-                    ns.setName("Style");
-                    plot2D1.add(ns,5,5);
+                    plot2D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
                         
                     functionPanel2.setFunction(0, "x(t)=", "cos(t)+3");
                     functionPanel2.setFunction(1, "y(t)=", "sin(t)+3");

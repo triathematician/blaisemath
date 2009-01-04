@@ -66,6 +66,7 @@ public class PAPlotter extends javax.swing.JApplet {
 
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);

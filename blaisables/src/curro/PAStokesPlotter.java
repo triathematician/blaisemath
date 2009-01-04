@@ -71,6 +71,7 @@ public class PAStokesPlotter extends javax.swing.JApplet {
         functionPanel1 = new sequor.component.FunctionPanel(functions);
         plot3D1 = new specto.euclidean3.Plot3D();
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
@@ -86,7 +87,7 @@ public class PAStokesPlotter extends javax.swing.JApplet {
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot3D1, java.awt.BorderLayout.CENTER);

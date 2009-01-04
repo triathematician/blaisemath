@@ -27,8 +27,10 @@ public class PASurfacePlotter extends javax.swing.JApplet {
                     initComponents();
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
-                    plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
+                    PlaneFunction2D pf1 = new PlaneFunction2D(functionPanel1.getFunctionModel(0));
+                    plot2D1.add(pf1);
                     plot2D1.repaint();
+                    plot2D1.add(pf1.getStyleSlider("Style",0,0),5,5);
                     
                     plot3D1.add(new Function3D(functionPanel1.getFunctionModel(0)));
                 }
@@ -51,29 +53,16 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         settingsPanel1 = new sequor.component.SettingsPanel();
         functionPanel1 = new sequor.component.FunctionPanel(functions);
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot2D1 = new specto.euclidean2.Plot2D();
         plot3D1 = new specto.euclidean3.Plot3D();
+        plot2D1 = new specto.euclidean2.Plot2D();
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
-        plot2D1.setAnimatorVisible(false);
-
-        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
-        plot2D1.setLayout(plot2D1Layout);
-        plot2D1Layout.setHorizontalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
-        );
-        plot2D1Layout.setVerticalGroup(
-            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("2D", plot2D1);
-
         plot3D1.setAnimatorVisible(false);
+        plot3D1.setAxisStyle(0);
 
         javax.swing.GroupLayout plot3D1Layout = new javax.swing.GroupLayout(plot3D1);
         plot3D1.setLayout(plot3D1Layout);
@@ -87,6 +76,22 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         );
 
         jTabbedPane1.addTab("3D", plot3D1);
+
+        plot2D1.setAnimatorVisible(false);
+        plot2D1.setAxisStyle(1);
+
+        javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
+        plot2D1.setLayout(plot2D1Layout);
+        plot2D1Layout.setHorizontalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 531, Short.MAX_VALUE)
+        );
+        plot2D1Layout.setVerticalGroup(
+            plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 289, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("2D", plot2D1);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

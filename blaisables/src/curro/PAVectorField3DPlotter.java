@@ -16,8 +16,8 @@ import specto.euclidean3.VectorField3D;
  */
 public class PAVectorField3DPlotter extends javax.swing.JApplet {
     
-    String[][] functions = { { "P(x,y,z)=" , "-a*x+a*y", "x", "y", "z" }, { "Q(x,y,z)=", "b*x-y/10-x*z/10", "x", "y", "z" }, { "R(x,y,z)=", "-c*z+x*y/10", "x", "y", "z" } };
-    Object[][] parameters = { { "a", 1.0 }, { "b", 1.1 }, { "c", 0.2 } };
+    String[][] functions = { { "P(x,y,z)=" , "sigma*(y-x)", "x", "y", "z" }, { "Q(x,y,z)=", "(x*(10*rho-z)-y)", "x", "y", "z" }, { "R(x,y,z)=", "(x*y-beta*z)", "x", "y", "z" } };
+    Object[][] parameters = { { "sigma", 10.0 }, { "beta", 2.33333 }, { "rho", 4.0 } };
 
     /** Initializes the applet AParameterPlotter */
     public void init() {
@@ -28,8 +28,13 @@ public class PAVectorField3DPlotter extends javax.swing.JApplet {
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
                     VectorField3D vf1 = new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
+                    vf1.style.setValue(3);
                     plot3D1.add(vf1);
                     plot3D1.add(new DESolution3D(vf1));
+                    plot3D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
+                    plot3D1.getVisometry().setSceneSize(40.0);
+                    plot3D1.getVisometry().setViewDist(100.0);
+                    plot3D1.getVisometry().setDesiredBounds(-140.0,-140.0,140.0,140.0);
                     plot3D1.repaint();
                 }
             });
@@ -52,6 +57,7 @@ public class PAVectorField3DPlotter extends javax.swing.JApplet {
         functionPanel1 = new sequor.component.FunctionPanel(functions);
         plot3D1 = new specto.euclidean3.Plot3D();
 
+        settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
