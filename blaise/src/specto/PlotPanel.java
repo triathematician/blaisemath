@@ -174,17 +174,18 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     
     private void initContextMenu(){
         contextMenu=new JPopupMenu();
-        optionsMenu=new JMenu("Options");
+        optionsMenu=new JMenu("Change style");
         contextMenu.add(optionsMenu);
-        contextMenu.add(new AddMenu(this));
-        JMenuItem mi=new JMenuItem("test XML output");
-        mi.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("\nGenerating XML Output...\n----\n\n");
-                System.out.println("\n----\nEnd of XML Output...\n\n");
-            }
-        });
-        contextMenu.add(mi);
+// commenting this out for now. would like to return in the future        
+//        contextMenu.add(new AddMenu(this));
+//        JMenuItem mi=new JMenuItem("test XML output");
+//        mi.addActionListener(new ActionListener(){
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("\nGenerating XML Output...\n----\n\n");
+//                System.out.println("\n----\nEnd of XML Output...\n\n");
+//            }
+//        });
+//        contextMenu.add(mi);
         setComponentPopupMenu(contextMenu);        
     }
     
@@ -317,6 +318,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         for(VisualControl vc:controls){
             vc.paintComponent(g);
         }
+        recomputeAll = false;
     }
     
     // EVENT HANDLING

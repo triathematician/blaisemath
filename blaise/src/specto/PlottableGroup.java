@@ -111,7 +111,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
 
     @Override
     public JMenu getOptionsMenu() {
-        JMenu result=new JMenu(toString() + " Options");   
+        JMenu result=new JMenu(toString());   
         result.add(getVisibleMenuItem());
         result.setForeground(getColor());
         result.add(getColorMenuItem());

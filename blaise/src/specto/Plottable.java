@@ -94,6 +94,15 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
             return null;
         }
     }
+    /** Returns adjuster which can be used to modify the style, with string for name. */
+    public NumberSlider getStyleSlider(String name,int x,int y){
+        if(style!=null){
+            NumberSlider result=new NumberSlider(name,x,y,style);
+            return result;
+        }else{
+            return null;
+        }
+    }
     
     /** Initializes the style. */
     public void initStyle(){
@@ -124,7 +133,7 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     
     /** Returns menu containing any desired options. By default, returns a color element, display style, and decoration items. */
     public JMenu getOptionsMenu(){
-        JMenu result=new JMenu(toString()+" Options");       
+        JMenu result=new JMenu(toString());       
         result.setForeground(getColor());
         result.add(getVisibleMenuItem());
         result.add(getColorMenuItem());  
