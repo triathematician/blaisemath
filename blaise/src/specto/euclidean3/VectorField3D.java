@@ -22,9 +22,9 @@ import scio.function.FunctionValueException;
 import sequor.model.FunctionTreeModel;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
+import scio.diffeq.DESolve;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
-import sequor.style.VisualStyle;
 import specto.Animatable;
 import specto.Plottable;
 
@@ -160,7 +160,7 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                     for (double pz:v.zRange.getValueRange(true, 0.0)){
                         point = new R3(px, py, pz);
                         samplePoints.add(point);
-                        vectors.add(DESolution3D.getMultipliedVector(function, point, 0.6 * step));
+                        vectors.add(DESolve.R3S.getMultipliedVector(function, point, 0.2 * step));
                     }
                 }
             }
@@ -189,8 +189,8 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
             case TRAILS:
                 try {
                     for (int i = 0; i < samplePoints.size(); i++) {
-                        v.drawPath(g, DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
-                        v.drawPath(g, DESolution3D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM));
+                        v.drawPath(g, DESolve.R3S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                        v.drawPath(g, DESolve.R3S.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM));
                     }
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -227,11 +227,11 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < samplePoints.size(); i++) {
-                            flows.add(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                            flows.add(DESolve.R3S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                         }
                     } else {
                         for (int i = 0; i < NUM_RANDOM; i++) {
-                            flows.add(DESolution3D.calcNewton(function, v.getRandom(), NUM, .75*step/NUM));
+                            flows.add(DESolve.R3S.calcNewton(function, v.getR3Value(), NUM, .75*step/NUM));
                         }
                     }
                 } catch (FunctionValueException ex) {
@@ -245,11 +245,11 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                             try {
                                 if(standardFlows) {
                                     for (int i = 0; i < samplePoints.size(); i++) {
-                                        flows.add(DESolution3D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                                        flows.add(DESolve.R3S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                                     }
                                 } else {
                                     for (int i = 0; i < NUM_RANDOM; i++) {
-                                        flows.add(DESolution3D.calcNewton(function, v.getRandom(), NUM, .75*step/NUM));
+                                        flows.add(DESolve.R3S.calcNewton(function, v.getR3Value(), NUM, .75*step/NUM));
                                     }
                                 }
                             } catch (FunctionValueException ex) {
@@ -262,17 +262,17 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution3D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DESolve.R3S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                     } else {
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
                             flows.remove(0);
                         }
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution3D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DESolve.R3S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
-                            flows.add(DESolution3D.calcNewton(function, v.getRandom(), NUM, .75*step/NUM));
+                            flows.add(DESolve.R3S.calcNewton(function, v.getR3Value(), NUM, .75*step/NUM));
                         }                        
                     }
                 } catch (FunctionValueException ex) {
