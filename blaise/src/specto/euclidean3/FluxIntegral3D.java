@@ -21,7 +21,8 @@ import specto.euclidean2.VectorField2D;
 
 /**
  * <p>
- * This class is used to visualize line integrals along a curve.
+ * This class is used to visualize flux integrals through a surface, by using a vector field to demonstrate
+ * the flow of vectors along a surface.
  * </p>
  * @author Elisha Peterson
  */
@@ -31,7 +32,7 @@ public class FluxIntegral3D extends ParametricSurface3D {
 
     public FluxIntegral3D(VectorField3D vf3) {
         super();
-        setForce(vf3);
+        setVelocity(vf3);
         setColor(new Color(200,100,250,200));
     }
 
@@ -39,18 +40,18 @@ public class FluxIntegral3D extends ParametricSurface3D {
         super();
         this.function = ps1.function;
         this.uvRange = ps1.uvRange;
-        setForce(vf3);
+        setVelocity(vf3);
         setColor(new Color(200,100,250,200));
     }
 
-    public VectorField3D getForce() { return velocity; }
-    public void setForce(VectorField3D forceFunction) { this.velocity = forceFunction; }
+    public VectorField3D getVelocity() { return velocity; }
+    public void setVelocity(VectorField3D forceFunction) { this.velocity = forceFunction; }
     
     /** Moves a particle given the applied velocity through a given arc length. */
     public R3 moveParticle(double u, double v, double ds) throws FunctionValueException {
         R3 pt = function.getValue(new R2(u,v));
-        double du = velocity.getFunction().getValue(pt).dot(getTangentX(function,u,v))*ds;
-        double dv = velocity.getFunction().getValue(pt).dot(getTangentY(function,u,v))*ds;
+        double du = velocity.getFunction().getValue(pt).dotProduct(getTangentX(function,u,v))*ds;
+        double dv = velocity.getFunction().getValue(pt).dotProduct(getTangentY(function,u,v))*ds;
         return function.getValue(new R2(u+du, v+dv));
     }
     
@@ -61,8 +62,8 @@ public class FluxIntegral3D extends ParametricSurface3D {
         result.add(pt);
         double du,dv;
         for (int i = 0; i < n; i++) {
-            du = velocity.getFunction().getValue(function.getValue(pt)).dot(getTangentX(function,u,v))*ds;
-            dv = velocity.getFunction().getValue(function.getValue(pt)).dot(getTangentY(function,u,v))*ds;
+            du = velocity.getFunction().getValue(function.getValue(pt)).dotProduct(getTangentX(function,u,v))*ds;
+            dv = velocity.getFunction().getValue(function.getValue(pt)).dotProduct(getTangentY(function,u,v))*ds;
             pt = pt.plus(du, dv);
             result.add(pt);
         }
@@ -74,8 +75,8 @@ public class FluxIntegral3D extends ParametricSurface3D {
         R2 pt = pts.lastElement();
         double du,dv;
         for (int i = 0; i < n; i++) {
-            du = velocity.getFunction().getValue(function.getValue(pt)).dot(getTangentX(function,pt.x,pt.y))*ds;
-            dv = velocity.getFunction().getValue(function.getValue(pt)).dot(getTangentY(function,pt.x,pt.y))*ds;
+            du = velocity.getFunction().getValue(function.getValue(pt)).dotProduct(getTangentX(function,pt.x,pt.y))*ds;
+            dv = velocity.getFunction().getValue(function.getValue(pt)).dotProduct(getTangentY(function,pt.x,pt.y))*ds;
             pt = pt.plus(du, dv);
             pts.add(pt);
             pts.remove(0);
@@ -106,8 +107,8 @@ public class FluxIntegral3D extends ParametricSurface3D {
             flows = new Vector<Vector<R2>>();
             try {
                 for (int i = 0; i < NUM_RANDOM; i++) {
-                    flows.add(getParticlePath(uvRange.xModel.getRandom(),
-                            uvRange.yModel.getRandom(), step, NUM));
+                    flows.add(getParticlePath(uvRange.xModel.getRValue(),
+                            uvRange.yModel.getRValue(), step, NUM));
                 }
             } catch (FunctionValueException ex) {
                 Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,8 +120,8 @@ public class FluxIntegral3D extends ParametricSurface3D {
                         flows = new Vector<Vector<R2>>();
                         try {
                             for (int i = 0; i < NUM_RANDOM; i++) {
-                                flows.add(getParticlePath(uvRange.xModel.getRandom(),
-                                        uvRange.yModel.getRandom(), step, NUM));
+                                flows.add(getParticlePath(uvRange.xModel.getRValue(),
+                                        uvRange.yModel.getRValue(), step, NUM));
                             }
                         } catch (FunctionValueException ex) {
                             Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -137,8 +138,8 @@ public class FluxIntegral3D extends ParametricSurface3D {
                     moveParticlePath(flows.get(i), step, t.getSpeed()+2);
                 }
                 for (int i = 0; i < RANDOM_TURNOVER; i++) {
-                    flows.add(getParticlePath(uvRange.xModel.getRandom(),
-                            uvRange.yModel.getRandom(), step, NUM));
+                    flows.add(getParticlePath(uvRange.xModel.getRValue(),
+                            uvRange.yModel.getRValue(), step, NUM));
                 }   
             } catch (FunctionValueException ex) {
                 Logger.getLogger(VectorField3D.class.getName()).log(Level.SEVERE, null, ex);
@@ -154,4 +155,9 @@ public class FluxIntegral3D extends ParametricSurface3D {
             }
         }   
     }
+    
+    /** New type of surface. */
+    @Override
+    public String toString() { return "Surface Particle Flow"; }
+    
 }

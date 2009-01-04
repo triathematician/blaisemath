@@ -134,7 +134,7 @@ public class PointSet3D extends Plottable<Euclidean3> implements Animatable<Eucl
         g.setComposite(AlphaComposite.SrcOver);  
     }
     
-    /** Draws dot at given position. */
+    /** Draws dotProduct at given position. */
     public void drawDot(Graphics2D g, Euclidean3 v, int pos){
         int posB=pos<0?0:(pos>=points.size()?points.size()-1:pos);
         v.fillDot(g,points.get(posB),3.0);

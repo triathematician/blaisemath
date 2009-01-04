@@ -8,6 +8,7 @@ package specto.euclidean3;
 import java.awt.Graphics2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
@@ -222,7 +223,21 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
         super.paintComponent(g, v);
     }
     
+    /** Overrides standard options menu so that not all secondary curves are displayed. */
+    @Override
+    public JMenu getOptionsMenu() {
+        JMenu result=new JMenu(toString());   
+        result.add(getVisibleMenuItem());
+        result.setForeground(getColor());
+        result.add(getColorMenuItem());
+        color.addChangeListener(this);
+        if(style==null){return result;}
+        return style.appendToMenu(result);
+    }
+    
     // STYLE
+    
+    
         
     @Override
     public String toString(){return "Parametric Surface";}
@@ -272,7 +287,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
     }
     /** Returns normal vector */
     public static R3 getNormal(Function<R2,R3> function, double x, double y) throws FunctionValueException {
-        return getTangentX(function, x, y).cross(getTangentY(function, x, y));
+        return getTangentX(function, x, y).crossProduct(getTangentY(function, x, y));
     }
     
     
@@ -328,7 +343,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
                         SurfacePoint.super.setPoint(pt);
                         R3 pdx = getTangentX(function, domain.getX(), domain.getY());
                         R3 pdy = getTangentY(function, domain.getX(), domain.getY());
-                        R3 pn = pdx.cross(pdy);
+                        R3 pn = pdx.crossProduct(pdy);
                         dx.setTo(pt.minus(pdx.times(.5)),pt.plus(pdx.times(.5)));
                         dy.setTo(pt.minus(pdy.times(.5)),pt.plus(pdy.times(.5)));
                         normal.setTo(pt,pt.plus(pn));

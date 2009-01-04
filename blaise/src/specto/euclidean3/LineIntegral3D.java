@@ -20,7 +20,8 @@ import specto.euclidean2.VectorField2D;
 
 /**
  * <p>
- * This class is used to visualize line integrals along a curve.
+ * This class is used to visualize line integrals along a curve. Displays little lines of flow
+ * along the curve as pushed around by the velocity field.
  * </p>
  * @author Elisha Peterson
  */
@@ -30,7 +31,7 @@ public class LineIntegral3D extends ParametricCurve3D {
 
     public LineIntegral3D(VectorField3D vf3) {
         super();
-        setForce(vf3);
+        setVelocity(vf3);
         setColor(new Color(128,0,128));
     }
 
@@ -38,16 +39,16 @@ public class LineIntegral3D extends ParametricCurve3D {
         super();
         this.function = pc1.function;
         this.tRange = pc1.tRange;
-        setForce(vf3);
+        setVelocity(vf3);
         setColor(new Color(128,0,128).brighter());
     }
 
-    public VectorField3D getForce() { return velocity; }
-    public void setForce(VectorField3D forceFunction) { this.velocity = forceFunction; }
+    public VectorField3D getVelocity() { return velocity; }
+    public void setVelocity(VectorField3D forceFunction) { this.velocity = forceFunction; }
     
     /** Moves a particle given the applied velocity through a given arc length. */
     public R3 moveParticle(double t, double ds) throws FunctionValueException {
-        double dt = velocity.getFunction().getValue(function.getValue(t)).dot(getTangentVector(function, t))*ds;
+        double dt = velocity.getFunction().getValue(function.getValue(t)).dotProduct(getTangentVector(function, t))*ds;
         return function.getValue(t+dt);
     }
     
@@ -57,7 +58,7 @@ public class LineIntegral3D extends ParametricCurve3D {
         result.add(t);
         double dt;
         for (int i = 0; i < n; i++) {
-            dt = velocity.getFunction().getValue(function.getValue(t)).dot(getTangentVector(function, t))*ds;
+            dt = velocity.getFunction().getValue(function.getValue(t)).dotProduct(getTangentVector(function, t))*ds;
             t+=dt;
             result.add(t);            
         }
@@ -69,7 +70,7 @@ public class LineIntegral3D extends ParametricCurve3D {
         double t = ts.lastElement();
         double dt;
         for (int i = 0; i < n; i++) {
-            dt = velocity.getFunction().getValue(function.getValue(t)).dot(getTangentVector(function, t))*ds;
+            dt = velocity.getFunction().getValue(function.getValue(t)).dotProduct(getTangentVector(function, t))*ds;
             t += dt;
             ts.add(t);  
             ts.remove(0);
@@ -99,7 +100,7 @@ public class LineIntegral3D extends ParametricCurve3D {
             flows = new Vector<Vector<Double>>();
             try {
                 for (int i = 0; i < NUM_RANDOM; i++) {
-                    flows.add(getParticlePath(tRange.getRandom(), step, NUM));
+                    flows.add(getParticlePath(tRange.getRValue(), step, NUM));
                 }
             } catch (FunctionValueException ex) {
                 Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,7 +112,7 @@ public class LineIntegral3D extends ParametricCurve3D {
                         flows = new Vector<Vector<Double>>();
                         try {
                             for (int i = 0; i < NUM_RANDOM; i++) {
-                                flows.add(getParticlePath(tRange.getRandom(), step, NUM));
+                                flows.add(getParticlePath(tRange.getRValue(), step, NUM));
                             }
                         } catch (FunctionValueException ex) {
                             Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -128,7 +129,7 @@ public class LineIntegral3D extends ParametricCurve3D {
                     moveParticlePath(flows.get(i), step, t.getSpeed()+2);
                 }
                 for (int i = 0; i < RANDOM_TURNOVER; i++) {
-                    flows.add(getParticlePath(tRange.getRandom(), step, NUM));
+                    flows.add(getParticlePath(tRange.getRValue(), step, NUM));
                 }   
             } catch (FunctionValueException ex) {
                 Logger.getLogger(VectorField3D.class.getName()).log(Level.SEVERE, null, ex);
@@ -144,4 +145,8 @@ public class LineIntegral3D extends ParametricCurve3D {
             }
         }   
     }
+    
+    /** New type of surface. */
+    @Override
+    public String toString() { return "Curve Particle Flow"; }
 }
