@@ -11,16 +11,16 @@ import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 
 /**
  *
  * @author Elisha Peterson
  */
 public class DoubleSlider extends JSlider implements ChangeListener {
-    private DoubleRangeModel2 model;
+    private DoubleRangeModel model;
 
-    public DoubleSlider(DoubleRangeModel2 model){
+    public DoubleSlider(DoubleRangeModel model){
         this.model=model;
         model.addChangeListener(this);
         setPaintTicks(true);

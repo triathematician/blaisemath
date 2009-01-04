@@ -27,7 +27,7 @@ import sequor.editor.SpinnerDoubleEditor;
 import sequor.editor.SpinnerIntegerEditor;
 import sequor.model.BooleanModel;
 import sequor.model.ColorModel;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.FunctionTreeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.ParameterListModel;
@@ -81,9 +81,9 @@ public class SettingsFactory {
             case EDIT_COMBO:
                 return ((StringRangeModel) sp.getModel()).getComboBox();
             case EDIT_DOUBLE:
-                return getSpinner((DoubleRangeModel2)sp.getModel());
+                return getSpinner((DoubleRangeModel)sp.getModel());
             case EDIT_DOUBLE_SLIDER:
-                return new DoubleSlider((DoubleRangeModel2)sp.getModel());
+                return new DoubleSlider((DoubleRangeModel)sp.getModel());
             case EDIT_FUNCTION:
                 return new FunctionTextComboBox((FunctionTreeModel)sp.getModel());
             case EDIT_INTEGER:
@@ -103,7 +103,7 @@ public class SettingsFactory {
     // GUI HANDLING SUPPORT
 
     /** Generates a spinner given a range model and a step size. */
-    public static JSpinner getSpinner(DoubleRangeModel2 drm) {
+    public static JSpinner getSpinner(DoubleRangeModel drm) {
         JSpinner result = new JSpinner(new SpinnerDoubleEditor(drm));
         //result.setMinimumSize(new Dimension(20, 20));
         //result.setPreferredSize(new Dimension(50, 25));

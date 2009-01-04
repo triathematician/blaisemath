@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
 import java.util.Vector;
 import javax.swing.JMenuItem;
 import scio.coordinate.R1;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import specto.PlotPanel;
 import specto.Visometry;
 
@@ -30,14 +30,14 @@ public class Euclidean1 extends Visometry<R1> {
     private Double b;
     
     /** Boundaries of the window. */
-    private DoubleRangeModel2 bounds;    
+    private DoubleRangeModel bounds;    
     /** The y-value of the line (same for all displayed points) */
     private double yValue = 0.0;
     
     // CONSTRUCTORS
     
-    public Euclidean1(){super();bounds=new DoubleRangeModel2(0,-5,5);}
-    public Euclidean1(PlotPanel p){super(p);bounds=new DoubleRangeModel2(0,-5,5);}
+    public Euclidean1(){super();bounds=new DoubleRangeModel(0,-5,5);}
+    public Euclidean1(PlotPanel p){super(p);bounds=new DoubleRangeModel(0,-5,5);}
 
     // BEANS
     

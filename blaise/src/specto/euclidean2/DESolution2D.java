@@ -16,7 +16,7 @@ import scio.diffeq.DESolve;
 import scio.function.BoundedFunction;
 import sequor.component.RangeTimer;
 import sequor.model.BooleanModel;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
 import sequor.style.VisualStyle;
@@ -40,7 +40,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     /** The number of solution steps. */
     IntegerRangeModel numSteps = new IntegerRangeModel(500,0,10000);    
     /** The solution step size. */
-    DoubleRangeModel2 stepSize = new DoubleRangeModel2(0.1,0.00001,100.0,0.1);    
+    DoubleRangeModel stepSize = new DoubleRangeModel(0.1,0.00001,100.0,0.1);    
     
     /** Whether to show the "reverse path" */
     BooleanModel showReverse = new BooleanModel(true);
@@ -80,7 +80,7 @@ public class DESolution2D extends InitialPointSet2D implements Decoration<Euclid
     /** Determines whether to use a box visualization of the solution. */
     BooleanModel useBox = new BooleanModel(false);
     /** Separation for the box solution. */
-    DoubleRangeModel2 boxSep = new DoubleRangeModel2(.2,.001,5);
+    DoubleRangeModel boxSep = new DoubleRangeModel(.2,.001,5);
     /** Solution curves for the box visualization of the solution. */
     Vector<Vector<R2>> boxSolutions;
     

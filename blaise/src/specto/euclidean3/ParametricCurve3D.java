@@ -19,7 +19,7 @@ import scio.function.Function;
 import scio.coordinate.R3;
 import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import specto.Decoration;
 import specto.Plottable;
 
@@ -37,7 +37,7 @@ public class ParametricCurve3D extends PointSet3D implements SampleSet3D, Sample
     Function<Double,R3> function;
 
     /** Range of t values. */
-    DoubleRangeModel2 tRange;
+    DoubleRangeModel tRange;
     
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
     private static final Function<Double,R3> DEFAULT_FUNCTION=new Function<Double,R3>(){
@@ -64,19 +64,19 @@ public class ParametricCurve3D extends PointSet3D implements SampleSet3D, Sample
     public ParametricCurve3D(Function<Double,R3> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
-        tRange=new DoubleRangeModel2(tMin,tMin,tMax);
+        tRange=new DoubleRangeModel(tMin,tMin,tMax);
         tRange.setNumSteps(samplePoints,true);
     }
 
-    public ParametricCurve3D(Function<Double, R3> function, DoubleRangeModel2 drm,int samplePoints) {
+    public ParametricCurve3D(Function<Double, R3> function, DoubleRangeModel drm,int samplePoints) {
         setColor(Color.BLUE);
         this.function=function;
-        tRange=new DoubleRangeModel2(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
+        tRange=new DoubleRangeModel(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
         tRange.setNumSteps(samplePoints,true);
     }
     
     public ParametricCurve3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
-        tRange = new DoubleRangeModel2 (0.0, 0.0, 2*Math.PI);
+        tRange = new DoubleRangeModel (0.0, 0.0, 2*Math.PI);
         tRange.setNumSteps(1000, true);
         function = getParametricFunction(
                 (Function<Double, Double>) fm1.getRoot().getFunction(1),
@@ -127,7 +127,7 @@ public class ParametricCurve3D extends PointSet3D implements SampleSet3D, Sample
                 (Function<Double, Double>) new FunctionTreeRoot(fy).getFunction(),
                 (Function<Double, Double>) new FunctionTreeRoot(fz).getFunction());
     }
-    public DoubleRangeModel2 getModel(){return tRange;}
+    public DoubleRangeModel getModel(){return tRange;}
     
     /** Draws the path. */
     @Override
@@ -155,7 +155,7 @@ public class ParametricCurve3D extends PointSet3D implements SampleSet3D, Sample
     
     /** Returns list of points along the path. */
     public Vector<R3> getSampleSet(int options) {
-        DoubleRangeModel2 sampleRange = new DoubleRangeModel2(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
+        DoubleRangeModel sampleRange = new DoubleRangeModel(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
         sampleRange.setNumSteps(options, true);
         try {
             return function.getValue(sampleRange.getValueRange(true, 0.0));
@@ -167,7 +167,7 @@ public class ParametricCurve3D extends PointSet3D implements SampleSet3D, Sample
 
     /** Returns list of vectors along the path in the direction of the path. */
     public Vector<R3[]> getSampleVectors(int options) {
-        DoubleRangeModel2 sampleRange = new DoubleRangeModel2(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
+        DoubleRangeModel sampleRange = new DoubleRangeModel(tRange.getValue(), tRange.getMinimum(), tRange.getMaximum());
         sampleRange.setNumSteps(options, true);
         try {
             Vector<R3[]> result = new Vector<R3[]>();

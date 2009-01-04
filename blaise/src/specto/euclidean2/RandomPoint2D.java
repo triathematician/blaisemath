@@ -11,7 +11,7 @@ import java.util.Vector;
 import scio.coordinate.R2;
 import scio.random.RandomGenerator;
 import scio.random.Random2D;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
 import specto.euclidean2.Euclidean2;
@@ -22,7 +22,7 @@ import specto.euclidean2.Euclidean2;
  */
 public class RandomPoint2D extends Point2D{
     Vector<R2> points;
-    DoubleRangeModel2 parameter;
+    DoubleRangeModel parameter;
     IntegerRangeModel numPoints;
 
     public RandomPoint2D(){this(new PointRangeModel());}
@@ -30,14 +30,14 @@ public class RandomPoint2D extends Point2D{
         super(prm);
         points=new Vector<R2>();
         numPoints=new IntegerRangeModel(1000,0,5000,1);
-        parameter=new DoubleRangeModel2(1,0,10,.1);
+        parameter=new DoubleRangeModel(1,0,10,.1);
         style.setValue(TYPE_NCIRCLE);
     }
     public RandomPoint2D(Point2D parent) {this(parent.prm);}
 
     
     // MODEL QUERY
-    public DoubleRangeModel2 getParameterModel(){return parameter;}
+    public DoubleRangeModel getParameterModel(){return parameter;}
     public IntegerRangeModel getNumPointsModel(){return numPoints;}
     
     // PAINTING

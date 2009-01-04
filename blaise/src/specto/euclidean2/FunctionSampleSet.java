@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.coordinate.R2;
 import scio.function.FunctionValueException;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import specto.Decoration;
 import specto.Plottable;
 
@@ -27,12 +27,12 @@ public class FunctionSampleSet extends Plottable<Euclidean2> implements Decorati
     
     /** whether to sample from the left (-0.5), right (0.5), or center (0) of a Riemann sum range. */
     double rSampleShift=0.0;
-    DoubleRangeModel2 valueRange;
+    DoubleRangeModel valueRange;
     
     public FunctionSampleSet(Function2D parent){this(parent,-4.0,4.0,20);}
     public FunctionSampleSet(Function2D parent,double leftPoint,double rightPoint,int numSamples){
         this.parent=parent;
-        valueRange=new DoubleRangeModel2(leftPoint,leftPoint,rightPoint);
+        valueRange=new DoubleRangeModel(leftPoint,leftPoint,rightPoint);
         valueRange.setNumSteps(numSamples, isInclusive());
         setColor(Color.RED);
     }
@@ -42,7 +42,7 @@ public class FunctionSampleSet extends Plottable<Euclidean2> implements Decorati
     public Function2D getParent(){return parent;}
     public void setParent(Function2D parent){this.parent=parent;}
     
-    public DoubleRangeModel2 getModel(){return valueRange;}
+    public DoubleRangeModel getModel(){return valueRange;}
     
     Vector<R2> getSamplePoints() throws FunctionValueException{
         Vector<R2> result=new Vector<R2>();

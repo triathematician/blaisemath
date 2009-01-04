@@ -23,7 +23,7 @@ import scio.function.BoundedFunction;
 import scio.function.Derivative;
 import scribo.tree.FunctionTreeRoot;
 import sequor.component.RangeTimer;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import sequor.style.VisualStyle;
 import specto.Constrains2D;
@@ -71,7 +71,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
         uvRange.yModel.setNumSteps(samplePoints,true);
     }
     /** Constructs with specified function. */
-    public ParametricSurface3D(Function<R2, R3> function, DoubleRangeModel2 drmu, DoubleRangeModel2 drmv, int samplePoints) {
+    public ParametricSurface3D(Function<R2, R3> function, DoubleRangeModel drmu, DoubleRangeModel drmv, int samplePoints) {
         setColor(new Color(100,100,100,200));        
         this.function=function;
         uvRange = new PointRangeModel(drmu, drmv);

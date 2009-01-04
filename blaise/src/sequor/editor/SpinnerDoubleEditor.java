@@ -1,7 +1,7 @@
 package sequor.editor;
 
 import sequor.model.*;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,18 +16,18 @@ import javax.swing.event.ChangeListener;
  */
 public class SpinnerDoubleEditor extends SpinnerNumberModel implements ChangeListener {
     
-    DoubleRangeModel2 sourceModel; //the real model
+    DoubleRangeModel sourceModel; //the real model
     protected Double stepSize=0.1;
         
     /**
      * Creates a SpinnerDoubleEditor that gets its state from sourceModel.
      */
     public SpinnerDoubleEditor(){initializeModels();}
-    public SpinnerDoubleEditor(DoubleRangeModel2 sourceModel){initializeModels(sourceModel);}
-    public SpinnerDoubleEditor(Double value,Double min,Double max,Double stepSize){initializeModels(new DoubleRangeModel2(value,min,max,stepSize));}
+    public SpinnerDoubleEditor(DoubleRangeModel sourceModel){initializeModels(sourceModel);}
+    public SpinnerDoubleEditor(Double value,Double min,Double max,Double stepSize){initializeModels(new DoubleRangeModel(value,min,max,stepSize));}
     
     // initializes given a model
-    public void initializeModels(DoubleRangeModel2 model){
+    public void initializeModels(DoubleRangeModel model){
         sourceModel=model;
         sourceModel.addChangeListener(this);
         stepSize=sourceModel.getStep();
@@ -35,7 +35,7 @@ public class SpinnerDoubleEditor extends SpinnerNumberModel implements ChangeLis
     
     // initialize underlying models
     public void initializeModels(){
-        if(sourceModel==null){sourceModel=new DoubleRangeModel2();}
+        if(sourceModel==null){sourceModel=new DoubleRangeModel();}
         sourceModel.addChangeListener(this);
     }
     

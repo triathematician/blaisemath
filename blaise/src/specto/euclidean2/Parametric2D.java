@@ -20,7 +20,7 @@ import scio.function.Derivative;
 import scribo.parser.Parser;
 import scribo.tree.FunctionTreeRoot;
 import sequor.component.RangeTimer;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.ParametricModel;
 import sequor.style.VisualStyle;
 import specto.Animatable;
@@ -40,7 +40,7 @@ public class Parametric2D extends PointSet2D {
     Function<Double,R2> function;
 
     /** Range of t values. */
-    DoubleRangeModel2 tRange;
+    DoubleRangeModel tRange;
     
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
     private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
@@ -60,19 +60,19 @@ public class Parametric2D extends PointSet2D {
     public Parametric2D(Function<Double,R2> function,double tMin,double tMax,int samplePoints){
         setColor(Color.BLUE);
         this.function=function;
-        tRange=new DoubleRangeModel2(tMin,tMin,tMax);
+        tRange=new DoubleRangeModel(tMin,tMin,tMax);
         tRange.setNumSteps(samplePoints,true);
     }
 
-    Parametric2D(Function<Double, R2> function, DoubleRangeModel2 drm,int samplePoints) {
+    Parametric2D(Function<Double, R2> function, DoubleRangeModel drm,int samplePoints) {
         setColor(Color.BLUE);
         this.function=function;
-        tRange=new DoubleRangeModel2(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
+        tRange=new DoubleRangeModel(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
         tRange.setNumSteps(samplePoints,true);
     }
     
     public Parametric2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
-        tRange = new DoubleRangeModel2 (0.0, 0.0, 2*Math.PI);
+        tRange = new DoubleRangeModel (0.0, 0.0, 2*Math.PI);
         tRange.setNumSteps(1000, true);
         function = getParametricFunction(
                 (Function<Double, Double>) functionModel1.getRoot().getFunction(1),
@@ -116,7 +116,7 @@ public class Parametric2D extends PointSet2D {
                 (Function<Double, Double>) new FunctionTreeRoot(fx).getFunction(),
                 (Function<Double, Double>) new FunctionTreeRoot(fy).getFunction());
     }
-    public DoubleRangeModel2 getModel(){return tRange;}
+    public DoubleRangeModel getModel(){return tRange;}
     
     // TODO should not recompute path every time. Just when it's necessary
 
@@ -168,11 +168,11 @@ public class Parametric2D extends PointSet2D {
         R2 velocity;
         R2 acceleration;
         
-        DoubleRangeModel2 tModel;
+        DoubleRangeModel tModel;
         
         public ParametricPoint(){
             setModel(getConstraintModel());
-            tModel = new DoubleRangeModel2(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
+            tModel = new DoubleRangeModel(getTime(getPoint()),tRange.getMinimum(),tRange.getMaximum(),tRange.getStep());
             tModel.addChangeListener(new ChangeListener(){
                 public void stateChanged(ChangeEvent e) {
                     if(adjusting){return;}
@@ -200,7 +200,7 @@ public class Parametric2D extends PointSet2D {
         public boolean isAnimationOn() { return animationOn; }
         
         /** Returns data model which can be used to control the time of this point. */
-        public DoubleRangeModel2 getTimeModel(){return tModel;}
+        public DoubleRangeModel getTimeModel(){return tModel;}
         
         @Override
         public void recompute(Euclidean2 v) {

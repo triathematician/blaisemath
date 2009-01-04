@@ -363,7 +363,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
         IntegerRangeModel irm=new IntegerRangeModel(1,-10,100,1);
         addProperty("integer (spinner)",irm,Settings.EDIT_INTEGER);
         addProperty("integer (slider)",irm,Settings.EDIT_INTEGER_SLIDER);
-        DoubleRangeModel2 drm=new DoubleRangeModel2(1.,-10.,100.,.1);
+        DoubleRangeModel drm=new DoubleRangeModel(1.,-10.,100.,.1);
         addProperty("double (spinner)",drm,Settings.EDIT_DOUBLE);
         addProperty("double (slider)",drm,Settings.EDIT_DOUBLE_SLIDER);
         addSeparator();

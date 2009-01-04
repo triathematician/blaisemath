@@ -21,7 +21,7 @@ import scio.function.Function;
 import scio.function.FunctionValueException;
 import scio.random.RandomGenerator;
 import sequor.model.BooleanModel;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.style.VisualStyle;
 import specto.euclidean2.Euclidean2;
@@ -36,9 +36,9 @@ public class Euclidean3 extends Euclidean2 {
 
     // PARAMETERS OF THE DISPLAY
 
-    DoubleRangeModel2 xRange = new DoubleRangeModel2(0.0,-5.0,5.0,2.0);
-    DoubleRangeModel2 yRange = new DoubleRangeModel2(0.0,-5.0,5.0,2.0);
-    DoubleRangeModel2 zRange = new DoubleRangeModel2(0.0,-5.0,5.0,2.0);
+    DoubleRangeModel xRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
+    DoubleRangeModel yRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
+    DoubleRangeModel zRange = new DoubleRangeModel(0.0,-5.0,5.0,2.0);
     
     
     /** The proj determining how the plot is displayed. */
@@ -338,14 +338,14 @@ public class Euclidean3 extends Euclidean2 {
     public class ViewProjection implements Function<R3,R2> {        
 
         /** Distance to clipping plane (in cm) */
-        DoubleRangeModel2 clipDist = new DoubleRangeModel2(2.0,0.1,10.0,0.1);
+        DoubleRangeModel clipDist = new DoubleRangeModel(2.0,0.1,10.0,0.1);
         /** Distance to view plane (in cm) */
-        DoubleRangeModel2 viewDist = new DoubleRangeModel2(20.0,0.01,100.0,0.1);
+        DoubleRangeModel viewDist = new DoubleRangeModel(20.0,0.01,100.0,0.1);
         /** Distance from the scene of interest */
-        DoubleRangeModel2 sceneSize = new DoubleRangeModel2(5.0,0.01,100.0,0.1);
+        DoubleRangeModel sceneSize = new DoubleRangeModel(5.0,0.01,100.0,0.1);
         
         /** Distance from the scene of interest */
-        DoubleRangeModel2 eyeSep = new DoubleRangeModel2(0.35,0.01,3.0,0.01);
+        DoubleRangeModel eyeSep = new DoubleRangeModel(0.35,0.01,3.0,0.01);
         
         /** Central point of interest. */
         R3 center = new R3(0,0,0);

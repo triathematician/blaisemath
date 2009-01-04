@@ -9,7 +9,7 @@ package specto.euclidean3;
 
 import specto.euclidean3.VectorField3D;
 import specto.euclidean3.Function3D;
-import specto.euclidean3.DESolution3D1;
+import specto.euclidean3.DESolution3D;
 import sequor.control.SliderBox;
 import specto.euclidean2.Point2D;
 import specto.euclidean2.Rectangle2D;
@@ -18,10 +18,10 @@ import specto.euclidean2.Rectangle2D;
  *
  * @author  ae3263
  */
-public class TestPlottables3b extends javax.swing.JFrame {
+public class TestPlottables3 extends javax.swing.JFrame {
     
     /** Creates new form BlaisePlotter */
-    public TestPlottables3b() {
+    public TestPlottables3() {
         initComponents();
         
         VectorField3D vf3 = new VectorField3D();
@@ -44,7 +44,7 @@ public class TestPlottables3b extends javax.swing.JFrame {
         
         
         vectorFieldPlot.add(vf3);
-        vectorFieldPlot.add(new DESolution3D1(vf3));
+        vectorFieldPlot.add(new DESolution3D(vf3));
         vectorFieldPlot.add(SliderBox.getStyleAdjusters(100,10,15,vectorFieldPlot.getPlottables(),vectorFieldPlot));
         
         stokesPlot.add(vf3);
@@ -354,7 +354,7 @@ public class TestPlottables3b extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestPlottables3b().setVisible(true);
+                new TestPlottables3().setVisible(true);
             }
         });
     }

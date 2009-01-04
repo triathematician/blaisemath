@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class StepControlledRangeModel extends IntegerRangeModel {
     BoundedRangeModel parent;
     
-    public StepControlledRangeModel(){this(new DoubleRangeModel2());}
+    public StepControlledRangeModel(){this(new DoubleRangeModel());}
     public StepControlledRangeModel(final BoundedRangeModel parent){
         super(0,-3,3,1);
         this.parent=parent;     

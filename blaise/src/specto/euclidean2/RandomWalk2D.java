@@ -8,7 +8,7 @@ package specto.euclidean2;
 import java.util.Vector;
 import scio.coordinate.R2;
 import scio.random.RandomGenerator;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 
 /**
@@ -20,20 +20,20 @@ import sequor.model.PointRangeModel;
 public class RandomWalk2D extends InitialPointSet2D {
     
     /** Speed */
-    DoubleRangeModel2 distancePerTime;
+    DoubleRangeModel distancePerTime;
     /** Change in angle per time step */
-    DoubleRangeModel2 angleParameter;
+    DoubleRangeModel angleParameter;
     
     public RandomWalk2D(){this(new PointRangeModel());}
     public RandomWalk2D(Point2D parent) {this(parent.prm);}
     public RandomWalk2D(PointRangeModel prm){
         super(prm);
-        distancePerTime=new DoubleRangeModel2(.1,.001,10,.001);
-        angleParameter=new DoubleRangeModel2(.1,0,10,.001);
+        distancePerTime=new DoubleRangeModel(.1,.001,10,.001);
+        angleParameter=new DoubleRangeModel(.1,0,10,.001);
     }
     
-    public DoubleRangeModel2 getAngleParameterModel(){return angleParameter;}
-    public DoubleRangeModel2 getDistancePerTimeModel(){return distancePerTime;}
+    public DoubleRangeModel getAngleParameterModel(){return angleParameter;}
+    public DoubleRangeModel getDistancePerTimeModel(){return distancePerTime;}
 
     @Override
     public void recompute(Euclidean2 v) {

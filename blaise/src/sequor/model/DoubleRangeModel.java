@@ -20,29 +20,29 @@ import scio.random.RandomGenerator;
  **/
 
 @XmlRootElement(name="doubleRangeModel")
-public class DoubleRangeModel2 extends BoundedRangeModel<Double> implements RandomGenerator<Double> {
+public class DoubleRangeModel extends BoundedRangeModel<Double> implements RandomGenerator<Double> {
     
     /** Default initializer. */
-    public DoubleRangeModel2(){this(0.0,-1.0,1.0,0.1);}
-    public DoubleRangeModel2(double d){this(d,-Double.MAX_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);}
+    public DoubleRangeModel(){this(0.0,-1.0,1.0,0.1);}
+    public DoubleRangeModel(double d){this(d,-Double.MAX_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);}
     /** Initializes with particular values. The stepsize is by default 0.1.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      */
-    public DoubleRangeModel2(double newValue,double newMin,double newMax){super(newValue,newMin,newMax,0.1);}
+    public DoubleRangeModel(double newValue,double newMin,double newMax){super(newValue,newMin,newMax,0.1);}
     /** Initializes with particular values.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      * @param step the increment size
      */
-    public DoubleRangeModel2(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
+    public DoubleRangeModel(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
     /** Initializes with particular values.
      * @param min the minimum value possible
      * @param max the maximum value possible
      */
-    DoubleRangeModel2(double min, double max) {
+    DoubleRangeModel(double min, double max) {
         this(min, min, max, 0.1);
     }
     
@@ -149,7 +149,7 @@ public class DoubleRangeModel2 extends BoundedRangeModel<Double> implements Rand
     public int getNumSteps(){return (int)Math.round((maximum-minimum)/step);}
         
     @Override
-    public FiresChangeEvents clone(){return new DoubleRangeModel2(value,minimum,maximum,step);}
+    public FiresChangeEvents clone(){return new DoubleRangeModel(value,minimum,maximum,step);}
     
     public boolean contains(double x){return x>=minimum && x<=maximum;}
 
@@ -157,7 +157,7 @@ public class DoubleRangeModel2 extends BoundedRangeModel<Double> implements Rand
     
     @Override
     public BoundedRangeModel getMinModel() {
-        final DoubleRangeModel2 result = new DoubleRangeModel2(minimum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
+        final DoubleRangeModel result = new DoubleRangeModel(minimum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
         result.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 setMinimum(result.getValue());
@@ -168,7 +168,7 @@ public class DoubleRangeModel2 extends BoundedRangeModel<Double> implements Rand
 
     @Override
     public BoundedRangeModel getMaxModel() {
-        final DoubleRangeModel2 result = new DoubleRangeModel2(maximum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
+        final DoubleRangeModel result = new DoubleRangeModel(maximum, -Double.MAX_VALUE, Double.MAX_VALUE, .1);
         result.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 setMaximum(result.getValue());

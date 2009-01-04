@@ -12,7 +12,7 @@ import sequor.control.ArcSlider;
 import sequor.control.SliderBox;
 import sequor.control.BoundedRangeSliderBox;
 import sequor.control.NumberSlider;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import specto.euclidean2.CirclePoint2D;
 import specto.euclidean2.Clock2D;
 import specto.euclidean2.DESolution2D;
@@ -58,7 +58,7 @@ public class TestPlottables1 extends javax.swing.JFrame {
         Point2D cp2=f1.getPointSlope();
         functionPlot.add(cp2);
         functionPlot.add(new RandomFlame2D(cp2.getModel(),80,20));
-        DoubleRangeModel2 drm1=fss.getModel();
+        DoubleRangeModel drm1=fss.getModel();
         BoundedRangeSliderBox nra1=new BoundedRangeSliderBox(210,10,drm1);
         functionPlot.add(nra1,3,5);
         functionPlot.add(new StandardGrid2D());
@@ -132,7 +132,7 @@ public class TestPlottables1 extends javax.swing.JFrame {
         nab1.add(new NumberSlider(0,0,da1.getSizeModel()));
         nab1.add(new NumberSlider(0,0,da1.getHandleSizeModel()));
         polarPlot2D1.add(nab1,3,8);
-        DoubleRangeModel2 drm2=par1.getModel();
+        DoubleRangeModel drm2=par1.getModel();
         polarPlot2D1.add(new BoundedRangeSliderBox(320,10,drm2),3,4);
         polarPlot2D1.add(SliderBox.getStyleAdjusters(100,10,15,polarPlot2D1.getPlottables(),polarPlot2D1));
         

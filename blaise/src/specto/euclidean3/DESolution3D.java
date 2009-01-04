@@ -21,7 +21,7 @@ import specto.Decoration;
  * <br><br>
  * @author ae3263
  */
-public class DESolution3D1 extends InitialPointSet3D implements Decoration<Euclidean3,VectorField3D> {
+public class DESolution3D extends InitialPointSet3D implements Decoration<Euclidean3,VectorField3D> {
         
     /** Default number of solution steps */
     public int NUM = 5000;
@@ -38,20 +38,20 @@ public class DESolution3D1 extends InitialPointSet3D implements Decoration<Eucli
     
     // CONSTRUCTOR
     
-    public DESolution3D1(R3 point,VectorField3D parent){
+    public DESolution3D(R3 point,VectorField3D parent){
         super(point);
         setParent(parent);
         this.point = new R3(1.0,1.0,1.0);
         setColor(new Color(.5f,0,.5f));
     }
-    public DESolution3D1(VectorField3D parent){
+    public DESolution3D(VectorField3D parent){
         super();
         point = new R3(1.0,1.0,1.0);
         setParent(parent);
         setColor(new Color(.5f,0,.5f));
     }
 
-    public DESolution3D1(VectorField3D parent, double x0, double y0, double z0) {
+    public DESolution3D(VectorField3D parent, double x0, double y0, double z0) {
         this(parent);
         point = new R3(x0,y0,z0);
     }

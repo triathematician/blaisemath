@@ -25,7 +25,7 @@ import scio.coordinate.R2;
 import scio.diffeq.DESolve;
 import scio.function.BoundedFunction;
 import scribo.tree.FunctionTreeRoot;
-import sequor.model.DoubleRangeModel2;
+import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Animatable;
 
