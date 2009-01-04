@@ -23,51 +23,27 @@ public class Random2D {
     public Random2D() {
     }
     
-    // ONE-DIMENSIONAL DISTRIBUTIONS
-    
-    /**
-     * Returns a random point in the range [low,high]
-     **/
-    public static double between(double low,double high){
-        return ((high-low)*Math.random()+low);
-    }
-    
-    /**
-     * Returns number in the standard (Gaussian) normal distribution.
-     **/
-    public static double normal(){
-        return ((new java.util.Random()).nextGaussian());
-    }
-    
-    /**
-     * Returns a point in the normal distribution with given mean and standard
-     * deviation.
-     **/
-    public static double normal(double mean,double std){
-        return std*normal()+mean;
-    }
-    
     // TWO-DIMENSIONAL DISTRIBUTIONS
     
     /**
      * Returns a (uniform)  random point in the rectangle [-x,-x]->[x,x]
      **/
     public static R2 rectangle(double x){
-        return new R2(between(-x,x),between(-x, x));
+        return new R2(RandomGenerator.Uniform.getValue(-x,x),RandomGenerator.Uniform.getValue(-x,x));
     }
     
     /**
      * Returns a (uniform)  random point in the rectangle [-x,-y]->[x,y]
      **/
     public static R2 rectangle(double x,double y){
-        return new R2(between(-x,x),between(-y, y));
+        return new R2(RandomGenerator.Uniform.getValue(-x,x),RandomGenerator.Uniform.getValue(-y, y));
     }
     
     /**
      * Returns a (uniform)  random point in the rectangle [x1,y1]->[x2,y2]
      **/
     public static R2 rectangle(double x1,double y1,double x2,double y2){
-        return new R2(between(x1,x2),between(y1, y2));
+        return new R2(RandomGenerator.Uniform.getValue(x1,x2),RandomGenerator.Uniform.getValue(y1, y2));
     }
     
     /**
@@ -81,8 +57,8 @@ public class Random2D {
      * Returns a (uniform) random point in the diskNormal radius 0->r
      **/
     public static R2 disk(double r){
-        double randRadius=between(0,r);
-        double randTheta=between(0,2*Math.PI);
+        double randRadius=RandomGenerator.Uniform.getValue(0,r);
+        double randTheta=RandomGenerator.Uniform.getValue(0,2*Math.PI);
         return new R2(randRadius*Math.cos(randTheta),randRadius*Math.sin(randTheta));
     }    
     /** Returns a (uniform) random point in the diskNormal radius 0->r centered at (x,y) */
@@ -95,8 +71,8 @@ public class Random2D {
      * centered at (x,y).
      **/
     public static R2 diskNormal(double std){
-        double randRadius=normal()*std;
-        double randTheta=between(0,2*Math.PI);
+        double randRadius=RandomGenerator.GAUSSIAN.getRValue()*std;
+        double randTheta=RandomGenerator.Uniform.getValue(0,2*Math.PI);
         return new R2(randRadius*Math.cos(randTheta),randRadius*Math.sin(randTheta));
     }
     /** Returns a (Gaussian) random point in the diskNormal radius 0->r centered at (x,y) */
@@ -105,33 +81,13 @@ public class Random2D {
     public static R2 diskNormal(R2 point,double std){return diskNormal(std).plus(point);}
     
     /** Separate x and y normal distributions. */
-    public static R2 rectNormal(double stdx,double stdy){return new R2(normal()*stdx,normal()*stdy);}
+    public static R2 rectNormal(double stdx,double stdy){return new R2(RandomGenerator.GAUSSIAN.getRValue()*stdx,RandomGenerator.GAUSSIAN.getRValue()*stdy);}
     
     /**
      * Returns a uniformly distributed direction
      */
     public static R2 direction(){
-        double randTheta=between(0,2*Math.PI);
+        double randTheta=RandomGenerator.Uniform.getValue(0,2*Math.PI);
         return new R2(Math.cos(randTheta),Math.sin(randTheta));
     }
-    
-    
-    // FUNCTIONS
-    
-    public abstract static class RandomDistribution implements Function<Double,Double> {
-        public Vector<Double> getValue(Vector<Double> x) throws FunctionValueException {return null;}
-        public Double minValue() {return 0.0;}
-        public Double maxValue() {return 1.0;}
-    }
-    public abstract static class OneParameterDistribution extends RandomDistribution {
-        
-    }
-    
-    public Function<Double,Double> normalDistribution=new RandomDistribution(){
-        public Double getValue(Double x) throws FunctionValueException {return normal();}
-    };
-    public Function<Double,Double> uniformDistribution=new RandomDistribution(){
-        
-        public Double getValue(Double x) throws FunctionValueException {return normal();}
-    };
 }
