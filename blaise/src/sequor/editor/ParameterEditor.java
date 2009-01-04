@@ -3,16 +3,18 @@
  * Created on Feb 20, 2008
  */
 
+// TODO check to ensure parameter is not a special character like "e" or "pi"
+
 package sequor.editor;
 
 import sequor.model.*;
-import sequor.editor.ButtonPropertyEditor;
 import java.awt.event.ActionEvent;
 import sequor.component.ParameterDialog;
 
 /**
+ * <p>
  * This class tells a button to open a dialog allowing the user to name and enter the value of a parameter.
- * 
+ * </p>
  * @author Elisha Peterson
  */
 public class ParameterEditor extends ButtonPropertyEditor<ParameterListModel>{
@@ -22,7 +24,7 @@ public class ParameterEditor extends ButtonPropertyEditor<ParameterListModel>{
     @Override
     public void initButton(){
         super.initButton();
-        button.setText("add");
+        button.setText("Add parameter");
     }
     @Override
     public void initDialog(){
