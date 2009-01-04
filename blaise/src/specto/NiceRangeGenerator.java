@@ -6,7 +6,7 @@
 package specto;
 
 import java.util.Vector;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 
 /**
  * NiceRangeGenerator is originally designed to generate nice grid spacing for plots,
@@ -47,7 +47,7 @@ public interface NiceRangeGenerator {
         public Vector<Double> niceRange(double min,double max,double idealStep){
             double factor=getStep(min,max,idealStep);
             if(factor==0){return new Vector<Double>();}
-            return new DoubleRangeModel(0,
+            return new DoubleRangeModel2(0,
                     factor*Math.ceil(min/factor),
                     factor*Math.floor(max/factor)*1.0001
                     ,factor)

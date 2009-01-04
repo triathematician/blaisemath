@@ -25,7 +25,7 @@ import specto.Visometry;
 import scio.coordinate.R2;
 import scio.random.RandomGenerator;
 import sequor.component.NumberDialog;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 import sequor.model.PointRangeModel;
 import specto.NiceRangeGenerator;
 import specto.euclidean2.Rectangle2D;
@@ -106,9 +106,9 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         if(Math.abs(newValue/aspectRatio-1)>.05){
             double oldValue=aspectRatio;
             final boolean up = (newValue > oldValue);
-            final DoubleRangeModel drm = up ?
-                new DoubleRangeModel(oldValue,oldValue,newValue,(newValue-oldValue)/200) :
-                new DoubleRangeModel(oldValue,newValue,oldValue,(oldValue-newValue)/200);
+            final DoubleRangeModel2 drm = up ?
+                new DoubleRangeModel2(oldValue,oldValue,newValue,(newValue-oldValue)/200) :
+                new DoubleRangeModel2(oldValue,newValue,oldValue,(oldValue-newValue)/200);
             Thread runner=new Thread(new Runnable(){
                 public void run() {
                     while(drm.increment(false, up ? +1 : -1)){
@@ -320,7 +320,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         final double cy=.1*p.y+.9*getActualCenter().y;
         final double xMultiplier=getDrawWidth()/2;
         final double yMultiplier=getDrawHeight()/2;
-        final DoubleRangeModel drm=new DoubleRangeModel();
+        final DoubleRangeModel2 drm=new DoubleRangeModel2();
         drm.setRangeProperties(1.0,1.0,factor,(factor-1.0)/100);
         Thread runner=new Thread(new Runnable(){
             public void run() {
@@ -337,7 +337,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
     public void zoomBoxAnimated(final Rectangle2D boundary){
         final R2 min1=getActualMin();
         final R2 max1=getActualMax();
-        final DoubleRangeModel drm=new DoubleRangeModel(0.0,0.0,1.0,.01);
+        final DoubleRangeModel2 drm=new DoubleRangeModel2(0.0,0.0,1.0,.01);
         Thread runner=new Thread(new Runnable(){
             public void run() {
                 while(drm.increment(false)){

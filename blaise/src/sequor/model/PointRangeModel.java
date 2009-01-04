@@ -21,10 +21,10 @@ import scio.random.RandomGenerator;
  */
 @XmlRootElement(name="pointRangeModel")
 public class PointRangeModel extends FiresChangeEvents implements ChangeListener, RandomGenerator<R2> {
-    public DoubleRangeModel xModel,yModel;
+    public DoubleRangeModel2 xModel,yModel;
     
     public PointRangeModel(){this(0,0);}
-    public PointRangeModel(DoubleRangeModel xModel,DoubleRangeModel yModel){
+    public PointRangeModel(DoubleRangeModel2 xModel,DoubleRangeModel2 yModel){
         this.xModel=xModel;
         this.yModel=yModel;
     }
@@ -46,20 +46,20 @@ public class PointRangeModel extends FiresChangeEvents implements ChangeListener
     }
     public PointRangeModel(R2 point,double range){this(point,-range,-range,range,range);}
     public PointRangeModel(double uMin, double uMax, double vMin, double vMax) {
-        this(new DoubleRangeModel(uMin, uMax), new DoubleRangeModel(vMin, vMax) );
+        this(new DoubleRangeModel2(uMin, uMax), new DoubleRangeModel2(vMin, vMax) );
     }
 
 
 
     private void initializeModels(){
-        xModel=new DoubleRangeModel();
+        xModel=new DoubleRangeModel2();
         xModel.addChangeListener(this);
-        yModel=new DoubleRangeModel();
+        yModel=new DoubleRangeModel2();
         yModel.addChangeListener(this);
     }
     
-    public void setXModel(DoubleRangeModel xm){xModel=xm;}
-    public void setYModel(DoubleRangeModel ym){yModel=ym;}
+    public void setXModel(DoubleRangeModel2 xm){xModel=xm;}
+    public void setYModel(DoubleRangeModel2 ym){yModel=ym;}
     
     public R2 getPoint(){return new R2(xModel.getValue(),yModel.getValue());}
     public R2 getValue(){return getPoint();}

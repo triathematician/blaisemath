@@ -8,7 +8,7 @@ package specto.euclidean3;
 import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.coordinate.R3;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 import sequor.model.StringRangeModel;
 import sequor.style.VisualStyle;
 
@@ -26,30 +26,30 @@ public class Plane3D extends Point3D {
     /** Second direction through point. */
     R3 dir2;
     /** Parameter values through point. */
-    DoubleRangeModel d1;
+    DoubleRangeModel2 d1;
     /** Parameter values through point. */
-    DoubleRangeModel d2;
+    DoubleRangeModel2 d2;
 
     /** Generates with specified point and directions. */
     public Plane3D(R3 value, R3 dir1, R3 dir2) {
         super(value);
         this.dir1 = dir1;
         this.dir2 = dir2;
-        d1 = new DoubleRangeModel(0,-5,5);
-        d2 = new DoubleRangeModel(0,-5,5);
+        d1 = new DoubleRangeModel2(0,-5,5);
+        d2 = new DoubleRangeModel2(0,-5,5);
     }
     /** Generates with specified point and directions. */
     public Plane3D(R3 value, R3 dir1, double min1, double max1, R3 dir2, double min2, double max2) {
         super(value);
         this.dir1 = dir1;
         this.dir2 = dir2;
-        d1 = new DoubleRangeModel(min1,min1,max1);
+        d1 = new DoubleRangeModel2(min1,min1,max1);
         d1.setNumSteps(11, true);
-        d2 = new DoubleRangeModel(min2,min2,max2);
+        d2 = new DoubleRangeModel2(min2,min2,max2);
         d2.setNumSteps(11, true);
     }
     /** Generates with specified point and directions. */
-    public Plane3D(R3 value, R3 dir1, DoubleRangeModel range1, R3 dir2, DoubleRangeModel range2) {
+    public Plane3D(R3 value, R3 dir1, DoubleRangeModel2 range1, R3 dir2, DoubleRangeModel2 range2) {
         super(value);
         this.dir1 = dir1;
         this.dir2 = dir2;

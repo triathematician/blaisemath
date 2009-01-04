@@ -12,7 +12,7 @@ import java.awt.geom.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.model.BoundedRangeModel;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 import sequor.model.IntegerRangeModel;
 import sequor.model.StepControlledRangeModel;
 
@@ -63,10 +63,10 @@ public class BoundedRangeSliderBox extends SliderBox {
             minModel=new IntegerRangeModel((Integer)mainModel.getMinimum(),-Integer.MAX_VALUE,Integer.MAX_VALUE);
             maxModel=new IntegerRangeModel((Integer)mainModel.getMaximum(),-Integer.MAX_VALUE,Integer.MAX_VALUE);
             stepModel=new IntegerRangeModel((Integer)mainModel.getStep(),1,Integer.MAX_VALUE);
-        }else if(mainModel instanceof DoubleRangeModel){
-            minModel=new DoubleRangeModel((Double)mainModel.getMinimum(),-Double.MAX_VALUE,Double.MAX_VALUE);
-            maxModel=new DoubleRangeModel((Double)mainModel.getMaximum(),-Double.MAX_VALUE,Double.MAX_VALUE);
-            stepModel=new DoubleRangeModel((Double)mainModel.getStep(),.001,Double.MAX_VALUE,.001);
+        }else if(mainModel instanceof DoubleRangeModel2){
+            minModel=new DoubleRangeModel2((Double)mainModel.getMinimum(),-Double.MAX_VALUE,Double.MAX_VALUE);
+            maxModel=new DoubleRangeModel2((Double)mainModel.getMaximum(),-Double.MAX_VALUE,Double.MAX_VALUE);
+            stepModel=new DoubleRangeModel2((Double)mainModel.getStep(),.001,Double.MAX_VALUE,.001);
         }
         add(new NumberSlider(0,0,mainModel));
         add(new NumberSlider(0,0,new StepControlledRangeModel(minModel)));

@@ -20,7 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import sequor.editor.ColorEditor;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 import sequor.FiresChangeEvents;
 import sequor.SettingsFactory;
 import sequor.model.FunctionTreeModel;
@@ -63,7 +63,7 @@ public class SettingsTable extends JTable {
             case Settings.EDIT_COMBO: return new DefaultCellEditor(((StringRangeModel)sp.getModel()).getComboBox());
             // TODO write custom double cell editor
             case Settings.EDIT_DOUBLE_SLIDER:
-            case Settings.EDIT_DOUBLE: return new TableSpinner((DoubleRangeModel)sp.getModel());
+            case Settings.EDIT_DOUBLE: return new TableSpinner((DoubleRangeModel2)sp.getModel());
             case Settings.EDIT_FUNCTION: return new DefaultCellEditor(new FunctionTextComboBox((FunctionTreeModel)sp.getModel()));
             // TODO write custom integer cell editor
             case Settings.EDIT_INTEGER_SLIDER:
@@ -110,7 +110,7 @@ public class SettingsTable extends JTable {
                     break;
                 case Settings.EDIT_DOUBLE_SLIDER:
                 case Settings.EDIT_DOUBLE:
-                    setText(((DoubleRangeModel)sp.getModel()).toString());
+                    setText(((DoubleRangeModel2)sp.getModel()).toString());
                     break;
                 case Settings.EDIT_INTEGER_SLIDER:
                 case Settings.EDIT_INTEGER:
@@ -186,8 +186,8 @@ public class SettingsTable extends JTable {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if(model instanceof DoubleRangeModel){
-                return SettingsFactory.getSpinner((DoubleRangeModel)model);
+            if(model instanceof DoubleRangeModel2){
+                return SettingsFactory.getSpinner((DoubleRangeModel2)model);
             }else if(model instanceof IntegerRangeModel){
                 return SettingsFactory.getSlider((IntegerRangeModel)model);
             }

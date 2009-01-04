@@ -15,7 +15,7 @@ import sequor.model.FunctionTreeModel;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.BoundedFunction;
-import sequor.model.DoubleRangeModel;
+import sequor.model.DoubleRangeModel2;
 import specto.Plottable;
 import specto.PlottableGroup;
 
@@ -94,9 +94,9 @@ public class Function3D extends PlottableGroup<Euclidean3>{
         
         int SAMPLES = 11;
         
-        DoubleRangeModel dx = new DoubleRangeModel(v.xRange.getMinimum(), v.xRange.getMinimum(), v.xRange.getMaximum());
+        DoubleRangeModel2 dx = new DoubleRangeModel2(v.xRange.getMinimum(), v.xRange.getMinimum(), v.xRange.getMaximum());
         dx.setNumSteps(SAMPLES, true);
-        DoubleRangeModel dy = new DoubleRangeModel(v.yRange.getMinimum(), v.yRange.getMinimum(), v.yRange.getMaximum());
+        DoubleRangeModel2 dy = new DoubleRangeModel2(v.yRange.getMinimum(), v.yRange.getMinimum(), v.yRange.getMaximum());
         dy.setNumSteps(SAMPLES, true);
         
         for (double x : dx.getValueRange(true, 0.0)) {

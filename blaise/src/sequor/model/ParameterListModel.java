@@ -23,7 +23,7 @@ import sequor.Settings;
 import sequor.component.SettingsPanel;
 
 /**
- * This class is a data model for a list of parameters (doubles). It maps Strings (or Variables) to DoubleRangeModel's which control their values,
+ * This class is a data model for a list of parameters (doubles). It maps Strings (or Variables) to DoubleRangeModel2's which control their values,
  * and will fire ChangeEvents if any of the values is changed. It can be used in conjunction with ParameterPanel to allow for automatically controlling
  * parameter inputs to a function.
  * 
@@ -31,20 +31,20 @@ import sequor.component.SettingsPanel;
  */
 @XmlRootElement(name="parameterList")
 public class ParameterListModel extends FiresChangeEvents implements ChangeListener {
-    TreeMap<String,DoubleRangeModel> values;
+    TreeMap<String,DoubleRangeModel2> values;
     boolean added=false;
     boolean useSliders=true;
     
     public ParameterListModel(){
-        values=new TreeMap<String,DoubleRangeModel>();
+        values=new TreeMap<String,DoubleRangeModel2>();
     }
     public ParameterListModel(SettingsPanel sp) {
         this();
         initPanel(sp);
     }
-    public ParameterListModel(TreeMap<String,DoubleRangeModel> values){
-        this.values=new TreeMap<String,DoubleRangeModel>();
-        for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+    public ParameterListModel(TreeMap<String,DoubleRangeModel2> values){
+        this.values=new TreeMap<String,DoubleRangeModel2>();
+        for(Entry<String,DoubleRangeModel2> e:values.entrySet()){
             this.values.put(e.getKey(),e.getValue());
         }
     }
@@ -74,7 +74,7 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     // PARAMETER METHODS
 
     /** Adds a model with a particular range of values. */
-    public void addModel(String s,DoubleRangeModel drm){
+    public void addModel(String s,DoubleRangeModel2 drm){
         if(drm!=null){
             values.put(s,drm);
             drm.addChangeListener(this);
@@ -141,11 +141,11 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     public JPanel updatePanel(final SettingsPanel jp){
         Settings s=new Settings();
         if(!useSliders){
-            for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+            for(Entry<String,DoubleRangeModel2> e:values.entrySet()){
                 s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE);
             }
         }else{
-            for(Entry<String,DoubleRangeModel> e:values.entrySet()){
+            for(Entry<String,DoubleRangeModel2> e:values.entrySet()){
                 s.addProperty(e.getKey(),e.getValue(),Settings.EDIT_DOUBLE_SLIDER);
             }
         }
@@ -196,8 +196,8 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     
     // UTILITY METHODS
     
-    /** Returns a default DoubleRangeModel */
-    public static DoubleRangeModel defaultDoubleRangeModel(double d){
-        return new DoubleRangeModel(d,-10,10,.1);
+    /** Returns a default DoubleRangeModel2 */
+    public static DoubleRangeModel2 defaultDoubleRangeModel(double d){
+        return new DoubleRangeModel2(d,-10,10,.1);
     }
 }
