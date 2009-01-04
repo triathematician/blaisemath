@@ -9,6 +9,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.Vector;
 import scio.coordinate.R2;
+import scio.random.RandomGenerator;
 import scio.random.Random2D;
 import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
@@ -66,7 +67,7 @@ public class RandomPoint2D extends Point2D{
             case TYPE_NRECTANGLE:
             default:
                 for(int i=0;i<numPoints.getValue();i++){
-                    points.add(new R2(Random2D.normal(x,size),Random2D.normal(y,size)));
+                    points.add(new R2(RandomGenerator.Normal.getValue(x,size),RandomGenerator.Normal.getValue(y,size)));
                 }
                 break;
         }

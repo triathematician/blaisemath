@@ -7,7 +7,7 @@ package specto.euclidean2;
 
 import java.util.Vector;
 import scio.coordinate.R2;
-import scio.random.Random2D;
+import scio.random.RandomGenerator;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 
@@ -40,12 +40,12 @@ public class RandomWalk2D extends InitialPointSet2D {
         Vector<R2> newPath=new Vector<R2>();
         newPath.add(getPoint());
         double theta=0;
-        double dtheta=this.angleParameter.getValue();
-        double speed=this.distancePerTime.getValue();
+        double dtheta=this.angleParameter.getRValue();
+        double speed=this.distancePerTime.getRValue();
         R2 lastPoint=getPoint();
         for(int i=0;i<length.getValue();i++){
-            theta+=Random2D.normal(0,dtheta);
-            lastPoint.translate(speed*Math.cos(theta),speed*Math.sin(theta));
+            theta+=RandomGenerator.Normal.getValue(0,dtheta);
+            lastPoint.translateBy(speed*Math.cos(theta),speed*Math.sin(theta));
             newPath.add(new R2(lastPoint.x,lastPoint.y));
         }
         path.setPath(newPath);

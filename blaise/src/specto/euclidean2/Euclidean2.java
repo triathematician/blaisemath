@@ -23,6 +23,8 @@ import javax.swing.JRadioButtonMenuItem;
 import specto.PlotPanel;
 import specto.Visometry;
 import scio.coordinate.R2;
+import scio.random.RandomGenerator;
+import sequor.component.NumberDialog;
 import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import specto.NiceRangeGenerator;
@@ -39,7 +41,7 @@ import specto.euclidean2.Rectangle2D;
  * <br><br>
  * @author Elisha Peterson
  */
-public class Euclidean2 extends Visometry<R2> {
+public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
     
     // PROPERTIES
     
@@ -98,7 +100,7 @@ public class Euclidean2 extends Visometry<R2> {
     public AffineTransform getAffineTransformation(){return at;}
     public PointRangeModel getBounds(){return bounds;}
     
-    public R2 getRandomPoint(){ return bounds.getRandom(); }
+    public R2 getRValue(){ return bounds.getRValue(); }
     
     public void setAspectRatio(double newValue){
         if(Math.abs(newValue/aspectRatio-1)>.05){
@@ -393,7 +395,11 @@ public class Euclidean2 extends Visometry<R2> {
         mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){setAspectRatio(.1);}});
         sub.add(mi);rbg.add(mi);
         mi=new JRadioButtonMenuItem("Custom");
-        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){}});
+        mi.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){
+            NumberDialog d = new NumberDialog("Enter aspect ratio as a decimal",getAspectRatio(),null,true,null);
+            d.setVisible(true);
+            setAspectRatio(d.getDoubleValue());
+        }});
         sub.add(mi);rbg.add(mi);
         result.add(sub);
         

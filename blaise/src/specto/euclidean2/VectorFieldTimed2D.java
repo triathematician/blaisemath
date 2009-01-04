@@ -23,9 +23,8 @@ import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
+import scio.diffeq.DETimeSolve;
 import scio.function.BoundedFunction;
-import scribo.tree.FunctionTreeRoot;
-import sequor.model.PointRangeModel;
 import specto.Animatable;
 
 /**
@@ -160,7 +159,7 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
                 for (double py:yRange){
                     point = new R2(px, py);
                     samplePoints.add(point);
-                    vectors.add(DESolution2D.getMultipliedVector(function, time*2*Math.PI/1000, point, 5 * step));
+                    vectors.add(DETimeSolve.R2T.getMultipliedVector(function, time*2*Math.PI/1000, point, 5 * step));
                 }
             }
         } catch (FunctionValueException ex) {
@@ -189,8 +188,8 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
             case TRAILS:
                 try {
                     for (int i = 0; i < samplePoints.size(); i++) {
-                        g.draw(v.path(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM)));
-                        g.draw(v.path(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM)));
+                        g.draw(v.path(DETimeSolve.R2T.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM)));
+                        g.draw(v.path(DETimeSolve.R2T.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM)));
                     }
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorFieldTimed2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,11 +224,11 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < samplePoints.size(); i++) {
-                            flows.add(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                            flows.add(DETimeSolve.R2T.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                         }
                     } else {
                         for (int i = 0; i < NUM_RANDOM; i++) {
-                            flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                            flows.add(DETimeSolve.R2T.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }
                     }
                 } catch (FunctionValueException ex) {
@@ -243,11 +242,11 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
                             try {
                                 if(standardFlows) {
                                     for (int i = 0; i < samplePoints.size(); i++) {
-                                        flows.add(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                                        flows.add(DETimeSolve.R2T.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                                     }
                                 } else {
                                     for (int i = 0; i < NUM_RANDOM; i++) {
-                                        flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                                        flows.add(DETimeSolve.R2T.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                                     }
                                 }
                             } catch (FunctionValueException ex) {
@@ -260,17 +259,17 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution2D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DETimeSolve.R2T.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                     } else {
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
                             flows.remove(0);
                         }
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution2D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DETimeSolve.R2T.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
-                            flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                            flows.add(DETimeSolve.R2T.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }                        
                     }
                 } catch (FunctionValueException ex) {
@@ -304,15 +303,6 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
     
     
     // DECORATIONS
-    
-    /** Returns solution to differential equation at a default initial point. */
-//    public DESolution2D getFlowCurve() { return new DESolution2D(this); }
-    
-    /** Returns solution to differential equation at a given initial point. */
-//    public DESolution2D getFlowCurve(PointRangeModel initialPoint) { 
-//        return new DESolution2D(initialPoint, this); 
-//    }
-    
     
 }
 

@@ -22,8 +22,10 @@ import sequor.component.RangeTimer;
 import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
+import scio.diffeq.DESolve;
 import scio.function.BoundedFunction;
 import scribo.tree.FunctionTreeRoot;
+import sequor.model.DoubleRangeModel;
 import sequor.model.PointRangeModel;
 import specto.Animatable;
 
@@ -158,7 +160,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                 for (double py:yRange){
                         point = new R2(px, py);
                         samplePoints.add(point);
-                        vectors.add(DESolution2D.getMultipliedVector(function, point, 0.6 * step));
+                        vectors.add(DESolve.R2S.getMultipliedVector(function, point, 0.6 * step));
                 }
             }
         } catch (FunctionValueException ex) {
@@ -188,8 +190,8 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
             case TRAILS:
                 try {
                     for (int i = 0; i < samplePoints.size(); i++) {
-                        g.draw(v.path(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM)));
-                        g.draw(v.path(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM)));
+                        g.draw(v.path(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM)));
+                        g.draw(v.path(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM)));
                     }
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,11 +225,11 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < samplePoints.size(); i++) {
-                            flows.add(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                            flows.add(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                         }
                     } else {
                         for (int i = 0; i < NUM_RANDOM; i++) {
-                            flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                            flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }
                     }
                 } catch (FunctionValueException ex) {
@@ -241,11 +243,11 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                             try {
                                 if(standardFlows) {
                                     for (int i = 0; i < samplePoints.size(); i++) {
-                                        flows.add(DESolution2D.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
+                                        flows.add(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                                     }
                                 } else {
                                     for (int i = 0; i < NUM_RANDOM; i++) {
-                                        flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                                        flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                                     }
                                 }
                             } catch (FunctionValueException ex) {
@@ -258,17 +260,17 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                 try {
                     if(standardFlows) {
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution2D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DESolve.R2S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                     } else {
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
                             flows.remove(0);
                         }
                         for (int i = 0; i < flows.size(); i++) {
-                            DESolution2D.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
+                            DESolve.R2S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                         for (int i = 0; i < RANDOM_TURNOVER; i++) {
-                            flows.add(DESolution2D.calcNewton(function, v.getRandomPoint(), NUM, .75*step/NUM));
+                            flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }                        
                     }
                 } catch (FunctionValueException ex) {
