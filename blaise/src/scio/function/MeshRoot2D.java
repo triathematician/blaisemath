@@ -134,7 +134,7 @@ public class MeshRoot2D {
     /** Returns segment of intersection of z=C with the portion of a plane bounded by three particular points. */
     public static Path2D.Double lineOnPlane(double zValue, R3 p1, R3 p2, R3 p3) {
         double tripleProd = R3.tripleProduct(p1, p2, p3);
-        R3 crossSum = (R3) p1.cross(p2).plus(p2.cross(p3)).plus(p3.cross(p1));
+        R3 crossSum = (R3) p1.crossProduct(p2).plus(p2.crossProduct(p3)).plus(p3.crossProduct(p1));
         double slope = -crossSum.getX()/crossSum.getY();
         double intercept = (tripleProd - zValue * crossSum.getZ()) / crossSum.getY();
         Path2D.Double result = new Path2D.Double ();

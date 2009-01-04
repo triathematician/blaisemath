@@ -70,7 +70,7 @@ public class Derivative {
         R3 value=function.getValue(input);
         R3 result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
         R3 leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
-        while(result.distance(leftResult)>tolerance){
+        while(result.distanceTo(leftResult)>tolerance){
             result=leftResult;
             step1=step1/10.;
             leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
@@ -79,13 +79,13 @@ public class Derivative {
         step1=0.1; 
         result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
         R3 rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
-        while(result.distance(rightResult)>tolerance){
+        while(result.distanceTo(rightResult)>tolerance){
             result=rightResult;
             step1=step1/10.;
             rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
         }
         
-        if(leftResult.distance(rightResult)<tolerance){
+        if(leftResult.distanceTo(rightResult)<tolerance){
             return leftResult;
         }
         return null;
