@@ -38,10 +38,10 @@ import specto.euclidean2.VectorField2D;
  *
  * @author  ae3263
  */
-public class TestPlottables extends javax.swing.JFrame {
+public class TestPlottables1 extends javax.swing.JFrame {
     
     /** Creates new form BlaisePlotter */
-    public TestPlottables() {
+    public TestPlottables1() {
         initComponents();
         
         Function2D f1=new Function2D();
@@ -524,7 +524,7 @@ public class TestPlottables extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestPlottables().setVisible(true);
+                new TestPlottables1().setVisible(true);
             }
         });
     }
