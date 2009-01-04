@@ -114,7 +114,7 @@ public class SettingsPanel extends JPanel {
     // CONTEXT MENU SUPPORT
     
     public JMenu getDeleteMenu() { 
-        JMenu result = new JMenu("Remove Setting");
+        JMenu result = new JMenu("Remove setting");
         for(final SettingsProperty sp: s){
             result.add(new JMenuItem(sp.getName())).addActionListener( new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
