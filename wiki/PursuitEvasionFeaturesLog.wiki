@@ -1,6 +1,10 @@
 #summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
 #labels Featured,Module-PEG
 
+==== Week of Jan 11-17 2009 ====
+
+ * _Fixed valuations for subset perceptions for various metrics. A few still need some changes, as annotated in code._ --Elisha
+
 ==== Week of Nov 16-22 ====
 
  * _Added in 3D visualization of pursuit games (with time on the vertical axis)._ --Elisha
