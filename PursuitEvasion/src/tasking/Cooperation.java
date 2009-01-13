@@ -75,7 +75,7 @@ public class Cooperation {
             V2 cat=tb.agents.get(0).loc;
             // invert all in circle of radius 1 centered about the cat
             for(Agent agent:ta.agents){
-                agent.loc.translate(-cat.x,-cat.y);
+                agent.loc.translateBy(-cat.x,-cat.y);
                 agent.loc.invertInCircleOfRadius(1);
             }
             // go through each team member and perform combo evasion
@@ -90,8 +90,8 @@ public class Cooperation {
             
             // now perform inversion again... both points
             for(Agent aa:ta.agents){
-                aa.loc.invertInCircleOfRadius(1);aa.loc.translate(cat.x,cat.y);
-                aa.loc.v.invertInCircleOfRadius(1);aa.loc.v.translate(cat.x,cat.y);
+                aa.loc.invertInCircleOfRadius(1);aa.loc.translateBy(cat.x,cat.y);
+                aa.loc.v.invertInCircleOfRadius(1);aa.loc.v.translateBy(cat.x,cat.y);
             }
         }
         return result;

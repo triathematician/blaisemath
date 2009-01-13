@@ -27,7 +27,7 @@ public class AutoGradient extends AutonomousTaskGenerator {
         R2 dir = new R2();
         for(Agent b:target.agents){
             if(agent.sees(b)){
-                dir.translate(new R2(b.loc.x-agent.loc.x,b.loc.y-agent.loc.y).multipliedBy(Math.pow(agent.loc.distance(b.loc),POWER-1)));
+                dir.translateBy(new R2(b.loc.x-agent.loc.x,b.loc.y-agent.loc.y).multipliedBy(Math.pow(agent.loc.distance(b.loc),POWER-1)));
             }
         }
         return new V2(agent.loc.plus(dir));
