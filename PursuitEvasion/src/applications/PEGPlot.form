@@ -338,6 +338,7 @@
                   <SubComponents>
                     <Container class="specto.euclidean2.Plot2D" name="metricsPlot">
                       <Properties>
+                        <Property name="toolTipText" type="java.lang.String" value="Shows metrics for each team based on victory conditions and other metrics. &#xa;Note that the solid line shows the metric and the dotted line shows the metric as perceived by the selected subset."/>
                         <Property name="animatorVisible" type="boolean" value="false"/>
                         <Property name="markerBoxVisible" type="boolean" value="false"/>
                       </Properties>

@@ -201,6 +201,7 @@ public class PEGPlot extends javax.swing.JFrame {
         infoPane.setToolTipText("See information regarding the simulations.");
         infoPane.setMaximumSize(new java.awt.Dimension(450, 600));
 
+        metricsPlot.setToolTipText("Shows metrics for each team based on victory conditions and other metrics. \nNote that the solid line shows the metric and the dotted line shows the metric as perceived by the selected subset.");
         metricsPlot.setAnimatorVisible(false);
         metricsPlot.setMarkerBoxVisible(false);
 

@@ -115,7 +115,7 @@ public class SimulationFactory {
         
 
         // Additional Metrics to Track
-        bugTeam.addValuation(new Valuation(teams, bugTeam, lightTeam, Valuation.NUM_OPPONENT));
+        bugTeam.addValuation(new Valuation(teams, bugTeam, lightTeam, Valuation.NUM_ACTIVE_OPPONENTS));
         lightTeam.addValuation(new Valuation(teams, lightTeam, bugTeam, Valuation.TIME_TOTAL));
 
         return teams;
@@ -138,7 +138,7 @@ public class SimulationFactory {
         // Victory Conditions
         //                      ( TEAMS, THIS TEAM, OPPOSING TEAM, METRIC FOR VICTORY, THRESHOLD , WHAT HAPPENS IF LESS , WHAT HAPPENS IF MORE )
         copTeam.setVictoryCondition(new VictoryCondition(teams, copTeam, robberTeam,
-                Valuation.NUM_CAP, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));        
+                Valuation.NUM_OPPONENTS_CAPTURED, 2.0, VictoryCondition.WON, VictoryCondition.NEITHER));        
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )   
@@ -197,9 +197,9 @@ public class SimulationFactory {
         // Victory Conditions
         //                      ( TEAMS, THIS TEAM, OPPOSING TEAM, METRIC FOR VICTORY, THRESHOLD , WHAT HAPPENS IF LESS , WHAT HAPPENS IF MORE )
         wildebeastTeam.setVictoryCondition(new VictoryCondition(teams, wildebeastTeam, wateringHole,
-                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.NUM_TEAM_SAFE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         lionTeam.setVictoryCondition(new VictoryCondition(teams, lionTeam, wildebeastTeam,
-                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.POSSIBLE_CAPTURES_NOT_MADE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  
@@ -232,7 +232,7 @@ public class SimulationFactory {
             }
             raptor.addAutoGoal(1.0, teams, mathematicians, Goal.SEEK, TaskGenerator.AUTO_CLOSEST, 1.0);
             raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MIN));
-            raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MIN_AGENT));
+            raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.AGENT_CLOSEST_TO_CAPTURE));
             raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MAX));
         }
         
@@ -289,9 +289,9 @@ public class SimulationFactory {
         // Victory Conditions
         //                      ( TEAMS, THIS TEAM, OPPOSING TEAM, METRIC FOR VICTORY, THRESHOLD , WHAT HAPPENS IF LESS , WHAT HAPPENS IF MORE )
         offense.setVictoryCondition(new VictoryCondition(teams, offense, endzone,
-                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.POSSIBLE_CAPTURES_NOT_MADE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         defense.setVictoryCondition(new VictoryCondition(teams, defense, offense,
-                Valuation.EVERY_CAPTURE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
+                Valuation.POSSIBLE_CAPTURES_NOT_MADE, 0.0, VictoryCondition.WON, VictoryCondition.NEITHER));
         
         // Goals (Taskings)
         //                      ( WEIGHT, TEAMS, OPPONENT, SEEK/FLEE/CAPTURE? , TASKING ALGORITHM , GOAL THRESHOLD )  

@@ -88,27 +88,30 @@ public class Valuation implements Function<DistanceTable,Double> {
             switch(vs.type.getValue()){
                 case DIST_MIN:
                     return dt.min(activeSubset,vs.target.getActiveAgents()).getDistance();
-                case DIST_MIN_AGENT:
-                    return (double) vs.owner.agents.indexOf(dt.min(activeSubset,vs.target.getActiveAgents()).getFirst());
                 case DIST_MAX:
                     return dt.max(activeSubset,vs.target.getActiveAgents()).getDistance();
                 case DIST_AVG:
                     return dt.average(activeSubset,vs.target.getActiveAgents());
-                case NUM_TEAM:
+                case AGENT_CLOSEST_TO_CAPTURE:
+                    return 1.0 + vs.owner.agents.indexOf(dt.min(activeSubset,vs.target.getActiveAgents()).getFirst());
+                case NUM_ACTIVE_AGENTS:
                     return (double)activeSubset.size();
                 case NUM_TEAM_SAFE:
                     return (double)vs.owner.getNumberSafe();
-                case NUM_OPPONENT:
+                case NUM_ACTIVE_OPPONENTS:
                     return (double)vs.target.getActiveAgents().size();
-                case NUM_CAP:
+                case NUM_OPPONENTS_CAPTURED: // NEEDS COOP FIX
                     return (double)(vs.target.getNumberCapturedBy(vs.owner));
-                case NUM_DIFF:
+                case AGENT_NUMBER_ADVANTAGE:
                     return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
                     return dt.getTime();
-                case EVERY_CAPTURE:
-                    return (double)((vs.owner.getAgentNumber()> vs.target.getAgentNumber())?
-                        (vs.target.getAgentNumber()-vs.owner.getAgentNumber()+vs.owner.getActiveAgents().size()):(vs.owner.getActiveAgents().size()));
+                case POSSIBLE_CAPTURES_NOT_MADE:
+                    return (double) ( subset.size() > vs.target.getAgentNumber() ?
+                        vs.target.getAgentNumber() - subset.size() + activeSubset.size()
+                        : activeSubset.size() );
+                case OPPONENTS_UNCAPTURED: // NEEDS COOP FIX
+                    return (double) (vs.target.getAgentNumber() - vs.target.getNumberCapturedBy(vs.owner)) ;
                 case TIME_SINCE_CAP:
                 default:
                     return Double.NaN;
@@ -204,31 +207,33 @@ public class Valuation implements Function<DistanceTable,Double> {
     // CONSTANTS
     
     public static final int DIST_MIN = 0;
-    public static final int DIST_MIN_AGENT = 1;
-    public static final int DIST_MAX = 2;
-    public static final int DIST_AVG = 3;
-    public static final int NUM_TEAM = 4;
+    public static final int DIST_MAX = 1;
+    public static final int DIST_AVG = 2;
+    public static final int AGENT_CLOSEST_TO_CAPTURE = 3;
+    public static final int NUM_ACTIVE_AGENTS = 4;
     public static final int NUM_TEAM_SAFE = 5;
-    public static final int NUM_OPPONENT = 6;
-    public static final int NUM_CAP = 7;
-    public static final int NUM_DIFF = 8;
-    public static final int EVERY_CAPTURE = 9;
-    public static final int TIME_TOTAL = 10;
-    public static final int TIME_SINCE_CAP = 11;
+    public static final int NUM_ACTIVE_OPPONENTS = 6;
+    public static final int NUM_OPPONENTS_CAPTURED = 7;
+    public static final int AGENT_NUMBER_ADVANTAGE = 8;
+    public static final int POSSIBLE_CAPTURES_NOT_MADE = 9;
+    public static final int OPPONENTS_UNCAPTURED = 10;
+    public static final int TIME_TOTAL = 11;
+    public static final int TIME_SINCE_CAP = 12;
     
     public static final String[] typeStrings = {
-        "Min. distance",   
-        "Closest agent number",
-        "Max. distance",        
-        "Avg. distance",
-        "# Active Agents",      
-        "# Team Safe",
-        "# Active Opponents",   
-        "# Opponents captured",
-        "Player # advantage",   
-        "Everyone Captures/Captured",
-        "Simulation time",      
-        "Time since capture"
+        "Min. distance to target",      // 0
+        "Max. distance to target",      // 1  
+        "Avg. distance to target",      // 2
+        "Agent closest to capture",     // 3
+        "# active agents",              // 4
+        "# agents reached safety",      // 5
+        "# active opponents",           // 6
+        "# opponents captured",         // 7
+        "Player # advantage",           // 8
+        "# possible captures not made", // 9
+        "# opponents uncaptured",       // 10
+        "Simulation time",              // 11
+        "Time since capture"            // 12
     };    
     
     public String explain() { return explain(vs.type.getValue()); }
@@ -240,23 +245,25 @@ public class Valuation implements Function<DistanceTable,Double> {
                 return "Represents the maximum distancec between team "+vs.owner+" and opposing team "+vs.target;
             case DIST_AVG:
                 return "Represents the average distancec between team "+vs.owner+" and opposing team "+vs.target;
-            case NUM_TEAM:
+            case NUM_ACTIVE_AGENTS:
                 return "Represents the number of agents on the team "+vs.owner;
             case NUM_TEAM_SAFE:
                 return "Represents the number of agents on the team "+vs.owner+" which have reached safety";
-            case NUM_OPPONENT:
+            case NUM_ACTIVE_OPPONENTS:
                 return "Represents the number of agents on the opposing team "+vs.target;
-            case NUM_CAP:
+            case NUM_OPPONENTS_CAPTURED:
                 return "Represents the number of opposing agents on team "+vs.target+" which have been captured by team "+vs.owner;
-            case NUM_DIFF:
+            case AGENT_NUMBER_ADVANTAGE:
                 return "Represents the number of agents on team "+vs.target+" minus the number on opposing team "+vs.target;
             case TIME_TOTAL:
                 return "Represents the total time of the simulation";
             case TIME_SINCE_CAP:
                 return "Represents the time since a member of team "+vs.owner+" last captured a member of team "+vs.target;
-            case EVERY_CAPTURE:
+            case POSSIBLE_CAPTURES_NOT_MADE:
                 return "Returns the number of potential captures which can be made by team "+vs.owner+" of opponents on team "+vs.target
                         + ", minus the number of captures which have been made";
+            case OPPONENTS_UNCAPTURED:
+                return "Returns the size of team "+vs.target+" minuts the number of captures made by team "+vs.owner;
         }
         return "Type not supported";
     }
@@ -286,7 +293,7 @@ public class Valuation implements Function<DistanceTable,Double> {
          */
         private DoubleRangeModel threshold = new DoubleRangeModel(1,0,1000,.1);
         /** Parameter describing the type of valuation. */
-        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,9);
+        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,10);
         
         public ValuationSettings(Vector<Team> teams, Team owner, Team target, int type, double threshold){
             setName("Valuation");

@@ -141,13 +141,13 @@ public class Statistics extends FiresChangeEvents {
         AverageData subset = computeAverages(subsetMetrics.get(val), 10000);
         AverageData partial = computeAverages(partialMetrics.get(val), 100000);
         textArea.append("Metric " + val + ":\n"
-                 + "  FULL: " + full + "\n"
+                 + "  FULL TEAM: " + full + "\n"
                  + (val.isCooperationTesting() ? 
-                      "  SUBSET: " + subset + "\n"
-                    + "  PARTIAL: " + partial + "\n"
-                    + "  SELFISH COOPERATION: average " + formatter.format(subset.avg - full.avg) + "\n"
-                    + "  ALTRUISTIC COOPERATION: average " + formatter.format(partial.avg - subset.avg) + "\n"
-                    + "  TOTAL COOPERATION: average " + formatter.format(partial.avg - full.avg) + "\n"
+                      "  MEASURED BY SUBSET: " + subset + "\n"
+                    + "  PARTIAL TEAM PARTICIPATION: " + partial + "\n"
+                    + "  => selfish cooperation: average " + formatter.format(subset.avg - full.avg) + "\n"
+                    + "  => altruistic cooperation: average " + formatter.format(partial.avg - subset.avg) + "\n"
+                    + "  => total cooperation: average " + formatter.format(partial.avg - full.avg) + "\n"
                     : ""));
     }
     
