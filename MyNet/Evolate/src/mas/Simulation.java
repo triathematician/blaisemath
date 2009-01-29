@@ -11,46 +11,37 @@ import java.util.Vector;
  * <p>Represents a simulation of a multi-agent system.</p>
  * @author Elisha Peterson
  */
-public abstract class Simulation {
+public abstract class Simulation extends Entity {
     
-    /** Constructs simulation with a single teams. */
-    public Simulation(SimStep step, Team team) {
-        this.step = step;
+    /** Agents are stored as collections of teams. */
+    protected Vector<Team> teams;
+
+    /** Constructs simulation */
+    public Simulation() { 
         teams = new Vector<Team>();
-        teams.add(team);
         controlVars = new ParameterSpace();
         stateVars = new ParameterSpace();
+    }
+
+    /** Constructs simulation with a single team. */
+    public Simulation(Team team) {
+        this();
+        if(team!=null){teams.add(team);}
     }
     
     /** Constructs simulation with several teams. */
-    public Simulation(SimStep step, Vector<Team> teams) {
-        this.step = step;
+    public Simulation(Vector<Team> teams) {
+        this();
         this.teams = teams;
-        controlVars = new ParameterSpace();
-        stateVars = new ParameterSpace();
     }
-    
-
-    /** Simulation Parameters. */
-    ParameterSpace controlVars;
-    
-    /** Simulation state space... variables that change during the simulation. */
-    ParameterSpace stateVars;
-
-    /** Agents are stored as collections of teams. */
-    Vector<Team> teams;
-    
-    /** Class describing how to perform a single iteration of the sim. */
-    SimStep step;
     
     /** Returns list of teams. */
     public Vector<Team> getTeams() { return teams; }
     
     /** Initializes the simulation. */
     public void initialize() {
-        controlVars.initialize();
         stateVars.initialize();
-        for (Team t : teams) { t.initializeControlVars(); t.initializeStateVars(); }
+        for (Team t : teams) { t.initStateVars(); }
     }
     
     /** Main simulation algorithm. */
@@ -58,15 +49,23 @@ public abstract class Simulation {
         initialize();
         while (!isFinished()) {
             preIterate();
-            step.iterate(this);
+            iterate();
             postIterate();
         }
     }
     
     /** Pre-iteration step. */
     protected void preIterate(){}
+    /** Iterates the simulation. */
+    public void iterate(){
+        for(Team t : getTeams()) { t.gatherInfo(this); }
+        for(Team t : getTeams()) { t.communicate(this); }
+        for(Team t : getTeams()) { t.adjustState(this); }
+    }
     /** Post-iteration step. */
-    protected void postIterate(){}
+    protected void postIterate(){
+        for(Team t:getTeams()){ t.progressReport(this,System.out); }
+    }
     
     /** Generates stop condition. */
     public boolean isFinished(){ return true; }

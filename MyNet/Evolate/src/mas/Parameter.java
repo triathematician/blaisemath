@@ -5,6 +5,8 @@
 
 package mas;
 
+import java.text.NumberFormat;
+
 /**
  * <p>Represents a parameter for use within a simulation. All parameters can be adjusted or modified.</p>
  * 
@@ -12,6 +14,12 @@ package mas;
  */
 public class Parameter<N extends Number> {
     public N min,max,value;
+
+    /** Initializes with particular values. */
+    public Parameter(Parameter pm) {
+        this((N)pm.min, (N)pm.max, (N)pm.value);
+    }
+
     /** Initializes with particular values. */
     public Parameter(N min, N max, N value) {
         this.min = min;
@@ -30,6 +38,18 @@ public class Parameter<N extends Number> {
         } else if (value instanceof Double) {
             double dval = (Double)min + (((Double)max-(Double)min)*Math.random());
             return new Parameter<Double>((Double)min,(Double)max,dval);
+        }
+        return null;
+    }
+
+    /** Returns copy. */
+    public Parameter copy() {
+        if (value instanceof Integer) {
+            return new Parameter<Integer>((Integer)min,(Integer)max,(Integer)value);
+        } else if (value instanceof Float) {
+            return new Parameter<Float>((Float)min,(Float)max,(Float)max);
+        } else if (value instanceof Double) {
+            return new Parameter<Double>((Double)min,(Double)max,(Double)max);
         }
         return null;
     }
@@ -57,5 +77,10 @@ public class Parameter<N extends Number> {
             return new Parameter<Double>(min,max,fval);
         }
         return null;
-    }  
+    }
+
+    final NumberFormat nf = NumberFormat.getInstance();
+
+    @Override
+    public String toString(){ return nf.format(value); }
 }

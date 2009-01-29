@@ -13,19 +13,38 @@ import mas.Parameter;
  * @author Elisha Peterson
  */
 public abstract class Allele<N extends Number> extends Parameter<N> {
-        
+
     /** Initializes with particular values. */
     public Allele(N min, N max, N value) { super(min, max, value); }
-    
+
+    /** Returns copy of this allele */
+    @Override
     public abstract Allele copy();
-    public abstract Allele mutation(double prob);
-    /** Uses a coinflip to determine which value to use. */
-    public Allele<N> cross(Allele<N> a2) {
-        return coinToss() ? copy() : a2.copy();
+
+    /** Returns a mutation of this allele
+     * @param error determines how large the mutation will be
+     * @return new Allele with mutation */
+    public abstract Allele mutation(double error);
+
+    /** By default use a coinflip to determine which value to use. */
+    public Allele<N> cross(Allele<N> a2) { return Math.random()<=.5 ? copy() : a2.copy(); }
+
+    // OVERRIDING METHODS TO ENSURE PROPER RETURN TYPE
+
+    /** Converts parameter type to allele type. */
+    public static Allele getAllele(Parameter pm) {
+        if (pm.min instanceof Integer) { return new Int((Integer)pm.min,(Integer)pm.max,(Integer)pm.value);
+        } else if (pm.min instanceof Double) { return new Doub((Double)pm.min,(Double)pm.max,(Double)pm.value);
+        } else if (pm.min instanceof Float) { return new Flt((Float)pm.min,(Float)pm.max,(Float)pm.value);
+        }
+        return null;
     }
-    
-    /** Generates a random boolean. */
-    public static boolean coinToss(){return Math.random()<=.5; }
+
+    /** Returns new instance */
+    public static Parameter getInstance(Number val) { return getAllele(Parameter.getInstance(val)); }
+    /** Returns random instance within values. */
+    @Override
+    public Parameter getRandom() { return getAllele(super.getRandom()); }
     
     /** Integer typed allele. */
     public static class Int extends Allele<Integer> {
@@ -33,51 +52,39 @@ public abstract class Allele<N extends Number> extends Parameter<N> {
         /** Returns direct copy of the value. */
         @Override
         public Allele copy() { return new Int(min,max,value); }
-        /** Mutation adds or subtracts 1 with even probability. */
+        /** Mutation adds or subtracts 1,...,error with even probability. */
         @Override
-        public Allele mutation(double prob) {
-            if (Math.random() <= prob) {
-                if (coinToss()) {
-                    return new Int(min, max, Math.max(min, value-1));
-                } else {
-                    return new Int(min, max, Math.min(max, value+1));
-                }
-            }
-            return copy();
+        public Allele mutation(double error) {
+            Integer diff = (int) Math.ceil(Math.random()*error);
+            if (Math.random()<.5) { return new Int(min, max, Math.max(min, value-diff)); }
+            return new Int(min, max, Math.min(max, value+diff));
         }
     }
     
     /** Double typed allele. */
     public static class Doub extends Allele<Double> {
-        /** Radius of addMutation by addition */
-        public double addInterval = 0.1;
-        /** Radius of addMutation by multiplication */
-        public double multInterval = 0.1;
-        /** Probability of addMutation by addition (vs. multiplication) */
-        public double addMutationProb = 0.5;
-        
         /** Constructor */
         public Doub(Double min, Double max, Double value) { super(min, max, value); }        
         /** Returns direct copy of the value. */
         @Override
         public Allele copy() { return new Doub(min,max,value); }
-        /** Mutation adds or subtracts 1 with even probability. */
+        /** Default mutation is a combination of adding and multiplying. */
         @Override
-        public Allele mutation(double prob) {
-            if (Math.random() <= prob) {
-                return (Math.random() <= addMutationProb) ? 
-                    new Doub(min,max,addMutation()) : 
-                    new Doub(min,max,prodMutation());
-            }
-            return copy();
+        public Allele mutation(double err) { return comboMutation(err, err); }
+        /** Returns combination of addition error and multiplicative error. */
+        public Allele comboMutation(double mErr, double aErr) {
+            return new Doub(min,max,
+                    Math.min(max, Math.max(min, value*(1+mErr*(2*Math.random()-1))+aErr*(2*Math.random()-1))));
         }
         /** Returns random additive mutation in interval. */
-        public double addMutation() {
-            return Math.min(max, Math.max(min, addInterval*(2*Math.random()-1)));
+        public Allele addMutation(double err){
+            return new Doub(min,max,
+                    Math.min(max, Math.max(min, value+err*(2*Math.random()-1))));
         }
         /** Returns random product mutation in interval. */
-        public double prodMutation() {
-            return Math.min(max, Math.max(min, value*(1+multInterval*(2*Math.random()-1)) ));
+        public Allele prodMutation(double err){
+            return new Doub(min,max,
+                    Math.min(max, Math.max(min, value*(1+err*(2*Math.random()-1)))));
         }
         /** Overrides to average values. */
         @Override
@@ -89,37 +96,32 @@ public abstract class Allele<N extends Number> extends Parameter<N> {
     
     /** Double typed allele. */
     public static class Flt extends Allele<Float> {
-        /** Radius of addMutation by addition */
-        public float addInterval = 0.1f;
-        /** Radius of addMutation by multiplication */
-        public float multInterval = 0.1f;
-        /** Probability of addMutation by addition (vs. multiplication) */
-        public float addMutationProb = 0.5f;
-        
         /** Constructor */
-        public Flt(Float min, Float max, Float value) { super(min, max, value); }        
+        public Flt(Float min, Float max, Float value) { super(min, max, value); }
         /** Returns direct copy of the value. */
         @Override
         public Allele copy() { return new Flt(min,max,value); }
-        /** Mutation adds or subtracts 1 with even probability. */
+        /** Default mutation is a combination of adding and multiplying. */
         @Override
-        public Allele mutation(double prob) {
-            if (Math.random() <= prob) {
-                return (Math.random() <= addMutationProb) ? 
-                    new Flt(min,max,addMutation()) : 
-                    new Flt(min,max,prodMutation());
-            }
-            return copy();
+        public Allele mutation(double err) { return comboMutation(err, err); }
+        /** Returns combination of addition error and multiplicative error. */
+        public Allele comboMutation(double mErr, double aErr) {
+            return new Flt(min, max, Math.min(max,Math.max(min,
+                    (float)(value*(1+mErr*(2*Math.random()-1))+aErr*(2*Math.random()-1))
+                    )));
         }
         /** Returns random additive mutation in interval. */
-        public float addMutation() {
-            return Math.min(max, Math.max(min, addInterval*(2*(float)Math.random()-1)));
+        public Allele addMutation(double err){
+            return new Flt(min, max, Math.min(max,Math.max(min,
+                    (float)(value+err*(2*Math.random()-1))
+                    )));
         }
         /** Returns random product mutation in interval. */
-        public float prodMutation() {
-            return Math.min(max, Math.max(min, value*(1+multInterval*(2*(float)Math.random()-1)) ));
+        public Allele prodMutation(double err){
+            return new Flt(min,max,
+                    Math.min(max, Math.max(min, (float)(value*(1+err*(2*Math.random()-1))))));
         }
-        /** Override to average values. */
+        /** Overrides to average values. */
         @Override
         public Allele<Float> cross(Allele<Float> a2) {
             return new Flt(Math.min(min,a2.min), Math.max(max,a2.max), (value+a2.value)/2);

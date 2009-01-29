@@ -21,16 +21,16 @@ public abstract class Team extends Agent {
     
     /** Initializes the team's control variables, and all agent control variables. */
     @Override
-    protected void initializeControlVars() {
-        super.initializeControlVars();
-        for(Agent a : agents) { a.initializeControlVars(); }
+    protected void initControlVars() {
+        super.initControlVars();
+        for(Agent a : agents) { a.initControlVars(); }
     }
     
     /** Initializes the team's state variables, and all agent state variables. */
     @Override
-    protected void initializeStateVars() {
-        super.initializeStateVars();
-        for(Agent a : agents) { a.initializeStateVars(); }
+    protected void initStateVars() {
+        super.initStateVars();
+        for(Agent a : agents) { a.initStateVars(); }
     }
     
     /** Tells agents on team to sense their environment. */
@@ -41,5 +41,5 @@ public abstract class Team extends Agent {
     abstract public void adjustState(Simulation sim);
     
     /** Prints progress report. */    
-    public void progressReport(mas.Simulation sim,PrintStream out) {}
+    public void progressReport(Simulation sim,PrintStream out) {}
 }

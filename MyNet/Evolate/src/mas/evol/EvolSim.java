@@ -16,31 +16,29 @@ import mas.Team;
  * </p>
  * @author Elisha Peterson
  */
-public class EvolStep extends mas.SimStep {
+public class EvolSim extends mas.NSimulation {
     
     /** Simulation to run at each step. */
     public mas.Simulation sim2;
     
     /** Initializes with no simulation. */
-    public EvolStep() { this.sim2 = null; }
-    
+    public EvolSim(int nSteps) { this(nSteps, null); }
     /** Initializes with a set simulation. */
-    public EvolStep(mas.Simulation sim2) { this.sim2 = sim2; }
+    public EvolSim(int nSteps, mas.Simulation sim2) { super(nSteps); this.sim2 = sim2; }
     
     /** Initializes the simulation. */
     public void inititialize(){}
 
     /** Runs an iteration of the simulation. */
     @Override
-    public void iterate(mas.Simulation sim) {
-        inititialize();
+    public void iterate() {
+        sim2.initialize();
         if(sim2 != null) { sim2.run(); }
         GenePool gp;
-        for (Team t : sim.getTeams()) {
+        for (Team t : getTeams()) {
             gp = (GenePool) t;
             gp.assignFitness(sim2);
             gp.evolve();
-            t.progressReport(sim,System.out);
         }
     }
 }

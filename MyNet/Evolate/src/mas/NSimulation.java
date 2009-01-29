@@ -15,18 +15,13 @@ public class NSimulation extends Simulation {
 
     public int nSteps;    
     public int curStep;
-    
+
     /** Constructs simulation with a single team. */
-    public NSimulation(SimStep step, int nSteps, Team team) {
-        super(step, team);
-        this.nSteps = nSteps;
-    }
-    
-    /** Constructs simulation with several teams. */
-    public NSimulation(SimStep step, int nSteps, Vector<Team> teams) {
-        super(step,teams);
-        this.nSteps = nSteps;
-    }
+    public NSimulation(int nSteps) { super(); this.nSteps = nSteps; }
+    /** Constructs simulation with a single team. */
+    public NSimulation(int nSteps, Team team) { super(team); this.nSteps = nSteps; }
+    /** Constructs simulation with several teams. */ 
+    public NSimulation(int nSteps, Vector<Team> teams) { super(teams); this.nSteps = nSteps; }
 
     @Override
     public void initialize() { super.initialize(); curStep = 0; }
