@@ -15,9 +15,6 @@ import mas.ParameterSpace;
  * @author Elisha Peterson
  */
 public class DNA extends ParameterSpace {
-
-    /** Stores probability of point mutation. */
-    public double pointMutationProb = 0.01;
  
     /** Default constructor */
     public DNA(){}
@@ -33,7 +30,7 @@ public class DNA extends ParameterSpace {
     public DNA mutation(float pointProb, float err){
         DNA result = (DNA) copy();
         for (Parameter pm : result.p.values()) {
-            if (Math.random() < pointProb) { ((Allele)pm).mutation(err); }
+            if (Math.random() < pointProb) { ((Allele)pm).mutate(err); }
         }
         return result;
     }
@@ -46,10 +43,6 @@ public class DNA extends ParameterSpace {
         }
         return result;
     }    
-    /** Returns DNA cross of two different agents. */
-    public static Agent cross(Agent agent1, Agent agent2, float err) {
-        return new Agent(cross((DNA)agent1.getStateVars(),(DNA)agent2.getStateVars(),err));
-    }
 
     // Override methods to ensure classes have proper types
 
@@ -76,7 +69,4 @@ public class DNA extends ParameterSpace {
         for(String s:p.keySet()) { ps2.p.put(s,((Allele)get(s)).getRandom()); }
         return ps2;
     }
-    /** Returns random agent. */
-    @Override
-    public Agent getRandomAgent() { return new Agent((DNA)getRandom()); }
 }

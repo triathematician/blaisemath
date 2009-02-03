@@ -130,9 +130,14 @@ public class Team {
             while (greedySearch(timeTable, teamPos, targetPos, assignments) > 0) {}
         }
         
-        /** Recursive search algorithm. Finds location of minimum value in table.
-         * Makes the assignment and eliminates from table.
-         * @return number of possible assignments left to make. */
+        /**
+         * This searches through the timeTable matrix and finds the minimum value
+         * @param timeTable matrix of values
+         * @param teamPos stores current locations of teams
+         * @param targetPos stores current locations of targets
+         * @param assignments stores the row/column entries in the optimal assignments
+         * @return
+         */
         public static int greedySearch(
                 Vector<Vector<Float>> timeTable, 
                 Vector<Integer> teamPos,

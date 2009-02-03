@@ -20,7 +20,6 @@ public abstract class Simulation extends Entity {
     public Simulation() { 
         teams = new Vector<Team>();
         controlVars = new ParameterSpace();
-        stateVars = new ParameterSpace();
     }
 
     /** Constructs simulation with a single team. */
@@ -37,15 +36,16 @@ public abstract class Simulation extends Entity {
     
     /** Returns list of teams. */
     public Vector<Team> getTeams() { return teams; }
-    
-    /** Initializes the simulation. */
-    public void initialize() {
-        stateVars.initialize();
-        for (Team t : teams) { t.initStateVars(); }
+    public void setTeams(Vector<Team> teams) { this.teams = teams; }
+
+    @Override
+    protected void initControlVars() {
+        super.initControlVars();
+        for (Team t : teams) { t.initControlVars(); }
     }
     
     /** Main simulation algorithm. */
-    public void run() {
+   public void run() {
         initialize();
         while (!isFinished()) {
             preIterate();
@@ -53,7 +53,9 @@ public abstract class Simulation extends Entity {
             postIterate();
         }
     }
-    
+
+    /** Initializes the simulation. */
+    public void initialize() { initControlVars(); }
     /** Pre-iteration step. */
     protected void preIterate(){}
     /** Iterates the simulation. */
@@ -65,8 +67,7 @@ public abstract class Simulation extends Entity {
     /** Post-iteration step. */
     protected void postIterate(){
         for(Team t:getTeams()){ t.progressReport(this,System.out); }
-    }
-    
+    }    
     /** Generates stop condition. */
     public boolean isFinished(){ return true; }
 

@@ -13,9 +13,7 @@ package mas;
  */
 public class Agent extends Entity {
     /** Default constructor */
-    public Agent() { super(new ParameterSpace(), new ParameterSpace()); }
-    /** Initializes with state variables only */
-    public Agent(ParameterSpace stateVars) { super(new ParameterSpace(),stateVars); }
+    public Agent() { super(new ParameterSpace()); }
     /** Initializes with given control and state variable types */
-    public Agent(ParameterSpace controlVars, ParameterSpace stateVars) { super(controlVars,stateVars); }
+    public Agent(ParameterSpace controlVars) { super(controlVars); }
 }

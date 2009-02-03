@@ -38,6 +38,9 @@ public class ParameterSpace {
     /** Returns value of a parameter. */
     public Number valueOf(String key) { return p.get(key).value; }
 
+    /** Returns number of parameters. */
+    public int size() { return p.size(); }
+
     /** Returns copy */
     public ParameterSpace copy() {
         ParameterSpace ps2 = new ParameterSpace();

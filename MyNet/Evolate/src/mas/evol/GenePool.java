@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 import mas.Agent;
+import mas.ParameterSpace;
 
 /**
  * <p>Represents a collection of agents with recombinant DNA spaces.
@@ -38,10 +39,12 @@ public abstract class GenePool extends mas.Team {
     public static float[] fRules = {.3f,.2f,.25f,.15f,.1f};
 
     /** Probability of point mutations. */
-    float mProb = 0.1f;
+    protected float mProb = 0.1f;
     /** Error introduced upon mutation. */
-    float mErr = 0.0f;
+    protected float mErr = 0.0f;
 
+    /** Default constructor */
+    public GenePool(int[] rules,float mProb,float mErr){ this(rules, mProb, mErr, null); }
     /** Default constructor */
     public GenePool(int[] rules,float mProb,float mErr,DNA template){
         this.rules = rules;
@@ -50,8 +53,9 @@ public abstract class GenePool extends mas.Team {
         int size = 0;
         for (int i = 0; i < rules.length; i++) { size += rules[i]; }
         agents = new Vector<Agent>(size);
+        if (template==null) { return; }
         for (int i = 0; i < size; i++) {
-            agents.add(template.getRandomAgent());
+            agents.add(getAgentFrom((DNA)template.getRandom()));
         }
     }
 
@@ -61,6 +65,7 @@ public abstract class GenePool extends mas.Team {
         if (fitness==null) { fitness = new HashMap<mas.Agent,Float>(); }
         fitness.clear();
         for(mas.Agent a : agents) { fitness.put(a,getFitness(a,sim)); }
+        //System.out.println(fitness);
         fitSpace = new WeightTable<mas.Agent>(fitness);
         try {
             fittestSource = srcMap.get(agents.indexOf(fitSpace.getTopScorer()));
@@ -81,14 +86,10 @@ public abstract class GenePool extends mas.Team {
     
     /** Evolves team (general algorithm). By default all descendants are generated
      * based on fitness scores. */
-    public void evolve() { 
-        int nTop = agents.size()/3; // 0-keep top portion of population
-        int nTopErr = agents.size()/3; // 1-top portion with introduced error
-        int nCross = agents.size()/12; // 2-cross-breeding proportion
-        int nFit = agents.size()/12; // 3-randomly selected based on proportional fitness, with error
-        int nRandom = agents.size()-nTop-nTopErr-nCross-nFit; // 4-generate remainder at random
-        evolve(nTop, nTopErr, nCross, nFit, nRandom); 
-    }
+    public void evolve() { evolve(rules); }
+
+    /** Generates based on an array describing how many agents corresponding to each rule. */
+    public void evolve(int[] nRule) { evolve(nRule[0],nRule[1],nRule[2],nRule[3],nRule[4]); }
     
     /** Evolves team based on fitness scores.
      * @param nTop the number of top scoring descendants to keep around (no change to parameters)
@@ -101,19 +102,16 @@ public abstract class GenePool extends mas.Team {
         srcMap = getRuleMap(nTop, nTopErr, nCross, nFit, nRandom);
         Vector<mas.Agent> result = fitSpace.getTop(nTop);
         //System.out.println("  A: " + result);
-        result.addAll(getMutatedDescendant(fitSpace.getTop(nTopErr),getPointMutationProbability(),getMutationError()));
+        result.addAll(getMutatedDescendant(fitSpace.getTop(nTopErr),mProb,mErr));
         //System.out.println("  B: " + result);
         for(int i=0; i<nCross; i++) { result.add(getCrossDescendant()); }
         //System.out.println("  C: " + result);
-        for(int i=0; i<nFit; i++) { result.add(getMutatedDescendant(getFitDescendant(),getPointMutationProbability(),getMutationError())); }
+        for(int i=0; i<nFit; i++) { result.add(getMutatedDescendant(getFitDescendant(),mProb,mErr));}
         //System.out.println("  D: " + result);
-        for(int i=0; i<nRandom; i++) { result.add(getMutatedDescendant(getRandomDescendant(),getPointMutationProbability(),getMutationError())); }
+        for(int i=0; i<nRandom; i++) { result.add(getMutatedDescendant(getRandomDescendant(),mProb,mErr));}
         //System.out.println("  E: " + result);
         agents = result;
     }
-
-    /** Generates based on an array describing how many agents corresponding to each rule. */
-    public void evolve(int[] nRule) { evolve(nRule[0],nRule[1],nRule[2],nRule[3],nRule[4]); }
 
     /** String descriptions of the evolution rules */
     static String[] RULES = { "Top", "Mut[Top]", "Crossbred", "Mut[Fit]", "Random" };
@@ -128,30 +126,35 @@ public abstract class GenePool extends mas.Team {
         for(int i = 0; i<nRandom; i++) { result.add(4); }
         return result;
     }
-    
+
+    public mas.Agent getAgentFrom(DNA dna) { return new mas.Agent(dna); }
+
+    /** Returns random DNA */
+    public DNA getRandomDNA() {
+        ParameterSpace ps = agents.firstElement().getControlVars();
+        return (DNA) ps.getRandom();
+    }
+    /** Returns fit DNA */
+    public DNA getFitDNA() {
+        ParameterSpace ps = ((mas.Agent)getFitDescendant()).getControlVars();
+        return (ps instanceof DNA) ? (DNA) ps : null;
+    }
     /** Generates a single fit agent at random. */
-    public mas.Agent getFitDescendant() { return (mas.Agent) fitSpace.getRandom(); }
+    public mas.Agent getFitDescendant() { return fitSpace.getRandom(); }
     /** Generates an agent cross-breed at random. */
-    public mas.Agent getCrossDescendant() { return DNA.cross(getFitDescendant(),getFitDescendant(),getMutationError()); }
+    public mas.Agent getCrossDescendant() { return getAgentFrom(DNA.cross(getFitDNA(),getFitDNA(),getMutationError())); }
     /** Generates a single random agent. */
-    public mas.Agent getRandomDescendant() { return new mas.Agent(((DNA)agents.firstElement().getStateVars()).getRandom()); }
+    public mas.Agent getRandomDescendant() { return getAgentFrom(getRandomDNA()); }
+    /** Introduces error into descendant agent... by default no error is introduced. */
+    public mas.Agent getMutatedDescendant(mas.Agent input, float pointProb, float err){
+        return getAgentFrom(((DNA)input.getControlVars()).mutation(pointProb, err));
+    }
     /** Introduces error into descendant agent... by default no error is introduced. */
     public Vector<mas.Agent> getMutatedDescendant(Vector<mas.Agent> input, float pointProb, float err){
         Vector<mas.Agent> result = new Vector<mas.Agent>(input.size());
         for(mas.Agent a : input) { result.add(getMutatedDescendant(a, pointProb, err)); }
         return result;
     }
-    /** Introduces error into descendant agent... by default no error is introduced. */
-    public mas.Agent getMutatedDescendant(mas.Agent input, float pointProb, float err){
-        return new Agent(((DNA)input.getStateVars()).mutation(pointProb, err));
-    }
-
-    @Override
-    public void adjustState(mas.Simulation sim) {}
-    @Override
-    public void communicate(mas.Simulation sim) {}
-    @Override
-    public void gatherInfo(mas.Simulation sim) {}
 
     @Override
     public void progressReport(mas.Simulation sim, PrintStream out) {

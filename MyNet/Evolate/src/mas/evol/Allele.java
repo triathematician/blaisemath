@@ -25,6 +25,7 @@ public abstract class Allele<N extends Number> extends Parameter<N> {
      * @param error determines how large the mutation will be
      * @return new Allele with mutation */
     public abstract Allele mutation(double error);
+    public void mutate(double err){value = (N) mutation(err).value; }
 
     /** By default use a coinflip to determine which value to use. */
     public Allele<N> cross(Allele<N> a2) { return Math.random()<=.5 ? copy() : a2.copy(); }

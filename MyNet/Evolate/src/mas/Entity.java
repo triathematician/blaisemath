@@ -7,34 +7,22 @@ package mas;
  * </p>
  * @author elisha
  */
-public class Entity {
+public abstract class Entity {
     protected ParameterSpace controlVars;
-    protected ParameterSpace stateVars;
 
     /** Default constructor */
-    public Entity() { this(new ParameterSpace(), new ParameterSpace()); }
-    /** Initializes with state variables only */
-    public Entity(ParameterSpace stateVars) { this(new ParameterSpace(),stateVars); }
+    public Entity() { this(new ParameterSpace()); }
     /** Initializes with given control and state variable types */
-    public Entity(ParameterSpace controlVars, ParameterSpace stateVars) {
-        this.controlVars = controlVars;
-        this.stateVars = stateVars;
-    }
+    public Entity(ParameterSpace controlVars) { this.controlVars = controlVars; }
 
     public ParameterSpace getControlVars() { return controlVars; }
-    public ParameterSpace getStateVars() { return stateVars; }
 
-    public Number valueOf(String key){
-        Number n = stateVars.valueOf(key);
-        return n==null ? controlVars.valueOf(key) : n;
-    }
+    public Number valueOf(String key){ return controlVars.valueOf(key); }
 
     /** Initializes all control variables. */
     protected void initControlVars() { controlVars.initialize(); }
-    /** Initializes all state variables. Should be done before each run. */
-    protected void initStateVars() { stateVars.initialize(); }
 
     /** Default to printing out state variables */
     @Override
-    public String toString() { return stateVars.toString(); }
+    public String toString() { return controlVars.toString(); }
 }

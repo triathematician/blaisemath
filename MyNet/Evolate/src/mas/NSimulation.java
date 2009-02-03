@@ -26,7 +26,7 @@ public class NSimulation extends Simulation {
     @Override
     public void initialize() { super.initialize(); curStep = 0; }
     @Override
-    protected void postIterate() { curStep++; }
+    protected void postIterate() { super.postIterate(); curStep++; }
     @Override
     public boolean isFinished() { return curStep >= nSteps; }
     
