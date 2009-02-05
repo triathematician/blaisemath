@@ -101,18 +101,20 @@ public class Valuation implements Function<DistanceTable,Double> {
                 case NUM_ACTIVE_OPPONENTS:
                     return (double)vs.target.getActiveAgents().size();
                 case NUM_OPPONENTS_CAPTURED: // NEEDS COOP FIX
-                    return (double)(vs.target.getNumberCapturedBy(vs.owner));
+                    return (double)(subset.size() - activeSubset.size());
                 case AGENT_NUMBER_ADVANTAGE:
                     return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
                     return dt.getTime();
                 case POSSIBLE_CAPTURES_NOT_MADE:
                     return (double) ( subset.size() > vs.target.getAgentNumber() ?
-                        vs.target.getAgentNumber() - subset.size() + activeSubset.size()
+                        (vs.target.getAgentNumber() - subset.size() + activeSubset.size())
                         : activeSubset.size() );
                 case OPPONENTS_UNCAPTURED: // NEEDS COOP FIX
-                    return (double) (vs.target.getAgentNumber() - vs.target.getNumberCapturedBy(vs.owner)) ;
+                    return (double) (vs.target.getAgentNumber() - subset.size() + activeSubset.size()) ;
                 case TIME_SINCE_CAP:
+                case PERCENT_OPPONENTS_CAPTURED:
+                    return (double)(subset.size()-activeSubset.size())/(vs.target.getAgentNumber());
                 default:
                     return Double.NaN;
             }
@@ -219,6 +221,7 @@ public class Valuation implements Function<DistanceTable,Double> {
     public static final int OPPONENTS_UNCAPTURED = 10;
     public static final int TIME_TOTAL = 11;
     public static final int TIME_SINCE_CAP = 12;
+    public static final int PERCENT_OPPONENTS_CAPTURED = 13;
     
     public static final String[] typeStrings = {
         "Min. distance to target",      // 0
@@ -233,7 +236,8 @@ public class Valuation implements Function<DistanceTable,Double> {
         "# possible captures not made", // 9
         "# opponents uncaptured",       // 10
         "Simulation time",              // 11
-        "Time since capture"            // 12
+        "Time since capture",            // 12
+        "Percent opponents captured"    // 13
     };    
     
     public String explain() { return explain(vs.type.getValue()); }
@@ -264,6 +268,8 @@ public class Valuation implements Function<DistanceTable,Double> {
                         + ", minus the number of captures which have been made";
             case OPPONENTS_UNCAPTURED:
                 return "Returns the size of team "+vs.target+" minuts the number of captures made by team "+vs.owner;
+            case PERCENT_OPPONENTS_CAPTURED:
+                return "Returns the percentage of opponents captured";
         }
         return "Type not supported";
     }
@@ -293,7 +299,7 @@ public class Valuation implements Function<DistanceTable,Double> {
          */
         private DoubleRangeModel threshold = new DoubleRangeModel(1,0,1000,.1);
         /** Parameter describing the type of valuation. */
-        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,10);
+        private StringRangeModel type = new StringRangeModel(typeStrings,0,0,13);
         
         public ValuationSettings(Vector<Team> teams, Team owner, Team target, int type, double threshold){
             setName("Valuation");
