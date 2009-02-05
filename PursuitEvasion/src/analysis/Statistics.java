@@ -77,13 +77,13 @@ public class Statistics extends FiresChangeEvents {
      * @param fullRunData the SimulationLog captured during the simulation with all players
      * @param partialRunData the datalog captured during the simulation with only part of the players
      */
-    public void captureData(Valuation v,SimulationLog fullRunData, SimulationLog partialRunData){
+    public void captureData(Valuation v, SimulationLog fullRunData, SimulationLog partialRunData){
         if (fullRunData != null) {
             fullMetrics.get(v).add(fullRunData.teamMetrics.get(v).lastElement().y);
             subsetMetrics.get(v).add(fullRunData.partialTeamMetrics.get(v).lastElement().y);
         }
         if (partialRunData != null) {
-            partialMetrics.get(v).add(partialRunData.teamMetrics.get(v).lastElement().y);
+            partialMetrics.get(v).add(partialRunData.partialTeamMetrics.get(v).lastElement().y);
         }
     }
     
