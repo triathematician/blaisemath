@@ -12,16 +12,16 @@ import sequor.Settings;
  *
  * @author  ae3263
  */
-public class SettingsDialog extends javax.swing.JDialog {
+public class SettingsTreeDialog extends javax.swing.JDialog {
     
-    public SettingsDialog(Settings s,java.awt.Frame parent, boolean modal) {
+    public SettingsTreeDialog(Settings s,java.awt.Frame parent, boolean modal) {
         this(parent,modal);
-        settingsPanel1.setSettings(s);
+        settingsPanel1.setTree(s);
         setTitle(s.getName());
     }
     
     /** Creates new form SettingsTreeDialog */
-    public SettingsDialog(java.awt.Frame parent, boolean modal) {
+    public SettingsTreeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -34,8 +34,8 @@ public class SettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        settingsPanel1 = new sequor.component.SettingsTreePanel();
         jPanel1 = new javax.swing.JPanel();
-        settingsPanel1 = new sequor.component.SettingsPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -49,6 +49,7 @@ public class SettingsDialog extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1);
 
         jButton2.setText("Cancel");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -56,33 +57,23 @@ public class SettingsDialog extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2))
-            .addComponent(settingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addComponent(settingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(settingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1))
-                        .addContainerGap())))
+                .addComponent(settingsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
         );
 
         pack();
@@ -102,7 +93,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SettingsDialog dialog = new SettingsDialog(new javax.swing.JFrame(), true);
+                SettingsTreeDialog dialog = new SettingsTreeDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
@@ -117,7 +108,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
-    private sequor.component.SettingsPanel settingsPanel1;
+    private sequor.component.SettingsTreePanel settingsPanel1;
     // End of variables declaration//GEN-END:variables
     
 }

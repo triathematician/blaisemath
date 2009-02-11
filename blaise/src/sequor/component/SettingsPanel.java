@@ -51,7 +51,7 @@ public class SettingsPanel extends JPanel {
         updatePanel();
     }
 
-    public void setSettings(Settings s) {this.s=s;}
+    public void setSettings(Settings s) {this.s=s;updatePanel();}
     public Settings getSettings(){return s;}
     public void setDisplayType(int displayType){this.displayType=displayType;updatePanel();}
     

@@ -5,15 +5,8 @@
 
 package sequor.component;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import sequor.Settings;
 import sequor.SettingsFactory;
 import sequor.SettingsProperty;
