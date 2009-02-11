@@ -87,7 +87,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
             g.setComposite(VisualStyle.COMPOSITE5);
             g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
             g.setComposite(AlphaComposite.SrcOver);
-        }
+    }
     }
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
@@ -126,7 +126,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
             g.setComposite(VisualStyle.COMPOSITE5);
             g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
             g.setComposite(AlphaComposite.SrcOver);
-        }    
+    }
     }
     
     public Shape drawDot(Euclidean2 v,int pos){

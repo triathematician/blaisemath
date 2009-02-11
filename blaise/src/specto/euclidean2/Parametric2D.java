@@ -5,23 +5,30 @@
 
 package specto.euclidean2;
 
+import java.awt.event.ActionEvent;
+import javax.swing.JMenu;
 import javax.swing.event.ChangeEvent;
 import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 import sequor.model.FunctionTreeModel;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Vector;
+import javax.swing.JDialog;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.event.ChangeListener;
 import scio.function.Function;
 import scio.coordinate.R2;
 import scio.function.Derivative;
-import scribo.parser.Parser;
 import scribo.tree.FunctionTreeRoot;
+import sequor.Settings;
+import sequor.SettingsProperty;
 import sequor.component.RangeTimer;
 import sequor.model.DoubleRangeModel;
-import sequor.model.ParametricModel;
+import sequor.model.IntegerRangeModel;
 import sequor.style.VisualStyle;
 import specto.Animatable;
 import specto.style.LineStyle;
@@ -45,7 +52,7 @@ public class Parametric2D extends PointSet2D {
     /** Defines a default function which is displayed. For now its a "Lissajous" curve */
     private static final Function<Double,R2> DEFAULT_FUNCTION=new Function<Double,R2>(){
         @Override
-        public R2 getValue(Double x){return new R2(2*Math.cos(x),2*Math.sin(2*x));}
+        public R2 getValue(Double x){return new R2(4*Math.cos(x)+Math.sin(7*x),4*Math.sin(x)+Math.cos(7*x));}
         @Override
         public Vector<R2> getValue(Vector<Double> x) {
             Vector<R2> result=new Vector<R2>(x.size());
@@ -64,7 +71,7 @@ public class Parametric2D extends PointSet2D {
         tRange.setNumSteps(samplePoints,true);
     }
 
-    Parametric2D(Function<Double, R2> function, DoubleRangeModel drm,int samplePoints) {
+    public Parametric2D(Function<Double, R2> function, DoubleRangeModel drm,int samplePoints) {
         setColor(Color.BLUE);
         this.function=function;
         tRange=new DoubleRangeModel(drm.getMinimum(),drm.getMinimum(),drm.getMaximum());
@@ -151,6 +158,50 @@ public class Parametric2D extends PointSet2D {
         return tRange.getMinimum()+i*tRange.getStep();
     }
     
+    // SETTINGS
+
+    /** Overrides to allow setting custom options. */
+    @Override
+    public JMenu getOptionsMenu() {
+        JMenu menu = super.getOptionsMenu();
+        menu.add(new JSeparator(),0);
+        JMenuItem mi = new JMenuItem("Curve Options");
+        mi.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if (ps==null) { ps = new ParametricSettings(); }
+                if (psd==null) { psd = ps.getDialog(null, false); }
+                psd.setVisible(true);
+            }
+        });
+        menu.add(mi,0);
+        return menu;
+    }
+    
+    ParametricSettings ps;
+    JDialog psd;
+    
+    /** Inner class controls options for displaying the curve... starting point, ending point, and number of steps */
+    public class ParametricSettings extends Settings {
+        private IntegerRangeModel stepsModel = new IntegerRangeModel(500,1,10000,10);
+        
+        /** Initializes, and sets up listening. */
+        public ParametricSettings() {
+            setName("Parametric Curve Settings");
+            add(new SettingsProperty("Minimum",tRange.getMinModel(),Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("Maximum",tRange.getMaxModel(),Settings.EDIT_DOUBLE));
+            add(new SettingsProperty("# Steps",stepsModel,Settings.EDIT_INTEGER));            
+            stepsModel.addChangeListener(new ChangeListener(){
+                public void stateChanged(ChangeEvent e) { tRange.setNumSteps(stepsModel.getValue(), true); Parametric2D.this.fireStateChanged(); }
+            });
+        }
+
+        /** Event handling... all taken care of by the models */
+        @Override
+        public void stateChanged(ChangeEvent e) { }
+    }
+    
+    
+    
     
     // DECORATIONS
     
@@ -159,6 +210,96 @@ public class Parametric2D extends PointSet2D {
      * @return Point2D object which can be added to a plot
      */
     public Point2D getPointSlope() { return new ParametricPoint(); }
+    
+    /** Stores parallel curve */
+    public Function<Double,R2> parallel;
+    
+    public void setParallel(){
+        parallel = new Function<Double,R2>(){
+            double offset=1;
+            R2 velocity;
+            R2 normDir;
+            public R2 getValue(Double t) throws FunctionValueException {
+                velocity = Derivative.approximateDerivative(function, t, .001);
+                normDir = velocity.normalized().rotatedBy(Math.PI/2);
+                return function.getValue(t).plus(normDir.multipliedBy(offset));
+            }
+            public Vector<R2> getValue(Vector<Double> tt) throws FunctionValueException {
+                Vector<R2> result = new Vector<R2>(tt.size());
+                for(Double t:tt) { result.add(getValue(t)); }
+                return result;
+            }            
+        };
+    }
+    
+    public Parametric2D getParallel(){
+        if(parallel==null){setParallel();}
+        Parametric2D result = new Parametric2D(parallel,tRange,tRange.getNumSteps());
+        result.setColor(getColor().brighter());
+        result.style.setValue(LineStyle.THIN);
+        result.animateStyle.setValue(PointSet2D.ANIMATE_TRACE);
+        return result;
+    }
+    
+    /** Stores involute */
+    public Function<Double,R2> involute;
+    
+    public void setInvolute(){
+        involute = new Function<Double,R2>(){
+            R2 velocity;
+            R2 acceleration;
+            public R2 getValue(Double t) throws FunctionValueException {
+                // TODO FILL THIS IN!!
+                return new R2();
+            }
+            public Vector<R2> getValue(Vector<Double> tt) throws FunctionValueException {
+                Vector<R2> result = new Vector<R2>(tt.size());
+                for(Double t:tt) { result.add(getValue(t)); }
+                return result;
+            }            
+        };
+    }
+    
+    public Parametric2D getInvolute(){
+        if(involute==null){setInvolute();}
+        Parametric2D result = new Parametric2D(involute,tRange,tRange.getNumSteps());
+        result.setColor(Color.YELLOW);
+        result.style.setValue(LineStyle.THIN);
+        result.animateStyle.setValue(PointSet2D.ANIMATE_TRACE);
+        return result;
+    }
+    
+    /** Returns parametric curve representing the evolute */
+    public Function<Double,R2> evolute;
+    
+    public void setEvolute(){
+        evolute = new Function<Double,R2>(){
+            R2 velocity;
+            R2 acceleration;
+            R2 normDir;
+            public R2 getValue(Double t) throws FunctionValueException {
+                velocity = Derivative.approximateDerivative(function, t, .001);
+                acceleration = Derivative.approximateDerivativeTwo(function, t, .001);
+                double curvature = Math.abs(velocity.cross(acceleration))/Math.pow(velocity.magnitude(),3);                
+                normDir = acceleration.componentPerpendicularTo(velocity).normalized();
+                return function.getValue(t).plus(normDir.multipliedBy(1/curvature));
+            }
+            public Vector<R2> getValue(Vector<Double> tt) throws FunctionValueException {
+                Vector<R2> result = new Vector<R2>(tt.size());
+                for(Double t:tt) { result.add(getValue(t)); }
+                return result;
+            }            
+        };
+    }
+    
+    public Parametric2D getEvolute(){
+        if(evolute==null){setEvolute();}
+        Parametric2D result = new Parametric2D(evolute,tRange,tRange.getNumSteps());
+        result.setColor(Color.GRAY);
+        result.style.setValue(LineStyle.THIN);
+        result.animateStyle.setValue(PointSet2D.ANIMATE_TRACE);
+        return result;
+    }
     
     
     // INNER CLASSES
@@ -208,6 +349,7 @@ public class Parametric2D extends PointSet2D {
                 super.setLabel("t="+NumberFormat.getInstance().format(tModel.getValue()));
                 velocity = Derivative.approximateDerivative(function, tModel.getValue(), .001);
                 acceleration = Derivative.approximateDerivativeTwo(function, tModel.getValue(), .001);
+                
             } catch (FunctionValueException ex) {
                 System.out.println("error computing derivative approximation");
             }
@@ -227,7 +369,21 @@ public class Parametric2D extends PointSet2D {
             if(acceleration!=null){
                 g.setColor(Color.PINK);
                 g.draw(v.arrow(position,position.plus(acceleration),8.0));
+            }            
+            if(velocity!=null && acceleration!=null){
+                double curvature = Math.abs(velocity.cross(acceleration))/Math.pow(velocity.magnitude(),3);                
+                R2 normDir = acceleration.componentPerpendicularTo(velocity).normalized();
+                g.setColor(Color.GREEN.darker());
+                g.setComposite(VisualStyle.COMPOSITE5);
+                g.draw(v.arrow(position,position.plus(normDir),4.0));
+                g.draw(v.arrow(position,position.plus(velocity.normalized()),4.0));
+                if(curvature!=0) {
+                    g.draw(v.circle(position.plus(normDir.multipliedBy(1/curvature)),1/curvature));
+                    g.setComposite(VisualStyle.COMPOSITE05);
+                    g.fill(v.circle(position.plus(normDir.multipliedBy(1/curvature)),1/curvature));
+                }
             }
+            g.setComposite(VisualStyle.COMPOSITE10);
         } 
             
         @Override

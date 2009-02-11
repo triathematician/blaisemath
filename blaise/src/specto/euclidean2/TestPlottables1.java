@@ -123,6 +123,8 @@ public class TestPlottables1 extends javax.swing.JFrame {
         final Parametric2D par1=new Parametric2D();
         Parametric2D.ParametricPoint cp5=(Parametric2D.ParametricPoint) par1.getPointSlope();
         polarPlot2D1.add(cp5);
+        polarPlot2D1.add(par1.getEvolute());
+        polarPlot2D1.add(par1.getParallel());
         polarPlot2D1.add(par1);
         ArcSlider da1=new ArcSlider(10,70,cp5.getTimeModel());
         //da1.getStyle().setValue(NumberSlider.STYLE_DOTS);

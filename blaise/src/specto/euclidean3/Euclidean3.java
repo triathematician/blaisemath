@@ -1,5 +1,5 @@
 /*
- * Euclidean.java
+ * Euclidean3.java
  * Created on Sep 14, 2007, 8:10:03 AM
  */
 

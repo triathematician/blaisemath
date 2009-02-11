@@ -66,20 +66,20 @@ public class Derivative {
     }
     
     public static R3 approximateDerivative(Function <Double,R3> function,double input,double tolerance) throws FunctionValueException{
-        double step1=0.1;
+        double step1=0.01;
         R3 value=function.getValue(input);
         R3 result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
         R3 leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
-        while(result.distanceTo(leftResult)>tolerance){
+        while(result.distanceTo(leftResult)>tolerance/2){
             result=leftResult;
             step1=step1/10.;
             leftResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
         }
         
-        step1=0.1; 
+        step1=0.01; 
         result=new R3(Double.MAX_VALUE,Double.MAX_VALUE,Double.MAX_VALUE);
         R3 rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
-        while(result.distanceTo(rightResult)>tolerance){
+        while(result.distanceTo(rightResult)>tolerance/2){
             result=rightResult;
             step1=step1/10.;
             rightResult=function.getValue(input+step1).minus(value).multipliedBy(1/step1);
@@ -92,20 +92,20 @@ public class Derivative {
     }
 
     public static R2 approximateDerivativeTwo(Function<Double, R2> function, double input, double tolerance) throws FunctionValueException {
-        double step1=0.1;
+        double step1=0.01;
         R2 value=Derivative.approximateDerivative(function,input,tolerance);
         R2 result=new R2(Double.MAX_VALUE,Double.MAX_VALUE);
         R2 leftResult=Derivative.approximateDerivative(function,input+step1,tolerance).minus(value).multipliedBy(1/step1);
-        while(result.distance(leftResult)>tolerance){
+        while(result.distance(leftResult)>tolerance/2){
             result=leftResult;
             step1=step1/10.;
             leftResult=Derivative.approximateDerivative(function,input+step1,tolerance).minus(value).multipliedBy(1/step1);
         }
         
-        step1=0.1; 
+        step1=0.01; 
         result=new R2(Double.MAX_VALUE,Double.MAX_VALUE);
         R2 rightResult=Derivative.approximateDerivative(function,input+step1,tolerance).minus(value).multipliedBy(1/step1);
-        while(result.distance(rightResult)>tolerance){
+        while(result.distance(rightResult)>tolerance/2){
             result=rightResult;
             step1=step1/10.;
             rightResult=Derivative.approximateDerivative(function,input+step1,tolerance).minus(value).multipliedBy(1/step1);

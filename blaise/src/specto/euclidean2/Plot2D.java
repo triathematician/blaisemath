@@ -37,7 +37,7 @@ public class Plot2D extends PlotPanel<Euclidean2> {
         @Override
         public boolean importData(TransferSupport support) {    // if we can't handle the import, return so
             if (!canImport(support)) { return false; }
-            // fetch the data, and bail if it fails
+            // fetch the data, and bail if it fails cos(x^2)
             String data;
             try {
                 data = (String)support.getTransferable().getTransferData(DataFlavor.stringFlavor);

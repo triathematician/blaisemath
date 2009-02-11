@@ -40,6 +40,7 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
     // OPERATIONS WHICH DO NOT CHANGE THE POINT
     
     public double dot(R2 b){return x*b.x+y*b.y;}
+    public double cross(R2 b){return x*b.y-y*b.x;}
     public double magnitude(){return Math.sqrt(x*x+y*y);}
     public double magnitudeSq(){return x*x+y*y;}
     public double angle(){return (x<0?Math.PI:0)+Math.atan(y/x);}
@@ -57,6 +58,15 @@ public class R2 extends java.awt.geom.Point2D.Double implements EuclideanElement
         return new R2(x*l/magnitude,y*l/magnitude);
     }
     public R2 normalized(){return scaledToLength(1.0);}
+    public R2 rotatedBy(double angle){
+        return new R2(Math.cos(angle)*x-Math.sin(angle)*y,Math.sin(angle)*x+Math.cos(angle)*x);
+    }
+    public R2 componentParallelTo(R2 vec) {
+        return vec.normalized().multipliedBy(this.dot(vec.normalized()));
+    }    
+    public R2 componentPerpendicularTo(R2 vec){
+        return minus(componentParallelTo(vec));
+    }
     
     // MORE GENERAL METHODS
 
