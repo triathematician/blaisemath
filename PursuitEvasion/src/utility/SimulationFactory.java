@@ -32,24 +32,29 @@ public class SimulationFactory {
     public static final int SIMPLE_PE = 1;
     /** Specifies simple game with two teams, pursuers and evaders */
     public static final int TWOTEAM = 2;
-    /** Specifies simple game with three teams, pursuers, pursuers/evaders, and evaders */
-    public static final int SIMPLE_PPE = 3;
     /** Specifies game with two teams, pursuers, and evaders, with evaders seeking a goal */
-    public static final int SAHARA_PE = 4;
-    /** Lots of teams!! */
-    public static final int LOTS_OF_FUN = 5;
-    /** For looking at lead factors. */
-    public static final int LEAD_FACTOR = 6;
+    public static final int SAHARA_PE = 3;
     /** Custom starting locations */
-    public static final int CUSTOM_START_SAHARA = 7;
+    public static final int CUSTOM_START_SAHARA = 4;
+    /** Specifies simple game with three teams, pursuers, pursuers/evaders, and evaders */
+    public static final int SIMPLE_PPE = 5;
+    /** Lots of teams!! */
+    public static final int LOTS_OF_TEAMS = 6;
     /** Evaders go to endzone. Has sidelines and obstacles. */
-    public static final int FOOTBALL_GAME = 8;
+    public static final int FOOTBALL_GAME = 7;
+    /** For looking at lead factors. */
+    public static final int LEAD_FACTOR = 8;
+    /** For flocking algorithm. */
+    public static final int FLOCKING = 9;
     
     /** Strings corresponding to each preset simulation. */
     public static final String[] GAME_STRINGS = {
-        "Custom", "Follow the Light", "Cops & Robbers", "Antarctica",
-        "Sahara", "Swallowed", "Jurassic",
-        "Custom Start Sahara","Football Game"};
+        "Custom", "1 Team Goal Seeking (Follow the Light)",
+        "2 Team (Cops & Robbers)",
+        "2 Team (Sahara)", "2 Team (Sahara, custom start)",
+        "3 Team (Antarctica)", "Lots of Teams (Swallowed)",
+        "Football Game",    
+        "Leading Algorithms (Jurassic)", "Flocking (The Birds)"};
     
     
     // STATIC FACTORY METHODS
@@ -62,13 +67,10 @@ public class SimulationFactory {
     /** Lookup function returning the list of teams used by each preset simulation. */
     public static Vector<Team> getTeams(int simCode) {
         switch(simCode) {
+            case CUSTOM: return null;
             case SIMPLE_PE: return lightSimulation();
             case TWOTEAM: return twoTeamSimulation();
-            case SIMPLE_PPE: return threeTeamSimulation();
             case SAHARA_PE: return twoPlusGoalSimulation();
-            case LOTS_OF_FUN: return bigSimulation();
-            case LEAD_FACTOR: return leadFactorSimulation();
-            case FOOTBALL_GAME: return footballGameSimulation();
             case CUSTOM_START_SAHARA:
                 Vector<Team> teams = twoPlusGoalSimulation();
                 R2[] LionsPositions = { new R2(40, 40) , new R2(0, -10) , new R2(-40, -50) };
@@ -78,6 +80,11 @@ public class SimulationFactory {
                 R2[] WaterPositions = { new R2(-20, 10) };
                 teams.get(2).setStartingLocations(WaterPositions);
                 return teams;
+            case SIMPLE_PPE: return threeTeamSimulation();
+            case LOTS_OF_TEAMS: return bigSimulation();
+            case FOOTBALL_GAME: return footballGameSimulation();
+            case LEAD_FACTOR: return leadFactorSimulation();
+            case FLOCKING: return flockSimulation();
             default: return null;
         }
     }
@@ -217,24 +224,55 @@ public class SimulationFactory {
         // Teams
         Vector<Team> teams = new Vector<Team>();
         Team mathematicians = new Team(); teams.add(mathematicians);
-        mathematicians.initSettings("Mathematician", 1, Team.START_ZERO, Behavior.APPROACHPATH, Color.GREEN);
+        mathematicians.initSettings("Mathematician", 1, Team.START_ZERO, Behavior.APPROACHPATH, Color.DARK_GRAY);
 //        mathematicians.setFixedPath("20cos(t/4)", "20sin(t/2)");
         
         for (int i = 0; i < 1; i++) {
             Team raptor = new Team(); teams.add(raptor);
-            raptor.initSettings("Velociraptors", 11, Team.START_SPECIFIC, Behavior.LEADING, Color.DARK_GRAY);
-            raptor.setSensorRange(100.0);
+            raptor.initSettings("Velociraptors", 7, Team.START_SPECIFIC, Behavior.LEADING, Color.RED);
+            raptor.setSensorRange(300.0);
             raptor.setTopSpeed(5.5);
-            for (int j = 0; j < 11; j++) {
+            for (int j = 0; j < 7; j++) {
                 if (j > 0) { raptor.agents.get(j).synchronizePointModelWith(raptor.agents.get(0)); }
-                raptor.agents.get(j).setLeadFactor(j/10.0);
-                raptor.agents.get(j).setColorValue(Color.getHSBColor(0.2f+j/12.0f, 1.0f, 1.0f));
+                raptor.agents.get(j).setLeadFactor(j/5.0);
+                raptor.agents.get(j).setColorValue(Color.getHSBColor(0.2f+j/7.0f, 1.0f, 1.0f));
             }
             raptor.addAutoGoal(1.0, teams, mathematicians, Goal.SEEK, TaskGenerator.AUTO_CLOSEST, 1.0);
             raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MIN));
             raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.AGENT_CLOSEST_TO_CAPTURE));
             raptor.addValuation(new Valuation(teams, raptor, mathematicians, Valuation.DIST_MAX));
         }
+        
+        return teams;
+    }
+    
+    /** Exploration of flocking */
+    public static Vector<Team> flockSimulation() {
+        Vector<Team> teams = new Vector<Team>();
+        Team flock = new Team(); teams.add(flock);
+        Team predator = new Team(); teams.add(predator);
+        Team obstacle = new Team(); teams.add(obstacle);
+        flock.initSettings("Flock", 25, Team.START_RANDOM, Behavior.STRAIGHT, Color.BLUE);
+        flock.setSensorRange(50.0);
+        flock.setCommRange(0.0);
+        flock.addAutoGoal(.5, teams, flock, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1);
+        flock.addAutoGoal(.4, teams, flock, Goal.SEEK, TaskGenerator.AUTO_COM, 1);
+        flock.addAutoGoal(.7, teams, flock, Goal.SEEK, TaskGenerator.AUTO_DIR_COM, 1);
+        flock.addAutoGoal(1, teams, predator, Goal.FLEE, TaskGenerator.AUTO_GRADIENT, 1);
+        flock.addAutoGoal(.5, teams, obstacle, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1);
+        
+        predator.initSettings("Predator", 4, Team.START_RANDOM, Behavior.LEADING, Color.RED.darker());
+        predator.setTopSpeed(6);
+        predator.setSensorRange(55.0);
+        predator.setCommRange(150.0);
+        predator.addAutoGoal(1, teams, flock, Goal.CAPTURE, TaskGenerator.AUTO_CLOSEST, 2.0);
+        predator.addAutoGoal(.7, teams, obstacle, Goal.FLEE, TaskGenerator.AUTO_CLOSEST, 1);
+        
+        obstacle.initSettings("Obstacle", 4, Team.START_RANDOM, Behavior.STATIONARY, Color.DARK_GRAY);
+        
+        predator.addCaptureCondition(teams, flock, 1.0, CaptureCondition.REMOVETARGET);
+        
+        predator.addValuation(new Valuation(teams, predator, flock, Valuation.NUM_OPPONENTS_CAPTURED));
         
         return teams;
     }
@@ -266,6 +304,8 @@ public class SimulationFactory {
         
         return teams;
     }
+    
+    /** Simulation including sidelines */
      public static Vector<Team> footballGameSimulation(){
          
          //teams, offense is evading

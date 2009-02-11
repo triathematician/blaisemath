@@ -38,6 +38,7 @@ public class AgentPair {
     // METHODS TO CHANGE THE AGENTS STORED HERE
     
     public void replaceIfLessBy(Agent a,Agent b,double d){
+        if(a==b){return;}
         if(d<distance){
             first=a;
             second=b;
@@ -45,6 +46,7 @@ public class AgentPair {
         }        
     }
     public void replaceIfMoreBy(Agent a,Agent b,double d){
+        if(a==b){return;}
         if(d>distance){
             first=a;
             second=b;
