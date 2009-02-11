@@ -35,6 +35,7 @@ public class ParameterSpace {
     }
     /** Returns a parameter. */
     public Parameter get(String key) { return p.get(key); }
+
     /** Returns value of a parameter. */
     public Number valueOf(String key) { return p.get(key).value; }
 
@@ -59,4 +60,10 @@ public class ParameterSpace {
     
     /** Default print. */
     @Override public String toString() { return p.toString(); }
+    /** Tab prints elements. */
+    public String toTabString() {
+        String result = "";
+        for(String s : p.keySet()) { result += p.get(s) + "\t"; }
+        return result;
+    }
 }

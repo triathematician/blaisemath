@@ -12,7 +12,7 @@ import mas.evol.DNA;
  * Represents a team of agents for use in the "sight" simulation. Stores DNA that evolves over time and determines the parameters of the agents on the team.
  * @author elisha
  */
-public class SightTeam extends Team {
+public class SightTeam extends Team implements Comparable<SightTeam> {
 
     // VARIABLES USED IN CALCULATING RESULT OF SIMULATION
 
@@ -20,19 +20,26 @@ public class SightTeam extends Team {
     SightAgent[] targeting;
     /** Total number of captures made by the team. */
     int captures = 0;
+    /** Determines whether agent specs are generated at random during each iteration. */
+    boolean randomSpec = false;
 
     /** Constructs given template DNA. */
-    public SightTeam(DNA dna) {
+    public SightTeam(DNA dna, boolean randomSpec) {
         controlVars = dna;
         for (int i = 0; i < dna.size(); i++) { agents.add(new SightAgent(getSpec(i))); }
+        this.randomSpec = randomSpec;
     }
 
     @Override
     protected void initControlVars() { captures = 0; }
-    public void preIterate() { for(Agent a : agents) { ((SightAgent)a).pos = (float) Math.random(); } }
+    public void preIterate() {
+        for(Agent a : agents) { ((SightAgent)a).pos = (float) Math.random(); }
+        if (randomSpec) { controlVars = ((DNA)controlVars).getRandom(); }
+    }
 
     @Override
     public void gatherInfo(Simulation sim) {
+        if(!(sim instanceof SightSim)){ return; }
         Float[] targets = ((SightSim)sim).targets;
         // determine which targets are visible
         boolean[] visible = new boolean[targets.length];
@@ -54,7 +61,7 @@ public class SightTeam extends Team {
         // store optimal assignment
         targeting = new SightAgent[targets.length];
         for (int i = 0; i < targets.length; i++) {
-            targeting[i] = targetTable.containsKey(i) ? (SightAgent) agents.get(targetTable.get(i)) : null;
+            targeting[i] = (targetTable.containsKey(i) && visible[i]) ? (SightAgent) agents.get(targetTable.get(i)) : null;
         }
     }
 
@@ -91,7 +98,31 @@ public class SightTeam extends Team {
     public void progressReport(Simulation sim, PrintStream out) {
         //out.println(" Team specs: " + agents.toString() + "; captures=" + captures);
     }
+
+    @Override
+    public String toString() { return controlVars.toTabString(); }
+
+    /** Used to sort teams by parameters. */
+    public int compareTo(SightTeam o) {
+        if (this == o) { return 0; }
+        DNA dna1 = (DNA) this.controlVars;
+        DNA dna2 = (DNA) o.controlVars;
+        int i = 0;
+        Float spec1=0f;
+        Float spec2=0f;
+        try {
+            while(true) {
+                spec1 = (Float) dna1.get("spec"+i).value;
+                spec2 = (Float) dna2.get("spec"+i).value;
+                if (spec1 > spec2) { return 1; }
+                if (spec1 < spec2) { return -1; }
+                i++;
+            }
+        } catch (NullPointerException e) {}
+        return 0;
+    }
     
+
 
     /** A team contains agents of the following type... their specs must be updated whenever the team DNA evolves. */
     public static class SightAgent extends Agent {
@@ -102,10 +133,11 @@ public class SightTeam extends Team {
         @Override public void initControlVars(){ pos = (float) Math.random(); }
         public boolean sees(float target){ return Math.abs(pos - target) < spec; }
         public float timeTo(float target){
-            float result = Math.abs(pos-target) / (1-spec) ;
+            if (spec > .999f) { return Float.MAX_VALUE; }
+            float result = Math.abs(pos - target) / (1 - spec) ;
             return result;
         }
         public void setSpec(float spec){this.spec = spec; }
-        public String toString(){ return ""+spec; }
+        @Override public String toString(){ return ""+spec; }
     }
 }

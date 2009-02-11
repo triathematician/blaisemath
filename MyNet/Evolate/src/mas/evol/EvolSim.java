@@ -44,19 +44,21 @@ public class EvolSim extends mas.NSimulation {
 
     @Override
     public void postIterate() {
+        Vector<Team> oldTeams = new Vector<Team>();
         Vector<Team> newTeams = new Vector<Team>();
         for (Team t : getTeams()) {
             if (t instanceof GenePool) {
+                for (Agent a : t.getAgents()) { if (a instanceof Team) { oldTeams.add((Team)a); } }
                 ((GenePool)t).assignFitness(sim2);
                 ((GenePool)t).evolve();
                 for (Agent a: t.getAgents()) {
                     if (a instanceof Team) { newTeams.add((Team)a); }
                 }
-            } else {
-                newTeams.add(t);
-            }
+            } 
         }
         super.postIterate();
-        if (sim2 != null) { sim2.setTeams(newTeams); }
+        if (sim2 != null) { 
+            sim2.replaceTeams(oldTeams,newTeams);
+        }
     }
 }

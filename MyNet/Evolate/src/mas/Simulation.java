@@ -38,6 +38,16 @@ public abstract class Simulation extends Entity {
     public Vector<Team> getTeams() { return teams; }
     public void setTeams(Vector<Team> teams) { this.teams = teams; }
 
+    /** Replaces specified teams */
+    public void replaceTeams(Vector<Team> oldT, Vector<Team> newT) {
+        if(teams == null) {
+            teams = newT;
+        } else {
+            if (oldT != null){ teams.removeAll(oldT); }
+            if (newT != null){ teams.addAll(newT); }
+        }
+    }
+
     @Override
     protected void initControlVars() {
         super.initControlVars();
