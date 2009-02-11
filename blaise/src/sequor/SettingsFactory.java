@@ -5,15 +5,13 @@
 
 package sequor;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -105,17 +103,17 @@ public class SettingsFactory {
     /** Generates a spinner given a range model and a step size. */
     public static JSpinner getSpinner(DoubleRangeModel drm) {
         JSpinner result = new JSpinner(new SpinnerDoubleEditor(drm));
-        //result.setMinimumSize(new Dimension(20, 20));
-        //result.setPreferredSize(new Dimension(50, 25));
-        //result.setMaximumSize(new Dimension(50, 25));
+        result.setMinimumSize(new Dimension(20, 20));
+        result.setPreferredSize(new Dimension(50, 25));
+        result.setMaximumSize(new Dimension(250, 25));
         return result;
     }
 
     public static JSpinner getSpinner(IntegerRangeModel irm) {
         JSpinner result = new JSpinner(new SpinnerIntegerEditor(irm));
-        //result.setMinimumSize(new Dimension(20, 20));
-        //result.setPreferredSize(new Dimension(50, 25));
-        //result.setMaximumSize(new Dimension(50, 25));
+        result.setMinimumSize(new Dimension(20, 20));
+        result.setPreferredSize(new Dimension(50, 25));
+        result.setMaximumSize(new Dimension(250, 25));
         return result;
     }
     

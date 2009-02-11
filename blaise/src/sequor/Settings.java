@@ -21,7 +21,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import sequor.model.*;
 
@@ -341,6 +340,8 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public JSplitPane getTreePanel(){return new SettingsTreePanel(this);}
     /** Generates a JDialog with panel display of the settings. */
     public JDialog getDialog(java.awt.Frame parent,boolean modal){return new SettingsDialog(this,parent,modal);}
+    /** Generates a JDialog with panel display of the settings. */
+    public JDialog getTreeDialog(java.awt.Frame parent,boolean modal){return new SettingsTreeDialog(this,parent,modal);}
     /** Generates a JMenu with Color and ComboBox items in this class. */
     public JMenu getMenu(){return new SettingsMenu(this);}
 

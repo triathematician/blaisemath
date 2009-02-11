@@ -24,6 +24,7 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> implements Rando
     
     /** Default initializer. */
     public DoubleRangeModel(){this(0.0,-1.0,1.0,0.1);}
+    /** Initializes to a given value only. */
     public DoubleRangeModel(double d){this(d,-Double.MAX_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);}
     /** Initializes with particular values. The stepsize is by default 0.1.
      * @param newValue the current value of the model
@@ -42,7 +43,7 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> implements Rando
      * @param min the minimum value possible
      * @param max the maximum value possible
      */
-    DoubleRangeModel(double min, double max) {
+    public DoubleRangeModel(double min, double max) {
         this(min, min, max, 0.1);
     }
     
