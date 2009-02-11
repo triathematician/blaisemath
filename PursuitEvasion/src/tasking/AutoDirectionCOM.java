@@ -12,13 +12,13 @@ import simulation.Team;
 import utility.DistanceTable;
 
 /**
- * Player seeks/flees the center-of-mass of the enemy team.
+ * Player moves based on average direction of target team.
  * <br><br>
  * @author Elisha Peterson
  */
-public class AutoCOM extends AutonomousTaskGenerator {
+public class AutoDirectionCOM extends AutonomousTaskGenerator {
 
-    public AutoCOM(Team target,int type){super(target,type);}
+    public AutoDirectionCOM(Team target,int type){super(target,type);}
         
 //    /** Performs tasking based on a preset goal.
 //     * @param team the team to assign tasks to
@@ -29,16 +29,13 @@ public class AutoCOM extends AutonomousTaskGenerator {
 //        for(Agent p:team){p.assignTask(null,bCOM,weight);}
 //    }
 
-    @Override
-    public V2 generate(Agent agent, DistanceTable table) {    
-        if (target.getActiveAgents().size() == 0) {
-            return null;
-        }
+    @Override    
+    public V2 generate(Agent agent, DistanceTable table) {   
         R2 center = new R2(0, 0);
         int visible=0;
         for (Agent a : target.getActiveAgents()) {
-            if(agent.sees(a) && agent!=a){
-                center.translateBy(a.loc);
+            if(agent.sees(a)){
+                center.translateBy(a.loc.v.normalized());
                 visible++;
             }
         //System.out.println("agent:"+agent.x+"+"+agent.y);
@@ -46,6 +43,6 @@ public class AutoCOM extends AutonomousTaskGenerator {
         if(visible==0){return new V2();}
         center.multiplyBy(1.0/visible);
         //System.out.println("center:"+center.x+"+"+center.y);
-        return new V2(new R2(),center);
+        return new V2(agent.loc.plus(center),center);
     }
 }

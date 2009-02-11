@@ -48,10 +48,9 @@ public class MainVisuals extends PlottableGroup<Euclidean2> implements ActionLis
         this.sim = sim;
         sim.addActionListener(this);
         setName(sim.getName());
-        clear();
+        clear();  
+        add(new PointSet2D(sim.log.capturePoints,Color.PINK,PointSet2D.POINTS_ONLY));
         for (Team t : sim.getTeams()) { add(new TeamVisuals(t)); }
-        PointSet2D captures = new PointSet2D(sim.log.capturePoints,Color.RED,PointSet2D.POINTS_ONLY);  
-        add(captures);
     }    
     
     // EVENT HANDLING

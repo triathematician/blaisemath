@@ -27,12 +27,14 @@ public abstract class TaskGenerator {
     public static final int AUTO_TWO_LINE=2;
     public static final int AUTO_FARTHEST=3;
     public static final int AUTO_COM=4;
-    public static final int AUTO_GRADIENT=5;
-    public static final int CONTROL_CLOSEST=6;
-    public static final int CONTROL_OPTIMAL=7;
+    public static final int AUTO_DIR_COM=5;
+    public static final int AUTO_GRADIENT=6;
+    public static final int CONTROL_CLOSEST=7;
+    public static final int CONTROL_OPTIMAL=8;
     public static final String[] TASKING_STRINGS=
     {"None","Autonomous Closest","Autonomous Two Closest","Autonomous Farthest",
-     "Autonomous Center-of-Mass","Autonomous Gradient","Control Closest", "Control Optimal"};
+     "Autonomous Center-of-Mass","Autonomous Center-of-Directions",
+     "Autonomous Gradient","Control Closest", "Control Optimal"};
     
     // ATTRIBUTES
     
@@ -89,6 +91,8 @@ public abstract class TaskGenerator {
                 return new tasking.AutoFarthest(team, type);
             case AUTO_COM:          
                 return new tasking.AutoCOM(team, type);
+            case AUTO_DIR_COM:
+                return new tasking.AutoDirectionCOM(team, type);
             case AUTO_GRADIENT:     
                 return new tasking.AutoGradient(team, type);
             case CONTROL_CLOSEST:   

@@ -106,7 +106,7 @@ public class Valuation implements Function<DistanceTable,Double> {
                     return (double)(activeSubset.size()-vs.target.getActiveAgents().size());
                 case TIME_TOTAL:
                     return dt.getTime();
-                case POSSIBLE_CAPTURES_NOT_MADE:
+                case POSSIBLE_CAPTURES_NOT_MADE: 
                     return (double) ( subset.size() > vs.target.getAgentNumber() ?
                         (vs.target.getAgentNumber() - subset.size() + activeSubset.size())
                         : activeSubset.size() );

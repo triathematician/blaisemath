@@ -518,7 +518,7 @@
               </StringArray>
             </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[150, 20]"/>
+              <Dimension value="[250, 20]"/>
             </Property>
           </Properties>
         </Component>

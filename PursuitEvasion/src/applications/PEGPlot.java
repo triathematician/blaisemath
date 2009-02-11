@@ -285,7 +285,7 @@ public class PEGPlot extends javax.swing.JFrame {
         jToolBar1.add(jLabel1);
 
         simulationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        simulationComboBox.setMaximumSize(new java.awt.Dimension(150, 20));
+        simulationComboBox.setMaximumSize(new java.awt.Dimension(250, 20));
         jToolBar1.add(simulationComboBox);
         jToolBar1.add(jSeparator1);
 

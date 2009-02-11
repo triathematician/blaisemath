@@ -59,6 +59,8 @@ public class Agent {
     
     /** Location */
     public V2 loc;    
+    /** Step */
+    public R2 dLoc;
     /** Agent's current list of tasks (changes over time) */
     Vector<Task> tasks;    
     /** Behavior corresponding to current task */
@@ -128,8 +130,10 @@ public class Agent {
     
     /** Moves the agent. */
     public void move(double stepTime){
-        loc.x+=loc.v.x*stepTime;
-        loc.y+=loc.v.y*stepTime;
+        loc.x+=dLoc.x*stepTime;
+        loc.y+=dLoc.y*stepTime;
+        loc.v.x=dLoc.x;
+        loc.v.y=dLoc.y;
     }
     
     public void copySettingsFrom(Team team){
@@ -210,14 +214,14 @@ public class Agent {
      */
     public void planPath(double time,double stepTime){
         if(myBehavior instanceof ApproachPath){
-            loc.v=myBehavior.direction(this,null,time).multipliedBy(getTopSpeed());
+            dLoc=myBehavior.direction(this,null,time).multipliedBy(getTopSpeed());
         }else{
-            loc.v=TaskFusion.getVector(this,tasks,time).multipliedBy(getTopSpeed());
+            dLoc=TaskFusion.getVector(this,tasks,time).multipliedBy(getTopSpeed());
         }
-        if(java.lang.Double.isNaN(loc.v.x)){
-            System.out.println("nan in path planning "+loc.v.toString()+" and pos x="+loc.x+" y="+loc.y);
-            loc.v.x=0;
-            loc.v.y=0;
+        if(java.lang.Double.isNaN(dLoc.x)){
+            //System.out.println("nan in path planning "+dLoc.toString()+" and pos x="+loc.x+" y="+loc.y);
+            dLoc.x=0;
+            dLoc.y=0;
         }
     }
     
@@ -405,11 +409,10 @@ public class Agent {
                     setPropertyEditor("Position(t)",Settings.NO_EDIT);
                 }
                 fireActionPerformed("agentBehaviorChange");
-            }
-            if(e.getSource()==color){
+            } else if(e.getSource()==color) {
                 fireActionPerformed("agentDisplayChange");
             // initial positions of players has changed
-            }else{
+            } else {
                 fireActionPerformed("agentSetupChange");
             }
         }

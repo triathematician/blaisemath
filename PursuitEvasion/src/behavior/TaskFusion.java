@@ -41,7 +41,9 @@ public class TaskFusion {
         for (Task t : tasks) {
             // translate... distinguish between seek and flee behaviors here
             multiplier = (t.getGoalType() == Goal.FLEE ? -1 : 1) * (agent.getBehaviorCode() == Behavior.REVERSE ? -1 : 1);
-            result.translateBy(agent.getBehavior().direction(agent, t.getTarget(), time).multipliedBy(multiplier * t.getPriority()));
+            // scales the result by the task priority
+            result.translateBy(agent.getBehavior().direction(agent, t.getTarget(), time)
+                    .multipliedBy(multiplier * t.getPriority()));
         }
         return result.normalized();
     }

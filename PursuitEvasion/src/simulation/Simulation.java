@@ -438,6 +438,9 @@ public class Simulation implements ActionListener {
             } else if(e.getSource()==gameType){
                 setName(SimulationFactory.GAME_STRINGS[getGameType()]);
                 setTeams(SimulationFactory.getTeams(getGameType()));
+                if(getGameType()==SimulationFactory.FLOCKING){
+                    Simulation.this.setNumSteps(1000);
+                }
                 update();
                 fireActionPerformed("reset");
             } else {
