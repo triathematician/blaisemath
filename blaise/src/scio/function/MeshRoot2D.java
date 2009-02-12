@@ -9,7 +9,6 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.Vector;
-import scio.coordinate.Euclidean;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
 
@@ -38,7 +37,7 @@ public class MeshRoot2D {
                 inputs.add(new R2(x1+refinement*i, y1+refinement*j));
             }
         }        
-        Vector<Double> outputs = function.getValue(inputs);
+        //Vector<Double> outputs = function.getValue(inputs);
         
         Vector<R2> midInputs = new Vector<R2>((xSteps-1)*(ySteps-1));        
         for (int i = 0; i < xSteps; i++) {
@@ -46,7 +45,7 @@ public class MeshRoot2D {
                 midInputs.add(new R2(x1+refinement*(i+.5),y1+refinement*(j+.5)));
             }
         }
-        Vector<Double> midOutputs = function.getValue(midInputs);
+       // Vector<Double> midOutputs = function.getValue(midInputs);
 
         // TODO use above function values to compute the "flat triangle" elements below...
         
