@@ -1,31 +1,35 @@
 #summary This page contains a summary of new features and changes which have been made to the platform since early Summer 2008.
 #labels Featured,Module-PEG
 
-==== Week of Jan 11-17 2009 ====
+==== Mar 2009 ====
+ * _Added victory win/loss settings into the settings panel._ --Elisha
+
+==== Feb 2009 ====
+ * _Added new simulation that implements a flocking algorithm._ --Elisha
+
+==== Jan 2009 ====
 
  * _Fixed valuations for subset perceptions for various metrics. A few still need some changes, as annotated in code._ --Elisha
 
-==== Week of Nov 16-22 ====
+==== Nov 2008 ====
 
  * _Added in 3D visualization of pursuit games (with time on the vertical axis)._ --Elisha
-
-==== Week of Nov 9-15 ====
 
  * _Adjusted leading algorithm; added in a "Plucker Lead" algorithm. Each predicts the "future point" in a slightly different way._ --Elisha
 
  * _Adjusted Jurassic simulation to bind all the points to the same underlying model, allowing them all to be used at once._ --Elisha
 
-==== Week of Oct 26-Nov 1 ====
+==== Oct 2008 ====
 
  * _Now have the ability to save and load simulations via menu options. The simulations are stored as XML files and can be easily edited without the simulation._ --Elisha
 
-==== Week of Sept 28-Oct 4 ====
+==== Sept 2008 ====
 
  * _Data log now includes starting positions of each team._ --Elisha
 
  * _One can now output an XML file that contains all simulation settings (using JAXB). This feature will be later extended to allow saving and loading of simulations._ --Elisha
 
-==== Week of June 8-14, 2008 ====
+==== June 2008 ====
 
  * _Moved labels from the plots themselves to a legend box which can be moved around the screen._ --Elisha
 
