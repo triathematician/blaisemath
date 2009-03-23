@@ -2,6 +2,8 @@
 #labels Featured,Module-PEG
 
 ==== Mar 2009 ====
+ * _Agent labels now use the first letter of the team name plus a number._ --Elisha
+
  * _Added victory win/loss settings into the settings panel._ --Elisha
 
 ==== Feb 2009 ====
