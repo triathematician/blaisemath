@@ -3,7 +3,6 @@
 
 ==== Mar 2009 ====
  * _Agent labels now use the first letter of the team name plus a number._ --Elisha
-
  * _Added victory win/loss settings into the settings panel._ --Elisha
 
 ==== Feb 2009 ====
@@ -16,9 +15,7 @@
 ==== Nov 2008 ====
 
  * _Added in 3D visualization of pursuit games (with time on the vertical axis)._ --Elisha
-
  * _Adjusted leading algorithm; added in a "Plucker Lead" algorithm. Each predicts the "future point" in a slightly different way._ --Elisha
-
  * _Adjusted Jurassic simulation to bind all the points to the same underlying model, allowing them all to be used at once._ --Elisha
 
 ==== Oct 2008 ====
@@ -28,15 +25,12 @@
 ==== Sept 2008 ====
 
  * _Data log now includes starting positions of each team._ --Elisha
-
  * _One can now output an XML file that contains all simulation settings (using JAXB). This feature will be later extended to allow saving and loading of simulations._ --Elisha
 
 ==== June 2008 ====
 
  * _Moved labels from the plots themselves to a legend box which can be moved around the screen._ --Elisha
-
  * _Added labels to metrics window display & synchronized timers between the two windows. Also added display of points to animating paths. The slider at the bottom of the page can be used to control the animation when the animation is playing/paused._ --Elisha
-
  * _Can now output starting locations with new button in the application window titled *GET START POSITIONS*. The locations are given in the *Log* window and the *Code* window. The custom starting locations may be saved by three steps shown below._ --Elisha
   # Register a new `static int` for the simulation in the `SimulationFactory` file
 {{{
