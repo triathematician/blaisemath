@@ -3,6 +3,7 @@
 
 ==== Nov 2008 ====
 
+ * _Added some more bean patterns to standard plotpanels. Added options to show/hide labels along paths._ --EP
  * _Perspective 3D visometry with stereographic display._ --EP
  * _3D vector fields, parametric curves and surfaces, and more visuals._ --EP
  * _Several applets demonstrating dynamic parameter capability. Also posted to web._ --EP
