@@ -1,50 +1,30 @@
 #summary Contains listing of feature additions to Blaise.
 #labels Featured,Module-Blaise
 
-==== Weeks of Nov 9-22 ====
+==== Nov 2008 ====
 
- * _Perspective 3D visometry with stereographic display._ --Elisha
-
- * _3D vector fields, parametric curves and surfaces, and more visuals._ --Elisha
-
- * _Several applets demonstrating dynamic parameter capability. Also posted to web._ --Elisha
-
- * _Particle flow models for constrained vector field models._ --Elisha
-
-==== Week of Nov 2-8 ====
-
- * _Moved animation toolbar to the left side of the plot window by default._ --Elisha
-
+ * _Perspective 3D visometry with stereographic display._ --EP
+ * _3D vector fields, parametric curves and surfaces, and more visuals._ --EP
+ * _Several applets demonstrating dynamic parameter capability. Also posted to web._ --EP
+ * _Particle flow models for constrained vector field models._ --EP
+ * _Moved animation toolbar to the left side of the plot window by default._ --EP
  * _Implemented animation for vector fields, allowing them to be displayed as animating flows._ --Elisha
+ * _Added in rudimentary visualization of 3D plots (on top of the Euclidean2 visometry)._ --EP
+ * _Added ability to show/hide any plottable._ --EP
 
- * _Added in rudimentary visualization of 3D plots (on top of the Euclidean2 visometry)._ --Elisha
+==== Oct 2008 ====
 
- * _Added ability to show/hide any plottable._ --Elisha
+ * _Added bean patterns to `PlotPanel`s for the marker box and animation control, so they can be hidden or shown in the Netbeans GUI builder._ --EP
+ * _Added bean pattern for the axis type to `Plot2D` for the Netbeans GUI builder._ --EP
+ * _Began work on automatic XML output from the `Settings` class._ --EP
 
-==== Week of Sept 28-Oct 4 ====
+==== June 2008 ====
 
- * _Added bean patterns to `PlotPanel`s for the marker box and animation control, so they can be hidden or shown in the Netbeans GUI builder._ --Elisha
-
- * _Added bean pattern for the axis type to `Plot2D` for the Netbeans GUI builder._ --Elisha
-
- * _Began work on automatic XML output from the `Settings` class._ --Elisha
-
-==== Week of June 8-14 ====
-
- * _Added an `FLabel` class displaying any/all of some text, a color, a stroke. Also added an `FLabelBox` class to contain a group of these elements, suitable for a legend on a graph._ --Elisha
-
- * _Implemented ability of multiple `Plottable` elements to use the same underlying `ColorModel`, ensuring their colors are always synchronized._ --Elisha
-
- * _Fixed problem with aspect ratio in `Euclidean2` plot panels._ --Elisha
-
- * _Added ability of `PlotPanel` to synchronize `RangeTimer` with another `PlotPanel`._ --Elisha
-
- * _Added ability to label paths (`PointSet2D`), and to display the current point when animating._ --Elisha
-
-==== Week of June 1-7 and earlier ====
-
- * _Restructured `blaise` package to organize `Plottable` elements by their corresponding `Visometry`._ --Elisha
-
- * _Began work on `Voronoi2D` which will plot Voronoi tesselations. It works with the exception of rays going to infinity._ --Elisha
-
- * _Wrote a working version of a contour plot for 2 input/1 output functions. It works, but it's rather slow._ --Elisha
+ * _Added an `FLabel` class displaying any/all of some text, a color, a stroke. Also added an `FLabelBox` class to contain a group of these elements, suitable for a legend on a graph._ --EP
+ * _Implemented ability of multiple `Plottable` elements to use the same underlying `ColorModel`, ensuring their colors are always synchronized._ --EP
+ * _Fixed problem with aspect ratio in `Euclidean2` plot panels._ --EP
+ * _Added ability of `PlotPanel` to synchronize `RangeTimer` with another `PlotPanel`._ --EP
+ * _Added ability to label paths (`PointSet2D`), and to display the current point when animating._ --EP
+ * _Restructured `blaise` package to organize `Plottable` elements by their corresponding `Visometry`._ --EP
+ * _Began work on `Voronoi2D` which will plot Voronoi tesselations. It works with the exception of rays going to infinity._ --EP
+ * _Wrote a working version of a contour plot for 2 input/1 output functions. It works, but it's rather slow._ --EP
