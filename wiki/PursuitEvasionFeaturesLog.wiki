@@ -2,6 +2,8 @@
 #labels Featured,Module-PEG
 
 ==== Mar 2009 ====
+ * _Added ability to add/remove items from the simulation via the tree (almost complete)._ --EP
+ * _Added detailed description of XML format to this wiki._ --EP
  * _Added options for display style of solution paths, and point displays._ --EP
  * _Agent labels now use the first letter of the team name plus a number._ --EP
  * _Added victory win/loss settings into the settings panel._ --EP
