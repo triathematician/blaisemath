@@ -1,5 +1,5 @@
 #summary This page describes the structure used to implement the pursuit/evasion simulations.
-#labels Featured,Module-PEG
+#labels Module-PEG
 
 = Iteration Structure Steps =
 Generally speaking, pursuit/evasion algorithms between multiple players contain three steps: MTT (multiple target tracking), PEA (pursuer-evader assignment), and PP (path planning). These are all implemented in the steps of the main iteration of the pursuit simulation.
