@@ -62,5 +62,15 @@ Represents a metric used to define when to remove a player from the game. Has al
 
 === `victory` ===
 Represents a metric used to assess victory or progress toward victory. Has all the attributes of `Metric` plus:
+  * `eventLessCode` and `eventGreaterCode`: determine whether victory is achieved or lost depending on the relative value of the metric versus the threshold 
+  * `gameEnding`: determines whether the game should end when this metric is tripped
 
 == Tasking ==
+Gives an algorithm that is used to generate movement for the team. Multiple taskings are supported and integrate using a weighted gradient technique.
+  * `type`: code for the particular tasking algorithm
+  * `target`: the target team, given by the team `name` attribute
+  * `taskType`: basically determines whether minimizing the distance is a good thing (generally pursuit) or a bad thing (generally evasion)
+  * `algorithm`: code for the precise algorithm
+  * `weight`: used to weight multiple taskings (default 1.0)
+  * `threshold`: not currently in use (default 1.0)
+ 
