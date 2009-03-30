@@ -5,7 +5,7 @@
 This space describes the XML format for PursuitEvasion simulation files. Since the program is always changing, this may change somewhat over time.
 
 = Overview =
-The basic structure of a simulation is:
+The basic structure of the XML file follows. This should be saved in a `.xml` file.
 {{{
 <simulation OPTIONS>
   <team OPTIONS>
@@ -27,50 +27,124 @@ The basic structure of a simulation is:
 The `simulation` and `team` tags are full blocks, while the `agent`, `capture`, `victory`, `tasking`, and `metric` tags have options only. All tags may be used multiple times, except for the `simulation` tag. The full descriptions of the options are in the next section.
 
 = Tag attributes =
-== `simulation` ==
-  * `name`: a name for the simulation
+== Simulation ==
+{{{
+<simulation stepTime="0.1" pitchSize="60.0" numSteps="250" name="Football Game" maxSteps="1000">
+}}}
+
+  * `name`: a name for the simulation (required; no default)
   * `numSteps`: the default number of steps in the simulation (default 250)
-  * `maxSteps`: the maximum number of steps allowed in the combo box (default 1000)
+  * `maxSteps`: the maximum number of steps allowed if the simulation runs until a goal is achieved (default 1000)
   * `stepTime`: the time elapsed per step (default .1)
   * `pitchSize`: the area used to generate random players (default 60)
 
-== `team` ==
-  * `name`: a name for the team
-  * `agentNumber`: number of agents on the team
-  * `color`: color used to represent the team
-  * `topSpeed`: the maximum movement per unit time
-  * `sensorRange`: the range of sensing opponents
-  * `commRange`: the range of communications
-  * `behaviorCode`: the code representing behavior
-  * `leadFactor`: the lead factor to use as required by the specific behavior
+== Team ==
 
-== `agent` ==
-  * `name`: a name for the player
-  * `color`, `topSpeed`, `sensorRange`, `commRange`, `behaviorCode`, `leadFactor`: specific values for the player to override the team settings
-  * `x` and `y`: the coordinates of the player
+{{{
+<team topSpeed="5.0" sensorRange="20.0" name="Sidelines" leadFactor="0.0" commRange="50.0" color="ff0000" behaviorCode="0" agentNumber="20">
+}}}
 
-== `metric` and its derivatives ==
+  * `name`: a name for the team (required; no default)
+  * `size`: number of agents on the team (default 0)
+  * `color`: color used to represent the team, in hex (default gray, eg. `color="ff0000"`)
+  * `topSpeed`: the maximum movement per unit time (default 5.0)
+  * `sensorRange`: the range of sensing opponents (default 20.0)
+  * `commRange`: the range of communications (default 50.0)
+  * `behaviorCode`: integer code representing behavior (default 0; see table below)
+  * `leadFactor`: the lead factor to use as required by the specific behavior (default 0.5)
+
+_UNSUPPORTED ATTRIBUTES: `startCode`, `parametricPath`_
+
+=====Team/Agent Behavior Codes=====
+|| *Value* || *Meaning* ||
+|| 0 || Stationary ||
+|| 1 || Head straight to/from target ||
+|| 2 || Head straight from/to target (direction swapped) ||
+|| 3 || Leading; aim in front of target ||
+|| 4 || Plucker leading; aim in front of target (slightly different algorithm) ||
+|| 5 || Large circle search ||
+|| 6 || Small circle search ||
+|| 7 || Large quadrant search ||
+|| 8 || Small quadrant search ||
+|| 9 || Approach a path ||
+|| 10 || _Follow a randomly generated path (UNSUPPORTED)_ ||
+_Behaviors 5-8 follow a search pattern if there is no opponent in sight; and otherwise follow a leading behavior._
+
+
+==Agent==
+  * `name`: a name for the player (required; no default)
+  * `color`, `topSpeed`, `sensorRange`, `commRange`, `behaviorCode`, `leadFactor`: specific values for the player to override the team settings (defaults same as for team)
+  * `x` and `y`: the coordinates of the player (default 0,0)
+
+==Metric==
 Defines a metric used for simulation statistics.
-  * `type`: code for the particular metric algorithm
-  * `target`: the target team, given by the team `name` attribute
-  * `threshold`: threshold for the capture (e.g. within 2 units implies captures)
-  * `cooperationOn`: boolean used to determine whether statistics should include the cooperative value of this particular metric
+  * `target`: the target team, given by the team `name` attribute (required; no default)
+  * `type`: code for the particular metric algorithm (default 0; see table below) 
+  * `threshold`: threshold for the capture, e.g. within 2 units implies captures (default 0)
+  * `cooperationOn`: boolean used to determine whether statistics should include the cooperative value of this particular metric (default false)
 
-=== `capture` ===
+=====Metric Type Codes=====
+|| *Value* || *Meaning* ||
+|| 0 || Minimum distance to targets ||
+|| 1 || Maximum distance to targets ||
+|| 2 || Average distance to targets ||
+|| 3 || Opposing agent which is closest to capture ||
+|| 4 || Number of active agents on own team ||
+|| 5 || Number on team that are "safe" ||
+|| 6 || Number of active opponents ||
+|| 7 || Number of opponents that have been captured ||
+|| 8 || Advantage in numbers over the opponent ||
+|| 9 || Number of potential captures that have not been made ||
+|| 10 || Number of opponents that have not been captured ||
+|| 11 || Total time of the simulation ||
+|| 12 || Time elapsed since the last capture ||
+|| 13 || Percentage of opponents that have been captured ||
+
+=== Capture ===
 Represents a metric used to define when to remove a player from the game. Has all the properties of a `metric` plus:
-  * `removalCode`: code describing whom to remove from the game after a capture 
+  * `removalCode`: code describing whom to remove from the game after a capture (default 0; see table below)
 
-=== `victory` ===
+=====Capture Action Codes====
+|| *Value* || *Meaning* ||
+|| 0 || Remove both agents involved in capture ||
+|| 1 || Remove only the target (agent that is captured) ||
+|| 2 || Remove only the agent that captures ||
+
+=== Victory ===
 Represents a metric used to assess victory or progress toward victory. Has all the attributes of `Metric` plus:
-  * `eventLessCode` and `eventGreaterCode`: determine whether victory is achieved or lost depending on the relative value of the metric versus the threshold 
-  * `gameEnding`: determines whether the game should end when this metric is tripped
+  * `eventLessCode` and `eventGreaterCode`: determine whether victory is achieved or lost depending on the relative value of the metric versus the threshold (default 0,0; see table below)
+  * `gameEnding`: boolean determining whether the game should end when this metric is tripped (default false)
+
+=====Victory Status Codes=====
+|| *Value* || *Meaning* ||
+|| 0 || Indicates neither a win nor a loss ||
+|| 1 || Indicates a win ||
+|| 2 || Indicates a loss ||
 
 == Tasking ==
 Gives an algorithm that is used to generate movement for the team. Multiple taskings are supported and integrate using a weighted gradient technique.
-  * `type`: code for the particular tasking algorithm
-  * `target`: the target team, given by the team `name` attribute
-  * `taskType`: basically determines whether minimizing the distance is a good thing (generally pursuit) or a bad thing (generally evasion)
-  * `algorithm`: code for the precise algorithm
+  * `type`: code for the particular tasking algorithm (default 0; see table below)
+  * `target`: the target team, given by the team `name` attribute (required; no default)
+  * `algorithm`: code for the precise algorithm (default 0)
+  * `taskType`: basically determines whether minimizing the distance is a good thing, generally pursuit, or a bad thing, generally evasion (default 0)
   * `weight`: used to weight multiple taskings (default 1.0)
-  * `threshold`: not currently in use (default 1.0)
  
+_UNSUPPORTED ATTRIBUTES: `threshold`_
+
+=====Tasking Algorithm Codes=====
+|| *Value* || *Meaning* ||
+|| 0 || No tasking done ||
+|| 1 ||_Autonomous;_ assigns closest target ||
+|| 2 || _Autonomous;_ assigns point along line between the two closest targets ||
+|| 3 || _Autonomous;_ assigns farthest target ||
+|| 4 || _Autonomous;_ assigns average position (center-of-mass) of targets ||
+|| 5 || _Autonomous;_ assigns average direction of targets ||
+|| 6 || _Autonomous;_ assigns direction of maximum increase of distance to targets (via gradient) ||
+|| 7 || _Control;_ assigns targets using a greedy algorithm ||
+|| 8 || _Control;_ assigns targets using linear program to optimize sum of assignment distance ||
+
+=====Tasking Type Codes=====
+|| *Value* || *Meaning* ||
+|| 0 || Seek ||
+|| 1 || Capture ||
+|| 2 || Flee ||
