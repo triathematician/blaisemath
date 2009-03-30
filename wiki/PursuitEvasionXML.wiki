@@ -1,0 +1,66 @@
+#summary Description of the XML structure of a PursuitEvasion simulation
+#labels Module-PEG,Featured
+
+= Introduction =
+This space describes the XML format for PursuitEvasion simulation files. Since the program is always changing, this may change somewhat over time.
+
+= Overview =
+The basic structure of a simulation is:
+{{{
+<simulation OPTIONS>
+  <team OPTIONS>
+    <agent OPTIONS />
+    ...
+    <capture OPTIONS />
+    ...
+    <victory OPTIONS />
+    ...
+    <metric OPTIONS />
+    ...
+    <tasking OPTIONS />
+    ...
+  </team>
+  ...
+</simulation>
+}}}
+
+The `simulation` and `team` tags are full blocks, while the `agent`, `capture`, `victory`, `tasking`, and `metric` tags have options only. All tags may be used multiple times, except for the `simulation` tag. The full descriptions of the options are in the next section.
+
+= Tag attributes =
+== `simulation` ==
+  * `name`: a name for the simulation
+  * `numSteps`: the default number of steps in the simulation (default 250)
+  * `maxSteps`: the maximum number of steps allowed in the combo box (default 1000)
+  * `stepTime`: the time elapsed per step (default .1)
+  * `pitchSize`: the area used to generate random players (default 60)
+
+== `team` ==
+  * `name`: a name for the team
+  * `agentNumber`: number of agents on the team
+  * `color`: color used to represent the team
+  * `topSpeed`: the maximum movement per unit time
+  * `sensorRange`: the range of sensing opponents
+  * `commRange`: the range of communications
+  * `behaviorCode`: the code representing behavior
+  * `leadFactor`: the lead factor to use as required by the specific behavior
+
+== `agent` ==
+  * `name`: a name for the player
+  * `color`, `topSpeed`, `sensorRange`, `commRange`, `behaviorCode`, `leadFactor`: specific values for the player to override the team settings
+  * `x` and `y`: the coordinates of the player
+
+== `metric` and its derivatives ==
+Defines a metric used for simulation statistics.
+  * `type`: code for the particular metric algorithm
+  * `target`: the target team, given by the team `name` attribute
+  * `threshold`: threshold for the capture (e.g. within 2 units implies captures)
+  * `cooperationOn`: boolean used to determine whether statistics should include the cooperative value of this particular metric
+
+=== `capture` ===
+Represents a metric used to define when to remove a player from the game. Has all the properties of a `metric` plus:
+  * `removalCode`: code describing whom to remove from the game after a capture 
+
+=== `victory` ===
+Represents a metric used to assess victory or progress toward victory. Has all the attributes of `Metric` plus:
+
+== Tasking ==
