@@ -25,7 +25,7 @@ public class SettingsBar extends JToolBar {
     public SettingsBar(){
         s=new Settings();
         setOrientation(VERTICAL);
-        s.addDefaultItems();
+        s.addTestItems();
         updateBar();
     }
     public SettingsBar(Settings s){

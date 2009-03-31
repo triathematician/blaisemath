@@ -72,7 +72,12 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     }
     
     // BEAN PATTERNS
-    
+
+    public String getXLabel() { return axes.getXLabel(); }
+    public void setXLabel(String xLabel) { axes.setXLabel(xLabel); }
+    public String getYLabel() { return axes.getYLabel(); }
+    public void setYLabel(String yLabel) { axes.setYLabel(yLabel); }
+
     /** Returns axis style. */
     public int getAxisStyle(){return axes.style.getValue();}
     /** Sets axis style. */
@@ -87,6 +92,11 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     public void setGridVisible(boolean newValue){grid.setVisible(false);}
     /** Gets axis visibility. */
     public boolean isGridVisible(){return grid.isVisible();}
+
+    /** Adjusts aspect ratio. */
+    public void setAspectRatio(double newValue){ visometry.setAspectRatio(newValue); }
+    /** Returns aspect ratio. */
+    public double getAspectRatio(){ return visometry.getAspectRatio(); }
 
     
     // OVERRIDES

@@ -356,9 +356,16 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public DefaultTreeModel getTreeModel() {
         return new DefaultTreeModel(getTreeNode());
     }
-    
+
     /** Used to generate a default list of displayed properties. */
-    public void addDefaultItems(){
+    public static Settings getTestClass(){
+        Settings s = new Settings();
+        s.addTestItems();
+        return s;
+    }
+
+    /** Used to generate a default list of displayed properties. */
+    public void addTestItems(){
         addProperty("color",new ColorModel(Color.BLUE),Settings.EDIT_COLOR);
         addSeparator();
         IntegerRangeModel irm=new IntegerRangeModel(1,-10,100,1);
@@ -381,7 +388,7 @@ public class Settings extends Vector<SettingsProperty> implements ChangeListener
     public static class Default extends Settings {
         public Default(){
             super();
-            addDefaultItems();
+            addTestItems();
         }
     }
 }

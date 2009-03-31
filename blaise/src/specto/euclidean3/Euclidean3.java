@@ -100,6 +100,22 @@ public class Euclidean3 extends Euclidean2 {
     // DRAW METHODS
 
     /** Draws solid dotProduct at given point with specified pixel width */
+    void drawString(Graphics2D g, R3 pt, String s) {
+        try {
+            if (isStereo()) {
+                g.setColor(leftColor);
+                g.drawString(s, (float) toWindowX(proj.getValueLeft(pt).x)+5,(float) toWindowY(proj.getValueLeft(pt).y));
+                g.setColor(rightColor);
+                g.drawString(s, (float) toWindowX(proj.getValueRight(pt).x)+5, (float) toWindowY(proj.getValueRight(pt).y));
+            } else {
+                g.drawString(s, (float) toWindowX(proj.getValue(pt).x)+5, (float) toWindowY(proj.getValue(pt).y));
+            }
+        } catch (FunctionValueException ex) {
+            Logger.getLogger(Euclidean3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /** Draws solid dotProduct at given point with specified pixel width */
     void drawDot(Graphics2D g, R3 pt, double d) {
         try {
             if (isStereo()) {
@@ -201,7 +217,6 @@ public class Euclidean3 extends Euclidean2 {
     void fillPath(Graphics2D g, Vector<R3> pts) {
         try {
             if (isStereo()) {
-                g.setComposite(VisualStyle.COMPOSITE5);
                 g.setColor(leftColor);
                 Shape path = path(proj.getValueLeft(pts));
                 g.fill(path);
@@ -306,9 +321,9 @@ public class Euclidean3 extends Euclidean2 {
     public void setStereo(boolean newValue){stereo.setValue(newValue);}
     
     /** Left color */
-    public final Color leftColor = new Color (255, 0, 0, 64);
+    public final Color leftColor = new Color (255, 0, 0, 128);
     /** Right color */
-    public final Color rightColor = new Color (0, 255, 255, 64);
+    public final Color rightColor = new Color (0, 255, 255, 128);
     
     
     // ACCESSOR METHODS

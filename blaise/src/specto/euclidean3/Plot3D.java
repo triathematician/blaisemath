@@ -24,6 +24,9 @@ public class Plot3D extends PlotPanel<Euclidean3> {
     
     StandardGrid3D grid;
     Axes3D axes;
+
+    SliderBox controlBox;
+    ButtonBox viewBox;
     
     // CONSTANTS
 
@@ -39,11 +42,12 @@ public class Plot3D extends PlotPanel<Euclidean3> {
         addBase(grid);
         axes = new Axes3D();
         addBase(axes);
-        add(get3DControls(),5,2);
+        controlBox = get3DControls();
+        add(controlBox,5,2);
         
-        ButtonBox viewSettings = new ButtonBox();
-        viewSettings.add(new ToggleButton(visometry.stereo, BoundedShape.BOWTIE));
-        add(viewSettings,5,1);
+        viewBox = new ButtonBox();
+        viewBox.add(new ToggleButton(visometry.stereo, BoundedShape.BOWTIE));
+        add(viewBox,5,1);
         //setBackground(Color.BLACK);
         //add(new ParametricSurface3D.Sphere(new R3(0,0,0), visometry.proj.sceneSize.getValue()));
     }
@@ -89,5 +93,31 @@ public class Plot3D extends PlotPanel<Euclidean3> {
         ns.setName("eye separation");
         sb.add(ns);
         return sb;
+    }
+
+    public boolean isControlsVisible(){ return controlBox!=null && controlBox.isVisible();}
+    public void setControlsVisible(boolean newValue){
+        if(newValue!=controlBox.isVisible()){
+            if(newValue==true){ 
+                if(controlBox==null){controlBox=get3DControls(); add(controlBox,5,2);}
+                controlBox.setVisible(true);
+            }
+            if(newValue==false){ controlBox.setVisible(false); }
+        }
+    }
+
+    public boolean isViewBoxVisible(){ return viewBox!=null && viewBox.isVisible(); }
+    public void setViewBoxVisible(boolean newValue){
+        if(newValue!=viewBox.isVisible()){
+            if(newValue==true){ 
+                if(viewBox==null){
+                    viewBox = new ButtonBox();
+                    viewBox.add(new ToggleButton(visometry.stereo, BoundedShape.BOWTIE));
+                    add(viewBox,5,1);
+                }
+                viewBox.setVisible(true);
+            }
+            if(newValue==false){ viewBox.setVisible(false); }
+        }
     }
 }

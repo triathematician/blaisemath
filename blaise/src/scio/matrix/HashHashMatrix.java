@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * A matrix with rows and columns referenced according to objects of type W.
+ * A matrix with rows and columns referenced according to objects of type W and U, respectively.
  * @author Elisha Peterson
  */
 public class HashHashMatrix<W,U,V> extends Matrix<V> {

@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import sequor.Settings;
 import sequor.SettingsFactory;
@@ -40,19 +41,19 @@ public class SettingsPanel extends JPanel {
     
     public SettingsPanel(){
         s=new Settings();
-        s.addDefaultItems();
         this.displayType=DISPLAY_SPINNERS;
         updatePanel();
     }
     public SettingsPanel(Settings s){this(s,DISPLAY_SPINNERS);}
     public SettingsPanel(Settings s,int displayType){
-        this.displayType=displayType;
         this.s=s;
+        this.displayType=displayType;
         updatePanel();
     }
 
     public void setSettings(Settings s) {this.s=s;updatePanel();}
     public Settings getSettings(){return s;}
+    public int getDisplayType(){return displayType;}
     public void setDisplayType(int displayType){this.displayType=displayType;updatePanel();}
     
     /** Places the settings on a given panel, and performs proper layout. */
@@ -63,6 +64,8 @@ public class SettingsPanel extends JPanel {
             setLayout(new BorderLayout());
             JScrollPane container=new JScrollPane();
             container.setViewportView(new SettingsTable(s));
+            container.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             add(container);
         }else{
             setLayout(new BorderLayout());
@@ -94,13 +97,12 @@ public class SettingsPanel extends JPanel {
                 }
             }
             SpringUtilities.makeCompactGrid(jp,numComponents, 2, 5, 5, 5, 5);
-            jp.setMinimumSize(new Dimension(50,numComponents*25));
-            jp.setPreferredSize(new Dimension(100,numComponents*30));
-            jp.setMaximumSize(new Dimension(800,numComponents*35));
             jp.setInheritsPopupMenu(true);
             JScrollPane container=new JScrollPane();
             container.setViewportView(jp);
             container.setInheritsPopupMenu(true);
+            container.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            container.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             add(container);
         }
         setToolTipText(s.toString());

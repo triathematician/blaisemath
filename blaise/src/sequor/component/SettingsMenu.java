@@ -32,7 +32,7 @@ public class SettingsMenu extends JMenu {
     
     public SettingsMenu(){
         s=new Settings();
-        s.addDefaultItems();
+        s.addTestItems();
         updateMenu();
     }
     public SettingsMenu(Settings s){

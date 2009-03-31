@@ -121,4 +121,8 @@ public class Axes2D extends DynamicPlottable<Euclidean2> implements ActionListen
     
     @Override
     public String toString(){return "Axes";}
+    public String getXLabel() { return xLabel; }
+    public void setXLabel(String xLabel) { this.xLabel = xLabel; }
+    public String getYLabel() { return yLabel; }
+    public void setYLabel(String yLabel) { this.yLabel = yLabel; }
 }

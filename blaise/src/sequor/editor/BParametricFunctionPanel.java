@@ -11,8 +11,10 @@ package sequor.editor;
 
 import java.awt.Dimension;
 import java.util.Vector;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
 import scio.function.FunctionValueException;
 import sequor.model.ParametricModel;
 import scio.coordinate.R2;
@@ -31,17 +33,18 @@ public class BParametricFunctionPanel extends JPanel{
     
     public BParametricFunctionPanel(){this(new ParametricModel("t^cos(t)","t^sin(t)"));}
     public BParametricFunctionPanel(ParametricModel pm){
+        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+
         fx=new FunctionTextField(new FunctionTreeModel(pm.getTreeX()));
+        fx.setMinimumSize(new Dimension(50,15)); fx.setPreferredSize(new Dimension(70,20));
         fy=new FunctionTextField(new FunctionTreeModel(pm.getTreeY()));
+        fy.setMinimumSize(new Dimension(50,15)); fy.setPreferredSize(new Dimension(70,20));
         fx.setText(pm.getXString());
         fy.setText(pm.getYString());
-        add(new JLabel("x(t)="));
+        add(new JLabel(" x(t)= "));
         add(fx);
-        add(new JLabel("y(t)="));
+        add(new JLabel(" y(t)= "));
         add(fy);
-        setMinimumSize(new Dimension(20,20));
-        setPreferredSize(new Dimension(50,25));
-        setMaximumSize(new Dimension(50,25));
     }
     
     public FunctionTextField getFX(){return fx;}

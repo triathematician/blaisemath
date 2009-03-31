@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * PlottableGroup.java
  * Created on Feb 25, 2008
@@ -20,7 +15,6 @@ import javax.swing.event.ChangeListener;
 import sequor.component.RangeTimer;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
-import specto.euclidean2.Euclidean2;
 
 /**
  *

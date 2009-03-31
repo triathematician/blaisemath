@@ -91,11 +91,13 @@ public class VisualControlGroup extends VisualControl implements ActionListener 
         
     @Override
     public void paintComponent(Graphics2D g) {
+        if(!isVisible()){ return; }
         super.paintComponent(g,0.2f);
         for(VisualControl vc:elements){vc.paintComponent(g);}
     }    
     @Override
     public void paintComponent(Graphics2D g,float opacity) {
+        if(!isVisible()){ return; }
         super.paintComponent(g,opacity);
         for(VisualControl vc:elements){vc.paintComponent(g,opacity);}
     }

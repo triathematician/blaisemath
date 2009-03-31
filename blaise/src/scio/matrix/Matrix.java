@@ -57,6 +57,18 @@ public class Matrix<V> implements Coordinate {
             data.add(row);
         }
     }
+
+    /** Fills the matrix with a given element */
+    public void fillMatrix(V v){
+        if(data==null){
+            return;
+        }
+        for(int i=0;i<data.size();i++){
+            for(int j=0;j<data.get(i).size();j++) {
+                data.get(i).set(j, v);
+            }
+        }
+    }
     
     
     // BEAN PATTERNS

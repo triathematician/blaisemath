@@ -32,6 +32,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     
     Vector<R2> points;
     private String label;
+    boolean labelVisible = true;
     
     public PointSet2D(){this(new Vector<R2>(),Color.BLACK);}
     public PointSet2D(Color c){this(new Vector<R2>(),c);}
@@ -67,6 +68,7 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     public boolean isAnimationOn() { return animationOn; }
     
     public Vector<R2> getPath(){return points;}
+
     public void setPath(Vector<R2> path){points=path;}
     public void setLabel(String s){label=s;}
     
@@ -82,12 +84,12 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
         } else {
             g.draw(drawPath(v,0,points.size()));
         }
-        if(label!=null){
+        if(label!=null && labelVisible){
             java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
             g.setComposite(VisualStyle.COMPOSITE5);
             g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
             g.setComposite(AlphaComposite.SrcOver);
-    }
+        }
     }
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
@@ -116,12 +118,14 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
                     break;
             }  
             if (curVal >= points.size()) { curVal = points.size() - 1; }
-            java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
-            g.setComposite(VisualStyle.COMPOSITE5);
-            g.drawString(points.get(curVal).toString(),(float)labelCenter.x+5,(float)labelCenter.y-5);
+            if(labelVisible) {
+                java.awt.geom.Point2D.Double labelCenter = v.toWindow(points.get(curVal));
+                g.setComposite(VisualStyle.COMPOSITE5);
+                g.drawString(points.get(curVal).toString(),(float)labelCenter.x+5,(float)labelCenter.y-5);
+            }
         }
         g.setComposite(AlphaComposite.SrcOver);
-        if(label!=null){
+        if(label!=null && labelVisible){
             java.awt.geom.Point2D.Double winCenter = v.toWindow(points.firstElement());
             g.setComposite(VisualStyle.COMPOSITE5);
             g.drawString(label,(float)winCenter.x+5,(float)winCenter.y+5);
@@ -188,6 +192,9 @@ public class PointSet2D extends Plottable<Euclidean2> implements Animatable<Eucl
     @Override
     public String toString(){return "Path or Set of Points";}
 
+    public void setLabelVisible(boolean visible) {
+        if(labelVisible != visible) { labelVisible=visible; fireStateChanged(); }
+    }
     
     // EVENT HANDLING
     

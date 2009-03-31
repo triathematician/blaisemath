@@ -66,9 +66,9 @@ public class Plane3D extends Point3D {
         rectangle.add(prm.plus(dir1.times(d1.getMinimum())).plus(dir2.times(d2.getMaximum())));
         rectangle.add(rectangle.get(0));
         g.setColor(getColor());
-        g.setComposite(VisualStyle.COMPOSITE05);
+        g.setComposite(VisualStyle.COMPOSITE1);
         v.fillPath(g, rectangle);
-        g.setComposite(VisualStyle.COMPOSITE10);
+        g.setComposite(VisualStyle.COMPOSITE5);
         g.setStroke(VisualStyle.THIN_STROKE);
         switch(style2.getValue()) {
             case SOLID:
@@ -84,6 +84,7 @@ public class Plane3D extends Point3D {
                 }
                 break;                
         }
+        g.setComposite(VisualStyle.COMPOSITE10);
     }
     
     public static final int SOLID = 1;

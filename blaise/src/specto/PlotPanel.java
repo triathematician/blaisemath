@@ -27,12 +27,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
-import sequor.component.AddMenu;
 import sequor.component.RangeTimer;
+import sequor.component.SettingsTreeDialog;
 import sequor.control.AnimationControl;
 import sequor.control.DrawnPath;
 import sequor.control.MarkerBox;
@@ -176,6 +177,15 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         contextMenu=new JPopupMenu();
         optionsMenu=new JMenu("Change style");
         contextMenu.add(optionsMenu);
+        // add item to open window with settings
+//        contextMenu.add(new JSeparator());
+//        JMenuItem popup = new JMenuItem("All settings");
+//        popup.addActionListener(new ActionListener(){
+//            public void actionPerformed(ActionEvent e) {
+//                new SettingsTreeDialog(components., this, false);
+//            }
+//        });
+//        contextMenu.add(popup);
 // commenting this out for now. would like to return in the future        
 //        contextMenu.add(new AddMenu(this));
 //        JMenuItem mi=new JMenuItem("test XML output");

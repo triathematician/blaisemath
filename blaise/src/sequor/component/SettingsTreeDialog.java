@@ -34,7 +34,7 @@ public class SettingsTreeDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        settingsPanel1 = new sequor.component.SettingsTreePanel();
+        settingsPanel1 = new sequor.component.SettingsTreePanel(Settings.getTestClass());
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();

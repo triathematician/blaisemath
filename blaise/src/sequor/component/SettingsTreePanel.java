@@ -7,6 +7,10 @@ package sequor.component;
 
 import sequor.Settings;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
@@ -25,6 +29,7 @@ public class SettingsTreePanel extends JSplitPane{
     protected JScrollPane pane1;
     protected JScrollPane pane2;
     protected JTree tree;
+    protected JPopupMenu popup;
     
     public SettingsTreePanel(){
         super();
@@ -33,7 +38,8 @@ public class SettingsTreePanel extends JSplitPane{
         // default settings for the windows
         pane1.setViewportView(new JTree());
         setLeftComponent(pane1);
-        setRightComponent(pane2);     
+        setRightComponent(pane2);
+        initPopup();
     }
     
     public SettingsTreePanel(Settings s){
@@ -43,8 +49,9 @@ public class SettingsTreePanel extends JSplitPane{
         pane2.setViewportView(s.getPanel());
         setLeftComponent(pane1);
         setRightComponent(pane2);
+        initPopup();
     }
-    
+
     private void initComponents(){
         // default settings for the panel
         setDividerLocation(130);
@@ -56,12 +63,21 @@ public class SettingsTreePanel extends JSplitPane{
         pane1=new JScrollPane();  
         pane1.setMinimumSize(new Dimension(100,23));
         pane2=new JScrollPane();
-        pane2.setMinimumSize(new Dimension(100,23));
+        pane2.setMinimumSize(new Dimension(200,23));
+    }
+
+    protected void initPopup(){
+        if (popup!=null && tree!=null) {
+            tree.addMouseListener( new MouseAdapter() {
+                @Override public void mouseReleased( MouseEvent e ) {
+                    if ( e.isPopupTrigger()) { popup.show( (JComponent)e.getSource(), e.getX(), e.getY() ); }
+                }
+            });
+        }
     }
     
     /** Constructs the tree based on the settings class. */
     protected void setTree(Settings s){
-        // TODO make sure this works
         tree=new JTree(s.getTreeModel());
         tree.addTreeSelectionListener(new TreeSelectionListener(){
             @Override
@@ -73,5 +89,6 @@ public class SettingsTreePanel extends JSplitPane{
             }
         });
         pane1.setViewportView(tree);
+        initPopup();
     }
 }

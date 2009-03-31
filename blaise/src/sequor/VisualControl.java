@@ -107,11 +107,12 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
     public static final Stroke DEFAULT_STROKE=new BasicStroke(1.0f);
     protected boolean paintBorder = true;
     protected boolean paintBackground = true;
+
+    public void paintComponent(Graphics2D g,int x,int y){ setLocation(x,y); paintComponent(g); }
+    public void paintComponent(Graphics2D g){ paintComponent(g,0.5f); }
     
-    public void paintComponent(Graphics2D g){
-        paintComponent(g,0.5f);
-    }
     public void paintComponent(Graphics2D g,float opacity){
+        if(!isVisible()){ return; }
         g.setColor(getBackground());
         g.setStroke(DEFAULT_STROKE);
         Shape s=backgroundShape.getBoundedShape(getBounds(),0);
@@ -123,10 +124,6 @@ public class VisualControl extends java.awt.Component implements ChangeListener,
         g.setColor(getForeground());
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         if(paintBorder){g.draw(s);}
-    }
-    public void paintComponent(Graphics2D g,int x,int y){
-        setLocation(x,y);
-        paintComponent(g);
     }
     
     // EVENT HANDLING
