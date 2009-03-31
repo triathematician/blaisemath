@@ -28,7 +28,7 @@ public abstract class AutonomousTaskGenerator extends TaskGenerator {
         for(Agent a:team){
             result = generate(a, table);
             if (result != null) {
-                a.assign(new Task(this,result,goalType,priority));
+                a.assign(new Task(this,result,type,priority));
             }
         }
     }

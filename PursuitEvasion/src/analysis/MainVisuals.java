@@ -12,6 +12,7 @@ import java.util.Collection;
 import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
+import specto.Plottable;
 import specto.PlottableGroup;
 import specto.euclidean2.CirclePoint2D;
 import specto.euclidean2.Euclidean2;
@@ -40,6 +41,7 @@ public class MainVisuals extends PlottableGroup<Euclidean2> implements ActionLis
     
     /** Returns the simulation. */
     public Simulation getSim() { return sim; }
+
     
     /** Initializes to a new simulation. */
     public void setSim(Simulation sim) {
@@ -51,7 +53,31 @@ public class MainVisuals extends PlottableGroup<Euclidean2> implements ActionLis
         clear();  
         add(new PointSet2D(sim.log.capturePoints,Color.PINK,PointSet2D.POINTS_ONLY));
         for (Team t : sim.getTeams()) { add(new TeamVisuals(t)); }
-    }    
+    }
+
+    public void setAnimationStyle(int style) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setAnimationStyle(style); }
+        }
+    }
+
+    public void setNetworkVisible(boolean visible) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).dtg.setVisible(visible); }
+        }
+    }
+
+    public void setPositionsVisible(boolean visible) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setPositionsVisible(visible); }
+        }
+    }
+
+    public void setStartVisible(boolean visible) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setStartVisible(visible); }
+        }
+    }
     
     // EVENT HANDLING
     
@@ -85,6 +111,24 @@ public class MainVisuals extends PlottableGroup<Euclidean2> implements ActionLis
             setColorModel(t.getColorModel());
             setName(t.getName());
             dtg = new DynamicTeamGraph(t,sim.log);
+        }
+
+        public void setAnimationStyle(int style) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).path.animateStyle.setIValue(style); }
+            }
+        }
+
+        public void setPositionsVisible(boolean visible) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).path.setLabelVisible(visible); }
+            }
+        }
+
+        public void setStartVisible(boolean visible) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).loc.setVisible(visible); }
+            }
         }
     }
     

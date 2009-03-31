@@ -1,9 +1,7 @@
 /*
  * Team.java
  * Created on Aug 28, 2007, 10:26:33 AM
- */// TODO Add team select box to goal settings panel
-// TODO Move starting location initializers to outside utility class
-// TODO Consolidate all "broadcast" methods
+ */
 package simulation;
 
 import metrics.*;
@@ -14,7 +12,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JPanel;
@@ -23,7 +20,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
@@ -33,7 +29,7 @@ import scio.coordinate.R2;
 import scio.function.FunctionValueException;
 import sequor.SettingsProperty;
 import sequor.model.DoubleRangeModel;
-import tasking.TaskGenerator;
+import tasking.Tasking;
 import utility.StartingPositionsFactory;
 
 /**
@@ -68,13 +64,13 @@ public class Team implements ActionListener {
     
     /** Capture conditions of the team. */
     @XmlElement(name="capture")
-    public Vector<CaptureCondition> capture;    
-    /** Value metrics of the team. */
-    @XmlElement(name="metric")
-    public Vector<Valuation> metrics;    
+    public Vector<CaptureCondition> capture;
     /** Victory condition of the team. */
     @XmlElement(name="victory")
     public VictoryCondition victory;
+    /** Value metrics of the team. */
+    @XmlElement(name="metric")
+    public Vector<Valuation> metrics;    
     
     
     //
@@ -90,14 +86,7 @@ public class Team implements ActionListener {
     /** Whether to forward action events */
     private boolean editing = false;
     
-    /** Result of the simulation if it should be recorded. Defaults to time at which goal is reached. */
-    private double value = Double.MAX_VALUE;
-   
-    /** Stores number of agents which have been captured by opposing teams.
-    * The value of this team itself represents the number which make it to "safety".
-    */
-    private HashMap<Team,Integer> captures;
-    
+     
     //
     // CONSTRUCTORS
     //
@@ -107,6 +96,12 @@ public class Team implements ActionListener {
         initControlVariables();
         initStateVariables();
         initAgentNumber();
+    }
+
+    /** Initializes with name. */
+    public Team(String s) {
+        this();
+        setName(s);
     }
 
     /** Initializes based on another team's settings. */    
@@ -152,7 +147,6 @@ public class Team implements ActionListener {
         if(activeAgents==null){ activeAgents = new HashSet<Agent>(); }
         activeAgents.clear();
         activeAgents.addAll(startAgents);
-        if(captures==null){ captures = new HashMap<Team,Integer>(); } else { captures.clear(); }
         for (Agent a : agents) { a.initStateVariables(); }
         if (victory != null) { victory.initStateVariables(); }
     }
@@ -162,11 +156,6 @@ public class Team implements ActionListener {
     // METHODS: ADDING ELEMENTS TO THE TEAM
     //
     
-    /** Adds a goal. */
-    public void addAutoGoal(double weight, Vector<Team> teams, Team target, int type, int tasking, double threshhold) {
-        Goal g = new Goal(weight, teams, this, target, type, tasking, threshhold);
-        addControlTask(g);
-    }
 
     /** Adds a capture condition. */
     public void addCaptureCondition(Vector<Team> teams, Team target, double captureDistance, int removal) {
@@ -175,7 +164,7 @@ public class Team implements ActionListener {
     /** Adds a capture condition. */
     public void addCaptureCondition(CaptureCondition cc){
         capture.add(cc);
-        tes.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
+        mets.addChild(cc.vs, Settings.PROPERTY_INDEPENDENT);
     }
 
     /** Adds a valuation metric. */
@@ -184,12 +173,17 @@ public class Team implements ActionListener {
         mets.addChild(val.vs, Settings.PROPERTY_INDEPENDENT);
     }
 
+    /** Adds a goal. */
+    public void addTasking(double weight, Vector<Team> teams, Team target, int type, int tasking, double threshhold) {
+        addTasking(new Tasking(weight, teams, this, target, type, tasking, threshhold));
+    }
+    
     /** Adds a "control agent". */
-    public void addControlTask(TaskGenerator tag) {
-        control.addTaskGenerator(tag);
-        if(tag instanceof Goal){
-            tass.addChild(((Goal)tag).gs, Settings.PROPERTY_INDEPENDENT);
-        }
+    public void addTasking(Tasking tag) {
+        control.addTasking(tag);
+        tass.addChild(tag.ts, Settings.PROPERTY_INDEPENDENT);
+        tag.removeActionListener(this);
+        tag.addActionListener(this);
     }
 
     /** Activate all. */
@@ -230,7 +224,7 @@ public class Team implements ActionListener {
             remove(agents.lastElement());
         }
         while (agents.size() < targetSize) {
-            add(new Agent(this,"Agent "+(agents.size()+1)));
+            add(new Agent(this,getName().substring(0,1)+(agents.size()+1)));
         }
         if (victory != null) {
             victory.resetTeam();
@@ -341,38 +335,9 @@ public class Team implements ActionListener {
         setStartCode(START_SPECIFIC);
     }
     
-    
-    // LOG EVENTS
-    
-    /** Logs a capture by a particular opposing team. */
-    public void addOneCapturedBy(Team opponent) {
-        if(captures.containsKey(opponent)) {
-            captures.put(opponent, captures.get(opponent)+1);
-        } else {
-            captures.put(opponent,1);
-        }
-    }
-    
-    /** Logs that a particular member of the team has reached "safety". */
-    public void addOneReachedSafety() {
-        // code is same as above, so just recycle it
-        addOneCapturedBy(this);
-    }
-    
-    /** Returns number which have been captured by an opposing team. */
-    public int getNumberCapturedBy(Team opponent) {
-        return captures.containsKey(opponent) ? captures.get(opponent) : 0;
-    }
-    
-    /** Returns number of team which have reached safety. */
-    public int getNumberSafe() {
-        return getNumberCapturedBy(this);
-    }
-    
-//    public HashSet<Agent> getValueAgents(){return valueAgents;}
-//    public void setValueAgents(HashSet<Agent> agents){valueAgents=agents;}
-//    public HashSet<Agent> getActiveValueAgents(){return activeValueAgents;}
+                
     // BROADCAST METHODS: PASS INSTRUCTIONS ONTO TEAM MEMBERS
+    
     /** Instructs all agents to gather sensory data
      * @param d The global table of distances */
     public void gatherSensoryData(DistanceTable d) {
@@ -398,13 +363,9 @@ public class Team implements ActionListener {
 
     /** Assigns tasks to the agents. */
     public void assignTasks(DistanceTable table) {
-        for (Agent a : activeAgents) {
-            a.tasks.clear();
-        }
+        for (Agent a : activeAgents) { a.tasks.clear(); }
         control.generateTasks(this, table, 1.0);
-        for (Agent a : activeAgents) {
-            a.generateTasks(this, table, 1.0);
-        }
+        for (Agent a : activeAgents) { a.generateTasks(this, table, 1.0); }
     }
 
     /** Generates directions for each team member based on their task and myBehavior.
@@ -462,7 +423,7 @@ public class Team implements ActionListener {
     
     // BEAN PATTERNS FOR INITIAL SETTINGS
     
-    @XmlAttribute // not necessary to make this an attribute... comes in as the number of agents in the team
+    @XmlAttribute(name="size") // not necessary to make this an attribute... comes in as the number of agents in the team
     public int getAgentNumber() { return tes.size.getValue(); }
     public void setAgentNumber(int newValue) { tes.size.setValue(newValue); }
         
@@ -503,49 +464,32 @@ public class Team implements ActionListener {
     }
     
     @XmlElement(name="tasking")
-    public Vector<Goal> getTaskings(){
-        Vector<Goal> result = new Vector<Goal>();
-        for (TaskGenerator tg:control.getTaskGenerators()){
-            if(tg instanceof Goal){result.add((Goal) tg);}
-        }
-        return result;
+    public Vector<Tasking> getTaskings(){
+        return control.getTasking();
     }
-    public void setTaskings(Vector<Goal> goals){
-        if(goals!=null){
-            control.taskGenerators.clear();
-            for(Goal g:goals){addControlTask(g);}
+    public void setTaskings(Vector<Tasking> taskings){
+        if(taskings!=null && control.taskings != taskings){
+            control.taskings.clear();
+            for (Agent a : agents) { a.taskings.clear(); }
+            for(Tasking t:taskings) { addTasking(t); }
+        }
+    }
+
+    @XmlElement(name="agent")
+    public Vector<Agent> getAgents(){
+        return agents;
+    }
+    public void setAgents(Vector<Agent> agents){
+        if(agents!=null && this.agents != agents) {
+            this.agents.clear();
+            this.agents.addAll(agents);
+            setAgentNumber(agents.size());
         }
     }
 
     /** Returns a specific agent. */
     public Agent getAgent(int i){return agents.get(i);}
-    
-    @XmlElementWrapper(name="agents")
-    @XmlElement(name="agent")
-    public Vector<Agent> getAllAgents() { return agents; }
-    public void setAllAgents(Vector<Agent> newAgents) {  
-        if(newAgents==null){return;}
-        if(newAgents==agents){
-           //System.out.println("here");            
-        } else {
-//            System.out.println("old positions for team "+getName()+":");
-//            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
-//            System.out.println("new positions:");
-//            for(Agent a:newAgents){System.out.println(" "+a.getInitialPosition());}
-//            editing = true;
-//            for(Agent a:agents){a.removeActionListener(this);tes.removeChild(a.ags);}            
-//            agents.clear();
-//            for(Agent a:newAgents){add(a);}
-//            if(victory!=null){victory.resetTeam();}
-//            for (CaptureCondition cc:capture){cc.resetTeam();}
-//            for (Valuation v:metrics){v.resetTeam();}
-//            activateAllAgents();
-//            editing=false;
-//            System.out.println("newer positions:");
-//            for(Agent a:agents){System.out.println(" "+a.getInitialPosition());}
-        }
-    }
-    
+        
     /** Reloads the settings tree, and updates the team names for subsidiary settings. */
     public void update(Vector<Team> teams){
         tes.getChildren().clear();
@@ -555,25 +499,26 @@ public class Team implements ActionListener {
         tes.addChild(ags, Settings.PROPERTY_INDEPENDENT);
         tes.addChild(tass, Settings.PROPERTY_INDEPENDENT);
         tes.addChild(mets, Settings.PROPERTY_INDEPENDENT);
-        for(CaptureCondition v:capture){
-            v.update(teams,this);
-            tes.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
-        }
-        for(Valuation v:metrics){
-            v.update(teams,this);
-            tes.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
-        }
-        for(TaskGenerator g:control.getTaskGenerators()){
-            ((Goal)g).update(teams,this);
-            tass.addChild(((Goal)g).gs, Settings.PROPERTY_INDEPENDENT);
-        }
-        if(victory!=null){
-            victory.update(teams,this);
-            tes.addChild(victory.vs, Settings.PROPERTY_INDEPENDENT);
-        }        
         for(Agent a:agents){
             a.addActionListener(this);
             ags.addChild(a.ags, Settings.PROPERTY_INDEPENDENT);
+           // a.setColor(getColor());
+        }
+        for(CaptureCondition v:capture){
+            v.update(teams,this);
+            mets.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
+        }
+        if(victory!=null){
+            victory.update(teams,this);
+            mets.addChild(victory.vs, Settings.PROPERTY_INDEPENDENT);
+        }
+        for(Valuation v:metrics){
+            v.update(teams,this);
+            mets.addChild(v.vs, Settings.PROPERTY_INDEPENDENT);
+        }
+        for(Tasking t:control.getTasking()){
+            t.update(teams,this);
+            tass.addChild(t.ts, Settings.PROPERTY_INDEPENDENT);
         }
         startAgents.clear();
         startAgents.addAll(agents);
@@ -589,9 +534,6 @@ public class Team implements ActionListener {
     public void setColorModel(ColorModel cm) { tes.color.copyValuesFrom(cm); }    
     
     public void setColorValue(Color newValue) { tes.color.setValue(newValue); }
-
-    public int getNumActive() { return getActiveAgents().size(); }
-    public Double getValue() { return value; }
 
     //    public Collection<Goal> getGoals(){return goals;}
     
@@ -648,26 +590,26 @@ public class Team implements ActionListener {
     //
     
     /** Contains all the initial settings for the simulation. Everything else is used while the simulation is running. */
-    private class TeamSettings extends Settings {
+    public class TeamSettings extends Settings {
 
         /** Team size */
-        private IntegerRangeModel size = new IntegerRangeModel(3, 1, 100);
-        /** Starting positions to use */
-        private StringRangeModel start = new StringRangeModel(START_STRINGS, START_CUSTOM);
+        private IntegerRangeModel size = new IntegerRangeModel(0, 0, 100);
+        /** Default color. */
+        private ColorModel color = new ColorModel(Color.DARK_GRAY);
+        /** Default speed [in ft/s]. */
+        private DoubleRangeModel topSpeed = new DoubleRangeModel(5, 0, 50, .05);
         /** Default sensor range [in ft]. */
         private DoubleRangeModel sensorRange = new DoubleRangeModel(20, 0, 5000, .5);
         /** Default communications range [in ft]. */
         private DoubleRangeModel commRange = new DoubleRangeModel(50, 0, 5000, .5);
-        /** Default speed [in ft/s]. */
-        private DoubleRangeModel topSpeed = new DoubleRangeModel(5, 0, 50, .05);
+        /** Starting positions to use */
+        private StringRangeModel start = new StringRangeModel(START_STRINGS, START_CUSTOM);
         /** Default behavioral setting */
         private StringRangeModel behavior = Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
-        private DoubleRangeModel leadFactor = new DoubleRangeModel(0, 0, 2, .01);
+        private DoubleRangeModel leadFactor = new DoubleRangeModel(0.5, 0, 2, .01);
         /** Position function if required for myBehavior */
-        private ParametricModel pm = new ParametricModel();
-        /** Default color. */
-        private ColorModel color = new ColorModel(Color.GREEN);
+        private ParametricModel pm=new ParametricModel("1000","50");
 
         /** Returns the color */
         @Override
@@ -676,6 +618,7 @@ public class Team implements ActionListener {
         }
 
         public TeamSettings() {
+            setName("");
             add(new SettingsProperty("# Agents", size, Settings.EDIT_INTEGER));
             add(new SettingsProperty("Starting Loc", start, Settings.EDIT_COMBO));
             add(new SettingsProperty("Speed", topSpeed, Settings.EDIT_DOUBLE));

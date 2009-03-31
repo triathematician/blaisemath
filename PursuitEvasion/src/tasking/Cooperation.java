@@ -7,9 +7,7 @@ package tasking;
 
 import simulation.Agent;
 import simulation.Team;
-import tasking.AutoGradient;
 import java.util.TreeMap;
-import metrics.Goal;
 import scio.coordinate.R2;
 import scio.coordinate.V2;
 import utility.DistanceTable;

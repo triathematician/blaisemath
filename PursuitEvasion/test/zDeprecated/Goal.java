@@ -2,7 +2,7 @@
  * Goal.java
  * Created on Aug 28, 2007, 10:26:56 AM
  */
-package metrics;
+package zDeprecated;
 
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import sequor.model.DoubleRangeModel;
 import simulation.Team;
 import simulation.Agent;
 import simulation.Simulation;
-import tasking.TaskGenerator;
+import tasking.Tasking;
 import utility.DistanceTable;
 
 /**
@@ -35,24 +35,17 @@ import utility.DistanceTable;
  * @author Elisha Peterson
  */
 @XmlAccessorType(XmlAccessType.NONE)
-public class Goal extends TaskGenerator {
+public class Goal extends Tasking {
     
     // CONSTANTS
-
-    public static final int SEEK = 0;
-    public static final int CAPTURE = 1;
-    public static final int FLEE = 2;
-    public static final String[] TYPE_STRINGS = {"Seek", "Capture", "Flee"};
     
     // SIMULATION ATTRIBUTES
     
-    /** Static settings. */
-    public GoalSettings gs;
     
     // DYNAMIC ATTRIBUTES
     
     /** Tasking class. */
-    private TaskGenerator tasker;    
+    private Tasking tasker;
     /** Whether or not the goal has been achieved. */
     private boolean achieved = false;
     /** The agent which achieved the goal. */
@@ -61,8 +54,6 @@ public class Goal extends TaskGenerator {
     // CONSTRUCTORS & INITIALIZERS   
     
     public Goal(){ 
-        gs = new GoalSettings();
-        tasker = gs.getTasking();
     }
     
     /** 
@@ -75,7 +66,7 @@ public class Goal extends TaskGenerator {
      * @param thresh    specifies at what point the goal has been reached... sometimes a more generic parameter
      */
     public Goal(double weight, Vector<Team> teams, Team owner, Team target, int type, int tasking, double thresh) {
-        super(target, type);
+        super(target);
         gs = new GoalSettings(weight, teams, owner, target, type, tasking, thresh);
         tasker = gs.getTasking();
         addActionListener(owner);
@@ -131,8 +122,8 @@ public class Goal extends TaskGenerator {
     // BEAN PATTERNS  
     
     @XmlAttribute
-    public int getType() { return gs.type.getValue(); }
-    public void setType(int newValue) { gs.type.setValue(newValue); }
+    public int getTaskType() { return gs.type.getValue(); }
+    public void setTaskType(int newValue) { gs.type.setValue(newValue); }
     
     @XmlAttribute
     public int getAlgorithm() { return gs.algorithm.getValue(); }
@@ -231,12 +222,12 @@ public class Goal extends TaskGenerator {
          */
         private DoubleRangeModel threshhold = new DoubleRangeModel(1, 0, 1000, .1);
         /** The team's tasking algorithm default */
-        private StringRangeModel algorithm=new StringRangeModel(TaskGenerator.TASKING_STRINGS);
+        private StringRangeModel algorithm=new StringRangeModel(Tasking.TASKING_STRINGS);
         /** Specifies the function describing whether the goal has been achieved. */
         private Function<DistanceTable, Double> value;
 
         private GoalSettings() {
-            this(0.0, new Vector<Team>(), new Team(), new Team(), SEEK, TaskGenerator.AUTO_CLOSEST, 0.0);
+            this(0.0, new Vector<Team>(), new Team(), new Team(), SEEK, Tasking.AUTO_CLOSEST, 0.0);
         }
         
         public GoalSettings(double weight, Vector<Team> teams, Team owner, Team target, int type, int tasking, double threshhold) {
@@ -281,8 +272,8 @@ public class Goal extends TaskGenerator {
             fireActionPerformed(ac);
         }
 
-        private TaskGenerator getTasking() {
-            return TaskGenerator.getTasking(target, type.getValue(), algorithm.getValue());
+        private Tasking getTasking() {
+            return Tasking.getTasking(target, type.getValue(), algorithm.getValue());
         }
 
         public void setOwner(Team newValue) {
@@ -296,6 +287,7 @@ public class Goal extends TaskGenerator {
             if (newValue != null && !newValue.equals(target)) {
                 target = newValue;
                 tasker.setTarget(target);
+                opponentModel.setValue(target.toString());
                 pcs.firePropertyChange("goalTarget", null, newValue);
             }
         }

@@ -5,20 +5,14 @@
 
 package analysis;
 
-import java.awt.event.ActionEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import scio.coordinate.R3;
-import scio.function.FunctionValueException;
 import utility.*;
-import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Vector;
 import javax.swing.JTextArea;
+import metrics.CaptureMap;
 import metrics.Valuation;
 import simulation.Agent;
 import simulation.Simulation;
@@ -60,7 +54,7 @@ public class SimulationLog extends FiresChangeEvents {
     /** Initializes to the agents/teams of a particular simulation. */
     public SimulationLog(Simulation sim){
         initialize(sim);
-        logAll(0,null);
+        logAll(0, null, null);
     }
     
 
@@ -154,11 +148,11 @@ public class SimulationLog extends FiresChangeEvents {
         significantEvents.clear();
         capturePoints.clear();
         capturePoints3D.clear();
-        logAll(0,null);
+        logAll(0, null, null);
     }
     
     /** Goes through all agents/teams in list and logs desired values. */
-    public void logAll(int timeStep,DistanceTable dt){
+    public void logAll(int timeStep, DistanceTable dt, CaptureMap cap){
         for(Agent a:agentPaths.keySet()){
             agentPaths.get(a).add(new R2(a.loc.x,a.loc.y));
             if(timeStep==0 || a.isActive()) {
@@ -167,12 +161,8 @@ public class SimulationLog extends FiresChangeEvents {
         }
         if(dt!=null){
             for(Valuation v:teamMetrics.keySet()){
-                try {
-                    teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getOwner().agents)));
-                    partialTeamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, v.getComplement())));
-                } catch (FunctionValueException ex) {
-                    Logger.getLogger(SimulationLog.class.getName()).log(Level.SEVERE, null, ex);
-                }                
+                teamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, cap, v.getOwner().agents)));
+                partialTeamMetrics.get(v).add(new R2(timeStep, v.getValue(dt, cap, v.getComplement())));
             }
         }
     }
@@ -253,8 +243,9 @@ public class SimulationLog extends FiresChangeEvents {
         
         @Override
         public String toString(){
-            return description+" at time "+DecimalFormat.getNumberInstance().format(time)
-                    +" ("+teamOriginator+":"+originator+" >> "+teamReceiver+":"+receiver+")";
+            String result = description+" at time "+DecimalFormat.getNumberInstance().format(time);
+            return teamOriginator == null ? result : 
+                    result+" ("+teamOriginator+(originator!=null?":"+originator:"")+" >> "+teamReceiver+(receiver!=null?":"+receiver:"")+")";
         }
     } // CLASS SimulationLog.SignificantEvent //
 

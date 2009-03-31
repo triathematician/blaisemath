@@ -27,7 +27,7 @@ public class CaptureCondition extends Valuation {
     
     public static final int REMOVEBOTH = 0;
     public static final int REMOVETARGET = 1;
-    public static final int REMOVEAGENT = 2;
+    public static final int AGENTSAFE = 2;
     
     // SIMULATION PARAMETERS
     
@@ -50,9 +50,11 @@ public class CaptureCondition extends Valuation {
     /** Checks to see whether capture has occurred in the given DistanceTable. If it has, captured agents are
      * deactivated and a message is sent to the log indicating capture.
      * @param log the log storing significant events for the simulation
+     * @param cap the capture table
+     * @param time the simulation time
      * @return vector of locations at which capture has occurred
      */
-    public Vector<R2> check(DistanceTable dt, SimulationLog log, double time) {
+    public Vector<R2> check(DistanceTable dt, SimulationLog log, CaptureMap cap, double time) {
         Vector<R2> result = new Vector<R2>();
         AgentPair closest = dt.min(vs.owner.getActiveAgents(), vs.target.getActiveAgents());
         while ((closest != null) && (closest.getDistance() < getThreshold())) {
@@ -62,15 +64,15 @@ public class CaptureCondition extends Valuation {
                 dt.removeAgents(closest);
                 vs.owner.deactivate(closest.getFirst());
                 vs.target.deactivate(closest.getSecond());
-                vs.target.addOneCapturedBy(vs.owner);
+                cap.logCapture(closest.getFirst(), closest.getSecond(), time);
             } else if (removal == REMOVETARGET) {
                 dt.removeAgent(closest.getSecond());
                 vs.target.deactivate(closest.getSecond());
-                vs.target.addOneCapturedBy(vs.owner);
+                cap.logCapture(closest.getFirst(), closest.getSecond(), time);
             } else {
                 dt.removeAgent(closest.getFirst());
                 vs.owner.deactivate(closest.getFirst());
-                vs.owner.addOneReachedSafety();
+                cap.logCapture(closest.getFirst(), closest.getFirst(), time);
             }
             closest = dt.min(vs.owner.getActiveAgents(), vs.target.getActiveAgents());
         }

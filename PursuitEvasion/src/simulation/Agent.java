@@ -26,13 +26,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import scio.function.FunctionValueException;
-import tasking.TaskGenerator;
+import tasking.Tasking;
 import sequor.Settings;
 import sequor.model.ColorModel;
 import sequor.model.StringRangeModel;
 import sequor.model.ParametricModel;
 import sequor.SettingsProperty;
 import sequor.model.DoubleRangeModel;
+import tasking.TaskGenerator;
 
 /**
  * Represents a single participant in the pursuit-evasion game. May be a pursuer, an evader, a stationary goal
@@ -46,16 +47,16 @@ import sequor.model.DoubleRangeModel;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Agent {
     
-    // STATIC PROPERTIES
+    // CONTROL VARIABLES
         
     /** Agent's settings */
     AgentSettings ags;    
     /** Agents trusted by this agent */
     TrustMap trusted;
     /** Task generators associated with this agent */
-    Vector<TaskGenerator> taskGenerators;
+    Vector<Tasking> taskings;
     
-    // CHANGING PROPERTIES
+    // STATE VARIABLES
     
     /** Location */
     public V2 loc;    
@@ -95,7 +96,7 @@ public class Agent {
     }
 
     /** Constructs with a given team and specified name. */
-    Agent(Team team, String name) {
+    public Agent(Team team, String name) {
         this(team);
         setName(name);
     }
@@ -103,8 +104,8 @@ public class Agent {
     
     // PROPERTY INTERFACE METHODS
     
-    public void addTaskGenerator(TaskGenerator tag){taskGenerators.add(tag);}
-    public Vector<TaskGenerator> getTaskGenerators(){return taskGenerators;}    
+    public void addTasking(Tasking tag){taskings.add(tag);}
+    public Vector<Tasking> getTasking(){return taskings;}
     
     
     // METHODS: INITIALIZATION HELPERS
@@ -115,7 +116,7 @@ public class Agent {
         tasks=new Vector<Task>();
         pov=new Vector<Agent>();
         commpov=new Vector<Agent>();
-        taskGenerators=new Vector<TaskGenerator>();
+        taskings=new Vector<Tasking>();
     }
     
     /** Resets before another run of the simulation. */
@@ -153,7 +154,7 @@ public class Agent {
 //     * @param g         the goal underlying the task
 //     * @param weight    the weighting of the task
 //     */
-//    public void assignTask(TaskGenerator tg,V2 agent,double weight){
+//    public void assignTask(Tasking tg,V2 agent,double weight){
 //        if(agent!=null){
 //            tasks.add(new Task(tg,this,agent,weight));
 //        }
@@ -165,8 +166,8 @@ public class Agent {
     }
 
     public void generateTasks(Team team,DistanceTable table, double priority) {
-        for(TaskGenerator tag:taskGenerators){
-            tag.generate(team.getActiveAgents(), table, priority);
+        for(Tasking tag:taskings){
+            tag.tasker.generate(team.getActiveAgents(), table, tag.getWeight()*priority);
         }
     }
     
@@ -342,7 +343,7 @@ public class Agent {
     // SUBCLASSES
     
     /** Contains all the initial settings for the simulation. Everything else is used while the simulation is running. */
-    private class AgentSettings extends Settings {
+    public class AgentSettings extends Settings {
         
         /** Starting Position. */
         private DoubleRangeModel startX=new DoubleRangeModel(0.0,-500.0,500.0,1.0);
@@ -360,9 +361,9 @@ public class Agent {
         /** Default behavioral setting */
         private StringRangeModel behavior=Behavior.getComboBoxModel();
         /** Lead factor if required for myBehavior */
-        private DoubleRangeModel leadFactor=new DoubleRangeModel(0,0,2,.01);
+        private DoubleRangeModel leadFactor=new DoubleRangeModel(.5,0,2,.01);
         /** Position function if required for myBehavior */
-        private ParametricModel pm=new ParametricModel("100+t/100","50+t/100");
+        private ParametricModel pm=new ParametricModel("1000","50");
         /** Default color. */
         private ColorModel color=new ColorModel(Color.BLUE);
         /** Returns the color */

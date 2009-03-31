@@ -8,12 +8,17 @@ package analysis;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import sequor.model.PointRangeModel;
 import simulation.Agent;
 import simulation.Simulation;
 import simulation.Team;
+import specto.Plottable;
 import specto.PlottableGroup;
 import specto.euclidean2.PointSet2D;
 import specto.euclidean3.Euclidean3;
+import specto.euclidean3.Point3D;
 import specto.euclidean3.PointSet3D;
 
 /**
@@ -60,6 +65,24 @@ public class MainVisuals3D extends PlottableGroup<Euclidean3> implements ActionL
         String ac = e.getActionCommand();
         if (ac.equals("reset")) { setSim(sim); }
     }
+
+    public void setAnimationStyle(int style) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setAnimationStyle(style); }
+        }
+    }
+
+    public void setPositionsVisible(boolean visible) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setPositionsVisible(visible); }
+        }
+    }
+
+    public void setStartVisible(boolean visible) {
+        for (Plottable tv : plottables) {
+            if (tv instanceof TeamVisuals) { ((TeamVisuals)tv).setStartVisible(visible); }
+        }
+    }
     
     
     //
@@ -70,12 +93,9 @@ public class MainVisuals3D extends PlottableGroup<Euclidean3> implements ActionL
     
     /** Stores the visual elements for a particular team. */
     class TeamVisuals extends PlottableGroup<Euclidean3> {        
-        
-        //DynamicTeamGraph dtg;
-        
+                
         TeamVisuals(Team t) {
             setTeam(t);
-            //add(dtg);
             for(Agent a : t.agents){ add(new AgentVisuals(a)); }
         }
         
@@ -83,7 +103,24 @@ public class MainVisuals3D extends PlottableGroup<Euclidean3> implements ActionL
             if (t==null) { return; }
             setColorModel(t.getColorModel());
             setName(t.getName());
-            //dtg = new DynamicTeamGraph(t,sim.log);
+        }
+        
+        public void setAnimationStyle(int style) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).path.animateStyle.setIValue(style); }
+            }
+        }
+
+        public void setPositionsVisible(boolean visible) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).path.setLabelVisible(visible); }
+            }
+        }
+
+        public void setStartVisible(boolean visible) {
+            for (Plottable av : plottables) {
+                if (av instanceof AgentVisuals) { ((AgentVisuals)av).loc.setVisible(visible); }
+            }
         }
     }
     
@@ -92,25 +129,26 @@ public class MainVisuals3D extends PlottableGroup<Euclidean3> implements ActionL
     class AgentVisuals extends PlottableGroup<Euclidean3> {
         
         PointSet3D path;
-        //CirclePoint3D loc;
+        Point3D loc;
         
         AgentVisuals(Agent a) {
             setAgent(a);
             add(path);
-            //add(loc);
+            add(loc);
         }
         
         public void setAgent(Agent a) {
             if (a==null){ return; }
             setColorModel(a.getColorModel());
             setName(a.getName());
-//            if (loc==null) { loc = new CirclePoint2D(); }
-//            loc.setColorModel(a.getColorModel());
-//            loc.setModel(a.getPointModel());
-//            loc.setLabel(a.getName());
-//            loc.deleteRadii();
-//            loc.addRadius(a.getCommRange());
-//            loc.addRadius(a.getSensorRange());
+            if (loc==null) { loc = new Point3D(); }
+            loc.setColorModel(a.getColorModel());
+            final PointRangeModel pa = a.getPointModel();
+            loc.getPoint().setTo(pa.getX(),pa.getY(),0);
+            a.getPointModel().addChangeListener(new ChangeListener(){
+                public void stateChanged(ChangeEvent e) { loc.getPoint().setTo(pa.getX(),pa.getY(),0); }
+            });
+            loc.setLabel(a.getName());
             if (path==null) { path = new PointSet3D(); }
             path.setColorModel(a.getColorModel());
             path.setPath(sim.log.path3DOf(a));

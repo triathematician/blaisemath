@@ -4,11 +4,11 @@
  */
 package behavior;
 
-import metrics.Goal;
 import tasking.Task;
 import java.util.Vector;
 import simulation.Agent;
 import scio.coordinate.R2;
+import tasking.Tasking;
 
 /**
  * This class will eventually handle the job of fusing together multiple & possibly
@@ -40,7 +40,7 @@ public class TaskFusion {
         } 
         for (Task t : tasks) {
             // translate... distinguish between seek and flee behaviors here
-            multiplier = (t.getGoalType() == Goal.FLEE ? -1 : 1) * (agent.getBehaviorCode() == Behavior.REVERSE ? -1 : 1);
+            multiplier = (t.getTaskType() == Tasking.FLEE ? -1 : 1) * (agent.getBehaviorCode() == Behavior.REVERSE ? -1 : 1);
             // scales the result by the task priority
             result.translateBy(agent.getBehavior().direction(agent, t.getTarget(), time)
                     .multipliedBy(multiplier * t.getPriority()));

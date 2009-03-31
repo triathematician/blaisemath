@@ -35,8 +35,8 @@ public class Task {
     TaskGenerator source;
     /** The targeting point of the task. */
     V2 target;    
-    /** Type of goal. */
-    int goalType;
+    /** Type of goal... seek, flee, or capture. */
+    int taskType;
     /** The priority weight of the task. */
     double priority;
     /** The timestamp of the task. */
@@ -55,7 +55,7 @@ public class Task {
     public Task(TaskGenerator source,V2 target,int type,double priority){
         this.source=source;
         this.target=target;
-        this.goalType=type;
+        this.taskType=type;
         setPriority(priority);
     }
 
@@ -65,8 +65,8 @@ public class Task {
     /** Returns generator of the task. */
     public TaskGenerator getGenerator(){return source;}
 
-    public int getGoalType() {
-        return goalType;
+    public int getTaskType() {
+        return taskType;
     }
     /** Returns target
      * @return object of the task */
@@ -91,6 +91,6 @@ public class Task {
     
     @Override
     public String toString(){
-        return "Task target="+target+", type="+goalType+", priority="+priority+" (orginated by "+source+")";
+        return "Task target="+target+", type="+taskType+", priority="+priority+" (orginated by "+source+")";
     }
 }

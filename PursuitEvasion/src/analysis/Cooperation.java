@@ -34,25 +34,22 @@ public class Cooperation {
         Team owner = val.getOwner();
         team.addAll(owner.agents);
         HashSet<Agent> complement=val.getComplement();
-        try {
-            double trial1, trial2, trial3;
-            sim.setBatchProcessing(true);
-            // subset participates
-            owner.setStartAgents(complement);
-            sim.run();
-            trial3 = val.getValue(sim, complement);    
-            // entire team participates
-            owner.setStartAgents(team);
-            sim.run();
-            trial1 = val.getValue(sim, team);
-            trial2 = val.getValue(sim, complement);  
-            // return values
-            sim.setBatchProcessing(false);
-            return new SplitContribution(owner, subset, val, trial2-trial1, trial3-trial2);
-            //return new SplitContribution(owner, subset, val, trial1-trial2, trial2-trial3);
-        } catch (FunctionValueException e) {
-            return new SplitContribution();            
-        }
+
+        double trial1, trial2, trial3;
+        sim.setBatchProcessing(true);
+        // subset participates
+        owner.setStartAgents(complement);
+        sim.run();
+        trial3 = val.getValue(sim, complement);
+        // entire team participates
+        owner.setStartAgents(team);
+        sim.run();
+        trial1 = val.getValue(sim, team);
+        trial2 = val.getValue(sim, complement);
+        // return values
+        sim.setBatchProcessing(false);
+        return new SplitContribution(owner, subset, val, trial2-trial1, trial3-trial2);
+        //return new SplitContribution(owner, subset, val, trial1-trial2, trial2-trial3);
     }
     
     

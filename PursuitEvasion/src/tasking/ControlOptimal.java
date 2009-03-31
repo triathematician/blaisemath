@@ -24,6 +24,7 @@ import drasys.or.mp.lp.LinearProgrammingI;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import scio.coordinate.V2;
 import simulation.Agent;
 import java.util.Vector;
 import simulation.Team;
@@ -54,14 +55,16 @@ public class ControlOptimal extends TaskGenerator {
             Vector<Agent> ps = new Vector<Agent>(team);
             Vector<Agent> es = new Vector<Agent>(target.getActiveAgents());
 //  Table has distances for every active pursuer to every active evader. 
-  // this allows for the calculations in the algorithm to go quickly.
+            // this allows for the calculations in the algorithm to go quickly.
             DistanceTable dist = new DistanceTable(ps, es);
 //   ps and es . size are defined elsewhere as the # of active members of the pursueing and evading teams
             int numberOfPursuers = ps.size();
             int numberOfEvaders = es.size();
 //            This ends the program when there are no pursuers or evaders remaining. Fixes convergence issues.
-            if(numberOfPursuers == 0 || numberOfEvaders == 0) { return; }
- //  This defines (how many constaints, how many variables)
+            if (numberOfPursuers == 0 || numberOfEvaders == 0) {
+                return;
+            }
+            //  This defines (how many constaints, how many variables)
             SizableProblemI prob = new Problem(numberOfPursuers + numberOfEvaders, numberOfPursuers * numberOfEvaders);
             prob.getMetadata().put("lp.isMaximize", "false");
 // For every pursuer, iterate through every evader and create a variable
@@ -92,8 +95,8 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-  // creates a constraint, in the case that there are more pursuers than evaders
-  //that every pursuer can only chase, at the most, one evader.
+                // creates a constraint, in the case that there are more pursuers than evaders
+                //that every pursuer can only chase, at the most, one evader.
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
                         prob.newConstraint(i + "can only chase one evader").setType(EQL).setRightHandSide(1.0);
@@ -101,8 +104,7 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }
-            else if (numberOfPursuers == numberOfEvaders) {
+            } else if (numberOfPursuers == numberOfEvaders) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
                         prob.newConstraint(j + "is chased").setType(EQL).setRightHandSide(1.0);
@@ -110,8 +112,8 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-  // creates a constraint, in the case that there are more pursuers than evaders
-  //that every pursuer can only chase, at the most, one evader.
+                // creates a constraint, in the case that there are more pursuers than evaders
+                //that every pursuer can only chase, at the most, one evader.
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
                         prob.newConstraint(i + "can only chase one evader").setType(EQL).setRightHandSide(1.0);
@@ -119,11 +121,10 @@ public class ControlOptimal extends TaskGenerator {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }
-     // if there are less pursuers than evaders, the constraints are different.
-   // every pursuer must chase someone, and every evader can only be chased by one pursuer.
-   // this fixed an issue of under constrained problem, where pursuers would chase the same evader.
-                else {
+            } // if there are less pursuers than evaders, the constraints are different.
+            // every pursuer must chase someone, and every evader can only be chased by one pursuer.
+            // this fixed an issue of under constrained problem, where pursuers would chase the same evader.
+            else {
                 for (int i = 0; i < numberOfPursuers; i++) {
                     try {
 
@@ -138,44 +139,44 @@ public class ControlOptimal extends TaskGenerator {
                     } catch (DuplicateException ex) {
                         Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                 }
             }
 // the following lines assign the coefficient to respective variables in their relevant constraints.
-         
+
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
                     try {
                         prob.setCoefficientAt(i + "can only chase one evader", "x" + i + " " + j, 1.0);
                         prob.setCoefficientAt(j + "is chased", "x" + i + " " + j, 1.0);
                     } catch (NotFoundException ex) {
-                       // Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
+                        // Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     try {
                         prob.setCoefficientAt(i + "is chasing", "x" + i + " " + j, 1.0);
-                        prob.setCoefficientAt(j +"only chased by one", "x" + i + " " + j, 1.0);
+                        prob.setCoefficientAt(j + "only chased by one", "x" + i + " " + j, 1.0);
                     } catch (NotFoundException ex) {
-                       // Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
+                        // Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
-   // solves the above defined LP using the Simplex method
+            // solves the above defined LP using the Simplex method
             LinearProgrammingI lp = new DenseSimplex(prob);
             double ans = lp.solve();
             VectorI solution = lp.getSolution();
-            
+
 // The solution vector is a series of 1's and 0's. 1's represent a given pursuer chasing a given evader.
 // once assigned someone to chase, the evader moves out in the direction of that evader.
-            
+
             for (int i = 0; i < numberOfPursuers; i++) {
                 for (int j = 0; j < numberOfEvaders; j++) {
-                    if (solution.elementAt(j + i * numberOfEvaders)==1) {
-                        ps.get(i).assign(new Task(this, es.get(j).loc, goalType, priority));
+                    if (solution.elementAt(j + i * numberOfEvaders) == 1) {
+                        ps.get(i).assign(new Task(this, es.get(j).loc, type, priority));
                     }
                 }
             }
 
-            } catch  (NoSolutionException ex) {
+        } catch (NoSolutionException ex) {
             Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnboundedException ex) {
             Logger.getLogger(ControlOptimal.class.getName()).log(Level.SEVERE, null, ex);

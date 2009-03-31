@@ -38,14 +38,14 @@ public class ControlClosest extends TaskGenerator {
         do{        
             closest=dist.min(ps,es);
             if(closest!=null){
-                closest.getFirst().assign(new Task(this,closest.getSecondLoc(),goalType,priority));
+                closest.getFirst().assign(new Task(this,closest.getSecondLoc(),type,priority));
                 ps.remove(closest.getFirst());
                 es.remove(closest.getSecond());
             }
         }while(!ps.isEmpty()&&!es.isEmpty()&&closest!=null);
         // assign remaining pursuers to closest prey
         for(Agent p:ps){
-            p.assign(new Task(this,dist.min(p,target.getActiveAgents()).getSecondLoc(),goalType,priority));
+            p.assign(new Task(this,dist.min(p,target.getActiveAgents()).getSecondLoc(),type,priority));
         }
     }
 }
