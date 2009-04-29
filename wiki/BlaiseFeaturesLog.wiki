@@ -1,6 +1,13 @@
 #summary Contains listing of feature additions to Blaise.
 #labels Featured,Module-Blaise
 
+==== Apr 2009 ====
+
+ * _(*HUGE*) Restructured `blaise` into six separate packages: `blaiseparser`, `blaisemath`, `firestorm`, `blaise`, `blaise3d`, and `blaisables`._ --EP
+ * _Compressed .jar files for packages (saves about 50% of space)._ --EP
+ * _Adjusted settings for multiple `blaisable` applets._ --EP
+ * _Added differential equations plotters (one and two-variable time-dependent)._ --EP
+
 ==== Nov 2008 ====
 
  * _Added some more bean patterns to standard plotpanels. Added options to show/hide labels along paths._ --EP
