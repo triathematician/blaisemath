@@ -17,7 +17,7 @@ import specto.Plottable;
 import specto.PlottableGroup;
 import specto.euclidean2.Euclidean2;
 import specto.euclidean2.Point2D;
-import specto.style.PointStyle;
+import sequor.style.PointStyle;
 
 /**
  * <b>DynamicPointSet2D</b> is a collection of points, \emph{all of which} can be moved.

@@ -15,8 +15,8 @@ import specto.DynamicPlottable;
 import scio.coordinate.R3;
 import sequor.model.ColorModel;
 import sequor.style.VisualStyle;
-import specto.style.LineStyle;
-import specto.style.PointStyle;
+import sequor.style.LineStyle;
+import sequor.style.PointStyle;
 
 /**
  * Represents a point which can be moved around the screen. The data is stored in a PointRangeModel, which restricts the movement of
@@ -28,22 +28,47 @@ public class Point3D extends DynamicPlottable<Euclidean3> implements ChangeListe
     // PROPERTIES
     
     protected R3 prm;
+
     private String label;
     
     
     // CONSTRUCTORS
     
     /** Default constructor places point at the origin. */
-    public Point3D(){this(new R3());}
+    public Point3D(){
+        this(new R3());
+    }
+
     /** Constructor places point at a given location. */
-    public Point3D(R3 value){prm = value;}    
-    public Point3D(double x, double y, double z) { this(new R3(x,y,z)); }
-    public Point3D(Color c){this();setColor(c);}
-    public Point3D(double x, double y, double z, Color c) {this(x,y,z); setColor(c);}
+    public Point3D(R3 value){
+        prm = value;
+    }
+
+    public Point3D(double x, double y, double z) { 
+        this(new R3(x,y,z));
+    }
+
+    public Point3D(Color c){
+        this();
+        setColor(c);
+    }
+
+    public Point3D(double x, double y, double z, Color c) {
+        this(x,y,z);
+        setColor(c);
+    }
+
     /** Constructor given a PointRangeModel and a particular color. */
-    public Point3D(R3 value, Color c){this(value); setColor(c);}
+    public Point3D(R3 value, Color c){
+        this(value);
+        setColor(c);
+    }
+
     /** Constructor given a PointRangeModel and a ColorModel. */
-    public Point3D(R3 value, ColorModel colorModel){ prm = value; setColorModel(colorModel); }
+    public Point3D(R3 value, ColorModel colorModel){
+        prm = value;
+        setColorModel(colorModel);
+    }
         
     
     // GETTERS AND SETTERS
@@ -57,7 +82,7 @@ public class Point3D extends DynamicPlottable<Euclidean3> implements ChangeListe
     
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v) {
-        g.setStroke(VisualStyle.THIN_STROKE);
+        g.setStroke(LineStyle.STROKES[LineStyle.THIN]);
         v.drawDot(g, prm, 4);
         if(label!=null){
             v.drawString(g, prm, label);
@@ -66,16 +91,14 @@ public class Point3D extends DynamicPlottable<Euclidean3> implements ChangeListe
     }
     
     // STYLE SETTINGS
-    @Override
-    public String[] getStyleStrings() {return VisualStyle.POINT_STYLE_STRINGS;}    
+
     @Override
     public String toString(){return "Point";}
+
     @Override
     public void initStyle() {
-        color=new ColorModel();
-        color.addChangeListener(this);
-        style=new PointStyle();
-        style.setValue(PointStyle.LARGE);
+        super.initStyle();
+        style = new PointStyle(PointStyle.LARGE);
         style.addChangeListener(this);
     }
 

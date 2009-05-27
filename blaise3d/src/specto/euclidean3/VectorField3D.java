@@ -25,7 +25,7 @@ import scio.function.FunctionValueException;
 import sequor.model.FunctionTreeModel;
 import scio.coordinate.R3;
 import scio.diffeq.DESolve;
-import scio.function.BoundedFunction;
+import scio.function.Function;
 import sequor.Settings;
 import sequor.SettingsProperty;
 import sequor.component.RangeTimer;
@@ -42,10 +42,10 @@ import specto.Plottable;
  */
 public class VectorField3D extends Plottable<Euclidean3> implements Animatable<Euclidean3>, ChangeListener {
     /** The underlying function for the vector field. */
-    BoundedFunction<R3,R3> function;    
+    Function<R3,R3> function;    
     
     /** A default vector field to use */    
-    public static final BoundedFunction<R3,R3> DEFAULT_FUNCTION=new BoundedFunction<R3,R3>(){
+    public static final Function<R3,R3> DEFAULT_FUNCTION=new Function<R3,R3>(){
         public R3 getValue(R3 p){return new R3(p.getY()*p.getZ(),-p.getX()*p.getZ(),Math.sqrt(p.getZ()+5));}
         @Override
         public Vector<R3> getValue(Vector<R3> x) {
@@ -53,39 +53,28 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
             for(R3 r:x){result.add(getValue(r));}
             return result;
         }
-        public R3 minValue(){return new R3(-5.0,-5.0,-5.0);}
-        public R3 maxValue(){return new R3(5.0,5.0,5.0);}
     };
     
     // CONSTRUCTORS
         
     public VectorField3D(){this(DEFAULT_FUNCTION);}
     
-    public VectorField3D(BoundedFunction<R3,R3> function){
+    public VectorField3D(Function<R3,R3> function){
         this.function=function;
         setColor(Color.BLUE);
         style.setValue(ARROWS);
     }
     
     public VectorField3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
-        Vector<String> vars = new Vector<String>();
-        vars.add("x"); vars.add("y"); vars.add("z");
+        String[] vars = { "x", "y", "z" };
         fm1.getRoot().setVariables(vars);
         fm2.getRoot().setVariables(vars);
         fm3.getRoot().setVariables(vars);
-        function = getVectorFunction(
-                (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3),
-                (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(3),
-                (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(3)
-                );
+        function = getVectorFunction(fm1, fm2, fm3);
         ChangeListener cl = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                function = getVectorFunction(
-                        (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(3),
-                        (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(3),
-                        (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(3)
-                        );
+                function = getVectorFunction(fm1, fm2, fm3);
                 fireStateChanged();
             }
         };
@@ -97,9 +86,16 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     }
     
     // HELPERS
+
+    public static Function<R3, R3> getVectorFunction(FunctionTreeModel fxm, FunctionTreeModel fym, FunctionTreeModel fzm) {
+        return getVectorFunction(
+            (Function<R3,Double>) fxm.getRoot().getFunction(),
+            (Function<R3,Double>) fym.getRoot().getFunction(),
+            (Function<R3,Double>) fzm.getRoot().getFunction() );
+    }
     
-    public static BoundedFunction<R3, R3> getVectorFunction(final BoundedFunction<R3,Double> fx, final BoundedFunction<R3,Double> fy, final BoundedFunction<R3,Double> fz) {
-        return new BoundedFunction<R3, R3>() {
+    public static Function<R3, R3> getVectorFunction(final Function<R3,Double> fx, final Function<R3,Double> fy, final Function<R3,Double> fz) {
+        return new Function<R3, R3>() {
             public R3 getValue(R3 pt) throws FunctionValueException { return new R3(fx.getValue(pt), fy.getValue(pt), fz.getValue(pt)); }
             public Vector<R3> getValue(Vector<R3> xx) throws FunctionValueException {
                 Vector<Double> xs = fx.getValue(xx);
@@ -111,32 +107,20 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
                 }
                 return result;
             }
-            public R3 minValue() { return new R3(fx.minValue(),fy.minValue(),fz.minValue()); }
-            public R3 maxValue() { return new R3(fx.maxValue(),fy.maxValue(),fz.maxValue()); }
         };
     }
 
     public VectorField3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3,
             String varx, String vary, String varz) {
-        Vector<String> vars = new Vector<String>();
-        vars.add(varx); vars.add(vary); vars.add(varz);
-        final String[] varsArray = {varx, vary, varz};
+        final String[] vars = {varx, vary, varz};
         fm1.getRoot().setVariables(vars);
         fm2.getRoot().setVariables(vars);
         fm3.getRoot().setVariables(vars);
-        function = getVectorFunction(
-                (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(varsArray),
-                (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(varsArray),
-                (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(varsArray)
-                );
+        function = getVectorFunction(fm1, fm2, fm3);
         ChangeListener cl = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                function = getVectorFunction(
-                        (BoundedFunction<R3,Double>) fm1.getRoot().getFunction(varsArray),
-                        (BoundedFunction<R3,Double>) fm2.getRoot().getFunction(varsArray),
-                        (BoundedFunction<R3,Double>) fm3.getRoot().getFunction(varsArray)
-                        );
+                function = getVectorFunction(fm1, fm2, fm3);
                 fireStateChanged();
             }
         };
@@ -157,9 +141,9 @@ public class VectorField3D extends Plottable<Euclidean3> implements Animatable<E
     public void setAnimationOn(boolean newValue) { animationOn=newValue; }
     public boolean isAnimationOn() { return animationOn; }
         
-    public BoundedFunction<R3,R3> getFunction(){return function;}
+    public Function<R3,R3> getFunction(){return function;}
 
-    public void setFunction(BoundedFunction<R3,R3> function){this.function=function;}
+    public void setFunction(Function<R3,R3> function){this.function=function;}
     
         
     // DRAW METHODS

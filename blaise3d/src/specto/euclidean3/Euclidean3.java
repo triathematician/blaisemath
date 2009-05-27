@@ -358,7 +358,7 @@ public class Euclidean3 extends Euclidean2 {
     public class ViewProjection implements Function<R3,R2> {        
 
         /** Distance to clipping plane (in cm) */
-        DoubleRangeModel clipDist = new DoubleRangeModel(5.0,0.1,10.0,0.1);
+        DoubleRangeModel clipDist = new DoubleRangeModel(0.2,0.1,10.0,0.1);
         /** Distance to view plane (in cm) */
         DoubleRangeModel viewDist = new DoubleRangeModel(30.0,0.01,100.0,0.1);
         /** Size of the scene under view */
@@ -414,7 +414,7 @@ public class Euclidean3 extends Euclidean2 {
         public Vector<R2> getValue(Vector<R3> pts) throws FunctionValueException {
             R3 cE = getCamera();
             R3 diff;
-            Vector<R2> result = new Vector<R2>();
+            Vector<R2> result = new Vector<R2>(pts.size());
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
                 double dist = diff.dotProduct(tDir);
@@ -439,11 +439,16 @@ public class Euclidean3 extends Euclidean2 {
         public Vector<R2> getValueLeft(Vector<R3> pts) throws FunctionValueException {
             R3 cE = getLeftCamera();
             R3 diff;
-            Vector<R2> result = new Vector<R2>();
+            Vector<R2> result = new Vector<R2>(pts.size());
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
-                result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir))
-                    .plus(-eyeSep.getValue()/2*la,0));
+                double dist = diff.dotProduct(tDir);
+                if (dist < clipDist.getValue()) {
+                    result.add(null);
+                } else {
+                    result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir))
+                        .plus(-eyeSep.getValue()/2*la,0));
+                }
             }   
             return result;
         }
@@ -460,11 +465,16 @@ public class Euclidean3 extends Euclidean2 {
         public Vector<R2> getValueRight(Vector<R3> pts) throws FunctionValueException {
             R3 cE = getRightCamera();
             R3 diff;
-            Vector<R2> result = new Vector<R2>();
+            Vector<R2> result = new Vector<R2>(pts.size());
             for (R3 pt : pts) {
                 diff = pt.minus(cE);
-                result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir))
-                    .plus(+eyeSep.getValue()/2*la,0));
+                double dist = diff.dotProduct(tDir);
+                if (dist < clipDist.getValue()) {
+                    result.add(null);
+                } else {
+                    result.add(new R2(diff.dotProduct(nDir)*la, diff.dotProduct(bDir)*lb).times(viewDist.getValue()/diff.dotProduct(tDir))
+                        .plus(+eyeSep.getValue()/2*la,0));
+                }
             }   
             return result;
         }

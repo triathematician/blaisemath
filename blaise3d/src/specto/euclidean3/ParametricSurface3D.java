@@ -2,7 +2,6 @@
  * Parametric2D.java
  * Created on Sep 27, 2007, 1:12:35 PM
  */
-
 package specto.euclidean3;
 
 import java.awt.Graphics2D;
@@ -39,62 +38,73 @@ import specto.euclidean2.Point2D;
  * @author ElishaPeterson
  */
 public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements SampleSet3D, SampleVector3D {
-    
-    // PROPERTIES
-    
-    /** Function which takes in a pair of points and returns a pair of doubles = a point in the plane. */
-    Function<R2,R3> function;
 
+    // PROPERTIES
+    /** Function which takes in a pair of points and returns a pair of doubles = a point in the plane. */
+    Function<R2, R3> function;
     /** Range of t values. */
     PointRangeModel uvRange;
-    
     /** Defines a default function which is displayed. For now its the unit sphere */
-    private static final Function<R2,R3> DEFAULT_FUNCTION=new Function<R2,R3>(){
+    private static final Function<R2, R3> DEFAULT_FUNCTION = new Function<R2, R3>() {
+
         @Override
-        public R3 getValue(R2 uv){return new R3(Math.cos(uv.y)*Math.sin(uv.x),Math.sin(uv.y)*Math.sin(uv.x),Math.cos(uv.x));}
+        public R3 getValue(R2 uv) {
+            return new R3(Math.cos(uv.y) * Math.sin(uv.x), Math.sin(uv.y) * Math.sin(uv.x), Math.cos(uv.x));
+        }
+
         @Override
         public Vector<R3> getValue(Vector<R2> pts) {
-            Vector<R3> result=new Vector<R3>(pts.size());
-            for(R2 pt:pts){result.add(getValue(pt));}
+            Vector<R3> result = new Vector<R3>(pts.size());
+            for (R2 pt : pts) {
+                result.add(getValue(pt));
+            }
             return result;
         }
     };
-        
-    public ParametricSurface3D(){this(DEFAULT_FUNCTION,0.0,Math.PI/2.0,0.0,2*Math.PI,10);}
-    public ParametricSurface3D(String string) {this();}
-    /** Constructor for use with a particular function and range of t values */
-    public ParametricSurface3D(Function<R2,R3> function,double uMin,double uMax,double vMin,double vMax,int samplePoints){
-        setColor(new Color(100,100,100,200));        
-        this.function=function;
-        uvRange = new PointRangeModel(uMin,uMax,vMin,vMax);
-        uvRange.xModel.setNumSteps(samplePoints,true);
-        uvRange.yModel.setNumSteps(samplePoints,true);
+
+    public ParametricSurface3D() {
+        this(DEFAULT_FUNCTION, 0.0, Math.PI / 2.0, 0.0, 2 * Math.PI, 10);
     }
+
+    public ParametricSurface3D(String string) {
+        this();
+    }
+
+    /** Constructor for use with a particular function and range of t values */
+    public ParametricSurface3D(Function<R2, R3> function, double uMin, double uMax, double vMin, double vMax, int samplePoints) {
+        setColor(new Color(100, 100, 100, 200));
+        this.function = function;
+        uvRange = new PointRangeModel(uMin, uMax, vMin, vMax);
+        uvRange.xModel.setNumSteps(samplePoints, true);
+        uvRange.yModel.setNumSteps(samplePoints, true);
+    }
+
     /** Constructs with specified function. */
     public ParametricSurface3D(Function<R2, R3> function, DoubleRangeModel drmu, DoubleRangeModel drmv, int samplePoints) {
-        setColor(new Color(100,100,100,200));        
-        this.function=function;
+        setColor(new Color(100, 100, 100, 200));
+        this.function = function;
         uvRange = new PointRangeModel(drmu, drmv);
-        uvRange.xModel.setNumSteps(samplePoints,true);
-        uvRange.yModel.setNumSteps(samplePoints,true);
+        uvRange.xModel.setNumSteps(samplePoints, true);
+        uvRange.yModel.setNumSteps(samplePoints, true);
     }
-    
+
     public ParametricSurface3D(final FunctionTreeModel fm1, final FunctionTreeModel fm2, final FunctionTreeModel fm3) {
-        setColor(new Color(100,100,100,200));        
+        setColor(new Color(100, 100, 100, 200));
         uvRange = new PointRangeModel(0.0, 10.0, 0.0, 10.0);
-        uvRange.xModel.setNumSteps(10,true);
-        uvRange.yModel.setNumSteps(10,true);
+        uvRange.xModel.setNumSteps(10, true);
+        uvRange.yModel.setNumSteps(10, true);
         function = getParametricFunction(
-                (Function<R2, Double>) fm1.getRoot().getFunction(2),
-                (Function<R2, Double>) fm2.getRoot().getFunction(2),
-                (Function<R2, Double>) fm3.getRoot().getFunction(2));
+                (Function<R2, Double>) fm1.getRoot().getFunction(),
+                (Function<R2, Double>) fm2.getRoot().getFunction(),
+                (Function<R2, Double>) fm3.getRoot().getFunction());
         ChangeListener cl = new ChangeListener() {
+
             @Override
             public void stateChanged(ChangeEvent e) {
                 function = getParametricFunction(
-                        (Function<R2, Double>) fm1.getRoot().getFunction(2),
-                        (Function<R2, Double>) fm2.getRoot().getFunction(2),
-                        (Function<R2, Double>) fm3.getRoot().getFunction(2));
+                        (Function<R2, Double>) fm1.getRoot().getFunction(),
+                        (Function<R2, Double>) fm2.getRoot().getFunction(),
+                        (Function<R2, Double>) fm3.getRoot().getFunction());
                 changeEvent = new ChangeEvent(ParametricSurface3D.this);
                 fireStateChanged();
             }
@@ -102,46 +112,49 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
         fm1.addChangeListener(cl);
         fm2.addChangeListener(cl);
     }
-    
+
     // HELPERS
-    
     public static Function<R2, R3> getParametricFunction(
-            final Function<R2,Double> fx, final Function<R2,Double> fy, final Function<R2,Double> fz) {
+            final Function<R2, Double> fx, final Function<R2, Double> fy, final Function<R2, Double> fz) {
         return new Function<R2, R3>() {
-            public R3 getValue(R2 pt) throws FunctionValueException { 
-                return new R3(fx.getValue(pt), fy.getValue(pt), fz.getValue(pt)); 
+
+            public R3 getValue(R2 pt) throws FunctionValueException {
+                return new R3(fx.getValue(pt), fy.getValue(pt), fz.getValue(pt));
             }
+
             public Vector<R3> getValue(Vector<R2> pts) throws FunctionValueException {
                 Vector<Double> xs = fx.getValue(pts);
                 Vector<Double> ys = fy.getValue(pts);
                 Vector<Double> zs = fz.getValue(pts);
                 Vector<R3> result = new Vector<R3>(xs.size());
-                for(int i=0; i<xs.size(); i++){
-                    result.add(new R3(xs.get(i),ys.get(i),zs.get(i)));
+                for (int i = 0; i < xs.size(); i++) {
+                    result.add(new R3(xs.get(i), ys.get(i), zs.get(i)));
                 }
                 return result;
             }
         };
     }
-    
-    
+
     // BEAN PATTERNS
-    
-    public Function<R2,R3> getFunction(){return function;}
-    public void setFunction(String fx,String fy,String fz) throws FunctionSyntaxException{
-        function=getParametricFunction(
+    public Function<R2, R3> getFunction() {
+        return function;
+    }
+
+    public void setFunction(String fx, String fy, String fz) throws FunctionSyntaxException {
+        function = getParametricFunction(
                 (Function<R2, Double>) new FunctionTreeRoot(fx).getFunction(),
                 (Function<R2, Double>) new FunctionTreeRoot(fy).getFunction(),
                 (Function<R2, Double>) new FunctionTreeRoot(fz).getFunction());
         fireStateChanged();
     }
-    
+
     /** Returns value range model */
-    public PointRangeModel getDomainModel(){return uvRange;}
-    
+    public PointRangeModel getDomainModel() {
+        return uvRange;
+    }
+
 
     // HANDLES THE INDIVIDUAL CURVES AND DRAWING THE SURFACE
-        
     /** Return sampling points used for the region. */
     public Vector<R3> getSampleSet(int options) {
         boolean inclusive = (options == 0);
@@ -152,16 +165,15 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
             return new Vector<R3>();
         }
     }
-
     double ARROW_SCALE = 0.1;
-    
+
     /** Returns sampling vectors used for the region... here the vectors point in the direction of the normal. */
     public Vector<R3[]> getSampleVectors(int options) {
         Vector<R3[]> result = new Vector<R3[]>();
         boolean inclusive = (options == 0);
         try {
             for (R2 pt : uvRange.getValueRange(inclusive, 0.0, 0.0)) {
-                R3[] temp = {function.getValue(pt), getNormal(function, pt.x, pt.y).times(ARROW_SCALE) };
+                R3[] temp = {function.getValue(pt), getNormal(function, pt.x, pt.y).times(ARROW_SCALE)};
                 result.add(temp);
             }
             return result;
@@ -172,7 +184,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
     }
 
     /** Returns sampling vectors used for the region... here the vectors point in the direction of the normal. */
-    public Vector<R3[]> getSampleVectors(int options, Function<R3,R3> vectorField) {
+    public Vector<R3[]> getSampleVectors(int options, Function<R3, R3> vectorField) {
         Vector<R3[]> result = new Vector<R3[]>();
         boolean inclusive = (options == 0);
         try {
@@ -186,18 +198,18 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
             return new Vector<R3[]>();
         }
     }
-    
+
     /** Sets up the curves used to draw the figure. */
-    public void initCurves(Euclidean3 v){        
+    public void initCurves(Euclidean3 v) {
         clear();
-        
+
         for (double x : uvRange.xModel.getValueRange(true, 0.0)) {
-            add(new ParametricCurve3D(getSliceFixedX(x, function),uvRange.yModel,100));
+            add(new ParametricCurve3D(getSliceFixedX(x, function), uvRange.yModel, 100));
         }
         for (double y : uvRange.yModel.getValueRange(true, 0.0)) {
-            add(new ParametricCurve3D(getSliceFixedY(y, function),uvRange.xModel,100));
+            add(new ParametricCurve3D(getSliceFixedY(y, function), uvRange.xModel, 100));
         }
-        
+
         for (Plottable p : plottables) {
             p.setColor(getColor());
         }
@@ -219,162 +231,207 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
     public void paintComponent(Graphics2D g, Euclidean3 v) {
         super.paintComponent(g, v);
     }
-    
+
     @Override
     public void paintComponent(Graphics2D g, Euclidean3 v, RangeTimer t) {
         super.paintComponent(g, v);
     }
-    
+
     /** Overrides standard options menu so that not all secondary curves are displayed. */
     @Override
     public JMenu getOptionsMenu() {
-        JMenu result=new JMenu(toString());   
+        JMenu result = new JMenu(toString());
         result.add(getVisibleMenuItem());
         result.setForeground(getColor());
         result.add(getColorMenuItem());
         color.addChangeListener(this);
-        if(style==null){return result;}
+        if (style == null) {
+            return result;
+        }
         return style.appendToMenu(result);
     }
-    
+
     // STYLE
-    
-    
-        
     @Override
-    public String toString(){return "Parametric Surface";}
-        
+    public String toString() {
+        return "Parametric Surface";
+    }
+
 
     // HELPERS    
-    
     /** Generates a partial function (one value is fixed). */
-    public static BoundedFunction<Double,R3> getSliceFixedY(final double y,final Function<R2,R3> input) {
-        return new BoundedFunction<Double,R3>() {
-            public R3 minValue() { return new R3(-1.0,-1.0,-1.0); }
-            public R3 maxValue() { return new R3(1.0,1.0,1.0); }
-            public R3 getValue(Double x) throws FunctionValueException {
-                return input.getValue(new R2(x,y));
+    public static BoundedFunction<Double, R3> getSliceFixedY(final double y, final Function<R2, R3> input) {
+        return new BoundedFunction<Double, R3>() {
+
+            public R3 minValue() {
+                return new R3(-1.0, -1.0, -1.0);
             }
+
+            public R3 maxValue() {
+                return new R3(1.0, 1.0, 1.0);
+            }
+
+            public R3 getValue(Double x) throws FunctionValueException {
+                return input.getValue(new R2(x, y));
+            }
+
             public Vector<R3> getValue(Vector<Double> xs) throws FunctionValueException {
                 Vector<R3> result = new Vector<R3>();
-                for(Double x : xs) { result.add(input.getValue(new R2(x,y))); }
+                for (Double x : xs) {
+                    result.add(input.getValue(new R2(x, y)));
+                }
                 return result;
-            }           
+            }
         };
     }
-    
+
     /** Generates a partial function (one value is fixed). */
-    public static BoundedFunction<Double,R3> getSliceFixedX(final double x,final Function<R2,R3> input) {
-        return new BoundedFunction<Double,R3>() {
-            public R3 minValue() { return new R3(-1.0,-1.0,-1.0); }
-            public R3 maxValue() { return new R3(1.0,1.0,1.0); }
-            public R3 getValue(Double y) throws FunctionValueException {
-                return input.getValue(new R2(x,y));
+    public static BoundedFunction<Double, R3> getSliceFixedX(final double x, final Function<R2, R3> input) {
+        return new BoundedFunction<Double, R3>() {
+
+            public R3 minValue() {
+                return new R3(-1.0, -1.0, -1.0);
             }
+
+            public R3 maxValue() {
+                return new R3(1.0, 1.0, 1.0);
+            }
+
+            public R3 getValue(Double y) throws FunctionValueException {
+                return input.getValue(new R2(x, y));
+            }
+
             public Vector<R3> getValue(Vector<Double> ys) throws FunctionValueException {
                 Vector<R3> result = new Vector<R3>();
-                for(Double y : ys) { result.add(input.getValue(new R2(x,y))); }
+                for (Double y : ys) {
+                    result.add(input.getValue(new R2(x, y)));
+                }
                 return result;
-            }           
+            }
         };
     }
-    
+
     /** Returns tangent vector in direction of x */
-    public static R3 getTangentX(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+    public static R3 getTangentX(Function<R2, R3> function, double x, double y) throws FunctionValueException {
         return Derivative.approximateDerivative(getSliceFixedY(y, function), x, .001);
     }
+
     /** Returns tangent vecotr in direction of y */
-    public static R3 getTangentY(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+    public static R3 getTangentY(Function<R2, R3> function, double x, double y) throws FunctionValueException {
         return Derivative.approximateDerivative(getSliceFixedX(x, function), y, .001);
     }
+
     /** Returns normal vector */
-    public static R3 getNormal(Function<R2,R3> function, double x, double y) throws FunctionValueException {
+    public static R3 getNormal(Function<R2, R3> function, double x, double y) throws FunctionValueException {
         return getTangentX(function, x, y).crossProduct(getTangentY(function, x, y));
     }
-    
-    
+
     // STANDARD SURFACES
-    
     /** Represents a sphere of given radius and center. */
     static class Sphere extends ParametricSurface3D {
+
         public Sphere(final R3 c, final Double r) {
-            super(new Function<R2,R3>(){
-                    @Override
-                    public R3 getValue(R2 uv){return new R3(
-                            c.x+r*Math.cos(uv.x)*Math.sin(uv.y),
-                            c.y+r*Math.sin(uv.x)*Math.sin(uv.y),
-                            c.z+r*Math.cos(uv.y));}
-                    @Override
-                    public Vector<R3> getValue(Vector<R2> pts) {
-                        Vector<R3> result=new Vector<R3>(pts.size());
-                        for(R2 pt:pts){result.add(getValue(pt));}
-                        return result;
+            super(new Function<R2, R3>() {
+
+                @Override
+                public R3 getValue(R2 uv) {
+                    return new R3(
+                            c.x + r * Math.cos(uv.x) * Math.sin(uv.y),
+                            c.y + r * Math.sin(uv.x) * Math.sin(uv.y),
+                            c.z + r * Math.cos(uv.y));
+                }
+
+                @Override
+                public Vector<R3> getValue(Vector<R2> pts) {
+                    Vector<R3> result = new Vector<R3>(pts.size());
+                    for (R2 pt : pts) {
+                        result.add(getValue(pt));
                     }
-           },0.0,2*Math.PI,0.0,Math.PI,10);
+                    return result;
+                }
+            }, 0.0, 2 * Math.PI, 0.0, Math.PI, 10);
         }
     }
-    
-    
+
     // DECORATIONS
-    
     /** Returns a point on the surface. */
-    public SurfacePoint getSurfacePoint() { return new SurfacePoint(uvRange); }
+    public SurfacePoint getSurfacePoint() {
+        return new SurfacePoint(uvRange);
+    }
+
     /** Returns normal vector field. */
-    public SurfaceNormals getNormalVectors() { return new SurfaceNormals(); }
+    public SurfaceNormals getNormalVectors() {
+        return new SurfaceNormals();
+    }
+
     /** Returns vector field on the surface. */
-    public SurfaceField getSurfaceField(VectorField3D field) { return new SurfaceField(field); }
-    
+    public SurfaceField getSurfaceField(VectorField3D field) {
+        return new SurfaceField(field);
+    }
+
     /** A point which you can move around on the surface. */
-    public class SurfacePoint extends Point3D implements Decoration<Euclidean3,ParametricSurface3D>, Constrains2D {
-        
+    public class SurfacePoint extends Point3D implements Decoration<Euclidean3, ParametricSurface3D>, Constrains2D {
+
         Segment3D normal;
         Segment3D dx;
         Segment3D dy;
         PointRangeModel domain;
         ParametricSurface3D parent;
-        
-        public SurfacePoint(PointRangeModel prm){
+
+        public SurfacePoint(PointRangeModel prm) {
             super();
             setParent(ParametricSurface3D.this);
             setColor(Color.RED);
-            domain=new PointRangeModel(prm.getX(),prm.getY());
+            domain = new PointRangeModel(prm.getX(), prm.getY());
             domain.xModel.setRangeProperties(prm.getX(), prm.getMinX(), prm.getMaxX());
             domain.yModel.setRangeProperties(prm.getY(), prm.getMinY(), prm.getMaxY());
             domain.addChangeListener(this);
-            normal=new Segment3D(this.prm, this.getPoint());
+            normal = new Segment3D(this.prm, this.getPoint());
             normal.style.setValue(Segment3D.LINE_VECTOR);
             normal.setEditable(false);
             normal.addChangeListener(this);
-            dx=new Segment3D(this.prm, this.getPoint());
+            dx = new Segment3D(this.prm, this.getPoint());
             dx.style.setValue(Segment3D.LINE_VECTOR);
             dx.setEditable(false);
             dx.addChangeListener(this);
-            dy=new Segment3D(this.prm, this.getPoint());
+            dy = new Segment3D(this.prm, this.getPoint());
             dy.style.setValue(Segment3D.LINE_VECTOR);
             dy.setEditable(false);
             dy.addChangeListener(this);
         }
-        
+
         // BEAN PATTERNS
-        
-        public PointRangeModel getConstraintModel() { return domain; }
-        public Point2D getConstrainedPoint() { Point2D result = new Point2D(domain); result.setColor(getColor()); return result; }
-        
-        public void setParent(ParametricSurface3D parent) { this.parent = parent; parent.addChangeListener(this); }
-        public ParametricSurface3D getParent() { return parent; }
+        public PointRangeModel getConstraintModel() {
+            return domain;
+        }
+
+        public Point2D getConstrainedPoint() {
+            Point2D result = new Point2D(domain);
+            result.setColor(getColor());
+            return result;
+        }
+
+        public void setParent(ParametricSurface3D parent) {
+            this.parent = parent;
+            parent.addChangeListener(this);
+        }
+
+        public ParametricSurface3D getParent() {
+            return parent;
+        }
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (e.getSource()==domain || e.getSource()==getParent()) {
+            if (e.getSource() == domain || e.getSource() == getParent()) {
                 try {
                     R3 pt = function.getValue(domain.getPoint());
                     SurfacePoint.super.setPoint(pt);
                     R3 pdx = getTangentX(function, domain.getX(), domain.getY());
                     R3 pdy = getTangentY(function, domain.getX(), domain.getY());
                     R3 pn = pdx.crossProduct(pdy);
-                    dx.setTo(pt.minus(pdx.times(.5)),pt.plus(pdx.times(.5)));
-                    dy.setTo(pt.minus(pdy.times(.5)),pt.plus(pdy.times(.5)));
-                    normal.setTo(pt,pt.plus(pn));
+                    dx.setTo(pt.minus(pdx.times(.5)), pt.plus(pdx.times(.5)));
+                    dy.setTo(pt.minus(pdy.times(.5)), pt.plus(pdy.times(.5)));
+                    normal.setTo(pt, pt.plus(pn));
                     fireStateChanged();
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(ParametricSurface3D.class.getName()).log(Level.SEVERE, null, ex);
@@ -384,9 +441,7 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
             }
         }
 
-        
         // PAINT METHODS
-
         @Override
         public void paintComponent(Graphics2D g, Euclidean3 v) {
             g.setComposite(VisualStyle.COMPOSITE5);
@@ -404,30 +459,23 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
             normal.paintComponent(g, v);
             g.setComposite(VisualStyle.COMPOSITE10);
             super.paintComponent(g, v);
-        }        
+        }
     }
-    
-    
+
     /** Draws a vector field on a surface... optionally displays also the curl of the field.
      */
-    public class SurfaceField extends Plottable<Euclidean3> implements Decoration<Euclidean3,ParametricSurface3D> {
+    public class SurfaceField extends Plottable<Euclidean3> implements Decoration<Euclidean3, ParametricSurface3D> {
 
         VectorField3D field;
-        
+
         public SurfaceField(VectorField3D field) {
             this.field = field;
         }
-        
+
         @Override
         public void paintComponent(Graphics2D g, Euclidean3 v) {
             g.setColor(getColor());
             v.drawArrows(g, getSampleVectors(1, field.getFunction()), 5.0);
-        }
-
-        @Override
-        public String[] getStyleStrings() {
-            String[] result = {};
-            return result;
         }
 
         public void setParent(ParametricSurface3D parent) {
@@ -438,21 +486,15 @@ public class ParametricSurface3D extends PlottableGroup<Euclidean3> implements S
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
-    
+
     /** Draws normal vectors on the surface.
      */
-    public class SurfaceNormals extends Plottable<Euclidean3> implements Decoration<Euclidean3,ParametricSurface3D> {
-                
+    public class SurfaceNormals extends Plottable<Euclidean3> implements Decoration<Euclidean3, ParametricSurface3D> {
+
         @Override
         public void paintComponent(Graphics2D g, Euclidean3 v) {
             g.setColor(new Color(255, 100, 100, 150));
             v.drawArrows(g, getSampleVectors(1), 5.0);
-        }
-
-        @Override
-        public String[] getStyleStrings() {
-            String[] result = {};
-            return result;
         }
 
         public void setParent(ParametricSurface3D parent) {

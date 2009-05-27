@@ -16,7 +16,7 @@ import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.function.FunctionValueException;
 import sequor.component.RangeTimer;
-import sequor.style.VisualStyle;
+import sequor.style.LineStyle;
 import specto.euclidean2.VectorField2D;
 
 /**
@@ -148,7 +148,7 @@ public class FluxIntegral3D extends ParametricSurface3D {
         for (int i = 0; i < flows.size(); i++) {
             try {
                 g.setColor(getColor());
-                g.setStroke(VisualStyle.VERY_THICK_STROKE);
+                g.setStroke(LineStyle.STROKES[LineStyle.VERY_THICK]);
                 v.drawPath(g, function.getValue(flows.get(i)));
             } catch (FunctionValueException ex) {
                 Logger.getLogger(FluxIntegral3D.class.getName()).log(Level.SEVERE, null, ex);

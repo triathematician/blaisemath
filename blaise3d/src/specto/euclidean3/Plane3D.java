@@ -10,6 +10,7 @@ import java.util.Vector;
 import scio.coordinate.R3;
 import sequor.model.DoubleRangeModel;
 import sequor.model.StringRangeModel;
+import sequor.style.LineStyle;
 import sequor.style.VisualStyle;
 
 /**
@@ -69,7 +70,7 @@ public class Plane3D extends Point3D {
         g.setComposite(VisualStyle.COMPOSITE1);
         v.fillPath(g, rectangle);
         g.setComposite(VisualStyle.COMPOSITE5);
-        g.setStroke(VisualStyle.THIN_STROKE);
+        g.setStroke(LineStyle.STROKES[LineStyle.THIN]);
         switch(style2.getValue()) {
             case SOLID:
                 v.drawPath(g, rectangle);

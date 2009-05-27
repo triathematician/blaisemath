@@ -27,6 +27,7 @@ import sequor.model.DoubleRangeModel;
 import sequor.model.IntegerRangeModel;
 import sequor.model.StringRangeModel;
 import specto.Decoration;
+import specto.euclidean2.Point2D;
 import specto.euclidean2.PointSet2D;
 
 /**
@@ -59,12 +60,7 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
     
     
     // CONSTRUCTOR
-    
-    public DESolution3D(VectorField3D parent,R3 point){
-        super(point);
-        setParent(parent);
-        setColor(new Color(.5f,0,.5f));
-    }
+
     public DESolution3D(VectorField3D parent){
         super();
         setParent(parent);
@@ -76,12 +72,47 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
         setPoint(new R3(x0,y0,z0));
     }
 
+    public DESolution3D(VectorField3D parent,R3 point){
+        super(point);
+        setParent(parent);
+        setColor(new Color(.5f,0,.5f));
+    }
+
+    public DESolution3D(VectorField3D parent, final Point2D point) {
+        super(new SlicePoint(point));
+        point.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                ((SlicePoint)prm).update(point);
+                DESolution3D.this.recompute(null);
+                DESolution3D.this.fireStateChanged();
+            }
+        });
+        setParent(parent);
+        setColor(new Color(.5f,0,.5f));
+    }
+
     public DESolution3D(VectorField3D parent, Point3D point) {
         super(point);
         setParent(parent);
         setColor(new Color(.5f,0,.5f));
     }
+
+
+    // ALLOWS FOR 2D CONTROL
     
+    static class SlicePoint extends R3 {
+        public SlicePoint(Point2D p2d) {
+            update(p2d);
+        }
+
+        public void update(Point2D p2d) {
+            x = p2d.getModel().getX();
+            y = p2d.getModel().getY();
+            z = 0;
+        }
+    }
+
+
     // DECORATION METHODS
 
     public void setParent(VectorField3D parent) {
@@ -108,7 +139,10 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
 
     @Override
     public int getAnimatingSteps() { return numSteps.getValue(); }
-    
+
+    public void setNumSteps(int i) { numSteps.setValue(i); }
+    public void setStepSize(double step) { stepSize.setValue(step); }
+
     // PAINT METHODS
     
     
@@ -154,18 +188,21 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
             Vector<R2> phase = new Vector<R2>();
             for (R3 p : path.points) { phase.add(new R2(p.x,p.y)); }
             phasePath.setPath(phase);
+            phasePath.redraw();
         }
 
         if (xPath != null) {
             Vector<R2> phase = new Vector<R2>();
             for (R3 p : path.points) { phase.add(new R2(p.z,p.x)); }
             xPath.setPath(phase);
+            xPath.redraw();
         }
 
         if (yPath != null) {
             Vector<R2> phase = new Vector<R2>();
             for (R3 p : path.points) { phase.add(new R2(p.z,p.y)); }
             yPath.setPath(phase);
+            yPath.redraw();
         }
     }
 
@@ -233,6 +270,7 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
     SolutionSettings ps;
     JDialog psd;
 
+
     /** Inner class controls options for displaying the curve... starting point, ending point, and number of steps */
     public class SolutionSettings extends Settings {
         /** Initializes, and sets up listening. */
@@ -248,6 +286,8 @@ public class DESolution3D extends InitialPointSet3D implements Decoration<Euclid
         }
         /** Event handling... all taken care of by the models */
         @Override
-        public void stateChanged(ChangeEvent e) { DESolution3D.this.fireStateChanged(); }
+        public void stateChanged(ChangeEvent e) { 
+            DESolution3D.this.fireStateChanged();
+        }
     }
 }

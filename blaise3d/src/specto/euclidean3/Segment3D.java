@@ -5,14 +5,9 @@
 
 package specto.euclidean3;
 
-import specto.euclidean2.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import scio.coordinate.R2;
 import scio.coordinate.R3;
-import sequor.model.PointRangeModel;
-import specto.Constrains2D;
+import sequor.style.LineStyle;
 
 /**
  * Implements a segment between two 2D points. Uses two <b>Point2D</b>s at the endpoints to control the position of the segment.
@@ -55,7 +50,7 @@ public class Segment3D extends DynamicPointSet3D {
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean3 v) {
-        g.setStroke(PointSet2D.strokes[PointSet2D.REGULAR]);
+        g.setStroke(LineStyle.STROKES[LineStyle.MEDIUM]);
         switch(style.getValue()){
             case LINE_RAY:
             case LINE_LINE:

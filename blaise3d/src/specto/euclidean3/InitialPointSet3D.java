@@ -23,17 +23,41 @@ import specto.Animatable;
  * @author Elisha Peterson
  */
 public class InitialPointSet3D extends Point3D implements Animatable<Euclidean3>,ChangeListener{
+    
     /** The number of points in the set. */
     protected IntegerRangeModel length;
+
     /** The path "decorating" the initial point. */
     protected PointSet3D path;
 
-    public InitialPointSet3D(){super();path=new PointSet3D();length=new IntegerRangeModel(100,0,50000,1);}
-    public InitialPointSet3D(Color value) {super(value);path=new PointSet3D();length=new IntegerRangeModel(100,0,50000,1);}
-    public InitialPointSet3D(R3 prm){super(prm);path=new PointSet3D();length=new IntegerRangeModel(100,0,50000,1);}
-    public InitialPointSet3D(Point3D parent){super(parent.prm);path=new PointSet3D();length=new IntegerRangeModel(100,0,50000,1);}
-    public InitialPointSet3D(Point3D parent,Vector<R3> points,Color c){this(parent.prm,points,c);}
-    public InitialPointSet3D(R3 prm,Vector<R3> points,Color c){
+    public InitialPointSet3D(){
+        path=new PointSet3D();
+        length=new IntegerRangeModel(100,0,50000,1);
+    }
+
+    public InitialPointSet3D(Color value) {
+        super(value);
+        path=new PointSet3D();
+        length=new IntegerRangeModel(100,0,50000,1);
+    }
+
+    public InitialPointSet3D(R3 prm){
+        super(prm);
+        path=new PointSet3D();
+        length=new IntegerRangeModel(100,0,50000,1);
+    }
+
+    public InitialPointSet3D(Point3D parent){
+        super(parent.prm);
+        path=new PointSet3D();
+        length=new IntegerRangeModel(100,0,50000,1);
+    }
+
+    public InitialPointSet3D(Point3D parent, Vector<R3> points,Color c){
+        this(parent.prm,points,c);
+    }
+
+    public InitialPointSet3D(R3 prm, Vector<R3> points, Color c){
         super(prm,c);
         path=new PointSet3D(points,c);
         length=new IntegerRangeModel(100,0,50000,1);
