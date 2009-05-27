@@ -6,6 +6,7 @@
 
 package curro;
 
+import javax.swing.event.ChangeEvent;
 import sequor.model.ParameterListModel;
 import specto.euclidean3.FluxIntegral3D;
 import specto.euclidean3.LineIntegral3D;
@@ -19,13 +20,12 @@ import specto.euclidean3.VectorField3D;
  */
 public class PAStokesPlotter extends javax.swing.JApplet {
     
-    String[][] functions = { 
-        { "P(x,y,z)=" , "sin(c*x)*sin(c*y)+p*y/10", "x", "y", "z" },  { "Q(x,y,z)=" , "cos(c*x)*cos(c*y)+q*x/10", "x", "y", "z" },  { "R(x,y,z)=" , "d*z/10", "x", "y", "z" },
-        { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "b cos(v)", "u", "v" },
-        { "rx(t)=" , "a cos(t)", "t" }, { "ry(t)=" , "a sin(t)", "t" }, { "rz(t)=" , "0" } };
+    String[][] functions1 = {  { "rx(u,v)=" , "a cos(u) sin(v)", "u", "v" }, { "ry(u,v)=" , "a sin(u) sin(v)", "u", "v" }, { "rz(u,v)=" , "b cos(v)", "u", "v" } };
+    String[][] functions2 = {  { "rx(t)=" , "a cos(t)", "t" }, { "ry(t)=" , "a sin(t)", "t" }, { "rz(t)=" , "0", "t" } };
+    String[][] functions3 = {  { "P(x,y,z)=" , "sin(c*x)*sin(c*y)+p*y/10", "x", "y", "z" },  { "Q(x,y,z)=" , "cos(c*x)*cos(c*y)+q*x/10", "x", "y", "z" },  { "R(x,y,z)=" , "d*z/10", "x", "y", "z" } };
     Object[][] parameters = { { "a", 1.5 }, { "b", 1.5 }, { "c", 1.0 }, { "d", 2.0 }, { "p", -2.0 }, { "q", 2.0 } };
 
-    /** Initializes the applet AParameterPlotter */
+    /** Initializes the applet PAStokesPlotter */
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
@@ -33,23 +33,27 @@ public class PAStokesPlotter extends javax.swing.JApplet {
                     initComponents();
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
-                    VectorField3D vf3 = new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
+                    parameterListModel1.addChangeListener(functionPanel2);
+                    parameterListModel1.addChangeListener(functionPanel3);
+                    parameterListModel1.stateChanged(new ChangeEvent(parameterListModel1));
+
+                    VectorField3D vf3 = new VectorField3D(functionPanel3.getFunctionModel(0), functionPanel3.getFunctionModel(1), functionPanel3.getFunctionModel(2));
                     plot3D1.add(vf3);
-                    ParametricSurface3D ps1 = new ParametricSurface3D(functionPanel1.getFunctionModel(3), functionPanel1.getFunctionModel(4), functionPanel1.getFunctionModel(5));
+
+                    ParametricSurface3D ps1 = new ParametricSurface3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
                     ps1.getDomainModel().xModel.setRangeProperties(0.0, 0.0, 2*Math.PI, Math.PI/6);
                     ps1.getDomainModel().yModel.setRangeProperties(0.0, 0.0, Math.PI/2.0, Math.PI/12);
-                    ParametricCurve3D pc1 = new ParametricCurve3D(functionPanel1.getFunctionModel(6), functionPanel1.getFunctionModel(7), functionPanel1.getFunctionModel(8));
-                    pc1.getModel().setRangeProperties(0.0, 0.0, 2*Math.PI);
                     plot3D1.add(ps1);
                     plot3D1.add(new FluxIntegral3D(ps1, vf3));
+
+                    ParametricCurve3D pc1 = new ParametricCurve3D(functionPanel2.getFunctionModel(0), functionPanel2.getFunctionModel(1), functionPanel2.getFunctionModel(2));
+                    pc1.getModel().setRangeProperties(0.0, 0.0, 2*Math.PI);
                     plot3D1.add(new LineIntegral3D(pc1, vf3));
                     
                     plot3D1.getVisometry().setSceneSize(1.5);
                     plot3D1.getVisometry().setViewDist(3.0);
                     plot3D1.getVisometry().setEyeSep(0.2);
                     plot3D1.getVisometry().setDesiredBounds(-3.0, -3.0, 3.0, 3.0);
-                    //plot2D1.add(new PlaneFunction2D(functionPanel1.getFunctionModel(0)));
-                    //plot2D1.repaint();
                 }
             });
         } catch (Exception ex) {
@@ -68,13 +72,15 @@ public class PAStokesPlotter extends javax.swing.JApplet {
 
         parameterListModel1 = new sequor.model.ParameterListModel();
         settingsPanel1 = new sequor.component.SettingsPanel();
-        functionPanel1 = new sequor.component.FunctionPanel(functions);
         plot3D1 = new specto.euclidean3.Plot3D();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        functionPanel1 = new sequor.component.FunctionPanel(functions1);
+        functionPanel2 = new sequor.component.FunctionPanel(functions2);
+        functionPanel3 = new sequor.component.FunctionPanel(functions3);
 
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
-        getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
         plot3D1.setAxisStyle(0);
         plot3D1.setXyStyle(3);
@@ -83,19 +89,28 @@ public class PAStokesPlotter extends javax.swing.JApplet {
         plot3D1.setLayout(plot3D1Layout);
         plot3D1Layout.setHorizontalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 536, Short.MAX_VALUE)
+            .addGap(0, 488, Short.MAX_VALUE)
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 273, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot3D1, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane1.addTab("Surface", functionPanel1);
+        jTabbedPane1.addTab("Boundary Curve", functionPanel2);
+        jTabbedPane1.addTab("Vector Field", functionPanel3);
+
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sequor.component.FunctionPanel functionPanel1;
+    private sequor.component.FunctionPanel functionPanel2;
+    private sequor.component.FunctionPanel functionPanel3;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private sequor.model.ParameterListModel parameterListModel1;
     private specto.euclidean3.Plot3D plot3D1;
     private sequor.component.SettingsPanel settingsPanel1;

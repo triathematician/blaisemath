@@ -30,7 +30,12 @@ public class PAVectorField3DPlotter extends javax.swing.JApplet {
                     VectorField3D vf1 = new VectorField3D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1), functionPanel1.getFunctionModel(2));
                     vf1.style.setValue(3);
                     plot3D1.add(vf1);
-                    plot3D1.add(new DESolution3D(vf1));
+                    
+                    DESolution3D de1 = new DESolution3D(vf1,.2,.3,.4);
+                    de1.setNumSteps(2000);
+                    de1.setStepSize(.5);
+                    plot3D1.add(de1);
+
                     plot3D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
                     plot3D1.getVisometry().setSceneSize(40.0);
                     plot3D1.getVisometry().setViewDist(100.0);
@@ -58,7 +63,7 @@ public class PAVectorField3DPlotter extends javax.swing.JApplet {
         plot3D1 = new specto.euclidean3.Plot3D();
 
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
@@ -66,11 +71,11 @@ public class PAVectorField3DPlotter extends javax.swing.JApplet {
         plot3D1.setLayout(plot3D1Layout);
         plot3D1Layout.setHorizontalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 536, Short.MAX_VALUE)
+            .addGap(0, 488, Short.MAX_VALUE)
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 273, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot3D1, java.awt.BorderLayout.CENTER);

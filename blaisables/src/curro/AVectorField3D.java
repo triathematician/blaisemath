@@ -23,9 +23,10 @@ public class AVectorField3D extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-                    functionPanel1.setFunction(0, "P(x,y,z)=", "-y");
-                    functionPanel1.setFunction(1, "Q(x,y,z)=", "x");
-                    functionPanel1.setFunction(2, "R(x,y,z)=", "1-z");
+                    String[] vars={"x","y","z"};
+                    functionPanel1.setFunction(0, "P(x,y,z)=", "-y", vars);
+                    functionPanel1.setFunction(1, "Q(x,y,z)=", "x", vars);
+                    functionPanel1.setFunction(2, "R(x,y,z)=", "1-z", vars);
                     VectorField3D vf1=new VectorField3D(functionPanel1.getFunctionModel(0),functionPanel1.getFunctionModel(1),functionPanel1.getFunctionModel(2));                        
                     
                     plot3D1.add(vf1);
@@ -35,10 +36,11 @@ public class AVectorField3D extends javax.swing.JApplet {
                     NumberSlider ns = vf1.getStyleSlider(0,0);
                     ns.setName("Style");
                     plot3D1.add(ns,5,5);
-                        
-                    functionPanel2.setFunction(0, "x(t)=", "cos(t)+3");
-                    functionPanel2.setFunction(1, "y(t)=", "sin(t)+3");
-                    functionPanel2.setFunction(2, "y(t)=", "t");
+
+                    String[] vars2={"t"};
+                    functionPanel2.setFunction(0, "x(t)=", "cos(t)+3", vars2);
+                    functionPanel2.setFunction(1, "y(t)=", "sin(t)+3", vars2);
+                    functionPanel2.setFunction(2, "y(t)=", "t", vars2);
                     ParametricCurve3D pp = new ParametricCurve3D(functionPanel2.getFunctionModel(0),functionPanel2.getFunctionModel(1),functionPanel2.getFunctionModel(2));
                     pp.setVisible(false);
                     pp.setAnimationOn(false);

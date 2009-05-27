@@ -8,6 +8,7 @@ package curro;
 
 import sequor.control.NumberSlider;
 import sequor.control.SliderBox;
+import specto.PlotPanel;
 import specto.euclidean2.PlaneFunction2D;
 import specto.euclidean2.VectorField2D;
 
@@ -23,7 +24,8 @@ public class APlaneFunction extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-                    functionPanel1.setFunction(0, "f(x,y)=", "cos(x)*sin(y)");
+                    String[] vars = {"x","y"};
+                    functionPanel1.setFunction(0, "f(x,y)=", "cos(x)*sin(y)",vars);
                     PlaneFunction2D pf1 = new PlaneFunction2D(functionPanel1.getFunctionModel(0));                    
                     plot2D1.add(pf1);
                     VectorField2D vf1 = new VectorField2D(pf1.getGradientFunction());
@@ -34,15 +36,15 @@ public class APlaneFunction extends javax.swing.JApplet {
                     plot2D1.add(ns,5,5);
                     plot2D1.getVisometry().setDesiredBounds(-3,-3,3,3);
                     
-                    functionPanel2.setFunction(0, "P(x,y)=", "cos(y)+x");
-                    functionPanel2.setFunction(1, "Q(x,y)=", "sin(x)+y");
+                    functionPanel2.setFunction(0, "P(x,y)=", "cos(y)+x",vars);
+                    functionPanel2.setFunction(1, "Q(x,y)=", "sin(x)+y",vars);
                     VectorField2D vf2 = new VectorField2D(functionPanel2.getFunctionModel(0), functionPanel2.getFunctionModel(1));                    
                     plot2D2.add(vf2.getDivergence());
                     plot2D2.add(vf2.getScalarCurl());
                     plot2D2.add(vf2);
                     plot2D2.add(vf2.getFlowCurve());
                     
-                    SliderBox sb = SliderBox.getStyleAdjusters(0,0,15,plot2D2.getPlottables(),plot2D2);
+                    SliderBox sb = PlotPanel.getStyleAdjusters(0,0,15,plot2D2.getPlottables(),plot2D2);
                     plot2D2.add(sb,5,5);
                     plot2D2.getVisometry().setDesiredBounds(-3,-3,3,3);
                 }

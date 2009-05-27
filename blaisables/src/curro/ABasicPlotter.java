@@ -43,12 +43,14 @@ public class ABasicPlotter extends javax.swing.JApplet {
         functionTreeTextField1 = new sequor.editor.FunctionTextField();
         plot2D1 = new specto.euclidean2.Plot2D();
 
-        function2D1.setAnimationOn(true);
         function2D1.setFunctionModel(functionTreeModel1);
 
         jLabel1.setText("f(x)=");
 
         functionTreeTextField1.setFunctionTreeModel(functionTreeModel1);
+
+        plot2D1.setYLabel("f(x)");
+        plot2D1.setMarkerBoxVisible(false);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);

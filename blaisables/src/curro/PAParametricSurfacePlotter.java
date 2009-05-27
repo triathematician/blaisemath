@@ -72,7 +72,7 @@ public class PAParametricSurfacePlotter extends javax.swing.JApplet {
 
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setToolTipText("Right-click to remove parameter");
-        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
@@ -100,7 +100,7 @@ public class PAParametricSurfacePlotter extends javax.swing.JApplet {
         plot3D1Layout.setHorizontalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plot3D1Layout.createSequentialGroup()
-                .addContainerGap(408, Short.MAX_VALUE)
+                .addContainerGap(360, Short.MAX_VALUE)
                 .addComponent(plot2D1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

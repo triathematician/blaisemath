@@ -4,7 +4,6 @@
   <NonVisualComponents>
     <Component class="specto.euclidean2.Function2D" name="function2D1">
       <Properties>
-        <Property name="animationOn" type="boolean" value="true"/>
         <Property name="functionModel" type="sequor.model.FunctionTreeModel" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="functionTreeModel1"/>
         </Property>
@@ -16,6 +15,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -63,6 +63,10 @@
       </Properties>
     </Component>
     <Container class="specto.euclidean2.Plot2D" name="plot2D1">
+      <Properties>
+        <Property name="YLabel" type="java.lang.String" value="f(x)"/>
+        <Property name="markerBoxVisible" type="boolean" value="false"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">

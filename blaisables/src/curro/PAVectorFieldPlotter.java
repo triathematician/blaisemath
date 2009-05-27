@@ -59,7 +59,7 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 536, Short.MAX_VALUE)
+            .addGap(0, 488, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -69,7 +69,7 @@ public class PAVectorFieldPlotter extends javax.swing.JApplet {
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
 
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents

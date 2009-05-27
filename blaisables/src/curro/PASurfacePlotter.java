@@ -57,7 +57,7 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         plot2D1 = new specto.euclidean2.Plot2D();
 
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        settingsPanel1.setPreferredSize(new java.awt.Dimension(202, 332));
+        settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
 
@@ -68,7 +68,7 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         plot3D1.setLayout(plot3D1Layout);
         plot3D1Layout.setHorizontalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 483, Short.MAX_VALUE)
         );
         plot3D1Layout.setVerticalGroup(
             plot3D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,7 +84,7 @@ public class PASurfacePlotter extends javax.swing.JApplet {
         plot2D1.setLayout(plot2D1Layout);
         plot2D1Layout.setHorizontalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 483, Short.MAX_VALUE)
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -1,24 +1,28 @@
 /*
- * PAPlotter.java
+ * AParameterPlotter.java
  *
  * Created on November 7, 2008, 12:11 PM
  */
 
 package curro;
 
+import sequor.model.FunctionTreeModel;
 import sequor.model.ParameterListModel;
-import specto.euclidean2.Function2D;
+import specto.euclidean2.Axes2D;
+import specto.euclidean2.DESolution2D;
+import specto.euclidean2.Point2D;
+import specto.euclidean2.VectorField2D;
 
 /**
  *
  * @author  ae3263
  */
-public class PAPlotter extends javax.swing.JApplet {
+public class PADiffEq1Plotter extends javax.swing.JApplet {
     
-    String[][] functions = { { "f(x)=" , "a*sin(b*(x-c))+d", "x" } };
-    Object[][] parameters = { { "a", 1.0 }, { "b", 2.0 }, { "c", Math.PI/2 }, { "d", -1.0 } };
+    String[][] functions = { { "x'(x,t)=" , "a*(x-b)*(c-x)+d*sin(t)", "t", "x" } };
+    Object[][] parameters = { { "a", 0.1 }, { "b", -1 }, {"c", 5}, {"d", 0} };
 
-    /** Initializes the applet PAPlotter */
+    /** Initializes the applet AParameterPlotter */
     public void init() {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
@@ -26,11 +30,11 @@ public class PAPlotter extends javax.swing.JApplet {
                     initComponents();
        
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
-
-                    Function2D f1 = new Function2D(functionPanel1.getFunctionModel(0));
-                    plot2D1.add(f1);
-                    plot2D1.add(f1.getPointSlope());
-
+                    VectorField2D vf1 = new VectorField2D(new FunctionTreeModel("1"), functionPanel1.getFunctionModel(0),"t","x");
+                    plot2D1.add(vf1);
+                    plot2D1.add(new DESolution2D(new Point2D(Axes2D.getYAxisModel()),vf1));
+                    plot2D1.add(new DESolution2D(new Point2D(Axes2D.getYAxisModel()),vf1));
+                    plot2D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
                     plot2D1.repaint();
                 }
             });
@@ -52,6 +56,10 @@ public class PAPlotter extends javax.swing.JApplet {
         plot2D1 = new specto.euclidean2.Plot2D();
         settingsPanel1 = new sequor.component.SettingsPanel();
         functionPanel1 = new sequor.component.FunctionPanel(functions);
+
+        plot2D1.setXLabel("t");
+        plot2D1.setYLabel("x");
+        plot2D1.setAxisStyle(2);
 
         javax.swing.GroupLayout plot2D1Layout = new javax.swing.GroupLayout(plot2D1);
         plot2D1.setLayout(plot2D1Layout);

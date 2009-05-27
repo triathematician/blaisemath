@@ -7,16 +7,16 @@
 package curro;
 
 import sequor.model.ParameterListModel;
-import specto.euclidean2.Function2D;
+import specto.euclidean2.Parametric2D;
 
 /**
  *
  * @author  ae3263
  */
-public class PAPlotter extends javax.swing.JApplet {
-    
-    String[][] functions = { { "f(x)=" , "a*sin(b*(x-c))+d", "x" } };
-    Object[][] parameters = { { "a", 1.0 }, { "b", 2.0 }, { "c", Math.PI/2 }, { "d", -1.0 } };
+public class PAParametricCurvePlotter2D extends javax.swing.JApplet {
+
+    String[][] functions = { { "x(t)=" , "a*cos(b*t)+c*cos(d*t)", "t" }, { "y(t)=", "a*sin(b*t)+c*sin(d*t)", "t" } };
+    Object[][] parameters = { { "a", 6.0 }, { "b", -1.2 }, {"c",2},{"d",4} };
 
     /** Initializes the applet PAPlotter */
     public void init() {
@@ -24,12 +24,13 @@ public class PAPlotter extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-       
+
                     parameterListModel1=new ParameterListModel(parameters, settingsPanel1, functionPanel1);
 
-                    Function2D f1 = new Function2D(functionPanel1.getFunctionModel(0));
-                    plot2D1.add(f1);
-                    plot2D1.add(f1.getPointSlope());
+                    Parametric2D pc = new specto.euclidean2.Parametric2D(functionPanel1.getFunctionModel(0), functionPanel1.getFunctionModel(1));
+                    pc.getModel().setRangeProperties(0.0,0.0,5*Math.PI);
+                    plot2D1.add(pc);
+                    plot2D1.add(pc.getPointSlope());
 
                     plot2D1.repaint();
                 }
@@ -61,7 +62,7 @@ public class PAPlotter extends javax.swing.JApplet {
         );
         plot2D1Layout.setVerticalGroup(
             plot2D1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
 
         getContentPane().add(plot2D1, java.awt.BorderLayout.CENTER);
@@ -69,6 +70,8 @@ public class PAPlotter extends javax.swing.JApplet {
         settingsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         settingsPanel1.setPreferredSize(new java.awt.Dimension(250, 332));
         getContentPane().add(settingsPanel1, java.awt.BorderLayout.LINE_END);
+
+        functionPanel1.setPreferredSize(new java.awt.Dimension(140, 70));
         getContentPane().add(functionPanel1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 

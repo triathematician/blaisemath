@@ -23,8 +23,9 @@ public class AVectorField extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     initComponents();
-                    functionPanel1.setFunction(0, "P(x,y)=", "x*y-.1");
-                    functionPanel1.setFunction(1, "Q(x,y)=", "cos(x)");
+                    String[] vars1={"x", "y"};
+                    functionPanel1.setFunction(0, "P(x,y)=", "x*y-.1", vars1);
+                    functionPanel1.setFunction(1, "Q(x,y)=", "cos(x)", vars1);
                     VectorField2D vf1=new VectorField2D(functionPanel1.getFunctionModel(0),functionPanel1.getFunctionModel(1));                        
                     
                     plot2D1.add(vf1);
@@ -32,9 +33,10 @@ public class AVectorField extends javax.swing.JApplet {
                     des.setVisible(false);
                     plot2D1.add(des);
                     plot2D1.add(vf1.getStyleSlider("Field style",0,0),5,5);
-                        
-                    functionPanel2.setFunction(0, "x(t)=", "cos(t)+3");
-                    functionPanel2.setFunction(1, "y(t)=", "sin(t)+3");
+
+                    String[] vars2={"t"};
+                    functionPanel2.setFunction(0, "x(t)=", "cos(t)+3", vars2);
+                    functionPanel2.setFunction(1, "y(t)=", "sin(t)+3", vars2);
                     Parametric2D pp = new Parametric2D(functionPanel2.getFunctionModel(0),functionPanel2.getFunctionModel(1));
                     pp.setVisible(false);
                     pp.setAnimationOn(false);

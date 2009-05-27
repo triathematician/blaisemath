@@ -22,7 +22,9 @@
   <SubComponents>
     <Container class="specto.euclidean2.Plot2D" name="plot2D1">
       <Properties>
-        <Property name="axisStyle" type="int" value="1"/>
+        <Property name="XLabel" type="java.lang.String" value="t"/>
+        <Property name="YLabel" type="java.lang.String" value="x"/>
+        <Property name="axisStyle" type="int" value="2"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
