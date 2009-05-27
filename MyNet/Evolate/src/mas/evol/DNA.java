@@ -5,7 +5,6 @@
 
 package mas.evol;
 
-import mas.Agent;
 import mas.Parameter;
 import mas.ParameterSpace;
 
@@ -18,6 +17,11 @@ public class DNA extends ParameterSpace {
  
     /** Default constructor */
     public DNA(){}
+
+    /** Constructs with an allele. */
+    public DNA(String s, Allele a) {
+        set(s, a);
+    }
 
     /** Override to return class of this type. */
     public static DNA getInstance() { return new DNA(); }

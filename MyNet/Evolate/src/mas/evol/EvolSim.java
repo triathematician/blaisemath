@@ -24,21 +24,49 @@ public class EvolSim extends mas.NSimulation {
     public mas.Simulation sim2;
     
     /** Initializes with no simulation. */
-    public EvolSim(int nSteps) { super(nSteps); this.sim2 = null; }
-    public EvolSim(int nSteps, Team team) { super(nSteps,team); }
-    public EvolSim(int nSteps, Vector<Team> teams) { super(nSteps,teams); }
-    /** Initializes with a set simulation. */
-    public EvolSim(int nSteps, mas.Simulation sim2) { super(nSteps); this.sim2 = sim2; }
-    public EvolSim(int nSteps, Team team, mas.Simulation sim2) { super(nSteps,team); this.sim2 = sim2;}
-    public EvolSim(int nSteps, Vector<Team> teams, mas.Simulation sim2) { super(nSteps,teams); this.sim2 = sim2; }
+    public EvolSim(int nSteps) { 
+        super(nSteps);
+        this.sim2 = null;
+    }
 
-    public Simulation getSim2() { return sim2; }
-    public void setSim2(Simulation sim2) { this.sim2 = sim2; }
+    public EvolSim(int nSteps, Team team) {
+        super(nSteps, team);
+    }
+
+    public EvolSim(int nSteps, Vector<Team> teams) { 
+        super(nSteps, teams);
+    }
+
+    /** Initializes with a set simulation. */
+    public EvolSim(int nSteps, mas.Simulation sim2) { 
+        super(nSteps);
+        this.sim2 = sim2;
+    }
+
+    public EvolSim(int nSteps, Team team, mas.Simulation sim2) { 
+        super(nSteps,team);
+        this.sim2 = sim2;
+    }
+
+    public EvolSim(int nSteps, Vector<Team> teams, mas.Simulation sim2) {
+        super(nSteps,teams);
+        this.sim2 = sim2;
+    }
+
+    public Simulation getSim2() {
+        return sim2;
+    }
+
+    public void setSim2(Simulation sim2) { 
+        this.sim2 = sim2;
+    }
 
     /** Runs an iteration of the simulation. */
     @Override
     public void iterate() {
-        if(sim2 != null) { sim2.run(); }
+        if(sim2 != null) { 
+            sim2.run();
+        }
         super.iterate();
     }
 
@@ -48,11 +76,17 @@ public class EvolSim extends mas.NSimulation {
         Vector<Team> newTeams = new Vector<Team>();
         for (Team t : getTeams()) {
             if (t instanceof GenePool) {
-                for (Agent a : t.getAgents()) { if (a instanceof Team) { oldTeams.add((Team)a); } }
+                for (Agent a : t.getAgents()) { 
+                    if (a instanceof Team) {
+                        oldTeams.add((Team)a);
+                    }
+                }
                 ((GenePool)t).assignFitness(sim2);
                 ((GenePool)t).evolve();
                 for (Agent a: t.getAgents()) {
-                    if (a instanceof Team) { newTeams.add((Team)a); }
+                    if (a instanceof Team) { 
+                        newTeams.add((Team)a);
+                    }
                 }
             } 
         }

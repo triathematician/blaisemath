@@ -25,4 +25,7 @@ public abstract class Entity {
     /** Default to printing out state variables */
     @Override
     public String toString() { return controlVars.toString(); }
+    
+    /** Prints tab separated control variables. */
+    public String toTabString() { return controlVars.toTabString(); }
 }

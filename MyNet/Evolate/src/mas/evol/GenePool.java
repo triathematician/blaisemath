@@ -22,12 +22,16 @@ public abstract class GenePool extends mas.Team {
     
     /** Team fitness scores. */
     public HashMap<mas.Agent,Float> fitness;
+
     /** Cumulative fitness of agents (used to generate fit agents at random). */
     public WeightTable<mas.Agent> fitSpace;
+
     /** Describes source of agents (used to assess validity of the simulation). */
     protected Vector<Integer> srcMap;
+
     /** Index of the fittest agent. */
     int fittestSource = -1;
+
     /** Whether a better agent has been found. */
     boolean improved = false;
     
@@ -36,17 +40,29 @@ public abstract class GenePool extends mas.Team {
 
     /** Determines the evolution rules. */
     public int[] rules;
-    public static float[] fRules = {.3f,.2f,.25f,.15f,.1f};
 
     /** Probability of point mutations. */
     protected float mProb = 0.1f;
+    
     /** Error introduced upon mutation. */
     protected float mErr = 0.0f;
 
-    /** Default constructor */
-    public GenePool(int[] rules,float mProb,float mErr){ this(rules, mProb, mErr, null); }
-    /** Default constructor */
-    public GenePool(int[] rules,float mProb,float mErr,DNA template){
+    /** Default constructor
+     * @param rules rules for generating the next generation of the pool
+     * @param mProb probability of a mutation
+     * @param mErr mutation error (how much error a mutation generates)
+     */
+    public GenePool(int[] rules, float mProb, float mErr){
+        this(rules, mProb, mErr, null);
+    }
+
+    /** Default constructor
+     * @param rules rules for generating the next generation of the pool
+     * @param mProb probability of a mutation
+     * @param mErr mutation error (how much error a mutation generates)
+     * @param template definitions of the specs for agents on the team
+     */
+    public GenePool(int[] rules, float mProb, float mErr, DNA template){
         this.rules = rules;
         this.mProb = mProb;
         this.mErr = mErr;
@@ -62,9 +78,13 @@ public abstract class GenePool extends mas.Team {
     
     /** Assigns fitness scores. */
     public void assignFitness(mas.Simulation sim){
-        if (fitness==null) { fitness = new HashMap<mas.Agent,Float>(); }
+        if (fitness==null) { 
+            fitness = new HashMap<mas.Agent,Float>();
+        }
         fitness.clear();
-        for(mas.Agent a : agents) { fitness.put(a,getFitness(a,sim)); }
+        for(mas.Agent a : agents) { 
+            fitness.put(a, getFitness(a, sim));
+        }
         //System.out.println(fitness);
         fitSpace = new WeightTable<mas.Agent>(fitness);
         try {
@@ -86,10 +106,14 @@ public abstract class GenePool extends mas.Team {
     
     /** Evolves team (general algorithm). By default all descendants are generated
      * based on fitness scores. */
-    public void evolve() { evolve(rules); }
+    public void evolve() { 
+        evolve(rules);
+    }
 
     /** Generates based on an array describing how many agents corresponding to each rule. */
-    public void evolve(int[] nRule) { evolve(nRule[0],nRule[1],nRule[2],nRule[3],nRule[4]); }
+    public void evolve(int[] nRule) { 
+        evolve(nRule[0], nRule[1], nRule[2], nRule[3], nRule[4]);
+    }
     
     /** Evolves team based on fitness scores.
      * @param nTop the number of top scoring descendants to keep around (no change to parameters)
@@ -127,7 +151,9 @@ public abstract class GenePool extends mas.Team {
         return result;
     }
 
-    public mas.Agent getAgentFrom(DNA dna) { return new mas.Agent(dna); }
+    public mas.Agent getAgentFrom(DNA dna) { 
+        return new mas.Agent(dna);
+    }
 
     /** Returns random DNA */
     public DNA getRandomDNA() {
@@ -181,7 +207,8 @@ public abstract class GenePool extends mas.Team {
         TreeMap<Float,O> scoreMap;
         TreeMap<Float,O> cumScoreMap;
         Float totScore;
-        
+
+        // TODO this needs to work when weights are repeated, not just as is.
         public WeightTable(HashMap<? extends O,Float> weightMap) {
             float cumFitness = 0;
             scoreMap = new TreeMap<Float,O>();
@@ -284,14 +311,19 @@ public abstract class GenePool extends mas.Team {
     }
     
     /** Prints list of agents. */
-    public void printAgentList(PrintStream out) {
+    public void printAgentHistory(PrintStream out, boolean table) {
         if (geneLog == null) { return; }
-        out.print("{ ");
-        for (GeneLogEntry gle : geneLog) {
-            out.print(gle.agent.toString());
-            if(! gle.equals(geneLog.lastElement())) { out.print(", "); }
+        if (table) {
+            for (GeneLogEntry gle : geneLog) {
+                out.println(gle.agent.toTabString());
+            }
+        } else {
+            out.print("{ ");
+            for (GeneLogEntry gle : geneLog) {
+                out.print(gle.agent.toString());
+                if(! gle.equals(geneLog.lastElement())) { out.print(", "); }
+            }
+            out.print("}\n");
         }
-        out.print("}");
-        
     }
 }

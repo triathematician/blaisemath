@@ -1,3 +1,8 @@
+/**
+ * SightTeam.java
+ * Created Feb 2009
+ */
+
 package sight;
 
 import java.io.PrintStream;
@@ -9,8 +14,10 @@ import mas.Team;
 import mas.evol.DNA;
 
 /**
- * Represents a team of agents for use in the "sight" simulation. Stores DNA that evolves over time and determines the parameters of the agents on the team.
- * @author elisha
+ * Represents a team of agents for use in the "sight" simulation.
+ * Stores DNA that evolves over time and determines the parameters of the agents on the team.
+ *
+ * @author Elisha Peterson
  */
 public class SightTeam extends Team implements Comparable<SightTeam> {
 
@@ -18,23 +25,39 @@ public class SightTeam extends Team implements Comparable<SightTeam> {
 
     /** The agents assigned to each target in the optimal capture. */
     SightAgent[] targeting;
+
     /** Total number of captures made by the team. */
     int captures = 0;
+    int nRounds = 1;
+
     /** Determines whether agent specs are generated at random during each iteration. */
     boolean randomSpec = false;
 
     /** Constructs given template DNA. */
     public SightTeam(DNA dna, boolean randomSpec) {
         controlVars = dna;
-        for (int i = 0; i < dna.size(); i++) { agents.add(new SightAgent(getSpec(i))); }
+        for (int i = 0; i < dna.size(); i++) { 
+            agents.add(new SightAgent(getSpec(i)));
+        }
         this.randomSpec = randomSpec;
     }
 
     @Override
-    protected void initControlVars() { captures = 0; }
+    protected void initControlVars() {
+        captures = 0;
+        nRounds = 1;
+    }
+
     public void preIterate() {
-        for(Agent a : agents) { ((SightAgent)a).pos = (float) Math.random(); }
-        if (randomSpec) { controlVars = ((DNA)controlVars).getRandom(); }
+        for(Agent a : agents) { 
+            ((SightAgent)a).pos = (float) Math.random();
+        }
+        if (randomSpec) { 
+            controlVars = ((DNA)controlVars).getRandom();
+            for (Agent a : agents) {
+                ((SightAgent)a).spec = (float) Math.random();
+            }
+        }
     }
 
     @Override
@@ -87,7 +110,10 @@ public class SightTeam extends Team implements Comparable<SightTeam> {
     }
 
     /** Returns spec i */
-    public float getSpec(int i){ return (Float)((DNA)controlVars).get("spec"+i).value; }
+    public float getSpec(int i){
+        return (Float)((DNA)controlVars).get("spec"+i).value;
+    }
+
     /** Returns whether target is within sight range of any agent on team */
     public boolean sees(float target){
         for (Agent a : agents) { if (((SightAgent)a).sees(target)) { return true; } }
@@ -100,7 +126,9 @@ public class SightTeam extends Team implements Comparable<SightTeam> {
     }
 
     @Override
-    public String toString() { return controlVars.toTabString(); }
+    public String toString() { 
+        return controlVars.toTabString();
+    }
 
     /** Used to sort teams by parameters. */
     public int compareTo(SightTeam o) {
@@ -120,24 +148,5 @@ public class SightTeam extends Team implements Comparable<SightTeam> {
             }
         } catch (NullPointerException e) {}
         return 0;
-    }
-    
-
-
-    /** A team contains agents of the following type... their specs must be updated whenever the team DNA evolves. */
-    public static class SightAgent extends Agent {
-        float spec;
-        float pos;
-        public SightAgent(float spec){this.spec = spec; }
-        // runs before each simulation... randomize position
-        @Override public void initControlVars(){ pos = (float) Math.random(); }
-        public boolean sees(float target){ return Math.abs(pos - target) < spec; }
-        public float timeTo(float target){
-            if (spec > .999f) { return Float.MAX_VALUE; }
-            float result = Math.abs(pos - target) / (1 - spec) ;
-            return result;
-        }
-        public void setSpec(float spec){this.spec = spec; }
-        @Override public String toString(){ return ""+spec; }
     }
 }

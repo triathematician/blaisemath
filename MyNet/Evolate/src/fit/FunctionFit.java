@@ -35,20 +35,29 @@ public class FunctionFit {
         System.out.println("actual function: "+FUNC);
         GenePool gp = new GenePool(NRULE, POINTPROB, ERROR,
             new DNA(){
-                @Override public void initialize(){ set("a",0.0); set("b",0.0); set("c",0.0); set("d",0.0); }
+                @Override public void initialize(){
+                    set("a",0.0);
+                    set("b",0.0);
+                    set("c",0.0);
+                    set("d",0.0);
+                }
                 //@Override public String toString(){ return valueOf("a")+"x^3"+valueOf("b")+"x^2"+valueOf("c")+"x"+valueOf("d"); }
             })
         {
             @Override
             public float getFitness(final Agent a, Simulation sim) {
+                float[] testValues = new float[50];
+                for (int i = 0; i < testValues.length; i++) {
+                    testValues[i] = (float) Math.random()*20-10;
+                }
                 return Math.max(0.0f, norm(testFunction,
                     new Function() { public double getValue(double x) { return (Double)a.valueOf("a")*x*x*x + (Double)a.valueOf("b")*x*x + (Double)a.valueOf("c")*x + (Double)a.valueOf("d"); }},
-                    TEST_VALUES));
+                    testValues));
             }
         };
         new EvolSim(NSTEPS, gp).run();
         gp.printLog(System.out);
-        gp.printAgentList(System.out);
+        gp.printAgentHistory(System.out, true);
     }
 
 
