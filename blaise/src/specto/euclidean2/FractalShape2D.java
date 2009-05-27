@@ -21,10 +21,10 @@ import scio.coordinate.R2;
 import scio.coordinate.R2Transform;
 import scio.fractal.IteratedTransform;
 import sequor.model.IntegerRangeModel;
-import sequor.style.VisualStyle;
+import sequor.style.LineStyle;
 import specto.Plottable;
 import specto.euclidean2.Euclidean2;
-import specto.style.PointStyle;
+import sequor.style.PointStyle;
 
 /**
  *
@@ -55,7 +55,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
     @Override
     public void paintComponent(Graphics2D g, Euclidean2 v) {
         g.setColor(getColor().brighter());
-        g.setStroke(VisualStyle.THIN_STROKE);
+        g.setStroke(LineStyle.STROKES[LineStyle.THIN]);
         if(s!=null){
             if(filled){
                 g.fill(v.getAffineTransformation().createTransformedShape(s));
@@ -98,7 +98,7 @@ public abstract class FractalShape2D extends DynamicPointSet2D {
         @Override
         public void recompute(Euclidean2 v) {   
             try{
-                Path2D.Double initialCurve=getPath(false);
+                Path2D.Double initialCurve = getPath(false);
                 AffineTransform at=getStandardTransform();
                 AffineTransform at2=at.createInverse();
                 initialCurve=(Path2D.Double) at2.createTransformedShape(initialCurve);

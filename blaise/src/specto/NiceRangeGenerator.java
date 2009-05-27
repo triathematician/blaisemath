@@ -44,14 +44,15 @@ public interface NiceRangeGenerator {
                                     10;
             return factor;
         }
+
         public Vector<Double> niceRange(double min,double max,double idealStep){
-            double factor=getStep(min,max,idealStep);
+            double factor = getStep(min, max, idealStep);
             if(factor==0){return new Vector<Double>();}
             return new DoubleRangeModel(0,
                     factor*Math.ceil(min/factor),
-                    factor*Math.floor(max/factor)*1.0001
-                    ,factor)
-                    .getValueRange(true,0.0);
+                    factor*Math.floor(max/factor)*1.0001,
+                    factor)
+                    .getValueRange(true, 0.0);
         }
     };
     

@@ -18,7 +18,7 @@ public class Triangle2D extends DynamicPointSet2D {
     public Triangle2D(){this(1,0,Math.cos(2*Math.PI/3),Math.sin(2*Math.PI/3),Math.cos(4*Math.PI/3),Math.sin(4*Math.PI/3));}
     public Triangle2D(double x1,double y1,double x2,double y2,double x3,double y3){
         this(new PointRangeModel(x1,y1),new PointRangeModel(x2,y2),new PointRangeModel(x3,y3));
-        style.setValue(STYLE_CYCLIC);
+        style.setValue(STYLE_FILLED);
     }
     public Triangle2D(PointRangeModel p1,PointRangeModel p2,PointRangeModel p3){
         this.p1=p1;

@@ -5,15 +5,16 @@
 
 package specto.euclidean2;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import javax.swing.JMenu;
+import java.awt.geom.Point2D;
+import java.util.Vector;
 import specto.DynamicPlottable;
 import scio.coordinate.R2;
+import sequor.style.LineStyle;
+import specto.NiceRangeGenerator;
 import specto.euclidean2.Euclidean2;
 
 /**
@@ -24,40 +25,50 @@ import specto.euclidean2.Euclidean2;
 public class PolarGrid2D extends DynamicPlottable<Euclidean2> {
     
     // STYLES
-    
-    private static final float[] dash1={6.0f,4.0f};
-    private static final Stroke DASHED_STROKE=new BasicStroke(1.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_MITER,10.0f,dash1,0.0f);
 
+    private static final int IDEAL_GRID_SPACE=40;
+    
     public PolarGrid2D(){
         super();
-        color.setValue(Color.getHSBColor(0.6f,0.5f,0.6f));
+        setColor(Color.getHSBColor(.4f,.3f,0.9f));
     }
     
     // DRAW METHODS
             
     double THETA_STEPS=24;
     
-    public void paintComponent(Graphics2D g,Euclidean2 v) {    
-        g.setColor(getColor().brighter());
-        g.setStroke(DASHED_STROKE);
+    public void paintComponent(Graphics2D g,Euclidean2 v) {
         double maxRad=maxRadius(v);
         double minRad=maxRad/40;
+        
+        Point2D.Double origin=v.toWindow(0,0);
+        origin.x=Math.min(Math.max(origin.x,0),v.getWindowWidth());
+        origin.y=Math.min(Math.max(origin.y,0),v.getWindowHeight());
+
+        NiceRangeGenerator spacing=new NiceRangeGenerator.StandardRange();
+        Vector<Double> rGrid=spacing.niceRange(minRad, maxRad,
+                (double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
+        g.setColor(getColor());
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
+
         // draw outward lines
         for(double i=0;i<2*Math.PI;i+=2*Math.PI/THETA_STEPS){
             g.draw(new Line2D.Double(
                     v.toWindowX(minRad*Math.cos(i)),v.toWindowY(minRad*Math.sin(i)),
                     v.toWindowX(maxRad*Math.cos(i)),v.toWindowY(maxRad*Math.sin(i))));
         }
+
+        // draw circles
         java.awt.geom.Point2D.Double left;
         java.awt.geom.Point2D.Double right;
-        for(double i=minRad;i<maxRad;i+=(maxRad-minRad)/10){
-            left=v.toWindow(new R2(-i,-i));
-            right=v.toWindow(new R2(i,i));
+        for(Double r : rGrid) {
+            left=v.toWindow(new R2(-r,-r));
+            right=v.toWindow(new R2(r,r));
             g.draw(new Ellipse2D.Double(left.x,right.y,right.x-left.x,left.y-right.y));
         }
     }
     
-    public double maxRadius(Euclidean2 v){
+    public static double maxRadius(Euclidean2 v){
         double x1=v.getActualMin().x;
         double x2=v.getActualMax().x;
         double y1=v.getActualMin().y;

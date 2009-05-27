@@ -20,7 +20,7 @@ import scio.coordinate.R2;
 import scio.random.Random2D;
 import sequor.model.PointRangeModel;
 import specto.euclidean2.Euclidean2;
-import specto.style.PointStyle;
+import sequor.style.PointStyle;
 
 /**
  *

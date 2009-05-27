@@ -14,7 +14,7 @@ import scio.coordinate.R2;
 import sequor.component.RangeTimer;
 import specto.Plottable;
 import specto.PlottableGroup;
-import specto.style.PointStyle;
+import sequor.style.PointStyle;
 
 /**
  * <b>DynamicPointSet2D</b> is a collection of points, \emph{all of which} can be moved.
@@ -30,6 +30,7 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
     public void add(R2 newPoint){
         Point2D point=new Point2D(newPoint);
         point.style.setValue(PointStyle.MEDIUM);
+        point.setColorModel(color);
         add(point);
     }
     public void add(double x,double y){add(new R2(x,y));}
@@ -41,7 +42,7 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
     public Path2D.Double getPath(boolean closed){
         Vector<R2> points=new Vector<R2>();
         for(int i=0;i<plottables.size();i++){points.add(getPoint(i));}
-        Path2D.Double path=new Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
+        Path2D.Double path=new Path2D.Double(Path2D.Double.WIND_NON_ZERO,points.size()+1);
         path.moveTo(points.firstElement().x, points.firstElement().y);
         for(R2 p:points){path.lineTo(p.x,p.y);}
         if(closed){path.lineTo(points.firstElement().x, points.firstElement().y);}
@@ -56,6 +57,7 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
+        g.setColor(getColor());
         switch(style.getValue()){
             case STYLE_OPEN:
             case STYLE_CYCLIC:
@@ -81,6 +83,7 @@ public class DynamicPointSet2D extends PlottableGroup<Euclidean2>{
             case STYLE_FILLED_NO_POINTS:
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
                 g.fill(v.closedPath(points));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1.0f));
                 break;
         }
     }

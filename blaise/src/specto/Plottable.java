@@ -35,15 +35,28 @@ import sequor.model.StringRangeModel;
 public abstract class Plottable<V extends Visometry> implements ChangeListener {
     
     boolean visible = true;
-    
-    public Plottable() {initStyle();}
+
+    /** Default constructor intializes the plottable's style only. */
+    public Plottable() {
+        initStyle();
+    }
 
     /** Used when the function must be recomputed, typically within paintComponent. */
     public void recompute(V v){}
+
     /** Called when the plottable is redrawn. */
-    public void redraw(){fireStateChanged();}
+    public void redraw(){
+        fireStateChanged();
+    }
+
     /** When the state is changed, should redraw this plottable. */
-    public void stateChanged(ChangeEvent e){if(e.getSource().equals(this)){return;}changeEvent=e;redraw();}
+    public void stateChanged(ChangeEvent e){
+        if(! e.getSource().equals(this)){
+            changeEvent=e;
+            redraw();
+        }
+    }
+    
     /** Method that paints the plottable. Uses either already-stored values computed by "recompute" or computes
      * new values if necessary.
      * @param g the graphics object
@@ -81,10 +94,26 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
     
     /** Color used by the element. */
     protected ColorModel color;
+    
     /** Style setting used by the element. */
     public StringRangeModel style;
+
     /** Style strings used to select a style. */
-    public abstract String[] getStyleStrings();
+    public String[] getStyleStrings() {
+        return (style != null) ? style.getStrings() : null;
+    }
+
+    /** Initializes the style. */
+    public void initStyle(){
+        color = new ColorModel();
+        color.addChangeListener(this);
+        String[] styles = getStyleStrings();
+        if(styles != null){
+          style = new StringRangeModel(styles);
+          style.addChangeListener(this);
+        }
+    }
+
     /** Returns adjuster which can be used to modify the style. */
     public NumberSlider getStyleSlider(int x,int y){
         if(style!=null){
@@ -94,6 +123,7 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
             return null;
         }
     }
+
     /** Returns adjuster which can be used to modify the style, with string for name. */
     public NumberSlider getStyleSlider(String name,int x,int y){
         if(style!=null){
@@ -104,29 +134,33 @@ public abstract class Plottable<V extends Visometry> implements ChangeListener {
         }
     }
     
-    /** Initializes the style. */
-    public void initStyle(){
-        color=new ColorModel();
-        color.addChangeListener(this);
-        String[] styles=getStyleStrings();
-        if(styles==null || styles.length==0){return;}
-        style=new StringRangeModel(styles);
-        style.addChangeListener(this);
-    }
-    
     
     // BEAN PATTERNS (STYLE)
     
     /** Returns color of the element. */
-    public Color getColor(){return color.getValue();}
+    public Color getColor(){
+        return color.getValue();
+    }
+
     /** Sets the color of the element. */
-    public void setColor(Color newValue){color.setValue(newValue);}
+    public void setColor(Color newValue){
+        color.setValue(newValue);
+    }
+
     /** Sets the color model. */
-    public void setColorModel(ColorModel model){this.color = model;}
+    public void setColorModel(ColorModel model){
+        this.color = model;
+    }
+
     /** Returns the color model. */
-    public ColorModel getColorModel(){return color;}
+    public ColorModel getColorModel(){
+        return color;
+    }
+
     /** Synchronizes color model with another plottable. */
-    public void synchronizeColorsWith(Plottable p){setColorModel(p.getColorModel());}
+    public void synchronizeColorsWith(Plottable p){
+        setColorModel(p.getColorModel());
+    }
     
     
     // CONTEXT MENU

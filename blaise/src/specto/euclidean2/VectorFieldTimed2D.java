@@ -1,9 +1,7 @@
 /*
- * Parametric2D.java
- * Created on Sep 27, 2007, 1:12:35 PM
+ * VectorFieldTimed2D.java
+ * Created on Oct 1, 2008
  */
-
-// TODO when function is assigned to this, compute the appropriate range of vector lengths
 
 package specto.euclidean2;
 
@@ -12,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +23,8 @@ import specto.Plottable;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
 import scio.diffeq.DETimeSolve;
-import scio.function.BoundedFunction;
+import scio.function.Function;
+import sequor.style.LineStyle;
 import specto.Animatable;
 
 /**
@@ -34,79 +34,71 @@ import specto.Animatable;
 public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>, ChangeListener {
     
     /** The underlying function for the vector field... depends on time (3rd element) */
-    BoundedFunction<R3,R2> function;
+    Function<R3,R2> function;
+
     /** The x function, as a tree. */
     FunctionTreeModel xFunction;
+    
     /** The y function, as a tree. */
     FunctionTreeModel yFunction;
-    
-    /** A default vector field to use */    
-    public static final BoundedFunction<R3,R2> DEFAULT_FUNCTION=new BoundedFunction<R3,R2>(){
-        public R2 getValue(R3 p){return new R2(p.y,-p.x*Math.cos(p.z));}
-        @Override
-        public Vector<R2> getValue(Vector<R3> x) {
-            Vector<R2> result=new Vector<R2>(x.size());
-            for(R3 r:x){result.add(getValue(r));}
-            return result;
-        }
-        public R2 minValue(){return new R2(-5.0,-5.0);}
-        public R2 maxValue(){return new R2(5.0,5.0);}
-    };
-        
+            
     
     // CONSTRUCTORS
-        
-    public VectorFieldTimed2D(){
-        this(DEFAULT_FUNCTION);
-        xFunction = new FunctionTreeModel("2y*t");
-        yFunction = new FunctionTreeModel("-y*t-5sin(x)");
-    }
-    public VectorFieldTimed2D(BoundedFunction<R3,R2> function){
+            
+    public VectorFieldTimed2D(Function<R3,R2> function){
         this.function=function;
         setColor(Color.BLUE);
         style.setValue(ARROWS);
     }
+
+    public VectorFieldTimed2D(){
+        this(new FunctionTreeModel("2*y+t"), new FunctionTreeModel("-y*t-5sin(x)"), "t", "x", "y");
+    }
+
     public VectorFieldTimed2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
-        Vector<String> vars = new Vector<String>();
-        vars.add("x"); vars.add("y"); vars.add("t");
-        functionModel1.getRoot().setVariables(vars);
-        functionModel2.getRoot().setVariables(vars);
+        this(functionModel1, functionModel2, "t", "x", "y");
+    }
+
+    public VectorFieldTimed2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2, String vart, String varx, String vary) {
+        final String[] varsArray = {vart, varx, vary};
+        functionModel1.getRoot().setVariables(varsArray);
+        functionModel2.getRoot().setVariables(varsArray);
         xFunction = functionModel1;
         yFunction = functionModel2;
         function = getVectorFunction(
-                (BoundedFunction<R3,Double>) functionModel1.getRoot().getFunction(3),
-                (BoundedFunction<R3,Double>) functionModel2.getRoot().getFunction(3));
+                (Function<R3,Double>) functionModel1.getRoot().getFunction(),
+                (Function<R3,Double>) functionModel2.getRoot().getFunction());
         ChangeListener cl = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 function = getVectorFunction(
-                        (BoundedFunction<R3,Double>) functionModel1.getRoot().getFunction(3),
-                        (BoundedFunction<R3,Double>) functionModel2.getRoot().getFunction(3));
+                        (Function<R3,Double>) functionModel1.getRoot().getFunction(),
+                        (Function<R3,Double>) functionModel2.getRoot().getFunction());
                 fireStateChanged();
             }
         };
         functionModel1.addChangeListener(cl);
-        functionModel2.addChangeListener(cl);   
-        setColor(Color.BLUE); 
+        functionModel2.addChangeListener(cl);
+        setColor(Color.BLUE);
         style.setValue(ARROWS);    
     }
-    
+
+
     // HELPERS
-    
-    public static BoundedFunction<R3, R2> getVectorFunction(final BoundedFunction<R3,Double> fx, final BoundedFunction<R3,Double> fy) {
-        return new BoundedFunction<R3, R2>() {
-            public R2 getValue(R3 pt) throws FunctionValueException { return new R2(fx.getValue(pt), fy.getValue(pt)); }
+
+    /** Returns a vector function, given two input functions. */
+    public static Function<R3, R2> getVectorFunction(final Function<R3,Double> fx, final Function<R3,Double> fy) {
+        return new Function<R3, R2>() {
+            public R2 getValue(R3 pt) throws FunctionValueException { 
+                return new R2(fx.getValue(pt), fy.getValue(pt));
+            }
             public Vector<R2> getValue(Vector<R3> xx) throws FunctionValueException {
-                Vector<Double> xs = fx.getValue(xx);
-                Vector<Double> ys = fy.getValue(xx);
-                Vector<R2> result = new Vector<R2>(xs.size());
-                for(int i=0; i<xs.size(); i++){
-                    result.add(new R2(xs.get(i),ys.get(i)));
+                Vector<R2> result = new Vector<R2>(xx.size());
+                for(int i=0; i < xx.size(); i++){
+                    result.add(new R2(fx.getValue(xx.get(i)), fy.getValue(xx.get(i))));
                 }
                 return result;
             }
-            public R2 minValue() { return new R2(fx.minValue(),fy.minValue()); }
-            public R2 maxValue() { return new R2(fx.maxValue(),fy.maxValue()); }
         };
     }
     
@@ -115,21 +107,25 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
     
     /** Whether this element animates. */    
     public boolean animationOn=true;
+
     public void setAnimationOn(boolean newValue) { animationOn=newValue; }
     public boolean isAnimationOn() { return animationOn; }
     
-    public BoundedFunction<R3,R2> getFunction(){return function;}
-    public void setFunction(BoundedFunction<R3,R2> function){this.function=function;}
+    public Function<R3,R2> getFunction(){return function;}
+    public void setFunction(Function<R3,R2> function){this.function=function;}
 
     
     // DRAW METHODS
     
     /** Stores the sample points. */
-    Vector<R2> samplePoints;
-    
+    Vector<R2> samplePoints;    
     /** Stores the vectors at these points. */
     Vector<R2> vectors;
-    
+    /** Stores the vector length for proper scaling. */
+    TreeSet<Double> lengths;
+
+    /** Stores length multiplier. */
+    double lengthMultiplier=1;
     /** Stores scaling multiplier. */
     double step;
     
@@ -144,9 +140,11 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
         if (samplePoints==null){ 
             samplePoints = new Vector<R2>(); 
             vectors = new Vector<R2>();
+            lengths = new TreeSet<Double>();
         } else {
             samplePoints.clear();
             vectors.clear();
+            lengths.clear();
         }
         Vector<Double> xRange=v.getSparseXRange(30);
         Vector<Double> yRange=v.getSparseYRange(30);
@@ -155,12 +153,19 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
         step=(stepX>stepY)?stepX:stepY;
         R2 point;
         try {
+            R2 vec;
             for (double px:xRange){
                 for (double py:yRange){
-                    point = new R2(px, py);
-                    samplePoints.add(point);
-                    vectors.add(DETimeSolve.R2T.getMultipliedVector(function, time*2*Math.PI/1000, point, 5 * step));
+                        point = new R2(px, py);
+                        samplePoints.add(point);
+                        vec = DETimeSolve.R2T.getMultipliedVector(function, time*2*Math.PI/1000, point, 1);
+                        vectors.add(vec);
+                        lengths.add(vec.magnitudeSq());
                 }
+            }
+            lengthMultiplier = .8*step / Math.sqrt((Double) lengths.toArray()[(int)(.9*lengths.size())]);
+            for (R2 vector : vectors) {
+                vector.multiplyBy(lengthMultiplier);
             }
         } catch (FunctionValueException ex) {
             Logger.getLogger(VectorFieldTimed2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,13 +175,8 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
     /** Paints the vecotr field. */
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v){
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
         switch(style.getValue()){
-            case DOT_LINES:
-                for (int i = 0; i < samplePoints.size(); i++) {
-                    g.fill(v.dot(samplePoints.get(i),2));
-                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i)),samplePoints.get(i).minus(vectors.get(i))));
-                }
-                break;
             case ARROWS:
                 Shape arrow;
                 for (int i = 0; i < samplePoints.size(); i++) {
@@ -195,10 +195,16 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
                     Logger.getLogger(VectorFieldTimed2D.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
+            case DOT_LINES:
+                for (int i = 0; i < samplePoints.size(); i++) {
+                    g.fill(v.dot(samplePoints.get(i),2));
+                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i).times(.5)),samplePoints.get(i).minus(vectors.get(i).times(.5))));
+                }
+                break;
             case LINES:
             default:
                 for (int i = 0; i < samplePoints.size(); i++) {
-                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i)),samplePoints.get(i).minus(vectors.get(i))));
+                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i).times(.5)),samplePoints.get(i).minus(vectors.get(i).times(.5))));
                 }
                 break;
         }
@@ -215,6 +221,7 @@ public class VectorFieldTimed2D extends Plottable<Euclidean2> implements Animata
 
     /** Animates vector field (flow lines only) */
     public void paintComponent(Graphics2D g, final Euclidean2 v, final RangeTimer t) {
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
         if(style.getValue()!=TRAILS){
             recompute(v, (Integer)t.getCurrentValue());
             paintComponent(g, v);

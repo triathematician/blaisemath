@@ -16,7 +16,7 @@ import java.util.Vector;
 import sequor.control.Ruler;
 import sequor.style.VisualStyle;
 import specto.DynamicPlottable;
-import specto.style.LineStyle;
+import sequor.style.LineStyle;
 import specto.euclidean2.Euclidean2;
 
 /**
@@ -47,11 +47,10 @@ public class StandardGrid2D extends DynamicPlottable<Euclidean2> implements Acti
                 v.getActualMin().x,v.getActualMax().x,
                 (double)IDEAL_GRID_SPACE*v.getDrawWidth()/v.getWindowWidth());
         Vector<Double> yGrid=spacing.niceRange(
-                v.getActualMin().y,v.getActualMax().y,
+                v.getActualMin().y, v.getActualMax().y,
                 (double)IDEAL_GRID_SPACE*v.getDrawHeight()/v.getWindowHeight());        
         g.setColor(getColor());
-        //        g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
-        g.setStroke(VisualStyle.VERY_THIN_STROKE);
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
         Line2D.Double[] lines=Ruler.getHorizontalLines(0,v.toWindowY(yGrid),v.getWindowWidth());
         for(int i=0;i<lines.length;i++){g.draw(lines[i]);}
         lines=Ruler.getVerticalLines(v.toWindowX(xGrid),0,v.getWindowHeight());

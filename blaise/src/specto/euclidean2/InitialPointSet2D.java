@@ -23,9 +23,11 @@ import specto.Animatable;
  * This class represents any path which depends upon an initial point. A call to recompute() is made whenever the initial point is moved.
  * @author Elisha Peterson
  */
-public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>,ChangeListener{
+public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>, ChangeListener{
+
     /** The number of points in the set. */
     protected IntegerRangeModel length;
+
     /** The path "decorating" the initial point. */
     protected PointSet2D path;
 
@@ -48,18 +50,30 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
     // BEAN PATTERNS
     
     /** Whether this element animates. */    
-    public boolean animationOn=true;
-    public void setAnimationOn(boolean newValue) { animationOn=newValue; }
-    public boolean isAnimationOn() { return animationOn; }
+    public boolean animationOn = true;
+
+    public void setAnimationOn(boolean newValue) {
+        animationOn=newValue;
+    }
+
+    public boolean isAnimationOn() { 
+        return animationOn;
+    }
 
     public IntegerRangeModel getLengthModel(){return length;}
     
     /** Returns plottable path element. */
     public PointSet2D getPathPlottable(){return path; }
+
     /** Returns path. */
     public Vector<R2> getPath(){return path.getPath();}
+
     /** Replaces the path contained here with a new one. */
-    public void setPath(Vector<R2> newPoints){path.setPath(newPoints);length.setValue(newPoints.size());}
+    public void setPath(Vector<R2> newPoints){
+        path.setPath(newPoints);
+        length.setValue(newPoints.size());
+    }
+
     /** Replaces the path's color with current color. */
     @Override
     public void setColor(Color newValue){
@@ -73,12 +87,14 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
         g.setColor(path.getColor());
         path.paintComponent(g,v);
     }
+
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v,RangeTimer t){
         super.paintComponent(g,v);
         g.setColor(path.getColor());
         path.paintComponent(g,v,t);
     }
+
     @Override
     public JMenu getOptionsMenu() {
         JMenu menu = super.getOptionsMenu();
@@ -88,11 +104,16 @@ public class InitialPointSet2D extends Point2D implements Animatable<Euclidean2>
         }
         return menu;
     }
-    public int getAnimatingSteps() {return path.getAnimatingSteps();}
+
+    public int getAnimatingSteps() {
+        return path.getAnimatingSteps();
+    }
+
     @Override
-    public String[] getStyleStrings() {return PointSet2D.styleStrings;}
-    @Override
-    public NumberSlider getStyleSlider(int x, int y) {return path.getStyleSlider(x, y);}
+    public NumberSlider getStyleSlider(int x, int y) {
+        return path.getStyleSlider(x, y);
+    }
+
     @Override
     public String toString(){return "Initial Point Set";}
 }

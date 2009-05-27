@@ -11,7 +11,7 @@ import java.util.Vector;
 import sequor.model.ColorModel;
 import sequor.model.PointRangeModel;
 import specto.euclidean2.Euclidean2;
-import specto.style.PointStyle;
+import sequor.style.PointStyle;
 
 /**
  * A list of radii around a central point.

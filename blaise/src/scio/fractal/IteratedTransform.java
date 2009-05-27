@@ -5,7 +5,9 @@
 
 package scio.fractal;
 
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.Vector;
 import scio.coordinate.R2Transform;
 
@@ -32,7 +34,7 @@ public class IteratedTransform {
             boolean connectShapes,
             boolean connectLevels)
     {
-        Path2D.Double result=unionSteps?initialPath:new Path2D.Double(Path2D.WIND_NON_ZERO,(int)Math.pow(5,steps));
+        Path2D.Double result=unionSteps?initialPath:new Path2D.Double(Path2D.Double.WIND_NON_ZERO,(int)Math.pow(5,steps));
         Path2D.Double lastShape=initialPath;
         Path2D.Double curShape=new Path2D.Double();
         

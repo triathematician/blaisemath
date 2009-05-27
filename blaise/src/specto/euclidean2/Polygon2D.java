@@ -5,8 +5,6 @@
 
 package specto.euclidean2;
 
-import sequor.model.PointRangeModel;
-
 /**
  * <p>
  * Triangle2D is ...
@@ -19,7 +17,8 @@ public class Polygon2D extends DynamicPointSet2D {
     public Polygon2D(int sides){
         this.sides=sides;
         for(int i=0;i<sides;i++){
-            add(new Point2D());
+            add(new Point2D(Math.cos(i*2*Math.PI/sides),Math.sin(i*2*Math.PI/sides)));
         }
+        style.setIValue(STYLE_FILLED);
     }
 }

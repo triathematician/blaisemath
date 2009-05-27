@@ -60,10 +60,10 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     /** Default constructor */
     public Plot2D(){
         super(new Euclidean2());
-        axes=new Axes2D();
-        add(axes);
         grid=new StandardGrid2D();
         add(grid);
+        axes=new Axes2D();
+        add(axes);
         initDropping();
     }
     
@@ -79,9 +79,14 @@ public class Plot2D extends PlotPanel<Euclidean2> {
     public void setYLabel(String yLabel) { axes.setYLabel(yLabel); }
 
     /** Returns axis style. */
-    public int getAxisStyle(){return axes.style.getValue();}
+    public int getAxisStyle(){
+        return axes.style.getValue();
+    }
+    
     /** Sets axis style. */
-    public void setAxisStyle(int newValue){axes.style.setValue(newValue);}
+    public void setAxisStyle(int newValue){
+        axes.style.setValue(newValue);
+    }
     
     /** Adjust axis visibility. */
     public void setAxisVisible(boolean newValue){axes.setVisible(false);}

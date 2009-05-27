@@ -20,6 +20,6 @@ public class PolarPlot2D extends PlotPanel<Euclidean2> {
     public PolarPlot2D(){
         super(new Euclidean2());
         addBase(new PolarGrid2D());
-        addBase(new Axes2D());
+        addBase(new PolarAxes2D());
     }
 }

@@ -1,10 +1,6 @@
 /*
  * Rectangle2D.java
- * 
  * Created on Sep 25, 2007, 4:24:07 PM
- * 
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
  */
 
 package specto.euclidean2;
@@ -17,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import specto.Plottable;
 import scio.coordinate.R2;
 import sequor.model.PointRangeModel;
+import sequor.style.LineStyle;
 import specto.euclidean2.Euclidean2;
 
 /**
@@ -75,7 +72,7 @@ public class Rectangle2D extends Plottable<Euclidean2>{
         double rHeight=Math.abs(v.toWindowY(max.y)-v.toWindowY(min.y));
         double rx=(v.toWindowX(max.x)<v.toWindowX(min.x)?v.toWindowX(max.x):v.toWindowX(min.x));
         double ry=(v.toWindowY(max.y)<v.toWindowY(min.y)?v.toWindowY(max.y):v.toWindowY(min.y));  
-        g.setStroke(PointSet2D.strokes[PointSet2D.REGULAR]);
+        g.setStroke(LineStyle.STROKES[LineStyle.MEDIUM]);
         g.draw(new java.awt.geom.Rectangle2D.Double(rx,ry,rWidth,rHeight));
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.2f));
         g.fill(new java.awt.geom.Rectangle2D.Double(rx,ry,rWidth,rHeight));

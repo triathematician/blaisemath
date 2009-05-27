@@ -20,7 +20,7 @@ import scio.function.Derivative;
 import scio.function.FunctionValueException;
 import sequor.component.RangeTimer;
 import sequor.model.FunctionTreeModel;
-import sequor.style.VisualStyle;
+import sequor.style.LineStyle;
 import specto.Animatable;
 import specto.Constrains2D;
 import specto.Decoration;
@@ -51,11 +51,11 @@ public class Function2D extends PointSet2D implements Constrains2D{
     
     /** Sets function based on model. */
     public void setFunctionModel(final FunctionTreeModel functionModel){
-        function=(Function<Double, Double>) functionModel.getRoot().getFunction(1);
+        function = (Function<Double, Double>) functionModel.getRoot().getFunction();
         functionModel.addChangeListener(new ChangeListener(){
             @Override
             public void stateChanged(ChangeEvent e) {
-                function = (Function<Double, Double>) functionModel.getRoot().getFunction(1);
+                function = (Function<Double, Double>) functionModel.getRoot().getFunction();
                 fireStateChanged();
             }
         });
@@ -92,7 +92,11 @@ public class Function2D extends PointSet2D implements Constrains2D{
     }
 
     @Override
-    public PointRangeModel getConstraintModel() {return new FunctionPointModel(function);}
+    public PointRangeModel getConstraintModel() {
+        FunctionPointModel result = new FunctionPointModel();
+        addChangeListener(result);
+        return result;
+    }
        
     @Override
     public String toString(){return "Function";}
@@ -108,14 +112,8 @@ public class Function2D extends PointSet2D implements Constrains2D{
     
     /** A point restricted to this function. */
     class FunctionPointModel extends PointRangeModel {
-        Function<Double,Double> function;
-
-        public FunctionPointModel(Function<Double, Double> function) {this(function,0.0);}
-        public FunctionPointModel(Function<Double, Double> function,double x0){
-            super();
-            this.function = function;
-            setTo(x0,0.0);        
-        }
+        public FunctionPointModel(){this(0.0);}
+        public FunctionPointModel(double x0){setTo(x0,0.0);}
 
         @Override
         public void setTo(double x0, double y0) {
@@ -151,7 +149,7 @@ public class Function2D extends PointSet2D implements Constrains2D{
         @Override
         public void recompute(Euclidean2 v) {
             try {
-                slope = Derivative.approximateDerivative(function, prm.getX(), .0001);
+                slope = Derivative.approximateDerivative(function, prm.getX(), v.getDrawWidth()/1000);
                 endVector.setTo(getPoint().plus(new R2(1.,slope).multipliedBy(1/Math.sqrt(1+slope*slope))));
             } catch (FunctionValueException ex) {
                 System.out.println("error computing derivative approximation");
@@ -161,9 +159,10 @@ public class Function2D extends PointSet2D implements Constrains2D{
         @Override
         public void paintComponent(Graphics2D g, Euclidean2 v) {
             vector.paintComponent(g,v);
-            g.setStroke(VisualStyle.VERY_DOTTED_STROKE);
+            g.setStroke(LineStyle.STROKES[LineStyle.VERY_DOTTED]);
             g.draw(v.lineSegment(prm.getX(), 0, prm.getX(), prm.getY()));
-            g.setStroke(VisualStyle.THIN_STROKE);
+            g.setStroke(LineStyle.STROKES[LineStyle.THIN]);
+            // draw a triangle slope as well
             Shape s = v.triangle(prm.getX(), prm.getY(), prm.getX() + 1, prm.getY() + slope, prm.getX() + 1, prm.getY() );
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
             g.fill(s);

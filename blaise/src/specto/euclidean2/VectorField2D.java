@@ -12,9 +12,14 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import scio.function.FunctionValueException;
@@ -23,10 +28,14 @@ import sequor.model.FunctionTreeModel;
 import specto.Plottable;
 import scio.coordinate.R2;
 import scio.diffeq.DESolve;
-import scio.function.BoundedFunction;
+import scio.function.Function;
 import scribo.tree.FunctionTreeRoot;
-import sequor.model.DoubleRangeModel;
+import sequor.Settings;
+import sequor.SettingsProperty;
+import sequor.model.IntegerRangeModel;
 import sequor.model.PointRangeModel;
+import sequor.model.StringRangeModel;
+import sequor.style.LineStyle;
 import specto.Animatable;
 
 /**
@@ -36,14 +45,14 @@ import specto.Animatable;
 public class VectorField2D extends Plottable<Euclidean2> implements Animatable<Euclidean2>, ChangeListener {
     
     /** The underlying function for the vector field. */
-    BoundedFunction<R2,R2> function;
+    Function<R2,R2> function;
     /** The x function, as a tree. */
     FunctionTreeModel xFunction;
     /** The y function, as a tree. */
     FunctionTreeModel yFunction;
     
     /** A default vector field to use */    
-    public static final BoundedFunction<R2,R2> DEFAULT_FUNCTION=new BoundedFunction<R2,R2>(){
+    public static final Function<R2,R2> DEFAULT_FUNCTION=new Function<R2,R2>(){
         public R2 getValue(R2 p){return new R2(2*p.y,-p.y-5*Math.sin(p.x));}
         @Override
         public Vector<R2> getValue(Vector<R2> x) {
@@ -51,8 +60,6 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
             for(R2 r:x){result.add(getValue(r));}
             return result;
         }
-        public R2 minValue(){return new R2(-5.0,-5.0);}
-        public R2 maxValue(){return new R2(5.0,5.0);}
     };
         
     
@@ -60,30 +67,32 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         
     public VectorField2D(){
         this(DEFAULT_FUNCTION);
-        xFunction = new FunctionTreeModel("2y");
-        yFunction = new FunctionTreeModel("-y-5sin(x)");
     }
-    public VectorField2D(BoundedFunction<R2,R2> function){
+    public VectorField2D(Function<R2,R2> function){
         this.function=function;
         setColor(Color.BLUE);
         style.setValue(ARROWS);
     }
-    public VectorField2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2) {
+    public VectorField2D(FunctionTreeModel functionModel1, FunctionTreeModel functionModel2) {
+        this(functionModel1, functionModel2, "x", "y");
+    }
+    public VectorField2D(final FunctionTreeModel functionModel1, final FunctionTreeModel functionModel2, String varx, String vary) {
         Vector<String> vars = new Vector<String>();
-        vars.add("x"); vars.add("y");
+        vars.add(varx); vars.add(vary);
+        final String[] varsArray = {varx, vary};
         functionModel1.getRoot().setVariables(vars);
         functionModel2.getRoot().setVariables(vars);
         xFunction = functionModel1;
         yFunction = functionModel2;
         function = getVectorFunction(
-                (BoundedFunction<R2,Double>) functionModel1.getRoot().getFunction(2),
-                (BoundedFunction<R2,Double>) functionModel2.getRoot().getFunction(2));
+                (Function<R2,Double>) functionModel1.getRoot().getFunction(varsArray),
+                (Function<R2,Double>) functionModel2.getRoot().getFunction(varsArray));
         ChangeListener cl = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 function = getVectorFunction(
-                        (BoundedFunction<R2,Double>) functionModel1.getRoot().getFunction(2),
-                        (BoundedFunction<R2,Double>) functionModel2.getRoot().getFunction(2));
+                        (Function<R2,Double>) functionModel1.getRoot().getFunction(varsArray),
+                        (Function<R2,Double>) functionModel2.getRoot().getFunction(varsArray));
                 fireStateChanged();
             }
         };
@@ -95,8 +104,8 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     // HELPERS
     
-    public static BoundedFunction<R2, R2> getVectorFunction(final BoundedFunction<R2,Double> fx, final BoundedFunction<R2,Double> fy) {
-        return new BoundedFunction<R2, R2>() {
+    public static Function<R2, R2> getVectorFunction(final Function<R2,Double> fx, final Function<R2,Double> fy) {
+        return new Function<R2, R2>() {
             public R2 getValue(R2 pt) throws FunctionValueException { return new R2(fx.getValue(pt), fy.getValue(pt)); }
             public Vector<R2> getValue(Vector<R2> xx) throws FunctionValueException {
                 Vector<Double> xs = fx.getValue(xx);
@@ -107,8 +116,6 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                 }
                 return result;
             }
-            public R2 minValue() { return new R2(fx.minValue(),fy.minValue()); }
-            public R2 maxValue() { return new R2(fx.maxValue(),fy.maxValue()); }
         };
     }
     
@@ -120,18 +127,21 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     public void setAnimationOn(boolean newValue) { animationOn=newValue; }
     public boolean isAnimationOn() { return animationOn; }
     
-    public BoundedFunction<R2,R2> getFunction(){return function;}
-    public void setFunction(BoundedFunction<R2,R2> function){this.function=function;}
+    public Function<R2,R2> getFunction(){return function;}
+    public void setFunction(Function<R2,R2> function){this.function=function;}
 
     
     // DRAW METHODS
     
     /** Stores the sample points. */
-    Vector<R2> samplePoints;
-    
+    Vector<R2> samplePoints;    
     /** Stores the vectors at these points. */
     Vector<R2> vectors;
-    
+    /** Stores the vector length for proper scaling. */
+    TreeSet<Double> lengths;
+
+    /** Stores length multiplier. */
+    double lengthMultiplier=1;
     /** Stores scaling multiplier. */
     double step;
     
@@ -145,23 +155,31 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
         if (samplePoints==null){ 
             samplePoints = new Vector<R2>(); 
             vectors = new Vector<R2>();
+            lengths = new TreeSet<Double>();
         } else {
             samplePoints.clear();
             vectors.clear();
+            lengths.clear();
         }
         Vector<Double> xRange=v.getSparseXRange(30);
         Vector<Double> yRange=v.getSparseYRange(30);
-        double stepX=xRange.get(1)-xRange.get(0);
-        double stepY=yRange.get(1)-yRange.get(0);
-        step=(stepX>stepY)?stepX:stepY;
+        step = Math.min(xRange.get(1)-xRange.get(0), yRange.get(1)-yRange.get(0));
         R2 point;
         try {
+            R2 vec;
+            // generate regularly spaced vectors
             for (double px:xRange){
                 for (double py:yRange){
                         point = new R2(px, py);
                         samplePoints.add(point);
-                        vectors.add(DESolve.R2S.getMultipliedVector(function, point, 0.6 * step));
+                        vec = DESolve.R2S.getMultipliedVector(function, point, 1);
+                        vectors.add(vec);
+                        lengths.add(vec.magnitudeSq());
                 }
+            }
+            lengthMultiplier = .8*step / Math.sqrt((Double) lengths.toArray()[(int)(.9*lengths.size())]);
+            for (R2 vector : vectors) {
+                vector.multiplyBy(lengthMultiplier);
             }
         } catch (FunctionValueException ex) {
             Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,14 +189,9 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     /** Paints the vecotr field. */
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v){
-        R2 vector;
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
+        int NUM = flowLength.getValue();
         switch(style.getValue()){
-            case DOT_LINES:
-                for (int i = 0; i < samplePoints.size(); i++) {
-                    g.fill(v.dot(samplePoints.get(i),2));
-                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i)),samplePoints.get(i).minus(vectors.get(i))));
-                }
-                break;
             case ARROWS:
                 Shape arrow;
                 for (int i = 0; i < samplePoints.size(); i++) {
@@ -190,33 +203,41 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
             case TRAILS:
                 try {
                     for (int i = 0; i < samplePoints.size(); i++) {
-                        g.draw(v.path(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM)));
+                        g.draw(v.path(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75*step/NUM)));
                         g.draw(v.path(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, -.75*step/NUM)));
                     }
                 } catch (FunctionValueException ex) {
                     Logger.getLogger(VectorField2D.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
+            case DOT_LINES:
+                for (int i = 0; i < samplePoints.size(); i++) {
+                    g.fill(v.dot(samplePoints.get(i),2));
+                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i).times(.5)),samplePoints.get(i).minus(vectors.get(i).times(.5))));
+                }
+                break;
             case LINES:
             default:
                 for (int i = 0; i < samplePoints.size(); i++) {
-                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i)),samplePoints.get(i).minus(vectors.get(i))));
+                    g.draw(v.lineSegment(samplePoints.get(i).plus(vectors.get(i).times(.5)),samplePoints.get(i).minus(vectors.get(i).times(.5))));
                 }
                 break;
         }
     }
     
     /** Determines whether lines are drawn at random positions and recycled over time or drawn at fixed points. */
-    boolean standardFlows = false;
-    
+    boolean standardFlows = false;    
     /** Determines the number of random flows. */
-    int NUM_RANDOM = 1000;
-    
+    IntegerRangeModel numRandom = new IntegerRangeModel(1000,0,10000,10);    
     /** Number to remove each time. */
-    int RANDOM_TURNOVER = 10;
+    IntegerRangeModel turnover = new IntegerRangeModel(10,0,1000,1);
+    /** Length of flow lines (in # of steps. */
+    IntegerRangeModel flowLength = new IntegerRangeModel(10,0,100,1);
 
     /** Animates vector field (flow lines only) */
     public void paintComponent(Graphics2D g, final Euclidean2 v, final RangeTimer t) {
+        g.setStroke(LineStyle.STROKES[LineStyle.VERY_THIN]);
+        final int NUM = flowLength.getValue();
         if(style.getValue()!=TRAILS){
             paintComponent(g, v);
         } else {
@@ -228,7 +249,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                             flows.add(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                         }
                     } else {
-                        for (int i = 0; i < NUM_RANDOM; i++) {
+                        for (int i = 0; i < numRandom.getValue(); i++) {
                             flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }
                     }
@@ -246,7 +267,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                                         flows.add(DESolve.R2S.calcNewton(function, samplePoints.get(i), NUM, .75 * step / NUM));
                                     }
                                 } else {
-                                    for (int i = 0; i < NUM_RANDOM; i++) {
+                                    for (int i = 0; i < numRandom.getValue(); i++) {
                                         flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                                     }
                                 }
@@ -263,13 +284,13 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                             DESolve.R2S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
                     } else {
-                        for (int i = 0; i < RANDOM_TURNOVER; i++) {
+                        for (int i = 0; i < turnover.getValue(); i++) {
                             flows.remove(0);
                         }
                         for (int i = 0; i < flows.size(); i++) {
                             DESolve.R2S.calcNewton(function, flows.get(i), t.getSpeed()+2, .75 * step / NUM);
                         }
-                        for (int i = 0; i < RANDOM_TURNOVER; i++) {
+                        for (int i = 0; i < turnover.getValue(); i++) {
                             flows.add(DESolve.R2S.calcNewton(function, v.getRValue(), NUM, .75*step/NUM));
                         }                        
                     }
@@ -284,9 +305,7 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     }
 
     /** Only need a few steps for the animation */
-    public int getAnimatingSteps() { return 10; }
-    
-    int NUM=10;
+    public int getAnimatingSteps() { return flowLength.getValue(); }
     
     
     // STYLE METHODS
@@ -298,7 +317,10 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     static final String[] styleStrings={"Slopelines","Slopelines with dots","Vectors","Flows"};
     
     @Override
-    public String[] getStyleStrings() {return styleStrings;}
+    public String[] getStyleStrings() {
+        return styleStrings;
+    }
+    
     @Override
     public String toString(){return "Vector field";}
     
@@ -315,6 +337,9 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     
     /** Returns a plottable function representing the divergence of this vector field. */
     public PlaneFunction2D getDivergence() {
+        if (xFunction == null || yFunction == null) {
+            return null;
+        }
         final PlaneFunction2D result = new PlaneFunction2D(getDivergence(xFunction, yFunction));
         ChangeListener cl = new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -329,7 +354,10 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     }
     
     /** Returns a plottable function representing the (scalar) curl of this vector field... the z component of the curl */
-    public PlaneFunction2D getScalarCurl() { 
+    public PlaneFunction2D getScalarCurl() {
+        if (xFunction == null || yFunction == null) {
+            return null;
+        }
         final PlaneFunction2D result = new PlaneFunction2D(getScalarCurl(xFunction, yFunction));
         ChangeListener cl = new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -347,13 +375,11 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     // STATIC METHODS
     
     /** Returns divergence of the specified vector field. */
-    public static BoundedFunction<R2, Double> getDivergence(final FunctionTreeModel fx, final FunctionTreeModel fy) {
-        return new BoundedFunction<R2, Double> () {
+    public static Function<R2, Double> getDivergence(final FunctionTreeModel fx, final FunctionTreeModel fy) {
+        return new Function<R2, Double> () {
             String[] vars = {"x", "y"};
-            BoundedFunction<R2, Double> fxx = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fx.getRoot().derivativeTree("x")).getFunction(vars);
-            BoundedFunction<R2, Double> fyy = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fy.getRoot().derivativeTree("y")).getFunction(vars);
-            public Double minValue() { return 0.0; }
-            public Double maxValue() { return 5.0; }
+            Function<R2, Double> fxx = (Function<R2, Double>) ((FunctionTreeRoot)fx.getRoot().derivativeTree("x")).getFunction(vars);
+            Function<R2, Double> fyy = (Function<R2, Double>) ((FunctionTreeRoot)fy.getRoot().derivativeTree("y")).getFunction(vars);
             public Double getValue(R2 pt) throws FunctionValueException {
                 return fxx.getValue(pt) + fyy.getValue(pt);
             }
@@ -369,13 +395,11 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
     }
     
     /** Returns curl of the specified vector field. */
-    public static BoundedFunction<R2, Double> getScalarCurl(final FunctionTreeModel fx, final FunctionTreeModel fy) {
-        return new BoundedFunction<R2, Double> () {
+    public static Function<R2, Double> getScalarCurl(final FunctionTreeModel fx, final FunctionTreeModel fy) {
+        return new Function<R2, Double> () {
             String[] vars = {"x", "y"};
-            BoundedFunction<R2, Double> fxy = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fx.getRoot().derivativeTree("y")).getFunction(vars);
-            BoundedFunction<R2, Double> fyx = (BoundedFunction<R2, Double>) new FunctionTreeRoot(fy.getRoot().derivativeTree("x")).getFunction(vars);
-            public Double minValue() { return 0.0; }
-            public Double maxValue() { return 5.0; }
+            Function<R2, Double> fxy = (Function<R2, Double>) ((FunctionTreeRoot)fx.getRoot().derivativeTree("y")).getFunction(vars);
+            Function<R2, Double> fyx = (Function<R2, Double>) ((FunctionTreeRoot)fy.getRoot().derivativeTree("x")).getFunction(vars);
             public Double getValue(R2 pt) throws FunctionValueException {
                 return fyx.getValue(pt) - fxy.getValue(pt);
             }
@@ -388,6 +412,44 @@ public class VectorField2D extends Plottable<Euclidean2> implements Animatable<E
                 return resultx;
             }            
         };
+    }
+
+    // SETTINGS
+
+    /** Overrides to allow setting custom options. */
+    @Override
+    public JMenu getOptionsMenu() {
+        JMenu menu = super.getOptionsMenu();
+        menu.add(new JSeparator(),0);
+        JMenuItem mi = new JMenuItem("Vector Field Options");
+        mi.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if (ps==null) { ps = new FlowSettings(); }
+                if (psd==null) { psd = ps.getDialog(null, false); }
+                psd.setVisible(true);
+            }
+        });
+        menu.add(mi,0);
+        return menu;
+    }
+
+    FlowSettings ps;
+    JDialog psd;
+
+    /** Inner class controls options for displaying the curve... starting point, ending point, and number of steps */
+    public class FlowSettings extends Settings {
+        /** Initializes, and sets up listening. */
+        public FlowSettings() {
+            setName("Vector Field Options");
+            add(new SettingsProperty("style",style,Settings.EDIT_COMBO));
+            add(new SettingsProperty("color",color,Settings.EDIT_COLOR));
+            add(new SettingsProperty("flow length",flowLength,Settings.EDIT_INTEGER_SLIDER));
+            add(new SettingsProperty("# flows",numRandom,Settings.EDIT_INTEGER));
+            add(new SettingsProperty("flow turnover",turnover,Settings.EDIT_INTEGER_SLIDER));
+        }
+        /** Event handling... all taken care of by the models */
+        @Override
+        public void stateChanged(ChangeEvent e) { VectorField2D.this.fireStateChanged(); }
     }
 }
 

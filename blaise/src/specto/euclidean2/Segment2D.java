@@ -10,6 +10,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import scio.coordinate.R2;
 import sequor.model.PointRangeModel;
+import sequor.model.StringRangeModel;
+import sequor.style.LineStyle;
 import specto.Constrains2D;
 
 /**
@@ -52,7 +54,7 @@ public class Segment2D extends DynamicPointSet2D implements Constrains2D {
 
     @Override
     public void paintComponent(Graphics2D g,Euclidean2 v) {
-        g.setStroke(PointSet2D.strokes[PointSet2D.REGULAR]);
+        g.setStroke(LineStyle.STROKES[LineStyle.MEDIUM]);
         switch(style.getValue()){
             case LINE_RAY:
                 Shape ray=v.ray(getPoint1(),getPoint2(),10.0);
@@ -85,9 +87,12 @@ public class Segment2D extends DynamicPointSet2D implements Constrains2D {
     /** Draw as a vector */
     public static final int LINE_VECTOR = 3;
 
-    static final String[] styleStrings={"Segment","Ray","Line","Vector"};
+    static final String[] styleStrings={"Segment", "Ray", "Line", "Vector"};
+
     @Override
-    public String[] getStyleStrings() {return styleStrings;}
+    public String[] getStyleStrings() {
+        return styleStrings;
+    }
     
     @Override
     public String toString(){return "Segment";}
@@ -96,14 +101,23 @@ public class Segment2D extends DynamicPointSet2D implements Constrains2D {
     // SUBCLASSES
     
     public static class Line extends Segment2D {
-        public Line(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_LINE);}
+        public Line(Point2D point1,Point2D point2){
+            super(point1,point2);
+            style.setValue(LINE_LINE);
+        }
     }    
     public static class Ray extends Segment2D {
-        public Ray(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_RAY);}
+        public Ray(Point2D point1,Point2D point2){
+            super(point1,point2);
+            style.setValue(LINE_RAY);
+        }
     }
     
     public static class Vector extends Segment2D {        
-        public Vector(Point2D point1,Point2D point2){super(point1,point2);style.setValue(LINE_VECTOR);}
+        public Vector(Point2D point1,Point2D point2){
+            super(point1,point2);
+            style.setValue(LINE_VECTOR);
+        }
     }
     
     // CONSTRAINED POINTS

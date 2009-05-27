@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.Vector;
 import sequor.control.Ruler;
-import sequor.style.VisualStyle;
+import sequor.style.LineStyle;
 import specto.DynamicPlottable;
 import specto.euclidean1.Euclidean1;
 
@@ -50,7 +50,7 @@ public class Axis1D extends DynamicPlottable<Euclidean1> implements ActionListen
         for(Double d:xGrid){xLabels.add(nf.format(d));}
         xGrid=v.toWindow(xGrid);
         g.setColor(getColor());
-        g.setStroke(VisualStyle.MEDIUM_STROKE);  
+        g.setStroke(LineStyle.STROKES[LineStyle.THICK]);
         
         Point2D.Double origin=v.toWindow(0.0);
         origin.x=Math.min(Math.max(origin.x,0),v.getWindowWidth());

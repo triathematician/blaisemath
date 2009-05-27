@@ -27,17 +27,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
 import sequor.component.RangeTimer;
-import sequor.component.SettingsTreeDialog;
 import sequor.control.AnimationControl;
 import sequor.control.DrawnPath;
 import sequor.control.MarkerBox;
 import sequor.control.NumberSlider;
+import sequor.control.SliderBox;
 import sequor.event.MouseVisometryEvent;
 import sequor.event.MouseVisometryListener;
 import sequor.model.IntegerRangeModel;
@@ -131,11 +130,11 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
     }
     
     private void addAnimationControls(){
-        if(animator==null){ animator=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_VLINE); }
-        if(!controls.contains(animator)){ add(animator,3,7); }
+        if(animator==null){ animator=new AnimationControl(0,0,timer,AnimationControl.LAYOUT_HLINE); }
+        if(!controls.contains(animator)){ add(animator,3,0); }
         if(timerBar==null){ timerBar = new NumberSlider(210,10,timer.getModel());}
         timerBar.setName("Timer");
-        if(!controls.contains(timerBar)){ add(timerBar,3,6); }        
+        if(!controls.contains(timerBar)){ add(timerBar,3,1); }
     }
     private void removeAnimationControls(){
         if(controls.remove(animator)){animator.removeChangeListener(this);}
@@ -149,7 +148,7 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
             markerBox.addMarker(Color.RED, DrawnPath.PEN);
             markerBox.addMarker(Color.BLACK, DrawnPath.PENCIL);
         }
-        if(!controls.contains(markerBox)){ add(markerBox,3,0); }
+        if(!controls.contains(markerBox)){ add(markerBox,3,2); }
     }
     private void removeMarkerBox(){
         if(controls.remove(markerBox)){markerBox.removeChangeListener(this);}
@@ -457,5 +456,22 @@ public abstract class PlotPanel<V extends Visometry> extends JPanel
         if(e!=null){
             visometry.mouseWheelMoved(e);
         }
+    }
+
+
+    // STATIC METHODS
+
+    /** Returns box of sliders for style of associated plottables. */
+    public static SliderBox getStyleAdjusters(int x,int y,int girth,Collection<Plottable> cp,JPanel snapPanel){
+        SliderBox result=new SliderBox(x,y,girth);
+        for(Plottable p:cp){
+            result.add(p.getStyleSlider(0,0));
+        }
+        result.adjustBounds();
+        result.performLayout();
+        if(snapPanel!=null){
+            result.enableSnapping(snapPanel, 3, 6);
+        }
+        return result;
     }
 }

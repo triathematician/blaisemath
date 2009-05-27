@@ -37,6 +37,7 @@ public class PlottableGroup<V extends Visometry> extends DynamicPlottable<V> imp
         plottables.clear();
     }    
     public void add(Plottable<V> p){
+        if (p==null) { return; }
         plottables.add(p);
         p.addChangeListener(this);
     }

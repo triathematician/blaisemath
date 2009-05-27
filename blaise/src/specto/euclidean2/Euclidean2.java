@@ -94,7 +94,9 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
     public R2 getDesiredMin(){return desiredMin;}
     public R2 getDesiredMax(){return desiredMax;}
     public double getWindowAspect(){return windowAspect;}
+    /** Returns the displayed range of x values. */
     public double getDrawWidth(){return bounds.getXRange();}
+    /** Returns the displayed range of y values. */
     public double getDrawHeight(){return bounds.getYRange();}
     public double getDrawAspect(){return getDrawWidth()/getDrawHeight();}
     public AffineTransform getAffineTransformation(){return at;}
@@ -200,7 +202,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         return result;
     }
     public Point2D.Double toWindow(double vx,double vy){return new Point2D.Double(toWindowX(vx),toWindowY(vy));}
-    public Point2D.Double toWindow(R2 vp){return new Point2D.Double(toWindowX(vp.x),toWindowY(vp.y));}
+    public Point2D.Double toWindow(R2 vp){if (vp==null) { return null; } return new Point2D.Double(toWindowX(vp.x),toWindowY(vp.y));}
     public void transform(Path2D.Double path) {path.transform(at);}
     
     // CONVERT WINDOW COORDINATES TO GEOMETRY COORDINATES
@@ -443,7 +445,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
                 return new R2(bounds.getMaxX(),yRight);
             }else if(p2.y>p1.y && p1.y<=bounds.getMaxY()){ // line goes up
                 return new R2((bounds.getMaxY()-p1.y)/slope+p1.x,bounds.getMaxY());                
-            }else if(p1.y>=bounds.getMinY()){ // line goes down
+            }else if(p1.y>p2.y && p1.y>=bounds.getMinY()){ // line goes down
                 return new R2((bounds.getMinY()-p1.y)/slope+p1.x,bounds.getMinY());                
             }
         }else if(p2.x<p1.x && p1.x>=bounds.getMinX()){ // line goes to the left
@@ -453,7 +455,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
                 return new R2(bounds.getMinX(),yLeft);
             }else if(p2.y>p1.y && p1.y<=bounds.getMaxY()){ // line goes up
                 return new R2((bounds.getMaxY()-p1.y)/slope+p1.x,bounds.getMaxY());                
-            }else if(p1.y>=bounds.getMinY()){ // line goes down
+            }else if(p1.y>p2.y && p1.y>=bounds.getMinY()){ // line goes down
                 return new R2((bounds.getMinY()-p1.y)/slope+p1.x,bounds.getMinY());                
             }
         }else if(p1.x==p2.x){ // line is vertical
@@ -465,10 +467,16 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         }
         return null;
     }
+
+    public final Shape NADA = new java.awt.geom.Line2D.Double(0,0,0,0);
     
     /** Returns a lineSegment in the current geometry. */
     public Shape lineSegment(R2 p1,R2 p2){
-        return new java.awt.geom.Line2D.Double(toWindow(p1),toWindow(p2));
+        try {
+            return new java.awt.geom.Line2D.Double(toWindow(p1),toWindow(p2));
+        } catch (NullPointerException e) {
+            return NADA;
+        }
     }
     public Shape lineSegment(double x1,double y1,double x2,double y2){return lineSegment(new R2(x1,y1),new R2(x2,y2));}
     /** Returns the line that passes through the two points. */
@@ -480,8 +488,12 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         return lineSegment(getActualMin().x,slope*(getActualMin().x-p1.x)+p1.y,getActualMax().x,slope*(getActualMax().x-p1.x)+p1.y);
     }
     /** Returns the ray that points from the first point through the second point. */
-    public Shape ray(R2 p1,R2 p2,double arrowSize){        
-        return arrow(p1,rayHit(p1,p2),arrowSize);
+    public Shape ray(R2 p1, double angle, double arrowSize){
+        return arrow(p1, rayHit(p1, p1.plus(R2.getPolar(1, angle))), arrowSize);
+    }
+    /** Returns the ray that points from the first point through the second point. */
+    public Shape ray(R2 p1, R2 p2, double arrowSize){
+        return arrow(p1, rayHit(p1,p2), arrowSize);
     }
     /** Returns arrow shape... the angles of the arrow must be done with respect to window geometry.
      * @param start the starting point for the arrow
@@ -489,7 +501,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
      * @param arrowSize multiplier for the arrow's size; if negative, it represents a multiple of the arrow's length; if positive, size in pixels
      * @return Path2D.Double containing the arrow
      */
-    public Shape arrow(R2 start,R2 end,double arrowSize){
+    public Shape arrow(R2 start, R2 end, double arrowSize){
         if (start==null||end==null){return new Path2D.Double();}
         Point2D.Double winStart=toWindow(start);
         Point2D.Double winEnd=toWindow(end);
@@ -552,22 +564,33 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         double x=(wx1<wx2?wx1:wx2);
         double y=(wy1<wy2?wy1:wy2);        
         return new java.awt.geom.Ellipse2D.Double(x,y,Math.abs(wx1-wx2),Math.abs(wy1-wy2));      
-    }    
+    }
+
     /** Returns an ellipse in the current geometry */
     public Shape ellipse(R2 p1,R2 p2){return ellipse(p1.x,p1.y,p2.x,p2.y);}
+
     /** Returns an ellipse in the current geometry */
     public Shape ellipse(R2 ctr,double wid,double height){return ellipse(new R2(ctr.x-wid,ctr.y-height),new R2(ctr.x+wid,ctr.y+height));
     }    
     /** Returns a circle in the current geometry. */
     public Shape circle(R2 ctr,double rad){return ellipse(ctr,rad,rad);}
+
     /** Returns path containing given list of points. */
     public Shape path(Vector<R2> points){
         java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
-        path.moveTo(points.firstElement().x, points.firstElement().y);
-        for(R2 p:points){path.lineTo(p.x,p.y);}
+        for(R2 p:points){
+            if(p!=null) { 
+                if (path.getCurrentPoint() == null) { 
+                    path.moveTo(p.x, p.y); 
+                } else {
+                    path.lineTo(p.x,p.y);
+                }
+            }
+        }
         path.transform(getAffineTransformation());
         return path;
     }
+
     /** Returns closed path containing given list of points. */
     public Shape closedPath(Vector<R2> points){
         java.awt.geom.Path2D.Double path=new java.awt.geom.Path2D.Double(java.awt.geom.Path2D.Double.WIND_NON_ZERO,points.size()+1);
@@ -577,16 +600,24 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         path.transform(getAffineTransformation());
         return path;
     }
+
     /** Returns horizontal line at the given coordinate. */
-    public Shape hLine(double y){return lineSegment(bounds.getMinX(),y,bounds.getMaxX(),y);}
+    public Shape hLine(double y){
+        return lineSegment(bounds.getMinX(), y, bounds.getMaxX(), y);
+    }
+
     /** Returns set of horizontal lines at given positions. */
     public Shape hLines(Vector<Double> coords){
         Path2D.Double result=new Path2D.Double();
         for(Double y:coords){result.append(hLine(y),false);}
         return result;
     }
+
     /** Returns horizontal line at the given coordinate. */
-    public Shape vLine(double x){return lineSegment(x,bounds.getMinY(),x,bounds.getMaxY());}
+    public Shape vLine(double x){
+        return lineSegment(x, bounds.getMinY(), x, bounds.getMaxY());
+    }
+    
     /** Returns set of vertical lines at given positions. */
     public Shape vLines(Vector<Double> coords){
         Path2D.Double result=new Path2D.Double();
@@ -607,6 +638,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
     
     /** Return a dot, whose size is independent of the geometry. */
     public Shape dot(R2 ctr,double winRad){
+        if (ctr==null) { return NADA; }
         return new java.awt.geom.Ellipse2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
     }
     /** Returns square dot with size independent of geometry. */
@@ -614,7 +646,7 @@ public class Euclidean2 extends Visometry<R2> implements RandomGenerator<R2> {
         return new java.awt.geom.Rectangle2D.Double(toWindowX(ctr.x)-winRad,toWindowY(ctr.y)-winRad,2*winRad,2*winRad);
     }
     /** Returns arrow at given angle and given length in window geometry. */
-    public Shape winArrow(R2 start,double angle,double length,double winArrowSize){
+    public Shape winArrow(R2 start, double angle, double length, double winArrowSize){
         Point2D.Double winStart=toWindow(start);
         Point2D.Double winEnd=getPointOffsetAngle(winStart,angle,length);
         double tipAngle=Math.PI/6;
