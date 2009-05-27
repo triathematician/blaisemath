@@ -17,6 +17,7 @@ public class Trig {
         public void initFunctionType(){setFunctionNames("cos","-sin","acos",null);}    
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return new Operation.Multiply(-1,new Sin(argumentNode()),argumentDerivative(v));}
+//        @Override
         public Double getValue(Double x){return Math.cos(x);}
     }
     
@@ -24,6 +25,7 @@ public class Trig {
         public Sin(FunctionTreeNode argument){super(argument);}
         @Override
         public void initFunctionType(){setFunctionNames("sin","cos","asin",null);}
+//        @Override
         public Double getValue(Double x){return Math.sin(x);}
     }
     
@@ -33,6 +35,7 @@ public class Trig {
         public void initFunctionType(){setFunctionNames("tan",null,"atan",null);}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return new Operation.Multiply(new Operation.Power(new Sec(argumentNode()),new Constant(2.0)),argumentDerivative(v));}
+//        @Override
         public Double getValue(Double x){return Math.tan(x);}
     }
     
@@ -42,6 +45,7 @@ public class Trig {
         public void initFunctionType(){setFunctionNames("sec",null,"asec",null);}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return new Operation.Multiply(new Sec(argumentNode()),new Tan(argumentNode()),argumentDerivative(v));}
+//        @Override
         public Double getValue(Double x){return 1/Math.cos(x);}
     }
     
@@ -51,6 +55,7 @@ public class Trig {
         public void initFunctionType(){setFunctionNames("csc",null,"acsc",null);}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return new Operation.Multiply(-1,new Cot(argumentNode()),new Csc(argumentNode()),argumentDerivative(v));}
+//        @Override
         public Double getValue(Double x){return 1/Math.sin(x);}    
     }    
     
@@ -60,6 +65,7 @@ public class Trig {
         public void initFunctionType(){setFunctionNames("cot",null,"acot",null);}
         @Override
         public FunctionTreeNode derivativeTree(Variable v){return new Operation.Multiply(-1,new Operation.Power(new Csc(argumentNode()),2),argumentDerivative(v));}
+//        @Override
         public Double getValue(Double x){return 1/Math.tan(x);}    
     }
 }

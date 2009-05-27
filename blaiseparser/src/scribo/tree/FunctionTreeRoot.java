@@ -12,18 +12,13 @@ package scribo.tree;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.Vector;
-import scio.coordinate.Euclidean;
 import scio.coordinate.EuclideanElement;
-import scio.coordinate.R1;
 import scio.coordinate.R2;
-import scio.function.BoundedFunction;
+import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
 import scio.function.FunctionValueException;
-import scio.function.ParameterFunction;
 import scribo.parser.Parser;
 
 /**
@@ -43,36 +38,63 @@ import scribo.parser.Parser;
  * </p>
  * @author Elisha Peterson
  */
-public class FunctionTreeRoot extends FunctionTreeFunctionNode implements FunctionRoot {
+public class FunctionTreeRoot extends FunctionTreeFunctionNode implements FunctionRoot<Double> {
     
     
     // VARIABLES
     
     /** Whether variables/parameters are auto-decided */
-    boolean autoVariables = true;    
-    /** Variables required to obtain a value. */
-    TreeSet<String> variables;
-    /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
-     * the values will be looked up in this table.
+    boolean autoVariables = true;
+
+    /** Variables required to obtain a value. The order of the variables is important as it determines how
+     * the class evaluates based upon a list of inputs.
      */
+    Vector<String> variables;
+
+    /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
+     * the values will be looked up in this table. */
     TreeMap<String,Double> parameters;
     
     
     // CONSTRUCTORS
-    
+
+    /** Constructs as the zero function. */
+    public FunctionTreeRoot() {
+        this(Constant.ZERO);
+    }
+
+    /** Constructs with given expression. */
     public FunctionTreeRoot(String s) throws FunctionSyntaxException {
         this(Parser.parseExpression(s));
     }
-    
+
+    /** Constructs with a particular tree node as the main argument. */
     public FunctionTreeRoot(FunctionTreeNode c){
-        addSubNode(c);
-        variables = c.getUnknowns();
+        variables = new Vector<String>();
         parameters = new TreeMap<String,Double>();
+        addSubNode(c);
+        variables.addAll(c.getUnknowns());
+    }
+
+
+    // INITIALIZERS
+
+    /** Provides the name of the function during initialization. */
+    @Override
+    public void initFunctionType(){ 
+        setFunctionNames("ROOT",null,null,null);
     }
     
     
-    // HANDLING UNKNOWN PARAMETERS
+    // HANDLING CHILD NODES
 
+    /** This node is not permitted to be added to other nodes. */
+    @Override
+    public boolean isValidSubNode(){
+        return false;
+    }
+
+    /** Changes the primary child node, which is the root of the function tree. */
     @Override
     public void setArgumentNode(FunctionTreeNode argument) {
         super.setArgumentNode(argument);
@@ -84,263 +106,271 @@ public class FunctionTreeRoot extends FunctionTreeFunctionNode implements Functi
                 variables.add(s);
             }
         }
-        for (String s: (TreeSet<String>)variables.clone()) {
+        for (String s: (Vector<String>) variables.clone()) {
             if (! vars.contains(s)) { 
                 variables.remove(s); 
             }
         }
-    }    
-    
-    /** Sets up an entire list of parameters. */
-    public void setParameters(TreeMap<String,Double> values){
-        parameters.putAll(values);
-        variables.removeAll(values.keySet());
     }
-    
+
+
+    // HANDLING VARIABLES AND PARAMETERS
+
     /** Returns current list of variables. */
-    public Set<String> getVariables(){return variables;}    
+    public Vector<String> getVariables(){
+        return variables;
+    }
+
+    /** Forces the list of variables to a particular set. This turns off automatic variable detection. */
+    public void setVariables(Vector<String> vars) {
+        setAutoVariables(false);
+        variables = vars;
+    }
+
+    /** Forces the list of variables to a particular set. This turns off automatic variable detection. */
+    public void setVariables(String[] vars) {
+        setAutoVariables(false);
+        variables = new Vector<String>();
+        for (int i = 0; i < vars.length; i++) {
+            variables.add(vars[i]);
+        }
+    }
+
     /** Returns current list of parameters. */
-    public Set<String> getParameters(){return parameters.keySet();}
+    public TreeMap<String, Double> getParameters() {
+        return parameters;
+    }
+
+    /** Sets up the entire list of parameters, replacing what is already there. */
+    public void setParameters(TreeMap<String,Double> parameters) {
+        this.parameters.clear();
+        this.parameters.putAll(parameters);
+        variables.removeAll(this.parameters.keySet());
+    }
+
+    /** Sets up list of parameters using an array, replacing what is already there. */
+    public void setParameters(Object[][] parameters) {
+        TreeMap<String, Double> parameterTree = new TreeMap<String,Double> ();
+        try {
+            for (int i = 0; i < parameters.length; i++) {
+                parameterTree.put( (String) parameters[i][0], (Double) parameters[i][1]);
+            }
+            setParameters(parameterTree);
+        } catch ( ClassCastException e ) {
+            System.out.println("error in parameter list");
+        }
+    }
+
+
     /** Returns number of variables. */
     public int getNumVariables(){return variables.size();}
+
     /** Returns number of parameters. */
-    public int getNumParameters(){return parameters.size();}
+    public int getNumParameters(){return parameters.size();}    
     
-    /** Sets the list of variables. */
-    public void setVariables(Collection<String> vars) {
-        setAutoVariables(false);
-        variables.clear();
-        variables.addAll(vars);
-    }
-    
+    /** Checks auto-variables flag. */
+    public boolean isAutoVariables(){ return autoVariables; }
+
     /** Sets auto-variables flag. */
     public void setAutoVariables(boolean newValue){ this.autoVariables = newValue; }
     
     
     // OVERRIDE SUBMETHODS FROM FUNCTIONTREEFUNCTIONNODE
-    
-    @Override
-    public String toString(){
-        return "Root "
-                + (parameters==null?"":(" , "+parameters.toString()));
-    }
+
+    /** Returns a new tree representing the derivative with respect to the specified variable. */
     @Override
     public FunctionTreeNode derivativeTree(Variable v){
-        return numSubNodes()==1?argumentDerivative(v):null;
+        return numSubNodes()==1
+            ? new FunctionTreeRoot(children.get(0).derivativeTree(v))
+            : null;
     }
-    @Override
-    public boolean isValidSubNode(){return false;}    
+
+    /** Represents the simplified version of this tree. Does this by checking to see if the tree may
+     * be represented by a constant; otherwise just simplifies the argument.
+     * @return a <code>FunctionTreeRoot</code> representing the simplifed tree.
+     */
     @Override
     public FunctionTreeNode simplified(){
         try{
-            return new Constant(getValue()).simplified();
+            return new FunctionTreeRoot(new Constant(getValue()).simplified());
         }catch(FunctionValueException e){
             return new FunctionTreeRoot(argumentSimplified());
         }
     }
-    @Override
-    public void initFunctionType(){}
 
     
     // METHODS TO RETURN VALUE
-    
-    @Override
-    public Double getValue(TreeMap<String, Double> table) throws FunctionValueException {
-        table.putAll(parameters);
-        return argumentValue(table);
+
+    /** Default value function for <code>Function(Double,Double)</code>, which is first
+     * implemented by <code>FunctionTreeFunctionNode</code>.
+     * @param value the input value
+     * @return value of the tree evaluated at the given value
+     * @throws scio.function.FunctionValueException if there is more than 1 variable in the tree
+     */
+    public Double getValue(Double value) throws FunctionValueException {
+        if (variables != null && variables.size() >= 1) {
+            return getValue(variables.get(0), value);
+        }
+        // by default try to get the constant value
+        return getValue("NOINPUTVARIABLE", value);
     }
+
+    /** Default value function for <code>Function(Double,Double)</code>, which is first
+     * implemented by <code>FunctionTreeFunctionNode</code>.
+     * @param value the input value
+     * @return value of the tree evaluated at the given value
+     * @throws scio.function.FunctionValueException if there is more than 1 variable in the tree
+     */
     @Override
-    public Double getValue(String s, Double d) throws FunctionValueException {
-        if(parameters==null||parameters.isEmpty()){return argumentValue(s,d);}
+    public Vector<Double> getValue(Vector<Double> values) throws FunctionValueException {
+        if (variables != null && variables.size() >= 1) {
+            return getValue(variables.get(0), values);
+        }
+        // by default try to get the constant value
+        return getValue("NOINPUTVARIABLE", values);
+    }
+    
+    /** Returns value for a single variable value.
+     * @param var the variable
+     * @param value the value of the variable
+     * @return value of the tree evaluated at the given variable
+     * @throws scio.function.FunctionValueException if there is more than 1 variable in the tree
+     */
+    @Override
+    public Double getValue(String var, Double value) throws FunctionValueException {
+        if (parameters==null || parameters.isEmpty()) {
+            return children.get(0).getValue(var, value);
+        }
         TreeMap<String,Double> table=new TreeMap<String,Double>();
-        table.putAll(parameters);
-        table.put(s,d);
+        table.put(var, value);
         return getValue(table);
     }
+
+    /** Returns value for an array of values for a single variable.
+     * @param var the variable
+     * @param values the value of the variable
+     * @return vector of values of the tree evaluated at the given variable
+     * @throws scio.function.FunctionValueException if there is more than 1 variable in the tree
+     */
     @Override
-    public Vector<Double> getValue(String s, Vector<Double> d) throws FunctionValueException {
-        // TODO make more efficient!
-        if(parameters==null||parameters.isEmpty()){return argumentValue(s,d);}
-        TreeMap<String,Double> table=new TreeMap<String,Double>();
+    public Vector<Double> getValue(String var, Vector<Double> values) throws FunctionValueException {
+        if ( parameters==null || parameters.isEmpty() ) {
+            return children.get(0).getValue(var, values);
+        }
+        TreeMap<String,Double> table = new TreeMap<String,Double>();
         table.putAll(parameters);
-        Vector<Double> result=new Vector<Double>(d.size());
-        for(Double x:d){
-            table.put(s,x);
-            result.add(argumentValue(table));
+        Vector<Double> result = new Vector<Double>(values.size());
+        for(Double x:values){
+            table.put(var,x);
+            result.add(children.get(0).getValue(table));
         }
         return result;
     }
+
+    /** Returns value given the list of values specified within the table... these are a list of variable values,
+     * to which pre-existing parameters will be added. So the table should NOT include any parameters.
+     * @param table mapping of variable values, as doubles
+     * @return double value of the evaluated tree
+     * @throws scio.function.FunctionValueException if the values do not cover all variables
+     */
+    @Override
+    public Double getValue(TreeMap<String, Double> table) throws FunctionValueException {
+        table.putAll(parameters);
+        return children.get(0).getValue(table);
+    }
+
     
     
 
     // FUNCTION INTERFACE METHODS
     
-    /** Doesn't work yet. */
-    public ParameterFunction getParameterFunction(){return null;}
+    //public ParameterFunction getParameterFunction(){return null;}
     
-    /** Returns generic function of the tree, with automatically computed number of variables. */
-    public BoundedFunction<?,Double> getFunction() {
-        return getFunction(variables.size());
+    /** Returns a function of the specified list of variables.
+     * @param vars an ordered array of variables
+     * @return a function whose type depends on the number of variables
+     */
+    public Function<?,Double> getFunction(final String[] vars) {
+        setVariables(vars);
+        return getFunction();
     }
-    
-    /** Returns a function of the specified list of variables. */
-    public BoundedFunction<?,Double> getFunction(final String[] vars) {        
-        variables.clear();
-        for (int i = 0; i < vars.length; i++) { variables.add(vars[i]); }
-        int n = vars.length;
-        if (n == 1) {
-            return new BoundedFunction<Double,Double>() {
-                public Double getValue(Double x) throws FunctionValueException {
-                    return FunctionTreeRoot.this.getValue(vars[0], x);
-                }
-                public Vector<Double> getValue(Vector<Double> xx) throws FunctionValueException {
-                    return FunctionTreeRoot.this.getValue(vars[0], xx);
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return +1.0; }
-            };
-        }
-        if (n == 2) {
-            return new BoundedFunction<R2,Double>() {
-                public Double getValue(R2 x) throws FunctionValueException {
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    for(int i=0;i<vars.length;i++){
-                        try{
-                            table.put(vars[i],x.getElement(i));
-                        } catch(NoSuchElementException e) { break; }
-                    }
-                    table.putAll(parameters);
-                    return FunctionTreeRoot.this.getValue(table);
-                }
-                public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
-                    Vector<Double> result=new Vector<Double>();
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    for(int i=0;i<x.size();i++){
-                        for(int j=0;j<vars.length;j++){
-                            table.put(vars[j],x.get(i).getElement(j));
-                        }
-                        result.add(FunctionTreeRoot.this.getValue(table));
-                    }
-                    table.putAll(parameters);
-                    return result;
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return 1.0; }
-            };
-        } else {
-            return new BoundedFunction<EuclideanElement,Double>(){
-                public Double getValue(EuclideanElement x) throws FunctionValueException {
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    for(int i=0;i<vars.length;i++){
-                        try{
-                            table.put(vars[i],x.getElement(i));
-                        } catch(NoSuchElementException e) { break; }
-                    }
-                    table.putAll(parameters);
-                    return FunctionTreeRoot.this.getValue(table);
-                }
-                public Vector<Double> getValue(Vector<EuclideanElement> x) throws FunctionValueException {
-                    Vector<Double> result=new Vector<Double>();
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    table.putAll(parameters);
-                    for(int i=0;i<x.size();i++){
-                        for(int j=0;j<vars.length;j++){
-                            table.put(vars[j],x.get(i).getElement(j));
-                        }
-                        result.add(FunctionTreeRoot.this.getValue(table));
-                    }
-                    return result;
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return 1.0; }
-            };
-        }
-    }
-    
-    /** Returns a generic function corresponding to this tree. The type of the function will depend on the number of inputs. */
-    public BoundedFunction<?,Double> getFunction(final int n) {
-        if (variables.size() > n){ return null; }
-        if (n == 1) {
-            return new BoundedFunction<Double,Double>() {
-                public Double getValue(Double x) throws FunctionValueException {
-                    return FunctionTreeRoot.this.getValue(variables.first(), x);
-                }      
-                public Vector<Double> getValue(Vector<Double> xx) throws FunctionValueException {
-                    return FunctionTreeRoot.this.getValue(variables.first(), xx);
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return +1.0; }
-            };
-        }
-        if (n == 2) {
-            return new BoundedFunction<R2,Double>() {
-                public Double getValue(R2 x) throws FunctionValueException {
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    String[] vars = new String[variables.size()];
-                    variables.toArray(vars);
-                    for(int i=0;i<vars.length;i++){           
-                        try{
-                            table.put(vars[i],x.getElement(i));
-                        } catch(NoSuchElementException e) { break; }
-                    }
-                    table.putAll(parameters);
-                    return FunctionTreeRoot.this.getValue(table);
-                }      
-                public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
-                    Vector<Double> result=new Vector<Double>();
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    table.putAll(parameters);
-                    String[] vars = new String[variables.size()];
-                    variables.toArray(vars);
-                    for(int i=0;i<x.size();i++){
-                        for(int j=0;j<vars.length;j++){ 
-                            table.put(vars[j],x.get(i).getElement(j));
-                        }
-                        result.add(FunctionTreeRoot.this.getValue(table));
-                    }
-                    return result;
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return 1.0; }
-            };
-        } else {
-            return new BoundedFunction<EuclideanElement,Double>(){
-                public Double getValue(EuclideanElement x) throws FunctionValueException {
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    String[] vars = new String[variables.size()];
-                    variables.toArray(vars);
-                    for(int i=0;i<vars.length;i++){           
-                        try{
-                            table.put(vars[i],x.getElement(i));
-                        } catch(NoSuchElementException e) { break; }
-                    }
-                    table.putAll(parameters);
-                    return FunctionTreeRoot.this.getValue(table);
-                }      
-                public Vector<Double> getValue(Vector<EuclideanElement> x) throws FunctionValueException {
-                    Vector<Double> result=new Vector<Double>();
-                    TreeMap<String,Double> table=new TreeMap<String,Double>();
-                    table.putAll(parameters);
-                    String[] vars = new String[variables.size()];
-                    variables.toArray(vars);
-                    for(int i=0;i<x.size();i++){
-                        for(int j=0;j<vars.length;j++){ 
-                            table.put(vars[j],x.get(i).getElement(j));
-                        }
-                        result.add(FunctionTreeRoot.this.getValue(table));
-                    }
-                    return result;
-                }
-                public Double minValue() { return -1.0; }
-                public Double maxValue() { return 1.0; }
-            };
+
+    /** Returns function with number of inputs that depends on the number of variables in the tree's "variables" parameter.
+     * @return function with input of arbitrary type and output of double type
+     */
+    public Function<?,Double> getFunction() {
+        switch (variables.size()) {
+            case 0:
+                return null;
+            case 1:
+                return new OneInput();
+            case 2:
+                return new TwoInput();
+            default:
+                return new NInput();
         }
     }
 
-    /** Default value function for Function<Double,Double>. Required as part of FunctionTreeFunctionNode. */
-    public Double getValue(Double x) throws FunctionValueException {
-        int n=variables.size();
-        if(n!=1){throw new FunctionValueException();}
-        return ((BoundedFunction<Double,Double>)getFunction()).getValue(x);
+    /** Inner function with a single input. */
+    class OneInput implements Function <Double, Double> {
+        public Double getValue(Double x) throws FunctionValueException {
+            return FunctionTreeRoot.this.getValue(variables.get(0), x);
+        }
+        public Vector<Double> getValue(Vector<Double> xx) throws FunctionValueException {
+            return FunctionTreeRoot.this.getValue(variables.get(0), xx);
+        }
+    }
+
+    /** Inner function with two inputs. */
+    class TwoInput implements Function <R2, Double> {
+        public Double getValue(R2 x) throws FunctionValueException {
+            TreeMap<String,Double> table=new TreeMap<String,Double>();
+            try{
+                for(int i=0; i < variables.size(); i++){
+                    table.put(variables.get(i), x.getElement(i));
+                }
+            } catch(NoSuchElementException e) {
+                throw new FunctionValueException(FunctionValueException.TOO_FEW_INPUTS);
+            }
+            return FunctionTreeRoot.this.getValue(table);
+        }
+        public Vector<Double> getValue(Vector<R2> x) throws FunctionValueException {
+            Vector<Double> result=new Vector<Double>();
+            TreeMap<String,Double> table=new TreeMap<String,Double>();
+            for(int i=0;i<x.size();i++){
+                for(int j=0;j<variables.size();j++){
+                    table.put(variables.get(j),x.get(i).getElement(j));
+                }
+                result.add(FunctionTreeRoot.this.getValue(table));
+            }
+            table.putAll(parameters);
+            return result;
+        }
+    }
+
+    /** Inner function with arbitrary number of inputs. */
+    class NInput implements Function <EuclideanElement, Double> {
+        public Double getValue(EuclideanElement x) throws FunctionValueException {
+            TreeMap<String,Double> table=new TreeMap<String,Double>();
+            for(int i=0;i<variables.size();i++){
+                try{
+                    table.put(variables.get(i), x.getElement(i));
+                } catch(NoSuchElementException e) { break; }
+            }
+            table.putAll(parameters);
+            return FunctionTreeRoot.this.getValue(table);
+        }
+        public Vector<Double> getValue(Vector<EuclideanElement> x) throws FunctionValueException {
+            Vector<Double> result=new Vector<Double>();
+            TreeMap<String,Double> table=new TreeMap<String,Double>();
+            table.putAll(parameters);
+            for(int i=0;i<x.size();i++){
+                for(int j=0;j<variables.size();j++){
+                    table.put(variables.get(j), x.get(i).getElement(j));
+                }
+                result.add(FunctionTreeRoot.this.getValue(table));
+            }
+            return result;
+        }
     }
 }

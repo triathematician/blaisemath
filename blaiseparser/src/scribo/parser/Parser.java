@@ -3,12 +3,8 @@
  * Created on Sep 18, 2007, 5:02:39 PM
  */
 
-// TODO Analyze JEP code for comparison/ideas
-// TODO Add support for &&,||,! operators
-
 package scribo.parser;
 
-import scribo.parser.FunctionSyntaxException;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -16,19 +12,15 @@ import java.util.regex.Pattern;
 import scribo.tree.*;
 
 /**
- * Parses a string input, produces a function result.<br><br>
+ * <p>
+ * This class parses a string input, produces a function result. It contains all the pattern recognition Strings
+ * required to compile the function.
+ * </p>
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
-public class Parser {
+public abstract class Parser {
     static final boolean verbose=false;
-    
-    /** The string containing the expression to be parsed. */
-    String s;
-    
-    public Parser() {
-    }
-       
     
     // Regular expressions for searching functions...
     static final String XSPACE = "\\s*";
@@ -93,8 +85,25 @@ public class Parser {
         return result;
     }
     
-    /** Parses a list of expressions, and operators used to combine them.
+    /**
+     * <p>
+     * Parses a list of expressions, and operators used to combine them.
      * For example, parsing {+,-,*,^} with {2,e,sin(x),4,x^3} gives 2+e-sin(x)*4^(x^3).
+     * </p>
+     * <p>
+     * The order of operations is as follows:
+     * <ul>
+     *  <li> , (comma)
+     *  <li> ||, &&, !
+     *  <li> >, <, >=, <=, ==, !=
+     *  <li> +, -, *, /, ^
+     * </ul>
+     * </p>
+     *
+     * @param operators the list of n-1 operators that combines the expressions
+     * @param expressions the expressions combined by the operators
+     * @return compiled tree having the proper order of operations
+     * @throws scribo.parser.FunctionSyntaxException if there is a problem compiling the tree
      */
     public static FunctionTreeNode resolveOperators(List<String> operators, List<FunctionTreeNode> expressions) throws FunctionSyntaxException  {
         if(verbose){
@@ -110,10 +119,35 @@ public class Parser {
         if (expressions.size()!=n+1){
             throw new FunctionSyntaxException(FunctionSyntaxException.OPERATOR);
         }
+        // base case
         if (n == 0) {return expressions.get(0);}
+
         // Check for comma-delimited list
         Vector<FunctionTreeNode> opNodes=operatorSplit(",",operators,expressions);
         if(opNodes!=null){return new ArgumentList(opNodes);}
+
+//        // Check for boolean operators
+//        opNodes=operatorSplit("||",operators,expressions);
+//        if(opNodes!=null){return new Boolean.Or(opNodes);}
+//        opNodes=operatorSplit("&&",operators,expressions);
+//        if(opNodes!=null){return new Boolean.And(opNodes);}
+//        opNodes=operatorSplit("!",operators,expressions);
+//        if(opNodes!=null){return new Boolean.Not(opNodes);}
+//
+//        // Check for equality operators
+//        opNodes=operatorSplit(">",operators,expressions);
+//        if(opNodes!=null){return new Equality.Greater(opNodes);}
+//        opNodes=operatorSplit("<",operators,expressions);
+//        if(opNodes!=null){return new Equality.Less(opNodes);}
+//        opNodes=operatorSplit(">=",operators,expressions);
+//        if(opNodes!=null){return new Equality.GreaterEqual(opNodes);}
+//        opNodes=operatorSplit("<=",operators,expressions);
+//        if(opNodes!=null){return new Equality.LessEqual(opNodes);}
+//        opNodes=operatorSplit("==",operators,expressions);
+//        if(opNodes!=null){return new Equality.Equal(opNodes);}
+//        opNodes=operatorSplit("!=",operators,expressions);
+//        if(opNodes!=null){return new Equality.NotEqual(opNodes);}
+        
         // Check in order of operations for each of the main operations.
         opNodes=operatorSplit("+",operators,expressions);
         if(opNodes!=null){return new Operation.Add(opNodes);}
@@ -125,6 +159,8 @@ public class Parser {
         if(opNodes!=null){return Operation.divideNode(opNodes);}
         opNodes=operatorSplit("^",operators,expressions);
         if(opNodes!=null){return new Operation.Power(opNodes);}
+
+        // If nothing matches the known set of operators, return an error
         throw new FunctionSyntaxException(FunctionSyntaxException.OPERATOR);
     }
     
@@ -141,12 +177,16 @@ public class Parser {
         return result;
     }
     
-    /** Returns tree corresponding to the function specified by the string. */
+    /** Returns tree corresponding to the function specified by the string
+     * @param s the input string containing the function to be parsed
+     * @return a compiled function tree based upon the input function
+     * @throws scribo.parser.FunctionSyntaxException if there is a syntax problem in the compilation
+     */
     public static FunctionTreeNode parseExpression(String s) throws FunctionSyntaxException {   
         if(verbose){System.out.println("parseExpression input ="+s);}
         
         if(s.equals("")){
-            throw new FunctionSyntaxException(FunctionSyntaxException.UNKNOWN);
+            throw new FunctionSyntaxException(FunctionSyntaxException.INCOMPLETE_INPUT);
         }
         if(mismatchedParentheses(s)){
             throw new FunctionSyntaxException(FunctionSyntaxException.PARENTHETICAL);

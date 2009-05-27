@@ -11,20 +11,24 @@ import scio.function.FunctionValueException;
 import scribo.parser.FunctionSyntaxException;
 
 /**
- * Implements an indexed series of nodes, which are either summed or multiplied or some other way combined.
- * The min/max/step values may be variables themselves.
+ * <p>
+ * A series is either an additive series or multiplicative series, where the terms are summed between a minimum
+ * and maximum value, with given step size. The
+ * </p>
  * 
  * @author Elisha Peterson
  */
-public abstract class Series extends Operator {    
-    public Series(FunctionTreeNode ftn,String var,FunctionTreeNode min,FunctionTreeNode max,FunctionTreeNode step){
+public abstract class Series extends Operator {
+
+    /** Creates the series. Requires a local index variable, specified by "var", and a range of values, together with the primary argument node. */
+    public Series(FunctionTreeNode ftn, String var, FunctionTreeNode min, FunctionTreeNode max, FunctionTreeNode step){
         super(ftn);
-        addParameter(var,null);
+        addLocalVar(var,null);
         addSubNode(min);
         addSubNode(max);
-        addSubNode(step);
-       
+        addSubNode(step);       
     }
+
     public Series(FunctionTreeNode ftn,String var,FunctionTreeNode min,FunctionTreeNode max){this(ftn,var,min,max,Constant.ONE);}
     public Series(FunctionTreeNode ftn,String var,double min,double max,double step){this(ftn,var,new Constant(min),new Constant(max),new Constant(step));}
     public Series(FunctionTreeNode ftn,String var,double min,double max){this(ftn,var,new Constant(min),new Constant(max),Constant.ONE);}
@@ -48,7 +52,12 @@ public abstract class Series extends Operator {
     }
     
     @Override
-    public boolean isNumber(){return getUnknowns().size()==0;}
+    public boolean isNumber(){
+        return getUnknowns().size() == 0
+                && getMinNode().isNumber()
+                && getMaxNode().isNumber()
+                && getStepNode().isNumber();
+    }
     
     
     // VALUE METHODS COMBINING ARGUMENT AND UNKNOWN VALUE

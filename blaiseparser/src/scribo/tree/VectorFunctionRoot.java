@@ -24,7 +24,7 @@ public class VectorFunctionRoot extends ArgumentList implements FunctionRoot {
     // VARIABLES
     
     /** Variables required to obtain a value. */
-    TreeSet<String> variables;
+    Vector<String> variables;
     /** Parameters associated with the tree.. along with the variables. If not passed directly to "getValue",
      * the values will be looked up in this table.
      */
@@ -35,12 +35,12 @@ public class VectorFunctionRoot extends ArgumentList implements FunctionRoot {
     
     public VectorFunctionRoot(Vector<String> cs) throws FunctionSyntaxException{
         parameters=new TreeMap<String,Double>();
-        variables=new TreeSet<String>();
+        variables=new Vector<String>();
         for(String s:cs){addSubNode(Parser.parseExpression(s));}
     }
     public VectorFunctionRoot(FunctionTreeNode result) {
         parameters=new TreeMap<String,Double>();
-        variables=new TreeSet<String>();
+        variables=new Vector<String>();
         if(result instanceof ArgumentList){
             for(FunctionTreeNode ftn:result.children){addSubNode(ftn);}
         }else{
@@ -58,9 +58,9 @@ public class VectorFunctionRoot extends ArgumentList implements FunctionRoot {
     }
     
     /** Returns current list of variables. */
-    public Set<String> getVariables(){return variables;}    
+    public Vector<String> getVariables(){return variables;}
     /** Returns current list of parameters. */
-    public Set<String> getParameters(){return parameters.keySet();}
+    public TreeMap<String, Double> getParameters(){return parameters;}
     /** Returns number of variables. */
     public int getNumVariables(){return variables.size();}
     /** Returns number of parameters. */

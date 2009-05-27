@@ -1,11 +1,7 @@
 
 /*
  * PiecewiseFunctionNode.java
- * 
  * Created on Sep 28, 2007, 3:52:01 PM
- * 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
  */
 
 package scribo.tree;
@@ -43,7 +39,7 @@ public class Piecewise extends FunctionTreeFunctionNode {
     /** Function which restricts the domain of another function. Returns 0 if the input is outside the domain;
      * otherwise returns the value of the argument.
      */
-    public static class Domain extends FunctionTreeFunctionNode{
+    public static class Domain extends FunctionTreeFunctionNode {
         // TODO this has not been implemented properly!!
         double lower,upper;
         boolean lowerSharp;

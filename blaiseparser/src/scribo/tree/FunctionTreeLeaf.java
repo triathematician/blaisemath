@@ -1,6 +1,5 @@
 /*
  * EvaluationNode.java
- * 
  * Created on Sep 18, 2007, 5:04:19 PM
  */
 

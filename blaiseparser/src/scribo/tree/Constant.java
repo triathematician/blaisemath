@@ -16,18 +16,37 @@ public class Constant extends FunctionTreeLeaf {
     /** Contains value associated with this node. */
     protected Double value;
     
-    public Constant(){value=0.0;}
-    public Constant(double v){value=v;}
-    public Constant(double v,String s){value=v;this.nodeName=s;}
+    public Constant(){
+        value=0.0;
+    }
+
+    public Constant(double v){
+        value=v;
+    }
+
+    public Constant(double v, String s){
+        value=v;
+        this.nodeName=s;
+    }
     
     /** Sets value of this leaf. */
-    public void setValue(Double d){value=d;}
+    public void setValue(Double d){
+        value=d;
+    }
     
     @Override
-    public boolean equals(double d){return value==d;}
-    public boolean equals(Constant c){return value==c.value;}
+    public boolean equals(double d){
+        return value==d;
+    }
+
+    public boolean equals(Constant c){
+        return value==c.value;
+
+    }
     @Override
-    public boolean isNumber(){return true;}
+    public boolean isNumber(){
+        return true;
+    }
     
     public static String toString(Double d){
         if(d==null){return "";}
@@ -42,7 +61,10 @@ public class Constant extends FunctionTreeLeaf {
     }
     
     @Override
-    public FunctionTreeNode derivativeTree(Variable v){return ZERO;}
+    public FunctionTreeNode derivativeTree(Variable v){
+        return ZERO;
+    }
+    
     @Override
     public FunctionTreeNode simplified(){
         if(equals(Math.E)){return E;}

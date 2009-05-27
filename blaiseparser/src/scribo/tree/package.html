@@ -1,0 +1,26 @@
+<html>
+  <body>
+  <p>
+    This package contains the classes that form the tree underlying an evaluated function.
+    The components of a tree are the <i>leaves</i>, which are variables and constants used in a problem,
+    and <i>nodes</i>, which are the functions transforming those variables/constants into a result.
+    The nodes may be <i>unary</i>, with a single input, or <i>binary</i>, with two inputs. More flexibility
+    may be added if necessary. For example, multiplication/addition may have multiple sub-nodes.
+  </p>
+
+  <p>
+    A compiled tree is able to search out unknown variables and evaluate recursively. Evaluation speed is
+    increased by allowing vectors of values to be passed down through the tree, rather than individual values.
+  </p>
+
+  <p>
+    The compiled trees also support simplification algorithms, derivation with respect to a particular varible,
+    and views as a <code>JTree</code> through the <code>FunctionTreeNode.getTreeNode()</code> method.
+  </p>
+
+  <p>
+    In the future, we hope to implement compatibility with <code>MathML</code>, as well as support
+    for compiling trees that contain other variables.
+  </p>
+  </body>
+</html>
