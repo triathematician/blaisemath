@@ -13,7 +13,7 @@ import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import scio.function.BoundedFunction;
+import scio.function.Function;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 import scribo.tree.FunctionTreeNode;
@@ -77,21 +77,21 @@ public class FunctionTreeModel extends FiresChangeEvents implements ChangeListen
     }
     public void setValue(String s, String[] vars) {
         try {
-            if(ftr==null){ftr=new FunctionTreeRoot(s);}
-            else{ftr.setArgumentNode(Parser.parseExpression(s));}
-            Vector<String> vs = new Vector<String>();
-            for (int i = 0; i < vars.length; i++) { vs.add(vars[i]); }
-            ftr.setVariables(vs);
-            valid=true;
+            if(ftr==null){
+                ftr = new FunctionTreeRoot(s);
+            } else {
+                ftr.setArgumentNode(Parser.parseExpression(s));
+            }
+            ftr.setVariables(vars);
+            valid = true;
             fireStateChanged();
         } catch (FunctionSyntaxException ex) {
-            valid=false;
+            valid = false;
         }
     }
         
-    public BoundedFunction<?,Double> getFunction(){ return ftr.getFunction(); }
-    public BoundedFunction<?,Double> getFunction(String[] vars){ return ftr.getFunction(vars); }
-    public BoundedFunction<?,Double> getFunction(int n){ return ftr.getFunction(n); }
+    public Function<?,Double> getFunction(){ return ftr.getFunction(); }
+    public Function<?,Double> getFunction(String[] vars){ return ftr.getFunction(vars); }
     
     // REQUIRED METHODS
     

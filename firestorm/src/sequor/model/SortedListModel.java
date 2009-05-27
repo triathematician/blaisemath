@@ -6,8 +6,10 @@
 package sequor.model;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 import javax.xml.bind.annotation.XmlRootElement;
 import sequor.FiresChangeEvents;
 
@@ -21,12 +23,24 @@ public class SortedListModel<O> extends FiresChangeEvents {
     
     public SortedListModel(){super();}
     public SortedListModel(Set<O> objects){setList(objects);}
+    public SortedListModel(Collection<O> objects){
+        list = new TreeSet<O>();
+        list.addAll(objects);
+    }
     
     
     // BEAN PATTERNS
     
     public void setList(Set<O> newList){
         TreeSet<O> testList=new TreeSet<O>(newList);
+        if(!list.equals(testList)){
+            list=testList;
+            fireStateChanged();
+        }
+    }
+    public void setList(Vector<O> newList){
+        TreeSet<O> testList=new TreeSet<O>();
+        testList.addAll(newList);
         if(!list.equals(testList)){
             list=testList;
             fireStateChanged();

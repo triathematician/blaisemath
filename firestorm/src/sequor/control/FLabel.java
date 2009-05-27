@@ -12,14 +12,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import sequor.VisualControl;
 import sequor.model.ColorModel;
-import sequor.style.VisualStyle;
+import sequor.style.LineStyle;
 
 /**
  * Implements a label, with ability to (i) display an icon to the left or right of the label,
@@ -46,7 +45,7 @@ public class FLabel extends VisualControl {
     
     /** Default constructor. */
     public FLabel() {
-        this("TESTing", Color.RED, VisualStyle.THICK_STROKE);
+        this("TESTing", Color.RED, LineStyle.STROKES[LineStyle.VERY_THICK]);
         super.setDraggable(true);
     }
     

@@ -67,7 +67,8 @@ public class ParameterListModel extends FiresChangeEvents implements ChangeListe
     public ParameterListModel(Object[][] parameters, SettingsPanel sp, ChangeListener cl) {
         this(parameters, sp);
         addChangeListener(cl);
-        cl.stateChanged(new ChangeEvent(this));
+        changeEvent = new ChangeEvent(this);
+        fireStateChanged();
     }
     
     

@@ -24,21 +24,30 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> implements Rando
     
     /** Default initializer. */
     public DoubleRangeModel(){this(0.0,-1.0,1.0,0.1);}
+
     /** Initializes to a given value only. */
     public DoubleRangeModel(double d){this(d,-Double.MAX_VALUE,Double.MAX_VALUE,Double.MIN_VALUE);}
+    
     /** Initializes with particular values. The stepsize is by default 0.1.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      */
-    public DoubleRangeModel(double newValue,double newMin,double newMax){super(newValue,newMin,newMax,0.1);}
+    public DoubleRangeModel(double newValue,double newMin,double newMax){
+        super(newValue,newMin,newMax,0.1);
+    }
+
     /** Initializes with particular values.
      * @param newValue the current value of the model
      * @param newMin the minimum value possible
      * @param newMax the maximum value possible
      * @param step the increment size
      */
-    public DoubleRangeModel(double newValue,double newMin,double newMax,double step){super(newValue,newMin,newMax,step);}
+
+    public DoubleRangeModel(double newValue, double newMin, double newMax, double step){
+        super(newValue,newMin,newMax,step);
+    }
+
     /** Initializes with particular values.
      * @param min the minimum value possible
      * @param max the maximum value possible
@@ -122,10 +131,20 @@ public class DoubleRangeModel extends BoundedRangeModel<Double> implements Rando
      * @param inclusive whether to include the endpoints in the range; if not, starts at minimum+step/2
      * @return Vector of Double's containing the values
      */
-    public Vector<Double> getValueRange(boolean inclusive,Double shift){
+    public Vector<Double> getValueRange(boolean inclusive, Double shift){
+        if (step == 0.0) {
+            Vector<Double> result = new Vector<Double>();
+            if(inclusive) {
+                result.add(minimum);
+                result.add(maximum);
+            } else {
+                result.add(.5*(minimum+maximum));
+            }
+            return result;
+        }
         Vector<Double> result=new Vector<Double>(1000);
         result.add(minimum-shift*step+(inclusive ? 0 : step/2));
-        while(result.lastElement()<=(maximum-step-shift*step)){// && result.size()<100000){
+        while(result.lastElement() <= (maximum-step-shift*step)) {// && result.size()<100000){
             result.add(result.lastElement()+step);
         }
         if (inclusive && result.lastElement()-maximum > step/2.0) {

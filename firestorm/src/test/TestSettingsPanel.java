@@ -4,7 +4,7 @@
  * Created on February 15, 2008, 7:45 AM
  */
 
-package sequor;
+package test;
 
 import sequor.component.*;
 

@@ -31,8 +31,8 @@ public class UltimateFunctionModel extends FiresChangeEvents {
     
     public UltimateFunctionModel(String text) throws FunctionSyntaxException{
         function=new FunctionTreeRoot(text);
-        variables=new SortedListModel(function.getVariables());
-        parameters=new SortedListModel(function.getParameters());
+        variables = new SortedListModel(function.getVariables());
+        parameters = new SortedListModel(function.getParameters().keySet());
     }
     
     
@@ -43,7 +43,7 @@ public class UltimateFunctionModel extends FiresChangeEvents {
         try{
             function=new FunctionTreeRoot(newFunction);
             variables.setList(function.getVariables());
-            parameters.setList(function.getVariables());
+            parameters.setList(function.getParameters().keySet());
             fireStateChanged();
         }catch(FunctionSyntaxException e){}
     }

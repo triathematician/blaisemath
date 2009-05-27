@@ -89,17 +89,41 @@ public class FunctionPanel extends SettingsPanel implements ChangeListener {
 //    }
         
     /** Returns the i'th function model contained herein. */
-    public FunctionTreeModel getFunctionModel(int i) { return ((FunctionTreeModel)s.get(i).getModel()); }
+    public FunctionTreeModel getFunctionModel(int i) {
+        return ((FunctionTreeModel)s.get(i).getModel());
+    }
+
     /** Sets the i'th function model. */
-    public void setFunctionModel(int i,FunctionTreeModel ftm){ if (i < s.size()) { s.get(i).setModel(ftm); updatePanel();  } }
+    public void setFunctionModel(int i,FunctionTreeModel ftm){
+        if (i < s.size()) {
+            s.get(i).setModel(ftm); updatePanel();
+        }
+    }
+
     /** Returns the i'th function name. */
-    public String getFunctionName(int i){ return s.get(i).getName(); }
+    public String getFunctionName(int i){
+        return s.get(i).getName();
+    }
+
     /** Sets the i'th function name. */
-    public void setFunctionName(int i,String name){ if (i < s.size()) { s.get(i).setName(name); updatePanel(); } }
+    public void setFunctionName(int i, String name){
+        if (i < s.size()) {
+            s.get(i).setName(name); updatePanel();
+        }
+    }
+
     /** Sets the i'th function by string. */
-    public void setFunction(int i,String newFunction){ if (i < s.size()) { getFunctionModel(i).setValue(newFunction); } }
+    public void setFunction(int i, String newFunction, String[] vars){
+        if (i < s.size()) {
+            getFunctionModel(i).setValue(newFunction, vars);
+        }
+    }
+
     /** Sets the i'th function name and value. */
-    public void setFunction(int i,String name,String newFunction){ setFunctionName(i,name); setFunction(i, newFunction); }
+    public void setFunction(int i, String name, String newFunction, String[] vars){ 
+        setFunctionName(i, name);
+        setFunction(i, newFunction, vars);
+    }
     
     /** Updates the panel. */
     @Override
