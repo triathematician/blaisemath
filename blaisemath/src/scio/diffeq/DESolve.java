@@ -85,7 +85,7 @@ public class DESolve<C extends EuclideanElement<C>> {
     }
     
     /** Returns vector pointing in direction of the field, multiplied by a fixed factor that depends only on the underlying vector field. */
-    public C getMultipliedVector(BoundedFunction<C,C> field,C point,double scaleFactor) throws FunctionValueException{
+    public C getMultipliedVector(Function<C,C> field,C point,double scaleFactor) throws FunctionValueException{
         return field.getValue(point).times(scaleFactor);
     }
     

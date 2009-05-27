@@ -10,7 +10,6 @@ import scio.coordinate.EuclideanElement;
 import scio.coordinate.R1;
 import scio.coordinate.R2;
 import scio.coordinate.R3;
-import scio.function.BoundedFunction;
 import scio.function.Function;
 import scio.function.FunctionValueException;
 
@@ -28,7 +27,7 @@ import scio.function.FunctionValueException;
 public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends EuclideanElement<D>> {
         
     /** Recalculates solution curves using Newton's Method (time-dependent function). */
-    public Vector<C> calcNewton(BoundedFunction<D,C> field, C start, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcNewton(Function<D,C> field, C start, int steps, double stepSize) throws FunctionValueException {
         Vector<C> result=new Vector<C>();
         result.add(start);
         C last;
@@ -40,7 +39,7 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
     }
     
     /** Recalculates solution curves using Newton's Method (time-dependent function. */
-     public Vector<C> calcNewton(BoundedFunction<D,C> field, Vector<C> flow, int steps, double stepSize) throws FunctionValueException {
+     public Vector<C> calcNewton(Function<D,C> field, Vector<C> flow, int steps, double stepSize) throws FunctionValueException {
         C last;
         for(int i=0;i<steps;i++){
             last=flow.lastElement();
@@ -53,7 +52,7 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
     /** Returns vector pointing in the direction of the field. This is abstract because the implementation of the field's "get" method will depend on the coordinate system. */
     public abstract C getScaledVector(Function<D,C> field,double time,C point,double size) throws FunctionValueException;
     /** Returns vector pointing in direction of the field, multiplied by a fixed factor that depends only on the underlying vector field. */
-    public abstract C getMultipliedVector(BoundedFunction<D, C> field, double time, C point, double size) throws FunctionValueException;
+    public abstract C getMultipliedVector(Function<D, C> field, double time, C point, double size) throws FunctionValueException;
 
     
     
@@ -68,8 +67,8 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
             return field.getValue(new R2(point.x,time)).scaledToLength(size);
         }
         @Override
-        public R1 getMultipliedVector(BoundedFunction<R2, R1> field, double time, R1 point, double size) throws FunctionValueException {
-            return field.getValue(new R2(point.x,time)).times(size/(field.maxValue().magnitude()));
+        public R1 getMultipliedVector(Function<R2, R1> field, double time, R1 point, double size) throws FunctionValueException {
+            return field.getValue(new R2(point.x,time)).times(size);
         }        
     };
     
@@ -82,8 +81,8 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
             return field.getValue(new R3(point.x,point.y,time)).scaledToLength(size);
         }
         @Override
-        public R2 getMultipliedVector(BoundedFunction<R3, R2> field, double time, R2 point, double size) throws FunctionValueException {
-            return field.getValue(new R3(point.x,point.y,time)).multipliedBy(size/(field.maxValue().magnitude()));
+        public R2 getMultipliedVector(Function<R3, R2> field, double time, R2 point, double size) throws FunctionValueException {
+            return field.getValue(new R3(point.x,point.y,time)).multipliedBy(size);
         }        
     };
 }

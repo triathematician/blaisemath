@@ -33,13 +33,13 @@ public class VoronoiCells {
         TreeSet<R2> sorted = new TreeSet<R2>(new AngleSort(pivot));
         sorted.addAll(points);
         hull = new Vector<R2>();
-        hull.add(sorted.first()); sorted.remove(sorted.first());
-        hull.add(sorted.first()); sorted.remove(sorted.first());
+        R2 pt = sorted.first(); hull.add(pt); sorted.remove(pt);
+        pt = sorted.first(); hull.add(pt); sorted.remove(pt);
         while (!sorted.isEmpty()) {
             while (R2.crossProduct(hull.get(hull.size()-2), hull.lastElement(), sorted.first()) <= 0) {
                 hull.remove(hull.size()-1);
             }
-            hull.add(sorted.first()); sorted.remove(sorted.first());
+            pt = sorted.first(); hull.add(pt); sorted.remove(pt);
         }
 
         // Step 1: generate set of equidistant points
@@ -55,8 +55,8 @@ public class VoronoiCells {
         // Step 2: toss unnecessary points
         HashSet<Equidistant> remove = new HashSet<Equidistant>();
         for (Equidistant ep : equis) {
-            for (R2 pt : points) {
-                if (ep.closerTo(pt)) { remove.add(ep); }
+            for (R2 opt : points) {
+                if (ep.closerTo(opt)) { remove.add(ep); }
             }
         }
         equis.removeAll(remove);
@@ -155,6 +155,7 @@ public class VoronoiCells {
             this.pivot=pivot;
         }
         public int compare(R2 o1, R2 o2) {
+            if(o1.equals(o2)) return 0;
             if (o1.equals(pivot)) return -1;
             if (o2.equals(pivot)) return +1;
             double angleDiff = o1.minus(pivot).angle() - o2.minus(pivot).angle();
