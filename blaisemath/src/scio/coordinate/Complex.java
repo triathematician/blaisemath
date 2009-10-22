@@ -2,7 +2,6 @@
  * Complex.java
  * Created on Mar 24, 2008
  */
-
 package scio.coordinate;
 
 /**
@@ -10,26 +9,42 @@ package scio.coordinate;
  * 
  * @author Elisha Peterson
  */
-public class Complex extends R2 {
-    public double realPart(){return super.x;}
-    public double imaginaryPart(){return super.y;}
-    
-    
+@Deprecated
+public class Complex extends EuclideanPoint2D {
+
+    @Deprecated
+    public double realPart() {
+        return super.x;
+    }
+
+    @Deprecated
+    public double imaginaryPart() {
+        return super.y;
+    }
+
     // LIBRARY OF STATIC FUNCTIONS
-    
-    public static Complex exp(Complex z){
+    @Deprecated
+    public static Complex exp(Complex z) {
         return null;
     }
-    public static Complex cos(Complex z){
+
+    @Deprecated
+    public static Complex cos(Complex z) {
         return null;
     }
-    public static Complex sin(Complex z){
+
+    @Deprecated
+    public static Complex sin(Complex z) {
         return null;
     }
-    public static Complex power(Complex z1,double z2){
+
+    @Deprecated
+    public static Complex power(Complex z1, double z2) {
         return null;
     }
-    public static Complex power(Complex z1,Complex z2){
+
+    @Deprecated
+    public static Complex power(Complex z1, Complex z2) {
         return null;
     }
 }

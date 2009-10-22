@@ -11,18 +11,24 @@ import java.awt.Point;
  * This class represents a point with integer coordinates.
  * @author Elisha Peterson
  */
-public class Z2 extends Point implements Coordinate {
+@Deprecated
+public class Z2 extends Point {
 
+    @Deprecated
     public Z2() {this(0,0);}
+    @Deprecated
     public Z2(int x,int y){super(x,y);}
 
-    public boolean equals(Coordinate c2) {
+    @Deprecated
+    public boolean equals(Z2 c2) {
         return (c2 instanceof Point) && ((Point)c2).x==x && ((Point)c2).y==y;
     }
-    public Coordinate copy() {
+    @Deprecated
+    public Z2 copy() {
         return new Z2(x,y); 
     }
-    
+
+    @Deprecated
     @Override
     public String toString(){
         return x+","+y;

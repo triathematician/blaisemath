@@ -7,9 +7,8 @@ package scio.random;
 
 import java.util.HashMap;
 import java.util.Vector;
-import scio.coordinate.R2;
+import org.apache.commons.math.FunctionEvaluationException;
 import scio.function.Function;
-import scio.function.FunctionValueException;
 import scio.matrix.HashMatrix;
 
 /**
@@ -32,7 +31,7 @@ public class Markov<V,W> {
             V[] hiddenStates,
             HashMap<V,Double> startProb,
             HashMatrix<V,Double> transProb,
-            HashMap<V,Function<W,Double>> emitProb) throws FunctionValueException {
+            HashMap<V,Function<W,Double>> emitProb) throws FunctionEvaluationException {
         
         int ns=hiddenStates.length;
         
