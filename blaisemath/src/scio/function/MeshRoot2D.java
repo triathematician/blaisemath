@@ -14,7 +14,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import scio.coordinate.EuclideanPoint2D;
 import scio.coordinate.EuclideanPoint3D;
 import scio.coordinate.P3D;
-import scio.coordinate.SpacialMathUtils;
+import scio.coordinate.utils.SpacialMathUtils;
 
 /**
  * This class is intended to solve equations of the form f(x,y)=C. Returns a path of points representing the solution curve.

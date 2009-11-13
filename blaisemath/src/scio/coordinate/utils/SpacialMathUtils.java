@@ -3,12 +3,17 @@
  * Created on Jul 29, 2009
  */
 
-package scio.coordinate;
+package scio.coordinate.utils;
+
+import scio.coordinate.*;
 
 /**
  * <p>
- *   <code>SpacialMathUtils</code> ...
+ *   <code>SpacialMathUtils</code> is a library of static methods for use on elements of space (vectors).
+ *   All methods work with <code>P3D</code>s.
  * </p>
+ *
+ * @see P3D
  *
  * @author Elisha Peterson
  */

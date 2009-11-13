@@ -7,6 +7,7 @@
 
 package scio.graph;
 
+import deprecated.GraphE;
 import java.util.Set;
 import junit.framework.*;
 import java.util.ArrayList;

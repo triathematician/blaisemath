@@ -2,7 +2,7 @@
  * R2Transform.java
  * Created on Apr 4, 2008
  */
-package scio.coordinate;
+package deprecated;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -17,6 +17,7 @@ import java.util.Vector;
  *
  * @author Elisha Peterson
  */
+@Deprecated
 public class R2Transform extends AffineTransform {
 
     public R2Transform(double m00, double m10, double m01, double m11, double m02, double m12) {

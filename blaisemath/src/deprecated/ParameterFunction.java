@@ -2,7 +2,7 @@
  * ParameterFunction.java
  * Created on Sep 27, 2007, 12:31:58 PM
  */
-package scio.function;
+package deprecated;
 
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;

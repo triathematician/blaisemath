@@ -3,7 +3,7 @@
  * Created on Sep 3, 2009
  */
 
-package scio.coordinate;
+package scio.coordinate.utils;
 
 /**
  * <p>
@@ -34,5 +34,4 @@ public interface ParameterRange<C> {
     void setMin(C min);
 
     void setMinInclusive(boolean minInclusive);
-
 }

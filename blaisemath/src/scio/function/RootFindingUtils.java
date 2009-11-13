@@ -4,6 +4,7 @@
  */
 package scio.function;
 
+import deprecated.RealFunction;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;

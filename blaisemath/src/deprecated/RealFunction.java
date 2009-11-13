@@ -3,8 +3,9 @@
  * Created on Jul 29, 2009
  */
 
-package scio.function;
+package deprecated;
 
+import scio.function.*;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 
 /**

@@ -47,8 +47,8 @@ public class TwoVarODE implements FirstOrderDifferentialEquations {
     /** Final t */
     double tFinal;
 
-    /** Stores values */
-    transient ContinuousOutputModel com;
+    /** Stores technique for solving. */
+    ODESolver algorithm = ODESolver.RUNGE_KUTTA;
 
     //
     //
@@ -70,11 +70,18 @@ public class TwoVarODE implements FirstOrderDifferentialEquations {
     //
     //
 
-
+    /**
+     * Returns current dx/dt function.
+     * @return current dx/dt function
+     */
     public MultivariateRealFunction getF1() {
         return f1;
     }
 
+    /**
+     * Sets dx/dt function
+     * @param function dx/dt function
+     */
     public void setF1(MultivariateRealFunction f1) {
         this.f1 = f1;
     }
@@ -87,29 +94,70 @@ public class TwoVarODE implements FirstOrderDifferentialEquations {
         this.f2 = f2;
     }
 
-    public double getT0() {
-        return t0;
-    }
-
-    public void setT0(double t0) {
-        this.t0 = t0;
-    }
-
-    public double getTFinal() {
-        return tFinal;
-    }
-
-    public void setTFinal(double tFinal) {
-        this.tFinal = tFinal;
-    }
-
+    /**
+     * Returns initial position
+     * @return initial position
+     */
     public Point2D.Double getStartPoint() {
         return xy0;
     }
 
+    /**
+     * Sets initial position
+     * @param initial position
+     */
     public void setStartPoint(Point2D.Double xy0) {
         this.xy0 = xy0;
     }
+
+    /**
+     * Returns initial time
+     * @return initial time
+     */
+    public double getT0() {
+        return t0;
+    }
+
+    /**
+     * Sets initial time
+     * @param initial time
+     */
+    public void setT0(double t0) {
+        this.t0 = t0;
+    }
+
+    /**
+     * Returns current tf
+     * @return current tf
+     */
+    public double getTFinal() {
+        return tFinal;
+    }
+
+    /**
+     * Sets current tf
+     * @param current tf
+     */
+    public void setTFinal(double tFinal) {
+        this.tFinal = tFinal;
+    }
+
+    /**
+     * Returns current solver algorithm
+     * @return current algorithm
+     */
+    public ODESolver getSolver() {
+        return algorithm;
+    }
+
+    /**
+     * Sets current solver algorithm
+     * @param current algorithm
+     */
+    public void setSolver(ODESolver algorithm) {
+        this.algorithm = algorithm;
+    }
+
 
     //
     //
@@ -132,12 +180,25 @@ public class TwoVarODE implements FirstOrderDifferentialEquations {
 
     //
     //
-    // Helpful methods
+    // SOLUTION METHODS
     //
     //
 
+    /** Stores values */
+    transient ContinuousOutputModel com;
+
+    /**
+     * Solves differential equation specified by this class, and saves the output in a
+     * <code>ContinuousOutputModel</code>
+     *
+     * @param xFinal pass this in to store the final value of x at tf
+     * @param step the step size to use for the integrator
+     * @return a <code>ContinuousOutputModel</code>, which may be used to interpolate the solution curve
+     * @throws org.apache.commons.math.ode.DerivativeException
+     * @throws org.apache.commons.math.ode.IntegratorException
+     */
     public ContinuousOutputModel solveODE(double[] yFinal, double tStep) throws DerivativeException, IntegratorException {
-        FirstOrderIntegrator i = new ClassicalRungeKuttaIntegrator(tStep);
+        FirstOrderIntegrator i = algorithm.getIntegrator(tStep);
         com = new ContinuousOutputModel();
         i.setStepHandler(com);
         i.integrate(this, t0, new double[]{xy0.x, xy0.y}, tFinal, yFinal);

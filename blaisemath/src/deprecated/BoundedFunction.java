@@ -3,7 +3,9 @@
  * Created on Sep 27, 2007, 12:31:58 PM
  */
 
-package scio.function;
+package deprecated;
+
+import scio.function.*;
 
 /**
  * <p>

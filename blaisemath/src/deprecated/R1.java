@@ -3,7 +3,9 @@
  * Created on May 30, 2008
  */
 
-package scio.coordinate;
+package deprecated;
+
+import scio.coordinate.*;
 
 
 /**

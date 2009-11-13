@@ -35,19 +35,19 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
     // PARAMETERS
     //
     //
+    
+    /** The function dx/dt=f(t,x). */
+    MultivariateRealFunction function;
 
     /** Initial position */
     double x0;
-
     /** Initial time */
     double t0;
     /** Final time */
     double tf;
 
-    /** The function dx/dt=f(t,x). */
-    MultivariateRealFunction function;
     /** Stores technique for solving. */
-    ODESolver algorithm;
+    ODESolver algorithm = ODESolver.RUNGE_KUTTA;
 
     //
     //
@@ -68,6 +68,7 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
     // BEAN PATTERNS
     //
     //
+
     /**
      * Returns current dx/dt function.
      * @return current dx/dt function
@@ -116,7 +117,6 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
         this.t0 = value;
     }
 
-
     /**
      * Returns current tf
      * @return current tf
@@ -137,7 +137,7 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
      * Returns current solver algorithm
      * @return current algorithm
      */
-    public ODESolver getAlgorithm() {
+    public ODESolver getSolver() {
         return algorithm;
     }
 
@@ -145,33 +145,8 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
      * Sets current solver algorithm
      * @param current algorithm
      */
-    public void setAlgorithm(ODESolver algorithm) {
+    public void setSolver(ODESolver algorithm) {
         this.algorithm = algorithm;
-    }
-    //
-    //
-    // SOLUTION METHODS
-    //
-    //
-    /** Stores values */
-    transient ContinuousOutputModel com;
-
-    /**
-     * Solves differential equation specified by this class, and saves the output in a
-     * <code>ContinuousOutputModel</code>
-     *
-     * @param xFinal pass this in to store the final value of x at tf
-     * @param step the step size to use for the integrator
-     * @return a <code>ContinuousOutputModel</code>, which may be used to interpolate the solution curve
-     * @throws org.apache.commons.math.ode.DerivativeException
-     * @throws org.apache.commons.math.ode.IntegratorException
-     */
-    public ContinuousOutputModel solveODE(double[] xFinal, double step) throws DerivativeException, IntegratorException {
-        FirstOrderIntegrator i = new ClassicalRungeKuttaIntegrator(step);
-        com = new ContinuousOutputModel();
-        i.setStepHandler(com);
-        i.integrate(this, t0, new double[]{x0}, tf, xFinal);
-        return com;
     }
 
 
@@ -192,5 +167,32 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
         } catch (FunctionEvaluationException ex) {
             throw new DerivativeException(ex);
         }
+    }
+
+    //
+    //
+    // SOLUTION METHODS
+    //
+    //
+    
+    /** Stores values */
+    transient ContinuousOutputModel com;
+
+    /**
+     * Solves differential equation specified by this class, and saves the output in a
+     * <code>ContinuousOutputModel</code>
+     *
+     * @param xFinal pass this in to store the final value of x at tf
+     * @param step the step size to use for the integrator
+     * @return a <code>ContinuousOutputModel</code>, which may be used to interpolate the solution curve
+     * @throws org.apache.commons.math.ode.DerivativeException
+     * @throws org.apache.commons.math.ode.IntegratorException
+     */
+    public ContinuousOutputModel solveODE(double[] xFinal, double step) throws DerivativeException, IntegratorException {
+        FirstOrderIntegrator i = algorithm.getIntegrator(step);
+        com = new ContinuousOutputModel();
+        i.setStepHandler(com);
+        i.integrate(this, t0, new double[]{x0}, tf, xFinal);
+        return com;
     }
 }

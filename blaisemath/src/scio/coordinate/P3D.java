@@ -39,6 +39,10 @@ public class P3D implements Cloneable {
         this(screenCenter.x, screenCenter.y, screenCenter.z);
     }
 
+    public P3D(double[] value) {
+        this(value[0], value[1], value[2]);
+    }
+
 
 
     /**
@@ -101,15 +105,25 @@ public class P3D implements Cloneable {
 
     /** @return distance to second point */
     public double distance(P3D p2) {
-        return distance(p2.x, p2.y, p2.z);
+        return Math.sqrt(distanceSq(p2.x, p2.y, p2.z));
     }
 
     /** @return distance to second point */
     public double distance(double x2, double y2, double z2) {
+        return Math.sqrt(distanceSq(x2, y2, z2));
+    }
+
+    /** @return distance to second point squared */
+    public double distanceSq(P3D p2) {
+        return distanceSq(p2.x, p2.y, p2.z);
+    }
+
+    /** @return distance to second point squared */
+    public double distanceSq(double x2, double y2, double z2) {
         double dx = x - x2;
         double dy = y - y2;
         double dz = z - z2;
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+        return dx * dx + dy * dy + dz * dz;
     }
 
     /** @return magnitude of this vector */

@@ -3,7 +3,7 @@
  * Created on Sep 14, 2007, 7:45:27 AM
  */
 
-package scio.coordinate;
+package deprecated;
 
 /**
  * This interface describes methods required by coordinate systems for visual geometries,

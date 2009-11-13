@@ -3,8 +3,9 @@
  * Created on Apr 28, 2009
  */
 
-package scio.function;
+package deprecated;
 
+import scio.function.*;
 import java.util.Vector;
 
 /**

@@ -47,10 +47,6 @@ public class Euclidean implements EuclideanElement<Euclidean> {
         
     
     // COORDINATE METHODS
-    
-    public boolean equals(Coordinate c2) {
-        return (c2 instanceof Euclidean && ((Euclidean)c2).coord.equals(coord));
-    }    
 
     public Euclidean copy() {
         return new Euclidean(this);

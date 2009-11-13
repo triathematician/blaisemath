@@ -4,6 +4,7 @@
  */
 package scio.coordinate;
 
+import scio.coordinate.utils.PlanarMathUtils;
 import java.awt.geom.Point2D;
 
 /**

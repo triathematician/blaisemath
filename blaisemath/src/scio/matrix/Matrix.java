@@ -11,7 +11,7 @@
 package scio.matrix;
 
 import java.util.Vector;
-import scio.coordinate.Coordinate;
+import deprecated.Coordinate;
 
 /**
  *

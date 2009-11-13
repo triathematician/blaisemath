@@ -3,7 +3,7 @@
  * Created in 2008
  */
 
-package scio.function;
+package deprecated;
 
 /**
  * <p>

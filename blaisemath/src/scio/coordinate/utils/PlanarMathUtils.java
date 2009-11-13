@@ -2,7 +2,7 @@
  * PlanarMathUtils.java
  * Created on Jul 29, 2009
  */
-package scio.coordinate;
+package scio.coordinate.utils;
 
 import java.awt.geom.Point2D;
 import static java.lang.Math.*;

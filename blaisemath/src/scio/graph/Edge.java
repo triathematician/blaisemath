@@ -1,65 +1,104 @@
+/*
+ * Graph.java
+ * Created on Oct 16, 2007, 1:12:27 PM
+ */
 package scio.graph;
 
-import java.util.Comparator;
-import java.util.Map;
-
 /**
- * <b>Edge.java</b><br>
- * Author: <i>Elisha Peterson</i><br>
- * Created on <i>May 3, 2007, 1:00 PM</i><br><br>
+ * Represents an edge of the given type of vertex.
  *
- * Describes an edge as an ordered pair of integers, with a certain weight... assumed here to be an integer.
- *   v0,v1 must be nonnegative integers, with the exception of the case where v0=v1=-1, which represents a
- *   "trivial" edge.
+ * @author Elisha Peterson
  */
+public class Edge<V> implements EdgeInterface<V> {
 
-public class Edge implements Comparable{
-    int v0,v1;
-    int weight;
-    public Edge(){v0=0;v1=0;weight=1;}
-    public Edge(int v0,int v1){if(v0<0||v1<0){v0=-1;v1=-1;}this.v0=v0;this.v1=v1;weight=1;}
-    public Edge(int v0,int v1,int w){if(v0<0||v1<0){v0=-1;v1=-1;}this.v0=v0;this.v1=v1;this.weight=w;}
-    public static Edge getTrivial(){return new Edge(-1,-1,1);}
-    public boolean isTrivial(){return v0==-1&&v1==-1;}
-    public boolean isLoop(){return v0==v1;}
-    public boolean equals(Edge e){return (e.v0==v0)&&(e.v1==v1)&&(e.weight==weight);}
-    public boolean equals(int ev0,int ev1){return (ev0==v0)&&(ev1==v1);}
-    public int weightedEquals(int ev0,int ev1){
-        if ((ev0==v0)&&(ev1==v1)) return weight;
-        return 0;
+    V source, sink;
+    double weight = 1;
+    boolean directed = false, weighted = true;
+
+    //
+    //
+    // CONSTRUCTOR
+    //
+    //
+
+    public Edge(V v1, V v2) {
+        super();
+        this.source = v1;
+        this.sink = v2;
     }
-    public int compareTo(Object o){
-        Edge e=(Edge)o;
-        if (e.v0==v0) return v1-e.v1;
-        return v0-e.v0;
+
+    //
+    //
+    // GET/SET
+    //
+    //
+
+    public V getSource() {
+        return source;
     }
-    public Edge clone(){return new Edge(v0,v1,weight);}
-    public String toString(boolean multiEdge,boolean directed){
-        String connector=directed?"->":"-";
-        if (multiEdge&&weight!=1) return Integer.toString(weight)+"("+Integer.toString(v0)+connector+Integer.toString(v1)+")";
-        return "("+Integer.toString(v0)+connector+Integer.toString(v1)+")";
+
+    public V getSink() {
+        return sink;
     }
-    public int getSource(){return v0;}
-    public int getSink(){return v1;}
-    public int getMax(){return (v0>=v1)?v0:v1;}
-    public int getMin(){return (v0>=v1)?v1:v0;}
-    public int getWeight(){return weight;}
-    public boolean addWeight(int i){weight+=i;return weight>0;}
-    public boolean startsAt(int i){return v0==i;}
-    public boolean endsAt(int i){return v1==i;}
-    public boolean contains(int i){return startsAt(i)||endsAt(i);}
-    public static Comparator<Edge> getComparator(){
-        return new Comparator<Edge>(){
-            public int compare(Edge e1,Edge e2){
-                if (e1.v0==e2.v0) return e2.v1-e1.v1;
-                return e2.v1-e1.v1;
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double newValue) {
+        this.weight = newValue;
+    }
+
+    public boolean isDirected() {
+        return directed;
+    }
+
+    public void setDirected(boolean directed) {
+        this.directed = directed;
+    }
+
+    public boolean isWeighted() {
+        return weighted;
+    }
+
+    public void setWeighted(boolean weighted) {
+        this.weighted = weighted;
+    }
+
+
+    //
+    //
+    // GENERAL METHODS
+    //
+    //
+
+    public boolean isAdjacent(V... vs) {
+        for (int i = 0; i < vs.length; i++) {
+            if (! (source.equals(vs[i]) || sink.equals(vs[i])) ) {
+                return false;
             }
-        };
+        }
+        return true;
     }
-    public void reverse(){int i=v0;v0=v1;v1=i;}
-    public void relabel(Map<Integer,Integer> mapping){v0=mapping.get(v0);v1=mapping.get(v1);}
-    /** Relabels: va is the old label, vb the new label. */
-    public void relabel(int va,int vb){if(v0==va){v0=vb;}if(v1==va){v1=vb;}}
-    public void addToLabel(int n){v0+=n;v1+=n;}
-    public void addToLabelAbove(int n,int i){if(v0>i){v0+=n;}if(v1>i){v1+=n;}}
+
+    public boolean equals(EdgeInterface e2) {
+        if (isWeighted() && weight != e2.getWeight())
+            return false;
+        if (isDirected())
+            return source.equals(e2.getSource()) && sink.equals(e2.getSink());
+        else
+            return source.equals(e2.getSource()) && sink.equals(e2.getSink()) || source.equals(e2.getSink()) && sink.equals(e2.getSource());
+    }
+
+    @Override
+    public String toString() {
+        String result = "{";
+        if (isWeighted())
+            result += "" + weight + " @ " + source;
+        if (isDirected())
+            result += " -> " + sink + "}";
+        else
+            result += ", " + sink + "}";
+        return result;
+    }
 }

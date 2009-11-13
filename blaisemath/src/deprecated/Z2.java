@@ -3,7 +3,7 @@
  * Created on Apr 8, 2008
  */
 
-package scio.coordinate;
+package deprecated;
 
 import java.awt.Point;
 
