@@ -1,0 +1,13 @@
+#summary How to download the Blaise project and get started using the program.
+#labels Featured,Module-Blaise
+
+= Required External Packages =
+
+  * Apache Commons Math:
+  * FireStarter: 
+
+= Projects to Checkout =
+
+  * BlaiseMath:
+  * BlaiseParser:
+  * BlaiseCore: 
