@@ -1,5 +1,7 @@
-#summary Contains listing of feature additions to Blaise.
-#labels Featured,Module-Blaise
+#summary Contains listing of feature additions to Blaise (OLD VERSION ONLY).
+#labels Deprecated,Module-Blaise
+
+*REMARK:* _This list is for the old version of blaise, and does not reflect features currently present or not present in the new version (`blaisecore`)._
 
 ==== Apr 2009 ====
 
