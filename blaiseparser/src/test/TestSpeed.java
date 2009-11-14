@@ -1,10 +1,10 @@
 package test;
 
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import scio.function.Function;
-import scio.function.FunctionValueException;
+import org.apache.commons.math.FunctionEvaluationException;
 import scribo.parser.FunctionSyntaxException;
 import scribo.tree.FunctionTreeRoot;
 
@@ -52,7 +52,7 @@ public class TestSpeed {
 
         long t1 = System.nanoTime();
 
-        Vector<Double> result1 = rt.getValue(inputs);
+        List<Double> result1 = rt.getValue(inputs);
 
         long t2 = System.nanoTime();
 //
@@ -82,7 +82,7 @@ public class TestSpeed {
 //        System.out.println("time fn vector input: " + (t4-t3));
 //        System.out.println("time fn each input:   " + (t5-t4));
 
-        } catch (FunctionValueException ex) {
+        } catch (FunctionEvaluationException ex) {
             Logger.getLogger(TestSpeed.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

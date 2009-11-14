@@ -21,7 +21,7 @@ public class Exponential {
             super(argument);
         }
 
-        public Double getValue(Double x) {
+        public Double getValue(Double x) throws FunctionEvaluationException {
             return x * x;
         }
 

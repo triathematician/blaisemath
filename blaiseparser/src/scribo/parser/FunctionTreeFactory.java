@@ -4,11 +4,11 @@
  */
 package scribo.parser;
 
-import deprecated.RealFunction;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
 import scribo.tree.*;
 import java.util.Vector;
+import deprecated.RealFunction;
 
 /**
  * <p>

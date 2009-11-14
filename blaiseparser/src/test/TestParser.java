@@ -13,7 +13,6 @@ package test;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import javax.swing.JTree;
 import javax.swing.event.DocumentEvent;
@@ -21,7 +20,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import scio.function.FunctionValueException;
+import org.apache.commons.math.FunctionEvaluationException;
 import scribo.parser.FunctionSyntaxException;
 import scribo.tree.*;
 
@@ -254,7 +253,7 @@ public class TestParser extends javax.swing.JFrame {
             TreeMap<String,Double> vars = new TreeMap<String,Double>();
             jTextField4.setText(functionTreeRoot1.getValue(vars).toString());
             jTextField4.setForeground(Color.BLACK);
-        } catch (FunctionValueException ex) {
+        } catch (FunctionEvaluationException ex) {
             jTextField4.setForeground(Color.RED);
         }
     }
