@@ -1,5 +1,5 @@
 #summary Describes the 2D plottables implemented within Blaise
-#labels Module-PEG,Phase-Implementation
+#labels Module-Blaise,Phase-Implementation
 
 = General =
 = Functions =
