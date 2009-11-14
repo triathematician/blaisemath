@@ -10,9 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.UnivariateRealSolver;
-import org.apache.commons.math.analysis.UnivariateRealSolverFactory;
+import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
+import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactory;
 
 /**
  * <p>
@@ -103,10 +104,10 @@ public class Newton1DSpace {
     /** Finds zero of a function in specified direction from point. */
     public static double[] getRoot(final MultivariateRealFunction func, final double[] point, final double[] dir) {
         UnivariateRealFunction func2 = getTraceFunction(func, point, dir);
-        UnivariateRealSolver solver = UnivariateRealSolverFactory.newInstance().newDefaultSolver(func2);
+        UnivariateRealSolver solver = UnivariateRealSolverFactory.newInstance().newDefaultSolver();
         double t = 0;
         try {
-            t = solver.solve(-5.0, 5.0, 0.0);
+            t = solver.solve(func2, -5.0, 5.0, 0.0);
         } catch (ConvergenceException ex) {
             Logger.getLogger(Newton1DSpace.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FunctionEvaluationException ex) {

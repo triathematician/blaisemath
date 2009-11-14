@@ -7,13 +7,12 @@ package scio.diffeq;
 
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.ode.ClassicalRungeKuttaIntegrator;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.IntegratorException;
-import scio.function.MultivariateRealFunction;
 
 /**
  * <p>
@@ -200,7 +199,7 @@ public class TwoVarODE implements FirstOrderDifferentialEquations {
     public ContinuousOutputModel solveODE(double[] yFinal, double tStep) throws DerivativeException, IntegratorException {
         FirstOrderIntegrator i = algorithm.getIntegrator(tStep);
         com = new ContinuousOutputModel();
-        i.setStepHandler(com);
+        i.addStepHandler(com);
         i.integrate(this, t0, new double[]{xy0.x, xy0.y}, tFinal, yFinal);
         return com;
     }

@@ -5,7 +5,8 @@
 
 package scio.diffeq;
 
-import org.apache.commons.math.ode.*;
+import org.apache.commons.math.ode.FirstOrderIntegrator;
+import org.apache.commons.math.ode.nonstiff.*;
 
 /**
  * <p>

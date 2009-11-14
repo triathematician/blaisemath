@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.MaxIterationsExceededException;
-import org.apache.commons.math.analysis.SecantSolver;
-import org.apache.commons.math.analysis.UnivariateRealSolver;
-import org.apache.commons.math.analysis.UnivariateRealSolverFactory;
+import org.apache.commons.math.analysis.solvers.SecantSolver;
+import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
+import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactory;
 
 /**
  * Contains algorithm for finding multiple roots of a function within a given range.
@@ -67,11 +67,11 @@ public class RootFindingUtils {
     @Deprecated
     public static double secantMethod(RealFunction function, double min, double max, double tolerance, int maxIterations) throws FunctionEvaluationException, MaxIterationsExceededException {
         UnivariateRealSolverFactory ursf = UnivariateRealSolverFactory.newInstance();
-        SecantSolver urs = (SecantSolver) ursf.newSecantSolver(function);
+        SecantSolver urs = (SecantSolver) ursf.newSecantSolver();
         urs.setAbsoluteAccuracy(tolerance);
         urs.setMaximalIterationCount(maxIterations);
 
-        return urs.solve(min, max);
+        return urs.solve(function, min, max);
     }
 
     /** Should use solver factory directly! */

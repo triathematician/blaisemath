@@ -5,7 +5,7 @@
 
 package scio.function.utils;
 
-import scio.function.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import static java.lang.Math.*;
 
 /**

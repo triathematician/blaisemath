@@ -6,13 +6,12 @@ package scio.diffeq;
 
 import java.io.Serializable;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.ode.ClassicalRungeKuttaIntegrator;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math.ode.FirstOrderIntegrator;
 import org.apache.commons.math.ode.IntegratorException;
-import scio.function.MultivariateRealFunction;
 
 /**
  * <p>
@@ -191,7 +190,7 @@ public class OneVarODE implements FirstOrderDifferentialEquations, Serializable 
     public ContinuousOutputModel solveODE(double[] xFinal, double step) throws DerivativeException, IntegratorException {
         FirstOrderIntegrator i = algorithm.getIntegrator(step);
         com = new ContinuousOutputModel();
-        i.setStepHandler(com);
+        i.addStepHandler(com);
         i.integrate(this, t0, new double[]{x0}, tf, xFinal);
         return com;
     }

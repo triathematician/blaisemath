@@ -5,9 +5,8 @@
 
 package scio.function.utils;
 
-import java.util.Arrays;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 
 /**
  * Contains utility classes for deriving new vector fields based on old ones, e.g.
