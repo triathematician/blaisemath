@@ -5,10 +5,11 @@
 
 package scio.voronoi;
 
+import scio.algorithm.VoronoiCells;
+import java.awt.geom.Point2D;
 import java.util.Vector;
 import junit.framework.TestCase;
-import scio.coordinate.R2;
-import scio.random.Random2D;
+import scio.random.Random2DUtils;
 
 /**
  *
@@ -35,8 +36,8 @@ public class CellsTest extends TestCase {
      */
     public void testCompute() {
         System.out.println("compute");
-        Vector<R2> points = new Vector<R2> ();
-        for (int i = 0; i < 10; i++) { points.add(Random2D.rectangle(10)); }
+        Vector<Point2D.Double> points = new Vector<Point2D.Double> ();
+        for (int i = 0; i < 10; i++) { points.add(Random2DUtils.uniformRectangle(-10, -10, 10, 10)); }
         VoronoiCells instance = new VoronoiCells(points);
         System.out.println(""+points.toString());
         System.out.println(""+instance.toString());
