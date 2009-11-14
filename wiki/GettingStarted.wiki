@@ -3,8 +3,8 @@
 
 = Required External Packages =
 
-  * Apache Commons Math:
-  * FireStarter: 
+  * Apache Commons Math: http://commons.apache.org/downloads/download_math.cgi
+  * FireStarter: http://javafirestorm.googlecode.com
 
 = Projects to Checkout =
 
