@@ -1,13 +1,26 @@
 #summary How to download the Blaise project and get started using the program.
 #labels Featured,Module-Blaise
 
+= Recommended IDE =
+
+This project is being developed within Netbeans (http://www.netbeans.org). We recommended downloading the latest version, and installing any updates, before downloading any of the source code for the projects here.
+
 = Required External Packages =
 
-  * Apache Commons Math: http://commons.apache.org/downloads/download_math.cgi
-  * FireStarter: http://javafirestorm.googlecode.com
+== Apache Commons Math 2.0 ==
+_Available at http://commons.apache.org/downloads/download_math.cgi _
+
+*Apache Commons Math* is an open-source library of useful mathematical classes and algorithms. To install the library, download and extract the binary [http://datadispensary.com/apache/commons/math/binaries/commons-math-2.0.zip .zip] file at the above link. You'll then need to add the `.jar` file to the projects which require it (currently `blaisemath`, `blaiseparser`, and `blaisecore`). We recommend adding the library to the Netbeans Library Manger. To do this, select the menu option `Tools>>Libraries`, click `New Library...`, and add the `.jar` files in the download for `Classpath` (required), `Sources` (optional), and `Documentation` (optional).
+
+== Firestarter ==
+_Available at http://javafirestorm.googlecode.com _
+
+*Firestarter* is an open-source project that implements, among other things, property tables and various other layout functionality used in _Blaise_. You will either need to download the `.jar` file from the linked website, or checkout the project from the website.
 
 = Projects to Checkout =
 
-  * BlaiseMath:
-  * BlaiseParser:
-  * BlaiseCore: 
+To use the full functionality of _Blaise_, you will need to checkout all of the following packages from the repository hosted on this project site:
+
+  * BlaiseMath: mathematical functionality, building on the Apache Commons library
+  * BlaiseParser: basic mathematical parsing
+  * BlaiseCore: the core library, implementing the plot libraries and plotting architecture
