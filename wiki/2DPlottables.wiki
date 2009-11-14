@@ -1,41 +1,25 @@
 #summary Describes the 2D plottables implemented within Blaise
-#labels Module-PEG
+#labels Module-PEG,Phase-Implementation
 
 = General =
- * `Point2D`
- * `PointSet2D`
- * `DynamicPointSet2D`
-
- * `CirclePoint2D`
- * `Segment2D`
- * `Vector2D`
- * `Line2D`
- * `Ray2D`
- * _`Slope2D`_
-
- * `Polygon2D`
- * `Triangle2D`
- * _`HalfPlane2D`_
-
 = Functions =
- * `Function2D`
- * _`Piecewise2D`_
- * `Parametric2D`
- * `PlaneFunction2D`
- * `ContourPlot2D`
- * `VectorField2D`
- * `FunctionSampleSet2D`
- * `FunctionPoint2D`
- * `SecantFunction2D`
- * _`IterativeSet2D`_
- * `DESolution2D`
-
-= Fun Stuff =
- * `Clock2D`
- * `FractalEdge2D`
-
 = Specialty =
- * `Grid2D`
- * `PolarGrid2D`
- * `Axes2D`
- * _`PolarAxes2D`_
+
+= Deprecated Version =
+*General*:
+`Point2D`, `PointSet2D`, `DynamicPointSet2D`, `CirclePoint2D`
+`Segment2D`, `Vector2D`, `Line2D`, `Ray2D`, _`Slope2D`_
+`Polygon2D`, `Triangle2D`, _`HalfPlane2D`_
+
+*Functions*:
+`Function2D`, _`Piecewise2D`_, `Parametric2D`
+`PlaneFunction2D`, `ContourPlot2D`, `VectorField2D`
+`FunctionSampleSet2D`, `FunctionPoint2D`, `SecantFunction2D`
+_`IterativeSet2D`_, `DESolution2D`
+
+*Fun Stuff*:
+`Clock2D`, `FractalEdge2D`
+
+*Specialty*:
+`Grid2D`, `PolarGrid2D`
+`Axes2D`, _`PolarAxes2D`_
