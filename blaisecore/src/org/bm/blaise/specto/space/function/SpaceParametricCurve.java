@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
 import scio.coordinate.utils.ParameterRange;
 import scio.coordinate.utils.ParameterRangeSupport;
-import scio.function.UnivariateVectorialFunction;
 
 /**
  *

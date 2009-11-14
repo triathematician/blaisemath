@@ -12,6 +12,8 @@ package org.bm.blaise.testing.space;
 
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.space.*;
 import org.bm.blaise.specto.space.basic.SpaceBox;
 import org.bm.blaise.specto.space.diffeq.*;
@@ -22,8 +24,6 @@ import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.utils.Curve3DSampleSet;
 import org.bm.utils.Surface3DSampleSet;
-import scio.function.MultivariateVectorialFunction;
-import scio.function.UnivariateVectorialFunction;
 
 /**
  *

@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import scio.coordinate.P3D;
 import scio.coordinate.utils.ParameterRange;
 import scio.coordinate.utils.SampleSetGenerator;
-import scio.function.MultivariateVectorialFunction;
 
 public class Surface3DSampleSet implements SampleSetGenerator<P3D> {
 

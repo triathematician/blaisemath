@@ -6,18 +6,17 @@
 package org.bm.blaise.specto.plane.function;
 
 import java.util.List;
-import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import scio.coordinate.utils.SampleSetGenerator;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
 import org.bm.blaise.specto.primitive.GraphicPoint;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.function.MultivariateRealFunction;
 import org.bm.blaise.specto.primitive.PointStyle;
 
 /**

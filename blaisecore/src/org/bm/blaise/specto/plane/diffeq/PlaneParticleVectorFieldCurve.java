@@ -10,9 +10,9 @@ import java.awt.geom.Point2D.Double;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.function.MultivariateVectorialFunction;
 
 /**
  *

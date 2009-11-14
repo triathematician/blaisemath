@@ -13,16 +13,16 @@ package org.bm.blaise.application;
 
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlaneAxes.AxisStyle;
 import org.bm.blaise.specto.plane.function.*;
 import org.bm.blaise.specto.plane.diffeq.*;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.blaise.specto.visometry.Plottable;
-import scio.function.MultivariateRealFunction;
-import scio.function.MultivariateVectorialFunction;
-import scio.function.UnivariateVectorialFunction;
 
 /**
  *

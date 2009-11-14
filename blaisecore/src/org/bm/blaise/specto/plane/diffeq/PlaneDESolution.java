@@ -10,11 +10,11 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
 import scio.diffeq.OneVarODE;
-import scio.function.MultivariateRealFunction;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.plottable.VComputedPointPath;
@@ -106,10 +106,13 @@ public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
         }
         path.moveTo((float) value.x, (float) value.y);
         int nSteps = (int) (((com.getFinalTime() - com.getInitialTime()) / step) + 1);
-        for (int i=0; i<nSteps; i++) {
-            double t = com.getInitialTime() + i * step;
-            com.setInterpolatedTime( t );
-            path.lineTo((float) t, (float) com.getInterpolatedState()[0]);
+        try{
+            for (int i=0; i<nSteps; i++) {
+                double t = com.getInitialTime() + i * step;
+                com.setInterpolatedTime( t );
+                path.lineTo((float) t, (float) com.getInterpolatedState()[0]);
+            }
+        } catch(DerivativeException ex) {
         }
         needsComputation = false;
     }

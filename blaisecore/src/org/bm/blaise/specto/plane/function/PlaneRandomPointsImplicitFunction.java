@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.awt.geom.Rectangle2D;
-import scio.function.MultivariateRealFunction;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import scio.function.Newton1DSpace;
 import org.bm.blaise.specto.primitive.PointStyle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;

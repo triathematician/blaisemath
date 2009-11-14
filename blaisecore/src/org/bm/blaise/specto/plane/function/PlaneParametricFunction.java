@@ -9,11 +9,11 @@ import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import scio.coordinate.utils.ParameterRange;
 import scio.coordinate.utils.ParameterRangeSupport;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
-import scio.function.UnivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
 

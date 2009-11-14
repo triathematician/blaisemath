@@ -10,11 +10,11 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
 import scio.diffeq.TwoVarODE;
-import scio.function.MultivariateRealFunction;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.plottable.VComputedPointPath;
@@ -137,13 +137,16 @@ public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
             path.reset();
         }
         path.moveTo((float) value.x, (float) value.y);
-        for (int i=0; i<nSteps; i++) {
-            double t = com.getInitialTime() + i * step;
-            com.setInterpolatedTime( t );
-            double[] p = com.getInterpolatedState();
-            path.lineTo((float) p[0], (float) p[1]);
-//            xVals[i] = new Point2D.Double(t, p[0]);
- //           yVals[i] = new Point2D.Double(t, p[1]);
+        try {
+            for (int i=0; i<nSteps; i++) {
+                double t = com.getInitialTime() + i * step;
+                com.setInterpolatedTime( t );
+                double[] p = com.getInterpolatedState();
+                path.lineTo((float) p[0], (float) p[1]);
+    //            xVals[i] = new Point2D.Double(t, p[0]);
+     //           yVals[i] = new Point2D.Double(t, p[1]);
+            }
+        } catch(DerivativeException ex) {
         }
 
 //        xPath.setValues(xVals);

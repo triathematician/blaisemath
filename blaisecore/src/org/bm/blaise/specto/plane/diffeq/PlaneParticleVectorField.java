@@ -7,7 +7,7 @@ package org.bm.blaise.specto.plane.diffeq;
 import org.bm.blaise.specto.plane.*;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;

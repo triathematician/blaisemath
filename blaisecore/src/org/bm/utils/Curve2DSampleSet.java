@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import scio.coordinate.utils.ParameterRange;
 import scio.coordinate.utils.SampleSetGenerator;
-import scio.function.UnivariateVectorialFunction;
 
 public class Curve2DSampleSet implements SampleSetGenerator<Point2D.Double> {
 

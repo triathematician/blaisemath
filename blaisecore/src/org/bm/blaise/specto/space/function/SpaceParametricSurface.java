@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
 import scio.coordinate.utils.ParameterRange;
 import scio.coordinate.utils.ParameterRangeSupport;
-import scio.function.MultivariateVectorialFunction;
 import scio.function.utils.SampleSurface3D;
 
 /**

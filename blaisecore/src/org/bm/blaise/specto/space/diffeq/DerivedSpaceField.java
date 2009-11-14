@@ -6,9 +6,9 @@
 package org.bm.blaise.specto.space.diffeq;
 
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import scio.coordinate.P3D;
 import scio.coordinate.utils.SampleSetGenerator;
-import scio.function.MultivariateVectorialFunction;
 import scio.function.utils.SampleField3D;
 import scio.function.utils.VectorFieldUtils;
 

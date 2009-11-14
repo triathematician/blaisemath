@@ -7,12 +7,12 @@ package org.bm.blaise.testing.plane;
 
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlanePlotComponent;
 import org.bm.blaise.specto.plane.PlanePolarGrid;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import org.bm.blaise.specto.visometry.Plottable;
-import scio.function.UnivariateVectorialFunction;
 
 /**
  *

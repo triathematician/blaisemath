@@ -8,13 +8,13 @@ package org.bm.blaise.testing.plane;
 import org.bm.blaise.specto.plane.function.PlaneRandomPointsImplicitFunction;
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.MultivariateRealFunction;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.component.BClock;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import org.bm.blaise.specto.plane.function.PlaneSurfaceFunction;
 import org.bm.blaise.specto.visometry.Plottable;
-import scio.function.UnivariateVectorialFunction;
 
 /**
  *

@@ -8,14 +8,14 @@ package org.bm.blaise.testing.plane;
 import org.bm.blaise.specto.plane.diffeq.PlaneVectorField;
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
+import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.component.BClock;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.diffeq.PlaneParticleVectorFieldCurve;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
 import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.utils.Curve2DSampleSet;
-import scio.function.UnivariateVectorialFunction;
 import scio.function.utils.VectorFieldUtils;
 
 /**
