@@ -11,13 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.utils.LineSampleSet;
-import scio.function.MultivariateVectorialFunction;
 
 /**
  * <p>

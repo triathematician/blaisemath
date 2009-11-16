@@ -11,10 +11,10 @@ import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
-import scio.function.MultivariateRealFunction;
 
 /**
  * <p>

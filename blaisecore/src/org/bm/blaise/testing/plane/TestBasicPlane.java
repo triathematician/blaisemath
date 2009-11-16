@@ -14,11 +14,11 @@ import org.bm.blaise.specto.plane.function.PlaneFunctionGraph;
 import data.propertysheet.PropertySheet;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
+import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.function.PlaneParametricFunction2;
 import org.bm.blaise.specto.visometry.Plottable;
-import scio.function.MultivariateVectorialFunction;
 
 /**
  *
@@ -59,7 +59,7 @@ public class TestBasicPlane extends javax.swing.JFrame {
         funPlot2.addPlottable(new PlaneParametricFunction2(new MultivariateVectorialFunction(){
             public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
                 return new double[]{
-                    point[0]*point[1], Math.sin(point[0]+point[1]) * Math.exp(point[0])
+                    point[0]*Math.cos(point[1]), point[0]*Math.sin(point[1])
                 };
             }
         }, new Point2D.Double(1,1), new Point2D.Double(3,3)));

@@ -7,7 +7,7 @@ package org.bm.blaise.specto.plane.function;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import scio.function.MultivariateRealFunction;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.Visometry;
