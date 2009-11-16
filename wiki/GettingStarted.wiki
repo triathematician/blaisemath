@@ -11,7 +11,7 @@ This project is being developed within Netbeans (http://www.netbeans.org). We re
 
 *Apache Commons Math* (_available at http://commons.apache.org/downloads/download_math.cgi _) is an open-source library of useful mathematical classes and algorithms. To install the library, download and extract the binary [http://datadispensary.com/apache/commons/math/binaries/commons-math-2.0.zip .zip] file at the above link. You'll then need to add the `.jar` file to the projects which require it (currently `blaisemath`, `blaiseparser`, and `blaisecore`). We recommend adding the library to the Netbeans Library Manger. To do this, select the menu option `Tools>>Libraries`, click `New Library...`, and add the `.jar` files in the download for `Classpath` (required), `Sources` (optional), and `Documentation` (optional).
 
-*Firestarter* (_available at http://javafirestorm.googlecode.com _) is an open-source project that implements, among other things, property tables and various other layout functionality used in _Blaise_. You will either need to download the `.jar` file from the linked website, or checkout the project from the website.
+*Firestarter* (_available at http://javafirestorm.googlecode.com _) is an open-source project that implements, among other things, property tables and various other layout functionality used in _Blaise_. You will either need to download the `.zip` file from the linked website to get the `.jar` file for the project, or checkout the project from the website.
 
 == Projects to Checkout ==
 
