@@ -1,6 +1,12 @@
 #summary Specific type of plottable used to display multiple objects on the screen at different points (e.g. a vector field)
 #labels Component-Plottable
 
+= Sample Use Cases =
+
+  # Riemann Sum visualization: 
+  # Vector Field visualization: 
+  # Vectors sampled along a curve: 
+
 = Relevant Interfaces and Classes =
 
 interface `PrimitiveMapper<C,P>`
