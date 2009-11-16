@@ -1,0 +1,34 @@
+#summary Description of generic plottable objects defined for all visometries
+#labels Module-Blaise,Component-Plottable
+
+These plottables are generic typed classes in the revised blaisecore package. Annotations are as follows:
+
+(A) indicates an AnimatingPlottable
+(C) indicates a Constrains2D
+(D) indicates a DynamicPlottable
+
+VInvisiblePoint (D)
+single point that may be moved around the visometry, but is not drawn
+VComputedPath (D)
+stores a path which is computed by subclasses
+Single points:
+VPoint (D)
+extends VInvisiblePoint; single point that may be moved around the visometry
+VLabel (D)
+extends VInvisiblePoint; label at a local coordinate that may be moved around the visometry
+Two points:
+
+VLine (D)
+line or vector between two points… multiple views of the line (e.g. as a vector, line, or segment) are supported via the style classes
+VRectangle (D)
+rectangle with draggable corners
+More points:
+
+VPointSet (D)
+collection of points that may be individually manipulated
+VPath
+collection of points displayed as a path
+VParticleField
+collection of points (or small trails) displayed individually, and moving about based upon abstract methods
+VComputedPointPath (D)
+extends VPoint; stores a point which may be moved around freely, together with a path (that depends on the point)… the path is computed by subclasses
