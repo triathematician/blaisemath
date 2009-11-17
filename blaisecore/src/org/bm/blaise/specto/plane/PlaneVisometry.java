@@ -30,7 +30,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomPointGen
     // PROPERTIES
     //
     //
-    /** Stores the boundary of the display window. */
+    /** Stores the boundary of the display window, in window coordinates. */
     RectangularShape windowBounds;
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
     Point2D.Double desiredMin = new Point2D.Double(0, 0);
@@ -40,7 +40,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomPointGen
     double aspectRatio = 1.0;
     /** Stores the affine transformation that converts the actual range to the window bounds. */
     transient AffineTransform at = new AffineTransform();
-    /** Stores the actual range of values that is displayed. */
+    /** Stores the actual range of values that is displayed, in local coordiantes. */
     transient Rectangle2D.Double displayRange = new Rectangle2D.Double();
 
     //
@@ -154,12 +154,18 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomPointGen
         return new Point2D.Double(displayRange.x + displayRange.width, displayRange.y + displayRange.height);
     }
 
-    /** @return x scaling to transform local to window coordinates */
+    /**
+     * Returns the number of pixels/unit in the x direction
+     * @return x scaling to transform local to window coordinates
+     */
     public double getScaleX() {
         return at.getScaleX();
     }
 
-    /** @return y scaling to transform local to window coordinates */
+    /**
+     * Returns the number of pixels/unit in the y direction
+     * @return y scaling to transform local to window coordinates
+     */
     public double getScaleY() {
         return at.getScaleY();
     }

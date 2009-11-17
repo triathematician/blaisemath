@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
+import org.bm.blaise.specto.plane.PlaneVisometry;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
 import org.bm.blaise.specto.primitive.GraphicArrow;
 import org.bm.blaise.specto.primitive.ArrowStyle;
@@ -37,13 +38,15 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
 
     /** Whether arrows are centered at sample points. */
     boolean centered;
+    /** Multiplier for vec field length. */
+    double lengthMultiplier = 1;
 
     /**
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
     public PlaneVectorField(MultivariateVectorialFunction func, SampleSetGenerator<Point2D.Double> ssg) {
-        super(DEFAULT_STYLE, ssg);
+        super((ArrowStyle) DEFAULT_STYLE.clone(), ssg);
         setFunc(func);
     }
 
@@ -83,12 +86,27 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         this.centered = centered;
     }
 
+    public double getLengthMultiplier() {
+        return lengthMultiplier;
+    }
+
+    public void setLengthMultiplier(double lengthMultiplier) {
+        this.lengthMultiplier = lengthMultiplier;
+    }
+
     
     //
     //
     // DRAW METHODS
     //
     //
+
+    @Override
+    public void scalePrimitives(Visometry vis) {
+        PlaneVisometry pv = (PlaneVisometry) vis;
+        double maxRad = Math.min(Math.abs(ssg.getSampleDiff().x * pv.getScaleX()), Math.abs(ssg.getSampleDiff().y * pv.getScaleY()));
+        GraphicArrow.scaleVectors(primitives, lengthMultiplier * maxRad, 0.9, centered);
+    }
 
     public GraphicArrow primitiveAt(Point2D.Double coord, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
         double[] value = new double[]{0, 0};
@@ -117,7 +135,6 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
             result[i] = primitiveAt(c, vis, vg);
             i++;
         }
-        GraphicArrow.scaleVectors(result, spacing.pixSpace, 0.5, centered);
         return result;
     }
 

@@ -135,7 +135,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
     }
 
     @Override
-    public void scalePrimitives() {
+    public void scalePrimitives(Visometry vis) {
         scaleVectors(primitives, ssg.getSampleDiff().magnitude() / 2, 0.8, centered);
     }
 

@@ -9,6 +9,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -41,7 +42,11 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
     //
 
     public PlaneFunctionGraph(UnivariateRealFunction func) {
-        this.func = func;
+        setFunction(func);
+    }
+
+    public PlaneFunctionGraph() {
+        setFunction(new UnivariateRealFunction(){public double value(double x) { return 0.0; } });
     }
 
     //
@@ -74,18 +79,34 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
     /** Recomputes the visual path for the function. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         double xStep = ((PlaneGraphics) vg).getIdealHStepForPixelSpacing(0.5); // set to sample every 0.5 pixels
-        try {
-            if (path == null) {
-                path = new GeneralPath();
-            } else {
-                path.reset();
+        if (path == null) {
+            path = new GeneralPath();
+        } else {
+            path.reset();
+        }
+        double x = vg.getMinimumVisible().x;
+        double fx = 0;
+        while (x <= vg.getMaximumVisible().x) {
+            boolean outsideDomain = true;
+            while (outsideDomain && x <= vg.getMaximumVisible().x) {
+                try {
+                    fx = func.value(x);
+                    outsideDomain = false;
+                } catch (ArgumentOutsideDomainException e) {
+                } catch (FunctionEvaluationException e) {
+                }
+                x += xStep;
             }
-            path.moveTo((float) vg.getMinimumVisible().x, (float) func.value(vg.getMinimumVisible().x));
-            for (double x = vg.getMinimumVisible().x; x <= vg.getMaximumVisible().x; x += xStep) {
-                path.lineTo((float) x, (float) func.value(x));
+            path.moveTo( (float) x, (float) fx );
+            while (!outsideDomain && x <= vg.getMaximumVisible().x) {
+                try {
+                    path.lineTo( (float) x, (float) func.value(x));
+                    outsideDomain = false;
+                } catch (ArgumentOutsideDomainException e) {
+                } catch (FunctionEvaluationException e) {
+                }
+                x += xStep;
             }
-        } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneFunctionGraph.class.getName()).log(Level.SEVERE, null, ex);
         }
         needsComputation = false;
     }

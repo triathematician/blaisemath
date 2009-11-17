@@ -100,11 +100,33 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="org.bm.blaise.specto.plane.PlanePlotComponent" name="divCurlPlot">
+        <Container class="org.bm.blaise.specto.plane.PlanePlotComponent" name="divPlot">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Divergence/Curl">
-                <Property name="tabTitle" type="java.lang.String" value="Divergence/Curl"/>
+              <JTabbedPaneConstraints tabName="Divergence">
+                <Property name="tabTitle" type="java.lang.String" value="Divergence"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="722" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="630" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
+        <Container class="org.bm.blaise.specto.plane.PlanePlotComponent" name="curlPlot">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Curl">
+                <Property name="tabTitle" type="java.lang.String" value="Curl"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

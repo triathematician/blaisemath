@@ -6,7 +6,7 @@
 package org.bm.utils;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 import java.util.AbstractList;
 import java.util.List;
 import scio.coordinate.utils.SampleSetGenerator;
@@ -17,24 +17,15 @@ import scio.coordinate.utils.SampleSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
+public abstract class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
 
-    /** Boundary of sampled region. */
-    Rectangle2D.Double bounds;
     /** Border around the sampling region. */
     double sampleBorder = 0;
-    /**
-     * Determines whether the grid is sampled at "nice" points, i.e. corresponding
-     * to integers, half-integers, etc.
-     */
+    /** Determines whether the grid is sampled at "nice" points, i.e. corresponding to integers, half-integers, etc. */
     boolean sampleNice = false;
-    /** Sample numbers. */
-    int nx = 10;
-    int ny = 10;
-
-    public PlaneGridSampleSet(Rectangle2D.Double bounds) {
-        this.bounds = bounds;
-    }
+    /** Sample numbers per direction. */
+    int nx = 20;
+    int ny = 20;
 
     //
     //
@@ -42,14 +33,9 @@ public class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
     //
     //
 
-    public Rectangle2D.Double getBounds() {
-        return bounds;
-    }
-
-    public void setBounds(Rectangle2D.Double bounds) {
-        this.bounds = bounds;
-    }
-
+    /** Returns rectangular area used to define the boundaries of the grid. */
+    public abstract RectangularShape getBounds();
+    
     public int getNX() {
         return nx;
     }
@@ -94,15 +80,15 @@ public class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
     List<Point2D.Double> computeSamples(int nXSamples, int nYSamples) {
         nx = nXSamples;
         ny = nYSamples;
-        diff.x = bounds.width / (nx - 1);
-        diff.y = bounds.height / (ny - 1);
+        diff.x = getBounds().getWidth() / (nx - 1);
+        diff.y = getBounds().getHeight() / (ny - 1);
         return new AbstractList<Point2D.Double>() {
             int n = nx * ny;
             @Override
             public Point2D.Double get(int index) {
                 return new Point2D.Double(
-                        bounds.x + diff.x * (index % nx),
-                        bounds.y + diff.y * ( (int) (index / nx) )
+                        getBounds().getX() + diff.x * (index % nx),
+                        getBounds().getY() + diff.y * ( (int) (index / nx) )
                         );
             }
             @Override
@@ -123,17 +109,15 @@ public class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
      * @return an <code>AbstractList</code> containing the grid of sampled points
      */
     public List<Point2D.Double> computeNiceSamples(double approxDX, double approxDY) {
-        final double[] xRange = NiceRangeGenerator.STANDARD.niceRange(bounds.x, bounds.x + bounds.width, approxDX);
-        final double[] yRange = NiceRangeGenerator.STANDARD.niceRange(bounds.y, bounds.y + bounds.height, approxDY);
-        nx = xRange.length;
-        ny = yRange.length;
+        final double[] xRange = NiceRangeGenerator.STANDARD.niceRange(getBounds().getMinX(), getBounds().getMaxX(), approxDX);
+        final double[] yRange = NiceRangeGenerator.STANDARD.niceRange(getBounds().getMinY(), getBounds().getMaxY(), approxDY);
         diff.x = xRange[1] - xRange[0];
         diff.y = yRange[1] - yRange[0];
         return new AbstractList<Point2D.Double>() {
-            int n = nx * ny;
+            int n = xRange.length * yRange.length;
             @Override
             public Point2D.Double get(int index) {
-                return new Point2D.Double(xRange[index % nx], yRange[index / nx]);
+                return new Point2D.Double(xRange[index % xRange.length], yRange[index / xRange.length]);
             }
             @Override
             public int size() {
@@ -144,7 +128,7 @@ public class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
 
     public List<Point2D.Double> getSamples() {
         if (sampleNice) {
-            return computeNiceSamples(bounds.width / nx, bounds.height / ny);
+            return computeNiceSamples(getBounds().getWidth() / nx, getBounds().getHeight() / ny);
         } else {
             return computeSamples(nx, ny);
         }

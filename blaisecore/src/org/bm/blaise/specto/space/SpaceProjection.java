@@ -82,7 +82,7 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     RectangularShape winBounds;
 
     /** Pixels per unit */
-    double dpi = 90;
+    double dpi = 270;
 
     /** Center of window, in window coordinates. */
     transient Point2D.Double winCenter;

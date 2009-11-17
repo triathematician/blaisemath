@@ -70,21 +70,25 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         // DIFF EQ'S
 
         DEPlot.addPlottable(new PlaneAxes());
-        DEPlot.addPlottable(new PlaneVectorField(func1, DEPlot.getSSG()));
+        DEPlot.addPlottable(new PlaneVectorField(func1, DEPlot.getPlotSampleSetGenerator()));
         DEPlot.addPlottable(new PlaneDESolution(new Point2D.Double(-1.5, .5), func2, 5.0));
         DEPlot.addPlottable(new PlaneParticleVectorField(func1));
         DEPlot.setClockTimer(timer);
 
         DEPlot2.addPlottable(new PlaneAxes());
-        DEPlot2.addPlottable(new PlaneVectorField(func3, DEPlot2.getSSG()));
+        DEPlot2.addPlottable(new PlaneVectorField(func3, DEPlot2.getPlotSampleSetGenerator()));
         DEPlot2.addPlottable(new PlaneDE2Solution(new Point2D.Double(0.2, -0.2), func4, func5, 0.0, 10.0));
 
         UnivariateRealFunction f = new UnivariateRealFunction() {
             public double value(double x) throws FunctionEvaluationException {
                 return 1-(x-.5)*(x-.5);
             } };
+
+        CobwebPlot.addPlottable(new PlaneAxes());
+        CobwebPlot.addPlottable(new PlaneFunctionGraph(new UnivariateRealFunction(){public double value(double x){return x;}}));
         CobwebPlot.addPlottable(new PlaneFunctionGraph(f));
         CobwebPlot.addPlottable( new PlaneCobwebFunction( new Point2D.Double(), new DifferenceEquation1(f, 0, 20) ));
+        CobwebPlot.setDesiredRange(-1.0, -1.0, 2.0, 1.5);
 
         
         // PANELS

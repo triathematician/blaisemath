@@ -53,7 +53,7 @@ public class TestSurfacePlots extends javax.swing.JFrame {
         PlaneParametricFunction ppf = new PlaneParametricFunction(curve, 0.0, 6.28, 0.1);
 
         sfcPlot.addPlottable(ppf);
-        sfcPlot.addPlottable(new PlaneSurfaceFunction(func, sfcPlot.getSSG()));
+        sfcPlot.addPlottable(new PlaneSurfaceFunction(func, sfcPlot.getPlotSampleSetGenerator()));
 
 //        sfcPlot.addPlottable(new PlaneParticleVectorField(
 //                new MultivariateVectorialFunction() {

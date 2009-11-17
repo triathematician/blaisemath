@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.AbstractList;
 import java.util.List;
 import scio.coordinate.utils.SampleSetGenerator;
@@ -129,22 +130,6 @@ public class PlaneGraphics extends VisometryGraphics<Point2D.Double> {
     // SAMPLING METHODS
     //
     //
-
-    transient PlaneGridSampleSet pgss;
-
-    public SampleSetGenerator<Point2D.Double> getSampleSetGenerator(Spacing s) {
-        PlaneVisometry pv = (PlaneVisometry) this.vis;
-        if (pgss == null) {
-            pgss = new PlaneGridSampleSet(pv.getVisibleRange());
-        } else {
-            pgss.setBounds(pv.getVisibleRange());
-        }
-        // TODO - figure out how to make this work better (i.e. should it depend on screen size??)
-        pgss.setNX(s.dimSamples);
-        pgss.setNY(s.dimSamples);
-        pgss.setSampleNice(true);
-        return pgss;
-    }
 
     /**
      * Computes and returns the step size corresponding to a given number of pixels in the x-direction.

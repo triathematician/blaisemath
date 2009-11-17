@@ -36,15 +36,18 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     /** The coordinate grid generator. */
     protected SampleSetGenerator<C> ssg;
 
-    /** The spacing directive. */
-    protected Spacing spacing = Spacing.REGULAR;
-
     //
     //
     // CONSTRUCTORS
     //
     //
 
+    /**
+     * Constructor requires providing a style class and a sample generator.
+     *
+     * @param style the style for the primitive <code>P</code>
+     * @param ssg the sample generator for the coordinate <code>C</code>
+     */
     public VPrimitiveMappingPlottable(PrimitiveStyle style, SampleSetGenerator<C> ssg) {
         this.style = style;
         this.ssg = ssg;
@@ -55,14 +58,6 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     // GET/SET PATTERNS
     //
     //
-
-    public Spacing getSpacing() {
-        return spacing;
-    }
-
-    public void setSpacing(Spacing spacing) {
-        this.spacing = spacing;
-    }
 
     public SampleSetGenerator<C> getSampleSetGenerator() {
         return ssg;
@@ -85,13 +80,12 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
      * Scales the size of graphics primitives appropriately. Extended classes
      * should use this method to adjust the size of the primitives, if necessary.
      */
-    public void scalePrimitives() {
-        
+    public void scalePrimitives(Visometry vis) {
     }
 
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
         primitives = primitivesAt(ssg.getSamples(), vis, canvas);
-        scalePrimitives();
+        scalePrimitives(vis);
     }
 
     @Override

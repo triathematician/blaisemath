@@ -24,7 +24,7 @@ import java.awt.geom.Point2D;
  *
  * @author Elisha Peterson
  */
-public class ArrowStyle implements PrimitiveStyle<GraphicArrow> {
+public class ArrowStyle implements PrimitiveStyle<GraphicArrow>, Cloneable {
 
     //
     //
@@ -68,6 +68,21 @@ public class ArrowStyle implements PrimitiveStyle<GraphicArrow> {
         this.headSize = headSize;
     }
 
+    public ArrowStyle(PathStyle pathStyle, ArrowShape headShape, ArrowShape anchorShape, int headSize) {
+        this.pathStyle = pathStyle;
+        this.headShape = headShape;
+        this.anchorShape = anchorShape;
+        this.headSize = headSize;
+    }
+
+
+    @Override
+    public Object clone() {
+        return new ArrowStyle(
+                new PathStyle(pathStyle.getColor(), pathStyle.getThickness()),
+                headShape, anchorShape, headSize
+                );
+    }
 
     //
     //
@@ -224,5 +239,4 @@ public class ArrowStyle implements PrimitiveStyle<GraphicArrow> {
          */
         abstract public Shape getShape(Point2D point, double dx, double dy, double headSize);
     }
-
 }

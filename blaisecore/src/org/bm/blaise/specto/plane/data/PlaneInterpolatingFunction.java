@@ -13,12 +13,8 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.MathException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.apache.commons.math.analysis.interpolation.DividedDifferenceInterpolator;
-import org.apache.commons.math.analysis.interpolation.NevilleInterpolator;
-import org.apache.commons.math.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math.analysis.interpolation.UnivariateRealInterpolator;
+import org.apache.commons.math.analysis.interpolation.*;
 import org.bm.blaise.specto.plane.PlaneGraphics;
 import org.bm.blaise.specto.plane.function.PlaneFunctionGraph;
 import org.bm.blaise.specto.plottable.VPointSet;
@@ -47,17 +43,15 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
 
     protected Interpolator interpolator = Interpolator.SPLINE;
 
-    /** Style of stroke */
-    protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.function());
+    protected PlaneFunctionGraph func = new PlaneFunctionGraph();
 
     public PlaneInterpolatingFunction(Point2D.Double[] values) {
         super(values);
         addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                setInterpolatingFunction();
+                needsComputation = true;
             }
         });
-        setInterpolatingFunction();
     }
 
     //
@@ -67,11 +61,11 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
     //
 
     public PathStyle getStrokeStyle() {
-        return strokeStyle;
+        return func.getStrokeStyle();
     }
 
     public void setStrokeStyle(PathStyle style) {
-        this.strokeStyle = style;
+        func.setStrokeStyle(style);
     }
 
     public Interpolator getInterpolator() {
@@ -85,10 +79,10 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
     
 
     // PAINT METHODS
+    
+    boolean needsComputation = true;
 
-    transient UnivariateRealFunction func;
-
-    private void setInterpolatingFunction() {
+    public void recompute(VisometryGraphics<Point2D.Double> vg) {
         // sort values by x
         TreeSet<Point2D.Double> sortedPts = new TreeSet<Point2D.Double>(
                 new Comparator<Point2D.Double>() {
@@ -113,39 +107,9 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
             i++;
         }
         try {
-            func = interpolator.interp.interpolate(xVals, yVals);
-        } catch (MathException ex) {
-            Logger.getLogger(PlaneInterpolatingFunction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        needsComputation = true;
-    }
-    
-    boolean needsComputation = true;
-    double xmin;
-    double xmax;
-    GeneralPath path;
-
-    public void recompute(VisometryGraphics<Point2D.Double> vg) {
-        xmin = values[0].x;
-        xmax = values[0].x;
-        for (int i = 1; i < values.length; i++) {
-            xmin = Math.min(xmin, values[i].x);
-            xmax = Math.max(xmax, values[i].x);
-        }
-        double xStep = ((PlaneGraphics) vg).getIdealHStepForPixelSpacing(2.0); // set to sample every 2 pixels
-        try {
-            if (path == null) {
-                path = new GeneralPath();
-            } else {
-                path.reset();
-            }
-            path.moveTo((float) xmin, (float) func.value(xmin));
-            for (double x = xmin; x <= xmax; x += xStep) {
-                path.lineTo((float) x, (float) func.value(x));
-            }
-            path.lineTo((float) xmax, (float) func.value(xmax));
-        } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneFunctionGraph.class.getName()).log(Level.SEVERE, null, ex);
+            func.setFunction(interpolator.interp.interpolate(xVals, yVals));
+        } catch (Exception e) {
+            // failure to interpolate
         }
         needsComputation = false;
     }
@@ -160,8 +124,7 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
         if (needsComputation) {
             recompute(vg);
         }
-        vg.setPathStyle(strokeStyle);
-        vg.drawWinPath(path);
+        func.paintComponent(vg);
     }
 
     /**
@@ -169,8 +132,8 @@ public class PlaneInterpolatingFunction extends VPointSet<Point2D.Double> implem
      */
     public enum Interpolator {
         SPLINE("Spline", new SplineInterpolator()),
-        DIVDIFF("Div Diff", new DividedDifferenceInterpolator()),
-  //      LOESS("Loess", new LoessInterpolator()),
+        DIVDIFF("Divided Difference", new DividedDifferenceInterpolator()),
+        //LOESS("Loess", new LoessInterpolator()),
         NEVILLE("Neville", new NevilleInterpolator());
 
         UnivariateRealInterpolator interp;

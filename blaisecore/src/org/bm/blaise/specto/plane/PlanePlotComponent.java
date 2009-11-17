@@ -7,8 +7,9 @@ package org.bm.blaise.specto.plane;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 import org.bm.blaise.specto.visometry.PlotComponent;
-import org.bm.utils.Spacing;
+import org.bm.utils.PlaneGridSampleSet;
 import scio.coordinate.utils.SampleSetGenerator;
 
 /**
@@ -34,9 +35,13 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         defaultMouseWheelListener = resizer;
     }
 
-    public SampleSetGenerator<Point2D.Double> getSSG() {
-        // TODO - hook into this generator in a better way!!
-        return ((PlaneGraphics) visometryGraphics).getSampleSetGenerator(Spacing.REGULAR);
+    public SampleSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
+        return new PlaneGridSampleSet() {
+            @Override
+            public RectangularShape getBounds() {
+                return ((PlaneVisometry) visometry).displayRange;
+            }
+        };
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
+import org.bm.blaise.specto.plane.PlaneVisometry;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
 import org.bm.blaise.specto.primitive.GraphicPoint;
 import org.bm.blaise.specto.visometry.Visometry;
@@ -31,6 +32,9 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
 
     /** Style to use for plotting points in the grid. */
     private static PointStyle DEFAULT_STYLE = new PointStyle(new Color(100, 100, 0), new Color(200, 200, 100));
+
+    /** Multiplier for dot size. */
+    double lengthMultiplier = 1;
 
     /** Underlying function */
     MultivariateRealFunction func;
@@ -67,11 +71,27 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
         this.style = style;
     }
 
+    public double getLengthMultiplier() {
+        return lengthMultiplier;
+    }
+
+    public void setLengthMultiplier(double lengthMultiplier) {
+        this.lengthMultiplier = lengthMultiplier;
+    }
+
+
     //
     //
     // PrimitiveMapper INTERFACE METHODS
     //
     //
+
+    @Override
+    public void scalePrimitives(Visometry vis) {
+        PlaneVisometry pv = (PlaneVisometry) vis;
+        double maxRad = Math.min(Math.abs(ssg.getSampleDiff().x * pv.getScaleX()), Math.abs(ssg.getSampleDiff().y * pv.getScaleY()));
+        GraphicPoint.scalePoints(primitives, lengthMultiplier * maxRad / 1.5, 0.5);
+    }
 
     public GraphicPoint primitiveAt(Point2D.Double coord, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
         double value = 0;
@@ -93,7 +113,6 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
             result[i] = primitiveAt(c, vis, vg);
             i++;
         }
-        GraphicPoint.scalePoints(result, spacing.pixSpace, 0.5);
         return result;
     }
 }

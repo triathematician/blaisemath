@@ -54,7 +54,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     PathStyle strokeStyle = new PathStyle( BlaisePalette.STANDARD.axis() );
 
     /** Style of the labels. */
-    StringStyle labelStyle = new StringStyle( BlaisePalette.STANDARD.axisLabel() );
+    StringStyle labelStyle = new StringStyle( BlaisePalette.STANDARD.axisLabel(), 14 );
 
     /** Whether ticks/labels are shown on the plot. */
     private boolean ticksVisible = true;

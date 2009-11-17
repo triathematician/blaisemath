@@ -31,6 +31,9 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
     /** Font of the text. */
     Font font;
 
+    /** Stores font size. */
+    transient Float fontSize = null;
+
     //
     //
     // CONSTRUCTORS
@@ -43,11 +46,17 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
 
     /** Construct with color only */
     public StringStyle(Color color) {
-        this(null, color);
+        this.color = color;
     }
 
     /** Constructs with provided parameters. */
-    public StringStyle(Font font, Color color) {
+    public StringStyle(Color color, float size) {
+        this.color = color;
+        this.fontSize = size;
+    }
+
+    /** Constructs with provided parameters. */
+    public StringStyle(Color color, Font font) {
         this.color = color;
         this.font = font;
     }
@@ -82,7 +91,10 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
     //
 
     public void draw(GraphicString grString, Graphics2D canvas) {
-        if (font != null) {
+        if (fontSize != null && font == null) {
+            font = canvas.getFont().deriveFont((float) fontSize);
+            canvas.setFont(font);
+        } else if (font != null) {
             canvas.setFont(font);
         }
         canvas.setColor(color);

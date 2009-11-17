@@ -101,9 +101,9 @@ public class VectorCalc extends javax.swing.JFrame {
         initComponents();
 
         PlaneAxes axes = PlaneAxes.instance(AxisStyle.CROSS, "x", "y");
-        PlaneVectorField vec1 = new PlaneVectorField(vecField1, ftcPlot.getSSG());
-        PlaneSurfaceFunction psf = new PlaneSurfaceFunction(surf1, gradientPlot.getSSG());
-        PlaneVectorField psfgrad = new PlaneVectorField(surf1grad, gradientPlot.getSSG());
+        PlaneVectorField vec1 = new PlaneVectorField(vecField1, ftcPlot.getPlotSampleSetGenerator());
+        PlaneSurfaceFunction psf = new PlaneSurfaceFunction(surf1, gradientPlot.getPlotSampleSetGenerator());
+        PlaneVectorField psfgrad = new PlaneVectorField(surf1grad, gradientPlot.getPlotSampleSetGenerator());
 
         ftcPlot.addPlottable(axes);
         ftcPlot.addPlottable(new PlaneFunctionGraph(ftcFunc));
@@ -117,8 +117,8 @@ public class VectorCalc extends javax.swing.JFrame {
         lineIntegralPlot.addPlottable(psf);
         lineIntegralPlot.addPlottable(psfgrad);
 
-        divCurlPlot.addPlottable(axes);
-        divCurlPlot.addPlottable(vec1);
+        curlPlot.addPlottable(axes);
+        curlPlot.addPlottable(vec1);
 
         data.beans.EditorRegistration.registerEditors();
         rollupPanel1.add("Visometry", new PropertySheet(ftcPlot.getVisometry()));
@@ -140,7 +140,8 @@ public class VectorCalc extends javax.swing.JFrame {
         ftcPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         gradientPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         lineIntegralPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
-        divCurlPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
+        divPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
+        curlPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         greensPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         div2Plot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         stokesPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
@@ -195,18 +196,31 @@ public class VectorCalc extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Line Integrals", lineIntegralPlot);
 
-        org.jdesktop.layout.GroupLayout divCurlPlotLayout = new org.jdesktop.layout.GroupLayout(divCurlPlot);
-        divCurlPlot.setLayout(divCurlPlotLayout);
-        divCurlPlotLayout.setHorizontalGroup(
-            divCurlPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        org.jdesktop.layout.GroupLayout divPlotLayout = new org.jdesktop.layout.GroupLayout(divPlot);
+        divPlot.setLayout(divPlotLayout);
+        divPlotLayout.setHorizontalGroup(
+            divPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(0, 722, Short.MAX_VALUE)
         );
-        divCurlPlotLayout.setVerticalGroup(
-            divCurlPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        divPlotLayout.setVerticalGroup(
+            divPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(0, 630, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Divergence/Curl", divCurlPlot);
+        jTabbedPane1.addTab("Divergence", divPlot);
+
+        org.jdesktop.layout.GroupLayout curlPlotLayout = new org.jdesktop.layout.GroupLayout(curlPlot);
+        curlPlot.setLayout(curlPlotLayout);
+        curlPlotLayout.setHorizontalGroup(
+            curlPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 722, Short.MAX_VALUE)
+        );
+        curlPlotLayout.setVerticalGroup(
+            curlPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 630, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Curl", curlPlot);
 
         org.jdesktop.layout.GroupLayout greensPlotLayout = new org.jdesktop.layout.GroupLayout(greensPlot);
         greensPlot.setLayout(greensPlotLayout);
@@ -290,9 +304,10 @@ public class VectorCalc extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.bm.blaise.specto.plane.PlanePlotComponent curlPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent div2Plot;
     private org.bm.blaise.specto.space.SpacePlotComponent div3Plot;
-    private org.bm.blaise.specto.plane.PlanePlotComponent divCurlPlot;
+    private org.bm.blaise.specto.plane.PlanePlotComponent divPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent ftcPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent gradientPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent greensPlot;

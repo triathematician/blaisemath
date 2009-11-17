@@ -71,14 +71,14 @@ public class TestVectorFields extends javax.swing.JFrame {
         PlaneParametricFunction ppf2 = new PlaneParametricFunction(func8 , 0.0, 1.0, .1);
 
         CurveDEPlot.addPlottable(new PlaneAxes());
-        CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getSSG()));
+        CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getPlotSampleSetGenerator()));
         CurveDEPlot.addPlottable(new PlaneParticleVectorFieldCurve(func6, ppf));
         CurveDEPlot.setClockTimer(timer);
 
         CurveDEPlot2.addPlottable(new PlaneAxes());
         CurveDEPlot2.addPlottable(ppf);
         CurveDEPlot2.addPlottable(ppf2);
-        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, CurveDEPlot2.getSSG()));
+        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, CurveDEPlot2.getPlotSampleSetGenerator()));
         CurveDEPlot2.addPlottable(new PlaneVectorField(func6, new Curve2DSampleSet(ppf.getFunc(), ppf.getRange())));
         CurveDEPlot2.addPlottable(new PlaneVectorField(
                 VectorFieldUtils.parallelField(func6, func7der),
