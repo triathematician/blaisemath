@@ -3,7 +3,7 @@
  * Created on May 30, 2008
  */
 
-package scio.coordinate;
+package scio.coordinate.formal;
 
 /**
  * <p>

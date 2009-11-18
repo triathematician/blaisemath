@@ -3,8 +3,9 @@
  * Created on Mar 20, 2008
  */
 
-package scio.coordinate;
+package scio.coordinate.formal;
 
+import scio.coordinate.formal.EuclideanElement;
 import java.util.Vector;
 
 /**

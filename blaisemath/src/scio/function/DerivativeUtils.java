@@ -4,6 +4,7 @@
  */
 package scio.function;
 
+import deprecated.Function;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;

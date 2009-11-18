@@ -3,7 +3,7 @@
  * Created on Nov 4, 2009
  */
 
-package scio.coordinate.utils;
+package scio.coordinate;
 
 /**
  * <p>
@@ -14,7 +14,7 @@ package scio.coordinate.utils;
  * 
  * @author Elisha Peterson
  */
-public interface RandomPointGenerator<C> {
+public interface RandomCoordinateGenerator<C> {
 
     /**
      * Return a random point.

@@ -5,8 +5,7 @@
 package deprecated;
 
 import java.util.Vector;
-import scio.coordinate.EuclideanElement;
-import scio.function.Function;
+import scio.coordinate.formal.EuclideanElement;
 
 /**
  * <p>

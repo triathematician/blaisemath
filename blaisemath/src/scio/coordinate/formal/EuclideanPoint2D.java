@@ -2,8 +2,9 @@
  * EuclideanPoint2D.java
  * Created on Sep 14, 2007, 8:10:55 AM
  */
-package scio.coordinate;
+package scio.coordinate.formal;
 
+import scio.coordinate.formal.EuclideanElement;
 import scio.coordinate.utils.PlanarMathUtils;
 import java.awt.geom.Point2D;
 

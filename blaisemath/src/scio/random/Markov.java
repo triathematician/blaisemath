@@ -8,7 +8,7 @@ package scio.random;
 import java.util.HashMap;
 import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.Function;
+import deprecated.Function;
 import scio.matrix.HashMatrix;
 
 /**

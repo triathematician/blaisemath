@@ -2,7 +2,10 @@
  * EuclideanPoint3D.java
  * Created on Sep 14, 2007, 8:15:59 AM
  */
-package scio.coordinate;
+package scio.coordinate.formal;
+
+import scio.coordinate.*;
+import scio.coordinate.formal.EuclideanElement;
 
 /**
  * <p>

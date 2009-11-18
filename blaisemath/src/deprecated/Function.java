@@ -3,7 +3,7 @@
  * Created on Sep 27, 2007, 12:31:58 PM
  */
 
-package scio.function;
+package deprecated;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import java.util.List;
  * 
  * @author Elisha Peterson
  */
+@Deprecated
 public interface Function<C,D> {
 
     /** Returns the value of the function at the given input. */

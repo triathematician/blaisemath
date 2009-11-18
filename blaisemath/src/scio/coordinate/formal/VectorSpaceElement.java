@@ -2,7 +2,7 @@
  * VectorSpaceElement.java
  * Created on Mar 24, 2008
  */
-package scio.coordinate;
+package scio.coordinate.formal;
 
 /**
  * <p>

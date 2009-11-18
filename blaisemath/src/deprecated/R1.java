@@ -5,6 +5,7 @@
 
 package deprecated;
 
+import scio.coordinate.formal.EuclideanElement;
 import scio.coordinate.*;
 
 

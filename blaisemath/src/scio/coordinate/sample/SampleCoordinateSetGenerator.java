@@ -1,22 +1,23 @@
 /*
- * SampleSetGenerator.java
+ * SampleCoordinateSetGenerator.java
  * Created on Nov 4, 2009
  */
 
-package scio.coordinate.utils;
+package scio.coordinate.sample;
 
 import java.util.List;
 
 /**
  * <p>
- *  Returns a collection of points.
+ *  Returns a collection of points of specified type. This should be used, e.g. to provide
+ *  several points in a grid, or a list of sample values for a Riemann sum.
  * </p>
  *
  * @param <C> the coordinate type of the output
  * 
  * @author Elisha Peterson
  */
-public interface SampleSetGenerator<C> {
+public interface SampleCoordinateSetGenerator<C> {
 
     /**
      * Return a list of sampled points. Any options as to what this looks

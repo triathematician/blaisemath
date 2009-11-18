@@ -3,7 +3,7 @@
  * Created on Oct 18, 2007, 12:46:36 PM
  */
 
-package scio.algorithm;
+package deprecated;
 
 import java.util.Vector;
 
@@ -11,6 +11,7 @@ import java.util.Vector;
  * Utility methods for plotting.
  * @author ae3263
  */
+@Deprecated
 public class Utility {
     
     /** What I'm trying to get at in the methods below is a way to place the lengths of a vector field, for example, between a couple very natural lengths,

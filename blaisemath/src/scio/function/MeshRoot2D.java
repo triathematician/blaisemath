@@ -4,6 +4,7 @@
  */
 package scio.function;
 
+import deprecated.Function;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.GeneralPath;
@@ -11,8 +12,8 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.coordinate.EuclideanPoint2D;
-import scio.coordinate.EuclideanPoint3D;
+import scio.coordinate.formal.EuclideanPoint2D;
+import scio.coordinate.formal.EuclideanPoint3D;
 import scio.coordinate.P3D;
 import scio.coordinate.utils.SpacialMathUtils;
 
