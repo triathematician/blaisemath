@@ -1,9 +1,16 @@
-#summary Describes the 2D plottables implemented within Blaise
+#summary Describes the planar plottables that have been implemented. See also the list of GenericPlottables.
 #labels Module-Blaise,Phase-Implementation
 
-= General =
 = Functions =
+
+  * `PlaneFunctionGraph`: the graph of a simple function, with one input and one output
+
+  * `PlaneParametricCurve`: a parametric curve, over a supplied range of parameters
+  * `PlaneParametricArea`: a parametric area, over a square range of 2d parameters
+
 = Specialty =
+
+
 
 = Deprecated Version =
 *General*:
@@ -12,7 +19,7 @@
 `Polygon2D`, `Triangle2D`, _`HalfPlane2D`_
 
 *Functions*:
-`Function2D`, _`Piecewise2D`_, `Parametric2D`
+_`Piecewise2D`_,
 `PlaneFunction2D`, `ContourPlot2D`, `VectorField2D`
 `FunctionSampleSet2D`, `FunctionPoint2D`, `SecantFunction2D`
 _`IterativeSet2D`_, `DESolution2D`
