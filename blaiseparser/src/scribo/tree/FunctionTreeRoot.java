@@ -18,8 +18,8 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.coordinate.EuclideanElement;
-import scio.function.Function;
+import scio.coordinate.formal.EuclideanElement;
+import deprecated.Function;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 

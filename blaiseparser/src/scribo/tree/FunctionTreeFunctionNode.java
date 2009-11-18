@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
-import scio.function.Function;
+import deprecated.Function;
 import scribo.parser.*;
 
 /**

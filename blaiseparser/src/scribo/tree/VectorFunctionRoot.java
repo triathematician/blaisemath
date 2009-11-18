@@ -8,7 +8,7 @@ import deprecated.ParameterFunction;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
-import scio.function.Function;
+import deprecated.Function;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 

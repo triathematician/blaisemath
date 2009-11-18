@@ -7,7 +7,7 @@ package scribo.tree;
 
 import java.util.TreeMap;
 import java.util.Vector;
-import scio.function.Function;
+import deprecated.Function;
 
 /**
  * <p>
