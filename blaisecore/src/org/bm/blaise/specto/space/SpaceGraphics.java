@@ -16,7 +16,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.utils.SpaceGridSampleSet;
 import org.bm.utils.Spacing;
 import scio.coordinate.P3D;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  * <p>
@@ -122,7 +122,7 @@ public class SpaceGraphics extends VisometryGraphics<P3D> {
 
     transient SpaceGridSampleSet pgss;
 
-    public SampleSetGenerator<P3D> getSampleSetGenerator(Spacing s) {
+    public SampleCoordinateSetGenerator<P3D> getSampleSetGenerator(Spacing s) {
         SpaceVisometry pv = (SpaceVisometry) this.vis;
         if (pgss == null) {
             pgss = new SpaceGridSampleSet(pv.minPoint, pv.maxPoint);

@@ -17,7 +17,7 @@ import org.bm.blaise.specto.space.SpaceGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import scio.function.utils.SampleField3D;
 
 /**
@@ -56,7 +56,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public SpaceVectorField(MultivariateVectorialFunction func, SampleSetGenerator<P3D> ssg) {
+    public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<P3D> ssg) {
         super(DEFAULT_STYLE, ssg);
         setFunc(func);
     }

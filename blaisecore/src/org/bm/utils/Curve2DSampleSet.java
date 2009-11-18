@@ -7,20 +7,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
-import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
-import scio.coordinate.utils.ParameterRange;
-import scio.coordinate.utils.SampleSetGenerator;
+import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
+import scio.coordinate.MaxMinDomain;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
-public class Curve2DSampleSet implements SampleSetGenerator<Point2D.Double> {
+public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Double> {
 
     /** Function */
     UnivariateVectorialFunction func;
     /** Range of values for display purposes */
-    ParameterRange<Double> range;
+    MaxMinDomain<Double> range;
     /** Number of samples */
     int nSamples = 20;
 
-    public Curve2DSampleSet(UnivariateVectorialFunction func, ParameterRange<Double> range) {
+    public Curve2DSampleSet(UnivariateVectorialFunction func, MaxMinDomain<Double> range) {
         this.func = func;
         this.range = range;
     }
@@ -41,11 +41,11 @@ public class Curve2DSampleSet implements SampleSetGenerator<Point2D.Double> {
         this.nSamples = nSamples;
     }
 
-    public ParameterRange<Double> getRange() {
+    public MaxMinDomain<Double> getRange() {
         return range;
     }
 
-    public void setRange(ParameterRange<Double> range) {
+    public void setRange(MaxMinDomain<Double> range) {
         this.range = range;
     }
 
@@ -59,7 +59,7 @@ public class Curve2DSampleSet implements SampleSetGenerator<Point2D.Double> {
                 val = func.value(range.getMin() + i * (range.getMax() - range.getMin()) / nSamples);
             } catch (FunctionEvaluationException ex) {
                 val = new double[]{0, 0};
-                Logger.getLogger(PlaneParametricFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PlaneParametricCurve.class.getName()).log(Level.SEVERE, null, ex);
             }
             result.add(new Point2D.Double(val[0], val[1]));
         }

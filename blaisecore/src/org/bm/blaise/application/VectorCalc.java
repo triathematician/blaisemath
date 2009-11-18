@@ -113,7 +113,7 @@ public class VectorCalc extends javax.swing.JFrame {
         gradientPlot.addPlottable(psfgrad);
 
         lineIntegralPlot.addPlottable(axes);
-        lineIntegralPlot.addPlottable(new PlaneParametricFunction(curve1, -2.0, 5.0, 0.5));
+        lineIntegralPlot.addPlottable(new PlaneParametricCurve(curve1, -2.0, 5.0));
         lineIntegralPlot.addPlottable(psf);
         lineIntegralPlot.addPlottable(psfgrad);
 

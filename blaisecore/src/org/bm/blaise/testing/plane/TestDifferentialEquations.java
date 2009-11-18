@@ -7,7 +7,7 @@ package org.bm.blaise.testing.plane;
 
 import org.bm.blaise.specto.plane.diffeq.PlaneDE2Solution;
 import org.bm.blaise.specto.plane.diffeq.PlaneDESolution;
-import org.bm.blaise.specto.plane.diffeq.PlaneParticleVectorField;
+import org.bm.blaise.specto.plane.particle.PlaneParticleVectorField;
 import org.bm.blaise.specto.plane.diffeq.PlaneVectorField;
 import data.propertysheet.PropertySheet;
 import java.awt.geom.Point2D;

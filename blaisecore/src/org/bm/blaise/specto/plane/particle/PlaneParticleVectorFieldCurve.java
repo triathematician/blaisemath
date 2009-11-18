@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.bm.blaise.specto.plane.diffeq;
+package org.bm.blaise.specto.plane.particle;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
-import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
+import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 
 /**
@@ -20,9 +20,9 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
  */
 public class PlaneParticleVectorFieldCurve extends PlaneParticleVectorField {
 
-    PlaneParametricFunction curve;
+    PlaneParametricCurve curve;
 
-    public PlaneParticleVectorFieldCurve(MultivariateVectorialFunction func, PlaneParametricFunction curve) {
+    public PlaneParticleVectorFieldCurve(MultivariateVectorialFunction func, PlaneParametricCurve curve) {
         super(func);
         this.curve = curve;
     }

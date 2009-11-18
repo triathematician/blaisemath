@@ -10,7 +10,7 @@ import javax.swing.event.ChangeEvent;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.utils.Spacing;
 import scio.coordinate.P3D;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  *
@@ -29,7 +29,7 @@ public class SpacePlotComponent extends PlotComponent<P3D> {
         defaultMouseWheelListener = resizer;
     }
 
-    public SampleSetGenerator<P3D> getSSG() {
+    public SampleCoordinateSetGenerator<P3D> getSSG() {
         // TODO - hook into this generator in a better way!!
         return ((SpaceGraphics) visometryGraphics).getSampleSetGenerator(Spacing.REGULAR);
     }

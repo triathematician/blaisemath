@@ -2,7 +2,7 @@
  * PlaneRandomPointsImplicitFunction.java
  * Created on Sep 25, 2009
  */
-package org.bm.blaise.specto.plane.function;
+package org.bm.blaise.specto.plane.particle;
 
 import org.bm.blaise.specto.plane.*;
 import java.awt.Color;

@@ -21,6 +21,7 @@ package org.bm.utils;
  *    It is up to any classes that uses this to determine exactly how to make use of these options.
  * </p>
  */
+@Deprecated
 public enum Spacing {
     SUPER_FINE("Super fine", 25, 20, 300),
     FINE("Fine", 40, 16, 200),

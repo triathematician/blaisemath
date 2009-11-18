@@ -14,8 +14,8 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
-import scio.coordinate.utils.ParameterRange;
-import scio.coordinate.utils.ParameterRangeSupport;
+import scio.coordinate.MaxMinDomain;
+import scio.coordinate.MaxMinDomainSupport;
 import scio.function.utils.SampleSurface3D;
 
 /**
@@ -35,22 +35,22 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
     public void setSample(SampleSurface3D sample) {
         this.sample = sample;
         func = sample;
-        domain1 = new ParameterRangeSupport<Double>(sample.u0, true, sample.u1, true);
-        domain2 = new ParameterRangeSupport<Double>(sample.v0, true, sample.v1, true);
+        domain1 = new MaxMinDomainSupport<Double>(sample.u0, true, sample.u1, true);
+        domain2 = new MaxMinDomainSupport<Double>(sample.v0, true, sample.v1, true);
     }
 
     /** Function */
     MultivariateVectorialFunction func;
     /** Range of values for display purposes */
-    ParameterRange<Double> domain1, domain2;
+    MaxMinDomain<Double> domain1, domain2;
     /** Sample quantities */
     int sample1 = 20;
     int sample2 = 20;
 
     public SpaceParametricSurface(MultivariateVectorialFunction func, double minU, double maxU, int sampleU, double minV, double maxV, int sampleV) {
         setFunc(func);
-        setDomain1(new ParameterRangeSupport<Double>(minU, true, maxU, true));
-        setDomain2(new ParameterRangeSupport<Double>(minV, true, maxV, true));
+        setDomain1(new MaxMinDomainSupport<Double>(minU, true, maxU, true));
+        setDomain2(new MaxMinDomainSupport<Double>(minV, true, maxV, true));
         setSample1(sampleU);
         setSample2(sampleV);
     }
@@ -63,19 +63,19 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
         this.func = func;
     }
 
-    public ParameterRange<Double> getDomain1() {
+    public MaxMinDomain<Double> getDomain1() {
         return domain1;
     }
 
-    public void setDomain1(ParameterRange<Double> domain1) {
+    public void setDomain1(MaxMinDomain<Double> domain1) {
         this.domain1 = domain1;
     }
 
-    public ParameterRange<Double> getDomain2() {
+    public MaxMinDomain<Double> getDomain2() {
         return domain2;
     }
 
-    public void setDomain2(ParameterRange<Double> domain2) {
+    public void setDomain2(MaxMinDomain<Double> domain2) {
         this.domain2 = domain2;
     }
 

@@ -12,8 +12,8 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.component.BClock;
 import org.bm.blaise.specto.plane.*;
-import org.bm.blaise.specto.plane.diffeq.PlaneParticleVectorFieldCurve;
-import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
+import org.bm.blaise.specto.plane.particle.PlaneParticleVectorFieldCurve;
+import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.utils.Curve2DSampleSet;
 import scio.function.utils.VectorFieldUtils;
@@ -67,8 +67,8 @@ public class TestVectorFields extends javax.swing.JFrame {
 
         // DIFF EQ'S
 
-        PlaneParametricFunction ppf = new PlaneParametricFunction(func7, -1.0, 2.0, .01);
-        PlaneParametricFunction ppf2 = new PlaneParametricFunction(func8 , 0.0, 1.0, .1);
+        PlaneParametricCurve ppf = new PlaneParametricCurve(func7, -1.0, 2.0);
+        PlaneParametricCurve ppf2 = new PlaneParametricCurve(func8 , 0.0, 1.0);
 
         CurveDEPlot.addPlottable(new PlaneAxes());
         CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getPlotSampleSetGenerator()));

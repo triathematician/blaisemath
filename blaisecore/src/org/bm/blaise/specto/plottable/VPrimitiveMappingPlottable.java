@@ -6,7 +6,7 @@
 package org.bm.blaise.specto.plottable;
 
 import org.bm.utils.Spacing;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.visometry.*;
 
@@ -34,7 +34,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     protected PrimitiveStyle style;
 
     /** The coordinate grid generator. */
-    protected SampleSetGenerator<C> ssg;
+    protected SampleCoordinateSetGenerator<C> ssg;
 
     //
     //
@@ -48,7 +48,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
      * @param style the style for the primitive <code>P</code>
      * @param ssg the sample generator for the coordinate <code>C</code>
      */
-    public VPrimitiveMappingPlottable(PrimitiveStyle style, SampleSetGenerator<C> ssg) {
+    public VPrimitiveMappingPlottable(PrimitiveStyle style, SampleCoordinateSetGenerator<C> ssg) {
         this.style = style;
         this.ssg = ssg;
     }
@@ -59,11 +59,11 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     //
     //
 
-    public SampleSetGenerator<C> getSampleSetGenerator() {
+    public SampleCoordinateSetGenerator<C> getSampleSetGenerator() {
         return ssg;
     }
 
-    public void setSampleSetGenerator(SampleSetGenerator<C> ssg) {
+    public void setSampleSetGenerator(SampleCoordinateSetGenerator<C> ssg) {
         this.ssg = ssg;
     }
     

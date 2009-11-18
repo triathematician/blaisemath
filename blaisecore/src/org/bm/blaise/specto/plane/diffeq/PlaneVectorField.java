@@ -18,7 +18,7 @@ import org.bm.blaise.specto.primitive.ArrowStyle;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public PlaneVectorField(MultivariateVectorialFunction func, SampleSetGenerator<Point2D.Double> ssg) {
+    public PlaneVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
         super((ArrowStyle) DEFAULT_STYLE.clone(), ssg);
         setFunc(func);
     }

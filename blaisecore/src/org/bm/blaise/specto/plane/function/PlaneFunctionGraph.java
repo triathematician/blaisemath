@@ -7,15 +7,13 @@ package org.bm.blaise.specto.plane.function;
 import org.bm.blaise.specto.plane.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
+import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
 /**
  * <p>
@@ -26,34 +24,18 @@ import org.bm.blaise.specto.plottable.VComputedPath;
  */
 public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
 
-    //
-    //
-    // PROPERTIES
-    //
-    //
     
     /** Underlying function */
     UnivariateRealFunction func;
 
-    //
-    //
-    // CONSTRUCTOR
-    //
-    //
+    /** Construct with a default function, f(x)=x */
+    public PlaneFunctionGraph() {
+        setFunction(new UnivariateRealFunction(){public double value(double x) { return x; } });
+    }
 
     public PlaneFunctionGraph(UnivariateRealFunction func) {
         setFunction(func);
     }
-
-    public PlaneFunctionGraph() {
-        setFunction(new UnivariateRealFunction(){public double value(double x) { return 0.0; } });
-    }
-
-    //
-    //
-    // BEANS
-    //
-    //
     
     public UnivariateRealFunction getFunction() {
         return func;
@@ -76,7 +58,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
         recompute((PlaneGraphics) canvas);
     }
 
-    /** Recomputes the visual path for the function. */
+    /** Recomputes the visual path for the function. Also performs domain checking. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         double xStep = ((PlaneGraphics) vg).getIdealHStepForPixelSpacing(0.5); // set to sample every 0.5 pixels
         if (path == null) {
@@ -111,6 +93,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
         needsComputation = false;
     }
 
+    @Override
     public boolean isClickablyCloseTo(VisometryMouseEvent<Point2D.Double> e) {
         double x = e.getCoordinate().x;
         double y;

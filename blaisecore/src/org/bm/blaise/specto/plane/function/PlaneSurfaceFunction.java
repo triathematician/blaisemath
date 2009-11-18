@@ -6,7 +6,7 @@
 package org.bm.blaise.specto.plane.function;
 
 import java.util.List;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
@@ -39,7 +39,7 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
     /** Underlying function */
     MultivariateRealFunction func;
 
-    public PlaneSurfaceFunction(MultivariateRealFunction func, SampleSetGenerator<Point2D.Double> ssg) {
+    public PlaneSurfaceFunction(MultivariateRealFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
         super(DEFAULT_STYLE, ssg);
         setFunc(func);
     }

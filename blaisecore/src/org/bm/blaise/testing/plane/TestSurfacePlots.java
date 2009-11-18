@@ -5,14 +5,14 @@
  */
 package org.bm.blaise.testing.plane;
 
-import org.bm.blaise.specto.plane.function.PlaneRandomPointsImplicitFunction;
+import org.bm.blaise.specto.plane.particle.PlaneRandomPointsImplicitFunction;
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.component.BClock;
 import org.bm.blaise.specto.plane.*;
-import org.bm.blaise.specto.plane.function.PlaneParametricFunction;
+import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.plane.function.PlaneSurfaceFunction;
 import org.bm.blaise.specto.visometry.Plottable;
 
@@ -50,7 +50,7 @@ public class TestSurfacePlots extends javax.swing.JFrame {
             }
         };
 
-        PlaneParametricFunction ppf = new PlaneParametricFunction(curve, 0.0, 6.28, 0.1);
+        PlaneParametricCurve ppf = new PlaneParametricCurve(curve, 0.0, 6.28);
 
         sfcPlot.addPlottable(ppf);
         sfcPlot.addPlottable(new PlaneSurfaceFunction(func, sfcPlot.getPlotSampleSetGenerator()));

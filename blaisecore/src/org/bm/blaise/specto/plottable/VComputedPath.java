@@ -5,12 +5,15 @@
 
 package org.bm.blaise.specto.plottable;
 
+import java.awt.Point;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
+import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
 /**
  * <p>
@@ -68,5 +71,19 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C> imple
         }
         vg.setPathStyle(strokeStyle);
         vg.drawPath(path);
+    }
+
+    /**
+     * Checks to see if the mouse point is close to this path. Uses the built in intersection
+     * checking of the <code>GeneralPath</code>
+     * @param e the mouse visometry event
+     * @return <code>true</code> if the mouse pointer is within a few pixels of the path
+     */
+    public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
+        Point p = e.getWindowPoint();
+        if (path == null) {
+            return false;
+        }
+        return path.intersects(p.x - 2, p.y - 2, 5, 5);
     }
 }

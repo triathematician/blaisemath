@@ -2,7 +2,7 @@
  * PlaneParticleVectorField.java
  * Created on Sep 24, 2009
  */
-package org.bm.blaise.specto.plane.diffeq;
+package org.bm.blaise.specto.plane.particle;
 
 import org.bm.blaise.specto.plane.*;
 import java.awt.geom.Point2D;
@@ -12,7 +12,7 @@ import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.plottable.VParticleField;
-import scio.coordinate.utils.RandomPointGenerator;
+import scio.coordinate.RandomCoordinateGenerator;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class PlaneParticleVectorField extends VParticleField<Point2D.Double> imp
     MultivariateVectorialFunction func;
     
     /** Used to generator random points. */
-    RandomPointGenerator<Point2D.Double> rpg;
+    RandomCoordinateGenerator<Point2D.Double> rpg;
 
     //
     //

@@ -17,7 +17,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.plane.*;
-import org.bm.blaise.specto.plane.function.PlaneParametricFunction2;
+import org.bm.blaise.specto.plane.function.PlaneParametricArea;
 import org.bm.blaise.specto.visometry.Plottable;
 
 /**
@@ -54,17 +54,6 @@ public class TestBasicPlane extends javax.swing.JFrame {
         }));
         funPlot.setDesiredRange(-5.0, -1.0, 5.0, 1.0);
 
-        funPlot2.addPlottable(new PlaneGrid());
-        funPlot2.addPlottable(new PlaneAxes());
-        funPlot2.addPlottable(new PlaneParametricFunction2(new MultivariateVectorialFunction(){
-            public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-                return new double[]{
-                    point[0]*Math.cos(point[1]), point[0]*Math.sin(point[1])
-                };
-            }
-        }, new Point2D.Double(1,1), new Point2D.Double(3,3)));
-        funPlot2.setDesiredRange(-3.0, -3.0, 3.0, 3.0);
-
 
         // PANELS
 
@@ -93,7 +82,6 @@ public class TestBasicPlane extends javax.swing.JFrame {
         tabPane = new javax.swing.JTabbedPane();
         basicPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         funPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
-        funPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -149,19 +137,6 @@ public class TestBasicPlane extends javax.swing.JFrame {
 
         tabPane.addTab("FuncPlot", funPlot);
 
-        org.jdesktop.layout.GroupLayout funPlot2Layout = new org.jdesktop.layout.GroupLayout(funPlot2);
-        funPlot2.setLayout(funPlot2Layout);
-        funPlot2Layout.setHorizontalGroup(
-            funPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 567, Short.MAX_VALUE)
-        );
-        funPlot2Layout.setVerticalGroup(
-            funPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 370, Short.MAX_VALUE)
-        );
-
-        tabPane.addTab("FuncPlot2", funPlot2);
-
         getContentPane().add(tabPane, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -195,7 +170,6 @@ public class TestBasicPlane extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.bm.blaise.specto.plane.PlanePlotComponent basicPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent funPlot;
-    private org.bm.blaise.specto.plane.PlanePlotComponent funPlot2;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;

@@ -4,7 +4,7 @@
  */
 package org.bm.blaise.specto.plane;
 
-import scio.coordinate.utils.RandomPointGenerator;
+import scio.coordinate.RandomCoordinateGenerator;
 import java.awt.geom.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +23,7 @@ import org.bm.blaise.specto.visometry.*;
  *
  * @author Elisha Peterson
  */
-public class PlaneVisometry implements Visometry<Point2D.Double>, RandomPointGenerator<Point2D.Double> {
+public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordinateGenerator<Point2D.Double> {
 
     //
     //

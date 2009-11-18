@@ -4,6 +4,7 @@
  */
 package org.bm.blaise.specto.plane.function;
 
+import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -18,6 +19,8 @@ import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.utils.LineSampleSet;
+import scio.coordinate.MaxMinDomain;
+import scio.coordinate.sample.RealIntervalSampler;
 
 /**
  * <p>
@@ -28,25 +31,25 @@ import org.bm.utils.LineSampleSet;
  *
  * @author Elisha Peterson
  */
-public class PlaneParametricFunction2 extends VComputedPath<Point2D.Double> {
+public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
     /** Range of x-values for display purposes */
-    LineSampleSet rangeX;
+    RealIntervalSampler rangeX;
     /** Range of y-valeus for display purposes */
-    LineSampleSet rangeY;
-    /** Stores underlying rectangle */
+    RealIntervalSampler rangeY;
+    /** Stores rectangle used to adjust the range. */
     VRectangle<Point2D.Double> domain;
 
     /** Initializes with an underlying function and a step rate for going through parameter values.
      * @param func the function
      * @param parameterStep the step rate for parameters
      */
-    public PlaneParametricFunction2(MultivariateVectorialFunction func, Point2D.Double min, Point2D.Double max) {
+    public PlaneParametricArea(MultivariateVectorialFunction func, Point2D.Double min, Point2D.Double max) {
         setFunc(func);
-        setXRange(new LineSampleSet(min.x, max.x));
-        setYRange(new LineSampleSet(min.x, max.x));
+        setXRange(new RealIntervalSampler(min.x, max.x, 10));
+        setYRange(new RealIntervalSampler(min.x, max.x, 10));
         domain = new VRectangle<Point2D.Double>(min, max);
         domain.addChangeListener(this);
     }
@@ -68,22 +71,45 @@ public class PlaneParametricFunction2 extends VComputedPath<Point2D.Double> {
         }
     }
 
-    public LineSampleSet getXRange() {
+    public MaxMinDomain<Double> getXRange() {
         return rangeX;
     }
 
-    public void setXRange(LineSampleSet range) {
-        this.rangeX = range;
-        needsComputation = true;
+    public void setXRange(MaxMinDomain<Double> range) {
+        if (range != null) {
+            if (range instanceof RealIntervalSampler) {
+                this.rangeX = (RealIntervalSampler) range;
+            } else {
+                this.rangeX.setMin(range.getMin());
+                this.rangeX.setMin(range.getMax());
+                this.rangeX.setMinInclusive(range.isMinInclusive());
+                this.rangeX.setMaxInclusive(range.isMaxInclusive());
+            }
+            needsComputation = true;
+        }
     }
 
-    public LineSampleSet getYRange() {
+    public MaxMinDomain<Double> getYRange() {
         return rangeY;
     }
 
-    public void setYRange(LineSampleSet range) {
-        this.rangeY = range;
-        needsComputation = true;
+    public void setYRange(MaxMinDomain<Double> range) {
+        if (range != null) {
+            if (range instanceof RealIntervalSampler) {
+                this.rangeY = (RealIntervalSampler) range;
+            } else {
+                this.rangeY.setMin(range.getMin());
+                this.rangeY.setMin(range.getMax());
+                this.rangeY.setMinInclusive(range.isMinInclusive());
+                this.rangeY.setMaxInclusive(range.isMaxInclusive());
+            }
+            needsComputation = true;
+            System.out.println("setting range.");
+        }
+    }
+
+    public VRectangle<Point2D.Double> getDomain() {
+        return domain;
     }
 
     @Override
@@ -141,16 +167,17 @@ public class PlaneParametricFunction2 extends VComputedPath<Point2D.Double> {
                 }
             }
         } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneParametricFunction2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PlaneParametricArea.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
-        domain.paintComponent(vg);
+//        domain.paintComponent(vg);
         super.paintComponent(vg);
     }
 
+    @Override
     public boolean isClickablyCloseTo(VisometryMouseEvent<Point2D.Double> e) {
         return domain.isClickablyCloseTo(e);
     }
@@ -174,6 +201,6 @@ public class PlaneParametricFunction2 extends VComputedPath<Point2D.Double> {
 
     @Override
     public String toString() {
-        return "Plane Function";
+        return "Parametric Area";
     }
 }

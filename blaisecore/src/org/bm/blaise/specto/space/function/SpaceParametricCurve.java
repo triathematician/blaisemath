@@ -15,8 +15,8 @@ import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
-import scio.coordinate.utils.ParameterRange;
-import scio.coordinate.utils.ParameterRangeSupport;
+import scio.coordinate.MaxMinDomain;
+import scio.coordinate.MaxMinDomainSupport;
 
 /**
  *
@@ -27,13 +27,13 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
     /** Function */
     UnivariateVectorialFunction func;
     /** Range of values for display purposes */
-    ParameterRange<Double> domain;
+    MaxMinDomain<Double> domain;
     /** Samples per curve */
     int samples = 100;
 
     public SpaceParametricCurve(UnivariateVectorialFunction func, double minT, double maxT, int samples) {
         setFunc(func);
-        setDomain(new ParameterRangeSupport<Double>(minT, true, maxT, true));
+        setDomain(new MaxMinDomainSupport<Double>(minT, true, maxT, true));
         setSamples(samples);
     }
 
@@ -54,11 +54,11 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
         }
     }
 
-    public ParameterRange<Double> getDomain() {
+    public MaxMinDomain<Double> getDomain() {
         return domain;
     }
 
-    public void setDomain(ParameterRange<Double> range) {
+    public void setDomain(MaxMinDomain<Double> range) {
         this.domain = range;
         needsComputation = true;
     }

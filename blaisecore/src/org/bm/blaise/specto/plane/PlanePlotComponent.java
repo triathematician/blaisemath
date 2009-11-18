@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.utils.PlaneGridSampleSet;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         defaultMouseWheelListener = resizer;
     }
 
-    public SampleSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
+    public SampleCoordinateSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
         return new PlaneGridSampleSet() {
             @Override
             public RectangularShape getBounds() {

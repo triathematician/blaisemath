@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.AbstractList;
 import java.util.List;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.utils.PlaneGridSampleSet;

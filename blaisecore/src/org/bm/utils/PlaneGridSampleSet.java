@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.util.AbstractList;
 import java.util.List;
-import scio.coordinate.utils.SampleSetGenerator;
+import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import scio.coordinate.utils.SampleSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class PlaneGridSampleSet implements SampleSetGenerator<Point2D.Double> {
+public abstract class PlaneGridSampleSet implements SampleCoordinateSetGenerator<Point2D.Double> {
 
     /** Border around the sampling region. */
     double sampleBorder = 0;
