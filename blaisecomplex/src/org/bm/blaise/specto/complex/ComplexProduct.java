@@ -36,9 +36,7 @@ public class ComplexProduct extends ComplexPointSet {
     public void setValue(int index, Point2D.Double value) {
         if (index == 0 || index == 1) {
             values[index] = value;
-            if (index != 2) {
-                values[2] = ComplexMathUtils.product(values[0], values[1]);
-            }
+            values[2] = ComplexMathUtils.product(values[0], values[1]);
             fireStateChanged();
         }
     }
