@@ -15,42 +15,42 @@ import static java.lang.Math.*;
 public enum SampleSurface3D implements MultivariateVectorialFunction {
     SPHERE(0, 2*PI, 0, PI) {
         public double[] value(double[] in) {
-            double r1 = cos(in[0]);
-            double r2 = sin(in[0]);
-            return new double[]{ r1 * cos(in[1]), r1 * sin(in[1]), r2 };
+            double r1 = cos(in[1]);
+            double r2 = sin(in[1]);
+            return new double[]{ r2 * cos(in[0]), r2 * sin(in[0]), r1 };
         }
     },
-    CYLINDER(-1, 1, 0, 2*PI) {
+    CYLINDER(0, 2*PI, -1, 1) {
         public double[] value(double[] in) {
             double r1 = 1;
-            double r2 = in[0];
-            return new double[]{ r1 * cos(in[1]), r1 * sin(in[1]), r2 };
+            double r2 = in[1];
+            return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
         }
     },
-    PARABOLOID(0, 1, 0, 2*PI) {
+    PARABOLOID(0, 2*PI, 0, 1) {
         public double[] value(double[] in) {
-            double r1 = in[0];
-            double r2 = in[0]*in[0];
-            return new double[]{ r1 * cos(in[1]), r1 * sin(in[1]), r2 };
+            double r1 = in[1];
+            double r2 = in[1]*in[1];
+            return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
         }
     },
-    CONE(-1, 1, 0, 2*PI) {
+    CONE(0, 2*PI, -1, 1)  {
         public double[] value(double[] in) {
-            double r1 = in[0];
-            double r2 = in[0];
-            return new double[]{ r1 * cos(in[1]), r1 * sin(in[1]), r2 };
+            double r1 = in[1];
+            double r2 = in[1];
+            return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
         }
     },
     TORUS(0, 2*PI, 0, 2*PI) {
         public double[] value(double[] in) {
-            double r1 = 2+Math.cos(in[0]);
-            double r2 = Math.sin(in[0]);
-            return new double[]{ r1 * cos(in[1]), r1 * sin(in[1]), r2 };
+            double r1 = 2+Math.cos(in[1]);
+            double r2 = Math.sin(in[1]);
+            return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
         }
     },
-    MOBIUS(-.5, .5, 0, PI) {
+    MOBIUS(0, PI, -.5, .5) {
         public double[] value(double[] in) {
-            return new double[]{ (2+in[0]*cos(in[1])) * cos(2*in[1]), (2+in[0]*cos(in[1])) * sin(2*in[1]), in[0]*sin(in[1]) };
+            return new double[]{ (2+in[1]*cos(in[0])) * cos(2*in[0]), (2+in[1]*cos(in[0])) * sin(2*in[0]), in[1]*sin(in[0]) };
         }
     };
 
