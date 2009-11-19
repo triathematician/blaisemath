@@ -3,10 +3,10 @@
 
 = Functions =
 
-  * `PlaneFunctionGraph`: the graph of a simple function, with one input and one output
+  * `PlaneFunctionGraph`: The graph of a simple function, with one input and one output. The domain is the visible portion of the real axis.
 
-  * `PlaneParametricCurve`: a parametric curve, over a supplied range of parameters
-  * `PlaneParametricArea`: a parametric area, over a square range of 2d parameters
+  * `PlaneParametricCurve`: A parametric curve, over a supplied domain (interval in *R*)
+  * `PlaneParametricArea`: A parametric area, over a supplied square domain (in *R*^2^)
 
 = Specialty =
 
