@@ -35,23 +35,24 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
-    /** Range of x-values for display purposes */
-    RealIntervalSampler rangeX;
-    /** Range of y-valeus for display purposes */
-    RealIntervalSampler rangeY;
+    /** Range of u-values for display purposes */
+    RealIntervalSampler domainU;
+    /** Range of v-valeus for display purposes */
+    RealIntervalSampler domainV;
     /** Stores rectangle used to adjust the range. */
-    VRectangle<Point2D.Double> domain;
+    VRectangle<Point2D.Double> domainPlottable;
 
     /** Initializes with an underlying function and a step rate for going through parameter values.
      * @param func the function
-     * @param parameterStep the step rate for parameters
+     * @param min minimum values of u and v
+     * @param max maximum values of u and v
      */
     public PlaneParametricArea(MultivariateVectorialFunction func, Point2D.Double min, Point2D.Double max) {
-        setFunc(func);
-        setXRange(new RealIntervalSampler(min.x, max.x, 10));
-        setYRange(new RealIntervalSampler(min.x, max.x, 10));
-        domain = new VRectangle<Point2D.Double>(min, max);
-        domain.addChangeListener(this);
+        setFunction(func);
+        setDomainU(new RealIntervalSampler(min.x, max.x, 10));
+        setDomainV(new RealIntervalSampler(min.x, max.x, 10));
+        domainPlottable = new VRectangle<Point2D.Double>(min, max);
+        domainPlottable.addChangeListener(this);
     }
 
     //
@@ -60,68 +61,57 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
     //
     //
 
-    public MultivariateVectorialFunction getFunc() {
+    public MultivariateVectorialFunction getFunction() {
         return func;
     }
 
-    public void setFunc(MultivariateVectorialFunction func) {
+    public void setFunction(MultivariateVectorialFunction func) {
         if (func != null && this.func != func) {
             this.func = func;
             needsComputation = true;
         }
     }
 
-    public MaxMinDomain<Double> getXRange() {
-        return rangeX;
+    public MaxMinDomain<Double> getDomainU() {
+        return domainU;
     }
 
-    public void setXRange(MaxMinDomain<Double> range) {
+    public void setDomainU(MaxMinDomain<Double> range) {
         if (range != null) {
             if (range instanceof RealIntervalSampler) {
-                this.rangeX = (RealIntervalSampler) range;
+                this.domainU = (RealIntervalSampler) range;
             } else {
-                this.rangeX.setMin(range.getMin());
-                this.rangeX.setMin(range.getMax());
-                this.rangeX.setMinInclusive(range.isMinInclusive());
-                this.rangeX.setMaxInclusive(range.isMaxInclusive());
+                this.domainU.setMin(range.getMin());
+                this.domainU.setMin(range.getMax());
+                this.domainU.setMinInclusive(range.isMinInclusive());
+                this.domainU.setMaxInclusive(range.isMaxInclusive());
             }
             needsComputation = true;
         }
     }
 
-    public MaxMinDomain<Double> getYRange() {
-        return rangeY;
+    public MaxMinDomain<Double> getDomainV() {
+        return domainV;
     }
 
-    public void setYRange(MaxMinDomain<Double> range) {
+    public void setDomainV(MaxMinDomain<Double> range) {
         if (range != null) {
             if (range instanceof RealIntervalSampler) {
-                this.rangeY = (RealIntervalSampler) range;
+                this.domainV = (RealIntervalSampler) range;
             } else {
-                this.rangeY.setMin(range.getMin());
-                this.rangeY.setMin(range.getMax());
-                this.rangeY.setMinInclusive(range.isMinInclusive());
-                this.rangeY.setMaxInclusive(range.isMaxInclusive());
+                this.domainV.setMin(range.getMin());
+                this.domainV.setMin(range.getMax());
+                this.domainV.setMinInclusive(range.isMinInclusive());
+                this.domainV.setMaxInclusive(range.isMaxInclusive());
             }
             needsComputation = true;
-            System.out.println("setting range.");
         }
     }
 
-    public VRectangle<Point2D.Double> getDomain() {
-        return domain;
+    public VRectangle<Point2D.Double> getDomainPlottable() {
+        return domainPlottable;
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == domain) {
-            rangeX.setMin(domain.getPoint1().x);
-            rangeX.setMax(domain.getPoint2().x);
-            rangeY.setMin(domain.getPoint1().y);
-            rangeY.setMax(domain.getPoint2().y);
-        }
-        super.stateChanged(e);
-    }
 
     //
     //
@@ -129,7 +119,17 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
     //
     //
 
-
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == domainPlottable) {
+            domainU.setMin(domainPlottable.getPoint1().x);
+            domainU.setMax(domainPlottable.getPoint2().x);
+            domainV.setMin(domainPlottable.getPoint1().y);
+            domainV.setMax(domainPlottable.getPoint2().y);
+            needsComputation = true;
+        }
+        super.stateChanged(e);
+    }
 
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
         // MAY EVENTUALLY REQUIRE RECOMPUTATION, BUT NOT RIGHT NOW
@@ -143,14 +143,14 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
             } else {
                 path.reset();
             }
-            List<Double> xx = rangeX.getSamples();
-            List<Double> yy = rangeY.getSamples();
+            List<Double> xx = domainU.getSamples();
+            List<Double> yy = domainV.getSamples();
 
             double[] fval = new double[]{0, 0};
 
             // add path for each x value in sample
             for (Double x : xx) {
-                fval = func.value(new double[]{x, rangeY.getMin()});
+                fval = func.value(new double[]{x, domainV.getMin()});
                 path.moveTo((float) fval[0], (float) fval[1]);
                 for (Double y : yy) {
                     fval = func.value(new double[]{x, y});
@@ -159,7 +159,7 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
             }
             // add path for each y value in sample
             for (Double y : yy) {
-                fval = func.value(new double[]{rangeX.getMin(), y});
+                fval = func.value(new double[]{domainU.getMin(), y});
                 path.moveTo((float) fval[0], (float) fval[1]);
                 for (Double x : xx) {
                     fval = func.value(new double[]{x, y});
@@ -179,22 +179,22 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
 
     @Override
     public boolean isClickablyCloseTo(VisometryMouseEvent<Point2D.Double> e) {
-        return domain.isClickablyCloseTo(e);
+        return domainPlottable.isClickablyCloseTo(e);
     }
 
     @Override
     public void mouseDragged(VisometryMouseEvent<Point2D.Double> e) {
-        domain.mouseDragged(e);
+        domainPlottable.mouseDragged(e);
     }
 
     @Override
     public void mousePressed(VisometryMouseEvent<Point2D.Double> e) {
-        domain.mousePressed(e);
+        domainPlottable.mousePressed(e);
     }
 
     @Override
     public void mouseReleased(VisometryMouseEvent<Point2D.Double> e) {
-        domain.mouseReleased(e);
+        domainPlottable.mouseReleased(e);
     }
 
 

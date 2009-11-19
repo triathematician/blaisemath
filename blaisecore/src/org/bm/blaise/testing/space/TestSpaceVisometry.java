@@ -11,6 +11,7 @@
 package org.bm.blaise.testing.space;
 
 import data.propertysheet.PropertySheet;
+import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
@@ -43,27 +44,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         funPlot.addPlottable(new SpaceAxes());
         funPlot.addPlottable(new SpaceFunction());
 
-        parPlot.addPlottable(new SpaceParametricCurve(
-                new UnivariateVectorialFunction() {
-                    public double[] value(double x) throws FunctionEvaluationException {
-                        return new double[] { (2 + 1.1*Math.sin(7*x)) * Math.cos(2*x), (2 + 1.1*Math.sin(7*x)) * Math.sin(2*x), 1.1*Math.cos(7*x) };
-                    }
-                },
-                0.0, 2*Math.PI, 200));
-        SpaceParametricSurface sps = new SpaceParametricSurface(
-                new MultivariateVectorialFunction() {
-                    public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-                        return new double[] {
-                            Math.cos(point[1]) * Math.cos(point[0]),
-                            Math.sin(point[1]) * Math.cos(point[0]),
-                            Math.sin(point[0])
-                        };
-                    }
-                },
-                -Math.PI/2, Math.PI/2, 10,
-                0.0, 3*Math.PI/2, 10);
-        parPlot.addPlottable(sps);
-
         MultivariateVectorialFunction field1 =
                 new MultivariateVectorialFunction() {
                     public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
@@ -81,6 +61,18 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
                         return new double[] { -point[1], point[0], 0 };
                     }
                 };
+        SpaceParametricSurface sps = new SpaceParametricSurface(
+                new MultivariateVectorialFunction() {
+                    public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
+                        return new double[] {
+                            Math.cos(point[1]) * Math.cos(point[0]),
+                            Math.sin(point[1]) * Math.cos(point[0]),
+                            Math.sin(point[0])
+                        };
+                    }
+                },
+                new Point2D.Double(-Math.PI/2, 0.0),
+                new Point2D.Double(Math.PI/2, 3*Math.PI/2));
         MultivariateVectorialFunction spsDer1 =
                 new MultivariateVectorialFunction() {
                     public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
@@ -101,16 +93,16 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         vecPlot.addPlottable(new SpaceAxes());
         vecPlot.addPlottable(new SpaceVectorField(field1, stdPlot.getSSG()));
         vecPlot.addPlottable(spc);
-        vecPlot.addPlottable(new SpaceVectorField(field1, new Curve3DSampleSet(spc.getFunc(), spc.getDomain())));
+        vecPlot.addPlottable(new SpaceVectorField(field1, new Curve3DSampleSet(spc.getFunction(), spc.getDomain())));
         vecPlot.addPlottable(new DerivedSpaceField(
                 field1, spcDer, null,
-                new Curve3DSampleSet(spc.getFunc(), spc.getDomain())));
+                new Curve3DSampleSet(spc.getFunction(), spc.getDomain())));
 
         vecPlot2.addPlottable(sps);
-        vecPlot2.addPlottable(new SpaceVectorField(field1, new Surface3DSampleSet(sps.getFunc(), sps.getDomain1(), sps.getDomain2())));
+        vecPlot2.addPlottable(new SpaceVectorField(field1, new Surface3DSampleSet(sps.getFunction(), sps.getDomainU(), sps.getDomainV())));
         vecPlot2.addPlottable(new DerivedSpaceField(
                 field1, spsDer1, spsDer2,
-                new Surface3DSampleSet(sps.getFunc(), sps.getDomain1(), sps.getDomain2())));
+                new Surface3DSampleSet(sps.getFunction(), sps.getDomainU(), sps.getDomainV())));
 
         data.beans.EditorRegistration.registerEditors();
         rollupPanel1.add("Visometry 1", new PropertySheet(stdPlot.getVisometry()));
@@ -132,7 +124,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         stdPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         miniPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
-        parPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         funPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         vecPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         vecPlot2 = new org.bm.blaise.specto.space.SpacePlotComponent();
@@ -178,19 +169,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Camera & View", stdPlot);
-
-        org.jdesktop.layout.GroupLayout parPlotLayout = new org.jdesktop.layout.GroupLayout(parPlot);
-        parPlot.setLayout(parPlotLayout);
-        parPlotLayout.setHorizontalGroup(
-            parPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 722, Short.MAX_VALUE)
-        );
-        parPlotLayout.setVerticalGroup(
-            parPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 607, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Parametrics", parPlot);
 
         org.jdesktop.layout.GroupLayout funPlotLayout = new org.jdesktop.layout.GroupLayout(funPlot);
         funPlot.setLayout(funPlotLayout);
@@ -287,7 +265,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private org.bm.blaise.specto.space.SpacePlotComponent miniPlot;
-    private org.bm.blaise.specto.space.SpacePlotComponent parPlot;
     private gui.RollupPanel rollupPanel1;
     private org.bm.blaise.specto.space.SpacePlotComponent stdPlot;
     private org.bm.blaise.specto.space.SpacePlotComponent vecPlot;

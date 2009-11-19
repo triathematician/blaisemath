@@ -36,10 +36,10 @@ public class PlaneParticleVectorFieldCurve extends PlaneParticleVectorField {
     @Override
     public Point2D.Double[] getNewPath(int length) {
         Point2D.Double[] result = new Point2D.Double[length];
-        double randomT = (curve.getRange().getMax() - curve.getRange().getMin()) * Math.random() + curve.getRange().getMin();
+        double randomT = (curve.getDomain().getMax() - curve.getDomain().getMin()) * Math.random() + curve.getDomain().getMin();
         double[] randomPt = {0, 0};
         try {
-            randomPt = curve.getFunc().value(randomT);
+            randomPt = curve.getFunction().value(randomT);
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(PlaneParticleVectorFieldCurve.class.getName()).log(Level.SEVERE, null, ex);
         }

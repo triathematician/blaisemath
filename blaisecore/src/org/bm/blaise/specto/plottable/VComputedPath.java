@@ -68,6 +68,7 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C> imple
     public void paintComponent(VisometryGraphics<C> vg) {
         if (needsComputation) {
             recompute(vg);
+            needsComputation = false;
         }
         vg.setPathStyle(strokeStyle);
         vg.drawPath(path);

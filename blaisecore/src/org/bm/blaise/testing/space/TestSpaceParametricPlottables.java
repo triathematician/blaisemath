@@ -3,8 +3,9 @@
  *
  * Created on Jul 30, 2009, 3:15:03 PM
  */
-package org.bm.blaise.testing.plane;
+package org.bm.blaise.testing.space;
 
+import org.bm.blaise.testing.plane.*;
 import data.propertysheet.PropertySheet;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
@@ -17,54 +18,48 @@ import org.bm.blaise.specto.plane.PlanePlotComponent;
 import org.bm.blaise.specto.plane.PlanePolarGrid;
 import org.bm.blaise.specto.plane.function.PlaneParametricArea;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
+import org.bm.blaise.specto.space.SpaceAxes;
+import org.bm.blaise.specto.space.SpacePlotComponent;
+import org.bm.blaise.specto.space.function.SpaceParametricCurve;
+import org.bm.blaise.specto.space.function.SpaceParametricSurface;
 import org.bm.blaise.specto.visometry.Plottable;
+import scio.function.utils.SampleSurface3D;
 
 /**
  *
  * @author ae3263
  */
-public class TestParametricPlottables extends javax.swing.JFrame {
+public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
-    public TestParametricPlottables() {
+    public TestSpaceParametricPlottables() {
         data.beans.EditorRegistration.registerEditors();
         initComponents();
 
 
         // FUNCTIONS
 
-        PlaneParametricCurve ppc = new PlaneParametricCurve(
-            new UnivariateVectorialFunction() {
-                public double[] value(double x) throws FunctionEvaluationException {
-                    return new double[]{Math.cos(2 * x) + 0.7 * Math.cos(5 * x) + 0.3 * Math.cos(29 * x), Math.sin(2 * x) + 0.7 * Math.sin(5 * x) + 0.3 * Math.sin(29 * x)};
-                }
-            },
-        0.0, 2 * Math.PI, 500);
+        SpaceParametricCurve spc = new SpaceParametricCurve(
+                new UnivariateVectorialFunction() {
+                    public double[] value(double x) throws FunctionEvaluationException {
+                        return new double[] { (2 + 1.1*Math.sin(7*x)) * Math.cos(2*x), (2 + 1.1*Math.sin(7*x)) * Math.sin(2*x), 1.1*Math.cos(7*x) };
+                    }
+                },
+                0.0, 2*Math.PI, 200);
+        SpaceParametricSurface sps = SpaceParametricSurface.getInstance(SampleSurface3D.SPHERE);
 
         domainPlot1.addPlottable(LineAxes.instance("t"));
-        domainPlot1.addPlottable(ppc.getDomainPlottable());
+        domainPlot1.addPlottable(spc.getDomainPlottable());
 
-        rangePlot1.addPlottable(new PlanePolarGrid());
-        rangePlot1.addPlottable(PlaneAxes.instance("x(t)", "y(t)"));
-        rangePlot1.addPlottable(ppc);
-        rangePlot1.setDesiredRange(-3.0, -3.0, 3.0, 3.0);
-
-        PlaneParametricArea area = new PlaneParametricArea(new MultivariateVectorialFunction(){
-            public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-                return new double[]{
-                    point[0]*Math.cos(point[1]), point[0]*Math.sin(point[1])
-                };
-            }
-        }, new Point2D.Double(1,1), new Point2D.Double(3,3));
+        rangePlot1.addPlottable(new SpaceAxes());
+        rangePlot1.addPlottable(spc);
 
         domainPlot2.addPlottable(new PlaneGrid());
-        domainPlot2.addPlottable(PlaneAxes.instance("u", "u"));
-        domainPlot2.addPlottable(area.getDomainPlottable());
+        domainPlot2.addPlottable(PlaneAxes.instance("u", "v"));
+        domainPlot2.addPlottable(sps.getDomainPlottable());
 
-        rangePlot2.addPlottable(new PlaneGrid());
-        rangePlot2.addPlottable(PlaneAxes.instance("x(u,v)", "y(u,v)"));
-        rangePlot2.addPlottable(area);
-        rangePlot2.setDesiredRange(-3.0, -3.0, 3.0, 3.0);
+        rangePlot2.addPlottable(new SpaceAxes());
+        rangePlot2.addPlottable(sps);
         
         // PANELS
 
@@ -88,8 +83,8 @@ public class TestParametricPlottables extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new gui.RollupPanel();
         tabPane = new javax.swing.JTabbedPane();
-        rangePlot1 = new org.bm.blaise.specto.plane.PlanePlotComponent();
-        rangePlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
+        rangePlot1 = new org.bm.blaise.specto.space.SpacePlotComponent();
+        rangePlot2 = new org.bm.blaise.specto.space.SpacePlotComponent();
         jPanel1 = new javax.swing.JPanel();
         domainPlot1 = new org.bm.blaise.specto.line.LinePlotComponent();
         domainPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
@@ -146,7 +141,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
             .add(0, 309, Short.MAX_VALUE)
         );
 
-        tabPane.addTab("Parametric Area", rangePlot2);
+        tabPane.addTab("Parametric Surface", rangePlot2);
 
         getContentPane().add(tabPane, java.awt.BorderLayout.CENTER);
 
@@ -189,7 +184,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
         rollupPanel1.removeAll();
-        PlanePlotComponent ppc = (PlanePlotComponent) tabPane.getSelectedComponent();
+        SpacePlotComponent ppc = (SpacePlotComponent) tabPane.getSelectedComponent();
         rollupPanel1.add("Visometry", new PropertySheet(ppc.getVisometry()));
         for (Plottable p : ppc.getPlottables()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
@@ -203,7 +198,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new TestParametricPlottables().setVisible(true);
+                new TestSpaceParametricPlottables().setVisible(true);
             }
         });
     }
@@ -215,8 +210,8 @@ public class TestParametricPlottables extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
-    private org.bm.blaise.specto.plane.PlanePlotComponent rangePlot1;
-    private org.bm.blaise.specto.plane.PlanePlotComponent rangePlot2;
+    private org.bm.blaise.specto.space.SpacePlotComponent rangePlot1;
+    private org.bm.blaise.specto.space.SpacePlotComponent rangePlot2;
     private gui.RollupPanel rollupPanel1;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables

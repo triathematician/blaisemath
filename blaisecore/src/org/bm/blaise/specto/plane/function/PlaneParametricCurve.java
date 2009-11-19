@@ -30,16 +30,17 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
 
     /** The underlying function */
     UnivariateVectorialFunction func;
-    /** Range of values for display purposes */
-    RealIntervalSampler range;
+    /** Domain of function */
+    RealIntervalSampler domain;
     /** Stores visual interval used to adjust the range. */
-    VRectangle<Double> domain;
+    VRectangle<Double> domainPlottable;
 
 
     /**
-     * Initializes with an underlying function and a step rate for going through parameter values.
+     * Initializes with an underlying function and min/max domain
      * @param func the function
-     * @param parameterStep the step rate for parameters
+     * @param min the min value in domain
+     * @param max the max value in domain
      */
     public PlaneParametricCurve(UnivariateVectorialFunction func, double min, double max) {
         this(func, min, max, 100);
@@ -47,15 +48,16 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     /**
      * Initializes with an underlying function and a step rate for going through parameter values.
      * @param func the function
-     * @param parameterStep the step rate for parameters
+     * @param min the min value in domain
+     * @param max the max value in domain
      * @param numSamples the number of samples
      */
     public PlaneParametricCurve(UnivariateVectorialFunction func, double min, double max, int numSamples) {
-        setFunc(func);
-        setRange(new RealIntervalSampler(min, max, numSamples));
-        domain = new VRectangle<Double>(min, max);
-        domain.getStyle().setThickness(3.0f);
-        domain.addChangeListener(this);
+        setFunction(func);
+        setDomain(new RealIntervalSampler(min, max, numSamples));
+        domainPlottable = new VRectangle<Double>(min, max);
+        domainPlottable.getStyle().setThickness(3.0f);
+        domainPlottable.addChangeListener(this);
     }
 
     //
@@ -64,11 +66,11 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     //
     //
 
-    public UnivariateVectorialFunction getFunc() {
+    public UnivariateVectorialFunction getFunction() {
         return func;
     }
 
-    public void setFunc(UnivariateVectorialFunction func) {
+    public void setFunction(UnivariateVectorialFunction func) {
         if (func != null && this.func != func) {
             this.func = func;
             needsComputation = true;
@@ -76,33 +78,34 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
         }
     }
 
-    public MaxMinDomain<Double> getRange() {
-        return range;
+    public MaxMinDomain<Double> getDomain() {
+        return domain;
     }
 
-    public void setRange(MaxMinDomain<Double> range) {
+    public void setDomain(MaxMinDomain<Double> range) {
         if (range != null) {
             if (range instanceof RealIntervalSampler) {
-                this.range = (RealIntervalSampler) range;
+                this.domain = (RealIntervalSampler) range;
             } else {
-                this.range.setMin(range.getMin());
-                this.range.setMin(range.getMax());
-                this.range.setMinInclusive(range.isMinInclusive());
-                this.range.setMaxInclusive(range.isMaxInclusive());
+                this.domain.setMin(range.getMin());
+                this.domain.setMin(range.getMax());
+                this.domain.setMinInclusive(range.isMinInclusive());
+                this.domain.setMaxInclusive(range.isMaxInclusive());
             }
             needsComputation = true;
         }
     }
 
-    public VRectangle<Double> getDomain() {
-        return domain;
+    public VRectangle<Double> getDomainPlottable() {
+        return domainPlottable;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == domain) {
-            range.setMin(domain.getPoint1());
-            range.setMax(domain.getPoint2());
+        if (e.getSource() == domainPlottable) {
+            domain.setMin(domainPlottable.getPoint1());
+            domain.setMax(domainPlottable.getPoint2());
+            needsComputation = true;
         }
         super.stateChanged(e);
     }
@@ -119,16 +122,17 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
 
     /** Recomputes the visual path for the function. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
+        System.out.println("recomputing curve...");
         try {
             if (path == null) {
                 path = new GeneralPath();
             } else {
                 path.reset();
             }
-            List<Double> domain = range.getSamples();
-            double[] coords = func.value(domain.get(0));
+            List<Double> samples = domain.getSamples();
+            double[] coords = func.value(samples.get(0));
             path.moveTo((float) coords[0], (float) coords[1]);
-            for (double x : domain) {
+            for (double x : samples) {
                 coords = func.value(x);
                 path.lineTo((float) coords[0], (float) coords[1]);
             }
@@ -139,6 +143,6 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
 
     @Override
     public String toString() {
-        return "Parametric Curve";
+        return "Parametric Curve 2D";
     }
 }

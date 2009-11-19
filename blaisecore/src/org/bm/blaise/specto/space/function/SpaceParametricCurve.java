@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
+import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
 import scio.coordinate.MaxMinDomain;
-import scio.coordinate.MaxMinDomainSupport;
+import scio.coordinate.sample.RealIntervalSampler;
 
 /**
  *
@@ -26,15 +28,34 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
 
     /** Function */
     UnivariateVectorialFunction func;
-    /** Range of values for display purposes */
-    MaxMinDomain<Double> domain;
-    /** Samples per curve */
-    int samples = 100;
+    /** Domain of function */
+    RealIntervalSampler domain;
+    /** Stores visual interval used to adjust the range. */
+    VRectangle<Double> domainPlottable;
 
-    public SpaceParametricCurve(UnivariateVectorialFunction func, double minT, double maxT, int samples) {
-        setFunc(func);
-        setDomain(new MaxMinDomainSupport<Double>(minT, true, maxT, true));
-        setSamples(samples);
+    /**
+     * Initializes with an underlying function and min/max domain
+     * @param func the function
+     * @param minT the min value in domain
+     * @param maxT the max value in domain
+     */
+    public SpaceParametricCurve(UnivariateVectorialFunction func, double minT, double maxT) {
+        this(func, minT, maxT, 100);
+    }
+
+    /**
+     * Initializes with an underlying function and min/max domain
+     * @param func the function
+     * @param minT the min value in domain
+     * @param maxT the max value in domain
+     * @param numSamples the number of samples
+     */
+    public SpaceParametricCurve(UnivariateVectorialFunction func, double minT, double maxT, int numSamples) {
+        setFunction(func);
+        setDomain(new RealIntervalSampler(minT, maxT, numSamples));
+        domainPlottable = new VRectangle<Double>(minT, maxT);
+        domainPlottable.getStyle().setThickness(3.0f);
+        domainPlottable.addChangeListener(this);
     }
 
     //
@@ -43,14 +64,15 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
     //
     //
 
-    public UnivariateVectorialFunction getFunc() {
+    public UnivariateVectorialFunction getFunction() {
         return func;
     }
 
-    public void setFunc(UnivariateVectorialFunction func) {
+    public void setFunction(UnivariateVectorialFunction func) {
         if (func != null && this.func != func) {
             this.func = func;
             needsComputation = true;
+            fireStateChanged();
         }
     }
 
@@ -59,20 +81,31 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
     }
 
     public void setDomain(MaxMinDomain<Double> range) {
-        this.domain = range;
-        needsComputation = true;
-    }
-
-    public int getSamples() {
-        return samples;
-    }
-
-    public void setSamples(int samples) {
-        if (samples <= 1) {
-            throw new IllegalArgumentException("samples should be greater than 1");
+        if (range != null) {
+            if (range instanceof RealIntervalSampler) {
+                this.domain = (RealIntervalSampler) range;
+            } else {
+                this.domain.setMin(range.getMin());
+                this.domain.setMin(range.getMax());
+                this.domain.setMinInclusive(range.isMinInclusive());
+                this.domain.setMaxInclusive(range.isMaxInclusive());
+            }
+            needsComputation = true;
         }
-        this.samples = samples;
-        needsComputation = true;
+    }
+
+    public VRectangle<Double> getDomainPlottable() {
+        return domainPlottable;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == domainPlottable) {
+            domain.setMin(domainPlottable.getPoint1());
+            domain.setMax(domainPlottable.getPoint2());
+            needsComputation = true;
+        }
+        super.stateChanged(e);
     }
 
     //
@@ -87,43 +120,32 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
     @Override
     public void paintComponent(VisometryGraphics<P3D> vg) {
         if (needsComputation) {
-            segments = getSegments(samples);
+            segments = getSegments();
             needsComputation = false;
         }
         ((SpaceGraphics) vg).addToScene(segments);
     }
 
-    List<P3D[]> getSegments(int steps) {
-        List<P3D[]> result = new ArrayList<P3D[]>(steps);
-        if (steps < 1) {
-            return result;
-        }
-        double dt = (domain.getMax() - domain.getMin()) / steps;
-        P3D last;
-        double[] temp = null;
-        double[] nextArr = null;
+    List<P3D[]> getSegments() {
+        List<P3D[]> result = new ArrayList<P3D[]>();
+        List<Double> samples = domain.getSamples();
         try {
-            temp = func.value(domain.getMin());
-        } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(SpaceParametricCurve.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        P3D next = new P3D(temp[0], temp[1], temp[2]);
-        try {
-            for (int i = 0; i < steps; i++) {
+            P3D last;
+            P3D next = new P3D(func.value(samples.get(0)));
+            for (double x : samples) {
                 last = next;
-                nextArr = func.value(domain.getMin() + (i + 1) * dt);
-                next = new P3D(nextArr[0], nextArr[1], nextArr[2]);
+                next = new P3D(func.value(x));
                 result.add(new P3D[]{last, next});
             }
-        } catch (FunctionEvaluationException e) {
-            System.out.println("getPolys exception in SpaceFunction!");
+        } catch (FunctionEvaluationException ex) {
+            Logger.getLogger(SpaceParametricCurve.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
     @Override
     public String toString() {
-        return "Parametric Curve";
+        return "Parametric Curve 3D";
     }
 
 }

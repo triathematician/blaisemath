@@ -79,14 +79,14 @@ public class TestVectorFields extends javax.swing.JFrame {
         CurveDEPlot2.addPlottable(ppf);
         CurveDEPlot2.addPlottable(ppf2);
         CurveDEPlot2.addPlottable(new PlaneVectorField(func6, CurveDEPlot2.getPlotSampleSetGenerator()));
-        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, new Curve2DSampleSet(ppf.getFunc(), ppf.getRange())));
+        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, new Curve2DSampleSet(ppf.getFunction(), ppf.getDomain())));
         CurveDEPlot2.addPlottable(new PlaneVectorField(
                 VectorFieldUtils.parallelField(func6, func7der),
-                new Curve2DSampleSet(ppf.getFunc(), ppf.getRange())));
-        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, new Curve2DSampleSet(ppf2.getFunc(), ppf2.getRange())));
+                new Curve2DSampleSet(ppf.getFunction(), ppf.getDomain())));
+        CurveDEPlot2.addPlottable(new PlaneVectorField(func6, new Curve2DSampleSet(ppf2.getFunction(), ppf2.getDomain())));
         CurveDEPlot2.addPlottable(new PlaneVectorField(
                 VectorFieldUtils.parallelField(func6, func8der),
-                new Curve2DSampleSet(ppf2.getFunc(), ppf2.getRange())));
+                new Curve2DSampleSet(ppf2.getFunction(), ppf2.getDomain())));
 
         // PANELS
 

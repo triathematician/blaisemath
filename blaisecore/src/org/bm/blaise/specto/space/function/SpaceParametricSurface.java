@@ -1,98 +1,105 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * SpaceParametricSurface.java
+ * Created Oct 2009
  */
 
 package org.bm.blaise.specto.space.function;
 
+import java.awt.geom.Point2D;
 import org.bm.blaise.specto.space.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
+import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.P3D;
 import scio.coordinate.MaxMinDomain;
-import scio.coordinate.MaxMinDomainSupport;
+import scio.coordinate.sample.RealIntervalSampler;
 import scio.function.utils.SampleSurface3D;
 
 /**
- *
- * @author ae3263
+ * <p>
+ *  Constructs and displays a 3D parametric surface.
+ * </p>
+ * @author Elisha Peterson
  */
 public class SpaceParametricSurface extends AbstractPlottable<P3D> {
 
-    // SAMPLES
-
-    SampleSurface3D sample = SampleSurface3D.SPHERE;
-
-    public SampleSurface3D getSample() {
-        return sample;
-    }
-
-    public void setSample(SampleSurface3D sample) {
-        this.sample = sample;
-        func = sample;
-        domain1 = new MaxMinDomainSupport<Double>(sample.u0, true, sample.u1, true);
-        domain2 = new MaxMinDomainSupport<Double>(sample.v0, true, sample.v1, true);
-    }
-
-    /** Function */
+    /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
-    /** Range of values for display purposes */
-    MaxMinDomain<Double> domain1, domain2;
-    /** Sample quantities */
-    int sample1 = 20;
-    int sample2 = 20;
+    /** Range of u-values for display purposes */
+    RealIntervalSampler domainU;
+    /** Range of v-valeus for display purposes */
+    RealIntervalSampler domainV;
+    /** Stores rectangle used to adjust the range. */
+    VRectangle<Point2D.Double> domainPlottable;
 
-    public SpaceParametricSurface(MultivariateVectorialFunction func, double minU, double maxU, int sampleU, double minV, double maxV, int sampleV) {
-        setFunc(func);
-        setDomain1(new MaxMinDomainSupport<Double>(minU, true, maxU, true));
-        setDomain2(new MaxMinDomainSupport<Double>(minV, true, maxV, true));
-        setSample1(sampleU);
-        setSample2(sampleV);
+    public SpaceParametricSurface(MultivariateVectorialFunction func, Point2D.Double min, Point2D.Double max) {
+        setFunction(func);
+        setDomainU(new RealIntervalSampler(min.x, max.x, 16));
+        setDomainV(new RealIntervalSampler(min.x, max.x, 16));
+        domainPlottable = new VRectangle<Point2D.Double>(min, max);
+        domainPlottable.addChangeListener(this);
     }
 
-    public MultivariateVectorialFunction getFunc() {
+    private SpaceParametricSurface(MultivariateVectorialFunction func, double u0, double u1, double v0, double v1) {
+        this(func, new Point2D.Double(u0, v0), new Point2D.Double(u1, v1));
+    }
+
+    public MultivariateVectorialFunction getFunction() {
         return func;
     }
 
-    public void setFunc(MultivariateVectorialFunction func) {
-        this.func = func;
+    public void setFunction(MultivariateVectorialFunction func) {
+        if (func != null && this.func != func) {
+            this.func = func;
+            needsComputation = true;
+        }
     }
 
-    public MaxMinDomain<Double> getDomain1() {
-        return domain1;
+    public MaxMinDomain<Double> getDomainU() {
+        return domainU;
     }
 
-    public void setDomain1(MaxMinDomain<Double> domain1) {
-        this.domain1 = domain1;
+    public void setDomainU(MaxMinDomain<Double> range) {
+        if (range != null) {
+            if (range instanceof RealIntervalSampler) {
+                this.domainU = (RealIntervalSampler) range;
+            } else {
+                this.domainU.setMin(range.getMin());
+                this.domainU.setMin(range.getMax());
+                this.domainU.setMinInclusive(range.isMinInclusive());
+                this.domainU.setMaxInclusive(range.isMaxInclusive());
+            }
+            needsComputation = true;
+        }
     }
 
-    public MaxMinDomain<Double> getDomain2() {
-        return domain2;
+    public MaxMinDomain<Double> getDomainV() {
+        return domainV;
     }
 
-    public void setDomain2(MaxMinDomain<Double> domain2) {
-        this.domain2 = domain2;
+    public void setDomainV(MaxMinDomain<Double> range) {
+        if (range != null) {
+            if (range instanceof RealIntervalSampler) {
+                this.domainV = (RealIntervalSampler) range;
+            } else {
+                this.domainV.setMin(range.getMin());
+                this.domainV.setMin(range.getMax());
+                this.domainV.setMinInclusive(range.isMinInclusive());
+                this.domainV.setMaxInclusive(range.isMaxInclusive());
+            }
+            needsComputation = true;
+            System.out.println("setting range.");
+        }
     }
 
-    public int getSample1() {
-        return sample1;
-    }
-
-    public void setSample1(int sample1) {
-        this.sample1 = sample1;
-    }
-
-    public int getSample2() {
-        return sample2;
-    }
-
-    public void setSample2(int sample2) {
-        this.sample2 = sample2;
+    public VRectangle<Point2D.Double> getDomainPlottable() {
+        return domainPlottable;
     }
 
 
@@ -103,35 +110,86 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<P3D> vg) {
-        ((SpaceGraphics) vg).addToScene(getPolys(sample1, sample2));
+    public void stateChanged(ChangeEvent e) {
+        System.out.println("state chnage!");
+        if (e.getSource() == domainPlottable) {
+            domainU.setMin(domainPlottable.getPoint1().x);
+            domainU.setMax(domainPlottable.getPoint2().x);
+            domainV.setMin(domainPlottable.getPoint1().y);
+            domainV.setMax(domainPlottable.getPoint2().y);
+            needsComputation = true;
+        }
+        super.stateChanged(e);
     }
 
-    List<P3D[]> getPolys(int stepX, int stepY) {
-        if (stepX < 1 || stepY < 1) {
+    transient boolean needsComputation = true;
+    transient List<P3D[]> polys;
+
+    @Override
+    public void paintComponent(VisometryGraphics<P3D> vg) {
+        if (needsComputation) {
+            polys = getPolys();
+            needsComputation = false;
+        }
+        ((SpaceGraphics) vg).addToScene(polys);
+    }
+
+    List<P3D[]> getPolys() {
+        int nx = domainU.getNumSamples();
+        int ny = domainV.getNumSamples();
+        if (nx < 1 || ny < 1) {
             return Collections.EMPTY_LIST;
         }
-        List<P3D[]> result = new ArrayList<P3D[]>(stepX * stepY);
+        // here we compute the values
         double[] input = new double[2];
-        double dx = (domain1.getMax() - domain1.getMin()) / stepX;
-        double dy = (domain2.getMax() - domain2.getMin()) / stepY;
-        P3D[][] arr = new P3D[stepX+1][stepY+1];
+        P3D[][] arr = new P3D[nx][ny];
         try {
-            for (int i = 0; i <= stepX; i++) {
-                for (int j = 0; j <= stepY; j++) {
-                    input[0] = domain1.getMin() + dx * i;
-                    input[1] = domain2.getMin() + dy * j;
+            int i = 0;
+            for (double x : domainU.getSamples()) {
+                int j = 0;
+                for (double y : domainV.getSamples()) {
+                    input[0] = x;
+                    input[1] = y;
                     arr[i][j] = new P3D(func.value(input));
+                    j++;
                 }
+                i++;
             }
         } catch (FunctionEvaluationException e) {
-            System.out.println("getPolys exception in SpaceFunction!");
+            System.out.println("Unable to evaluate function in SpaceParamertricSurface");
         }
-        for (int i = 0; i < stepX; i++) {
-            for (int j = 0; j < stepY; j++) {
+        // here we create and return the polygons
+        List<P3D[]> result = new ArrayList<P3D[]>((nx-1) * (ny-1));
+        for (int i = 0; i < nx-1; i++) {
+            for (int j = 0; j < ny-1; j++) {
                 result.add(new P3D[]{ arr[i][j], arr[i+1][j], arr[i+1][j+1], arr[i][j+1] });
             }
         }
         return result;
+    }
+
+    //
+    // SAMPLE SURFACES
+    //
+
+    SampleSurface3D sample = SampleSurface3D.SPHERE;
+
+    public SampleSurface3D getSample() {
+        return sample;
+    }
+
+    public void setSample(SampleSurface3D sample) {
+        this.sample = sample;
+        func = sample;
+        domainU = new RealIntervalSampler(sample.u0, sample.u1, 16);
+        domainV = new RealIntervalSampler(sample.v0, sample.v1, 16);
+        domainPlottable.setPoint1(new Point2D.Double(sample.u0, sample.v0));
+        domainPlottable.setPoint2(new Point2D.Double(sample.u1, sample.v1));
+        needsComputation = true;
+        fireStateChanged();
+    }
+
+    public static SpaceParametricSurface getInstance(SampleSurface3D sample) {
+        return new SpaceParametricSurface(sample, sample.u0, sample.u1, sample.v0, sample.v1);
     }
 }
