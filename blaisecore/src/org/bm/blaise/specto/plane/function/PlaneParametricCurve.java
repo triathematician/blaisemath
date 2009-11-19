@@ -54,6 +54,7 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
         setFunc(func);
         setRange(new RealIntervalSampler(min, max, numSamples));
         domain = new VRectangle<Double>(min, max);
+        domain.getStyle().setThickness(3.0f);
         domain.addChangeListener(this);
     }
 

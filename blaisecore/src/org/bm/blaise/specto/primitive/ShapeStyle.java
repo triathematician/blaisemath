@@ -6,6 +6,7 @@
 package org.bm.blaise.specto.primitive;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -115,6 +116,17 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
 
     public void setStrokeColor(Color strokeColor) {
         this.strokeColor = strokeColor;
+    }
+
+    public float getThickness() {
+        return (stroke instanceof BasicStroke) ? ((BasicStroke)stroke).getLineWidth() : -1;
+    }
+
+    public void setThickness(float width) {
+        if (stroke instanceof BasicStroke) {
+            BasicStroke bs = (BasicStroke) stroke;
+            stroke = new BasicStroke(width, bs.getEndCap(), bs.getLineJoin(), bs.getMiterLimit(), bs.getDashArray(), bs.getDashPhase());
+        }
     }
 
 
