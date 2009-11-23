@@ -3,20 +3,21 @@
 
 These plottables are generic typed classes in the revised blaisecore package. Annotations are as follows:
 
-(A) indicates an AnimatingPlottable
-(C) indicates a Constrains2D
-(D) indicates a DynamicPlottable
+(A) indicates an `AnimatingPlottable`
+(D) indicates a `DynamicPlottable`
 
-  * VInvisiblePoint (D) single point that may be moved around the visometry, but is not drawn
-  * VPoint (D) extends VInvisiblePoint; single point that may be moved around the visometry
-  * VLabel (D) extends VInvisiblePoint; label at a local coordinate that may be moved around the visometry
+  * `VInvisiblePoint` (D) single point that may be moved around the visometry, but is not drawn
+  * `VPoint` (D) extends `VInvisiblePoint`; single point that may be moved around the visometry
+  * `VLabel` (D) extends `VInvisiblePoint`; label at a local coordinate that may be moved around the visometry
 
-  * VLine (D) line or vector between two points… multiple views of the line (e.g. as a vector, line, or segment) are supported via the style classes
-  * VRectangle (D) rectangle with draggable corners
+  * `VLine` (D) line or vector between two points… multiple views of the line (e.g. as a vector, line, or segment) are supported via the style classes
+  * `VRectangle` (D) rectangle with draggable corners
 
-  * VPointSet (D) collection of points that may be individually manipulated
-  * VPath collection of points displayed as a path
-  * VParticleField collection of points (or small trails) displayed individually, and moving about based upon abstract methods
-  * VComputedPath (D) stores a path which is computed by subclasses
-  * VComputedPointPath (D) extends VPoint; stores a point which may be moved around freely, together with a path (that depends on the point)… the path is computed by subclasses
-  * `VPrimitiveMappingPlottable`: draws collection of primitive elements at various points specified by an underlying SampleSetGenerator (see PrimitiveMappingPlottable)
+  * `VPointSet` (D) collection of points that may be individually manipulated
+  * `VPath` collection of points displayed as a path
+  * `VComputedPath` (D) stores a path which is computed by subclasses
+  * `VComputedPointPath` (D) extends VPoint; stores a point which may be moved around freely, together with a path (that depends on the point)… the path is computed by subclasses
+
+  * `VPrimitiveMappingPlottable`: draws collection of primitive elements at various points specified by an underlying `SampleSetGenerator` (see PrimitiveMappingPlottable)
+
+  * `VParticleField` collection of points (or small trails) displayed individually, and moving about based upon abstract methods
