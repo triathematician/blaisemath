@@ -1,0 +1,71 @@
+#summary Describes features and functionality of the parser.
+#labels Module-Blaise,Phase-Implementation
+
+= Description =
+The `blaiseparser` package provides basic parsing functionality. Some principles for the parser:
+  * case-insensitive
+  * permits pseudonyms for functions, e.g. "avg", and "average" work the same
+
+= Features =
+
+== Supported Operators ==
+
+== Supported Constants ==
+
+|| Name || Description || Remarks ||
+|| `pi` || pi=3.141592653589793... || ok ||
+|| `e` || e=2.718281828459045... || ok ||
+
+== Supported Functions ==
+
+=== Basic ===
+
+|| Name || Description || Remarks ||
+|| `sqrt` || square root of the argument || ok ||
+|| `cbrt` || cube root of the argument || ok ||
+|| `abs` || absolute value of the argument || ok ||
+|| `floor` || first integer at or below the argument || ok ||
+|| `ceil` || first integer at or above the argument || ok ||
+|| `round` || closest integer to the argument || not working ||
+|| `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || `sign` not working ||
+
+=== Trig Functions ===
+
+|| Name || Description || Remarks ||
+|| `sin` || sine || ok ||
+|| `cos` || cosine || ok ||
+|| `tan` || tangent || ok ||
+|| `asin` or `arcsin` || inverse of the sine function || alternate not working ||
+|| `acos` or `arccos` || inverse of the cosine function || alternate not working ||
+|| `atan` or `arctan` || inverse of the tangent function || alternate not working ||
+
+=== Exponentials, Logs, and Hyperbolic ===
+
+|| Name || Description || Remarks ||
+|| `sinh` || hyperbolic sine || ok ||
+|| `cosh` || hyperbolic cosine || ok ||
+|| `tanh` || hyperbolic tangent || ok ||
+|| `log` or `ln` || natural logarithm || `ln` not working ||
+|| `log2` || base-2 logarithm || not working ||
+|| `log10` || base-10 logarithm || ok ||
+|| `exp` || exponential of the argument, ie. e^x || ok ||
+
+=== Random Numbers ===
+
+|| Name || Description || Remarks ||
+|| `rand` or `random` (no argument) || generates a random number between 0 and 1 || not working ||
+|| `rand` or `random` (2 arguments) || generates a random number between the two arguments || not working ||
+
+=== Statistical Features ===
+
+|| Name || Description || Remarks ||
+|| `avg` or `average` || average of multiple comma-separated values || not working ||
+|| `min` or `minimum` || minimum of multiple comma-separated values || not working ||
+|| `max` or `maximum` || maximum of multiple comma-separated values || not working ||
+
+== Supported Branching Statements ==
+
+|| Name || Description || Remarks ||
+|| `if` || conditional switch || not working ||
+|| `sum` or `summation` || summation over indexed set || not working ||
+|| `prod` or `product` || product over indexed set || not working ||
