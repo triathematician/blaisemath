@@ -35,9 +35,9 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 || `sin` || sine || ok ||
 || `cos` || cosine || ok ||
 || `tan` || tangent || ok ||
-|| `asin` or `arcsin` || inverse of the sine function || alternate not working ||
-|| `acos` or `arccos` || inverse of the cosine function || alternate not working ||
-|| `atan` or `arctan` || inverse of the tangent function || alternate not working ||
+|| `asin` or `arcsin` || inverse of the sine function || ok ||
+|| `acos` or `arccos` || inverse of the cosine function || ok ||
+|| `atan` or `arctan` || inverse of the tangent function || ok ||
 
 === Exponentials, Logs, and Hyperbolic ===
 
