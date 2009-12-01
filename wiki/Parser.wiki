@@ -27,7 +27,7 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 || `floor` || first integer at or below the argument || ok ||
 || `ceil` || first integer at or above the argument || ok ||
 || `round` || closest integer to the argument || not working ||
-|| `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || `sign` not working ||
+|| `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || ok ||
 
 === Trig Functions ===
 
@@ -45,8 +45,8 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 || `sinh` || hyperbolic sine || ok ||
 || `cosh` || hyperbolic cosine || ok ||
 || `tanh` || hyperbolic tangent || ok ||
-|| `log` or `ln` || natural logarithm || `ln` not working ||
-|| `log2` || base-2 logarithm || not working ||
+|| `log` or `ln` || natural logarithm || ok ||
+|| `log2` || base-2 logarithm || ok ||
 || `log10` || base-10 logarithm || ok ||
 || `exp` || exponential of the argument, ie. e^x || ok ||
 
