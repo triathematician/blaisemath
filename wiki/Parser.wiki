@@ -35,11 +35,11 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 === Basic ===
 
 || Name || Description || Remarks ||
-|| `sqrt` || square root of the argument || ok ||
-|| `cbrt` || cube root of the argument || ok ||
-|| `abs` || absolute value of the argument || ok ||
+|| `sqrt` or `squareroot` || square root of the argument || ok ||
+|| `cbrt` or `cuberoot` || cube root of the argument || ok ||
+|| `abs` or `absolutevalue` || absolute value of the argument || ok ||
 || `floor` || first integer at or below the argument || ok ||
-|| `ceil` || first integer at or above the argument || ok ||
+|| `ceil` or `ceiling` || first integer at or above the argument || ok ||
 || `round` || closest integer to the argument || ok ||
 || `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || ok ||
 || `frac` || the "fractional" part of the argument (i.e. what follows the decimal) || ok ||
@@ -47,12 +47,12 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 === Trig Functions ===
 
 || Name || Description || Remarks ||
-|| `sin` || sine || ok ||
-|| `cos` || cosine || ok ||
-|| `tan` || tangent || ok ||
-|| `asin` or `arcsin` || inverse of the sine function || ok ||
-|| `acos` or `arccos` || inverse of the cosine function || ok ||
-|| `atan` or `arctan` || inverse of the tangent function || ok ||
+|| `sin` or `sine` || sine || ok ||
+|| `cos` or `cosine` || cosine || ok ||
+|| `tan` or `tangent` || tangent || ok ||
+|| `asin` or `arcsin` or `arcsine` || inverse of the sine function || ok ||
+|| `acos` or `arccos` or `arccosine` || inverse of the cosine function || ok ||
+|| `atan` or `arctan` or `arctan` || inverse of the tangent function || ok ||
 
 === Exponentials, Logs, and Hyperbolic ===
 
@@ -68,15 +68,16 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 === Random Numbers ===
 
 || Name || Description || Remarks ||
-|| `rand` or `random` (no argument) || generates a random number between 0 and 1 || not working ||
+|| `rand` or `random` (no argument) || generates a random number between 0 and 1 || ok ||
 || `rand` or `random` (2 arguments) || generates a random number between the two arguments || ok ||
 
 === Statistical Features ===
 
 || Name || Description || Remarks ||
-|| `avg` or `average` || average of multiple comma-separated values || not working ||
+|| `avg` or `average` || average of multiple comma-separated values || ok ||
 || `min` or `minimum` || minimum of multiple comma-separated values || ok ||
 || `max` or `maximum` || maximum of multiple comma-separated values || ok ||
+|| `sum` || sum of multiple comma-separated values || ok ||
 
 == Supported Branching Statements ==
 
