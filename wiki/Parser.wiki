@@ -13,9 +13,9 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 === Binary and Multary Operators ===
 
 || Name || Description || Type || Remarks ||
-|| `-`,'/','^' || subtraction, division, power || binary || ok ||
+|| `-`, `/`, `^` || subtraction, division, power || binary || ok ||
 || `%` || modulus, e.g. "8%5" is 3 || binary || ok ||
-|| `*','+' || multiplication, addition || multary || ok ||
+|| `*`, `+` || multiplication, addition || multary || ok ||
 
 === Unary Operators ===
 
