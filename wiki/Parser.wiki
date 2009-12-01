@@ -54,14 +54,14 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 
 || Name || Description || Remarks ||
 || `rand` or `random` (no argument) || generates a random number between 0 and 1 || not working ||
-|| `rand` or `random` (2 arguments) || generates a random number between the two arguments || not working ||
+|| `rand` or `random` (2 arguments) || generates a random number between the two arguments || ok ||
 
 === Statistical Features ===
 
 || Name || Description || Remarks ||
 || `avg` or `average` || average of multiple comma-separated values || not working ||
-|| `min` or `minimum` || minimum of multiple comma-separated values || not working ||
-|| `max` or `maximum` || maximum of multiple comma-separated values || not working ||
+|| `min` or `minimum` || minimum of multiple comma-separated values || ok ||
+|| `max` or `maximum` || maximum of multiple comma-separated values || ok ||
 
 == Supported Branching Statements ==
 
