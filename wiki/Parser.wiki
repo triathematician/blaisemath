@@ -8,78 +8,70 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 
 = Features =
 
-== Supported Operators ==
-
-=== Binary and Multary Operators ===
+== Built-in Operators ==
 
 || Name || Description || Type || Remarks ||
 || `-`, `/`, `^` || subtraction, division, power || binary || ok ||
 || `%` || modulus, e.g. "8%5" is 3 || binary || ok ||
 || `*`, `+` || multiplication, addition || multary || ok ||
+|| `-` || negation, e.g. "-5" || unary (prefix) || ok ||
+|| `!` || factorial, e.g. "5!" is 120 || unary (postfix) || ok ||
 
-=== Unary Operators ===
-
-|| Name || Description || Remarks ||
-|| `-` || negation, e.g. "-5" || ok ||
-|| `!` || factorial, e.g. "5!" is 120 || ok ||
-
-
-== Supported Constants ==
+== Built-in Constants ==
 
 || Name || Description || Remarks ||
 || `pi` || pi=3.141592653589793... || ok ||
 || `e` || e=2.718281828459045... || ok ||
 
-== Supported Functions ==
+== Built-in Functions ==
 
-=== Basic ===
+*Power Functions*
+|| `sqrt` or `squareroot` || square root of the argument || 1 || ok ||
+|| `cbrt` or `cuberoot` || cube root of the argument || 1 || ok ||
+|| `hypot` or `hypotenuse` || hypotenuse of two arguments, e.g. "hypot(3,4)" is 5 || 2 || ok ||
 
-|| Name || Description || Remarks ||
-|| `sqrt` or `squareroot` || square root of the argument || ok ||
-|| `cbrt` or `cuberoot` || cube root of the argument || ok ||
-|| `abs` or `absolutevalue` || absolute value of the argument || ok ||
-|| `floor` || first integer at or below the argument || ok ||
-|| `ceil` or `ceiling` || first integer at or above the argument || ok ||
-|| `round` || closest integer to the argument || ok ||
-|| `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || ok ||
-|| `frac` || the "fractional" part of the argument (i.e. what follows the decimal) || ok ||
+*Trig Functions*
+|| Name || Description || # of Arguments || Remarks ||
+|| `sin` or `sine` || sine || 1 || ok ||
+|| `cos` or `cosine` || cosine || 1 || ok ||
+|| `tan` or `tangent` || tangent || 1 || ok ||
+|| `asin` or `arcsin` or `arcsine` || inverse of the sine function || 1 || ok ||
+|| `acos` or `arccos` or `arccosine` || inverse of the cosine function || 1 || ok ||
+|| `atan` or `arctan` or `arctan` || inverse of the tangent function || 1 || ok ||
+|| `atan2` || inverse tangent of the argument as a point `(x,y)`, where `y` is the first provided argument and `x` is the second; value is between -pi and pi || 2 || ok ||
 
-=== Trig Functions ===
+*Exponentials, Logs, and Hyperbolic Functions*
+|| Name || Description || # of Arguments || Remarks ||
+|| `exp` || exponential of the argument, ie. e^x || 1 || ok ||
+|| `log` or `ln` || natural logarithm || 1 || ok ||
+|| `log2` || base-2 logarithm || 1 || ok ||
+|| `log10` || base-10 logarithm || 1 || ok ||
+|| `sinh` || hyperbolic sine || 1 || ok ||
+|| `cosh` || hyperbolic cosine || 1 || ok ||
+|| `tanh` || hyperbolic tangent || 1 || ok ||
 
-|| Name || Description || Remarks ||
-|| `sin` or `sine` || sine || ok ||
-|| `cos` or `cosine` || cosine || ok ||
-|| `tan` or `tangent` || tangent || ok ||
-|| `asin` or `arcsin` or `arcsine` || inverse of the sine function || ok ||
-|| `acos` or `arccos` or `arccosine` || inverse of the cosine function || ok ||
-|| `atan` or `arctan` or `arctan` || inverse of the tangent function || ok ||
+*Rounding Functions*
+|| Name || Description || # of Arguments || Remarks ||
+|| `abs` or `absolutevalue` || absolute value of the argument || 1 || ok ||
+|| `floor` || first integer at or below the argument || 1 || ok ||
+|| `ceil` or `ceiling` || first integer at or above the argument || 1 || ok ||
+|| `round` or `rint` || closest integer to the argument || 1 || ok ||
+|| `signum` or `sign` or `sgn` || the sign of the argument, as +1 or -1 || 1 || ok ||
+|| `frac` || the "fractional" part of the argument (i.e. what follows the decimal) || 1 || ok ||
 
-=== Exponentials, Logs, and Hyperbolic ===
+*Random Functions*
+|| Name || Description || # of Arguemnts || Remarks ||
+|| `rand` or `random` || generates a random number between 0 and 1 || 0 || ok ||
+|| `rand` or `random` || generates a random number between two arguments || 2 || ok ||
 
-|| Name || Description || Remarks ||
-|| `sinh` || hyperbolic sine || ok ||
-|| `cosh` || hyperbolic cosine || ok ||
-|| `tanh` || hyperbolic tangent || ok ||
-|| `log` or `ln` || natural logarithm || ok ||
-|| `log2` || base-2 logarithm || ok ||
-|| `log10` || base-10 logarithm || ok ||
-|| `exp` || exponential of the argument, ie. e^x || ok ||
+*Statistical Functions*
+|| Name || Description || # of Arguemnts || Remarks ||
+|| `avg` or `average` || average of multiple comma-separated values || any || ok ||
+|| `min` or `minimum` || minimum of multiple comma-separated values || any || ok ||
+|| `max` or `maximum` || maximum of multiple comma-separated values || any || ok ||
+|| `sum` or `summation` || sum of multiple comma-separated values || any || ok ||
 
-=== Random Numbers ===
-
-|| Name || Description || Remarks ||
-|| `rand` or `random` (no argument) || generates a random number between 0 and 1 || ok ||
-|| `rand` or `random` (2 arguments) || generates a random number between the two arguments || ok ||
-
-=== Statistical Features ===
-
-|| Name || Description || Remarks ||
-|| `avg` or `average` || average of multiple comma-separated values || ok ||
-|| `min` or `minimum` || minimum of multiple comma-separated values || ok ||
-|| `max` or `maximum` || maximum of multiple comma-separated values || ok ||
-|| `sum` || sum of multiple comma-separated values || ok ||
-
-== Supported Branching Statements ==
+== Built-in Branching Statements ==
 
 || Name || Description || Remarks ||
 || `if` || conditional switch || not working ||
