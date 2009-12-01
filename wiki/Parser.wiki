@@ -20,7 +20,7 @@ The `blaiseparser` package provides basic parsing functionality. Some principles
 === Unary Operators ===
 
 || Name || Description || Remarks ||
-|| `-' || negation, e.g. "-5" || ok ||
+|| `-` || negation, e.g. "-5" || ok ||
 || `!` || factorial, e.g. "5!" is 120 || ok ||
 
 
