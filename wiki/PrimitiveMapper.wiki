@@ -1,0 +1,4 @@
+#summary Description of the `PrimitiveMapper` concept associating coordinates to graphics primitives
+#labels Module-Blaise,Component-Plottable
+
+The big idea here is to draw a GraphicsPrimitive at a coordinate in a well-defined way. Typical examples include _vector fields_. The basic class that uses this mapping functionality is `VPrimitiveMappingPlottable`.
