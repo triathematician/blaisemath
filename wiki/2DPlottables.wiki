@@ -1,32 +1,53 @@
 #summary Describes the planar plottables that have been implemented. See also the list of GenericPlottables.
-#labels Module-Blaise,Phase-Implementation
+#labels Module-Blaise,Phase-Implementation,Component-Plottable
 
-= Functions =
+This page describes the planar plottables that have been implemented in `blaisecore`. See also the list of GenericPlottables.
 
-  * `PlaneFunctionGraph`: The graph of a simple function, with one input and one output. The domain is the visible portion of the real axis.
+= Implemented Features =
 
-  * `PlaneParametricCurve`: A parametric curve, over a supplied domain (interval in *R*)
-  * `PlaneParametricArea`: A parametric area, over a supplied square domain (in *R*^2^)
+*Basic*
+  * `PlaneAxes` (D) draws coordinate axes
+  * `PlaneGrid` draws an underlying grid
+  * `PlanePolarGrid` draws a polar grid
 
-= Specialty =
+*Functions*
+  * `PlaneFunctionGraph` extends `VComputedPath`: The graph of a simple function, with one input and one output. The domain is the visible portion of the real axis.
+  * `PlaneParametricCurve` extends `VComputedPath`: A parametric curve, over a supplied domain (interval in *R*).
+  * `PlaneParametricArea` (D) extends `VComputedPath`: A parametric area, over a supplied square domain (in *R*^2^), which is stored and drawn by a `VRectangle`. Uses an underlying function mapping *R*^2^ to *R*^2^. The domain may be dragged around by the user.
+  * `PlaneSurfaceFunction` extends `VPrimitiveMappingPlottable`: Represents a function from *R*^2^ to *R* by a collection of dots drawn at regular intervals along a grid.
+
+*Geometry*
+  * `PlaneBezierCurve` (D) extends `VPointSet`: Draws a Bezier curve along with control points
+  * `PlaneEllipse` (D) draws an ellipse whose width and height may be manipulated
+  * `PlaneTriangle` (D) extends `VPolygon`: draws a shaded triangle between three points
+
+*Vector Fields & Differential Equations*
+  * TBD
+
+= Dynamic Interaction with the Plot =
+
+The class `PlanePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically.
+
+= Under Construction =
+  * `PlaneImplicitFunction`
 
 
+= Old Features =
+Features which are crossed out have been implemented in the new version of Blaise.
 
-= Deprecated Version =
 *General*:
-`Point2D`, `PointSet2D`, `DynamicPointSet2D`, `CirclePoint2D`
-`Segment2D`, `Vector2D`, `Line2D`, `Ray2D`, _`Slope2D`_
-`Polygon2D`, `Triangle2D`, _`HalfPlane2D`_
+~~`Point2D`~~, ~~`PointSet2D`~~, ~~`DynamicPointSet2D`~~, `CirclePoint2D`
+~~`Segment2D`~~, ~~`Vector2D`~~, ~~`Line2D`~~, ~~`Ray2D`~~, _`Slope2D`_
+~~`Polygon2D`~~, ~~`Triangle2D`~~, _`HalfPlane2D`_
 
 *Functions*:
-_`Piecewise2D`_,
-`PlaneFunction2D`, `ContourPlot2D`, `VectorField2D`
+_`Piecewise2D`_, ~~`PlaneFunction2D`~~, `ContourPlot2D`, ~~`VectorField2D`~~
 `FunctionSampleSet2D`, `FunctionPoint2D`, `SecantFunction2D`
-_`IterativeSet2D`_, `DESolution2D`
+_`IterativeSet2D`_, ~~`DESolution2D`~~
 
 *Fun Stuff*:
-`Clock2D`, `FractalEdge2D`
+~~`Clock2D`~~, `FractalEdge2D`
 
 *Specialty*:
-`Grid2D`, `PolarGrid2D`
-`Axes2D`, _`PolarAxes2D`_
+~~`Grid2D`~~, ~~`PolarGrid2D`~~
+~~`Axes2D`~~, _`PolarAxes2D`_
