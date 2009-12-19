@@ -1,0 +1,8 @@
+#summary Links to all plottable pages
+#labels Module-Blaise,Component-Plottable,Phase-Implementation
+
+= Plottable Pages =
+  * GenericPlottables: describes plottables that can be used for all plot components
+  * 1DPlottables: describes plottable elements for the line
+  * 2DPlottables: describes plottable elements for the plane
+  * 3DPlottables: describes plottable elements for 3d space
