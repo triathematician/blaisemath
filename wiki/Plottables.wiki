@@ -3,6 +3,6 @@
 
 = Plottable Pages =
   * GenericPlottables: describes plottables that can be used for all plot components
-  * 1DPlottables: describes plottable elements for the line
-  * 2DPlottables: describes plottable elements for the plane
-  * 3DPlottables: describes plottable elements for 3d space
+  * [1DPlottables  1DPlottables]: describes plottable elements for the line
+  * [2DPlottables  2DPlottables]: describes plottable elements for the plane
+  * [3DPlottables  3DPlottables]: describes plottable elements for 3d space
