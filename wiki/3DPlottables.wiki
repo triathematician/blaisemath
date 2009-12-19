@@ -1,14 +1,8 @@
-#summary Description of 3D plottables in the blaisecore package
+#summary Description of 3D plottables in the `blaisecore` package
 #labels Component-Plottable,Module-Blaise,Phase-Implementation
 
-= Introduction =
+This page describes the 3d plottables that have been implemented in `blaisecore`. See also the list of GenericPlottables.
 
-Add your content here.
+= Implemented Features =
 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+*Basic*
