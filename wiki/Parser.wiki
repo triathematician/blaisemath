@@ -1,5 +1,6 @@
 #summary Describes features and functionality of the parser.
 #labels Module-Blaise,Phase-Implementation,Component-Parser
+#sidebar TableOfContents
 
 = Description =
 The `blaiseparser` package provides basic parsing functionality. Some principles for the parser:
