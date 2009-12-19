@@ -1,5 +1,6 @@
 #summary How to download the Blaise project and get started using the program.
 #labels Featured,Module-Blaise
+#sidebar TableOfContents
 
 = Required Downloads =
 
