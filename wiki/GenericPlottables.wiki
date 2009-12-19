@@ -33,5 +33,5 @@ These plottables are generic typed classes in the `blaisecore` package. Annotati
 
 *Collections*
 
-  * `VPrimitiveMappingPlottable` draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMapper)
+  * `VPrimitiveMappingPlottable` draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMappingPlottable)
   * `VParticleField` (A) draws a collection of points (or small trails) displayed individually, and moving about based upon abstract methods
