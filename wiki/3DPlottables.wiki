@@ -6,4 +6,36 @@ This page describes the 3d plottables that have been implemented in `blaisecore`
 
 = Implemented Features =
 
-*Basic*
+*Basic Plottables*
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `SpaceAxes` || Displays axes and coordinate planes. || || ||
+|| `SpaceBox` || A test set of cubes near the origin. || || ||
+
+*Function Plottables*
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `SpaceFunctionGraph` || Displays a function with two inputs and one output. || || ||
+|| `SpaceParametricCurve` || Displays a parametric curve with one input and three outputs. || || ||
+|| `SpaceParametricSurface` || Displays a parametric surface with two inputs and three outputs. || || ||
+|| `SpaceVectorField` || Displays a function with three inputs and three outputs as a vector field. || `VPrimitiveMappingPlottable` || ||
+|| `TwoCurveSurface` || Displays a parametric surface that is created as the span of two input curves. || `SpaceParametricSurface` || ||
+
+
+= Testing & Experimental =
+
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `DerivedSpaceField` || Displays various fields that are "derived" from a basic field. || `SpaceVectorField` || ||
+|| `SpaceParametricSurfacePatch` || Displays a single patch of a surface. || || ||
+
+
+= Old Features =
+
+Features which are ~~crossed out~~ have been implemented in the new version of *blaise*. Those in _italics_ were not implemented in the old version of *blaise* either.
+
+*General*:
+~~`Point3D`~~, ~~`PointSet3D`~~, ~~`DynamicPointSet3D`~~, ~~`InitialPointSet3D`~~, ~~`Vector3D`~~, `Plane3D`, ~~`Ray3D`~~, ~~`Line3D`~~, _`Triangle3D`_
+
+*Functions*:
+~~`Function3D`~~, ~~`VectorField3D`~~, ~~`ParametricCurve3D`~~, ~~`ParametricSurface3D`~~, _`ContourPlot3D`_, `LineIntegral3D`, `FluxIntegral3D`, `DESolution3D`
+
+*Specialty*:
+~~`Axes3D`~~, ~~`StandardGrid3D`~~
