@@ -2,6 +2,7 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
+  * [Parser]
   * [Plottables]
     * [GenericPlottables Generic]
     * [1DPlottables 1D Plottables]
@@ -9,4 +10,3 @@
     * [3DPlottables 3D Plottables]
     * [PrimitiveMappingPlottable]
   * [PrimitiveStyle Primitives and Styles]
-  * [Parser]
