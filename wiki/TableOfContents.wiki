@@ -8,4 +8,5 @@
     * [2DPlottables 2D Plottables]
     * [3DPlottables 3D Plottables]
     * [PrimitiveMappingPlottable]
+  * [PrimitiveStyle Primitives and Styles]
   * [Parser]
