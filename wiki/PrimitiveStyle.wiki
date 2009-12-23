@@ -7,6 +7,25 @@ A `PrimitiveStyle` is a class that is responsible for the final display of a vis
 
 Under this architecture, figures are drawn by first creating one or more `GraphicsPrimitive` objects that will be displayed, such as paths, segments, points, etc., and then using the `PrimitiveStyle` classes associated with these to select the final way things look when drawn.
 
+
 = Graphics Primitive Classes =
 
+Here are the classes that have been added for new kinds of _graphic primitives_. Existing ones in Java that are used as is include `GeneralPath`, `Point2D`, `Shape`.
+
+|| *Name of Class* || *Purpose* ||
+|| `GraphicArrow` || Draws an arrow between two points, an _anchor_ and a _head_ ||
+|| `GraphicPoint` || extends `Point2D.Double`; draws a point of a given radius || ||
+|| `GraphicString` || Draws a string at a particular location ||
+
+
 = Primitive Style Classes =
+
+|| *Name of Class* || *Associated Graphics Primitive* || *Description* || *Style Options* ||
+|| `ArrowStyle` || `GraphicArrow` || draws an arrow || `PathStyle` for drawing the line; `enum ArrowShape`s and a `headSize` integer for the ends of the arrow ||
+|| `ClockStyle` || `Point2D` || draws a clock at a given location || `enum ClockModel` for style of clock; `PathStyle` for the ticks; `ArrowStyle` for the hands; `ShapeStyle` for the frame; `StringStyle` for the date; and a `radius` integer ||
+|| `HandleStyle` || `Point2D` || draws a _handle_, e.g. a little box, for manipulating objects || _none_ ||
+|| `PathStyle` || `Shape` || draws a path (stroke only) || `stroke` and `strokeColor` ||
+|| `PointStyle` || `Point2D` || draws a point || `enum PointShape` for the type of shape to draw; `Stroke`, `strokeColor` and `fillColor` for the associated stroke and colors; and a `radius` integer ||
+|| `ShapeStyle` || `Shape` || draws and fills a shape || `Stroke`, `strokeColor` and `fillColor` for the associated stroke and colors; `opacity` float for the fill opacity ||
+|| `StringStyle` || `GraphicString` || draws a string at given location || `Font` and `Color` ||
+|| `TwoPointStyle` || `GraphicArrow` || extends `ArrowStyle`; draws a line, segment, ray, or arrow between two points || additional `enum endStyle` for what to do with the endpoint (e.g. terminate path there, give it an arrow, or extend to the edge of the picture); additional `PointStyle` for the points that may be drawn along the line ||
