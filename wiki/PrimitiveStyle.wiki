@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Description of *blaise*'s _primitives_ and _style_ architecture
 #labels Module-Blaise,Phase-Implementation,Component-Plottable
 #sidebar TableOfContents
 
