@@ -8,32 +8,20 @@ These plottables are generic typed classes in the `blaisecore` package. Annotati
 
 = Concrete Plottables =
 
-*Single-Coordinate Plottables*
 || *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
-|| `VInvisiblePoint` || || (D) || single point that may be moved around, but is not drawn ||
-|| `VPoint` || `VInvisiblePoint` || (D) || single point that may be moved around the visometry ||
-|| `VLabel` || `VInvisiblePoint` || (D) || label at a local coordinate that may be moved around the visometry ||
 || `VClock` || `VInvisiblePoint` || (A,D) || draws a clock at an arbitrary position using the `ClockStyle` primitive style; position is tied to the underlying coordinate ||
-
-*Multi-Coordinate Plottables*
-|| *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
-|| `VPointSet` || || (D) || a collection of points that may be individually manipulated ||
-|| `VPath` || || || a collection of points displayed as a path; coordinates may be set directly, but not manipulated ||
-
-*Geometric Shapes*
-|| *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
+|| `VLabel` || `VInvisiblePoint` || (D) || label at a local coordinate that may be moved around the visometry ||
+|| `VInvisiblePoint` || || (D) || single point that may be moved around, but is not drawn ||
 || `VLine` || || (D) || line or vector between two points… multiple views of the line (e.g. as a vector, line, or segment) are supported via the style classes ||
-|| `VRectangle` || || (D) || rectangle with draggable corners and sides ||
+|| `VPath` || || || a collection of points displayed as a path; coordinates may be set directly, but not manipulated ||
 || `VPolygon` || `VPointSet` || (D) || displayed as a filled in shape rather than a collection of points ||
+|| `VPoint` || `VInvisiblePoint` || (D) || single point that may be moved around the visometry ||
+|| `VPointSet` || || (D) || a collection of points that may be individually manipulated ||
+|| `VRectangle` || || (D) || rectangle with draggable corners and sides ||
 
 = Abstract Plottables =
 
-*Paths*
 || *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
 || `VComputedPath` || || (D) || basic functionality for drawing a path, but requires the path to first be created by a subclass ||
 || `VComputedPointPath` || `VPoint` || (D) || stores a point which may be moved around freely; subclass is responsible for recomputing the path whenever the point is moved; structurally this is very similar to `VComputedPath` and they may possibly be merged in the future ||
-
-*Collections*
-|| *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
-|| `VPrimitiveMappingPlottable` || || || draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMappingPlottable) ||
-|| `VParticleField` || || (A) || draws a collection of points (or small trails) displayed individually, and moving about based upon abstract methods ||
+|| `VParticleField` || || (A) || draws a collection of points (or small trails) displayed individually, and moving about based upon abstract methods || || `VPrimitiveMappingPlottable` || || || draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMappingPlottable) ||
