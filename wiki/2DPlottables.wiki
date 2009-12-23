@@ -4,47 +4,52 @@
 
 This page describes the planar plottables that have been implemented in `blaisecore`. See also the list of GenericPlottables.
 
+
 = Implemented Features =
 
-*Basic*
-  * `PlaneAxes` (D) draws coordinate axes
-  * `PlaneGrid` draws an underlying grid
-  * `PlanePolarGrid` draws a polar grid
+*Basic Plottables*
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `PlaneAxes` || Coordinate axes with custom labels and positions || || *Dyn* ||
+|| `PlaneBezierCurve` || A Bezier curve along with control points || `VPointSet` || *Dyn* ||
+|| `PlaneEllipse` || An ellipse whose width and height may be manipulated || || *Dyn* ||
+|| `PlaneGrid` || An underlying grid || || ||
+|| `PlanePolarGrid` || A polar grid || || ||
+|| `PlaneTriangle` || A shaded triangle between three points || `VPolygon` || *Dyn* ||
 
-*Functions*
-  * `PlaneFunctionGraph` extends `VComputedPath`: The graph of a simple function, with one input and one output. The domain is the visible portion of the real axis.
-  * `PlaneParametricCurve` extends `VComputedPath`: A parametric curve, over a supplied domain (interval in *R*).
-  * `PlaneParametricArea` (D) extends `VComputedPath`: A parametric area, over a supplied square domain (in *R*^2^), which is stored and drawn by a `VRectangle`. Uses an underlying function mapping *R*^2^ to *R*^2^. The domain may be dragged around by the user.
-  * `PlaneSurfaceFunction` extends `VPrimitiveMappingPlottable`: Represents a function from *R*^2^ to *R* by a collection of dots drawn at regular intervals along a grid.
-
-*Geometry*
-  * `PlaneBezierCurve` (D) extends `VPointSet`: Draws a Bezier curve along with control points
-  * `PlaneEllipse` (D) draws an ellipse whose width and height may be manipulated
-  * `PlaneTriangle` (D) extends `VPolygon`: draws a shaded triangle between three points
-
-*Vector Fields & Differential Equations*
-  * TBD
+*Function Plottables*
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `PlaneCobwebFunction` || Displays a _cobwebbing_ set of lines to display the behavior of a dynamical system. || `VComputedPointPath` || *Dyn* ||
+|| `PlaneDESolution` || Displays solution to a single-variable first-order differential equation. || `VComputedPointPath` || *Dyn* ||
+|| `PlaneDE2Solution` || Displays solution to a system of two first-order differential equations. || `VComputedPointPath` || *Dyn* ||
+|| `PlaneFunctionGraph` || The graph of a simple function, with one input and one output. The domain is the visible portion of the real axis. || `VComputedPath` || ||
+|| `PlanePaddlePoint` || Displays a _"paddle"_ whose axis is fixed and which moves around in response to a vector field. || `VPoint` || *Anim*, *Dyn* ||
+|| `PlaneParametricArea` || A parametric area, over a supplied square domain (in *R*^2^), which is stored and drawn by a `VRectangle`. Uses an underlying function mapping *R*^2^ to *R*^2^. The domain may be dragged around by the user. || `VComputedPath` || *Dyn* ||
+|| `PlaneParametricCurve` || A parametric curve, over a supplied domain (interval in *R*). || `VComputedPath` || ||
+|| `PlaneParticleVectorField` || Displays a vector field as a collection of small particles that are "pushed around" by the field. || `VParticleField` || *Anim* ||
+|| `PlaneParticleVectorFieldCurve` || Displays a particle visualization of a vector field where all particles begin along the curve and are then moved off of the curve. || `PlaneParticleVectorField` || *Anim* ||
+|| `PlaneSurfaceFunction` || Represents a function from *R*^2^ to *R* by a collection of dots drawn at regular intervals along a grid. || `VPrimitiveMappingPlottable` || ||
+|| `PlaneVectorField` || Displays a field of vectors representing (scaled) samples of a vector field. || `VPrimitiveMappingPlottable` || ||
 
 = Dynamic Interaction with the Plot =
 
 The class `PlanePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically.
 
-= Under Construction =
+= Testing & Under Construction =
   * `PlaneImplicitFunction`
-
+  * `PlaneRandomPointsImplicitFunction`
 
 = Old Features =
-Features which are crossed out have been implemented in the new version of Blaise.
+Features which are ~~crossed out~~ have been implemented in the new version of *blaise*. Those in _italics_ were not implemented in the old version of *blaise* either.
 
 *General*:
-~~`Point2D`~~, ~~`PointSet2D`~~, ~~`DynamicPointSet2D`~~, `CirclePoint2D`
+~~`Point2D`~~, ~~`PointSet2D`~~, ~~`DynamicPointSet2D`~~, ~~`CirclePoint2D`~~
 ~~`Segment2D`~~, ~~`Vector2D`~~, ~~`Line2D`~~, ~~`Ray2D`~~, _`Slope2D`_
-~~`Polygon2D`~~, ~~`Triangle2D`~~, _`HalfPlane2D`_
+~~`Polygon2D`~~, ~~`Triangle2D`~~, ~~_`HalfPlane2D`_~~
 
 *Functions*:
 _`Piecewise2D`_, ~~`PlaneFunction2D`~~, `ContourPlot2D`, ~~`VectorField2D`~~
-`FunctionSampleSet2D`, `FunctionPoint2D`, `SecantFunction2D`
-_`IterativeSet2D`_, ~~`DESolution2D`~~
+~~`FunctionSampleSet2D`~~, `FunctionPoint2D`, `SecantFunction2D`
+~~_`IterativeSet2D`_~~, ~~`DESolution2D`~~
 
 *Fun Stuff*:
 ~~`Clock2D`~~, `FractalEdge2D`
