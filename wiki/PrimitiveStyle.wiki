@@ -1,4 +1,4 @@
-#summary Description of *blaise*'s _primitives_ and _style_ architecture
+#summary Description of blaise's primitives and style architecture
 #labels Module-Blaise,Phase-Implementation,Component-Plottable
 #sidebar TableOfContents
 
