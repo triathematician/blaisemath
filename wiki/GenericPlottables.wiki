@@ -24,4 +24,5 @@ These plottables are generic typed classes in the `blaisecore` package. Annotati
 || *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
 || `VComputedPath` || || (D) || basic functionality for drawing a path, but requires the path to first be created by a subclass ||
 || `VComputedPointPath` || `VPoint` || (D) || stores a point which may be moved around freely; subclass is responsible for recomputing the path whenever the point is moved; structurally this is very similar to `VComputedPath` and they may possibly be merged in the future ||
-|| `VParticleField` || || (A) || draws a collection of points (or small trails) displayed individually, and moving about based upon abstract methods || || `VPrimitiveMappingPlottable` || || || draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMappingPlottable) ||
+|| `VParticleField` || || (A) || draws a collection of points (or small trails) displayed individually, and moving about based upon abstract methods ||
+|| `VPrimitiveMappingPlottable` || || || draws a collection of primitive elements at various points specified by an underlying `SampleCoordinateSetGenerator` (see PrimitiveMappingPlottable) ||
