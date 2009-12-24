@@ -6,9 +6,9 @@ This page describes the 1d plottables that have been implemented in `blaisecore`
 
 = Implemented Features =
 
-|| *Name of Class* || *Base Class(es)* || *Annotations* || *Description* ||
-|| `LineAxis` || || || Displays a line and tick marks to represent the axis. ||
-|| `LineFunction` || `VPoint` || *Dyn* || Displays an "input" point and an "output" point to represent a function with one real variable. ||
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `LineAxis` ||Displays a line and tick marks to represent the axis. || || ||
+|| `LineFunction` || Displays an "input" point and an "output" point to represent a function with one real variable. || `VPoint` || *Dyn* ||
 
 
 = Dynamic Interaction with the Plot =
