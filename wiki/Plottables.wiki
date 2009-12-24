@@ -1,5 +1,5 @@
 #summary Links to all plottable pages
-#labels Module-Blaise,Component-Plottable,Phase-Implementation
+#labels Module-Blaise,Component-Plottable,Phase-Implementation,Featured
 #sidebar TableOfContents
 
 *Plottables* are the code objects that are added to plots to illustrate mathematical concepts, such as a function's "graph", a vector field, etc. The following pages describe plottables that are currently supported within *blaise*:
