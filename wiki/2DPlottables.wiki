@@ -32,7 +32,12 @@ This page describes the planar plottables that have been implemented in `blaisec
 
 = Dynamic Interaction with the Plot =
 
-The class `PlanePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically.
+The class `PlanePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically. Interaction modes are as follows:
+
+    * `Drag` pans the window left/right/up/down.
+    * `Alt+Drag` displays a box and zooms the window to that box.
+    * `Shift+Drag` restricts movement to purely horizontal or vertical
+    * `MouseWheel` zooms the plot in and out. 
 
 = Testing & Under Construction =
   * `PlaneImplicitFunction`
