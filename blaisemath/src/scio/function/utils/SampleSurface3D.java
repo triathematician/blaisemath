@@ -48,6 +48,13 @@ public enum SampleSurface3D implements MultivariateVectorialFunction {
             return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
         }
     },
+    TWISTED_TORUS(0, 2*PI, 0, 2*PI) {
+        public double[] value(double[] in) {
+            double r1 = 2+Math.cos(in[1]+in[0]);
+            double r2 = Math.sin(in[1]+in[0]);
+            return new double[]{ r1 * cos(in[0]), r1 * sin(in[0]), r2 };
+        }
+    },
     MOBIUS(0, PI, -.5, .5) {
         public double[] value(double[] in) {
             return new double[]{ (2+in[1]*cos(in[0])) * cos(2*in[0]), (2+in[1]*cos(in[0])) * sin(2*in[0]), in[1]*sin(in[0]) };

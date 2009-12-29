@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -112,8 +112,8 @@ public class DerivativeUtils {
         return new Point2D.Double((p1.x - p2.x) / divider, (p1.y - p2.y) / divider);
     }
     /** subtract and divide points */
-    private static P3D scaledDiff(P3D p1, P3D p2, double divider) {
-        return new P3D((p1.x - p2.x) / divider, (p1.y - p2.y) / divider, (p1.z - p2.z) / divider);
+    private static Point3D scaledDiff(Point3D p1, Point3D p2, double divider) {
+        return new Point3D((p1.x - p2.x) / divider, (p1.y - p2.y) / divider, (p1.z - p2.z) / divider);
     }
 
 //    /**

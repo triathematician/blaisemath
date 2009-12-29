@@ -14,7 +14,7 @@ import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
 import scio.coordinate.formal.EuclideanPoint2D;
 import scio.coordinate.formal.EuclideanPoint3D;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.utils.SpacialMathUtils;
 
 /**
@@ -122,7 +122,7 @@ public class MeshRoot2D {
             if (t < 0 || t > 1) {
                 return null;
             }
-            P3D rTemp = new P3D(p1.x + t*(p2.x-p1.x), p1.y + t*(p2.y-p1.y), p1.z + t*(p2.z-p1.z));
+            Point3D rTemp = new Point3D(p1.x + t*(p2.x-p1.x), p1.y + t*(p2.y-p1.y), p1.z + t*(p2.z-p1.z));
             return new Point2D.Double(rTemp.x, rTemp.y);
         }
     }
@@ -148,10 +148,10 @@ public class MeshRoot2D {
     /** Returns segment of intersection of z=C with the portion of a plane bounded by three particular points. */
     public static GeneralPath lineOnPlane(double zValue, EuclideanPoint3D p1, EuclideanPoint3D p2, EuclideanPoint3D p3) {
         double tripleProd = SpacialMathUtils.tripleProduct(p1, p2, p3);
-        P3D sum1 = p1.crossProduct(p2);
-        P3D sum2 = p2.crossProduct(p3);
-        P3D sum3 = p3.crossProduct(p1);
-        P3D crossSum = new P3D(sum1.x + sum2.x + sum3.x, sum1.y + sum2.y + sum3.y, sum1.z + sum2.z + sum3.z);
+        Point3D sum1 = p1.crossProduct(p2);
+        Point3D sum2 = p2.crossProduct(p3);
+        Point3D sum3 = p3.crossProduct(p1);
+        Point3D crossSum = new Point3D(sum1.x + sum2.x + sum3.x, sum1.y + sum2.y + sum3.y, sum1.z + sum2.z + sum3.z);
         double slope = -crossSum.getX() / crossSum.getY();
         double intercept = (tripleProd - zValue * crossSum.getZ()) / crossSum.getY();
         GeneralPath result = new GeneralPath();

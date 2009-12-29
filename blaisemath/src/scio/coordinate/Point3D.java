@@ -11,35 +11,35 @@ package scio.coordinate;
  *
  * @author Elisha Peterson
  */
-public class P3D implements Cloneable {
+public class Point3D implements Cloneable {
 
-    public static final P3D ZERO = new P3D();
-    public static final P3D PLUS_I = new P3D(1,0,0);
-    public static final P3D MINUS_I = new P3D(-1,0,0);
-    public static final P3D PLUS_J = new P3D(0,1,0);
-    public static final P3D MINUS_J = new P3D(0,-1,0);
-    public static final P3D PLUS_K = new P3D(0,0,1);
-    public static final P3D MINUS_K = new P3D(0,0,-1);
+    public static final Point3D ZERO = new Point3D();
+    public static final Point3D PLUS_I = new Point3D(1,0,0);
+    public static final Point3D MINUS_I = new Point3D(-1,0,0);
+    public static final Point3D PLUS_J = new Point3D(0,1,0);
+    public static final Point3D MINUS_J = new Point3D(0,-1,0);
+    public static final Point3D PLUS_K = new Point3D(0,0,1);
+    public static final Point3D MINUS_K = new Point3D(0,0,-1);
 
 
     public double x = 0.0;
     public double y = 0.0;
     public double z = 0.0;
 
-    public P3D() {
+    public Point3D() {
     }
 
-    public P3D(double x, double y, double z) {
+    public Point3D(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public P3D(P3D screenCenter) {
+    public Point3D(Point3D screenCenter) {
         this(screenCenter.x, screenCenter.y, screenCenter.z);
     }
 
-    public P3D(double[] value) {
+    public Point3D(double[] value) {
         this(value[0], value[1], value[2]);
     }
 
@@ -104,7 +104,7 @@ public class P3D implements Cloneable {
     }
 
     /** @return distance to second point */
-    public double distance(P3D p2) {
+    public double distance(Point3D p2) {
         return Math.sqrt(distanceSq(p2.x, p2.y, p2.z));
     }
 
@@ -114,7 +114,7 @@ public class P3D implements Cloneable {
     }
 
     /** @return distance to second point squared */
-    public double distanceSq(P3D p2) {
+    public double distanceSq(Point3D p2) {
         return distanceSq(p2.x, p2.y, p2.z);
     }
 
@@ -137,40 +137,40 @@ public class P3D implements Cloneable {
     }
 
     /** @return new point that is a unit vector in the same direction as this vector */
-    public P3D normalized() {
+    public Point3D normalized() {
         double l = Math.sqrt(x*x + y*y + z*z);
-        return new P3D(x/l, y/l, z/l);
+        return new Point3D(x/l, y/l, z/l);
     }
 
     /** Returns the dotProduct product of two 3-vectors */
-    public double dotProduct(P3D p2) {
+    public double dotProduct(Point3D p2) {
         return x * p2.x + y * p2.y + z * p2.z;
     }
 
     /** Returns the crossProduct product of two 3-vectors */
-    public P3D crossProduct(P3D p2) {
-        return new P3D(y * p2.z - z * p2.y, z * p2.x - x * p2.z, x * p2.y - y * p2.x);
+    public Point3D crossProduct(Point3D p2) {
+        return new Point3D(y * p2.z - z * p2.y, z * p2.x - x * p2.z, x * p2.y - y * p2.x);
     }
 
     /** Subtracts this vector from a second vector, and returns the result. */
-    public P3D minus(P3D p2) {
-        return new P3D(x - p2.x, y - p2.y, z - p2.z);
+    public Point3D minus(Point3D p2) {
+        return new Point3D(x - p2.x, y - p2.y, z - p2.z);
     }
     /** Subtracts a triple of coordinates, returns the result. */
-    public P3D minus(double x, double y, double z) {
-        return new P3D(this.x - x, this.y - y, this.z - z);
+    public Point3D minus(double x, double y, double z) {
+        return new Point3D(this.x - x, this.y - y, this.z - z);
     }
     /** Adds this vector to a second vector, and returns the result. */
-    public P3D plus(P3D p2) {
-        return new P3D(x + p2.x, y + p2.y, z + p2.z);
+    public Point3D plus(Point3D p2) {
+        return new Point3D(x + p2.x, y + p2.y, z + p2.z);
     }
     /** Adds to a triple of coordinates, returns the result. */
-    public P3D plus(double x, double y, double z) {
-        return new P3D(this.x + x, this.y + y, this.z + z);
+    public Point3D plus(double x, double y, double z) {
+        return new Point3D(this.x + x, this.y + y, this.z + z);
     }
     /** Multiplies this vector by a scalar, and returns the result. */
-    public P3D times(double s) {
-        return new P3D(s * x, s * y, s * z);
+    public Point3D times(double s) {
+        return new Point3D(s * x, s * y, s * z);
     }
 
 

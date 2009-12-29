@@ -23,7 +23,7 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
 
     /** Recalculates solution curves using Newton's Method (time-dependent function). */
     @Deprecated
-    public Vector<C> calcNewton(Function<D, C> field, C start, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcNewton(Function<D, C> field, C start, int steps, double stepSize) throws org.apache.commons.math.MathException {
         Vector<C> result = new Vector<C>();
         result.add(start);
         C last;
@@ -36,7 +36,7 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
 
     /** Recalculates solution curves using Newton's Method (time-dependent function. */
     @Deprecated
-    public Vector<C> calcNewton(Function<D, C> field, Vector<C> flow, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcNewton(Function<D, C> field, Vector<C> flow, int steps, double stepSize) throws org.apache.commons.math.MathException {
         C last;
         for (int i = 0; i < steps; i++) {
             last = flow.lastElement();
@@ -48,11 +48,11 @@ public abstract class DETimeSolve<C extends EuclideanElement<C>, D extends Eucli
 
     /** Returns vector pointing in the direction of the field. This is abstract because the implementation of the field's "get" method will depend on the coordinate system. */
     @Deprecated
-    public abstract C getScaledVector(Function<D, C> field, double time, C point, double size) throws FunctionValueException;
+    public abstract C getScaledVector(Function<D, C> field, double time, C point, double size) throws org.apache.commons.math.MathException;
 
     /** Returns vector pointing in direction of the field, multiplied by a fixed factor that depends only on the underlying vector field. */
     @Deprecated
-    public abstract C getMultipliedVector(Function<D, C> field, double time, C point, double size) throws FunctionValueException;
+    public abstract C getMultipliedVector(Function<D, C> field, double time, C point, double size) throws org.apache.commons.math.MathException;
 //    // STATIC SOLVERS
 //
 //    /** This subclass implements the time-dependent solver for a 1D coordinate system, providing solutions

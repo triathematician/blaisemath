@@ -32,9 +32,9 @@ public class SpacialMathUtilsTest {
     @Test
     public void testTripleProduct() {
         System.out.println("tripleProduct");
-        P3D p1 = new P3D(2,1,4);
-        P3D p2 = new P3D(5,-1,-3);
-        P3D p3 = new P3D(2,6,5.5);
+        Point3D p1 = new Point3D(2,1,4);
+        Point3D p2 = new Point3D(5,-1,-3);
+        Point3D p3 = new Point3D(2,6,5.5);
         double expResult = 119.5;
         double result = SpacialMathUtils.tripleProduct(p1, p2, p3);
         assertEquals(expResult, result, 1e-12);

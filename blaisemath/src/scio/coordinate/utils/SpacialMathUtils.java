@@ -24,7 +24,7 @@ public class SpacialMathUtils {
     }
 
     /** Computes and returns triple product of 3 3-vectors */
-    public static double tripleProduct(P3D p1, P3D p2, P3D p3) {
+    public static double tripleProduct(Point3D p1, Point3D p2, Point3D p3) {
         return p1.crossProduct(p2).dotProduct(p3);
     }
 

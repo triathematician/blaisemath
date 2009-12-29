@@ -9,29 +9,84 @@ import static java.lang.Math.*;
 
 /**
  * <p>
- *   <code>PlanarMathUtils</code> is a library of static methods for use on elements of the plane.
- *   All methods work with <code>Point2D.Double</code>s.
+ *    <code>PlanarMathUtils</code> is a library of static methods for use on elements of the plane.
+ *    All methods work with <code>Point2D.Double</code>s.
+ * </p>
+ * <p>
+ *    This library is built to handle a "circle" of points at infinity. These are represented by a <code>Double.POSITIVE_INFINITY</code>
+ *    x-coordinate, and a y-coordinate representing the infinite angle.
+ * </p>
+ * <p>
+ *   The code is organized as follows:
+ *      <li>Test methods
+ *      <li>Methods for constructing new points
+ *      <li>Methods for converting points between various formats
+ *      <li>Methods that operate on a point (changing a point parameter)
+ *      <li>Methods that use properties of existing point to create new points (dot and cross products)
+ *      <li>Dot and cross product formulas
+ *      <li>Angle formulas
+ *      <li>Projection formulas
+ *      <li>Distance formulas
  * </p>
  *
  * @author Elisha Peterson
  */
-public class PlanarMathUtils {
+public final class PlanarMathUtils {
 
+    /** The origin. */
     public static final Point2D.Double ZERO = new Point2D.Double();
-    public static final Point2D.Double INFINITY = new Point2D.Double(Double.MAX_VALUE, Double.MAX_VALUE);
-
-    static final double INFINITE_RADIUS = sqrt(Double.MAX_VALUE) / 3;
-
+    /** The point at infinity. */
+    public static final Point2D.Double INFINITY = new Point2D.Double(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+    /** A non-existent point. */
+    public static final Point2D.Double NO_POINT = new Point2D.Double(Double.NaN, Double.NaN);
 
     /** Non-instantiable class. */
-    private PlanarMathUtils() {
+    private PlanarMathUtils() {}
+
+
+    //==================================================================================================
+    //
+    // 0. TEST METHODS
+    //
+
+    /**
+     * Determines whether provided point is infinite.
+     * @param point point to check
+     * @return <code>true</code> if this represents an infinite point.
+     */
+    public static boolean isInfinite(Point2D.Double point) {
+        return Double.isInfinite(point.x);
     }
 
+    /**
+     * Determines whether provided point is valid.
+     * @param point point to check
+     * @return <code>false</code> if the point is valid (either infinite or finite)
+     */
+    public static boolean isValidPoint(Point2D.Double point) {
+        return ! (Double.isNaN(point.x) || Double.isNaN(point.y) || Double.isInfinite(point.y));
+    }
+
+
+    //==================================================================================================
     //
+    // 1a. METHODS TO CONSTRUCT POINTS
     //
-    // FACTORY METHODS
+
+    /**
+     * Creates a point-at-infinity using a specified angle.
+     * @param angle the angle to palce the point at
+     * @return a point at infinity, represented in polar terms
+     */
+    public static Point2D.Double polarPointAtInfinity(double angle) {
+        return new Point2D.Double(Double.POSITIVE_INFINITY, angle);
+    }
+    
+    //==================================================================================================
     //
+    // 1b. METHODS TO CONVERT POINTS BETWEEN VARIOUS FORMATS
     //
+
     /**
      * Creates and returns a new point with specified radius and angle
      * @param radius the radius (may be negative)
@@ -43,15 +98,6 @@ public class PlanarMathUtils {
     }
 
     /**
-     * Converts a polar-specified point to a Cartesian-specified point.
-     * @param polarPoint a point whose x is the radius and y is the angle (from x-axis)
-     * @return a Cartesian version of the point
-     */
-    public static Point2D.Double toCartesianFromPolar(Point2D.Double polarPoint) {
-        return toCartesianFromPolar(polarPoint.x, polarPoint.y);
-    }
-
-    /**
      * Converts a Cartesian-specified point to a polar-specified point.
      * @param point the Cartesian-specified point
      * @return a point whose x is the radius, y is the angle (from x-axis) of the point
@@ -59,23 +105,12 @@ public class PlanarMathUtils {
     public static Point2D.Double toPolarFromCartesian(Point2D.Double point) {
         return new Point2D.Double(point.distance(0,0), angle(point));
     }
+    
+    //==================================================================================================
+    //
+    // 2. METHODS OPERATING ON A POINT AND RETURNING THAT POINT
+    //
 
-    /**
-     * Returns point at infinity at the given angle, approximated as a very, very large point
-     * (a distance of <code>Double.MAX_VALUE/2</code> from the origin).
-     * @param angle the angle for the point, relative to the x-axis
-     * @return a new point very close to infinity
-     */
-    public static Point2D.Double getNearInfinitePointAtAngle(double angle) {
-        return toCartesianFromPolar(INFINITE_RADIUS, angle);
-    }
-
-
-    //
-    //
-    // FUNCTIONAL METHODS : operate on a supplied point; may return a copy of that point
-    //
-    //
     /**
      * Normalizes the input vector, by dividing by the magnitude, and returns a copy of the vector.
      * @param vector the input vector
@@ -83,7 +118,7 @@ public class PlanarMathUtils {
      *      returns the vector if magnitude is 0.
      */
     public static Point2D.Double normalize(Point2D.Double vector) {
-        double magn = vector.distance(0, 0);
+        double magn = magnitude(vector);
         if (magn == 0) {
             return vector;
         }
@@ -91,7 +126,7 @@ public class PlanarMathUtils {
         vector.y /= magn;
         return vector;
     }
-    
+
     /**
      * Translates first point by amount of the second. Returns the first point.
      * @param point the first point to translate (value will change)
@@ -103,17 +138,25 @@ public class PlanarMathUtils {
         return point;
     }
 
+
+
+    //==================================================================================================
+    //
+    // 3. METHODS TO CREATE POINTS BASED ON EXISTING POINTS
+    //
+
     /**
-     * Returns a point that is a copy of the provided point rotated about the specified anchor by a specified amount.
-     * @param anchor the anchor point for the rotation
-     * @param point the input point
-     * @param dAngle the amount of angle change
-     * @return a new point
+     * Adds a collection of points, and returns the result.
+     * @param points the points to add together
+     * @return sum of all the points
      */
-    public static Point2D.Double rotate(Point2D.Double anchor, Point2D.Double point, double dAngle) {
-        double newX = anchor.x + cos(dAngle) * (point.x - anchor.x) - sin(dAngle) * (point.y - anchor.y);
-        double newY = anchor.y + sin(dAngle) * (point.x - anchor.x) + cos(dAngle) * (point.y - anchor.y);
-        return new Point2D.Double(newX, newY);
+    public static Point2D.Double sum(Point2D.Double... points) {
+        Point2D.Double result = new Point2D.Double();
+        for (int i = 0; i < points.length; i++) {
+            result.x += points[i].x;
+            result.y += points[i].y;
+        }
+        return result;
     }
 
     /**
@@ -128,41 +171,25 @@ public class PlanarMathUtils {
         return new Point2D.Double(newX, newY);
     }
 
-
-    //
-    //
-    // PROPERTY METHODS : return result of computation on one or more points
-    //
-    //
-
     /**
-     * Computes angle formed by given coordinates with the x-axis.
-     * @param x the x coord
-     * @param y the y coord
-     * @return an angle with range between 0 and 2pi
+     * Returns a point that is a copy of the provided point rotated about the specified anchor by a specified amount.
+     * @param anchor the anchor point for the rotation
+     * @param point the input point
+     * @param dAngle the amount of (counter-clockwise) angle change
+     * @return a new point
      */
-    public static double angle(double x, double y) {
-        return (x < 0 ? PI : 0) + atan(y / x);
+    public static Point2D.Double rotate(Point2D.Double anchor, Point2D.Double point, double dAngle) {
+        double newX = anchor.x + cos(dAngle) * (point.x - anchor.x) - sin(dAngle) * (point.y - anchor.y);
+        double newY = anchor.y + sin(dAngle) * (point.x - anchor.x) + cos(dAngle) * (point.y - anchor.y);
+        return new Point2D.Double(newX, newY);
     }
 
-    /**
-     * Computes angle formed by given vector with the x-axis.
-     * @param pt the input point
-     * @return an angle with range between 0 and 2pi
-     */
-    public static double angle(Point2D.Double pt) {
-        return angle(pt.x, pt.y);
-    }
 
-    /**
-     * Computes slope between two points.
-     * @param p1 the first point
-     * @param p2 the second point
-     * @return a <code>Double</code> with the slope, which may be infinite (if the points are spaced vertically) or NaN (if they're the same)
-     */
-    public static Double slope(Point2D.Double p1, Point2D.Double p2) {
-        return (p2.y - p1.y) / (p2.x - p1.x);
-    }
+
+    //==================================================================================================
+    //
+    // 4a. METHODS THAT RETURN dot/cross product PROPERTIES OF ONE OR MORE POINTS
+    //
 
     /**
      * Computes dot product of two vectors
@@ -191,98 +218,143 @@ public class PlanarMathUtils {
      * @param p3 third point
      * @return cross product double
      */
-    public static double crossProduct(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
+    public static double crossProductOf3Points(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
         return (p2.x - p1.x) * (p3.y - p2.y) - (p2.y - p1.y) * (p3.x - p2.x);
     }
 
+
+    //==================================================================================================
+    //
+    // 4b. METHODS THAT RETURN angle/magnitude PROPERTIES OF ONE OR MORE POINTS
+    //
+
     /**
-     * Computes angle between three points, specifically between vectors P2>P1 and P2>P3.
+     * Computes magnitude of a vector.
+     * @param vec the vector
+     * @return magnitude
+     */
+    public static double magnitude(Point2D.Double vec) {
+        return vec.distance(0, 0);
+    }
+
+    /**
+     * Computes "angle" of a vector using the <code>Math.atan</code> method.
+     * @param vec the vector
+     * @return angle in the range of -pi to pi, as computed by <code>Math.atan</code>
+     */
+    public static double angle(Point2D.Double vec) {
+        if (Double.isInfinite(vec.x)) {
+            return vec.y > PI ? vec.y - 2*PI : vec.y;
+        }
+        return atan2(vec.y, vec.x);
+    }
+
+    /**
+     * Computes angle formed by vector with the x-axis.
+     * @param x the x coord
+     * @param y the y coord
+     * @return an angle with range between 0 and 2pi
+     */
+    public static double positiveAngle(double x, double y) {
+        return (x < 0 ? PI : 0) + atan(y / x);
+    }
+
+    /**
+     * Computes angle made by given vector with the x-axis
+     * @param vec a vector
+     * @return an angle with range between 0 and 2pi
+     */
+    public static double positiveAngle(Point2D.Double vec) {
+        if (Double.isInfinite(vec.x)) {
+            return vec.y < 0 ? vec.y + 2*PI : vec.y;
+        }
+        return positiveAngle(vec.x, vec.y);
+
+    }
+
+    /**
+     * Computes angle between two vectors, as comptued by the dot product formula
+     * @param vec1 first vector
+     * @param vec2 second vector
+     * @return angle in the range of 0 to pi.
+     */
+    public static double angleBetween(Point2D.Double vec1, Point2D.Double vec2) {
+        return Math.acos( dotProduct(vec1, vec2) / ( magnitude(vec1) * magnitude(vec2) ) );
+    }
+        
+
+    /**
+     * Computes angle between three points. In particular, this is the angle required to rotate
+     * the vector [p2->p1] to the point where it is parallel to the vector [p2->p3].
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
-     * @return angle of that based at p2
+     * @return the rotation angle, between 0 and 2pi.
      */
-    public static double angleBetween(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
-        return angle(p1.x - p2.x, p1.y - p2.y) - angle(p3.x - p2.x, p3.y - p2.y);
+    public static double signedAngleBetween3Points(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
+        double angleDiff = positiveAngle(p3.x - p2.x, p3.y - p2.y) - positiveAngle(p1.x - p2.x, p1.y - p2.y);
+        if (angleDiff < 0) {
+            angleDiff += 2*Math.PI;
+        }
+        return angleDiff;
+    }
+
+
+    //==================================================================================================
+    //
+    // 5. PROJECTION FORMULAS
+    //
+
+    /**
+     * Computes scalar projection of first vector onto second vector.
+     * @param projVec vector that will be projected
+     * @param dir vector to project onto
+     * @return length of component of <code>projVec> in the direction of <code>dir</code>
+     */
+    public static double scalarProjection(Point2D.Double projVec, Point2D.Double dir) {
+        return dotProduct(projVec, dir) / magnitude(dir);
     }
 
     /**
      * Computes projection of first vector onto second vector.
-     * @param vec1 first vector
-     * @param vec2 second vector
-     * @return vector in direction of vec2
+     * @param projVec vector that will be projected
+     * @param dir vector to project onto
+     * @return vector in the direction of <code>dir</code>
      */
-    public static Point2D.Double projectVector(Point2D.Double vec1, Point2D.Double vec2) {
-        double factor = dotProduct(vec1, vec2) / vec2.distanceSq(0,0);
-        return new Point2D.Double(vec2.x * factor, vec2.y * factor);
+    public static Point2D.Double vectorProjection(Point2D.Double projVec, Point2D.Double dir) {
+        double factor = dotProduct(projVec, dir) / pow(magnitude(dir), 2);
+        return new Point2D.Double(dir.x * factor, dir.y * factor);
     }
 
     /**
      * Computes component of first vector that is perpendicular to the second vector
-     * @param vec1 first vector
-     * @param vec2 second vector
-     * @return vector in direction of vec2
+     * @param projVec first vector
+     * @param dir vector to project orthogonally to
+     * @return vector component that is perpendicular to <code>dir</code>
      */
-    public static Point2D.Double perpProjectVector(Point2D.Double vec1, Point2D.Double vec2) {
-        Point2D.Double parallel = projectVector(vec1, vec2);
-        return new Point2D.Double(vec1.x - parallel.x, vec1.y - parallel.y);
+    public static double perpendicularScalarProjection(Point2D.Double projVec, Point2D.Double dir) {
+        return Math.sqrt(projVec.distanceSq(0,0) - pow(scalarProjection(projVec,dir), 2));
     }
 
     /**
-     * Computes and returns a point near infinity that is along the line equidistant between the two points.
-     * Which near-infinite point is chosen depends on the order of the inputs.
-     * @param p1 first point
-     * @param p2 second point
-     * @return a point near infinity, or the "infinite" point if the two inputs are equal
+     * Computes component of first vector that is perpendicular to the second vector
+     * @param projVec first vector
+     * @param dir vector to project orthogonally to
+     * @return vector component that is perpendicular to <code>dir</code>
      */
-    public static Point2D.Double pointAtInfinityEquidistantTo(Point2D.Double p1, Point2D.Double p2) {
-        return p1.equals(p2) 
-                ? INFINITY
-                : getNearInfinitePointAtAngle(angle(p2.x - p1.x, p2.y - p1.y) + Math.PI / 2);
+    public static Point2D.Double perpendicularVectorProjection(Point2D.Double projVec, Point2D.Double dir) {
+        Point2D.Double parallel = vectorProjection(projVec, dir);
+        return new Point2D.Double(projVec.x - parallel.x, projVec.y - parallel.y);
     }
 
-    /** 
-     * Computes and returns center of circle passing through three points. The center is at infinity if points are colinear.
-     * If one of the points is infinity then returns point in direction of bisecting line between the two others.
-     */
-    public static Point2D.Double centerOfCircleThrough(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
-        // one of the points is infinite
-        if (p1.equals(INFINITY)) {
-            return pointAtInfinityEquidistantTo(p2, p3);
-        } else if (p2.equals(INFINITY)) {
-            return pointAtInfinityEquidistantTo(p1, p3);
-        } else if (p3.equals(INFINITY)) {
-            return pointAtInfinityEquidistantTo(p1, p2);
-        }
 
-        // points are colinear, or one of the slopes is infinite
-        Double m12 = slope(p1, p2);
-        Double m23 = slope(p2, p3);
+    //==================================================================================================
+    //
+    // 6. DISTANCE FORMULAS
+    //
 
-        // if p1/p2 or p2/p3 coincide
-        if (m12.isNaN()) {
-            return pointAtInfinityEquidistantTo(p2, p3);
-        } else if (m23.isNaN()) {
-            return pointAtInfinityEquidistantTo(p1, p2);
-        }
-
-        // if points are colinear or vertically spaced
-        if (((double)m12) == ((double)m23)) {
-            return pointAtInfinityEquidistantTo(p1, p2);
-        } else if (m12.isInfinite()) {
-            return centerOfCircleThrough(p2, p3, p1);
-        } else if (m23.isInfinite()) {
-            return centerOfCircleThrough(p3, p1, p2);
-        }
-
-        // points are not colinear
-        double xCenter = (m12 * m23 * (p1.y - p3.y) + m23 * (p1.x + p2.x) - m12 * (p2.x + p3.x)) / (2 * (m23 - m12));
-        double yCenter =
-                ((double) m12) == 0.0
-                ? (-xCenter + (p1.x + p2.x) / 2) / m12 + (p1.y + p2.y) / 2
-                : (-xCenter + (p2.x + p3.x) / 2) / m23 + (p2.y + p3.y) / 2;
-
-        return new Point2D.Double(xCenter, yCenter);
+    private static double t(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
+        return ((endpt1.x - original.x) * (endpt1.x - endpt2.x) + (endpt1.y - original.y) * (endpt1.y - endpt2.y)) / endpt1.distanceSq(endpt2);
     }
 
     /**
@@ -300,27 +372,11 @@ public class PlanarMathUtils {
      * @param endpt2 second endpoint of the line
      * @return point along the line that forms a perpendicular with the original point; or if the endpoints coincide a point at an endpoint
      **/
-    public static Point2D.Double closestOnLine(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
+    public static Point2D.Double closestPointOnLine(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
         if (endpt1.equals(endpt2)) {
             return new Point2D.Double(endpt1.x, endpt1.y);
         }
-        double t = ((endpt1.x - original.x) * (endpt1.x - endpt2.x) + (endpt1.y - original.y) * (endpt1.y - endpt2.y)) / ((endpt1.x - endpt2.x) * (endpt1.x - endpt2.x) + (endpt1.y - endpt2.y) * (endpt1.y - endpt2.y));
-        return new Point2D.Double(endpt1.x + t * (endpt2.x - endpt1.x), endpt1.y + t * (endpt2.y - endpt1.y));
-    }
-
-    /**
-     * Returns point on line SEGMENT between point1 and point2 which is closest to this point.
-     * @param original the point considered
-     * @param endpt1 first endpoint of the line segment
-     * @param endpt2 second endpoint of the line segment
-     * @return point along the line that forms a perpendicular with the original point, or the nearest endpt to that point; or if the endpoints coincide a point at an endpoint
-     */
-    public static Point2D.Double closestOnSegment(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
-        if (endpt1.equals(endpt2)) {
-            return new Point2D.Double(endpt1.x, endpt1.y);
-        }
-        double t = ((endpt1.x - original.x) * (endpt1.x - endpt2.x) + (endpt1.y - original.y) * (endpt1.y - endpt2.y)) / ((endpt1.x - endpt2.x) * (endpt1.x - endpt2.x) + (endpt1.y - endpt2.y) * (endpt1.y - endpt2.y));
-        t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        double t = t(original, endpt1, endpt2);
         return new Point2D.Double(endpt1.x + t * (endpt2.x - endpt1.x), endpt1.y + t * (endpt2.y - endpt1.y));
     }
 
@@ -331,12 +387,29 @@ public class PlanarMathUtils {
      * @param endpt2 second endpoint of the ray
      * @return point along the line that forms a perpendicular with the original point, or the nearest endpt to that point; or if the endpoints coincide a point at an endpoint
      */
-    public static Point2D.Double closestOnRay(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
+    public static Point2D.Double closestPointOnRay(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
         if (endpt1.equals(endpt2)) {
             return new Point2D.Double(endpt1.x, endpt1.y);
         }
-        double t = ((endpt1.x - original.x) * (endpt1.x - endpt2.x) + (endpt1.y - original.y) * (endpt1.y - endpt2.y)) / ((endpt1.x - endpt2.x) * (endpt1.x - endpt2.x) + (endpt1.y - endpt2.y) * (endpt1.y - endpt2.y));
+        double t = t(original, endpt1, endpt2);
         t = t < 0 ? 0 : t;
         return new Point2D.Double(endpt1.x + t * (endpt2.x - endpt1.x), endpt1.y + t * (endpt2.y - endpt1.y));
     }
+
+    /**
+     * Returns point on line SEGMENT between point1 and point2 which is closest to this point.
+     * @param original the point considered
+     * @param endpt1 first endpoint of the line segment
+     * @param endpt2 second endpoint of the line segment
+     * @return point along the line that forms a perpendicular with the original point, or the nearest endpt to that point; or if the endpoints coincide a point at an endpoint
+     */
+    public static Point2D.Double closestPointOnSegment(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
+        if (endpt1.equals(endpt2)) {
+            return new Point2D.Double(endpt1.x, endpt1.y);
+        }
+        double t = t(original, endpt1, endpt2);
+        t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        return new Point2D.Double(endpt1.x + t * (endpt2.x - endpt1.x), endpt1.y + t * (endpt2.y - endpt1.y));
+    }
+
 }

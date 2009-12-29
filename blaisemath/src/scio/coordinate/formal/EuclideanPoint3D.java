@@ -13,7 +13,7 @@ import scio.coordinate.formal.EuclideanElement;
  * </p>
  * @author Elisha Peterson
  */
-public class EuclideanPoint3D extends P3D implements EuclideanElement<P3D> {
+public class EuclideanPoint3D extends Point3D implements EuclideanElement<Point3D> {
 
     // CONSTRUCTORS
     /** Default constructor. */
@@ -95,7 +95,7 @@ public class EuclideanPoint3D extends P3D implements EuclideanElement<P3D> {
     // MetricSpaceElement METHODS
     //
     //
-    public double distanceTo(P3D p2) {
+    public double distanceTo(Point3D p2) {
         return super.distance(p2);
     }
 
@@ -104,7 +104,7 @@ public class EuclideanPoint3D extends P3D implements EuclideanElement<P3D> {
     // VectorSpaceElement METHODS
     //
     //
-    public P3D zero() {
+    public Point3D zero() {
         return ZERO;
     }
 
@@ -112,31 +112,31 @@ public class EuclideanPoint3D extends P3D implements EuclideanElement<P3D> {
         return super.distance(0, 0, 0);
     }
 
-    public P3D normalized() {
+    public Point3D normalized() {
         double m = magnitude();
         return m == 0 ? this : this.timesScalar(1 / magnitude());
     }
 
-    public P3D plus(P3D pt) {
-        return new P3D(x + pt.x, y + pt.y, z + pt.z);
+    public Point3D plus(Point3D pt) {
+        return new Point3D(x + pt.x, y + pt.y, z + pt.z);
     }
 
-    public P3D minus(P3D pt) {
-        return new P3D(x - pt.x, y - pt.y, z - pt.z);
+    public Point3D minus(Point3D pt) {
+        return new Point3D(x - pt.x, y - pt.y, z - pt.z);
     }
 
-    public P3D translateBy(P3D pt) {
+    public Point3D translateBy(Point3D pt) {
         x += pt.x;
         y += pt.y;
         z += pt.z;
         return this;
     }
 
-    public P3D timesScalar(double scalar) {
-        return new P3D(scalar * x, scalar * y, scalar * z);
+    public Point3D timesScalar(double scalar) {
+        return new Point3D(scalar * x, scalar * y, scalar * z);
     }
 
-    public P3D multiplyBy(double scalar) {
+    public Point3D multiplyBy(double scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;

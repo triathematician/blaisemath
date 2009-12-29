@@ -26,7 +26,7 @@ public class DESolve<C extends EuclideanElement<C>> {
      * @param stepSize  The size of path added at each step.
      */
     @Deprecated
-    public Vector<C> calcNewton(Function<C, C> field, C start, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcNewton(Function<C, C> field, C start, int steps, double stepSize) throws org.apache.commons.math.MathException {
         Vector<C> result = new Vector<C>();
         result.add(start);
         C last;
@@ -43,7 +43,7 @@ public class DESolve<C extends EuclideanElement<C>> {
      * @param stepSize  The size of path added at each step.
      */
     @Deprecated
-    public Vector<C> calcNewton(Function<C, C> field, Vector<C> flow, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcNewton(Function<C, C> field, Vector<C> flow, int steps, double stepSize) throws org.apache.commons.math.MathException {
         C last;
         for (int i = 0; i < steps; i++) {
             last = flow.lastElement();
@@ -58,7 +58,7 @@ public class DESolve<C extends EuclideanElement<C>> {
      * @param stepSize the change in t for each iteration
      */
     @Deprecated
-    public Vector<C> calcRungeKutta4(Function<C, C> field, C start, int steps, double stepSize) throws FunctionValueException {
+    public Vector<C> calcRungeKutta4(Function<C, C> field, C start, int steps, double stepSize) throws org.apache.commons.math.MathException {
         Vector<C> result = new Vector<C>();
         result.add(start);
         C k1, k2, k3, k4;
@@ -77,14 +77,14 @@ public class DESolve<C extends EuclideanElement<C>> {
 
     /** Returns vector pointing in the direction of the field. */
     @Deprecated
-    public C getScaledVector(Function<C, C> field, C point, double size) throws FunctionValueException {
+    public C getScaledVector(Function<C, C> field, C point, double size) throws org.apache.commons.math.MathException {
         throw new UnsupportedOperationException();
     //return field.getValue(point).scaledToLength(size);
     }
 
     /** Returns vector pointing in direction of the field, multiplied by a fixed factor that depends only on the underlying vector field. */
     @Deprecated
-    public C getMultipliedVector(Function<C, C> field, C point, double scaleFactor) throws FunctionValueException {
+    public C getMultipliedVector(Function<C, C> field, C point, double scaleFactor) throws org.apache.commons.math.MathException {
         throw new UnsupportedOperationException();
     //return field.getValue(point).timesScalar(scaleFactor);
     }

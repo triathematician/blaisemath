@@ -5,6 +5,8 @@
 
 package scio.coordinate;
 
+import scio.random.RandomCoordinateGenerator;
+
 /**
  * <p>
  *   This class represents an interval of the real axis. It has domain functionality,

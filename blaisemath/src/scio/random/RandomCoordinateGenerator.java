@@ -3,7 +3,7 @@
  * Created on Nov 4, 2009
  */
 
-package scio.coordinate;
+package scio.random;
 
 /**
  * <p>
