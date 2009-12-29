@@ -81,10 +81,12 @@ public class PlaneGraph extends VPointSet<Point2D.Double> {
         }
 
         public boolean adjacent(Integer v1, Integer v2) {
-            if ((v1 + v2) % 2 == 0) {
-                return true;
-            }
-            return false;
+            // return true if common factors are shared
+            int i1 = Math.abs(v1+1);
+            int i2 = Math.abs(v2+1);
+            int i = Math.min(i1, i2);
+            while (i1%i!=0 || i2%i!=0) i--;
+            return i == 1;
         }
 
     };

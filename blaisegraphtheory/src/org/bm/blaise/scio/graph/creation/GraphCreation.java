@@ -2,8 +2,10 @@
  * GraphCreation.java
  * Created on Oct 14, 2009
  */
-package org.bm.blaise.scio.graph;
+package org.bm.blaise.scio.graph.creation;
 
+import org.bm.blaise.scio.graph.metrics.GraphUtils;
+import org.bm.blaise.scio.graph.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;

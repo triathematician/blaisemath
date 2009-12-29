@@ -3,8 +3,9 @@
  * Created on Oct 26, 2009
  */
 
-package org.bm.blaise.scio.graph;
+package org.bm.blaise.scio.graph.metrics;
 
+import org.bm.blaise.scio.graph.*;
 import java.util.Map;
 
 /**

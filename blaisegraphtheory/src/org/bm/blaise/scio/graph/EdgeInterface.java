@@ -7,7 +7,7 @@ package org.bm.blaise.scio.graph;
 
 /**
  * <p>
- *   <code>EdgeInterface</code> is an interface for graph edges.
+ *   <code>EdgeInterface</code> is an interface for graph edges for vertices of unspecified type <code>V</code>.
  * </p>
  *
  * @author Elisha Peterson

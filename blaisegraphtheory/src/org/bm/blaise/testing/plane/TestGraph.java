@@ -6,7 +6,7 @@
 package org.bm.blaise.testing.plane;
 
 import data.propertysheet.PropertySheet;
-import org.bm.blaise.scio.graph.GraphCreation;
+import org.bm.blaise.scio.graph.creation.GraphCreation;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import org.bm.blaise.specto.visometry.Plottable;
@@ -26,9 +26,9 @@ public class TestGraph extends javax.swing.JFrame {
         // BASIC ELEMENTS
 
         graphPlot.addPlottable(new PlaneGraph(new PlaneGraph.TestNSI()));
-        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getLoopGraph(15)));
-        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getCompleteGraph(5, true)));
-        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getRandomGraph(30, .1, true)));
+//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getLoopGraph(15)));
+//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getCompleteGraph(5, true)));
+//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getRandomGraph(30, .1, true)));
         graphPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
 
 

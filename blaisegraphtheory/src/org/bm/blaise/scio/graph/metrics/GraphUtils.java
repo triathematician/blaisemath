@@ -3,8 +3,9 @@
  * Created on Oct 14, 2009
  */
 
-package org.bm.blaise.scio.graph;
+package org.bm.blaise.scio.graph.metrics;
 
+import org.bm.blaise.scio.graph.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 /**
  * <p>
- *   <code>GraphUtils</code> isAdjacent a collection of utility algorithms for computations
+ *   <code>GraphUtils</code> is a collection of utility algorithms for computations
  *   in graph theory.
  * </p>
  *

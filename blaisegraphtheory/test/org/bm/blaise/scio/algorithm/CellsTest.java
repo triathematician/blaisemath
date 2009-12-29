@@ -5,7 +5,7 @@
 
 package org.bm.blaise.scio.algorithm;
 
-import org.bm.blaise.scio.algorithm.VoronoiCells;
+import deprecated.VoronoiCells;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 import junit.framework.TestCase;
