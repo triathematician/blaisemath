@@ -33,6 +33,14 @@ public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements Viso
     public PlaneGrid() {
     }
 
+    /**
+     * <b>FACTORY METHOD</b>
+     * @return instance of the class with specified parameters.
+     */
+    public static PlaneGrid instance() {
+        return new PlaneGrid();
+    }
+
     public PathStyle getStrokeStyle() {
         return style;
     }
@@ -60,11 +68,15 @@ public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements Viso
     public void paintComponent(VisometryGraphics<Point2D.Double> canvas) {
         PlaneGraphics pg = (PlaneGraphics) canvas;
         canvas.setPathStyle(style);
+        if (xValues == null) return;
         for (Double x : xValues) {
             pg.drawVerticalLine(x);
         }
+        if (yValues == null) return;
         for (Double y : yValues) {
             pg.drawHorizontalLine(y);
         }
     }
+
+    @Override public String toString() { return "PlaneGrid"; }
 }

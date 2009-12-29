@@ -4,7 +4,6 @@
  */
 package org.bm.blaise.specto.plane.function;
 
-import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -15,18 +14,15 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
-import org.bm.utils.LineSampleSet;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
 
 /**
  * <p>
- *   <code>PlaneParametricFunction</code> plots a 2d array of curves depending
- *   upon two functions that each depend upon two input parameters... So the
- *   input region is a square. The output is displayed as a grid.
+ *   <code>PlaneParametricArea</code> shows how a piece of the plane maps under
+ *   a function with 2 inputs and 2 outputs.
  * </p>
  *
  * @author Elisha Peterson
@@ -131,10 +127,6 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
         super.stateChanged(e);
     }
 
-    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        // MAY EVENTUALLY REQUIRE RECOMPUTATION, BUT NOT RIGHT NOW
-    }
-
     /** Recomputes the visual path for the function. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         try {
@@ -196,8 +188,6 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
     public void mouseReleased(VisometryMouseEvent<Point2D.Double> e) {
         domainPlottable.mouseReleased(e);
     }
-
-
 
     @Override
     public String toString() {

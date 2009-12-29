@@ -7,11 +7,9 @@ package org.bm.blaise.specto.plottable;
 
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
-import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -24,7 +22,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  * @param <C> coordinate type of visometry
  * @author Elisha Peterson
  */
-public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C> implements VisometryChangeListener {
+public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
 
     //
     //

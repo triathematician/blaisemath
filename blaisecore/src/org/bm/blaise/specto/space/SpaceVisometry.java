@@ -11,7 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.bm.blaise.specto.visometry.Visometry;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -20,7 +20,7 @@ import scio.coordinate.P3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceVisometry implements Visometry<P3D> {
+public class SpaceVisometry implements Visometry<Point3D> {
 
     //
     //
@@ -31,9 +31,9 @@ public class SpaceVisometry implements Visometry<P3D> {
     /** Stores the boundary of the display window. */
     RectangularShape windowBounds;
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
-    P3D minPoint = new P3D(-1, -1, -1);
+    Point3D minPoint = new Point3D(-1, -1, -1);
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
-    P3D maxPoint = new P3D(1, 1, 1);
+    Point3D maxPoint = new Point3D(1, 1, 1);
     /** Stores the window's AspectRatio. First is xy, second is xz. */
     double[] aspectRatio = new double[]{1, 1};
     /** Stores the affine transformation that converts the actual range to the window bounds. */
@@ -61,7 +61,7 @@ public class SpaceVisometry implements Visometry<P3D> {
      * @param oldProj the original projection
      * @param diff translation
      */
-    public void translateCamera(SpaceProjection oldProj, P3D diff) {
+    public void translateCamera(SpaceProjection oldProj, Point3D diff) {
         proj.setCenter( oldProj.center.minus(diff) );
         fireStateChanged();
     }
@@ -74,7 +74,7 @@ public class SpaceVisometry implements Visometry<P3D> {
         if (factor <= 0) {
             throw new IllegalArgumentException("Zoom factor must be positive: " + factor);
         }
-        proj.viewDist *= factor;
+        proj.dpi /= factor;
         proj.computeTransformation();
         fireStateChanged();
     }
@@ -101,11 +101,11 @@ public class SpaceVisometry implements Visometry<P3D> {
      * @param pt2 second point for rotation
      * @return sinphi
      */
-    public double rotateCamera(SpaceProjection oldProj, P3D pt1, P3D pt2) {
+    public double rotateCamera(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
         double boost = 1;
-        P3D rotVec1 = pt1.minus(oldProj.center);
-        P3D rotVec2 = pt2.minus(oldProj.center);
-        P3D n = rotVec1.crossProduct(rotVec2).normalized();
+        Point3D rotVec1 = pt1.minus(oldProj.center);
+        Point3D rotVec2 = pt2.minus(oldProj.center);
+        Point3D n = rotVec1.crossProduct(rotVec2).normalized();
         double cosphi = Math.cos(boost * Math.acos(rotVec1.dotProduct(rotVec2)/(rotVec1.magnitude()*rotVec2.magnitude())));
         double sinphi = Math.sqrt(1-cosphi*cosphi);
         // can use either single or double rotation here
@@ -119,26 +119,26 @@ public class SpaceVisometry implements Visometry<P3D> {
     }
 
     /** Formula for the rotation about a specific axis given by a normal vector n */
-    public P3D eulerRotation (P3D pt, P3D n, double cosphi, double sinphi) {
+    public Point3D eulerRotation (Point3D pt, Point3D n, double cosphi, double sinphi) {
         return pt.times(cosphi)
                 .plus( n.times(n.dotProduct(pt)*(1-cosphi)) )
                 .plus( (pt.crossProduct(n)).times(sinphi) );
     }
 
     /** Animates a rotation. */
-    public void animateCameraRotation(SpaceProjection oldProj, P3D pt1, P3D pt2) {
+    public void animateCameraRotation(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
         double boost = 1;
-        P3D rotVec1 = pt1.minus(oldProj.center);
-        P3D rotVec2 = pt2.minus(oldProj.center);
-        P3D n = rotVec1.crossProduct(rotVec2).normalized();
+        Point3D rotVec1 = pt1.minus(oldProj.center);
+        Point3D rotVec2 = pt2.minus(oldProj.center);
+        Point3D n = rotVec1.crossProduct(rotVec2).normalized();
         double cosphi = Math.cos(boost * Math.acos(rotVec1.dotProduct(rotVec2)/(rotVec1.magnitude()*rotVec2.magnitude())));
         double sinphi = Math.sqrt(1-cosphi*cosphi);
         // don't rotate if the angle is too small
         if (Math.abs(sinphi) > .01) {
             // lock rotation if within certain limits
-            if (Math.abs(n.x)>.9) { n = new P3D(n.x/Math.abs(n.x),0,0); }
-            else if (Math.abs(n.y)>.9) { n = new P3D(0,n.y/Math.abs(n.y),0); }
-            else if (Math.abs(n.z)>.9) { n = new P3D(0,0,n.z/Math.abs(n.z)); }
+            if (Math.abs(n.x)>.9) { n = new Point3D(n.x/Math.abs(n.x),0,0); }
+            else if (Math.abs(n.y)>.9) { n = new Point3D(0,n.y/Math.abs(n.y),0); }
+            else if (Math.abs(n.z)>.9) { n = new Point3D(0,0,n.z/Math.abs(n.z)); }
             animateRotation(oldProj, n, Math.sqrt(1-sinphi*sinphi), sinphi);
         }
     }
@@ -151,7 +151,7 @@ public class SpaceVisometry implements Visometry<P3D> {
     }
 
     /** Animates a rotation. */
-    public void animateRotation(final SpaceProjection oldProj, final P3D n, final double cosphi, final double sinphi) {
+    public void animateRotation(final SpaceProjection oldProj, final Point3D n, final double cosphi, final double sinphi) {
         rotating = true;
         Thread runner=new Thread(new Runnable(){
             public void run() {
@@ -192,25 +192,25 @@ public class SpaceVisometry implements Visometry<P3D> {
         fireStateChanged();
     }
 
-    public P3D getMinPointVisible() {
+    public Point3D getMinPointVisible() {
         return minPoint;
     }
 
-    public P3D getMaxPointVisible() {
+    public Point3D getMaxPointVisible() {
         return maxPoint;
     }
 
     public void computeTransformation() throws IllegalStateException {
         proj.winBounds = windowBounds;
-        proj.center = new P3D((minPoint.x + maxPoint.x)/2, (minPoint.y + maxPoint.y)/2, (minPoint.z + maxPoint.z)/2);
+        proj.center = new Point3D((minPoint.x + maxPoint.x)/2, (minPoint.y + maxPoint.y)/2, (minPoint.z + maxPoint.z)/2);
         proj.computeTransformation();
     }
 
-    public Point2D getWindowPointOf(P3D coordinate) {
+    public Point2D getWindowPointOf(Point3D coordinate) {
         return proj.getWindowPointOf(coordinate);
     }
 
-    public P3D getCoordinateOf(Point2D point) {
+    public Point3D getCoordinateOf(Point2D point) {
         return proj.getCoordinateOf(point);
     }
     

@@ -12,7 +12,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 import org.bm.blaise.specto.visometry.VisometryMouseInputListener;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import scio.coordinate.P3D;
  *
  * @author Elisha Peterson
  */
-public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, MouseWheelListener {
+public class SpacePlotResizer implements VisometryMouseInputListener<Point3D>, MouseWheelListener {
 
     SpacePlotComponent plot;
     SpaceVisometry vis;
@@ -35,7 +35,7 @@ public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, Mouse
     transient protected String mode = null;
     transient protected SpaceProjection oldProj = null;
 
-    public boolean isClickablyCloseTo(VisometryMouseEvent<P3D> e) {
+    public boolean isClickablyCloseTo(VisometryMouseEvent<Point3D> e) {
         return true;
     }
 
@@ -43,7 +43,7 @@ public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, Mouse
      * When the mouse is pressed, prepare for resizing or panning.
      * @param e
      */
-    public void mousePressed(VisometryMouseEvent<P3D> e) {
+    public void mousePressed(VisometryMouseEvent<Point3D> e) {
         vis.stopRotation();
         pressedAt = e.getWindowPoint();
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
@@ -53,10 +53,10 @@ public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, Mouse
         }
     }
 
-    public void mouseDragged(VisometryMouseEvent<P3D> e) {
+    public void mouseDragged(VisometryMouseEvent<Point3D> e) {
         if (pressedAt != null) {
             if (mode.equals("Alt+Button1")) { // pan mode
-                P3D diffC = vis.getProj().getVectorOf( e.getWindowPoint().x - pressedAt.x, e.getWindowPoint().y - pressedAt.y);
+                Point3D diffC = vis.getProj().getVectorOf( e.getWindowPoint().x - pressedAt.x, e.getWindowPoint().y - pressedAt.y);
                 vis.translateCamera(oldProj, diffC);
                 plot.repaint();
             } else { // rotate mode
@@ -65,10 +65,10 @@ public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, Mouse
         }
     }
 
-    public void mouseReleased(VisometryMouseEvent<P3D> e) {
+    public void mouseReleased(VisometryMouseEvent<Point3D> e) {
         //mouseDragged(e);
         if (pressedAt != null && mode.equals("Alt+Button1")) { // pan mode
-        } else if (pressedAt != null && mode.equals("Ctrl+Button1")) {
+        } else if (pressedAt != null && mode.equals("Ctrl+Button1")) { // rotate mode
             vis.animateCameraRotation(oldProj, oldProj.getCoordinateOf(pressedAt), oldProj.getCoordinateOf(e.getWindowPoint()));
         }
         pressedAt = null;
@@ -76,16 +76,16 @@ public class SpacePlotResizer implements VisometryMouseInputListener<P3D>, Mouse
         mode = null;
     }
 
-    public void mouseClicked(VisometryMouseEvent<P3D> e) {
+    public void mouseClicked(VisometryMouseEvent<Point3D> e) {
     }
 
-    public void mouseEntered(VisometryMouseEvent<P3D> e) {
+    public void mouseEntered(VisometryMouseEvent<Point3D> e) {
     }
 
-    public void mouseExited(VisometryMouseEvent<P3D> e) {
+    public void mouseExited(VisometryMouseEvent<Point3D> e) {
     }
 
-    public void mouseMoved(VisometryMouseEvent<P3D> e) {
+    public void mouseMoved(VisometryMouseEvent<Point3D> e) {
         if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt")) { // pan mode
             plot.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         } else { // rotate mode (need better coursor!)

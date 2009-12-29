@@ -9,7 +9,7 @@
  * Created on Oct 23, 2009, 11:00:32 AM
  */
 
-package org.bm.blaise.testing.space;
+package org.bm.blaise.application;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

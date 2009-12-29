@@ -8,15 +8,14 @@ package org.bm.blaise.specto.space;
 import java.awt.Graphics;
 import javax.swing.event.ChangeEvent;
 import org.bm.blaise.specto.visometry.PlotComponent;
-import org.bm.utils.Spacing;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
  *
  * @author Elisha Peterson
  */
-public class SpacePlotComponent extends PlotComponent<P3D> {
+public class SpacePlotComponent extends PlotComponent<Point3D> {
 
     /** View settings */
     boolean anaglyph;
@@ -29,9 +28,9 @@ public class SpacePlotComponent extends PlotComponent<P3D> {
         defaultMouseWheelListener = resizer;
     }
 
-    public SampleCoordinateSetGenerator<P3D> getSSG() {
+    public SampleCoordinateSetGenerator<Point3D> getSSG() {
         // TODO - hook into this generator in a better way!!
-        return ((SpaceGraphics) visometryGraphics).getSampleSetGenerator(Spacing.REGULAR);
+        return ((SpaceGraphics) visometryGraphics).getSampleSetGenerator();
     }
 
     public boolean isAnaglyph() {
@@ -48,6 +47,24 @@ public class SpacePlotComponent extends PlotComponent<P3D> {
             repaint();
         }
     }
+
+    public float getDefaultFillOpacity() {
+        return ((SpaceGraphics) visometryGraphics).getOpacity();
+    }
+
+    public void setDefaultFillOpacity(float opacity) {
+        ((SpaceGraphics) visometryGraphics).setOpacity(opacity);
+    }
+
+    public SpaceGraphics getVisometryGraphics() {
+        return (SpaceGraphics) visometryGraphics;
+    }
+
+    public void setVisometryGraphics(SpaceGraphics visometryGraphics) {
+        this.visometryGraphics = visometryGraphics;
+    }
+
+
 
     @Override
     public void stateChanged(ChangeEvent e) {

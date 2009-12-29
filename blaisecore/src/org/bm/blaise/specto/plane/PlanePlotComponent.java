@@ -5,10 +5,12 @@
 
 package org.bm.blaise.specto.plane;
 
+import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import org.bm.blaise.specto.visometry.PlotComponent;
+import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.utils.PlaneGridSampleSet;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
@@ -34,6 +36,16 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         defaultMouseListener = resizer;
         defaultMouseWheelListener = resizer;
     }
+
+    public PlanePlotComponent(PlaneGraphics pg, Visometry vis) {
+        super(vis);
+        visometryGraphics = pg;
+        PlanePlotResizer resizer = new PlanePlotResizer((PlaneVisometry) visometry, this);
+        defaultMouseListener = resizer;
+        defaultMouseWheelListener = resizer;
+    }
+
+
 
     public SampleCoordinateSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
         return new PlaneGridSampleSet() {

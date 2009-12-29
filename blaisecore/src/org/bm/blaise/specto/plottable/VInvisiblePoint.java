@@ -30,7 +30,8 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
     /** The value of the point. */
     protected C value;
 
-    public VInvisiblePoint() {
+    public VInvisiblePoint(C value) {
+        this.value = value;
     }
 
     //

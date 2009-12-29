@@ -25,7 +25,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
  * @param <C> coordinate type of visometry
  * @author Elisha Peterson
  */
-public abstract class VComputedPointPath<C> extends VPoint<C> implements VisometryChangeListener {
+public abstract class VComputedPointPath<C> extends VPoint<C> {
 
     //
     //

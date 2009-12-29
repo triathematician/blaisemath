@@ -16,7 +16,7 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
 import scio.function.utils.SampleSurface3D;
@@ -27,7 +27,7 @@ import scio.function.utils.SampleSurface3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceParametricSurface extends AbstractPlottable<P3D> {
+public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
@@ -37,16 +37,18 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
     RealIntervalSampler domainV;
     /** Stores rectangle used to adjust the range. */
     VRectangle<Point2D.Double> domainPlottable;
+    /** Style used to display the surface */
+    GridStyle gridStyle = GridStyle.REGULAR;
 
     public SpaceParametricSurface(MultivariateVectorialFunction func, Point2D.Double min, Point2D.Double max) {
         setFunction(func);
         setDomainU(new RealIntervalSampler(min.x, max.x, 16));
-        setDomainV(new RealIntervalSampler(min.x, max.x, 16));
+        setDomainV(new RealIntervalSampler(min.y, max.y, 16));
         domainPlottable = new VRectangle<Point2D.Double>(min, max);
         domainPlottable.addChangeListener(this);
     }
 
-    private SpaceParametricSurface(MultivariateVectorialFunction func, double u0, double u1, double v0, double v1) {
+    public SpaceParametricSurface(MultivariateVectorialFunction func, double u0, double u1, double v0, double v1) {
         this(func, new Point2D.Double(u0, v0), new Point2D.Double(u1, v1));
     }
 
@@ -94,8 +96,17 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
                 this.domainV.setMaxInclusive(range.isMaxInclusive());
             }
             needsComputation = true;
-            System.out.println("setting range.");
         }
+    }
+
+    public GridStyle getGridStyle() {
+        return gridStyle;
+    }
+
+    public void setGridStyle(GridStyle gridStyle) {
+        this.gridStyle = gridStyle;
+        needsComputation = true;
+        fireStateChanged();
     }
 
     public VRectangle<Point2D.Double> getDomainPlottable() {
@@ -111,7 +122,6 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        System.out.println("state chnage!");
         if (e.getSource() == domainPlottable) {
             domainU.setMin(domainPlottable.getPoint1().x);
             domainU.setMax(domainPlottable.getPoint2().x);
@@ -123,18 +133,18 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
     }
 
     transient boolean needsComputation = true;
-    transient List<P3D[]> polys;
+    transient List<Point3D[]> polys;
 
     @Override
-    public void paintComponent(VisometryGraphics<P3D> vg) {
-        if (needsComputation) {
+    public void paintComponent(VisometryGraphics<Point3D> vg) {
+       // if (needsComputation) {
             polys = getPolys();
             needsComputation = false;
-        }
+      //  }
         ((SpaceGraphics) vg).addToScene(polys);
     }
 
-    List<P3D[]> getPolys() {
+    List<Point3D[]> getPolys() {
         int nx = domainU.getNumSamples();
         int ny = domainV.getNumSamples();
         if (nx < 1 || ny < 1) {
@@ -142,7 +152,7 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
         }
         // here we compute the values
         double[] input = new double[2];
-        P3D[][] arr = new P3D[nx][ny];
+        Point3D[][] arr = new Point3D[nx][ny];
         try {
             int i = 0;
             for (double x : domainU.getSamples()) {
@@ -150,7 +160,7 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
                 for (double y : domainV.getSamples()) {
                     input[0] = x;
                     input[1] = y;
-                    arr[i][j] = new P3D(func.value(input));
+                    arr[i][j] = new Point3D(func.value(input));
                     j++;
                 }
                 i++;
@@ -158,14 +168,46 @@ public class SpaceParametricSurface extends AbstractPlottable<P3D> {
         } catch (FunctionEvaluationException e) {
             System.out.println("Unable to evaluate function in SpaceParamertricSurface");
         }
-        // here we create and return the polygons
-        List<P3D[]> result = new ArrayList<P3D[]>((nx-1) * (ny-1));
-        for (int i = 0; i < nx-1; i++) {
-            for (int j = 0; j < ny-1; j++) {
-                result.add(new P3D[]{ arr[i][j], arr[i+1][j], arr[i+1][j+1], arr[i][j+1] });
+        if (gridStyle == GridStyle.REGULAR || gridStyle == GridStyle.NO_GRID) {
+            // here we create and return the polygons
+            List<Point3D[]> result = new ArrayList<Point3D[]>((nx-1) * (ny-1));
+            for (int i = 0; i < nx-1; i++) {
+                for (int j = 0; j < ny-1; j++) {
+                    result.add(new Point3D[]{ arr[i][j], arr[i+1][j], arr[i+1][j+1], arr[i][j+1] });
+                }
             }
+            return result;
+        } else {
+            // here we create and return writeframe
+            List<Point3D[]> result = new ArrayList<Point3D[]>((nx-1)*ny+nx*(ny-1));
+            if (gridStyle != GridStyle.GRID_V) {
+                for (int i = 0; i < nx-1; i++) {
+                    for (int j = 0; j < ny; j++) {
+                        result.add(new Point3D[]{ arr[i][j], arr[i+1][j] });
+                    }
+                }
+            }
+            if (gridStyle != GridStyle.GRID_U) {
+                for (int i = 0; i < nx; i++) {
+                    for (int j = 0; j < ny-1; j++) {
+                        result.add(new Point3D[]{ arr[i][j], arr[i][j+1] });
+                    }
+                }
+            }
+            return result;
         }
-        return result;
+    }
+
+    //
+    // GRID STYLE
+    //
+
+    public enum GridStyle {
+        REGULAR,
+        NO_GRID,
+        WIREFRAME,
+        GRID_U,
+        GRID_V;
     }
 
     //

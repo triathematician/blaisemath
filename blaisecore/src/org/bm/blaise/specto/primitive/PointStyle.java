@@ -35,7 +35,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     public static final PointStyle REGULAR = new PointStyle();
 
     /** Point that shows up as a small gray dot. */
-    public static final PointStyle SMALL = new PointStyle(PointShape.SOLID_DOT, null, null, Color.DARK_GRAY, 2);
+    public static final PointStyle SMALL = new PointStyle(PointShape.CIRCLE, null, null, Color.DARK_GRAY, 2);
 
     //
     //
@@ -44,7 +44,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     //
 
     /** Determines shape used to indicate the point. */
-    PointShape shape = PointShape.OUTLINE_DOT;
+    PointShape shape = PointShape.CIRCLE;
 
     /** Stroke outline */
     Stroke stroke = DEFAULT_STROKE;
@@ -141,11 +141,11 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     public void draw(Point2D point, Graphics2D canvas) {
         double rad = point instanceof GraphicPoint ? ((GraphicPoint) point).radius : radius;
         Shape s = shape.getShape(point.getX(), point.getY(), Math.abs(rad));
-        if (shape.filled) {
+        if (fillColor != null) {
             canvas.setColor( rad < 0 ? fillColor.darker() : fillColor );
             canvas.fill(s);
         }
-        if (shape.stroked) {
+        if (stroke != null && strokeColor != null) {
             canvas.setStroke(stroke);
             canvas.setColor( rad < 0 ? strokeColor.darker() : strokeColor );
             canvas.draw(s);
@@ -168,37 +168,38 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     /** This <code>enum</code> provides for various formatted point styles. */
     public static enum PointShape {
         /** Dot with fill and outline */
-        OUTLINE_DOT(true, true) {
+        CIRCLE {
             public Shape getShape(double x, double y, double radius) {
                 return new Ellipse2D.Double(x - radius, y - radius, 2*radius, 2*radius);
             }
         },
-        SOLID_DOT(false, true) {
+        SQUARE {
             public Shape getShape(double x, double y, double radius) {
-                return new Ellipse2D.Double(x - radius, y - radius, 2*radius, 2*radius);
+                return new Rectangle2D.Double(x - radius/Math.sqrt(2), y - radius/Math.sqrt(2), 2*radius/Math.sqrt(2), 2*radius/Math.sqrt(2));
             }
         },
-        OPEN_DOT(true, false) {
+        DIAMOND {
             public Shape getShape(double x, double y, double radius) {
-                return new Ellipse2D.Double(x - radius, y - radius, 2*radius, 2*radius);
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)x, (float)(y-radius));
+                gp.lineTo((float)(x-radius), (float)y);
+                gp.lineTo((float)x, (float)(y+radius));
+                gp.lineTo((float)(x+radius), (float)y);
+                gp.closePath();
+                return gp;
             }
         },
-        OUTLINE_SQUARE(true, true) {
+        TRIANGLE {
             public Shape getShape(double x, double y, double radius) {
-                return new Rectangle2D.Double(x - radius, y - radius, 2*radius, 2*radius);
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)x, (float) (y-radius));
+                gp.lineTo((float)(x+radius*Math.cos(Math.PI*1.16667)), (float)(y-radius*Math.sin(Math.PI*1.16667)));
+                gp.lineTo((float)(x+radius*Math.cos(Math.PI*1.83333)), (float)(y-radius*Math.sin(Math.PI*1.83333)));
+                gp.closePath();
+                return gp;
             }
         },
-        SOLID_SQUARE(false, true) {
-            public Shape getShape(double x, double y, double radius) {
-                return new Rectangle2D.Double(x - radius, y - radius, 2*radius, 2*radius);
-            }
-        },
-        OPEN_SQUARE (true, false) {
-            public Shape getShape(double x, double y, double radius) {
-                return new Rectangle2D.Double(x - radius, y - radius, 2*radius, 2*radius);
-            }
-        },
-        PLUS(true, false) {
+        PLUS {
             public Shape getShape(double x, double y, double radius) {
                 GeneralPath gp = new GeneralPath();
                 gp.moveTo((float) x, (float) (y-radius));
@@ -208,7 +209,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
                 return gp;
             }
         },
-        CROSS(true, false) {
+        CROSS {
             public Shape getShape(double x, double y, double radius) {
                 GeneralPath gp = new GeneralPath();
                 double r2 = 0.7 * radius;
@@ -219,7 +220,49 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
                 return gp;
             }
         },
-        HAPPY_FACE(true, true) {
+        STAR {
+            public Shape getShape(double x, double y, double radius) {
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)x, (float) (y-radius));
+                for (int i = 0; i < 5; i++) {
+                    double angle = Math.PI/2 + 2*Math.PI*i/5;
+                    gp.lineTo((float)(x+radius*Math.cos(angle)), (float)(y-radius*Math.sin(angle)));
+                    angle += Math.PI/5;
+                    gp.lineTo((float)(x+radius/Math.sqrt(8)*Math.cos(angle)), (float)(y-radius/Math.sqrt(8)*Math.sin(angle)));
+                }
+                gp.closePath();
+                return gp;
+            }
+        },
+        STAR_7 {
+            public Shape getShape(double x, double y, double radius) {
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)x, (float) (y-radius));
+                for (int i = 0; i < 7; i++) {
+                    double angle = Math.PI/2 + 2*Math.PI*i/7;
+                    gp.lineTo((float)(x+radius*Math.cos(angle)), (float)(y-radius*Math.sin(angle)));
+                    angle += Math.PI/7;
+                    gp.lineTo((float)(x+radius/2*Math.cos(angle)), (float)(y-radius/2*Math.sin(angle)));
+                }
+                gp.closePath();
+                return gp;
+            }
+        },
+        STAR_11 {
+            public Shape getShape(double x, double y, double radius) {
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)x, (float) (y-radius));
+                for (int i = 0; i < 11; i++) {
+                    double angle = Math.PI/2 + 2*Math.PI*i/11;
+                    gp.lineTo((float)(x+radius*Math.cos(angle)), (float)(y-radius*Math.sin(angle)));
+                    angle += Math.PI/11;
+                    gp.lineTo((float)(x+radius/1.5*Math.cos(angle)), (float)(y-radius/1.5*Math.sin(angle)));
+                }
+                gp.closePath();
+                return gp;
+            }
+        },
+        HAPPY_FACE {
             public Shape getShape(double x, double y, double radius) {
                 GeneralPath gp = new GeneralPath();
                 gp.append(new Ellipse2D.Double(x - radius, y - radius, 2*radius, 2*radius), false);
@@ -228,20 +271,30 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
                 gp.append(new Arc2D.Double(x - radius/2, y - radius/2, radius, radius, 200, 140, Arc2D.CHORD), false);
                 return gp;
             }
-        };
-        
-        boolean stroked;
-        boolean filled;
+        },
+        CAR {
+            public Shape getShape(double x, double y, double r) {
+                GeneralPath gp = new GeneralPath();
+                gp.moveTo((float)(x+r), (float)y);
+                gp.lineTo((float)(x+.67*r), (float)y);
+                gp.append(new Arc2D.Double(x-.33*r, y-.5*r, r, r, 0, 180, Arc2D.OPEN), true); // top
+                gp.append(new Arc2D.Double(x-.83*r, y, r, .67*r, 90, 90, Arc2D.OPEN), true); // hood
+                gp.append(new Arc2D.Double(x-r, y+.33*r, .33*r, .33*r, 90, 90, Arc2D.OPEN), true); // bumper
+                gp.lineTo((float)(x-.7*r), (float)(y+.5*r));
+                gp.append(new Arc2D.Double(x-.7*r, y+.3*r, .4*r, .4*r, 180, -180, Arc2D.OPEN), true); // wheel well
+                gp.lineTo((float)(x+.3*r), (float)(y+.5*r));
+                gp.append(new Arc2D.Double(x+.3*r, y+.3*r, .4*r, .4*r, 180, -180, Arc2D.OPEN), true); // wheel well
+                gp.lineTo((float)(x+r), (float)(y+.5*r));
+                gp.closePath();
 
-        /** Constructs the shape, with settings that determine whether or not the object
-         * has an outline and fill
-         * @param stroked true if outline should be drawn, else false
-         * @param filled true if point outline should be filled, else false
-         */
-        PointShape(boolean stroked, boolean filled) {
-            this.stroked = stroked;
-            this.filled = filled;
-        }
+                gp.append(new Arc2D.Double(x-.2*r, y-.4*r, .7*r, .6*r, 90, 90, Arc2D.PIE), false); // windows
+                gp.append(new Arc2D.Double(x-.05*r, y-.4*r, .6*r, .6*r, 0, 90, Arc2D.PIE), false); // windows
+                
+                gp.append(new Ellipse2D.Double(x-.67*r, y+.33*r, .33*r, .33*r), false); // wheels
+                gp.append(new Ellipse2D.Double(x+.33*r, y+.33*r, .33*r, .33*r), false);
+                return gp;
+            }
+        };
 
         /** Returns shape at given window location and pixel radius. */
         abstract public Shape getShape(double x, double y, double radius);

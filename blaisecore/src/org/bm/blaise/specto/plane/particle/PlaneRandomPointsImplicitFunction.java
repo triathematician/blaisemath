@@ -40,7 +40,7 @@ public class PlaneRandomPointsImplicitFunction extends AbstractPlottable<Point2D
     int nRoots = 100;
     /** Style of point to display. */
     PointStyle style = new PointStyle(
-            PointStyle.PointShape.SOLID_DOT,
+            PointStyle.PointShape.CIRCLE,
             PointStyle.DEFAULT_STROKE, Color.BLACK,
             Color.GRAY,
             3);

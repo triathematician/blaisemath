@@ -40,7 +40,7 @@ public class VPoint<C> extends VInvisiblePoint<C> {
      * @param value coordinates of the point
      */
     public VPoint(C value) {
-        this.value = value;
+        super(value);
     }
 
     public PointStyle getStyle() {
@@ -65,6 +65,11 @@ public class VPoint<C> extends VInvisiblePoint<C> {
 
     public void setLabelVisible(boolean labelVisible) {
         this.labelVisible = labelVisible;
+    }
+
+    @Override
+    public String toString() {
+        return "VPoint ["+value.toString()+"]";
     }
 
    

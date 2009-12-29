@@ -111,11 +111,6 @@ public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
     //
     //
 
-
-    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        needsComputation = true;
-    }
-
     @Override
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         ode.setStartPoint(value);

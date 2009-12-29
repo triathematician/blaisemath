@@ -116,10 +116,6 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     //
     //
 
-    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        // MAY EVENTUALLY REQUIRE RECOMPUTATION, BUT NOT RIGHT NOW
-    }
-
     /** Recomputes the visual path for the function. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         System.out.println("recomputing curve...");

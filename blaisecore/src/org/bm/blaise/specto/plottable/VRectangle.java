@@ -6,6 +6,9 @@
 package org.bm.blaise.specto.plottable;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import org.bm.blaise.specto.primitive.ShapeStyle;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -91,8 +94,9 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
+        visrec = vg.getRectangle(value1, value2);
         vg.setShapeStyle(style);
-        vg.drawRectangle(value1, value2);
+        vg.drawWinShape(visrec);
     }
 
     //
@@ -101,28 +105,147 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
     //
     //
 
-    boolean val1Adjusting = true;
+    transient Rectangle2D visrec = null;
+    transient Rectangle2D startrec = null;
+    transient DragMode dragMode = DragMode.NONE;
+    transient Point pressedAt = null;
+    final static int LOCK = 4;
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
-        if (e.withinRangeOf(value1, 10)) {
-            val1Adjusting = true;
-            return true;
+        if (visrec == null) {
+            return false;
         }
-        if (e.withinRangeOf(value2, 10)) {
-            val1Adjusting = false;
-            return true;
+        Point pt = e.getWindowPoint();
+        // determine region in which mouse was clicked
+        return (pt.x >= visrec.getMinX() - LOCK) && (pt.x <= visrec.getMaxX() + LOCK)
+                && (pt.y >= visrec.getMinY() - LOCK) && (pt.y <= visrec.getMaxY() + LOCK);
+    }
+
+    @Override
+    public void mousePressed(VisometryMouseEvent<C> e) {
+        if (visrec == null) {
+            return;
         }
-        return false;
+        Point pt = e.getWindowPoint();
+        // determine region in which mouse was clicked
+        int xZone =
+            pt.x < visrec.getMinX() - LOCK ? 0 :
+                pt.x < visrec.getMinX() + LOCK ? 1 :
+                    pt.x < visrec.getMaxX() - LOCK ? 2 :
+                        pt.x < visrec.getMaxX() + LOCK ? 3 : 4;
+        int yZone =
+            pt.y < visrec.getMinY() - LOCK ? 0 :
+                pt.y < visrec.getMinY() + LOCK ? 1 :
+                    pt.y < visrec.getMaxY() - LOCK ? 2 :
+                        pt.y < visrec.getMaxY() + LOCK ? 3 : 4;
+        dragMode = DragMode.getState(xZone, yZone);
+        adjusting = (dragMode != DragMode.NONE);
+        if (adjusting) {
+            pressedAt = pt;
+            startrec = (Rectangle2D) visrec.clone();
+        }
     }
 
     @Override
     public void mouseDragged(VisometryMouseEvent<C> e) {
         if (adjusting) {
-            if (val1Adjusting) {
-                setPoint1(e.getCoordinate());
-            } else {
-                setPoint2(e.getCoordinate());
+            Rectangle2D newRec = dragMode.getRec(startrec, pressedAt, e.getWindowPoint());
+            Point2D.Double newMin = new Point2D.Double(newRec.getMinX(), newRec.getMaxY());
+            Point2D.Double newMax = new Point2D.Double(newRec.getMaxX(), newRec.getMinY());
+            setPoint1(e.getCoordinateOf(newMin));
+            setPoint2(e.getCoordinateOf(newMax));
+        }
+    }
+
+    @Override
+    public void mouseReleased(VisometryMouseEvent<C> e) {
+        super.mouseReleased(e);
+        pressedAt = null;
+    }
+
+
+
+    static enum DragMode {
+        NW() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, end.y - start.y);
+                return new Rectangle2D.Double( 
+                        initial.getMinX() + diff.x, initial.getMinY() + diff.y,
+                        initial.getWidth() - diff.x, initial.getHeight() - diff.y );
             }
+        }, N() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(0, end.y - start.y);
+                return new Rectangle2D.Double( 
+                        initial.getMinX(), initial.getMinY() + diff.y,
+                        initial.getWidth(), initial.getHeight() - diff.y );
+            }
+        }, NE() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, end.y - start.y);
+                return new Rectangle2D.Double(
+                        initial.getMinX(), initial.getMinY() + diff.y,
+                        initial.getWidth() + diff.x, initial.getHeight() - diff.y );
+            }
+        }, E() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, 0);
+                return new Rectangle2D.Double( 
+                        initial.getMinX(), initial.getMinY(),
+                        initial.getWidth() + diff.x, initial.getHeight() );
+            }
+        }, SE() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, end.y - start.y);
+                return new Rectangle2D.Double(
+                        initial.getMinX(), initial.getMinY(),
+                        initial.getWidth() + diff.x, initial.getHeight() + diff.y );
+            }
+        }, S() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(0, end.y - start.y);
+                return new Rectangle2D.Double(
+                        initial.getMinX(), initial.getMinY(),
+                        initial.getWidth(), initial.getHeight() + diff.y );
+            }
+        }, SW() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, end.y - start.y);
+                return new Rectangle2D.Double( 
+                        initial.getMinX() + diff.x, initial.getMinY(),
+                        initial.getWidth() - diff.x, initial.getHeight() + diff.y );
+            }
+        }, W() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, 0);
+                return new Rectangle2D.Double( 
+                        initial.getMinX() + diff.x, initial.getMinY(),
+                        initial.getWidth() - diff.x, initial.getHeight() );
+            }
+        }, CENTRAL() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                Point diff = new Point(end.x - start.x, end.y - start.y);
+                return new Rectangle2D.Double(
+                        initial.getMinX() + diff.x, initial.getMinY() + diff.y,
+                        initial.getWidth(), initial.getHeight());
+            }
+        }, NONE() {
+            Rectangle2D getRec(Rectangle2D initial, Point start, Point end){
+                return (Rectangle2D) initial.clone();
+            }
+        };
+
+        abstract Rectangle2D getRec(Rectangle2D initial, Point start, Point end);
+
+        static DragMode getState(int i, int j) {
+            if (i == 1) {
+                return (j==1) ? NW : (j==2) ? W : SW;
+            } else if (i == 2) {
+                return (j==1) ? N : (j==2) ? CENTRAL : S;
+            } else if (i == 3) {
+                return (j==1) ? NE : (j==2) ? E : SE;
+            }
+            return NONE;
         }
     }
 }

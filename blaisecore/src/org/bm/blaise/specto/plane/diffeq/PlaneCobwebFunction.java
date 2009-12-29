@@ -69,10 +69,6 @@ public class PlaneCobwebFunction extends VComputedPointPath<Point2D.Double> {
     //
     //
 
-    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        needsComputation = true;
-    }
-
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
         if (path == null) {
             path = new GeneralPath();

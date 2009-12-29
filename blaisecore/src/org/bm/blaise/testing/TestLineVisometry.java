@@ -14,7 +14,7 @@ import data.propertysheet.PropertySheet;
 import java.awt.BasicStroke;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
-import org.bm.blaise.specto.line.LineAxes;
+import org.bm.blaise.specto.line.LineAxis;
 import org.bm.blaise.specto.line.LineFunction;
 import org.bm.blaise.specto.primitive.ArrowStyle;
 import org.bm.blaise.specto.primitive.TwoPointStyle;
@@ -34,21 +34,24 @@ public class TestLineVisometry extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-        linePlot.addPlottable(new LineAxes());
+        linePlot.addPlottable(new LineAxis());
         linePlot.addPlottable(new LineFunction(new UnivariateRealFunction() {
+
             public double value(double x) throws FunctionEvaluationException {
                 return Math.cos(x);
             }
         }));
 
-        linePlot2.addPlottable(new LineAxes());
+        linePlot2.addPlottable(new LineAxis());
         linePlot2.addPlottable(new VPoint<Double>(-1.0));
-        linePlot2.addPlottable(new VPointSet<Double>(new Double[]{-3.0, -2.8, -2.6, -2.4}));
-        
-        linePlot3.addPlottable(new LineAxes());
+        VPointSet<Double> vch = new VPointSet<Double>(new Double[]{-3.0, -2.8, -2.6, -2.4});
+        linePlot2.addPlottable(vch);
+        linePlot2.setDefaultCoordinateHandler(vch);
+
+        linePlot3.addPlottable(new LineAxis());
         linePlot3.addPlottable(new VRectangle<Double>(-0.7, -0.5));
         linePlot3.addPlottable(new VPath<Double>(new Double[]{3.0, 3.2, 3.4}));
-        VLine<Double> vld = new VLine<Double>(1.1,1.3);
+        VLine<Double> vld = new VLine<Double>(1.1, 1.3);
         vld.getStyle().setStroke(new BasicStroke(2.0f));
         vld.getStyle().setEndStyle(TwoPointStyle.EndStyle.SEGMENT);
         vld.getStyle().setHeadShape(ArrowStyle.ArrowShape.REGULAR);
@@ -166,7 +169,6 @@ public class TestLineVisometry extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;

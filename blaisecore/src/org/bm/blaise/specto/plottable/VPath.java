@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.plottable;
 
+import java.util.Arrays;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -13,7 +14,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 /**
  * <p>
  *   <code>VPoint</code> is a static set of points in the visometry.
- *   This is the "non-dynamic" version of <code>VPointSet</code>, with potentially\
+ *   This is the "non-dynamic" version of <code>VPointSet</code>, allowing a potentially
  *   a huge number of points stored for display.
  * </p>
  *
@@ -97,6 +98,11 @@ public class VPath<C> extends AbstractPlottable<C> {
 
     public void setClosedPath(boolean closedPath) {
         this.closedPath = closedPath;
+    }
+
+    @Override
+    public String toString() {
+        return "VPath [" + values.length + " points]";
     }
 
     

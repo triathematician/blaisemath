@@ -68,6 +68,11 @@ public class ArrowStyle implements PrimitiveStyle<GraphicArrow>, Cloneable {
         this.headSize = headSize;
     }
 
+    public ArrowStyle(ArrowShape headShape, ArrowShape anchorShape) {
+        this.headShape = headShape;
+        this.anchorShape = anchorShape;
+    }
+
     public ArrowStyle(PathStyle pathStyle, ArrowShape headShape, ArrowShape anchorShape, int headSize) {
         this.pathStyle = pathStyle;
         this.headShape = headShape;
@@ -103,6 +108,14 @@ public class ArrowStyle implements PrimitiveStyle<GraphicArrow>, Cloneable {
 
     public void setStroke(Stroke stroke) {
         pathStyle.setStroke(stroke);
+    }
+
+    public void setThickness(float width) {
+        pathStyle.setThickness(width);
+    }
+
+    public float getThickness() {
+        return pathStyle.getThickness();
     }
 
     public ArrowShape getAnchorShape() {

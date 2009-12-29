@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.bm.blaise.specto.primitive.*;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -29,35 +29,35 @@ import scio.coordinate.P3D;
  */
 public class SpaceRendered {
 
-    TreeMap<P3D[], PrimitiveStyle> objects;
+    TreeMap<Point3D[], PrimitiveStyle> objects;
     SpaceProjection proj;
 
     public SpaceRendered(SpaceProjection proj) {
         this.proj = proj;
-        objects = new TreeMap<P3D[], PrimitiveStyle>(proj.getPolyComparator());
+        objects = new TreeMap<Point3D[], PrimitiveStyle>(proj.getPolygonZOrderComparator());
     }
 
     public void clear() {
         objects.clear();
     }
 
-    public void addObject(P3D[] arr) {
+    public void addObject(Point3D[] arr) {
         objects.put(arr, null);
     }
 
-    public void addObjects(Collection<P3D[]> arr) {
-        for (P3D[] a : arr) {
+    public void addObjects(Collection<Point3D[]> arr) {
+        for (Point3D[] a : arr) {
             objects.put(a, null);
         }
     }
     
-    public void addObjects(P3D[][] arr) {
+    public void addObjects(Point3D[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             objects.put(arr[i], null);
         }
     }
 
-    public void addObjects(P3D[][] arr, PrimitiveStyle style) {
+    public void addObjects(Point3D[][] arr, PrimitiveStyle style) {
         for (int i = 0; i < arr.length; i++) {
             if(arr[i].length < 2) {
                 System.out.println("adding + " + Arrays.toString(arr[i]));
@@ -67,12 +67,12 @@ public class SpaceRendered {
     }
 
     public void draw(SpaceGraphics sg) {
-        sg.getShapeStyle().setFillOpacity(0.2f);
+//        sg.getShapeStyle().setFillOpacity(0.6f);
         sg.getShapeStyle().setStroke(new BasicStroke(0.5f));
         //sg.getShapeStyle().setStroke(null);
         sg.getPathStyle().setStroke(new BasicStroke(2.0f));
         sg.getPathStyle().setColor(BlaisePalette.STANDARD.function());
-        for (Entry<P3D[],PrimitiveStyle> entry : objects.entrySet()) {
+        for (Entry<Point3D[],PrimitiveStyle> entry : objects.entrySet()) {
             if (proj.getAverageDist(entry.getKey()) < proj.clipDist) {
                 continue;
             }

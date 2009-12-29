@@ -10,7 +10,7 @@ import javax.swing.event.EventListenerList;
 
 /**
  * <p>
- *   <code>BClock</code> ...
+ *   <code>BClock</code> is an implementation of the <code>ClockTimer</code> interface.
  * </p>
  *
  * @author Elisha Peterson
@@ -113,7 +113,6 @@ public class BClock implements ClockTimer, ActionListener {
      * @param newStatus new status of the timer.
      */
     public void setStatus(TimerStatus newStatus) {
-        System.out.println("argument = "+newStatus);
         if (status != newStatus) {
             status = newStatus;
             switch (status) {
@@ -213,6 +212,11 @@ public class BClock implements ClockTimer, ActionListener {
             }
         }
     }
+
+    //
+    // STANDARD ActionEvent CODE
+    //
+
     protected ActionEvent actionEvent = null;
     protected EventListenerList listenerList = new EventListenerList();
 

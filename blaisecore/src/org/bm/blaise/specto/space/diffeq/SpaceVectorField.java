@@ -16,7 +16,7 @@ import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.space.SpaceGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import scio.function.utils.SampleField3D;
 
@@ -28,7 +28,7 @@ import scio.function.utils.SampleField3D;
  *
  * @author Elisha Peterson
  */
-public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
+public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3D[]> {
 
     // SAMPLES
 
@@ -56,7 +56,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<P3D> ssg) {
+    public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point3D> ssg) {
         super(DEFAULT_STYLE, ssg);
         setFunc(func);
     }
@@ -110,7 +110,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
      * @param exponent the exponent to scale the radius by (1 is linear, 0.5 makes fewer small circles, 2 makes fewer large circles)
      * @param centered <code>true</code> if the vectors should scale about their centers
      */
-    public static void scaleVectors(P3D[][] vectors, double maxLength, double exponent, boolean centered) {
+    public static void scaleVectors(Point3D[][] vectors, double maxLength, double exponent, boolean centered) {
         double mr = 0;
         double l = 0;
         for (int i = 0; i < vectors.length; i++) {
@@ -124,11 +124,11 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
             double length = vectors[i][0].distance(vectors[i][1]) / mr;
             length = maxLength * Math.pow(length, exponent);
             if (centered) {
-                P3D dNorm = vectors[i][1].minus(vectors[i][0]).normalized();
-                P3D half = vectors[i][0].plus(vectors[i][1]).times(.5);
-                vectors[i] = new P3D[]{ half.minus(dNorm.times(length/2)), half.plus(dNorm.times(length/2)) };
+                Point3D dNorm = vectors[i][1].minus(vectors[i][0]).normalized();
+                Point3D half = vectors[i][0].plus(vectors[i][1]).times(.5);
+                vectors[i] = new Point3D[]{ half.minus(dNorm.times(length/2)), half.plus(dNorm.times(length/2)) };
             } else {
-                P3D dNorm = vectors[i][1].minus(vectors[i][0]).normalized();
+                Point3D dNorm = vectors[i][1].minus(vectors[i][0]).normalized();
                 vectors[i][1] = vectors[i][0].plus(dNorm.times(length));
             }
         }
@@ -140,13 +140,13 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<P3D> vg) {
+    public void paintComponent(VisometryGraphics<Point3D> vg) {
         if (primitives != null) {
             ((SpaceGraphics) vg).addToScene(primitives, style);
         }
     }
 
-    public P3D[] primitiveAt(P3D coord, Visometry<P3D> vis, VisometryGraphics<P3D> vg) {
+    public Point3D[] primitiveAt(Point3D coord, Visometry<Point3D> vis, VisometryGraphics<Point3D> vg) {
         double[] value = new double[]{0, 0, 0};
         try {
             value = func.value(new double[]{coord.x, coord.y, coord.z});
@@ -156,20 +156,20 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<P3D, P3D[]> {
             Logger.getLogger(SpaceVectorField.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (centered) {
-            return new P3D[] {
-                new P3D(coord.x - value[0]/2.0, coord.y - value[1]/2.0, coord.z - value[2]/2.0),
-                new P3D(coord.x + value[0]/2.0, coord.y + value[1]/2.0, coord.z + value[2]/2.0) };
+            return new Point3D[] {
+                new Point3D(coord.x - value[0]/2.0, coord.y - value[1]/2.0, coord.z - value[2]/2.0),
+                new Point3D(coord.x + value[0]/2.0, coord.y + value[1]/2.0, coord.z + value[2]/2.0) };
         } else {
-            return new P3D[] {
+            return new Point3D[] {
                 coord,
-                new P3D(coord.x + value[0], coord.y + value[1], coord.z + value[2]) };
+                new Point3D(coord.x + value[0], coord.y + value[1], coord.z + value[2]) };
         }
     }
 
-    public P3D[][] primitivesAt(List<P3D> coords, Visometry<P3D> vis, VisometryGraphics<P3D> vg) {
-        P3D[][] result = new P3D[coords.size()][2];
+    public Point3D[][] primitivesAt(List<Point3D> coords, Visometry<Point3D> vis, VisometryGraphics<Point3D> vg) {
+        Point3D[][] result = new Point3D[coords.size()][2];
         int i = 0;
-        for (P3D c : coords) {
+        for (Point3D c : coords) {
             result[i] = primitiveAt(c, vis, vg);
             i++;
         }

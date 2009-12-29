@@ -244,11 +244,20 @@ public class VisometryGraphics<C> {
     //
 
     /**
+     * Draws a coordinate with a given style class.
+     * @param coordinate the coordinate
+     * @param style the style used to draw
+     */
+    public void drawWithStyle(C coordinate, PrimitiveStyle<Point2D> style) {
+        style.draw(vis.getWindowPointOf(coordinate), gr);
+    }
+
+    /**
      * Draws a point at specified coordinate, using default <code>pointStyle</code>
      * @param coordinate point in local coordinates
      */
     public void drawPoint(C coordinate) {
-        pointStyle.draw(vis.getWindowPointOf(coordinate), gr);
+        drawWithStyle(coordinate, pointStyle);
     }
 
     /**
@@ -369,11 +378,20 @@ public class VisometryGraphics<C> {
      * @param corner2 second corner of the rectangle, in local coordinates
      */
     public void drawRectangle(C corner1, C corner2) {
+        shapeStyle.draw(getRectangle(corner1, corner2), gr);
+    }
+
+    /**
+     * Returns a rectangle between specified corners
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     */
+    public Rectangle2D.Double getRectangle(C corner1, C corner2) {
         Point2D wp1 = vis.getWindowPointOf(corner1);
         Point2D wp2 = vis.getWindowPointOf(corner2);
-        shapeStyle.draw(new Rectangle2D.Double(
+        return new Rectangle2D.Double(
                 Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
-                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY())), gr);
+                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY()));
     }
 
     /**

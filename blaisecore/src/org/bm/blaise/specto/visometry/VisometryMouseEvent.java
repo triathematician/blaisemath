@@ -44,6 +44,13 @@ public class VisometryMouseEvent<C> {
     }
 
     /**
+     * Uses the visometry to convert a coordinate.
+     */
+    public C getCoordinateOf(Point2D point) {
+        return visometry.getCoordinateOf(point);
+    }
+
+    /**
      * Sets the underlying event, and computes the coordinate.
      * @param event the mouse event
      */
@@ -85,6 +92,10 @@ public class VisometryMouseEvent<C> {
 
     public int getModifiersEx() {
         return event.getModifiersEx();
+    }
+
+    public int getClickCount() {
+        return event.getClickCount();
     }
 
     

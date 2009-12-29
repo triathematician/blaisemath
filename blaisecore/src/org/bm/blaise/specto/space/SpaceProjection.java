@@ -8,7 +8,7 @@ package org.bm.blaise.specto.space;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.util.Comparator;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -18,7 +18,7 @@ import scio.coordinate.P3D;
  * 
  * @author Elisha Peterson
  */
-public class SpaceProjection implements Cloneable, Comparator<P3D> {
+public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     //
     //
@@ -27,22 +27,22 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     //
 
     /** Point of interest. */
-    P3D center = new P3D(0, 0, 0);
+    Point3D center = new Point3D(0, 0, 0);
 
     /** Total distance from camera to center of interest. */
     double viewDist = 29.0;
 
     /** Camera angle ("front" of camera). */
-    P3D tDir = new P3D(-3, -3, -1).normalized();
+    Point3D tDir = new Point3D(-3, -3, -1).normalized();
     
     /** Camera normal vector ("top" of camera). */
-    P3D nDir = new P3D(-1, -1, 6).normalized();
+    Point3D nDir = new Point3D(-1, -1, 6).normalized();
 
     /** Camera location. */
-    transient P3D camera = derivedPoint(center, -viewDist, tDir);
+    transient Point3D camera = derivedPoint(center, -viewDist, tDir);
 
     /** Camera binormal ("side" of camera). */
-    transient P3D bDir = tDir.crossProduct(nDir);
+    transient Point3D bDir = tDir.crossProduct(nDir);
 
     //
     //
@@ -54,13 +54,13 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     double screenDist = 30.0;
 
     /** Center of screen */
-    transient P3D screenCenter = derivedPoint(camera, screenDist, tDir);
+    transient Point3D screenCenter = derivedPoint(camera, screenDist, tDir);
 
     /** Distance from camera to clipping plane (in cm) */
     double clipDist = 2;
 
     /** Point representing the clipping plane. */
-    transient P3D clipPoint = derivedPoint(camera, clipDist, tDir);
+    transient Point3D clipPoint = derivedPoint(camera, clipDist, tDir);
 
     //
     //
@@ -94,20 +94,20 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     //
     //
 
-    public P3D getCenter() {
+    public Point3D getCenter() {
         return center;
     }
 
-    public void setCenter(P3D center) {
+    public void setCenter(Point3D center) {
         this.center = center;
         computeTransformation();
     }
 
-    public P3D getCamera() {
+    public Point3D getCamera() {
         return camera;
     }
 
-    public void setCamera(P3D camera) {
+    public void setCamera(Point3D camera) {
         setCenter( camera.plus(tDir.times(viewDist)) );
     }
 
@@ -120,11 +120,11 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
         computeTransformation();
     }
 
-    public P3D getTDir() {
+    public Point3D getTDir() {
         return tDir;
     }
 
-    public void setTDir(P3D tDir) {
+    public void setTDir(Point3D tDir) {
         if (tDir.magnitudeSq() == 1) {
             this.tDir = tDir;
         } else {
@@ -133,11 +133,11 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
         computeTransformation();
     }
 
-    public P3D getNDir() {
+    public Point3D getNDir() {
         return nDir;
     }
 
-    public void setNDir(P3D nDir) {
+    public void setNDir(Point3D nDir) {
         if (nDir.magnitudeSq() == 1) {
             this.nDir = nDir;
         } else {
@@ -147,11 +147,11 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
         computeTransformation();
     }
 
-    public P3D getBDir() {
+    public Point3D getBDir() {
         return bDir;
     }
 
-    public void setBDir(P3D bDir) {
+    public void setBDir(Point3D bDir) {
         setNDir(bDir.crossProduct(tDir));
     }
 
@@ -217,8 +217,8 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      *
      * @return new point at start + dist * dir
      */
-    static P3D derivedPoint(P3D start, double dist, P3D dir) {
-        return new P3D(
+    static Point3D derivedPoint(Point3D start, double dist, Point3D dir) {
+        return new Point3D(
                 start.x + dist * dir.x,
                 start.y + dist * dir.y,
                 start.z + dist * dir.z );
@@ -288,8 +288,8 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     }
 
     /** Converts a spacial coordinate to a window coordinate. */
-    Point2D getWindowPointOf(P3D coordinate) {
-        P3D cc = coordinate.minus(camera);
+    Point2D getWindowPointOf(Point3D coordinate) {
+        Point3D cc = coordinate.minus(camera);
         double dc = cc.dotProduct(tDir);
         if (dc < clipDist) {
             // handle clipping... point should not be displayed
@@ -307,8 +307,8 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      * 
      * @param coordinate the coordinate for projection
      */
-    Point2D[] getDoubleWindowPointOf(P3D coordinate) {
-        P3D cc = coordinate.minus(camera);
+    Point2D[] getDoubleWindowPointOf(Point3D coordinate) {
+        Point3D cc = coordinate.minus(camera);
         double dc = cc.dotProduct(tDir);
         if (dc < clipDist) {
             // handle clipping... point should not be displayed
@@ -331,11 +331,11 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      * @param p a point in window pixel coordinates
      * @return point on the viewing plane
      */
-    P3D getCoordinateOf(Point2D p) {
+    Point3D getCoordinateOf(Point2D p) {
         vp = new Point2D.Double(
                 (p.getX() - winBounds.getWidth()/2) / dpi,
                 (-p.getY() + winBounds.getHeight()/2) / dpi);
-        return new P3D(
+        return new Point3D(
                 screenCenter.x + vp.x * bDir.x + vp.y * nDir.x,
                 screenCenter.y + vp.x * bDir.y + vp.y * nDir.y,
                 screenCenter.z + vp.x * bDir.z + vp.y * nDir.z
@@ -348,10 +348,10 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      * @param x x-coordinate of vector
      * @param y y-coordinate of vector
      */
-    P3D getVectorOf(double x, double y) {
+    Point3D getVectorOf(double x, double y) {
         double dx = x / dpi;
         double dy = -y / dpi;
-        return new P3D(
+        return new Point3D(
                 dx * bDir.x + dy * nDir.x,
                 dx * bDir.y + dy * nDir.y,
                 dx * bDir.z + dy * nDir.z
@@ -375,14 +375,14 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
     /**
      * Returns z value of a point, i.e. tangential distance to camera.
      */
-    public double getDistance(P3D point) {
+    public double getDistance(Point3D point) {
         return point.distanceSq(camera);
     }
 
     /**
      * Returns average distance from camera to a set of points
      */
-    public double getAverageDist(P3D[] points) {
+    public double getAverageDist(Point3D[] points) {
         double sum = 0.0;
         for (int i = 0; i < points.length; i++) {
             sum += getDistance(points[i]);
@@ -398,7 +398,7 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      * 
      * @return a negative integer, zero, or a positive integer as the first argument's z-value is less than, equal to, or greater than the second
      */
-    public int compare(P3D p1, P3D p2) {
+    public int compare(Point3D p1, Point3D p2) {
         if (p1 == p2) {
             return 0; // only return 0 with strict equality of pointers
         }
@@ -428,9 +428,9 @@ public class SpaceProjection implements Cloneable, Comparator<P3D> {
      * 
      * @return a negative integer, zero, or a positive integer as the first argument's z-value is less than, equal to, or greater than the second
      */
-    public Comparator<P3D[]> getPolyComparator() {
-        return new Comparator<P3D[]>() {
-            public int compare(P3D[] o1, P3D[] o2) {
+    public Comparator<Point3D[]> getPolygonZOrderComparator() {
+        return new Comparator<Point3D[]>() {
+            public int compare(Point3D[] o1, Point3D[] o2) {
                 double d1 = getAverageDist(o1);
                 double d2 = getAverageDist(o2);
                 if (d1 == d2) {

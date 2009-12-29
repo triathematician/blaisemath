@@ -8,7 +8,7 @@ package org.bm.utils;
 import java.awt.geom.Rectangle2D;
 import java.util.AbstractList;
 import java.util.List;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
@@ -17,11 +17,11 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
+public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<Point3D> {
 
     /** Boundary of sampled region. */
-    P3D min;
-    P3D max;
+    Point3D min;
+    Point3D max;
     /** Border around the sampling region. */
     double sampleBorder = 0;
     /**
@@ -34,7 +34,7 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
     int ny = 5;
     int nz = 5;
 
-    public SpaceGridSampleSet(P3D min, P3D max) {
+    public SpaceGridSampleSet(Point3D min, Point3D max) {
         this.min = min;
         this.max = max;
     }
@@ -45,19 +45,19 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
     //
     //
 
-    public P3D getMax() {
+    public Point3D getMax() {
         return max;
     }
 
-    public void setMax(P3D max) {
+    public void setMax(Point3D max) {
         this.max = max;
     }
 
-    public P3D getMin() {
+    public Point3D getMin() {
         return min;
     }
 
-    public void setMin(P3D min) {
+    public void setMin(Point3D min) {
         this.min = min;
     }
 
@@ -101,7 +101,7 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
     //
 
     /** Sample step. */
-    transient P3D diff = new P3D();
+    transient Point3D diff = new Point3D();
 
     /** 
      * Computes samples using the current boundaries.
@@ -111,18 +111,18 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
      * @param nZSamples number of samples in the z direction
      * @return an <code>AbstractList</code> containing the grid of sampled points
      */
-    List<P3D> computeSamples(int nXSamples, int nYSamples, int nZSamples) {
+    List<Point3D> computeSamples(int nXSamples, int nYSamples, int nZSamples) {
         nx = nXSamples;
         ny = nYSamples;
         nz = nZSamples;
         diff.x = (max.x - min.x) / (nx - 1);
         diff.y = (max.y - min.y) / (ny - 1);
         diff.z = (max.z - min.z) / (nz - 1);
-        return new AbstractList<P3D>() {
+        return new AbstractList<Point3D>() {
             int n = nx * ny * nz;
             @Override
-            public P3D get(int index) {
-                return new P3D(
+            public Point3D get(int index) {
+                return new Point3D(
                         min.x + diff.x * (index % nx),
                         min.y + diff.y * ( ((int) (index / nx)) % ny),
                         min.z + diff.z * ( ((int) (index / (nx * ny))) ) );
@@ -145,7 +145,7 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
      * @param approxDZ approximate spacing in the z direction
      * @return an <code>AbstractList</code> containing the grid of sampled points
      */
-    public List<P3D> computeNiceSamples(double approxDX, double approxDY, double approxDZ) {
+    public List<Point3D> computeNiceSamples(double approxDX, double approxDY, double approxDZ) {
         final double[] xRange = NiceRangeGenerator.STANDARD.niceRange(min.x, max.x, approxDX);
         final double[] yRange = NiceRangeGenerator.STANDARD.niceRange(min.y, max.y, approxDY);
         final double[] zRange = NiceRangeGenerator.STANDARD.niceRange(min.z, max.z, approxDZ);
@@ -155,11 +155,11 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
         diff.x = xRange[1] - xRange[0];
         diff.y = yRange[1] - yRange[0];
         diff.z = zRange[1] - zRange[0];
-        return new AbstractList<P3D>() {
+        return new AbstractList<Point3D>() {
             int n = nx * ny * nz;
             @Override
-            public P3D get(int index) {
-                return new P3D(xRange[index % nx], yRange[((int) (index / nx)) % ny], zRange[index / (nx * ny)]);
+            public Point3D get(int index) {
+                return new Point3D(xRange[index % nx], yRange[((int) (index / nx)) % ny], zRange[index / (nx * ny)]);
             }
             @Override
             public int size() {
@@ -168,7 +168,7 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
         };
     }
 
-    public List<P3D> getSamples() {
+    public List<Point3D> getSamples() {
         if (sampleNice) {
             return computeNiceSamples((max.x - min.x) / nx, (max.y - min.y) / ny, (max.z - min.z) / nz);
         } else {
@@ -176,7 +176,7 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<P3D> {
         }
     }
 
-    public P3D getSampleDiff() {
+    public Point3D getSampleDiff() {
         return diff;
     }
 }

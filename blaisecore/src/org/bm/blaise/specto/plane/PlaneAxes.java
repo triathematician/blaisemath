@@ -31,7 +31,7 @@ import org.bm.utils.NiceRangeGenerator;
  * 
  * @author Elisha Peterson
  */
-public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implements VisometryChangeListener {
+public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implements Cloneable, VisometryChangeListener {
 
     private static final int PIXEL_SPACING = 40;
 
@@ -191,6 +191,11 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     }
 
     @Override
+    public PlaneAxes clone() {
+        return instance(axisStyle, xLabel, yLabel);
+    }
+
+    @Override
     public String toString() {
         return "Axes ["+xLabel + "," + yLabel + "]";
     }
@@ -296,15 +301,17 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
                 if (ticksVisible) {
                     ArrayList<String> xLab = new ArrayList<String>();
+                    if (xValues == null) return;
                     for (int i = 0; i < xValues.length; i++) {
                         xLab.add(nf.format(xValues[i]));
                     }
+                    if (yValues == null) return;
                     ArrayList<String> yLab = new ArrayList<String>();
                     for (int i = 0; i < yValues.length; i++) {
                         yLab.add(nf.format(yValues[i]));
                     }
-                    pg.drawLabeledHorizontalLines(min.x, xValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledHorizontalLines(max.x, xValues, TICK_HEIGHT, yLab, YOFFSET);
+                    pg.drawLabeledHorizontalLines(min.x, yValues, TICK_HEIGHT, yLab, YOFFSET);
+                    pg.drawLabeledHorizontalLines(max.x, yValues, TICK_HEIGHT, yLab, YOFFSET);
                     pg.drawLabeledVerticalLines(xValues, min.y, TICK_HEIGHT, xLab, XOFFSET);
                     pg.drawLabeledVerticalLines(xValues, max.y, TICK_HEIGHT, xLab, XOFFSET);
                 }

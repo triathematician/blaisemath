@@ -36,7 +36,7 @@ public class VLabel<C> extends VInvisiblePoint<C> {
 
     /** Cosntructs label at specified basepoint with specified text. */
     public VLabel(C value, String string) {
-        this.value = value;
+        super(value);
         this.text = string;
     }
 
@@ -62,6 +62,11 @@ public class VLabel<C> extends VInvisiblePoint<C> {
 
     public void setOffset(Point offset) {
         this.offset = offset;
+    }
+
+    @Override
+    public String toString() {
+        return "VLabel \""+getText()+"\" ["+value.toString()+"]";
     }
 
     

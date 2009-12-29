@@ -16,7 +16,7 @@ import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VRectangle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
 
@@ -24,7 +24,7 @@ import scio.coordinate.sample.RealIntervalSampler;
  *
  * @author ae3263
  */
-public class SpaceParametricCurve extends AbstractPlottable<P3D> {
+public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
 
     /** Function */
     UnivariateVectorialFunction func;
@@ -115,10 +115,10 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
     //
 
     transient boolean needsComputation = true;
-    transient List<P3D[]> segments;
+    transient List<Point3D[]> segments;
 
     @Override
-    public void paintComponent(VisometryGraphics<P3D> vg) {
+    public void paintComponent(VisometryGraphics<Point3D> vg) {
         if (needsComputation) {
             segments = getSegments();
             needsComputation = false;
@@ -126,16 +126,16 @@ public class SpaceParametricCurve extends AbstractPlottable<P3D> {
         ((SpaceGraphics) vg).addToScene(segments);
     }
 
-    List<P3D[]> getSegments() {
-        List<P3D[]> result = new ArrayList<P3D[]>();
+    List<Point3D[]> getSegments() {
+        List<Point3D[]> result = new ArrayList<Point3D[]>();
         List<Double> samples = domain.getSamples();
         try {
-            P3D last;
-            P3D next = new P3D(func.value(samples.get(0)));
+            Point3D last;
+            Point3D next = new Point3D(func.value(samples.get(0)));
             for (double x : samples) {
                 last = next;
-                next = new P3D(func.value(x));
-                result.add(new P3D[]{last, next});
+                next = new Point3D(func.value(x));
+                result.add(new Point3D[]{last, next});
             }
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(SpaceParametricCurve.class.getName()).log(Level.SEVERE, null, ex);

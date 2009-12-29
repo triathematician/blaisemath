@@ -66,7 +66,7 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     //
     //
 
-    /** Stored plottables. */
+    /** Stores the group of plottables. */
     protected PlottableGroup<C> plottables;
     
     /** Underlying visometry. */
@@ -85,7 +85,10 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     //
 
     /** Default handler for mouse events. */
-    protected VisometryMouseInputListener defaultMouseListener;
+    protected VisometryMouseInputListener<C> defaultMouseListener;
+
+    /** Default handler for double-click events. */
+    protected CoordinateHandler<C> defaultDoubleClickHandler;
 
     /** Default handler for mouse wheel events. */
     protected MouseWheelListener defaultMouseWheelListener;
@@ -190,6 +193,10 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
             }
             repaint();
         }
+    }
+
+    public void setDefaultCoordinateHandler(CoordinateHandler<C> ch) {
+        this.defaultDoubleClickHandler = ch;
     }
     
     //
@@ -321,10 +328,10 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     //
 
     /** Local variable storing mouse events. */
-    private transient VisometryMouseEvent vme;
+    private transient VisometryMouseEvent<C> vme;
 
     /** The class handling the mouse event... called upon a press event. */
-    private transient VisometryMouseInputListener vmil = null;
+    private transient VisometryMouseInputListener<C> vmil = null;
 
     /** Convenience method for lazy initialization of vme. */
     private void setVME(MouseEvent e) {
@@ -363,11 +370,14 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
         if(vmil != null) {
             vmil.mouseReleased(vme);
         }
-        vmil = null;
+        //vmil = null;
     }
 
     public void mouseClicked(MouseEvent e) {
         setVME(e);
+        if (e.getClickCount() > 1 && defaultDoubleClickHandler != null) {
+            defaultDoubleClickHandler.handleCoordinate(vme.getCoordinate());
+        }
         if(vmil != null) {
             vmil.mouseClicked(vme);
         }

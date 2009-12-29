@@ -13,7 +13,7 @@ import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.GraphicArrow;
 import org.bm.blaise.specto.primitive.GraphicString;
 import org.bm.blaise.specto.visometry.Visometry;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import scio.coordinate.P3D;
 public class SpaceGraphicsAnaglyph extends SpaceGraphics {
 
     /** Constructs with a visometry. */
-    public SpaceGraphicsAnaglyph(Visometry<P3D> vis) {
+    public SpaceGraphicsAnaglyph(Visometry<Point3D> vis) {
         super(vis);
         proj = ((SpaceVisometry) vis).getProj();
         rend = new SpaceRendered(proj);
@@ -44,7 +44,7 @@ public class SpaceGraphicsAnaglyph extends SpaceGraphics {
     final static AlphaComposite COMP2 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f);
 
     @Override
-    public void drawPoint(P3D coordinate) {
+    public void drawPoint(Point3D coordinate) {
         Color s1 = pointStyle.getStrokeColor();
         Color f1 = pointStyle.getFillColor();
         Point2D[] winC = proj.getDoubleWindowPointOf(coordinate);
@@ -66,8 +66,8 @@ public class SpaceGraphicsAnaglyph extends SpaceGraphics {
     }
 
     @Override
-    public void drawSegment(P3D coord1, P3D coord2) {
-        P3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new P3D[]{coord1, coord2});
+    public void drawSegment(Point3D coord1, Point3D coord2) {
+        Point3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new Point3D[]{coord1, coord2});
         if (clipped != null) {
             Color s1 = pathStyle.getColor();
             Point2D[] wp1 = proj.getDoubleWindowPointOf(coord1);
@@ -88,8 +88,8 @@ public class SpaceGraphicsAnaglyph extends SpaceGraphics {
     }
 
     @Override
-    public void drawArrow(P3D coord1, P3D coord2) {
-        P3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new P3D[]{coord1, coord2});
+    public void drawArrow(Point3D coord1, Point3D coord2) {
+        Point3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new Point3D[]{coord1, coord2});
         if (clipped != null) {
             Color s1 = arrowStyle.getColor();
             Point2D[] wp1 = proj.getDoubleWindowPointOf(coord1);
@@ -110,12 +110,12 @@ public class SpaceGraphicsAnaglyph extends SpaceGraphics {
     }
 
     @Override
-    public void drawClosedPath(P3D[] p) {
+    public void drawClosedPath(Point3D[] p) {
         if (p == null || p.length <= 1 || P3DUtils.clips(proj.clipPoint, proj.tDir, p)) {
             return;
         }
         Color s1 = shapeStyle.getStrokeColor();
-        Color f1 = getFillColor(p);
+        Color f1 = shadedFillColor(p);
 
         Point2D[] nextPt = proj.getDoubleWindowPointOf(p[0]);
         GeneralPath p1 = new GeneralPath();
@@ -147,7 +147,7 @@ public class SpaceGraphicsAnaglyph extends SpaceGraphics {
     }
 
     @Override
-    public void drawString(String str, P3D anchor, int shiftX, int shiftY) {
+    public void drawString(String str, Point3D anchor, int shiftX, int shiftY) {
         Point2D wp[] = proj.getDoubleWindowPointOf(anchor);
         GraphicString gs1 = new GraphicString(wp[0].getX() + shiftX, wp[0].getY() + shiftY, str);
         GraphicString gs2 = new GraphicString(wp[1].getX() + shiftX, wp[1].getY() + shiftY, str);

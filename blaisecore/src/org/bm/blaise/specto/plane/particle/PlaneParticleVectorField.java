@@ -12,7 +12,7 @@ import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.plottable.VParticleField;
-import scio.coordinate.RandomCoordinateGenerator;
+import scio.random.RandomCoordinateGenerator;
 
 /**
  * <p>

@@ -52,6 +52,10 @@ public class LinePlotComponent extends PlotComponent<Double> {
         ((LineVisometry) visometry).setMinPointVisible(minimum);
     }
 
+    public void setDesiredRange(double min, double max) {
+        ((LineVisometry) visometry).setDesiredRange(min, max);
+    }
+
     Rectangle2D.Double overlayBox;
 
     @Override
@@ -61,4 +65,5 @@ public class LinePlotComponent extends PlotComponent<Double> {
             ((Graphics2D) g).draw(overlayBox);
         }
     }
+
 }

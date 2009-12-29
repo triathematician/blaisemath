@@ -7,11 +7,10 @@ package org.bm.blaise.specto.line;
 import java.awt.Color;
 import java.awt.Point;
 import java.text.DecimalFormat;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.primitive.StringStyle;
+import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.utils.NiceRangeGenerator;
@@ -23,7 +22,7 @@ import org.bm.utils.NiceRangeGenerator;
  * 
  * @author Elisha Peterson
  */
-public class LineAxes extends AbstractDynamicPlottable<Double> implements VisometryChangeListener {
+public class LineAxis extends AbstractPlottable<Double> implements VisometryChangeListener {
 
     private static final int PIXEL_SPACING = 40;
 
@@ -53,15 +52,15 @@ public class LineAxes extends AbstractDynamicPlottable<Double> implements Visome
     //
 
     /** Construct using defaults. */
-    public LineAxes() {
+    public LineAxis() {
     }
 
     /**
      * <b>FACTORY METHOD</b>
      * @return instance of the class with specified parameters.
      */
-    public static LineAxes instance(String xLabel) {
-        LineAxes result = new LineAxes();
+    public static LineAxis instance(String xLabel) {
+        LineAxis result = new LineAxis();
         result.xLabel = xLabel;
         return result;
     }
@@ -155,9 +154,5 @@ public class LineAxes extends AbstractDynamicPlottable<Double> implements Visome
         canvas.drawVTick(0.0, TICK_HEIGHT * 2);
         canvas.drawHLine(0.0);
         canvas.drawString(xLabel, canvas.getMaximumVisible(), -8, -7);
-    }
-
-    public boolean isClickablyCloseTo(VisometryMouseEvent<Double> coordinate) {
-        return false;
     }
 }

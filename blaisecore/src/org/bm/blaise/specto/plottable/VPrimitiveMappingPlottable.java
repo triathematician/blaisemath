@@ -5,7 +5,6 @@
 
 package org.bm.blaise.specto.plottable;
 
-import org.bm.utils.Spacing;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.visometry.*;

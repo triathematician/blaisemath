@@ -14,8 +14,7 @@ import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.utils.SpaceGridSampleSet;
-import org.bm.utils.Spacing;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 /**
@@ -24,34 +23,36 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceGraphics extends VisometryGraphics<P3D> {
+public class SpaceGraphics extends VisometryGraphics<Point3D> {
 
     /** Stores rendered objects. */
     SpaceRendered rend;
-
     /** Stores a copy of the visometry's projection. */
     SpaceProjection proj;
+    /** Stores opacity of displayed fill objects. */
+    float opacity;
 
     /** Constructs with a visometry. */
-    public SpaceGraphics(Visometry<P3D> vis) {
+    public SpaceGraphics(Visometry<Point3D> vis) {
         super(vis);
         proj = ((SpaceVisometry) vis).getProj();
         rend = new SpaceRendered(proj);
+        setOpacity(0.6f);
     }
 
-    public void addToScene(P3D[] object) {
+    public void addToScene(Point3D[] object) {
         rend.addObject(object);
     }
 
-    public void addToScene(P3D[][] objects) {
+    public void addToScene(Point3D[][] objects) {
         rend.addObjects(objects);
     }
 
-    public void addToScene(Collection<P3D[]> objects) {
+    public void addToScene(Collection<Point3D[]> objects) {
         rend.addObjects(objects);
     }
 
-    public void addToScene(P3D[][] objects, PrimitiveStyle style) {
+    public void addToScene(Point3D[][] objects, PrimitiveStyle style) {
         rend.addObjects(objects, style);
     }
 
@@ -64,65 +65,74 @@ public class SpaceGraphics extends VisometryGraphics<P3D> {
     }
 
     @Override
-    public void setVisometry(Visometry<P3D> vis) {
+    public void setVisometry(Visometry<Point3D> vis) {
         super.setVisometry(vis);
         proj = ((SpaceVisometry) vis).getProj();
         rend = new SpaceRendered(proj);
     }
 
+    public float getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
+        shapeStyle.setFillOpacity(opacity);
+    }
+
     @Override
-    public void drawSegment(P3D coord1, P3D coord2) {
+    public void drawSegment(Point3D coord1, Point3D coord2) {
 //        System.out.println("segment: " + coord1 + " " + coord2);
-        P3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new P3D[]{coord1, coord2});
+        Point3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new Point3D[]{coord1, coord2});
 //        System.out.println("clipped: " + Arrays.toString(clipped));
         if (clipped != null) {
             super.drawSegment(clipped[0], clipped[1]);
         }
     }
 
-    P3D LIGHT = new P3D(3, -5, 6).normalized();
-    Color fill = new Color(200, 200, 255);
+    public static final Point3D LIGHT = new Point3D(3, -5, 6).normalized();
+    public static final Color BASE_FILL = new Color(200, 200, 255);
 
-    public Color getFillColor(P3D[] poly) {
-        P3D n = (poly[2].minus(poly[0])).crossProduct(poly[2].minus(poly[1])).normalized();
+    Color shadedFillColor(Point3D[] poly) {
+        Point3D n = (poly[2].minus(poly[0])).crossProduct(poly[2].minus(poly[1])).normalized();
         float costh = (float) Math.abs(n.dotProduct(LIGHT));
         costh = .5f + .5f * costh * costh;
-        return new Color(costh*fill.getRed()*costh/255, costh*fill.getGreen()/255, costh*fill.getBlue()/255);
+        return new Color(costh*BASE_FILL.getRed()*costh/255, costh*BASE_FILL.getGreen()/255, costh*BASE_FILL.getBlue()/255, opacity);
     }
 
     @Override
-    public void drawClosedPath(P3D[] p) {
+    public void drawClosedPath(Point3D[] p) {
         if (P3DUtils.clips(proj.clipPoint, proj.tDir, p)) {
             return;
         }
-        shapeStyle.setFillColor(getFillColor(p));
+        shapeStyle.setFillColor(shadedFillColor(p));
         super.drawClosedPath(p);
     }
 
 
 
-    public void drawPolygons(P3D[][] polys) {
+    public void drawPolygons(Point3D[][] polys) {
         // sort polygons by average z-order from projection
-        Arrays.sort(polys, proj.getPolyComparator());
+        Arrays.sort(polys, proj.getPolygonZOrderComparator());
 
         for (int i = 0; i < polys.length; i++) {
             drawClosedPath(polys[i]);
         }
     }
 
-    public void drawPolygons(List<P3D[]> polys) {
+    public void drawPolygons(List<Point3D[]> polys) {
         // sort polygons by average z-order from projection
-        TreeSet<P3D[]> sorted = new TreeSet<P3D[]>(proj.getPolyComparator());
+        TreeSet<Point3D[]> sorted = new TreeSet<Point3D[]>(proj.getPolygonZOrderComparator());
         sorted.addAll(polys);
         
-        for (P3D[] p : sorted) {
+        for (Point3D[] p : sorted) {
             drawClosedPath(p);
         }
     }
 
     transient SpaceGridSampleSet pgss;
 
-    public SampleCoordinateSetGenerator<P3D> getSampleSetGenerator(Spacing s) {
+    public SampleCoordinateSetGenerator<Point3D> getSampleSetGenerator() {
         SpaceVisometry pv = (SpaceVisometry) this.vis;
         if (pgss == null) {
             pgss = new SpaceGridSampleSet(pv.minPoint, pv.maxPoint);

@@ -30,9 +30,10 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
     public TestDifferentialEquations() {
-        data.beans.EditorRegistration.registerEditors();
         timer = new BClock();
         initComponents();
+
+        timerBar1.setTimer(timer);
 
         // FUNCTIONS
 
@@ -93,6 +94,7 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         
         // PANELS
 
+        data.beans.EditorRegistration.registerEditors();
         rollupPanel1.add("Timer", new PropertySheet(timer));
         rollupPanel1.add("Visometry", new PropertySheet(DEPlot.getVisometry()));
         for (Plottable p : DEPlot.getPlottables()) {
@@ -112,32 +114,16 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new gui.RollupPanel();
         tabPane = new javax.swing.JTabbedPane();
         DEPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         DEPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
         CobwebPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
+        timerBar1 = new org.bm.blaise.sequor.component.TimerBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-
-        jToolBar1.setRollover(true);
-
-        jButton1.setText("jButton1");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton1);
-
-        getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
         jScrollPane1.setViewportView(rollupPanel1);
 
@@ -190,12 +176,11 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
 
         getContentPane().add(tabPane, java.awt.BorderLayout.CENTER);
 
+        timerBar1.setRollover(true);
+        getContentPane().add(timerBar1, java.awt.BorderLayout.PAGE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("Here");
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
         rollupPanel1.removeAll();
@@ -223,10 +208,9 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
     private org.bm.blaise.specto.plane.PlanePlotComponent CobwebPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent DEPlot;
     private org.bm.blaise.specto.plane.PlanePlotComponent DEPlot2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar jToolBar1;
     private gui.RollupPanel rollupPanel1;
     private javax.swing.JTabbedPane tabPane;
+    private org.bm.blaise.sequor.component.TimerBar timerBar1;
     // End of variables declaration//GEN-END:variables
 }

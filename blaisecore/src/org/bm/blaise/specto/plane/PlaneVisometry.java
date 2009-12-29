@@ -4,7 +4,7 @@
  */
 package org.bm.blaise.specto.plane;
 
-import scio.coordinate.RandomCoordinateGenerator;
+import scio.random.RandomCoordinateGenerator;
 import java.awt.geom.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -212,11 +212,24 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
     }
 
     public Point2D getWindowPointOf(Point2D.Double coordinate) {
-        if (at == null) {
+        if (at == null)
             throw new IllegalStateException();
-        }
+        if (Double.isInfinite(coordinate.x))
+            return getWindowPointOfInfiniteAngle(coordinate.y);
         return at.transform(coordinate, null);
     }
+
+    /**
+     * Returns an approximate location of a point at infinity... projects out at least 1000 times the size of the window, relative to the
+     * center of the window.
+     * @param angle the angle of the point
+     * @return an approximate window location for a point at infinity.
+     */
+    public Point2D getWindowPointOfInfiniteAngle(double angle) {
+        double diagonal = 1000*Math.hypot(displayRange.width, displayRange.height);
+        return at.transform(new Point2D.Double(displayRange.getCenterX()+diagonal*Math.cos(angle), displayRange.getCenterY()+diagonal*Math.sin(angle)), null);
+    }
+
 
     public Point2D.Double getCoordinateOf(Point2D point) {
         if (at == null) {

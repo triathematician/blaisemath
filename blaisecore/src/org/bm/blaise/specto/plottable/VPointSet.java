@@ -5,12 +5,17 @@
 
 package org.bm.blaise.specto.plottable;
 
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.bm.blaise.specto.primitive.PointStyle;
 import org.bm.blaise.specto.primitive.StringStyle;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.CoordinateHandler;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -23,44 +28,37 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class VPointSet<C> extends AbstractDynamicPlottable<C> {
+public class VPointSet<C> extends AbstractDynamicPlottable<C> implements CoordinateHandler<C> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Values */
     protected C[] values;
 
     /** Style option */
-    protected PointStyle style = new PointStyle();
-
-    /** Whether the label si shown. */
-    protected boolean labelVisible = true;
+    protected PointStyle pointStyle = new PointStyle();
 
     /** Style for the coordinate label. */
     protected StringStyle labelStyle;
+    /** Whether the label si shown. */
+    protected boolean labelsVisible = false;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /**
      * Construct with sequence of points
      * @param values the points
      */
-    public VPointSet(C[] values) {
+    public VPointSet(C... values) {
         setValues(values);
     }
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // COMPOSITIONAL PATTERNS
     //
 
     /** @return entire list of values, as an array */
@@ -85,16 +83,45 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> {
         fireStateChanged();
     }
 
+    /** Adds an additional value to the list of values. */
+    public void addValue(C value) {
+        C[] newValues = (C[]) java.lang.reflect.Array.newInstance(values.getClass().getComponentType(), values.length + 1);
+        System.arraycopy(values, 0, newValues, 0, values.length);
+        newValues[values.length] = value;
+        values = newValues;
+        fireStateChanged();
+    }
+
+    /** Removes a value from the lsit of values. */
+    public void removeValue(int index) {
+        if (index>=0 && index < values.length) {
+            C[] newValues = (C[]) java.lang.reflect.Array.newInstance(values.getClass().getComponentType(), values.length - 1);
+            if (index >= 1)
+                System.arraycopy(values, 0, newValues, 0, index);
+            if (index <= values.length-2)
+                System.arraycopy(values, index+1, newValues, index, values.length-index-1);
+            values = newValues;
+            fireStateChanged();
+        }
+    }
+
+    //
+    // STYLE GETTERS & SETTERS
+    //
+
     /** @return current style for the path */
-    public PointStyle getStyle() {
-        return style;
+    public PointStyle getPointStyle() {
+        return pointStyle;
     }
 
     /** Sets the style for the path
      * @param style new style
      */
-    public void setStyle(PointStyle style) {
-        this.style = style;
+    public void setPointStyle(PointStyle style) {
+        if (style != pointStyle) {
+            this.pointStyle = style;
+            fireStateChanged();
+        }
     }
 
     public StringStyle getLabelStyle() {
@@ -102,40 +129,32 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> {
     }
 
     public void setLabelStyle(StringStyle labelStyle) {
-        this.labelStyle = labelStyle;
+        if (this.labelStyle != labelStyle) {
+            this.labelStyle = labelStyle;
+            fireStateChanged();
+        }
     }
 
-    public boolean isLabelVisible() {
-        return labelVisible;
+    public boolean isLabelsVisible() {
+        return labelsVisible;
     }
 
-    public void setLabelVisible(boolean labelVisible) {
-        this.labelVisible = labelVisible;
+    public void setLabelsVisible(boolean labelVisible) {
+        if (this.labelsVisible != labelVisible) {
+            this.labelsVisible = labelVisible;
+            fireStateChanged();
+        }
     }
 
-
-    //
     //
     // PAINTING
     //
-    //
-    final protected NumberFormat formatter = new DecimalFormat("#0.000");
-
-    /** Hook for subclasses to provide custom formatting of displayed coordinates of point. */
-    public String getValueString(int i) {
-        if (values[i] instanceof Point2D) {
-            Point2D p2d = ((Point2D)values[i]);
-            return "(" + formatter.format(p2d.getX()) + ", " + formatter.format(p2d.getY()) + ")";
-
-        }
-        return values[i].toString();
-    }
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setPointStyle(style);
+        vg.setPointStyle(pointStyle);
         vg.drawPoints(values);
-        if (labelVisible) {
+        if (labelsVisible) {
             if (labelStyle != null) {
                 vg.setStringStyle(labelStyle);
             }
@@ -145,13 +164,38 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> {
         }
     }
 
+    final protected NumberFormat formatter = new DecimalFormat("#0.000");
+
+    /** Hook for subclasses to provide custom formatting of displayed coordinates of point. */
+    public String getValueString(int i) {
+        if (values[i] instanceof Point2D) {
+            Point2D p2d = ((Point2D)values[i]);
+            return "(" + formatter.format(p2d.getX()) + ", " + formatter.format(p2d.getY()) + ")";
+        }
+        return values[i].toString();
+    }
+
+    @Override
+    public String toString() {
+        return "VPointSet " + Arrays.toString(values);
+    }
+
     //
     //
     // DYNAMIC EDITING
     //
     //
 
-    private transient int selectedIndex = -1;
+    /** Adds a new point at the specified coordinate. */
+    public boolean handleCoordinate(C coord) {
+        if (editable) {
+            addValue(coord);
+            return true;
+        }
+        return false;
+    }
+
+    protected transient int selectedIndex = -1;
 
     /** @return index of selected coordinate */
     public int getSelectedIndex() {
@@ -181,8 +225,20 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> {
     
     @Override
     public void mouseDragged(VisometryMouseEvent<C> e) {
-        if (adjusting && selectedIndex != -1) {
+        if (adjusting && editable && selectedIndex != -1) {
             setValue(selectedIndex, e.getCoordinate());
         }
     }
+
+    @Override
+    public void mouseClicked(VisometryMouseEvent<C> e) {
+        if (editable) {
+            String mode = MouseEvent.getModifiersExText(e.getModifiersEx());
+            if (mode.equals("Ctrl") && selectedIndex != -1) {
+                removeValue(selectedIndex);
+            }
+        }
+    }
+
+
 }

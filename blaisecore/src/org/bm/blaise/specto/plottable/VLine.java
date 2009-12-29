@@ -85,7 +85,11 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
             fireStateChanged();
         }
     }
-
+    
+    @Override
+    public String toString() {
+        return style.getEndStyle().name() + " ["+value1+", "+value2+"]";
+    }
 
     //
     //

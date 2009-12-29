@@ -9,7 +9,7 @@ import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.StringStyle;
 import org.bm.blaise.specto.visometry.AbstractPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import scio.coordinate.P3D;
  * </p>
  * @author ae3263
  */
-public class SpaceAxes extends AbstractPlottable<P3D> {
+public class SpaceAxes extends AbstractPlottable<Point3D> {
 
     StringStyle labStyle = new StringStyle(BlaisePalette.STANDARD.axisLabel());
 
@@ -119,44 +119,44 @@ public class SpaceAxes extends AbstractPlottable<P3D> {
     // PAINT METHODS
 
     @Override
-    public void paintComponent(VisometryGraphics<P3D> vg) {
+    public void paintComponent(VisometryGraphics<Point3D> vg) {
         SpaceGraphics sg = (SpaceGraphics) vg;
 
         if (showOrigin) {
-            sg.addToScene(new P3D[]{P3D.ZERO});
+            sg.addToScene(new Point3D[]{Point3D.ZERO});
         }
 
         if (showAxes) {
             switch(type) {
                 case IJK:
                 case POSITIVE:
-                    sg.addToScene(new P3D[]{P3D.ZERO, P3D.PLUS_I});
-                    sg.addToScene(new P3D[]{P3D.ZERO, P3D.PLUS_J});
-                    sg.addToScene(new P3D[]{P3D.ZERO, P3D.PLUS_K});
+                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_I});
+                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_J});
+                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_K});
                     break;
                 case BOX:
                 case REGULAR:
-                    sg.addToScene(new P3D[]{P3D.MINUS_I, P3D.PLUS_I});
-                    sg.addToScene(new P3D[]{P3D.MINUS_J, P3D.PLUS_J});
-                    sg.addToScene(new P3D[]{P3D.MINUS_K, P3D.PLUS_K});
+                    sg.addToScene(new Point3D[]{Point3D.MINUS_I, Point3D.PLUS_I});
+                    sg.addToScene(new Point3D[]{Point3D.MINUS_J, Point3D.PLUS_J});
+                    sg.addToScene(new Point3D[]{Point3D.MINUS_K, Point3D.PLUS_K});
                 default:
             }
 
             // label axes
             vg.setStringStyle(labStyle);
-            vg.drawString(sx, P3D.PLUS_I, 5, 5);
-            vg.drawString(sy, P3D.PLUS_J, 5, 5);
-            vg.drawString(sz, P3D.PLUS_K, 5, 5);
+            vg.drawString(sx, Point3D.PLUS_I, 5, 5);
+            vg.drawString(sy, Point3D.PLUS_J, 5, 5);
+            vg.drawString(sz, Point3D.PLUS_K, 5, 5);
         }
 
         if (showXY) {
-            sg.addToScene(new P3D[]{new P3D(.001, .001, 0), new P3D(.001, .9, 0), new P3D(.9, .9, 0), new P3D(.9, .001, 0)});
+            sg.addToScene(new Point3D[]{new Point3D(.001, .001, 0), new Point3D(.001, .9, 0), new Point3D(.9, .9, 0), new Point3D(.9, .001, 0)});
         }
         if (showXZ) {
-            sg.addToScene(new P3D[]{new P3D(.001, 0, .001), new P3D(.001, 0, .9), new P3D(.9, 0, .9), new P3D(.9, 0, .001)});
+            sg.addToScene(new Point3D[]{new Point3D(.001, 0, .001), new Point3D(.001, 0, .9), new Point3D(.9, 0, .9), new Point3D(.9, 0, .001)});
         }
         if (showYZ) {
-            sg.addToScene(new P3D[]{new P3D(0, .001, .001), new P3D(0, .001, .9), new P3D(0, .9, .9), new P3D(0, .9, .001)});
+            sg.addToScene(new Point3D[]{new Point3D(0, .001, .001), new Point3D(0, .001, .9), new Point3D(0, .9, .9), new Point3D(0, .9, .001)});
         }
     }
 

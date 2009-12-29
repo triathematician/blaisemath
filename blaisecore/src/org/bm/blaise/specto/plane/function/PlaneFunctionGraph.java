@@ -13,16 +13,17 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
+import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
 /**
  * <p>
- *   <code>PlaneFunctionGraph</code> plots a parametric function with a parameter input and a two-variable output.
+ *   <code>PlaneFunctionGraph</code> plots a function with a single input and a single output.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
+public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements VisometryChangeListener {
 
     
     /** Underlying function */
@@ -32,7 +33,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
     public PlaneFunctionGraph() {
         setFunction(new UnivariateRealFunction(){public double value(double x) { return x; } });
     }
-
+    
     public PlaneFunctionGraph(UnivariateRealFunction func) {
         setFunction(func);
     }
@@ -45,6 +46,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
         if (func != null && this.func != func) {
             this.func = func;
             needsComputation = true;
+            fireStateChanged();
         }
     }
 
@@ -105,4 +107,8 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> {
         return e.withinRangeOf(new Point2D.Double(x, y), 4);
     }
 
+    @Override
+    public String toString() {
+        return "Function Graph";
+    }
 }

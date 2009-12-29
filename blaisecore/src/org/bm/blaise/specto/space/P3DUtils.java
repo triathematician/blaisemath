@@ -4,7 +4,7 @@
  */
 package org.bm.blaise.specto.space;
 
-import scio.coordinate.P3D;
+import scio.coordinate.Point3D;
 
 /**
  * <p>
@@ -14,7 +14,7 @@ import scio.coordinate.P3D;
  */
 public class P3DUtils {
 
-    static public double planeDist(P3D point, P3D normal, P3D testPoint) {
+    static public double planeDist(Point3D point, Point3D normal, Point3D testPoint) {
         return normal.x * (testPoint.x - point.x) + normal.y * (testPoint.y - point.y) + normal.z * (testPoint.z - point.z);
     }
 
@@ -23,7 +23,7 @@ public class P3DUtils {
      * 
      * @return true if any of the supplied points are clipped by the plane
      */
-    static public boolean clips(P3D point, P3D normal, P3D[] pts) {
+    static public boolean clips(Point3D point, Point3D normal, Point3D[] pts) {
         for (int i = 0; i < pts.length; i++) {
             if (planeDist(point, normal, pts[i]) < 0) {
                 return true;
@@ -35,8 +35,8 @@ public class P3DUtils {
     /**
      * Returns point at given percentage of distance between two other points
      */
-    static public P3D onSegment(P3D p1, P3D p2, double dist) {
-        return new P3D(
+    static public Point3D onSegment(Point3D p1, Point3D p2, double dist) {
+        return new Point3D(
                 p1.x + (p2.x - p1.x) * dist,
                 p1.y + (p2.y - p1.y) * dist,
                 p1.z + (p2.z - p1.z) * dist);
@@ -50,7 +50,7 @@ public class P3DUtils {
      * @param i1 index of first point
      * @param i2 index of second point
      */
-    static public P3D onSegment(P3D[] pp, double[] dd, int i1, int i2) {
+    static public Point3D onSegment(Point3D[] pp, double[] dd, int i1, int i2) {
         return onSegment(pp[i1], pp[i2], dd[i1] / (dd[i1] - dd[i2]));
     }
 
@@ -64,7 +64,7 @@ public class P3DUtils {
      * 
      * @return the clipped segment
      */
-    static public P3D[] clipSegment(P3D point, P3D normal, P3D[] segment) {
+    static public Point3D[] clipSegment(Point3D point, Point3D normal, Point3D[] segment) {
         if (segment == null || segment.length != 2) {
             throw new IllegalArgumentException("Segment must have 2 points!");
         }
@@ -72,9 +72,9 @@ public class P3DUtils {
         if (dists[0] > 0 && dists[1] > 0) { // no clipping
             return segment;
         } else if (dists[0] > 0 && dists[1] < 0) { // clip second point
-            return new P3D[]{segment[0], onSegment(segment, dists, 0, 1)};
+            return new Point3D[]{segment[0], onSegment(segment, dists, 0, 1)};
         } else if (dists[0] < 0 && dists[1] > 0) { // clip first point
-            return new P3D[]{onSegment(segment, dists, 1, 0), segment[1]};
+            return new Point3D[]{onSegment(segment, dists, 1, 0), segment[1]};
         }
         // default when both points are on the other side of the plane
         return null;
@@ -93,7 +93,7 @@ public class P3DUtils {
      *
      * @return the clipped triangle
      */
-    static public P3D[] clipTriangle(P3D point, P3D normal, P3D[] triangle) {
+    static public Point3D[] clipTriangle(Point3D point, Point3D normal, Point3D[] triangle) {
         if (triangle == null || triangle.length != 3) {
             throw new IllegalArgumentException("Triangle must have 2 points!");
         }
@@ -101,27 +101,27 @@ public class P3DUtils {
         if (dists[0] > 0) {
             if (dists[1] > 0) {
                 if (dists[2] > 0) { // no clipping
-                    return new P3D[]{triangle[0], triangle[1], triangle[2], triangle[0]};
+                    return new Point3D[]{triangle[0], triangle[1], triangle[2], triangle[0]};
                 } else { // clip t2 off
-                    return new P3D[]{onSegment(triangle, dists, 0, 2), triangle[0], triangle[1], onSegment(triangle, dists, 1, 2)};
+                    return new Point3D[]{onSegment(triangle, dists, 0, 2), triangle[0], triangle[1], onSegment(triangle, dists, 1, 2)};
                 }
             } else {
                 if (dists[2] > 0) { // clip t1 off
-                    return new P3D[]{onSegment(triangle, dists, 2, 1), triangle[2], triangle[0], onSegment(triangle, dists, 0, 1)};
+                    return new Point3D[]{onSegment(triangle, dists, 2, 1), triangle[2], triangle[0], onSegment(triangle, dists, 0, 1)};
                 } else { // clip t1 and t2 off
-                    return new P3D[]{onSegment(triangle, dists, 0, 2), triangle[0], onSegment(triangle, dists, 0, 1)};
+                    return new Point3D[]{onSegment(triangle, dists, 0, 2), triangle[0], onSegment(triangle, dists, 0, 1)};
                 }
             }
         } else {
             if (dists[1] > 0) {
                 if (dists[2] > 0) { // clip t0 off
-                    return new P3D[]{onSegment(triangle, dists, 1, 0), triangle[1], triangle[2], onSegment(triangle, dists, 2, 0)};
+                    return new Point3D[]{onSegment(triangle, dists, 1, 0), triangle[1], triangle[2], onSegment(triangle, dists, 2, 0)};
                 } else { // clip t0 and t2 off
-                    return new P3D[]{onSegment(triangle, dists, 1, 0), triangle[1], onSegment(triangle, dists, 1, 2)};
+                    return new Point3D[]{onSegment(triangle, dists, 1, 0), triangle[1], onSegment(triangle, dists, 1, 2)};
                 }
             } else {
                 if (dists[2] > 0) { // clip t0 and t1 off
-                    return new P3D[]{onSegment(triangle, dists, 2, 1), triangle[2], onSegment(triangle, dists, 2, 0)};
+                    return new Point3D[]{onSegment(triangle, dists, 2, 1), triangle[2], onSegment(triangle, dists, 2, 0)};
                 } else { // all hidden
                     return null;
                 }

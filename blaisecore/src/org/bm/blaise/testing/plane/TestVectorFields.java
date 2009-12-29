@@ -7,11 +7,13 @@ package org.bm.blaise.testing.plane;
 
 import org.bm.blaise.specto.plane.diffeq.PlaneVectorField;
 import data.propertysheet.PropertySheet;
+import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.component.BClock;
 import org.bm.blaise.specto.plane.*;
+import org.bm.blaise.specto.plane.diffeq.PlanePaddlePoint;
 import org.bm.blaise.specto.plane.particle.PlaneParticleVectorFieldCurve;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.visometry.Plottable;
@@ -37,7 +39,8 @@ public class TestVectorFields extends javax.swing.JFrame {
         MultivariateVectorialFunction func6 = // field
                 new MultivariateVectorialFunction() {
                     public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-                        return new double[]{Math.sin(point[1]), point[0]*Math.cos(point[1])};
+                        return new double[]{point[1], -point[0]};
+//                        return new double[]{Math.cos(point[1]) + point[0], Math.sin(point[0]) + point[1]};
                     }
                 };
 
@@ -70,9 +73,15 @@ public class TestVectorFields extends javax.swing.JFrame {
         PlaneParametricCurve ppf = new PlaneParametricCurve(func7, -1.0, 2.0);
         PlaneParametricCurve ppf2 = new PlaneParametricCurve(func8 , 0.0, 1.0);
 
+
         CurveDEPlot.addPlottable(new PlaneAxes());
         CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getPlotSampleSetGenerator()));
         CurveDEPlot.addPlottable(new PlaneParticleVectorFieldCurve(func6, ppf));
+        for (double i = -4; i <= 4; i+=.5) {
+            for (double j = -4; j <= 4; j+=.5) {
+                CurveDEPlot.addPlottable(new PlanePaddlePoint(new Point2D.Double(i, j), func6));
+            }
+        }
         CurveDEPlot.setClockTimer(timer);
 
         CurveDEPlot2.addPlottable(new PlaneAxes());

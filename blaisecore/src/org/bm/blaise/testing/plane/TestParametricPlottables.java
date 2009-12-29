@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
-import org.bm.blaise.specto.line.LineAxes;
+import org.bm.blaise.specto.line.LineAxis;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlaneGrid;
 import org.bm.blaise.specto.plane.PlanePlotComponent;
@@ -41,8 +41,9 @@ public class TestParametricPlottables extends javax.swing.JFrame {
             },
         0.0, 2 * Math.PI, 500);
 
-        domainPlot1.addPlottable(LineAxes.instance("t"));
+        domainPlot1.addPlottable(LineAxis.instance("t"));
         domainPlot1.addPlottable(ppc.getDomainPlottable());
+        domainPlot1.setDesiredRange(-1.0, 7.28);
 
         rangePlot1.addPlottable(new PlanePolarGrid());
         rangePlot1.addPlottable(PlaneAxes.instance("x(t)", "y(t)"));
@@ -92,6 +93,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
         rangePlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
         jPanel1 = new javax.swing.JPanel();
         domainPlot1 = new org.bm.blaise.specto.line.LinePlotComponent();
+        jSeparator1 = new javax.swing.JSeparator();
         domainPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -156,7 +158,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
         domainPlot1.setLayout(domainPlot1Layout);
         domainPlot1Layout.setHorizontalGroup(
             domainPlot1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 501, Short.MAX_VALUE)
+            .add(0, 500, Short.MAX_VALUE)
         );
         domainPlot1Layout.setVerticalGroup(
             domainPlot1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -165,11 +167,16 @@ public class TestParametricPlottables extends javax.swing.JFrame {
 
         jPanel1.add(domainPlot1);
 
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setMaximumSize(new java.awt.Dimension(2, 32767));
+        jSeparator1.setPreferredSize(new java.awt.Dimension(2, 10));
+        jPanel1.add(jSeparator1);
+
         org.jdesktop.layout.GroupLayout domainPlot2Layout = new org.jdesktop.layout.GroupLayout(domainPlot2);
         domainPlot2.setLayout(domainPlot2Layout);
         domainPlot2Layout.setHorizontalGroup(
             domainPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 501, Short.MAX_VALUE)
+            .add(0, 500, Short.MAX_VALUE)
         );
         domainPlot2Layout.setVerticalGroup(
             domainPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -214,6 +221,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private org.bm.blaise.specto.plane.PlanePlotComponent rangePlot1;
     private org.bm.blaise.specto.plane.PlanePlotComponent rangePlot2;

@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
-import org.bm.blaise.specto.line.LineAxes;
+import org.bm.blaise.specto.line.LineAxis;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlaneGrid;
 import org.bm.blaise.specto.plane.PlanePlotComponent;
@@ -22,6 +22,8 @@ import org.bm.blaise.specto.space.SpaceAxes;
 import org.bm.blaise.specto.space.SpacePlotComponent;
 import org.bm.blaise.specto.space.function.SpaceParametricCurve;
 import org.bm.blaise.specto.space.function.SpaceParametricSurface;
+import org.bm.blaise.specto.space.function.SpaceParametricSurfacePatch;
+import org.bm.blaise.specto.space.function.TwoCurveSurface;
 import org.bm.blaise.specto.visometry.Plottable;
 import scio.function.utils.SampleSurface3D;
 
@@ -47,9 +49,11 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
                 },
                 0.0, 2*Math.PI, 200);
         SpaceParametricSurface sps = SpaceParametricSurface.getInstance(SampleSurface3D.SPHERE);
+        SpaceParametricSurfacePatch spsp = new SpaceParametricSurfacePatch(sps.getFunction(), 0, 0, .1, .1);
 
-        domainPlot1.addPlottable(LineAxes.instance("t"));
+        domainPlot1.addPlottable(LineAxis.instance("t"));
         domainPlot1.addPlottable(spc.getDomainPlottable());
+        domainPlot1.setDesiredRange(-1.0, 7.28);
 
         rangePlot1.addPlottable(new SpaceAxes());
         rangePlot1.addPlottable(spc);
@@ -57,9 +61,25 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         domainPlot2.addPlottable(new PlaneGrid());
         domainPlot2.addPlottable(PlaneAxes.instance("u", "v"));
         domainPlot2.addPlottable(sps.getDomainPlottable());
+        domainPlot2.addPlottable(spsp.getDomainPlottable());
 
         rangePlot2.addPlottable(new SpaceAxes());
         rangePlot2.addPlottable(sps);
+        rangePlot2.addPlottable(spsp);
+
+
+        rangePlot3.addPlottable(new SpaceAxes());
+        rangePlot3.addPlottable(new TwoCurveSurface(
+                new UnivariateVectorialFunction (){
+                    public double[] value(double x) throws FunctionEvaluationException {
+                        return new double[]{Math.cos(x), Math.sin(x), -.5};
+                    }
+                },
+                new UnivariateVectorialFunction (){
+                    public double[] value(double x) throws FunctionEvaluationException {
+                        return new double[]{Math.cos(x+2)+.5, Math.sin(x+2)+.2, 1};
+                    }
+                }, 0, 2*Math.PI));
         
         // PANELS
 
@@ -85,8 +105,10 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         tabPane = new javax.swing.JTabbedPane();
         rangePlot1 = new org.bm.blaise.specto.space.SpacePlotComponent();
         rangePlot2 = new org.bm.blaise.specto.space.SpacePlotComponent();
+        rangePlot3 = new org.bm.blaise.specto.space.SpacePlotComponent();
         jPanel1 = new javax.swing.JPanel();
         domainPlot1 = new org.bm.blaise.specto.line.LinePlotComponent();
+        jSeparator1 = new javax.swing.JSeparator();
         domainPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,7 +116,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Toggle Anaglyph");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -130,6 +152,8 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
         tabPane.addTab("Parametric Curve", rangePlot1);
 
+        rangePlot2.setDefaultFillOpacity(0.9F);
+
         org.jdesktop.layout.GroupLayout rangePlot2Layout = new org.jdesktop.layout.GroupLayout(rangePlot2);
         rangePlot2.setLayout(rangePlot2Layout);
         rangePlot2Layout.setHorizontalGroup(
@@ -143,6 +167,19 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
         tabPane.addTab("Parametric Surface", rangePlot2);
 
+        org.jdesktop.layout.GroupLayout rangePlot3Layout = new org.jdesktop.layout.GroupLayout(rangePlot3);
+        rangePlot3.setLayout(rangePlot3Layout);
+        rangePlot3Layout.setHorizontalGroup(
+            rangePlot3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 988, Short.MAX_VALUE)
+        );
+        rangePlot3Layout.setVerticalGroup(
+            rangePlot3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 309, Short.MAX_VALUE)
+        );
+
+        tabPane.addTab("2-Curve Surface", rangePlot3);
+
         getContentPane().add(tabPane, java.awt.BorderLayout.CENTER);
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
@@ -151,7 +188,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         domainPlot1.setLayout(domainPlot1Layout);
         domainPlot1Layout.setHorizontalGroup(
             domainPlot1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 501, Short.MAX_VALUE)
+            .add(0, 500, Short.MAX_VALUE)
         );
         domainPlot1Layout.setVerticalGroup(
             domainPlot1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -160,11 +197,16 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
         jPanel1.add(domainPlot1);
 
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setMaximumSize(new java.awt.Dimension(2, 32767));
+        jSeparator1.setPreferredSize(new java.awt.Dimension(2, 10));
+        jPanel1.add(jSeparator1);
+
         org.jdesktop.layout.GroupLayout domainPlot2Layout = new org.jdesktop.layout.GroupLayout(domainPlot2);
         domainPlot2.setLayout(domainPlot2Layout);
         domainPlot2Layout.setHorizontalGroup(
             domainPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 501, Short.MAX_VALUE)
+            .add(0, 500, Short.MAX_VALUE)
         );
         domainPlot2Layout.setVerticalGroup(
             domainPlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -179,7 +221,8 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("Here");
+        SpacePlotComponent spc = (SpacePlotComponent) tabPane.getSelectedComponent();
+        spc.setAnaglyph(!spc.isAnaglyph());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
@@ -209,9 +252,11 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
     private org.bm.blaise.specto.space.SpacePlotComponent rangePlot1;
     private org.bm.blaise.specto.space.SpacePlotComponent rangePlot2;
+    private org.bm.blaise.specto.space.SpacePlotComponent rangePlot3;
     private gui.RollupPanel rollupPanel1;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables
