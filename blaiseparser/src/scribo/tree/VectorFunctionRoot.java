@@ -4,7 +4,6 @@
  */
 package scribo.tree;
 
-import deprecated.ParameterFunction;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -77,10 +76,6 @@ public class VectorFunctionRoot extends ArgumentList implements FunctionRoot {
 
     // FUNCTION QUERIES
     public Function getFunction() {
-        return null;
-    }
-
-    public ParameterFunction getParameterFunction() {
         return null;
     }
 }

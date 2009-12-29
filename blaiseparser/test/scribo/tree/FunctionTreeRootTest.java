@@ -5,15 +5,14 @@
 
 package scribo.tree;
 
-import java.lang.Double;
+import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 import junit.framework.TestCase;
-import scio.coordinate.R2;
-import scio.coordinate.R3;
-import scio.function.Function;
-import scio.function.Function;
-import scio.function.FunctionValueException;
+import org.apache.commons.math.FunctionEvaluationException;
+import scio.coordinate.formal.EuclideanPoint3D;
+import deprecated.Function;
 import scribo.parser.FunctionSyntaxException;
 import scribo.parser.Parser;
 
@@ -124,7 +123,7 @@ public class FunctionTreeRootTest extends TestCase {
             assertEquals(1,test2.getValue(3.0));
             assertEquals(1,test3.getValue(3.0));
             assertEquals(1,test4.getValue(3.0));
-        }catch(FunctionValueException e){
+        }catch(FunctionEvaluationException e){
             assertEquals(true,true);
         }
         TreeMap<String, Double> values = new TreeMap<String,Double>();
@@ -180,15 +179,15 @@ public class FunctionTreeRootTest extends TestCase {
         System.out.print("...function evaluations with single input...");
 
         Vector<Double> x = new Vector<Double>(); x.add(0.0); x.add(2.0);
-        Vector<R2> xy = new Vector<R2>(); xy.add(new R2(1.5, 2.0)); xy.add(new R2(2.0, 2.0));
-        Vector<R3> xyz = new Vector<R3>(); xyz.add(new R3(1.5, 1.0, 2.0)); xyz.add(new R3(0.0, 0.0, 1.0));
+        List<Point2D.Double> xy = new Vector<Point2D.Double>(); xy.add(new Point2D.Double(1.5, 2.0)); xy.add(new Point2D.Double(2.0, 2.0));
+        Vector<EuclideanPoint3D> xyz = new Vector<EuclideanPoint3D>(); xyz.add(new EuclideanPoint3D(1.5, 1.0, 2.0)); xyz.add(new EuclideanPoint3D(0.0, 0.0, 1.0));
 
         try { // test single inputs
             assertEquals(1.0, fun1.getValue(x.get(0)));
             assertEquals(-0.9899924966004454, fun2.getValue(xy.get(0)));
             assertEquals(-0.9899924966004454, fun3.getValue(xyz.get(0)));
             assertEquals(6.0, fun4.getValue(x.get(0)));
-        } catch (FunctionValueException ex) {
+        } catch (FunctionEvaluationException ex) {
             assertEquals(true,false);
         }
         System.out.println("passed!");
@@ -200,7 +199,7 @@ public class FunctionTreeRootTest extends TestCase {
             assertEquals("[-0.9899924966004454, -0.6536436208636119]", fun2.getValue(xy).toString());
             assertEquals("[-0.9899924966004454, 1.0]", fun3.getValue(xyz).toString());
             assertEquals("[6.0, 5.960170286650366]", fun4.getValue(x).toString());
-        } catch (FunctionValueException ex) {
+        } catch (FunctionEvaluationException ex) {
             assertEquals(true,false);
         }
         System.out.println("passed!");
