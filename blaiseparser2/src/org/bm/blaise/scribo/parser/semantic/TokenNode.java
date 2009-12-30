@@ -2,7 +2,7 @@
  * TokenNode.java
  * Created Nov 2009
  */
-package org.bm.blaise.scribo.parser;
+package org.bm.blaise.scribo.parser.semantic;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -15,7 +15,7 @@ import javax.swing.tree.TreeNode;
  * </code>
  * @author elisha
  */
-public abstract class TokenNode implements TreeNode {
+abstract class TokenNode implements TreeNode {
 
     String name;
     TokenNode parent;

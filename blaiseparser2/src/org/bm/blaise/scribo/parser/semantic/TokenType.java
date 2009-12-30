@@ -2,7 +2,7 @@
  * TokenType.java
  * Created Nov 2009
  */
-package org.bm.blaise.scribo.parser;
+package org.bm.blaise.scribo.parser.semantic;
 
 /**
  * <p>
@@ -10,7 +10,7 @@ package org.bm.blaise.scribo.parser;
  * </p>
  * @author Elisha Peterson
  */
-public enum TokenType {
+enum TokenType {
 
     IDENTIFIER(true, true),
     NUMBER(true, true),
@@ -24,11 +24,11 @@ public enum TokenType {
     
     /** Whether the type makes sense at the beginning of a phrase */
     public boolean canStartPhrase;
-    /** Whether the type can be followed by a binary operator */
-    public boolean binaryFollow;
+    /** Whether the type can be followed by an n-ary operator */
+    public boolean naryFollow;
 
-    TokenType(boolean canStartPhrase, boolean binaryFollow) {
+    TokenType(boolean canStartPhrase, boolean naryFollow) {
         this.canStartPhrase = canStartPhrase;
-        this.binaryFollow = binaryFollow;
+        this.naryFollow = naryFollow;
     }
 }

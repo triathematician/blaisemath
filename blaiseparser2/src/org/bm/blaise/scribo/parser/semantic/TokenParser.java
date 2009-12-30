@@ -1,17 +1,19 @@
-// TODO - implicit multiplication should be grammar-dependent
-
 /*
  * Parser.java
  * Created Nov 2009
  */
 
-package org.bm.blaise.scribo.parser;
+package org.bm.blaise.scribo.parser.semantic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.bm.blaise.scribo.parser.Grammar;
+import org.bm.blaise.scribo.parser.GrammarParser;
+import org.bm.blaise.scribo.parser.ParseException;
+import org.bm.blaise.scribo.parser.SemanticNode;
 
 /**
  * <p>
@@ -43,7 +45,7 @@ import java.util.regex.Pattern;
  *
  * @author elisha
  */
-public class Parser {
+public class TokenParser implements GrammarParser {
 
     /** Debugging constant */
     static final boolean VERBOSE = false;
@@ -52,20 +54,37 @@ public class Parser {
     Grammar grammar;
     /** Tokenizer built from the grammar. */
     Tokenizer tokenizer;
+    /** Class responsible for constructing the semantic tree from the token node. */
+    SemanticTreeBuilder builder;
 
     /** Set up a parser with a specified grammar. */
-    public Parser(Grammar grammar) {
+    public TokenParser(Grammar grammar) {
+        setGrammar(grammar);
+    }
+
+    public void setGrammar(Grammar grammar) {
         this.grammar = grammar;
         tokenizer = new Tokenizer(grammar);
+        builder = new SemanticTreeBuilder(grammar);
     }
 
     /**
      * Converts a string expression into a token tree.
      * @param expression the string input to the parser
-     * @return a <code>TokenNode</code> which is the top node in the tree
+     * @return a <code>SemanticNode</code> which is the top node in the tree
      * @throws ParseException if the parser fails in some way to parse the input
      */
-    public TokenNode parseTree(String expression) throws ParseException {
+    public SemanticNode parseTree(String expression) throws ParseException {
+        return builder.buildTree(tokenizeTree(expression));
+    }
+
+    /**
+     * Converts a string expression into a token tree.
+     * @param expression the string input to the parser
+     * @return a <code>SemanticNode</code> which is the top node in the tree
+     * @throws ParseException if the parser fails in some way to parse the input
+     */
+    TokenNode tokenizeTree(String expression) throws ParseException {
         ArrayList<String> tokens = new ArrayList<String>();
         ArrayList<TokenType> types = new ArrayList<TokenType>();
         tokenizer.tokenize(expression, tokens, types);
@@ -100,12 +119,11 @@ public class Parser {
                     ParseException.ParseErrorCode.INVALID_OPERATOR_POSITION);
 
         // check for implicit multiplication
-        // TODO - move this to within the parser
         if (curNode instanceof TokenNode.GroupNode && curNode.children.size() > 0 &&
                 (type==TokenType.NUMBER || type==TokenType.IDENTIFIER || type==TokenType.FUNCTION
                 || type==TokenType.PARENTHETICAL_OPEN || type==TokenType.PRE_UNARY_OPERATOR )
                 ) {
-           curNode = addToTree(curNode, "*", TokenType.MULTARY_OPERATOR);
+           curNode = addToTree(curNode, grammar.implicitSpaceOperator(), TokenType.MULTARY_OPERATOR);
         }
 
         TokenNode newNode;
@@ -215,12 +233,12 @@ public class Parser {
 
         /** Uses the currently defined grammar to construct regex patterns. */
         private void buildPatterns() {
-            P$PAR_OPEN = Pattern.compile(buildRegEx(grammar.parentheticals(), 0));
-            P$PAR_CLOSE = Pattern.compile(buildRegEx(grammar.parentheticals(), 1));
-            P$PRE_UNARY = Pattern.compile(buildRegEx(grammar.preUnaryOperators()));
-            P$POST_UNARY = Pattern.compile(buildRegEx(grammar.postUnaryOperators()));
-            P$NARY = Pattern.compile(buildRegEx(grammar.naryOperators()));
-            P$MULTARY = Pattern.compile(buildRegEx(grammar.multaryOperators()));
+            P$PAR_OPEN = buildRegEx(grammar.parentheticals(), 0);
+            P$PAR_CLOSE = buildRegEx(grammar.parentheticals(), 1);
+            P$PRE_UNARY = buildRegEx(grammar.preUnaryOperators().keySet());
+            P$POST_UNARY = buildRegEx(grammar.postUnaryOperators().keySet());
+            P$NARY = buildRegEx(grammar.naryOperators().keySet());
+            P$MULTARY = buildRegEx(grammar.multaryOperators());
         }
 
         //
@@ -242,7 +260,7 @@ public class Parser {
             // switch here based on whether one permits binary/multary operators to follow the last token or not
             TokenType lastType = types.isEmpty() ? TokenType.PARENTHETICAL_OPEN : types.get(types.size() - 1);
             Matcher match;
-            if (lastType.binaryFollow) {
+            if (lastType.naryFollow) {
                 match = startMatcher(input, P$FL, P$PAR_OPEN, P$PAR_CLOSE, P$MULTARY, P$NARY, P$POST_UNARY, P$IDENTIFIER);
             } else {
                 match = startMatcher(input, P$FL, P$PAR_OPEN, P$PAR_CLOSE, P$PRE_UNARY, P$IDENTIFIER);
@@ -289,15 +307,15 @@ public class Parser {
      * @return <code>true</code> if the grammar recognizes the token as a function
      */
     static boolean isFunctionToken(String idToken, Grammar grammar) {
-        Map<String,String> synMap = grammar.synonymMap();
-        String[] funcs = grammar.functions();
-        if (!grammar.isCaseSensitive())
-            idToken = idToken.toLowerCase();
-        if (synMap.containsKey(idToken))
-            idToken = synMap.get(idToken);
-        for (int i = 0; i < funcs.length; i++)
-            if (sensitiveEquals(idToken, funcs[i], grammar.isCaseSensitive()))
-                return true;
+        if (grammar.isCaseSensitive()) {
+            return grammar.functions().keySet().contains(idToken);
+        } else {
+            for (String s : grammar.functions().keySet()) {
+                if (s.equalsIgnoreCase(idToken)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -343,7 +361,7 @@ public class Parser {
      *      token as an n-ary operator.
      */
     static int operatorDepth(String opToken, Grammar grammar) {
-        String[] ops = grammar.naryOperators();
+        String[] ops = grammar.orderOfOperations();
         for (int i = 0; i < ops.length; i++) {
             if (sensitiveEquals(opToken, ops[i], grammar.isCaseSensitive()))
                 return i;
@@ -365,27 +383,44 @@ public class Parser {
     }
 
     /** Constructs a regex that checks for any string in the provided array. */
-    static String buildRegEx(String[] arr) {
+    static Pattern buildRegEx(Collection<String> arr) {
+        if (arr.size() == 0)
+            return null;
+        String result = "(";
+        int i = 0;
+        for (String s : arr) {
+            if (i != 0) {
+                result += "|";
+            }
+            result += "\\Q" + s + "\\E";
+            i++;
+        }
+        result += ")";
+        return Pattern.compile(result);
+    }
+
+    /** Constructs a regex that checks for any string in the provided array. */
+    static Pattern buildRegEx(String[] arr) {
         if (arr.length == 0)
-            return "()";
+            return null;
         String result = "(\\Q" + arr[0] + "\\E";
         for (int i = 1; i < arr.length; i++) {
             result += "|\\Q" + arr[i] + "\\E";
         }
         result += ")";
-        return result;
+        return Pattern.compile(result);
     }
 
     /** Constructs a regex that checks for any string in the provided array. */
-    static String buildRegEx(String[][] arr, int index) {
+    static Pattern buildRegEx(String[][] arr, int index) {
         if (arr.length == 0)
-            return "()";
+            return null;
         String result = "(\\Q" + arr[0][index] + "\\E";
         for (int i = 1; i < arr.length; i++) {
             result += "|\\Q" + arr[i][index] + "\\E";
         }
         result += ")";
-        return result;
+        return Pattern.compile(result);
     }
 
     /**
@@ -396,6 +431,7 @@ public class Parser {
     static Matcher startMatcher(String input, Pattern... patterns) {
         Matcher m = null;
         for (int i = 0; i < patterns.length; i++) {
+            if (patterns[i] == null) continue;
             if (VERBOSE) System.out.print("  attempting to match pattern " + patterns[i] + " with input " + input);
             m = patterns[i].matcher(input);
             if (m.find() && m.start()==0) { if (VERBOSE) System.out.println(" ... success!!!"); return m; }
@@ -404,33 +440,4 @@ public class Parser {
         return null;
     }
     
-//    //
-//    // OLD STUFF
-//    //
-//
-//    //static String $PAROPEN = "(\\(|\\[|\\{|\\Q/**\\E|\\Q!--\\E)";
-////    static String $PAROPEN = "(\\Q(\\E|\\Q[\\E|\\Q{\\E|\\Q/**\\E|\\Q!--\\E)";
-////    static String $PARCLOSE = "([\\)\\]\\}]|\\Q*/\\E|\\Q-!\\E)";
-//
-//    // unary operator pattern
-////    static String[] unary = { "!", "+", "-" };
-//    static String $UNARY = "([!\\+\\-])";
-//    static Pattern P$UN = Pattern.compile($UNARY);
-//
-//    // post-unary operator pattern
-//    static String $POSTUNARY = "([!])";
-//    static Pattern P$PU = Pattern.compile($POSTUNARY);
-//
-//    // multary operator pattern
-////    static String[] punctuation = { ",", ";" };
-////    static String[] multary = { "*", "+" };
-//    static String $MULTARY = "([\\+\\*,;])";
-//    static Pattern P$MU = Pattern.compile($MULTARY);
-//
-//    // binary operator pattern
-////    static String[] binary = { "==", "!=", ">=", "<=", ">", "<", "=", ":=", "-", "/", "^", "&&", "||" };
-//    static String $BIN1 = "[\\-/\\^><=%]";
-//    static String $BIN2 = "==|!=|>=|<=|:=|&&|\\Q||\\E";
-//    static String $BINARY = "(" + $BIN2 + "|" + $BIN1 + ")";
-//    static Pattern P$BI = Pattern.compile($BINARY);
 }

@@ -6,7 +6,7 @@ package org.bm.blaise.scribo.parser.semantic;
 
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -40,8 +40,8 @@ public class SemanticConstantNode extends SemanticLeafNodeSupport {
         return value;
     }
 
-    public List<String> unknowns() {
-        return Collections.EMPTY_LIST;
+    public Map<String, Class<?>> unknowns() {
+        return Collections.EMPTY_MAP;
     }
 
     public Class<?> valueType() {

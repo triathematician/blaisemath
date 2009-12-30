@@ -28,7 +28,7 @@ import java.util.Map;
  *    this will be done. This also permits grammars to be dynamically adjusted.
  * </p>
  *
- * @see Parser
+ * @see GrammarParser
  * @author Elisha Peterson
  */
 public interface Grammar {
@@ -59,6 +59,12 @@ public interface Grammar {
      * @return string token
      */
     public String argumentListSeparator();
+
+    /**
+     * Returns token associated with an implicit space or adjacency of operators, e.g. "3 x" and "3x" become "3*x"
+     * @return string token
+     */
+    public String implicitSpaceOperator();
 
     /**
      * Returns pairs of strings that represent opening and closing parenthetical statements.
@@ -105,12 +111,8 @@ public interface Grammar {
     public Map<String, Method> postUnaryOperators();
 
     /**
-     * Return strings representing <i>all binary <b>AND</b> multary operators</i> in the grammar.
-     * These should be ordered in a way consistent with order-of-operations. 
-     * The last entry is the first operator that will be evaluated, and the first entry
-     * is the last operator that will be evaluated (and be at the top of the token tree).
-     * 
-     * The keys in the map
+     * Return strings representing <i>all binary <b>AND</b> multary operators</i>
+     * in the grammar. The keys in the map
      * are the operators used in the grammar; the values are the <b>names</b> of the
      * associated functions. These functions will be "looked up" in the default class
      * locations, and the corresponding functions should all have two or more arguments.
@@ -134,7 +136,17 @@ public interface Grammar {
      *
      * @return a map pairing operator tokens with the method names representing them.
      */
-    public Map<String, Method> multaryOperators();
+    public String[] multaryOperators();
+
+    /**
+     * Return list of operators in order desired for order-of-operations.
+     * These should be ordered in a way consistent with order-of-operations.
+     * The last entry is the first operator that will be evaluated, and the first entry
+     * is the last operator that will be evaluated (and be at the top of the token tree).
+     *
+     * @return an array of operators in order of operations
+     */
+    public String[] orderOfOperations();
 
     //
     // FUNCTIONS

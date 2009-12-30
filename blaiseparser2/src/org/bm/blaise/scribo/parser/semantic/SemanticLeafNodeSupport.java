@@ -53,8 +53,18 @@ public abstract class SemanticLeafNodeSupport implements SemanticNode {
             return name + (value == null ? "" : "=" + value);
     }
 
+
     //
-    // MutableTreeNode METHODS
+    // SemanticNode METHODS
+    //
+
+    public Class<?>[] getArgumentTypes() {
+        return null;
+    }
+
+
+    //
+    // TreeNode METHODS
     //
 
     public TreeNode getParent() {

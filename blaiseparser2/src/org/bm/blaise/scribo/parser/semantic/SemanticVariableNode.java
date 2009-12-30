@@ -6,7 +6,8 @@ package org.bm.blaise.scribo.parser.semantic;
 
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -55,8 +56,10 @@ public class SemanticVariableNode extends SemanticLeafNodeSupport {
         return value;
     }
 
-    public List<String> unknowns() {
-        return Arrays.asList(name);
+    public Map<String, Class<?>> unknowns() {
+        HashMap<String, Class<?>> result = new HashMap<String, Class<?>>();
+        result.put(name, valueType);
+        return result;
     }
 
     public Class<?> valueType() {

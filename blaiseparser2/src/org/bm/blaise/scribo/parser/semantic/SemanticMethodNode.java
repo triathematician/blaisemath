@@ -8,8 +8,6 @@ package org.bm.blaise.scribo.parser.semantic;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 
@@ -34,19 +32,35 @@ public class SemanticMethodNode extends SemanticArgumentNodeSupport {
         this.method = method;
     }
 
-    public Class<?>[] getParameterTypes() {
+    public Class<?>[] getArgumentTypes() {
         return method.getParameterTypes();
     }
 
+    @Override
+    boolean compatibleArguments(Class<?>[] types1, Class<?>[] types2) {
+//        System.out.println("Checking compatibility of " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
+        if (Arrays.equals(types1, types2)) {
+            return true;
+        }
+        if (types1.length == types2.length) {
+            // TODO - also check the compatibility
+            return true;
+        }
+        return false;
+    }
+
     public Object value() throws SemanticTreeEvaluationException {
+        Object[] args = null;
         try {
-            Object[] args = new Object[arguments.length];
+            args = new Object[arguments.length];
             for (int i = 0; i < args.length; i++) {
                 args[i] = arguments[i].value();
             }
             return method.invoke(null, args);
-        } catch (Exception ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex);
+        } catch (IllegalAccessException ex) {
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
+        } catch (InvocationTargetException ex) {
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
         }
     }
 

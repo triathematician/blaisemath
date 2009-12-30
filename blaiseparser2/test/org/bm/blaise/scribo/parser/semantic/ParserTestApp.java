@@ -2,15 +2,18 @@
  * TestTokenizers.java
  * Created on Nov 26, 2009, 2:42:23 PM
  */
-package org.bm.blaise.scribo.parser;
+package org.bm.blaise.scribo.parser.semantic;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeModel;
-import org.bm.blaise.scribo.parser.Parser.Tokenizer;
-import org.bm.blaise.scribo.parser.real.RealGrammar;
-import org.bm.blaise.scribo.parser.real.RealTreeBuilder;
+import org.bm.blaise.scribo.parser.Grammar;
+import org.bm.blaise.scribo.parser.ParseException;
+import org.bm.blaise.scribo.parser.SemanticNode;
+import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
+import org.bm.blaise.scribo.parser.semantic.TokenParser.Tokenizer;
 
 /**
  *
@@ -35,6 +38,7 @@ public class ParserTestApp extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         value = new javax.swing.JLabel();
@@ -63,6 +67,9 @@ public class ParserTestApp extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jTextField1);
+
+        jComboBox1.setModel(new DefaultComboBoxModel(ParserType.values()));
+        jToolBar1.add(jComboBox1);
 
         jButton1.setText("GO!!");
         jButton1.setFocusable(false);
@@ -127,13 +134,19 @@ public class ParserTestApp extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String expression = jTextField1.getText();
+        Grammar g = ((ParserType)jComboBox1.getSelectedItem()).g;
 
         // create token table
         try {
             ArrayList<String> tokens = new ArrayList<String>();
             ArrayList<TokenType> types = new ArrayList<TokenType>();
-            new Tokenizer(RealGrammar.INSTANCE).tokenize(expression, tokens, types);
-            Parser.convertFunctionTypes(tokens, types, RealGrammar.INSTANCE);
+            if (jComboBox1.getSelectedItem()==ParserType.REAL) {
+                new Tokenizer(g).tokenize(expression, tokens, types);
+                TokenParser.convertFunctionTypes(tokens, types, g);
+            } else if (jComboBox1.getSelectedItem()==ParserType.BOOLEAN) {
+                new Tokenizer(g).tokenize(expression, tokens, types);
+                TokenParser.convertFunctionTypes(tokens, types, g);
+            }
             Object[][] data = new Object[tokens.size()][2];
             String[] colNames = {"Token", "Type"};
             for (int i = 0; i < data.length; i++) {
@@ -146,7 +159,7 @@ public class ParserTestApp extends javax.swing.JFrame {
 
         // create token tree
         try {
-            TokenNode topNode = new Parser(RealGrammar.INSTANCE).parseTree(expression);
+            TokenNode topNode = new TokenParser(g).tokenizeTree(expression);
             tokenTree.setModel(new DefaultTreeModel(topNode));
             jTextField1.setForeground(Color.BLACK);
             status.setText("OK");
@@ -177,7 +190,7 @@ public class ParserTestApp extends javax.swing.JFrame {
         // create semantic tree and show values
         SemanticNode sNode = null;
         try {
-            sNode = RealTreeBuilder.INSTANCE.buildTree(expression);
+            sNode = new TokenParser(g).parseTree(expression);
             semanticTree.setModel(new DefaultTreeModel(sNode));
             
             // compute value
@@ -185,6 +198,7 @@ public class ParserTestApp extends javax.swing.JFrame {
                 value.setText(sNode.value().toString());
                 value.setForeground(Color.BLUE);
             } catch (SemanticTreeEvaluationException ex) {
+                status.setText("Error evaluating semantic tree");
                 value.setText("N/A");
                 value.setForeground(Color.RED);
             }
@@ -216,6 +230,7 @@ public class ParserTestApp extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

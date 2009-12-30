@@ -6,10 +6,11 @@
 package org.bm.blaise.scribo.parser.semantic;
 
 import org.bm.blaise.scribo.parser.SemanticNode;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.tree.TreeNode;
 
 /**
@@ -26,12 +27,12 @@ import javax.swing.tree.TreeNode;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class SemanticArgumentNodeSupport implements SemanticArgumentNode {
+public abstract class SemanticArgumentNodeSupport implements SemanticNode {
 
     /** The parent object of the node */
     SemanticNode parent;
     /** Argument types */
-    Class[] argTypes;
+    Class<?>[] argTypes;
     /** The arguments of the node */
     SemanticNode[] arguments;
 
@@ -54,33 +55,35 @@ public abstract class SemanticArgumentNodeSupport implements SemanticArgumentNod
      * @throws IllegalArgumentException if the arguments do not match the stored argument types
      */
     protected void setArguments(Class<?>[] argTypes, SemanticNode... arguments) {
-        // type checking
-        if (arguments.length == argTypes.length) {
-//            for (int i = 0; i < arguments.length; i++) {
-//                if (!argTypes[i].isAssignableFrom(arguments[i].valueType()))
-//                    throw new IllegalArgumentException("Argument " + arguments[i].valueType() + " is not an object of type " + argTypes[i]);
-//            }
-        } else {
-            throw new IllegalArgumentException("Must have an equal number of arguments and argument types.");
+        Class<?>[] argTypes2 = new Class<?>[arguments.length];
+        for (int i = 0; i < arguments.length; i++) {
+            argTypes2[i] = arguments[i].valueType();
+        }
+        if (!compatibleArguments(argTypes, argTypes2)) {
+            throw new IllegalArgumentException("Arguments are not compatible with specified types.");
         }
         this.argTypes = argTypes;
         this.arguments = arguments;
     }
 
+    abstract boolean compatibleArguments(Class<?>[] types1, Class<?>[] types2);
+
     //
     // SemanticNode & SemanticArgumentNode INTERFACE METHODS
     //
 
-    public List<String> unknowns() {
-        List<String> result = new ArrayList<String>();
-        for (SemanticNode tn : arguments) {
-            for (Object s : tn.unknowns()) {
-                if ( ! result.contains((String) s) ) {
-                    result.add((String) s);
-                }
+    public Map<String, Class<?>> unknowns() {
+        if (getChildCount() == 0) {
+            return Collections.EMPTY_MAP;
+        } else if (getChildCount() == 1) {
+            return arguments[0].unknowns();
+        } else {
+            Map<String, Class<?>> result = new HashMap<String, Class<?>>();
+            for (SemanticNode tn : arguments) {
+                result.putAll(tn.unknowns());
             }
+            return result;
         }
-        return result;
     }
 
     //
