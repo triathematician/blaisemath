@@ -10,7 +10,7 @@ import data.propertysheet.editor.FunctionEditor;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bm.blaise.scribo.parser.real.ParsedUnivariateRealFunction;
+import org.bm.blaise.scio.function.ParsedUnivariateRealFunction;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlaneGrid;

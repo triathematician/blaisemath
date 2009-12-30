@@ -6,7 +6,7 @@
 package data.propertysheet.editor;
 
 import java.beans.PropertyEditorManager;
-import org.bm.blaise.scribo.parser.real.ParsedUnivariateRealFunction;
+import org.bm.blaise.scio.function.ParsedUnivariateRealFunction;
 import org.bm.blaise.scribo.parser.ParseException;
 
 /**
@@ -34,7 +34,6 @@ public class FunctionEditor extends StringEditor {
         try { func().setFunctionString(text); } catch (ParseException ex) { }
     }
 
-    @Override
     public void setNewAsText(String text) {
         try { newfunc().setFunctionString(text); } catch (ParseException ex) { }
     }

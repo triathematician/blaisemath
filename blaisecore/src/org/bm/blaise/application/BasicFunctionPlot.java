@@ -1,18 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * BasicFunctionPlot.java
- *
  * Created on Dec 1, 2009, 3:06:10 PM
  */
 
 package org.bm.blaise.application;
 
 import java.awt.Color;
-import org.bm.blaise.scribo.parser.real.ParsedUnivariateRealFunction;
+import org.bm.blaise.scio.function.ParsedUnivariateRealFunction;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.specto.plane.PlaneAxes;
 
