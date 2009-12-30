@@ -3,7 +3,7 @@
 #sidebar TableOfContents
 
 = Description =
-The `blaiseparser` package provides basic parsing functionality. Some principles for the parser:
+The `blaiseparser2` package provides basic parsing functionality. Some principles for the parser:
   * case-insensitive
   * permits pseudonyms for functions, e.g. "avg", and "average" work the same
 
