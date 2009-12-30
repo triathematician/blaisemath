@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scribo.parser.bool;
 
+import org.bm.blaise.scribo.parser.bool.*;
 import java.lang.reflect.Method;
 import org.bm.blaise.scribo.parser.*;
 import org.bm.blaise.scribo.parser.ParseException.ParseErrorCode;
@@ -55,7 +56,7 @@ public class BooleanTreeBuilder implements SemanticTreeBuilder {
                 else
                     throw new ParseException("Empty expression", ParseException.ParseErrorCode.EMPTY_EXPRESSION);
 
-            case UNARY_OPERATOR:
+            case PRE_UNARY_OPERATOR:
             case POST_UNARY_OPERATOR:
                 SemanticNode arg = buildTree((TokenNode) tokenNode.firstChild());
                 if (name.equals("!") || name.equalsIgnoreCase("not"))
@@ -138,12 +139,5 @@ public class BooleanTreeBuilder implements SemanticTreeBuilder {
     }
 
 
-    //
-    // STATIC FUNCTIONS TO USE IN SEMANTIC EVALUATION
-    //
 
-    public static boolean not(boolean x) { return !x; }
-    public static boolean and(boolean x, boolean y) { return x && y; }
-    public static boolean or(boolean x, boolean y) { return x || y; }
-    public static boolean xor(boolean x, boolean y) { return (x && !y) || (!x && y); }
 }

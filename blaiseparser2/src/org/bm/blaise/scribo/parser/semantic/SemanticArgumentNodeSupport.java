@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import javax.swing.tree.TreeNode;
-import org.bm.blaise.scribo.parser.SemanticArgumentNode;
 
 /**
  * <p>

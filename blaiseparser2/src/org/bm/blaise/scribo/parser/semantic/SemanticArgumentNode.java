@@ -3,7 +3,9 @@
  * Created on Nov 30, 2009
  */
 
-package org.bm.blaise.scribo.parser;
+package org.bm.blaise.scribo.parser.semantic;
+
+import org.bm.blaise.scribo.parser.*;
 
 /**
  * <p>

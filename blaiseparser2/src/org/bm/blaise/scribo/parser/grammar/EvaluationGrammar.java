@@ -28,7 +28,7 @@ public class EvaluationGrammar implements Grammar {
     public String[] functions() { return FUNCS; }
     public String[] constants() { return CONSTANTS; }
 
-    public Map<String, String> synonyms() { return Collections.EMPTY_MAP; }
+    public Map<String, String> synonymMap() { return Collections.EMPTY_MAP; }
     public boolean isCaseSensitive() { return false; }
 
     public String[] preUnaryOperators() {

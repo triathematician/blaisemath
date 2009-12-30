@@ -47,7 +47,7 @@ public class ParserTest {
             public String[][] parentheticals() { return new String[][] { {"(",")"}, {"/**", "*/"}, {"[", "]"} }; }
             public String[] functions() { return new String[] { "sin" }; }
             public String[] constants() { return new String[] {}; }
-            public Map<String, String> synonyms() { return Collections.EMPTY_MAP; }
+            public Map<String, String> synonymMap() { return Collections.EMPTY_MAP; }
             public boolean isCaseSensitive() { return false; }
         });
 

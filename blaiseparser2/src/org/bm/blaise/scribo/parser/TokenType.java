@@ -17,7 +17,7 @@ public enum TokenType {
     FUNCTION(true, false),
     PARENTHETICAL_OPEN(true, false),
     PARENTHETICAL_CLOSE(false, true),
-    UNARY_OPERATOR(true, false),
+    PRE_UNARY_OPERATOR(true, false),
     POST_UNARY_OPERATOR(false, false),
     BINARY_OPERATOR(false, false),
     MULTARY_OPERATOR(false, false);

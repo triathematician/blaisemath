@@ -4,6 +4,7 @@
  */
 package org.bm.blaise.scribo.parser.real;
 
+import org.bm.blaise.scribo.parser.real.*;
 import java.lang.reflect.Method;
 import org.bm.blaise.scribo.parser.*;
 import org.bm.blaise.scribo.parser.semantic.*;
@@ -80,7 +81,7 @@ public class RealTreeBuilder implements SemanticTreeBuilder {
                 else
                     throw new ParseException("Empty expression", ParseException.ParseErrorCode.EMPTY_EXPRESSION);
 
-            case UNARY_OPERATOR:
+            case PRE_UNARY_OPERATOR:
             case POST_UNARY_OPERATOR:
                 SemanticNode arg = buildTree((TokenNode) tokenNode.firstChild());
                 // TODO - this dynamic naming should be described within the grammar
@@ -180,81 +181,5 @@ public class RealTreeBuilder implements SemanticTreeBuilder {
         return m;
     }
 
-    //
-    // STATIC FUNCTIONS TO USE IN SEMANTIC EVALUATION
-    //
 
-    public static double log2(double arg) {
-        return Math.log(arg)/Math.log(2);
-    }
-    public static double frac(double arg) {
-        return arg % 1;
-    }
-    public static double random(double min, double max) {
-        return Math.random()*(max-min) + min;
-    }
-
-    //
-    // UNARY OPERATORS AS FUNCTIONS
-    //
-
-    public static double negation(double arg) {
-        return -arg;
-    }
-    public static double factorial(double arg) {
-        double result = 1;
-        while (arg > 1) {
-            result *= arg;
-            arg--;
-        }
-        return result;
-    }
-
-    //
-    // BINARY OPERATORS AS FUNCTIONS
-    //
-
-    public static double subtract(double arg1, double arg2) {
-        return arg1 - arg2;
-    }
-
-    public static double divide(double arg1, double arg2) {
-        return arg1 / arg2;
-    }
-
-    public static double power(double arg1, double arg2) {
-        return Math.pow(arg1, arg2);
-    }
-
-    public static double modulus(double arg1, double arg2) {
-        return arg1 % arg2;
-    }
-
-    //
-    // MULTARY OPERATORS AS FUNCTIONS
-    //
-
-    public static double add(double arg1, double arg2) {
-        return arg1 + arg2;
-    }
-
-    public static double multiply(double arg1, double arg2) {
-        return arg1 * arg2;
-    }
-
-    //
-    // GENERAL MULTARY FUNCTIONS
-    //
-
-    public static double average(double[] xs) {
-        return sum(xs)/xs.length;
-    }
-
-    public static double sum(double[] xs) {
-        double result = 0.0;
-        for (int i = 0; i < xs.length; i++) {
-            result += xs[i];
-        }
-        return result;
-    }
 }

@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scribo.parser;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -33,79 +34,115 @@ import java.util.Map;
 public interface Grammar {
 
     //
-    // LANGUAGE SPECS
-    //
-
-    /** 
-     * Return strings representing prefix-unary operators in the grammar, such as the
-     * "-" in "-5", or the "!" in "!true". Order does not matter.
-     * @return an array containing the operators
-     */
-    public String[] preUnaryOperators();
-
-    /**
-     * Return strings representing postfix-unary operators in the grammar, such as the
-     * "!" in "5!" for factorial. Order does not matter.
-     * @return an array containing the operators
-     */
-    public String[] postUnaryOperators();
-
-    /**
-     * Return strings representing <i>all binary <b>AND</b> multary operators</i> in the grammar.
-     * These should be ordered in a way consistent with order-of-operations. 
-     * The last entry is the first operator that will be evaluated, and the first entry
-     * is the last operator that will be evaluated (and be at the top of the token tree).
-     * @return an array containing the operators
-     */
-    public String[] naryOperators();
-
-    /**
-     * Return strings representing <i>multary</i> operators in the grammar.
-     * These should also be returned by the <code>binaryOperators()</code> method,
-     * in which there order is used to determine the order-of-operations. Operators
-     * returned by <code>binaryOperators()</code> that are not returned by this
-     * method are assumed to be purely <i>binary</i> oeprators.
-     * @return an array containing the operators
-     */
-    public String[] multaryOperators();
-
-    /**
-     * Returns pairs of strings that represent opening and closing parenthetical statements.
-     * @return an array of length-2 arrays of strings, where the first string represents
-     *   an opening parenthetical and the second represents a closing parenthetical
-     */
-    public String[][] parentheticals();
-
-    /**
-     * Returns strings representing functions in the grammar.
-     * @return an array of strings that represent function names
-     */
-    public String[] functions();
-
-    /** 
-     * Returns strings representing constants in the grammar.
-     * @return an array of strings that represent constants
-     */
-    public String[] constants();
-
-
-    //
-    // SYNONYMS
+    // GENERAL PROPERTIES
     //
 
     /**
-     * Return list of token synonyms.
-     * @return a map associating key strings with their synonyms; the keys should
-     *   be the token name, and the value should be the synonym; generally, these
-     *   tokens will be replaced by their synonyms
-     */
-    public Map<String,String> synonyms();
-
-    /** 
      * Describes whether the grammar is case-sensitive. A case-sensitive grammar
      * interprets versions of the same token with different cases as different tokens.
      * @return <code>true</code> if the grammar is case-sensitive
      */
     public boolean isCaseSensitive();
 
+    //
+    // PARENTHETICALS
+    //
+
+    /**
+     * Returns token associated with opening of a function's list of arguments.
+     * @return string token
+     */
+    public String argumentListOpener();
+
+    /**
+     * Returns token separating arguments in a list of arguments.
+     * @return string token
+     */
+    public String argumentListSeparator();
+
+    /**
+     * Returns pairs of strings that represent opening and closing parenthetical statements.
+     * 
+     * @return an array of length-2 arrays of strings, where the first string represents
+     *   an opening parenthetical and the second represents a closing parenthetical
+     */
+    public String[][] parentheticals();
+
+    //
+    // CONSTANTS & VARIABLES
+    //
+
+    /**
+     * Returns the constants in the grammar, together with their associated values.
+     * @return a lookup map that contains the constants
+     */
+    public Map<String, ? extends Object> constants();
+
+    //
+    // OPERATORS
+    //
+
+    /** 
+     * Return strings representing prefix-unary operators in the grammar, such as the
+     * "-" in "-5", or the "!" in "!true". Order does not matter. The keys in the map
+     * are the operators used in the grammar; the values are the <b>names</b> of the
+     * associated functions. These functions will be "looked up" in the default class
+     * locations, and the corresponding functions should all have a single argument.
+     *
+     * @return a map pairing operator tokens with the method names representing them.
+     */
+    public Map<String, Method> preUnaryOperators();
+
+    /**
+     * Return strings representing postfix-unary operators in the grammar, such as the
+     * "!" in "5!" for factorial. Order does not matter. The keys in the map
+     * are the operators used in the grammar; the values are the <b>names</b> of the
+     * associated functions. These functions will be "looked up" in the default class
+     * locations, and the corresponding functions should all have a single argument.
+     *
+     * @return a map pairing operator tokens with the method names representing them.
+     */
+    public Map<String, Method> postUnaryOperators();
+
+    /**
+     * Return strings representing <i>all binary <b>AND</b> multary operators</i> in the grammar.
+     * These should be ordered in a way consistent with order-of-operations. 
+     * The last entry is the first operator that will be evaluated, and the first entry
+     * is the last operator that will be evaluated (and be at the top of the token tree).
+     * 
+     * The keys in the map
+     * are the operators used in the grammar; the values are the <b>names</b> of the
+     * associated functions. These functions will be "looked up" in the default class
+     * locations, and the corresponding functions should all have two or more arguments.
+     *
+     * @return a map pairing operator tokens with the method names representing them.
+     */
+    public Map<String, Method> naryOperators();
+
+    /**
+     * Return strings representing <i>multary</i> operators in the grammar.
+     * These should also be returned by the <code>binaryOperators()</code> method,
+     * in which there order is used to determine the order-of-operations. Operators
+     * returned by <code>binaryOperators()</code> that are not returned by this
+     * method are assumed to be purely <i>binary</i> operators.
+     * 
+     * The keys in the map
+     * are the operators used in the grammar; the values are the <b>names</b> of the
+     * associated functions. These functions will be "looked up" in the default class
+     * locations, and the corresponding functions should have a single array-based
+     * argument.
+     *
+     * @return a map pairing operator tokens with the method names representing them.
+     */
+    public Map<String, Method> multaryOperators();
+
+    //
+    // FUNCTIONS
+    //
+
+    /**
+     * Returns strings representing functions in the grammar.
+     * @return an array of strings that represent function names
+     */
+    public Map<String, Method> functions();
 }

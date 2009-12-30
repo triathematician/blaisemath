@@ -103,7 +103,7 @@ public class Parser {
         // TODO - move this to within the parser
         if (curNode instanceof TokenNode.GroupNode && curNode.children.size() > 0 &&
                 (type==TokenType.NUMBER || type==TokenType.IDENTIFIER || type==TokenType.FUNCTION
-                || type==TokenType.PARENTHETICAL_OPEN || type==TokenType.UNARY_OPERATOR )
+                || type==TokenType.PARENTHETICAL_OPEN || type==TokenType.PRE_UNARY_OPERATOR )
                 ) {
            curNode = addToTree(curNode, "*", TokenType.MULTARY_OPERATOR);
         }
@@ -115,7 +115,7 @@ public class Parser {
                 // add a function node to the tree, which is the new current node
                 curNode = curNode.addNode(new TokenNode.FunctionNode(curNode, type, token));
                 break;
-            case UNARY_OPERATOR:
+            case PRE_UNARY_OPERATOR:
                 // add a unary operator to the tree, which is the new current node
                 curNode = curNode.addNode(new TokenNode.OperatorNode(curNode, type, token, Integer.MAX_VALUE));
                 break;
@@ -259,7 +259,7 @@ public class Parser {
                     : p==P$FL ? TokenType.NUMBER
                     : p==P$PAR_OPEN ? TokenType.PARENTHETICAL_OPEN
                     : p==P$PAR_CLOSE ? TokenType.PARENTHETICAL_CLOSE
-                    : p==P$PRE_UNARY ? TokenType.UNARY_OPERATOR
+                    : p==P$PRE_UNARY ? TokenType.PRE_UNARY_OPERATOR
                     : p==P$POST_UNARY ? TokenType.POST_UNARY_OPERATOR
                     : p==P$MULTARY ? TokenType.MULTARY_OPERATOR
                     : p==P$NARY ? TokenType.BINARY_OPERATOR
@@ -289,7 +289,7 @@ public class Parser {
      * @return <code>true</code> if the grammar recognizes the token as a function
      */
     static boolean isFunctionToken(String idToken, Grammar grammar) {
-        Map<String,String> synMap = grammar.synonyms();
+        Map<String,String> synMap = grammar.synonymMap();
         String[] funcs = grammar.functions();
         if (!grammar.isCaseSensitive())
             idToken = idToken.toLowerCase();
