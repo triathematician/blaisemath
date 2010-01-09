@@ -25,10 +25,13 @@ This page describes the planar plottables that have been implemented in `blaisec
 || `PlanePaddlePoint` || Displays a _"paddle"_ whose axis is fixed and which moves around in response to a vector field. || `VPoint` || *Anim*, *Dyn* ||
 || `PlaneParametricArea` || A parametric area, over a supplied square domain (in *R*^2^), which is stored and drawn by a `VRectangle`. Uses an underlying function mapping *R*^2^ to *R*^2^. The domain may be dragged around by the user. || `VComputedPath` || *Dyn* ||
 || `PlaneParametricCurve` || A parametric curve, over a supplied domain (interval in *R*). || `VComputedPath` || ||
-|| `PlaneParticleVectorField` || Displays a vector field as a collection of small particles that are "pushed around" by the field. || `VParticleField` || *Anim* ||
-|| `PlaneParticleVectorFieldCurve` || Displays a particle visualization of a vector field where all particles begin along the curve and are then moved off of the curve. || `PlaneParticleVectorField` || *Anim* ||
 || `PlaneSurfaceFunction` || Represents a function from *R*^2^ to *R* by a collection of dots drawn at regular intervals along a grid. || `VPrimitiveMappingPlottable` || ||
 || `PlaneVectorField` || Displays a field of vectors representing (scaled) samples of a vector field. || `VPrimitiveMappingPlottable` || ||
+
+*Particle-Based Visualizations*
+|| *Name of Class* || *Description* || *Base Class(es)* || *Annotations* ||
+|| `PlaneParticleVectorField` || Displays a vector field as a collection of small particles that are "pushed around" by the field. || `VParticleField` || *Anim* ||
+|| `PlaneParticleVectorFieldCurve` || Displays a particle visualization of a vector field where all particles begin along the curve and are then moved off of the curve. || `PlaneParticleVectorField` || *Anim* ||
 
 = Dynamic Interaction with the Plot =
 
@@ -39,7 +42,7 @@ The class `PlanePlotResizer` allows the user to manipulate the boundaries of the
     * `Shift+Drag` restricts movement to purely horizontal or vertical
     * `MouseWheel` zooms the plot in and out. 
 
-= Testing & Under Construction =
+= Experimental & Under Construction =
   * `PlaneImplicitFunction`
   * `PlaneRandomPointsImplicitFunction`
 
