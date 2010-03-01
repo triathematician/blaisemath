@@ -18,41 +18,48 @@ import org.bm.blaise.specto.visometry.PlotComponent;
 public interface BlaisePage {
 
     /** Returns the unique identifier of the page. */
-    String getIdentifier();
-
+    public String getIdentifier();
+    
     /** Returns the title of the page. */
-    String getTitle();
+    public String getTitle();
     /** Returns a description of the page. */
-    String getDescription();
-
-
-    /** Returns the previous page, possibly null. */
-    BlaisePage getPreviousPage();
-    /** Returns the next page, possibly null. */
-    BlaisePage getNextPage();
-
+    public String getDescription();
 
     /** Returns the main text of the page. */
-    String getText();
+    public String getText();
 
-
-    /** Returns the active plot component(s) of the page. */
-    PlotComponent getActivePlot();
     /** Returns all associated plot components. */
-    PlotComponent[] getPlot();
+    public PlotComponent[] getPlot();
     /** Returns the ith plot component. */
-    PlotComponent getPlot(int i);
+    public PlotComponent getPlot(int i);
+
+    /** Returns the active plot component(s) of the page, or null if no plot is currently selected. */
+    public PlotComponent getActivePlot();
+    /** Sets the active plot component. Should be one of the plots existing on the page. */
+    public void setActivePlot(PlotComponent plot);
+
     /** Returns the plot layout. */
-    PlotLayout getPlotLayout();
+    public PlotLayout getPlotLayout();
+
+    /** Returns the previous page, possibly null. */
+    public BlaisePage getPreviousPage();
+    /** Returns the next page, possibly null. */
+    public BlaisePage getNextPage();
 
 
     /** Represents possible layouts for multi-plot elements. */
     public enum PlotLayout {
-        TABBED,          // displays windows in tabs
-        CENTER_TOP,      // places first window at top and large
-        CENTER_LEFT,     // places first window at left and large
-        TILE_VERTICAL,   // gives plots equal size in vertical direction
-        TILE_HORIZONTAL, // gives plots equal size in horizontal direction
-        TILE_SQUARE;     // attempts to place plots in a grid format
+        /** Displays multiple windows in tabs. */
+        TABBED,
+        /** Places first window at top, makes it large; remaining windows go underneath. */
+        CENTER_TOP,
+        /** Places first window at left, makes it large; remaining windows go to the right. */
+        CENTER_LEFT,
+        /** Gives plots equal size in vertical direction */
+        TILE_VERTICAL,
+        /** Gives plots equal size in horizontal direction */
+        TILE_HORIZONTAL,
+        /** Attempts to place plots in a grid format */
+        TILE_SQUARE;
     }
 }

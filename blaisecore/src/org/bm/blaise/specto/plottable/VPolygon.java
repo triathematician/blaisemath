@@ -25,7 +25,7 @@ public class VPolygon<C> extends VPointSet<C> {
     /** Controls the outline and fill */
     protected ShapeStyle shapeStyle = new ShapeStyle(Color.BLACK, Color.GRAY);
 
-    public VPolygon(C[] values) {
+    public VPolygon(C... values) {
         super(values);
         setLabelsVisible(false);
     }

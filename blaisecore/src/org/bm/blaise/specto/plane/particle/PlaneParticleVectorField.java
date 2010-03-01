@@ -13,6 +13,7 @@ import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.plottable.VParticleField;
 import scio.random.RandomCoordinateGenerator;
+import util.ChangeEventHandler;
 
 /**
  * <p>
@@ -46,8 +47,10 @@ public class PlaneParticleVectorField extends VParticleField<Point2D.Double> imp
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public PlaneParticleVectorField(MultivariateVectorialFunction func) {
+    public PlaneParticleVectorField(MultivariateVectorialFunction func, RandomCoordinateGenerator<Point2D.Double> rpg) {
         setFunc(func);
+        this.rpg = rpg;
+        this.numParticles = 500;
     }
 
 
@@ -65,7 +68,16 @@ public class PlaneParticleVectorField extends VParticleField<Point2D.Double> imp
      * @param func the function
      */
     public void setFunc(MultivariateVectorialFunction func) {
-        this.func = func;
+        if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            }
+            this.func = func;
+            if (func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)func).addChangeListener(this);
+            }
+            fireStateChanged();
+        }
     }
 
     //
@@ -102,7 +114,7 @@ public class PlaneParticleVectorField extends VParticleField<Point2D.Double> imp
 
     @Override
     public void advancePath(Point2D.Double[] path) {
-        double tScale = 0.0001 * winScaleFactor * speed;
+        double tScale = 0.000001 * winScaleFactor * speed;
         double[] input = new double[2];
         double[] result = new double[2];
         Point2D.Double last;
@@ -122,5 +134,10 @@ public class PlaneParticleVectorField extends VParticleField<Point2D.Double> imp
             }
             path[path.length - 1] = new Point2D.Double(input[0] + result[0] * tScale, input[1] + result[1] * tScale);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Particle Visualization of DE Solution";
     }
 }

@@ -7,7 +7,7 @@ package org.bm.blaise.specto.plottable;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import org.bm.blaise.sequor.component.TimeClock;
+import org.bm.blaise.sequor.timer.TimeClock;
 import org.bm.blaise.specto.primitive.ClockStyle;
 import org.bm.blaise.specto.visometry.AnimatingPlottable;
 import org.bm.blaise.specto.visometry.Visometry;

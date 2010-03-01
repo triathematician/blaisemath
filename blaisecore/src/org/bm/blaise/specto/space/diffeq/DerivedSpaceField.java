@@ -9,12 +9,17 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
-import scio.function.utils.SampleField3D;
+import scio.function.utils.MultivariableUtils;
 import scio.function.utils.VectorFieldUtils;
+import util.ChangeEventHandler;
 
 /**
- * Offers user opportunity to switch between various "derived" types.
- * @author ae3263
+ * <p>
+ *   Offers user opportunity to switch between various "derived" types. The user may specify a base field
+ *   and possibly a few others that determine how this is used.
+ * </p>
+ * @author Elisha Peterson
+ * @see scio.function.utils.VectorFieldUtils
  */
 public class DerivedSpaceField extends SpaceVectorField {
     MultivariateVectorialFunction orig;
@@ -24,11 +29,11 @@ public class DerivedSpaceField extends SpaceVectorField {
     DerivedType type = DerivedType.PARALLEL;
 
     public DerivedSpaceField(
-            MultivariateVectorialFunction func,
+            MultivariateVectorialFunction orig,
             MultivariateVectorialFunction der1,
             MultivariateVectorialFunction der2,
             SampleCoordinateSetGenerator<Point3D> ssg) {
-        super(func, ssg);
+        super(null, ssg);
         this.der1 = der1;
         this.der2 = der2;
         if (this.der2 == null) {
@@ -38,8 +43,27 @@ public class DerivedSpaceField extends SpaceVectorField {
                 }
             };
         }
-        this.orig = func;
-        this.func = type.derived(orig, der1, der2);
+        setFunction(orig);
+    }
+
+    public DerivedSpaceField(
+            DerivedType type,
+            MultivariateVectorialFunction orig,
+            MultivariateVectorialFunction der1,
+            MultivariateVectorialFunction der2,
+            SampleCoordinateSetGenerator<Point3D> ssg) {
+        super(null, ssg);
+        this.type = type;
+        this.der1 = der1;
+        this.der2 = der2;
+        if (this.der2 == null) {
+            this.der2 = new MultivariateVectorialFunction() {
+                public double[] value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
+                    return new double[]{0, 0, 1};
+                }
+            };
+        }
+        setFunction(orig);
     }
 
     public DerivedType getType() {
@@ -53,9 +77,23 @@ public class DerivedSpaceField extends SpaceVectorField {
     }
 
     @Override
-    public void setSample(SampleField3D sample) {
-        super.setSample(sample);
-        orig = sample;
+    public MultivariateVectorialFunction getFunction() {
+        return orig;
+    }
+
+    @Override
+    public void setFunction(MultivariateVectorialFunction orig) {
+        if (orig != null && this.orig != orig) {
+            if (this.orig instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.orig).removeChangeListener(this);
+            }
+            this.orig = orig;
+            func = type.derived(orig, der1, der2);
+            if (orig instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)orig).addChangeListener(this);
+            }
+            fireStateChanged();
+        }
     }
 
     public static enum DerivedType {
@@ -113,6 +151,14 @@ public class DerivedSpaceField extends SpaceVectorField {
             MultivariateVectorialFunction der1,
             MultivariateVectorialFunction der2) {
                 return VectorFieldUtils.parallelField(func, der1, der2);
+            }
+        },
+        CURL(){
+            MultivariateVectorialFunction derived(
+            MultivariateVectorialFunction func,
+            MultivariateVectorialFunction der1,
+            MultivariateVectorialFunction der2) {
+                return MultivariableUtils.approximateCurlOf(func, 1e-6);
             }
         };
         

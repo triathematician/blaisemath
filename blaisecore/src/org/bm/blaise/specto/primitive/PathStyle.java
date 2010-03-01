@@ -25,9 +25,7 @@ import java.awt.Stroke;
 public class PathStyle implements PrimitiveStyle<Shape> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Stroke for the stroke. */
@@ -37,9 +35,7 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     Color strokeColor = Color.BLACK;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /** Default constructor. */
@@ -63,9 +59,16 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     }
 
     //
+    // UTILITIES
+    //
+
+    @Override
+    public String toString() {
+        return "PathStyle [wid=" + getThickness() + "]";
+    }
+
     //
     // PATTERNS
-    //
     //
 
     public Stroke getStroke() {
@@ -96,9 +99,7 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     }
 
     //
-    //
     // IMPLEMENTATION
-    //
     //
 
     public void draw(Shape path, Graphics2D canvas) {

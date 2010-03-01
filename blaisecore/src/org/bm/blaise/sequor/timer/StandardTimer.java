@@ -2,7 +2,7 @@
  * StandardTimer.java
  * Created on Jul 30, 2009
  */
-package org.bm.blaise.sequor.component;
+package org.bm.blaise.sequor.timer;
 
 import java.awt.event.ActionListener;
 
@@ -16,9 +16,7 @@ import java.awt.event.ActionListener;
 public interface StandardTimer {
 
     //
-    //
     // PATTERNS
-    //
     //
 
     /**
@@ -75,9 +73,7 @@ public interface StandardTimer {
     public boolean isStopped();
 
     //
-    //
     // STATE FEATURES
-    //
     //
 
     /** 
@@ -124,9 +120,7 @@ public interface StandardTimer {
     public void speedUp();
 
     //
-    //
     // ACTION EVENT HANDLING
-    //
     //
 
     /**

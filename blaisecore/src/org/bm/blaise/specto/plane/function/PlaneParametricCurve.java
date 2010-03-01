@@ -18,6 +18,7 @@ import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.plottable.VComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
 import scio.coordinate.sample.RealIntervalSampler;
+import scio.function.utils.DemoCurve2D;
 
 /**
  * <p>
@@ -43,7 +44,7 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
      * @param max the max value in domain
      */
     public PlaneParametricCurve(UnivariateVectorialFunction func, double min, double max) {
-        this(func, min, max, 100);
+        this(func, min, max, 200);
     }
     /**
      * Initializes with an underlying function and a step rate for going through parameter values.
@@ -61,24 +62,10 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     }
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // GETTERS & SETTERS
     //
 
-    public UnivariateVectorialFunction getFunction() {
-        return func;
-    }
-
-    public void setFunction(UnivariateVectorialFunction func) {
-        if (func != null && this.func != func) {
-            this.func = func;
-            needsComputation = true;
-            fireStateChanged();
-        }
-    }
-
-    public MaxMinDomain<Double> getDomain() {
+    public RealIntervalSampler getDomain() {
         return domain;
     }
 
@@ -100,6 +87,10 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
         return domainPlottable;
     }
 
+    //
+    // EVENT HANDLING
+    //
+
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == domainPlottable) {
@@ -111,14 +102,45 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     }
 
     //
+    // FUNCTION HANDLING & DEMOS
+    //
+
+    DemoCurve2D demo = DemoCurve2D.ARCHIMEDEAN_SPIRAL;
+
+    public UnivariateVectorialFunction getFunction() {
+        return demo == demo.NONE ? func : demo;
+    }
+
+    public void setFunction(UnivariateVectorialFunction func) {
+        if (func != null && this.func != func) {
+            this.func = func;
+            demo = demo.NONE;
+            needsComputation = true;
+            fireStateChanged();
+        }
+    }
+    public DemoCurve2D getDemoCurve() {
+        return demo;
+    }
+
+    public void setDemoCurve(DemoCurve2D demo) {
+        this.demo = demo;
+        if (demo != DemoCurve2D.NONE) {
+            domain = new RealIntervalSampler(demo.t0, demo.t1, 200);
+            domainPlottable.setPoint1(demo.t0);
+            domainPlottable.setPoint2(demo.t1);
+        }
+        needsComputation = true;
+        fireStateChanged();
+    }
+
     //
     // DRAW METHODS
-    //
     //
 
     /** Recomputes the visual path for the function. */
     protected void recompute(VisometryGraphics<Point2D.Double> vg) {
-        System.out.println("recomputing curve...");
+        UnivariateVectorialFunction useFunc = demo == DemoCurve2D.NONE ? func : demo;
         try {
             if (path == null) {
                 path = new GeneralPath();
@@ -126,10 +148,10 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
                 path.reset();
             }
             List<Double> samples = domain.getSamples();
-            double[] coords = func.value(samples.get(0));
+            double[] coords = useFunc.value(samples.get(0));
             path.moveTo((float) coords[0], (float) coords[1]);
             for (double x : samples) {
-                coords = func.value(x);
+                coords = useFunc.value(x);
                 path.lineTo((float) coords[0], (float) coords[1]);
             }
         } catch (FunctionEvaluationException ex) {

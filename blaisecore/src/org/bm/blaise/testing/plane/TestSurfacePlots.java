@@ -10,7 +10,7 @@ import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
-import org.bm.blaise.sequor.component.BClock;
+import org.bm.blaise.sequor.timer.BetterTimeClock;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.plane.function.PlaneSurfaceFunction;
@@ -22,12 +22,12 @@ import org.bm.blaise.specto.visometry.Plottable;
  */
 public class TestSurfacePlots extends javax.swing.JFrame {
 
-    BClock timer;
+    BetterTimeClock timer;
 
     /** Creates new form TestPlaneVisometry */
     public TestSurfacePlots() {
-        data.beans.EditorRegistration.registerEditors();
-        timer = new BClock();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
+        timer = new BetterTimeClock();
         initComponents();
 
 
@@ -35,7 +35,7 @@ public class TestSurfacePlots extends javax.swing.JFrame {
 
         sfcPlot.addPlottable(new PlaneGrid());
         sfcPlot.addPlottable(new PlaneAxes());
-        sfcPlot.setClockTimer(timer);
+        sfcPlot.setTimeClock(timer);
 
         MultivariateRealFunction func = new MultivariateRealFunction(){
             public double value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {

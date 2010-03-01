@@ -5,23 +5,25 @@
  */
 package org.bm.blaise.scribo.page;
 
+import data.propertysheet.editor.FunctionEditor;
 import javax.swing.UIManager;
 
 /**
  *
  * @author ae3263
  */
-public class TestPage extends javax.swing.JFrame {
+public class BlaisePageViewer extends javax.swing.JFrame {
 
     /** Creates new form TestPage */
-    public TestPage() {
+    public BlaisePageViewer() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
         }
+        data.propertysheet.editor.EditorRegistration.registerEditors();
+        FunctionEditor.register();
 
         initComponents();
-        jSplitPane2.setLeftComponent(new BlaisePagePanel());
     }
 
     /** This method is called from within the constructor to
@@ -33,30 +35,43 @@ public class TestPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        blaisePageBean1 = new org.bm.blaise.scribo.page.BlaisePageBean();
+        blaisePageBean2 = new org.bm.blaise.scribo.page.BlaisePageBean();
+        blaisePageBean3 = new org.bm.blaise.scribo.page.BlaisePageBean();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        rollupPanel1 = new gui.RollupPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         blaisePageTree1 = new org.bm.blaise.scribo.page.BlaisePageTree();
+        blaisePagePanelPlus1 = new org.bm.blaise.scribo.page.BlaisePagePanelPlus();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
+        blaisePageBean1.setNextPage(blaisePageBean2);
+        blaisePageBean1.setPreviousPage(blaisePageBean3);
+        blaisePageBean1.setTitle("Page 1");
+
+        blaisePageBean2.setNextPage(blaisePageBean3);
+        blaisePageBean2.setPreviousPage(blaisePageBean1);
+        blaisePageBean2.setTitle("Page 2");
+
+        blaisePageBean3.setNextPage(blaisePageBean1);
+        blaisePageBean3.setPreviousPage(blaisePageBean2);
+        blaisePageBean3.setTitle("Page 3");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane1.setDividerLocation(150);
+        jSplitPane1.setDividerSize(10);
+        jSplitPane1.setForeground(new java.awt.Color(255, 255, 255));
+        jSplitPane1.setContinuousLayout(true);
         jSplitPane1.setOneTouchExpandable(true);
-
-        jSplitPane2.setDividerLocation(300);
-        jSplitPane2.setResizeWeight(1.0);
-        jSplitPane2.setOneTouchExpandable(true);
-        jSplitPane2.setRightComponent(rollupPanel1);
-
-        jSplitPane1.setRightComponent(jSplitPane2);
 
         jScrollPane1.setViewportView(blaisePageTree1);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
+
+        blaisePagePanelPlus1.setPage(blaisePageBean1);
+        jSplitPane1.setRightComponent(blaisePagePanelPlus1);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -78,18 +93,20 @@ public class TestPage extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new TestPage().setVisible(true);
+                new BlaisePageViewer().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.bm.blaise.scribo.page.BlaisePageBean blaisePageBean1;
+    private org.bm.blaise.scribo.page.BlaisePageBean blaisePageBean2;
+    private org.bm.blaise.scribo.page.BlaisePageBean blaisePageBean3;
+    private org.bm.blaise.scribo.page.BlaisePagePanelPlus blaisePagePanelPlus1;
     private org.bm.blaise.scribo.page.BlaisePageTree blaisePageTree1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
-    private gui.RollupPanel rollupPanel1;
     // End of variables declaration//GEN-END:variables
 }

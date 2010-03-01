@@ -8,6 +8,7 @@ package org.bm.blaise.specto.plane.function;
 import java.util.List;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import java.awt.Color;
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.bm.blaise.specto.plane.PlaneVisometry;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
+import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.GraphicPoint;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -28,10 +30,7 @@ import org.bm.blaise.specto.primitive.PointStyle;
  *
  * @author Elisha Peterson
  */
-public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Double, GraphicPoint> {
-
-    /** Style to use for plotting points in the grid. */
-    private static PointStyle DEFAULT_STYLE = new PointStyle(new Color(100, 100, 0), new Color(200, 200, 100));
+public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Double, GraphicPoint, Point2D.Double> {
 
     /** Multiplier for dot size. */
     double lengthMultiplier = 1;
@@ -40,14 +39,12 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
     MultivariateRealFunction func;
 
     public PlaneSurfaceFunction(MultivariateRealFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
-        super(DEFAULT_STYLE, ssg);
+        super(new PointStyle(BlaisePalette.STANDARD.func2(), BlaisePalette.STANDARD.func2light()), ssg);
         setFunc(func);
     }
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return function describing the surface */
@@ -79,11 +76,8 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
         this.lengthMultiplier = lengthMultiplier;
     }
 
-
-    //
     //
     // PrimitiveMapper INTERFACE METHODS
-    //
     //
 
     @Override
@@ -114,5 +108,10 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
             i++;
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "2-Variable Function [" + ssg + "]";
     }
 }

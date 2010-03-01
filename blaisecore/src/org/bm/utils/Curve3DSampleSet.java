@@ -33,11 +33,11 @@ public class Curve3DSampleSet implements SampleCoordinateSetGenerator<Point3D> {
         this.func = func;
     }
 
-    public int getnSamples() {
+    public int getNumSamples() {
         return nSamples;
     }
 
-    public void setnSamples(int nSamples) {
+    public void setNumSamples(int nSamples) {
         this.nSamples = nSamples;
     }
 
@@ -69,5 +69,10 @@ public class Curve3DSampleSet implements SampleCoordinateSetGenerator<Point3D> {
     public Point3D getSampleDiff() {
         double max = Math.max(Math.max(diff.x, diff.y), diff.z);
         return new Point3D(max, max, max);
+    }
+
+    @Override
+    public String toString() {
+        return "Curve Sample";
     }
 }

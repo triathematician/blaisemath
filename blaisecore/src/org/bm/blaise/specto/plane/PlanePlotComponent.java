@@ -5,12 +5,11 @@
 
 package org.bm.blaise.specto.plane;
 
-import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import org.bm.blaise.specto.plane.PlaneAxes.AxisStyle;
 import org.bm.blaise.specto.visometry.PlotComponent;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.utils.PlaneGridSampleSet;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
@@ -23,6 +22,10 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  * @author Elisha Peterson
  */
 public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
+
+    //
+    // CONSTRUCTORS
+    //
 
     /** 
      * Sets up default visometry and corresponding canvas. Also adds an underlying
@@ -37,15 +40,47 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         defaultMouseWheelListener = resizer;
     }
 
-    public PlanePlotComponent(PlaneGraphics pg, Visometry vis) {
-        super(vis);
-        visometryGraphics = pg;
+    /** 
+     * Constructs plot component which borrows graphics and visometry objects from
+     * another plot component. This intentionally makes it so adjusting one component
+     * also adjusts the other component.
+     * @param cpt another plot component
+     */
+    public PlanePlotComponent(PlanePlotComponent cpt) {
+        super(cpt.visometry);
+        visometryGraphics = cpt.visometryGraphics;
         PlanePlotResizer resizer = new PlanePlotResizer((PlaneVisometry) visometry, this);
         defaultMouseListener = resizer;
         defaultMouseWheelListener = resizer;
     }
 
+    /**
+     * Constructs plot component which borrows graphics and visometry objects from
+     * another plot component. This intentionally makes it so adjusting one component
+     * also adjusts the other component.
+     * @param cpt another plot component
+     */
+    public PlanePlotComponent(PlanePlotComponent cpt, String title, AxisStyle axisStyle) {
+        this(cpt);
+        setTitle(title);
+        addPlottable(PlaneAxes.instance(axisStyle, "x", "y"));
+    }
 
+    /** Initializes with a title and axes labeled by x and y. */
+    public PlanePlotComponent(String title, AxisStyle axisStyle) {
+        this(title, axisStyle, "x", "y");
+    }
+
+    /** Initializes with axes labeled by specified strings. */
+    public PlanePlotComponent(String title, AxisStyle axisStyle, String xLabel, String yLabel) {
+        this();
+        setTitle(title);
+        addPlottable(PlaneAxes.instance(axisStyle, xLabel, yLabel));
+    }
+
+    //
+    // GETTERS & SETTERS
+    //
 
     public SampleCoordinateSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
         return new PlaneGridSampleSet() {

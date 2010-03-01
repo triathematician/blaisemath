@@ -214,6 +214,7 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
                 return true;
             }
         }
+        selectedIndex = -1;
         return false;
     }
 

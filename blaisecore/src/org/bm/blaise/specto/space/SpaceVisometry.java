@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.bm.blaise.specto.visometry.Visometry;
 import scio.coordinate.Point3D;
+import scio.random.RandomCoordinateGenerator;
 
 /**
  * <p>
@@ -20,12 +21,10 @@ import scio.coordinate.Point3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceVisometry implements Visometry<Point3D> {
+public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGenerator<Point3D> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Stores the boundary of the display window. */
@@ -40,9 +39,7 @@ public class SpaceVisometry implements Visometry<Point3D> {
     SpaceProjection proj = new SpaceProjection();
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** Returns current space projection */
@@ -102,7 +99,7 @@ public class SpaceVisometry implements Visometry<Point3D> {
      * @return sinphi
      */
     public double rotateCamera(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
-        double boost = 1;
+        double boost = .5; // determines how quickly rotation occurs relative to mouse movement
         Point3D rotVec1 = pt1.minus(oldProj.center);
         Point3D rotVec2 = pt2.minus(oldProj.center);
         Point3D n = rotVec1.crossProduct(rotVec2).normalized();
@@ -213,11 +210,20 @@ public class SpaceVisometry implements Visometry<Point3D> {
     public Point3D getCoordinateOf(Point2D point) {
         return proj.getCoordinateOf(point);
     }
+
+    //
+    // SAMPLING ALGORITHMS
+    //
+
+    public Point3D randomValue() {
+        return new Point3D(
+                minPoint.x + Math.random() * (maxPoint.x - minPoint.x),
+                minPoint.y + Math.random() * (maxPoint.y - minPoint.y),
+                minPoint.z + Math.random() * (maxPoint.z - minPoint.z));
+    }
     
     //
-    //
     // EVENT HANDLING
-    //
     //
 
     /**

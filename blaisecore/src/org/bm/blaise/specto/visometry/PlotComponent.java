@@ -9,6 +9,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -21,7 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputListener;
-import org.bm.blaise.sequor.component.ClockTimer;
+import org.bm.blaise.sequor.timer.TimeClock;
+import org.bm.blaise.sequor.timer.TimerStatus;
 
 /**
  * <p>
@@ -61,10 +63,11 @@ import org.bm.blaise.sequor.component.ClockTimer;
 public class PlotComponent<C> extends JPanel implements ActionListener, ChangeListener, ComponentListener, MouseInputListener, MouseWheelListener {
 
     //
-    //
     // PROPERTIES
     //
-    //
+
+    /** The title of the plot. */
+    protected String title;
 
     /** Stores the group of plottables. */
     protected PlottableGroup<C> plottables;
@@ -75,13 +78,11 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     /** Graphics object for painting. */
     protected VisometryGraphics<C> visometryGraphics;
 
-    /** Clock timer used for the class. */
-    protected ClockTimer timer = null;
+    /** Clock timer used for animations. */
+    protected TimeClock timer = null;
 
     //
-    //
     // EVENT HANDLING
-    //
     //
 
     /** Default handler for mouse events. */
@@ -95,9 +96,7 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
 
 
     //
-    //
     // CONSTRUCTOR
-    //
     //
 
     /**
@@ -115,6 +114,7 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     public PlotComponent(Visometry<C> visometry) {
         plottables = new PlottableGroup();
         setVisometry(visometry);
+        title = "";
 
         // EVENT HANDLING
         plottables.addChangeListener(this);
@@ -129,11 +129,22 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
         setPreferredSize(new Dimension(300, 200));
     }
 
-    //
+
     //
     // BEAN PATTERNS
     //
-    //
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public TimeClock getTimeClock() {
+        return timer;
+    }
 
     /**
      * Sets this component's clock. The method first removes the component as a
@@ -144,7 +155,7 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      * @param clock the underlying timer
      * @throws IllegalArgumentException if a null argument is provided
      */
-    public void setClockTimer(ClockTimer clock) {
+    public void setTimeClock(TimeClock clock) {
         if (clock == null) {
             throw new IllegalArgumentException("setClockTimer called with null argument!");
         }
@@ -200,43 +211,51 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
     }
     
     //
-    //
     // COMPOSITIONAL
     //
-    //
 
-    /**
-     * Adds a plottable to the panel.
-     * 
-     * @param plottable a new plottable
-     */
-    public void addPlottable(Plottable<? extends C> plottable) {
+    /** Adds a plottable to the panel.
+     * @param plottable a new plottable */
+    public void addPlottable(Plottable<C> plottable) {
         plottables.add(plottable);
     }
 
-    /**
-     * Removes a plottable from the panel.
-     * 
+    /** Removes a plottable from the panel.
      * @param plottable a new plottable
-     * @return result of remove operation
-     */
-    public boolean removePlottable(Plottable<? extends C> plottable) {
+     * @return result of remove operation */
+    public boolean removePlottable(Plottable<C> plottable) {
         return plottables.remove(plottable);
     }
 
-    /**
-     * Return list of plottables.
-     *
-     * @return list of plottable elements
-     */
-    public List<Plottable<? extends C>> getPlottables() {
-        return plottables.getElements();
+    /** Removes all plottables from the panel. */
+    public void removeAllPlottables() {
+        plottables.clear();
+    }
+
+    /** Return list of plottables.
+     * @return list of plottable elements */
+    public List<Plottable<C>> getPlottables() {
+        return plottables.getPlottables();
+    }
+
+    public void setPlottableArray(int i, Plottable p) {
+        plottables.setPlottableArray(i, p);
+    }
+
+    public void setPlottableArray(Plottable[] pl) {
+        plottables.setPlottableArray(pl);
+    }
+
+    public Plottable getPlottableArray(int i) {
+        return plottables.getPlottableArray(i);
+    }
+
+    public Plottable[] getPlottableArray() {
+        return plottables.getPlottableArray();
     }
 
     //
-    //
     // COMPUTATION/PAINTING
-    //
     //
 
     /**
@@ -250,18 +269,18 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      */
     @Override
     protected void paintComponent(Graphics g) {
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g);
         visometryGraphics.setScreenGraphics((Graphics2D) g);
         plottables.paintComponent(visometryGraphics);
         if (defaultMouseListener instanceof Plottable) {
             ((Plottable) defaultMouseListener).paintComponent(visometryGraphics);
         }
+        
     }
 
     //
-    //
     // EVENT HANDLING : delegate to the plottable group
-    //
     //
     
     /**
@@ -290,15 +309,19 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer) {
-            plottables.recomputeAtTime(visometry, visometryGraphics, timer);
+            if (e.getActionCommand().equals(TimerStatus.STOPPED.toString()))
+                plottables.setAnimationOn(false);
+            else {
+                if (!plottables.isAnimationOn())
+                    plottables.setAnimationOn(true);
+                plottables.recomputeAtTime(visometry, visometryGraphics, timer);
+            }
             repaint();
         }
     }
 
     //
-    //
     // WINDOW SIZING EVENTS: PASS ON TO VISOMETRY
-    //
     //
 
     public void componentResized(ComponentEvent e) {
@@ -307,24 +330,18 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
         repaint();
     }
 
-    public void componentMoved(ComponentEvent e) {
-        //System.out.println("move");
-    }
-
     public void componentShown(ComponentEvent e) {
         //System.out.println("show");
         visometry.setWindowBounds(getVisibleRect());
         repaint();
     }
 
-    public void componentHidden(ComponentEvent e) {
-        //System.out.println("hide");
-    }
+    public void componentHidden(ComponentEvent e) {}
+
+    public void componentMoved(ComponentEvent e) {}
 
     //
-    //
     // MOUSE EVENTS : delegate to the plottable group
-    //
     //
 
     /** Local variable storing mouse events. */

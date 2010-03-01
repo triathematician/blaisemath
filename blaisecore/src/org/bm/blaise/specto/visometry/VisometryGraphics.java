@@ -329,13 +329,21 @@ public class VisometryGraphics<C> {
      * @param coords the points of the path in local coordinates
      */
     public void drawPath(C[] coords) {
+        drawPath(coords, 0, coords.length);
+    }
+
+    /**
+     * Draws a path from the first supplied point to the last, using default <code>pathStyle</code>
+     * @param coords the points of the path in local coordinates
+     */
+    public void drawPath(C[] coords, int iMin, int iMax) {
         if (coords.length <= 0) {
             return;
         }
-        Point2D nextPt = vis.getWindowPointOf(coords[0]);
+        Point2D nextPt = vis.getWindowPointOf(coords[iMin]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
-        for (int i = 1; i < coords.length; i++) {
+        for (int i = iMin+1; i <= Math.min(coords.length-1, iMax); i++) {
             nextPt = vis.getWindowPointOf(coords[i]);
             path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
         }

@@ -249,9 +249,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
     }
 
     //
-    //
     // SAMPLING ALGORITHMS
-    //
     //
 
     public Point2D.Double randomValue() {
@@ -261,9 +259,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
     }
 
     //
-    //
     // EVENT HANDLING
-    //
     //
     
     /**

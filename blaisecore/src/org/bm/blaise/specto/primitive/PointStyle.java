@@ -4,6 +4,7 @@
  */
 package org.bm.blaise.specto.primitive;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -18,7 +19,8 @@ import java.awt.geom.Rectangle2D;
  * <p>
  *   <code>PointStyle</code> draws a point on a 2D graphics canvas.
  *   Supports multiple styles of draw, encoded by the <code>shape</code> property,
- *   in the sub-class <code>PointStyle.PointShape</code>.
+ *   in the sub-class <code>PointStyle.PointShape</code>. If the radius of a point
+ *   is negative, the style will display that as a lighter colored point.
  * </p>
  *
  * @author Elisha Peterson
@@ -26,9 +28,7 @@ import java.awt.geom.Rectangle2D;
 public class PointStyle implements PrimitiveStyle<Point2D> {
 
     //
-    //
     // CONSTANTS
-    //
     //
 
     /** Default point. */
@@ -38,9 +38,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     public static final PointStyle SMALL = new PointStyle(PointShape.CIRCLE, null, null, Color.DARK_GRAY, 2);
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Determines shape used to indicate the point. */
@@ -59,9 +57,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     int radius = 5;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /** Construct with defaults. */
@@ -83,11 +79,17 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
         this.radius = radius;
     }
 
+    //
+    // UTILITIES
+    //
+
+    @Override
+    public String toString() {
+        return "PointStyle [" + shape + ", r=" + radius + "]";
+    }
 
     //
-    //
     // BEANS
-    //
     //
     
     public Color getFillColor() {
@@ -130,24 +132,31 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
         this.strokeColor = strokeColor;
     }
 
+    public float getThickness() {
+        return (stroke instanceof BasicStroke) ? ((BasicStroke)stroke).getLineWidth() : -1;
+    }
 
+    public void setThickness(float width) {
+        if (stroke instanceof BasicStroke) {
+            BasicStroke bs = (BasicStroke) stroke;
+            stroke = new BasicStroke(width, bs.getEndCap(), bs.getLineJoin(), bs.getMiterLimit(), bs.getDashArray(), bs.getDashPhase());
+        }
+    }
 
-    //
     //
     // GRAPHICS METHODS
-    //
     //
 
     public void draw(Point2D point, Graphics2D canvas) {
         double rad = point instanceof GraphicPoint ? ((GraphicPoint) point).radius : radius;
         Shape s = shape.getShape(point.getX(), point.getY(), Math.abs(rad));
         if (fillColor != null) {
-            canvas.setColor( rad < 0 ? fillColor.darker() : fillColor );
+            canvas.setColor( rad < 0 ? lighterVersionOf(fillColor) : fillColor );
             canvas.fill(s);
         }
         if (stroke != null && strokeColor != null) {
             canvas.setStroke(stroke);
-            canvas.setColor( rad < 0 ? strokeColor.darker() : strokeColor );
+            canvas.setColor( rad < 0 ? lighterVersionOf(strokeColor) : strokeColor );
             canvas.draw(s);
         }
     }
@@ -158,11 +167,17 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
         }
     }
 
+    private static Color lighterVersionOf(Color c) {
+        return new Color(lighten(c.getRed()), lighten(c.getGreen()), lighten(c.getBlue()));
+    }
+
+    private static int lighten(int i) {
+        return i + Math.min(64, (255-i)/2);
+    }
+
 
     //
-    //
     // SPECIALIZED DRAW METHODS
-    //
     //
 
     /** This <code>enum</code> provides for various formatted point styles. */

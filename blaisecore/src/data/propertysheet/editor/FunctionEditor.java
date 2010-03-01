@@ -20,6 +20,8 @@ public class FunctionEditor extends StringEditor {
     public static void register() {
         PropertyEditorManager.registerEditor(ParsedUnivariateRealFunction.class, FunctionEditor.class);
     }
+
+
     
     ParsedUnivariateRealFunction func() {
         return (ParsedUnivariateRealFunction) getValue();
@@ -29,13 +31,16 @@ public class FunctionEditor extends StringEditor {
         return (ParsedUnivariateRealFunction) getNewValue();
     }
 
+
+    
     @Override
     public void setAsText(String text) {
-        try { func().setFunctionString(text); } catch (ParseException ex) { }
+        try { func().setFunctionString(text, null); } catch (ParseException ex) { }
     }
 
+    @Override
     public void setNewAsText(String text) {
-        try { newfunc().setFunctionString(text); } catch (ParseException ex) { }
+        try { newfunc().setFunctionString(text, null); } catch (ParseException ex) { }
     }
 
     @Override

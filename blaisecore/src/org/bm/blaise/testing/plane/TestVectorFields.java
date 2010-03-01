@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
-import org.bm.blaise.sequor.component.BClock;
+import org.bm.blaise.sequor.timer.BetterTimeClock;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.diffeq.PlanePaddlePoint;
 import org.bm.blaise.specto.plane.particle.PlaneParticleVectorFieldCurve;
@@ -26,12 +26,12 @@ import scio.function.utils.VectorFieldUtils;
  */
 public class TestVectorFields extends javax.swing.JFrame {
 
-    BClock timer;
+    BetterTimeClock timer;
 
     /** Creates new form TestPlaneVisometry */
     public TestVectorFields() {
-        data.beans.EditorRegistration.registerEditors();
-        timer = new BClock();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
+        timer = new BetterTimeClock();
         initComponents();
 
         // FUNCTIONS
@@ -76,13 +76,15 @@ public class TestVectorFields extends javax.swing.JFrame {
 
         CurveDEPlot.addPlottable(new PlaneAxes());
         CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getPlotSampleSetGenerator()));
-        CurveDEPlot.addPlottable(new PlaneParticleVectorFieldCurve(func6, ppf));
-        for (double i = -4; i <= 4; i+=.5) {
-            for (double j = -4; j <= 4; j+=.5) {
-                CurveDEPlot.addPlottable(new PlanePaddlePoint(new Point2D.Double(i, j), func6));
+        CurveDEPlot.addPlottable(new PlaneParticleVectorFieldCurve(func6, ppf, (PlaneVisometry) CurveDEPlot.getVisometry()));
+        PlanePaddlePoint ppp = new PlanePaddlePoint(func6);
+        for (double i = -4; i <= 4; i+=1) {
+            for (double j = -4; j <= 4; j+=1) {
+                ppp.addValue(new Point2D.Double(i,j));
             }
         }
-        CurveDEPlot.setClockTimer(timer);
+        CurveDEPlot.addPlottable(ppp);
+        CurveDEPlot.setTimeClock(timer);
 
         CurveDEPlot2.addPlottable(new PlaneAxes());
         CurveDEPlot2.addPlottable(ppf);

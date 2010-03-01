@@ -31,7 +31,7 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
     //
     
     /** Style of stroke */
-    protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.function());
+    protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.func1());
 
 
     //

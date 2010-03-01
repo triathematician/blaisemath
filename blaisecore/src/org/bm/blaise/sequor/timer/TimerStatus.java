@@ -3,7 +3,7 @@
  * Created on Jul 30, 2009
  */
 
-package org.bm.blaise.sequor.component;
+package org.bm.blaise.sequor.timer;
 
 /**
  * <p>

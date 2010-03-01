@@ -20,9 +20,7 @@ import java.awt.Graphics2D;
 public class StringStyle implements PrimitiveStyle<GraphicString> {
 
     //
-    //
     // PROPERTIES
-    //
     //
     
     /** Color of the text. */
@@ -35,9 +33,7 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
     transient Float fontSize = null;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
     
     /** Default constructor. */
@@ -61,11 +57,17 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
         this.font = font;
     }
 
+    //
+    // UTILITIES
+    //
+
+    @Override
+    public String toString() {
+        return "StringStyle [" + font + "]";
+    }
 
     //
-    //
     // BEANS
-    //
     //
     
     public Color getColor() {
@@ -85,9 +87,7 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
     }
 
     //
-    //
     // GRAPHICS METHODS
-    //
     //
 
     public void draw(GraphicString grString, Graphics2D canvas) {

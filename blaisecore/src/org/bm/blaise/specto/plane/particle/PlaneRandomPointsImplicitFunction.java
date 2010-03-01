@@ -19,7 +19,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 
 /**
  * <p>
- *   <code>PlaneRandomPointsImplicitFunction</code> uses randomized points and directions, together
+ *   (Experimental) <code>PlaneRandomPointsImplicitFunction</code> uses randomized points and directions, together
  *   with a newton algorithm, to generate random points along an implicit curve.
  * </p>
  *

@@ -28,7 +28,7 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
 
     Point2D.Double[][] beziers;
     
-    PathStyle curveStyle = new PathStyle(BlaisePalette.STANDARD.function());
+    PathStyle curveStyle = new PathStyle(BlaisePalette.STANDARD.func1());
 
     ArrowStyle controlStyle = new ArrowStyle(BlaisePalette.STANDARD.grid(), ArrowShape.DOT, 4);
     boolean drawControls = true;

@@ -115,9 +115,9 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<Point3D>
         nx = nXSamples;
         ny = nYSamples;
         nz = nZSamples;
-        diff.x = (max.x - min.x) / (nx - 1);
-        diff.y = (max.y - min.y) / (ny - 1);
-        diff.z = (max.z - min.z) / (nz - 1);
+        diff.x = nx == 1 ? 0 : (max.x - min.x) / (nx - 1);
+        diff.y = ny == 1 ? 0 : (max.y - min.y) / (ny - 1);
+        diff.z = nz == 1 ? 0 : (max.z - min.z) / (nz - 1);
         return new AbstractList<Point3D>() {
             int n = nx * ny * nz;
             @Override
@@ -178,5 +178,10 @@ public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<Point3D>
 
     public Point3D getSampleDiff() {
         return diff;
+    }
+
+    @Override
+    public String toString() {
+        return "Grid Sample("+nx+"x"+ny+"x"+nz+")";
     }
 }

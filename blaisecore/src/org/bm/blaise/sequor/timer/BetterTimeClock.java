@@ -2,10 +2,12 @@
  * BClock.java
  * Created on Sep 25, 2009
  */
-package org.bm.blaise.sequor.component;
+package org.bm.blaise.sequor.timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.event.EventListenerList;
 
 /**
@@ -15,45 +17,46 @@ import javax.swing.event.EventListenerList;
  *
  * @author Elisha Peterson
  */
-public class BClock implements ClockTimer, ActionListener {
+public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Current status of the timer. */
     TimerStatus status = TimerStatus.STOPPED;
-
     /** Whether the clock should reverse once max time is reached. */
     boolean autoReverse = false;
-
     /** Number of times to repeat the clock play loop. */
     int repeatCount = 0;
-
     /** Speed of the timer... controls the rate at which time advances. */
     int speed;
+    /** The minimum time for the clock's range of values */
+    double minTime = 0;
+    /** The maximum time for the clock's range of values */
+    double maxTime = Double.MAX_VALUE;
 
     /** Stores the value of the clock associated with the timer. */
     double time = 0;
+    /** The direction of the clock's advance */
+    boolean forward = true;
+    /** The number of plays since last pressed */
+    int playCount = 0;
 
-    //
     //
     // CONSTRUCTOR
     //
-    //
-    public BClock() {
+
+    public BetterTimeClock() {
         timer = new BetterTimer(1);
         timer.addActionListener(this);
     }
 
 
     //
-    //
     // BEAN PATTERNS
     //
-    //
+
     public boolean isAutoReverseOn() {
         return autoReverse;
     }
@@ -68,6 +71,22 @@ public class BClock implements ClockTimer, ActionListener {
 
     public void setRepeatCount(int newCount) {
         this.repeatCount = newCount;
+    }
+
+    public double getMaxTime() {
+        return maxTime;
+    }
+
+    public void setMaxTime(double maxTime) {
+        this.maxTime = maxTime;
+    }
+
+    public double getMinTime() {
+        return minTime;
+    }
+
+    public void setMinTime(double minTime) {
+        this.minTime = minTime;
     }
 
     public TimerStatus getStatus() {
@@ -86,21 +105,17 @@ public class BClock implements ClockTimer, ActionListener {
         return status == TimerStatus.STOPPED;
     }
 
-
-    //
     //
     // TimeClock Methods
     //
-    //
+
     public double getTime() {
         return time;
     }
 
 
     //
-    //
     // TIMER AND PLAY CONTROL METHODS
-    //
     //
 
     /** Stores the actual timer. */
@@ -109,7 +124,6 @@ public class BClock implements ClockTimer, ActionListener {
     /**
      * This method controls the behavior of the timer... starting, stopping
      * and pausing the action of the timer.
-     *
      * @param newStatus new status of the timer.
      */
     public void setStatus(TimerStatus newStatus) {
@@ -118,15 +132,25 @@ public class BClock implements ClockTimer, ActionListener {
             switch (status) {
                 case PLAYING :
                     timer.start();
+                    fireActionPerformed(TimerStatus.PLAYING.name());
                     break;
                 case PAUSED :
                     timer.stop();
+                    fireActionPerformed(TimerStatus.PAUSED.name());
                     break;
                 case STOPPED :
                     timer.stop();
-                    time = 0;
+                    time = minTime;
+                    playCount = 0;
+                    fireActionPerformed(TimerStatus.STOPPED.name());
                     break;
             }
+            playAction.setEnabled(!isPlaying());
+            pauseAction.setEnabled(!isStopped());
+            stopAction.setEnabled(!isStopped());
+            restartAction.setEnabled(true);
+            slowDownAction.setEnabled(!isStopped());
+            speedUpAction.setEnabled(!isStopped());
         }
     }
 
@@ -136,7 +160,36 @@ public class BClock implements ClockTimer, ActionListener {
      * in time.
      */
     protected void incrementTimer() {
-        time += Math.pow(1.5, speed);
+        if (forward) {
+            time += Math.pow(1.5, speed);
+            time = Math.min(time, maxTime);
+            if (time == maxTime) {
+                if (autoReverse)
+                    forward = false;
+                else {
+                    playCount++;
+                    if (playCount <= repeatCount)
+                        time = minTime;
+                    else
+                        pause();
+                }
+            }
+        } else {
+            time -= Math.pow(1.5, speed);
+            time = Math.max(time, minTime);
+            if (time == minTime) {
+                playCount++;
+                if (playCount <= repeatCount) {
+                    if (autoReverse)
+                        forward = true;
+                    else
+                        time = maxTime;
+                } else {
+                    forward = true;
+                    pause();
+                }
+            }
+        }
         fireActionPerformed("Tick");
     }
 
@@ -170,9 +223,7 @@ public class BClock implements ClockTimer, ActionListener {
     }
     
     //
-    //
     // EVENT HANDLING AND TIMER CONTROL
-    //
     //
 
     /**
@@ -183,33 +234,11 @@ public class BClock implements ClockTimer, ActionListener {
      * @param e
      */
     public void actionPerformed(ActionEvent e) {
-        if (e == null) {
+        if (e == null)
             return;
-        }
-        // an actual timer event
         if (e.getSource().equals(timer)) {
-            if (isPlaying()) {
+            if (isPlaying())
                 incrementTimer();
-            }
-        } else {
-            String s = e.getActionCommand();
-            if (s.equals("play") || s.equals("start")) {
-                play();
-            } else if (s.equals("pause")) {
-                pause();
-            } else if (s.equals("stop")) {
-                stop();
-            } else if (s.equals("restart")) {
-                restart();
-            } else if (s.equals("slower")) {
-                if (isPlaying()) {
-                    slowDown();
-                }
-            } else if (s.equals("faster")) {
-                if (isPlaying()) {
-                    speedUp();
-                }
-            }
         }
     }
 
@@ -237,4 +266,45 @@ public class BClock implements ClockTimer, ActionListener {
             }
         }
     }
+
+    //
+    // CUSTOM ACTIONS
+    //
+
+    public Action getPlayAction() { return playAction; }    
+    AbstractAction playAction = new AbstractAction("Play") {
+            { putValue(SHORT_DESCRIPTION, "Play the timer from current location"); }
+            public void actionPerformed(ActionEvent e) { play(); }
+        };
+
+    public Action getPauseAction() { return pauseAction; }
+    AbstractAction pauseAction = new AbstractAction("Pause") {
+            { putValue(SHORT_DESCRIPTION, "Pause the timer if playing, or unpause if paused"); setEnabled(false); }
+            public void actionPerformed(ActionEvent e) { pause(); }
+        };
+
+    public Action getStopAction() { return stopAction; }
+    AbstractAction stopAction = new AbstractAction("Stop") {
+            { putValue(SHORT_DESCRIPTION, "Stop the timer and reset clock"); setEnabled(false); }
+            public void actionPerformed(ActionEvent e) { stop(); }
+        };
+
+    public Action getRestartAction() { return restartAction; }
+    AbstractAction restartAction = new AbstractAction("Restart") {
+            { putValue(SHORT_DESCRIPTION, "Restart the timer (stop, then play)"); }
+            public void actionPerformed(ActionEvent e) { restart(); }
+        };
+
+    public Action getSlowDownAction() { return slowDownAction; }
+    AbstractAction slowDownAction = new AbstractAction("Slow down") {
+            { putValue(SHORT_DESCRIPTION, "Slows the timer down"); setEnabled(false); }
+            public void actionPerformed(ActionEvent e) { slowDown(); }
+        };
+
+    public Action getSpeedUpAction() { return speedUpAction; }
+    AbstractAction speedUpAction = new AbstractAction("Speed up") {
+            { putValue(SHORT_DESCRIPTION, "Speeds up the timer"); setEnabled(false); }
+            public void actionPerformed(ActionEvent e) { speedUp(); }
+        };
+        
 }

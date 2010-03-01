@@ -2,7 +2,7 @@
  * BetterTimer.java
  * Created on Sep 25, 2009
  */
-package org.bm.blaise.sequor.component;
+package org.bm.blaise.sequor.timer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

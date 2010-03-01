@@ -5,27 +5,22 @@
  */
 package org.bm.blaise.testing.space;
 
-import org.bm.blaise.testing.plane.*;
 import data.propertysheet.PropertySheet;
-import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
+import org.bm.blaise.scio.function.FlexSpaceCurve;
+import org.bm.blaise.scio.function.FlexSpaceSurface;
 import org.bm.blaise.specto.line.LineAxis;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.plane.PlaneGrid;
-import org.bm.blaise.specto.plane.PlanePlotComponent;
-import org.bm.blaise.specto.plane.PlanePolarGrid;
-import org.bm.blaise.specto.plane.function.PlaneParametricArea;
-import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.space.SpaceAxes;
 import org.bm.blaise.specto.space.SpacePlotComponent;
 import org.bm.blaise.specto.space.function.SpaceParametricCurve;
 import org.bm.blaise.specto.space.function.SpaceParametricSurface;
 import org.bm.blaise.specto.space.function.SpaceParametricSurfacePatch;
-import org.bm.blaise.specto.space.function.TwoCurveSurface;
+import org.bm.blaise.specto.space.function.SpaceTwoCurveSurface;
 import org.bm.blaise.specto.visometry.Plottable;
-import scio.function.utils.SampleSurface3D;
+import scio.function.utils.DemoSurface3D;
 
 /**
  *
@@ -35,20 +30,20 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
     public TestSpaceParametricPlottables() {
-        data.beans.EditorRegistration.registerEditors();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
         initComponents();
 
 
         // FUNCTIONS
 
-        SpaceParametricCurve spc = new SpaceParametricCurve(
-                new UnivariateVectorialFunction() {
+        FlexSpaceCurve curve = new FlexSpaceCurve(new UnivariateVectorialFunction() {
                     public double[] value(double x) throws FunctionEvaluationException {
                         return new double[] { (2 + 1.1*Math.sin(7*x)) * Math.cos(2*x), (2 + 1.1*Math.sin(7*x)) * Math.sin(2*x), 1.1*Math.cos(7*x) };
-                    }
-                },
-                0.0, 2*Math.PI, 200);
-        SpaceParametricSurface sps = SpaceParametricSurface.getInstance(SampleSurface3D.SPHERE);
+                    }});
+        SpaceParametricCurve spc = new SpaceParametricCurve(curve, 0.0, 2*Math.PI, 200);
+
+        FlexSpaceSurface surface = new FlexSpaceSurface(DemoSurface3D.SPHERE);
+        SpaceParametricSurface sps = new SpaceParametricSurface(surface, 0, 2*Math.PI, 0, Math.PI);
         SpaceParametricSurfacePatch spsp = new SpaceParametricSurfacePatch(sps.getFunction(), 0, 0, .1, .1);
 
         domainPlot1.addPlottable(LineAxis.instance("t"));
@@ -69,7 +64,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
 
         rangePlot3.addPlottable(new SpaceAxes());
-        rangePlot3.addPlottable(new TwoCurveSurface(
+        rangePlot3.addPlottable(new SpaceTwoCurveSurface(
                 new UnivariateVectorialFunction (){
                     public double[] value(double x) throws FunctionEvaluationException {
                         return new double[]{Math.cos(x), Math.sin(x), -.5};

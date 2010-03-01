@@ -5,14 +5,6 @@
 
 package org.bm.blaise.scribo.page;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bm.blaise.scio.function.ParsedUnivariateRealFunction;
-import org.bm.blaise.scribo.parser.ParseException;
-import org.bm.blaise.specto.plane.PlaneAxes;
-import org.bm.blaise.specto.plane.PlaneGrid;
-import org.bm.blaise.specto.plane.PlanePlotComponent;
-import org.bm.blaise.specto.plane.function.PlaneFunctionGraph;
 import org.bm.blaise.specto.visometry.PlotComponent;
 
 /**
@@ -21,7 +13,19 @@ import org.bm.blaise.specto.visometry.PlotComponent;
  * </p>
  * @author Elisha Peterson
  */
-class SampleBlaisePage implements BlaisePage {
+public class SampleBlaisePage implements BlaisePage, java.io.Serializable {
+
+//    transient PlanePlotComponent ppc = null;
+
+    public SampleBlaisePage() {
+//        ppc = new PlanePlotComponent();
+//        ppc.addPlottable(new PlaneGrid());
+//        ppc.addPlottable(new PlaneAxes());
+//        try {
+//            ppc.addPlottable(new PlaneFunctionGraph(new ParsedUnivariateRealFunction("cos(x)")));
+//        } catch (ParseException ex) {
+//        }
+    }
 
     public String getIdentifier() {
         return "ID001";
@@ -29,6 +33,11 @@ class SampleBlaisePage implements BlaisePage {
 
     public String getTitle() {
         return "SAMPLE";
+    }
+
+    @Override
+    public String toString() {
+        return getTitle();
     }
 
     public String getDescription() {
@@ -41,19 +50,15 @@ class SampleBlaisePage implements BlaisePage {
     }
 
     public PlotComponent getActivePlot() {
-        PlanePlotComponent ppc = new PlanePlotComponent();
-        ppc.addPlottable(PlaneGrid.instance());
-        ppc.addPlottable(PlaneAxes.instance("x", "y"));
-        try {
-            ppc.addPlottable(new PlaneFunctionGraph(new ParsedUnivariateRealFunction("cos(x)")));
-        } catch (ParseException ex) {
-            Logger.getLogger(SampleBlaisePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ppc;
+        return null;
     }
 
+    public void setActivePlot(PlotComponent plot) {
+    }
+
+
     public PlotComponent[] getPlot() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new PlotComponent[]{};
     }
 
     public PlotComponent getPlot(int i) {

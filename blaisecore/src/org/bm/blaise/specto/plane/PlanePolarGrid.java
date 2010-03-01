@@ -84,4 +84,9 @@ public class PlanePolarGrid extends AbstractPlottable<Point2D.Double> {
         double a4 = Point2D.Double.distanceSq(pt2.x, pt1.y, 0, 0);
         return Math.sqrt( Math.max(Math.max(Math.max(a1, a2), a3), a4) );
     }
+
+    @Override
+    public String toString() {
+        return "Polar Grid";
+    }
 }

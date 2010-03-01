@@ -19,6 +19,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
+import util.ChangeEventHandler;
 
 /**
  *
@@ -59,9 +60,7 @@ public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
     }
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // GETTERS & SETTERS
     //
 
     public UnivariateVectorialFunction getFunction() {
@@ -70,13 +69,19 @@ public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
 
     public void setFunction(UnivariateVectorialFunction func) {
         if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            }
             this.func = func;
+            if (func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)func).addChangeListener(this);
+            }
             needsComputation = true;
             fireStateChanged();
         }
     }
 
-    public MaxMinDomain<Double> getDomain() {
+    public RealIntervalSampler getDomain() {
         return domain;
     }
 
@@ -98,20 +103,22 @@ public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
         return domainPlottable;
     }
 
+    //
+    // EVENT HANDLING
+    //
+
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == domainPlottable) {
             domain.setMin(domainPlottable.getPoint1());
             domain.setMax(domainPlottable.getPoint2());
-            needsComputation = true;
         }
+        needsComputation = true;
         super.stateChanged(e);
     }
 
     //
-    //
     // DRAW METHODS
-    //
     //
 
     transient boolean needsComputation = true;
@@ -120,13 +127,13 @@ public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
     @Override
     public void paintComponent(VisometryGraphics<Point3D> vg) {
         if (needsComputation) {
-            segments = getSegments();
+            segments = getSegments(func);
             needsComputation = false;
         }
         ((SpaceGraphics) vg).addToScene(segments);
     }
 
-    List<Point3D[]> getSegments() {
+    List<Point3D[]> getSegments(UnivariateVectorialFunction func) {
         List<Point3D[]> result = new ArrayList<Point3D[]>();
         List<Double> samples = domain.getSamples();
         try {

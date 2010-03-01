@@ -16,7 +16,7 @@ package org.bm.blaise.specto.visometry;
 public abstract class AbstractAnimatingPlottable<V> extends AbstractPlottable<V> implements AnimatingPlottable<V> {
 
     /** Whether animation is turned on. */
-    boolean animating;
+    protected boolean animating = true;
 
     public boolean isAnimationOn() {
         return animating;

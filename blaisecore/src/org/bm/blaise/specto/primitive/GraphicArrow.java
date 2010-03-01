@@ -99,4 +99,9 @@ public class GraphicArrow {
                     centered);
         }
     }
+
+    @Override
+    public String toString() {
+        return "GraphicArrow[" + anchor.getX() + "," + anchor.getY() + " ; " + head.getX() + "," + head.getY() + "]";
+    }
 }

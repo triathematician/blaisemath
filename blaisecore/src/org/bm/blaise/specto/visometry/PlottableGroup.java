@@ -4,12 +4,14 @@
  */
 package org.bm.blaise.specto.visometry;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
-import org.bm.blaise.sequor.component.TimeClock;
+import org.bm.blaise.sequor.timer.TimeClock;
+import org.bm.blaise.specto.visometry.Plottable;
 
 /**
  * <p>
@@ -23,31 +25,38 @@ import org.bm.blaise.sequor.component.TimeClock;
 public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements AnimatingPlottable<C>, VisometryChangeListener, ChangeListener {
 
     /** Stores the elements in the group. */
-    protected ArrayList<Plottable<? extends C>> plottables;
-    
+    protected ArrayList<Plottable<C>> plottables;    
     /** Name of the group. */
-    protected String name = "";
-    
+    protected String name = "";    
     /** Whether this element animates. */
     public boolean animationOn = true;
 
     //
-    //
     // CONSTRUCTOR
-    //
     //
 
     /**
      * Constructs, initializing list of plottables.
      */
     public PlottableGroup() {
-        plottables = new ArrayList<Plottable<? extends C>>();
+        plottables = new ArrayList<Plottable<C>>();
     }
 
     //
+    // UTILITIES
     //
-    // BEANS
+
+    /**
+     * Overrides <code>toString()</code> to return the name of the group also.
+     * @return the name of the group as well as the type of the class.
+     */
+    @Override
+    public String toString() {
+        return "PlottableGroup("+name+")";
+    }
+
     //
+    // GETTERS & SETTERS
     //
 
     /**
@@ -74,30 +83,43 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
 
     public void setAnimationOn(boolean newValue) {
         animationOn = newValue;
+        for (Plottable<C> p : plottables)
+            if (p instanceof AnimatingPlottable)
+                ((AnimatingPlottable)p).setAnimationOn(newValue);
     }
 
     /**
-     * Gets the list of elements.
-     * @return list of plottable elements owned by this group
+     * Returns list of plottables.
+     * @return list of plottable elements owned by this group,
      */
-    public List<Plottable<? extends C>> getElements() {
+    public List<Plottable<C>> getPlottables() {
         return plottables;
     }
 
-    /**
-     * Overrides <code>toString()</code> to return the name of the group also.
-     * @return the name of the group as well as the type of the class.
-     */
-    @Override
-    public String toString() {
-        return "PlottableGroup("+name+")";
+    public Plottable[] getPlottableArray() {
+        if (plottables == null) {
+            return (Plottable[]) Array.newInstance(Plottable.class, 0);
+        }
+        return plottables.toArray( (Plottable[]) Array.newInstance(Plottable.class, 0) );
     }
 
+    public void setPlottableArray(Plottable[] pl) {
+        plottables.clear();
+        for (int i = 0; i < pl.length; i++) {
+            add(pl[i]);
+        }
+    }
+
+    public Plottable getPlottableArray(int i) {
+        return plottables.get(i);
+    }
+
+    public void setPlottableArray(int i, Plottable p) {
+        plottables.set(i, p);
+    }
 
     //
-    //
     // COMPOSITIONAL
-    //
     //
 
     /** 
@@ -114,7 +136,7 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * Adds specified plottable to the group. Also sets up change listening.
      * @param plottable the plottable to add.
      */
-    public void add(Plottable<? extends C> plottable) {
+    public void add(Plottable<C> plottable) {
         if (plottable == null) {
             throw new NullPointerException("Plottable should not be null!");
         }
@@ -126,7 +148,7 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * Adds specified plottables to the group. Also sets up change listening.
      * @param plottables the plottables to add.
      */
-    public void addAll(Collection<? extends Plottable<? extends C>> plottables) {
+    public void addAll(Collection<? extends Plottable<C>> plottables) {
         this.plottables.addAll(plottables);
         for (Plottable p : plottables) {
             p.addChangeListener(this);
@@ -138,7 +160,7 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * @param plottable the plottable to remove.
      * @return value of remove operation
      */
-    public boolean remove(Plottable<? extends C> plottable) {
+    public boolean remove(Plottable<C> plottable) {
         if (plottable == null) {
             throw new NullPointerException("Plottable should not be null!");
         }
@@ -147,9 +169,7 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
     }
 
     //
-    //
     // COMPUTATIONAL/VISUAL
-    //
     //
 
     /**
@@ -160,11 +180,9 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * @param canvas the underlying canvas for painting objects
      */
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        for (Plottable p : plottables) {
-            if (p instanceof VisometryChangeListener) {
+        for (Plottable p : plottables)
+            if (p instanceof VisometryChangeListener)
                 ((VisometryChangeListener) p).visometryChanged(vis, canvas);
-            }
-        }
     }
 
     /**
@@ -176,11 +194,9 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * @param clock the clock for recomputing
      */
     public void recomputeAtTime(Visometry<C> vis, VisometryGraphics<C> canvas, TimeClock clock) {
-        for (Plottable p : plottables) {
-            if (p instanceof AnimatingPlottable && ((AnimatingPlottable) p).isAnimationOn()) {
+        for (Plottable p : plottables)
+            if (p instanceof AnimatingPlottable && ((AnimatingPlottable) p).isAnimationOn())
                 ((AnimatingPlottable) p).recomputeAtTime(vis, canvas, clock);
-            }
-        }
     }
 
     /**
@@ -192,22 +208,13 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      * @param canvas the underlying canvas for painting objects
      */
     public void paintComponent(VisometryGraphics<C> canvas) {
-        for (Plottable p : plottables) {
-            if (p.isVisible()) {
+        for (Plottable p : plottables)
+            if (p.isVisible())
                 p.paintComponent(canvas);
-                if (p instanceof AnimatingPlottable) {
-                    // TODO - fill in
-                } else if (p instanceof VisometryChangeListener) {
-                    // TODO - fill in
-                }
-            }
-        }
     }
 
     //
-    //
     // MOUSE HANDLING
-    //
     //
 
     /**

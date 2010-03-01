@@ -34,7 +34,7 @@ public abstract class VComputedPointPath<C> extends VPoint<C> {
     //
     
     /** Style of stroke */
-    protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.function());
+    protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.func1());
 
     //
     //
@@ -46,7 +46,7 @@ public abstract class VComputedPointPath<C> extends VPoint<C> {
     public VComputedPointPath(C point) {
         super(point);
         style = PointStyle.SMALL;
-        style.setStrokeColor(BlaisePalette.STANDARD.function());
+        style.setStrokeColor(BlaisePalette.STANDARD.func1());
         addChangeListener(this); // listen for changes to the underlying point... causes path to be recomputed.
     }
 

@@ -8,6 +8,7 @@ package org.bm.blaise.specto.space.diffeq;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
@@ -18,30 +19,22 @@ import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
-import scio.function.utils.SampleField3D;
+import util.ChangeEventHandler;
 
 /**
  * <p>
  *   <code>PlaneVectorField</code> displays a vector field, specified by an underlying
  *   function with 2 inputs and 2 outputs (a <code>MultivariateVectorialFunction</code>).
+ *   One must also supply a class that desribes where the field should be sampled.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3D[]> {
+public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3D[], Point3D> {
 
-    // SAMPLES
-
-    SampleField3D sample = SampleField3D.WHIRLPOOL;
-
-    public SampleField3D getSample() {
-        return sample;
-    }
-
-    public void setSample(SampleField3D sample) {
-        this.sample = sample;
-        func = sample;
-    }
+    //
+    // PROPERTIES
+    //
 
     /** Style for drawing the vectors. */
     private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.ArrowShape.REGULAR, 5);
@@ -58,26 +51,32 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
      */
     public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point3D> ssg) {
         super(DEFAULT_STYLE, ssg);
-        setFunc(func);
+        setFunction(func);
     }
 
-
     //
-    //
-    // BEAN PATTERNS
-    //
+    // GETTERS & SETTERS
     //
 
     /** @return function describing the field */
-    public MultivariateVectorialFunction getFunc() {
+    public MultivariateVectorialFunction getFunction() {
         return func;
     }
 
     /** Sets the function for the field.
      * @param func the function
      */
-    public void setFunc(MultivariateVectorialFunction func) {
-        this.func = func;
+    public void setFunction(MultivariateVectorialFunction func) {
+        if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            }
+            this.func = func;
+            if (func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)func).addChangeListener(this);
+            }
+            fireStateChanged();
+        }
     }
 
     public ArrowStyle getStyle() {
@@ -95,12 +94,9 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     public void setCentered(boolean centered) {
         this.centered = centered;
     }
-
     
     //
-    //
     // DRAW METHODS
-    //
     //
 
     /**
@@ -140,6 +136,12 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     }
 
     @Override
+    public void stateChanged(ChangeEvent e) {
+        super.stateChanged(e);
+        visometryChanged(null, null);
+    }
+
+    @Override
     public void paintComponent(VisometryGraphics<Point3D> vg) {
         if (primitives != null) {
             ((SpaceGraphics) vg).addToScene(primitives, style);
@@ -176,4 +178,8 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Vector Field [" + ssg + "]";
+    }
 }

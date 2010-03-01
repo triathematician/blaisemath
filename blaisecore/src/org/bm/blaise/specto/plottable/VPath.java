@@ -5,9 +5,10 @@
 
 package org.bm.blaise.specto.plottable;
 
-import java.util.Arrays;
+import org.bm.blaise.sequor.timer.TimeClock;
 import org.bm.blaise.specto.primitive.PathStyle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.AbstractAnimatingPlottable;
+import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -21,16 +22,14 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  * @author Elisha Peterson
  * @seealso VPointSet
  */
-public class VPath<C> extends AbstractPlottable<C> {
+public class VPath<C> extends AbstractAnimatingPlottable<C> {
 
-    //
     //
     // PROPERTIES
     //
-    //
 
     /** Values */
-    C[] values;
+    protected C[] values;
 
     /** Style option */
     PathStyle style = new PathStyle();
@@ -39,9 +38,7 @@ public class VPath<C> extends AbstractPlottable<C> {
     boolean closedPath;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /**
@@ -50,12 +47,11 @@ public class VPath<C> extends AbstractPlottable<C> {
      */
     public VPath(C[] values) {
         this.values = values;
+        animating = false;
     }
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return entire list of values, as an array */
@@ -104,29 +100,36 @@ public class VPath<C> extends AbstractPlottable<C> {
     public String toString() {
         return "VPath [" + values.length + " points]";
     }
+   
 
-    
-
-    //
     //
     // PAINTING
     //
-    //
+
+    double time;
+
+    public void recomputeAtTime(Visometry<C> vis, VisometryGraphics<C> canvas, TimeClock clock) {
+        time = clock.getTime();
+    }
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
         vg.setPathStyle(style);
-        if (closedPath) {
-            vg.drawClosedPath(values);
+        if (animating) {
+            // default to animating over each value
+            int length = Math.min(values.length, (int) time);
+            vg.drawPath(values, 0, length);
         } else {
-            vg.drawPath(values);
+            if (closedPath) {
+                vg.drawClosedPath(values);
+            } else {
+                vg.drawPath(values);
+            }
         }
     }
 
     //
-    //
     // DYNAMIC EDITING
-    //
     //
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
@@ -137,5 +140,4 @@ public class VPath<C> extends AbstractPlottable<C> {
         }
         return false;
     }
-
 }

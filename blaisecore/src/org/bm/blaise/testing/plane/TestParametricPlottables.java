@@ -27,7 +27,7 @@ public class TestParametricPlottables extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
     public TestParametricPlottables() {
-        data.beans.EditorRegistration.registerEditors();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
         initComponents();
 
 

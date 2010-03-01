@@ -71,7 +71,7 @@ public class SpaceRendered {
         sg.getShapeStyle().setStroke(new BasicStroke(0.5f));
         //sg.getShapeStyle().setStroke(null);
         sg.getPathStyle().setStroke(new BasicStroke(2.0f));
-        sg.getPathStyle().setColor(BlaisePalette.STANDARD.function());
+        sg.getPathStyle().setColor(BlaisePalette.STANDARD.func1());
         for (Entry<Point3D[],PrimitiveStyle> entry : objects.entrySet()) {
             if (proj.getAverageDist(entry.getKey()) < proj.clipDist) {
                 continue;

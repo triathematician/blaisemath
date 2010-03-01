@@ -13,7 +13,7 @@ import data.propertysheet.PropertySheet;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.*;
-import org.bm.blaise.sequor.component.BClock;
+import org.bm.blaise.sequor.timer.BetterTimeClock;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.specto.plane.diffeq.PlaneCobwebFunction;
 import org.bm.blaise.specto.plane.function.PlaneFunctionGraph;
@@ -26,11 +26,11 @@ import scio.diffeq.DifferenceEquation1;
  */
 public class TestDifferentialEquations extends javax.swing.JFrame {
 
-    BClock timer;
+    BetterTimeClock timer;
 
     /** Creates new form TestPlaneVisometry */
     public TestDifferentialEquations() {
-        timer = new BClock();
+        timer = new BetterTimeClock();
         initComponents();
 
         timerBar1.setTimer(timer);
@@ -73,8 +73,8 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         DEPlot.addPlottable(new PlaneAxes());
         DEPlot.addPlottable(new PlaneVectorField(func1, DEPlot.getPlotSampleSetGenerator()));
         DEPlot.addPlottable(new PlaneDESolution(new Point2D.Double(-1.5, .5), func2, 5.0));
-        DEPlot.addPlottable(new PlaneParticleVectorField(func1));
-        DEPlot.setClockTimer(timer);
+        DEPlot.addPlottable(new PlaneParticleVectorField(func1, (PlaneVisometry) DEPlot.getVisometry()));
+        DEPlot.setTimeClock(timer);
 
         DEPlot2.addPlottable(new PlaneAxes());
         DEPlot2.addPlottable(new PlaneVectorField(func3, DEPlot2.getPlotSampleSetGenerator()));
@@ -94,7 +94,7 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         
         // PANELS
 
-        data.beans.EditorRegistration.registerEditors();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
         rollupPanel1.add("Timer", new PropertySheet(timer));
         rollupPanel1.add("Visometry", new PropertySheet(DEPlot.getVisometry()));
         for (Plottable p : DEPlot.getPlottables()) {
@@ -120,7 +120,7 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         DEPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
         DEPlot2 = new org.bm.blaise.specto.plane.PlanePlotComponent();
         CobwebPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
-        timerBar1 = new org.bm.blaise.sequor.component.TimerBar();
+        timerBar1 = new org.bm.blaise.sequor.timer.TimerBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -211,6 +211,6 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private gui.RollupPanel rollupPanel1;
     private javax.swing.JTabbedPane tabPane;
-    private org.bm.blaise.sequor.component.TimerBar timerBar1;
+    private org.bm.blaise.sequor.timer.TimerBar timerBar1;
     // End of variables declaration//GEN-END:variables
 }

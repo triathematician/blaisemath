@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.plottable;
 
+import javax.swing.event.ChangeEvent;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.visometry.*;
@@ -18,10 +19,11 @@ import org.bm.blaise.specto.visometry.*;
  *
  * @param <C> the coordinate type
  * @param <P> the primitive type
+ * @param <CV> the type of coordinate for the visometry
  *
  * @author Elisha Peterson
  */
-public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable<C> implements PrimitiveMapper<C, P>, VisometryChangeListener {
+public abstract class VPrimitiveMappingPlottable<C, P, CV> extends AbstractPlottable<CV> implements PrimitiveMapper<C, P, CV>, VisometryChangeListener {
 
     //
     //
@@ -36,9 +38,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     protected SampleCoordinateSetGenerator<C> ssg;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /**
@@ -53,9 +53,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     }
 
     //
-    //
     // GET/SET PATTERNS
-    //
     //
 
     public SampleCoordinateSetGenerator<C> getSampleSetGenerator() {
@@ -67,9 +65,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     }
     
     //
-    //
     // DRAW METHODS
-    //
     //
 
     /** Stores graphic primitive objects displayed. */
@@ -79,7 +75,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
      * Scales the size of graphics primitives appropriately. Extended classes
      * should use this method to adjust the size of the primitives, if necessary.
      */
-    public void scalePrimitives(Visometry vis) {
+    public void scalePrimitives(Visometry<CV> vis) {
     }
 
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
@@ -88,7 +84,7 @@ public abstract class VPrimitiveMappingPlottable<C, P> extends AbstractPlottable
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void paintComponent(VisometryGraphics<CV> vg) {
         if (primitives != null) {
             vg.setPrimitiveStyle(style);
             vg.draw(primitives);

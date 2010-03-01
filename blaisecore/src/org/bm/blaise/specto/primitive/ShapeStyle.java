@@ -23,9 +23,7 @@ import java.awt.Stroke;
 public class ShapeStyle implements PrimitiveStyle<Shape> {
 
     //
-    //
     // CONSTANTS
-    //
     //
 
     /** Stroke outline */
@@ -42,9 +40,7 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
 
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /** Construct with defaults. */
@@ -79,11 +75,18 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
         this.opacity = opacity;
     }
 
+    //
+    // UTILITIES
+    //
+
+    @Override
+    public String toString() {
+        return "ShapeStyle [stroke=" + strokeColor + ", fill=" + fillColor + ", opacity=" + opacity + "]";
+    }
+
 
     //
-    //
     // BEANS
-    //
     //
 
     public Color getFillColor() {
@@ -133,9 +136,7 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
 
 
     //
-    //
     // GRAPHICS METHODS
-    //
     //
 
     public void draw(Shape sh, Graphics2D canvas) {

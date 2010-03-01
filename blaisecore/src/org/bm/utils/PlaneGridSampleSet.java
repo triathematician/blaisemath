@@ -140,6 +140,6 @@ public abstract class PlaneGridSampleSet implements SampleCoordinateSetGenerator
 
     @Override
     public String toString() {
-        return "Grid Sample";
+        return "Grid Sample("+nx+"x"+ny+")";
     }
 }

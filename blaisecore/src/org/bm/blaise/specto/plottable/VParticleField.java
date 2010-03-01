@@ -5,7 +5,7 @@
 
 package org.bm.blaise.specto.plottable;
 
-import org.bm.blaise.sequor.component.TimeClock;
+import org.bm.blaise.sequor.timer.TimeClock;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.primitive.PointStyle;
 import org.bm.blaise.specto.visometry.AbstractAnimatingPlottable;

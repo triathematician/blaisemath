@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
-import scio.coordinate.MaxMinDomain;
+import scio.coordinate.sample.RealIntervalSampler;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
 
 public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Double> {
@@ -16,11 +16,9 @@ public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Do
     /** Function */
     UnivariateVectorialFunction func;
     /** Range of values for display purposes */
-    MaxMinDomain<Double> range;
-    /** Number of samples */
-    int nSamples = 20;
+    RealIntervalSampler range;
 
-    public Curve2DSampleSet(UnivariateVectorialFunction func, MaxMinDomain<Double> range) {
+    public Curve2DSampleSet(UnivariateVectorialFunction func, RealIntervalSampler range) {
         this.func = func;
         this.range = range;
     }
@@ -33,19 +31,19 @@ public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Do
         this.func = func;
     }
 
-    public int getnSamples() {
-        return nSamples;
+    public void setNumSamples(int numSamples) {
+        range.setNumSamples(numSamples);
     }
 
-    public void setnSamples(int nSamples) {
-        this.nSamples = nSamples;
+    public int getNumSamples() {
+        return range.getNumSamples();
     }
 
-    public MaxMinDomain<Double> getRange() {
+    public RealIntervalSampler getRange() {
         return range;
     }
 
-    public void setRange(MaxMinDomain<Double> range) {
+    public void setRange(RealIntervalSampler range) {
         this.range = range;
     }
 
@@ -54,16 +52,20 @@ public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Do
     public List<Point2D.Double> getSamples() {
         List<Point2D.Double> result = new ArrayList<Point2D.Double>();
         double[] val = null;
-        for (int i = 0; i < nSamples; i++) {
+        List<Double> domain = range.getSamples();
+        for (Double d : domain) {
             try {
-                val = func.value(range.getMin() + i * (range.getMax() - range.getMin()) / nSamples);
+                val = func.value(d);
             } catch (FunctionEvaluationException ex) {
                 val = new double[]{0, 0};
                 Logger.getLogger(PlaneParametricCurve.class.getName()).log(Level.SEVERE, null, ex);
             }
             result.add(new Point2D.Double(val[0], val[1]));
         }
-        diff = new Point2D.Double(Math.abs(result.get(1).x - result.get(0).x), Math.abs(result.get(1).y - result.get(0).y));
+        double dist = result.get(0).distance(result.get(1));
+        // diff = new Point2D.Double(Math.abs(result.get(1).x - result.get(0).x), Math.abs(result.get(1).y - result.get(0).y));
+        // TODO - currently distance is approximated by the distance between the first two points... should do a better job here!!
+        diff = new Point2D.Double(dist, dist);
         return result;
     }
 

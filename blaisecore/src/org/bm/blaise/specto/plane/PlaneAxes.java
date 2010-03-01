@@ -36,9 +36,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     private static final int PIXEL_SPACING = 40;
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Label for the horizontal axis. */
@@ -61,9 +59,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
 
     //
-    //
     // CONSTRUCTORS AND STATIC FACTORY METHODS
-    //
     //
 
     /** Construct using defaults. */
@@ -75,10 +71,15 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
      * @return instance of the class with specified parameters.
      */
     public static PlaneAxes instance(String xLabel, String yLabel) {
-        PlaneAxes result = new PlaneAxes();
-        result.xLabel = xLabel;
-        result.yLabel = yLabel;
-        return result;
+        return instance(AxisStyle.CROSS, xLabel, yLabel);
+    }
+
+    /**
+     * <b>FACTORY METHOD</b>
+     * @return instance of the class with specified parameters.
+     */
+    public static PlaneAxes instance(AxisStyle style) {
+        return instance(style, "x", "y");
     }
 
     /**
@@ -95,9 +96,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** Returns horizontal label. */
@@ -107,7 +106,10 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
     /** Sets horizontal label. */
     public void setXLabel(String xLabel) {
-        this.xLabel = xLabel;
+        if (!this.xLabel.equals(xLabel)) {
+            this.xLabel = xLabel;
+            fireStateChanged();
+        }
     }
 
     /** Returns vertical label. */
@@ -117,7 +119,10 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
     /** Sets vertical label. */
     public void setYLabel(String yLabel) {
-        this.yLabel = yLabel;
+        if (!this.yLabel.equals(yLabel)) {
+            this.yLabel = yLabel;
+            fireStateChanged();
+        }
     }
 
     /** Return style. */
@@ -127,7 +132,10 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
     /** Sets style. */
     public void setStyle(AxisStyle style) {
-        this.axisStyle = style;
+        if (this.axisStyle != style) {
+            this.axisStyle = style;
+            fireStateChanged();
+        }
     }
 
     public PathStyle getStrokeStyle() {
@@ -135,7 +143,10 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     }
 
     public void setStrokeStyle(PathStyle style) {
-        this.strokeStyle = style;
+        if (this.strokeStyle != style) {
+            this.strokeStyle = style;
+            fireStateChanged();
+        }
     }
 
     /** @return true if ticks are visible. */
@@ -145,7 +156,10 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
     /** Sets tick style. */
     public void setTicksVisible(boolean value) {
-        this.ticksVisible = value;
+        if (this.ticksVisible != value) {
+            this.ticksVisible = value;
+            fireStateChanged();
+        }
     }
 
     public StringStyle getLabelStyle() {
@@ -153,13 +167,14 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     }
 
     public void setLabelStyle(StringStyle labelStyle) {
-        this.labelStyle = labelStyle;
+        if (this.labelStyle != labelStyle) {
+            this.labelStyle = labelStyle;
+            fireStateChanged();
+        }
     }
     
     //
-    //
     // PAINT METHODS
-    //
     //
 
     transient double[] xValues;

@@ -22,9 +22,7 @@ import javax.swing.event.EventListenerList;
 public abstract class AbstractPlottable<C> implements Plottable<C> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Determines visibility of the plottable. */
@@ -34,9 +32,7 @@ public abstract class AbstractPlottable<C> implements Plottable<C> {
     protected boolean selected = false;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /** 
@@ -46,9 +42,7 @@ public abstract class AbstractPlottable<C> implements Plottable<C> {
     }    
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
 
@@ -92,9 +86,7 @@ public abstract class AbstractPlottable<C> implements Plottable<C> {
     public abstract void paintComponent(VisometryGraphics<C> vg);
 
     //
-    //
     // EVENT HANDLING
-    //
     //
 
     /**

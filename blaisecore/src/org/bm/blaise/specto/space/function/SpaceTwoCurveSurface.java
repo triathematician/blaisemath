@@ -11,14 +11,18 @@ import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 
 /**
  * <p>
- *    This class represents a parametric surface bounded between two curves.
+ *    This class represents a parametric surface bounded between two curves. Both curves
+ *    are required to construct the initial surface, as well as the bounds for parameters,
+ *    which must be the same for both curves.
  * </p>
  * @author Elisha Peterson
  */
-public class TwoCurveSurface extends SpaceParametricSurface {
+public class SpaceTwoCurveSurface extends SpaceParametricSurface {
 
-    public TwoCurveSurface(UnivariateVectorialFunction func1, UnivariateVectorialFunction func2, double u0, double u1) {
+    public SpaceTwoCurveSurface(UnivariateVectorialFunction func1, UnivariateVectorialFunction func2, double u0, double u1) {
         super(spanFunc(func1, func2), u0, u1, 0, 1);
+        getDomainU().setNumSamples(30);
+        getDomainV().setNumSamples(4);
     }
 
     public static MultivariateVectorialFunction spanFunc(final UnivariateVectorialFunction func1, final UnivariateVectorialFunction func2) {
@@ -33,5 +37,10 @@ public class TwoCurveSurface extends SpaceParametricSurface {
                 };
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        return "Surface Spanning 2 Curves [" + domainU + "]";
     }
 }

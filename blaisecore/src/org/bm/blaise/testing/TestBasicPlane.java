@@ -30,7 +30,7 @@ public class TestBasicPlane extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
     public TestBasicPlane() {
-        data.beans.EditorRegistration.registerEditors();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
         FunctionEditor.register();
         initComponents();
 
@@ -69,12 +69,11 @@ public class TestBasicPlane extends javax.swing.JFrame {
         funPlot.addPlottable(new PlaneGrid());
         funPlot.addPlottable(new PlaneAxes());
         try {
-            funPlot.addPlottable(new PlaneFunctionGraph(new ParsedUnivariateRealFunction("cos(x)")));
+            funPlot.addPlottable(new PlaneFunctionGraph(new ParsedUnivariateRealFunction("cos(x)", "x")));
         } catch (ParseException ex) {
             Logger.getLogger(TestBasicPlane.class.getName()).log(Level.SEVERE, null, ex);
         }
         funPlot.setDesiredRange(-5.0, -1.0, 5.0, 1.0);
-
 
         // PANELS
         

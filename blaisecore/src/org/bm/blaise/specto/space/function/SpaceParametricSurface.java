@@ -19,7 +19,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
-import scio.function.utils.SampleSurface3D;
+import util.ChangeEventHandler;
 
 /**
  * <p>
@@ -52,18 +52,29 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
         this(func, new Point2D.Double(u0, v0), new Point2D.Double(u1, v1));
     }
 
+    //
+    // GETTERS & SETTERS
+    //
+
     public MultivariateVectorialFunction getFunction() {
         return func;
     }
 
     public void setFunction(MultivariateVectorialFunction func) {
         if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            }
             this.func = func;
+            if (func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)func).addChangeListener(this);
+            }
             needsComputation = true;
+            fireStateChanged();
         }
     }
 
-    public MaxMinDomain<Double> getDomainU() {
+    public RealIntervalSampler getDomainU() {
         return domainU;
     }
 
@@ -81,7 +92,7 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
         }
     }
 
-    public MaxMinDomain<Double> getDomainV() {
+    public RealIntervalSampler getDomainV() {
         return domainV;
     }
 
@@ -113,11 +124,8 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
         return domainPlottable;
     }
 
-
     //
-    //
-    // DRAW METHODS
-    //
+    // EVENT HANDLING
     //
 
     @Override
@@ -132,19 +140,21 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
         super.stateChanged(e);
     }
 
+    //
+    // DRAW METHODS
+    //
+
     transient boolean needsComputation = true;
     transient List<Point3D[]> polys;
 
     @Override
     public void paintComponent(VisometryGraphics<Point3D> vg) {
-       // if (needsComputation) {
-            polys = getPolys();
-            needsComputation = false;
-      //  }
+        polys = getPolys(func);
+        needsComputation = false;
         ((SpaceGraphics) vg).addToScene(polys);
     }
-
-    List<Point3D[]> getPolys() {
+    
+    List<Point3D[]> getPolys(MultivariateVectorialFunction func) {
         int nx = domainU.getNumSamples();
         int ny = domainV.getNumSamples();
         if (nx < 1 || ny < 1) {
@@ -198,40 +208,33 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Parametric Surface [" + domainU + ", " + domainV + "]";
+    }
+
+
+
     //
     // GRID STYLE
     //
 
+    /** Controls display of grid lines and the surface. */
     public enum GridStyle {
+        /** Display grid lines and surface. */
         REGULAR,
+        /** Display surface only. */
         NO_GRID,
+        /** Display grid lines only. */
         WIREFRAME,
+        /** Display first-variable-constant lines and surface. */
         GRID_U,
-        GRID_V;
+        /** Display second-variable-constant lines and surface. */
+        GRID_V,
+        /** Display first-variable-constant lines only. */
+        GRID_ONLY_U,
+        /** Display second-variable-constant lines only. */
+        GRID_ONLY_V;
     }
 
-    //
-    // SAMPLE SURFACES
-    //
-
-    SampleSurface3D sample = SampleSurface3D.SPHERE;
-
-    public SampleSurface3D getSample() {
-        return sample;
-    }
-
-    public void setSample(SampleSurface3D sample) {
-        this.sample = sample;
-        func = sample;
-        domainU = new RealIntervalSampler(sample.u0, sample.u1, 16);
-        domainV = new RealIntervalSampler(sample.v0, sample.v1, 16);
-        domainPlottable.setPoint1(new Point2D.Double(sample.u0, sample.v0));
-        domainPlottable.setPoint2(new Point2D.Double(sample.u1, sample.v1));
-        needsComputation = true;
-        fireStateChanged();
-    }
-
-    public static SpaceParametricSurface getInstance(SampleSurface3D sample) {
-        return new SpaceParametricSurface(sample, sample.u0, sample.u1, sample.v0, sample.v1);
-    }
 }

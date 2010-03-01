@@ -7,7 +7,6 @@ package org.bm.blaise.specto.space.function;
 
 import org.bm.blaise.specto.space.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
@@ -25,27 +24,27 @@ import scio.coordinate.Point3D;
 public class SpaceFunctionGraph extends AbstractPlottable<Point3D> {
 
     int samples = 20;
-    Rectangle2D.Double domain = new Rectangle2D.Double(-5.0, -5.0, 5.0, 5.0);
+    Rectangle2D.Double domain;
+    MultivariateRealFunction function;
 
-    MultivariateRealFunction function = new MultivariateRealFunction(){
-        public double value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-            return Math.cos(point[0]) + Math.sin(point[1]);
-        }
-    };
+    public SpaceFunctionGraph() {
+        this(new MultivariateRealFunction(){
+                public double value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
+                    return Math.cos(point[0]) + Math.sin(point[1]);
+                }
+            }, -5, -5, 5, 5);
+    }
 
-//    public ShapeStyle getStyle() {
-//        return style;
-//    }
-//
-//    public void setStyle(ShapeStyle style) {
-//        this.style = style;
-//    }
+    public SpaceFunctionGraph(MultivariateRealFunction function, double lowX, double lowY, double highX, double highY) {
+        this.function = function;
+        this.domain = new Rectangle2D.Double(lowX, lowY, highX-lowX, highY-lowY);
+    }
 
-    public Double getDomain() {
+    public Rectangle2D.Double getDomain() {
         return domain;
     }
 
-    public void setDomain(Double domain) {
+    public void setDomain(Rectangle2D.Double domain) {
         this.domain = domain;
     }
 
@@ -90,5 +89,10 @@ public class SpaceFunctionGraph extends AbstractPlottable<Point3D> {
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Graph of 2-Variable Function";
     }
 }

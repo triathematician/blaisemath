@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * PlaneParticleVectorFieldCurve.java
+ * Created Fall 2009
  */
 
 package org.bm.blaise.specto.plane.particle;
@@ -13,17 +13,19 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
+import scio.random.RandomCoordinateGenerator;
 
 /**
- *
+ * This extends a <code>PlaneParticleVectorField</code> by having particle's initial
+ * locations occur along a curve rather than along a rectangular region of the plane.
  * @author ae3263
  */
 public class PlaneParticleVectorFieldCurve extends PlaneParticleVectorField {
 
     PlaneParametricCurve curve;
 
-    public PlaneParticleVectorFieldCurve(MultivariateVectorialFunction func, PlaneParametricCurve curve) {
-        super(func);
+    public PlaneParticleVectorFieldCurve(MultivariateVectorialFunction func, PlaneParametricCurve curve, RandomCoordinateGenerator<Point2D.Double> rpg) {
+        super(func, rpg);
         this.curve = curve;
     }
 
@@ -36,7 +38,7 @@ public class PlaneParticleVectorFieldCurve extends PlaneParticleVectorField {
     @Override
     public Point2D.Double[] getNewPath(int length) {
         Point2D.Double[] result = new Point2D.Double[length];
-        double randomT = (curve.getDomain().getMax() - curve.getDomain().getMin()) * Math.random() + curve.getDomain().getMin();
+        double randomT = curve.getDomain().randomValue();
         double[] randomPt = {0, 0};
         try {
             randomPt = curve.getFunction().value(randomT);

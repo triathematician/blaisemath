@@ -28,7 +28,7 @@ public class TestLineVisometry extends javax.swing.JFrame {
 
     /** Creates new form TestPlaneVisometry */
     public TestLineVisometry() {
-        data.beans.EditorRegistration.registerEditors();
+        data.propertysheet.editor.EditorRegistration.registerEditors();
         initComponents();
 
 

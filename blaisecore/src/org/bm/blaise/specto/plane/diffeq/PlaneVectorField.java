@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plane.PlaneVisometry;
@@ -19,6 +20,7 @@ import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import util.ChangeEventHandler;
 
 /**
  * <p>
@@ -28,7 +30,7 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  *
  * @author Elisha Peterson
  */
-public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double, GraphicArrow> {
+public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double, GraphicArrow, Point2D.Double> {
 
     /** Style for drawing the vectors. */
     private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.ArrowShape.REGULAR, 5);
@@ -52,9 +54,7 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
 
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return function describing the field */
@@ -62,19 +62,27 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         return func;
     }
 
-    /**
-     * Sets the function for the field.
+    /** Sets the function for the field.
      * @param func the function
      */
     public void setFunc(MultivariateVectorialFunction func) {
-        this.func = func;
+        if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            }
+            this.func = func;
+            if (func instanceof ChangeEventHandler) {
+                ((ChangeEventHandler)func).addChangeListener(this);
+            }
+            fireStateChanged();
+        }
     }
 
-    public ArrowStyle getStyle() {
+    public ArrowStyle getVectorStyle() {
         return (ArrowStyle) style;
     }
 
-    public void setStyle(ArrowStyle arrowStyle) {
+    public void setVectorStyle(ArrowStyle arrowStyle) {
         this.style = arrowStyle;
     }
 
@@ -93,12 +101,15 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
     public void setLengthMultiplier(double lengthMultiplier) {
         this.lengthMultiplier = lengthMultiplier;
     }
-
+    
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        super.stateChanged(e);
+        // TODO - need to tell the plottable to redraw at this point
+    }
     
     //
-    //
     // DRAW METHODS
-    //
     //
 
     @Override
@@ -109,9 +120,10 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
     }
 
     public GraphicArrow primitiveAt(Point2D.Double coord, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
+        MultivariateVectorialFunction useFunc = getFunc();
         double[] value = new double[]{0, 0};
         try {
-            value = func.value(new double[]{coord.x, coord.y});
+            value = useFunc.value(new double[]{coord.x, coord.y});
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalArgumentException ex) {

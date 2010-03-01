@@ -4,7 +4,7 @@
  */
 package org.bm.blaise.specto.visometry;
 
-import org.bm.blaise.sequor.component.TimeClock;
+import org.bm.blaise.sequor.timer.TimeClock;
 
 /**
  * <p>

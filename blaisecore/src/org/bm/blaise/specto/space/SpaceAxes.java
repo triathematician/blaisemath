@@ -33,6 +33,19 @@ public class SpaceAxes extends AbstractPlottable<Point3D> {
     boolean showYZ = false;
     boolean showXZ = false;
 
+    public SpaceAxes() {
+    }
+
+    public SpaceAxes(String sx, String sy, String sz) {
+        this.sx = sx;
+        this.sy = sy;
+        this.sz = sz;
+    }
+    
+    public static SpaceAxes instance(String sx, String sy, String sz) {
+        return new SpaceAxes(sx, sy, sz);
+    }
+
     // BEAN PATTERNS
 
     public String getLabelX() {

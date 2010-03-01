@@ -20,6 +20,10 @@ public class SpacePlotComponent extends PlotComponent<Point3D> {
     /** View settings */
     boolean anaglyph;
 
+    //
+    // CONSTRUCTORS
+    //
+
     public SpacePlotComponent() {
         super(new SpaceVisometry());
         visometryGraphics = new SpaceGraphics(visometry);
@@ -27,6 +31,25 @@ public class SpacePlotComponent extends PlotComponent<Point3D> {
         defaultMouseListener = resizer;
         defaultMouseWheelListener = resizer;
     }
+
+    /** Initializes with a title and (if desired) axes labeled by x,y,z. */
+    public SpacePlotComponent(String title, boolean showAxes) {
+        this();
+        setTitle(title);
+        if (showAxes)
+            addPlottable(SpaceAxes.instance("x", "y", "z"));
+    }
+
+    /** Initializes with axes labeled by specified strings. */
+    public SpacePlotComponent(String title, String xLabel, String yLabel, String zLabel) {
+        this();
+        setTitle(title);
+        addPlottable(SpaceAxes.instance(xLabel, yLabel, zLabel));
+    }
+
+    //
+    // GETTERS & SETTERS
+    //
 
     public SampleCoordinateSetGenerator<Point3D> getSSG() {
         // TODO - hook into this generator in a better way!!

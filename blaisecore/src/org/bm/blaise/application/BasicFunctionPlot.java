@@ -63,7 +63,7 @@ public class BasicFunctionPlot extends javax.swing.JPanel {
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         try {
-            ParsedUnivariateRealFunction func = new ParsedUnivariateRealFunction(jTextField1.getText());
+            ParsedUnivariateRealFunction func = new ParsedUnivariateRealFunction(jTextField1.getText(), null);
             planeFunctionGraph1.setFunction(func);
             jTextField1.setForeground(Color.BLACK);
         } catch (ParseException ex) {

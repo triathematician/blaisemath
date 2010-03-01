@@ -7,8 +7,6 @@ package org.bm.blaise.scio.function;
 
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.scribo.parser.ParseException;
@@ -16,7 +14,6 @@ import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 import org.bm.blaise.scribo.parser.grammars.RealGrammar;
 import org.bm.blaise.scribo.parser.semantic.SemanticTreeUtils;
-import org.bm.blaise.scribo.parser.semantic.TokenParser;
 
 /**
  * <p>
@@ -25,12 +22,18 @@ import org.bm.blaise.scribo.parser.semantic.TokenParser;
  *   Parsing is handled by the <code>RealTreeBuilder</code> class with grammar
  *   defined by <code>RealGrammar</code>.
  * </p>
+ * <p>
+ *   A parameter table stores values for any "parameters", which means any unknowns
+ *   that ARE NOT the specified variable.
+ * </p>
  * @author Elisha Peterson
  */
 public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
     
     String function;
-    transient String variable;
+    String variable;
+    RealParameterTable parameters;
+    
     transient HashMap<String,Double> variableTable;
     transient SemanticNode functionTree;
 
@@ -38,8 +41,17 @@ public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
      * @param funcString the function as a string
      * @throws ParseException if the function cannot be parsed
      */
-    public ParsedUnivariateRealFunction(String funcString) throws ParseException {
-        setFunctionString(funcString);
+    public ParsedUnivariateRealFunction(String funcString, String var) throws ParseException {
+        this(funcString, var, new RealParameterTable());
+    }
+
+    /** Construct a real function specified by the given input string.
+     * @param funcString the function as a string
+     * @throws ParseException if the function cannot be parsed
+     */
+    public ParsedUnivariateRealFunction(String funcString, String var, RealParameterTable parameters) throws ParseException {
+        this.parameters = parameters;
+        setFunctionString(funcString, var);
     }
 
     public String getFunctionString() {
@@ -47,21 +59,39 @@ public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
     }
 
     /**
-     * Sets up the function for the given string, along with doing some error checking and building the underlying tree.
+     * Sets up the function for the given string. Requires a variable to be passed in.
+     * If this variable is null, the current variable will not be changed. If both the
+     * current variable and this variable are null, the variable will become the first
+     * variable that is found.
      *
-     * @param function  the String representation of the function
+     * @param function the String representation of the function
+     * @param var the variable used by the function
      * @throws ParseException  if the String cannot be parsed
      * @throws IllegalArgumentException  if the String function has too many unknowns
      */
-    public void setFunctionString(String function) throws ParseException {
-        SemanticNode newTree = new TokenParser(RealGrammar.INSTANCE).parseTree(function);
-        Set<String> vars = newTree.unknowns().keySet();
-        if (vars.size() > 1) {
-            throw new IllegalArgumentException("Cannot construct a UnivariateRealFunction: the function " + function + " has more than 1 input.");
+    public void setFunctionString(String function, String var) throws ParseException {
+        SemanticNode newTree = RealGrammar.PARSER.parseTree(function);
+        Set<String> unknowns = newTree.unknowns().keySet();
+        // use the specified variable if possible; otherwise use what's already here or pick the first one in the list of unknowns
+        if (var == null) {
+            if (variable == null) {
+                if (unknowns.size() > 0) {
+                    variable = (String) unknowns.toArray()[0];
+                } else {
+                    variable = "UNKNOWN_VARIABLE";
+                }
+            }
+        } else if (!var.equals(variable)) {
+            this.variable = var;
         }
         variableTable = new HashMap<String,Double>();
-        variable = vars.size() == 1 ? vars.toArray(new String[]{})[0] : "dummy";
-        variableTable.put(variable, null);
+        variableTable.put(variable,null);
+        // if unknown is not the variable, insert into the parameter table
+        for (String u : unknowns) {
+            if ( ! (u.equals(variable) || parameters.containsKey(u)) ) {
+                parameters.put(u, 0.0);
+            }
+        }
         this.function = function;
         this.functionTree = newTree;
     }
@@ -74,6 +104,7 @@ public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
     public double value(double x) throws FunctionEvaluationException {
         try {
             variableTable.put(variable, x);
+            variableTable.putAll(parameters);
             SemanticTreeUtils.assignVariables(variableTable, functionTree);
             return (Double) functionTree.value();
         } catch (SemanticTreeEvaluationException ex) {
