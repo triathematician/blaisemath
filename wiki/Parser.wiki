@@ -3,9 +3,28 @@
 #sidebar TableOfContents
 
 = Description =
-The `blaiseparser2` package provides basic parsing functionality. Some principles for the parser:
-  * case-insensitive
-  * permits pseudonyms for functions, e.g. "avg", and "average" work the same
+The *BlaiseParser* library provides basic parsing functionality, currently supporting parsing *real-valued expressions* and basic *boolean-valued expressions*. The parser is _case insensitive_ and also supports various _pseudonyms_ (e.g. "avg" and "average" can both be used for the average of a list of numbers).
+
+== Usage ==
+The API for *BlaiseParser* is built to be as simple to use as possible. Here is a sample usage, to compile and evaluate the expression `sin(x)` at the value `x=pi`:
+{{{
+String stringToParse = "sin(x)";
+String variable = "x";
+Double value = Math.PI;
+
+SemanticNode sn = RealGrammar.getParser().parseTree(stringToParse);
+HashMap<String,Double> variables = new HashMap<String,Double>();
+variables.put(variable, value);
+sn.assignVariables(variables);
+Double result = sn.getValue();
+
+System.out.println("The value of " + stringToParse 
+    + " at " + variable + "=" + value
+    + " is " + result);
+}}}
+
+== Source Code ==
+The source code for *BlaiseParser* is contained in the `blaiseparser2` folder.
 
 = Features =
 
@@ -27,6 +46,7 @@ The `blaiseparser2` package provides basic parsing functionality. Some principle
 == Built-in Functions ==
 
 *Power Functions*
+|| Name || Description || # of Arguments || Remarks ||
 || `sqrt` or `squareroot` || square root of the argument || 1 || ok ||
 || `cbrt` or `cuberoot` || cube root of the argument || 1 || ok ||
 || `hypot` or `hypotenuse` || hypotenuse of two arguments, e.g. "hypot(3,4)" is 5 || 2 || ok ||
