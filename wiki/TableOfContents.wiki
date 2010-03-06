@@ -2,7 +2,8 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
-  * [Parser]
+  * [BlaiseParser]
+  * [BlaiseMath]
   * [Plottables]
     * [GenericPlottables Generic]
     * [1DPlottables 1D Plottables]
