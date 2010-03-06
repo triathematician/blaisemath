@@ -2,7 +2,7 @@
  * RealGrammar.java
  * Created on Dec 1, 2009
  */
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.Grammar;
+import org.bm.blaise.scribo.parser.semantic.TokenParser;
 
 /**
  * <p>
@@ -20,7 +21,22 @@ import org.bm.blaise.scribo.parser.Grammar;
  */
 public class RealGrammar implements Grammar {
 
-    public static RealGrammar INSTANCE = new RealGrammar();
+    static RealGrammar INSTANCE;
+    static TokenParser PARSER;
+
+    /** @return a static instance of a RealGrammar that can be used to construct a parser. */
+    public static RealGrammar getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new RealGrammar();
+        return INSTANCE;
+    }
+
+    /** @return a static instance of a parser that uses the RealGrammar. */
+    public static TokenParser getParser() {
+        if (PARSER == null)
+            PARSER = new TokenParser(getInstance());
+        return PARSER;
+    }
 
     //
     // STATIC DEFINITIONS
@@ -176,12 +192,13 @@ public class RealGrammar implements Grammar {
 
     public static double add(double... args) {
         double result = 0.0;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
             result += args[i];
-        }
         return result;
     }
-    public static double average(double... xs) { return add(xs)/xs.length; }
+    public static double average(double... xs) { 
+        return add(xs)/xs.length;
+    }
     public static double divide(double arg1, double arg2) { return arg1 / arg2; }
     public static double factorial(double arg) {
         double result = 1;
@@ -195,27 +212,28 @@ public class RealGrammar implements Grammar {
     public static boolean greater(double arg1, double arg2) { return arg1 > arg2; }
     public static double log2(double arg) { return Math.log(arg)/Math.log(2); }
     public static double max(double... args) {
+        if (args.length == 0)
+            return Double.MAX_VALUE;
         double max = -Double.MAX_VALUE;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
             if (args[i] > max)
                 max = args[i];
-        }
         return max;
     }
     public static double min(double... args) {
+        if (args.length == 0)
+            return -Double.MAX_VALUE;
         double min = Double.MAX_VALUE;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
             if (args[i] < min)
                 min = args[i];
-        }
         return min;
     }
     public static double modulus(double arg1, double arg2) { return arg1 % arg2; }
     public static double multiply(double... args) {
         double result = 1.0;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
             result *= args[i];
-        }
         return result;
     }
     public static double negative(double arg) { return -arg; }

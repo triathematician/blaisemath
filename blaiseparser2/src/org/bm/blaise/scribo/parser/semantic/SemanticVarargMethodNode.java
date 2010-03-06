@@ -19,7 +19,7 @@ import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
  * </p>
  * @author Elisha Peterson
  */
-public class SemanticVarargMethodNode extends SemanticMethodNode {
+class SemanticVarargMethodNode extends SemanticMethodNode {
 
     /**
      * Constructs the node using the specified method.
@@ -31,7 +31,7 @@ public class SemanticVarargMethodNode extends SemanticMethodNode {
     }
 
     @Override
-    boolean compatibleArguments(Class<?>[] types1, Class<?>[] types2) {
+    boolean compatibleArguments(Class[] types1, Class[] types2) {
 //        System.out.println("Checking vararg compatibility of " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
         if (super.compatibleArguments(types1, types2)) {
             return true;
@@ -44,51 +44,51 @@ public class SemanticVarargMethodNode extends SemanticMethodNode {
     }
 
     @Override
-    public Object value() throws SemanticTreeEvaluationException {
-        Class<?> pType = method.getParameterTypes()[0].getComponentType();
+    public Object getValue() throws SemanticTreeEvaluationException {
+        Class pType = method.getParameterTypes()[0].getComponentType();
         try {
             // use explicit array creation for primitive types
             if (pType.equals(double.class)) {
-                double[] args = new double[arguments.length];
+                double[] args = new double[parameters.length];
                 for (int i = 0; i < args.length; i++) {
-                    args[i] = (Double) arguments[i].value();
+                    args[i] = (Double) parameters[i].getValue();
                 }
                 return method.invoke(null, args);
             } else if (pType.equals(boolean.class)) {
-                boolean[] args = new boolean[arguments.length];
+                boolean[] args = new boolean[parameters.length];
                 for (int i = 0; i < args.length; i++) {
-                    args[i] = (Boolean) arguments[i].value();
+                    args[i] = (Boolean) parameters[i].getValue();
                 }
                 return method.invoke(null, args);
             } else if (pType.equals(int.class)) {
-                int[] args = new int[arguments.length];
+                int[] args = new int[parameters.length];
                 for (int i = 0; i < args.length; i++) {
-                    args[i] = (Integer) arguments[i].value();
+                    args[i] = (Integer) parameters[i].getValue();
                 }
                 return method.invoke(null, args);
             } else {
                 return value(pType);
             }
         } catch (IllegalAccessException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex + " (invalid method)");
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(parameters) + ": " + ex + " (invalid method)");
         } catch (InvocationTargetException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex + " (invoking method)");
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(parameters) + ": " + ex + " (invoking method)");
         } catch (ClassCastException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex + " (incorrect parameters passed to method)");
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(parameters) + ": " + ex + " (incorrect parameters passed to method)");
         }
     }
 
     <T> Object value(Class<T> t) throws SemanticTreeEvaluationException {
         try {
-            T[] args = (T[]) Array.newInstance(t, arguments.length);
+            T[] args = (T[]) Array.newInstance(t, parameters.length);
             for (int i = 0; i < args.length; i++) {
-                args[i] = (T) arguments[i].value();
+                args[i] = (T) parameters[i].getValue();
             }
             return method.invoke(null, args);
         } catch (IllegalAccessException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex);
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(parameters) + ": " + ex);
         } catch (InvocationTargetException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(arguments) + ": " + ex);
+            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(parameters) + ": " + ex);
         }
     }
 }

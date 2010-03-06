@@ -2,16 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser;
 
-import org.bm.blaise.scribo.parser.grammars.RealGrammar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bm.blaise.scribo.parser.GrammarParser;
-import org.bm.blaise.scribo.parser.SemanticNode;
-import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import org.bm.blaise.scribo.parser.ParseException;
-import org.bm.blaise.scribo.parser.semantic.TokenParser;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -21,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class RealGrammarTest {
 
-    GrammarParser gp = new TokenParser(RealGrammar.INSTANCE);
+    GrammarParser gp = RealGrammar.getParser();
 
     void assertEqualTree(double value, String s2) {
         SemanticNode tree = null;
@@ -29,7 +23,7 @@ public class RealGrammarTest {
         try {
             tree = gp.parseTree(s2);
             try {
-                treeValue = (Double) tree.value();
+                treeValue = (Double) tree.getValue();
                 assertEquals(value, treeValue, 1e-5);
             } catch (SemanticTreeEvaluationException ex) {
                 Logger.getLogger(RealGrammarTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -53,6 +47,7 @@ public class RealGrammarTest {
         assertEqualTree(8., "2*2*2");
         assertEqualTree(0.5, "2/2/2");
         assertEqualTree(16., "2^2^2");
+        assertEqualTree(3486784401.0, "3^4^5");
 
         assertEqualTree(0.5, "1.5%1");
         assertEqualTree(120., "5!");
@@ -162,16 +157,27 @@ public class RealGrammarTest {
     public void testBuildTreeStat() {
         System.out.println("buildTree (statistical functions)");
 
+        assertEqualTree(-Double.MAX_VALUE, "min()");
+        assertEqualTree(Double.MAX_VALUE, "max()");
+        assertEqualTree(0.0, "min(0.0)");
         assertEqualTree(0.0, "min(0.0,1.0)");
         assertEqualTree(1.0, "max(0.0,1.0)");
 
         assertEqualTree(0.0, "minimum(0.0,1.0,2.0,3.0,4.0)");
         assertEqualTree(4.0, "maximum(0.0,1.0,2.0,3.0,4.0)");
 
+        assertEqualTree(Double.NaN, "avg()");
+        assertEqualTree(1.0, "avg(1.0)");
         assertEqualTree(0.5, "avg(0.0,1.0)");
         assertEqualTree(2.0, "average(0.0,1.0,2.0,3.0,4.0)");
 
+        assertEqualTree(0.0, "sum()");
+        assertEqualTree(1.0, "sum(1.0)");
         assertEqualTree(15.0, "sum(0.0,1.0,2.0,3.0,4.0,5.0)");
+
+        assertEqualTree(1.0, "multiply()");
+        assertEqualTree(2.0, "multiply(2.0)");
+        assertEqualTree(120.0, "multiply(1.0,2.0,3.0,4.0,5.0)");
     }
 
 //    @Test

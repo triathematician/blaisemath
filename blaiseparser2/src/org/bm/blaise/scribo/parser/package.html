@@ -7,9 +7,8 @@
   <body>
     <p>
         This package contains functionality to recognize "tokens" of various type in
-        a String input. The <code>Tokenizer</code> class converts the String into an
-        array of tokens, and the <code>Parser</code> converts the token array into
-        a token tree.
+        a String input, and to convert them into a <code>SemanticNode</code>, which
+        has functionality similar to a method.
     </p>
     <p>
         Errors in input are handled by the <code>ParseException</code> class.
@@ -17,7 +16,8 @@
     <p>
         Extensibility is handled primarily by the <code>Grammar</code> interface, which
         is used by the tokenizer to determine the types of tokens corresponding to
-        different symbols.
+        different symbols. Currently supported grammars are the <i>BooleanGrammar</i> and
+        the <i>RealGrammar</i>.
     </p>
   </body>
 </html>

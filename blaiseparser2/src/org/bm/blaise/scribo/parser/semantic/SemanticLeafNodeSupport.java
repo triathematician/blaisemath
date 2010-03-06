@@ -8,7 +8,6 @@ package org.bm.blaise.scribo.parser.semantic;
 import org.bm.blaise.scribo.parser.*;
 import java.util.Collections;
 import java.util.Enumeration;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 /**
@@ -20,7 +19,7 @@ import javax.swing.tree.TreeNode;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class SemanticLeafNodeSupport implements SemanticNode {
+abstract class SemanticLeafNodeSupport implements SemanticNode {
 
     /** The parent object of the node */
     SemanticNode parent;
@@ -58,8 +57,8 @@ public abstract class SemanticLeafNodeSupport implements SemanticNode {
     // SemanticNode METHODS
     //
 
-    public Class<?>[] getArgumentTypes() {
-        return null;
+    public Class[] getParameterTypes() {
+        return new Class[]{};
     }
 
 
@@ -88,7 +87,7 @@ public abstract class SemanticLeafNodeSupport implements SemanticNode {
     }
 
     public Enumeration children() {
-        return (Enumeration) Collections.EMPTY_LIST;
+        return (Enumeration) Collections.emptyList();
     }
 
     public TreeNode getChildAt(int childIndex) {

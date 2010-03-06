@@ -3,15 +3,19 @@
  * and open the template in the editor.
  */
 
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser.semantic;
 
+import org.bm.blaise.scribo.parser.semantic.VectorGrammar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.GrammarParser;
+import org.bm.blaise.scribo.parser.GrammarParser;
+import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.scribo.parser.SemanticNode;
+import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import org.bm.blaise.scribo.parser.semantic.TokenParser;
+import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -21,7 +25,7 @@ import static org.junit.Assert.*;
  */
 public class VectorGrammarTest {
 
-    GrammarParser gp = new TokenParser(VectorGrammar.INSTANCE);
+    GrammarParser gp = VectorGrammar.getParser();
 
     void assertEqualTree(double[] value, String s2) {
         SemanticNode tree = null;
@@ -29,7 +33,7 @@ public class VectorGrammarTest {
         try {
             tree = gp.parseTree(s2);
             try {
-                treeValue = (double[]) tree.value();
+                treeValue = (double[]) tree.getValue();
                 assertEquals(value.length, treeValue.length);
                 for (int i = 0; i < treeValue.length; i++) {
                     assertEquals(value[i], treeValue[i], 1e-6);
@@ -46,7 +50,7 @@ public class VectorGrammarTest {
 
     @Test
     public void testBasicCases() throws Exception {
-        System.out.println("buildTree");
+        System.out.println("testBasicCases");
 
         assertEqualTree(new double[]{1,2}, "vec(1,2)");
         assertEqualTree(new double[]{1,2}, "1;2");
@@ -60,12 +64,12 @@ public class VectorGrammarTest {
 
     @Test
     public void testBoundaryCases() throws Exception {
-        System.out.println("buildTree");
+        System.out.println("testBoundaryCases");
 
         assertEqualTree(new double[]{}, "vec()");
         assertEqualTree(new double[]{1}, "vec(1)");
-        assertEqualTree(new double[]{}, "[]");
         assertEqualTree(new double[]{1}, "[1]");
+        assertEqualTree(new double[]{}, "[]");
     }
 
 }

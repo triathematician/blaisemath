@@ -3,15 +3,15 @@
  * and open the template in the editor.
  */
 
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser;
 
+import org.bm.blaise.scribo.parser.BooleanGrammar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.GrammarParser;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import org.bm.blaise.scribo.parser.semantic.TokenParser;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class BooleanGrammarTest {
 
-    GrammarParser gp = new TokenParser(BooleanGrammar.INSTANCE);
+    GrammarParser gp = BooleanGrammar.getParser();
 
     void assertEqualTree(boolean value, String s2) {
         SemanticNode tree = null;
@@ -29,7 +29,7 @@ public class BooleanGrammarTest {
         try {
             tree = gp.parseTree(s2);
             try {
-                treeValue = (Boolean) tree.value();
+                treeValue = (Boolean) tree.getValue();
                 assertEquals(value, treeValue);
             } catch (SemanticTreeEvaluationException ex) {
                 Logger.getLogger(BooleanGrammarTest.class.getName()).log(Level.SEVERE, null, ex);

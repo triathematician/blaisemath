@@ -17,17 +17,17 @@ import org.bm.blaise.scribo.parser.SemanticNode;
  * </p>
  * @author Elisha Peterson
  */
-public class SemanticTreeBuilder {
+class SemanticTreeBuilder {
 
     /** Grammar used to build the semantic tree. */
     Grammar grammar;
 
     /** Constructs the tree builder with specified grammar. */
-    SemanticTreeBuilder(Grammar grammar) {
+    public SemanticTreeBuilder(Grammar grammar) {
         this.grammar = grammar;
     }
 
-    SemanticNode buildTree(TokenNode tokenNode) throws ParseException {
+    public SemanticNode buildTree(TokenNode tokenNode) throws ParseException {
         String name = tokenNode.getName();
         TokenType type = tokenNode.getType();
 

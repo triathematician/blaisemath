@@ -5,7 +5,9 @@
 package org.bm.blaise.scribo.parser.semantic;
 
 import java.awt.Color;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeModel;
@@ -195,7 +197,20 @@ public class ParserTestApp extends javax.swing.JFrame {
             
             // compute value
             try {
-                value.setText(sNode.value().toString());
+                Object val = sNode.getValue();
+                if (val.getClass().isArray()) {
+                    if (Array.getLength(val)==0) {
+                        value.setText("[]");
+                    } else {
+                        String s = "[" + Array.get(val, 0).toString();
+                        for (int i = 1; i < Array.getLength(val); i++) {
+                            s += ", " + Array.get(val, i).toString();
+                        }
+                        s += "]";
+                        value.setText(s);
+                    }
+                } else
+                    value.setText(val.toString());
                 value.setForeground(Color.BLUE);
             } catch (SemanticTreeEvaluationException ex) {
                 status.setText("Error evaluating semantic tree");
@@ -204,7 +219,7 @@ public class ParserTestApp extends javax.swing.JFrame {
             }
             
             // compute variables
-            vars.setText(sNode.unknowns().toString());
+            vars.setText(sNode.getVariables().toString());
             value.setForeground(Color.BLUE);
         } catch (ParseException ex) {
             status.setText("Error building semantic tree (parse).");

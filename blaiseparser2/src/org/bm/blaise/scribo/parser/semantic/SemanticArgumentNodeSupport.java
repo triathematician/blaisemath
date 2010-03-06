@@ -27,14 +27,14 @@ import javax.swing.tree.TreeNode;
  * </p>
  * @author Elisha Peterson
  */
-public abstract class SemanticArgumentNodeSupport implements SemanticNode {
+abstract class SemanticArgumentNodeSupport implements SemanticNode {
 
     /** The parent object of the node */
     SemanticNode parent;
     /** Argument types */
-    Class<?>[] argTypes;
+    Class[] parameterTypes;
     /** The arguments of the node */
-    SemanticNode[] arguments;
+    SemanticNode[] parameters;
 
     /**
      * Construct the node with multiple arguments.
@@ -42,7 +42,7 @@ public abstract class SemanticArgumentNodeSupport implements SemanticNode {
      * @param arguments an array of nodes representing the arguments; the types should be compatible with the <code>argTypes</code> array.
      * @throws IllegalArgumentException if the arguments do not match the supplied argument types
      */
-    public SemanticArgumentNodeSupport(Class<?>[] argTypes, SemanticNode... arguments) {
+    public SemanticArgumentNodeSupport(Class[] argTypes, SemanticNode... arguments) {
         this.parent = null;
         setArguments(argTypes, arguments);
     }
@@ -54,37 +54,45 @@ public abstract class SemanticArgumentNodeSupport implements SemanticNode {
      * @param arguments an array of nodes representing the arguments; the types should be compatible with the <code>argTypes</code> array.
      * @throws IllegalArgumentException if the arguments do not match the stored argument types
      */
-    protected void setArguments(Class<?>[] argTypes, SemanticNode... arguments) {
-        Class<?>[] argTypes2 = new Class<?>[arguments.length];
+    protected void setArguments(Class[] argTypes, SemanticNode... arguments) {
+        Class[] argTypes2 = new Class[arguments.length];
         for (int i = 0; i < arguments.length; i++) {
-            argTypes2[i] = arguments[i].valueType();
+            argTypes2[i] = arguments[i].getValueType();
         }
-        if (!compatibleArguments(argTypes, argTypes2)) {
-            throw new IllegalArgumentException("Arguments are not compatible with specified types.");
-        }
-        this.argTypes = argTypes;
-        this.arguments = arguments;
+        if (!compatibleArguments(argTypes, argTypes2))
+            throw new IllegalArgumentException("Arguments are not compatible with specified types:" +
+                    " FOUND TYPES = " + Arrays.toString(argTypes2) 
+                    + " ; EXPECTED TYPES = " + Arrays.toString(argTypes));
+        this.parameterTypes = argTypes;
+        this.parameters = arguments;
     }
 
-    abstract boolean compatibleArguments(Class<?>[] types1, Class<?>[] types2);
+    abstract boolean compatibleArguments(Class[] types1, Class[] types2);
 
     //
-    // SemanticNode & SemanticArgumentNode INTERFACE METHODS
+    // SemanticNode INTERFACE METHODS
     //
 
-    public Map<String, Class<?>> unknowns() {
+    public Map<String, Class> getVariables() {
         if (getChildCount() == 0) {
             return Collections.EMPTY_MAP;
         } else if (getChildCount() == 1) {
-            return arguments[0].unknowns();
+            return parameters[0].getVariables();
         } else {
-            Map<String, Class<?>> result = new HashMap<String, Class<?>>();
-            for (SemanticNode tn : arguments) {
-                result.putAll(tn.unknowns());
+            Map<String, Class> result = new HashMap<String, Class>();
+            for (SemanticNode tn : parameters) {
+                result.putAll(tn.getVariables());
             }
             return result;
         }
     }
+
+    public void assignVariables(Map<String, ? extends Object> valueTable) {
+        for (int i = 0; i < getChildCount(); i++)
+            ((SemanticNode)getChildAt(i)).assignVariables(valueTable);
+    }
+
+
 
     //
     // TreeNode INTERFACE METHODS
@@ -95,23 +103,23 @@ public abstract class SemanticArgumentNodeSupport implements SemanticNode {
     }
 
     public TreeNode getChildAt(int childIndex) {
-        return arguments[childIndex];
+        return parameters[childIndex];
     }
 
     public int getChildCount() {
-        return arguments.length;
+        return parameters.length;
     }
 
     public int getIndex(TreeNode node) {
-        return Arrays.asList(arguments).indexOf(node);
+        return Arrays.asList(parameters).indexOf(node);
     }
 
     public boolean isLeaf() {
-        return arguments.length == 0;
+        return parameters.length == 0;
     }
 
     public Enumeration children() {
-        return (Enumeration) Arrays.asList(arguments);
+        return (Enumeration) Arrays.asList(parameters);
     }
 
     public boolean getAllowsChildren() {

@@ -5,9 +5,12 @@
 
 package org.bm.blaise.scribo.parser.semantic;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
 
@@ -18,7 +21,7 @@ import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
  * </p>
  * @author Elisha Peterson
  */
-public class SemanticMethodNode extends SemanticArgumentNodeSupport {
+class SemanticMethodNode extends SemanticArgumentNodeSupport {
 
     /** Method used to implement the node. */
     Method method;
@@ -32,39 +35,67 @@ public class SemanticMethodNode extends SemanticArgumentNodeSupport {
         this.method = method;
     }
 
-    public Class<?>[] getArgumentTypes() {
+    public Class[] getParameterTypes() {
         return method.getParameterTypes();
     }
 
     @Override
-    boolean compatibleArguments(Class<?>[] types1, Class<?>[] types2) {
-//        System.out.println("Checking compatibility of " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
-        if (Arrays.equals(types1, types2)) {
-            return true;
-        }
-        if (types1.length == types2.length) {
+    boolean compatibleArguments(Class[] types1, Class[] types2) {
+//        System.out.println("SemanticMethodNode.compatibleArguments: checking equivalence of types " + Arrays.toString(types1) + " and " + Arrays.toString(types2));
+        boolean result = false;
+        if (Arrays.equals(types1, types2))
+            result = true;
+        else if (types1.length == types2.length) {
             // TODO - also check the compatibility
-            return true;
+            result = true;
+        } else if (types1.length == 1 && types1[0].isArray() && types2.length == 0) {
+            // if first argument accepts arrays, OK for length 0
+            result = true;
         }
-        return false;
+//        System.out.println(result);
+        return result;
     }
 
-    public Object value() throws SemanticTreeEvaluationException {
-        Object[] args = null;
-        try {
-            args = new Object[arguments.length];
-            for (int i = 0; i < args.length; i++) {
-                args[i] = arguments[i].value();
+    public Object getValue() throws SemanticTreeEvaluationException {
+//        if (method.isVarArgs() && args.length < 2) {
+//            System.out.println("var-args method: " + Arrays.toString(method.getParameterTypes()));
+//            System.out.println(Arrays.toString(args));
+//            System.out.println(args.getClass());
+//        }
+        if (method.isVarArgs()) {
+            Class vaType = method.getParameterTypes()[method.getParameterTypes().length-1].getComponentType();
+            Object vargs = Array.newInstance(vaType, parameters.length);
+            for (int i = 0; i < parameters.length; i++)
+                Array.set(vargs, i, parameters[i].getValue());
+            try {
+                return method.invoke(null, vargs);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(SemanticMethodNode.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(SemanticMethodNode.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(SemanticMethodNode.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return method.invoke(null, args);
-        } catch (IllegalAccessException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
-        } catch (InvocationTargetException ex) {
-            throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
+        } else {
+            // will only reach here if its not a varargs call
+            Object[] args = null;
+            args = new Object[parameters.length];
+            for (int i = 0; i < parameters.length; i++)
+                args[i] = parameters[i].getValue();
+            try {
+                return method.invoke(null, args);
+            } catch (IllegalAccessException ex) {
+                throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
+            } catch (InvocationTargetException ex) {
+                throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
+            } catch (IllegalArgumentException ex) {
+                throw new SemanticTreeEvaluationException("Failed to evaluate method " + method + " with arguments " + Arrays.toString(args) + ": " + ex);
+            }
         }
+        throw new IllegalStateException("Should not be here!");
     }
 
-    public Class<?> valueType() {
+    public Class getValueType() {
         return method.getReturnType();
     }
 }

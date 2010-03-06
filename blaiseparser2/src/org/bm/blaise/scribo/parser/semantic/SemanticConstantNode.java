@@ -17,7 +17,7 @@ import java.util.Map;
  * </p>
  * @author elisha
  */
-public class SemanticConstantNode extends SemanticLeafNodeSupport {
+class SemanticConstantNode extends SemanticLeafNodeSupport {
 
     /** Construct the node with specified value. */
     public SemanticConstantNode(Object value) {
@@ -36,15 +36,19 @@ public class SemanticConstantNode extends SemanticLeafNodeSupport {
     // SemanticNode INTERFACE METHODS
     //
     
-    public Object value() throws SemanticTreeEvaluationException {
+    public Object getValue() throws SemanticTreeEvaluationException {
         return value;
     }
 
-    public Map<String, Class<?>> unknowns() {
+    public Map<String, Class> getVariables() {
         return Collections.EMPTY_MAP;
     }
 
-    public Class<?> valueType() {
+    public Class<?> getValueType() {
         return value.getClass();
+    }
+
+    /** Does nothing as this is a constant node. */
+    public void assignVariables(Map<String, ? extends Object> valueTable) {
     }
 }

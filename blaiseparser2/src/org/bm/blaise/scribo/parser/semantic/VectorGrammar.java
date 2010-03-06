@@ -3,7 +3,7 @@
  * Created on Dec 1, 2009
  */
 
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser.semantic;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -20,9 +20,24 @@ import org.bm.blaise.scribo.parser.Grammar;
  * </p>
  * @author Elisha Peterson
  */
-public class VectorGrammar implements Grammar {
+class VectorGrammar implements Grammar {
 
-    public static final VectorGrammar INSTANCE = new VectorGrammar();
+    static VectorGrammar INSTANCE;
+    static TokenParser PARSER;
+
+    /** @return a static instance of a VectorGrammar that can be used to construct a parser. */
+    public static VectorGrammar getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new VectorGrammar();
+        return INSTANCE;
+    }
+
+    /** @return a static instance of a parser that uses the VectorGrammar. */
+    public static TokenParser getParser() {
+        if (PARSER == null)
+            PARSER = new TokenParser(getInstance());
+        return PARSER;
+    }
 
     //
     // STATIC DEFINITIONS
@@ -81,7 +96,7 @@ public class VectorGrammar implements Grammar {
     // STATIC FUNCTIONS TO USE IN SEMANTIC EVALUATION
     //
     
-    public static double[] id(double[] x) { return x; }
+    public static double[] id(double... x) { return x; }
     public static double[] plus(double[] x, double[] y) {
         if (x.length < y.length) return plus(y, x);
         assert x.length >= y.length;

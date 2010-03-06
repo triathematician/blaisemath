@@ -3,7 +3,7 @@
  * Created on Dec 1, 2009
  */
 
-package org.bm.blaise.scribo.parser.grammars;
+package org.bm.blaise.scribo.parser;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bm.blaise.scribo.parser.Grammar;
+import org.bm.blaise.scribo.parser.semantic.TokenParser;
 
 /**
  * <p>
@@ -21,7 +22,22 @@ import org.bm.blaise.scribo.parser.Grammar;
  */
 public class BooleanGrammar implements Grammar {
 
-    public static final BooleanGrammar INSTANCE = new BooleanGrammar();
+    static BooleanGrammar INSTANCE;
+    static TokenParser PARSER;
+
+    /** @return a static instance of a boolean grammar that can be used to construct a parser. */
+    public static BooleanGrammar getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new BooleanGrammar();
+        return INSTANCE;
+    }
+
+    /** @return a static instance of a parser that uses the boolean grammar. */
+    public static TokenParser getParser() {
+        if (PARSER == null)
+            PARSER = new TokenParser(getInstance());
+        return PARSER;
+    }
 
     //
     // STATIC DEFINITIONS

@@ -5,7 +5,6 @@
 package org.bm.blaise.scribo.parser.semantic;
 
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ import java.util.Map;
  * </p>
  * @author elisha
  */
-public class SemanticVariableNode extends SemanticLeafNodeSupport {
+class SemanticVariableNode extends SemanticLeafNodeSupport {
 
     /** Type of the variable value. */
     Class<?> valueType;
@@ -50,19 +49,25 @@ public class SemanticVariableNode extends SemanticLeafNodeSupport {
     // SemanticNode methods
     //
 
-    public Object value() throws SemanticTreeEvaluationException {
+    public Object getValue() throws SemanticTreeEvaluationException {
         if (value == null)
             throw new SemanticTreeEvaluationException(SemanticTreeEvaluationException.VARIABLE);
         return value;
     }
 
-    public Map<String, Class<?>> unknowns() {
-        HashMap<String, Class<?>> result = new HashMap<String, Class<?>>();
+    public Map<String, Class> getVariables() {
+        HashMap<String, Class> result = new HashMap<String, Class>();
         result.put(name, valueType);
         return result;
     }
 
-    public Class<?> valueType() {
+    public Class<?> getValueType() {
         return valueType;
+    }
+
+    public void assignVariables(Map<String, ?> valueTable) {
+        String varName = name.toLowerCase();
+        if (valueTable.containsKey(varName))
+            setValue(valueTable.get(varName));
     }
 }
