@@ -69,4 +69,8 @@ public class RealIntervalSampler extends RealInterval implements SampleCoordinat
         return (max-min)/n;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

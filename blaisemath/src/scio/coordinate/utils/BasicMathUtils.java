@@ -7,7 +7,7 @@ package scio.coordinate.utils;
 
 /**
  * <p>
- *    This class ...
+ *    This class contains some routines related to basic mathematics, e.g. the quadratic formula.
  * </p>
  * @author Elisha Peterson
  */
@@ -26,7 +26,7 @@ public class BasicMathUtils {
      */
     public static double[] quadraticRoots(double a, double b, double c) {
         double disc = b*b-4*a*c;
-        if (disc < 0)
+        if (disc < -1e-15)
             return new double[] { Double.NaN, Double.NaN };
         else if (a==0 && b==0)
             return null;
@@ -58,4 +58,18 @@ public class BasicMathUtils {
                 new double[][]{ {roots[0], roots[1]} };
     }
 
+    /**
+     * Solves a linear system with two unknowns: <br>
+     * c1[0]*x+c1[1]*y+c1[2]=0 <br>
+     * c2[0]*x+c2[1]*y+c2[2]=0
+     * @return solution {x,y}, or null if there is not one unique solution
+     */
+    public static double[] solveLinear(double[] c1, double[] c2) {
+        double det = c1[0]*c2[1]-c1[1]*c2[0];
+        // det = 0, so zero or many solutions
+        if (det == 0) {
+            return null;
+        }
+        return new double[] { (c1[1]*c2[2]-c2[1]*c1[2]) / det, -(c1[0]*c2[2]-c2[0]*c1[2]) / det };
+    }
 }

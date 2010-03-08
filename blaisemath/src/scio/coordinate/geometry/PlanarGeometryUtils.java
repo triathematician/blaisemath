@@ -183,7 +183,7 @@ public class PlanarGeometryUtils {
     /**
      * Returns point of intersection of two given lines, in the form y=m*x+b. If the value of m is <i>infinite</i>,
      * then the line is assumed to be a vertical line of the form x=b. So this will work for any input.
-     * @param l1 first line
+     * @param l1 first line; parameter 0 is slope, parameter 1 is intersection point
      * @param l2 second line
      * @return the point of intersection; the point at infinity if the lines are parallel; <code>NO_POINT</code> if lines coincide
      */
@@ -307,7 +307,8 @@ public class PlanarGeometryUtils {
     }
 
     /**
-     * Returns <b>points</b> of intersection of two parabolas with a common vertical directrix line.
+     * Returns <b>points</b> of intersection of two parabolas with a common vertical directrix line. If one of the x-values
+     * of the foci is equal to the directrix, finds the y-value of the other parabola at that x-value
      * @param focus1 the first focus
      * @param focus2 the second focus
      * @param directrix the common directrix
@@ -316,6 +317,13 @@ public class PlanarGeometryUtils {
     public static Point2D.Double[] getIntersectionOfParabolasWithCommonDirectrix(Point2D.Double focus1, Point2D.Double focus2, double directrix) {
         double[] parabola1 = parabolaByFocusAndDirectrix(focus1, directrix);
         double[] parabola2 = parabolaByFocusAndDirectrix(focus2, directrix);
+        if (focus1.x == directrix && focus2.x == directrix) {
+            return focus1.y == focus2.y ? new Point2D.Double[] { new Point2D.Double(directrix, focus1.y) } : null;
+        } else if (focus1.x == directrix) {
+            return new Point2D.Double[] { new Point2D.Double(parabola2[0]*focus1.y*focus1.y + parabola2[1]*focus1.y + parabola2[2], focus1.y) };
+        } else if (focus2.x == directrix) {
+            return new Point2D.Double[] { new Point2D.Double(parabola1[0]*focus2.y*focus2.y + parabola1[1]*focus2.y + parabola1[2], focus2.y) };
+        }
         double[] yRoots = intersectionsOfParabolas(parabola1, parabola2);
         if (yRoots.length == 1)
             return new Point2D.Double[] {

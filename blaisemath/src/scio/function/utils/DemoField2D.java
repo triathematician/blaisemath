@@ -14,7 +14,19 @@ import static java.lang.Math.*;
  * 
  * @author ae3263
  */
-public enum SampleField2D implements DifferentiableMultivariateVectorialFunction {
+public enum DemoField2D implements DifferentiableMultivariateVectorialFunction {
+    NONE() {
+        public double[] value(double[] in) {
+            return new double[]{0, 0};
+        }
+        public MultivariateMatrixFunction jacobian() {
+            return new MultivariateMatrixFunction() {
+                public double[][] value(double[] point) {
+                    return new double[][] { { 0, 0}, {0, 0} };
+                }
+            };
+        }
+    },
     OUT() {
         public double[] value(double[] in) {
             return new double[]{in[0], in[1]};
@@ -92,6 +104,18 @@ public enum SampleField2D implements DifferentiableMultivariateVectorialFunction
     LOGISTIC2() {
         public double[] value(double[] in) {
             return new double[]{in[1]*(1-in[1]), in[0]*(1-in[0])};
+        }
+        public MultivariateMatrixFunction jacobian() {
+            return new MultivariateMatrixFunction() {
+                public double[][] value(double[] in) {
+                    return new double[][] { { 0, 1-2*in[1]}, {1-2*in[0], 0} };
+                }
+            };
+        }
+    },
+    WAVY() { //"3*cos(x+y)","3*sin(x+y)-x"
+        public double[] value(double[] in) {
+            return new double[]{3*cos(in[0]+in[1]), 3*sin(in[0]+in[1])-in[0]};
         }
         public MultivariateMatrixFunction jacobian() {
             return new MultivariateMatrixFunction() {

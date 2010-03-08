@@ -11,13 +11,12 @@
 package scio.matrix;
 
 import java.util.Vector;
-import deprecated.Coordinate;
 
 /**
  *
  * @author Elisha Peterson
  */
-public class Matrix<V> implements Coordinate {
+public class Matrix<V> {
     
     /** Stores the underlying data. */
     Vector<Vector<V>> data;
@@ -120,17 +119,29 @@ public class Matrix<V> implements Coordinate {
     
     // COORDINATE METHODS
 
-    public boolean equals(Coordinate c2) {
-        if(!(c2 instanceof Matrix)){return false;}
-        Matrix compareTo=(Matrix)c2;
-        if(!(compareTo.getNumCols()==getNumCols() && compareTo.getNumRows()==getNumRows())){return false;}
-        for(int i=0;i<getNumRows();i++){
-            for(int j=0;j<getNumCols();j++){
-                if(get(i,j)!=compareTo.get(i,j)){return false;}
-            }
-        }
+    @Override
+    public boolean equals(Object c2) {
+        if(!(c2 instanceof Matrix))
+            return false;
+        Matrix compareTo = (Matrix) c2;
+        if(!(compareTo.getNumCols()==getNumCols() && compareTo.getNumRows()==getNumRows()))
+            return false;
+        for(int i=0; i<getNumRows(); i++)
+            for(int j=0; j<getNumCols(); j++)
+                if(get(i,j) != compareTo.get(i,j))
+                    return false;
         return true;
     }
 
-    public Coordinate copy() { return new Matrix<V>(this); }
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + (this.data != null ? this.data.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public Object clone() {
+        return new Matrix<V>(this);
+    }
 }

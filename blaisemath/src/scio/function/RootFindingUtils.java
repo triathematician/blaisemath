@@ -4,12 +4,12 @@
  */
 package scio.function;
 
-import deprecated.RealFunction;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.MaxIterationsExceededException;
+import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.apache.commons.math.analysis.solvers.SecantSolver;
 import org.apache.commons.math.analysis.solvers.UnivariateRealSolver;
 import org.apache.commons.math.analysis.solvers.UnivariateRealSolverFactory;
@@ -39,7 +39,7 @@ public class RootFindingUtils {
      * @return list of roots
      */
     public static List<Double> findAllRoots(
-            RealFunction function,
+            UnivariateRealFunction function,
             UnivariateRealSolver solver,
             double min, double max, double refinement) {
 
@@ -65,7 +65,7 @@ public class RootFindingUtils {
 
     /** Should use SecantSolver directly. */
     @Deprecated
-    public static double secantMethod(RealFunction function, double min, double max, double tolerance, int maxIterations) throws FunctionEvaluationException, MaxIterationsExceededException {
+    public static double secantMethod(UnivariateRealFunction function, double min, double max, double tolerance, int maxIterations) throws FunctionEvaluationException, MaxIterationsExceededException {
         UnivariateRealSolverFactory ursf = UnivariateRealSolverFactory.newInstance();
         SecantSolver urs = (SecantSolver) ursf.newSecantSolver();
         urs.setAbsoluteAccuracy(tolerance);
@@ -77,18 +77,18 @@ public class RootFindingUtils {
     /** Should use solver factory directly! */
     @Deprecated
     public static double falsePositionMethod(
-            RealFunction function,
+            UnivariateRealFunction function,
             double s, double t,
             double tolerance, int maxIterations)
             throws FunctionEvaluationException {
         int side = 0;
-        double r = 0, fr, fs = function.getValue(s), ft = function.getValue(t);
+        double r = 0, fr, fs = function.value(s), ft = function.value(t);
         for (int n = 1; n <= maxIterations; n++) {
             r = (fs * t - ft * s) / (fs - ft);
             if (Math.abs(t - s) < tolerance * Math.abs(t + s)) {
                 break;
             }
-            fr = function.getValue(r);
+            fr = function.value(r);
             if (fr * ft > 0) {
                 t = r;
                 ft = fr;

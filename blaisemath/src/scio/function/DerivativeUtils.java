@@ -4,7 +4,6 @@
  */
 package scio.function;
 
-import deprecated.Function;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.ConvergenceException;
 import org.apache.commons.math.FunctionEvaluationException;
@@ -81,6 +80,7 @@ public class DerivativeUtils {
      * @return approximation of the derivative, as a point
      * @throws org.apache.commons.math.FunctionEvaluationException if the function fails to evaluate for some reason
      */
+    @Deprecated
     public static Point2D.Double approximateDerivative(Function<Double, Point2D.Double> function, double input, double tolerance) throws FunctionEvaluationException, ConvergenceException {
         double step1 = 0.1;
         Point2D.Double value = function.getValue(input);
@@ -116,39 +116,40 @@ public class DerivativeUtils {
         return new Point3D((p1.x - p2.x) / divider, (p1.y - p2.y) / divider, (p1.z - p2.z) / divider);
     }
 
-//    /**
-//     * Computes an approximate derivative.
-//     * @param function input function mapping a number to a point
-//     * @param input the input value
-//     * @param tolerance accuracy required
-//     * @return approximation of the derivative, as a point
-//     * @throws org.apache.commons.math.FunctionEvaluationException if the function fails to evaluate for some reason
-//     */
-//    public static P3D approximateDerivative(Function<Double, P3D> function, double input, double tolerance) throws FunctionEvaluationException, ConvergenceException {
-//        double step1 = 0.01;
-//        P3D value = function.getValue(input);
-//        P3D result = new P3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-//        P3D leftResult = scaledDiff(function.getValue(input + step1), value, step1);
-//        while (result.distance(leftResult) > tolerance / 2) {
-//            result = leftResult;
-//            step1 = step1 / 10.;
-//            leftResult = scaledDiff(function.getValue(input + step1), value, step1);
-//        }
-//
-//        step1 = 0.01;
-//        result = new P3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-//        P3D rightResult = scaledDiff(function.getValue(input + step1), value, step1);
-//        while (result.distance(rightResult) > tolerance / 2) {
-//            result = rightResult;
-//            step1 = step1 / 10.;
-//            rightResult = scaledDiff(function.getValue(input + step1), value, step1);
-//        }
-//
-//        if (leftResult.distance(rightResult) < tolerance) {
-//            return leftResult;
-//        }
-//        throw new ConvergenceException();
-//    }
+    /**
+     * Computes an approximate derivative.
+     * @param function input function mapping a number to a point
+     * @param input the input value
+     * @param tolerance accuracy required
+     * @return approximation of the derivative, as a point
+     * @throws org.apache.commons.math.FunctionEvaluationException if the function fails to evaluate for some reason
+     */
+    @Deprecated
+    public static Point3D approximateDerivative3D(Function<Double, Point3D> function, double input, double tolerance) throws FunctionEvaluationException, ConvergenceException {
+        double step1 = 0.01;
+        Point3D value = function.getValue(input);
+        Point3D result = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        Point3D leftResult = scaledDiff(function.getValue(input + step1), value, step1);
+        while (result.distance(leftResult) > tolerance / 2) {
+            result = leftResult;
+            step1 = step1 / 10.;
+            leftResult = scaledDiff(function.getValue(input + step1), value, step1);
+        }
+
+        step1 = 0.01;
+        result = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        Point3D rightResult = scaledDiff(function.getValue(input + step1), value, step1);
+        while (result.distance(rightResult) > tolerance / 2) {
+            result = rightResult;
+            step1 = step1 / 10.;
+            rightResult = scaledDiff(function.getValue(input + step1), value, step1);
+        }
+
+        if (leftResult.distance(rightResult) < tolerance) {
+            return leftResult;
+        }
+        throw new ConvergenceException();
+    }
 
     /**
      * Computes an approximate second derivative.
@@ -158,6 +159,7 @@ public class DerivativeUtils {
      * @return approximation of the derivative, as a point
      * @throws org.apache.commons.math.FunctionEvaluationException if the function fails to evaluate for some reason
      */
+    @Deprecated
     public static Point2D.Double approximateDerivativeTwo(Function<Double, Point2D.Double> function, double input, double tolerance) throws FunctionEvaluationException, ConvergenceException {
         double step1 = 0.01;
         Point2D.Double value = DerivativeUtils.approximateDerivative(function, input, tolerance);

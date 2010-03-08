@@ -92,4 +92,12 @@ public class HashHashMatrix<W, U, V> extends Matrix<V> {
             }
         }
     }
+
+    @Override public String toString() {
+        String result = "HHM: " + rowMap + ", " + colMap;
+        for (int i = 0; i < super.getNumRows(); i++) {
+            result += "  row " + i + ": " + super.getRow(i) + "\n";
+        }
+        return result;
+    }
 }

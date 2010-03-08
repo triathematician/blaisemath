@@ -18,22 +18,39 @@ import static java.lang.Math.*;
  * </p>
  * @author Elisha Peterson
  */
-public enum SampleCurve2D implements UnivariateVectorialFunction {
-    SEGMENT() {
+public enum DemoCurve2D implements UnivariateVectorialFunction {
+    NONE(0,0) {
+        public double[] value(double x) {
+            return null;
+        }
+    },
+    SEGMENT(-1,2) {
         public double[] value(double x) {
             return new double[]{x-1, .5*x};
         }
     },
-    CIRCLE() {
+    CIRCLE(0, 2*PI) {
         public double[] value(double x) {
             return new double[]{cos(x), sin(x)};
         }
     },
-    DOUBLE_BUBBLE() {
+    ARCHIMEDEAN_SPIRAL(0,2) {
+        public double[] value(double x) {
+            return new double[]{ x*cos(2*PI*x), x*sin(2*PI*x) };
+        }
+    },
+    DOUBLE_BUBBLE(0, 2*PI) {
         public double[] value(double x) {
             double cx = cos(x);
             double r = 1.5 + 2.5 * cx * cx;
             return new double[] { r * cx, r * sin(x) };
         }
     };
+
+    public double t0, t1;
+
+    DemoCurve2D(double t0, double t1) {
+        this.t0 = t0;
+        this.t1 = t1;
+    }
 }

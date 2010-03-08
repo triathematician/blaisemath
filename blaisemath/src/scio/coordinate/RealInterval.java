@@ -86,4 +86,8 @@ public class RealInterval extends MaxMinDomainSupport<Double> implements RandomC
         }
     }
 
+    @Override
+    public String toString() {
+        return (minInclusive ? "[" : "(") + min + "," + max + (maxInclusive ? "]" : ")");
+    }
 }

@@ -8,7 +8,7 @@ package scio.random;
 import java.util.HashMap;
 import java.util.Vector;
 import org.apache.commons.math.FunctionEvaluationException;
-import deprecated.Function;
+import scio.function.Function;
 import scio.matrix.HashMatrix;
 
 /**
@@ -26,6 +26,7 @@ public class Markov<V,W> {
      * @param transProb the transition probabilities taking one state into another
      * @param emitProb the probability of a given observation given a particular hidden staet
      */
+    @Deprecated
     public CurrentState forwardViterbi(
             W[] observations,
             V[] hiddenStates,
@@ -86,6 +87,7 @@ public class Markov<V,W> {
     }
     
     /** Helpful class for the Viterbi algorithm */
+    @Deprecated
     public class CurrentState{
         public CurrentState(){vitPath=new Vector<V>();}
         public CurrentState(double p,Vector<V> path,double vp){totalProb=p;vitPath=path;vitProb=vp;}

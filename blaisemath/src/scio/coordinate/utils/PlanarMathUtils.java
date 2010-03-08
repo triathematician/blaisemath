@@ -256,7 +256,8 @@ public final class PlanarMathUtils {
      * @return an angle with range between 0 and 2pi
      */
     public static double positiveAngle(double x, double y) {
-        return (x < 0 ? PI : 0) + atan(y / x);
+        double result = atan2(y, x);
+        return result < 0 ? result + 2*PI : result;
     }
 
     /**
@@ -265,9 +266,8 @@ public final class PlanarMathUtils {
      * @return an angle with range between 0 and 2pi
      */
     public static double positiveAngle(Point2D.Double vec) {
-        if (Double.isInfinite(vec.x)) {
+        if (Double.isInfinite(vec.x))
             return vec.y < 0 ? vec.y + 2*PI : vec.y;
-        }
         return positiveAngle(vec.x, vec.y);
 
     }
@@ -281,18 +281,42 @@ public final class PlanarMathUtils {
     public static double angleBetween(Point2D.Double vec1, Point2D.Double vec2) {
         return Math.acos( dotProduct(vec1, vec2) / ( magnitude(vec1) * magnitude(vec2) ) );
     }
+
+    /**
+     * Computes (signed) angle between two vectors, in the range of -pi to pi
+     * @param vec1 first vector
+     * @param vec2 second vector
+     * @return angle of vec2 relative to vec1, in the range of -pi to pi
+     */
+    public static double signedAngleBetween(Point2D.Double vec1, Point2D.Double vec2) {
+        double angle1 = atan2(vec1.y, vec1.x);
+        double angle2 = atan2(vec2.y, vec2.x);
+        double diff = angle2 - angle1;
+        if (diff > PI)
+            return diff - 2*PI;
+        else if (diff < -PI)
+            return diff + 2*PI;
+        else
+            return diff;
+    }
         
 
     /**
      * Computes angle between three points. In particular, this is the angle required to rotate
-     * the vector [p2->p1] to the point where it is parallel to the vector [p2->p3].
+     * the vector [p2->p1] to the point where it is parallel to the vector [p2->p3]. Allows for points at
+     * infinity of the form (infinity, angle)
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
-     * @return the rotation angle, between 0 and 2pi.
+     * @return the rotation angle, between 0 and 2pi; or NaN if any of the points coincide
      */
-    public static double signedAngleBetween3Points(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
-        double angleDiff = positiveAngle(p3.x - p2.x, p3.y - p2.y) - positiveAngle(p1.x - p2.x, p1.y - p2.y);
+    public static double positiveAngleBetween3Points(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
+        if (isInfinite(p2)) {
+            return 0;
+        }
+        double angleDiff =
+                (isInfinite(p3) ? p3.y : positiveAngle(p3.x - p2.x, p3.y - p2.y))
+                - (isInfinite(p1) ? p1.y : positiveAngle(p1.x - p2.x, p1.y - p2.y));
         if (angleDiff < 0) {
             angleDiff += 2*Math.PI;
         }

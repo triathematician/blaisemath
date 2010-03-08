@@ -3,8 +3,6 @@
  * Created on May 23, 2008
  */
 package scio.function;
-
-import deprecated.Function;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.GeneralPath;
@@ -22,6 +20,7 @@ import scio.coordinate.utils.SpacialMathUtils;
  * 
  * @author Elisha Peterson
  */
+@Deprecated
 public class MeshRoot2D {
 
     public static GeneralPath findRoots(

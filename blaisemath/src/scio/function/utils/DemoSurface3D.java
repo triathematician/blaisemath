@@ -12,7 +12,17 @@ import static java.lang.Math.*;
  *
  * @author ae3263
  */
-public enum SampleSurface3D implements MultivariateVectorialFunction {
+public enum DemoSurface3D implements MultivariateVectorialFunction {
+    NONE(0, 0, 0, 0) {
+        public double[] value(double[] in) {
+            return new double[]{0, 0, 0};
+        }
+    },
+    PLANE(0, 1, 0, 1) {
+        public double[] value(double[] in) {
+            return new double[]{ 1 - in[0] - in[1], in[0], in[1]};
+        }
+    },
     SPHERE(0, 2*PI, 0, PI) {
         public double[] value(double[] in) {
             double r1 = cos(in[1]);
@@ -63,7 +73,7 @@ public enum SampleSurface3D implements MultivariateVectorialFunction {
 
     public double u0, u1, v0, v1;
 
-    private SampleSurface3D(double u0, double u1, double v0, double v1) {
+    private DemoSurface3D(double u0, double u1, double v0, double v1) {
         this.u0 = u0;
         this.u1 = u1;
         this.v0 = v0;
