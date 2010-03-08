@@ -29,14 +29,17 @@ This page describes the 3d plottables that have been implemented in `blaisecore`
 
 = Dynamic Interaction with the Plot =
 
-The class `SpacePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically. Interaction modes are as follows:
+The class `SpacePlotResizer` allows the user to manipulate the boundaries of the plot window dynamically. Interaction modes that move or rotate the camera are as follows:
 
-  * `Drag` rotates the window's view.
-  * `Alt+Drag` pans the view in the plane perpendicular to the camera.
-  * `Ctrl+Drag` rotates the window as with a straight `Drag`, but also animates the rotation (if it is big enough) when the mouse button is released.
-  * `Shift+Drag` restricts movement to purely horizontal or vertical.
-  * `MouseWheel` zooms the plot in and out by changing the DPI.
-  * `Shift+MouseWheel` keeps the camera in fixed position, but changes the projection plane; this basically just changes the perspective.
+  * `Drag`: rotates the plot
+  * `Ctrl+Drag`: animate rotation, based on the difference between the two mouse coordinates; does not rotate if the computed angle of rotation is too small
+  * `Alt+Drag`: translate the center of interest in directions perpendicular to the view direction
+  * `Alt-MouseWheel`: moves the camera to or from the center of interest
+
+Here are the interactions that zoom:
+
+  * `MouseWheel`: change the 2D-scale of the view (does not change the 3D projection)
+  * `Shift+MouseWheel`: change the focal length, e.g. move the object of interest to/from the camera
 
 
 = Old Features =
