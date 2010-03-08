@@ -109,8 +109,9 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     }
 
     public void draw(Shape[] paths, Graphics2D canvas) {
-        for (Shape p : paths) {
+        canvas.setStroke(stroke);
+        canvas.setColor(strokeColor);
+        for (Shape p : paths)
             draw(p, canvas);
-        }
     }
 }

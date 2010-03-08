@@ -160,9 +160,8 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
             throw new IllegalArgumentException("setClockTimer called with null argument!");
         }
         if (timer != clock) {
-            if (timer != null) {
+            if (timer != null)
                 timer.removeActionListener(this);
-            }
             this.timer = clock;
             timer.addActionListener(this);
         }
@@ -269,14 +268,11 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      */
     @Override
     protected void paintComponent(Graphics g) {
-        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g);
         visometryGraphics.setScreenGraphics((Graphics2D) g);
         plottables.paintComponent(visometryGraphics);
-        if (defaultMouseListener instanceof Plottable) {
+        if (defaultMouseListener instanceof Plottable)
             ((Plottable) defaultMouseListener).paintComponent(visometryGraphics);
-        }
-        
     }
 
     //
@@ -294,9 +290,8 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      * @param e the <code>ChangeEvent</code>
      */
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == visometry) {
+        if (e.getSource() == visometry)
             plottables.visometryChanged(visometry, visometryGraphics);
-        }
         repaint();
     }
 

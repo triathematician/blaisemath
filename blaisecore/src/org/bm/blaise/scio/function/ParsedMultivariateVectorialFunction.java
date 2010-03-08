@@ -14,8 +14,7 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import org.bm.blaise.scribo.parser.grammars.RealGrammar;
-import org.bm.blaise.scribo.parser.semantic.SemanticTreeUtils;
+import org.bm.blaise.scribo.parser.RealGrammar;
 
 /**
  * <p>
@@ -59,8 +58,8 @@ public class ParsedMultivariateVectorialFunction implements MultivariateVectoria
         // compile trees, and check to see if variables are defined properly
         Set<String> parseVars = new HashSet<String>();
         for (int i = 0; i < functions.length; i++) {
-            trees[i] = RealGrammar.PARSER.parseTree(functions[i]);
-            parseVars.addAll(trees[i].unknowns().keySet());
+            trees[i] = RealGrammar.getParser().parseTree(functions[i]);
+            parseVars.addAll(trees[i].getVariables().keySet());
         }
         if ( ! Arrays.asList(vars).containsAll(parseVars) ) {
             throw new IllegalArgumentException("Functional expressions " + Arrays.asList(functions) + " contain variables that are not included in the provided list: " + Arrays.toString(vars) );
@@ -89,8 +88,8 @@ public class ParsedMultivariateVectorialFunction implements MultivariateVectoria
             }
             double[] result = new double[functions.length];
             for (int i = 0; i < result.length; i++) {
-                SemanticTreeUtils.assignVariables(variableTable, functionTrees[i]);
-                result[i] = (Double) functionTrees[i].value();
+                functionTrees[i].assignVariables(variableTable);
+                result[i] = (Double) functionTrees[i].getValue();
             }
             return result;
         } catch (SemanticTreeEvaluationException ex) {

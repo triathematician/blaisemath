@@ -6,6 +6,9 @@
 package org.bm.blaise.specto.space;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +40,7 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
         super(vis);
         proj = ((SpaceVisometry) vis).getProj();
         rend = new SpaceRendered(proj);
-        setOpacity(0.6f);
+        setOpacity(.95f);
     }
 
     public void addToScene(Point3D[] object) {
@@ -60,7 +63,8 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
         rend.clear();
     }
 
-    public void drawScene() {
+    public void drawScene(Graphics2D g) {
+        this.gr = g;
         rend.draw(this);
     }
 
@@ -82,11 +86,11 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
 
     @Override
     public void drawSegment(Point3D coord1, Point3D coord2) {
-//        System.out.println("segment: " + coord1 + " " + coord2);
-        Point3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new Point3D[]{coord1, coord2});
-//        System.out.println("clipped: " + Arrays.toString(clipped));
+        Point3D[] clipped = P3DUtils.clipSegment(proj.clipPoint, proj.tDir, new Point3D[]{coord1, coord2});//        System.out.println("clipped: " + Arrays.toString(clipped));
         if (clipped != null) {
-            super.drawSegment(clipped[0], clipped[1]);
+            Point2D wp1 = vis.getWindowPointOf(coord1);
+            Point2D wp2 = vis.getWindowPointOf(coord2);
+            pathStyle.draw(new Line2D.Double(wp1, wp2), gr);
         }
     }
 
@@ -97,14 +101,17 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
         Point3D n = (poly[2].minus(poly[0])).crossProduct(poly[2].minus(poly[1])).normalized();
         float costh = (float) Math.abs(n.dotProduct(LIGHT));
         costh = .5f + .5f * costh * costh;
-        return new Color(costh*BASE_FILL.getRed()*costh/255, costh*BASE_FILL.getGreen()/255, costh*BASE_FILL.getBlue()/255, opacity);
+        return new Color(
+                costh*BASE_FILL.getRed()*costh/255,
+                costh*BASE_FILL.getGreen()/255,
+                costh*BASE_FILL.getBlue()/255,
+                opacity);
     }
 
     @Override
     public void drawClosedPath(Point3D[] p) {
-        if (P3DUtils.clips(proj.clipPoint, proj.tDir, p)) {
+        if (P3DUtils.clips(proj.clipPoint, proj.tDir, p))
             return;
-        }
         shapeStyle.setFillColor(shadedFillColor(p));
         super.drawClosedPath(p);
     }
@@ -114,20 +121,16 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
     public void drawPolygons(Point3D[][] polys) {
         // sort polygons by average z-order from projection
         Arrays.sort(polys, proj.getPolygonZOrderComparator());
-
-        for (int i = 0; i < polys.length; i++) {
+        for (int i = 0; i < polys.length; i++)
             drawClosedPath(polys[i]);
-        }
     }
 
     public void drawPolygons(List<Point3D[]> polys) {
         // sort polygons by average z-order from projection
         TreeSet<Point3D[]> sorted = new TreeSet<Point3D[]>(proj.getPolygonZOrderComparator());
-        sorted.addAll(polys);
-        
-        for (Point3D[] p : sorted) {
+        sorted.addAll(polys);        
+        for (Point3D[] p : sorted)
             drawClosedPath(p);
-        }
     }
 
     transient SpaceGridSampleSet pgss;

@@ -21,16 +21,11 @@ import scio.coordinate.Point3D;
 public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     //
-    //
     // CAMERA SETTINGS
-    //
     //
 
     /** Point of interest. */
     Point3D center = new Point3D(0, 0, 0);
-
-    /** Total distance from camera to center of interest. */
-    double viewDist = 29.0;
 
     /** Camera angle ("front" of camera). */
     Point3D tDir = new Point3D(-3, -3, -1).normalized();
@@ -38,60 +33,50 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
     /** Camera normal vector ("top" of camera). */
     Point3D nDir = new Point3D(-1, -1, 6).normalized();
 
-    /** Camera location. */
-    transient Point3D camera = derivedPoint(center, -viewDist, tDir);
-
-    /** Camera binormal ("side" of camera). */
-    transient Point3D bDir = tDir.crossProduct(nDir);
-
-    //
-    //
-    // PROJECTION SETTINGS
-    //
-    //
+    /** Total distance from camera to center of interest. */
+    double viewDist = 25.0;
 
     /** Distance from camera to view plane (in cm) */
-    double screenDist = 30.0;
-
-    /** Center of screen */
-    transient Point3D screenCenter = derivedPoint(camera, screenDist, tDir);
+    double screenDist = 25.0;
 
     /** Distance from camera to clipping plane (in cm) */
     double clipDist = 2;
+    
+    /** Distance between left and right cameras */
+    double camSep = 0.5;
+    
+    //
+    // COMPUTED VALUES
+    //
+
+    /** Camera location. */
+    transient Point3D camera;
+
+    /** Camera binormal ("side" of camera). */
+    transient Point3D bDir;
+
+    /** Center of screen */
+    transient Point3D screenCenter;
 
     /** Point representing the clipping plane. */
-    transient Point3D clipPoint = derivedPoint(camera, clipDist, tDir);
+    transient Point3D clipPoint;
 
     //
-    //
-    // DUAL CAMERA SETTINGS
-    //
-    //
-
-    /** Distance between cameras */
-    double camSep = 0.5;
-
-
-    //
-    //
-    // WINDOW COORDINATES
-    //
+    // WINDOW PARAMETERS
     //
 
     /** Window bounding box. */
     RectangularShape winBounds;
 
-    /** Pixels per unit */
-    double dpi = 270;
-
     /** Center of window, in window coordinates. */
     transient Point2D.Double winCenter;
 
+    /** Pixels per unit */
+    double dpi = 100.0;
+
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     public Point3D getCenter() {
@@ -100,7 +85,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setCenter(Point3D center) {
         this.center = center;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public Point3D getCamera() {
@@ -117,7 +102,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setViewDist(double viewDist) {
         this.viewDist = viewDist;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public Point3D getTDir() {
@@ -130,7 +115,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
         } else {
             this.tDir = tDir.normalized();
         }
-        computeTransformation();
+        useCenterCamera();
     }
 
     public Point3D getNDir() {
@@ -144,7 +129,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
             this.nDir = nDir.normalized();
         }
         this.nDir = nDir;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public Point3D getBDir() {
@@ -161,7 +146,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setClipDist(double clipDist) {
         this.clipDist = clipDist;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public double getCamSep() {
@@ -178,7 +163,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setScreenDist(double projDist) {
         this.screenDist = projDist;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public RectangularShape getWinBounds() {
@@ -187,7 +172,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setWinBounds(RectangularShape winBounds) {
         this.winBounds = winBounds;
-        computeTransformation();
+        useCenterCamera();
     }
 
     public double getDpi() {
@@ -196,15 +181,44 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
     public void setDpi(double dpi) {
         this.dpi = dpi;
-        computeTransformation();
+        useCenterCamera();
     }
 
+    //
+    // CAMERA SWITCHING
+    //
+
+    public void useLeftCamera() {
+        bDir = tDir.crossProduct(nDir);
+        Point3D centerCam = pointInRelativeDirection(center, -viewDist, tDir);
+        camera = pointInRelativeDirection(centerCam, -camSep/2, bDir);
+        screenCenter = pointInRelativeDirection(camera, screenDist, tDir);
+        clipPoint = pointInRelativeDirection(camera, clipDist, tDir);
+        winCenter = centerOf(winBounds);
+        winCenter.x -= camSep/2 * dpi;
+    }
+
+    public void useRightCamera() {
+        bDir = tDir.crossProduct(nDir);
+        Point3D centerCam = pointInRelativeDirection(center, -viewDist, tDir);
+        camera = pointInRelativeDirection(centerCam, camSep/2, bDir);
+        screenCenter = pointInRelativeDirection(camera, screenDist, tDir);
+        clipPoint = pointInRelativeDirection(camera, clipDist, tDir);
+        winCenter = centerOf(winBounds);
+        winCenter.x += camSep/2 * dpi;
+    }
+
+    public void useCenterCamera() {
+        bDir = tDir.crossProduct(nDir);
+        camera = pointInRelativeDirection(center, -viewDist, tDir);
+        screenCenter = pointInRelativeDirection(camera, screenDist, tDir);
+        clipPoint = pointInRelativeDirection(camera, clipDist, tDir);
+        winCenter = centerOf(winBounds);
+    }
     
 
     //
-    //
     // STATIC UTILITY COMPUTATIONS
-    //
     //
 
     /**
@@ -217,14 +231,14 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
      *
      * @return new point at start + dist * dir
      */
-    static Point3D derivedPoint(Point3D start, double dist, Point3D dir) {
+    static Point3D pointInRelativeDirection(Point3D start, double dist, Point3D dir) {
         return new Point3D(
                 start.x + dist * dir.x,
                 start.y + dist * dir.y,
                 start.z + dist * dir.z );
     }
 
-    static Point2D.Double computeWinCenter(RectangularShape rr) {
+    static Point2D.Double centerOf(RectangularShape rr) {
         return new Point2D.Double(
                 rr.getMinX() + rr.getWidth() / 2,
                 rr.getMinY() + rr.getHeight() / 2 );
@@ -233,93 +247,17 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
 
 
     //
-    //
     // PROJECTION METHODS
     //
-    //
-
-    Point2D.Double getCenterClone() {
-        return (Point2D.Double) winCenter.clone();
-    }
-
-//    /** Snaps the directions onto coordinate axes if they're suitably close. */
-//    public void snapDir() {
-//        boolean t = snap(tDir);
-//        boolean n = snap(nDir);
-//        bDir = tDir.crossProduct(nDir);
-//    }
-//
-//    double SNAP_FACTOR = 0.05;
-//
-//    boolean snap(P3D dir) {
-//        boolean result = false;
-//        if (Math.abs(dir.x) < SNAP_FACTOR) {
-//            dir.x = 0;
-//            result = true;
-//        }
-//        if (Math.abs(dir.y) < SNAP_FACTOR) {
-//            dir.y = 0;
-//            result = true;
-//        }
-//        if (Math.abs(dir.z) < SNAP_FACTOR) {
-//            result = true;
-//            if (dir.x == 0 && dir.y == 0) {
-//                dir.z = 1;
-//            } else {
-//                dir.z = 0;
-//                if (dir.x == 0) {
-//                    dir.y = 1;
-//                } else if (dir.y == 0) {
-//                    dir.x = 1;
-//                } else {
-//                    dir.y = Math.sqrt(1 - dir.x * dir.x);
-//                }
-//            }
-//        }
-//        return result;
-//    }
-
-    public void computeTransformation() {
-        bDir = tDir.crossProduct(nDir);
-        camera = derivedPoint(center, -viewDist, tDir);
-        screenCenter = derivedPoint(camera, screenDist, tDir);
-        clipPoint = derivedPoint(camera, clipDist, tDir);
-        winCenter = computeWinCenter(winBounds);
-    }
 
     /** Converts a spacial coordinate to a window coordinate. */
     Point2D getWindowPointOf(Point3D coordinate) {
         Point3D cc = coordinate.minus(camera);
         double dc = cc.dotProduct(tDir);
-        if (dc < clipDist) {
-            // handle clipping... point should not be displayed
-        }
         double factor = dpi * screenDist / dc;
-        Point2D.Double result = getCenterClone();
-        result.x += factor * cc.dotProduct(bDir);
-        result.y -= factor * cc.dotProduct(nDir);
-        return result;
-    }
-
-    /**
-     * Converts a spacial coordinate into two window coordinates (for a left and right), where the cameras
-     * are shifted by the specified amount.
-     * 
-     * @param coordinate the coordinate for projection
-     */
-    Point2D[] getDoubleWindowPointOf(Point3D coordinate) {
-        Point3D cc = coordinate.minus(camera);
-        double dc = cc.dotProduct(tDir);
-        if (dc < clipDist) {
-            // handle clipping... point should not be displayed
-        }
-        double factor = screenDist / dc;
-        Point2D.Double[] result = new Point2D.Double[] { getCenterClone(), null };
-        result[0].x += dpi * factor * cc.dotProduct(bDir);
-        result[0].y -= dpi * factor * cc.dotProduct(nDir);
-        result[1] = new Point2D.Double(result[0].x + camSep * dpi * (1-factor), result[0].y);
-        result[0].x -= camSep * dpi * (1 - factor);
-        return result;
+        return new Point2D.Double(
+                winCenter.x + factor * cc.dotProduct(bDir),
+                winCenter.y - factor * cc.dotProduct(nDir));
     }
 
     /** Stores viewsccreen coordinates of last point request. */
@@ -373,20 +311,12 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
     //
 
     /**
-     * Returns z value of a point, i.e. tangential distance to camera.
-     */
-    public double getDistance(Point3D point) {
-        return point.distanceSq(camera);
-    }
-
-    /**
      * Returns average distance from camera to a set of points
      */
     public double getAverageDist(Point3D[] points) {
         double sum = 0.0;
-        for (int i = 0; i < points.length; i++) {
-            sum += getDistance(points[i]);
-        }
+        for (int i = 0; i < points.length; i++)
+            sum += points[i].distance(camera);
         return sum / points.length;
     }
 
@@ -399,23 +329,21 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
      * @return a negative integer, zero, or a positive integer as the first argument's z-value is less than, equal to, or greater than the second
      */
     public int compare(Point3D p1, Point3D p2) {
-        if (p1 == p2) {
+        if (p1 == p2)
             return 0; // only return 0 with strict equality of pointers
-        }
-        double d1 = getDistance(p2);
-        double d2 = getDistance(p2);
-        if (d1 != d2) {
+        double d1 = p1.distance(camera);
+        double d2 = p2.distance(camera);
+        if (d1 != d2)
             return (int) Math.signum(d2 - d1);
-        } else {
-            if (p1.x != p2.x) {
+        else {
+            if (p1.x != p2.x)
                 return (int) Math.signum (p2.x - p1.x);
-            } else if (p2.y != p2.y) {
+            else if (p1.y != p2.y)
                 return (int) Math.signum (p2.y - p1.y);
-            } else if (p2.z != p2.z) {
+            else if (p1.z != p2.z)
                 return (int) Math.signum (p2.z - p1.z);
-            } else {
+            else
                 return 1;
-            }
         }
     }
 
@@ -433,11 +361,10 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
             public int compare(Point3D[] o1, Point3D[] o2) {
                 double d1 = getAverageDist(o1);
                 double d2 = getAverageDist(o2);
-                if (d1 == d2) {
+                if (d1 == d2)
                     return SpaceProjection.this.compare(o1[0], o2[0]);
-                } else {
+                else
                     return (int) Math.signum(d2 - d1);
-                }
             }
         };
     }

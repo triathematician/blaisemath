@@ -65,17 +65,16 @@ public class P3DUtils {
      * @return the clipped segment
      */
     static public Point3D[] clipSegment(Point3D point, Point3D normal, Point3D[] segment) {
-        if (segment == null || segment.length != 2) {
-            throw new IllegalArgumentException("Segment must have 2 points!");
-        }
-        double[] dists = new double[] { planeDist(point, normal, segment[0]), planeDist(point, normal, segment[1]) };
-        if (dists[0] > 0 && dists[1] > 0) { // no clipping
+        double[] dists = new double[] {
+            planeDist(point, normal, segment[0]),
+            planeDist(point, normal, segment[1])
+        };
+        if (dists[0] > 0 && dists[1] > 0) // no clipping
             return segment;
-        } else if (dists[0] > 0 && dists[1] < 0) { // clip second point
+        else if (dists[0] > 0 && dists[1] < 0) // clip second point
             return new Point3D[]{segment[0], onSegment(segment, dists, 0, 1)};
-        } else if (dists[0] < 0 && dists[1] > 0) { // clip first point
+        else if (dists[0] < 0 && dists[1] > 0) // clip first point
             return new Point3D[]{onSegment(segment, dists, 1, 0), segment[1]};
-        }
         // default when both points are on the other side of the plane
         return null;
     }

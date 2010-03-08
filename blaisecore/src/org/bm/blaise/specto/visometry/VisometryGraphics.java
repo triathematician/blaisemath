@@ -366,9 +366,8 @@ public class VisometryGraphics<C> {
      * @param coords the points of the path in local coordinates
      */
     public void drawClosedPath(C[] coords) {
-        if (coords.length <= 0) {
+        if (coords.length <= 0)
             return;
-        }
         Point2D nextPt = vis.getWindowPointOf(coords[0]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());

@@ -29,8 +29,8 @@ public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener
     boolean autoReverse = false;
     /** Number of times to repeat the clock play loop. */
     int repeatCount = 0;
-    /** Speed of the timer... controls the rate at which time advances. */
-    int speed;
+    /** Speed of the timer... controls the rate at which time advances (speed up/slow down buttons). */
+    int animationSpeed;
     /** The minimum time for the clock's range of values */
     double minTime = 0;
     /** The maximum time for the clock's range of values */
@@ -48,7 +48,7 @@ public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener
     //
 
     public BetterTimeClock() {
-        timer = new BetterTimer(1);
+        timer = new BetterTimer(50);
         timer.addActionListener(this);
     }
 
@@ -161,7 +161,7 @@ public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener
      */
     protected void incrementTimer() {
         if (forward) {
-            time += Math.pow(1.5, speed);
+            time += Math.pow(1.5, animationSpeed);
             time = Math.min(time, maxTime);
             if (time == maxTime) {
                 if (autoReverse)
@@ -175,7 +175,7 @@ public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener
                 }
             }
         } else {
-            time -= Math.pow(1.5, speed);
+            time -= Math.pow(1.5, animationSpeed);
             time = Math.max(time, minTime);
             if (time == minTime) {
                 playCount++;
@@ -215,11 +215,11 @@ public class BetterTimeClock implements TimeClock, StandardTimer, ActionListener
     }
 
     public void slowDown() {
-        speed--;
+        animationSpeed--;
     }
 
     public void speedUp() {
-        speed++;
+        animationSpeed++;
     }
     
     //

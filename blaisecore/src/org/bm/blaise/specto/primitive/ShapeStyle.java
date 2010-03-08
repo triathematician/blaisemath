@@ -154,8 +154,18 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
     }
 
     public void draw(Shape[] shapes, Graphics2D canvas) {
-        for (Shape sh : shapes) {
-            draw(sh, canvas);
+        if (fillColor != null) {
+            canvas.setColor(fillColor);
+            canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+            for (Shape sh : shapes)
+                canvas.fill(sh);
+            canvas.setComposite(AlphaComposite.SrcOver);
+        }
+        if (stroke != null && strokeColor != null) {
+            canvas.setStroke(stroke);
+            canvas.setColor(strokeColor);
+            for (Shape sh : shapes)
+                canvas.draw(sh);
         }
     }
 }

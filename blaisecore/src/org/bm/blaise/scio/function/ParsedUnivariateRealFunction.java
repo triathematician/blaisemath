@@ -12,8 +12,7 @@ import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.scribo.parser.ParseException;
 import org.bm.blaise.scribo.parser.SemanticNode;
 import org.bm.blaise.scribo.parser.SemanticTreeEvaluationException;
-import org.bm.blaise.scribo.parser.grammars.RealGrammar;
-import org.bm.blaise.scribo.parser.semantic.SemanticTreeUtils;
+import org.bm.blaise.scribo.parser.RealGrammar;
 
 /**
  * <p>
@@ -70,8 +69,8 @@ public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
      * @throws IllegalArgumentException  if the String function has too many unknowns
      */
     public void setFunctionString(String function, String var) throws ParseException {
-        SemanticNode newTree = RealGrammar.PARSER.parseTree(function);
-        Set<String> unknowns = newTree.unknowns().keySet();
+        SemanticNode newTree = RealGrammar.getParser().parseTree(function);
+        Set<String> unknowns = newTree.getVariables().keySet();
         // use the specified variable if possible; otherwise use what's already here or pick the first one in the list of unknowns
         if (var == null) {
             if (variable == null) {
@@ -105,8 +104,8 @@ public class ParsedUnivariateRealFunction implements UnivariateRealFunction {
         try {
             variableTable.put(variable, x);
             variableTable.putAll(parameters);
-            SemanticTreeUtils.assignVariables(variableTable, functionTree);
-            return (Double) functionTree.value();
+            functionTree.assignVariables(variableTable);
+            return (Double) functionTree.getValue();
         } catch (SemanticTreeEvaluationException ex) {
             throw new FunctionEvaluationException(x, ex.getMessage());
         }

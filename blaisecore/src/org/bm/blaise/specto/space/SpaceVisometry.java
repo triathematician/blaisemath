@@ -38,9 +38,22 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
     /** Stores the affine transformation that converts the actual range to the window bounds. */
     SpaceProjection proj = new SpaceProjection();
 
+    /** Stores the delay step in animation speed (ms) */
+    int animationDelay = 50;
+
     //
     // BEAN PATTERNS
     //
+
+    /** @return animationDelay the sleep time between animation fires, in milliseconds */
+    public int getAnimationDelay() {
+        return animationDelay;
+    }
+
+    /** @param animationDelay the sleep time between animation fires, in milliseconds */
+    public void setAnimationDelay(int animationDelay) {
+        this.animationDelay = animationDelay;
+    }
 
     /** Returns current space projection */
     public SpaceProjection getProj() {
@@ -64,31 +77,69 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
     }
 
     /**
-     * Zooms the camera by shifting it toward or away from the scene's center.
-     * @param zoom the percentage to multiply the distance between camera and scene by (also scales other distances)
+     * Zooms the camera by adjusting the pixels per 3d unit displayed.
+     * @param zoom the percentage to scale by
      */
-    public void zoomCamera(double factor) {
-        if (factor <= 0) {
+    public void zoomDPI(double factor) {
+        if (factor <= 0)
             throw new IllegalArgumentException("Zoom factor must be positive: " + factor);
-        }
-        proj.dpi /= factor;
-        proj.computeTransformation();
+        proj.setDpi( proj.getDpi()/factor );
         fireStateChanged();
     }
 
     /**
-     * Adjusts the distance to the projection plane (and to the clipping plane)
-     * @param zoom the percentage to multiply the distance between camera and scene by (also scales other distances)
+     * Zooms the camera to or from the center of interest.
+     * @param zoom the percentage to scale by
      */
-    public void zoomPlane(double factor) {
-        if (factor <= 0) {
+    public void zoomViewDistance(double factor) {
+        if (factor <= 0)
             throw new IllegalArgumentException("Zoom factor must be positive: " + factor);
-        }
+        proj.setViewDist(proj.getViewDist() * factor);
+        fireStateChanged();
+    }
+
+    /**
+     * Zooms the image by adjusting both the screen distance, the view distance, and the clipping distance
+     * by a common factor.
+     * @param zoom the percentage to scale by
+     */
+    public void zoomAll(double factor) {
+        if (factor <= 0)
+            throw new IllegalArgumentException("Zoom factor must be positive: " + factor);
         proj.screenDist *= factor;
         proj.clipDist *= factor;
         proj.viewDist *= factor;
-        proj.computeTransformation();
+        proj.useCenterCamera();
         fireStateChanged();
+    }
+
+    /**
+     * @param axis pointer to value that will store the axis of rotation
+     * @return { cosphi, sinphi } to describe a 3D rotation
+     */
+    double[] getRotation(SpaceProjection oldProj, Point3D pt1, Point3D pt2, Point3D axis) {
+        Point3D rotVec1 = pt1.minus(oldProj.camera);
+        Point3D rotVec2 = pt2.minus(oldProj.camera);
+        Point3D tAxis = rotVec1.crossProduct(rotVec2).normalized();
+        axis.x = tAxis.x;
+        axis.y = tAxis.y;
+        axis.z = tAxis.z;
+        double cosphi = rotVec1.dotProduct(rotVec2) / (rotVec1.magnitude() * rotVec2.magnitude());
+        return new double[] {
+            cosphi,
+            Math.sqrt(1-cosphi*cosphi)
+        };
+    }
+
+    /**
+     * Formula for the rotation about a specific axis given by a normal vector n
+     * @param p the vector/point before rotation
+     * @return the vector/point after rotation
+     */
+    public Point3D eulerRotation (Point3D p, Point3D axis, double cosphi, double sinphi) {
+        return p.times(cosphi)
+                .plus( axis.times(axis.dotProduct(p)*(1-cosphi)) )
+                .plus( (p.crossProduct(axis)).times(sinphi) );
     }
 
     /**
@@ -96,47 +147,35 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
      * @param oldProj the original projection
      * @param pt1 first point for rotation
      * @param pt2 second point for rotation
-     * @return sinphi
      */
-    public double rotateCamera(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
-        double boost = .5; // determines how quickly rotation occurs relative to mouse movement
-        Point3D rotVec1 = pt1.minus(oldProj.center);
-        Point3D rotVec2 = pt2.minus(oldProj.center);
-        Point3D n = rotVec1.crossProduct(rotVec2).normalized();
-        double cosphi = Math.cos(boost * Math.acos(rotVec1.dotProduct(rotVec2)/(rotVec1.magnitude()*rotVec2.magnitude())));
-        double sinphi = Math.sqrt(1-cosphi*cosphi);
+    public void rotateCamera(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
+        Point3D axis = new Point3D();
+        double[] angles = getRotation(oldProj, pt1, pt2, axis);
         // can use either single or double rotation here
-        proj.tDir = eulerRotation(oldProj.getTDir(), n, cosphi, sinphi);
-        proj.nDir = eulerRotation(oldProj.getNDir(), n, cosphi, sinphi);
-        proj.bDir = eulerRotation(oldProj.getBDir(), n, cosphi, sinphi);
-        // TESTING STILL -- proj.snapDir();
-        proj.computeTransformation();
+        proj.tDir = eulerRotation(eulerRotation(oldProj.getTDir(), axis, angles[0], angles[1]), axis, angles[0], angles[1]);
+        proj.nDir = eulerRotation(eulerRotation(oldProj.getNDir(), axis, angles[0], angles[1]), axis, angles[0], angles[1]);
+        proj.bDir = eulerRotation(eulerRotation(oldProj.getBDir(), axis, angles[0], angles[1]), axis, angles[0], angles[1]);
+        proj.useCenterCamera();
         fireStateChanged();
-        return sinphi;
     }
 
-    /** Formula for the rotation about a specific axis given by a normal vector n */
-    public Point3D eulerRotation (Point3D pt, Point3D n, double cosphi, double sinphi) {
-        return pt.times(cosphi)
-                .plus( n.times(n.dotProduct(pt)*(1-cosphi)) )
-                .plus( (pt.crossProduct(n)).times(sinphi) );
-    }
+    private static final double ROTATE_THRESHOLD = .01;
+    private static final double SNAP_THRESHOLD = .9;
 
     /** Animates a rotation. */
     public void animateCameraRotation(SpaceProjection oldProj, Point3D pt1, Point3D pt2) {
-        double boost = 1;
-        Point3D rotVec1 = pt1.minus(oldProj.center);
-        Point3D rotVec2 = pt2.minus(oldProj.center);
-        Point3D n = rotVec1.crossProduct(rotVec2).normalized();
-        double cosphi = Math.cos(boost * Math.acos(rotVec1.dotProduct(rotVec2)/(rotVec1.magnitude()*rotVec2.magnitude())));
-        double sinphi = Math.sqrt(1-cosphi*cosphi);
+        Point3D axis = new Point3D();
+        double[] angles = getRotation(oldProj, pt1, pt2, axis);
         // don't rotate if the angle is too small
-        if (Math.abs(sinphi) > .01) {
+        if (Math.abs(angles[1]) > ROTATE_THRESHOLD) {
             // lock rotation if within certain limits
-            if (Math.abs(n.x)>.9) { n = new Point3D(n.x/Math.abs(n.x),0,0); }
-            else if (Math.abs(n.y)>.9) { n = new Point3D(0,n.y/Math.abs(n.y),0); }
-            else if (Math.abs(n.z)>.9) { n = new Point3D(0,0,n.z/Math.abs(n.z)); }
-            animateRotation(oldProj, n, Math.sqrt(1-sinphi*sinphi), sinphi);
+            if (Math.abs(axis.x) > SNAP_THRESHOLD)
+                axis = new Point3D(Math.signum(axis.x), 0, 0);
+            else if (Math.abs(axis.y) > SNAP_THRESHOLD)
+                axis = new Point3D(0, Math.signum(axis.y), 0);
+            else if (Math.abs(axis.z) > SNAP_THRESHOLD)
+                axis = new Point3D(0, 0, Math.signum(axis.z));
+            animateRotation(oldProj, axis, angles[0], angles[1]);
         }
     }
 
@@ -153,11 +192,11 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
         Thread runner=new Thread(new Runnable(){
             public void run() {
                 while(rotating){
-                    try{Thread.sleep(100);}catch(Exception e){}
+                    try{Thread.sleep(animationDelay);}catch(Exception e){}
                     proj.tDir = eulerRotation(proj.tDir, n, cosphi, sinphi);
                     proj.nDir = eulerRotation(proj.nDir, n, cosphi, sinphi);
                     proj.bDir = eulerRotation(proj.bDir, n, cosphi, sinphi);
-                    proj.computeTransformation();
+                    proj.useCenterCamera();
                     fireStateChanged();
                 }
             }
@@ -200,7 +239,7 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
     public void computeTransformation() throws IllegalStateException {
         proj.winBounds = windowBounds;
         proj.center = new Point3D((minPoint.x + maxPoint.x)/2, (minPoint.y + maxPoint.y)/2, (minPoint.z + maxPoint.z)/2);
-        proj.computeTransformation();
+        proj.useCenterCamera();
     }
 
     public Point2D getWindowPointOf(Point3D coordinate) {
