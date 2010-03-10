@@ -27,12 +27,12 @@ import scio.coordinate.Point3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceRendered {
+public class SpaceScene {
 
     TreeMap<Point3D[], PrimitiveStyle> objects;
     SpaceProjection proj;
 
-    public SpaceRendered(SpaceProjection proj) {
+    public SpaceScene(SpaceProjection proj) {
         this.proj = proj;
         objects = new TreeMap<Point3D[], PrimitiveStyle>(proj.getPolygonZOrderComparator());
     }
@@ -43,6 +43,10 @@ public class SpaceRendered {
 
     public void addObject(Point3D[] arr) {
         objects.put(arr, null);
+    }
+
+    public void addObject(Point3D[] arr, PrimitiveStyle style) {
+        objects.put(arr, style);
     }
 
     public void addObjects(Collection<Point3D[]> arr) {
@@ -72,25 +76,35 @@ public class SpaceRendered {
         //sg.getShapeStyle().setStroke(null);
         sg.getPathStyle().setStroke(new BasicStroke(2.0f));
         sg.getPathStyle().setColor(BlaisePalette.STANDARD.func1());
+        int r = sg.getPointStyle().getRadius();
+        double dist;
         for (Entry<Point3D[],PrimitiveStyle> entry : objects.entrySet()) {
-            if (proj.getAverageDist(entry.getKey()) < proj.clipDist) {
+            dist = proj.getAverageDist(entry.getKey());
+            if (dist < proj.clipDist)
                 continue;
-            }
             PrimitiveStyle style = entry.getValue();
-            if (style instanceof ArrowStyle && entry.getKey().length == 2) {
+            if (style instanceof ArrowStyle && entry.getKey().length == 2)
                 sg.drawArrow(entry.getKey()[0], entry.getKey()[1]);
+            else if (style instanceof PointStyle && entry.getKey().length == 1) {
+                PointStyle oldStyle = sg.getPointStyle();
+                int r2 = ((PointStyle) style).getRadius();
+                ((PointStyle) style).setRadius((int) (r2 * proj.viewDist / dist));
+                sg.setPointStyle((PointStyle) style);
+                sg.drawPoint(entry.getKey()[0]);
+                ((PointStyle) style).setRadius(r2);
+                sg.setPointStyle(oldStyle);
             } else { // style and class determined by length of array
                 switch (entry.getKey().length) {
                     case 1:
-                        sg.drawPoint(entry.getKey()[0]);
                         break;
                     case 2:
                         sg.drawSegment(entry.getKey()[0], entry.getKey()[1]);
                         break;
                     default:
-                        sg.drawClosedPath(entry.getKey());
+                        sg.drawShape(entry.getKey());
                 }
             }
         }
+        sg.getPointStyle().setRadius(r);
     }
 }

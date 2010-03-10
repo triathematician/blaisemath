@@ -60,7 +60,8 @@ import org.bm.blaise.sequor.timer.TimerStatus;
  *
  * @author Elisha Peterson
  */
-public class PlotComponent<C> extends JPanel implements ActionListener, ChangeListener, ComponentListener, MouseInputListener, MouseWheelListener {
+public class PlotComponent<C> extends JPanel
+        implements ActionListener, ChangeListener, ComponentListener, MouseInputListener, MouseWheelListener {
 
     //
     // PROPERTIES
@@ -80,6 +81,9 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
 
     /** Clock timer used for animations. */
     protected TimeClock timer = null;
+
+    /** Whether antialiasing is currently on. */
+    boolean antialias = true;
 
     //
     // EVENT HANDLING
@@ -112,7 +116,7 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      * @param visometry the visometry to use
      */
     public PlotComponent(Visometry<C> visometry) {
-        plottables = new PlottableGroup();
+        plottables = new PlottableGroup<C>();
         setVisometry(visometry);
         title = "";
 
@@ -140,6 +144,14 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isAntialias() {
+        return antialias;
+    }
+
+    public void setAntialias(boolean antialias) {
+        this.antialias = antialias;
     }
 
     public TimeClock getTimeClock() {
@@ -196,11 +208,10 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
             this.visometry = visometry;
             this.visometry.setWindowBounds(getVisibleRect());
             this.visometry.addChangeListener(this);
-            if (visometryGraphics != null) {
+            if (visometryGraphics != null)
                 visometryGraphics.setVisometry(visometry);
-            } else {
-                visometryGraphics = VisometryGraphics.instance(visometry); // use default graphics object
-            }
+            else
+                visometryGraphics = new VisometryGraphics(visometry); // use default graphics object
             repaint();
         }
     }
@@ -268,6 +279,10 @@ public class PlotComponent<C> extends JPanel implements ActionListener, ChangeLi
      */
     @Override
     protected void paintComponent(Graphics g) {
+        if (antialias)
+            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        else
+            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         super.paintComponent(g);
         visometryGraphics.setScreenGraphics((Graphics2D) g);
         plottables.paintComponent(visometryGraphics);

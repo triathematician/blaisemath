@@ -20,14 +20,14 @@ import java.awt.Stroke;
  *
  * @author Elisha Peterson
  */
-public class ShapeStyle implements PrimitiveStyle<Shape> {
+public class ShapeStyle extends PrimitiveStyle<Shape> {
 
     //
     // CONSTANTS
     //
 
     /** Stroke outline */
-    Stroke stroke = DEFAULT_STROKE;
+    BasicStroke stroke = DEFAULT_STROKE;
 
     /** Stroke color */
     Color strokeColor = Color.BLACK;
@@ -68,7 +68,7 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
     }
 
     /** Construct with specified elements. */
-    public ShapeStyle(Stroke stroke, Color strokeColor, Color fillColor, float opacity) {
+    public ShapeStyle(BasicStroke stroke, Color strokeColor, Color fillColor, float opacity) {
         this.stroke = stroke;
         this.strokeColor = strokeColor;
         this.fillColor = fillColor;
@@ -109,7 +109,7 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
         return stroke;
     }
 
-    public void setStroke(Stroke stroke) {
+    public void setStroke(BasicStroke stroke) {
         this.stroke = stroke;
     }
 
@@ -122,24 +122,18 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
     }
 
     public float getThickness() {
-        return (stroke instanceof BasicStroke) ? ((BasicStroke)stroke).getLineWidth() : -1;
+        return stroke.getLineWidth();
     }
 
     public void setThickness(float width) {
-        if (stroke instanceof BasicStroke) {
-            BasicStroke bs = (BasicStroke) stroke;
-            stroke = new BasicStroke(width, bs.getEndCap(), bs.getLineJoin(), bs.getMiterLimit(), bs.getDashArray(), bs.getDashPhase());
-        }
+        stroke = new BasicStroke(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase());
     }
-
-
-
 
     //
     // GRAPHICS METHODS
     //
 
-    public void draw(Shape sh, Graphics2D canvas) {
+    public void draw(Graphics2D canvas, Shape sh, boolean selected) {
         if (fillColor != null) {
             canvas.setColor(fillColor);
             canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
@@ -153,7 +147,8 @@ public class ShapeStyle implements PrimitiveStyle<Shape> {
         }
     }
 
-    public void draw(Shape[] shapes, Graphics2D canvas) {
+    @Override
+    public void draw(Graphics2D canvas, Shape[] shapes, boolean selected) {
         if (fillColor != null) {
             canvas.setColor(fillColor);
             canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));

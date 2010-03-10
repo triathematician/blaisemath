@@ -16,11 +16,7 @@ import org.bm.blaise.specto.plane.PlanePlotComponent;
 import org.bm.blaise.specto.plane.PlaneVisometry;
 import org.bm.blaise.specto.space.*;
 import org.bm.blaise.specto.space.diffeq.*;
-import org.bm.blaise.specto.space.function.SpaceParametricCurve;
-import org.bm.blaise.specto.space.function.SpaceParametricSurface;
-import org.bm.blaise.specto.space.particle.SpaceParticleVectorField;
-import org.bm.blaise.specto.space.particle.SpaceParticleVectorFieldCurve;
-import org.bm.blaise.specto.space.particle.SpaceParticleVectorFieldSurface;
+import org.bm.blaise.specto.space.function.*;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.utils.Curve3DSampleSet;
 import org.bm.utils.Surface3DSampleSet;
@@ -55,8 +51,6 @@ public class TestSpaceVectorFields extends javax.swing.JFrame {
         // 1. Just a basic vector field and particle flows associated with it
         vecPlot.addPlottable(new SpaceAxes());
         vecPlot.addPlottable(svf);
-        SpaceParticleVectorField spvf = new SpaceParticleVectorField(field);
-        vecPlot.addPlottable(spvf);
         vecPlot.setTimeClock(timer);
 
         // 2. Curve-based field
@@ -70,8 +64,6 @@ public class TestSpaceVectorFields extends javax.swing.JFrame {
         SpaceVectorField scfield = new SpaceVectorField(field, new Curve3DSampleSet(curve, spc.getDomain()));
         curve.addChangeListener(scfield);
         curvePlot.addPlottable(scfield);
-        SpaceParticleVectorFieldCurve spvfc = new SpaceParticleVectorFieldCurve(field, spc);
-        curvePlot.addPlottable(spvfc);
         curvePlot.setTimeClock(timer);
 
         MultivariateVectorialFunction spcDer =
@@ -100,7 +92,6 @@ public class TestSpaceVectorFields extends javax.swing.JFrame {
         surfacePlot.addPlottable(sps);
         sps.setVisible(false);
         surfacePlot.addPlottable(new SpaceVectorField(field, new Surface3DSampleSet(sps.getFunction(), sps.getDomainU(), sps.getDomainV())));
-        surfacePlot.addPlottable(new SpaceParticleVectorFieldSurface(field, sps));
         surfacePlot.setTimeClock(timer);
 
         MultivariateVectorialFunction spsDer1 =
@@ -126,9 +117,7 @@ public class TestSpaceVectorFields extends javax.swing.JFrame {
          MultivariateVectorialFunction tgtFlow = VectorFieldUtils.parallelField(field, spcDer);
          MultivariateVectorialFunction tgtFlow2 = VectorFieldUtils.parallelField(field, spsDer1, spsDer2);
          constrainPlot.addPlottable(spc);
-         constrainPlot.addPlottable(new SpaceParticleVectorFieldCurve(tgtFlow, spc));
          constrainPlot.addPlottable(sps);
-         constrainPlot.addPlottable(new SpaceParticleVectorFieldSurface(tgtFlow2, sps));
          constrainPlot.setTimeClock(timer);
     }
 

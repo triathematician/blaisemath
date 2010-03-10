@@ -25,9 +25,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> implements VisometryChangeListener {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Underlying function */
@@ -36,23 +34,16 @@ public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> imp
     /** Style to use for plotting points in the grid. */
     private PathStyle style = new PathStyle();
 
-
-
-    //
     //
     // CONSTRUCTORS
-    //
     //
 
     public PlaneImplicitFunction(MultivariateRealFunction func) {
         setFunc(func);
     }
 
-
-    //
     //
     // BEAN PATTERNS
-    //
     //
 
     public MultivariateRealFunction getFunc() {
@@ -73,9 +64,7 @@ public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> imp
 
 
     //
-    //
     // DRAW METHODS
-    //
     //
 
     transient Point2D.Double[][] solutions;
@@ -86,7 +75,6 @@ public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> imp
 
     @Override
     public void paintComponent(VisometryGraphics<Double> vg) {
-        vg.setPathStyle(style);
-        vg.drawPaths(solutions);
+        vg.drawPaths(solutions, style);
     }
 }

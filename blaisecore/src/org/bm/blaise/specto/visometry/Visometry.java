@@ -57,7 +57,7 @@ public interface Visometry<C> {
      * @param coordinate the local coordinate
      * @return a point within the window
      */
-    public Point2D getWindowPointOf(C coordinate);
+    public Point2D.Double getWindowPointOf(C coordinate);
 
     /**
      * Converts a window point to a local coordinate.

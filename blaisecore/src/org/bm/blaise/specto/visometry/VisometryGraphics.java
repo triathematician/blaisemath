@@ -5,11 +5,10 @@
 
 package org.bm.blaise.specto.visometry;
 
-import org.bm.blaise.specto.primitive.*;
 import java.awt.Graphics2D;
+import org.bm.blaise.specto.primitive.*;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
@@ -17,20 +16,19 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
-// TODO - rethink the approach here... is the drawing done within the plottable object, or is it
-// done within here? or is it from the visometry? review the plottable's contract, in terms of
-// what it delivers... should be the graphics primitive objects, converted to the screen geometry
-
-
 /**
  * <p>
- *  This class is responsible for <b>ALL</b> drawing done by underyling plottables.
+ *  This class is repsonsible for using the visometry to draw objects on a graphics
+ *  object. Plottables and other objects should use the drawing methods provided
+ *  within this class, and may also set/retrieve the styles within this graphics object.
  * </p>
  * <p>
  *  Drawing is accomplished using customized style classes, which are stored by
  *  this class and may be altered externally. This class first converts
  *  the passed in elements into <i>graphics primitives</i>, and then uses the appropriate
- *  <i>style</i> to draw the element on the <code>Graphics2D</code> canvas.
+ *  <i>style</i> (if not provided) to draw the element on the <code>Graphics2D</code> canvas.
+ *  The style itself will use the current value of the <i>selected</i> boolean to
+ *  determine the precise way to draw the object.
  * </p>
  *
  * @param <C> class representing the underlying coordinate system
@@ -41,27 +39,26 @@ public class VisometryGraphics<C> {
 
     /** Underlying graphics object. */
     protected Graphics2D gr = null;
-
     /** Visometry for point conversion. */
     protected Visometry<C> vis;
 
     //
-    //
-    // DEFAULT STYLE PROPERTIES
-    //
+    // DEFAULT STYLES
     //
 
-    protected ArrowStyle arrowStyle = new ArrowStyle();
-    protected PathStyle pathStyle = new PathStyle();
+    // TODO - add default styles here
+
+    /** Determines whether the object being drawn is currently "selected" or not.*/
+    protected boolean selected = false;
+    
     protected PointStyle pointStyle = new PointStyle();
+    protected PathStyle pathStyle = new PathStyle();
     protected ShapeStyle shapeStyle = new ShapeStyle();
     protected StringStyle stringStyle = new StringStyle();
+    protected ArrowStyle arrowStyle = new ArrowStyle();
 
-
     //
-    //
-    // CONSTRUCTORS & FACTORY METHODS
-    //
+    // CONSTRUCTORS
     //
     
     /**
@@ -72,19 +69,14 @@ public class VisometryGraphics<C> {
         this.vis = vis;
     }
 
-    /**
-     * <b>FACTORY METHOD:</b> create and return a new instance of this class.
-     * @return new instance of a graphics object for painting on specified visometry.
-     */
-    public static VisometryGraphics instance(Visometry vis) {
-        return new VisometryGraphics(vis);
-    }
-
-    //
     //
     // BIG BEANS
     //
-    //
+
+    /** @return the underlying screen graphics being used. */
+    public Graphics2D getScreenGraphics() {
+        return gr;
+    }
 
     /**
      * Sets the underlying screen graphics to paint on.
@@ -93,6 +85,11 @@ public class VisometryGraphics<C> {
     public void setScreenGraphics(Graphics2D gr) {
         this.gr = gr;
         gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+    /** @return the underlying visometry. */
+    public Visometry<C> getVisometry() {
+        return vis;
     }
     
     /**
@@ -104,10 +101,16 @@ public class VisometryGraphics<C> {
     }
 
     //
-    //
     // STYLE BEANS
     //
-    //
+    
+    public boolean isSelectedStyle() {
+        return selected;
+    }
+
+    public void setSelectedStyle(boolean sel) {
+        this.selected = sel;
+    }
 
     public ArrowStyle getArrowStyle() {
         return arrowStyle;
@@ -151,44 +154,38 @@ public class VisometryGraphics<C> {
 
     /**
      * Generic command to set style.
-     * 
-     * @param style
+     * @param style an arrow, path, point, shape, or string style
      */
     public void setPrimitiveStyle(PrimitiveStyle style) {
-        if (style instanceof ArrowStyle) {
+        if (style instanceof ArrowStyle)
             setArrowStyle((ArrowStyle) style);
-        } else if (style instanceof PathStyle) {
+        else if (style instanceof PathStyle)
             setPathStyle((PathStyle) style);
-        } else if (style instanceof PointStyle) {
+        else if (style instanceof PointStyle)
             setPointStyle((PointStyle) style);
-        } else if (style instanceof ShapeStyle) {
+        else if (style instanceof ShapeStyle)
             setShapeStyle((ShapeStyle) style);
-        } else if (style instanceof StringStyle) {
+        else if (style instanceof StringStyle)
             setStringStyle((StringStyle) style);
-        } else {
+        else
             System.out.println("Unable to set style");
-        }
     }
 
-
-
-    //
     //
     // WINDOW ATTRIBUTE BEANS
-    //
     //
 
     /**
      * @return minimum coordinate of the visometry.
      */
-    public C getMinimumVisible() {
+    public C getMinCoord() {
         return vis.getMinPointVisible();
     }
 
     /**
      * @return minimum coordinate of the visometry.
      */
-    public C getMaximumVisible() {
+    public C getMaxCoord() {
         return vis.getMaxPointVisible();
     }
 
@@ -238,9 +235,27 @@ public class VisometryGraphics<C> {
     }
 
     //
+    // VISOMETRY ACCESSOR METHODS
     //
-    // DRAW UTILITY LIBRARY
+
+    public Point2D.Double getWindowPointOf(C coordinate) {
+        return vis.getWindowPointOf(coordinate);
+    }
+
+    public C getCoordinateOf(Point2D.Double point) {
+        return vis.getCoordinateOf(point);
+    }
+
+
+    // ************************************************************** //
+    //                                                                //
+    //           ROUTINES TO DRAW IN LOCAL COORDINATES                //
+    //                                                                //
+    // ************************************************************** //
+
+    
     //
+    // DRAWING ROUTINES: POINTS
     //
 
     /**
@@ -248,8 +263,8 @@ public class VisometryGraphics<C> {
      * @param coordinate the coordinate
      * @param style the style used to draw
      */
-    public void drawWithStyle(C coordinate, PrimitiveStyle<Point2D> style) {
-        style.draw(vis.getWindowPointOf(coordinate), gr);
+    public void drawPoint(C coordinate, PrimitiveStyle<Point2D> style) {
+        style.draw(gr, vis.getWindowPointOf(coordinate), selected);
     }
 
     /**
@@ -257,7 +272,19 @@ public class VisometryGraphics<C> {
      * @param coordinate point in local coordinates
      */
     public void drawPoint(C coordinate) {
-        drawWithStyle(coordinate, pointStyle);
+        drawPoint(coordinate, pointStyle);
+    }
+
+    /**
+     * Draws a series of points with a given style class.
+     * @param coords the points in local coordinates
+     * @param style the style used to draw
+     */
+    public void drawPoints(C[] coords, PrimitiveStyle<Point2D> style) {
+        if (coords == null || coords.length <= 0)
+            return;
+        for (C c : coords)
+            style.draw(gr, vis.getWindowPointOf(c), selected);
     }
 
     /**
@@ -265,42 +292,25 @@ public class VisometryGraphics<C> {
      * @param coords the points in local coordinates
      */
     public void drawPoints(C[] coords) {
-        if (coords.length <= 0) {
+        if (coords.length <= 0)
             return;
-        }
-        for (int i = 0; i < coords.length; i++) {
+        for (int i = 0; i < coords.length; i++)
             drawPoint(coords[i]);
-        }
     }
 
-    /** Draws a vertical line at specified coordinate, using default pathStyle */
-    public void drawVLine(C coord) {
-        Point2D wp = vis.getWindowPointOf(coord);
-        pathStyle.draw(new Line2D.Double(wp.getX(), vis.getWindowBounds().getMaxY(), wp.getX(), vis.getWindowBounds().getMinY()), gr);
-    }
+    //
+    // DRAWING ROUTINES: PATHS (SEGMENTS, ARROWS, LINES, etc.)
+    //
 
-    /** Draws a horizontal line at specified coordinate, using default pathStyle */
-    public void drawHLine(C coord) {
-        Point2D wp = vis.getWindowPointOf(coord);
-        pathStyle.draw(new Line2D.Double(vis.getWindowBounds().getMinX(), wp.getY(), vis.getWindowBounds().getMaxX(), wp.getY()), gr);
-    }
-
-    /** Draws a vertical tick mark at specified location, using default path style.
-     * @param coord the local coordinate of the position
-     * @param tickHeight height of the mark (in pixels)
+    /**
+     * Draws a straight segment (relative to the window) between specified
+     * coordinates with a given style class
+     * @param coord1 point in local coordinates
+     * @param coord2 point in local coordinates
+     * @param style the style used to draw
      */
-    public void drawVTick(C coord, int tickHeight) {
-        Point2D wp = vis.getWindowPointOf(coord);
-        pathStyle.draw(new Line2D.Double(wp.getX(), wp.getY() - tickHeight, wp.getX(), wp.getY() + tickHeight), gr);
-    }
-
-    /** Draws a horizontal tick mark at specified location, using default path style.
-     * @param coord the local coordinate of the position
-     * @param tickHeight width of the mark (in pixels)
-     */
-    public void drawHTick(C coord, int tickWidth) {
-        Point2D wp = vis.getWindowPointOf(coord);
-        pathStyle.draw(new Line2D.Double(wp.getX() - tickWidth, wp.getY(), wp.getX() - tickWidth, wp.getY()), gr);
+    public void drawSegment(C coord1, C coord2, PathStyle style) {
+        style.draw(gr, new Line2D.Double(vis.getWindowPointOf(coord1), vis.getWindowPointOf(coord2)), selected);
     }
 
     /**
@@ -309,19 +319,66 @@ public class VisometryGraphics<C> {
      * @param coord2 point in local coordinates
      */
     public void drawSegment(C coord1, C coord2) {
-        Point2D wp1 = vis.getWindowPointOf(coord1);
-        Point2D wp2 = vis.getWindowPointOf(coord2);
-        pathStyle.draw(new Line2D.Double(wp1, wp2), gr);
+        drawSegment(coord1, coord2, pathStyle);
     }
 
     /**
-     * Draws an arrow between specified coordinates, using default <code>arrowStyle</code>
-     * @param anchor starting point of arrow in local coordinates
-     * @param head end point of arrow in local coordinates
+     * Draws straight segments (relative to the window) between specified
+     * coordinates with a given style class
+     * @param coords an array of arrays of length two
+     * @param style the style used to draw
      */
-    public void drawArrow(C anchor, C head) {
-        GraphicArrow ga = new GraphicArrow(vis.getWindowPointOf(anchor), vis.getWindowPointOf(head));
-        arrowStyle.draw(ga, gr);
+    public void drawSegments(C[][] coords, PathStyle style) {
+        if (coords == null || coords.length <= 0)
+            return;
+        if (coords[0].length != 2)
+            throw new IllegalArgumentException("drawSegments should be called with length 2 arrays: " + coords[0].length);
+        for (C[] segment : coords)
+            drawSegment(segment[0], segment[1], style);
+    }
+
+    /**
+     * Draws straight segments between specified coordinates, using default <code>pathStyle</code>
+     * @param coords an array of arrays of length two
+     * @param coords2 point in local coordinates
+     */
+    public void drawSegments(C[][] coords) {
+        drawSegments(coords, pathStyle);
+    }
+
+    /**
+     * Draws a path from the first supplied point to the last using specified style
+     * @param coords the points of the path in local coordinates
+     * @param style the custom style
+     */
+    public void drawPath(C[] coords, int iMin, int iMax, PathStyle style) {
+        if (coords.length <= 0)
+            return;
+        Point2D nextPt = vis.getWindowPointOf(coords[iMin]);
+        GeneralPath path = new GeneralPath();
+        path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
+        for (int i = iMin+1; i <= Math.min(coords.length-1, iMax); i++) {
+            nextPt = vis.getWindowPointOf(coords[i]);
+            path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
+        }
+        style.draw(gr, path, selected);
+    }
+
+    /**
+     * Draws a path from the first supplied point to the last, using default <code>pathStyle</code>
+     * @param coords the points of the path in local coordinates
+     */
+    public void drawPath(C[] coords, int iMin, int iMax) {
+        drawPath(coords, iMin, iMax, pathStyle);
+    }
+
+    /**
+     * Draws a path from the first supplied point to the last in a custom style
+     * @param coords the points of the path in local coordinates
+     * @param style the custom style
+     */
+    public void drawPath(C[] coords, PathStyle style) {
+        drawPath(coords, 0, coords.length, style);
     }
 
     /**
@@ -333,21 +390,13 @@ public class VisometryGraphics<C> {
     }
 
     /**
-     * Draws a path from the first supplied point to the last, using default <code>pathStyle</code>
-     * @param coords the points of the path in local coordinates
+     * Draws multiple paths specified by arrays of points, using default <code>pathStyle</code>
+     * @param paths the paths as an array of arrays, in local coordinates
+     * @param style the custom style
      */
-    public void drawPath(C[] coords, int iMin, int iMax) {
-        if (coords.length <= 0) {
-            return;
-        }
-        Point2D nextPt = vis.getWindowPointOf(coords[iMin]);
-        GeneralPath path = new GeneralPath();
-        path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
-        for (int i = iMin+1; i <= Math.min(coords.length-1, iMax); i++) {
-            nextPt = vis.getWindowPointOf(coords[i]);
-            path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
-        }
-        pathStyle.draw(path, gr);
+    public void drawPaths(C[][] paths, PathStyle style) {
+        for (C[] path : paths)
+            drawPath(path, 0, path.length, style);
     }
 
     /**
@@ -355,17 +404,79 @@ public class VisometryGraphics<C> {
      * @param paths the paths as an array of arrays, in local coordinates
      */
     public void drawPaths(C[][] paths) {
-        for (int i = 0; i < paths.length; i++) {
+        for (int i = 0; i < paths.length; i++)
             drawPath(paths[i]);
-        }
+    }
+
+    //
+    // DRAW COMMANDS: SHAPES
+    //
+
+    /**
+     * Utility method to return a rectangle between specified corners
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     */
+    Rectangle2D.Double getRectangle(C corner1, C corner2) {
+        Point2D wp1 = vis.getWindowPointOf(corner1);
+        Point2D wp2 = vis.getWindowPointOf(corner2);
+        return new Rectangle2D.Double(
+                Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
+                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY()));
+    }
+
+    /**
+     * Draws rectangle between specified corners using specified style.
+     * Provided coordinates may be in any relative direction.
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     * @param style the custom style
+     */
+    public void drawRectangle(C corner1, C corner2, ShapeStyle style) {
+        style.draw(gr, getRectangle(corner1, corner2), selected);
+    }
+
+    /**
+     * Draws rectangle between specified corners, using default <code>shapeStyle</code>
+     * Provided coordinates may be in any relative direction.
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     */
+    public void drawRectangle(C corner1, C corner2) {
+        drawRectangle(corner1, corner2, shapeStyle);
+    }
+
+    /**
+     * Draws ellipse between specified corners using custom style
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     * @param style the custom style
+     */
+    public void drawEllipse(C corner1, C corner2, ShapeStyle style) {
+        Point2D wp1 = vis.getWindowPointOf(corner1);
+        Point2D wp2 = vis.getWindowPointOf(corner2);
+        shapeStyle.draw(gr, new Ellipse2D.Double(
+                Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
+                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY())
+                ), selected);
+    }
+
+    /**
+     * Draws ellipse between specified corners, using default <code>shapeStyle</code>
+     * @param corner1 first corner of the rectangle, in local coordinates
+     * @param corner2 second corner of the rectangle, in local coordinates
+     */
+    public void drawEllipse(C corner1, C corner2) {
+        drawEllipse(corner1, corner2, shapeStyle);
     }
 
     /**
      * Draws a shape through supplied points, using default <code>shapeStyle</code>.
-     * The path is automatically closed
+     * The path is automatically closed.
      * @param coords the points of the path in local coordinates
+     * @param style the custom style
      */
-    public void drawClosedPath(C[] coords) {
+    public void drawShape(C[] coords, ShapeStyle style) {
         if (coords.length <= 0)
             return;
         Point2D nextPt = vis.getWindowPointOf(coords[0]);
@@ -376,138 +487,186 @@ public class VisometryGraphics<C> {
             path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
         }
         path.closePath();
-        shapeStyle.draw(path, gr);
+        style.draw(gr, path, selected);
     }
 
     /**
-     * Draws rectangle between specified corners, using default <code>shapeStyle</code>
-     * @param corner1 first corner of the rectangle, in local coordinates
-     * @param corner2 second corner of the rectangle, in local coordinates
+     * Draws a shape through supplied points, using default <code>shapeStyle</code>.
+     * The path is automatically closed.
+     * @param coords the points of the path in local coordinates
      */
-    public void drawRectangle(C corner1, C corner2) {
-        shapeStyle.draw(getRectangle(corner1, corner2), gr);
+    public void drawShape(C[] coords) {
+        drawShape(coords, shapeStyle);
+    }
+
+    //
+    // DRAW COMMANDS: TEXT
+    //
+
+    /**
+     * Draws a string at specified point, using specified style
+     * @param str the string
+     * @param coord the coordinate anchoring the string
+     * @param shiftX # of pixels to shift in x direction
+     * @param shiftY # of pixels to shift in y direction
+     * @param anchor orientation specifies centering of the string
+     * @param style the custom style
+     */
+    public void drawString(String str, C coord, int shiftX, int shiftY, int anchor, PrimitiveStyle<GraphicString> style) {
+        Point2D wp = vis.getWindowPointOf(coord);
+        GraphicString gs = new GraphicString(str, wp.getX() + shiftX, wp.getY() + shiftY, anchor);
+        style.draw(gr, gs, selected);
     }
 
     /**
-     * Returns a rectangle between specified corners
-     * @param corner1 first corner of the rectangle, in local coordinates
-     * @param corner2 second corner of the rectangle, in local coordinates
+     * Draws a string at specified point, using specified style
+     * @param str the string
+     * @param coord the anchor point for the string, in local coordinates
+     * @param shiftX # of pixels to shift in x direction
+     * @param shiftY # of pixels to shift in y direction
+     * @param style the custom style
      */
-    public Rectangle2D.Double getRectangle(C corner1, C corner2) {
-        Point2D wp1 = vis.getWindowPointOf(corner1);
-        Point2D wp2 = vis.getWindowPointOf(corner2);
-        return new Rectangle2D.Double(
-                Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
-                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY()));
-    }
-
-    /**
-     * Draws ellipse between specified corners, using default <code>shapeStyle</code>
-     * @param corner1 first corner of the rectangle, in local coordinates
-     * @param corner2 second corner of the rectangle, in local coordinates
-     */
-    public void drawEllipse(C corner1, C corner2) {
-        Point2D wp1 = vis.getWindowPointOf(corner1);
-        Point2D wp2 = vis.getWindowPointOf(corner2);
-        shapeStyle.draw(new Ellipse2D.Double(
-                Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
-                Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY())), gr);
+    public void drawString(String str, C coord, int shiftX, int shiftY, PrimitiveStyle<GraphicString> style) {
+        Point2D wp = vis.getWindowPointOf(coord);
+        GraphicString gs = new GraphicString(str, wp.getX() + shiftX, wp.getY() + shiftY);
+        style.draw(gr, gs, selected);
     }
 
     /**
      * Draws a string at specified point, using default <code>stringStyle</code>
      * @param str the string
-     * @param anchor the anchor point for the string, in local coordinates
+     * @param coord the anchor point for the string, in local coordinates
+     * @param shiftX # of pixels to shift in x direction
+     * @param shiftY # of pixels to shift in y direction
+     * @param anchor orientation specifies centering of the string
+     */
+    public void drawString(String str, C coord, int shiftX, int shiftY, int anchor) {
+        drawString(str, coord, shiftX, shiftY, anchor, stringStyle);
+    }
+
+    /**
+     * Draws a string at specified point, using default <code>stringStyle</code>
+     * @param str the string
+     * @param coord the anchor point for the string, in local coordinates
      * @param shiftX # of pixels to shift in x direction
      * @param shiftY # of pixels to shift in y direction
      */
-    public void drawString(String str, C anchor, int shiftX, int shiftY) {
-        Point2D wp = vis.getWindowPointOf(anchor);
-        GraphicString gs = new GraphicString(wp.getX() + shiftX, wp.getY() + shiftY, str);
-        stringStyle.draw(gs, gr);
+    public void drawString(String str, C coord, int shiftX, int shiftY) {
+        drawString(str, coord, shiftX, shiftY, stringStyle);
     }
 
     //
-    //
-    // ARBITRARY COORDINATE COMMANDS
-    //
+    // DRAW COMMANDS: ARROWS
     //
 
     /**
-     * Draws a path after applying the specified affine transform, using default <code>pathStyle</code>
-     * @param path the path
-     * @param at the affine transform
+     * Draws an arrow between specified coordinates with custom style
+     * @param anchor starting point of arrow in local coordinates
+     * @param head end point of arrow in local coordinates
+     * @param style the custom style
      */
-    public void drawPath(GeneralPath path, AffineTransform at) {
-        path.transform(at);
-        pathStyle.draw(path, gr);
+    public void drawArrow(C anchor, C head, PrimitiveStyle<GraphicArrow> style) {
+        GraphicArrow ga = new GraphicArrow(vis.getWindowPointOf(anchor), vis.getWindowPointOf(head));
+        style.draw(gr, ga, selected);
     }
 
-    //
-    //
-    // HYBRID COORDINATE COMMANDS
-    //
-    //
-
     /**
-     * Draws a path in window coordinates, using default <code>pathStyle</code>
-     * @param path the path in WINDOW coordinates
+     * Draws an arrow between specified coordinates, using default <code>arrowStyle</code>
+     * @param anchor starting point of arrow in local coordinates
+     * @param head end point of arrow in local coordinates
      */
-    public void drawPath(GeneralPath path) {
-        drawWinPath(path);
+    public void drawArrow(C anchor, C head) {
+        drawArrow(anchor, head, arrowStyle);
     }
 
+    
+    // ************************************************************** //
+    //                                                                //
+    //           ROUTINES TO DRAW IN WINDOW COORDINATES                //
+    //                                                                //
+    // ************************************************************** //
+
     //
-    //
-    // WINDOW COORDINATE COMMANDS
-    //
+    // OBJECT CREATION...
     //
 
     /**
-     * Draws border around the outside borders of the window, using default <code>pathStyle</code>
+     * Draws a segment given in WINDOW coordinates on the window using a custom style
+     * @param style the custom style
+     */
+    public void drawWinSegment(double x1, double y1, double x2, double y2, PrimitiveStyle<Shape> style) {
+        style.draw(gr, new Line2D.Double(x1, y1, x2, y2), selected);
+    }
+
+    /**
+     * Draws a segment on the window
+     */
+    public void drawWinSegment(double x1, double y1, double x2, double y2) {
+        drawWinSegment(x1, y1, x2, y2, pathStyle);
+    }
+
+    /**
+     * Draws border around the outside borders of the WINDOW using custom path style
+     * @param style the custom style
+     */
+    public void drawWinBorder(PrimitiveStyle<Shape> style) {
+        style.draw(gr, new Rectangle2D.Double(
+                getWindowMinX(), getWindowMinY(),
+                getWindowWidth() - 1, getWindowHeight() - 1)
+                , selected);
+    }
+
+    /**
+     * Draws border around the outside borders of the WINDOW, using default <code>pathStyle</code>
      */
     public void drawWinBorder() {
-        pathStyle.draw(new Rectangle2D.Double(getWindowMinX(), getWindowMinY(), getWindowWidth()-1, getWindowHeight()-1), gr);
+        drawWinBorder(pathStyle);
     }
 
-    /** Draws collection of arrows with provided window coordinates. */
-    public void drawWinArrow(GraphicArrow vec) {
-        arrowStyle.draw(vec, gr);
+    //
+    // PRIMITIVE DRAWING
+    //
+
+    /**
+     * Draws an arbitrary primitive, in window coordinates
+     * @param primitive the primitive object
+     * @param style custom style for the object
+     */
+    public <P> void drawWinPrimitive(P primitive, PrimitiveStyle<P> style) {
+        style.draw(gr, primitive, selected);
     }
 
     /**
-     * Draws a path in window coordinates, using default <code>pathStyle</code>
+     * Draws arbitrary primitives, in window coordinates
+     * @param primitives the primitives
+     * @param style custom style for the object
+     */
+    public <P> void drawWinPrimitives(P[] primitives, PrimitiveStyle<P> style) {
+        style.draw(gr, primitives, selected);
+    }
+
+    /**
+     * Draws a path in WINDOW coordinates, using default <code>pathStyle</code>
      * @param path the path in WINDOW coordinates
      */
     public void drawWinPath(GeneralPath path) {
-        pathStyle.draw(path, gr);
+        drawWinPrimitive(path, pathStyle);
     }
 
     /**
-     * Draws a shape in window coordinates.
-     * @param shape the window shape
+     * Draws a shape in WINDOW coordinates with default style
+     * @param shape the WINDOW shape
      */
     public void drawWinShape(Shape shape) {
-        shapeStyle.draw(shape, gr);
+        drawWinPrimitive(shape, shapeStyle);
     }
 
-    /** Draws a generic collection of objects on the window. */
-    public <P> void draw(P[] objects) {
-        if (objects == null || objects.length == 0)
-            return;
-        if (objects[0] instanceof GraphicArrow) {
-            arrowStyle.draw((GraphicArrow[]) objects, gr);
-        } else if (objects[0] instanceof GraphicString) {
-            stringStyle.draw((GraphicString[]) objects, gr);
-        } else if (objects[0] instanceof Point2D) {
-            pointStyle.draw((Point2D[]) objects, gr);
-        } else if (objects[0] instanceof Shape) {
-            shapeStyle.draw((Shape[]) objects, gr);
-        } else if (objects[0] instanceof GeneralPath) {
-            pathStyle.draw((Shape[]) objects, gr);
-        } else {
-            System.out.println("Unable to draw objects.");
-        }
+    /**
+     * Draws arrow in WINDOW coordinates with provided WINDOW coordinates.
+     * @param vec the arrow
+     */
+    public void drawWinArrow(GraphicArrow vec) {
+        drawWinPrimitive(vec, arrowStyle);
     }
     
 }

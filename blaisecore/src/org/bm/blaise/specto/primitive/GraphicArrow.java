@@ -9,40 +9,45 @@ import java.awt.geom.Point2D;
 
 /**
  * <p>
- *   <code>GraphicArrow</code> is a graphics primitive that represents a head,
- *   given by an anchor point and a (dx,dy) for the head.
+ *   <code>GraphicArrow</code> is a graphics primitive that represents an arrow
+ *   with an anchor and a head.
  * </p>
  *
  * @author Elisha Peterson
  */
 public class GraphicArrow {
 
-    Point2D anchor;
-    Point2D head;
+    Point2D.Double anchor;
+    Point2D.Double head;
 
     /** Construct arrow with provided coords.
      * @param anchor point coordinate of the anchor
      * @param head point coordinate of the head (endpoint)
      */
     public GraphicArrow(Point2D anchor, Point2D head) {
-        this.anchor = anchor;
-        this.head = head;
+        setAnchor(anchor);
+        setHead(head);
     }
 
-    public Point2D getAnchor() {
+    @Override
+    public String toString() {
+        return "GraphicArrow[" + anchor.getX() + "," + anchor.getY() + " ; " + head.getX() + "," + head.getY() + "]";
+    }
+
+    public Point2D.Double getAnchor() {
         return anchor;
     }
 
     public void setAnchor(Point2D anchor) {
-        this.anchor = anchor;
+        anchor.setLocation(anchor);
     }
 
-    public Point2D getHead() {
+    public Point2D.Double getHead() {
         return head;
     }
 
     public void setHead(Point2D vector) {
-        this.head = vector;
+        head.setLocation(vector);
     }
 
     public double magnitude() {
@@ -56,12 +61,12 @@ public class GraphicArrow {
      * @param centered whether to scale length from center (<code>true</code>) or from anchor (<code>false</code>)
      */
     public void setMagnitude(double value, boolean centered) {
-        double m = magnitude();
-        double dx = head.getX() - anchor.getX();
-        double dy = head.getY() - anchor.getY();
+        double dx = head.x - anchor.x;
+        double dy = head.y - anchor.y;
+        double m = Math.sqrt(dx*dx + dy*dy);
         if (centered) {
-            double cx = (anchor.getX() + head.getX()) / 2;
-            double cy = (anchor.getY() + head.getY()) / 2;
+            double cx = (anchor.x + head.x) / 2;
+            double cy = (anchor.y + head.y) / 2;
             anchor = new Point2D.Double(
                 cx - dx * value / m / 2,
                 cy - dy * value / m / 2);
@@ -70,8 +75,8 @@ public class GraphicArrow {
                 cy + dy * value / m / 2);
         } else {
             head = new Point2D.Double(
-                anchor.getX() + dx * value / m,
-                anchor.getY() + dy * value / m);
+                anchor.x + dx * value / m,
+                anchor.y + dy * value / m);
         }
     }
     
@@ -98,10 +103,5 @@ public class GraphicArrow {
                     * Math.pow(Math.abs(vectors[i].magnitude()) / mr, exponent),
                     centered);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "GraphicArrow[" + anchor.getX() + "," + anchor.getY() + " ; " + head.getX() + "," + head.getY() + "]";
     }
 }

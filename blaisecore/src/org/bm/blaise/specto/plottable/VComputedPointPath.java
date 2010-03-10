@@ -28,18 +28,14 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
 public abstract class VComputedPointPath<C> extends VPoint<C> {
 
     //
-    //
     // PROPERTIES
-    //
     //
     
     /** Style of stroke */
     protected PathStyle strokeStyle = new PathStyle(BlaisePalette.STANDARD.func1());
 
     //
-    //
     // CONSTRUCTOR
-    //
     //
 
     /** Constructs with given point. */
@@ -51,9 +47,7 @@ public abstract class VComputedPointPath<C> extends VPoint<C> {
     }
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // STYLE PATTERNS
     //
 
     public PathStyle getStrokeStyle() {
@@ -65,14 +59,12 @@ public abstract class VComputedPointPath<C> extends VPoint<C> {
     }
 
     //
-    //
     // DRAW METHODS
-    //
     //
     
     /** Determines whether path needs to be recomputed */
     transient protected boolean needsComputation = true;
-    /** Stores the path computed and displayed. */
+    /** Stores the path computed and displayed, in WINDOW coordinates. */
     transient protected GeneralPath path;
 
     @Override
@@ -88,11 +80,9 @@ public abstract class VComputedPointPath<C> extends VPoint<C> {
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        if (needsComputation) {
+        if (needsComputation)
             recompute(vg);
-        }
         super.paintComponent(vg);
-        vg.setPathStyle(strokeStyle);
-        vg.drawPath(path);
+        vg.drawWinPrimitive(path, strokeStyle);
     }
 }

@@ -20,7 +20,7 @@ public class BasicFunctionPlot extends javax.swing.JPanel {
     public BasicFunctionPlot() {
         initComponents();
         jTextField1KeyReleased(null);
-        planePlotComponent1.addPlottable(PlaneAxes.instance("x", "f(x)"));
+        planePlotComponent1.addPlottable(new PlaneAxes("x", "f(x)"));
         planePlotComponent1.addPlottable(planeFunctionGraph1);
     }
 

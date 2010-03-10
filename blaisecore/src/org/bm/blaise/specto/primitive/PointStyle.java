@@ -25,7 +25,7 @@ import java.awt.geom.Rectangle2D;
  *
  * @author Elisha Peterson
  */
-public class PointStyle implements PrimitiveStyle<Point2D> {
+public class PointStyle extends PrimitiveStyle<Point2D> {
 
     //
     // CONSTANTS
@@ -45,7 +45,7 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     PointShape shape = PointShape.CIRCLE;
 
     /** Stroke outline */
-    Stroke stroke = DEFAULT_STROKE;
+    BasicStroke stroke = DEFAULT_STROKE;
 
     /** Stroke color */
     Color strokeColor = Color.BLACK;
@@ -71,7 +71,13 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     }
 
     /** Construct with specified elements. */
-    public PointStyle(PointShape shape, Stroke stroke, Color strokeColor, Color fillColor, int radius) {
+    public PointStyle(PointShape shape, int radius) {
+        this.shape = shape;
+        this.radius = radius;
+    }
+
+    /** Construct with specified elements. */
+    public PointStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, int radius) {
         this.shape = shape;
         this.stroke = stroke;
         this.strokeColor = strokeColor;
@@ -116,11 +122,11 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
         this.shape = shape;
     }
 
-    public Stroke getStroke() {
+    public BasicStroke getStroke() {
         return stroke;
     }
 
-    public void setStroke(Stroke stroke) {
+    public void setStroke(BasicStroke stroke) {
         this.stroke = stroke;
     }
 
@@ -133,21 +139,18 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
     }
 
     public float getThickness() {
-        return (stroke instanceof BasicStroke) ? ((BasicStroke)stroke).getLineWidth() : -1;
+        return stroke.getLineWidth();
     }
 
     public void setThickness(float width) {
-        if (stroke instanceof BasicStroke) {
-            BasicStroke bs = (BasicStroke) stroke;
-            stroke = new BasicStroke(width, bs.getEndCap(), bs.getLineJoin(), bs.getMiterLimit(), bs.getDashArray(), bs.getDashPhase());
-        }
+        stroke = new BasicStroke(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase());
     }
 
     //
     // GRAPHICS METHODS
     //
 
-    public void draw(Point2D point, Graphics2D canvas) {
+    public void draw(Graphics2D canvas, Point2D point, boolean selected) {
         double rad = point instanceof GraphicPoint ? ((GraphicPoint) point).radius : radius;
         Shape s = shape.getShape(point.getX(), point.getY(), Math.abs(rad));
         if (fillColor != null) {
@@ -155,15 +158,16 @@ public class PointStyle implements PrimitiveStyle<Point2D> {
             canvas.fill(s);
         }
         if (stroke != null && strokeColor != null) {
-            canvas.setStroke(stroke);
             canvas.setColor( rad < 0 ? lighterVersionOf(strokeColor) : strokeColor );
-            canvas.draw(s);
-        }
-    }
-
-    public void draw(Point2D[] points, Graphics2D canvas) {
-        for (Point2D p2d : points) {
-            draw(p2d, canvas);
+            if (selected) {
+                setThickness(getThickness()*2);
+                canvas.setStroke(stroke);
+                canvas.draw(s);
+                setThickness(getThickness()/2);
+            } else {
+                canvas.setStroke(stroke);
+                canvas.draw(s);
+            }
         }
     }
 

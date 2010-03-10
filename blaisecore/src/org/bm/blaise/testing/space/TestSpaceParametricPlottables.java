@@ -46,7 +46,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         SpaceParametricSurface sps = new SpaceParametricSurface(surface, 0, 2*Math.PI, 0, Math.PI);
         SpaceParametricSurfacePatch spsp = new SpaceParametricSurfacePatch(sps.getFunction(), 0, 0, .1, .1);
 
-        domainPlot1.addPlottable(LineAxis.instance("t"));
+        domainPlot1.addPlottable(new LineAxis("t"));
         domainPlot1.addPlottable(spc.getDomainPlottable());
         domainPlot1.setDesiredRange(-1.0, 7.28);
 
@@ -54,7 +54,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         rangePlot1.addPlottable(spc);
 
         domainPlot2.addPlottable(new PlaneGrid());
-        domainPlot2.addPlottable(PlaneAxes.instance("u", "v"));
+        domainPlot2.addPlottable(new PlaneAxes("u", "v"));
         domainPlot2.addPlottable(sps.getDomainPlottable());
         domainPlot2.addPlottable(spsp.getDomainPlottable());
 
@@ -134,6 +134,8 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
             }
         });
 
+        rangePlot1.setBackground(new java.awt.Color(0, 0, 0));
+
         org.jdesktop.layout.GroupLayout rangePlot1Layout = new org.jdesktop.layout.GroupLayout(rangePlot1);
         rangePlot1.setLayout(rangePlot1Layout);
         rangePlot1Layout.setHorizontalGroup(
@@ -147,6 +149,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
 
         tabPane.addTab("Parametric Curve", rangePlot1);
 
+        rangePlot2.setBackground(new java.awt.Color(0, 0, 0));
         rangePlot2.setDefaultFillOpacity(0.9F);
 
         org.jdesktop.layout.GroupLayout rangePlot2Layout = new org.jdesktop.layout.GroupLayout(rangePlot2);
@@ -161,6 +164,8 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         );
 
         tabPane.addTab("Parametric Surface", rangePlot2);
+
+        rangePlot3.setBackground(new java.awt.Color(0, 0, 0));
 
         org.jdesktop.layout.GroupLayout rangePlot3Layout = new org.jdesktop.layout.GroupLayout(rangePlot3);
         rangePlot3.setLayout(rangePlot3Layout);

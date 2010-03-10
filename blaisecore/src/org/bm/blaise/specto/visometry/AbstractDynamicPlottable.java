@@ -20,9 +20,7 @@ package org.bm.blaise.specto.visometry;
 public abstract class AbstractDynamicPlottable<C> extends AbstractPlottable<C> implements DynamicPlottable<C> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** Whether the plottable is being changed.*/
@@ -32,9 +30,7 @@ public abstract class AbstractDynamicPlottable<C> extends AbstractPlottable<C> i
     public boolean editable = true;
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return true if the element is adjusting, otherwise false */
@@ -54,34 +50,37 @@ public abstract class AbstractDynamicPlottable<C> extends AbstractPlottable<C> i
     }
 
     //
+    // HANDLING MOUSE EVENTS..
     //
-    // HANDLING MOUSE EVENTS
+    // Possibly states: moved over, dragging, 
     //
-    //
+
+    public void mouseMoved(VisometryMouseEvent<C> e) {
+        setSelected(isClickablyCloseTo(e));
+    }
 
     public void mousePressed(VisometryMouseEvent<C> e) {
-        if (isClickablyCloseTo(e)) {
+        if (isClickablyCloseTo(e) && !adjusting) {
             adjusting = true;
+            setSelected(true);
         }
-    }
-
-    public void mouseReleased(VisometryMouseEvent<C> e) {
-        mouseDragged(e);
-        adjusting = false;
-    }
-    
-    public void mouseClicked(VisometryMouseEvent<C> e) {
     }
 
     public void mouseDragged(VisometryMouseEvent<C> e) {
     }
 
-    public void mouseEntered(VisometryMouseEvent<C> e) {
+    public void mouseReleased(VisometryMouseEvent<C> e) {
+        mouseDragged(e);
+        if (adjusting) {
+            adjusting = false;
+            setSelected(false);
+        }
+    }
+    
+    public void mouseClicked(VisometryMouseEvent<C> e) {
+        setSelected(isClickablyCloseTo(e));
     }
 
-    public void mouseExited(VisometryMouseEvent<C> e) {
-    }
-
-    public void mouseMoved(VisometryMouseEvent<C> e) {
-    }
+    public void mouseEntered(VisometryMouseEvent<C> e) { }
+    public void mouseExited(VisometryMouseEvent<C> e) { }
 }

@@ -114,9 +114,9 @@ public class PlaneAxesBeanInfo extends SimpleBeanInfo {
             methods[METHOD_clone0].setDisplayName ( "" );
             methods[METHOD_instance1] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {java.lang.String.class, java.lang.String.class})); // NOI18N
             methods[METHOD_instance1].setDisplayName ( "" );
-            methods[METHOD_instance2] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.AxisStyle.class})); // NOI18N
+            methods[METHOD_instance2] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.Style.class})); // NOI18N
             methods[METHOD_instance2].setDisplayName ( "" );
-            methods[METHOD_instance3] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.AxisStyle.class, java.lang.String.class, java.lang.String.class})); // NOI18N
+            methods[METHOD_instance3] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.Style.class, java.lang.String.class, java.lang.String.class})); // NOI18N
             methods[METHOD_instance3].setDisplayName ( "" );
             methods[METHOD_isClickablyCloseTo4] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("isClickablyCloseTo", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_isClickablyCloseTo4].setDisplayName ( "" );

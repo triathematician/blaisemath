@@ -25,9 +25,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
 
     //
-    //
     // PROPERTIES
-    //
     //
     
     /** Style of stroke */
@@ -35,9 +33,7 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
 
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // STYLE PATTERNS
     //
 
     public PathStyle getStrokeStyle() {
@@ -49,9 +45,7 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
     }
 
     //
-    //
     // DRAW METHODS
-    //
     //
     
     /** Determines whether path needs to be recomputed */
@@ -59,7 +53,10 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
     /** Stores the path computed and displayed (in WINDOW coordinates) */
     transient protected GeneralPath path;
 
-    /** This method is called to recompute the path. */
+    /** 
+     * This method is called to recompute the path, and should populate the
+     * <code>path</code> in WINDOW coordinates.
+     */
     abstract protected void recompute(VisometryGraphics<C> vg);
 
     @Override
@@ -68,9 +65,12 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
             recompute(vg);
             needsComputation = false;
         }
-        vg.setPathStyle(strokeStyle);
-        vg.drawPath(path);
+        vg.drawWinPrimitive(path, strokeStyle);
     }
+
+    //
+    // MOUSE METHODS
+    //
 
     /**
      * Checks to see if the mouse point is close to this path. Uses the built in intersection

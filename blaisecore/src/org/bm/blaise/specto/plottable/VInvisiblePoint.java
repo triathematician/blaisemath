@@ -22,9 +22,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** The value of the point. */
@@ -35,18 +33,16 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
     }
 
     //
-    //
     // BEANS
     //
-    //
+
     public C getPoint() {
         return value;
     }
 
     public void setPoint(C value) {
-        if (value == null) {
+        if (value == null)
             throw new NullPointerException();
-        }
         if (!value.equals(this.value)) {
             this.value = value;
             fireStateChanged();
@@ -54,9 +50,7 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
     }
 
     //
-    //
     // PAINT METHODS
-    //
     //
 
     /** Subclasses must override the paint method to display the point. */
@@ -65,9 +59,7 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
     }
 
     //
-    //
     // DYNAMIC METHODS
-    //
     //
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
@@ -76,9 +68,9 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
 
     @Override
     public void mouseDragged(VisometryMouseEvent<C> e) {
-        if (adjusting) {
+        super.mouseDragged(e);
+        if (adjusting)
             setPoint(e.getCoordinate());
-        }
     }
 
 }

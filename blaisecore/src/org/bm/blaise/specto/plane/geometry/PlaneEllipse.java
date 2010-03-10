@@ -23,12 +23,27 @@ public class PlaneEllipse extends VPointSet<Point2D.Double> {
 
     /** Whether points should be shown */
     boolean pointsVisible = false;
+
     /** Controls the outline and fill */
     ShapeStyle shapeStyle = new ShapeStyle(Color.BLACK, Color.GRAY);
+    
 
     public PlaneEllipse() {
         super(new Point2D.Double[]{new Point2D.Double(0,0), new Point2D.Double(1,0), new Point2D.Double(0,1)});
     }
+
+    //
+    // OBJECT UTILTIES
+    //
+
+    @Override
+    public String toString() {
+        return "PlaneEllipse " + Arrays.toString(values);
+    }
+
+    //
+    // VALUE PATTERNS
+    //
 
     @Override
     public void setValue(int index, Point2D.Double value) {
@@ -51,7 +66,9 @@ public class PlaneEllipse extends VPointSet<Point2D.Double> {
         }
     }
 
-
+    //
+    // STYLE PATTERNS
+    //
 
     public ShapeStyle getShapeStyle() {
         return shapeStyle;
@@ -70,10 +87,9 @@ public class PlaneEllipse extends VPointSet<Point2D.Double> {
         fireStateChanged();
     }
 
-    @Override
-    public String toString() {
-        return "PlaneEllipse " + Arrays.toString(values);
-    }
+    //
+    // PAINT METHODS
+    //
 
     public Point2D.Double center() {
         return values[0];
@@ -89,23 +105,14 @@ public class PlaneEllipse extends VPointSet<Point2D.Double> {
 
     @Override
     public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
-        if (shapeStyle != null) {
-            vg.setShapeStyle(shapeStyle);
-        }
-        vg.drawEllipse(corner1(), corner2());
+        vg.drawEllipse(corner1(), corner2(), shapeStyle);
         if (pointsVisible) {
             vg.setPointStyle(pointStyle);
-            for (Point2D.Double v : values) {
-                vg.drawWithStyle(v, HandleStyle.INSTANCE);
-            }
+            for (Point2D.Double v : values)
+                vg.drawPoint(v, HandleStyle.getInstance());
         }
-        if (labelsVisible) {
-            if (labelStyle != null) {
-                vg.setStringStyle(labelStyle);
-            }
-            for (int i = 0; i < values.length; i++) {
-                vg.drawString(getValueString(i), values[i], 5, -5);
-            }
-        }
+        if (labelsVisible)
+            for (int i = 0; i < values.length; i++)
+                vg.drawString(getValueString(i), values[i], 5, -5, labelStyle);
     }
 }

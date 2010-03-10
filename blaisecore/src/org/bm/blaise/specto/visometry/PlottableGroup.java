@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.event.ChangeListener;
 import org.bm.blaise.sequor.timer.TimeClock;
-import org.bm.blaise.specto.visometry.Plottable;
 
 /**
  * <p>

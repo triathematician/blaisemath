@@ -12,7 +12,7 @@ import java.awt.geom.Point2D.Double;
 import org.bm.blaise.specto.plane.PlaneGraphics;
 import org.bm.blaise.specto.plottable.VPointSet;
 import org.bm.blaise.specto.primitive.ArrowStyle;
-import org.bm.blaise.specto.primitive.ArrowStyle.ArrowShape;
+import org.bm.blaise.specto.primitive.ArrowStyle.Shape;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -30,7 +30,7 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
     
     PathStyle curveStyle = new PathStyle(BlaisePalette.STANDARD.func1());
 
-    ArrowStyle controlStyle = new ArrowStyle(BlaisePalette.STANDARD.grid(), ArrowShape.DOT, 4);
+    ArrowStyle controlStyle = new ArrowStyle(BlaisePalette.STANDARD.grid(), Shape.DOT, 4);
     boolean drawControls = true;
 
     public PlaneBezierCurve(Point2D.Double... values) {
@@ -146,21 +146,19 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
     public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
         super.paintComponent(vg);
         if (drawControls && values.length > 1) {
-            vg.setArrowStyle(controlStyle);
             for (int i = 0; i < beziers.length; i++) {
                 if (beziers[i][0] == null)
                     continue;
                 else if (beziers[i][1]==null) {
-                    vg.drawArrow(values[i], beziers[i][0]);
-                    vg.drawArrow(values[i+1], beziers[i][0]);
+                    vg.drawArrow(values[i], beziers[i][0], controlStyle);
+                    vg.drawArrow(values[i+1], beziers[i][0], controlStyle);
                 } else {
-                    vg.drawArrow(values[i], beziers[i][0]);
-                    vg.drawArrow(values[i+1], beziers[i][1]);
+                    vg.drawArrow(values[i], beziers[i][0], controlStyle);
+                    vg.drawArrow(values[i+1], beziers[i][1], controlStyle);
                 }
             }
         }
         if (values.length > 1) {
-            vg.setPathStyle(curveStyle);
             GeneralPath gp = new GeneralPath();
             gp.moveTo((float) values[0].x, (float) values[0].y);
             for (int i = 1; i < values.length; i++) {
@@ -171,7 +169,7 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
                 else
                     gp.curveTo((float) beziers[i-1][0].x, (float) beziers[i-1][0].y, (float) beziers[i-1][1].x, (float) beziers[i-1][1].y, (float) values[i].x, (float) values[i].y);
             }
-            ((PlaneGraphics)vg).drawPath(gp);
+            ((PlaneGraphics)vg).drawPath(gp, curveStyle);
         }
     }
     //
@@ -216,11 +214,11 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
     public void mouseClicked(VisometryMouseEvent<Double> e) {
         if (editable && selectedIndex != -1) {
             String mode = MouseEvent.getModifiersExText(e.getModifiersEx());
-            if (mode.equals("Ctrl") && selectionType == 0) {
+            if (mode.equals("Ctrl") && selectionType == 0)
                 removeValue(selectedIndex);
-            } else if (mode.equals("Alt") && selectionType != 0) {
+            else if (mode.equals("Alt") && selectionType != 0)
                 setBezierValue(selectedIndex, 1, selectionType == 1 ? beziers[selectedIndex][0] : null);
-            } else if (mode.equals("Alt") && selectionType == 0) {
+            else if (mode.equals("Alt") && selectionType == 0) {
                 // TODO - make this force the two beziers at the point to be equal/opposite directions ?
             }
         }

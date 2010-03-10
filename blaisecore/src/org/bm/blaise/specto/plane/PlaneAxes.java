@@ -5,10 +5,13 @@
 package org.bm.blaise.specto.plane;
 
 import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import org.bm.blaise.specto.primitive.BlaisePalette;
+import org.bm.blaise.specto.primitive.GraphicString;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
@@ -33,7 +36,13 @@ import org.bm.utils.NiceRangeGenerator;
  */
 public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implements Cloneable, VisometryChangeListener {
 
-    private static final int PIXEL_SPACING = 40;
+    /** Options for the type of axis. */
+    public enum Style {
+        CROSS,
+        ELL,
+        INVERTED_T,
+        BOX
+    }
 
     //
     // PROPERTIES
@@ -41,16 +50,14 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
     /** Label for the horizontal axis. */
     private String xLabel = "x";
-
     /** Label for the vertical axis. */
     private String yLabel = "y";
 
     /** Type of axis to display. */
-    private AxisStyle axisStyle = AxisStyle.CROSS;
+    private Style axisStyle = Style.CROSS;
 
     /** Style of the axis and tick marks. */
     PathStyle strokeStyle = new PathStyle( BlaisePalette.STANDARD.axis() );
-
     /** Style of the labels. */
     StringStyle labelStyle = new StringStyle( BlaisePalette.STANDARD.axisLabel(), 14 );
 
@@ -59,41 +66,39 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
 
 
     //
-    // CONSTRUCTORS AND STATIC FACTORY METHODS
+    // CONSTRUCTORS
     //
 
     /** Construct using defaults. */
     public PlaneAxes() {
     }
 
-    /**
-     * <b>FACTORY METHOD</b>
-     * @return instance of the class with specified parameters.
-     */
-    public static PlaneAxes instance(String xLabel, String yLabel) {
-        return instance(AxisStyle.CROSS, xLabel, yLabel);
+    /** Construct with specified labels. */
+    public PlaneAxes(String xLabel, String yLabel) {
+        setXLabel(xLabel);
+        setYLabel(yLabel);
     }
 
-    /**
-     * <b>FACTORY METHOD</b>
-     * @return instance of the class with specified parameters.
-     */
-    public static PlaneAxes instance(AxisStyle style) {
-        return instance(style, "x", "y");
+    /** Construct with specified labels. */
+    public PlaneAxes(String xLabel, String yLabel, Style style) {
+        setXLabel(xLabel);
+        setYLabel(yLabel);
+        setStyle(style);
+    }
+    
+    //
+    // OBJECT UTILITIES
+    //
+
+    @Override
+    public PlaneAxes clone() {
+        return new PlaneAxes(xLabel, yLabel, axisStyle);
     }
 
-    /**
-     * <b>FACTORY METHOD</b>
-     * @return instance of the class with specified parameters.
-     */
-    public static PlaneAxes instance(AxisStyle style, String xLabel, String yLabel) {
-        PlaneAxes result = new PlaneAxes();
-        result.axisStyle = style;
-        result.xLabel = xLabel;
-        result.yLabel = yLabel;
-        return result;
+    @Override
+    public String toString() {
+        return "Axes ["+xLabel + "," + yLabel + "]";
     }
-
 
     //
     // BEAN PATTERNS
@@ -126,12 +131,12 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
     }
 
     /** Return style. */
-    public AxisStyle getStyle() {
+    public Style getStyle() {
         return axisStyle;
     }
 
     /** Sets style. */
-    public void setStyle(AxisStyle style) {
+    public void setStyle(Style style) {
         if (this.axisStyle != style) {
             this.axisStyle = style;
             fireStateChanged();
@@ -149,6 +154,17 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
         }
     }
 
+    public StringStyle getLabelStyle() {
+        return labelStyle;
+    }
+
+    public void setLabelStyle(StringStyle labelStyle) {
+        if (this.labelStyle != labelStyle) {
+            this.labelStyle = labelStyle;
+            fireStateChanged();
+        }
+    }
+
     /** @return true if ticks are visible. */
     public boolean isTicksVisible() {
         return ticksVisible;
@@ -161,193 +177,194 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
             fireStateChanged();
         }
     }
-
-    public StringStyle getLabelStyle() {
-        return labelStyle;
-    }
-
-    public void setLabelStyle(StringStyle labelStyle) {
-        if (this.labelStyle != labelStyle) {
-            this.labelStyle = labelStyle;
-            fireStateChanged();
-        }
-    }
     
     //
     // PAINT METHODS
     //
 
+    transient Point2D.Double min;
+    transient Point2D.Double max;
     transient double[] xValues;
+    transient String[] xLabels;
     transient double[] yValues;
+    transient String[] yLabels;
+    
+    /** Format for axis number labels. */
+    private static final DecimalFormat nf = new DecimalFormat("##0.##");
 
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        if (canvas instanceof PlaneGraphics) {
-            PlaneGraphics pg = ((PlaneGraphics) canvas);
-            Point2D.Double min = pg.getMinimumVisible();
-            Point2D.Double max = pg.getMaximumVisible();
-            xValues = NiceRangeGenerator.STANDARD.niceRange(min.x, max.x, pg.getIdealHStepForPixelSpacing(PIXEL_SPACING));
-            yValues = NiceRangeGenerator.STANDARD.niceRange(min.y, max.y, pg.getIdealVStepForPixelSpacing(PIXEL_SPACING));
-        }
+        if (! (canvas instanceof PlaneGraphics))
+            throw new IllegalStateException("PlaneAxes only supports PlaneGraphics!");
+        PlaneGraphics pg = ((PlaneGraphics) canvas);
+
+        min = pg.getMinCoord();
+        max = pg.getMaxCoord();
+        if (axisStyle == Style.ELL) {
+            min.x = 0;
+            min.y = 0;
+        } else if (axisStyle == Style.INVERTED_T)
+            min.y = 0;
+
+        xValues = NiceRangeGenerator.STANDARD.niceRange(min.x, max.x, pg.getIdealHStepForPixelSpacing(PIXEL_SPACING));
+        xLabels = new String[xValues.length];
+        for (int i = 0; i < xValues.length; i++)
+            xLabels[i] = nf.format(xValues[i]);
+        
+        yValues = NiceRangeGenerator.STANDARD.niceRange(min.y, max.y, pg.getIdealVStepForPixelSpacing(PIXEL_SPACING));
+        yLabels = new String[yValues.length];
+        for (int i = 0; i < yValues.length; i++)
+            yLabels[i] = nf.format(yValues[i]);
     }
 
-    /** Uses currently selected axis style to draw the axes.
-     *
+    /** Pixel height of a tick. */
+    private static final int TICK_HEIGHT = 5;
+    /** Determines the "ideal" spacing between tick marks, in terms of pixels. */
+    private static final int PIXEL_SPACING = 40;
+
+    /**
+     * Uses currently selected axis style to draw the axes.
      * @param canvas the visometry graphics object used for painting
      */
     @Override
     public void paintComponent(VisometryGraphics<Point2D.Double> canvas) {
-        canvas.setPathStyle(strokeStyle);
-        canvas.setStringStyle(labelStyle);
-        axisStyle.draw(((PlaneGraphics) canvas), xValues, yValues, xLabel, yLabel, ticksVisible);
+        PlaneGraphics pg = (PlaneGraphics) canvas;
+        Point2D.Double maxC = pg.getMaxCoord();
+        Point2D.Double minC = pg.getMinCoord();
+
+        // draw ticks
+        if (ticksVisible) {
+            switch (axisStyle) {
+                case BOX:
+                    drawLabeledHorizontalLines(pg, min.x, yValues, 0, TICK_HEIGHT, yLabels);
+                    drawLabeledHorizontalLines(pg, max.x, yValues, -TICK_HEIGHT, 0, yLabels);
+                    drawLabeledVerticalLines(pg, xValues, min.y, 0, TICK_HEIGHT, xLabels);
+                    drawLabeledVerticalLines(pg, xValues, max.y, -TICK_HEIGHT, 0, xLabels);
+                    break;
+                case CROSS:
+                case ELL:
+                case INVERTED_T:
+                default:
+                    drawLabeledHorizontalLines(pg, 0.0, yValues, -TICK_HEIGHT, TICK_HEIGHT, yLabels);
+                    drawLabeledVerticalLines(pg, xValues, 0.0, -TICK_HEIGHT, TICK_HEIGHT, xLabels);
+                    break;
+            }
+        }
+
+        // draw axes
+        switch (axisStyle) {
+            case BOX:
+                pg.drawWinBorder(strokeStyle);
+                break;
+            case ELL:
+                pg.drawSegment(0.0, 0.0, maxC.x, 0.0, strokeStyle);
+                pg.drawSegment(0.0, 0.0, 0.0, maxC.y, strokeStyle);
+                break;
+            case INVERTED_T:
+                pg.drawSegment(0.0, 0.0, 0.0, maxC.y, strokeStyle);
+                pg.drawHorizontalLine(0.0, strokeStyle);
+                break;
+            case CROSS:
+                pg.drawHorizontalLine(0.0, strokeStyle);
+                pg.drawVerticalLine(0.0, strokeStyle);
+            default:
+                break;
+        }
+
+        // draw axis labels
+        switch(axisStyle) {
+            case BOX:
+                pg.drawString(xLabel, new Point2D.Double(max.x, 0.0), 0, -2 * TICK_HEIGHT, GraphicString.RIGHT, labelStyle);
+                pg.drawString(yLabel, new Point2D.Double(0.0, max.y), -2 * TICK_HEIGHT, 0, GraphicString.TOP, labelStyle);
+                break;
+            case ELL:
+            case INVERTED_T:
+            case CROSS:
+            default:
+                pg.drawString(xLabel, new Point2D.Double(maxC.x, 0.0), -TICK_HEIGHT, 2 * TICK_HEIGHT, GraphicString.RIGHT, labelStyle);
+                pg.drawString(yLabel, new Point2D.Double(0.0, maxC.y), 2 * TICK_HEIGHT, -TICK_HEIGHT, GraphicString.TOP_LEFT, labelStyle);
+                break;
+        }
     }
+
+    
+    //
+    // MOUSE HANDLING
+    //
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<Point2D.Double> coordinate) {
         return false;
     }
 
-    @Override
-    public PlaneAxes clone() {
-        return instance(axisStyle, xLabel, yLabel);
+    //
+    // UTILITY DRAWING METHODS
+    //
+
+
+    /** 
+     * Draws a series of labeled horizontal lines with appropriate labels, e.g.<br><br>
+     *    ---  2.0 <br>
+     *    ---  1.0 <br>
+     *    ---  0.0 <br>
+     *    ---  -1.0 <br>
+     *    ---  -2.0 <br>
+     *
+     * @param pg the graphics object to draw on
+     *
+     * @param x the x value at which to draw the lines
+     * @param ys the set of y values
+     * @param minusX pixels to shift in negative x direction
+     * @param plusX pixels to shift in positive direction
+     *
+     * @param labels the set of labels for the y values
+     */
+    public void drawLabeledHorizontalLines(PlaneGraphics pg,
+            double x, double[] ys, int minusX, int plusX,
+            String[] labels) {
+
+        assert ys != null && labels != null && ys.length == labels.length;
+
+        Point2D.Double pt = new Point2D.Double(x, 0);
+        Point2D.Double winPt;
+
+        for (int i = 0; i < ys.length; i++) {
+            pt.y = ys[i];
+            winPt = pg.getWindowPointOf(pt);
+            pg.drawWinSegment(winPt.x + minusX, winPt.y, winPt.x + plusX, winPt.y, strokeStyle);
+            pg.drawString(labels[i], pt, plusX + 2, 0, GraphicString.LEFT, labelStyle);
+        }
     }
-
-    @Override
-    public String toString() {
-        return "Axes ["+xLabel + "," + yLabel + "]";
-    }
-
-    //
-    //
-    // DRAWING METHODS: SUPPORT VARIOUS STYLES OF DRAW
-    //
-    //
-
-    /** Pixel height of a tick. */
-    private static final int TICK_HEIGHT = 5;
-
-    /** Offset for the horizontal axis label. */
-    private static final Point XOFFSET = new Point(-10, -7);
-
-    /** Offset for the vertical axis label. */
-    private static final Point YOFFSET = new Point(7, 10);
-
-    /** Format for axis number labels. */
-    private static final DecimalFormat nf = new DecimalFormat("##0.##");
 
     /**
-     * Options for the type of axis.
+     * Draws a series of labeled vertical lines with appropriate labels, e.g.<br><br>
+     * <code>-2.0 . -1.0 .. 0.0 .. 1.0 .. 2.0<br>
+     *       . | .... | .... | .... | .... |<br>
+     *       . | .... | .... | .... | .... |<br>
+     * </code>
+     *
+     * @param pg the graphics object to draw on
+     *
+     * @param xx the set of x values
+     * @param y the y value where to draw the line
+     * @param minusY pixels to shift in negative y direction
+     * @param plusY pixels to shift in positive y direction
+     *
+     * @param labels the set of labels for the x values
      */
-    public enum AxisStyle {
+    public void drawLabeledVerticalLines(PlaneGraphics pg,
+            double[] xs, double y, int minusY, int plusY,
+            String[] labels) {
 
-        CROSS("Cross-Style Axes") {
-            @Override
-            public void draw(PlaneGraphics pg, double[] xValues, double[] yValues, String xLabel, String yLabel, boolean ticksVisible) {
-                if (ticksVisible && xValues != null) {
-                    ArrayList<String> xLab = new ArrayList<String>();
-                    for (int i = 0; i < xValues.length; i++) {
-                        xLab.add(nf.format(xValues[i]));
-                    }
-                    ArrayList<String> yLab = new ArrayList<String>();
-                    for (int i = 0; i < yValues.length; i++) {
-                        yLab.add(nf.format(yValues[i]));
-                    }
-                    pg.drawLabeledHorizontalLines(0.0, yValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledVerticalLines(xValues, 0.0, TICK_HEIGHT, xLab, XOFFSET);
-                }
+        assert xs != null && labels != null && xs.length == labels.length;
 
-                pg.drawHorizontalLine(0.0);
-                pg.drawVerticalLine(0.0);
-                pg.drawString(xLabel, new Point2D.Double(pg.getMaximumVisible().x, 0.0), -8, 12);
-                pg.drawString(yLabel, new Point2D.Double(0.0, pg.getMaximumVisible().y), -10, 12);
+        Point2D.Double pt = new Point2D.Double(0, y);
+        Point2D.Double winPt;
 
-            }
-        },
-
-        ELL("L-Style Axes") {
-            @Override
-            public void draw(PlaneGraphics pg, double[] xValues, double[] yValues, String xLabel, String yLabel, boolean ticksVisible) {
-                if (ticksVisible) {
-                    ArrayList<String> xLab = new ArrayList<String>();
-                    for (int i = 0; i < xValues.length; i++) {
-                        xLab.add(nf.format(xValues[i]));
-                    }
-                    ArrayList<String> yLab = new ArrayList<String>();
-                    for (int i = 0; i < yValues.length; i++) {
-                        yLab.add(nf.format(yValues[i]));
-                    }
-                    pg.drawLabeledHorizontalLines(0.0, yValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledVerticalLines(xValues, 0.0, TICK_HEIGHT, xLab, XOFFSET);
-                }
-
-                pg.drawLine(0.0, 0.0, pg.getMaximumVisible().x, 0.0);
-                pg.drawLine(0.0, 0.0, 0.0, pg.getMaximumVisible().y);
-                pg.drawString(xLabel, new Point2D.Double(pg.getMaximumVisible().x, 0.0), -10, 15);
-                pg.drawString(yLabel, new Point2D.Double(0.0, pg.getMaximumVisible().y), -10, 15);
-            }
-        },
-
-        INVERTED_T("Inverted T-Style Axes") {
-            @Override
-            public void draw(PlaneGraphics pg, double[] xValues, double[] yValues, String xLabel, String yLabel, boolean ticksVisible) {
-                if (ticksVisible) {
-                    ArrayList<String> xLab = new ArrayList<String>();
-                    for (int i = 0; i < xValues.length; i++) {
-                        xLab.add(nf.format(xValues[i]));
-                    }
-                    ArrayList<String> yLab = new ArrayList<String>();
-                    for (int i = 0; i < yValues.length; i++) {
-                        yLab.add(nf.format(yValues[i]));
-                    }
-                    pg.drawLabeledHorizontalLines(0.0, yValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledVerticalLines(xValues, 0.0, TICK_HEIGHT, xLab, XOFFSET);
-                }
-
-                pg.drawHorizontalLine(0.0);
-                pg.drawString(xLabel, new Point2D.Double(pg.getMaximumVisible().x, 0.0), XOFFSET.x, XOFFSET.y);
-                pg.drawLine(0.0, 0.0, 0.0, pg.getMaximumVisible().y);
-                pg.drawString(yLabel, new Point2D.Double(0.0, pg.getMaximumVisible().y), YOFFSET.x, YOFFSET.y);
-            }
-        },
-
-        BOX("Box-Style Axes") {
-            @Override
-            public void draw(PlaneGraphics pg, double[] xValues, double[] yValues, String xLabel, String yLabel, boolean ticksVisible) {
-                Point2D.Double min = pg.getMinimumVisible();
-                Point2D.Double max = pg.getMaximumVisible();
-
-                if (ticksVisible) {
-                    ArrayList<String> xLab = new ArrayList<String>();
-                    if (xValues == null) return;
-                    for (int i = 0; i < xValues.length; i++) {
-                        xLab.add(nf.format(xValues[i]));
-                    }
-                    if (yValues == null) return;
-                    ArrayList<String> yLab = new ArrayList<String>();
-                    for (int i = 0; i < yValues.length; i++) {
-                        yLab.add(nf.format(yValues[i]));
-                    }
-                    pg.drawLabeledHorizontalLines(min.x, yValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledHorizontalLines(max.x, yValues, TICK_HEIGHT, yLab, YOFFSET);
-                    pg.drawLabeledVerticalLines(xValues, min.y, TICK_HEIGHT, xLab, XOFFSET);
-                    pg.drawLabeledVerticalLines(xValues, max.y, TICK_HEIGHT, xLab, XOFFSET);
-                }
-                
-                pg.drawWinBorder();
-                pg.drawString(xLabel, new Point2D.Double(max.x, 0.0), XOFFSET.x, XOFFSET.y);
-                pg.drawString(yLabel, new Point2D.Double(0.0, max.y), YOFFSET.x, YOFFSET.y);
-            }
-        };
-
-        String name;
-
-        AxisStyle(String name) {
-            this.name = name;
+        for (int i = 0; i < xs.length; i++) {
+            pt.x = xs[i];
+            winPt = pg.getWindowPointOf(pt);
+            pg.drawWinSegment(winPt.x, winPt.y - plusY, winPt.x, winPt.y - minusY, strokeStyle);
+            pg.drawString(labels[i], pt, 0, plusY + 2, GraphicString.BOTTOM, labelStyle);
         }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-
-        abstract public void draw(PlaneGraphics pg, double[] xValues, double[] yValues, String xLabel, String yLabel, boolean ticksVisible);
     }
+
 }

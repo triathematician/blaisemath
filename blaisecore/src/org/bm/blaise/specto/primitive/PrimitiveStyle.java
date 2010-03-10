@@ -7,7 +7,6 @@ package org.bm.blaise.specto.primitive;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 
 /**
  * <p>
@@ -17,24 +16,30 @@ import java.awt.Stroke;
  * </p>
  *
  * @param <P> the type of graphics primitive controlled by this class
+ * 
  * @author Elisha Peterson
  */
-public interface PrimitiveStyle<P> {
+abstract public class PrimitiveStyle<P> {
 
     /** Default stroke of 1 unit width. */
-    public static final Stroke DEFAULT_STROKE = new BasicStroke(1.0f);
+    public static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
 
     /**
      * Draws the provided primitive on the provided canvas.
-     * @param primitive the primitive graphics object plottable by this style class
      * @param canvas the canvas on which to paint
+     * @param primitive the primitive graphics object plottable by this style class
+     * @param selected whether the primitive is currently "selected"
      */
-    public void draw(P primitive, Graphics2D canvas);
+    abstract public void draw(Graphics2D canvas, P primitive, boolean selected);
 
     /**
      * Draws a series of primitives on the provided canvas.
-     * @param primitives the primitive graphics object plottable by this style class
      * @param canvas the canvas on which to paint
+     * @param primitives the primitive graphics object plottable by this style class
+     * @param selected whether the primitive is currently "selected"
      */
-    public void draw(P[] primitives, Graphics2D canvas);
+    public void draw(Graphics2D canvas, P[] primitives, boolean selected) {
+        for(P p : primitives)
+            draw(canvas, p, selected);
+    }
 }

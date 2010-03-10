@@ -21,7 +21,8 @@ import scio.random.RandomCoordinateGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGenerator<Point3D> {
+public class SpaceVisometry
+        implements Visometry<Point3D>, RandomCoordinateGenerator<Point3D> {
 
     //
     // PROPERTIES
@@ -242,7 +243,7 @@ public class SpaceVisometry implements Visometry<Point3D>, RandomCoordinateGener
         proj.useCenterCamera();
     }
 
-    public Point2D getWindowPointOf(Point3D coordinate) {
+    public Point2D.Double getWindowPointOf(Point3D coordinate) {
         return proj.getWindowPointOf(coordinate);
     }
 

@@ -1,9 +1,11 @@
+package org.bm.blaise.specto.plane.diffeq;
+
 /**
  * PlaneVectorField.java
  * Created on Sep 3, 2009
  */
 
-package org.bm.blaise.specto.plane.diffeq;
+
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -33,7 +35,7 @@ import util.ChangeEventHandler;
 public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double, GraphicArrow, Point2D.Double> {
 
     /** Style for drawing the vectors. */
-    private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.ArrowShape.REGULAR, 5);
+    private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.Shape.REGULAR, 5);
 
     /** Underlying function */
     MultivariateVectorialFunction func;
@@ -52,6 +54,10 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         setFunc(func);
     }
 
+    @Override
+    public String toString() {
+        return "Vector Field [" + ssg + "]";
+    }
 
     //
     // BEAN PATTERNS
@@ -119,7 +125,7 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         GraphicArrow.scaleVectors(primitives, lengthMultiplier * maxRad, 0.9, centered);
     }
 
-    public GraphicArrow primitiveAt(Point2D.Double coord, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
+    public GraphicArrow primitiveAt(Point2D.Double coord, VisometryGraphics<Point2D.Double> vg) {
         MultivariateVectorialFunction useFunc = getFunc();
         double[] value = new double[]{0, 0};
         try {
@@ -129,29 +135,21 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (centered) {
+        if (centered)
             return new GraphicArrow(
-                    vis.getWindowPointOf(new Point2D.Double(coord.x - value[0]/2.0, coord.y - value[1]/2.0)),
-                    vis.getWindowPointOf(new Point2D.Double(coord.x + value[0]/2.0, coord.y + value[1]/2.0)));
-        } else {
+                    vg.getWindowPointOf(new Point2D.Double(coord.x - value[0]/2.0, coord.y - value[1]/2.0)),
+                    vg.getWindowPointOf(new Point2D.Double(coord.x + value[0]/2.0, coord.y + value[1]/2.0)));
+        else
             return new GraphicArrow(
-                    vis.getWindowPointOf(coord),
-                    vis.getWindowPointOf(new Point2D.Double(coord.x + value[0], coord.y + value[1])));
-        }
+                    vg.getWindowPointOf(coord),
+                    vg.getWindowPointOf(new Point2D.Double(coord.x + value[0], coord.y + value[1])));
     }
 
-    public GraphicArrow[] primitivesAt(List<Point2D.Double> coords, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
+    public GraphicArrow[] primitivesAt(List<Point2D.Double> coords, VisometryGraphics<Point2D.Double> vg) {
         GraphicArrow[] result = new GraphicArrow[coords.size()];
         int i = 0;
-        for (Point2D.Double c : coords) {
-            result[i] = primitiveAt(c, vis, vg);
-            i++;
-        }
+        for (Point2D.Double c : coords)
+            result[i++] = primitiveAt(c, vg);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Vector Field [" + ssg + "]";
     }
 }

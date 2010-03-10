@@ -6,7 +6,6 @@
 package org.bm.blaise.specto.plottable;
 
 import java.awt.Point;
-import java.awt.geom.Point2D.Double;
 import org.bm.blaise.specto.primitive.StringStyle;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 
@@ -29,9 +28,7 @@ public class VLabel<C> extends VInvisiblePoint<C> {
     StringStyle labelStyle = new StringStyle();
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /** Cosntructs label at specified basepoint with specified text. */
@@ -39,6 +36,15 @@ public class VLabel<C> extends VInvisiblePoint<C> {
         super(value);
         this.text = string;
     }
+    
+    @Override
+    public String toString() {
+        return "VLabel \""+getText()+"\" ["+value.toString()+"]";
+    }
+
+    //
+    // PROPERTY PATTERNS
+    //
 
     public String getText() {
         return text;
@@ -63,23 +69,14 @@ public class VLabel<C> extends VInvisiblePoint<C> {
     public void setOffset(Point offset) {
         this.offset = offset;
     }
-
-    @Override
-    public String toString() {
-        return "VLabel \""+getText()+"\" ["+value.toString()+"]";
-    }
-
     
     //
-    //
     // PAINTING
-    //
     //
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setStringStyle(labelStyle);
-        vg.drawString(text, value, offset.x, offset.y);
+        vg.drawString(text, value, offset.x, offset.y, labelStyle);
     }
 
 }

@@ -211,12 +211,12 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
         fireStateChanged();
     }
 
-    public Point2D getWindowPointOf(Point2D.Double coordinate) {
+    public Point2D.Double getWindowPointOf(Point2D.Double coordinate) {
         if (at == null)
             throw new IllegalStateException();
         if (Double.isInfinite(coordinate.x))
             return getWindowPointOfInfiniteAngle(coordinate.y);
-        return at.transform(coordinate, null);
+        return (Point2D.Double) at.transform(coordinate, null);
     }
 
     /**
@@ -225,23 +225,24 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
      * @param angle the angle of the point
      * @return an approximate window location for a point at infinity.
      */
-    public Point2D getWindowPointOfInfiniteAngle(double angle) {
+    public Point2D.Double getWindowPointOfInfiniteAngle(double angle) {
         double diagonal = 1000*Math.hypot(displayRange.width, displayRange.height);
-        return at.transform(new Point2D.Double(displayRange.getCenterX()+diagonal*Math.cos(angle), displayRange.getCenterY()+diagonal*Math.sin(angle)), null);
+        return (Point2D.Double) at.transform(new Point2D.Double(
+                displayRange.getCenterX() + diagonal * Math.cos(angle),
+                displayRange.getCenterY() + diagonal*Math.sin(angle) )
+                , null);
     }
 
 
     public Point2D.Double getCoordinateOf(Point2D point) {
-        if (at == null) {
+        if (at == null)
             throw new IllegalStateException();
-        }
         try {
             Point2D result = at.inverseTransform(point, null);
-            if (result instanceof Point2D.Double) {
+            if (result instanceof Point2D.Double)
                 return (Point2D.Double) result;
-            } else {
+            else
                 return new Point2D.Double(result.getX(), result.getY());
-            }
         } catch (NoninvertibleTransformException ex) {
             Logger.getLogger(PlaneVisometry.class.getName()).log(Level.SEVERE, null, ex);
         }

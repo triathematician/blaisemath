@@ -8,7 +8,7 @@ package org.bm.blaise.specto.plane;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import org.bm.blaise.specto.plane.PlaneAxes.AxisStyle;
+import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.utils.PlaneGridSampleSet;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
@@ -21,7 +21,8 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  *
  * @author Elisha Peterson
  */
-public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
+public class PlanePlotComponent extends PlotComponent<Point2D.Double>
+        implements java.io.Serializable {
 
     //
     // CONSTRUCTORS
@@ -60,22 +61,22 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
      * also adjusts the other component.
      * @param cpt another plot component
      */
-    public PlanePlotComponent(PlanePlotComponent cpt, String title, AxisStyle axisStyle) {
+    public PlanePlotComponent(PlanePlotComponent cpt, String title, PlaneAxes.Style axisStyle) {
         this(cpt);
         setTitle(title);
-        addPlottable(PlaneAxes.instance(axisStyle, "x", "y"));
+        addPlottable(new PlaneAxes("x", "y", axisStyle));
     }
 
     /** Initializes with a title and axes labeled by x and y. */
-    public PlanePlotComponent(String title, AxisStyle axisStyle) {
+    public PlanePlotComponent(String title, PlaneAxes.Style axisStyle) {
         this(title, axisStyle, "x", "y");
     }
 
     /** Initializes with axes labeled by specified strings. */
-    public PlanePlotComponent(String title, AxisStyle axisStyle, String xLabel, String yLabel) {
+    public PlanePlotComponent(String title, PlaneAxes.Style axisStyle, String xLabel, String yLabel) {
         this();
         setTitle(title);
-        addPlottable(PlaneAxes.instance(axisStyle, xLabel, yLabel));
+        addPlottable(new PlaneAxes(xLabel, yLabel, axisStyle));
     }
 
     //

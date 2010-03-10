@@ -34,9 +34,6 @@ public class VPath<C> extends AbstractAnimatingPlottable<C> {
     /** Style option */
     PathStyle style = new PathStyle();
 
-    /** Whether to create a closed path */
-    boolean closedPath;
-
     //
     // CONSTRUCTORS
     //
@@ -48,6 +45,11 @@ public class VPath<C> extends AbstractAnimatingPlottable<C> {
     public VPath(C[] values) {
         this.values = values;
         animating = false;
+    }
+
+    @Override
+    public String toString() {
+        return "VPath [" + values.length + " points]";
     }
 
     //
@@ -87,19 +89,6 @@ public class VPath<C> extends AbstractAnimatingPlottable<C> {
     public void setStyle(PathStyle style) {
         this.style = style;
     }
-
-    public boolean isClosedPath() {
-        return closedPath;
-    }
-
-    public void setClosedPath(boolean closedPath) {
-        this.closedPath = closedPath;
-    }
-
-    @Override
-    public String toString() {
-        return "VPath [" + values.length + " points]";
-    }
    
 
     //
@@ -118,14 +107,9 @@ public class VPath<C> extends AbstractAnimatingPlottable<C> {
         if (animating) {
             // default to animating over each value
             int length = Math.min(values.length, (int) time);
-            vg.drawPath(values, 0, length);
-        } else {
-            if (closedPath) {
-                vg.drawClosedPath(values);
-            } else {
-                vg.drawPath(values);
-            }
-        }
+            vg.drawPath(values, 0, length, style);
+        } else
+            vg.drawPath(values, style);
     }
 
     //

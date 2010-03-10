@@ -75,7 +75,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         stdPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         miniPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         funPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
-        planarPlot = new org.bm.blaise.specto.space.SpacePlotComponent();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -88,6 +87,8 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
                 jTabbedPane1StateChanged(evt);
             }
         });
+
+        stdPlot.setBackground(new java.awt.Color(0, 0, 0));
 
         org.jdesktop.layout.GroupLayout miniPlotLayout = new org.jdesktop.layout.GroupLayout(miniPlot);
         miniPlot.setLayout(miniPlotLayout);
@@ -119,6 +120,8 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Camera & View", stdPlot);
 
+        funPlot.setBackground(new java.awt.Color(0, 0, 0));
+
         org.jdesktop.layout.GroupLayout funPlotLayout = new org.jdesktop.layout.GroupLayout(funPlot);
         funPlot.setLayout(funPlotLayout);
         funPlotLayout.setHorizontalGroup(
@@ -131,19 +134,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Function", funPlot);
-
-        org.jdesktop.layout.GroupLayout planarPlotLayout = new org.jdesktop.layout.GroupLayout(planarPlot);
-        planarPlot.setLayout(planarPlotLayout);
-        planarPlotLayout.setHorizontalGroup(
-            planarPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 722, Short.MAX_VALUE)
-        );
-        planarPlotLayout.setVerticalGroup(
-            planarPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 607, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Planar", planarPlot);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
@@ -202,7 +192,6 @@ public class TestSpaceVisometry extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private org.bm.blaise.specto.space.SpacePlotComponent miniPlot;
-    private org.bm.blaise.specto.space.SpacePlotComponent planarPlot;
     private gui.RollupPanel rollupPanel1;
     private org.bm.blaise.specto.space.SpacePlotComponent stdPlot;
     // End of variables declaration//GEN-END:variables

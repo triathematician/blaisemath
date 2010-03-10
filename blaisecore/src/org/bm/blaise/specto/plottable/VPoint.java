@@ -43,6 +43,15 @@ public class VPoint<C> extends VInvisiblePoint<C> {
         super(value);
     }
 
+    @Override
+    public String toString() {
+        return "VPoint ["+value.toString()+"]";
+    }
+
+    //
+    // PROPERTY PATTERNS
+    //
+
     public PointStyle getStyle() {
         return style;
     }
@@ -82,11 +91,6 @@ public class VPoint<C> extends VInvisiblePoint<C> {
     public void setCoordVisible(boolean coordVisible) {
         this.coordVisible = coordVisible;
     }
-
-    @Override
-    public String toString() {
-        return "VPoint ["+value.toString()+"]";
-    }
    
     //
     // PAINTING
@@ -105,17 +109,14 @@ public class VPoint<C> extends VInvisiblePoint<C> {
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setPointStyle(style);
-        vg.drawPoint(value);
+        vg.drawPoint(value, style);
         if (labelVisible || coordVisible) {
-            if (labelStyle != null)
-                vg.setStringStyle(labelStyle);
             vg.drawString(
                     labelVisible && coordVisible ? label + " " + getValueString()
                     : labelVisible ? label
                     : coordVisible ? getValueString()
                     : null
-                    , value, 5, -5);
+                    , value, 5, -5, labelStyle);
         }
     }
 }

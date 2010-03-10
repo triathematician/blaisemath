@@ -19,10 +19,9 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 public class VLine<C> extends AbstractDynamicPlottable<C> {
 
     //
-    //
     // PROPERTIES
     //
-    //
+
     /** First point */
     C value1;
     /** Second point */
@@ -31,10 +30,9 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
     TwoPointStyle style = new TwoPointStyle();
 
     //
-    //
     // CONSTRUCTORS
     //
-    //
+
     /**
      * Construct with points
      * @param value1 first point
@@ -45,12 +43,19 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
         this.value2 = value2;
     }
 
-
     //
+    // OBJECT UTILITIES
+    //
+
+    @Override
+    public String toString() {
+        return style.getEndStyle().name() + " ["+value1+", "+value2+"]";
+    }
+
     //
     // BEAN PATTERNS
     //
-    //
+
     /** @return current style for the path */
     public TwoPointStyle getStyle() {
         return style;
@@ -85,28 +90,20 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
             fireStateChanged();
         }
     }
-    
-    @Override
-    public String toString() {
-        return style.getEndStyle().name() + " ["+value1+", "+value2+"]";
-    }
 
-    //
     //
     // PAINTING
     //
-    //
+
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setArrowStyle(style);
-        vg.drawArrow(value1, value2);
+        vg.drawArrow(value1, value2, style);
     }
 
     //
-    //
     // DYNAMIC EDITING
     //
-    //
+
     private transient C selectedPoint = null;
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
@@ -120,11 +117,6 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
         return false;
     }
 
-    //
-    //
-    // HANDLING MOUSE EVENTS
-    //
-    //
     @Override
     public void mouseDragged(VisometryMouseEvent<C> e) {
         if (adjusting) {

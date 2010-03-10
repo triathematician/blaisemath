@@ -77,10 +77,8 @@ public class LineFunction extends VPoint<Double> {
             evaluates = false;
         }
 
-        if (evaluates) {
-            vg.setPointStyle(outputStyle);
-            vg.drawPoint(output);
-        }
+        if (evaluates)
+            vg.drawPoint(output, outputStyle);
     }
 
 }

@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.space.diffeq;
 
+import java.awt.Graphics2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,8 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
 import org.bm.blaise.specto.primitive.ArrowStyle;
 import org.bm.blaise.specto.primitive.BlaisePalette;
+import org.bm.blaise.specto.primitive.GraphicArrow;
+import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.space.SpaceGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -37,7 +40,12 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     //
 
     /** Style for drawing the vectors. */
-    private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.ArrowShape.REGULAR, 5);
+    static private class ArrowStyle3D extends PrimitiveStyle<Point3D[]> {
+        public ArrowStyle arrow = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.Shape.REGULAR, 5);
+        @Override
+        public void draw(Graphics2D canvas, Point3D[] primitive, boolean selected) {}
+    }
+    private static PrimitiveStyle<Point3D[]> DEFAULT_STYLE = new ArrowStyle3D();
 
     /** Underlying function */
     MultivariateVectorialFunction func;
@@ -52,6 +60,11 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point3D> ssg) {
         super(DEFAULT_STYLE, ssg);
         setFunction(func);
+    }
+
+    @Override
+    public String toString() {
+        return "Vector Field [" + ssg + "]";
     }
 
     //
@@ -80,11 +93,11 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     }
 
     public ArrowStyle getStyle() {
-        return (ArrowStyle) style;
+        return ((ArrowStyle3D)style).arrow;
     }
 
     public void setStyle(ArrowStyle arrowStyle) {
-        this.style = arrowStyle;
+        ((ArrowStyle3D)style).arrow = arrowStyle;
     }
 
     public boolean isCentered() {
@@ -148,7 +161,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
         }
     }
 
-    public Point3D[] primitiveAt(Point3D coord, Visometry<Point3D> vis, VisometryGraphics<Point3D> vg) {
+    public Point3D[] primitiveAt(Point3D coord, VisometryGraphics<Point3D> vg) {
         double[] value = new double[]{0, 0, 0};
         try {
             value = func.value(new double[]{coord.x, coord.y, coord.z});
@@ -157,29 +170,21 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(SpaceVectorField.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (centered) {
+        if (centered)
             return new Point3D[] {
                 new Point3D(coord.x - value[0]/2.0, coord.y - value[1]/2.0, coord.z - value[2]/2.0),
                 new Point3D(coord.x + value[0]/2.0, coord.y + value[1]/2.0, coord.z + value[2]/2.0) };
-        } else {
+        else
             return new Point3D[] {
                 coord,
                 new Point3D(coord.x + value[0], coord.y + value[1], coord.z + value[2]) };
-        }
     }
 
-    public Point3D[][] primitivesAt(List<Point3D> coords, Visometry<Point3D> vis, VisometryGraphics<Point3D> vg) {
+    public Point3D[][] primitivesAt(List<Point3D> coords, VisometryGraphics<Point3D> vg) {
         Point3D[][] result = new Point3D[coords.size()][2];
         int i = 0;
-        for (Point3D c : coords) {
-            result[i] = primitiveAt(c, vis, vg);
-            i++;
-        }
+        for (Point3D c : coords)
+            result[i++] = primitiveAt(c, vg);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Vector Field [" + ssg + "]";
     }
 }

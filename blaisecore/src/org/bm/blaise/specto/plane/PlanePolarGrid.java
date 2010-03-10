@@ -45,18 +45,16 @@ public class PlanePolarGrid extends AbstractPlottable<Point2D.Double> {
         pg.setPathStyle(style);
         pg.setShapeStyle(new ShapeStyle(style));
 
-        double minR = minRadius(vg.getMinimumVisible(), vg.getMaximumVisible());
-        double maxR = maxRadius(vg.getMinimumVisible(), vg.getMaximumVisible());
+        double minR = minRadius(vg.getMinCoord(), vg.getMaxCoord());
+        double maxR = maxRadius(vg.getMinCoord(), vg.getMaxCoord());
 
         double[] rValues = NiceRangeGenerator.STANDARD.niceRange(minR, maxR, pg.getIdealStepForPixelSpacing(PIXEL_SPACING));
 
-        for (Double r : rValues) {
+        for (Double r : rValues)
             pg.drawCircle(0.0, 0.0, r);
-        }
 
-       for (double theta = 0; theta < 2 * Math.PI; theta += 2 * Math.PI / THETA_STEPS) {
-            pg.drawLine(minR * Math.cos(theta), minR * Math.sin(theta), maxR * Math.cos(theta), maxR * Math.sin(theta));
-        }
+       for (double theta = 0; theta < 2 * Math.PI; theta += 2 * Math.PI / THETA_STEPS)
+            pg.drawSegment(minR * Math.cos(theta), minR * Math.sin(theta), maxR * Math.cos(theta), maxR * Math.sin(theta));
     }
 
     /** Compute minimum distance from origin in window specified by given points. */

@@ -7,11 +7,10 @@ package org.bm.blaise.specto.plottable;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import org.bm.blaise.specto.primitive.PointStyle;
 import org.bm.blaise.specto.primitive.StringStyle;
 import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
@@ -57,8 +56,13 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
         setValues(values);
     }
 
+    @Override
+    public String toString() {
+        return "VPointSet " + Arrays.toString(values);
+    }
+
     //
-    // COMPOSITIONAL PATTERNS
+    // VALUE PATTERNS
     //
 
     /** @return entire list of values, as an array */
@@ -95,7 +99,7 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
     /** Removes a value from the lsit of values. */
     public void removeValue(int index) {
         if (index>=0 && index < values.length) {
-            C[] newValues = (C[]) java.lang.reflect.Array.newInstance(values.getClass().getComponentType(), values.length - 1);
+            C[] newValues = (C[]) Array.newInstance(values.getClass().getComponentType(), values.length - 1);
             if (index >= 1)
                 System.arraycopy(values, 0, newValues, 0, index);
             if (index <= values.length-2)
@@ -103,6 +107,11 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
             values = newValues;
             fireStateChanged();
         }
+    }
+
+    /** Removes all values. */
+    public void removeAllValues() {
+        setValues((C[]) Array.newInstance(values.getClass().getComponentType(), 0));
     }
 
     //
@@ -152,15 +161,10 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setPointStyle(pointStyle);
-        vg.drawPoints(values);
+        vg.drawPoints(values, pointStyle);
         if (labelsVisible) {
-            if (labelStyle != null) {
-                vg.setStringStyle(labelStyle);
-            }
-            for (int i = 0; i < values.length; i++) {
-                vg.drawString(getValueString(i), values[i], 5, -5);
-            }
+            for (int i = 0; i < values.length; i++)
+                vg.drawString(getValueString(i), values[i], 5, -5, labelStyle);
         }
     }
 
@@ -173,11 +177,6 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
             return "(" + formatter.format(p2d.getX()) + ", " + formatter.format(p2d.getY()) + ")";
         }
         return values[i].toString();
-    }
-
-    @Override
-    public String toString() {
-        return "VPointSet " + Arrays.toString(values);
     }
 
     //
@@ -226,9 +225,9 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
     
     @Override
     public void mouseDragged(VisometryMouseEvent<C> e) {
-        if (adjusting && editable && selectedIndex != -1) {
+        super.mouseDragged(e);
+        if (adjusting && editable && selectedIndex != -1)
             setValue(selectedIndex, e.getCoordinate());
-        }
     }
 
     @Override

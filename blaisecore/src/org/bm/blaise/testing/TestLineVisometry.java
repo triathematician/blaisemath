@@ -54,7 +54,7 @@ public class TestLineVisometry extends javax.swing.JFrame {
         VLine<Double> vld = new VLine<Double>(1.1, 1.3);
         vld.getStyle().setStroke(new BasicStroke(2.0f));
         vld.getStyle().setEndStyle(TwoPointStyle.EndStyle.SEGMENT);
-        vld.getStyle().setHeadShape(ArrowStyle.ArrowShape.REGULAR);
+        vld.getStyle().setHeadShape(ArrowStyle.Shape.REGULAR);
         linePlot3.addPlottable(vld);
 
         // PANELS

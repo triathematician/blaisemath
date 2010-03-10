@@ -6,6 +6,7 @@ package org.bm.blaise.specto.line;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.primitive.PathStyle;
@@ -46,30 +47,20 @@ public class LineAxis extends AbstractPlottable<Double> implements VisometryChan
 
 
     //
-    //
-    // CONSTRUCTORS AND STATIC FACTORY METHODS
-    //
+    // CONSTRUCTORS
     //
 
     /** Construct using defaults. */
-    public LineAxis() {
-    }
+    public LineAxis() {}
 
-    /**
-     * <b>FACTORY METHOD</b>
-     * @return instance of the class with specified parameters.
-     */
-    public static LineAxis instance(String xLabel) {
-        LineAxis result = new LineAxis();
-        result.xLabel = xLabel;
-        return result;
+    /** Construct with x label. */
+    public LineAxis(String xLabel) {
+        setXLabel(xLabel);
     }
 
 
-    //
     //
     // BEAN PATTERNS
-    //
     //
 
     /** Returns horizontal label. */
@@ -109,9 +100,7 @@ public class LineAxis extends AbstractPlottable<Double> implements VisometryChan
     }
     
     //
-    //
     // PAINT METHODS
-    //
     //
 
     transient double[] xValues;
@@ -140,19 +129,24 @@ public class LineAxis extends AbstractPlottable<Double> implements VisometryChan
      */
     @Override
     public void paintComponent(VisometryGraphics<Double> canvas) {
-        canvas.setPathStyle(strokeStyle);
         canvas.setStringStyle(labelStyle);
-        if (xValues == null) {
+        if (xValues == null)
             return;
-        }
-        if (ticksVisible) {
-            for (int i = 0; i < xValues.length; i++) {
-                canvas.drawVTick(xValues[i], TICK_HEIGHT);
-                canvas.drawString(nf.format(xValues[i]), xValues[i], XOFFSET.x, XOFFSET.y);
+        if (ticksVisible)
+            for (double x : xValues) {
+                drawVTick(canvas, x, TICK_HEIGHT, strokeStyle);
+                canvas.drawString(nf.format(x), x, XOFFSET.x, XOFFSET.y, labelStyle);
             }
-        }
-        canvas.drawVTick(0.0, TICK_HEIGHT * 2);
-        canvas.drawHLine(0.0);
-        canvas.drawString(xLabel, canvas.getMaximumVisible(), -8, -7);
+        drawVTick(canvas, 0.0, 2 * TICK_HEIGHT, strokeStyle);
+
+        canvas.drawSegment(canvas.getMinCoord(), canvas.getMaxCoord(), strokeStyle);
+        canvas.drawString(xLabel, canvas.getMaxCoord(), -8, -7);
     }
+
+    void drawVTick(VisometryGraphics<Double> canvas, double x, int height, PathStyle style) {
+        Point2D.Double winX = canvas.getWindowPointOf(x);
+        canvas.setPathStyle(style);
+        canvas.drawWinSegment(winX.x, winX.y - height, winX.x, winX.y + height);
+    }
+    
 }

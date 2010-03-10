@@ -45,7 +45,6 @@ public class PlaneGraphicsInSpace extends PlaneGraphics {
         sg.addToScene(new Point3D[]{inclusion(coordinate)});
     }
 
-    @Override
     public void drawLine(double x1, double y1, double x2, double y2) {
         sg.addToScene( new Point3D[]{ inclusion(x1, y1), inclusion(x2, y2) } );
     }

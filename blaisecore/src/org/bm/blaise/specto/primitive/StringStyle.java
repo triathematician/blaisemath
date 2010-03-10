@@ -4,7 +4,6 @@
  */
 package org.bm.blaise.specto.primitive;
 
-import org.bm.blaise.specto.primitive.GraphicString;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -17,7 +16,7 @@ import java.awt.Graphics2D;
  *
  * @author Elisha Peterson
  */
-public class StringStyle implements PrimitiveStyle<GraphicString> {
+public class StringStyle extends PrimitiveStyle<GraphicString> {
 
     //
     // PROPERTIES
@@ -90,7 +89,7 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
     // GRAPHICS METHODS
     //
 
-    public void draw(GraphicString grString, Graphics2D canvas) {
+    public void draw(Graphics2D canvas, GraphicString grString, boolean selected) {
         if (fontSize != null && font == null) {
             font = canvas.getFont().deriveFont((float) fontSize);
             canvas.setFont(font);
@@ -99,11 +98,5 @@ public class StringStyle implements PrimitiveStyle<GraphicString> {
         }
         canvas.setColor(color);
         canvas.drawString(grString.getString(), (float) grString.getAnchor().getX(), (float) grString.getAnchor().getY());
-    }
-
-    public void draw(GraphicString[] grStrings, Graphics2D canvas) {
-        for (GraphicString gs : grStrings) {
-            draw(gs, canvas);
-        }
     }
 }

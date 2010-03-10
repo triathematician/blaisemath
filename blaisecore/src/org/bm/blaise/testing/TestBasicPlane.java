@@ -60,7 +60,7 @@ public class TestBasicPlane extends javax.swing.JFrame {
         genericPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
         genericPlot.setDefaultCoordinateHandler(vps);
 
-        geometryPlot.addPlottable(PlaneAxes.instance("x", "y"));
+        geometryPlot.addPlottable(new PlaneAxes());
         geometryPlot.addPlottable(new PlaneTriangle());
         geometryPlot.addPlottable(new PlaneEllipse());
 

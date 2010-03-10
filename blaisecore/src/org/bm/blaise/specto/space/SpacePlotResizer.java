@@ -24,7 +24,7 @@ import scio.coordinate.Point3D;
  *      <li><code>Drag</code>: rotate the plot</li>
  *      <li><code>Ctrl-Drag</code>: animate rotation, based on the difference between the two mouse coordinates;
  *          does not rotate if the computed angle of rotation is too small.</li>
- *      <li><code>Alt-Drag</code>: translate the center of the interest in directions perpendicular to the view direction</li>
+ *      <li><code>Alt-Drag</code>: translate the center of interest in directions perpendicular to the view direction</li>
  *      <li><code>Alt-MouseWheel</code>: moves the camera to or from the center of interest
  *   </ul>
  *   Here are the zoom behaviors:
@@ -87,10 +87,10 @@ public class SpacePlotResizer implements VisometryMouseInputListener<Point3D>, M
     }
 
     public void mouseMoved(VisometryMouseEvent<Point3D> e) {
-        if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt")) // pan mode
-            plot.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-        else // rotate mode (need better coursor!)
-            plot.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+//        if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt")) // pan mode
+//            plot.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+//        else // rotate mode (need better coursor!)
+//            plot.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
     }
 
     public void mouseClicked(VisometryMouseEvent<Point3D> e) {}

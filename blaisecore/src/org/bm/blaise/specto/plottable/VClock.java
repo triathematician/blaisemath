@@ -19,7 +19,8 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
  * </p>
  * @author Elisha Peterson
  */
-public class VClock<C> extends VInvisiblePoint<C> implements AnimatingPlottable<C> {
+public class VClock<C> extends VInvisiblePoint<C>
+        implements AnimatingPlottable<C> {
 
     ClockStyle style = new ClockStyle();
 
@@ -27,6 +28,19 @@ public class VClock<C> extends VInvisiblePoint<C> implements AnimatingPlottable<
         super(value);
         setAnimationOn(true);
     }
+
+    //
+    // OBJECT UTILITY METHODS
+    //
+
+    @Override
+    public String toString() {
+        return "Clock";
+    }
+
+    //
+    // STYLE PATTERNS
+    //
 
     public ClockStyle getStyle() {
         return style;
@@ -36,15 +50,18 @@ public class VClock<C> extends VInvisiblePoint<C> implements AnimatingPlottable<
         this.style = style;
     }
 
-    @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
-        vg.drawWithStyle(value, style);
-    }
+    //
+    // PAINT METHODS
+    //
 
     @Override
-    public String toString() {
-        return "Clock";
+    public void paintComponent(VisometryGraphics<C> vg) {
+        vg.drawPoint(value, style);
     }
+
+    //
+    // ANIMATION CONTROLS
+    //
 
     boolean animating = true;
 

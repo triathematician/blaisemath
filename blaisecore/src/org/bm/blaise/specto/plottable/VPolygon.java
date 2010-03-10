@@ -22,12 +22,18 @@ public class VPolygon<C> extends VPointSet<C> {
 
     /** Whether points should be shown */
     protected boolean pointsVisible = false;
+    
     /** Controls the outline and fill */
     protected ShapeStyle shapeStyle = new ShapeStyle(Color.BLACK, Color.GRAY);
 
     public VPolygon(C... values) {
         super(values);
         setLabelsVisible(false);
+    }
+
+    @Override
+    public String toString() {
+        return "VPolygon " + Arrays.toString(values);
     }
 
     public ShapeStyle getShapeStyle() {
@@ -48,25 +54,9 @@ public class VPolygon<C> extends VPointSet<C> {
     }
 
     @Override
-    public String toString() {
-        return "VPolygon " + Arrays.toString(values);
-    }
-
-    @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        vg.setShapeStyle(shapeStyle);
-        vg.drawClosedPath(values);
-        if (pointsVisible) {
-            vg.setPointStyle(pointStyle);
-            vg.drawPoints(values);
-        }
-        if (labelsVisible) {
-            if (labelStyle != null) {
-                vg.setStringStyle(labelStyle);
-            }
-            for (int i = 0; i < values.length; i++) {
-                vg.drawString(getValueString(i), values[i], 5, -5);
-            }
-        }
+        vg.drawShape(values, shapeStyle);
+        if (pointsVisible)
+            super.paintComponent(vg);
     }
 }

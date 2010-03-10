@@ -8,8 +8,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -25,10 +23,9 @@ import org.bm.blaise.specto.visometry.Visometry;
 public class LineVisometry implements Visometry<Double> {
 
     //
-    //
     // PROPERTIES
     //
-    //
+
     /** Stores the boundary of the display window. */
     RectangularShape windowBounds;
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
@@ -36,13 +33,14 @@ public class LineVisometry implements Visometry<Double> {
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
     Double maximum = 5.0;
     /** Stores the affine transformation that converts the actual range to the window bounds. */
-    AffineTransform at = new AffineTransform();
+    AffineTransform at;
+    /** Stores the inverse of the transform */
+    transient AffineTransform atInverse;
 
-    //
     //
     // BEAN PATTERNS
     //
-    //
+    
     /**
      * Retrieve the underlying window's boundary.
      * @return bounding rectangle provided by the window.
@@ -56,16 +54,12 @@ public class LineVisometry implements Visometry<Double> {
      * Recomputes transformation after setting.
      */
     public void setWindowBounds(RectangularShape newBounds) {
-        if (newBounds == null) {
+        if (newBounds == null)
             throw new NullPointerException();
-        }
+        
         if (!newBounds.equals(windowBounds)) {
             this.windowBounds = newBounds;
-            // TODO - operate better here!
-            try {
-                computeTransformation();
-            } catch (IllegalStateException e) {
-            }
+            computeTransformation();
         }
     }
 
@@ -96,9 +90,9 @@ public class LineVisometry implements Visometry<Double> {
      * @param max
      */
     public void setDesiredRange(double min, double max) {
-        if (min == max) {
+        if (min == max)
             throw new IllegalArgumentException("Range must be nonempty");
-        }
+        
         // ensure proper order
         if (min > max) {
             double swap = min;
@@ -107,11 +101,8 @@ public class LineVisometry implements Visometry<Double> {
         }
         minimum = min;
         maximum = max;
-        // TODO - operate better here!
-        try {
-            computeTransformation();
-        } catch (IllegalStateException e) {
-        }
+        
+        computeTransformation();
     }
 
     /** @return x scaling to transform local to window coordinates */
@@ -119,45 +110,43 @@ public class LineVisometry implements Visometry<Double> {
         return at.getScaleX();
     }
 
+    /** Margin on the sides of the window. */
+    int MARGIN = 10;
+
     public void computeTransformation() throws IllegalStateException {
         // ensure proper parameters
-        if (windowBounds == null || windowBounds.getWidth() == 0 || windowBounds.getHeight() == 0 || minimum == null || maximum == null) {
+        if (windowBounds == null || windowBounds.getWidth() == 0 || windowBounds.getHeight() == 0 || minimum == null || maximum == null)
             throw new IllegalStateException();
-        }
         //System.out.println("recompute transformation");
         //System.out.println("bounds: "+windowBounds);
         //System.out.println("desired: "+desiredMin+"   "+desiredMax);
 
-        double margin = 10;
-
         // The axis is transformed horizontally, and centered vertically.
         // The specified margin is left out on either end.
         at.setToIdentity();
-        double scaleX = (windowBounds.getWidth() - 2 * margin) / (maximum - minimum);
-        at.translate(windowBounds.getMinX() + margin, windowBounds.getMinY() + windowBounds.getHeight() / 2);
+        double scaleX = (windowBounds.getWidth() - 2 * MARGIN) / (maximum - minimum);
+        at.translate(windowBounds.getMinX() + MARGIN, windowBounds.getMinY() + windowBounds.getHeight() / 2);
         at.scale(scaleX, 1);
         at.translate(-minimum, 0);
+        
+        try {
+            atInverse = at.createInverse();
+        } catch (NoninvertibleTransformException ex) {
+            throw new IllegalStateException();
+        }
         fireStateChanged();
     }
 
     public Point2D.Double getWindowPointOf(Double coordinate) {
-        if (at == null) {
+        if (at == null)
             throw new IllegalStateException();
-        }
         return (Point2D.Double) at.transform(new Point2D.Double(coordinate, 0), null);
     }
 
     public Double getCoordinateOf(Point2D point) {
-        if (at == null) {
+        if (atInverse == null)
             throw new IllegalStateException();
-        }
-        try {
-            Point2D result = at.inverseTransform(point, null);
-            return result.getX();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(LineVisometry.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        throw new IllegalStateException();
+        return atInverse.transform(point, null).getX();
     }
 
     /**
@@ -170,10 +159,9 @@ public class LineVisometry implements Visometry<Double> {
     }
 
     //
-    //
     // EVENT HANDLING
     //
-    //
+    
     /**
      * Handles a change event. By default, passes the ChangeEvent along
      * to interested listeners (particularly the parent class), provided this class
@@ -187,7 +175,10 @@ public class LineVisometry implements Visometry<Double> {
         }
     }
 
+    //
     // Event handling code copied from DefaultBoundedRangeModel.
+    //
+
     protected ChangeEvent changeEvent = new ChangeEvent(this);
     protected EventListenerList listenerList = new EventListenerList();
 
@@ -212,13 +203,11 @@ public class LineVisometry implements Visometry<Double> {
      */
     protected void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2)
             if (listeners[i] == ChangeListener.class) {
-                if (changeEvent == null) {
+                if (changeEvent == null)
                     return;
-                }
                 ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
             }
-        }
     }
 }

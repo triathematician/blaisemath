@@ -22,14 +22,14 @@ import java.awt.Stroke;
  *
  * @author Elisha Peterson
  */
-public class PathStyle implements PrimitiveStyle<Shape> {
+public class PathStyle extends PrimitiveStyle<Shape> {
 
     //
     // PROPERTIES
     //
 
     /** Stroke for the stroke. */
-    Stroke stroke = DEFAULT_STROKE;
+    BasicStroke stroke = DEFAULT_STROKE;
 
     /** Color of stroke. */
     Color strokeColor = Color.BLACK;
@@ -53,7 +53,7 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     }
 
     /** Construct with parameters. */
-    public PathStyle(Color color, Stroke stroke){
+    public PathStyle(Color color, BasicStroke stroke){
         this.strokeColor = color;
         this.stroke = stroke;
     }
@@ -75,19 +75,16 @@ public class PathStyle implements PrimitiveStyle<Shape> {
         return stroke;
     }
 
-    public void setStroke(Stroke stroke) {
+    public void setStroke(BasicStroke stroke) {
         this.stroke = stroke;
     }
 
     public float getThickness() {
-        return (stroke instanceof BasicStroke) ? ((BasicStroke)stroke).getLineWidth() : -1;
+        return stroke.getLineWidth();
     }
 
     public void setThickness(float width) {
-        if (stroke instanceof BasicStroke) {
-            BasicStroke bs = (BasicStroke) stroke;
-            stroke = new BasicStroke(width, bs.getEndCap(), bs.getLineJoin(), bs.getMiterLimit(), bs.getDashArray(), bs.getDashPhase());
-        }
+        stroke = new BasicStroke(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase());
     }
 
     public Color getColor() {
@@ -102,16 +99,33 @@ public class PathStyle implements PrimitiveStyle<Shape> {
     // IMPLEMENTATION
     //
 
-    public void draw(Shape path, Graphics2D canvas) {
-        canvas.setStroke(stroke);
+    public void draw(Graphics2D canvas, Shape path, boolean selected) {
         canvas.setColor(strokeColor);
-        canvas.draw(path);
+        if (selected) {
+            setThickness(getThickness()*2);
+            canvas.setStroke(stroke);
+            canvas.draw(path);
+            setThickness(getThickness()/2);
+        } else {
+            canvas.setStroke(stroke);
+            canvas.draw(path);
+        }
     }
 
-    public void draw(Shape[] paths, Graphics2D canvas) {
+    @Override
+    public void draw(Graphics2D canvas, Shape[] paths, boolean selected) {
         canvas.setStroke(stroke);
         canvas.setColor(strokeColor);
-        for (Shape p : paths)
-            draw(p, canvas);
+        if (selected) {
+            setThickness(getThickness()*2);
+            canvas.setStroke(stroke);
+            for (Shape p : paths)
+                canvas.draw(p);
+            setThickness(getThickness()/2);
+        } else {
+            canvas.setStroke(stroke);
+            for (Shape p : paths)
+                canvas.draw(p);
+        }
     }
 }

@@ -251,7 +251,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
     //
 
     /** Converts a spacial coordinate to a window coordinate. */
-    Point2D getWindowPointOf(Point3D coordinate) {
+    public Point2D.Double getWindowPointOf(Point3D coordinate) {
         Point3D cc = coordinate.minus(camera);
         double dc = cc.dotProduct(tDir);
         double factor = dpi * screenDist / dc;
@@ -269,7 +269,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
      * @param p a point in window pixel coordinates
      * @return point on the viewing plane
      */
-    Point3D getCoordinateOf(Point2D p) {
+    public Point3D getCoordinateOf(Point2D p) {
         vp = new Point2D.Double(
                 (p.getX() - winBounds.getWidth()/2) / dpi,
                 (-p.getY() + winBounds.getHeight()/2) / dpi);
@@ -286,7 +286,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
      * @param x x-coordinate of vector
      * @param y y-coordinate of vector
      */
-    Point3D getVectorOf(double x, double y) {
+   public Point3D getVectorOf(double x, double y) {
         double dx = x / dpi;
         double dy = -y / dpi;
         return new Point3D(

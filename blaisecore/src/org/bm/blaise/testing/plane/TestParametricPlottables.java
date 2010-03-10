@@ -41,12 +41,12 @@ public class TestParametricPlottables extends javax.swing.JFrame {
             },
         0.0, 2 * Math.PI, 500);
 
-        domainPlot1.addPlottable(LineAxis.instance("t"));
+        domainPlot1.addPlottable(new LineAxis("t"));
         domainPlot1.addPlottable(ppc.getDomainPlottable());
         domainPlot1.setDesiredRange(-1.0, 7.28);
 
         rangePlot1.addPlottable(new PlanePolarGrid());
-        rangePlot1.addPlottable(PlaneAxes.instance("x(t)", "y(t)"));
+        rangePlot1.addPlottable(new PlaneAxes("x(t)", "y(t)"));
         rangePlot1.addPlottable(ppc);
         rangePlot1.setDesiredRange(-3.0, -3.0, 3.0, 3.0);
 
@@ -59,11 +59,11 @@ public class TestParametricPlottables extends javax.swing.JFrame {
         }, new Point2D.Double(1,1), new Point2D.Double(3,3));
 
         domainPlot2.addPlottable(new PlaneGrid());
-        domainPlot2.addPlottable(PlaneAxes.instance("u", "u"));
+        domainPlot2.addPlottable(new PlaneAxes("u", "u"));
         domainPlot2.addPlottable(area.getDomainPlottable());
 
         rangePlot2.addPlottable(new PlaneGrid());
-        rangePlot2.addPlottable(PlaneAxes.instance("x(u,v)", "y(u,v)"));
+        rangePlot2.addPlottable(new PlaneAxes("x(u,v)", "y(u,v)"));
         rangePlot2.addPlottable(area);
         rangePlot2.setDesiredRange(-3.0, -3.0, 3.0, 3.0);
         

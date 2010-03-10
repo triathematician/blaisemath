@@ -15,20 +15,17 @@ import java.awt.geom.Rectangle2D;
  * </p>
  * @author Elisha Peterson
  */
-public class HandleStyle implements PrimitiveStyle<Point2D> {
+public class HandleStyle extends PrimitiveStyle<Point2D> {
 
-    public static final HandleStyle INSTANCE = new HandleStyle();
+    private static final HandleStyle INSTANCE = new HandleStyle();
 
     private HandleStyle(){}
 
-    public void draw(Point2D p, Graphics2D canvas) {
+    public static HandleStyle getInstance() {
+        return INSTANCE;
+    }
+
+    public void draw(Graphics2D canvas, Point2D p, boolean selected) {
         canvas.draw(new Rectangle2D.Double(p.getX()-3, p.getY()-3, 6, 6));
     }
-
-    public void draw(Point2D[] primitives, Graphics2D canvas) {
-        for (Point2D p : primitives) {
-            draw(p, canvas);
-        }
-    }
-
 }

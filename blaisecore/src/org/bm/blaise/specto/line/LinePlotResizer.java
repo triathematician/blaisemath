@@ -97,27 +97,19 @@ public class LinePlotResizer implements VisometryMouseInputListener<Double>, Mou
         mode = null;
     }
 
-    public void mouseClicked(VisometryMouseEvent<Double> e) {
-    }
-
-    public void mouseEntered(VisometryMouseEvent<Double> e) {
-    }
-
-    public void mouseExited(VisometryMouseEvent<Double> e) {
-    }
-
     public void mouseMoved(VisometryMouseEvent<Double> e) {
-        if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt")) {
+        if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt"))
             plot.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-        } else {
+        else
             plot.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-        }
     }
 
-    //
+    public void mouseClicked(VisometryMouseEvent<Double> e) {}
+    public void mouseEntered(VisometryMouseEvent<Double> e) {}
+    public void mouseExited(VisometryMouseEvent<Double> e) {}
+
     //
     // ZOOM METHODS
-    //
     //
 
     /** 

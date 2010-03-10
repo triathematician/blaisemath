@@ -45,13 +45,13 @@ public class GraphicPoint extends Point2D.Double {
      * @param maxRad the maximum permissible radius
      * @param exponent the exponent to scale the radius by (1 is linear, 0.5 makes fewer small circles, 2 makes fewer large circles)
      */
-    public static void scalePoints(GraphicPoint[] points, double maxRad, double exponent) {
+    public static void scalePoints(Point2D[] points, double maxRad, double exponent) {
         double mr = 0;
-        for (int i = 0; i < points.length; i++) {
-            mr = Math.max(mr, Math.abs(points[i].radius));
-        }
-        for (int i = 0; i < points.length; i++) {
-            points[i].radius = maxRad * Math.signum(points[i].radius) * Math.pow(Math.abs(points[i].radius) / mr, exponent);
-        }
+        for (Point2D p : points)
+            mr = Math.max(mr, Math.abs(((GraphicPoint)p).radius));
+        for (Point2D p : points)
+            ((GraphicPoint)p).radius = maxRad
+                * Math.signum(((GraphicPoint)p).radius)
+                * Math.pow(Math.abs(((GraphicPoint)p).radius) / mr, exponent);
     }
 }

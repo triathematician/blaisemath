@@ -1,14 +1,14 @@
+package org.bm.blaise.testing.plane;
+
 /*
  * TestPlaneVisometry.java
  *
  * Created on Jul 30, 2009, 3:15:03 PM
  */
-package org.bm.blaise.testing.plane;
 
-import org.bm.blaise.specto.plane.diffeq.PlaneDE2Solution;
-import org.bm.blaise.specto.plane.diffeq.PlaneDESolution;
-import org.bm.blaise.specto.plane.particle.PlaneParticleVectorField;
+
 import org.bm.blaise.specto.plane.diffeq.PlaneVectorField;
+import org.bm.blaise.specto.plane.diffeq.*;
 import data.propertysheet.PropertySheet;
 import java.awt.geom.Point2D;
 import org.apache.commons.math.FunctionEvaluationException;
@@ -73,7 +73,6 @@ public class TestDifferentialEquations extends javax.swing.JFrame {
         DEPlot.addPlottable(new PlaneAxes());
         DEPlot.addPlottable(new PlaneVectorField(func1, DEPlot.getPlotSampleSetGenerator()));
         DEPlot.addPlottable(new PlaneDESolution(new Point2D.Double(-1.5, .5), func2, 5.0));
-        DEPlot.addPlottable(new PlaneParticleVectorField(func1, (PlaneVisometry) DEPlot.getVisometry()));
         DEPlot.setTimeClock(timer);
 
         DEPlot2.addPlottable(new PlaneAxes());

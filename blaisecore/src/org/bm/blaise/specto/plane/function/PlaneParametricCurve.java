@@ -39,13 +39,22 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
 
     /**
      * Initializes with an underlying function and min/max domain
+     */
+    public PlaneParametricCurve() {
+        this(new UnivariateVectorialFunction(){ public double[] value(double x) { return new double[] { Math.cos(x), Math.sin(x) }; } },
+                0, 2*Math.PI, 100);
+    }
+
+    /**
+     * Initializes with an underlying function and min/max domain
      * @param func the function
      * @param min the min value in domain
      * @param max the max value in domain
      */
     public PlaneParametricCurve(UnivariateVectorialFunction func, double min, double max) {
-        this(func, min, max, 200);
+        this(func, min, max, 100);
     }
+
     /**
      * Initializes with an underlying function and a step rate for going through parameter values.
      * @param func the function

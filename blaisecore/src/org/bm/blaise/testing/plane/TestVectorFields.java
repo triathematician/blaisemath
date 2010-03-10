@@ -1,9 +1,11 @@
+package org.bm.blaise.testing.plane;
+
 /*
  * TestPlaneVisometry.java
  *
  * Created on Jul 30, 2009, 3:15:03 PM
  */
-package org.bm.blaise.testing.plane;
+
 
 import org.bm.blaise.specto.plane.diffeq.PlaneVectorField;
 import data.propertysheet.PropertySheet;
@@ -13,8 +15,7 @@ import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.sequor.timer.BetterTimeClock;
 import org.bm.blaise.specto.plane.*;
-import org.bm.blaise.specto.plane.diffeq.PlanePaddlePoint;
-import org.bm.blaise.specto.plane.particle.PlaneParticleVectorFieldCurve;
+import org.bm.blaise.specto.plane.diffeq.*;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.utils.Curve2DSampleSet;
@@ -76,7 +77,6 @@ public class TestVectorFields extends javax.swing.JFrame {
 
         CurveDEPlot.addPlottable(new PlaneAxes());
         CurveDEPlot.addPlottable(new PlaneVectorField(func6, CurveDEPlot.getPlotSampleSetGenerator()));
-        CurveDEPlot.addPlottable(new PlaneParticleVectorFieldCurve(func6, ppf, (PlaneVisometry) CurveDEPlot.getVisometry()));
         PlanePaddlePoint ppp = new PlanePaddlePoint(func6);
         for (double i = -4; i <= 4; i+=1) {
             for (double j = -4; j <= 4; j+=1) {

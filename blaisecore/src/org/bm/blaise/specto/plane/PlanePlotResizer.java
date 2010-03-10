@@ -67,18 +67,14 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
     final static ShapeStyle overlayStyle = new ShapeStyle(pathStyle, new Color(255, 128, 128, 128));
     /** An arrow showing where the mouse has been clicked. */
     transient GraphicArrow overlayVec;
-    final static ArrowStyle arrStyle = new ArrowStyle(pathStyle, ArrowStyle.ArrowShape.TRIANGLE, 15);
+    final static ArrowStyle arrStyle = new ArrowStyle(pathStyle, ArrowStyle.Shape.TRIANGLE, 15);
 
     @Override
     public void paintComponent(VisometryGraphics<Double> vg) {
-        if (overlayBox != null) {
-            vg.setShapeStyle(overlayStyle);
-            vg.drawWinShape(overlayBox);
-        }
-        if (overlayVec != null) {
-            vg.setArrowStyle(arrStyle);
-            vg.drawWinArrow(overlayVec);
-        }
+        if (overlayBox != null)
+            vg.drawWinPrimitive(overlayBox, overlayStyle);
+        if (overlayVec != null)
+            vg.drawWinPrimitive(overlayVec, arrStyle);
     }
 
     //

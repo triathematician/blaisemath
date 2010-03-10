@@ -41,9 +41,7 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
     }
 
     //
-    //
-    // BEAN PATTERNS
-    //
+    // PROPERTY PATTERNS
     //
 
     /** @return coordinates of 1st vertex of the rectangle */
@@ -82,27 +80,19 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
 
     public void setStyle(ShapeStyle style) {
         this.style = style;
-    }
+    }    
 
-    
-
-    //
     //
     // PAINTING
-    //
     //
 
     @Override
     public void paintComponent(VisometryGraphics<C> vg) {
-        visrec = vg.getRectangle(value1, value2);
-        vg.setShapeStyle(style);
-        vg.drawWinShape(visrec);
+        vg.drawRectangle(value1, value2, style);
     }
 
     //
-    //
     // DYNAMIC EDITING
-    //
     //
 
     transient Rectangle2D visrec = null;

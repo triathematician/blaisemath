@@ -57,8 +57,8 @@ public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements Viso
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
         if (canvas instanceof PlaneGraphics) {
             PlaneGraphics pg = ((PlaneGraphics) canvas);
-            Point2D.Double min = pg.getMinimumVisible();
-            Point2D.Double max = pg.getMaximumVisible();
+            Point2D.Double min = pg.getMinCoord();
+            Point2D.Double max = pg.getMaxCoord();
             xValues = NiceRangeGenerator.STANDARD.niceRange(min.x, max.x, pg.getIdealHStepForPixelSpacing(PIXEL_SPACING));
             yValues = NiceRangeGenerator.STANDARD.niceRange(min.y, max.y, pg.getIdealVStepForPixelSpacing(PIXEL_SPACING));
         }
@@ -68,14 +68,16 @@ public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements Viso
     public void paintComponent(VisometryGraphics<Point2D.Double> canvas) {
         PlaneGraphics pg = (PlaneGraphics) canvas;
         canvas.setPathStyle(style);
-        if (xValues == null) return;
-        for (Double x : xValues) {
+        
+        if (xValues == null)
+            return;
+        for (Double x : xValues)
             pg.drawVerticalLine(x);
-        }
-        if (yValues == null) return;
-        for (Double y : yValues) {
+        
+        if (yValues == null)
+            return;
+        for (Double y : yValues)
             pg.drawHorizontalLine(y);
-        }
     }
 
     @Override public String toString() { return "PlaneGrid"; }

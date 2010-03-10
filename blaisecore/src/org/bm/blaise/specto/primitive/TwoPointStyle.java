@@ -29,12 +29,12 @@ public class TwoPointStyle extends ArrowStyle {
 
     public TwoPointStyle() {
         super();
-        anchorShape = ArrowShape.NONE;
-        headShape = ArrowShape.NONE;
+        anchorShape = Shape.NONE;
+        headShape = Shape.NONE;
     }
 
     public TwoPointStyle(Color color, EndStyle endStyle) {
-        super(color, ArrowShape.NONE, 5);
+        super(color, Shape.NONE, 5);
         this.endStyle = endStyle;
     }
 
@@ -55,32 +55,23 @@ public class TwoPointStyle extends ArrowStyle {
     }    
 
     @Override
-    public void draw(GraphicArrow primitive, Graphics2D canvas) {
+    public void draw(Graphics2D canvas, GraphicArrow primitive, boolean selected) {
         canvas.setColor(pathStyle.getColor());
         canvas.setStroke(pathStyle.getStroke());
 //        System.out.println("clip bounds: "+canvas.getClipBounds());
         Point2D anchor = endStyle.getStart(primitive, (Rectangle2D) canvas.getClipBounds());
         Point2D head = endStyle.getEnd(primitive, (Rectangle2D) canvas.getClipBounds());
         canvas.draw(new Line2D.Double(anchor, head));
-        if (headShape != ArrowShape.NONE) {
-            canvas.draw(headShape.getShape(head, head.getX() - anchor.getX(), head.getY() - anchor.getY(), headSize));
-        }
-        if (anchorShape != ArrowShape.NONE) {
-            canvas.draw(headShape.getShape(anchor, anchor.getX() - head.getX(), anchor.getY() - head.getY(), headSize));
-        }
+        if (headShape != Shape.NONE)
+            canvas.draw(getShape(head, head.getX() - anchor.getX(), head.getY() - anchor.getY(), headSize, headShape));
+        if (anchorShape != Shape.NONE)
+            canvas.draw(getShape(anchor, anchor.getX() - head.getX(), anchor.getY() - head.getY(), headSize, anchorShape));
         if (pointStyle != null) {
-            if (!endStyle.isStartCovering()) {
-                pointStyle.draw(primitive.getAnchor(), canvas);
-            }
-            if (!endStyle.isEndCovering()) {
-                pointStyle.draw(primitive.getHead(), canvas);
-            }
+            if (!endStyle.isStartCovering())
+                pointStyle.draw(canvas, primitive.getAnchor(), selected);
+            if (!endStyle.isEndCovering())
+                pointStyle.draw(canvas, primitive.getHead(), selected);
         }
-    }
-
-    @Override
-    public void draw(GraphicArrow[] primitives, Graphics2D canvas) {
-        super.draw(primitives, canvas);
     }
 
 

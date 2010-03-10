@@ -31,7 +31,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
 
     /** Construct with a default function, f(x)=x */
     public PlaneFunctionGraph() {
-        setFunction(new UnivariateRealFunction(){public double value(double x) { return x; } });
+        this(new UnivariateRealFunction(){public double value(double x) { return x; } });
     }
     
     public PlaneFunctionGraph(UnivariateRealFunction func) {
@@ -51,9 +51,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
     }
 
     //
-    //
     // PAINT ROUTINES
-    //
     //
 
     public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
@@ -68,11 +66,11 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
         } else {
             path.reset();
         }
-        double x = vg.getMinimumVisible().x;
+        double x = vg.getMinCoord().x;
         double fx = 0;
-        while (x <= vg.getMaximumVisible().x) {
+        while (x <= vg.getMaxCoord().x) {
             boolean outsideDomain = true;
-            while (outsideDomain && x <= vg.getMaximumVisible().x) {
+            while (outsideDomain && x <= vg.getMaxCoord().x) {
                 try {
                     fx = func.value(x);
                     outsideDomain = false;
@@ -82,7 +80,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
                 x += xStep;
             }
             path.moveTo( (float) x, (float) fx );
-            while (!outsideDomain && x <= vg.getMaximumVisible().x) {
+            while (!outsideDomain && x <= vg.getMaxCoord().x) {
                 try {
                     path.lineTo( (float) x, (float) func.value(x));
                     outsideDomain = false;

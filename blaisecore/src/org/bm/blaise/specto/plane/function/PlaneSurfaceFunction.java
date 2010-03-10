@@ -7,8 +7,6 @@ package org.bm.blaise.specto.plane.function;
 
 import java.util.List;
 import scio.coordinate.sample.SampleCoordinateSetGenerator;
-import java.awt.Color;
-import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +28,7 @@ import org.bm.blaise.specto.primitive.PointStyle;
  *
  * @author Elisha Peterson
  */
-public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Double, GraphicPoint, Point2D.Double> {
+public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Double, Point2D, Point2D.Double> {
 
     /** Multiplier for dot size. */
     double lengthMultiplier = 1;
@@ -41,6 +39,11 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
     public PlaneSurfaceFunction(MultivariateRealFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
         super(new PointStyle(BlaisePalette.STANDARD.func2(), BlaisePalette.STANDARD.func2light()), ssg);
         setFunc(func);
+    }
+
+    @Override
+    public String toString() {
+        return "2-Variable Function [" + ssg + "]";
     }
 
     //
@@ -58,14 +61,6 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
      */
     public void setFunc(MultivariateRealFunction func) {
         this.func = func;
-    }
-
-    public PointStyle getStyle() {
-        return (PointStyle) style;
-    }
-
-    public void setStyle(PointStyle style) {
-        this.style = style;
     }
 
     public double getLengthMultiplier() {
@@ -87,7 +82,7 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
         GraphicPoint.scalePoints(primitives, lengthMultiplier * maxRad / 1.5, 0.5);
     }
 
-    public GraphicPoint primitiveAt(Point2D.Double coord, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
+    public Point2D primitiveAt(Point2D.Double coord, VisometryGraphics<Point2D.Double> vg) {
         double value = 0;
         try {
             value = func.value(new double[]{coord.x, coord.y});
@@ -97,21 +92,14 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
             Logger.getLogger(PlaneSurfaceFunction.class.getName()).log(Level.SEVERE, null, ex);
         }
         // TODO - error checking/functionality
-        return new GraphicPoint(vis.getWindowPointOf(coord), 5 * value);
+        return new GraphicPoint(vg.getWindowPointOf(coord), 5 * value);
     }
 
-    public GraphicPoint[] primitivesAt(List<Point2D.Double> coords, Visometry<Point2D.Double> vis, VisometryGraphics<Point2D.Double> vg) {
-        GraphicPoint[] result = new GraphicPoint[coords.size()];
+    public Point2D[] primitivesAt(List<Point2D.Double> coords, VisometryGraphics<Point2D.Double> vg) {
+        Point2D[] result = new Point2D[coords.size()];
         int i = 0;
-        for (Point2D.Double c : coords) {
-            result[i] = primitiveAt(c, vis, vg);
-            i++;
-        }
+        for (Point2D.Double c : coords)
+            result[i++] = primitiveAt(c, vg);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "2-Variable Function [" + ssg + "]";
     }
 }

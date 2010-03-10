@@ -5,7 +5,6 @@
  */
 package org.bm.blaise.testing.plane;
 
-import org.bm.blaise.specto.plane.particle.PlaneRandomPointsImplicitFunction;
 import data.propertysheet.PropertySheet;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
@@ -89,17 +88,6 @@ public class TestSurfacePlots extends javax.swing.JFrame {
 //                    }
 //                },
 //                0.0, 10.0));
-
-
-        // FUNCTIONS - IMPLICIT
-
-        sfcPlot2.addPlottable(new PlaneAxes());
-        sfcPlot2.addPlottable(new PlaneRandomPointsImplicitFunction(new MultivariateRealFunction() {
-
-            public double value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
-                return Math.sin(point[0]) * Math.cos(point[1]) + .5;
-            }
-        }, new double[]{0}));
 
         
         // PANELS
