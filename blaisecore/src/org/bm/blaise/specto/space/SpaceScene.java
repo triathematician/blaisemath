@@ -119,7 +119,7 @@ public class SpaceScene {
     public void draw(Graphics2D gr, Color background, boolean anaglyph) {
         if (anaglyph) {
             if (leftImage == null || this.width != proj.getWinBounds().getWidth() || this.height != proj.getWinBounds().getHeight())
-                initAnaglyph(width, height);
+                initAnaglyph((int) proj.getWinBounds().getWidth(), (int) proj.getWinBounds().getHeight());
             proj.useLeftCamera();
             draw(leftImage.createGraphics(), background);
             proj.useRightCamera();
@@ -180,7 +180,7 @@ public class SpaceScene {
     //
 
     public static final Point3D LIGHT = new Point3D(3, -5, 6).normalized();
-    public static final Color BASE_FILL = new Color(200, 200, 255);
+    public static final float[] BASE_FILL = new float[]{.25f, 1f, 1f};
 
     /**
      * @param poly a polygon (only the first 3 coords are used)
@@ -190,16 +190,23 @@ public class SpaceScene {
 
     Color shadedFillColor(Point3D[] poly, double dist) {
         Point3D n = (poly[2].minus(poly[0])).crossProduct(poly[2].minus(poly[1])).normalized();
-        float costh = (float) Math.abs(n.dotProduct(LIGHT));
-        costh = .5f + .5f * costh * costh;
         float opacityMultiplier = dist < proj.viewDist ? 1f
-                                   : dist < 3 * proj.viewDist ? (float) (1 - .5 * (dist - proj.viewDist) / proj.viewDist)
+                                   : dist < 2 * proj.viewDist ? (float) (1 - (dist - proj.viewDist) / proj.viewDist)
                                    : 0f;
+
         return new Color(
-                costh * BASE_FILL.getRed() * costh / 255,
-                costh * BASE_FILL.getGreen() / 255,
-                costh * BASE_FILL.getBlue() / 255,
+                BASE_FILL[0],
+                .5f * BASE_FILL[1] + .25f * (float) (1 + n.y * LIGHT.y),
+                .5f * BASE_FILL[2] + .25f * (float) (1 + n.z * LIGHT.z),
                 opacity * opacityMultiplier);
+
+//        float costh = (float) Math.abs(n.dotProduct(LIGHT));
+//        costh = .5f + .5f * costh * costh;
+//        return new Color(
+//                costh * BASE_FILL.getRed() * costh / 255,
+//                costh * BASE_FILL.getGreen() / 255,
+//                costh * BASE_FILL.getBlue() * (1 - costh) / 255,
+//                opacity * opacityMultiplier);
     }
 
     /** Draws a point on the canvas at specified distance from camera. */
@@ -226,11 +233,10 @@ public class SpaceScene {
 
     /** Draws a path on the canvas w/ specified distance setting. */
     public void drawPath(Graphics2D gr, Point3D[] points, PathStyle style, double dist) {
-        if (P3DUtils.clips(proj.clipPoint, proj.tDir, points))
+        if (points.length <= 0 || P3DUtils.clips(proj.clipPoint, proj.tDir, points))
             return;
-        style.setColor(shadedFillColor(points, dist));
-        if (points.length <= 0)
-            return;
+        if (points.length > 2)
+            style.setColor(shadedFillColor(points, dist));
         Point2D nextPt = proj.getWindowPointOf(points[0]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
@@ -243,11 +249,10 @@ public class SpaceScene {
 
     /** Draws a shape on the canvas w/ specified distance setting. */
     public void drawShape(Graphics2D gr, Point3D[] points, ShapeStyle style, double dist) {
-        if (P3DUtils.clips(proj.clipPoint, proj.tDir, points))
+        if (points.length <= 0 || P3DUtils.clips(proj.clipPoint, proj.tDir, points))
             return;
-        style.setFillColor(shadedFillColor(points, dist));
-        if (points.length <= 0)
-            return;
+        if (points.length > 2)
+            style.setFillColor(shadedFillColor(points, dist));
         Point2D nextPt = proj.getWindowPointOf(points[0]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());

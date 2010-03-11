@@ -134,8 +134,6 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
             }
         });
 
-        rangePlot1.setBackground(new java.awt.Color(0, 0, 0));
-
         org.jdesktop.layout.GroupLayout rangePlot1Layout = new org.jdesktop.layout.GroupLayout(rangePlot1);
         rangePlot1.setLayout(rangePlot1Layout);
         rangePlot1Layout.setHorizontalGroup(
@@ -144,7 +142,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         );
         rangePlot1Layout.setVerticalGroup(
             rangePlot1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 309, Short.MAX_VALUE)
+            .add(0, 305, Short.MAX_VALUE)
         );
 
         tabPane.addTab("Parametric Curve", rangePlot1);
@@ -160,7 +158,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         );
         rangePlot2Layout.setVerticalGroup(
             rangePlot2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 309, Short.MAX_VALUE)
+            .add(0, 305, Short.MAX_VALUE)
         );
 
         tabPane.addTab("Parametric Surface", rangePlot2);
@@ -175,7 +173,7 @@ public class TestSpaceParametricPlottables extends javax.swing.JFrame {
         );
         rangePlot3Layout.setVerticalGroup(
             rangePlot3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 309, Short.MAX_VALUE)
+            .add(0, 305, Short.MAX_VALUE)
         );
 
         tabPane.addTab("2-Curve Surface", rangePlot3);

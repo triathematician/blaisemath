@@ -58,9 +58,9 @@ public class SpaceGraphics extends VisometryGraphics<Point3D> {
      * @param g
      * @param anaglyph
      */
-    public void drawScene(Graphics2D g, boolean anaglyph) {
+    public void drawScene(Graphics2D g, Color background, boolean anaglyph) {
         this.gr = g;
-        scene.draw(g);
+        scene.draw(g, background, anaglyph);
     }
 
     //

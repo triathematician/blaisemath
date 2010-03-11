@@ -18,7 +18,8 @@ import scio.coordinate.Point3D;
  * 
  * @author Elisha Peterson
  */
-public class SpaceProjection implements Cloneable, Comparator<Point3D> {
+public class SpaceProjection
+        implements Cloneable, Comparator<Point3D> {
 
     //
     // CAMERA SETTINGS
@@ -167,6 +168,7 @@ public class SpaceProjection implements Cloneable, Comparator<Point3D> {
     }
 
     public RectangularShape getWinBounds() {
+        System.out.println("getWinBounds: " + winBounds);
         return winBounds;
     }
 

@@ -42,7 +42,7 @@ public class PlaneVectorField extends SamplerPlottable<double[], Point2D[], Poin
      */
     public PlaneVectorField(MultivariateVectorialFunction func, SampleGenerator<Point2D.Double> sg) {
         super(sg);
-        setFunc(func);
+        setFunction(func);
         setStyle(new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.Shape.REGULAR, 5));
     }
 
@@ -56,7 +56,7 @@ public class PlaneVectorField extends SamplerPlottable<double[], Point2D[], Poin
     //
 
     /** @return function describing the field */
-    public MultivariateVectorialFunction getFunc() {
+    public MultivariateVectorialFunction getFunction() {
         return func;
     }
 
@@ -64,7 +64,7 @@ public class PlaneVectorField extends SamplerPlottable<double[], Point2D[], Poin
      * Sets the function for the field.
      * @param func the function
      */
-    public void setFunc(MultivariateVectorialFunction func) {
+    public void setFunction(MultivariateVectorialFunction func) {
         if (func != null && this.func != func) {
             if (this.func instanceof ChangeEventHandler)
                 ((ChangeEventHandler)this.func).removeChangeListener(this);
@@ -132,8 +132,10 @@ public class PlaneVectorField extends SamplerPlottable<double[], Point2D[], Poin
         double maxLengthSq = 0;
         for (double[] val : values)
             maxLengthSq = Math.max( maxLengthSq, val[0]*val[0] + val[1]*val[1]);
-        return lengthMultiplier * (maxLengthSq == 0 ? 1
-                : .95 * Math.min(Math.abs(diff.x), Math.abs(diff.y)) * Math.sqrt( 1 / maxLengthSq));
+        return lengthMultiplier 
+                * ( maxLengthSq == 0 ? 1
+                : .95 * Math.min(Math.abs(diff.x), Math.abs(diff.y)) 
+                / Math.sqrt( maxLengthSq ) );
     }
 
     /** Constructs the graphic arrows to be actually displayed. */

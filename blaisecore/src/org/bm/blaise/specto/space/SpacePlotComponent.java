@@ -107,7 +107,7 @@ public class SpacePlotComponent extends PlotComponent<Point3D> {
         SpaceGraphics sg = (SpaceGraphics) visometryGraphics;
         sg.clearScene();
         plottables.draw(sg); // this constructs the 3d plottables, and adds them to the graphics scene
-        sg.drawScene((Graphics2D) g, anaglyph);
+        sg.drawScene((Graphics2D) g, getBackground(), anaglyph);
     }
 
 }
