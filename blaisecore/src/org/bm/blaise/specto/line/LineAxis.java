@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.primitive.StringStyle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.utils.NiceRangeGenerator;
@@ -23,7 +23,7 @@ import org.bm.utils.NiceRangeGenerator;
  * 
  * @author Elisha Peterson
  */
-public class LineAxis extends AbstractPlottable<Double> implements VisometryChangeListener {
+public class LineAxis extends Plottable<Double> implements VisometryChangeListener {
 
     private static final int PIXEL_SPACING = 40;
 
@@ -128,7 +128,7 @@ public class LineAxis extends AbstractPlottable<Double> implements VisometryChan
      * @param canvas the visometry graphics object used for painting
      */
     @Override
-    public void paintComponent(VisometryGraphics<Double> canvas) {
+    public void draw(VisometryGraphics<Double> canvas) {
         canvas.setStringStyle(labelStyle);
         if (xValues == null)
             return;

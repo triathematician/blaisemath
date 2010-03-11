@@ -15,7 +15,7 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VRectangle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 
@@ -25,7 +25,7 @@ import scio.coordinate.Point3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceParametricSurfacePatch extends AbstractPlottable<Point3D> {
+public class SpaceParametricSurfacePatch extends Plottable<Point3D> {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
@@ -99,9 +99,8 @@ public class SpaceParametricSurfacePatch extends AbstractPlottable<Point3D> {
     transient List<Point3D[]> polys;
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         try {
-            polys = new ArrayList<Point3D[]>(1);
             Point3D[] patch = new Point3D[4];
             double[] input = new double[]{domainPoint.x, domainPoint.y};
             patch[0] = new Point3D(func.value(input));
@@ -111,8 +110,7 @@ public class SpaceParametricSurfacePatch extends AbstractPlottable<Point3D> {
             patch[2] = new Point3D(func.value(input));
             input[0] -= dPoint.x;
             patch[3] = new Point3D(func.value(input));
-            polys.add(patch);
-            ((SpaceGraphics) vg).addToScene(polys);
+            ((SpaceGraphics)vg).drawShape(patch);
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(SpaceParametricSurfacePatch.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalArgumentException ex) {

@@ -14,8 +14,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import scio.coordinate.MaxMinDomain;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.visometry.Visometry;
-import org.bm.blaise.specto.plottable.VComputedPath;
+import org.bm.blaise.specto.plane.ComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
 import scio.coordinate.sample.RealIntervalSampler;
 import scio.function.utils.DemoCurve2D;
@@ -27,7 +26,7 @@ import scio.function.utils.DemoCurve2D;
  *
  * @author Elisha Peterson
  */
-public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
+public class PlaneParametricCurve extends ComputedPath {
 
     /** The underlying function */
     UnivariateVectorialFunction func;
@@ -68,6 +67,11 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
         domainPlottable = new VRectangle<Double>(min, max);
         domainPlottable.getStyle().setThickness(3.0f);
         domainPlottable.addChangeListener(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Parametric Curve 2D";
     }
 
     //
@@ -148,14 +152,10 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
     //
 
     /** Recomputes the visual path for the function. */
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
         UnivariateVectorialFunction useFunc = demo == DemoCurve2D.NONE ? func : demo;
+        GeneralPath path = new GeneralPath();
         try {
-            if (path == null) {
-                path = new GeneralPath();
-            } else {
-                path.reset();
-            }
             List<Double> samples = domain.getSamples();
             double[] coords = useFunc.value(samples.get(0));
             path.moveTo((float) coords[0], (float) coords[1]);
@@ -166,10 +166,6 @@ public class PlaneParametricCurve extends VComputedPath<Point2D.Double> {
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(PlaneParametricCurve.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Parametric Curve 2D";
+        return path;
     }
 }

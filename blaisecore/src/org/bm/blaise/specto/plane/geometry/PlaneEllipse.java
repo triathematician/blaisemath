@@ -104,7 +104,7 @@ public class PlaneEllipse extends VPointSet<Point2D.Double> {
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
         vg.drawEllipse(corner1(), corner2(), shapeStyle);
         if (pointsVisible) {
             vg.setPointStyle(pointStyle);

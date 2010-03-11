@@ -55,7 +55,7 @@ public class TwoPointStyle extends ArrowStyle {
     }    
 
     @Override
-    public void draw(Graphics2D canvas, GraphicArrow primitive, boolean selected) {
+    public void draw(Graphics2D canvas, Point2D[] primitive, boolean selected) {
         canvas.setColor(pathStyle.getColor());
         canvas.setStroke(pathStyle.getStroke());
 //        System.out.println("clip bounds: "+canvas.getClipBounds());
@@ -68,9 +68,9 @@ public class TwoPointStyle extends ArrowStyle {
             canvas.draw(getShape(anchor, anchor.getX() - head.getX(), anchor.getY() - head.getY(), headSize, anchorShape));
         if (pointStyle != null) {
             if (!endStyle.isStartCovering())
-                pointStyle.draw(canvas, primitive.getAnchor(), selected);
+                pointStyle.draw(canvas, primitive[0], selected);
             if (!endStyle.isEndCovering())
-                pointStyle.draw(canvas, primitive.getHead(), selected);
+                pointStyle.draw(canvas, primitive[1], selected);
         }
     }
 
@@ -81,27 +81,27 @@ public class TwoPointStyle extends ArrowStyle {
      */
     public enum EndStyle {
         SEGMENT("Segment", false, false) {
-            Point2D getStart(GraphicArrow arr, Rectangle2D boundary) {
-                return arr.getAnchor();
+            Point2D getStart(Point2D[] arr, Rectangle2D boundary) {
+                return arr[0];
             }
-            Point2D getEnd(GraphicArrow arr, Rectangle2D boundary) {
-                return arr.getHead();
+            Point2D getEnd(Point2D[] arr, Rectangle2D boundary) {
+                return arr[1];
             }
         },
         RAY("Ray", false, false) {
-            Point2D getStart(GraphicArrow arr, Rectangle2D boundary) {
-                return arr.getAnchor();
+            Point2D getStart(Point2D[] arr, Rectangle2D boundary) {
+                return arr[0];
             }
-            Point2D getEnd(GraphicArrow arr, Rectangle2D boundary) {
-                return rayHit(arr.getAnchor(), arr.getHead(), boundary);
+            Point2D getEnd(Point2D[] arr, Rectangle2D boundary) {
+                return rayHit(arr[0], arr[1], boundary);
             }
         },
         LINE("Line", false, false) {
-            Point2D getStart(GraphicArrow arr, Rectangle2D boundary) {
-                return rayHit(arr.getHead(), arr.getAnchor(), boundary);
+            Point2D getStart(Point2D[] arr, Rectangle2D boundary) {
+                return rayHit(arr[1], arr[0], boundary);
             }
-            Point2D getEnd(GraphicArrow arr, Rectangle2D boundary) {
-                return rayHit(arr.getAnchor(), arr.getHead(), boundary);
+            Point2D getEnd(Point2D[] arr, Rectangle2D boundary) {
+                return rayHit(arr[0], arr[1], boundary);
 
             }
         };
@@ -131,8 +131,8 @@ public class TwoPointStyle extends ArrowStyle {
             return name;
         }
 
-        abstract Point2D getStart(GraphicArrow arr, Rectangle2D boundary);
-        abstract Point2D getEnd(GraphicArrow arr, Rectangle2D boundary);
+        abstract Point2D getStart(Point2D[] arr, Rectangle2D boundary);
+        abstract Point2D getEnd(Point2D[] arr, Rectangle2D boundary);
 
 
     }

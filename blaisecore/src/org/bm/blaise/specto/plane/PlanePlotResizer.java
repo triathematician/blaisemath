@@ -11,14 +11,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import org.bm.blaise.specto.primitive.ArrowStyle;
-import org.bm.blaise.specto.primitive.GraphicArrow;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.primitive.ShapeStyle;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -39,15 +37,13 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> implements MouseWheelListener {
+public class PlanePlotResizer extends DynamicPlottable<Point2D.Double> implements MouseWheelListener {
 
     PlanePlotComponent plot;
     PlaneVisometry vis;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     public PlanePlotResizer(PlaneVisometry vis, PlanePlotComponent plot) {
@@ -56,9 +52,7 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
     }
     
     //
-    //
     // PAINT METHODS
-    //
     //
 
     /** This is a box showing where the mouse was clicked first and where it was clicked last. */
@@ -66,21 +60,19 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
     final static PathStyle pathStyle = new PathStyle(new Color(255, 128, 128, 128), 2f);
     final static ShapeStyle overlayStyle = new ShapeStyle(pathStyle, new Color(255, 128, 128, 128));
     /** An arrow showing where the mouse has been clicked. */
-    transient GraphicArrow overlayVec;
+    transient Point2D[] overlayVec;
     final static ArrowStyle arrStyle = new ArrowStyle(pathStyle, ArrowStyle.Shape.TRIANGLE, 15);
 
     @Override
-    public void paintComponent(VisometryGraphics<Double> vg) {
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
         if (overlayBox != null)
-            vg.drawWinPrimitive(overlayBox, overlayStyle);
+            overlayStyle.draw(vg.getScreenGraphics(), overlayBox, false);
         if (overlayVec != null)
-            vg.drawWinPrimitive(overlayVec, arrStyle);
+            arrStyle.draw(vg.getScreenGraphics(), overlayVec, false);
     }
 
     //
-    //
     // MOUSE METHODS
-    //
     //
 
     /** Location mouse was first pressed at. */
@@ -111,7 +103,7 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
         if (mode.equals("Alt+Button1")) { // rectangle resize mode
             overlayBox = new Rectangle2D.Double(pressedAt.x, pressedAt.y, 0, 0);
         } else { // pan mode
-            overlayVec = new GraphicArrow(pressedAt, pressedAt);
+            overlayVec = new Point2D[]{pressedAt, pressedAt};
             oldMin = (Point2D.Double) vis.desiredMin.clone();
             oldMax = (Point2D.Double) vis.desiredMax.clone();
         }
@@ -141,13 +133,12 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
 //                System.out.println(MouseEvent.getModifiersExText(e.getModifiersEx()));
                 String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
                 if (curMode.equals("Shift+Button1") || curMode.equals("Shift")) { // restricted movement mode
-                    if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
+                    if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x))
                         winPt.y = pressedAt.y;
-                    } else {
+                    else
                         winPt.x = pressedAt.x;
-                    }
                 }
-                overlayVec.setHead(winPt);
+                overlayVec[1] = winPt;
                 Point2D.Double newC = vis.getCoordinateOf(winPt);
                 Point2D.Double oldC = vis.getCoordinateOf(pressedAt);
                 vis.setDesiredRange(
@@ -191,9 +182,7 @@ public class PlanePlotResizer extends AbstractDynamicPlottable<Point2D.Double> i
     }
 
     //
-    //
     // MOUSE-WHEEL METHODS
-    //
     //
 
     /** 

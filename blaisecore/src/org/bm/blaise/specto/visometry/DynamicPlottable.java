@@ -1,27 +1,90 @@
-/**
- * DynamicPlottable.java
- * Created on Sep 5, 2009
+/*
+ * AbstractDynamicPlottable.java
+ * Created on Sep 14, 2007, 7:55:27 AM
  */
-
 package org.bm.blaise.specto.visometry;
 
 /**
  * <p>
- *   <code>DynamicPlottable</code> represents a class that may be edited with the mouse.
+ *  This class takes the <code>AbstractPlottable</code> class and adds in basic support for mouse event handling.
+ *  In order to properly handle incoming events, the mouse positions should be passed through the visometry to
+ *  convert coordinates and determine whether the object has actually been clicked.
  * </p>
- *
+ * <p>
+ *  The class also adds in two flags: <code>adjustable</code> and <code>editable</code>, which can be used to determine
+ *  whether it is ready to receive and respond to mouse events.
+ * </p>
+ * 
  * @author Elisha Peterson
  */
-public interface DynamicPlottable<C> extends VisometryMouseInputListener<C> {
+public abstract class DynamicPlottable<C> extends Plottable<C>
+        implements VisometryMouseInputListener<C> {
 
-    /**
-     * @return true if the element is editable, otherwise false
-     */
-    boolean isEditable();
+    //
+    // PROPERTIES
+    //
 
-    /**
-     * Sets the editable status of the element.
-     */
-    void setEditable(boolean newValue);
+    /** Whether the plottable is being changed.*/
+    public boolean adjusting = false;
 
+    /** Whether the plottable can be edited in some way. */
+    public boolean editable = true;
+
+    //
+    // BEAN PATTERNS
+    //
+
+    /** @return true if the element is adjusting, otherwise false */
+    public boolean isAdjusting() {
+        return adjusting;
+    }
+
+    /** @return true if the element is editable, otherwise false */
+    //@Override
+    public boolean isEditable() {
+        return visible && editable;
+    }
+
+    /** Sets the editable status of the element. */
+    public void setEditable(boolean newValue) {
+        editable = newValue;
+    }
+
+    //
+    // HANDLING MOUSE EVENTS..
+    //
+
+    // Possibly states: moved over, dragging, 
+    //
+
+    abstract public boolean isClickablyCloseTo(VisometryMouseEvent<C> e);
+
+    public void mouseMoved(VisometryMouseEvent<C> e) {
+        setSelected(isClickablyCloseTo(e));
+    }
+
+    public void mousePressed(VisometryMouseEvent<C> e) {
+        if (isClickablyCloseTo(e) && !adjusting) {
+            adjusting = true;
+            setSelected(true);
+        }
+    }
+
+    public void mouseDragged(VisometryMouseEvent<C> e) {
+    }
+
+    public void mouseReleased(VisometryMouseEvent<C> e) {
+        mouseDragged(e);
+        if (adjusting) {
+            adjusting = false;
+            setSelected(false);
+        }
+    }
+    
+    public void mouseClicked(VisometryMouseEvent<C> e) {
+        setSelected(isClickablyCloseTo(e));
+    }
+
+    public void mouseEntered(VisometryMouseEvent<C> e) { }
+    public void mouseExited(VisometryMouseEvent<C> e) { }
 }

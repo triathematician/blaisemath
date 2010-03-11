@@ -11,7 +11,7 @@ import java.awt.geom.RectangularShape;
 import org.bm.blaise.specto.plane.PlaneAxes;
 import org.bm.blaise.specto.visometry.PlotComponent;
 import org.bm.utils.PlaneGridSampleSet;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 
 /**
  * <p>
@@ -83,7 +83,7 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double>
     // GETTERS & SETTERS
     //
 
-    public SampleCoordinateSetGenerator<Point2D.Double> getPlotSampleSetGenerator() {
+    public SampleGenerator<Point2D.Double> getPlotSampleSetGenerator() {
         return new PlaneGridSampleSet() {
             @Override
             public RectangularShape getBounds() {

@@ -5,7 +5,7 @@
 
 package org.bm.blaise.specto.plottable;
 
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -19,7 +19,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
+public class VInvisiblePoint<C> extends DynamicPlottable<C> {
 
     //
     // PROPERTIES
@@ -55,7 +55,7 @@ public class VInvisiblePoint<C> extends AbstractDynamicPlottable<C> {
 
     /** Subclasses must override the paint method to display the point. */
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
     }
 
     //

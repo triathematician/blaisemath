@@ -13,7 +13,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import org.bm.blaise.specto.primitive.PointStyle;
 import org.bm.blaise.specto.primitive.StringStyle;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.CoordinateHandler;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
@@ -27,7 +27,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class VPointSet<C> extends AbstractDynamicPlottable<C> implements CoordinateHandler<C> {
+public class VPointSet<C> extends DynamicPlottable<C> implements CoordinateHandler<C> {
 
     //
     // PROPERTIES
@@ -160,7 +160,7 @@ public class VPointSet<C> extends AbstractDynamicPlottable<C> implements Coordin
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawPoints(values, pointStyle);
         if (labelsVisible) {
             for (int i = 0; i < values.length; i++)

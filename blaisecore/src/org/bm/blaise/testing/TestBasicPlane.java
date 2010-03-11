@@ -79,9 +79,8 @@ public class TestBasicPlane extends javax.swing.JFrame {
         
         rollupPanel1.removeAll();
         rollupPanel1.add("Visometry", new PropertySheet(testPlot.getVisometry()));
-        for (Plottable p : testPlot.getPlottables()) {
+        for (Plottable p : testPlot.getPlottables())
             rollupPanel1.add(p.toString(), new PropertySheet(p));
-        }
     }
 
     /** This method is called from within the constructor to
@@ -198,6 +197,7 @@ public class TestBasicPlane extends javax.swing.JFrame {
             PlotComponent ppc = (PlotComponent) tabPane.getSelectedComponent();
             rollupPanel1.add("Visometry", new PropertySheet(ppc.getVisometry()));
             for (Object p : ppc.getPlottables()) {
+                System.out.println("Adding plottable " + p);
                 rollupPanel1.add(p.toString(), new PropertySheet(p));
             }
         }

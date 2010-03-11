@@ -26,6 +26,22 @@ public class PlaneGraphics extends VisometryGraphics<Point2D.Double> {
 
     // ************************************************************** //
     //                                                                //
+    //         NEW VISOMETRY DELEGATORS                               //
+    //                                                                //
+    // ************************************************************** //
+
+    public double getScaleX() {
+        return Math.abs(((PlaneVisometry)visometry).getScaleX());
+    }
+
+    public double getScaleY() {
+        return Math.abs(((PlaneVisometry)visometry).getScaleY());
+    }
+
+
+
+    // ************************************************************** //
+    //                                                                //
     //         NEW ROUTINES TO DRAW IN LOCAL COORDINATES              //
     //                                                                //
     // ************************************************************** //
@@ -92,13 +108,23 @@ public class PlaneGraphics extends VisometryGraphics<Point2D.Double> {
     }
 
     /**
+     * Transforms a path from local coords to window coordinates.
+     * @param path the path to transform
+     * @return the resulting path
+     */
+    public GeneralPath toWindow(GeneralPath path) {
+        path.transform(((PlaneVisometry)visometry).at);
+        return path;
+    }
+
+    /**
      * Draws a path specified in LOCAL coordinates with custom style
      * @param path the path in LOCAL coordinates
      * @param style style to draw with
      */
     public void drawPath(GeneralPath path, PathStyle style) {
         GeneralPath pathClone = (GeneralPath) path.clone();
-        pathClone.transform(((PlaneVisometry)vis).at);
+        pathClone.transform(((PlaneVisometry)visometry).at);
         style.draw(gr, pathClone, selected);
     }
 
@@ -173,7 +199,7 @@ public class PlaneGraphics extends VisometryGraphics<Point2D.Double> {
      * @return coordinate range for specified number of pixels.
      */
     public double getIdealHStepForPixelSpacing(double pixelSpacing) {
-        return Math.abs(pixelSpacing / ((PlaneVisometry) vis).getScaleX());
+        return Math.abs(pixelSpacing / ((PlaneVisometry) visometry).getScaleX());
     }
 
     /**
@@ -182,7 +208,7 @@ public class PlaneGraphics extends VisometryGraphics<Point2D.Double> {
      * @return coordinate range for specified number of pixels.
      */
     public double getIdealVStepForPixelSpacing(double pixelSpacing) {
-        return Math.abs(pixelSpacing / ((PlaneVisometry) vis).getScaleY());
+        return Math.abs(pixelSpacing / ((PlaneVisometry) visometry).getScaleY());
     }
 
     /**

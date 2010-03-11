@@ -64,9 +64,9 @@ public class LineFunction extends VPoint<Double> {
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<Double> vg) {
+    public void draw(VisometryGraphics<Double> vg) {
         // paints input point
-        super.paintComponent(vg);
+        super.draw(vg);
 
         // try evaluating function
         boolean evaluates = true;

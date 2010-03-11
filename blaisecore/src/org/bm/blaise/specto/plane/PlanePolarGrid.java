@@ -6,7 +6,7 @@ package org.bm.blaise.specto.plane;
 
 import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.BlaisePalette;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.primitive.PathStyle;
 import org.bm.blaise.specto.primitive.ShapeStyle;
@@ -21,7 +21,7 @@ import org.bm.utils.NiceRangeGenerator;
  *
  * @author Elisha Peterson
  */
-public class PlanePolarGrid extends AbstractPlottable<Point2D.Double> {
+public class PlanePolarGrid extends Plottable<Point2D.Double> {
 
     PathStyle style = new PathStyle(BlaisePalette.STANDARD.grid());
 
@@ -40,7 +40,7 @@ public class PlanePolarGrid extends AbstractPlottable<Point2D.Double> {
     double THETA_STEPS = 24;
 
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
         PlaneGraphics pg = (PlaneGraphics) vg;
         pg.setPathStyle(style);
         pg.setShapeStyle(new ShapeStyle(style));

@@ -120,7 +120,9 @@ public class ClockStyle extends PrimitiveStyle<Point2D> {
     public enum ClockModel {
         DEFAULT {
             public void paintHand(Graphics2D g, ArrowStyle style, boolean selected, Point2D p, double r, double angle) {
-                style.draw(g, new GraphicArrow( p, new Point2D.Double(p.getX() + r*Math.cos(angle), p.getY() - r*Math.sin(angle)) ), selected);
+                style.draw(g, 
+                        new Point2D[]{ p, new Point2D.Double(p.getX() + r*Math.cos(angle), p.getY() - r*Math.sin(angle)) },
+                        selected);
             }
         },
         ARCS {

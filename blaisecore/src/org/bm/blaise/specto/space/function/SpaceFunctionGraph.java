@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 
@@ -21,7 +21,7 @@ import scio.coordinate.Point3D;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceFunctionGraph extends AbstractPlottable<Point3D> {
+public class SpaceFunctionGraph extends Plottable<Point3D> {
 
     int samples = 20;
     Rectangle2D.Double domain;
@@ -58,9 +58,11 @@ public class SpaceFunctionGraph extends AbstractPlottable<Point3D> {
     
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         List<Point3D[]> polys = getPolys(domain.getMinX(), domain.getMinY(), domain.getMaxX(), domain.getMaxY(), samples);
-        ((SpaceGraphics) vg).addToScene(polys);
+        SpaceGraphics sg = (SpaceGraphics) vg;
+        for (Point3D[] sh : polys)
+            sg.drawShape(sh);
     }
 
     private List<Point3D[]> getPolys(double xmin, double ymin, double xmax, double ymax, int steps) {

@@ -301,13 +301,11 @@ public class PlaneVisometry implements Visometry<Point2D.Double>, RandomCoordina
      */
     protected void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2)
             if (listeners[i] == ChangeListener.class) {
-                if (changeEvent == null) {
+                if (changeEvent == null)
                     return;
-                }
                 ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
             }
-        }
     }
 }

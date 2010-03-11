@@ -21,12 +21,15 @@ import org.bm.blaise.sequor.timer.TimeClock;
  *
  * @author Elisha Peterson
  */
-public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements AnimatingPlottable<C>, VisometryChangeListener, ChangeListener {
+public class PlottableGroup<C> extends DynamicPlottable<C>
+        implements AnimatingPlottable<C>, VisometryChangeListener {
+
+    /** Name of the group. */
+    protected String name = "";
 
     /** Stores the elements in the group. */
-    protected ArrayList<Plottable<C>> plottables;    
-    /** Name of the group. */
-    protected String name = "";    
+    protected ArrayList<Plottable<C>> plottables;
+
     /** Whether this element animates. */
     public boolean animationOn = true;
 
@@ -55,6 +58,21 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
     }
 
     //
+    // ANIMATION METHODS
+    //
+
+    public boolean isAnimationOn() {
+        return animationOn;
+    }
+
+    public void setAnimationOn(boolean newValue) {
+        animationOn = newValue;
+        for (Plottable<C> p : plottables)
+            if (p instanceof AnimatingPlottable)
+                ((AnimatingPlottable)p).setAnimationOn(newValue);
+    }
+
+    //
     // GETTERS & SETTERS
     //
 
@@ -74,17 +92,6 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
             throw new NullPointerException("Name should not be null!");
         }
         this.name = name;
-    }
-
-    public boolean isAnimationOn() {
-        return animationOn;
-    }
-
-    public void setAnimationOn(boolean newValue) {
-        animationOn = newValue;
-        for (Plottable<C> p : plottables)
-            if (p instanceof AnimatingPlottable)
-                ((AnimatingPlottable)p).setAnimationOn(newValue);
     }
 
     /**
@@ -206,10 +213,10 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      *
      * @param canvas the underlying canvas for painting objects
      */
-    public void paintComponent(VisometryGraphics<C> canvas) {
+    public void draw(VisometryGraphics<C> canvas) {
         for (Plottable p : plottables)
             if (p.isVisible())
-                p.paintComponent(canvas);
+                p.draw(canvas);
     }
 
     //
@@ -229,7 +236,7 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
      */
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
         for (Plottable<? extends C> dp : plottables) {
-            if ((dp instanceof AbstractDynamicPlottable) && ((AbstractDynamicPlottable<C>) dp).isClickablyCloseTo(e)) {
+            if ((dp instanceof DynamicPlottable) && ((DynamicPlottable<C>) dp).isClickablyCloseTo(e)) {
                 return true;
             }
         }
@@ -244,11 +251,10 @@ public class PlottableGroup<C> extends AbstractDynamicPlottable<C> implements An
     protected List<VisometryMouseInputListener<C>> getHits(VisometryMouseEvent<C> e) {
         Vector<VisometryMouseInputListener<C>> result = new Vector<VisometryMouseInputListener<C>>();
         for (Plottable<? extends C> dp : plottables) {
-            if (dp instanceof PlottableGroup) {
+            if (dp instanceof PlottableGroup)
                 result.addAll(((PlottableGroup) dp).getHits(e));
-            } else if ((dp instanceof AbstractDynamicPlottable) && ((AbstractDynamicPlottable<C>) dp).isClickablyCloseTo(e)) {
-                result.add((AbstractDynamicPlottable<C>) dp);
-            }
+            else if ((dp instanceof DynamicPlottable) && ((DynamicPlottable<C>) dp).isClickablyCloseTo(e))
+                result.add((DynamicPlottable<C>) dp);
         }
         return result;
     }

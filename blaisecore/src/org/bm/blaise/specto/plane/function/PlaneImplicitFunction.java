@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
 import org.bm.blaise.specto.primitive.PathStyle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
@@ -22,7 +22,7 @@ import org.bm.blaise.specto.visometry.VisometryGraphics;
  *
  * @author Elisha Peterson
  */
-public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> implements VisometryChangeListener {
+public class PlaneImplicitFunction extends Plottable<Point2D.Double> implements VisometryChangeListener {
 
     //
     // PROPERTIES
@@ -74,7 +74,7 @@ public class PlaneImplicitFunction extends AbstractPlottable<Point2D.Double> imp
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<Double> vg) {
+    public void draw(VisometryGraphics<Double> vg) {
         vg.drawPaths(solutions, style);
     }
 }

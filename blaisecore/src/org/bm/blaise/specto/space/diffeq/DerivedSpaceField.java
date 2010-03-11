@@ -8,7 +8,7 @@ package org.bm.blaise.specto.space.diffeq;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import scio.coordinate.Point3D;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 import scio.function.utils.MultivariableUtils;
 import scio.function.utils.VectorFieldUtils;
 import util.ChangeEventHandler;
@@ -32,7 +32,7 @@ public class DerivedSpaceField extends SpaceVectorField {
             MultivariateVectorialFunction orig,
             MultivariateVectorialFunction der1,
             MultivariateVectorialFunction der2,
-            SampleCoordinateSetGenerator<Point3D> ssg) {
+            SampleGenerator<Point3D> ssg) {
         super(null, ssg);
         this.der1 = der1;
         this.der2 = der2;
@@ -51,7 +51,7 @@ public class DerivedSpaceField extends SpaceVectorField {
             MultivariateVectorialFunction orig,
             MultivariateVectorialFunction der1,
             MultivariateVectorialFunction der2,
-            SampleCoordinateSetGenerator<Point3D> ssg) {
+            SampleGenerator<Point3D> ssg) {
         super(null, ssg);
         this.type = type;
         this.der1 = der1;

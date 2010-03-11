@@ -6,8 +6,6 @@ package org.bm.blaise.specto.plane.diffeq;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
@@ -15,9 +13,8 @@ import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
 import scio.diffeq.TwoVarODE;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.plottable.VComputedPointPath;
+import org.bm.blaise.specto.plane.ComputedPointPath;
 
 /**
  * <p>
@@ -30,35 +27,23 @@ import org.bm.blaise.specto.plottable.VComputedPointPath;
  *
  * @author Elisha Peterson
  */
-public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
+public class PlaneDE2Solution extends ComputedPointPath {
 
     //
-    //
     // PROPERTIES
-    //
     //
 
     /** ODE responsible for computing the solution. */
     TwoVarODE ode;
-
     /** Used to interpolate the computed solution. */
     ContinuousOutputModel com;
-
     /** This determines the step size used for solving and interpolating the
      * solution. */
     double step = 0.05;
 
-//    /** Path of values for the (x, t) solution. */
-//    VPath<Point2D.Double> xPath;
-//
-//    /** Path of values for the (y, t) solution. */
-//    VPath<Point2D.Double> yPath;
 
-
-    //
     //
     // CONSTRUCTORS
-    //
     //
 
     /**
@@ -79,9 +64,7 @@ public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
     }
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return the underlying ODE used for computation */
@@ -106,14 +89,12 @@ public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
     
 
     //
-    //
     // COMPUTATION / PAINTING
-    //
     //
 
     @Override
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
-        ode.setStartPoint(value);
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
+        ode.setStartPoint(getPoint());
         double[] yFinal = {0.999, 0.999};
         try {
             com = ode.solveODE(yFinal, step);
@@ -123,37 +104,19 @@ public class PlaneDE2Solution extends VComputedPointPath<Point2D.Double> {
             Logger.getLogger(PlaneDESolution.class.getName()).log(Level.SEVERE, null, ex);
         }
         int nSteps = (int) (((com.getFinalTime() - com.getInitialTime()) / step) + 1);
-//        Point2D.Double[] xVals = new Point2D.Double[nSteps];
-//        Point2D.Double[] yVals = new Point2D.Double[nSteps];
 
-        if (path == null) {
-            path = new GeneralPath();
-        } else {
-            path.reset();
-        }
-        path.moveTo((float) value.x, (float) value.y);
+        GeneralPath path = new GeneralPath();
+        path.moveTo((float) getPoint().x, (float) getPoint().y);
         try {
             for (int i=0; i<nSteps; i++) {
                 double t = com.getInitialTime() + i * step;
                 com.setInterpolatedTime( t );
                 double[] p = com.getInterpolatedState();
                 path.lineTo((float) p[0], (float) p[1]);
-    //            xVals[i] = new Point2D.Double(t, p[0]);
-     //           yVals[i] = new Point2D.Double(t, p[1]);
             }
         } catch(DerivativeException ex) {
         }
 
-//        xPath.setValues(xVals);
-  //      yPath.setValues(yVals);
-
-        needsComputation = false;
-    }
-
-    final NumberFormat formatter = new DecimalFormat("#0.00");
-
-    @Override
-    public String getValueString() {
-        return "(" + formatter.format(value.x) + ", " + formatter.format(value.y) + ")";
+        return path;
     }
 }

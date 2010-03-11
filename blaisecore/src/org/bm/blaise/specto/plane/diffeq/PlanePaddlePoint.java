@@ -165,14 +165,14 @@ public class PlanePaddlePoint extends VPointSet<Point2D.Double> implements Anima
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
         if (angles == null || angles.length != values.length)
             computePoints();
         for (int i = 0; i < values.length; i++) {
             vg.drawSegment(p1[i], p3[i], armStyle);
             vg.drawSegment(p2[i], p4[i], armStyle);
         }
-        super.paintComponent(vg);
+        super.draw(vg);
     }
 
     @Override

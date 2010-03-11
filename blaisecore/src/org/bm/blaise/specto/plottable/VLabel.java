@@ -75,7 +75,7 @@ public class VLabel<C> extends VInvisiblePoint<C> {
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawString(text, value, offset.x, offset.y, labelStyle);
     }
 

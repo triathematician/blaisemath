@@ -40,7 +40,7 @@ public class VisometryGraphics<C> {
     /** Underlying graphics object. */
     protected Graphics2D gr = null;
     /** Visometry for point conversion. */
-    protected Visometry<C> vis;
+    protected Visometry<C> visometry;
 
     //
     // DEFAULT STYLES
@@ -66,7 +66,7 @@ public class VisometryGraphics<C> {
      * @param vis visometry (converts to/from window geometry)
      */
     protected VisometryGraphics(Visometry<C> vis) {
-        this.vis = vis;
+        this.visometry = vis;
     }
 
     //
@@ -84,21 +84,20 @@ public class VisometryGraphics<C> {
      */
     public void setScreenGraphics(Graphics2D gr) {
         this.gr = gr;
-        gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-    /** @return the underlying visometry. */
-    public Visometry<C> getVisometry() {
-        return vis;
-    }
-    
-    /**
-     * Sets the underlying visometry.
-     * @param vis the visometry
-     */
-    public void setVisometry(Visometry<C> vis) {
-        this.vis = vis;
-    }
+//    /** @return the underlying visometry. */
+//    public Visometry<C> getVisometry() {
+//        return vis;
+//    }
+//
+//    /**
+//     * Sets the underlying visometry.
+//     * @param vis the visometry
+//     */
+//    public void setVisometry(Visometry<C> vis) {
+//        this.vis = vis;
+//    }
 
     //
     // STYLE BEANS
@@ -179,59 +178,59 @@ public class VisometryGraphics<C> {
      * @return minimum coordinate of the visometry.
      */
     public C getMinCoord() {
-        return vis.getMinPointVisible();
+        return visometry.getMinPointVisible();
     }
 
     /**
      * @return minimum coordinate of the visometry.
      */
     public C getMaxCoord() {
-        return vis.getMaxPointVisible();
+        return visometry.getMaxPointVisible();
     }
 
     /**
      * @return bounding box of the window
      */
     public RectangularShape getWindowBounds() {
-        return vis.getWindowBounds();
+        return visometry.getWindowBounds();
     }
 
     /**
      * @return minimum x value in window coords
      */
     public double getWindowMinX() {
-        return vis.getWindowBounds().getMinX();
+        return visometry.getWindowBounds().getMinX();
     }
 
     /**
      * @return minimum x value in window coords
      */
     public double getWindowMaxX() {
-        return vis.getWindowBounds().getMaxX();
+        return visometry.getWindowBounds().getMaxX();
     }
 
     /**
      * @return minimum x value in window coords
      */
     public double getWindowMinY() {
-        return vis.getWindowBounds().getMinY();
+        return visometry.getWindowBounds().getMinY();
     }
 
     /**
      * @return minimum x value in window coords
      */
     public double getWindowMaxY() {
-        return vis.getWindowBounds().getMaxY();
+        return visometry.getWindowBounds().getMaxY();
     }
     
     /** @return width of window */
     public double getWindowWidth() {
-        return vis.getWindowBounds().getWidth();
+        return visometry.getWindowBounds().getWidth();
     }
     
     /** @return height of window */
     public double getWindowHeight() {
-        return vis.getWindowBounds().getHeight();
+        return visometry.getWindowBounds().getHeight();
     }
 
     //
@@ -239,11 +238,11 @@ public class VisometryGraphics<C> {
     //
 
     public Point2D.Double getWindowPointOf(C coordinate) {
-        return vis.getWindowPointOf(coordinate);
+        return visometry.getWindowPointOf(coordinate);
     }
 
     public C getCoordinateOf(Point2D.Double point) {
-        return vis.getCoordinateOf(point);
+        return visometry.getCoordinateOf(point);
     }
 
 
@@ -264,7 +263,7 @@ public class VisometryGraphics<C> {
      * @param style the style used to draw
      */
     public void drawPoint(C coordinate, PrimitiveStyle<Point2D> style) {
-        style.draw(gr, vis.getWindowPointOf(coordinate), selected);
+        style.draw(gr, visometry.getWindowPointOf(coordinate), selected);
     }
 
     /**
@@ -284,7 +283,7 @@ public class VisometryGraphics<C> {
         if (coords == null || coords.length <= 0)
             return;
         for (C c : coords)
-            style.draw(gr, vis.getWindowPointOf(c), selected);
+            style.draw(gr, visometry.getWindowPointOf(c), selected);
     }
 
     /**
@@ -310,7 +309,7 @@ public class VisometryGraphics<C> {
      * @param style the style used to draw
      */
     public void drawSegment(C coord1, C coord2, PathStyle style) {
-        style.draw(gr, new Line2D.Double(vis.getWindowPointOf(coord1), vis.getWindowPointOf(coord2)), selected);
+        style.draw(gr, new Line2D.Double(visometry.getWindowPointOf(coord1), visometry.getWindowPointOf(coord2)), selected);
     }
 
     /**
@@ -354,11 +353,11 @@ public class VisometryGraphics<C> {
     public void drawPath(C[] coords, int iMin, int iMax, PathStyle style) {
         if (coords.length <= 0)
             return;
-        Point2D nextPt = vis.getWindowPointOf(coords[iMin]);
+        Point2D nextPt = visometry.getWindowPointOf(coords[iMin]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
         for (int i = iMin+1; i <= Math.min(coords.length-1, iMax); i++) {
-            nextPt = vis.getWindowPointOf(coords[i]);
+            nextPt = visometry.getWindowPointOf(coords[i]);
             path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
         }
         style.draw(gr, path, selected);
@@ -418,8 +417,8 @@ public class VisometryGraphics<C> {
      * @param corner2 second corner of the rectangle, in local coordinates
      */
     Rectangle2D.Double getRectangle(C corner1, C corner2) {
-        Point2D wp1 = vis.getWindowPointOf(corner1);
-        Point2D wp2 = vis.getWindowPointOf(corner2);
+        Point2D wp1 = visometry.getWindowPointOf(corner1);
+        Point2D wp2 = visometry.getWindowPointOf(corner2);
         return new Rectangle2D.Double(
                 Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
                 Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY()));
@@ -453,8 +452,8 @@ public class VisometryGraphics<C> {
      * @param style the custom style
      */
     public void drawEllipse(C corner1, C corner2, ShapeStyle style) {
-        Point2D wp1 = vis.getWindowPointOf(corner1);
-        Point2D wp2 = vis.getWindowPointOf(corner2);
+        Point2D wp1 = visometry.getWindowPointOf(corner1);
+        Point2D wp2 = visometry.getWindowPointOf(corner2);
         shapeStyle.draw(gr, new Ellipse2D.Double(
                 Math.min(wp1.getX(), wp2.getX()), Math.min(wp1.getY(), wp2.getY()),
                 Math.abs(wp2.getX() - wp1.getX()), Math.abs(wp2.getY() - wp1.getY())
@@ -479,11 +478,11 @@ public class VisometryGraphics<C> {
     public void drawShape(C[] coords, ShapeStyle style) {
         if (coords.length <= 0)
             return;
-        Point2D nextPt = vis.getWindowPointOf(coords[0]);
+        Point2D nextPt = visometry.getWindowPointOf(coords[0]);
         GeneralPath path = new GeneralPath();
         path.moveTo((float) nextPt.getX(), (float) nextPt.getY());
         for (int i = 1; i < coords.length; i++) {
-            nextPt = vis.getWindowPointOf(coords[i]);
+            nextPt = visometry.getWindowPointOf(coords[i]);
             path.lineTo((float) nextPt.getX(), (float) nextPt.getY());
         }
         path.closePath();
@@ -509,12 +508,12 @@ public class VisometryGraphics<C> {
      * @param coord the coordinate anchoring the string
      * @param shiftX # of pixels to shift in x direction
      * @param shiftY # of pixels to shift in y direction
-     * @param anchor orientation specifies centering of the string
+     * @param orientation orientation specifies centering of the string
      * @param style the custom style
      */
-    public void drawString(String str, C coord, int shiftX, int shiftY, int anchor, PrimitiveStyle<GraphicString> style) {
-        Point2D wp = vis.getWindowPointOf(coord);
-        GraphicString gs = new GraphicString(str, wp.getX() + shiftX, wp.getY() + shiftY, anchor);
+    public void drawString(String str, C coord, int shiftX, int shiftY, int orientation, PrimitiveStyle<GraphicString> style) {
+        Point2D wp = visometry.getWindowPointOf(coord);
+        GraphicString gs = new GraphicString(str, wp.getX() + shiftX, wp.getY() + shiftY, orientation);
         style.draw(gr, gs, selected);
     }
 
@@ -527,7 +526,7 @@ public class VisometryGraphics<C> {
      * @param style the custom style
      */
     public void drawString(String str, C coord, int shiftX, int shiftY, PrimitiveStyle<GraphicString> style) {
-        Point2D wp = vis.getWindowPointOf(coord);
+        Point2D wp = visometry.getWindowPointOf(coord);
         GraphicString gs = new GraphicString(str, wp.getX() + shiftX, wp.getY() + shiftY);
         style.draw(gr, gs, selected);
     }
@@ -565,9 +564,9 @@ public class VisometryGraphics<C> {
      * @param head end point of arrow in local coordinates
      * @param style the custom style
      */
-    public void drawArrow(C anchor, C head, PrimitiveStyle<GraphicArrow> style) {
-        GraphicArrow ga = new GraphicArrow(vis.getWindowPointOf(anchor), vis.getWindowPointOf(head));
-        style.draw(gr, ga, selected);
+    public void drawArrow(C anchor, C head, PrimitiveStyle<Point2D[]> style) {
+        Point2D[] arr = new Point2D[]{visometry.getWindowPointOf(anchor), visometry.getWindowPointOf(head)};
+        style.draw(gr, arr, selected);
     }
 
     /**
@@ -621,52 +620,5 @@ public class VisometryGraphics<C> {
      */
     public void drawWinBorder() {
         drawWinBorder(pathStyle);
-    }
-
-    //
-    // PRIMITIVE DRAWING
-    //
-
-    /**
-     * Draws an arbitrary primitive, in window coordinates
-     * @param primitive the primitive object
-     * @param style custom style for the object
-     */
-    public <P> void drawWinPrimitive(P primitive, PrimitiveStyle<P> style) {
-        style.draw(gr, primitive, selected);
-    }
-
-    /**
-     * Draws arbitrary primitives, in window coordinates
-     * @param primitives the primitives
-     * @param style custom style for the object
-     */
-    public <P> void drawWinPrimitives(P[] primitives, PrimitiveStyle<P> style) {
-        style.draw(gr, primitives, selected);
-    }
-
-    /**
-     * Draws a path in WINDOW coordinates, using default <code>pathStyle</code>
-     * @param path the path in WINDOW coordinates
-     */
-    public void drawWinPath(GeneralPath path) {
-        drawWinPrimitive(path, pathStyle);
-    }
-
-    /**
-     * Draws a shape in WINDOW coordinates with default style
-     * @param shape the WINDOW shape
-     */
-    public void drawWinShape(Shape shape) {
-        drawWinPrimitive(shape, shapeStyle);
-    }
-
-    /**
-     * Draws arrow in WINDOW coordinates with provided WINDOW coordinates.
-     * @param vec the arrow
-     */
-    public void drawWinArrow(GraphicArrow vec) {
-        drawWinPrimitive(vec, arrowStyle);
-    }
-    
+    }    
 }

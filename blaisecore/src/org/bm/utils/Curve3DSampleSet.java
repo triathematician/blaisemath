@@ -9,9 +9,9 @@ import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 
-public class Curve3DSampleSet implements SampleCoordinateSetGenerator<Point3D> {
+public class Curve3DSampleSet implements SampleGenerator<Point3D> {
 
     /** Function */
     UnivariateVectorialFunction func;

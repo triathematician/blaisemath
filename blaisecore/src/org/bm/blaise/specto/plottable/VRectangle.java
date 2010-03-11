@@ -10,7 +10,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import org.bm.blaise.specto.primitive.ShapeStyle;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -24,7 +24,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class VRectangle<C> extends AbstractDynamicPlottable<C> {
+public class VRectangle<C> extends DynamicPlottable<C> {
 
     ShapeStyle style = new ShapeStyle(Color.BLACK, Color.GRAY);
 
@@ -86,8 +86,15 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
     // PAINTING
     //
 
+    /** Stores the rectangle that is drawn on the plot. */
+    transient Rectangle2D.Double visrec = null;
+
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
+        Point2D.Double v1 = vg.getWindowPointOf(value1);
+        Point2D.Double v2 = vg.getWindowPointOf(value2);
+        visrec = new Rectangle2D.Double(Math.min(v1.x, v2.x), Math.min(v1.y, v2.y), Math.abs(v2.x - v1.x), Math.abs(v2.y - v1.y));
+        style.draw(vg.getScreenGraphics(), visrec, selected);
         vg.drawRectangle(value1, value2, style);
     }
 
@@ -95,16 +102,14 @@ public class VRectangle<C> extends AbstractDynamicPlottable<C> {
     // DYNAMIC EDITING
     //
 
-    transient Rectangle2D visrec = null;
     transient Rectangle2D startrec = null;
     transient DragMode dragMode = DragMode.NONE;
     transient Point pressedAt = null;
     final static int LOCK = 4;
 
     public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
-        if (visrec == null) {
+        if (visrec == null)
             return false;
-        }
         Point pt = e.getWindowPoint();
         // determine region in which mouse was clicked
         return (pt.x >= visrec.getMinX() - LOCK) && (pt.x <= visrec.getMaxX() + LOCK)

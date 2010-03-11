@@ -16,15 +16,13 @@ import java.awt.geom.Point2D;
 /**
  * <p>
  *   <code>ArrowStyle</code> represents a style that is used to draw arrows
- *   (described by the <code>GraphicArrow</code> primitive). I may alter this
- *   to restrict it to the arrowhead, specified by an anchor point and a direction,
- *   but for now the primitive will be displayed as a line segment between the
+ *   (described by two points). For now the primitive will be displayed as a line segment between the
  *   two points together with an arrow head.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class ArrowStyle extends PrimitiveStyle<GraphicArrow> {
+public class ArrowStyle extends PrimitiveStyle<Point2D[]> {
 
     public enum Shape {
         NONE,
@@ -149,20 +147,20 @@ public class ArrowStyle extends PrimitiveStyle<GraphicArrow> {
     // GRAPHICS METHODS
     //
     
-    public void draw(Graphics2D canvas, GraphicArrow primitive, boolean selected) {
+    public void draw(Graphics2D canvas, Point2D[] primitive, boolean selected) {
         canvas.setColor(pathStyle.getColor());
         canvas.setStroke(pathStyle.getStroke());
-        canvas.draw(new Line2D.Double(primitive.getAnchor(), primitive.getHead()));
+        canvas.draw(new Line2D.Double(primitive[0], primitive[1]));
         if (headShape != Shape.NONE) {
-            canvas.draw(getShape(primitive.getHead(),
-                    primitive.getHead().x - primitive.getAnchor().x,
-                    primitive.getHead().y - primitive.getAnchor().y,
+            canvas.draw(getShape(primitive[1],
+                    primitive[1].getX() - primitive[0].getX(),
+                    primitive[1].getY() - primitive[0].getY(),
                     headSize, headShape));
         }
         if (anchorShape != Shape.NONE) {
-            canvas.draw(getShape(primitive.getAnchor(),
-                    primitive.getAnchor().x - primitive.getHead().x,
-                    primitive.getAnchor().y - primitive.getHead().y,
+            canvas.draw(getShape(primitive[0],
+                    primitive[0].getX() - primitive[1].getX(),
+                    primitive[0].getY() - primitive[1].getY(),
                     headSize, anchorShape));
         }
     }

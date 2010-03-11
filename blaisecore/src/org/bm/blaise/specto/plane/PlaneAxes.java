@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.GraphicString;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 import org.bm.blaise.specto.primitive.PathStyle;
@@ -34,7 +34,7 @@ import org.bm.utils.NiceRangeGenerator;
  * 
  * @author Elisha Peterson
  */
-public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implements Cloneable, VisometryChangeListener {
+public class PlaneAxes extends DynamicPlottable<Point2D.Double> implements Cloneable, VisometryChangeListener {
 
     /** Options for the type of axis. */
     public enum Style {
@@ -226,7 +226,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
      * @param canvas the visometry graphics object used for painting
      */
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> canvas) {
+    public void draw(VisometryGraphics<Point2D.Double> canvas) {
         PlaneGraphics pg = (PlaneGraphics) canvas;
         Point2D.Double maxC = pg.getMaxCoord();
         Point2D.Double minC = pg.getMinCoord();
@@ -273,15 +273,15 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
         // draw axis labels
         switch(axisStyle) {
             case BOX:
-                pg.drawString(xLabel, new Point2D.Double(max.x, 0.0), 0, -2 * TICK_HEIGHT, GraphicString.RIGHT, labelStyle);
-                pg.drawString(yLabel, new Point2D.Double(0.0, max.y), -2 * TICK_HEIGHT, 0, GraphicString.TOP, labelStyle);
+                pg.drawString(xLabel, new Point2D.Double(max.x, 0.0), -2 * TICK_HEIGHT, 0, GraphicString.RIGHT, labelStyle);
+                pg.drawString(yLabel, new Point2D.Double(0.0, max.y), 0, 2 * TICK_HEIGHT, GraphicString.TOP, labelStyle);
                 break;
             case ELL:
             case INVERTED_T:
             case CROSS:
             default:
-                pg.drawString(xLabel, new Point2D.Double(maxC.x, 0.0), -TICK_HEIGHT, 2 * TICK_HEIGHT, GraphicString.RIGHT, labelStyle);
-                pg.drawString(yLabel, new Point2D.Double(0.0, maxC.y), 2 * TICK_HEIGHT, -TICK_HEIGHT, GraphicString.TOP_LEFT, labelStyle);
+                pg.drawString(xLabel, new Point2D.Double(maxC.x, 0.0), -TICK_HEIGHT, 2 * TICK_HEIGHT, GraphicString.TOP_RIGHT, labelStyle);
+                pg.drawString(yLabel, new Point2D.Double(0.0, maxC.y), -2 * TICK_HEIGHT, TICK_HEIGHT, GraphicString.TOP_RIGHT, labelStyle);
                 break;
         }
     }
@@ -330,7 +330,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
             pt.y = ys[i];
             winPt = pg.getWindowPointOf(pt);
             pg.drawWinSegment(winPt.x + minusX, winPt.y, winPt.x + plusX, winPt.y, strokeStyle);
-            pg.drawString(labels[i], pt, plusX + 2, 0, GraphicString.LEFT, labelStyle);
+            pg.drawString(labels[i], pt, plusX + 4, 0, GraphicString.LEFT, labelStyle);
         }
     }
 
@@ -363,7 +363,7 @@ public class PlaneAxes extends AbstractDynamicPlottable<Point2D.Double> implemen
             pt.x = xs[i];
             winPt = pg.getWindowPointOf(pt);
             pg.drawWinSegment(winPt.x, winPt.y - plusY, winPt.x, winPt.y - minusY, strokeStyle);
-            pg.drawString(labels[i], pt, 0, plusY + 2, GraphicString.BOTTOM, labelStyle);
+            pg.drawString(labels[i], pt, 0, - plusY - 4, GraphicString.BOTTOM, labelStyle);
         }
     }
 

@@ -102,7 +102,7 @@ public class VPath<C> extends AbstractAnimatingPlottable<C> {
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.setPathStyle(style);
         if (animating) {
             // default to animating over each value

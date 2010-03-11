@@ -54,9 +54,9 @@ public class VPolygon<C> extends VPointSet<C> {
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawShape(values, shapeStyle);
         if (pointsVisible)
-            super.paintComponent(vg);
+            super.draw(vg);
     }
 }

@@ -55,7 +55,7 @@ public class VClock<C> extends VInvisiblePoint<C>
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawPoint(value, style);
     }
 

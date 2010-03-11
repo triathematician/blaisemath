@@ -6,7 +6,10 @@ package org.bm.blaise.specto.primitive;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * <p>
@@ -93,10 +96,58 @@ public class StringStyle extends PrimitiveStyle<GraphicString> {
         if (fontSize != null && font == null) {
             font = canvas.getFont().deriveFont((float) fontSize);
             canvas.setFont(font);
-        } else if (font != null) {
+        } else if (font != null)
             canvas.setFont(font);
+
+        if (grString.getOrientation() == GraphicString.BOTTOM_LEFT) {
+            canvas.drawString(grString.string, (float) grString.anchor.x, (float) grString.anchor.y);
+        } else {
+            FontMetrics fm = canvas.getFontMetrics();
+            double width = fm.getStringBounds(grString.string, canvas).getWidth();
+            double height = fm.getAscent() - fm.getDescent();
+            Point2D.Double shift = new Point2D.Double();
+
+            switch (grString.orientation) {
+                case GraphicString.TOP_RIGHT:
+                case GraphicString.RIGHT:
+                case GraphicString.BOTTOM_RIGHT:
+                    shift.x = -width;
+                    break;
+                case GraphicString.TOP:
+                case GraphicString.CENTER:
+                case GraphicString.BOTTOM:
+                    shift.x = -width / 2;
+                    break;
+                case GraphicString.TOP_LEFT:
+                case GraphicString.LEFT:
+                case GraphicString.BOTTOM_LEFT:
+                default:
+                    // no shift in x direction
+                    break;
+            }
+
+            switch (grString.orientation) {
+                case GraphicString.TOP_LEFT:
+                case GraphicString.TOP:
+                case GraphicString.TOP_RIGHT:
+                    shift.y = height;
+                    break;
+                case GraphicString.LEFT:
+                case GraphicString.CENTER:
+                case GraphicString.RIGHT:
+                    shift.y = height / 2;
+                    break;
+                case GraphicString.BOTTOM_LEFT:
+                case GraphicString.BOTTOM:
+                case GraphicString.BOTTOM_RIGHT:
+                default:
+                    // no shift in y direction
+                    break;
+            }
+
+            canvas.drawString(grString.string,
+                    (float) (grString.anchor.x + shift.x),
+                    (float) (grString.anchor.y + shift.y));
         }
-        canvas.setColor(color);
-        canvas.drawString(grString.getString(), (float) grString.getAnchor().getX(), (float) grString.getAnchor().getY());
     }
 }

@@ -13,7 +13,7 @@ package org.bm.blaise.specto.visometry;
  *
  * @author Elisha Peterson
  */
-public abstract class AbstractAnimatingPlottable<V> extends AbstractPlottable<V> implements AnimatingPlottable<V> {
+public abstract class AbstractAnimatingPlottable<V> extends Plottable<V> implements AnimatingPlottable<V> {
 
     /** Whether animation is turned on. */
     protected boolean animating = true;

@@ -12,16 +12,15 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
-import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
+import org.bm.blaise.specto.plottable.SamplerPlottable;
 import org.bm.blaise.specto.primitive.ArrowStyle;
 import org.bm.blaise.specto.primitive.BlaisePalette;
-import org.bm.blaise.specto.primitive.GraphicArrow;
 import org.bm.blaise.specto.primitive.PrimitiveStyle;
 import org.bm.blaise.specto.space.SpaceGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 import util.ChangeEventHandler;
 
 /**
@@ -33,7 +32,7 @@ import util.ChangeEventHandler;
  *
  * @author Elisha Peterson
  */
-public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3D[], Point3D> {
+public class SpaceVectorField extends SamplerPlottable<double[], Point3D[], Point3D> {
 
     //
     // PROPERTIES
@@ -57,14 +56,14 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public SpaceVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point3D> ssg) {
+    public SpaceVectorField(MultivariateVectorialFunction func, SampleGenerator<Point3D> ssg) {
         super(DEFAULT_STYLE, ssg);
         setFunction(func);
     }
 
     @Override
     public String toString() {
-        return "Vector Field [" + ssg + "]";
+        return "Vector Field [" + getSampleGenerator() + "]";
     }
 
     //
@@ -155,7 +154,7 @@ public class SpaceVectorField extends VPrimitiveMappingPlottable<Point3D, Point3
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         if (primitives != null) {
             ((SpaceGraphics) vg).addToScene(primitives, style);
         }

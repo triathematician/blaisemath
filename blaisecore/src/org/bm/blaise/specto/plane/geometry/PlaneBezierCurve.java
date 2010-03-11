@@ -143,8 +143,8 @@ public class PlaneBezierCurve extends VPointSet<Point2D.Double> {
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
-        super.paintComponent(vg);
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
+        super.draw(vg);
         if (drawControls && values.length > 1) {
             for (int i = 0; i < beziers.length; i++) {
                 if (beziers[i][0] == null)

@@ -9,9 +9,9 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plane.function.PlaneParametricCurve;
 import scio.coordinate.sample.RealIntervalSampler;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 
-public class Curve2DSampleSet implements SampleCoordinateSetGenerator<Point2D.Double> {
+public class Curve2DSampleSet implements SampleGenerator<Point2D.Double> {
 
     /** Function */
     UnivariateVectorialFunction func;

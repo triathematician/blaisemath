@@ -14,7 +14,7 @@ import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VRectangle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
@@ -25,7 +25,7 @@ import util.ChangeEventHandler;
  *
  * @author ae3263
  */
-public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
+public class SpaceParametricCurve extends Plottable<Point3D> {
 
     /** Function */
     UnivariateVectorialFunction func;
@@ -125,12 +125,14 @@ public class SpaceParametricCurve extends AbstractPlottable<Point3D> {
     transient List<Point3D[]> segments;
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         if (needsComputation) {
             segments = getSegments(func);
             needsComputation = false;
         }
-        ((SpaceGraphics) vg).addToScene(segments);
+        SpaceGraphics sg = (SpaceGraphics) vg;
+        for (Point3D[] sh : segments)
+            sg.drawSegment(sh[0], sh[1]);
     }
 
     List<Point3D[]> getSegments(UnivariateVectorialFunction func) {

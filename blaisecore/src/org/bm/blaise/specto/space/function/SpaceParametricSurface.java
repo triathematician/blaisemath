@@ -14,7 +14,7 @@ import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.plottable.VRectangle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 import scio.coordinate.MaxMinDomain;
@@ -27,7 +27,7 @@ import util.ChangeEventHandler;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
+public class SpaceParametricSurface extends Plottable<Point3D> {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
@@ -148,10 +148,12 @@ public class SpaceParametricSurface extends AbstractPlottable<Point3D> {
     transient List<Point3D[]> polys;
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         polys = getPolys(func);
         needsComputation = false;
-        ((SpaceGraphics) vg).addToScene(polys);
+        SpaceGraphics sg = (SpaceGraphics) vg;
+        for (Point3D[] sh : polys)
+            sg.drawShape(sh);
     }
     
     List<Point3D[]> getPolys(MultivariateVectorialFunction func) {

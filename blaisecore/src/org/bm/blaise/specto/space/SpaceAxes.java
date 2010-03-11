@@ -7,7 +7,7 @@ package org.bm.blaise.specto.space;
 
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.StringStyle;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 
@@ -17,7 +17,7 @@ import scio.coordinate.Point3D;
  * </p>
  * @author ae3263
  */
-public class SpaceAxes extends AbstractPlottable<Point3D> {
+public class SpaceAxes extends Plottable<Point3D> {
 
     StringStyle labStyle = new StringStyle(BlaisePalette.STANDARD.axisLabel());
 
@@ -42,11 +42,14 @@ public class SpaceAxes extends AbstractPlottable<Point3D> {
         this.sz = sz;
     }
     
-    public static SpaceAxes instance(String sx, String sy, String sz) {
-        return new SpaceAxes(sx, sy, sz);
+    @Override
+    public String toString() {
+        return "3D Axes";
     }
 
+    //
     // BEAN PATTERNS
+    //
 
     public String getLabelX() {
         return sx;
@@ -128,30 +131,30 @@ public class SpaceAxes extends AbstractPlottable<Point3D> {
         this.labStyle = labStyle;
     }
    
-
+    //
     // PAINT METHODS
+    //
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         SpaceGraphics sg = (SpaceGraphics) vg;
 
-        if (showOrigin) {
-            sg.addToScene(new Point3D[]{Point3D.ZERO});
-        }
+        if (showOrigin)
+            sg.drawPoint( Point3D.ZERO );
 
         if (showAxes) {
             switch(type) {
                 case IJK:
                 case POSITIVE:
-                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_I});
-                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_J});
-                    sg.addToScene(new Point3D[]{Point3D.ZERO, Point3D.PLUS_K});
+                    sg.drawArrow( Point3D.ZERO, Point3D.PLUS_I );
+                    sg.drawArrow( Point3D.ZERO, Point3D.PLUS_J );
+                    sg.drawArrow( Point3D.ZERO, Point3D.PLUS_K );
                     break;
                 case BOX:
                 case REGULAR:
-                    sg.addToScene(new Point3D[]{Point3D.MINUS_I, Point3D.PLUS_I});
-                    sg.addToScene(new Point3D[]{Point3D.MINUS_J, Point3D.PLUS_J});
-                    sg.addToScene(new Point3D[]{Point3D.MINUS_K, Point3D.PLUS_K});
+                    sg.drawArrow( Point3D.MINUS_I, Point3D.PLUS_I );
+                    sg.drawArrow( Point3D.MINUS_J, Point3D.PLUS_J );
+                    sg.drawArrow( Point3D.MINUS_K, Point3D.PLUS_K );
                 default:
             }
 
@@ -162,21 +165,14 @@ public class SpaceAxes extends AbstractPlottable<Point3D> {
             vg.drawString(sz, Point3D.PLUS_K, 5, 5);
         }
 
-        if (showXY) {
-            sg.addToScene(new Point3D[]{new Point3D(.001, .001, 0), new Point3D(.001, .9, 0), new Point3D(.9, .9, 0), new Point3D(.9, .001, 0)});
-        }
-        if (showXZ) {
-            sg.addToScene(new Point3D[]{new Point3D(.001, 0, .001), new Point3D(.001, 0, .9), new Point3D(.9, 0, .9), new Point3D(.9, 0, .001)});
-        }
-        if (showYZ) {
-            sg.addToScene(new Point3D[]{new Point3D(0, .001, .001), new Point3D(0, .001, .9), new Point3D(0, .9, .9), new Point3D(0, .9, .001)});
-        }
+        if (showXY)
+            sg.drawShape(new Point3D[]{new Point3D(.001, .001, 0), new Point3D(.001, .9, 0), new Point3D(.9, .9, 0), new Point3D(.9, .001, 0)});
+        if (showXZ)
+            sg.drawShape(new Point3D[]{new Point3D(.001, 0, .001), new Point3D(.001, 0, .9), new Point3D(.9, 0, .9), new Point3D(.9, 0, .001)});
+        if (showYZ)
+            sg.drawShape(new Point3D[]{new Point3D(0, .001, .001), new Point3D(0, .001, .9), new Point3D(0, .9, .9), new Point3D(0, .9, .001)});
     }
 
-    @Override
-    public String toString() {
-        return "3D Axes";
-    }
 
 
     

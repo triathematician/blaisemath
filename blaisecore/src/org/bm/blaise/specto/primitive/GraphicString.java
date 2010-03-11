@@ -18,41 +18,38 @@ import java.awt.geom.Point2D;
 public class GraphicString {
 
     /** Anchor point constants. */
-    public static final int LEFT = 0;
-    public static final int TOP_LEFT = 1;
-    public static final int TOP = 2;
-    public static final int TOP_RIGHT = 3;
-    public static final int RIGHT = 4;
-    public static final int BOTTOM_RIGHT = 5;
-    public static final int BOTTOM = 6;
-    public static final int BOTTOM_LEFT = 7;
+    public static final int BOTTOM_LEFT = 0;
+    public static final int LEFT = 1;
+    public static final int TOP_LEFT = 2;
+    public static final int TOP = 3;
+    public static final int TOP_RIGHT = 4;
+    public static final int RIGHT = 5;
+    public static final int BOTTOM_RIGHT = 6;
+    public static final int BOTTOM = 7;
     public static final int CENTER = 8;
 
     String string;
-    Point2D anchor;
-    int orientation;
+    Point2D.Double anchor = new Point2D.Double();
+    int orientation = BOTTOM_LEFT;
 
     public GraphicString(String string, Point2D anchor) {
-        this.anchor = anchor;
-        this.string = string;
+        this(string, anchor, BOTTOM_LEFT);
     }
 
     public GraphicString(String string, double x, double y) {
-        this.string = string;
-        this.anchor = new Point2D.Double(x, y);
-    }
-
-    public GraphicString(String string, Point2D anchor, int orientation) {
-        this.anchor = anchor;
-        this.string = string;
-        this.orientation = orientation;
+        this(string, new Point2D.Double(x, y), BOTTOM_LEFT);
     }
 
     public GraphicString(String string, double x, double y, int orientation) {
-        this.string = string;
-        this.anchor = new Point2D.Double(x, y);
-        this.orientation = orientation;
+        this(string, new Point2D.Double(x, y), orientation);
     }
+    
+    public GraphicString(String string, Point2D anchor, int orientation) {
+        setAnchor(anchor);
+        setString(string);
+        setOrientation(orientation);
+    }
+
 
     //
     // BEANS
@@ -71,7 +68,7 @@ public class GraphicString {
     }
 
     public void setAnchor(Point2D newAnchor) {
-        this.anchor = newAnchor;
+        this.anchor.setLocation(newAnchor);
     }
 
     public int getOrientation() {

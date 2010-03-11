@@ -5,9 +5,7 @@
 
 package org.bm.blaise.specto.space;
 
-import java.awt.Color;
-import org.bm.blaise.specto.primitive.BlaisePalette;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import scio.coordinate.Point3D;
 
@@ -17,7 +15,7 @@ import scio.coordinate.Point3D;
  * </p>
  * @author ae3263
  */
-public class SpaceViewObjects extends AbstractPlottable<Point3D> {
+public class SpaceViewObjects extends Plottable<Point3D> {
 
     SpaceProjection sp;
 
@@ -34,7 +32,7 @@ public class SpaceViewObjects extends AbstractPlottable<Point3D> {
     // PAINT METHODS
 
     @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
+    public void draw(VisometryGraphics<Point3D> vg) {
         SpaceGraphics sg = (SpaceGraphics) vg;
 
         // vectors for the scene's focal point
@@ -44,16 +42,16 @@ public class SpaceViewObjects extends AbstractPlottable<Point3D> {
 //        sg.addToScene(new P3D[]{ sp.center.minus(sp.bDir.times(.3)), sp.center.plus(sp.bDir.times(.3)) });
 
         // camera
-        sg.addToScene(new Point3D[]{ sp.camera });
-        sg.addToScene(new Point3D[]{ sp.camera, sp.camera.plus(sp.tDir.times(.25)) });
-        sg.addToScene(new Point3D[]{ sp.camera.minus(sp.nDir.times(.1)), sp.camera.plus(sp.nDir.times(.1)) });
-        sg.addToScene(new Point3D[]{ sp.camera.minus(sp.bDir.times(.1)), sp.camera.plus(sp.bDir.times(.1)) });
+        sg.drawPoint( sp.camera );
+        sg.drawSegment( sp.camera, sp.camera.plus(sp.tDir.times(.25)) );
+        sg.drawSegment( sp.camera.minus(sp.nDir.times(.1)), sp.camera.plus(sp.nDir.times(.1)) );
+        sg.drawSegment( sp.camera.minus(sp.bDir.times(.1)), sp.camera.plus(sp.bDir.times(.1)) );
 
         // screen
 //        sg.addToScene(new P3D[]{ sp.screenCenter.minus(sp.tDir.times(.05)) });
 //        sg.addToScene(new P3D[]{ sp.screenCenter.minus(sp.tDir.times(.05)), sp.screenCenter.minus(sp.tDir.times(.3)) });
-        sg.addToScene(new Point3D[]{ sp.screenCenter.minus(sp.nDir.times(.1)), sp.screenCenter.plus(sp.nDir.times(.1)) });
-        sg.addToScene(new Point3D[]{ sp.screenCenter.minus(sp.bDir.times(.1)), sp.screenCenter.plus(sp.bDir.times(.1)) });
+        sg.drawSegment( sp.screenCenter.minus(sp.nDir.times(.1)), sp.screenCenter.plus(sp.nDir.times(.1)) );
+        sg.drawSegment( sp.screenCenter.minus(sp.bDir.times(.1)), sp.screenCenter.plus(sp.bDir.times(.1)) );
         double wx = sp.winBounds.getWidth() / 2.0 / sp.dpi;
         double wy = sp.winBounds.getHeight() / 2.0 / sp.dpi;
 //        sg.addToScene(new P3D[]{ sp.screenCenter.plus(sp.bDir.times(wx)).plus(sp.nDir.times(wy)), sp.screenCenter.minus(sp.bDir.times(wx)).plus(sp.nDir.times(wy))});
@@ -61,15 +59,15 @@ public class SpaceViewObjects extends AbstractPlottable<Point3D> {
 //        sg.addToScene(new P3D[]{ sp.screenCenter.minus(sp.bDir.times(wx)).minus(sp.nDir.times(wy)), sp.screenCenter.plus(sp.bDir.times(wx)).minus(sp.nDir.times(wy))});
 //        sg.addToScene(new P3D[]{ sp.screenCenter.plus(sp.bDir.times(wx)).minus(sp.nDir.times(wy)), sp.screenCenter.plus(sp.bDir.times(wx)).plus(sp.nDir.times(wy))});
         // polygon
-        sg.addToScene(new Point3D[]{
+        sg.drawShape(new Point3D[]{
             sp.screenCenter.plus(sp.bDir.times(wx)).plus(sp.nDir.times(wy)), sp.screenCenter.minus(sp.bDir.times(wx)).plus(sp.nDir.times(wy)),
             sp.screenCenter.minus(sp.bDir.times(wx)).minus(sp.nDir.times(wy)), sp.screenCenter.plus(sp.bDir.times(wx)).minus(sp.nDir.times(wy))});
 
         // feature
-        sg.addToScene(new Point3D[]{ feature });
-        sg.addToScene(new Point3D[]{ sp.getCoordinateOf(sp.getWindowPointOf(feature)) });
-        sg.addToScene(new Point3D[]{ feature, sp.getCoordinateOf(sp.getWindowPointOf(feature)) });
-        sg.addToScene(new Point3D[]{ sp.camera, sp.getCoordinateOf(sp.getWindowPointOf(feature)) });
+        sg.drawPoint( feature );
+        sg.drawPoint( sp.getCoordinateOf(sp.getWindowPointOf(feature)) );
+        sg.drawSegment( feature, sp.getCoordinateOf(sp.getWindowPointOf(feature)) );
+        sg.drawSegment( sp.camera, sp.getCoordinateOf(sp.getWindowPointOf(feature)) );
         
 
         // draw boundaries of the viewing window (displays two rectangles, one for the full screen, and one just inside)

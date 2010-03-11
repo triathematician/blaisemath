@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.AbstractList;
 import java.util.List;
 import scio.coordinate.Point3D;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class SpaceGridSampleSet implements SampleCoordinateSetGenerator<Point3D> {
+public class SpaceGridSampleSet implements SampleGenerator<Point3D> {
 
     /** Boundary of sampled region. */
     Point3D min;

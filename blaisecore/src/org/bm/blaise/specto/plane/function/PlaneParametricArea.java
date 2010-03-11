@@ -14,7 +14,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
-import org.bm.blaise.specto.plottable.VComputedPath;
+import org.bm.blaise.specto.plane.ComputedPath;
 import org.bm.blaise.specto.plottable.VRectangle;
 import scio.coordinate.MaxMinDomain;
 import scio.coordinate.sample.RealIntervalSampler;
@@ -27,14 +27,17 @@ import scio.coordinate.sample.RealIntervalSampler;
  *
  * @author Elisha Peterson
  */
-public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
+public class PlaneParametricArea extends ComputedPath {
 
     /** The underlying function, 2 inputs, 2 outputs */
     MultivariateVectorialFunction func;
+    
     /** Range of u-values for display purposes */
     RealIntervalSampler domainU;
+
     /** Range of v-valeus for display purposes */
     RealIntervalSampler domainV;
+
     /** Stores rectangle used to adjust the range. */
     VRectangle<Point2D.Double> domainPlottable;
 
@@ -51,10 +54,13 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
         domainPlottable.addChangeListener(this);
     }
 
-    //
+    @Override
+    public String toString() {
+        return "Parametric Area";
+    }
+
     //
     // BEAN PATTERNS
-    //
     //
 
     public MultivariateVectorialFunction getFunction() {
@@ -110,9 +116,7 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
 
 
     //
-    //
     // DRAW METHODS
-    //
     //
 
     @Override
@@ -128,13 +132,9 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
     }
 
     /** Recomputes the visual path for the function. */
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
+        GeneralPath path = new GeneralPath();
         try {
-            if (path == null) {
-                path = new GeneralPath();
-            } else {
-                path.reset();
-            }
             List<Double> xx = domainU.getSamples();
             List<Double> yy = domainV.getSamples();
 
@@ -161,12 +161,7 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
         } catch (FunctionEvaluationException ex) {
             Logger.getLogger(PlaneParametricArea.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> vg) {
-//        domain.paintComponent(vg);
-        super.paintComponent(vg);
+        return path;
     }
 
     @Override
@@ -187,10 +182,5 @@ public class PlaneParametricArea extends VComputedPath<Point2D.Double> {
     @Override
     public void mouseReleased(VisometryMouseEvent<Point2D.Double> e) {
         domainPlottable.mouseReleased(e);
-    }
-
-    @Override
-    public String toString() {
-        return "Parametric Area";
     }
 }

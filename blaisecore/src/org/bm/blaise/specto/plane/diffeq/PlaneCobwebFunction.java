@@ -6,12 +6,9 @@ package org.bm.blaise.specto.plane.diffeq;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.plottable.VComputedPointPath;
+import org.bm.blaise.specto.plane.ComputedPointPath;
 import scio.diffeq.DifferenceEquation1;
 
 /**
@@ -21,21 +18,13 @@ import scio.diffeq.DifferenceEquation1;
  *
  * @author Elisha Peterson
  */
-public class PlaneCobwebFunction extends VComputedPointPath<Point2D.Double> {
-
-    //
-    //
-    // PROPERTIES
-    //
-    //
+public class PlaneCobwebFunction extends ComputedPointPath {
 
     /** Responsible for computing the walk. */
     DifferenceEquation1 de;
 
     //
-    //
     // CONSTRUCTORS
-    //
     //
 
     /**
@@ -47,9 +36,7 @@ public class PlaneCobwebFunction extends VComputedPointPath<Point2D.Double> {
     }
 
     //
-    //
     // BEAN PATTERNS
-    //
     //
 
     /** @return the underlying walk used for computation */
@@ -59,39 +46,29 @@ public class PlaneCobwebFunction extends VComputedPointPath<Point2D.Double> {
 
     /** Sets a new walk for this plottable */
     public void setEquation(DifferenceEquation1 de) {
-        this.de = de;
+        if (this.de != de) {
+            this.de = de;
+            needsComputation = true;
+            fireStateChanged();
+        }
     }
 
 
-    //
     //
     // COMPUTATION / PAINTING
     //
-    //
 
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
-        if (path == null) {
-            path = new GeneralPath();
-        } else {
-            path.reset();
-        }
-        path.moveTo((float) value.x, (float) value.y);
-        de.setX0(value.x);
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
+        GeneralPath path = new GeneralPath();
+        path.moveTo((float) getPoint().x, (float) getPoint().y);
+        de.setX0(getPoint().x);
         try {
             de.computeResult();
+            Point2D.Double[] pw = de.getCobwebPath();
+            for (int i=0; i < pw.length; i++)
+                path.lineTo((float) pw[i].x, (float) pw[i].y);
         } catch (FunctionEvaluationException ex) {
         }
-        Point2D.Double[] pw = de.getCobwebPath();
-        for (int i=0; i < pw.length; i++) {
-            path.lineTo((float) pw[i].x, (float) pw[i].y);
-        }
-        needsComputation = false;
-    }
-
-    final NumberFormat formatter = new DecimalFormat("#0.00");
-
-    @Override
-    public String getValueString() {
-        return "(" + formatter.format(value.x) + ", " + formatter.format(value.y) + ")";
+        return path;
     }
 }

@@ -7,7 +7,7 @@ package org.bm.blaise.specto.plane;
 
 import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.BlaisePalette;
-import org.bm.blaise.specto.visometry.AbstractPlottable;
+import org.bm.blaise.specto.visometry.Plottable;
 import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.primitive.PathStyle;
@@ -21,7 +21,7 @@ import org.bm.utils.NiceRangeGenerator;
  *
  * @author Elisha Peterson
  */
-public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements VisometryChangeListener {
+public class PlaneGrid extends Plottable<Point2D.Double> implements VisometryChangeListener {
 
     /** Default approximate spacing between the grid. */
     private static final int PIXEL_SPACING = 80;
@@ -65,7 +65,7 @@ public class PlaneGrid extends AbstractPlottable<Point2D.Double> implements Viso
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<Point2D.Double> canvas) {
+    public void draw(VisometryGraphics<Point2D.Double> canvas) {
         PlaneGraphics pg = (PlaneGraphics) canvas;
         canvas.setPathStyle(style);
         

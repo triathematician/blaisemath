@@ -26,9 +26,8 @@ public class PlaneTriangle extends VPolygon<Point2D.Double> {
 
     @Override
     public void setValues(Point2D.Double[] values) {
-        if (values == null || values.length != 3) {
+        if (values == null || values.length != 3)
             throw new IllegalArgumentException("Triangle requires exactly 3 endpoints!");
-        }
         super.setValues(values);
     }
 

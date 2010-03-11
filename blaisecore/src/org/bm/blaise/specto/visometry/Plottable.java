@@ -4,88 +4,132 @@
  */
 package org.bm.blaise.specto.visometry;
 
+import java.text.DecimalFormat;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 
 /**
  * <p>
- *  This interface consists of basic features for an object that can be drawn on
- *  a <code>VisometryGraphics</code> canvas. The idea is to convert an underlying
- *  mathematical object into something that can be seen on the plot. The class has
- *  methods that show/hide the plottable.
- * </p>
- * <p>
- *  Finally, the class extends <code>ChangeListener</code> and adds patterns for
- *  adding and removing other <code>ChangeListener</code>'s to this class. This
- *  allows for other classes to be notified if the plottable is changed visually,
- *  and allows it to be "recomputed" if the underlying mathematical objects change.
- * </p>
- * <p>
- *  The <code>AbstractPlottable</code> class implements basic functionality for
- *  most of these features.
+ *   Provides an abstract implementation of a <code>Plottable</code>. Implements
+ *   visibility properties, as well as code for handling and firing <code>ChangeEvent</code>s.
+ *   Sub-classes need only implement the <code>paintComponent</code> method.
  * </p>
  *
- * @see AbstractPlottable
  * @param <C> the coordinate type of the plottable
  *
  * @author Elisha Peterson
  */
-public interface Plottable<C> extends ChangeListener {
+public abstract class Plottable<C>
+        implements ChangeListener {
 
     //
+    // PROPERTIES
+    //
+
+    static public DecimalFormat formatter = new DecimalFormat("#0.00");
+
+    /** Determines visibility of the plottable. */
+    protected boolean visible = true;
+
+    /** Selected state of the plottable. */
+    protected boolean selected = false;
+
+    //
+    // CONSTRUCTORS
+    //
+
+    /** 
+     * Default constructor does nothing.
+     */
+    public Plottable() {
+    }    
+
     //
     // BEAN PATTERNS
     //
+
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean newValue) {
+        if (visible != newValue) {
+            visible = newValue;
+            fireStateChanged();
+        }
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean newValue) {
+        if (selected != newValue) {
+            selected = newValue;
+            fireStateChanged();
+        }
+    }
+
     //
-
-    /** 
-     * Sets whether plot is visible.
-     */
-    public void setVisible(boolean newValue);
-
-    /** 
-     * Returns visibility status.
-     */
-    public boolean isVisible();
-
-    /**
-     * Sets selected status.
-     */
-    public void setSelected(boolean newValue);
-
-    /**
-     * Whether the plottable is selected.
-     */
-    public boolean isSelected();
-
-    //
-    //
-    // COMPUTATIONAL/VISUAL
-    //
+    // VISUAL
     //
 
     /**
      * Method that paints the plottable. Subclasses have full control over this method.
-     * They DO NOT need to check whether the plottable as visible, as this will be
+     * They DO NOT need to check whether the plottable is visible, as this will be
      * done by the parent classes.
-     * @param vg the visometry graphics object for painting
+     * @param vg the graphics object for painting
      */
-    public void paintComponent(VisometryGraphics<C> vg);
+    abstract public void draw(VisometryGraphics<C> vg);
 
-    //
     //
     // EVENT HANDLING
     //
-    //
+
+    /**
+     * Handles a change event. By default, passes the ChangeEvent along
+     * to interested listeners (particularly the parent class), provided this class
+     * itself did not originate the event.
+     * @param e the change event
+     */
+    public void stateChanged(ChangeEvent e) {
+        if (!e.getSource().equals(this)) {
+            changeEvent = e;
+            fireStateChanged();
+        }
+    }
+    
+    protected transient ChangeEvent changeEvent = new ChangeEvent(this);
+    protected EventListenerList listenerList = new EventListenerList();
 
     /**
      * Removes a listener from the list of classes receiving <code>ChangeEvent</code>s
      * @param l the listener
      */
-    public void addChangeListener(ChangeListener l);
+    public void addChangeListener(ChangeListener l) {
+        listenerList.add(ChangeListener.class, l);
+    }
 
     /**
      * Adds a listener to receive <code>ChangeEvent</code>s
      * @param l the listener
      */
-    public void removeChangeListener(ChangeListener l);
+    public void removeChangeListener(ChangeListener l) {
+        listenerList.remove(ChangeListener.class, l);
+    }
+
+    /**
+     * Fires the change event to listeners.
+     */
+    protected void fireStateChanged() {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = listeners.length - 2; i >= 0; i -= 2)
+            if (listeners[i] == ChangeListener.class) {
+                if (changeEvent == null)
+                    return;
+                ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
+            }
+    }
 }

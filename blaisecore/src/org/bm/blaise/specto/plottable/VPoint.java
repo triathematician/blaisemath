@@ -96,8 +96,6 @@ public class VPoint<C> extends VInvisiblePoint<C> {
     // PAINTING
     //
 
-    final NumberFormat formatter = new DecimalFormat("#0.000");
-
     /** Hook for subclasses to provide custom formatting of displayed coordinates of point. */
     public String getValueString() {
         if (value instanceof Point2D) {
@@ -108,15 +106,11 @@ public class VPoint<C> extends VInvisiblePoint<C> {
     }
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawPoint(value, style);
-        if (labelVisible || coordVisible) {
-            vg.drawString(
-                    labelVisible && coordVisible ? label + " " + getValueString()
-                    : labelVisible ? label
-                    : coordVisible ? getValueString()
-                    : null
-                    , value, 5, -5, labelStyle);
-        }
+        String str = (labelVisible && label != null ? label : "")
+                + (coordVisible ? getValueString() : "");
+        if (str.length() != 0)
+            vg.drawString(str, value, 5, -5, labelStyle);
     }
 }

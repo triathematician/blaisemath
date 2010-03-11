@@ -6,19 +6,17 @@
 package org.bm.blaise.specto.plane.function;
 
 import java.util.List;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 import java.awt.geom.Point2D;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.math.FunctionEvaluationException;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.math.analysis.MultivariateRealFunction;
-import org.bm.blaise.specto.plane.PlaneVisometry;
-import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
+import org.bm.blaise.specto.plane.PlaneGraphics;
+import org.bm.blaise.specto.plottable.SamplerPlottable;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.GraphicPoint;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.primitive.PointStyle;
+import util.ChangeEventHandler;
 
 /**
  * <p>
@@ -28,26 +26,27 @@ import org.bm.blaise.specto.primitive.PointStyle;
  *
  * @author Elisha Peterson
  */
-public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Double, Point2D, Point2D.Double> {
-
-    /** Multiplier for dot size. */
-    double lengthMultiplier = 1;
+public class PlaneSurfaceFunction extends SamplerPlottable<Double, GraphicPoint, Point2D.Double> {
 
     /** Underlying function */
     MultivariateRealFunction func;
+    /** Multiplier for dot size. */
+    double lengthMultiplier = 1;
 
-    public PlaneSurfaceFunction(MultivariateRealFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
-        super(new PointStyle(BlaisePalette.STANDARD.func2(), BlaisePalette.STANDARD.func2light()), ssg);
+
+    public PlaneSurfaceFunction(MultivariateRealFunction func, SampleGenerator<Point2D.Double> sg) {
+        super(sg);
         setFunc(func);
+        setStyle(new PointStyle(BlaisePalette.STANDARD.func2(), BlaisePalette.STANDARD.func2light()));
     }
 
     @Override
     public String toString() {
-        return "2-Variable Function [" + ssg + "]";
+        return "2-Variable Function [" + getSampleGenerator() + "]";
     }
 
     //
-    // BEAN PATTERNS
+    // VALUE PATTERNS
     //
 
     /** @return function describing the surface */
@@ -60,46 +59,81 @@ public class PlaneSurfaceFunction extends VPrimitiveMappingPlottable<Point2D.Dou
      * @param func the function
      */
     public void setFunc(MultivariateRealFunction func) {
-        this.func = func;
+        if (func != null && this.func != func) {
+            if (this.func instanceof ChangeEventHandler)
+                ((ChangeEventHandler)this.func).removeChangeListener(this);
+            this.func = func;
+            if (func instanceof ChangeEventHandler)
+                ((ChangeEventHandler)func).addChangeListener(this);
+            needsComputation = true;
+            fireStateChanged();
+        }
     }
+
+    //
+    // STYLE PATTERNS
+    //
 
     public double getLengthMultiplier() {
         return lengthMultiplier;
     }
 
     public void setLengthMultiplier(double lengthMultiplier) {
-        this.lengthMultiplier = lengthMultiplier;
+        if (this.lengthMultiplier != lengthMultiplier) {
+            this.lengthMultiplier = lengthMultiplier;
+            needsPrimitiveComputation = true;
+            fireStateChanged();
+        }
+    }
+
+    public PointStyle getStyle() {
+        return (PointStyle) style;
+    }
+
+    public void setStyle(PointStyle pointStyle) {
+        if (this.style != pointStyle) {
+            this.style = pointStyle;
+            fireStateChanged();
+        }
     }
 
     //
-    // PrimitiveMapper INTERFACE METHODS
+    // DRAW METHODS
+    //
+
+    protected Double getValue(Point2D.Double sample) {
+        try {
+            return func.value(new double[]{sample.x, sample.y});
+        } catch (Exception ex) {
+            return Double.NaN;
+        }
+    }
+
+    @Override
+    protected double getScaleFactor(List<Double> values, Point2D.Double diff) {
+        double maxAbsValue = 0.0;
+        for (Double d : values)
+            maxAbsValue = Math.max( maxAbsValue, Math.abs(d) );
+        return lengthMultiplier * (maxAbsValue == 0 ? 1
+                : .95 * Math.min(Math.abs(diff.x), Math.abs(diff.y)) / maxAbsValue);
+    }
+
+    protected GraphicPoint[] getPrimitives(List<Point2D.Double> samples, List<Double> values, double scaleFactor, VisometryGraphics<Point2D.Double> vg) {
+        double maxRad = .5 * Math.min(((PlaneGraphics)vg).getScaleX(), ((PlaneGraphics)vg).getScaleY());
+        GraphicPoint[] points = new GraphicPoint[samples.size()];
+        for (int i = 0; i < samples.size(); i++)
+            points[i] = new GraphicPoint(vg.getWindowPointOf(samples.get(i)), maxRad * scaleFactor * values.get(i));
+        return points;
+    }
+    
+    //    
+    // CHANGE HANDLING
     //
 
     @Override
-    public void scalePrimitives(Visometry vis) {
-        PlaneVisometry pv = (PlaneVisometry) vis;
-        double maxRad = Math.min(Math.abs(ssg.getSampleDiff().x * pv.getScaleX()), Math.abs(ssg.getSampleDiff().y * pv.getScaleY()));
-        GraphicPoint.scalePoints(primitives, lengthMultiplier * maxRad / 1.5, 0.5);
-    }
-
-    public Point2D primitiveAt(Point2D.Double coord, VisometryGraphics<Point2D.Double> vg) {
-        double value = 0;
-        try {
-            value = func.value(new double[]{coord.x, coord.y});
-        } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneSurfaceFunction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(PlaneSurfaceFunction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // TODO - error checking/functionality
-        return new GraphicPoint(vg.getWindowPointOf(coord), 5 * value);
-    }
-
-    public Point2D[] primitivesAt(List<Point2D.Double> coords, VisometryGraphics<Point2D.Double> vg) {
-        Point2D[] result = new Point2D[coords.size()];
-        int i = 0;
-        for (Point2D.Double c : coords)
-            result[i++] = primitiveAt(c, vg);
-        return result;
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == func)
+            needsComputation = true;
+        super.stateChanged(e);
     }
 }

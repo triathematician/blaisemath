@@ -12,7 +12,7 @@ import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.Visometry;
-import org.bm.blaise.specto.plottable.VComputedPath;
+import org.bm.blaise.specto.plane.ComputedPath;
 import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -23,7 +23,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements VisometryChangeListener {
+public class PlaneFunctionGraph extends ComputedPath implements VisometryChangeListener {
 
     
     /** Underlying function */
@@ -37,6 +37,19 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
     public PlaneFunctionGraph(UnivariateRealFunction func) {
         setFunction(func);
     }
+
+    //
+    // OBJECT METHODS
+    //
+
+    @Override
+    public String toString() {
+        return "Function Graph";
+    }
+
+    //
+    // VALUE METHODS
+    //
     
     public UnivariateRealFunction getFunction() {
         return func;
@@ -54,18 +67,10 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
     // PAINT ROUTINES
     //
 
-    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
-        recompute((PlaneGraphics) canvas);
-    }
-
     /** Recomputes the visual path for the function. Also performs domain checking. */
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
         double xStep = ((PlaneGraphics) vg).getIdealHStepForPixelSpacing(0.5); // set to sample every 0.5 pixels
-        if (path == null) {
-            path = new GeneralPath();
-        } else {
-            path.reset();
-        }
+        GeneralPath path = new GeneralPath();
         double x = vg.getMinCoord().x;
         double fx = 0;
         while (x <= vg.getMaxCoord().x) {
@@ -90,7 +95,7 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
                 x += xStep;
             }
         }
-        needsComputation = false;
+        return path;
     }
 
     @Override
@@ -103,10 +108,5 @@ public class PlaneFunctionGraph extends VComputedPath<Point2D.Double> implements
             return false;
         }
         return e.withinRangeOf(new Point2D.Double(x, y), 4);
-    }
-
-    @Override
-    public String toString() {
-        return "Function Graph";
     }
 }

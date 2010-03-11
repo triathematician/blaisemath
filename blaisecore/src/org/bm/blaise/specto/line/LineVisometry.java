@@ -20,7 +20,8 @@ import org.bm.blaise.specto.visometry.Visometry;
  *
  * @author Elisha Peterson
  */
-public class LineVisometry implements Visometry<Double> {
+public class LineVisometry
+        implements Visometry<Double> {
 
     //
     // PROPERTIES
@@ -36,6 +37,15 @@ public class LineVisometry implements Visometry<Double> {
     AffineTransform at;
     /** Stores the inverse of the transform */
     transient AffineTransform atInverse;
+
+    //
+    // CONSTRUCTORS
+    //
+
+    public LineVisometry() {
+        at = new AffineTransform();
+    }
+    
 
     //
     // BEAN PATTERNS
@@ -59,7 +69,11 @@ public class LineVisometry implements Visometry<Double> {
         
         if (!newBounds.equals(windowBounds)) {
             this.windowBounds = newBounds;
-            computeTransformation();
+            try {
+                computeTransformation();
+            } catch (IllegalStateException ex) {
+                this.windowBounds = null;
+            }
         }
     }
 
@@ -92,17 +106,15 @@ public class LineVisometry implements Visometry<Double> {
     public void setDesiredRange(double min, double max) {
         if (min == max)
             throw new IllegalArgumentException("Range must be nonempty");
-        
-        // ensure proper order
-        if (min > max) {
-            double swap = min;
-            min = max;
-            max = swap;
+
+        minimum = Math.min(min, max);
+        maximum = Math.max(min, max);
+
+        try {
+            computeTransformation();
+        } catch (IllegalStateException ex) {
+            this.windowBounds = null;
         }
-        minimum = min;
-        maximum = max;
-        
-        computeTransformation();
     }
 
     /** @return x scaling to transform local to window coordinates */
@@ -138,14 +150,10 @@ public class LineVisometry implements Visometry<Double> {
     }
 
     public Point2D.Double getWindowPointOf(Double coordinate) {
-        if (at == null)
-            throw new IllegalStateException();
         return (Point2D.Double) at.transform(new Point2D.Double(coordinate, 0), null);
     }
 
     public Double getCoordinateOf(Point2D point) {
-        if (atInverse == null)
-            throw new IllegalStateException();
         return atInverse.transform(point, null).getX();
     }
 

@@ -3,13 +3,16 @@
  * Created on Sep 17, 2009
  */
 
-package org.bm.blaise.specto.plottable;
+package org.bm.blaise.specto.plane;
 
 import java.awt.Point;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 import org.bm.blaise.specto.primitive.BlaisePalette;
 import org.bm.blaise.specto.primitive.PathStyle;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
+import org.bm.blaise.specto.visometry.Visometry;
+import org.bm.blaise.specto.visometry.VisometryChangeListener;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -22,7 +25,8 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  * @param <C> coordinate type of visometry
  * @author Elisha Peterson
  */
-public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
+public abstract class ComputedPath extends DynamicPlottable<Point2D.Double>
+        implements VisometryChangeListener {
 
     //
     // PROPERTIES
@@ -51,21 +55,22 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
     /** Determines whether path needs to be recomputed */
     transient protected boolean needsComputation = true;
     /** Stores the path computed and displayed (in WINDOW coordinates) */
-    transient protected GeneralPath path;
+    transient GeneralPath path;
 
-    /** 
-     * This method is called to recompute the path, and should populate the
-     * <code>path</code> in WINDOW coordinates.
-     */
-    abstract protected void recompute(VisometryGraphics<C> vg);
+    /** This method is called to recompute the path; should return the path in LOCAL coordinates. */
+    abstract protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg);
+
+    public void visometryChanged(Visometry vis, VisometryGraphics canvas) {
+        path = ((PlaneGraphics)canvas).toWindow(getPath(canvas));
+        needsComputation = false;
+    }
+
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
-        if (needsComputation) {
-            recompute(vg);
-            needsComputation = false;
-        }
-        vg.drawWinPrimitive(path, strokeStyle);
+    public void draw(VisometryGraphics<Point2D.Double> vg) {
+        if (needsComputation || path == null)
+            visometryChanged(null, vg);
+        strokeStyle.draw(vg.getScreenGraphics(), path, selected);
     }
 
     //
@@ -78,11 +83,10 @@ public abstract class VComputedPath<C> extends AbstractDynamicPlottable<C>  {
      * @param e the mouse visometry event
      * @return <code>true</code> if the mouse pointer is within a few pixels of the path
      */
-    public boolean isClickablyCloseTo(VisometryMouseEvent<C> e) {
+    public boolean isClickablyCloseTo(VisometryMouseEvent<Point2D.Double> e) {
         Point p = e.getWindowPoint();
-        if (path == null) {
+        if (path == null)
             return false;
-        }
         return path.intersects(p.x - 2, p.y - 2, 5, 5);
     }
 }

@@ -15,9 +15,8 @@ import org.apache.commons.math.ode.ContinuousOutputModel;
 import org.apache.commons.math.ode.DerivativeException;
 import org.apache.commons.math.ode.IntegratorException;
 import scio.diffeq.OneVarODE;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import org.bm.blaise.specto.plottable.VComputedPointPath;
+import org.bm.blaise.specto.plane.ComputedPointPath;
 
 /**
  * <p>
@@ -29,14 +28,12 @@ import org.bm.blaise.specto.plottable.VComputedPointPath;
  *
  * @author Elisha Peterson
  */
-public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
+public class PlaneDESolution extends ComputedPointPath {
 
     /** ODE responsible for computing the solution. */
     OneVarODE ode;
-
     /** Used to interpolate the computed solution. */
     ContinuousOutputModel com;
-
     /** This determines the step size used for solving and interpolating the
      * solution. */
     double step = 0.05;
@@ -51,10 +48,13 @@ public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
         ode = new OneVarODE(df, point.y, point.x, endTime);
     }
 
-    //
+    @Override
+    public String toString() {
+        return "Solution Curve @ " + point.getValueString();
+    }
+
     //
     // BEAN PATTERNS
-    //
     //
 
     /** @return the underlying ODE used for computation */
@@ -79,14 +79,12 @@ public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
        
 
     //
-    //
     // COMPUTATION / PAINTING
     //
-    //
 
-    protected void recompute(VisometryGraphics<Point2D.Double> vg) {
-        ode.setT0(value.x);
-        ode.setX0(value.y);
+    protected GeneralPath getPath(VisometryGraphics<Point2D.Double> vg) {
+        ode.setT0(getPoint().x);
+        ode.setX0(getPoint().y);
         double[] yFinal = { 0.999 };
         try {
             com = ode.solveODE(yFinal, step);
@@ -95,12 +93,8 @@ public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
         } catch (IntegratorException ex) {
             Logger.getLogger(PlaneDESolution.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (path == null) {
-            path = new GeneralPath();
-        } else {
-            path.reset();
-        }
-        path.moveTo((float) value.x, (float) value.y);
+        GeneralPath path = new GeneralPath();
+        path.moveTo((float) getPoint().x, (float) getPoint().y);
         int nSteps = (int) (((com.getFinalTime() - com.getInitialTime()) / step) + 1);
         try{
             for (int i=0; i<nSteps; i++) {
@@ -110,18 +104,6 @@ public class PlaneDESolution extends VComputedPointPath<Point2D.Double> {
             }
         } catch(DerivativeException ex) {
         }
-        needsComputation = false;
-    }
-
-    final NumberFormat formatter = new DecimalFormat("#0.00");
-
-    @Override
-    public String getValueString() {
-        return "(" + formatter.format(value.x) + ", " + formatter.format(value.y) + ")";
-    }
-
-    @Override
-    public String toString() {
-        return "Solution Curve @ " + getValueString();
+        return path;
     }
 }

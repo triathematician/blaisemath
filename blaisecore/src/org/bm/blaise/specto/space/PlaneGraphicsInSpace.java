@@ -42,11 +42,11 @@ public class PlaneGraphicsInSpace extends PlaneGraphics {
 
     @Override
     public void drawPoint(Point2D.Double coordinate) {
-        sg.addToScene(new Point3D[]{inclusion(coordinate)});
+        sg.drawPoint( inclusion(coordinate) );
     }
 
     public void drawLine(double x1, double y1, double x2, double y2) {
-        sg.addToScene( new Point3D[]{ inclusion(x1, y1), inclusion(x2, y2) } );
+        sg.drawSegment( inclusion(x1, y1), inclusion(x2, y2) );
     }
 
     @Override
@@ -74,6 +74,7 @@ public class PlaneGraphicsInSpace extends PlaneGraphics {
             }
             pi.next();
         }
-        sg.addToScene(pathParts);
+        for(Point3D[] part : pathParts)
+            sg.drawPath(part);
     }
 }

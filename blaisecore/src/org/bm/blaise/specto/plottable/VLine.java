@@ -5,7 +5,7 @@
 package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.specto.primitive.TwoPointStyle;
-import org.bm.blaise.specto.visometry.AbstractDynamicPlottable;
+import org.bm.blaise.specto.visometry.DynamicPlottable;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
 import org.bm.blaise.specto.visometry.VisometryMouseEvent;
 
@@ -16,7 +16,7 @@ import org.bm.blaise.specto.visometry.VisometryMouseEvent;
  *
  * @author Elisha Peterson
  */
-public class VLine<C> extends AbstractDynamicPlottable<C> {
+public class VLine<C> extends DynamicPlottable<C> {
 
     //
     // PROPERTIES
@@ -96,7 +96,7 @@ public class VLine<C> extends AbstractDynamicPlottable<C> {
     //
 
     @Override
-    public void paintComponent(VisometryGraphics<C> vg) {
+    public void draw(VisometryGraphics<C> vg) {
         vg.drawArrow(value1, value2, style);
     }
 

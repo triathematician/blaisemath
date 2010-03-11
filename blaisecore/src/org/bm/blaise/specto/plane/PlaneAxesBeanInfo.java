@@ -88,9 +88,9 @@ public class PlaneAxesBeanInfo extends SimpleBeanInfo {
 
     // Method identifiers//GEN-FIRST:Methods
     private static final int METHOD_clone0 = 0;
-    private static final int METHOD_instance1 = 1;
-    private static final int METHOD_instance2 = 2;
-    private static final int METHOD_instance3 = 3;
+    private static final int METHOD_draw1 = 1;
+    private static final int METHOD_drawLabeledHorizontalLines2 = 2;
+    private static final int METHOD_drawLabeledVerticalLines3 = 3;
     private static final int METHOD_isClickablyCloseTo4 = 4;
     private static final int METHOD_mouseClicked5 = 5;
     private static final int METHOD_mouseDragged6 = 6;
@@ -99,49 +99,46 @@ public class PlaneAxesBeanInfo extends SimpleBeanInfo {
     private static final int METHOD_mouseMoved9 = 9;
     private static final int METHOD_mousePressed10 = 10;
     private static final int METHOD_mouseReleased11 = 11;
-    private static final int METHOD_paintComponent12 = 12;
-    private static final int METHOD_stateChanged13 = 13;
-    private static final int METHOD_toString14 = 14;
-    private static final int METHOD_visometryChanged15 = 15;
+    private static final int METHOD_stateChanged12 = 12;
+    private static final int METHOD_toString13 = 13;
+    private static final int METHOD_visometryChanged14 = 14;
 
     // Method array 
     /*lazy MethodDescriptor*/
     private static MethodDescriptor[] getMdescriptor(){
-        MethodDescriptor[] methods = new MethodDescriptor[16];
+        MethodDescriptor[] methods = new MethodDescriptor[15];
     
         try {
             methods[METHOD_clone0] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("clone", new Class[] {})); // NOI18N
             methods[METHOD_clone0].setDisplayName ( "" );
-            methods[METHOD_instance1] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {java.lang.String.class, java.lang.String.class})); // NOI18N
-            methods[METHOD_instance1].setDisplayName ( "" );
-            methods[METHOD_instance2] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.Style.class})); // NOI18N
-            methods[METHOD_instance2].setDisplayName ( "" );
-            methods[METHOD_instance3] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("instance", new Class[] {org.bm.blaise.specto.plane.PlaneAxes.Style.class, java.lang.String.class, java.lang.String.class})); // NOI18N
-            methods[METHOD_instance3].setDisplayName ( "" );
+            methods[METHOD_draw1] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("draw", new Class[] {org.bm.blaise.specto.visometry.VisometryGraphics.class})); // NOI18N
+            methods[METHOD_draw1].setDisplayName ( "" );
+            methods[METHOD_drawLabeledHorizontalLines2] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("drawLabeledHorizontalLines", new Class[] {org.bm.blaise.specto.plane.PlaneGraphics.class, double.class, double[].class, int.class, int.class, java.lang.String[].class})); // NOI18N
+            methods[METHOD_drawLabeledHorizontalLines2].setDisplayName ( "" );
+            methods[METHOD_drawLabeledVerticalLines3] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("drawLabeledVerticalLines", new Class[] {org.bm.blaise.specto.plane.PlaneGraphics.class, double[].class, double.class, int.class, int.class, java.lang.String[].class})); // NOI18N
+            methods[METHOD_drawLabeledVerticalLines3].setDisplayName ( "" );
             methods[METHOD_isClickablyCloseTo4] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("isClickablyCloseTo", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_isClickablyCloseTo4].setDisplayName ( "" );
-            methods[METHOD_mouseClicked5] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseClicked", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseClicked5] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseClicked", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseClicked5].setDisplayName ( "" );
-            methods[METHOD_mouseDragged6] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseDragged", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseDragged6] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseDragged", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseDragged6].setDisplayName ( "" );
-            methods[METHOD_mouseEntered7] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseEntered", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseEntered7] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseEntered", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseEntered7].setDisplayName ( "" );
-            methods[METHOD_mouseExited8] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseExited", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseExited8] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseExited", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseExited8].setDisplayName ( "" );
-            methods[METHOD_mouseMoved9] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseMoved", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseMoved9] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseMoved", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseMoved9].setDisplayName ( "" );
-            methods[METHOD_mousePressed10] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mousePressed", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mousePressed10] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mousePressed", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mousePressed10].setDisplayName ( "" );
-            methods[METHOD_mouseReleased11] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractDynamicPlottable.class.getMethod("mouseReleased", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
+            methods[METHOD_mouseReleased11] = new MethodDescriptor(org.bm.blaise.specto.visometry.DynamicPlottable.class.getMethod("mouseReleased", new Class[] {org.bm.blaise.specto.visometry.VisometryMouseEvent.class})); // NOI18N
             methods[METHOD_mouseReleased11].setDisplayName ( "" );
-            methods[METHOD_paintComponent12] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("paintComponent", new Class[] {org.bm.blaise.specto.visometry.VisometryGraphics.class})); // NOI18N
-            methods[METHOD_paintComponent12].setDisplayName ( "" );
-            methods[METHOD_stateChanged13] = new MethodDescriptor(org.bm.blaise.specto.visometry.AbstractPlottable.class.getMethod("stateChanged", new Class[] {javax.swing.event.ChangeEvent.class})); // NOI18N
-            methods[METHOD_stateChanged13].setDisplayName ( "" );
-            methods[METHOD_toString14] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("toString", new Class[] {})); // NOI18N
-            methods[METHOD_toString14].setDisplayName ( "" );
-            methods[METHOD_visometryChanged15] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("visometryChanged", new Class[] {org.bm.blaise.specto.visometry.Visometry.class, org.bm.blaise.specto.visometry.VisometryGraphics.class})); // NOI18N
-            methods[METHOD_visometryChanged15].setDisplayName ( "" );
+            methods[METHOD_stateChanged12] = new MethodDescriptor(org.bm.blaise.specto.visometry.Plottable.class.getMethod("stateChanged", new Class[] {javax.swing.event.ChangeEvent.class})); // NOI18N
+            methods[METHOD_stateChanged12].setDisplayName ( "" );
+            methods[METHOD_toString13] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("toString", new Class[] {})); // NOI18N
+            methods[METHOD_toString13].setDisplayName ( "" );
+            methods[METHOD_visometryChanged14] = new MethodDescriptor(org.bm.blaise.specto.plane.PlaneAxes.class.getMethod("visometryChanged", new Class[] {org.bm.blaise.specto.visometry.Visometry.class, org.bm.blaise.specto.visometry.VisometryGraphics.class})); // NOI18N
+            methods[METHOD_visometryChanged14].setDisplayName ( "" );
         }
         catch( Exception e) {}//GEN-HEADEREND:Methods
 

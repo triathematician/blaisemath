@@ -9,19 +9,13 @@ package org.bm.blaise.specto.plane.diffeq;
 
 import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
-import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.MultivariateVectorialFunction;
-import org.bm.blaise.specto.plane.PlaneVisometry;
-import org.bm.blaise.specto.plottable.VPrimitiveMappingPlottable;
-import org.bm.blaise.specto.primitive.GraphicArrow;
+import org.bm.blaise.specto.plottable.SamplerPlottable;
 import org.bm.blaise.specto.primitive.ArrowStyle;
 import org.bm.blaise.specto.primitive.BlaisePalette;
-import org.bm.blaise.specto.visometry.Visometry;
 import org.bm.blaise.specto.visometry.VisometryGraphics;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 import util.ChangeEventHandler;
 
 /**
@@ -32,16 +26,13 @@ import util.ChangeEventHandler;
  *
  * @author Elisha Peterson
  */
-public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double, GraphicArrow, Point2D.Double> {
-
-    /** Style for drawing the vectors. */
-    private static ArrowStyle DEFAULT_STYLE = new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.Shape.REGULAR, 5);
+public class PlaneVectorField extends SamplerPlottable<double[], Point2D[], Point2D.Double> {
 
     /** Underlying function */
     MultivariateVectorialFunction func;
 
     /** Whether arrows are centered at sample points. */
-    boolean centered;
+    boolean centered = false;
     /** Multiplier for vec field length. */
     double lengthMultiplier = 1;
 
@@ -49,18 +40,19 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public PlaneVectorField(MultivariateVectorialFunction func, SampleCoordinateSetGenerator<Point2D.Double> ssg) {
-        super((ArrowStyle) DEFAULT_STYLE.clone(), ssg);
+    public PlaneVectorField(MultivariateVectorialFunction func, SampleGenerator<Point2D.Double> sg) {
+        super(sg);
         setFunc(func);
+        setStyle(new ArrowStyle(BlaisePalette.STANDARD.vector(), ArrowStyle.Shape.REGULAR, 5));
     }
 
     @Override
     public String toString() {
-        return "Vector Field [" + ssg + "]";
+        return "Vector Field [" + getSampleGenerator() + "]";
     }
 
     //
-    // BEAN PATTERNS
+    // VALUE PATTERNS
     //
 
     /** @return function describing the field */
@@ -68,36 +60,36 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
         return func;
     }
 
-    /** Sets the function for the field.
+    /**
+     * Sets the function for the field.
      * @param func the function
      */
     public void setFunc(MultivariateVectorialFunction func) {
         if (func != null && this.func != func) {
-            if (this.func instanceof ChangeEventHandler) {
+            if (this.func instanceof ChangeEventHandler)
                 ((ChangeEventHandler)this.func).removeChangeListener(this);
-            }
             this.func = func;
-            if (func instanceof ChangeEventHandler) {
+            if (func instanceof ChangeEventHandler)
                 ((ChangeEventHandler)func).addChangeListener(this);
-            }
+            needsComputation = true;
             fireStateChanged();
         }
     }
 
-    public ArrowStyle getVectorStyle() {
-        return (ArrowStyle) style;
-    }
-
-    public void setVectorStyle(ArrowStyle arrowStyle) {
-        this.style = arrowStyle;
-    }
+    //
+    // STYLE PATTERNS
+    //
 
     public boolean isCentered() {
         return centered;
     }
 
     public void setCentered(boolean centered) {
-        this.centered = centered;
+        if (this.centered != centered) {
+            this.centered = centered;
+            needsPrimitiveComputation = true;
+            fireStateChanged();
+        }
     }
 
     public double getLengthMultiplier() {
@@ -105,51 +97,82 @@ public class PlaneVectorField extends VPrimitiveMappingPlottable<Point2D.Double,
     }
 
     public void setLengthMultiplier(double lengthMultiplier) {
-        this.lengthMultiplier = lengthMultiplier;
+        if (this.lengthMultiplier != lengthMultiplier) {
+            this.lengthMultiplier = lengthMultiplier;
+            needsPrimitiveComputation = true;
+            fireStateChanged();
+        }
     }
-    
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        super.stateChanged(e);
-        // TODO - need to tell the plottable to redraw at this point
+
+    public ArrowStyle getStyle() {
+        return (ArrowStyle) style;
+    }
+
+    public void setStyle(ArrowStyle arrowStyle) {
+        if (this.style != arrowStyle) {
+            this.style = arrowStyle;
+            fireStateChanged();
+        }
     }
     
     //
     // DRAW METHODS
     //
 
-    @Override
-    public void scalePrimitives(Visometry vis) {
-        PlaneVisometry pv = (PlaneVisometry) vis;
-        double maxRad = Math.min(Math.abs(ssg.getSampleDiff().x * pv.getScaleX()), Math.abs(ssg.getSampleDiff().y * pv.getScaleY()));
-        GraphicArrow.scaleVectors(primitives, lengthMultiplier * maxRad, 0.9, centered);
-    }
-
-    public GraphicArrow primitiveAt(Point2D.Double coord, VisometryGraphics<Point2D.Double> vg) {
-        MultivariateVectorialFunction useFunc = getFunc();
-        double[] value = new double[]{0, 0};
+    protected double[] getValue(Point2D.Double sample) {
         try {
-            value = useFunc.value(new double[]{coord.x, coord.y});
-        } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
+            return func.value(new double[]{sample.x, sample.y});
+        } catch (Exception ex) {
+            return new double[] { Double.NaN, Double.NaN };
         }
-        if (centered)
-            return new GraphicArrow(
-                    vg.getWindowPointOf(new Point2D.Double(coord.x - value[0]/2.0, coord.y - value[1]/2.0)),
-                    vg.getWindowPointOf(new Point2D.Double(coord.x + value[0]/2.0, coord.y + value[1]/2.0)));
-        else
-            return new GraphicArrow(
-                    vg.getWindowPointOf(coord),
-                    vg.getWindowPointOf(new Point2D.Double(coord.x + value[0], coord.y + value[1])));
     }
 
-    public GraphicArrow[] primitivesAt(List<Point2D.Double> coords, VisometryGraphics<Point2D.Double> vg) {
-        GraphicArrow[] result = new GraphicArrow[coords.size()];
-        int i = 0;
-        for (Point2D.Double c : coords)
-            result[i++] = primitiveAt(c, vg);
-        return result;
+    @Override
+    protected double getScaleFactor(List<double[]> values, Point2D.Double diff) {
+        double maxLengthSq = 0;
+        for (double[] val : values)
+            maxLengthSq = Math.max( maxLengthSq, val[0]*val[0] + val[1]*val[1]);
+        return lengthMultiplier * (maxLengthSq == 0 ? 1
+                : .95 * Math.min(Math.abs(diff.x), Math.abs(diff.y)) * Math.sqrt( 1 / maxLengthSq));
+    }
+
+    /** Constructs the graphic arrows to be actually displayed. */
+    protected Point2D[][] getPrimitives(List<Point2D.Double> samples, List<double[]> values, double scaleFactor, VisometryGraphics<Point2D.Double> vg) {
+        int n = samples.size();
+        Point2D[][] arrows = new Point2D[n][2];
+        Point2D.Double anchor, head;
+        if (centered)
+            for (int i = 0; i < n; i++) {
+                anchor = new Point2D.Double(
+                        samples.get(i).x - scaleFactor * values.get(i)[0] / 2.0,
+                        samples.get(i).y - scaleFactor * values.get(i)[1] / 2.0
+                        );
+                head = new Point2D.Double(
+                        samples.get(i).x + scaleFactor * values.get(i)[0] / 2.0,
+                        samples.get(i).y + scaleFactor * values.get(i)[1] / 2.0);
+                arrows[i][0] = vg.getWindowPointOf(anchor);
+                arrows[i][1] = vg.getWindowPointOf(head);
+            }
+        else
+            for (int i = 0; i < n; i++) {
+                anchor = samples.get(i);
+                head = new Point2D.Double(
+                        anchor.x + scaleFactor * values.get(i)[0],
+                        anchor.y + scaleFactor * values.get(i)[1]);
+                arrows[i][0] = vg.getWindowPointOf(anchor);
+                arrows[i][1] = vg.getWindowPointOf(head);
+            }
+        return arrows;
+    }
+    
+    //
+    // EVENT HANDLING
+    //
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == func)
+            needsComputation = true;
+        super.stateChanged(e);
     }
 }

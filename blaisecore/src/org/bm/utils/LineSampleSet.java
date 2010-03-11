@@ -9,7 +9,7 @@ package org.bm.utils;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-import scio.coordinate.sample.SampleCoordinateSetGenerator;
+import scio.coordinate.sample.SampleGenerator;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import scio.coordinate.sample.SampleCoordinateSetGenerator;
  * </p>
  * @author Elisha Peterson
  */
-public class LineSampleSet implements SampleCoordinateSetGenerator<Double> {
+public class LineSampleSet implements SampleGenerator<Double> {
 
     /** Min of sampled region. */
     double min;

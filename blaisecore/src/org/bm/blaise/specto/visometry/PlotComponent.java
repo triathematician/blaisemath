@@ -83,7 +83,7 @@ public class PlotComponent<C> extends JPanel
     protected TimeClock timer = null;
 
     /** Whether antialiasing is currently on. */
-    boolean antialias = true;
+    protected boolean antialias = true;
 
     //
     // EVENT HANDLING
@@ -209,7 +209,7 @@ public class PlotComponent<C> extends JPanel
             this.visometry.setWindowBounds(getVisibleRect());
             this.visometry.addChangeListener(this);
             if (visometryGraphics != null)
-                visometryGraphics.setVisometry(visometry);
+                visometryGraphics.visometry = visometry;
             else
                 visometryGraphics = new VisometryGraphics(visometry); // use default graphics object
             repaint();
@@ -285,9 +285,9 @@ public class PlotComponent<C> extends JPanel
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         super.paintComponent(g);
         visometryGraphics.setScreenGraphics((Graphics2D) g);
-        plottables.paintComponent(visometryGraphics);
+        plottables.draw(visometryGraphics);
         if (defaultMouseListener instanceof Plottable)
-            ((Plottable) defaultMouseListener).paintComponent(visometryGraphics);
+            ((Plottable) defaultMouseListener).draw(visometryGraphics);
     }
 
     //
