@@ -119,9 +119,8 @@ public class DifferenceEquation1 {
     public double[] computeResult() throws FunctionEvaluationException {
         lastResult = new double[tf + 1];
         lastResult[0] = x0;
-        for (int i = 1; i < lastResult.length; i++) {
+        for (int i = 1; i < lastResult.length; i++)
             lastResult[i] = function.value(lastResult[i-1]);
-        }
         return lastResult;
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
  * 
  * @author Elisha Peterson
  */
-public interface SampleCoordinateSetGenerator<C> {
+public interface SampleGenerator<C> {
 
     /**
      * Return a list of sampled points. Any options as to what this looks

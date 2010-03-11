@@ -19,7 +19,7 @@ import java.util.List;
  * </p>
  * @author Elisha Peterson
  */
-public class RealIntervalSampler extends RealInterval implements SampleCoordinateSetGenerator<Double> {
+public class RealIntervalSampler extends RealInterval implements SampleGenerator<Double> {
 
     /** Number of samples in the interval. */
     int numSamples;
