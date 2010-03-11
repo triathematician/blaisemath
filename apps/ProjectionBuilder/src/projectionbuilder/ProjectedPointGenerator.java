@@ -34,9 +34,9 @@ public class ProjectedPointGenerator extends VPointSet<Point3D>
     /** Point on second plot clicked. */
     Point2D p2;
     /** Visible point on first plot. */
-    SpecialPoint p31;
+    VPoint<Point3D> p31;
     /** Visible point on first plot. */
-    SpecialPoint p32;
+    VPoint<Point3D> p32;
 
     public ProjectedPointGenerator() {
         super();
@@ -53,15 +53,14 @@ public class ProjectedPointGenerator extends VPointSet<Point3D>
         this.sp2 = sp2;
         sp1.addMouseListener(this);
         sp2.addMouseListener(this);
-        sp1.addPlottable(p31 = new SpecialPoint(new Point3D()));
-        sp2.addPlottable(p32 = new SpecialPoint(new Point3D()));
-    }
-
-    @Override
-    public void paintComponent(VisometryGraphics<Point3D> vg) {
-        SpaceGraphics sg = (SpaceGraphics) vg;
-        for (Point3D p : values)
-            sg.addPointToScene(p, pointStyle);
+        sp1.addPlottable(p31 = new VPoint<Point3D>(new Point3D()));
+            p31.setVisible(false);
+            p31.setLabelVisible(false);
+            p31.setStyle(new PointStyle(PointStyle.PointShape.CROSS, 5));
+        sp2.addPlottable(p32 = new VPoint<Point3D>(new Point3D()));
+            p31.setVisible(false);
+            p31.setLabelVisible(false);
+            p32.setStyle(p31.getStyle());
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -96,19 +95,5 @@ public class ProjectedPointGenerator extends VPointSet<Point3D>
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
-
-    static class SpecialPoint extends VPoint<Point3D> {
-        public SpecialPoint(Point3D value) {
-            super(value);
-            setVisible(false);
-            setLabelVisible(false);
-            setStyle(new PointStyle(PointStyle.PointShape.CROSS, 5));
-        }
-
-        @Override
-        public void paintComponent(VisometryGraphics<Point3D> vg) {
-            ((SpaceGraphics)vg).addPointToScene(this.value, getStyle());
-        }
-    }
 
 }
