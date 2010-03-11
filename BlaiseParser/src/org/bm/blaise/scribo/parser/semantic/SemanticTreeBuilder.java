@@ -28,7 +28,7 @@ class SemanticTreeBuilder {
     }
 
     public SemanticNode buildTree(TokenNode tokenNode) throws ParseException {
-        String name = tokenNode.getName();
+        String name = tokenNode.getName().toLowerCase();
         TokenType type = tokenNode.getType();
 
         switch (type) {
