@@ -1,0 +1,4296 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_21" class="java.beans.XMLDecoder"> 
+ <object class="org.bm.firestorm.gestures.data.CoefficientClassifier"> 
+  <void property="database"> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>28.596243930894286</double> 
+         </void> 
+         <void index="1"> 
+          <double>2.3647309996156793</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.822103520854262</double> 
+         </void> 
+         <void index="3"> 
+          <double>1.5835191545557559</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.1319878089994207</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.5981547687856126</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.058887234137233055</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.182646502335847</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.07280959190649595</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.1679610268749095</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.038104811617118525</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.02975925899484208</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.09306634154760542</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.0018896311968320811</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.09342680727079095</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.04207884511349817</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-36.87353691651463</double> 
+         </void> 
+         <void index="1"> 
+          <double>-15.362297235523013</double> 
+         </void> 
+         <void index="2"> 
+          <double>-5.445487703202864</double> 
+         </void> 
+         <void index="3"> 
+          <double>4.124066926889916</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.8306410116588245</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.4818983725259713</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.3321251800546994</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.5537845490103077</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.023996442692527042</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.13767465190191486</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.177494555588541</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.09746115522477133</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.1942110999339718</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.1481525717825214</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.07225882411425522</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.0918066621714777</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>1</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>45.8293723977887</double> 
+         </void> 
+         <void index="1"> 
+          <double>5.055261830135439</double> 
+         </void> 
+         <void index="2"> 
+          <double>-0.12149176779738308</double> 
+         </void> 
+         <void index="3"> 
+          <double>-0.4721638514474613</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.03691687845794944</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.029358840388563734</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.049724461755139726</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.21894630926117414</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.22447900876182458</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.15291342566842353</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.07395872012624388</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.05980116978163233</double> 
+         </void> 
+         <void index="12"> 
+          <double>3.1671620393161626E-4</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.06369217039221137</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.005297204821375634</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.0842123838879715</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-51.57457539694968</double> 
+         </void> 
+         <void index="1"> 
+          <double>-32.61845379651073</double> 
+         </void> 
+         <void index="2"> 
+          <double>-0.07694762823163961</double> 
+         </void> 
+         <void index="3"> 
+          <double>3.229204971586564</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.039177046632325685</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.06355802316943016</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.09006296500112548</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.18587303745468464</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.15791649619143516</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.004385674806587803</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.04568756988854433</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.012025823810194625</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.07696701745008028</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.010495436924020496</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.08287657198666942</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.03910093350163574</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>1</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>78.48882159900855</double> 
+         </void> 
+         <void index="1"> 
+          <double>1.8786468869926114</double> 
+         </void> 
+         <void index="2"> 
+          <double>-9.365557172744598</double> 
+         </void> 
+         <void index="3"> 
+          <double>-1.3612086961079213</double> 
+         </void> 
+         <void index="4"> 
+          <double>-12.394743458341454</double> 
+         </void> 
+         <void index="5"> 
+          <double>-5.029876118127127</double> 
+         </void> 
+         <void index="6"> 
+          <double>6.850528343191342</double> 
+         </void> 
+         <void index="7"> 
+          <double>7.237005734028951</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.5333772141948021</double> 
+         </void> 
+         <void index="9"> 
+          <double>-5.3696280279165345</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.6633492536229126</double> 
+         </void> 
+         <void index="11"> 
+          <double>2.6457855633412333</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.3027971089819157</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.8045394547073645</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.6155202182377733</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.09120281405174263</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-131.40841026029764</double> 
+         </void> 
+         <void index="1"> 
+          <double>-1.2471376755099493</double> 
+         </void> 
+         <void index="2"> 
+          <double>-4.6671718275915985</double> 
+         </void> 
+         <void index="3"> 
+          <double>-1.8577655549030456</double> 
+         </void> 
+         <void index="4"> 
+          <double>-8.943013050047123</double> 
+         </void> 
+         <void index="5"> 
+          <double>6.463794501082201</double> 
+         </void> 
+         <void index="6"> 
+          <double>1.6725851366150697</double> 
+         </void> 
+         <void index="7"> 
+          <double>-3.9458535392264666</double> 
+         </void> 
+         <void index="8"> 
+          <double>3.7770156945668774</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.5288495175996533</double> 
+         </void> 
+         <void index="10"> 
+          <double>-2.0069845246504405</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.24024431719125616</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.5689319583498054</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.39391610948683986</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.5688151049113327</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.25563069613915135</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>*</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>100.1934288921903</double> 
+         </void> 
+         <void index="1"> 
+          <double>3.532475387371294</double> 
+         </void> 
+         <void index="2"> 
+          <double>4.2214574949592585</double> 
+         </void> 
+         <void index="3"> 
+          <double>9.434904407792583</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.4195836011317364</double> 
+         </void> 
+         <void index="5"> 
+          <double>-3.5037071231870613</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.6301866649723724</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.5131723412517821</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.01101675810851438</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.05665654910703877</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.1384186815752234</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.0748047811945517</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.1333188985929279</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.06978304351618747</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.017763539151240293</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.09073398267089638</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-153.45414283528666</double> 
+         </void> 
+         <void index="1"> 
+          <double>-10.879742327771428</double> 
+         </void> 
+         <void index="2"> 
+          <double>-11.12095928405845</double> 
+         </void> 
+         <void index="3"> 
+          <double>4.936818484679956</double> 
+         </void> 
+         <void index="4"> 
+          <double>7.620549859309999</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.20125496636737</double> 
+         </void> 
+         <void index="6"> 
+          <double>-2.475214040654812</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.04285617707377287</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.2950122054246944</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.1502435154664814</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.038417006177241975</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.29282309462849443</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.07011525677240482</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.16798115572041583</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.1051938484278987</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.06451552946700745</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>7</int> 
+     </void> 
+    </object> 
+    <string>e</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>105.48798708284708</double> 
+         </void> 
+         <void index="1"> 
+          <double>34.264263637469476</double> 
+         </void> 
+         <void index="2"> 
+          <double>6.558575316854265</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.5251917035840894</double> 
+         </void> 
+         <void index="4"> 
+          <double>-1.65609325381925</double> 
+         </void> 
+         <void index="5"> 
+          <double>5.173149086215694</double> 
+         </void> 
+         <void index="6"> 
+          <double>-2.9085301354341317</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.8832473964495507</double> 
+         </void> 
+         <void index="8"> 
+          <double>2.2389526841622067</double> 
+         </void> 
+         <void index="9"> 
+          <double>-2.2420798053386783</double> 
+         </void> 
+         <void index="10"> 
+          <double>-1.0773770952626462</double> 
+         </void> 
+         <void index="11"> 
+          <double>2.4127402530837117</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.09205305331897351</double> 
+         </void> 
+         <void index="13"> 
+          <double>-2.8991790631490093</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.5851037244098467</double> 
+         </void> 
+         <void index="15"> 
+          <double>1.5623449131488416</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-76.79439717560024</double> 
+         </void> 
+         <void index="1"> 
+          <double>0.1556689286506659</double> 
+         </void> 
+         <void index="2"> 
+          <double>-1.91021245486029</double> 
+         </void> 
+         <void index="3"> 
+          <double>-2.3819939150745415</double> 
+         </void> 
+         <void index="4"> 
+          <double>-1.0074530016528742</double> 
+         </void> 
+         <void index="5"> 
+          <double>4.300838456188588</double> 
+         </void> 
+         <void index="6"> 
+          <double>-3.3147961079418353</double> 
+         </void> 
+         <void index="7"> 
+          <double>3.978925116293622</double> 
+         </void> 
+         <void index="8"> 
+          <double>2.685806439183347</double> 
+         </void> 
+         <void index="9"> 
+          <double>-2.776914040274324</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.22547442659087374</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.13018406270809962</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.19716461914817413</double> 
+         </void> 
+         <void index="13"> 
+          <double>-1.6632197290212658</double> 
+         </void> 
+         <void index="14"> 
+          <double>-2.080481941636822</double> 
+         </void> 
+         <void index="15"> 
+          <double>2.452579242819721</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>7</int> 
+     </void> 
+    </object> 
+    <string>sin</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>112.66567669782039</double> 
+         </void> 
+         <void index="1"> 
+          <double>27.942377524811064</double> 
+         </void> 
+         <void index="2"> 
+          <double>-3.376599566905696</double> 
+         </void> 
+         <void index="3"> 
+          <double>-3.2119307138174604</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.9428186291161742</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.1524268391104011</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.6707540539637304</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.29139571258717234</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.0432579407411231</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.2048142351469322</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.0731611947145211</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.12330065242519961</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.025393233117613434</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.009984246898342652</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.009813199241563542</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.05320036211221213</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-101.76446601070805</double> 
+         </void> 
+         <void index="1"> 
+          <double>2.2964064318182267</double> 
+         </void> 
+         <void index="2"> 
+          <double>0.0562713676921556</double> 
+         </void> 
+         <void index="3"> 
+          <double>-0.08157772218667714</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.15643481754185762</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.07169061721017567</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.11234030042087023</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.12025443031770527</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.04260033826630494</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.014069609632770597</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.011916915533371819</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.09051527941710602</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.12815306359985645</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.010601427073717917</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.05754093603145294</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.0902223821371983</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>-</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>114.96161847520756</double> 
+         </void> 
+         <void index="1"> 
+          <double>19.32267885074776</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.4144533327771134</double> 
+         </void> 
+         <void index="3"> 
+          <double>-36.015402350275416</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.45795013269909907</double> 
+         </void> 
+         <void index="5"> 
+          <double>14.222022493346659</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.23769006191437259</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.11532280927436428</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.22657695545604495</double> 
+         </void> 
+         <void index="9"> 
+          <double>-1.8439027260226712</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.3550427214606052</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.23738316881787108</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.6697653487467266</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.01705137598839318</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.4317424222983029</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.38898514020263064</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-106.17945831888754</double> 
+         </void> 
+         <void index="1"> 
+          <double>-1.4624313878244326</double> 
+         </void> 
+         <void index="2"> 
+          <double>71.86845435142429</double> 
+         </void> 
+         <void index="3"> 
+          <double>-2.319133705612261</double> 
+         </void> 
+         <void index="4"> 
+          <double>-35.2179279115517</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.2350087808956864</double> 
+         </void> 
+         <void index="6"> 
+          <double>7.36642668724324</double> 
+         </void> 
+         <void index="7"> 
+          <double>1.3794921592786302</double> 
+         </void> 
+         <void index="8"> 
+          <double>1.1150795578001893</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.31049866875562393</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.45213310703723364</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.2310268852309869</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.7739159459667613</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.0936244578555098</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.607042823691771</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.24406289230703163</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>0</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>119.81739428072108</double> 
+         </void> 
+         <void index="1"> 
+          <double>-1.316991381370087</double> 
+         </void> 
+         <void index="2"> 
+          <double>-3.9521385467886216</double> 
+         </void> 
+         <void index="3"> 
+          <double>-30.591600431490757</double> 
+         </void> 
+         <void index="4"> 
+          <double>4.554238713601703</double> 
+         </void> 
+         <void index="5"> 
+          <double>11.815893106123967</double> 
+         </void> 
+         <void index="6"> 
+          <double>2.8735623779141415</double> 
+         </void> 
+         <void index="7"> 
+          <double>-1.5372235885462535</double> 
+         </void> 
+         <void index="8"> 
+          <double>-2.7423392400787723</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.019276612104709</double> 
+         </void> 
+         <void index="10"> 
+          <double>-1.3984597371919794</double> 
+         </void> 
+         <void index="11"> 
+          <double>-1.9788086802828824</double> 
+         </void> 
+         <void index="12"> 
+          <double>2.1044332081602795</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.26385719697954835</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.7476420190397814</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.1805760903175797</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-134.9643569247892</double> 
+         </void> 
+         <void index="1"> 
+          <double>-57.55510790088632</double> 
+         </void> 
+         <void index="2"> 
+          <double>-1.770390306315479</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.900793776394491</double> 
+         </void> 
+         <void index="4"> 
+          <double>5.15763857564967</double> 
+         </void> 
+         <void index="5"> 
+          <double>8.506782903305636</double> 
+         </void> 
+         <void index="6"> 
+          <double>-4.240514066568694</double> 
+         </void> 
+         <void index="7"> 
+          <double>-8.785840943482677</double> 
+         </void> 
+         <void index="8"> 
+          <double>3.0485349067844294</double> 
+         </void> 
+         <void index="9"> 
+          <double>3.466277342409587</double> 
+         </void> 
+         <void index="10"> 
+          <double>-1.8616660482320553</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.2314347347461425</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.5015270214799268</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.6903276383479552</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.4573367491236485</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.2841054412545656</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>5</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>121.15096938576748</double> 
+         </void> 
+         <void index="1"> 
+          <double>3.3092159246153563</double> 
+         </void> 
+         <void index="2"> 
+          <double>14.358963651933845</double> 
+         </void> 
+         <void index="3"> 
+          <double>-1.0580626766520336</double> 
+         </void> 
+         <void index="4"> 
+          <double>-3.4401854831387175</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.3716896703057991</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.13912736330992426</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.34363762455720315</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.1919707836000113</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.12499171296432021</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.08875044932566023</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.09109285478076012</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.15744742392076783</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.01950062296321098</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.04768709988617814</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.0860730634614173</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-121.78440695406306</double> 
+         </void> 
+         <void index="1"> 
+          <double>-67.73065354072212</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.5600118589614826</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.882439101747483</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.9874355535731243</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.4134550222267801</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.5442817901806882</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.27827686767203064</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.1273638950170506</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.2595070798421306</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.026210748184322674</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.29103217650214175</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.001004841775533949</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.05351717416399282</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.0369163301237716</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.03296953624547716</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>(</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>122.14633248894556</double> 
+         </void> 
+         <void index="1"> 
+          <double>6.16605820232537</double> 
+         </void> 
+         <void index="2"> 
+          <double>0.9720509369807869</double> 
+         </void> 
+         <void index="3"> 
+          <double>10.925117710443228</double> 
+         </void> 
+         <void index="4"> 
+          <double>-4.909630491312574</double> 
+         </void> 
+         <void index="5"> 
+          <double>-8.656603091402232</double> 
+         </void> 
+         <void index="6"> 
+          <double>5.23812839408885</double> 
+         </void> 
+         <void index="7"> 
+          <double>5.439279788680345</double> 
+         </void> 
+         <void index="8"> 
+          <double>-8.224465577425274</double> 
+         </void> 
+         <void index="9"> 
+          <double>-4.541041128198263</double> 
+         </void> 
+         <void index="10"> 
+          <double>8.028492194907935</double> 
+         </void> 
+         <void index="11"> 
+          <double>1.0063691367815593</double> 
+         </void> 
+         <void index="12"> 
+          <double>-3.253420311819171</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.924984447712122</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.4871842478965628</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.7207386409206626</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-140.22182029370464</double> 
+         </void> 
+         <void index="1"> 
+          <double>-51.52122873093047</double> 
+         </void> 
+         <void index="2"> 
+          <double>7.215537787401344</double> 
+         </void> 
+         <void index="3"> 
+          <double>21.739302108045987</double> 
+         </void> 
+         <void index="4"> 
+          <double>-6.836610494390578</double> 
+         </void> 
+         <void index="5"> 
+          <double>-10.058214288451191</double> 
+         </void> 
+         <void index="6"> 
+          <double>10.564231247037261</double> 
+         </void> 
+         <void index="7"> 
+          <double>3.9321967681339562</double> 
+         </void> 
+         <void index="8"> 
+          <double>-8.449638126844437</double> 
+         </void> 
+         <void index="9"> 
+          <double>-2.8583468048908047</double> 
+         </void> 
+         <void index="10"> 
+          <double>5.025739640960062</double> 
+         </void> 
+         <void index="11"> 
+          <double>1.234226466690826</double> 
+         </void> 
+         <void index="12"> 
+          <double>-3.0548146518403447</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.7928368554953611</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.9483126512458577</double> 
+         </void> 
+         <void index="15"> 
+          <double>-1.7266123117345789</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>%</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>123.75604976260779</double> 
+         </void> 
+         <void index="1"> 
+          <double>2.5346574821520123</double> 
+         </void> 
+         <void index="2"> 
+          <double>-9.993250821003889</double> 
+         </void> 
+         <void index="3"> 
+          <double>-15.367985951898623</double> 
+         </void> 
+         <void index="4"> 
+          <double>16.242758918468724</double> 
+         </void> 
+         <void index="5"> 
+          <double>6.823139950408174</double> 
+         </void> 
+         <void index="6"> 
+          <double>-5.238480363934946</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.6520871541731272</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.8899117314434211</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.6746154256059793</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.6945859276456849</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.9492066045391727</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.2792997554433544</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.6992604473787919</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.11365301160059932</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.15132284995480888</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-176.6898088437916</double> 
+         </void> 
+         <void index="1"> 
+          <double>-37.00964380973298</double> 
+         </void> 
+         <void index="2"> 
+          <double>34.91561587555253</double> 
+         </void> 
+         <void index="3"> 
+          <double>-26.269361516703896</double> 
+         </void> 
+         <void index="4"> 
+          <double>-10.080858416625459</double> 
+         </void> 
+         <void index="5"> 
+          <double>10.155145224101222</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.04365129465009743</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.16231920791703625</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.47455501127260424</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.3873385150203137</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.10939600700585761</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.5515178144779067</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.4619244386316599</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.01920700192069824</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.4739492864871374</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.11153854207845892</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>6</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>123.93009419730173</double> 
+         </void> 
+         <void index="1"> 
+          <double>-3.8698382746561384</double> 
+         </void> 
+         <void index="2"> 
+          <double>-1.0484265243247202</double> 
+         </void> 
+         <void index="3"> 
+          <double>2.931977523224173</double> 
+         </void> 
+         <void index="4"> 
+          <double>-6.0046718816804106</double> 
+         </void> 
+         <void index="5"> 
+          <double>-14.66823652580884</double> 
+         </void> 
+         <void index="6"> 
+          <double>2.8805972488528617</double> 
+         </void> 
+         <void index="7"> 
+          <double>12.380326422719406</double> 
+         </void> 
+         <void index="8"> 
+          <double>1.7017905724138116</double> 
+         </void> 
+         <void index="9"> 
+          <double>-4.009248688038311</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.6858303012786926</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.40315788021487897</double> 
+         </void> 
+         <void index="12"> 
+          <double>-2.643427501837068</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.3531119807239461</double> 
+         </void> 
+         <void index="14"> 
+          <double>1.6615544548614745</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.6429853801264467</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-147.9138834229437</double> 
+         </void> 
+         <void index="1"> 
+          <double>-29.229073920779072</double> 
+         </void> 
+         <void index="2"> 
+          <double>8.079154070246783</double> 
+         </void> 
+         <void index="3"> 
+          <double>35.847693413613634</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.3179801862509146</double> 
+         </void> 
+         <void index="5"> 
+          <double>-14.31737561585284</double> 
+         </void> 
+         <void index="6"> 
+          <double>1.109565364203842</double> 
+         </void> 
+         <void index="7"> 
+          <double>1.8961724232564825</double> 
+         </void> 
+         <void index="8"> 
+          <double>-2.8443633315880983</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.5321793505648744</double> 
+         </void> 
+         <void index="10"> 
+          <double>2.0528359041550712</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.6511156910268504</double> 
+         </void> 
+         <void index="12"> 
+          <double>-1.2929740487067618</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.15345798057120075</double> 
+         </void> 
+         <void index="14"> 
+          <double>1.9651751576859633</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.30654704049629944</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>8</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>123.99751965731562</double> 
+         </void> 
+         <void index="1"> 
+          <double>29.666880231730108</double> 
+         </void> 
+         <void index="2"> 
+          <double>2.426934527770523</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.5899076249854684</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.30047584935717764</double> 
+         </void> 
+         <void index="5"> 
+          <double>-2.0095378432654547</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.1432588451190255</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.7045530937963161</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.5016683449801692</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.011853918900533111</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.11678876196316135</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.12857335205435894</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.06614838923232147</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.10414532486238925</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.07403945566947057</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.0351399620417816</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-103.61835291276934</double> 
+         </void> 
+         <void index="1"> 
+          <double>2.6865140690578966</double> 
+         </void> 
+         <void index="2"> 
+          <double>-18.326870445447877</double> 
+         </void> 
+         <void index="3"> 
+          <double>-2.933224165477158</double> 
+         </void> 
+         <void index="4"> 
+          <double>5.33632899858306</double> 
+         </void> 
+         <void index="5"> 
+          <double>1.3235108904995823</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.13225459185596838</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.3683588332850577</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.8243533850105007</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.20568016894362595</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.4219491634276945</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.060657219219082514</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.24410611498763102</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.11520207493895895</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.13477360270062078</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.06910168056483723</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>^</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>125.2310745081628</double> 
+         </void> 
+         <void index="1"> 
+          <double>-55.30531303473635</double> 
+         </void> 
+         <void index="2"> 
+          <double>11.230713360669572</double> 
+         </void> 
+         <void index="3"> 
+          <double>4.912166869450027</double> 
+         </void> 
+         <void index="4"> 
+          <double>-2.7653523624041174</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.47560736233190015</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.07896647765997467</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.05972913111126121</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.3166689694579707</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.2068283904697461</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.09773440473854389</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.020002964514233168</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.0478041375014141</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.027254770415858</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.23779034674832075</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.11388891517764996</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-142.12847008956402</double> 
+         </void> 
+         <void index="1"> 
+          <double>-59.1640316694431</double> 
+         </void> 
+         <void index="2"> 
+          <double>6.265640096551394</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.126107723380194</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.925748039789725</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.8903857831080148</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.5572600746322408</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.5747156295448211</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.11135843947622248</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.05180964133930621</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.0708966496443566</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.09615316333464263</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.1615001850521387</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.07756899246499138</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.03145903270309636</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.08347299530739494</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>/</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>126.11093878970182</double> 
+         </void> 
+         <void index="1"> 
+          <double>3.682694113162715</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.48703316466566</double> 
+         </void> 
+         <void index="3"> 
+          <double>10.39520215630591</double> 
+         </void> 
+         <void index="4"> 
+          <double>4.465958237100158</double> 
+         </void> 
+         <void index="5"> 
+          <double>1.485692965544726</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.6084465224968225</double> 
+         </void> 
+         <void index="7"> 
+          <double>-2.2878925523580014</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.5623493330339746</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.5725629019585522</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.35210613871626883</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.48401608614518</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.2893396215002577</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.2178662741980686</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.11280690996823195</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.22548970798457846</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-167.9123000358777</double> 
+         </void> 
+         <void index="1"> 
+          <double>-60.994302912345326</double> 
+         </void> 
+         <void index="2"> 
+          <double>18.8862834172949</double> 
+         </void> 
+         <void index="3"> 
+          <double>14.337940421355711</double> 
+         </void> 
+         <void index="4"> 
+          <double>-15.728182212785326</double> 
+         </void> 
+         <void index="5"> 
+          <double>2.172716147989438</double> 
+         </void> 
+         <void index="6"> 
+          <double>6.486997987516504</double> 
+         </void> 
+         <void index="7"> 
+          <double>-4.838187842076793</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.2549084203156424</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.3444386232432057</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.9988219016530312</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.6509241838957858</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.40535101126890916</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.11229305007232715</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.22399987166289204</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.07890911043425342</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>1</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>126.55485477007666</double> 
+         </void> 
+         <void index="1"> 
+          <double>-1.8340829575776532</double> 
+         </void> 
+         <void index="2"> 
+          <double>4.973006289284111</double> 
+         </void> 
+         <void index="3"> 
+          <double>2.509298823294387</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.3789203448640628</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.8835510957213167</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.43967326348471053</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.17377743773540733</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.25579586977666835</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.14494449853470415</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.009982673839732503</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.09339099072369128</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.10330808386172952</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.015855287145575936</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.14317077243133758</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.009486979404855322</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-117.84537387715442</double> 
+         </void> 
+         <void index="1"> 
+          <double>-0.8259505547883885</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.902063253728141</double> 
+         </void> 
+         <void index="3"> 
+          <double>3.7789882762997</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.0179559803099352</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.8806127638649706</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.6011725879128247</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.7748868740396403</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.3881186545160933</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.11247924143382315</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.15745632024226947</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.024480063533045993</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.19743624324071468</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.015964718575104175</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.3267477493028763</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.017808554589253678</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>.</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>127.04352212441921</double> 
+         </void> 
+         <void index="1"> 
+          <double>-0.7699875574318652</double> 
+         </void> 
+         <void index="2"> 
+          <double>24.642670034209043</double> 
+         </void> 
+         <void index="3"> 
+          <double>26.487873529599817</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.8257622539018477</double> 
+         </void> 
+         <void index="5"> 
+          <double>-12.534416030724993</double> 
+         </void> 
+         <void index="6"> 
+          <double>-9.00596953618527</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.5374330624365558</double> 
+         </void> 
+         <void index="8"> 
+          <double>3.9098728563748733</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.326818874248292</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.059429776818275326</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.15517106850412765</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.24627906913811826</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.48099670603262723</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.1363155780840002</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.14690448154086044</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-157.191970091822</double> 
+         </void> 
+         <void index="1"> 
+          <double>3.4121555350967485</double> 
+         </void> 
+         <void index="2"> 
+          <double>22.63516601495036</double> 
+         </void> 
+         <void index="3"> 
+          <double>-20.053683349157396</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.6207611914946347</double> 
+         </void> 
+         <void index="5"> 
+          <double>7.815134718349709</double> 
+         </void> 
+         <void index="6"> 
+          <double>-2.131125262890261</double> 
+         </void> 
+         <void index="7"> 
+          <double>-2.1090533568261303</double> 
+         </void> 
+         <void index="8"> 
+          <double>-1.3868180046826448</double> 
+         </void> 
+         <void index="9"> 
+          <double>1.2756055072734311</double> 
+         </void> 
+         <void index="10"> 
+          <double>1.3179230358803073</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.21129946473636352</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.28257580650015446</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.2375674348715775</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.1027984825310817</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.14110237149260674</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>+</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>127.06257440953125</double> 
+         </void> 
+         <void index="1"> 
+          <double>24.56027240826259</double> 
+         </void> 
+         <void index="2"> 
+          <double>-20.59553189157083</double> 
+         </void> 
+         <void index="3"> 
+          <double>-4.411738671634683</double> 
+         </void> 
+         <void index="4"> 
+          <double>15.103570328950621</double> 
+         </void> 
+         <void index="5"> 
+          <double>-5.307039141017997</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.037393569605495114</double> 
+         </void> 
+         <void index="7"> 
+          <double>2.387931382714309</double> 
+         </void> 
+         <void index="8"> 
+          <double>-3.6393317433596755</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.07102064622734006</double> 
+         </void> 
+         <void index="10"> 
+          <double>1.8089868085048342</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.44900482926219165</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.09756939965293565</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.2733250810561817</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.6036684501249369</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.13168847300533748</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-144.19270570267818</double> 
+         </void> 
+         <void index="1"> 
+          <double>-24.940231358791955</double> 
+         </void> 
+         <void index="2"> 
+          <double>-30.552219925272365</double> 
+         </void> 
+         <void index="3"> 
+          <double>-29.17056185192733</double> 
+         </void> 
+         <void index="4"> 
+          <double>12.71589391696537</double> 
+         </void> 
+         <void index="5"> 
+          <double>14.03611264315262</double> 
+         </void> 
+         <void index="6"> 
+          <double>7.995865330148073</double> 
+         </void> 
+         <void index="7"> 
+          <double>-3.09098657120353</double> 
+         </void> 
+         <void index="8"> 
+          <double>-5.219927988142373</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.8537202743772626</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.04350704694443852</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.6108517810823546</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.6819784204164427</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.6079328008316136</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.49483617085255704</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.7042975130456828</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>4</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>129.272045512861</double> 
+         </void> 
+         <void index="1"> 
+          <double>11.07956416145826</double> 
+         </void> 
+         <void index="2"> 
+          <double>-3.967951102602445</double> 
+         </void> 
+         <void index="3"> 
+          <double>9.533166217378536</double> 
+         </void> 
+         <void index="4"> 
+          <double>-2.7640304878377733</double> 
+         </void> 
+         <void index="5"> 
+          <double>-12.637371438855931</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.300270300841809</double> 
+         </void> 
+         <void index="7"> 
+          <double>9.252118354761917</double> 
+         </void> 
+         <void index="8"> 
+          <double>5.99336130320698</double> 
+         </void> 
+         <void index="9"> 
+          <double>-9.595807837943383</double> 
+         </void> 
+         <void index="10"> 
+          <double>-2.6474345367135</double> 
+         </void> 
+         <void index="11"> 
+          <double>8.92292542552141</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.407605617352497</double> 
+         </void> 
+         <void index="13"> 
+          <double>-4.784242325000721</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.2945646761629751</double> 
+         </void> 
+         <void index="15"> 
+          <double>1.3711449523432004</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-106.79999967370833</double> 
+         </void> 
+         <void index="1"> 
+          <double>-36.705276073474245</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.292421795375819</double> 
+         </void> 
+         <void index="3"> 
+          <double>17.73017754351173</double> 
+         </void> 
+         <void index="4"> 
+          <double>5.729857685232745</double> 
+         </void> 
+         <void index="5"> 
+          <double>-13.597235468360639</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.434992235697783</double> 
+         </void> 
+         <void index="7"> 
+          <double>6.495409850125247</double> 
+         </void> 
+         <void index="8"> 
+          <double>-1.6825103292495331</double> 
+         </void> 
+         <void index="9"> 
+          <double>-4.509495246391469</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.714587986632745</double> 
+         </void> 
+         <void index="11"> 
+          <double>4.704350260011675</double> 
+         </void> 
+         <void index="12"> 
+          <double>2.5895359716948123</double> 
+         </void> 
+         <void index="13"> 
+          <double>-3.729362811831317</double> 
+         </void> 
+         <void index="14"> 
+          <double>-2.0349841380905693</double> 
+         </void> 
+         <void index="15"> 
+          <double>2.0370019429704707</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>%</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>132.12795080712402</double> 
+         </void> 
+         <void index="1"> 
+          <double>9.37935386244787</double> 
+         </void> 
+         <void index="2"> 
+          <double>-17.89281099129902</double> 
+         </void> 
+         <void index="3"> 
+          <double>-3.128616122060062</double> 
+         </void> 
+         <void index="4"> 
+          <double>-22.20305183386048</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.4687879683356006</double> 
+         </void> 
+         <void index="6"> 
+          <double>16.366601375213826</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.9777506109795968</double> 
+         </void> 
+         <void index="8"> 
+          <double>-4.5968298805373164</double> 
+         </void> 
+         <void index="9"> 
+          <double>-2.0095515630545653</double> 
+         </void> 
+         <void index="10"> 
+          <double>2.596796917357059</double> 
+         </void> 
+         <void index="11"> 
+          <double>1.5830533707306738</double> 
+         </void> 
+         <void index="12"> 
+          <double>-2.0843323895265424</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.4192185305734214</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.7938143311315853</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.12891054327341606</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-139.01720732341062</double> 
+         </void> 
+         <void index="1"> 
+          <double>-67.30269177313828</double> 
+         </void> 
+         <void index="2"> 
+          <double>-8.143720000864416</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.859227803005184</double> 
+         </void> 
+         <void index="4"> 
+          <double>2.1471091672146563</double> 
+         </void> 
+         <void index="5"> 
+          <double>9.88175466264269</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.4922017424743148</double> 
+         </void> 
+         <void index="7"> 
+          <double>-8.016930759050771</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.22577469349379586</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.820358428426383</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.3114948636188608</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.3128279023194468</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.44898630995808464</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.5232567337756506</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.3468534000398975</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.7144527308257145</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>3</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>134.03209037391002</double> 
+         </void> 
+         <void index="1"> 
+          <double>29.992015364198576</double> 
+         </void> 
+         <void index="2"> 
+          <double>-7.982323332308558</double> 
+         </void> 
+         <void index="3"> 
+          <double>-2.098025762604718</double> 
+         </void> 
+         <void index="4"> 
+          <double>2.9884219317369083</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.2586134678561226</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.5987387917538806</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.12153492985109371</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.35171919647287697</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.26246079683626977</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.19443459316338108</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.07606848498320784</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.16501583806591913</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.06930841647754904</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.0545414247814453</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.10075365911580492</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-136.4008980908853</double> 
+         </void> 
+         <void index="1"> 
+          <double>0.15513598336935303</double> 
+         </void> 
+         <void index="2"> 
+          <double>0.031715905678733725</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.6030754110796874</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.11226878796771106</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.26444398189061785</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.016160977376650176</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.04890956927655843</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.06331253907560608</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.0742918800387814</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.039248047114901485</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.08267295960404886</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.01067456680708867</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.14237159102143426</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.06980693408230687</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.027731562104984953</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>-</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>134.31493308638463</double> 
+         </void> 
+         <void index="1"> 
+          <double>34.40926350001087</double> 
+         </void> 
+         <void index="2"> 
+          <double>-0.8394850279715024</double> 
+         </void> 
+         <void index="3"> 
+          <double>-5.168355043409602</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.656624457421943</double> 
+         </void> 
+         <void index="5"> 
+          <double>1.0734904694644518</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.2670800864541344</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.21741092564410747</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.10780704009544229</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.0829130354791372</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.02926162744028782</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.05956100927078967</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.154207413894752</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.018794734971343874</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.11527158832631812</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.0838005207669692</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-137.99188834855497</double> 
+         </void> 
+         <void index="1"> 
+          <double>-0.7450539465931301</double> 
+         </void> 
+         <void index="2"> 
+          <double>-0.7701313773536498</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.08116878705932246</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.11152164088866606</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.31564544043015086</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.02448776977935513</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.1499615049311399</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.10272384592887529</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.08257190440895879</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.11098421382290313</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.06652325806623793</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.0037740568703240607</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.03660737534491265</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.1091630267509952</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.013265931101103301</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>-</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>135.61718053259693</double> 
+         </void> 
+         <void index="1"> 
+          <double>-4.1122534673506195</double> 
+         </void> 
+         <void index="2"> 
+          <double>0.4705047071675291</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.09905686426780552</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.00983043701010572</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.09127413828801073</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.014757677602395824</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.06897776031713454</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.10984173282058107</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.11736241748267712</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.13017890850806835</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.2021603492503269</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.10140623063331089</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.04140937916657761</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.15695541901226268</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.054487249172621155</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-133.0244632107192</double> 
+         </void> 
+         <void index="1"> 
+          <double>-56.83873203151597</double> 
+         </void> 
+         <void index="2"> 
+          <double>3.2083180385430756</double> 
+         </void> 
+         <void index="3"> 
+          <double>7.284845600303169</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.8624653908843027</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.5142711475748921</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.3503005133278182</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.2792529644219951</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.22862650753141234</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.2459686604736654</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.007673507456283368</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.22670160133591655</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.06265828638382587</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.16465590038623845</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.02198053948822254</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.014227852533933216</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>1</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>138.04878074595558</double> 
+         </void> 
+         <void index="1"> 
+          <double>41.682053572509076</double> 
+         </void> 
+         <void index="2"> 
+          <double>-4.874015466396189</double> 
+         </void> 
+         <void index="3"> 
+          <double>-2.033161795191032</double> 
+         </void> 
+         <void index="4"> 
+          <double>8.214315101813598</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.9099947654394405</double> 
+         </void> 
+         <void index="6"> 
+          <double>11.498161762154544</double> 
+         </void> 
+         <void index="7"> 
+          <double>3.497596808808874</double> 
+         </void> 
+         <void index="8"> 
+          <double>-6.751019837905538</double> 
+         </void> 
+         <void index="9"> 
+          <double>-4.007528140290846</double> 
+         </void> 
+         <void index="10"> 
+          <double>-5.018713526389957</double> 
+         </void> 
+         <void index="11"> 
+          <double>3.6092352838325206</double> 
+         </void> 
+         <void index="12"> 
+          <double>4.454102261104075</double> 
+         </void> 
+         <void index="13"> 
+          <double>-4.692812910461804</double> 
+         </void> 
+         <void index="14"> 
+          <double>-2.06718279535949</double> 
+         </void> 
+         <void index="15"> 
+          <double>3.580314214216229</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-119.94895856842841</double> 
+         </void> 
+         <void index="1"> 
+          <double>-4.336258941803652</double> 
+         </void> 
+         <void index="2"> 
+          <double>1.888182413520902</double> 
+         </void> 
+         <void index="3"> 
+          <double>-9.853805189079383</double> 
+         </void> 
+         <void index="4"> 
+          <double>5.521692122639945</double> 
+         </void> 
+         <void index="5"> 
+          <double>3.48849770346261</double> 
+         </void> 
+         <void index="6"> 
+          <double>-4.481680367474747</double> 
+         </void> 
+         <void index="7"> 
+          <double>-6.392870784165497</double> 
+         </void> 
+         <void index="8"> 
+          <double>-8.143677293971601</double> 
+         </void> 
+         <void index="9"> 
+          <double>8.159330531929257</double> 
+         </void> 
+         <void index="10"> 
+          <double>8.899686205923484</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.941812983047983</double> 
+         </void> 
+         <void index="12"> 
+          <double>2.2464454692227154</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.9765998219771364</double> 
+         </void> 
+         <void index="14"> 
+          <double>-6.354943407575311</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.0925749930012989</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>7</int> 
+     </void> 
+    </object> 
+    <string>cos</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>141.29658017470203</double> 
+         </void> 
+         <void index="1"> 
+          <double>-1.6174310668875829</double> 
+         </void> 
+         <void index="2"> 
+          <double>-18.143998796698014</double> 
+         </void> 
+         <void index="3"> 
+          <double>8.203338318272028</double> 
+         </void> 
+         <void index="4"> 
+          <double>4.153972664611009</double> 
+         </void> 
+         <void index="5"> 
+          <double>-2.0559585126344615</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.013067973200064642</double> 
+         </void> 
+         <void index="7"> 
+          <double>-1.0155732318081547</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.33330895862450766</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.9329003862608872</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.49758033762660026</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.24766133149848102</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.32100749763524283</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.10075253264681039</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.05435240546696607</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.010290017488695291</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-95.41781212560609</double> 
+         </void> 
+         <void index="1"> 
+          <double>-55.49356265095098</double> 
+         </void> 
+         <void index="2"> 
+          <double>-23.846415649037215</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.482783299610375</double> 
+         </void> 
+         <void index="4"> 
+          <double>8.613137624023231</double> 
+         </void> 
+         <void index="5"> 
+          <double>1.6184172526414595</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.941205465521754</double> 
+         </void> 
+         <void index="7"> 
+          <double>-1.2209452185075365</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.3287991061383553</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.05919371443931265</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.03399190901862881</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.014990646303108868</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.02684295253458746</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.06401174316107194</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.03732121472330452</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.005698963063206275</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>7</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>143.88390934290706</double> 
+         </void> 
+         <void index="1"> 
+          <double>-2.45167625530713</double> 
+         </void> 
+         <void index="2"> 
+          <double>-12.878393350263753</double> 
+         </void> 
+         <void index="3"> 
+          <double>3.0740872280203657</double> 
+         </void> 
+         <void index="4"> 
+          <double>-11.533683705064494</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.6718818830165076</double> 
+         </void> 
+         <void index="6"> 
+          <double>11.080710728752113</double> 
+         </void> 
+         <void index="7"> 
+          <double>1.5508728371304552</double> 
+         </void> 
+         <void index="8"> 
+          <double>-3.390251738094455</double> 
+         </void> 
+         <void index="9"> 
+          <double>-1.8446612463989638</double> 
+         </void> 
+         <void index="10"> 
+          <double>1.3188226896447062</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.13161440628468185</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.9582174253468013</double> 
+         </void> 
+         <void index="13"> 
+          <double>1.304791959348016</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.03296189892978946</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.6236237091069026</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-147.79756435743886</double> 
+         </void> 
+         <void index="1"> 
+          <double>22.0129271571206</double> 
+         </void> 
+         <void index="2"> 
+          <double>41.9718498561612</double> 
+         </void> 
+         <void index="3"> 
+          <double>-21.280506702611145</double> 
+         </void> 
+         <void index="4"> 
+          <double>-15.045332477230515</double> 
+         </void> 
+         <void index="5"> 
+          <double>6.840998364616465</double> 
+         </void> 
+         <void index="6"> 
+          <double>5.502751469311315</double> 
+         </void> 
+         <void index="7"> 
+          <double>-4.562912485229566</double> 
+         </void> 
+         <void index="8"> 
+          <double>-2.17438700689092</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.5761164122543296</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.1043699717053625</double> 
+         </void> 
+         <void index="11"> 
+          <double>1.1599937140259247</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.5884987446688612</double> 
+         </void> 
+         <void index="13"> 
+          <double>-1.9155806321278925</double> 
+         </void> 
+         <void index="14"> 
+          <double>1.2046022571339614</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.5232653617326486</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>8</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>144.50481839325278</double> 
+         </void> 
+         <void index="1"> 
+          <double>15.348406399645784</double> 
+         </void> 
+         <void index="2"> 
+          <double>17.501050022139193</double> 
+         </void> 
+         <void index="3"> 
+          <double>32.385517276559426</double> 
+         </void> 
+         <void index="4"> 
+          <double>-7.855738720986706</double> 
+         </void> 
+         <void index="5"> 
+          <double>-16.655292633683313</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.384892213454176</double> 
+         </void> 
+         <void index="7"> 
+          <double>1.8002965505077904</double> 
+         </void> 
+         <void index="8"> 
+          <double>1.873570430985628</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.7209676754029343</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.9603294000934751</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.18753800060369508</double> 
+         </void> 
+         <void index="12"> 
+          <double>-1.3648132930913754</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.5537613657277871</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.2607591341862834</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.3984359309245239</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-148.17942323248323</double> 
+         </void> 
+         <void index="1"> 
+          <double>-59.43280685984336</double> 
+         </void> 
+         <void index="2"> 
+          <double>15.66051104497351</double> 
+         </void> 
+         <void index="3"> 
+          <double>21.836071913216372</double> 
+         </void> 
+         <void index="4"> 
+          <double>-13.700862528561624</double> 
+         </void> 
+         <void index="5"> 
+          <double>-7.841954804587117</double> 
+         </void> 
+         <void index="6"> 
+          <double>6.328574958655157</double> 
+         </void> 
+         <void index="7"> 
+          <double>2.6456399986511316</double> 
+         </void> 
+         <void index="8"> 
+          <double>-1.280798176655686</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.3887372977860931</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.24362567696803017</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.1792235409218499</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.6977057004111741</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.15456291816140477</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.8904498167794229</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.09186768789479505</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>2</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>145.39201537211295</double> 
+         </void> 
+         <void index="1"> 
+          <double>4.735423822114279</double> 
+         </void> 
+         <void index="2"> 
+          <double>1.0207665518618647</double> 
+         </void> 
+         <void index="3"> 
+          <double>-4.428133822574228</double> 
+         </void> 
+         <void index="4"> 
+          <double>7.72906188640145</double> 
+         </void> 
+         <void index="5"> 
+          <double>-3.5381503416146227</double> 
+         </void> 
+         <void index="6"> 
+          <double>-5.838941883516165</double> 
+         </void> 
+         <void index="7"> 
+          <double>3.969704997612781</double> 
+         </void> 
+         <void index="8"> 
+          <double>2.6809679937601874</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.08687545553655507</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.20200085532772638</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.8491045494958779</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.20448507402208604</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.10219004965007017</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.017000999520295323</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.12709806571500892</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-150.16763072448458</double> 
+         </void> 
+         <void index="1"> 
+          <double>-5.077689995087699</double> 
+         </void> 
+         <void index="2"> 
+          <double>6.971333988624577</double> 
+         </void> 
+         <void index="3"> 
+          <double>-5.917206055504291</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.35115827599612687</double> 
+         </void> 
+         <void index="5"> 
+          <double>7.512290518207928</double> 
+         </void> 
+         <void index="6"> 
+          <double>-4.235865392835798</double> 
+         </void> 
+         <void index="7"> 
+          <double>-5.751940052415038</double> 
+         </void> 
+         <void index="8"> 
+          <double>1.6520865221586267</double> 
+         </void> 
+         <void index="9"> 
+          <double>2.3717943438425513</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.44747621804062543</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.6748847879637582</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.012244477013160004</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.4019168258969279</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.03274631866836797</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.2714801802677629</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>*</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>146.82220106245975</double> 
+         </void> 
+         <void index="1"> 
+          <double>7.052322048253349</double> 
+         </void> 
+         <void index="2"> 
+          <double>7.757529807807543</double> 
+         </void> 
+         <void index="3"> 
+          <double>-17.81274556797604</double> 
+         </void> 
+         <void index="4"> 
+          <double>10.372582523464766</double> 
+         </void> 
+         <void index="5"> 
+          <double>5.2729881083671515</double> 
+         </void> 
+         <void index="6"> 
+          <double>-6.362609611915938</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.30111932044106904</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.6247438447932286</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.2230396337269125</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.17427692387293636</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.2167894317112662</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.2700561814873573</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.029248098667968514</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.16278100809803853</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.13446645566487037</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-137.91021751532767</double> 
+         </void> 
+         <void index="1"> 
+          <double>-15.846435326524976</double> 
+         </void> 
+         <void index="2"> 
+          <double>-41.872895093275766</double> 
+         </void> 
+         <void index="3"> 
+          <double>-17.47696965093012</double> 
+         </void> 
+         <void index="4"> 
+          <double>14.142307821813711</double> 
+         </void> 
+         <void index="5"> 
+          <double>14.498819706568776</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.1047759465309992</double> 
+         </void> 
+         <void index="7"> 
+          <double>-4.997584218130965</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.9056781866563558</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.4400504147550305</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.4121922043660282</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.9123311886616792</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.002902414792153918</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.6056627078756968</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.20593990496788084</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.31426013383529594</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>4</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>147.22687685911947</double> 
+         </void> 
+         <void index="1"> 
+          <double>-0.5798142638418811</double> 
+         </void> 
+         <void index="2"> 
+          <double>-1.5409595151111626</double> 
+         </void> 
+         <void index="3"> 
+          <double>2.1883391103001233</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.132448455690169</double> 
+         </void> 
+         <void index="5"> 
+          <double>-3.193832281527562</double> 
+         </void> 
+         <void index="6"> 
+          <double>3.486135097692339</double> 
+         </void> 
+         <void index="7"> 
+          <double>-3.0157640061683386</double> 
+         </void> 
+         <void index="8"> 
+          <double>-1.5991027372381559</double> 
+         </void> 
+         <void index="9"> 
+          <double>6.28597846970224</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.7247574449641911</double> 
+         </void> 
+         <void index="11"> 
+          <double>-3.632817537706067</double> 
+         </void> 
+         <void index="12"> 
+          <double>-1.4858717651580042</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.5288646502369774</double> 
+         </void> 
+         <void index="14"> 
+          <double>1.369279698072678</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.560505796079857</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-150.64945894203856</double> 
+         </void> 
+         <void index="1"> 
+          <double>-5.425645039402959</double> 
+         </void> 
+         <void index="2"> 
+          <double>3.057666775195471</double> 
+         </void> 
+         <void index="3"> 
+          <double>-1.5890778313325429</double> 
+         </void> 
+         <void index="4"> 
+          <double>3.394771106998708</double> 
+         </void> 
+         <void index="5"> 
+          <double>-4.901063258653356</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.2541093675640592</double> 
+         </void> 
+         <void index="7"> 
+          <double>5.7569537718715615</double> 
+         </void> 
+         <void index="8"> 
+          <double>-6.882922010347297</double> 
+         </void> 
+         <void index="9"> 
+          <double>-2.6355848695229542</double> 
+         </void> 
+         <void index="10"> 
+          <double>7.212366239392657</double> 
+         </void> 
+         <void index="11"> 
+          <double>1.6946161237639807</double> 
+         </void> 
+         <void index="12"> 
+          <double>-2.5636162379856784</double> 
+         </void> 
+         <void index="13"> 
+          <double>-1.2354147918208256</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.2508539960574282</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.7081360112010969</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>*</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>150.97833430596938</double> 
+         </void> 
+         <void index="1"> 
+          <double>7.931908879081131</double> 
+         </void> 
+         <void index="2"> 
+          <double>3.8488666075678637</double> 
+         </void> 
+         <void index="3"> 
+          <double>-12.876345341559905</double> 
+         </void> 
+         <void index="4"> 
+          <double>6.3432406024238395</double> 
+         </void> 
+         <void index="5"> 
+          <double>4.34433091935127</double> 
+         </void> 
+         <void index="6"> 
+          <double>-3.564872628909626</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.7113358041435668</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.3985650582934833</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.24513592520145144</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.04382206569288649</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.07079402995396589</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.06662681704438411</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.20264625785477675</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.2518418678208947</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.08986168415858808</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-107.69015094469954</double> 
+         </void> 
+         <void index="1"> 
+          <double>-39.49629942523243</double> 
+         </void> 
+         <void index="2"> 
+          <double>-17.203171840736896</double> 
+         </void> 
+         <void index="3"> 
+          <double>-10.608171578228509</double> 
+         </void> 
+         <void index="4"> 
+          <double>1.5383798162321123</double> 
+         </void> 
+         <void index="5"> 
+          <double>13.638149575915032</double> 
+         </void> 
+         <void index="6"> 
+          <double>3.2176547006972704</double> 
+         </void> 
+         <void index="7"> 
+          <double>-6.148046731703449</double> 
+         </void> 
+         <void index="8"> 
+          <double>-3.207885201352558</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.8017234510560393</double> 
+         </void> 
+         <void index="10"> 
+          <double>1.5911973186203512</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.8995106077485429</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.5815219437904728</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.8876586615511831</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.05931036652776367</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.36631566936163695</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>9</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>151.9417177978608</double> 
+         </void> 
+         <void index="1"> 
+          <double>0.8995479235999679</double> 
+         </void> 
+         <void index="2"> 
+          <double>-22.80921539739158</double> 
+         </void> 
+         <void index="3"> 
+          <double>6.469322389061639</double> 
+         </void> 
+         <void index="4"> 
+          <double>4.5796372246196695</double> 
+         </void> 
+         <void index="5"> 
+          <double>-3.130978726624404</double> 
+         </void> 
+         <void index="6"> 
+          <double>1.0175729877229143</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.27213193395442364</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.2337786442750993</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.19777769647806864</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.493747740393535</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.12411839724928231</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.23137629412914873</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.15213805572397698</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.05488069302879628</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.11063538025503405</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-102.04759863696356</double> 
+         </void> 
+         <void index="1"> 
+          <double>-62.24877409070123</double> 
+         </void> 
+         <void index="2"> 
+          <double>-31.23419899379767</double> 
+         </void> 
+         <void index="3"> 
+          <double>1.3851358775116718</double> 
+         </void> 
+         <void index="4"> 
+          <double>9.259815949409841</double> 
+         </void> 
+         <void index="5"> 
+          <double>3.7660385304893067</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.5039805186516488</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.5522099521220878</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.22239706161814132</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.1263295366999886</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.4666067009980146</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.0788970490180998</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.10650467777420736</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.17908006553136624</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.04787390967798544</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.03181523417976728</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>7</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>152.8115213641168</double> 
+         </void> 
+         <void index="1"> 
+          <double>0.5212720664628122</double> 
+         </void> 
+         <void index="2"> 
+          <double>7.151764740448457</double> 
+         </void> 
+         <void index="3"> 
+          <double>1.630112512571287</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.5623021579800017</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.3788255795765867</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.5126005805951298</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.4317189710139623</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.22999528556582083</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.12330276605947932</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.1374934888611027</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.12680614643194155</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.017569716241479072</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.039309871791446294</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.03960721151358537</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.045474182400373264</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-212.80092342984213</double> 
+         </void> 
+         <void index="1"> 
+          <double>-2.1175705182200466</double> 
+         </void> 
+         <void index="2"> 
+          <double>-1.8594154663594658</double> 
+         </void> 
+         <void index="3"> 
+          <double>3.3800157222317995</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.26569700787692285</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.3618577667619198</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.3906664880424352</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.531986065751109</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.17573740107204827</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.10754847652297606</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.10220318504702197</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.17153790935816005</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.03683886010809001</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.13225619867868832</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.08870609169630539</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.014197975433242638</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>.</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>161.04892645621038</double> 
+         </void> 
+         <void index="1"> 
+          <double>-2.9945626143612984</double> 
+         </void> 
+         <void index="2"> 
+          <double>5.042677218530927</double> 
+         </void> 
+         <void index="3"> 
+          <double>2.102187995691713</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.062203738018702937</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.7696720279739668</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.4822519011115849</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.14834994601379614</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.23332484266643516</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.06973684910697464</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.12119316419439685</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.14055950613826684</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.0827990307918327</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.25717845068702516</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.15144162302775466</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.20067191876497092</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-213.35340999961437</double> 
+         </void> 
+         <void index="1"> 
+          <double>-2.590815292326916</double> 
+         </void> 
+         <void index="2"> 
+          <double>-2.646681397045411</double> 
+         </void> 
+         <void index="3"> 
+          <double>3.14649858985997</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.33538002839626124</double> 
+         </void> 
+         <void index="5"> 
+          <double>-1.37863502544243</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.05033267532979069</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.4238091536262313</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.14870636288495098</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.026202900938673723</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.24568193242397496</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.11454410864529685</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.2812807758149132</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.050217173716401886</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.09165905470800628</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.005804499171004007</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>.</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>164.17567910351292</double> 
+         </void> 
+         <void index="1"> 
+          <double>-41.57883666509197</double> 
+         </void> 
+         <void index="2"> 
+          <double>-16.262774939497852</double> 
+         </void> 
+         <void index="3"> 
+          <double>4.435365290570603</double> 
+         </void> 
+         <void index="4"> 
+          <double>6.7169243160885195</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.5895488369911954</double> 
+         </void> 
+         <void index="6"> 
+          <double>-1.9953034554829063</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.6279687929555235</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.39704415611607796</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.17694420731071864</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.0035754089300460423</double> 
+         </void> 
+         <void index="11"> 
+          <double>-4.2940863846580024E-4</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.04661652736117877</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.08290408755667483</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.03569820088869996</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.008169707785153246</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-116.63634431790459</double> 
+         </void> 
+         <void index="1"> 
+          <double>-5.300799250233672</double> 
+         </void> 
+         <void index="2"> 
+          <double>4.777710731193511</double> 
+         </void> 
+         <void index="3"> 
+          <double>-1.0725513146847216</double> 
+         </void> 
+         <void index="4"> 
+          <double>-0.8963840738956848</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.7439591859496035</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.19591377289143713</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.2759552898259949</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.08774511445160998</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.04194603546460046</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.03346145079003543</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.026502103693444412</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.03140760328655856</double> 
+         </void> 
+         <void index="13"> 
+          <double>0.09366229311673935</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.037321891038612165</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.01320819045135846</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+    </object> 
+    <string>enter</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>167.30147149980473</double> 
+         </void> 
+         <void index="1"> 
+          <double>-8.768392112389993</double> 
+         </void> 
+         <void index="2"> 
+          <double>-15.725844937807281</double> 
+         </void> 
+         <void index="3"> 
+          <double>8.124451999569064</double> 
+         </void> 
+         <void index="4"> 
+          <double>2.493795095293949</double> 
+         </void> 
+         <void index="5"> 
+          <double>-3.7100744776475514</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.8465700505983418</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.5494548221440876</double> 
+         </void> 
+         <void index="8"> 
+          <double>-0.37327874950121087</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.18182713857002064</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.21203860723388557</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.04915957149999928</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.15797025404135268</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.1352030541498659</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.020996307629100208</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.02103094134762129</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-156.38059617310833</double> 
+         </void> 
+         <void index="1"> 
+          <double>-74.85203571894672</double> 
+         </void> 
+         <void index="2"> 
+          <double>17.36670578625793</double> 
+         </void> 
+         <void index="3"> 
+          <double>5.500135911975873</double> 
+         </void> 
+         <void index="4"> 
+          <double>-3.7124347127037423</double> 
+         </void> 
+         <void index="5"> 
+          <double>0.324545914681037</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.9748956346143031</double> 
+         </void> 
+         <void index="7"> 
+          <double>1.3831313008763195</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.6771356090851757</double> 
+         </void> 
+         <void index="9"> 
+          <double>-1.0496233135340645</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.23191403696164592</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.48753497673395807</double> 
+         </void> 
+         <void index="12"> 
+          <double>-0.024889302189250007</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.2802877778363623</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.08283689743905764</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.03561803578081291</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>6</int> 
+     </void> 
+    </object> 
+    <string>)</string> 
+   </void> 
+   <void method="put"> 
+    <object class="org.bm.firestorm.gestures.data.TrainGesture"> 
+     <void property="arrays"> 
+      <array class="[D" length="2"> 
+       <void index="0"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>210.62558012819997</double> 
+         </void> 
+         <void index="1"> 
+          <double>1.7541470539566424</double> 
+         </void> 
+         <void index="2"> 
+          <double>-3.2151187565922483</double> 
+         </void> 
+         <void index="3"> 
+          <double>0.48472931534025876</double> 
+         </void> 
+         <void index="4"> 
+          <double>0.39311918752704045</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.21270465165795327</double> 
+         </void> 
+         <void index="6"> 
+          <double>-0.07539692409115961</double> 
+         </void> 
+         <void index="7"> 
+          <double>-0.046822016779472064</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.15410255760035396</double> 
+         </void> 
+         <void index="9"> 
+          <double>0.04218928643181974</double> 
+         </void> 
+         <void index="10"> 
+          <double>-0.18176780210398968</double> 
+         </void> 
+         <void index="11"> 
+          <double>-0.007435925251281228</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.07362696997067641</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.03452375066803648</double> 
+         </void> 
+         <void index="14"> 
+          <double>0.058789756939668814</double> 
+         </void> 
+         <void index="15"> 
+          <double>0.01410679374062096</double> 
+         </void> 
+        </array> 
+       </void> 
+       <void index="1"> 
+        <array class="double" length="16"> 
+         <void index="0"> 
+          <double>-171.36578692777627</double> 
+         </void> 
+         <void index="1"> 
+          <double>-43.007354725357224</double> 
+         </void> 
+         <void index="2"> 
+          <double>8.204906949865514</double> 
+         </void> 
+         <void index="3"> 
+          <double>4.206834474513672</double> 
+         </void> 
+         <void index="4"> 
+          <double>-2.0339690116830487</double> 
+         </void> 
+         <void index="5"> 
+          <double>-0.23806626885604465</double> 
+         </void> 
+         <void index="6"> 
+          <double>0.020430316499484236</double> 
+         </void> 
+         <void index="7"> 
+          <double>0.33098678079492583</double> 
+         </void> 
+         <void index="8"> 
+          <double>0.10764149215773244</double> 
+         </void> 
+         <void index="9"> 
+          <double>-0.20795908274175912</double> 
+         </void> 
+         <void index="10"> 
+          <double>0.007563966161152513</double> 
+         </void> 
+         <void index="11"> 
+          <double>0.053421845054239636</double> 
+         </void> 
+         <void index="12"> 
+          <double>0.04385770727501126</double> 
+         </void> 
+         <void index="13"> 
+          <double>-0.07159665695594375</double> 
+         </void> 
+         <void index="14"> 
+          <double>-0.03414209292566284</double> 
+         </void> 
+         <void index="15"> 
+          <double>-0.01749414255749282</double> 
+         </void> 
+        </array> 
+       </void> 
+      </array> 
+     </void> 
+     <void property="contextAsInteger"> 
+      <int>1</int> 
+     </void> 
+    </object> 
+    <string>1</string> 
+   </void> 
+  </void> 
+ </object> 
+</java> 
