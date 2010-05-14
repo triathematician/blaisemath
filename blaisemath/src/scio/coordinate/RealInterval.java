@@ -9,50 +9,111 @@ import scio.random.RandomCoordinateGenerator;
 
 /**
  * <p>
- *   This class represents an interval of the real axis. It has domain functionality,
- *   uniformly random point generation functionality, and sampling functionality.
+ *   This class represents an interval of the real axis. It has domain functionality
+ *   and uniform random point generation functionality.
  * </p>
  * @author Elisha Peterson
  */
-public class RealInterval extends MaxMinDomainSupport<Double> implements RandomCoordinateGenerator<Double> {
+public class RealInterval
+        implements Domain<Double>, MinMaxBean<Double>, RandomCoordinateGenerator<Double> {
 
-    public RealInterval(MaxMinDomain<Double> domain) {
-        super(domain);
-    }
+    /** Min and max values. */
+    protected double min, max;
+    /** Inclusive properties. */
+    protected boolean includeMin = true, includeMax = true;
 
     /** 
      * Constructs real interval with specified min and max (included by default in the interval)
      * @param min minimum of interval
      * @param max maximum of interval
      */
-    public RealInterval(Double min, Double max) {
-        super(min, max);
-    }
-
-    public RealInterval(Double min, boolean minInclusive, Double max, boolean maxInclusive) {
-        super(min, minInclusive, max, maxInclusive);
-    }
-
-    @Override
-    public void setMax(Double max) {
-        // TODO check for infinites
-        if (min != null && max < min) {
-            this.max = this.min;
-            this.min = max;
-        } else {
+    public RealInterval(double min, double max) {
+        if (min <= max) {
+            this.min = min;
             this.max = max;
+        } else {
+            this.min = max;
+            this.max = min;
         }
     }
 
+    /**
+     * Constructs real interval with specified min and max & booleans describing whether they are included in the domain
+     * @param min minimum of interval
+     * @param minInclusive whether minimum is included in domain
+     * @param max maximum of interval
+     * @param maxInclusive whether maax is included in domain
+     */
+    public RealInterval(double min, boolean minInclusive, double max, boolean maxInclusive) {
+        this.min = min;
+        this.includeMin = minInclusive;
+        this.max = max;
+        this.includeMax = maxInclusive;
+    }
+
     @Override
-    public void setMin(Double min) {
-        // TODO check for infinites
-        if (max != null && max < min) {
+    public String toString() {
+        return (includeMin ? "[" : "(") + min + "," + max + (includeMax ? "]" : ")");
+    }
+    
+    //
+    // BEAN PROPERTIES
+    //
+    
+    /** @return minimum value of interval */
+    public Double getMinimum() {
+        return min;
+    }
+
+    /** Sets minimum value of interval; if greater than max value, reverses order of min and max. */
+    public void setMinimum(Double min) {
+        if (max < min) {
             this.min = this.max;
             this.max = min;
-        } else {
+        } else
             this.min = min;
-        }
+    }
+
+    /** @return maximum value of interval */
+    public Double getMaximum() {
+        return max;
+    }
+
+    /** Sets maximum value of interval; if less than min value, reverses order of min and max. */
+    public void setMaximum(Double max) {
+        if (max < min) {
+            this.max = this.min;
+            this.min = max;
+        } else
+            this.max = max;
+    }
+
+    public boolean isIncludeMaximum() {
+        return includeMax;
+    }
+
+    public void setIncludeMaximum(boolean includeMax) {
+        this.includeMax = includeMax;
+    }
+
+    public boolean isIncludeMinimum() {
+        return includeMin;
+    }
+
+    public void setIncludeMinimum(boolean includeMin) {
+        this.includeMin = includeMin;
+    }
+
+
+
+    //
+    // INTERFACE METHODS
+    //
+
+    public boolean contains(Double coord) {
+        return (coord > min && coord < max)
+                || (coord == min && includeMin)
+                || (coord == max && includeMax);
     }
 
     /**
@@ -63,31 +124,19 @@ public class RealInterval extends MaxMinDomainSupport<Double> implements RandomC
      * @return a randomly chosen value
      */
     public Double randomValue() {
-        if (min.isInfinite() && max.isInfinite()) {
-            return (pseudomax() - pseudomin()) * Math.random() + min;
-        } else {
-            return (max - min) * Math.random() + min;
-        }
+        return min + Math.random() * (
+                Double.isInfinite(min) || Double.isInfinite(max)
+                    ? pseudomax() - pseudomin()
+                    : max - min);
     }
 
-    private Double pseudomax() {
-        if (max.isInfinite()) {
-            return Double.MAX_VALUE/10;
-        } else {
-            return max;
-        }
+    /** @return a double value "close" to the max if the range is infinite, otherwise the actual max. */
+    private double pseudomax() {
+        return Double.isInfinite(max) ? Double.MAX_VALUE / 10 : max;
     }
 
-    private Double pseudomin() {
-        if (min.isInfinite()) {
-            return -Double.MAX_VALUE/10;
-        } else {
-            return max;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return (minInclusive ? "[" : "(") + min + "," + max + (maxInclusive ? "]" : ")");
+    /** @return a double value "close" to the min if the range is infinite, otherwise the actual min. */
+    private double pseudomin() {
+        return Double.isInfinite(min) ? -Double.MAX_VALUE / 10 : min;
     }
 }

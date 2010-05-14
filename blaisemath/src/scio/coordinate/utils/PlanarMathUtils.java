@@ -397,9 +397,8 @@ public final class PlanarMathUtils {
      * @return point along the line that forms a perpendicular with the original point; or if the endpoints coincide a point at an endpoint
      **/
     public static Point2D.Double closestPointOnLine(Point2D.Double original, Point2D.Double endpt1, Point2D.Double endpt2) {
-        if (endpt1.equals(endpt2)) {
+        if (endpt1.equals(endpt2))
             return new Point2D.Double(endpt1.x, endpt1.y);
-        }
         double t = t(original, endpt1, endpt2);
         return new Point2D.Double(endpt1.x + t * (endpt2.x - endpt1.x), endpt1.y + t * (endpt2.y - endpt1.y));
     }

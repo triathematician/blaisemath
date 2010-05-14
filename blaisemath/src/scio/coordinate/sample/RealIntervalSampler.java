@@ -19,25 +19,20 @@ import java.util.List;
  * </p>
  * @author Elisha Peterson
  */
-public class RealIntervalSampler extends RealInterval implements SampleGenerator<Double> {
+public class RealIntervalSampler extends RealInterval
+        implements SampleSet<Double> {
 
     /** Number of samples in the interval. */
     int numSamples;
 
-    public RealIntervalSampler(MaxMinDomain<Double> domain, int numSamples) {
-        super(domain);
-        this.numSamples = numSamples;
-    }
-
-    public RealIntervalSampler(Double min, boolean minInclusive, Double max, boolean maxInclusive, int numSamples) {
-        super(min, minInclusive, max, maxInclusive);
-        this.numSamples = numSamples;
-    }
-
-    public RealIntervalSampler(Double min, Double max, int numSamples) {
+    public RealIntervalSampler(double min, double max, int numSamples) {
         super(min, max);
         this.numSamples = numSamples;
     }
+
+    //
+    // BEAN PROPERTIES
+    //
 
     public int getNumSamples() {
         return numSamples;
@@ -47,11 +42,15 @@ public class RealIntervalSampler extends RealInterval implements SampleGenerator
         this.numSamples = numSamples;
     }
 
+    //
+    // SAMPLING METHODS
+    //
+
     public List<Double> getSamples() {
         // start at min if that's included, min + diff if not min but max is, min + diff/2 if neither is
-        double n = (maxInclusive && minInclusive) ? numSamples - 1 : numSamples;
+        double n = (includeMax && includeMin) ? numSamples - 1 : numSamples;
         final double diff = (max-min)/n;
-        final double mx = minInclusive ? min : ( maxInclusive ? min + diff : min + diff/2 );
+        final double mx = includeMin ? min : ( includeMax ? min + diff : min + diff/2 );
         return new AbstractList<Double>() {
             @Override
             public Double get(int index) {
@@ -65,12 +64,7 @@ public class RealIntervalSampler extends RealInterval implements SampleGenerator
     }
 
     public Double getSampleDiff() {
-        double n = (maxInclusive && minInclusive) ? numSamples - 1 : numSamples;
+        double n = (includeMin && includeMax) ? numSamples - 1 : numSamples;
         return (max-min)/n;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }
