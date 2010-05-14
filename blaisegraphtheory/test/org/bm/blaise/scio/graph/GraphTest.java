@@ -27,14 +27,14 @@ public class GraphTest extends TestCase {
     
     public static Test suite(){return new TestSuite(GraphTest.class);}
 
-    GraphE instance;
+    SimpleGraph instance;
     
     public GraphTest(String testName) {
         super(testName);
     }
 
     protected void setUp() throws Exception {
-        instance=new GraphE();
+        instance=new SimpleGraph();
         instance.addEdge(1,2);
         instance.addEdge(1,2,4);
         instance.addEdge(1,2,-2);
@@ -53,7 +53,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of addTrivialLoop method, of class scio.graph.Graph.
+     * Test of addTrivialLoop method, of class scio.graph.SimpleGraph.
      */
     public void testAddTrivialEdge() {
         System.out.println("addTrivialEdge");        
@@ -62,7 +62,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of addEdge method, of class scio.graph.Graph. Assume works.
+     * Test of addEdge method, of class scio.graph.SimpleGraph. Assume works.
      */
     public void testAddEdge() {
         System.out.println("addEdge");
@@ -70,7 +70,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getVertices method, of class scio.graph.Graph.
+     * Test of getVertices method, of class scio.graph.SimpleGraph.
      */
     public void testGetVertices() {
         System.out.println("getVertices");
@@ -83,7 +83,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getNumVertices method, of class scio.graph.Graph.
+     * Test of getNumVertices method, of class scio.graph.SimpleGraph.
      */
     public void testGetNumVertices() {
         System.out.println("getNumVertices");
@@ -91,7 +91,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getMaxVertex method, of class scio.graph.Graph.
+     * Test of getMaxVertex method, of class scio.graph.SimpleGraph.
      */
     public void testGetMaxVertex() {
         System.out.println("getMaxVertex");
@@ -102,14 +102,14 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of toString method, of class scio.graph.Graph.
+     * Test of toString method, of class scio.graph.SimpleGraph.
      */
     public void testToString() {
         System.out.println("toString: NO TEST REQUIRED");
     }
 
     /**
-     * Test of relabelVertices method, of class scio.graph.Graph.
+     * Test of relabelVertices method, of class scio.graph.SimpleGraph.
      */
     public void testRelabelVertices() {
         System.out.println("relabelVertices");        
@@ -120,7 +120,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of addToLabels method, of class scio.graph.Graph.
+     * Test of addToLabels method, of class scio.graph.SimpleGraph.
      */
     public void testAddToLabels() {
         System.out.println("addToLabels");
@@ -132,7 +132,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of reverseEdges method, of class scio.graph.Graph.
+     * Test of reverseEdges method, of class scio.graph.SimpleGraph.
      */
     public void testReverseEdges() {
         System.out.println("reverseEdges");        
@@ -141,7 +141,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of reverseEdges method, of class scio.graph.Graph.
+     * Test of reverseEdges method, of class scio.graph.SimpleGraph.
      */
     public void testReverseLabels() {
         System.out.println("reverseEdges");        
@@ -151,7 +151,7 @@ public class GraphTest extends TestCase {
     }   
     
     /**
-     * Test of removeVertex method, of class scio.graph.Graph.
+     * Test of removeVertex method, of class scio.graph.SimpleGraph.
      */
     public void testRemoveVertex() {
         System.out.println("removeVertex");
@@ -161,7 +161,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of glueVertices method, of class scio.graph.Graph.
+     * Test of glueVertices method, of class scio.graph.SimpleGraph.
      */
     public void testGlueVertices() {
         System.out.println("glueVertices");
@@ -172,7 +172,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getLoopsAt method, of class scio.graph.Graph.
+     * Test of getLoopsAt method, of class scio.graph.SimpleGraph.
      */
     public void testGetLoopsAt() {
         System.out.println("getLoopsAt");
@@ -183,7 +183,7 @@ public class GraphTest extends TestCase {
     }
     
     /**
-     * Test of getValency method, of class scio.graph.Graph.
+     * Test of getValency method, of class scio.graph.SimpleGraph.
      */
     public void testGetValency() {
         System.out.println("getValency");
@@ -198,7 +198,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getNeighborhood method, of class scio.graph.Graph.
+     * Test of getNeighborhood method, of class scio.graph.SimpleGraph.
      */
     public void testGetNeighborhood() {
         System.out.println("getNeighborhood");
@@ -210,7 +210,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of removeEdge method, of class scio.graph.Graph.
+     * Test of removeEdge method, of class scio.graph.SimpleGraph.
      */
     public void testRemoveEdge() {
         System.out.println("removeEdge");
@@ -223,7 +223,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of contractEdge method, of class scio.graph.Graph.
+     * Test of contractEdge method, of class scio.graph.SimpleGraph.
      */
     public void testContractEdge() {
         System.out.println("removeEdge");
@@ -234,7 +234,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of contractVerticesByDegree method, of class scio.graph.Graph.
+     * Test of contractVerticesByDegree method, of class scio.graph.SimpleGraph.
      */
     public void testContractDegreeTwo() {
         System.out.println("contractDegreeTwo");
@@ -243,7 +243,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of glueTo method, of class scio.graph.Graph.
+     * Test of glueTo method, of class scio.graph.SimpleGraph.
      */
     public void testGlueTo() {
         System.out.println("glueTo");
@@ -264,14 +264,14 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getEdge method, of class scio.graph.Graph.
+     * Test of getEdge method, of class scio.graph.SimpleGraph.
      */
     public void testGetEdge() {        
         System.out.println("getEdge: NO TESTING REQUIRED!");
     }
 
     /**
-     * Test of edgeCount method, of class scio.graph.Graph.
+     * Test of edgeCount method, of class scio.graph.SimpleGraph.
      */
     public void testEdgeCount() {
         System.out.println("edgeCount");
@@ -279,7 +279,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of isConnected method, of class scio.graph.Graph.
+     * Test of isConnected method, of class scio.graph.SimpleGraph.
      */
     public void testIsConnected() {
         System.out.println("isConnected");
@@ -293,7 +293,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getComponent method, of class scio.graph.Graph.
+     * Test of getComponent method, of class scio.graph.SimpleGraph.
      */
     public void testGetComponent() {
         System.out.println("getComponent");
@@ -306,7 +306,7 @@ public class GraphTest extends TestCase {
 
  
     /**
-     * Test of getAllComponents method, of class scio.graph.Graph.
+     * Test of getAllComponents method, of class scio.graph.SimpleGraph.
      */
     public void testGetAllComponents() {
         System.out.println("getAllComponents");
@@ -325,7 +325,7 @@ public class GraphTest extends TestCase {
     }
     
     /**
-     * Test of getVertexOfDegree method, of class scio.graph.Graph.
+     * Test of getVertexOfDegree method, of class scio.graph.SimpleGraph.
      */
     public void testGetVertexOfDegree() {
         System.out.println("getVertexOfDegree");
@@ -339,7 +339,7 @@ public class GraphTest extends TestCase {
     }
 
     /**
-     * Test of getAllAdjacencies method, of class scio.graph.Graph.
+     * Test of getAllAdjacencies method, of class scio.graph.SimpleGraph.
      */
     public void testGetAllAdjacencies() {
         System.out.println("getAllAdjacencies");
@@ -357,44 +357,44 @@ public class GraphTest extends TestCase {
 
 
     /**
-     * Test of getWeightedMatrix method, of class scio.graph.Graph.
+     * Test of getWeightedMatrix method, of class scio.graph.SimpleGraph.
      */
     public void testGetWeightedMatrix() {
         System.out.println("getWeightedMatrix TO BE IMPLEMENTED");
     }
 
     /**
-     * Test of getOrderedMatrix method, of class scio.graph.Graph.
+     * Test of getOrderedMatrix method, of class scio.graph.SimpleGraph.
      */
     public void testGetOrderedMatrix() {
         System.out.println("getOrderedMatrix TO BE IMPLEMENTED");
     }
 
     /**
-     * Test of getUnOrderedMatrix method, of class scio.graph.Graph.
+     * Test of getUnOrderedMatrix method, of class scio.graph.SimpleGraph.
      */
     public void testGetUnOrderedMatrix() {
         System.out.println("getUnOrderedMatrix TO BE IMPLEMENTED");
     }
 
     /**
-     * Test of surgery method, of class scio.graph.Graph.
+     * Test of surgery method, of class scio.graph.SimpleGraph.
      */
     public void testSurgery() {
         System.out.println("surgery TO BE IMPLEMENTED");
     }
 
     /**
-     * Test of closeOff method, of class scio.graph.Graph.
+     * Test of closeOff method, of class scio.graph.SimpleGraph.
      */
     public void testCloseOff() {
         System.out.println("closeOff TO BE IMPLEMENTED");
     }
 
-    /** Test of addTrivialLoop method, of class scio.graph.Graph. */
+    /** Test of addTrivialLoop method, of class scio.graph.SimpleGraph. */
     public void testAddTrivialLoop(){System.out.println("addTrivialLoop: NO TEST REQUIRED!");}
 
-    /** Test of getNumTrivialLoops method, of class scio.graph.Graph. */
+    /** Test of getNumTrivialLoops method, of class scio.graph.SimpleGraph. */
     public void testGetNumTrivialLoops(){System.out.println("getNumTrivialLoops: NO TEST REQUIRED!");}
 
 }
