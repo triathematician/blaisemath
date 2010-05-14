@@ -4,12 +4,10 @@
  */
 package org.bm.blaise.scio.graph.creation;
 
-import org.bm.blaise.scio.graph.metrics.GraphUtils;
 import org.bm.blaise.scio.graph.*;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import org.bm.blaise.scio.graph.metrics.GraphMetrics;
 
 /**
  * <p>
@@ -21,65 +19,129 @@ import java.util.Set;
 public class GraphCreation {
 
     public static void main(String[] args) {
-        Graph g = getRandomGraph(10, 0.3, false);
-        System.out.println(g);
-        System.out.println("====");
-        System.out.println(GraphUtils.getDegreeMap(g));
-        System.out.println(Arrays.toString(GraphUtils.getDegreeDistribution(g)));
-        System.out.println("----");
-        System.out.println(GraphUtils.getNeighborhood(g, 0));
-        System.out.println(GraphUtils.getCliqueCount(g, 0));
-        System.out.println(GraphUtils.getCliqueCountMap(g));
-        System.out.println("----");
-        System.out.println(GraphUtils.getDistance(g, 0, 1));
-        System.out.println(GraphUtils.getDistance(g, 0, 2));
-        System.out.println(GraphUtils.getDistance(g, 1, 2));
-        System.out.println("----");
-        System.out.println(GraphUtils.getNeighborhood(g, 0, 0));
-        System.out.println(GraphUtils.getNeighborhood(g, 0, 1));
-        System.out.println(GraphUtils.getNeighborhood(g, 0, 2));
-        System.out.println(GraphUtils.getNeighborhood(g, 0, 3));
-        System.out.println("----");
-        System.out.println(getSubEdges(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4)));
-        System.out.println(getSubgraph(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4)));
-        System.out.println("----");
-        System.out.println(getContractedEdges(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4), 0));
-        System.out.println(getContractedGraph(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4), 0));
-        System.out.println("----");
+        long t0 = System.currentTimeMillis();
+        
+        long t = System.currentTimeMillis();
+        System.out.println("== Graph == " + t0);
+
+        SimpleGraph g = generateSparseRandomGraph(5000, 5000, false);
+//        System.out.println(g);
+        System.out.println(g.getEdges().size() + " edges");
+
+        long t2 = System.currentTimeMillis();
+        System.out.println("--DegreeMap/Distribution-- " + (t2-t) + "ms");
+        t = t2;
+
+//        System.out.println(GraphUtils.getDegreeMap(g));
+        System.out.println(Arrays.toString(GraphUtils.degreeDistribution(g)));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--Neighborhood and Clique Counts-- " + (t2-t) + "ms");
+        t = t2;
+
+        System.out.println(GraphUtils.neighborhood(0, g));
+        System.out.println(GraphMetrics.CLIQUE_COUNT.getValue(g, 0));
+//        System.out.println(GraphUtils.getCliqueCountMap(g));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--Components-- " + (t2-t) + "ms");
+        t = t2;
+
+        for (Object s : GraphUtils.components(g))
+            System.out.println(".." + s);
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--Distance Calculations-- " + (t2-t) + "ms");
+        t = t2;
+
+        System.out.println(GraphUtils.distance(0, 1, g));
+        System.out.println(GraphUtils.distance(0, 2, g));
+        System.out.println(GraphUtils.distance(1, 2, g));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--Neighborhood Methods-- " + (t2-t) + "ms");
+        t = t2;
+
+        System.out.println(GraphUtils.neighborhood(0, g, 0));
+        System.out.println(GraphUtils.neighborhood(0, g, 1));
+        System.out.println(GraphUtils.neighborhood(0, g, 2));
+        System.out.println(GraphUtils.neighborhood(0, g, 3));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--SubEdges & Subgraph-- " + (t2-t) + "ms");
+        t = t2;
+
+        System.out.println(deriveSubgraph(g, Arrays.asList((Object) 0, 1, 2, 3, 4)));
+        System.out.println(deriveContractedGraph(g, Arrays.asList(0, 1, 2, 3, 4), 0));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("--ContractedEdges & ContractedGraph-- " + (t2-t) + "ms");
+        t = t2;
+
+//        System.out.println(getContractedEdges(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4), 0));
+//        System.out.println(deriveContractedGraph(g, (Collection<Object>) Arrays.asList((Object) 0, 1, 2, 3, 4), 0));
+
+        t2 = System.currentTimeMillis();
+        System.out.println("---- " + (t2-t) + "ms");
+        System.out.println("==== total = " + (t2-t0) + "ms");
     }
 
     /**
-     * Constructs a graph with provided array of vertices and array of edges.
+     * Builds a graph with provided array of vertices and array of edges.
+     * @param vertices array of vertices
+     * @param edges array of vertex-pairings; each entry should be an array of length two
      */
-    public static Graph getGraph(Object[] vertices, Object[][] edges) {
-        Graph result = new Graph();
-        for (int i = 0; i < vertices.length; i++) {
+    public static SimpleGraph buildGraph(Object[] vertices, Object[][] edges) {
+        SimpleGraph result = new SimpleGraph();
+        for (int i = 0; i < vertices.length; i++)
             result.addVertex(vertices[i]);
-        }
-        for (int i = 0; i < edges.length; i++) {
+        for (int i = 0; i < edges.length; i++)
             result.addEdge(edges[i][0], edges[i][1]);
-        }
         return result;
     }
 
-    /** Returns graph with specified number of vertices and edge probability. */
-    public static Graph getRandomGraph(int nVertices, double pEdge, boolean directed) {
-        Graph result = getEmptyGraph(nVertices);
-        for (int i = 0; i < nVertices; i++) {
-            for (int j = 0; j < nVertices; j++) {
-                if ((!directed && j > i) || (directed && j != i)) {
-                    if (Math.random() < pEdge) {
+    /**
+     * Returns random graph with specified number of vertices and edge probability. Every potential
+     * link has an equal probability of existence.
+     * @param nVertices number of vertices in the resulting graph
+     * @param pEdge probability of each edge's existence
+     * @param directed whether graph is directed or not
+     */
+    public static SimpleGraph generateRandomGraph(int nVertices, double pEdge, boolean directed) {
+        SimpleGraph result = buildEmptyGraph(nVertices);
+        for (int i = 0; i < nVertices; i++)
+            for (int j = 0; j < nVertices; j++)
+                if ((!directed && j > i) || (directed && j != i))
+                    if (Math.random() < pEdge)
                         result.addEdge(i, j);
-                    }
-                }
-            }
+        return result;
+    }
+
+    /**
+     * Returns random graph w/ specified number of vertices and edges. Useful for creating
+     * large sparse random graphs
+     * @param nVertices number of vertices in the resulting graph
+     * @param nEdges number of edges in the resulting graph
+     * @param directed whether graph is directed or not
+     */
+    public static SimpleGraph generateSparseRandomGraph(int nVertices, int nEdges, boolean directed) {
+        SimpleGraph result = buildEmptyGraph(nVertices);
+        Edge potential;
+        for (int i = 0; i < nEdges; i++) {
+//            do {
+                potential = new Edge(
+                    (int) Math.floor(nVertices * Math.random()),
+                    (int) Math.floor(nVertices * Math.random())
+                );                    
+//            } while (result.containsEdge(potential));
+            result.addEdge(potential);
         }
         return result;
     }
 
     /** Returns graph with all possible edges. */
-    public static Graph getCompleteGraph(int nVertices, boolean directed) {
-        Graph result = getEmptyGraph(nVertices);
+    public static SimpleGraph buildCompleteGraph(int nVertices, boolean directed) {
+        SimpleGraph result = buildEmptyGraph(nVertices);
         for (int i = 0; i < nVertices; i++) {
             for (int j = 0; j < nVertices; j++) {
                 if ((!directed && j > i) || (directed && j != i)) {
@@ -91,8 +153,8 @@ public class GraphCreation {
     }
 
     /** Returns undirected graph with cyclic edges. */
-    public static Graph getLoopGraph(int nVertices) {
-        Graph result = getEmptyGraph(nVertices);
+    public static SimpleGraph buildLoopGraph(int nVertices) {
+        SimpleGraph result = buildEmptyGraph(nVertices);
         for (int i = 0; i < nVertices; i++) {
             result.addEdge(i, (i + 1) % nVertices);
         }
@@ -100,8 +162,8 @@ public class GraphCreation {
     }
 
     /** Returns undirected graph with single central vertex. */
-    public static Graph getWheelGraph(int nVertices) {
-        Graph result = getEmptyGraph(nVertices);
+    public static SimpleGraph buildWheelGraph(int nVertices) {
+        SimpleGraph result = buildEmptyGraph(nVertices);
         for (int i = 1; i < nVertices; i++) {
             result.addEdge(0, i);
         }
@@ -109,66 +171,53 @@ public class GraphCreation {
     }
 
     /** Returns graph with specified number of vertices. */
-    public static Graph<Integer> getEmptyGraph(int nVertices) {
-        Graph<Integer> result = new Graph<Integer>();
-        for (int i = 0; i < nVertices; i++) {
+    public static SimpleGraph buildEmptyGraph(int nVertices) {
+        SimpleGraph result = new SimpleGraph();
+        for (int i = 0; i < nVertices; i++)
             result.addVertex(i);
-        }
         return result;
     }
 
 
-    /** Returns list of edges between specified vertices. */
-    public static <V> Set<EdgeInterface<V>> getSubEdges(Graph<V> g, Collection<V> vertices) {
-        Set<EdgeInterface<V>> result = new HashSet<EdgeInterface<V>>();
-        for(EdgeInterface<V> e : g.getEdges()) {
-            if (vertices.contains(e.getSource()) && vertices.contains(e.getSink())) {
-                result.add(e);
-            }
-        }
-        return result;
-    }
-
-    /** Returns subgraph for given set of vertices. */
-    public static <V> Graph<V> getSubgraph(Graph<V> g, Collection<V> vertices) {
-        Graph<V> result = (Graph<V>) g.clone();
-        result.clear();
-        for (V v : vertices) {
+    /**
+     * Returns deriveSubgraph for given set of vertices.
+     * @param g the starting graph
+     * @param vertices the collection of vertices that will comprise the vertex set in the new graph
+     * @return the resulting graph
+     */
+    public static SimpleGraph deriveSubgraph(SimpleGraph g, Collection<Object> vertices) {
+        SimpleGraph result = new SimpleGraph();
+        for (Object v : vertices)
             result.addVertex(v);
-        }
-        result.setEdges(getSubEdges(g, vertices));
+        for (Edge e : g.getEdges())
+            if (vertices.contains(e.getSource()) && vertices.contains(e.getSink()))
+                result.addEdge(result.indexOf(e.getSource()), result.indexOf(e.getSink()));
         return result;
     }
 
-    /** Returns list of edges with specified vertices contracted, and replaced by the specified new vertex. */
-    public static <V> Set<EdgeInterface<V>> getContractedEdges(Graph<V> g, Collection<V> vertices, V newVertex) {
-        Set<EdgeInterface<V>> result = new HashSet<EdgeInterface<V>>();
-        for(EdgeInterface<V> e : g.getEdges()) {
-            if (vertices.contains(e.getSource())) {
-                if (vertices.contains(e.getSink())) {
-                    result.add(new Edge<V>(newVertex, newVertex));
-                } else {
-                    result.add(new Edge<V>(newVertex, e.getSink()));
-                }
-            } else {
-                if (vertices.contains(e.getSink())) {
-                    result.add(new Edge<V>(e.getSource(), newVertex));
-                } else {
-                    result.add(new Edge<V>(e.getSource(), e.getSink()));
-                }
-            }
-        }
-        return result;
-    }
 
-    /** Returns subgraph with specified vertices contracted. */
-    public static <V> Graph<V> getContractedGraph(Graph<V> g, Collection<V> vertices, V newVertex) {
-        Graph<V> result = (Graph<V>) g.clone();
-        for (V v : vertices) {
-            result.removeVertex(v);
-        }
-        result.addVertex(newVertex);
-        result.setEdges(getContractedEdges(g, vertices, newVertex));
+    /**
+     * Returns graph in which the specified collection of vertices have been replaced by a single new vertex
+     * @param g the starting graph
+     * @param vertices the collection of vertices to be contracted
+     * @param newVertex the index of the replacement vertex
+     * @return the resulting graph
+     */
+    public static SimpleGraph deriveContractedGraph(SimpleGraph g, Collection<Integer> vertices, Integer newVertex) {
+        SimpleGraph result = new SimpleGraph();
+//        for (Integer v : g.getVertices())
+//            if (!vertices.contains(v))
+//                result.addVertex(v);
+//        result.addVertex(newVertex);
+//        for (Edge e : g.getEdges())
+//            if (vertices.contains(e.getSource()) && vertices.contains(e.getSink()))
+//                continue;
+//            else if (vertices.contains(e.getSource()))
+//                result.addEdge(newVertex, e.getSink());
+//            else if (vertices.contains(e.getSink()))
+//                result.addEdge(e.getSource(), newVertex);
+//            else
+//                result.addEdge(e.getSource(), e.getSink());
         return result;
     }
 }

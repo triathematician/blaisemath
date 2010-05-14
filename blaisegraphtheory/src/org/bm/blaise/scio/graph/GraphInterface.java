@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * <p>
@@ -16,6 +17,10 @@ import java.util.Collection;
  * @author Elisha Peterson
  */
 public interface GraphInterface<V> extends NeighborSetInterface<V> {
+
+    //
+    // VERTICES
+    //
 
     /** 
      * Adds a vertex to the graph, without any edges.
@@ -42,29 +47,33 @@ public interface GraphInterface<V> extends NeighborSetInterface<V> {
      */
     public Collection<V> getVertices();
 
+    //
+    // EDGES
+    //
+
     /**
      * Adds an edge between the two vertices.
      * @param edge the edge to add
      */
-    public void addEdge(EdgeInterface<V> edge);
+    public void addEdge(Edge edge);
 
     /**
      * Removes an edge between the two vertices.
      * @param edge the edge to add
      * @return true if the graph contains an edge between the specified vertices
      */
-    public boolean removeEdge(EdgeInterface<V> edge);
+    public boolean removeEdge(Edge edge);
 
     /**
      * Returns true if the graph contains an edge between the specified vertices.
      * @param edge the edge to add
      */
-    public boolean containsEdge(EdgeInterface<V> edge);
+    public boolean containsEdge(Edge edge);
 
         /**
          * Returns the edges of the graph as a collection.
          */
-    public Collection<EdgeInterface<V>> getEdges();
+    public Set<Edge> getEdges();
 
     /**
      * Adds an edge between two vertices.
@@ -74,12 +83,20 @@ public interface GraphInterface<V> extends NeighborSetInterface<V> {
     public void addEdge(V v1, V v2);
 
     /**
-     * Returns the edge between the two vertices.
+     * Finds the edge between the two vertices.
+     * @param i1 index of first vertex
+     * @param i2 index of second vertex
+     * @return the edge between the vertices, or <code>null</code> if there is no connection between them.
+     */
+    public Edge findEdge(int i1, int i2);
+
+    /**
+     * Finds the edge between the two vertices.
      * @param v1 first vertex of edge
      * @param v2 second vertex of edge
      * @return the edge between the vertices, or <code>null</code> if there is no connection between them.
      */
-    public EdgeInterface<V> getEdge(V v1, V v2);
+    public Edge findEdge(V v1, V v2);
 
     /**
      * Returns the weight associated with the edge between the two vertices.
@@ -90,9 +107,7 @@ public interface GraphInterface<V> extends NeighborSetInterface<V> {
     public double getEdgeWeight(V v1, V v2);
     
     //
-    //
     // TYPES
-    //
     //
 
     /**

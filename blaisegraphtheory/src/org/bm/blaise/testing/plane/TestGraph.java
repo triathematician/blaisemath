@@ -6,10 +6,16 @@
 package org.bm.blaise.testing.plane;
 
 import data.propertysheet.PropertySheet;
+import data.propertysheet.editor.EditorRegistration;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import org.bm.blaise.scio.graph.creation.GraphCreation;
-import org.bm.blaise.specto.plane.*;
+import org.bm.blaise.scio.graph.layout.EnergyLayout;
+import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
-import org.bm.blaise.specto.visometry.Plottable;
+import stormtimer.BetterTimer;
+import visometry.plane.PlanePlotComponent;
+import visometry.plottable.Plottable;
 
 /**
  *
@@ -17,30 +23,31 @@ import org.bm.blaise.specto.visometry.Plottable;
  */
 public class TestGraph extends javax.swing.JFrame {
 
+    PlanePlotComponent graphPlot;
+    PlaneGraph pg;
+    /** Flag for when el needs points updated */
+    boolean updateEL = true;
+    EnergyLayout el;
+
     /** Creates new form TestPlaneVisometry */
     public TestGraph() {
-        data.beans.EditorRegistration.registerEditors();
+        EditorRegistration.registerEditors();
         initComponents();
-
+        graphPlot = new PlanePlotComponent();
+        tabPane.add("Graph Plot", graphPlot);
 
         // BASIC ELEMENTS
 
-        graphPlot.addPlottable(new PlaneGraph(new PlaneGraph.TestNSI()));
-//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getLoopGraph(15)));
-//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getCompleteGraph(5, true)));
-//        graphPlot.addPlottable(new PlaneGraph(GraphCreation.getRandomGraph(30, .1, true)));
+        graphPlot.add(pg = new PlaneGraph(GraphCreation.generateSparseRandomGraph(100, 50, false)));
         graphPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
-
 
         // PANELS
 
         rollupPanel1.add("Visometry", new PropertySheet(graphPlot.getVisometry()));
-        for (Plottable p : graphPlot.getPlottables()) {
+        rollupPanel1.add("Energy Layout", new PropertySheet(el = new EnergyLayout(pg.getGraph(), pg.getPoint())));
+        for (Plottable p : graphPlot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
-//        rollupPanel1.add("Point Style", new PropertySheet(planePlotComponent1.getVisometryGraphics().getPointStyle()));
-//        rollupPanel1.add("Stroke Style", new PropertySheet(planePlotComponent1.getVisometryGraphics().getPathStyle()));
-//        rollupPanel1.add("Text Style", new PropertySheet(planePlotComponent1.getVisometryGraphics().getTextStyle()));
     }
 
     /** This method is called from within the constructor to
@@ -53,27 +60,80 @@ public class TestGraph extends javax.swing.JFrame {
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
+        randomLB = new javax.swing.JButton();
+        circleLB = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        jLabel1 = new javax.swing.JLabel();
+        energyIB = new javax.swing.JButton();
+        energyAB = new javax.swing.JButton();
+        energySB = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new gui.RollupPanel();
         tabPane = new javax.swing.JTabbedPane();
-        graphPlot = new org.bm.blaise.specto.plane.PlanePlotComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
 
         jToolBar1.setRollover(true);
 
-        jButton1.setText("jButton1");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        randomLB.setText("Random Layout");
+        randomLB.setFocusable(false);
+        randomLB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        randomLB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        randomLB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                randomLBActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton1);
+        jToolBar1.add(randomLB);
+
+        circleLB.setText("Circle Layout");
+        circleLB.setFocusable(false);
+        circleLB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        circleLB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        circleLB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                circleLBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(circleLB);
+        jToolBar1.add(jSeparator1);
+
+        jLabel1.setText("ENERGY:");
+        jToolBar1.add(jLabel1);
+
+        energyIB.setText("iterate");
+        energyIB.setFocusable(false);
+        energyIB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        energyIB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        energyIB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                energyIBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(energyIB);
+
+        energyAB.setText("animate");
+        energyAB.setFocusable(false);
+        energyAB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        energyAB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        energyAB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                energyABActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(energyAB);
+
+        energySB.setText("stop");
+        energySB.setFocusable(false);
+        energySB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        energySB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        energySB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                energySBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(energySB);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
@@ -86,37 +146,63 @@ public class TestGraph extends javax.swing.JFrame {
                 tabPaneStateChanged(evt);
             }
         });
-
-        org.jdesktop.layout.GroupLayout graphPlotLayout = new org.jdesktop.layout.GroupLayout(graphPlot);
-        graphPlot.setLayout(graphPlotLayout);
-        graphPlotLayout.setHorizontalGroup(
-            graphPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 567, Short.MAX_VALUE)
-        );
-        graphPlotLayout.setVerticalGroup(
-            graphPlotLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 370, Short.MAX_VALUE)
-        );
-
-        tabPane.addTab("Graph", graphPlot);
-
         getContentPane().add(tabPane, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("Here");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
+        updateEL = true;
+        pg.setPoint(StaticGraphLayout.RANDOM.layout(pg.getGraph(), 5.0));
+    }//GEN-LAST:event_randomLBActionPerformed
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
         rollupPanel1.removeAll();
         PlanePlotComponent ppc = (PlanePlotComponent) tabPane.getSelectedComponent();
         rollupPanel1.add("Visometry", new PropertySheet(ppc.getVisometry()));
-        for (Plottable p : ppc.getPlottables()) {
+        for (Plottable p : ppc.getPlottableArray())
             rollupPanel1.add(p.toString(), new PropertySheet(p));
-        }
 }//GEN-LAST:event_tabPaneStateChanged
+
+    private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
+        updateEL = true;
+        pg.setPoint(StaticGraphLayout.CIRCLE.layout(pg.getGraph(), 5.0));
+    }//GEN-LAST:event_circleLBActionPerformed
+
+    private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
+        if (el == null)
+            el = new EnergyLayout(pg.getGraph(), pg.getPoint());
+        else if (updateEL)
+            el.initialize(pg.getGraph(), pg.getPoint());
+        el.iterate();
+        pg.setPoint(el.getPoints());
+        updateEL = false;
+    }//GEN-LAST:event_energyIBActionPerformed
+
+    BetterTimer timer;
+
+    private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
+        if (el == null)
+            el = new EnergyLayout(pg.getGraph(), pg.getPoint());
+        else if (updateEL)
+            el.initialize(pg.getGraph(), pg.getPoint());
+        timer = new BetterTimer(100);
+        timer.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if (updateEL)
+                    el.initialize(pg.getGraph(), pg.getPoint());
+                el.iterate();
+                pg.setPoint(el.getPoints());
+            }
+        });
+        timer.start();
+    }//GEN-LAST:event_energyABActionPerformed
+
+    private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
+        if (timer != null)
+            timer.stop();
+        timer = null;
+    }//GEN-LAST:event_energySBActionPerformed
 
     /**
      * @param args the command line arguments
@@ -131,10 +217,15 @@ public class TestGraph extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.bm.blaise.specto.plane.PlanePlotComponent graphPlot;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton circleLB;
+    private javax.swing.JButton energyAB;
+    private javax.swing.JButton energyIB;
+    private javax.swing.JButton energySB;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JButton randomLB;
     private gui.RollupPanel rollupPanel1;
     private javax.swing.JTabbedPane tabPane;
     // End of variables declaration//GEN-END:variables
