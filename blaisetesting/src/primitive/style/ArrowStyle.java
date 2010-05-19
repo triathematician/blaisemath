@@ -58,7 +58,6 @@ public class ArrowStyle extends AbstractPathStyle implements PrimitiveStyle<Poin
         return "ArrowStyle["+headShape + ", " + anchorShape + "]";
     }
 
-    @Override
     public Class<? extends Point2D.Double[]> getTargetType() {
         return Point2D.Double[].class;
     }
@@ -114,7 +113,6 @@ public class ArrowStyle extends AbstractPathStyle implements PrimitiveStyle<Poin
         }
     }
 
-    @Override
     public boolean contained(Point2D.Double[] primitive, Graphics2D canvas, Point point) {
         return false;
     }

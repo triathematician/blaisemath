@@ -46,7 +46,6 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
         return "Clock";
     }
 
-    @Override
     public Class<? extends Point2D.Double> getTargetType() {
         return Point2D.Double.class;
     }
@@ -93,7 +92,6 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
         paintHand(canvas, model, handStyle, point, .75*radius, Math.PI/2-sec*Math.PI/30.);
     }
 
-    @Override
     public boolean contained(Point2D.Double primitive, Graphics2D canvas, Point point) {
         return primitive.distance(point) <= radius;
     }

@@ -61,7 +61,6 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
         return "StringStyle [" + font + "]";
     }
 
-    @Override
     public Class getTargetType() {
         return GraphicString.class;
     }
@@ -85,7 +84,6 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
         canvas.drawString(gs.string, (float) (bounds.x + gs.offset.x), (float) (bounds.y + gs.offset.y));
     }
 
-    @Override
     public boolean contained(GraphicString<Point2D.Double> primitive, Graphics2D canvas, Point point) {
         return bounds(canvas, primitive).contains(point);
     }

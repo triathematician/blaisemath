@@ -42,7 +42,6 @@ public class PointStyle extends AbstractPointStyle implements PrimitiveStyle<Poi
         return "PointStyle [" + shape + ", r=" + radius + "]";
     }
 
-    @Override
     public Class<? extends Point2D.Double> getTargetType() {
         return Point2D.Double.class;
     }

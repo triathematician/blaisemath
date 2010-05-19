@@ -34,7 +34,6 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
     public MeshStyle() {
     }
 
-    @Override
     public Class getTargetType() {
         return GraphicMesh.class;
     }
@@ -68,7 +67,6 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
 
 
 
-    @Override
     public void draw(Graphics2D canvas, GraphicMesh<Point2D.Double> mesh) {
         if (aVisible) {
             for (int i = 0; i < mesh.areas.length; i++) {
@@ -96,7 +94,6 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
         }
     }
 
-    @Override
     public boolean contained(GraphicMesh<Point2D.Double> primitive, Graphics2D canvas, Point point) {
         return false;
     }

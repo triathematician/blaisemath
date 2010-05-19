@@ -46,12 +46,10 @@ public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2
     public void setBaseStyle(ArrowStyle style) { this.baseStyle = style; }
 
 
-    @Override
     public Class getTargetType() {
         return GraphicPointDir.class;
     }
 
-    @Override
     public void draw(Graphics2D canvas, GraphicPointDir<Point2D.Double> primitive) {
         Point2D.Double[] drawn = new Point2D.Double[2];
         if (centered) {
@@ -64,7 +62,6 @@ public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2
         baseStyle.draw(canvas, drawn);
     }
 
-    @Override
     public boolean contained(GraphicPointDir<Point2D.Double> primitive, Graphics2D canvas, Point point) {
         return false;
     }

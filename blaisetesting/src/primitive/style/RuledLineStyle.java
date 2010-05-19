@@ -37,7 +37,6 @@ public class RuledLineStyle extends AbstractPrimitiveStyle<GraphicRuledLine<Poin
     /** Whether tick labels are shown on the plot. */
     private boolean tickLabelsVisible = true;
 
-    @Override
     public Class getTargetType() {
         return GraphicRuledLine.class;
     }
@@ -47,7 +46,6 @@ public class RuledLineStyle extends AbstractPrimitiveStyle<GraphicRuledLine<Poin
     /** Sets style for drawing the line */
     public void setLineStyle(ArrowStyle style) { lineStyle = style; }
 
-    @Override
     public void draw(Graphics2D canvas, GraphicRuledLine<Point2D.Double> primitive) {
         // general computations
         Point2D.Double dt = new Point2D.Double(-primitive.start.y+primitive.end.y, -primitive.end.x+primitive.start.x);
@@ -85,7 +83,6 @@ public class RuledLineStyle extends AbstractPrimitiveStyle<GraphicRuledLine<Poin
         }
     }
 
-    @Override
     public boolean contained(GraphicRuledLine<Point2D.Double> primitive, Graphics2D canvas, Point point) {
         return false;
     }

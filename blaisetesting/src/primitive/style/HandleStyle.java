@@ -26,7 +26,6 @@ public class HandleStyle extends AbstractPrimitiveStyle<Point2D.Double> {
 
     public static HandleStyle getInstance() { return INSTANCE; }
 
-    @Override
     public Class<? extends Point2D.Double> getTargetType() {
         return Point2D.Double.class;
     }
@@ -36,7 +35,6 @@ public class HandleStyle extends AbstractPrimitiveStyle<Point2D.Double> {
         canvas.draw(new Rectangle2D.Double(p.getX()-3, p.getY()-3, 6, 6));
     }
 
-    @Override
     public boolean contained(Point2D.Double primitive, Graphics2D canvas, Point point) {
         return Math.abs(primitive.x - point.x) <= 3 && Math.abs(primitive.y - point.y) <= 3;
     }

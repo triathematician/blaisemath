@@ -44,7 +44,6 @@ public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shap
         return "ShapeStyle [stroke=" + strokeColor + ", fill=" + fillColor + ", opacity=" + opacity + "]";
     }
 
-    @Override
     public Class<? extends Shape> getTargetType() {
         return Shape.class;
     }
@@ -76,7 +75,6 @@ public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shap
         }
     }
 
-    @Override
     public void draw(Graphics2D canvas, Shape[] shapes) {
         if (stroke != null && strokeColor != null) {
             canvas.setStroke(stroke);
@@ -107,7 +105,6 @@ public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shap
         }
     }
 
-    @Override
     public boolean contained(Shape primitive, Graphics2D canvas, Point point) {
         return primitive.contains(point);
     }
