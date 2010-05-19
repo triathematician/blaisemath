@@ -16,6 +16,7 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import primitive.GraphicString;
 import primitive.style.PathStylePoints;
 import primitive.style.PointLabeledStyle;
+import primitive.style.PointStyle;
 import primitive.style.StringStyle;
 import visometry.PointDragListener;
 import visometry.VDraggablePrimitiveEntry;
@@ -55,13 +56,15 @@ public class PlaneGraph extends Plottable<Point2D.Double>
 
     public PlaneGraph(NeighborSetInterface nsi) {
         addPrimitive(edgeEntry = new VPrimitiveEntry(null, new PathStylePoints(new Color(96, 192, 96))));
-        addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, new PointLabeledStyle(StringStyle.ANCHOR_W), this));
+        PointLabeledStyle vStyle = new PointLabeledStyle(PointStyle.PointShape.SQUARE, 4, StringStyle.ANCHOR_N);
+        vStyle.setLabelColor(new Color(128, 128, 128));
+        addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
         setGraph(nsi);
     }
 
     @Override
     public String toString() {
-        return "Graph[" + nsi.getSize() + " vertices]";
+        return "Graph[" + nsi.size() + " vertices]";
     }
 
     /** @return current style of point for this plottable */
@@ -78,7 +81,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     /** Sets the underlying graph; uses default vertex positions around a circle */
     public void setGraph(NeighborSetInterface nsi) {
         this.nsi = nsi;
-        int size = nsi.getSize();
+        int size = nsi.size();
         GraphicString[] gsa = new GraphicString[size];
         Point2D.Double[] pts = StaticGraphLayout.RANDOM.layout(nsi, 4.5);
         for (int i = 0; i < size; i++)
@@ -117,6 +120,14 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         firePlottableChanged();
     }
 
+    /** Sets label of i'th vertex */
+    public void setLabel(int i, String newLabel) {
+        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        gsa[i].string = newLabel;
+        vertexEntry.needsConversion = true;
+        firePlottableStyleChanged();
+    }
+
     /** @return edge in local coordinates between specified indexed vertices */
     public Point2D.Double[] getEdge(int i1, int i2) {
         return new Point2D.Double[] { getPoint(i1), getPoint(i2) };
@@ -130,8 +141,8 @@ public class PlaneGraph extends Plottable<Point2D.Double>
             for (Edge e : sg.getEdges())
                 edges.add(getEdge(e.getSource(), e.getSink()));
         } else {
-            for (int i1 = 0; i1 < nsi.getSize(); i1++)
-                for (int i2 = 0; i2 < nsi.getSize(); i2++)
+            for (int i1 = 0; i1 < nsi.size(); i1++)
+                for (int i2 = 0; i2 < nsi.size(); i2++)
                     if (i1 != i2 && nsi.adjacent(i1, i2))
                         edges.add(getEdge(i1, i2));
         }

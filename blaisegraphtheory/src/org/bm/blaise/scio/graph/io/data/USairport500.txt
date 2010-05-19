@@ -1,3 +1,5 @@
+*Description
+Undirected weighted network as obtained by considering the 500 US airports with the largest amount of traffic from publicly available data. Nodes represent US airports and edges represent air travel connections among them. The file reports the anonymized list of connected pairs of nodes and the weight associated to the edge, expressed in terms of number of available seats on the given connection on a yearly basis. Please, feel free to use the above network dataset, provided the appropriate credit to the authors through the reference: Reaction-diffusion processes and metapopulation models in heterogeneous networks V. Colizza, R. Pastor-Satorras, A. Vespignani Nature Physics 3, 276-282 (2007)
 *Edges
 1 111 68150
 1 49 110902

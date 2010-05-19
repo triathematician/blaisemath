@@ -37,8 +37,8 @@ public class GraphUtils {
             maxDegree = Math.max(maxDegree, deg);
         double[] result = new double[maxDegree+1];
         Arrays.fill(result, 0);
-        for (Integer deg : degreeMap.values())
-            result[deg]++;
+        for (Integer deg : degreeMap.keySet())
+            result[deg] = degreeMap.get(deg);
         return result;
     }
 
@@ -63,7 +63,7 @@ public class GraphUtils {
      * @return distance in number of steps, or Integer.MAX_VALUE if not in the same component
      */
     public static <V> int distance(int i1, int i2, GraphInterface<V> graph) {
-        int size = graph.getSize();
+        int size = graph.size();
         if (i1 == i2)
             return 0;
         if (i1 < 0 || i2 < 0 || i1 >= size || i2 >= size)
@@ -118,12 +118,12 @@ public class GraphUtils {
      */
     public static ArrayList<Set<Integer>> allDistances(int vertex, GraphInterface graph, int maxRadius) {
         ArrayList<Set<Integer>> result = new ArrayList<Set<Integer>>();
-        if (vertex < 0 || vertex >= graph.getSize())
+        if (vertex < 0 || vertex >= graph.size())
             return result;
 
         // describes remaining vertices in graph to check
         HashSet<Integer> left = new HashSet<Integer>();
-        for (int i = 0; i < graph.getSize(); i++)
+        for (int i = 0; i < graph.size(); i++)
             left.add(i);
         
 
@@ -185,7 +185,7 @@ public class GraphUtils {
     public static <V> Set<Set<Integer>> components(GraphInterface<V> graph) {
         Set<Set<Integer>> result = new HashSet<Set<Integer>>();
         ArrayList<Integer> left = new ArrayList<Integer>();
-        for (int i = 0; i < graph.getSize(); i++)
+        for (int i = 0; i < graph.size(); i++)
             left.add(i);
         while (! left.isEmpty()) {
             Set<Integer> cpt = component(left.get(0), graph);

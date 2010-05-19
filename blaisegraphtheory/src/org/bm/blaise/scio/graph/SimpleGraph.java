@@ -48,7 +48,7 @@ public class SimpleGraph implements GraphInterface<Object> {
     // GET/SET PATTERNS
     //
 
-    public int getSize() {
+    public int size() {
         return vertices.size();
     }
 
@@ -99,6 +99,15 @@ public class SimpleGraph implements GraphInterface<Object> {
         return vertices.indexOf(vertex);
     }
 
+    /**
+     * Finds vertex corresponding to given label and returns the number associated with it.
+     * @param vertex the vertex's object
+     * @return the index of the vertex in the list of vertices
+     */
+    public int indexOfLabel(String label) {
+        return labels.indexOf(label);
+    }
+
     public boolean removeVertex(Object v1) {
         int i = vertices.indexOf(v1);
         if (i != -1) {
@@ -116,10 +125,15 @@ public class SimpleGraph implements GraphInterface<Object> {
     public String getLabel(int index) {
         return labels.get(index);
     }
+
+    /** Sets label associated with given index. */
+    public void setLabel(int index, String newLabel) {
+        labels.set(index, newLabel);
+    }
     
     void extendVerticesTo(int max) {
-        while (getSize() <= max)
-            addVertex(getSize());
+        while (size() <= max)
+            addVertex(size());
     }
 
     //
@@ -137,6 +151,8 @@ public class SimpleGraph implements GraphInterface<Object> {
     }
 
     public void addEdge(Edge edge) {
+        if (findEdge(edge.source, edge.sink) != null && !isMultiEdge())
+            return;
         edges.add(edge);
         extendVerticesTo(Math.max(edge.source, edge.sink));
     }
@@ -150,8 +166,7 @@ public class SimpleGraph implements GraphInterface<Object> {
             addVertex(source);
         if (!vertices.contains(sink))
             addVertex(sink);
-        if (isMultiEdge() || findEdge(source, sink) == null)
-            addEdge(indexOf(source), indexOf(sink));
+        addEdge(indexOf(source), indexOf(sink));
     }
 
     public boolean removeEdge(Edge edge) {
@@ -204,6 +219,6 @@ public class SimpleGraph implements GraphInterface<Object> {
 
     @Override
     public String toString() {
-        return "SimpleGraph("+getSize() + " vertices)\n\t" + vertices.toString() + "\n\t" + edges.toString();
+        return "SimpleGraph("+size() + " vertices)\n\t" + vertices.toString() + "\n\t" + edges.toString();
     }
 }

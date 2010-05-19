@@ -14,13 +14,20 @@ import org.junit.Test;
  */
 public class SimpleGraphIOTest {
 
-    static SimpleGraph SAMPLE;
+    static SimpleGraph SAMPLE1, SAMPLE2;
 
-    public static SimpleGraph sample() {
-        if (SAMPLE == null)
-            SAMPLE = SimpleGraphIO.importSimpleGraph(
+    public static SimpleGraph sample1() {
+        if (SAMPLE1 == null)
+            SAMPLE1 = SimpleGraphIO.importSimpleGraph(
                 SimpleGraphIO.class.getResource("data/padgett.txt"));
-        return SAMPLE;
+        return SAMPLE1;
+    }
+
+    public static SimpleGraph sample2() {
+        if (SAMPLE2 == null)
+            SAMPLE2 = SimpleGraphIO.importSimpleGraph(
+                SimpleGraphIO.class.getResource("data/InternetISP.txt"));
+        return SAMPLE2;
     }
 
     /**
@@ -29,7 +36,7 @@ public class SimpleGraphIOTest {
     @Test
     public void testImportSimpleGraph() {
         System.out.println("importSimpleGraph");
-        System.out.println(sample());        
+        System.out.println(sample1());
     }
 
 }

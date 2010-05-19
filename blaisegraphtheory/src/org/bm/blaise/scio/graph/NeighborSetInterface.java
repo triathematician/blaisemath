@@ -18,7 +18,7 @@ package org.bm.blaise.scio.graph;
 public interface NeighborSetInterface<V> extends Iterable<V> {
 
     /** @return number of vertices. */
-    public int getSize();
+    public int size();
 
     /** @return true if objects at provided indices are adjacent */
     public boolean adjacent(int i1, int i2);

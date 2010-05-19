@@ -24,6 +24,8 @@ public class SimpleGraphIO {
 
     /** Specifies expected mode for next input line. */
     enum ImportMode {
+        /** Descriptive info about the graph */
+        DESCRIPTION,
         /** A vertex, possibly with a name. */
         VERTICES,
         /** An arc */
@@ -58,7 +60,9 @@ public class SimpleGraphIO {
                     line = line.trim();
                     if (line.startsWith("*")) {
                         String adjusted = line.substring(1).toUpperCase();
-                        if (adjusted.startsWith("VERTICES"))
+                        if (adjusted.startsWith("DESCRIPTION"))
+                            mode = ImportMode.DESCRIPTION;
+                        else if (adjusted.startsWith("VERTICES"))
                             mode = ImportMode.VERTICES;
                         else if (adjusted.startsWith("ARCS"))
                             mode = ImportMode.ARCS;
@@ -72,6 +76,8 @@ public class SimpleGraphIO {
                         split = line.split("\\s+");
                         try {
                             switch (mode) {
+                                case DESCRIPTION:
+                                    break;
                                 case VERTICES:
                                     importVertex(result, split);
                                     break;

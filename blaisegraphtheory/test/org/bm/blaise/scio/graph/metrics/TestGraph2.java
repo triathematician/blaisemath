@@ -32,8 +32,8 @@ public class TestGraph2 extends javax.swing.JFrame {
         //graphPlot.add(new PlaneGraph(SimpleGraphIOTest.sample()));
         graphPlot.add(new PlaneGraph(GraphCreation.buildCompleteGraph(5, false)));
         graphPlot.add(new PlaneGraph(GraphCreation.buildEmptyGraph(7)));
-        graphPlot.add(new PlaneGraph(GraphCreation.buildLoopGraph(11)));
-        graphPlot.add(new PlaneGraph(GraphCreation.buildWheelGraph(13)));
+        graphPlot.add(new PlaneGraph(GraphCreation.buildCircleGraph(11)));
+        graphPlot.add(new PlaneGraph(GraphCreation.buildHubSpokeGraph(13)));
         Object[] vx = { "A", "B", "C", "D" };
         Object[][] lx = { { "A", "B" }, { "A", "C" }, {"C", "D"}, {"B", "C"} };
         graphPlot.add(new PlaneGraph(GraphCreation.buildGraph(vx, lx)));

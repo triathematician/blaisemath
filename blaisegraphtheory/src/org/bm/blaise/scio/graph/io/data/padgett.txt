@@ -1,3 +1,5 @@
+*Description
+Florentine family marriage data, Padgett/Ansell
 *Vertices     16
       1 "ACCIAIUOL"
       2 "ALBIZZI"

@@ -24,7 +24,7 @@ public interface StaticGraphLayout {
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
     public static StaticGraphLayout CIRCLE = new StaticGraphLayout(){
         public Point2D.Double[] layout(NeighborSetInterface nsi, double... parameters) {
-            int size = nsi.getSize();
+            int size = nsi.size();
             Point2D.Double[] result = new Point2D.Double[size];
             double radius = parameters.length > 0 ? parameters[0] : 1;
             for (int i = 0; i < result.length; i++)
@@ -36,7 +36,7 @@ public interface StaticGraphLayout {
     /** Lays out vertices at random positions within a square (size corresponds to first parameter). */
     public static StaticGraphLayout RANDOM = new StaticGraphLayout(){
         public Point2D.Double[] layout(NeighborSetInterface nsi, double... parameters) {
-            int size = nsi.getSize();
+            int size = nsi.size();
             Point2D.Double[] result = new Point2D.Double[size];
             double multiplier = parameters.length > 0 ? parameters[0] : 1;
             for (int i = 0; i < result.length; i++)

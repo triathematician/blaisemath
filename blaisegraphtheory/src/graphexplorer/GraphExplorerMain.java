@@ -15,9 +15,13 @@ import data.propertysheet.editor.EditorRegistration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
+import javax.swing.event.TableModelEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.NeighborSetInterface;
 import org.bm.blaise.scio.graph.SimpleGraph;
+import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import visometry.plane.PlanePlotComponent;
 import visometry.plottable.Plottable;
@@ -28,8 +32,12 @@ import visometry.plottable.Plottable;
  */
 public class GraphExplorerMain extends javax.swing.JFrame {
 
+    /** Singleton describing actions that can be taken within this app */
     GraphExplorerActions actions;
+    /** Tracks the active graph in the explorer */
     PlaneGraph activeGraph;
+    /** Layout engine that may animate */
+    EnergyLayout energy;
 
     /** Creates new form GraphExplorerMain */
     public GraphExplorerMain() {
@@ -48,24 +56,30 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        vertexTM = new graphexplorer.GraphTableModel();
+        metricTM = new graphexplorer.MetricTableModel();
         jScrollPane2 = new javax.swing.JScrollPane();
         outputTP = new javax.swing.JTextPane();
-        graphTP = new javax.swing.JTabbedPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         graphSP = new javax.swing.JSplitPane();
         jScrollPane3 = new javax.swing.JScrollPane();
-        graphT = new javax.swing.JTable();
+        vertexTable = new javax.swing.JTable();
         adjacencyP = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jSplitPane1 = new javax.swing.JSplitPane();
+        metricSP = new javax.swing.JSplitPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        metricTable = new javax.swing.JTable();
+        distributionSP = new javax.swing.JSplitPane();
         jScrollPane4 = new javax.swing.JScrollPane();
-        metricT = new javax.swing.JTable();
+        distributionTable = new javax.swing.JTable();
         statP = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        statLabel = new javax.swing.JLabel();
+        graphTP = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         propertyRP = new gui.RollupPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileM = new javax.swing.JMenu();
         loadMI = new javax.swing.JMenuItem();
@@ -73,38 +87,46 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         closeMI = new javax.swing.JMenuItem();
         quitMI = new javax.swing.JMenuItem();
         generateM = new javax.swing.JMenu();
-        specialM = new javax.swing.JMenu();
         emptyMI = new javax.swing.JMenuItem();
         circleMI = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         wheelMI = new javax.swing.JMenuItem();
         completeMI = new javax.swing.JMenuItem();
-        randomM = new javax.swing.JMenu();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         uniform1MI = new javax.swing.JMenuItem();
         uniform2MI = new javax.swing.JMenuItem();
         preferentialMI = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         layoutM = new javax.swing.JMenu();
         circularMI = new javax.swing.JMenuItem();
         randomMI = new javax.swing.JMenuItem();
-        energyMI = new javax.swing.JMenuItem();
+        energyM = new javax.swing.JMenu();
+        energyStartMI = new javax.swing.JMenuItem();
+        energyStopMI = new javax.swing.JMenuItem();
+        energyIterateMI = new javax.swing.JMenuItem();
+        statM = new javax.swing.JMenu();
+        statDegreeMI = new javax.swing.JMenuItem();
+        statDegree2MI = new javax.swing.JMenuItem();
+        statCliqueMI = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        statAllMI = new javax.swing.JMenuItem();
+
+        vertexTM.addTableModelListener(new javax.swing.event.TableModelListener() {
+            public void tableChanged(javax.swing.event.TableModelEvent evt) {
+                vertexTMTableChanged(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Graph Explorer");
 
         outputTP.setBackground(new java.awt.Color(0, 0, 0));
         outputTP.setForeground(new java.awt.Color(204, 204, 255));
-        outputTP.setText("== Output ==");
+        outputTP.setText("== Output ==\n");
         outputTP.setPreferredSize(new java.awt.Dimension(500, 200));
         jScrollPane2.setViewportView(outputTP);
 
         getContentPane().add(jScrollPane2, java.awt.BorderLayout.PAGE_END);
-
-        graphTP.setPreferredSize(new java.awt.Dimension(500, 500));
-        graphTP.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                graphTPStateChanged(evt);
-            }
-        });
-        getContentPane().add(graphTP, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(300, 400));
@@ -112,33 +134,8 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         graphSP.setDividerLocation(200);
         graphSP.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        graphT.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Index", "Label", "Object"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, true, true
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(graphT);
+        vertexTable.setModel(vertexTM);
+        jScrollPane3.setViewportView(vertexTable);
 
         graphSP.setLeftComponent(jScrollPane3);
 
@@ -151,35 +148,49 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Vertices & Adjacencies", graphSP);
 
-        jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(0.5);
+        metricSP.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        metricT.setModel(new javax.swing.table.DefaultTableModel(
+        metricTable.setModel(metricTM);
+        jScrollPane5.setViewportView(metricTable);
+
+        metricSP.setTopComponent(jScrollPane5);
+
+        jTabbedPane1.addTab("Metrics", metricSP);
+
+        distributionSP.setDividerLocation(200);
+        distributionSP.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        distributionSP.setResizeWeight(0.5);
+
+        distributionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane4.setViewportView(metricT);
+        jScrollPane4.setViewportView(distributionTable);
 
-        jSplitPane1.setTopComponent(jScrollPane4);
+        distributionSP.setTopComponent(jScrollPane4);
 
         statP.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("...statistics plot here...");
-        statP.add(jLabel2, java.awt.BorderLayout.CENTER);
+        statLabel.setText("...statistics plot here...");
+        statP.add(statLabel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setRightComponent(statP);
+        distributionSP.setRightComponent(statP);
 
-        jTabbedPane1.addTab("Metrics & Statistics", jSplitPane1);
+        jTabbedPane1.addTab("Distributions", distributionSP);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.EAST);
+
+        graphTP.setPreferredSize(new java.awt.Dimension(500, 500));
+        graphTP.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                graphTPStateChanged(evt);
+            }
+        });
+        getContentPane().add(graphTP, java.awt.BorderLayout.CENTER);
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(200, 400));
         jScrollPane1.setViewportView(propertyRP);
@@ -188,11 +199,19 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        jButton1.setText("toolbar button");
+        jButton1.setAction(actions.LAYOUT_ENERGY_START);
+        jButton1.setText("Energy-PLAY");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButton1);
+
+        jButton2.setAction(actions.LAYOUT_ENERGY_STOP);
+        jButton2.setText("Energy-STOP");
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton2);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
@@ -202,12 +221,15 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         loadMI.setText("Load graph from file");
         fileM.add(loadMI);
 
+        saveMI.setAction(actions.SAVE_ACTION);
         saveMI.setText("Save current graph to file");
         fileM.add(saveMI);
 
+        closeMI.setAction(actions.CLOSE_ACTION);
         closeMI.setText("Close current graph");
         fileM.add(closeMI);
 
+        quitMI.setAction(actions.QUIT_ACTION);
         quitMI.setText("Quit");
         fileM.add(quitMI);
 
@@ -215,34 +237,42 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         generateM.setText("Generate");
 
-        specialM.setText("Special Graph");
-
+        emptyMI.setAction(actions.GENERATE_EMPTY);
         emptyMI.setText("Empty Graph");
-        specialM.add(emptyMI);
+        generateM.add(emptyMI);
 
+        circleMI.setAction(actions.GENERATE_CIRCLE);
         circleMI.setText("Circle Graph");
-        specialM.add(circleMI);
+        generateM.add(circleMI);
 
+        jMenuItem1.setAction(actions.GENERATE_HUB_SPOKE);
+        jMenuItem1.setText("Hub & Spoke Graph");
+        generateM.add(jMenuItem1);
+
+        wheelMI.setAction(actions.GENERATE_WHEEL);
         wheelMI.setText("Wheel Graph");
-        specialM.add(wheelMI);
+        generateM.add(wheelMI);
 
+        completeMI.setAction(actions.GENERATE_COMPLETE);
         completeMI.setText("Complete Graph");
-        specialM.add(completeMI);
+        generateM.add(completeMI);
+        generateM.add(jSeparator1);
 
-        generateM.add(specialM);
-
-        randomM.setText("Random Graph");
-
+        uniform1MI.setAction(actions.GENERATE_RANDOM_PROBABILITY);
         uniform1MI.setText("Uniform (by edge probability)");
-        randomM.add(uniform1MI);
+        generateM.add(uniform1MI);
 
+        uniform2MI.setAction(actions.GENERATE_RANDOM_EDGE);
         uniform2MI.setText("Uniform (by number of edges)");
-        randomM.add(uniform2MI);
+        generateM.add(uniform2MI);
 
+        preferentialMI.setAction(actions.GENERATE_PREFERENTIAL);
         preferentialMI.setText("Preferential Attachment");
-        randomM.add(preferentialMI);
+        generateM.add(preferentialMI);
 
-        generateM.add(randomM);
+        jMenuItem3.setAction(actions.GENERATE_PREFERENTIAL2);
+        jMenuItem3.setText("Preferential Attachment (varied connection #)");
+        generateM.add(jMenuItem3);
 
         jMenuBar1.add(generateM);
 
@@ -256,10 +286,44 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         randomMI.setText("Random");
         layoutM.add(randomMI);
 
-        energyMI.setText("Energy");
-        layoutM.add(energyMI);
+        energyM.setText("Energy");
+
+        energyStartMI.setAction(actions.LAYOUT_ENERGY_START);
+        energyStartMI.setText("Start");
+        energyM.add(energyStartMI);
+
+        energyStopMI.setAction(actions.LAYOUT_ENERGY_STOP);
+        energyStopMI.setText("Stop");
+        energyM.add(energyStopMI);
+
+        energyIterateMI.setAction(actions.LAYOUT_ENERGY_ITERATE);
+        energyIterateMI.setText("Iterate");
+        energyM.add(energyIterateMI);
+
+        layoutM.add(energyM);
 
         jMenuBar1.add(layoutM);
+
+        statM.setText("Statistics");
+
+        statDegreeMI.setAction(actions.STAT_DEGREE);
+        statDegreeMI.setText("Degree Distribution");
+        statM.add(statDegreeMI);
+
+        statDegree2MI.setAction(actions.STAT_DEGREE2);
+        statDegree2MI.setText("Degree Distribution (2)");
+        statM.add(statDegree2MI);
+
+        statCliqueMI.setAction(actions.STAT_CLIQUE);
+        statCliqueMI.setText("Clique Count Distribution");
+        statM.add(statCliqueMI);
+        statM.add(jSeparator2);
+
+        statAllMI.setAction(actions.POPULATE_METRIC_TABLE);
+        statAllMI.setText("ALL");
+        statM.add(statAllMI);
+
+        jMenuBar1.add(statM);
 
         setJMenuBar(jMenuBar1);
 
@@ -269,17 +333,36 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private void graphTPStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_graphTPStateChanged
         // update active graph based on selected tab
         PlanePlotComponent ppc = (PlanePlotComponent) graphTP.getSelectedComponent();
-        Plottable[] ps = ppc.getPlottableArray();
-        if (ps == null || ps.length == 0)
-            activeGraph = null;
-        else
-            for (Plottable p : ps)
-                if (p instanceof PlaneGraph) {
-                    activeGraph = (PlaneGraph) p;
-                    return;
-                }
+        if (ppc != null) {
+            Plottable[] ps = ppc.getPlottableArray();
+            if (ps == null || ps.length == 0)
+                activeGraph = null;
+            else
+                for (Plottable p : ps)
+                    if (p instanceof PlaneGraph) {
+                        activeGraph = (PlaneGraph) p;
+                        break;
+                    }
+            if (activeGraph != null) {
+                NeighborSetInterface graph = activeGraph.getGraph();
+                // stop animation of energy layout and set to new parameters
+                actions.LAYOUT_ENERGY_STOP.actionPerformed(null);
+                if (energy != null)
+                    energy.initialize(graph, activeGraph.getPoint());
+                vertexTM.setGraph(graph);
+                return;
+            }
+        }
         activeGraph = null;
+        if (energy != null)
+            energy.setGraph(null);
     }//GEN-LAST:event_graphTPStateChanged
+
+    private void vertexTMTableChanged(javax.swing.event.TableModelEvent evt) {//GEN-FIRST:event_vertexTMTableChanged
+        // only look at individual cell updates
+        if (evt.getType() == TableModelEvent.UPDATE && evt.getColumn() != TableModelEvent.ALL_COLUMNS && evt.getFirstRow() != TableModelEvent.HEADER_ROW)
+            activeGraph.setLabel(evt.getFirstRow(), (String) vertexTM.getValueAt(evt.getFirstRow(), evt.getColumn()));
+    }//GEN-LAST:event_vertexTMTableChanged
 
     /**
     * @param args the command line arguments
@@ -298,38 +381,54 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem circularMI;
     private javax.swing.JMenuItem closeMI;
     private javax.swing.JMenuItem completeMI;
+    private javax.swing.JSplitPane distributionSP;
+    private javax.swing.JTable distributionTable;
     private javax.swing.JMenuItem emptyMI;
-    private javax.swing.JMenuItem energyMI;
+    private javax.swing.JMenuItem energyIterateMI;
+    private javax.swing.JMenu energyM;
+    private javax.swing.JMenuItem energyStartMI;
+    private javax.swing.JMenuItem energyStopMI;
     private javax.swing.JMenu fileM;
     private javax.swing.JMenu generateM;
     private javax.swing.JSplitPane graphSP;
-    private javax.swing.JTable graphT;
     private javax.swing.JTabbedPane graphTP;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu layoutM;
     private javax.swing.JMenuItem loadMI;
-    private javax.swing.JTable metricT;
+    private javax.swing.JSplitPane metricSP;
+    private graphexplorer.MetricTableModel metricTM;
+    private javax.swing.JTable metricTable;
     private javax.swing.JTextPane outputTP;
     private javax.swing.JMenuItem preferentialMI;
     private gui.RollupPanel propertyRP;
     private javax.swing.JMenuItem quitMI;
-    private javax.swing.JMenu randomM;
     private javax.swing.JMenuItem randomMI;
     private javax.swing.JMenuItem saveMI;
-    private javax.swing.JMenu specialM;
+    private javax.swing.JMenuItem statAllMI;
+    private javax.swing.JMenuItem statCliqueMI;
+    private javax.swing.JMenuItem statDegree2MI;
+    private javax.swing.JMenuItem statDegreeMI;
+    private javax.swing.JLabel statLabel;
+    private javax.swing.JMenu statM;
     private javax.swing.JPanel statP;
     private javax.swing.JMenuItem uniform1MI;
     private javax.swing.JMenuItem uniform2MI;
+    private graphexplorer.GraphTableModel vertexTM;
+    private javax.swing.JTable vertexTable;
     private javax.swing.JMenuItem wheelMI;
     // End of variables declaration//GEN-END:variables
 
@@ -338,7 +437,7 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     void output(String output) {
         Document d = outputTP.getDocument();
         try {
-            d.insertString(d.getLength(), output, null);
+            d.insertString(d.getLength(), output + "\n", null);
         } catch (BadLocationException ex) {
             Logger.getLogger(GraphExplorerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -350,5 +449,40 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         ppc.add(activeGraph = new PlaneGraph(sg));
         graphTP.add(name, ppc);
         graphTP.setSelectedComponent(ppc);
+        if (vertexTM.getGraph() != sg)
+            vertexTM.setGraph(sg);
+        output("Successfully loaded graph " + name + " with " + sg.size() + " vertices and " + sg.getEdges().size() + " edges.");
+    }
+
+    /** Closes the active graph */
+    void closeActiveGraph() {
+        if (actions.timer != null)
+            actions.timer.stop();
+        graphTP.remove(graphTP.getSelectedComponent());
+        if (graphTP.getComponentCount() == 0)
+            vertexTM.setGraph(null);
+    }
+
+    /** Sets table model for the distribution table */
+    void setMetricTableModel(DistributionTableModel model) {
+        distributionTable.setModel(model);
+        int[] counts = model.counts;
+        int countMax = counts[0];
+        String countStr = "" + counts[0];
+        for (int i = 1; i < counts.length; i++) { countStr += "," + counts[i]; countMax = Math.max(countMax, counts[i]); }
+        String labelStr = "";
+        for (Object o : model.values) { labelStr += o + "|"; }
+        output("http://chart.apis.google.com/chart?cht=bvg&chs=800x300&chxt=x,y"
+                + "&chd=t:" + countStr
+                + "&chds=" + "0," + countMax
+                + "&chxr=" + "1,0," + countMax
+                + "&chxl=0:|" + labelStr
+                + "&chbh=8,0,1"
+                );
+    }
+
+    /** Activates the table that displays standard metrics. */
+    void activateMetricTable() {
+        metricTM.setGraph((GraphInterface) activeGraph.getGraph());
     }
 }

@@ -32,9 +32,9 @@ public class EnergyLayout {
     double globalC = .25;
 
     /** Damping constant */
-    double dampingC = 0.75;
+    double dampingC = 0.5;
     /** Time step per iteration */
-    double stepC = 0.5;
+    double stepC = 0.25;
 
     /** Current locations */
     Point2D.Double[] loc;
@@ -66,6 +66,11 @@ public class EnergyLayout {
             vel[i] = new Point2D.Double();
     }
 
+    /** @return current active graph */
+    public NeighborSetInterface getGraph() { return nsi; }
+    /** Updates graph */
+    public void setGraph(NeighborSetInterface newGraph) { nsi = newGraph; }
+
 
     public double getRepulsiveForce() { return repulsiveC; }
     public void setRepulsiveForce(double value) { repulsiveC = value; }
@@ -90,7 +95,7 @@ public class EnergyLayout {
     public void iterate() {
         energy = 0;
         double nodeMass = 1;
-        int size = nsi.getSize();
+        int size = nsi.size();
         for (int i = 0; i < size; i++) {
             Point2D.Double netForce = new Point2D.Double();
             addGlobalForce(netForce, i);

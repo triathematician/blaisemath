@@ -37,7 +37,7 @@ public class GraphMetrics {
      */
     public static <N> List<N> computeValues(GraphInterface graph, VertexMetricInterface<N> metric) {
         ArrayList<N> result = new ArrayList<N>();
-        for (int i = 0; i < graph.getSize(); i++)
+        for (int i = 0; i < graph.size(); i++)
             result.add(metric.getValue(graph, i));
         return result;
     }
@@ -92,7 +92,8 @@ public class GraphMetrics {
             return degree;
         }
         public List<Integer> getValues(GraphInterface graph) {
-            Integer[] result = new Integer[graph.getSize()];
+            Integer[] result = new Integer[graph.size()];
+            Arrays.fill(result, 0);
             for (Object o : graph.getEdges()) {
                 Edge e = (Edge) o;
                 result[e.getSource()]++;
@@ -101,6 +102,16 @@ public class GraphMetrics {
             return Arrays.asList(result);
         }
     };
+
+    /**
+     * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
+     */
+    public static VertexMetricInterface<Integer> DEGREE2 = new VertexMetricInterface<Integer>() {
+        public Integer getValue(GraphInterface graph, int vertex) {
+            return GraphUtils.neighborhood(vertex, graph, 2).size() - 1;
+        }
+    };
+
 
     /**
      * Computes the clique count of a particular vertex,

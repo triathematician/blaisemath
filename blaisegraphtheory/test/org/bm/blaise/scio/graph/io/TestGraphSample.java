@@ -39,7 +39,7 @@ public class TestGraphSample extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-        graphPlot.add(pg = new PlaneGraph(SimpleGraphIOTest.sample()));
+        graphPlot.add(pg = new PlaneGraph(SimpleGraphIOTest.sample1()));
         graphPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
 
         // PANELS
