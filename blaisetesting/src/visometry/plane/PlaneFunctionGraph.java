@@ -86,6 +86,7 @@ public class PlaneFunctionGraph extends PlanePathPlottable
                 moveTo = true;
             }
         }
+        needsComputation = false;
         entry.needsConversion = true;
     }
     

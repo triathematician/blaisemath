@@ -44,7 +44,7 @@ public class PathStylePoints extends AbstractPathStyle implements PrimitiveStyle
         drawPath(canvas, path);
     }
 
-    public void draw(Graphics2D canvas, Point2D.Double[][] paths) {
+    public void drawArray(Graphics2D canvas, Point2D.Double[][] paths) {
         drawPaths(canvas, paths);
     }
 

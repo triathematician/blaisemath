@@ -14,27 +14,23 @@ import visometry.plottable.Plottable;
 
 /**
  * This simplifies implementation of plottables that display a single (general path),
- * by providing a default entry and default style patterns.
+ * by providing a default entry and default style patterns. Implementing classes
+ * should update the <code>path</code> property within the <code>recompute</code> method.
  *
  * @author Elisha Peterson
  */
 public abstract class PlanePathPlottable extends Plottable<Point2D.Double> {
 
     /** Entry containing the path and style */
-    VPrimitiveEntry entry;
+    protected VPrimitiveEntry entry;
 
     /** Stores path underlying graph in local coordinates */
-    transient GeneralPath path;
+    protected transient GeneralPath path;
 
     /** Constructs the plottable and the corresponding primitive entry. */
     public PlanePathPlottable() {
         addPrimitive(entry = new VPrimitiveEntry(path, new PathStyle( new Color(64, 0, 0) )));
     }
-
-
-    //
-    // STYLE METHODS
-    //
 
     /** @return current style of stroke for this plottable */
     public PathStyle getStyle() { return (PathStyle) entry.style; }

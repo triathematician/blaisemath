@@ -33,7 +33,7 @@ public class RayStyle extends ArrowStyle {
     }
 
     @Override
-    public void draw(Graphics2D canvas, Point2D.Double[][] rays) {
+    public void drawArray(Graphics2D canvas, Point2D.Double[][] rays) {
         Rectangle2D bounds = canvas.getClipBounds();
         for (Point2D.Double[] ray : rays)
             super.draw(canvas, new Point2D.Double[]{ ray[0], LineStyle.boundaryHit(ray[0], ray[1], bounds) });

@@ -24,8 +24,8 @@ import java.awt.geom.Point2D;
 
 public abstract class AbstractPathStyle {
 
-    BasicStroke stroke = PrimitiveStyle.DEFAULT_STROKE;
-    Color strokeColor = Color.BLACK;
+    protected BasicStroke stroke = PrimitiveStyle.DEFAULT_STROKE;
+    protected Color strokeColor = Color.BLACK;
 
     /** Construct with default stroke and color black */
     public AbstractPathStyle() {}
@@ -41,10 +41,11 @@ public abstract class AbstractPathStyle {
     /** @param stroke new stroke */
     public void setStroke(BasicStroke stroke) { this.stroke = stroke; }
     /** @return thickness of current stroke */
-    public float getThickness() { return stroke.getLineWidth(); }
+    public float getThickness() { return stroke == null ? 0 : stroke.getLineWidth(); }
     /** @param width new thickness for current stroke */
     public void setThickness(float width) {
-        stroke = new BasicStroke(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase());
+        stroke = stroke == null ? new BasicStroke(width)
+                : new BasicStroke(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase());
     }
     /** @return color of stroke */
     public Color getStrokeColor() { return strokeColor; }
@@ -60,7 +61,6 @@ public abstract class AbstractPathStyle {
     }
     /** Draws several shapes */
     public void drawPaths(Graphics2D canvas, Shape[] paths) {
-        canvas.setStroke(stroke);
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
         for (Shape p : paths)
@@ -79,7 +79,6 @@ public abstract class AbstractPathStyle {
     }
     /** Draws several paths */
     public void drawPaths(Graphics2D canvas, Point2D.Double[][] paths) {
-        canvas.setStroke(stroke);
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
         GeneralPath gp = new GeneralPath();

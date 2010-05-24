@@ -51,4 +51,13 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
     public void setDesiredRange(double min1, double min2, double max1, double max2) {
         ((PlaneVisometry) visometry).setDesiredRange(min2, min2, max2, max2);
     }
+
+    /**
+     * Sets aspect ratio of plot
+     * Recomputes transformation after setting
+     * @param ratio new aspect ratio
+     */
+    public void setAspectRatio(double ratio) {
+        ((PlaneVisometry) visometry).setAspectRatio(ratio);
+    }
 }

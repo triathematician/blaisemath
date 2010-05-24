@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
 /**
  * <p>
  *   <code>PointStyle</code> draws a point on a 2D graphics canvas.
- *   Supports multiple styles of draw, encoded by the <code>shape</code> property,
+ *   Supports multiple styles of drawArray, encoded by the <code>shape</code> property,
  *   in the sub-class <code>PointStyle.PointShape</code>. If the radius of a point
  *   is negative, the style will display that as a lighter colored point.
  * </p>
@@ -63,7 +63,7 @@ public class PointStyle extends AbstractPointStyle implements PrimitiveStyle<Poi
         return primitive.distance(point) <= radius;
     }
 
-    public void draw(Graphics2D canvas, Point2D.Double[] primitives) {
+    public void drawArray(Graphics2D canvas, Point2D.Double[] primitives) {
         for (Point2D.Double p : primitives)
             draw(canvas, p);
     }

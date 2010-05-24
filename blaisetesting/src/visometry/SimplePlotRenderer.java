@@ -35,12 +35,8 @@ public class SimplePlotRenderer {
             try {
                 if (pe.style == null)
                     drawWithDefaultStyle(gr, pe.primitive);
-                else if (pe.primitive instanceof Point2D.Double[] && pe.style.getTargetType() == Point2D.Double.class)
-                    pe.style.draw(gr, (Point2D.Double[]) pe.primitive);
-                else if (pe.primitive instanceof Point2D.Double[][] && pe.style.getTargetType() == Point2D.Double[].class)
-                    pe.style.draw(gr, (Point2D.Double[][]) pe.primitive);
-                else if (pe.primitive instanceof GraphicPointDir[] && pe.style.getTargetType() == GraphicPointDir.class)
-                    pe.style.draw(gr, (GraphicPointDir[]) pe.primitive);
+                else if (pe.primitive.getClass() != pe.style.getTargetType() && pe.primitive.getClass().isArray())
+                    pe.style.drawArray(gr, (Object[]) pe.primitive);
                 else
                     pe.style.draw(gr, pe.primitive);
             } catch (Exception ex) {
@@ -54,7 +50,7 @@ public class SimplePlotRenderer {
         if (primitive instanceof Point2D.Double)
             defPt.draw(gr, (Point2D.Double) primitive);
         else if (primitive instanceof Point2D.Double[])
-            defPt.draw(gr, (Point2D.Double[]) primitive);
+            defPt.drawArray(gr, (Point2D.Double[]) primitive);
         else
             System.out.println("Unable to find appropriate style for primitive object " + primitive + " of type " + primitive.getClass());
     }

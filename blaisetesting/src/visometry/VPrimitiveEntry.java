@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * VPrimitiveEntry.java
+ * Created Apr 2010
  */
 
 package visometry;
@@ -24,5 +24,11 @@ public class VPrimitiveEntry extends PrimitiveEntry {
     public VPrimitiveEntry(Object localPrimitive, PrimitiveStyle style) {
         super(null, style);
         local = localPrimitive;
+    }
+
+    /** Sets the local primitive and updates the conversion flag. */
+    public void setLocal(Object local) {
+        this.local = local;
+        needsConversion = true;
     }
 }

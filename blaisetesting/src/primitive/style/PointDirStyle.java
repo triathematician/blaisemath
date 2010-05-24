@@ -14,13 +14,13 @@ import primitive.GraphicPointDir;
 /**
  * Displays an anchor point together with a direction. Also supports a scaling parameter that
  * is applied uniformly when the elements are drawn. Uses an underlying ArrowStyle
- * to draw.
+ * to drawArray.
  * 
  * @author Elisha Peterson
  */
 public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2D.Double>> {
 
-    /** Arrow style used to draw. */
+    /** Arrow style used to drawArray. */
     ArrowStyle baseStyle = new ArrowStyle();
     /** Whether arrows are centered at anchors. */
     boolean centered;

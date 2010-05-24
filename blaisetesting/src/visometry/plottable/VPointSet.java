@@ -49,7 +49,7 @@ public class VPointSet<C> extends VAbstractPointArray<C>
     public void mouseDragged(Object source, C current) {
         int index = entry.getActiveIndex();
         if (index != -1)
-            setPoint(index, current);
+            setPoints(index, current);
     }
     public void mouseDragCompleted(Object source, C end) {
         mouseDragged(source, end);

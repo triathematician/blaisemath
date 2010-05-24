@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
-import java.awt.Stroke;
 
 /**
  * <p>
@@ -24,9 +23,9 @@ import java.awt.Stroke;
 public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shape> {
 
     /** Fill of object */
-    Color fillColor = Color.LIGHT_GRAY;
+    protected Color fillColor = Color.LIGHT_GRAY;
     /** Opacity of fill */
-    float opacity = .5f;
+    protected float opacity = .5f;
 
     /** Construct with defaults. */
     public ShapeStyle() {}
@@ -75,7 +74,7 @@ public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shap
         }
     }
 
-    public void draw(Graphics2D canvas, Shape[] shapes) {
+    public void drawArray(Graphics2D canvas, Shape[] shapes) {
         if (stroke != null && strokeColor != null) {
             canvas.setStroke(stroke);
             if (fillColor != null) {

@@ -15,7 +15,7 @@ import visometry.VDraggablePrimitiveEntry;
  *
  * @author Elisha Peterson
  */
-public abstract class VAbstractPointArray<C> extends Plottable<C> {
+public abstract class VAbstractPointArray<C> extends DynamicPlottable<C> {
 
     /** Stores the point-array and the style. */
     protected VDraggablePrimitiveEntry entry;
@@ -26,17 +26,17 @@ public abstract class VAbstractPointArray<C> extends Plottable<C> {
     }
 
     /** @return list of points being drawn */
-    public C[] getPoint() {
+    public C[] getPoints() {
         return (C[]) entry.local;
     }
 
     /** @return i'th point */
-    public C getPoint(int i) {
-        return getPoint()[i];
+    public C getPoints(int i) {
+        return getPoints()[i];
     }
 
     /** Sets list of points being drawn */
-    public void setPoint(C[] points) {
+    public void setPoints(C[] points) {
         if (entry.local != points) {
             entry.local = points;
             entry.needsConversion = true;
@@ -45,8 +45,8 @@ public abstract class VAbstractPointArray<C> extends Plottable<C> {
     }
 
     /** Sets the i'th point */
-    public void setPoint(int i, C value) {
-        if (getPoint(i) != value) {
+    public void setPoints(int i, C value) {
+        if (getPoints(i) != value) {
             ((C[])entry.local)[i] = value;
             entry.needsConversion = true;
             firePlottableChanged();

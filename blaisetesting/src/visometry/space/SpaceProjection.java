@@ -356,9 +356,6 @@ public class SpaceProjection
     /**
      * Used to measure distances between polygons, using the average distance of coordinates from the camera plane.
      * "Larger" points are closer to the camera.
-     *
-     * @param o1 first set of points
-     * @param o2 second set of points
      * 
      * @return a negative integer, zero, or a positive integer as the first argument's z-value is less than, equal to, or greater than the second
      */

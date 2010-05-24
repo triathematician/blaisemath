@@ -62,13 +62,18 @@ public abstract class Plottable<C>
     public void setVisible(boolean newValue) { if (visible != newValue) { visible = newValue; firePlottableChanged(); } }
 
     /**
-     * This method is responsible for constructing the underlying visualization of the plottable, i.e. what it looks like
-     * in terms of the local coordinates. Thye method is called by the parent plottable group.
-     * The endstate of this method should be a collection of graphics primitives (in local coordinates), which
-     * can be retrieved via the "getPrimitives" method.
-     *
-     * By default, this does nothing, so any plottable with a lengthy computation process ought to make use of this method
-     * to compute.
+     * <p>
+     * This method is called during the drawing process before any "local" primitive elements are converted into "window" primitive elements.
+     * It will be called whenever the <code>needsComputation</code> flag is set. Note that this flag is automatically set by the
+     * <code>firePlottableChanged</code> method, and so any computation that needs to be done in response to user changes can occur
+     * here and will automatically be done before the plottable is redisplayed. By default, it just sets the <code>needsComputation</code>
+     * flag to false.
+     * </p>
+     * <p>
+     * <b>Overriding this method is the preferred way to "recompute" an object that depends on a user's input or some other visual elements.</b>
+     * For example, the convex hull of a set of points depends on the positions of the points. When the user moves the points, the hull
+     * needs to be recomputed, and this is where that computation should be done.
+     * </p>
      */
     protected void recompute() { needsComputation = false; }
 

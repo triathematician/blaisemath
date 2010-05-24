@@ -47,18 +47,18 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
     /** Sets visibility status of areas */
     public void setAreasVisible(boolean aVisible) { this.aVisible = aVisible; }
 
-    /** @return style used to draw points */
+    /** @return style used to drawArray points */
     public PointStyle getPointStyle() { return pStyle; }
-    /** Sets style used to draw points */
+    /** Sets style used to drawArray points */
     public void setPointStyle(PointStyle pStyle) { this.pStyle = pStyle; }
     /** @return true if points are visible */
     public boolean isPointsVisible() { return pVisible; }
     /** Sets visibility of points */
     public void setPointsVisible(boolean pVisible) { this.pVisible = pVisible; }
 
-    /** @return style used to draw segments */
+    /** @return style used to drawArray segments */
     public PathStyle getSegmentStyle() { return sStyle; }
-    /** Sets style used to draw segments */
+    /** Sets style used to drawArray segments */
     public void setSegmentStyle(PathStyle sStyle) { this.sStyle = sStyle; }
     /** @return true if segments are visible */
     public boolean isSegmentsVisible() { return sVisible; }
@@ -69,7 +69,7 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
 
     public void draw(Graphics2D canvas, GraphicMesh<Point2D.Double> mesh) {
         if (aVisible) {
-            for (int i = 0; i < mesh.areas.length; i++) {
+            for (int i = 0; i < mesh.areas.size(); i++) {
                 Object[] pts = mesh.getArea(i);
                 GeneralPath gp = new GeneralPath();
                 Point2D p = (Point2D) pts[0];
@@ -90,7 +90,7 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
             }
         }
         if (pVisible) {
-            pStyle.draw(canvas, mesh.points);
+            pStyle.drawArray(canvas, mesh.points);
         }
     }
 

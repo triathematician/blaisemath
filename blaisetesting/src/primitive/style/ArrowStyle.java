@@ -16,7 +16,7 @@ import java.awt.geom.Point2D;
 
 /**
  * <p>
- *   <code>ArrowStyle</code> represents a style that is used to draw arrows
+ *   <code>ArrowStyle</code> represents a style that is used to drawArray arrows
  *   (described by two points). For now the primitive will be displayed as a line segment between the
  *   two points together with an arrow head.
  * </p>
@@ -93,7 +93,7 @@ public class ArrowStyle extends AbstractPathStyle implements PrimitiveStyle<Poin
         }
     }
 
-    public void draw(Graphics2D canvas, Point2D.Double[][] primitives) {
+    public void drawArray(Graphics2D canvas, Point2D.Double[][] primitives) {
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
         for (Point2D.Double[] arr : primitives) {

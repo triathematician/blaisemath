@@ -48,7 +48,7 @@ public class PathStyle extends AbstractPathStyle implements PrimitiveStyle<Shape
         drawPath(canvas, path);
     }
 
-    public void draw(Graphics2D canvas, Shape[] paths) {
+    public void drawArray(Graphics2D canvas, Shape[] paths) {
         drawPaths(canvas, paths);
     }
 

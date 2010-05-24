@@ -40,10 +40,10 @@ public interface PrimitiveStyle<P> {
      * @param canvas the canvas on which to paint
      * @param primitives the primitive graphics object plottable by this style class
      */
-    public void draw(Graphics2D canvas, P[] primitives);
+    public void drawArray(Graphics2D canvas, P[] primitives);
 //    {
 //        for(P p : primitives)
-//            draw(canvas, p);
+//            drawArray(canvas, p);
 //    }
 
     /**

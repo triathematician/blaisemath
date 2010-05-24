@@ -10,13 +10,13 @@ import java.awt.event.MouseEvent;
 import primitive.style.PrimitiveStyle;
 
 /**
- * Stores information required for a renderer to draw an object, including both the
+ * Stores information required for a renderer to drawArray an object, including both the
  * object and an associated style.
  *
  * @author Elisha Peterson
  */
 public class PrimitiveEntry {
-    /** The object to draw. */
+    /** The object to drawArray. */
     public Object primitive;
     /** The associated style. */
     public PrimitiveStyle style;

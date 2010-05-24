@@ -13,7 +13,7 @@ import java.awt.geom.Rectangle2D;
 
 /**
  * <p>
- *    This class can be used to draw a small "handle" at a given point.
+ *    This class can be used to drawArray a small "handle" at a given point.
  * </p>
  * @author Elisha Peterson
  */

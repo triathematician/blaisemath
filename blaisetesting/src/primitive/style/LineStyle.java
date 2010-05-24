@@ -38,7 +38,7 @@ public class LineStyle extends PathStylePoints {
     }
 
     @Override
-    public void draw(Graphics2D canvas, Point2D.Double[][] lines) {
+    public void drawArray(Graphics2D canvas, Point2D.Double[][] lines) {
         canvas.setStroke(stroke);
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);

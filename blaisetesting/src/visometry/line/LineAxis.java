@@ -25,7 +25,7 @@ import visometry.plottable.PlottableConstants;
  */
 public class LineAxis extends Plottable<Double> {
 
-    /** AxisType used to draw the axes. */
+    /** AxisType used to drawArray the axes. */
     private RuledLineStyle style = new RuledLineStyle();
 
     /** Horizontal axis entry. */

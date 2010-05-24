@@ -85,7 +85,7 @@ public class SpaceVisometry implements Visometry<Point3D>,
 
     /**
      * Zooms the camera by adjusting the pixels per 3d unit displayed.
-     * @param zoom the percentage to scale by
+     * @param factor the percentage to scale by
      */
     public void zoomDPI(double factor) {
         if (factor <= 0)
@@ -96,7 +96,7 @@ public class SpaceVisometry implements Visometry<Point3D>,
 
     /**
      * Zooms the camera to or from the center of interest.
-     * @param zoom the percentage to scale by
+     * @param factor the percentage to scale by
      */
     public void zoomViewDistance(double factor) {
         if (factor <= 0)
@@ -108,7 +108,7 @@ public class SpaceVisometry implements Visometry<Point3D>,
     /**
      * Zooms the image by adjusting both the screen distance, the view distance, and the clipping distance
      * by a common factor.
-     * @param zoom the percentage to scale by
+     * @param factor the percentage to scale by
      */
     public void zoomAll(double factor) {
         if (factor <= 0)

@@ -56,13 +56,34 @@ public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         {
             Point2D.Double[] locArr = (Point2D.Double[]) entry.local;
             GeneralPath path = new GeneralPath();
-            path.moveTo((float) locArr[0].x, (float) locArr[0].y);
-            for (int i = 0; i < locArr.length; i++)
-                path.lineTo((float) locArr[i].x, (float) locArr[i].y);
-            if (entry.style instanceof ShapeStyle)
-                path.closePath();
+            if (locArr.length > 0) {
+                path.moveTo((float) locArr[0].x, (float) locArr[0].y);
+                for (int i = 0; i < locArr.length; i++)
+                    path.lineTo((float) locArr[i].x, (float) locArr[i].y);
+                if (entry.style instanceof ShapeStyle)
+                    path.closePath();
+            }
             path.transform(((PlaneVisometry)vis).at);
             entry.primitive = path;
+        }
+
+        else if (entry.local instanceof Point2D.Double[][] && (entry.style instanceof PathStyle || entry.style instanceof ShapeStyle))
+        {
+            Point2D.Double[][] locArr = (Point2D.Double[][]) entry.local;
+            Shape[] paths = new Shape[locArr.length];
+            GeneralPath path;
+            int j = 0;
+            for (Point2D.Double[] arr : locArr) {
+                paths[j] = path = new GeneralPath();
+                path.moveTo((float) arr[0].x, (float) arr[0].y);
+                for (int i = 0; i < arr.length; i++)
+                    path.lineTo((float) arr[i].x, (float) arr[i].y);
+                if (entry.style instanceof ShapeStyle)
+                    path.closePath();
+                path.transform(((PlaneVisometry)vis).at);
+                j++;
+            }
+            entry.primitive = paths;
         }
 
         else if (entry.local instanceof Point2D.Double[])
@@ -74,7 +95,7 @@ public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             entry.primitive = winArr;
         }
 
-        else if (entry.local instanceof Point2D.Double[][] && entry.style instanceof ArrowStyle || entry.style instanceof PathStylePoints)
+        else if (entry.local instanceof Point2D.Double[][] && (entry.style instanceof ArrowStyle || entry.style instanceof PathStylePoints))
         {
             Point2D.Double[][] locArr = (Point2D.Double[][]) entry.local;
             ArrayList<Point2D.Double[]> winArr = new ArrayList<Point2D.Double[]>();

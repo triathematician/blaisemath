@@ -6,6 +6,8 @@
 package primitive;
 
 import java.lang.reflect.Array;
+import java.util.AbstractList;
+import java.util.List;
 
 /**
  * Represents a graphic "mesh" consisting of several points, several connections between the points,
@@ -20,7 +22,7 @@ public class GraphicMesh<C> {
     /** Segments in the mesh */
     public int[][] segments;
     /** Areas in the mesh */
-    public int[][] areas;
+    public List<int[]> areas;
     /** A float scale associated with each area in the mesh, useful e.g. for highlighting colors. */
     public float[] colors;
 
@@ -28,10 +30,10 @@ public class GraphicMesh<C> {
     /**
      * Constructs the graphic mesh with specified arguments.
      * @param points the points comprising the mesh
-     * @param segments the segments of the mesh
-     * @param areas the areas defined within the mesh
+     * @param segments the segments of the mesh; each entry is an array describing the indices of the two points on the segment
+     * @param areas the areas defined within the mesh; each entry is an array describing the boundary points of the mesh
      */
-    public GraphicMesh(C[] points, int[][] segments, int[][] areas) {
+    public GraphicMesh(C[] points, int[][] segments, List<int[]> areas) {
         this.points = points;
         this.segments = segments;
         this.areas = areas;
@@ -44,9 +46,9 @@ public class GraphicMesh<C> {
 
     /** @return the i'th area in coordinates */
     public Object[] getArea(int i) {
-        Object[] result = new Object[areas[i].length];
+        Object[] result = new Object[areas.get(i).length];
         for (int j = 0; j < result.length; j++)
-            result[j] = points[areas[i][j]];
+            result[j] = points[areas.get(i)[j]];
         return result;
     }
 
@@ -58,8 +60,8 @@ public class GraphicMesh<C> {
      * @return the mesh
      */
     public static <T> GraphicMesh<T> createGridMesh(T[][] points, Class<? extends T> classType) {
-        int n = points.length;
-        int m = points[0].length;
+        final int n = points.length;
+        final int m = points[0].length;
 
         // add points
         T[] pts = (T[]) Array.newInstance(classType, n*m);
@@ -79,11 +81,15 @@ public class GraphicMesh<C> {
                 segments[pos++] = new int[] { i*n+j, (i-1)*n+j };
 
         // add areas
-        int[][] areas = new int[(n-1)*(m-1)][4];
-        pos = 0;
-        for (int i = 1; i < n; i++)
-            for (int j = 1; j < m; j++)
-                areas[pos++] = new int[] { (i-1)*n+j-1, i*n+j-1, i*n+j, (i-1)*n+j };
+        List<int[]> areas = new AbstractList<int[]>() {
+            @Override
+            public int[] get(int index) {
+                int j = (index % (m-1)) + 1;
+                int i = (index / (m-1)) + 1;
+                return new int[] { (i-1)*n+j-1, i*n+j-1, i*n+j, (i-1)*n+j };
+            }
+            @Override public int size() { return (n-1) * (m-1); }
+        };
 
         return new GraphicMesh<T>(pts, segments, areas);
     }

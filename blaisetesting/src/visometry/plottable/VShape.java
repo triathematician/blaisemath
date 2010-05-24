@@ -11,9 +11,11 @@ import primitive.style.ShapeStyle;
 import visometry.VPrimitiveEntry;
 
 /**
- * <p>
- *    This class is a dynamically adjustable polygon.
- * </p>
+ * This class displays a shape whose outline is specified by a list of points.
+ * The points may be drawn along with the shape's outline. Separate styling
+ * is supported for both display styles, and the points may be visible or invisible.
+ * (By default the points are not visible.)
+ *
  * @param <C> the underlying system of coordinates
  */
 public class VShape<C> extends VPointSet<C> {
@@ -34,7 +36,7 @@ public class VShape<C> extends VPointSet<C> {
     }
 
     @Override
-    public void setPoint(C[] points) {
+    public void setPoints(C[] points) {
         if (entry.local != points) {
             entry.local = points;
             entry.needsConversion = true;
@@ -44,9 +46,9 @@ public class VShape<C> extends VPointSet<C> {
     }
 
     @Override
-    public void setPoint(int i, C value) {
-        if (getPoint(i) != value) {
-            getPoint()[i] = value;
+    public void setPoints(int i, C value) {
+        if (getPoints(i) != value) {
+            getPoints()[i] = value;
             entry.needsConversion = true;
             entry2.needsConversion = true;
             firePlottableChanged();

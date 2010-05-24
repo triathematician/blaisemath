@@ -5,6 +5,7 @@
 
 package visometry.space;
 
+import java.util.ArrayList;
 import primitive.GraphicMesh;
 import primitive.style.MeshStyle;
 import scio.coordinate.Point3D;
@@ -37,11 +38,13 @@ public class SpaceBox extends Plottable<Point3D> {
             base, base.plus(l,0,0), base.plus(0,w,0), base.plus(0,0,h),
             base.plus(l,w,0), base.plus(l,0,h), base.plus(0,w,h), base.plus(l,w,h)
         };
-        return new GraphicMesh<Point3D>(
-            points,
-            new int[][] { {0,1}, {0,2}, {0,3}, {1,4}, {1,5}, {2,4}, {2,6}, {3,5}, {3,6}, {4,7}, {5,7}, {6,7} },
-            new int[][] { {0,1,4,2}, {0,2,6,3}, {0,3,5,1}, {1,4,7,5}, {2,6,7,4}, {3,5,7,6} }
-        );
+        int[][] edges = new int[][] { {0,1}, {0,2}, {0,3}, {1,4}, {1,5}, {2,4}, {2,6}, {3,5}, {3,6}, {4,7}, {5,7}, {6,7} };
+        int[][] areas = new int[][] { {0,1,4,2}, {0,2,6,3}, {0,3,5,1}, {1,4,7,5}, {2,6,7,4}, {3,5,7,6} };
+        ArrayList<int[]> areaList = new ArrayList<int[]>();
+        for (int[] a : areas) areaList.add(a);
+        return new GraphicMesh<Point3D>( points, edges, areaList );
     }
+
+
 
 }
