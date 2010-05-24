@@ -19,7 +19,7 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
-public class SimpleGraph implements GraphInterface<Object> {
+public class SimpleGraph implements Graph2<Object> {
 
     //
     // PROPERTIES
@@ -202,8 +202,6 @@ public class SimpleGraph implements GraphInterface<Object> {
     //
     // GENERAL METHODS
     //
-
-
 
     @Override
     public Object clone() {

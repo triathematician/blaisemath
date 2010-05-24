@@ -2,7 +2,7 @@
  * GraphCreation.java
  * Created on Oct 14, 2009
  */
-package org.bm.blaise.scio.graph.creation;
+package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
 import org.bm.blaise.scio.graph.*;
@@ -88,20 +88,6 @@ public class GraphCreation {
     }
 
     /**
-     * Builds a graph with provided array of vertices and array of edges.
-     * @param vertices array of vertices
-     * @param edges array of vertex-pairings; each entry should be an array of length two
-     */
-    public static SimpleGraph buildGraph(Object[] vertices, Object[][] edges) {
-        SimpleGraph result = new SimpleGraph();
-        for (int i = 0; i < vertices.length; i++)
-            result.addVertex(vertices[i]);
-        for (int i = 0; i < edges.length; i++)
-            result.addEdge(edges[i][0], edges[i][1]);
-        return result;
-    }
-
-    /**
      * Returns random graph with specified number of vertices and edge probability. Every potential
      * link has an equal probability of existence.
      * @param nVertices number of vertices in the resulting graph
@@ -145,7 +131,7 @@ public class GraphCreation {
      * @param graph the graph
      * @return index of a randomly chosen vertex
      */
-    static int weightedRandomVertex(GraphInterface graph) {
+    static int weightedRandomVertex(Graph2 graph) {
         List<Integer> degrees = GraphMetrics.DEGREE.getValues(graph);
         int totalDegree = graph.getEdges().size() * 2;
         double random = Math.random() * totalDegree;
@@ -240,7 +226,7 @@ public class GraphCreation {
     }
 
     /** Returns undirected graph with single central vertex. */
-    public static SimpleGraph buildHubSpokeGraph(int nVertices) {
+    public static SimpleGraph buildStarGraph(int nVertices) {
         SimpleGraph result = buildEmptyGraph(nVertices);
         for (int i = 1; i < nVertices; i++)
             result.addEdge(0, i);

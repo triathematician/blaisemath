@@ -7,7 +7,7 @@ package org.bm.blaise.scio.graph.metrics;
 
 import java.util.ArrayList;
 import java.util.Set;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.GraphUtils;
 
 /**
@@ -29,7 +29,7 @@ public class DecayCentrality implements VertexMetricInterface<Double> {
     /** @param newValue new value of decay parameter */
     public void setParameter(double newValue) { if (newValue < 1 && newValue > 0) parameter = newValue; }
 
-    public Double getValue(GraphInterface graph, int vertex) {
+    public Double getValue(Graph2 graph, int vertex) {
         // this puts every vertex in the vertex's nbhd at the appropriate distance
         ArrayList<Set<Integer>> nbhds = GraphUtils.allDistances(vertex, graph, Integer.MAX_VALUE);
         double total = 0.0;

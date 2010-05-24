@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.NeighborSetInterface;
 import org.bm.blaise.scio.graph.SimpleGraph;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
@@ -86,10 +86,10 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         saveMI = new javax.swing.JMenuItem();
         closeMI = new javax.swing.JMenuItem();
         quitMI = new javax.swing.JMenuItem();
-        generateM = new javax.swing.JMenu();
+        createM = new javax.swing.JMenu();
         emptyMI = new javax.swing.JMenuItem();
         circleMI = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        starMI = new javax.swing.JMenuItem();
         wheelMI = new javax.swing.JMenuItem();
         completeMI = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -104,12 +104,15 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         energyStartMI = new javax.swing.JMenuItem();
         energyStopMI = new javax.swing.JMenuItem();
         energyIterateMI = new javax.swing.JMenuItem();
-        statM = new javax.swing.JMenu();
+        analyzeM = new javax.swing.JMenu();
         statDegreeMI = new javax.swing.JMenuItem();
         statDegree2MI = new javax.swing.JMenuItem();
         statCliqueMI = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         statAllMI = new javax.swing.JMenuItem();
+        helpM = new javax.swing.JMenu();
+        aboutMI = new javax.swing.JMenuItem();
+        contentMI = new javax.swing.JMenuItem();
 
         vertexTM.addTableModelListener(new javax.swing.event.TableModelListener() {
             public void tableChanged(javax.swing.event.TableModelEvent evt) {
@@ -235,46 +238,46 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         jMenuBar1.add(fileM);
 
-        generateM.setText("Generate");
+        createM.setText("Create");
 
         emptyMI.setAction(actions.GENERATE_EMPTY);
         emptyMI.setText("Empty Graph");
-        generateM.add(emptyMI);
+        createM.add(emptyMI);
 
         circleMI.setAction(actions.GENERATE_CIRCLE);
         circleMI.setText("Circle Graph");
-        generateM.add(circleMI);
+        createM.add(circleMI);
 
-        jMenuItem1.setAction(actions.GENERATE_HUB_SPOKE);
-        jMenuItem1.setText("Hub & Spoke Graph");
-        generateM.add(jMenuItem1);
+        starMI.setAction(actions.GENERATE_STAR);
+        starMI.setText("Star Graph");
+        createM.add(starMI);
 
         wheelMI.setAction(actions.GENERATE_WHEEL);
         wheelMI.setText("Wheel Graph");
-        generateM.add(wheelMI);
+        createM.add(wheelMI);
 
         completeMI.setAction(actions.GENERATE_COMPLETE);
         completeMI.setText("Complete Graph");
-        generateM.add(completeMI);
-        generateM.add(jSeparator1);
+        createM.add(completeMI);
+        createM.add(jSeparator1);
 
         uniform1MI.setAction(actions.GENERATE_RANDOM_PROBABILITY);
         uniform1MI.setText("Uniform (by edge probability)");
-        generateM.add(uniform1MI);
+        createM.add(uniform1MI);
 
         uniform2MI.setAction(actions.GENERATE_RANDOM_EDGE);
         uniform2MI.setText("Uniform (by number of edges)");
-        generateM.add(uniform2MI);
+        createM.add(uniform2MI);
 
         preferentialMI.setAction(actions.GENERATE_PREFERENTIAL);
         preferentialMI.setText("Preferential Attachment");
-        generateM.add(preferentialMI);
+        createM.add(preferentialMI);
 
         jMenuItem3.setAction(actions.GENERATE_PREFERENTIAL2);
         jMenuItem3.setText("Preferential Attachment (varied connection #)");
-        generateM.add(jMenuItem3);
+        createM.add(jMenuItem3);
 
-        jMenuBar1.add(generateM);
+        jMenuBar1.add(createM);
 
         layoutM.setText("Layout");
 
@@ -304,26 +307,38 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         jMenuBar1.add(layoutM);
 
-        statM.setText("Statistics");
+        analyzeM.setText("Analyze");
 
         statDegreeMI.setAction(actions.STAT_DEGREE);
         statDegreeMI.setText("Degree Distribution");
-        statM.add(statDegreeMI);
+        analyzeM.add(statDegreeMI);
 
         statDegree2MI.setAction(actions.STAT_DEGREE2);
         statDegree2MI.setText("Degree Distribution (2)");
-        statM.add(statDegree2MI);
+        analyzeM.add(statDegree2MI);
 
         statCliqueMI.setAction(actions.STAT_CLIQUE);
         statCliqueMI.setText("Clique Count Distribution");
-        statM.add(statCliqueMI);
-        statM.add(jSeparator2);
+        analyzeM.add(statCliqueMI);
+        analyzeM.add(jSeparator2);
 
         statAllMI.setAction(actions.POPULATE_METRIC_TABLE);
         statAllMI.setText("ALL");
-        statM.add(statAllMI);
+        analyzeM.add(statAllMI);
 
-        jMenuBar1.add(statM);
+        jMenuBar1.add(analyzeM);
+
+        helpM.setText("Help");
+
+        aboutMI.setAction(actions.ABOUT_ACTION);
+        aboutMI.setText("About");
+        helpM.add(aboutMI);
+
+        contentMI.setAction(actions.HELP_ACTION);
+        contentMI.setText("Content");
+        helpM.add(contentMI);
+
+        jMenuBar1.add(helpM);
 
         setJMenuBar(jMenuBar1);
 
@@ -376,11 +391,15 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMI;
     private javax.swing.JPanel adjacencyP;
+    private javax.swing.JMenu analyzeM;
     private javax.swing.JMenuItem circleMI;
     private javax.swing.JMenuItem circularMI;
     private javax.swing.JMenuItem closeMI;
     private javax.swing.JMenuItem completeMI;
+    private javax.swing.JMenuItem contentMI;
+    private javax.swing.JMenu createM;
     private javax.swing.JSplitPane distributionSP;
     private javax.swing.JTable distributionTable;
     private javax.swing.JMenuItem emptyMI;
@@ -389,14 +408,13 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem energyStartMI;
     private javax.swing.JMenuItem energyStopMI;
     private javax.swing.JMenu fileM;
-    private javax.swing.JMenu generateM;
     private javax.swing.JSplitPane graphSP;
     private javax.swing.JTabbedPane graphTP;
+    private javax.swing.JMenu helpM;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -418,12 +436,12 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem quitMI;
     private javax.swing.JMenuItem randomMI;
     private javax.swing.JMenuItem saveMI;
+    private javax.swing.JMenuItem starMI;
     private javax.swing.JMenuItem statAllMI;
     private javax.swing.JMenuItem statCliqueMI;
     private javax.swing.JMenuItem statDegree2MI;
     private javax.swing.JMenuItem statDegreeMI;
     private javax.swing.JLabel statLabel;
-    private javax.swing.JMenu statM;
     private javax.swing.JPanel statP;
     private javax.swing.JMenuItem uniform1MI;
     private javax.swing.JMenuItem uniform2MI;
@@ -483,6 +501,6 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
     /** Activates the table that displays standard metrics. */
     void activateMetricTable() {
-        metricTM.setGraph((GraphInterface) activeGraph.getGraph());
+        metricTM.setGraph((Graph2) activeGraph.getGraph());
     }
 }

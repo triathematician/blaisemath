@@ -6,7 +6,7 @@
 package graphexplorer;
 
 import javax.swing.table.AbstractTableModel;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.NeighborSetInterface;
 import org.bm.blaise.scio.graph.NeighborSetUtils;
 import org.bm.blaise.scio.graph.SimpleGraph;
@@ -60,7 +60,7 @@ public class GraphTableModel extends AbstractTableModel {
             case 0 : return row;
             case 1 : return graph.getLabel(row);
             case 2 : return graph.getObject(row);
-            case 3 : return graph instanceof GraphInterface ? GraphMetrics.DEGREE.getValue((GraphInterface) graph, row) : NeighborSetUtils.degree(graph, row);
+            case 3 : return graph instanceof Graph2 ? GraphMetrics.DEGREE.getValue((Graph2) graph, row) : NeighborSetUtils.degree(graph, row);
         }
         throw new IllegalArgumentException("Graph's table does not contain entry at (row, col) = (" + row + ", " + col + ").");
     }

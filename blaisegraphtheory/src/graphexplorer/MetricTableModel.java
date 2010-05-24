@@ -6,7 +6,7 @@
 package graphexplorer;
 
 import javax.swing.table.AbstractTableModel;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.metrics.GraphMetrics;
 
 /**
@@ -15,17 +15,17 @@ import org.bm.blaise.scio.graph.metrics.GraphMetrics;
  */
 public class MetricTableModel extends AbstractTableModel {
 
-    GraphInterface graph = null;
+    Graph2 graph = null;
 
     /** Constructs without a graph */
     public MetricTableModel() {}
     /** Constructs with specified graph. */
-    public MetricTableModel(GraphInterface graph) { this.graph = graph; }
+    public MetricTableModel(Graph2 graph) { this.graph = graph; }
 
     /** @return graph */
-    public GraphInterface getGraph() { return graph; }
+    public Graph2 getGraph() { return graph; }
     /** Sets graph */
-    public void setGraph(GraphInterface graph) { this.graph = graph; fireTableDataChanged(); }
+    public void setGraph(Graph2 graph) { this.graph = graph; fireTableDataChanged(); }
 
     private static final int COL_INDEX = 0, COL_LABEL = 1, COL_DEGREE = 2, COL_DEGREE2 = 3, COL_CLIQUECOUNT = 4;
     String[] COL_NAMES = { "Index", "Label", "Degree", "Degree-2", "Clique Count" };

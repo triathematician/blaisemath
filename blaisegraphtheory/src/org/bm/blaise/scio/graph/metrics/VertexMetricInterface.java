@@ -26,5 +26,5 @@ public interface VertexMetricInterface<N> {
      *
      * @return value of the metric
      */
-    public N getValue(GraphInterface graph, int vertex);
+    public N getValue(Graph2 graph, int vertex);
 }

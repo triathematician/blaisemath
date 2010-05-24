@@ -7,7 +7,7 @@ package org.bm.blaise.scio.graph.metrics;
 
 import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
-import org.bm.blaise.scio.graph.creation.GraphCreation;
+import org.bm.blaise.scio.graph.GraphCreation;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import visometry.plane.PlanePlotComponent;
 import visometry.plottable.Plottable;
@@ -33,7 +33,7 @@ public class TestGraph2 extends javax.swing.JFrame {
         graphPlot.add(new PlaneGraph(GraphCreation.buildCompleteGraph(5, false)));
         graphPlot.add(new PlaneGraph(GraphCreation.buildEmptyGraph(7)));
         graphPlot.add(new PlaneGraph(GraphCreation.buildCircleGraph(11)));
-        graphPlot.add(new PlaneGraph(GraphCreation.buildHubSpokeGraph(13)));
+        graphPlot.add(new PlaneGraph(GraphCreation.buildStarGraph(13)));
         Object[] vx = { "A", "B", "C", "D" };
         Object[][] lx = { { "A", "B" }, { "A", "C" }, {"C", "D"}, {"B", "C"} };
         graphPlot.add(new PlaneGraph(GraphCreation.buildGraph(vx, lx)));

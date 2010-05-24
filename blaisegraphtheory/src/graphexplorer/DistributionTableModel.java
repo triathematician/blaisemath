@@ -8,7 +8,7 @@ package graphexplorer;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.table.AbstractTableModel;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.metrics.GraphMetrics;
 import org.bm.blaise.scio.graph.metrics.VertexMetricInterface;
 
@@ -18,12 +18,12 @@ import org.bm.blaise.scio.graph.metrics.VertexMetricInterface;
  */
 public class DistributionTableModel extends AbstractTableModel {
 
-    GraphInterface graph;
+    Graph2 graph;
     VertexMetricInterface metric;
     Object[] values;
     int[] counts;
 
-    public <N> DistributionTableModel(GraphInterface graph, VertexMetricInterface<N> metric) {
+    public <N> DistributionTableModel(Graph2 graph, VertexMetricInterface<N> metric) {
         this.graph = graph;
         this.metric = metric;
         Map<N, Integer> map = GraphMetrics.computeDistribution(graph, metric);

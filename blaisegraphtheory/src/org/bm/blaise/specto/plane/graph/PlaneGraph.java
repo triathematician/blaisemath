@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.bm.blaise.scio.graph.Edge;
 import org.bm.blaise.scio.graph.NeighborSetInterface;
 import org.bm.blaise.scio.graph.SimpleGraph;
-import org.bm.blaise.scio.graph.creation.GraphCreation;
+import org.bm.blaise.scio.graph.GraphCreation;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import primitive.GraphicString;
 import primitive.style.PathStylePoints;

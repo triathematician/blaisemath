@@ -9,7 +9,7 @@ import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.bm.blaise.scio.graph.creation.GraphCreation;
+import org.bm.blaise.scio.graph.GraphCreation;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;

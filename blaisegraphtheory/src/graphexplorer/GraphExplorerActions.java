@@ -12,12 +12,13 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import org.bm.blaise.scio.graph.GraphInterface;
+import org.bm.blaise.scio.graph.Graph2;
 import org.bm.blaise.scio.graph.SimpleGraph;
-import org.bm.blaise.scio.graph.creation.GraphCreation;
+import org.bm.blaise.scio.graph.GraphCreation;
 import org.bm.blaise.scio.graph.io.SimpleGraphIO;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
@@ -46,7 +47,7 @@ public class GraphExplorerActions {
     }
 
     //
-    // FILE HANDLING
+    // FILE HANDLING & HELP
     //
 
     JFileChooser fc;
@@ -62,7 +63,6 @@ public class GraphExplorerActions {
             putValue(SHORT_DESCRIPTION, "Load a graph from a file");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
             putValue(MNEMONIC_KEY, KeyEvent.VK_O);
-            setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
             initFileChooser();
@@ -86,7 +86,6 @@ public class GraphExplorerActions {
             putValue(SHORT_DESCRIPTION, "Save current graph to a file");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
             putValue(MNEMONIC_KEY, KeyEvent.VK_S);
-            setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
             main.output("Save feature not yet implemented.");
@@ -98,7 +97,6 @@ public class GraphExplorerActions {
             putValue(SHORT_DESCRIPTION, "Closes current graph window");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
             putValue(MNEMONIC_KEY, KeyEvent.VK_W);
-            setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
             main.closeActiveGraph();
@@ -109,10 +107,27 @@ public class GraphExplorerActions {
         {
             putValue(SHORT_DESCRIPTION, "Exit Graph Explorer");
             putValue(MNEMONIC_KEY, KeyEvent.VK_X);
-            setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
+        }
+    };
+
+    public Action ABOUT_ACTION = new AbstractAction("About") {
+        {
+            putValue(SHORT_DESCRIPTION, "About GraphExplorer");
+        }
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(main, "GraphExplorer 0.0001\nCreated by Elisha Peterson");
+        }
+    };
+
+    public Action HELP_ACTION = new AbstractAction("Help") {
+        {
+            putValue(SHORT_DESCRIPTION, "Load help file");
+        }
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(main, "Sorry, the help feature is not yet available!");
         }
     };
 
@@ -120,7 +135,7 @@ public class GraphExplorerActions {
     // GRAPH GENERATION
     //
 
-    public Action GENERATE_EMPTY = new AbstractAction("Generate empty graph") {
+    public Action GENERATE_EMPTY = new AbstractAction("Empty graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generates an empty graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_E);
@@ -132,7 +147,7 @@ public class GraphExplorerActions {
         }
     };
 
-    public Action GENERATE_COMPLETE = new AbstractAction("Generate complete graph") {
+    public Action GENERATE_COMPLETE = new AbstractAction("Complete graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generates a complete graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_X);
@@ -144,7 +159,7 @@ public class GraphExplorerActions {
         }
     };
 
-    public Action GENERATE_CIRCLE = new AbstractAction("Generate circle graph") {
+    public Action GENERATE_CIRCLE = new AbstractAction("Circle graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generates a circle graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_C);
@@ -156,19 +171,19 @@ public class GraphExplorerActions {
         }
     };
 
-    public Action GENERATE_HUB_SPOKE = new AbstractAction("Generate hub-and-spoke graph") {
+    public Action GENERATE_STAR = new AbstractAction("Star graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generates graph with central hub connected to all other vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_H);
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for hub-and-spoke graph (up to 1 million).", 1, 1000000);
-            main.loadGraph(GraphCreation.buildHubSpokeGraph(num), "Hub-and-Spoke graph");
+            int num = showIntegerInputDialog("Enter number of vertices for star graph (up to 1 million).", 1, 1000000);
+            main.loadGraph(GraphCreation.buildStarGraph(num), "Star graph");
         }
     };
 
-    public Action GENERATE_WHEEL = new AbstractAction("Generate wheel graph") {
+    public Action GENERATE_WHEEL = new AbstractAction("Wheel graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generates a wheel graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_W);
@@ -352,8 +367,8 @@ public class GraphExplorerActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof GraphInterface)
-                main.setMetricTableModel(new DistributionTableModel((GraphInterface) main.activeGraph.getGraph(), GraphMetrics.DEGREE));
+            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
+                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.DEGREE));
         }
     };
 
@@ -364,8 +379,8 @@ public class GraphExplorerActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof GraphInterface)
-                main.setMetricTableModel(new DistributionTableModel((GraphInterface) main.activeGraph.getGraph(), GraphMetrics.DEGREE2));
+            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
+                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.DEGREE2));
         }
     };
 
@@ -376,8 +391,8 @@ public class GraphExplorerActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof GraphInterface)
-                main.setMetricTableModel(new DistributionTableModel((GraphInterface) main.activeGraph.getGraph(), GraphMetrics.CLIQUE_COUNT));
+            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
+                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.CLIQUE_COUNT));
         }
     };
 
@@ -389,7 +404,7 @@ public class GraphExplorerActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof GraphInterface)
+            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
                 main.activateMetricTable();
         }
     };

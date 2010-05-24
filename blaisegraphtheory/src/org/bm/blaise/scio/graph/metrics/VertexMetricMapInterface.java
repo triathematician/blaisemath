@@ -27,5 +27,5 @@ public interface VertexMetricMapInterface<N> extends VertexMetricInterface<N> {
      *
      * @return values of the metric
      */
-    public List<N> getValues(GraphInterface graph);
+    public List<N> getValues(Graph2 graph);
 }

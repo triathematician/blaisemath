@@ -50,9 +50,9 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="generateM">
+        <Menu class="javax.swing.JMenu" name="createM">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Generate"/>
+            <Property name="text" type="java.lang.String" value="Create"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="emptyMI">
@@ -71,12 +71,12 @@
                 <Property name="text" type="java.lang.String" value="Circle Graph"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="starMI">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="actions.GENERATE_HUB_SPOKE" type="code"/>
+                  <Connection code="actions.GENERATE_STAR" type="code"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Hub &amp; Spoke Graph"/>
+                <Property name="text" type="java.lang.String" value="Star Graph"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="wheelMI">
@@ -185,9 +185,9 @@
             </Menu>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="statM">
+        <Menu class="javax.swing.JMenu" name="analyzeM">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Statistics"/>
+            <Property name="text" type="java.lang.String" value="Analyze"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="statDegreeMI">
@@ -222,6 +222,29 @@
                   <Connection code="actions.POPULATE_METRIC_TABLE" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="ALL"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="helpM">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Help"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="aboutMI">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="actions.ABOUT_ACTION" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="About"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="contentMI">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="actions.HELP_ACTION" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Content"/>
               </Properties>
             </MenuItem>
           </SubComponents>
