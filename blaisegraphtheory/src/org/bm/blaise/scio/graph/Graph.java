@@ -5,12 +5,12 @@
 
 package org.bm.blaise.scio.graph;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * <p>
- * A graph is a collection of objects together with known "adjacencies" among the objects.
+ * The interface contains methods describing a set of objects of arbitrary type
+ * together with adjacencies among the objects.
  * The data type of the nodes is specifed by a type parameter. This interface does
  * not provide any methods for altering the graph, so implementations must provide
  * concrete methods for constructing the graph.
@@ -22,8 +22,6 @@ import java.util.List;
  * </p>
  *
  * @param <V> the type of the nodes
- *
- * @see Pseudograph
  *
  * @author Elisha Peterson
  */
@@ -40,10 +38,11 @@ public interface Graph<V> {
     public int order();
 
     /**
-     * Returns a view of the nodes in the graph
-     * @return a collection of all vertices in the graph, possibly empty
+     * Returns a list view of the nodes in the graph. Note that the iteration
+     * order is important here, so the nodes are required to be in list format.
+     * @return a list view of all vertices in the graph, possibly empty
      */
-    public Collection<V> nodes();
+    public List<V> nodes();
 
     /**
      * Tests to see if the graph contains a node
@@ -57,6 +56,12 @@ public interface Graph<V> {
     //
 
     /**
+     * Says whether graph is directed
+     * @return true if graph is directed, false otherwise
+     */
+    public boolean isDirected();
+
+    /**
      * Determines if there is an edge from the first node to the second.
      * For undirected graphs, all that matters is whether the nodes are adjacent.
      * Return false if either node is not contained in the graph.
@@ -68,7 +73,8 @@ public interface Graph<V> {
 
     /**
      * Returns the degree/outdegree of an edge in the graph, i.e. the number of nodes
-     * for which there is an edge from x to the node
+     * for which there is an edge from x to the node. In an undirected graph, each
+     * <i>loop</i>, or edge from a node to itself, contributes a value of 2 to the degree.
      * @param x base node
      * @return number of nodes x points to; or 0 if the node is not in the graph
      */
@@ -87,6 +93,6 @@ public interface Graph<V> {
      * Returns the size of the graph, the number of edges.
      * @return the number of edges in the graph
      */
-    public int size();
+    public int edgeNumber();
 
 }

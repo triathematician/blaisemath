@@ -12,17 +12,21 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import org.bm.blaise.scio.graph.Graph2;
-import org.bm.blaise.scio.graph.SimpleGraph;
-import org.bm.blaise.scio.graph.GraphCreation;
+import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.Graphs;
+import org.bm.blaise.scio.graph.PreferentialAttachment;
 import org.bm.blaise.scio.graph.io.SimpleGraphIO;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
+import org.bm.blaise.scio.graph.metrics.DecayCentrality;
 import org.bm.blaise.scio.graph.metrics.GraphMetrics;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYBarDataset;
 import stormtimer.BetterTimer;
 
 /**
@@ -72,7 +76,7 @@ public class GraphExplorerActions {
             }
             if (fc.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
-                SimpleGraph sg = SimpleGraphIO.importSimpleGraph(openFile);
+                Graph<Integer> sg = SimpleGraphIO.importGraph(openFile);
                 if (sg != null)
                     main.loadGraph(sg, openFile.getName());
                 else
@@ -143,7 +147,8 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for empty graph (up to 1 million).", 1, 1000000);
-            main.loadGraph(GraphCreation.buildEmptyGraph(num), "Empty graph");
+            if (num == -1) return;
+            main.loadGraph(Graphs.getEmptyGraphInstance(num, false), "Empty graph");
         }
     };
 
@@ -155,7 +160,8 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for complete graph (up to 1000).", 1, 1000);
-            main.loadGraph(GraphCreation.buildCompleteGraph(num, false), "Complete graph");
+            if (num == -1) return;
+            main.loadGraph(Graphs.getCompleteGraphInstance(num, false), "Complete graph");
         }
     };
 
@@ -167,7 +173,8 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for circle graph (up to 1 million).", 1, 1000000);
-            main.loadGraph(GraphCreation.buildCircleGraph(num), "Circle graph");
+            if (num == -1) return;
+            main.loadGraph(Graphs.getCycleGraphInstance(num, false), "Circle graph");
         }
     };
 
@@ -179,7 +186,8 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for star graph (up to 1 million).", 1, 1000000);
-            main.loadGraph(GraphCreation.buildStarGraph(num), "Star graph");
+            if (num == -1) return;
+            main.loadGraph(Graphs.getStarGraphInstance(num), "Star graph");
         }
     };
 
@@ -191,7 +199,8 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for wheel graph (up to 1 million).", 1, 1000000);
-            main.loadGraph(GraphCreation.buildWheelGraph(num), "Wheel graph");
+            if (num == -1) return;
+            main.loadGraph(Graphs.getWheelGraphInstance(num), "Wheel graph");
         }
     };
 
@@ -203,9 +212,11 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for random graph (up to 1 million).", 1, 1000000);
+            if (num == -1) return;
             int maxEdges = Math.max(num*(num-1)/2,10000000);
             int numE = showIntegerInputDialog("Enter number of edges in random graph (up to " + maxEdges + ").", 0, maxEdges);
-            main.loadGraph(GraphCreation.generateSparseRandomGraph(num, numE, false), "Random graph");
+            if (numE == -1) return;
+            main.loadGraph(Graphs.getRandomInstance(num, numE, false), "Random graph");
         }
     };
 
@@ -217,8 +228,10 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for random graph (up to 100000).", 1, 100000);
-            double prob = showFloatInputDialog("Enter probability for each edge", 0f, 1f);
-            main.loadGraph(GraphCreation.generateRandomGraph(num, prob, false), "Random graph");
+            if (num == -1) return;
+            float prob = showFloatInputDialog("Enter probability for each edge", 0f, 1f);
+            if (prob == -1) return;
+            main.loadGraph(Graphs.getRandomInstance(num, prob, false), "Random graph");
         }
     };
 
@@ -230,10 +243,15 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            double prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
+            if (num == -1) return;
+            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
+            if (prob == -1) return;
             int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
+            if (num2 == -1) return;
             int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
-            main.loadGraph(GraphCreation.generatePreferentialAttachmentGraph(num, prob, num2, num3), "Preferential attachment graph");
+            if (num3 == -1) return;
+            Graph<Integer> seed = Graphs.getRandomInstance(num, prob, false);
+            main.loadGraph(PreferentialAttachment.getRandomInstance(seed, num2, num3), "Preferential attachment graph");
         }
     };
 
@@ -245,13 +263,15 @@ public class GraphExplorerActions {
         }
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            double prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
+            if (num == -1) return;
+            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
+            if (prob == -1) return;
             int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-            int num3 = showIntegerInputDialog("Enter maximum number of connections to include per added vertex", 0, 1000);
-            double[] probs = new double[num3+1];
-            for (int i = 0; i <= num3; i++)
-                probs[i] = showFloatInputDialog("Enter probability that a new vertex connects to " + i + " vertices.", 0f, 1f);
-            main.loadGraph(GraphCreation.generatePreferentialAttachmentGraph(num, prob, num2, probs), "Preferential attachment graph");
+            if (num2 == -1) return;
+            float[] probs = showFloatArrayInputDialog("Enter probabilities of connecting to i vertices as a list of values adding up to 1, e.g. '0.25,0.5,0.25'.", 0f, 1f);
+            if (probs == null) return;
+            Graph<Integer> seed = Graphs.getRandomInstance(num, prob, false);
+            main.loadGraph(PreferentialAttachment.getRandomInstance(seed, num2, probs), "Preferential attachment graph");
         }
     };
 
@@ -360,41 +380,122 @@ public class GraphExplorerActions {
     // STATISTICS
     //
 
+    /** Encodes values for various actions that compute distributions. */
+    public enum StatEnum {
+        DEGREE("Degree") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_DEGREE; } },
+        DEGREE2("2nd Order Degree") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_DEGREE2; } },
+        CLIQUE_COUNT("Clique Count") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_CLIQUE; } },
+        CLIQUE_COUNT2("2nd Order Clique Count") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_CLIQUE2; } },
+        DECAY25("Decay Centrality (0.25)") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_DECAY_25; } },
+        DECAY50("Decay Centrality (0.50)") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_DECAY_50; } },
+        DECAY75("Decay Centrality (0.75)") { public Action getAction(GraphExplorerActions gea) { return gea.STAT_DECAY_75; } };
+
+        String s;
+        StatEnum(String s) { this.s = s; }
+        @Override public String toString() { return s; }
+        abstract public Action getAction(GraphExplorerActions gea);
+    }
+
     public Action STAT_DEGREE = new AbstractAction("Compute degree distribution") {
         {
-            putValue(SHORT_DESCRIPTION, "Computes degree distribution and sets up metric table with results");
+            putValue(SHORT_DESCRIPTION, "Compute degree distribution and set up metric table with results");
             putValue(MNEMONIC_KEY, KeyEvent.VK_D);
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
-                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.DEGREE));
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), GraphMetrics.DEGREE),
+                    "Degree");
         }
     };
 
-    public Action STAT_DEGREE2 = new AbstractAction("Compute degree distribution 2") {
+    public Action STAT_DEGREE2 = new AbstractAction("Compute second-order degree distribution") {
         {
-            putValue(SHORT_DESCRIPTION, "Computes degree distribution and sets up metric table with results");
+            putValue(SHORT_DESCRIPTION, "Compute second-order degree distribution and set up metric table with results");
             putValue(MNEMONIC_KEY, KeyEvent.VK_E);
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
-                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.DEGREE2));
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), GraphMetrics.DEGREE2),
+                    "2nd Order Degree");
         }
     };
 
     public Action STAT_CLIQUE = new AbstractAction("Compute clique distribution") {
         {
-            putValue(SHORT_DESCRIPTION, "Computes clique distribution and sets up metric table with results");
+            putValue(SHORT_DESCRIPTION, "Compute clique distribution and set up metric table with results");
             putValue(MNEMONIC_KEY, KeyEvent.VK_C);
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
-                main.setMetricTableModel(new DistributionTableModel((Graph2) main.activeGraph.getGraph(), GraphMetrics.CLIQUE_COUNT));
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), GraphMetrics.CLIQUE_COUNT),
+                    "Clique Count");
         }
     };
+
+    public Action STAT_CLIQUE2 = new AbstractAction("Compute 2nd order clique distribution") {
+        {
+            putValue(SHORT_DESCRIPTION, "Compute 2nd order clique distribution and set up metric table with results");
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), GraphMetrics.CLIQUE_COUNT2),
+                    "2nd Order Clique Count");
+        }
+    };
+
+    public Action STAT_DECAY_25 = new AbstractAction("Compute decay centrality distribution (0.25)") {
+        {
+            putValue(SHORT_DESCRIPTION, "Compute decay centrality distribution with parameter 0.25 and set up metric table with results");
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), new DecayCentrality(0.25)),
+                    "Decay Centrality 0.25");
+        }
+    };
+    public Action STAT_DECAY_50 = new AbstractAction("Compute decay centrality distribution (0.5)") {
+        {
+            putValue(SHORT_DESCRIPTION, "Compute decay centrality distribution with parameter 0.5 and set up metric table with results");
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), new DecayCentrality(0.5)),
+                    "Decay Centrality 0.5");
+        }
+    };
+    public Action STAT_DECAY_75 = new AbstractAction("Compute decay centrality distribution (0.75)") {
+        {
+            putValue(SHORT_DESCRIPTION, "Compute decay centrality distribution with parameter 0.75 and set up metric table with results");
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), new DecayCentrality(0.75)),
+                    "Decay Centrality 0.75");
+        }
+    };
+    public Action STAT_DECAY_CUSTOM = new AbstractAction("Compute decay centrality distribution (custom)") {
+        {
+            putValue(SHORT_DESCRIPTION, "Compute decay centrality distribution with custom parameter and set up metric table with results");
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            float parameter = GraphExplorerActions.showFloatInputDialog("Enter parameter for decay centrality (between 0 and 1)", 0, 1);
+            if (parameter == -1) return;
+            main.setDistributionModel(
+                    new DistributionTableModel(main.activeGraph.getGraph(), new DecayCentrality(parameter)),
+                    "Decay Centrality " + parameter);
+        }
+    };
+
+
+
 
     public Action POPULATE_METRIC_TABLE = new AbstractAction("Compute standard metrics") {
         {
@@ -404,7 +505,7 @@ public class GraphExplorerActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null && main.activeGraph.getGraph() instanceof Graph2)
+            if (main.activeGraph != null)
                 main.activateMetricTable();
         }
     };
@@ -414,24 +515,56 @@ public class GraphExplorerActions {
     // UTILITY METHODS
     //
 
-    /** Shows option pane to retrieve an integer value in provided range. */
+    /**
+     * Shows option pane to retrieve an integer value in provided range.
+     * @return a value between min and max, or -1 if the user cancelled the dialog
+     */
     public static int showIntegerInputDialog(String message, int min, int max) {
         int num = 0;
         do {
             String response = JOptionPane.showInputDialog(message);
+            if (response == null) return -1;
             try { num = Integer.decode(response); } catch (NumberFormatException ex) { System.out.println("Improperly formatted number..."); }
         } while (num < min || num > max);
         return num;
     }
 
-    /** Shows option pane to retrieve a float value in provided range. */
+    /** 
+     * Shows option pane to retrieve a float value in provided range.
+     * @return a value between min and max, or -1 if the user cancelled the dialog
+     */
     public static float showFloatInputDialog(String message, float min, float max) {
         float num = 0;
         do {
             String response = JOptionPane.showInputDialog(message);
+            if (response == null) return -1;
             try { num = Float.parseFloat(response); } catch (NumberFormatException ex) { System.out.println("Improperly formatted number..."); }
         } while (num < min || num > max);
         return num;
+    }
+
+    /** 
+     * Shows option pane to retrieve a float value in provided range.
+     * @return a value between min and max, or null if the user cancelled the dialog
+     */
+    public static float[] showFloatArrayInputDialog(String message, float min, float max) {
+        float[] result = null;
+        boolean valid = false;
+        do {
+            String response = JOptionPane.showInputDialog(message);
+            if (response == null) return null;
+            String[] responseArr = response.split(",");
+            result = new float[responseArr.length];
+            try {
+                float sum = 0f;
+                for (int i = 0; i < responseArr.length; i++) {
+                    result[i] = Float.valueOf(responseArr[i]);
+                    sum += result[i];
+                }
+                valid = sum == 1f;
+            } catch (NumberFormatException ex) { System.out.println("Improperly formatted number..."); }
+        } while (!valid);
+        return result;
     }
 
 }

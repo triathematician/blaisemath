@@ -8,10 +8,10 @@ package org.bm.blaise.specto.plane.graph;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import org.bm.blaise.scio.graph.Edge;
-import org.bm.blaise.scio.graph.NeighborSetInterface;
-import org.bm.blaise.scio.graph.SimpleGraph;
-import org.bm.blaise.scio.graph.GraphCreation;
+import java.util.List;
+import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.Graphs;
+import org.bm.blaise.scio.graph.NodeValueGraph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import primitive.GraphicString;
 import primitive.style.PathStylePoints;
@@ -35,7 +35,7 @@ import visometry.plottable.VPointSet;
  *    is added for labeling the vertices as well.
  * </p>
  * @author Elisha Peterson
- * @see NeighborSetInterface
+ * @see org.bm.blaise.scio.graph.Graph
  * @see PlanePlotComponent
  * @see VPointSet
  */
@@ -46,25 +46,25 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     VPrimitiveEntry vertexEntry;
     /** Edges; underlying primitive is an array of point-pairs */
     VPrimitiveEntry edgeEntry;
-    /** Captures connections. */
-    NeighborSetInterface nsi;
+    /** The underlying graph object. */
+    Graph graph;
 
     /** Constructs graph with a sample network */
     public PlaneGraph() {
-        this(GraphCreation.generateSparseRandomGraph(10, 10, false));
+        this(Graphs.getRandomInstance(10, 10, true));
     }
 
-    public PlaneGraph(NeighborSetInterface nsi) {
+    public PlaneGraph(Graph graph) {
         addPrimitive(edgeEntry = new VPrimitiveEntry(null, new PathStylePoints(new Color(96, 192, 96))));
         PointLabeledStyle vStyle = new PointLabeledStyle(PointStyle.PointShape.SQUARE, 4, StringStyle.ANCHOR_N);
         vStyle.setLabelColor(new Color(128, 128, 128));
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
-        setGraph(nsi);
+        setGraph(graph);
     }
 
     @Override
     public String toString() {
-        return "Graph[" + nsi.size() + " vertices]";
+        return "Graph[" + graph.order() + " vertices]";
     }
 
     /** @return current style of point for this plottable */
@@ -77,15 +77,25 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     public void setEdgeStyle(PathStylePoints edgeStyle) { edgeEntry.style = edgeStyle; }
     
     /** @return underlying graph */
-    public NeighborSetInterface getGraph() { return nsi; }
-    /** Sets the underlying graph; uses default vertex positions around a circle */
-    public void setGraph(NeighborSetInterface nsi) {
-        this.nsi = nsi;
-        int size = nsi.size();
+    public Graph getGraph() { return graph; }
+    /**
+     * Sets the underlying graph; uses default vertex positions around a circle
+     * @param graph the new graph
+     */
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+        List nodes = graph.nodes();
+        int size = nodes.size();
         GraphicString[] gsa = new GraphicString[size];
-        Point2D.Double[] pts = StaticGraphLayout.RANDOM.layout(nsi, 4.5);
-        for (int i = 0; i < size; i++)
-            gsa[i] = new GraphicString<Point2D.Double>(pts[i], nsi.getLabel(i));
+        Point2D.Double[] pts = StaticGraphLayout.RANDOM.layout(graph, 4.5);
+        if (graph instanceof NodeValueGraph) {
+            NodeValueGraph nvg = (NodeValueGraph) graph;
+            for (int i = 0; i < size; i++)
+                gsa[i] = new GraphicString<Point2D.Double>(pts[i], nvg.getValue(nodes.get(i)).toString());
+        } else {
+            for (int i = 0; i < size; i++)
+                gsa[i] = new GraphicString<Point2D.Double>(pts[i], nodes.get(i).toString());
+        }
         vertexEntry.local = gsa;
         vertexEntry.needsConversion = true;
         firePlottableChanged();
@@ -122,30 +132,23 @@ public class PlaneGraph extends Plottable<Point2D.Double>
 
     /** Sets label of i'th vertex */
     public void setLabel(int i, String newLabel) {
+        // TODO - probably should change this to make use of the <code>NodeValueGraph</code> construction.
         GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
         gsa[i].string = newLabel;
         vertexEntry.needsConversion = true;
         firePlottableStyleChanged();
     }
 
-    /** @return edge in local coordinates between specified indexed vertices */
-    public Point2D.Double[] getEdge(int i1, int i2) {
-        return new Point2D.Double[] { getPoint(i1), getPoint(i2) };
-    }
-
     @Override
     protected void recompute() {
         ArrayList<Point2D.Double[]> edges = new ArrayList<Point2D.Double[]>();
-        if (nsi instanceof SimpleGraph) {
-            SimpleGraph sg = (SimpleGraph) nsi;
-            for (Edge e : sg.getEdges())
-                edges.add(getEdge(e.getSource(), e.getSink()));
-        } else {
-            for (int i1 = 0; i1 < nsi.size(); i1++)
-                for (int i2 = 0; i2 < nsi.size(); i2++)
-                    if (i1 != i2 && nsi.adjacent(i1, i2))
-                        edges.add(getEdge(i1, i2));
-        }
+        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        List nodes = graph.nodes();
+        int size = nodes.size();
+        for (int i1 = 0; i1 < size; i1++)
+            for (int i2 = 0; i2 < size; i2++)
+                if (graph.adjacent(nodes.get(i1), nodes.get(i2)))
+                    edges.add(new Point2D.Double[]{(Point2D.Double)gsa[i1].getAnchor(), (Point2D.Double)gsa[i2].getAnchor()});
         edgeEntry.local = edges.toArray(new Point2D.Double[][]{});
         edgeEntry.needsConversion = true;
     }
@@ -165,6 +168,6 @@ public class PlaneGraph extends Plottable<Point2D.Double>
 
     /** Applies the specified layout to the current graph */
     public void applyLayout(StaticGraphLayout layoutAlgorithm, double... parameters) {
-        setPoint(layoutAlgorithm.layout(nsi, parameters));
+        setPoint(layoutAlgorithm.layout(graph, parameters));
     }
 }

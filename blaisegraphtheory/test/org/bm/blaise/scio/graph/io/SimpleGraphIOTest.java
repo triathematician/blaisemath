@@ -5,7 +5,7 @@
 
 package org.bm.blaise.scio.graph.io;
 
-import org.bm.blaise.scio.graph.SimpleGraph;
+import org.bm.blaise.scio.graph.Graph;
 import org.junit.Test;
 
 /**
@@ -14,20 +14,20 @@ import org.junit.Test;
  */
 public class SimpleGraphIOTest {
 
-    static SimpleGraph SAMPLE1, SAMPLE2;
+    static Graph<Integer> SAMPLE_PADGETT, SAMPLE_AIRPORTS;
 
-    public static SimpleGraph sample1() {
-        if (SAMPLE1 == null)
-            SAMPLE1 = SimpleGraphIO.importSimpleGraph(
+    public static Graph<Integer> samplePadgett() {
+        if (SAMPLE_PADGETT == null)
+            SAMPLE_PADGETT = SimpleGraphIO.importGraph(
                 SimpleGraphIO.class.getResource("data/padgett.txt"));
-        return SAMPLE1;
+        return SAMPLE_PADGETT;
     }
 
-    public static SimpleGraph sample2() {
-        if (SAMPLE2 == null)
-            SAMPLE2 = SimpleGraphIO.importSimpleGraph(
-                SimpleGraphIO.class.getResource("data/InternetISP.txt"));
-        return SAMPLE2;
+    public static Graph<Integer> sampleAirports() {
+        if (SAMPLE_AIRPORTS == null)
+            SAMPLE_AIRPORTS = SimpleGraphIO.importGraph(
+                SimpleGraphIO.class.getResource("data/USAirport500.txt"));
+        return SAMPLE_AIRPORTS;
     }
 
     /**
@@ -35,8 +35,9 @@ public class SimpleGraphIOTest {
      */
     @Test
     public void testImportSimpleGraph() {
-        System.out.println("importSimpleGraph");
-        System.out.println(sample1());
+        System.out.println("-- SimpleGraphIOTest --");
+        System.out.println("importSimpleGraph: MANUALLY CHECK FOR DESIRED OUTPUT");
+        System.out.println(samplePadgett());
     }
 
 }

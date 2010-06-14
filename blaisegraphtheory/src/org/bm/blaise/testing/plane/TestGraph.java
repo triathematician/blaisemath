@@ -9,7 +9,7 @@ import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.bm.blaise.scio.graph.GraphCreation;
+import org.bm.blaise.scio.graph.Graphs;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
@@ -38,7 +38,7 @@ public class TestGraph extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-        graphPlot.add(pg = new PlaneGraph(GraphCreation.generateSparseRandomGraph(100, 50, false)));
+        graphPlot.add(pg = new PlaneGraph(Graphs.getRandomInstance(100, 50, false)));
         graphPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
 
         // PANELS

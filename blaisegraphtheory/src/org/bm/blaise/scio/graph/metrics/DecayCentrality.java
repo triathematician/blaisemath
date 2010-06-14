@@ -5,17 +5,18 @@
 
 package org.bm.blaise.scio.graph.metrics;
 
-import java.util.ArrayList;
-import java.util.Set;
-import org.bm.blaise.scio.graph.Graph2;
-import org.bm.blaise.scio.graph.GraphUtils;
+import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.Graphs;
+import org.bm.blaise.scio.graph.NodeValueGraph;
 
 /**
- * Computes the decay centrality of a vertex in a graph
+ * Provides a metric describing the decay centrality of a vertex in a graph.
+ * This computation can be slow for large graphs since it uses all vertices
+ * in a component.
  *
  * @author Elisha Peterson
  */
-public class DecayCentrality implements VertexMetricInterface<Double> {
+public class DecayCentrality implements NodeMetric<Double> {
 
     double parameter = 0.5;
 
@@ -27,15 +28,16 @@ public class DecayCentrality implements VertexMetricInterface<Double> {
     /** @return value of decay parameter */
     public double getParameter() { return parameter; }
     /** @param newValue new value of decay parameter */
-    public void setParameter(double newValue) { if (newValue < 1 && newValue > 0) parameter = newValue; }
+    public void setParameter(double newValue) { 
+        if (! (newValue <= 1 && newValue >= 0)) throw new IllegalArgumentException("Parameter for DecayCentrality must be between 0 and 1: " + newValue);
+        parameter = newValue;
+    }
 
-    public Double getValue(Graph2 graph, int vertex) {
-        // this puts every vertex in the vertex's nbhd at the appropriate distance
-        ArrayList<Set<Integer>> nbhds = GraphUtils.allDistances(vertex, graph, Integer.MAX_VALUE);
+    public <V> Double getValue(Graph<V> graph, V vertex) {
+        NodeValueGraph<V, Integer> nvg = Graphs.geodesicTree(graph, vertex);
         double total = 0.0;
-        int i = 0;
-        for (Set<Integer> set : nbhds)
-            total += set.size() * Math.pow(parameter, i++);
+        for (V v : nvg.nodes())
+            total += Math.pow(parameter, nvg.getValue(v));
         return total - 1;
     }
 }

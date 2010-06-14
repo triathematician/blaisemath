@@ -6,9 +6,8 @@
 package org.bm.blaise.scio.graph.layout;
 
 import java.awt.geom.Point2D;
-import org.bm.blaise.scio.graph.Edge;
-import org.bm.blaise.scio.graph.NeighborSetInterface;
-import org.bm.blaise.scio.graph.SimpleGraph;
+import java.util.List;
+import org.bm.blaise.scio.graph.Graph;
 
 /**
  * Simple energy-layout engine
@@ -18,23 +17,23 @@ import org.bm.blaise.scio.graph.SimpleGraph;
 public class EnergyLayout {
 
     /** Provides vertices and connections */
-    NeighborSetInterface nsi;
+    Graph g;
     /** Provides initial layout */
     StaticGraphLayout initialLayout = StaticGraphLayout.RANDOM;
 
     /** Repelling constant */
-    double repulsiveC = 2;
+    double repulsiveC = 1;
     /** Attractive constant */
-    double springC = 1;
+    double springC = 10;
     /** Natural spring length */
     double springL = .5;
     /** Global attractive constant (keeps vertices closer to origin) */
-    double globalC = .25;
+    double globalC = .5;
 
     /** Damping constant */
-    double dampingC = 0.5;
+    double dampingC = 0.75;
     /** Time step per iteration */
-    double stepC = 0.25;
+    double stepC = 0.1;
 
     /** Current locations */
     Point2D.Double[] loc;
@@ -44,22 +43,22 @@ public class EnergyLayout {
     transient double energy = 0.0;
 
     /** Construct for given graph */
-    public EnergyLayout(NeighborSetInterface nsi, double initialRadius) {
-        this.nsi = nsi;
-        loc = initialLayout.layout(nsi, initialRadius);
+    public EnergyLayout(Graph g, double initialRadius) {
+        this.g = g;
+        loc = initialLayout.layout(g, initialRadius);
         vel = new Point2D.Double[loc.length];
         for (int i = 0; i < loc.length; i++)
             vel[i] = new Point2D.Double();
     }
 
     /** Construct for given graph, using specified starting locations */
-    public EnergyLayout(NeighborSetInterface nsi, Point2D.Double[] loc) {
-        initialize(nsi, loc);
+    public EnergyLayout(Graph g, Point2D.Double[] loc) {
+        initialize(g, loc);
     }
 
     /** Initialzie layout for given graph, given starting locations */
-    public void initialize(NeighborSetInterface nsi, Point2D.Double[] loc) {
-        this.nsi = nsi;
+    public void initialize(Graph g, Point2D.Double[] loc) {
+        this.g = g;
         this.loc = loc;
         vel = new Point2D.Double[loc.length];
         for (int i = 0; i < loc.length; i++)
@@ -67,9 +66,9 @@ public class EnergyLayout {
     }
 
     /** @return current active graph */
-    public NeighborSetInterface getGraph() { return nsi; }
+    public Graph getGraph() { return g; }
     /** Updates graph */
-    public void setGraph(NeighborSetInterface newGraph) { nsi = newGraph; }
+    public void setGraph(Graph newGraph) { g = newGraph; }
 
 
     public double getRepulsiveForce() { return repulsiveC; }
@@ -93,26 +92,19 @@ public class EnergyLayout {
 
     /** Iterate the energy layout algorithm, moving the points slightly */
     public void iterate() {
+        List l = g.nodes();
         energy = 0;
         double nodeMass = 1;
-        int size = nsi.size();
-        for (int i = 0; i < size; i++) {
+        int order = g.order();
+        for (int i = 0; i < order; i++) {
             Point2D.Double netForce = new Point2D.Double();
             addGlobalForce(netForce, i);
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < order; j++) {
                 // repulsive force from other nodes
                 addRepulsiveForce(netForce, i, j);
                 // attractive force from adjacencies
-                if (!(nsi instanceof SimpleGraph) && nsi.adjacent(i, j))
+                if (g.adjacent(l.get(i), l.get(j)))
                     addSpringForce(netForce, i, j);
-            }
-            if (nsi instanceof SimpleGraph) {
-                for (Edge e : ((SimpleGraph)nsi).getEdges()) {
-                    if (e.getSource() == i)
-                        addSpringForce(netForce, i, e.getSink());
-                    else if (e.getSink() == i)
-                        addSpringForce(netForce, i, e.getSource());
-                }
             }
             vel[i].x = dampingC * (vel[i].x + stepC * netForce.x);
             vel[i].y = dampingC * (vel[i].y + stepC * netForce.y);

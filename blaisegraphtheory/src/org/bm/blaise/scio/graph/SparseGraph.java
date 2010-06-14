@@ -6,17 +6,18 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- * Provides an implementation of a <i>sparse graph</i> backed by lists of
- * adjacencies of vertices.
+ * Provides an implementation of a graph that is backed by a map associating
+ * each vertex to its adjacent vertices. This is useful for graphs with a large
+ * number of vertices and a relatively small number of edges.
  *
- * @param <V> the object type of the nodes
+ * @param <V> the type of the nodes
  *
  * @author Elisha Peterson
  */
@@ -24,12 +25,15 @@ public class SparseGraph<V> implements Graph<V> {
 
     /** Whether graph is directed or not. */
     final boolean directed;
-    /** The nodes in the graph */
-    private ArrayList<V> nodes;
     /** The adjacencies in the graph */
-    private HashMap<V, ArrayList<V>> adjacencies;
+    private TreeMap<V, TreeSet<V>> adjacencies;
 
-    private SparseGraph(boolean directed) { this.directed = directed; nodes = new ArrayList<V>(); adjacencies = new HashMap<V, ArrayList<V>>(); }
+    private SparseGraph(boolean directed) { this.directed = directed; adjacencies = new TreeMap<V, TreeSet<V>>(); }
+
+    @Override
+    public String toString() {
+        return adjacencies.toString();
+    }
 
     /**
      * Factory method to return an immutable instance of a sparse graph. Adds all nodes and edges. If an edge
@@ -38,36 +42,39 @@ public class SparseGraph<V> implements Graph<V> {
      * @param nodes the nodes in the graph
      * @param edges the edges in the graph, as node pairs; each must have a 0 element and a 1 element
      */
-    public static <V> SparseGraph<V> createSparseGraph(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
+    public static <V> SparseGraph<V> getInstance(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
         SparseGraph<V> g = new SparseGraph<V>(directed);
         for (V v : nodes)
-            g.nodes.add(v);
+            g.adjacencies.put(v, new TreeSet<V>());
         for (V[] e : edges) {
-            if (!g.nodes.contains(e[0])) g.nodes.add(e[0]);
-            if (!g.nodes.contains(e[1])) g.nodes.add(e[1]);
             if (!g.adjacencies.containsKey(e[0]))
-                g.adjacencies.put(e[0], new ArrayList<V>());
+                g.adjacencies.put(e[0], new TreeSet<V>());
+            if (!g.adjacencies.containsKey(e[1]))
+                g.adjacencies.put(e[1], new TreeSet<V>());
             g.adjacencies.get(e[0]).add(e[1]);
-            if (!directed) {
-                if (!g.adjacencies.containsKey(e[1]))
-                    g.adjacencies.put(e[1], new ArrayList<V>());
+            if (!directed)
                 g.adjacencies.get(e[1]).add(e[0]);
-            }
         }
         return g;
     }
 
-    public int order() { return nodes.size(); }
-    public Collection<V> nodes() { return Collections.unmodifiableList(nodes); }
-    public boolean contains(V x) { return nodes.contains(x); }
-    
+    public int order() { return adjacencies.size(); }
+    public List<V> nodes() { return new ArrayList<V>(adjacencies.keySet()); }
+    public boolean contains(V x) { return adjacencies.containsKey(x); }
+
+    public boolean isDirected() { return directed; }
     public boolean adjacent(V x, V y) { return adjacencies.containsKey(x) && adjacencies.get(x).contains(y); }
-    public int degree(V x) { return adjacencies.containsKey(x) ? adjacencies.get(x).size() : 0; }
-    public List<V> neighbors(V x) { return adjacencies.containsKey(x) ? Collections.unmodifiableList(adjacencies.get(x)) : (List<V>) Collections.emptyList(); }
-    public int size() {
+    public int degree(V x) { 
+        if (!adjacencies.containsKey(x)) return 0;
+        TreeSet<V> nbhd = adjacencies.get(x);
+        return (!directed && nbhd.contains(x)) ? nbhd.size()+1 : nbhd.size();
+    }
+    public List<V> neighbors(V x) { return adjacencies.containsKey(x) ? new ArrayList<V>(adjacencies.get(x)) : (List<V>) Collections.emptyList(); }
+    public int edgeNumber() {
         int total = 0;
-        for (Entry<V, ArrayList<V>> en : adjacencies.entrySet())
-            total += en.getValue().size();
+        for (Entry<V, TreeSet<V>> en : adjacencies.entrySet()) {
+            total += en.getValue().size() + (!directed && en.getValue().contains(en.getKey()) ? 1 : 0);
+        }
         return directed ? total : total / 2;
     }
 

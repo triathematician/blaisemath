@@ -2,9 +2,21 @@
     <title>Graph Theory Package (org.bm.blaise.scio.graph)</title>
     <body>
       <p>
-          This package contains the primary classes for graph theory, including
-          interfaces for edges and graphs, and some default implementations.
-          See sub-packages for utility methods.
+          This package contains the primary classes for graphs, including interfaces
+          and default implementations. The two most important implementations are
+          <code>SparseGraph</code>, where the edges are encoded using lists, and <code>MatrixGraph</code>,
+          where the edges are encoded using arrays.
+      </p>
+      <p>
+          A few additional graph types
+          (such as those with weighted nodes or edges) are also supported with interfaces
+          and implementations that wrap an existing graph.
+      </p>
+      <p>
+          The <code>Graphs</code> class provides several utility methods for generating
+          specific types of graphs, including random graphs, as well as performing some
+          standard computations on graphs, such as finding neighborhoods and shortest
+          path lengths.
       </p>
   </body>
 </html>

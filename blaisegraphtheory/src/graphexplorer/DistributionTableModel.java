@@ -8,9 +8,9 @@ package graphexplorer;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.table.AbstractTableModel;
-import org.bm.blaise.scio.graph.Graph2;
+import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.metrics.GraphMetrics;
-import org.bm.blaise.scio.graph.metrics.VertexMetricInterface;
+import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a basic table for metric distributions
@@ -18,12 +18,14 @@ import org.bm.blaise.scio.graph.metrics.VertexMetricInterface;
  */
 public class DistributionTableModel extends AbstractTableModel {
 
-    Graph2 graph;
-    VertexMetricInterface metric;
+    Graph graph;
+    NodeMetric metric;
+    /** Stores the values in the table. */
     Object[] values;
+    /** Stores the number of each value in the table. */
     int[] counts;
 
-    public <N> DistributionTableModel(Graph2 graph, VertexMetricInterface<N> metric) {
+    public <N> DistributionTableModel(Graph graph, NodeMetric<N> metric) {
         this.graph = graph;
         this.metric = metric;
         Map<N, Integer> map = GraphMetrics.computeDistribution(graph, metric);
