@@ -5,10 +5,9 @@
 
 package visometry.plane;
 
+import coordinate.DomainHint;
 import coordinate.RealIntervalNiceSampler;
-import coordinate.ScreenSampleDomainProvider;
 import java.awt.geom.Point2D;
-import java.lang.Double;
 import java.util.ArrayList;
 import java.util.List;
 import primitive.GraphicRuledLine;
@@ -40,6 +39,8 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
     private AxesType type = null;
     /** AxesType used to draw the axes. */
     private RuledLineStyle style = new RuledLineStyle();
+    /** Used to draw top/right axes in box mode */
+    private RuledLineStyle.Opposite oppositeStyle = new RuledLineStyle.Opposite(style);
 
     /** Horizontal axis entry. */
     private VPrimitiveEntry hEntry, hEntry2;
@@ -52,8 +53,6 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
 
     /** Determines the "ideal" spacing between tick marks, in terms of pixels. */
     private int PIXEL_SPACING = 60;
-    /** Determines "buffer" zone between last numeric label and side of window. */
-    private int BUFFER = 20;
     /** Whether to use multiples of pi for the tick marks. */
     private boolean usePiX = false, usePiY = false;
 
@@ -75,9 +74,9 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
     public PlaneAxes(String xLabel, String yLabel, AxesType type) {
         addPrimitive(
                 hEntry = new VPrimitiveEntry( hLine = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), xLabel, null, null), style ),
-                hEntry2 = new VPrimitiveEntry( hLine2 = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), null, null, null), style ),
+                hEntry2 = new VPrimitiveEntry( hLine2 = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), xLabel, null, null), oppositeStyle ),
                 vEntry = new VPrimitiveEntry( vLine = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), yLabel, null, null), style ),
-                vEntry2 = new VPrimitiveEntry( vLine2 = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), yLabel, null, null), style ) );
+                vEntry2 = new VPrimitiveEntry( vLine2 = new GraphicRuledLine<Point2D.Double>(new Point2D.Double(), new Point2D.Double(), yLabel, null, null), oppositeStyle ) );
         hEntry2.visible = false;
         vEntry2.visible = false;
         setType(type);
@@ -100,11 +99,23 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
     /** Returns horizontal label. */
     public String getLabel1() { return hLine.label; }
     /** Sets horizontal label. */
-    public void setLabel1(String label) { if (!hLine.label.equals(label)) { hLine.label = label; firePlottableStyleChanged(); } }
+    public void setLabel1(String label) { 
+        if (!hLine.label.equals(label)) {
+            hLine.label = label;
+            hLine2.label = label;
+            firePlottableStyleChanged();
+        }
+    }
     /** Returns vertical label. */
     public String getLabel2() { return vLine.label; }
     /** Sets vertical label. */
-    public void setLabel2(String label) { if (!vLine.label.equals(label)) { vLine.label = label; firePlottableStyleChanged(); } }
+    public void setLabel2(String label) { 
+        if (!vLine.label.equals(label)) {
+            vLine.label = label;
+            vLine2.label = label;
+            firePlottableStyleChanged();
+        }
+    }
 
     /** @return true if first axis uses multiples of pi. */
     public boolean isUsePiHorizontal() { return usePiX; }
@@ -118,7 +129,17 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
     /** @return general style of axes drawn . */
     public AxesType getType() { return type; }
     /** Sets style. */
-    public void setType(AxesType type) { if (this.type != type) { this.type = type; firePlottableChanged(); } }
+    public void setType(AxesType type) { 
+        if (this.type != type) {
+            this.type = type;
+            style.setDrawArrow(type != AxesType.BOX);
+            hEntry.needsConversion = true;
+            hEntry2.needsConversion = true;
+            vEntry.needsConversion = true;
+            vEntry2.needsConversion = true;
+            firePlottableChanged();
+        }
+    }
 
     //
     // COMPUTATIONS (mostly determining where the ticks are displayed)
@@ -130,8 +151,8 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
     @Override
     protected void recompute() {
         if (sampleX == null || sampleY == null) {
-            sampleX = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, usePiX ? ScreenSampleDomainProvider.HINT_PREFER_PI : ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
-            sampleY = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, usePiY ? ScreenSampleDomainProvider.HINT_PREFER_PI : ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
+            sampleX = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, usePiX ? DomainHint.PREFER_PI : DomainHint.REGULAR );
+            sampleY = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, usePiY ? DomainHint.PREFER_PI : DomainHint.REGULAR );
             if (sampleX == null || sampleY == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sampleX).addChangeListener(this);
@@ -146,6 +167,9 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
         float maxY = (float)(double) rins2.getMaximum();
 
         if (type == AxesType.BOX) {
+            float dx = maxX-minX, dy = maxY-minY;
+            minX += .01f*dx; maxX -= .01f*dx;
+            minY += .01f*dy; maxY -= .01f*dy;
             hLine.start.setLocation(minX, minY);
             hLine.end.setLocation(maxX, minY);
             vLine.start.setLocation(minX, minY);
@@ -165,11 +189,12 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
             vEntry2.visible = false;
         }
 
-        assignTicks(hLine, sampleX.getSamples(), "x");
+        boolean showZero = type == AxesType.BOX;
+        assignTicks(hLine, sampleX.getSamples(), "x", showZero);
         hLine2.ticks = hLine.ticks;
         hLine2.tickLabels = hLine.tickLabels;
 
-        assignTicks(vLine, sampleY.getSamples(), "y");
+        assignTicks(vLine, sampleY.getSamples(), "y", showZero);
         vLine2.ticks = vLine.ticks;
         vLine2.tickLabels = vLine.tickLabels;
 
@@ -184,8 +209,9 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
      * @param line the line to assign
      * @param ts tick values
      * @param var "x" or "y", depending upon which value is being considered on the line
+     * @param showZero whether a 0 should be displayed along with the other values
      */
-    private static void assignTicks(GraphicRuledLine<Point2D.Double> line, List<Double> ts, String var) {
+    private static void assignTicks(GraphicRuledLine<Point2D.Double> line, List<Double> ts, String var, boolean showZero) {
         ArrayList<Double> ts2 = new ArrayList<Double>();
         double lStart, lEnd;
         if (var.equals("x")) { lStart = line.start.x; lEnd = line.end.x; }
@@ -202,7 +228,7 @@ public class PlaneAxes extends Plottable<Point2D.Double> {
         double length = lEnd - lStart;
         for(int i = 0; i < size; i++) {
             line.ticks[i] = (ts2.get(i) - lStart) / length;
-            line.tickLabels[i] = ts2.get(i) == 0.0 ? null : PlottableConstants.floatFormat.format(ts2.get(i));
+            line.tickLabels[i] = (showZero || ts2.get(i) != 0.0) ? PlottableConstants.FLOAT_FORMAT.format(ts2.get(i)) : null;
         }
     }
 

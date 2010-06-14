@@ -6,8 +6,7 @@
 package visometry.plottable;
 
 import java.awt.Color;
-import primitive.style.LineStyle;
-import primitive.style.PointStyle;
+import primitive.style.PointLabeledStyle;
 import primitive.style.RayStyle;
 
 /**
@@ -20,13 +19,13 @@ import primitive.style.RayStyle;
 public class VRay<C> extends VAbstractTwoPoint<C> {
     
     /** Style for points. */
-    PointStyle pointStyle;
+    PointLabeledStyle pointStyle;
     /** Whether points are visible. */
     boolean pointsVisible;
 
     /** Construct to specified coordinates */
     public VRay(C... values) {
-        super(values, new PointStyle(), new RayStyle(new Color(64, 0, 0)));
+        super(values, new PointLabeledStyle(), new RayStyle(new Color(64, 0, 0)));
     }
 
     /** @return current style of stroke for this plottable */
@@ -40,8 +39,8 @@ public class VRay<C> extends VAbstractTwoPoint<C> {
     public void setPointsVisible(boolean value) { if (entryP1.visible != value) { entryP1.visible = value; entryP2.visible = false; firePlottableStyleChanged(); } }
 
     /** @return current style of stroke for this plottable */
-    public PointStyle getPointStyle() { return (PointStyle) entryP1.style; }
+    public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) entryP1.style; }
     /** Set current style of stroke for this plottable */
-    public void setPointStyle(PointStyle newValue) { if (entryP1.style != newValue) { entryP1.style = newValue; entryP2.style = newValue; firePlottableStyleChanged(); } }
+    public void setPointStyle(PointLabeledStyle newValue) { if (entryP1.style != newValue) { entryP1.style = newValue; entryP2.style = newValue; firePlottableStyleChanged(); } }
 
 }

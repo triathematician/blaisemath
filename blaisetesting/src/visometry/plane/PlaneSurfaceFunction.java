@@ -1,69 +1,69 @@
 /**
- * PlaneVectorField.java
- * Created on Sep 3, 2009
+ * PlaneSurfaceFunction.java
+ * Created Sep 2009
  */
 
 package visometry.plane;
 
 import coordinate.DomainHint;
-import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.math.FunctionEvaluationException;
-import org.apache.commons.math.analysis.MultivariateVectorialFunction;
-import primitive.GraphicPointDir;
-import primitive.style.ArrowStyle;
+import org.apache.commons.math.analysis.MultivariateRealFunction;
+import primitive.GraphicPointRadius;
 import primitive.style.PointDirStyle;
+import primitive.style.PointRadiusStyle;
 import scio.coordinate.sample.SampleSet;
-import scio.function.utils.DemoField2D;
 import util.ChangeBroadcaster;
 import visometry.VPrimitiveEntry;
 import visometry.plottable.Plottable;
 
 /**
  * <p>
- *   <code>PlaneVectorField</code> displays a vector field, specified by an underlying
- *   function with 2 inputs and 2 outputs (a <code>MultivariateVectorialFunction</code>).
+ *   <code>PlaneSurfaceFunction</code> represents a function that has two inputs and one output, i.e. of the form z=f(x,y).
+ *   The function is displayed as a collection of points of varying radii.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class PlaneVectorField extends Plottable<Point2D.Double> {
+public class PlaneSurfaceFunction extends Plottable<Point2D.Double> {
 
-    /** Model function */
-    MultivariateVectorialFunction func;
+    /** Underlying function */
+    MultivariateRealFunction func;
     /** Location of sampling points */
     SampleSet<Point2D.Double> sampler;
 
     /** Determines the "ideal" spacing between elements of the field, in terms of pixels. */
-    private int DEFAULT_PIXEL_SPACING = 60;
-    /** Whether arrows are centered at sample points. */
-    boolean centered = false;
+    private int DEFAULT_PIXEL_SPACING = 30;
     /** Multiplier for vec field length. */
-    double lengthMultiplier = 1;
+    double radiusMultiplier = 1;
 
     /** Entry containing the displayed arrows and style */
     VPrimitiveEntry entry;
 
     /** Construct with a default vector field. */
-    public PlaneVectorField() {
-        this(DemoField2D.AROUND);
+    public PlaneSurfaceFunction() {
+        this(new MultivariateRealFunction(){
+            public double value(double[] point) throws FunctionEvaluationException, IllegalArgumentException {
+                return Math.sin(point[0]) * Math.sqrt(Math.abs(point[1]));
+            }
+        });
     }
 
     /**
      * Construct the vector field.
      * @param func underlying function that determines the vectors
      */
-    public PlaneVectorField(MultivariateVectorialFunction func) {
-        addPrimitive(entry = new VPrimitiveEntry(null, new PointDirStyle(new Color(96, 192, 96), ArrowStyle.ArrowShape.REGULAR, 5)));
+    public PlaneSurfaceFunction(MultivariateRealFunction func) {
+        addPrimitive(entry = new VPrimitiveEntry(null, new PointRadiusStyle()));
         setFunction(func);
     }
 
     @Override
     public String toString() {
-        return "Vector Field";
+        return "Surface Function";
     }
 
     //
@@ -71,7 +71,7 @@ public class PlaneVectorField extends Plottable<Point2D.Double> {
     //
 
     /** @return function describing the field */
-    public MultivariateVectorialFunction getFunction() {
+    public MultivariateRealFunction getFunction() {
         return func;
     }
 
@@ -79,7 +79,7 @@ public class PlaneVectorField extends Plottable<Point2D.Double> {
      * Sets the function for the field.
      * @param f the function
      */
-    public void setFunction(MultivariateVectorialFunction f) {
+    public void setFunction(MultivariateRealFunction f) {
         if (f != null && this.func != f) {
             if (this.func instanceof ChangeBroadcaster) ((ChangeBroadcaster)this.func).removeChangeListener(this);
             this.func = f;
@@ -88,26 +88,13 @@ public class PlaneVectorField extends Plottable<Point2D.Double> {
         }
     }
 
-    /** @return true if current display style centers arrows about the sample points */
-    public boolean isCentered() {
-        return centered;
+    public double getRadiusMultiplier() {
+        return radiusMultiplier;
     }
 
-    /** Sets style of display of arrows, based on whether or not they are centered around the sample points. */
-    public void setCentered(boolean centered) {
-        if (this.centered != centered) {
-            this.centered = centered;
-            firePlottableChanged();
-        }
-    }
-
-    public double getLengthMultiplier() {
-        return lengthMultiplier;
-    }
-
-    public void setLengthMultiplier(double lengthMultiplier) {
-        if (this.lengthMultiplier != lengthMultiplier) {
-            this.lengthMultiplier = lengthMultiplier;
+    public void setRadiusMultiplier(double radiusMultiplier) {
+        if (this.radiusMultiplier != radiusMultiplier) {
+            this.radiusMultiplier = radiusMultiplier;
             firePlottableChanged();
         }
     }
@@ -127,25 +114,24 @@ public class PlaneVectorField extends Plottable<Point2D.Double> {
 
         List<Point2D.Double> samples = sampler.getSamples();
         int n = samples.size();
-        double[][] values = new double[n][2];
+        double[] values = new double[n];
         try {
             for (int i = 0; i < n; i++) {
                 values[i] = func.value(new double[]{samples.get(i).x, samples.get(i).y});
             }
         } catch (FunctionEvaluationException ex) {
-            Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PlaneSurfaceFunction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(PlaneVectorField.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PlaneSurfaceFunction.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        GraphicPointDir[] arrows = new GraphicPointDir[n];
+        GraphicPointRadius[] pts = new GraphicPointRadius[n];
         for (int i = 0; i < n; i++)
-            arrows[i] = new GraphicPointDir<Point2D.Double>(samples.get(i), new Point2D.Double(values[i][0], values[i][1]));
+            pts[i] = new GraphicPointRadius<Point2D.Double>(samples.get(i), values[i]);
 
-        ((PointDirStyle)entry.style).setMaxLength(DEFAULT_PIXEL_SPACING * lengthMultiplier);
-        ((PointDirStyle)entry.style).setCentered(centered);
+        ((PointRadiusStyle)entry.style).setMaxRadius(DEFAULT_PIXEL_SPACING * radiusMultiplier);
 
-        entry.local = arrows;
+        entry.local = pts;
         entry.needsConversion = true;
     }
 
@@ -156,9 +142,9 @@ public class PlaneVectorField extends Plottable<Point2D.Double> {
     //
 
     /** @return current style of stroke for this plottable */
-    public PointDirStyle getStyle() { return (PointDirStyle) entry.style; }
+    public PointRadiusStyle getStyle() { return (PointRadiusStyle) entry.style; }
     /** Set current style of stroke for this plottable */
-    public void setStyle(PointDirStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setStyle(PointRadiusStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 
 
 }

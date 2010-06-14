@@ -22,10 +22,14 @@ public class DomainUtils {
      * @return a step sampler built on another domain, with a given scale and a given hint.
      * @see <code>ScreenSampleDomainProvider</code>
      */
-    public static RealIntervalStepSampler stepSamplingDomain(RealInterval domain, double scale, int hint) {
-        return hint == ScreenSampleDomainProvider.HINT_REGULAR ? new RealIntervalStepSampler(domain, scale)
-                : hint == ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS ? new RealIntervalNiceSampler(domain, scale)
-                : hint == ScreenSampleDomainProvider.HINT_PREFER_PI ? new RealIntervalNiceSampler(domain, scale, true)
-                : null;
+    public static RealIntervalStepSampler stepSamplingDomain(RealInterval domain, double scale, DomainHint hint) {
+        switch (hint) {
+            case PREFER_PI:
+                return new RealIntervalNiceSampler(domain, scale, true);
+            case REGULAR:
+            case PREFER_INTS:
+            default:
+                return new RealIntervalNiceSampler(domain, scale);
+        }
     }
 }

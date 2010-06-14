@@ -31,17 +31,17 @@ import visometry.Visometry;
 public class LineVisometry implements Visometry<Double>,
         ChangeBroadcaster, ChangeListener {
 
+    /** Stores the boundary of the display window, in window coordinates. */
+    RectangularShape windowBounds;
     /** Minimum point of line */
     double min = -5.0;
     /** Maximum point of line */
     double max = 5.0;
-    /** Minimum point of visible line (window coords) */
-    Point2D.Double minPoint;
-    /** Maximum point of visible line (window coords) */
-    Point2D.Double maxPoint;
+    /** Position of minimum value on axis, in terms of window coordinates */
+    transient Point2D.Double minPoint = new Point2D.Double();
+    /** Position of maximum value on axis, in terms of window coordinates */
+    transient Point2D.Double maxPoint = new Point2D.Double();
 
-    /** Stores the boundary of the display window, in window coordinates. */
-    RectangularShape windowBounds;
 
     //
     // BEAN PROPERTIES
@@ -81,13 +81,13 @@ public class LineVisometry implements Visometry<Double>,
     }
     
     /** Sets the minimum point of the axis (in window coordinates) */
-    public void setMinPoint(Point2D point) {
+    void setMinPoint(Point2D point) {
         minPoint.setLocation(point);
         computeTransformation();
     }
 
     /** Sets the maximum point of the axis (in window coordinates) */
-    public void setMaxPoint(Point2D point) {
+    void setMaxPoint(Point2D point) {
         maxPoint.setLocation(point);
         computeTransformation();
     }

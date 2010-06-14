@@ -5,6 +5,7 @@
 
 package visometry.space;
 
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.util.Comparator;
@@ -63,11 +64,20 @@ public class SpaceProjection
     transient Point3D clipPoint;
 
     //
+    // CONSTRUCTORS
+    //
+
+    /** Constructs a default space projection */
+    public SpaceProjection() {
+        useCenterCamera();
+    }
+
+    //
     // WINDOW PARAMETERS
     //
 
     /** Window bounding box. */
-    RectangularShape winBounds;
+    RectangularShape winBounds = new Rectangle(0, 0, 100, 100);
 
     /** Center of window, in window coordinates. */
     transient Point2D.Double winCenter;
@@ -253,7 +263,7 @@ public class SpaceProjection
 
     /** Converts a spacial coordinate to a window coordinate. */
     public Point2D.Double getWindowPointOf(Point3D coordinate) {
-        Point3D cc = coordinate.minus(camera);
+        Point3D cc = new Point3D(coordinate.x - camera.x, coordinate.y - camera.y, coordinate.z - camera.z);
         double dc = cc.dotProduct(tDir);
         double factor = dpi * screenDist / dc;
         return new Point2D.Double(

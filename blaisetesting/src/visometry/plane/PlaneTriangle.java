@@ -34,16 +34,16 @@ public class PlaneTriangle extends VShape<Point2D.Double> {
     }
 
     @Override
-    public void setPoints(Point2D.Double[] values) {
+    public void setPoint(Point2D.Double[] values) {
         if (values == null || values.length != 3)
             throw new IllegalArgumentException("Triangle requires exactly 3 endpoints!");
-        super.setPoints(values);
+        super.setPoint(values);
     }
 
     @Override
     public String toString() {
-        DecimalFormat f = PlottableConstants.floatFormat;
-        Point2D.Double[] v = getPoints();
+        DecimalFormat f = PlottableConstants.FLOAT_FORMAT;
+        Point2D.Double[] v = getPoint();
         return "Triangle[ (" + f.format(v[0].x) + ", " + v[0].y + ") ; ("
                  + f.format(v[1].x) + ", " + v[1].y + ") ; ("
                  + f.format(v[2].x) + ", " + v[2].y + ") ]";

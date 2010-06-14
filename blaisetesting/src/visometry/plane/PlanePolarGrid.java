@@ -5,9 +5,9 @@
 
 package visometry.plane;
 
+import coordinate.DomainHint;
 import coordinate.NiceRangeGenerator;
 import coordinate.RealIntervalNiceSampler;
-import coordinate.ScreenSampleDomainProvider;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -16,7 +16,6 @@ import java.util.List;
 import primitive.style.PathStyle;
 import scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
-import visometry.VPrimitiveEntry;
 
 /**
  *   <code>PlanePolarGrid</code> is a polar grid on a plot.
@@ -47,8 +46,8 @@ public class PlanePolarGrid extends PlanePathPlottable {
     @Override
     public void recompute() {
         if (sampleX == null || sampleY == null) {
-            sampleX = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
-            sampleY = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
+            sampleX = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, DomainHint.REGULAR);
+            sampleY = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, DomainHint.REGULAR);
             if (sampleX == null || sampleY == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sampleX).addChangeListener(this);

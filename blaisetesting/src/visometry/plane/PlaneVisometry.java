@@ -4,17 +4,14 @@
  */
 package visometry.plane;
 
-import coordinate.DomainUtils;
+import coordinate.DomainHint;
 import coordinate.SquareDomainStepSampler;
-import coordinate.RealIntervalBroadcaster;
-import coordinate.RealIntervalNiceSampler;
 import coordinate.RealIntervalSamplerProvider;
 import coordinate.ScreenSampleDomainProvider;
 import coordinate.RealIntervalStepSampler;
 import coordinate.SquareDomainBroadcaster;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
-import javax.swing.Action;
 import scio.coordinate.sample.SampleSet;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -323,7 +320,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         public PlaneDomain() {
             super(getHorizontalDomain(), getVerticalDomain());
         }
-        public SampleSet<Point2D.Double> samplerWithPixelSpacing(final float pixSpacing, int hint) {
+        public SampleSet<Point2D.Double> samplerWithPixelSpacing(final float pixSpacing, DomainHint hint) {
             final SquareDomainStepSampler result = new SquareDomainStepSampler(
                     (RealIntervalStepSampler) getHorizontalDomain().samplerWithPixelSpacing(pixSpacing, hint),
                     (RealIntervalStepSampler) getVerticalDomain().samplerWithPixelSpacing(pixSpacing, hint) );

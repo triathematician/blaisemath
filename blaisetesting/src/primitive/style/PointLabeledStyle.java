@@ -9,7 +9,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import primitive.GraphicString;
 
@@ -18,9 +17,7 @@ import primitive.GraphicString;
  *      This style class handles both <code>Point2D.Double</code> primitives
  *      and <code>GraphicString</code> primitives. If a <code>GraphicString<Point2D.Double></code>,
  *      the location of the anchor point is used for the point and the string.
- *      Otherwise, the location of the <code>Point2D.Double</code>, or of the <code>GraphicString</code>
- *      interpreted as a <code>Point2D.Double</code>, is used to display the point.
- *      No label is displayed if the primitive is not a <code>GraphicString</code>.
+ *      If the primitive is not a <code>GraphicSTring</code>, it just displays the point.
  * </p>
  *
  * @see GraphicString
@@ -32,7 +29,7 @@ public class PointLabeledStyle extends PointStyle {
     StringStyle sStyle = new StringStyle();
 
     /** Construct with defaults. */
-    public PointLabeledStyle() { sStyle.anchor = StringStyle.ANCHOR_CENTER; }
+    public PointLabeledStyle() { sStyle.anchor = StringStyle.ANCHOR_N; }
     /** Construct with default point style, specified anchor location */
     public PointLabeledStyle(int anchor) { super(); sStyle.anchor = anchor; }
     /** Construct with colors only. */

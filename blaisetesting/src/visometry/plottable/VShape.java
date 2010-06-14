@@ -27,35 +27,20 @@ public class VShape<C> extends VPointSet<C> {
     public VShape(C... values) {
         super(values);
         entry.visible = false;
-        addPrimitive(entry2 = new VPrimitiveEntry(entry.local, new ShapeStyle(Color.BLACK, Color.LIGHT_GRAY)));
+        addPrimitive(entry2 = new VPrimitiveEntry(points, new ShapeStyle(Color.BLACK, Color.LIGHT_GRAY)));
     }
 
     @Override
     public String toString() {
-        return "VBasicShape " + Arrays.toString((C[]) entry.local);
+        return "VShape " + Arrays.toString((C[]) points);
     }
 
     @Override
-    public void setPoints(C[] points) {
-        if (entry.local != points) {
-            entry.local = points;
-            entry.needsConversion = true;
-            entry2.needsConversion = true;
-            firePlottableChanged();
-        }
+    protected void firePlottableChanged() {
+        entry2.local = points;
+        entry2.needsConversion = true;
+        super.firePlottableChanged();
     }
-
-    @Override
-    public void setPoints(int i, C value) {
-        if (getPoints(i) != value) {
-            getPoints()[i] = value;
-            entry.needsConversion = true;
-            entry2.needsConversion = true;
-            firePlottableChanged();
-        }
-    }
-
-
 
     /** @return true if points at vertices of polygon are visible */
     public boolean isPointsVisible() { return entry.visible; }

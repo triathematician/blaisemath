@@ -5,7 +5,7 @@
 
 package visometry.space;
 
-import coordinate.ScreenSampleDomainProvider;
+import coordinate.DomainHint;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -31,7 +31,7 @@ import visometry.plottable.Plottable;
  *
  * @author Elisha Peterson
  */
-public class SpaceVectorField extends Plottable<Point2D.Double> {
+public class SpaceVectorField extends Plottable<Point3D> {
 
     /** Model function */
     MultivariateVectorialFunction func;
@@ -120,7 +120,7 @@ public class SpaceVectorField extends Plottable<Point2D.Double> {
     @Override
     protected void recompute() {
         if (sampler == null) {
-            sampler = parent.requestScreenSampleDomain("xyz", Point3D.class, DEFAULT_PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
+            sampler = parent.requestScreenSampleDomain("xyz", Point3D.class, DEFAULT_PIXEL_SPACING, DomainHint.PREFER_INTS);
             if (sampler == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sampler).addChangeListener(this);

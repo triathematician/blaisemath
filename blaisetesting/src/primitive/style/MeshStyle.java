@@ -34,6 +34,15 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
     public MeshStyle() {
     }
 
+    @Override
+    public String toString() {
+        return "MeshStyle [ visible: "
+                + (aVisible ? "areas; " : "")
+                + (sVisible ? "segments; " : "")
+                + (pVisible ? "points; " : "")
+                + aStyle + ", " + sStyle + ", " + pStyle + "]";
+    }
+
     public Class getTargetType() {
         return GraphicMesh.class;
     }

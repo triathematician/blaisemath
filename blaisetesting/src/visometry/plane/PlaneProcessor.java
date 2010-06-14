@@ -14,6 +14,7 @@ import primitive.style.ArrowStyle;
 import primitive.style.PathStyle;
 import primitive.style.PointDirStyle;
 import primitive.style.PathStylePoints;
+import primitive.style.PointRadiusStyle;
 import primitive.style.ShapeStyle;
 import visometry.PlotProcessor;
 import visometry.Visometry;
@@ -31,7 +32,7 @@ import visometry.VPrimitiveEntry;
  * </ul>
  * @author Elisha Peterson
  */
-public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
+class PlaneProcessor extends PlotProcessor<Point2D.Double> {
 
     @Override
     protected void convert(VPrimitiveEntry entry, Visometry<Point2D.Double> vis) {
@@ -39,18 +40,13 @@ public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             return;
 
         if (entry.local instanceof GraphicString)
-        {
             convertGraphicString(entry, (GraphicString) entry.local, vis);
-        }
 
-        else if (entry.local instanceof GraphicString[]) {
+        else if (entry.local instanceof GraphicString[])
             convertGraphicString(entry, (GraphicString[]) entry.local, vis);
-        }
 
         else if (entry.local instanceof Point2D.Double)
-        {
             entry.primitive = vis.getWindowPointOf((Point2D.Double) entry.local);
-        }
 
         else if (entry.local instanceof Point2D.Double[] && (entry.style instanceof PathStyle || entry.style instanceof ShapeStyle))
         {
@@ -111,10 +107,11 @@ public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         else if (entry.local instanceof GraphicPointDir[] && entry.style instanceof PointDirStyle)
             convertGraphicPointDir(entry, (GraphicPointDir[]) entry.local, ((PointDirStyle) entry.style).getMaxLength(), vis);
 
+        else if (entry.local instanceof GraphicPointRadius[] && entry.style instanceof PointRadiusStyle)
+            convertGraphicPointRadius(entry, (GraphicPointRadius[]) entry.local, ((PointRadiusStyle) entry.style).getMaxRadius(), vis);
+
         else if (entry.local instanceof Shape)
-        {
             entry.primitive = ((PlaneVisometry)vis).at.createTransformedShape((Shape) entry.local);
-        }
 
         else if (entry.local instanceof GraphicMesh)
         {
@@ -180,6 +177,20 @@ public class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         for (int i = 0; i < locArr.length; i++) {
             ((Point2D.Double)winArr[i].dir).x *= maxLengthPermitted / Math.sqrt(maxLengthSq);
             ((Point2D.Double)winArr[i].dir).y *= maxLengthPermitted / Math.sqrt(maxLengthSq);
+        }
+        entry.primitive = winArr;
+    }
+
+    /** Converts graphic point rad array, updating for maximum radii */
+    private static void convertGraphicPointRadius(VPrimitiveEntry entry, GraphicPointRadius[] locArr, double maxRadPermitted, Visometry<Point2D.Double> vis) {
+        GraphicPointRadius[] winArr = new GraphicPointRadius[locArr.length];
+        double maxRad = 0;
+        for (int i = 0; i < locArr.length; i++)
+            maxRad = Math.max(maxRad, locArr[i].rad);
+
+        for (int i = 0; i < locArr.length; i++) {
+            Point2D.Double anchor = (Point2D.Double) locArr[i].anchor;
+            winArr[i] = new GraphicPointRadius(vis.getWindowPointOf(anchor), locArr[i].rad / maxRad * maxRadPermitted / 2.0);
         }
         entry.primitive = winArr;
     }

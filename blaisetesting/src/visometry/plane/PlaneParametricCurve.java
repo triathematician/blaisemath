@@ -39,7 +39,7 @@ public class PlaneParametricCurve extends PlanePathPlottable {
      * Initializes with an underlying function and min/max domain
      */
     public PlaneParametricCurve() {
-        this(new UnivariateVectorialFunction(){ public double[] value(double x) { return new double[] { Math.cos(x), Math.sin(x) }; } },
+        this(new UnivariateVectorialFunction(){ public double[] value(double x) { return new double[] { Math.sqrt(Math.abs(x))*Math.cos(x), Math.sqrt(Math.abs(x))*Math.sin(x) }; } },
                 0, 2*Math.PI, 100);
     }
 
@@ -157,6 +157,7 @@ public class PlaneParametricCurve extends PlanePathPlottable {
         RealIntervalUniformSampler rius = (RealIntervalUniformSampler) sampler;
         if (domainPlottable == null) {
             domainPlottable = new VSegment<Double>( rius.getMinimum(), rius.getMaximum() );
+            domainPlottable.getStrokeStyle().setThickness(2f);
             domainPlottable.addChangeListener(this);
         } else {
             domainPlottable.setPoint1(rius.getMinimum());

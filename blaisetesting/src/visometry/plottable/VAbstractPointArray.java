@@ -5,6 +5,8 @@
 
 package visometry.plottable;
 
+import primitive.GraphicString;
+import primitive.style.PointLabeledStyle;
 import primitive.style.PrimitiveStyle;
 import visometry.VDraggablePrimitiveEntry;
 
@@ -19,35 +21,61 @@ public abstract class VAbstractPointArray<C> extends DynamicPlottable<C> {
 
     /** Stores the point-array and the style. */
     protected VDraggablePrimitiveEntry entry;
+    /** Stores the points. */
+    C[] points;
 
     /** Construct with specified point(s) and style. */
     public VAbstractPointArray(PrimitiveStyle style, C[] points) {
-        addPrimitive(entry = new VDraggablePrimitiveEntry(points, style, null));
+        this.points = points;
+        addPrimitive(entry = new VDraggablePrimitiveEntry(
+                style instanceof PointLabeledStyle
+                    ? convertToGraphicStrings(points)
+                    : points,
+                style, null));
+    }
+
+    /** Converts list of points to list of graphic strings */
+    private GraphicString<C>[] convertToGraphicStrings(C[] points) {
+        GraphicString[] result = new GraphicString[points.length];
+        for (int i = 0; i < result.length; i++)
+            result[i] = new GraphicString<C>(points[i], PlottableConstants.formatCoordinate(points[i]));
+        return result;
     }
 
     /** @return list of points being drawn */
-    public C[] getPoints() {
-        return (C[]) entry.local;
+    public C[] getPoint() {
+        return points;
     }
 
     /** @return i'th point */
-    public C getPoints(int i) {
-        return getPoints()[i];
+    public C getPoint(int i) {
+        return points[i];
     }
 
     /** Sets list of points being drawn */
-    public void setPoints(C[] points) {
-        if (entry.local != points) {
-            entry.local = points;
+    public void setPoint(C[] points) {
+        if (this.points != points) {
+            this.points = points;
+            entry.local = entry.style instanceof PointLabeledStyle
+                    ? convertToGraphicStrings(points)
+                    : points;
             entry.needsConversion = true;
             firePlottableChanged();
         }
     }
 
     /** Sets the i'th point */
-    public void setPoints(int i, C value) {
-        if (getPoints(i) != value) {
-            ((C[])entry.local)[i] = value;
+    public void setPoint(int i, C value) {
+        if (value == null)
+            throw new NullPointerException();
+        if (!value.equals(points[i])) {
+            points[i] = value;
+            if (entry.style instanceof PointLabeledStyle) {
+                GraphicString<C> gs = ((GraphicString[]) entry.local)[i];
+                gs.setAnchor(value);
+                gs.setString(PlottableConstants.formatCoordinate(value));
+            } else
+                ((C[])entry.local)[i] = value;
             entry.needsConversion = true;
             firePlottableChanged();
         }

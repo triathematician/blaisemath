@@ -15,6 +15,12 @@ import java.awt.Point;
  */
 public abstract class AbstractPrimitiveStyle<C> implements PrimitiveStyle<C> {
 
+    /**
+     * Draws a series of primitives on the provided canvas, using the class's <code>draw</code>
+     * method.
+     * @param canvas the canvas on which to paint
+     * @param primitives the primitive graphics object plottable by this style class
+     */
     public void drawArray(Graphics2D canvas, C[] primitives) {
         for (C p : primitives)
             draw(canvas, p);

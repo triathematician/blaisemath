@@ -1,14 +1,13 @@
 /**
- * PlaneRectangle.java
- * Created Aug 2009
- * Updated Apr 8, 2010
+ * PlaneEllipse.java
+ * Adapted Jun 3, 2010 from PlaneRectangle.java
  */
 
 package visometry.plane;
 
 import java.awt.Color;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import primitive.style.HandleStyle;
 import primitive.style.ShapeStyle;
 import visometry.PointDragListener;
@@ -17,13 +16,13 @@ import visometry.plottable.DynamicPlottable;
 
 /**
  * <p>
- *   <code>PlaneRectangle</code> is a rectangle between a maximum point and a minimum point,
+ *   <code>PlaneEllipse</code> is an ellipse between a maximum point and a minimum point,
  *   drawn by the underlying <code>VisometryGraphics</code>.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class PlaneRectangle extends DynamicPlottable<Point2D.Double>
+public class PlaneEllipse extends DynamicPlottable<Point2D.Double>
         implements PointDragListener<Point2D.Double> {
 
     /** Boundaries. */
@@ -33,9 +32,9 @@ public class PlaneRectangle extends DynamicPlottable<Point2D.Double>
     /** Entry containing the control boxes. */
     VDraggablePrimitiveEntry controlEntry;
 
-    /** Construct with default boundaries: (1,1) to (2,2). */
-    public PlaneRectangle() {
-        this(1,1,2,2);
+    /** Construct with default boundaries: (-1,-1) to (1,1). */
+    public PlaneEllipse() {
+        this(-1,-1,1,1);
     }
 
     /** Construct with specified boundaries.
@@ -44,12 +43,12 @@ public class PlaneRectangle extends DynamicPlottable<Point2D.Double>
      * @param maxx maximum x value
      * @param maxy maximum y value
      */
-    public PlaneRectangle(double minX, double minY, double maxX, double maxY) {
+    public PlaneEllipse(double minX, double minY, double maxX, double maxY) {
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
-        addPrimitive(entry = new VDraggablePrimitiveEntry(new Rectangle2D.Double(), new ShapeStyle(Color.BLACK, Color.GRAY), this));
+        addPrimitive(entry = new VDraggablePrimitiveEntry(new Ellipse2D.Double(), new ShapeStyle(Color.BLACK, Color.GRAY), this));
         addPrimitive(controlEntry = new VDraggablePrimitiveEntry(null, new HandleStyle(), this));
         controlEntry.visible = false;
     }
@@ -119,20 +118,16 @@ public class PlaneRectangle extends DynamicPlottable<Point2D.Double>
 
     @Override
     protected void recompute() {
-        Rectangle2D.Double shape = (Rectangle2D.Double) entry.local;
+        Ellipse2D.Double shape = (Ellipse2D.Double) entry.local;
         shape.x = Math.min(minX, maxX);
         shape.y = Math.min(minY, maxY);
         shape.width =  Math.abs(minX - maxX);
         shape.height = Math.abs(minY - maxY);
         entry.needsConversion = true;
         controlEntry.local = new Point2D.Double[] {
-            new Point2D.Double(minX, minY),
             new Point2D.Double(minX, .5*(minY+maxY)),
-            new Point2D.Double(minX, maxY),
             new Point2D.Double(.5*(minX+maxX), maxY),
-            new Point2D.Double(maxX, maxY),
             new Point2D.Double(maxX, .5*(minY+maxY)),
-            new Point2D.Double(maxX, minY),
             new Point2D.Double(.5*(minX+maxX), minY)
         };
         controlEntry.needsConversion = true;
@@ -176,27 +171,15 @@ public class PlaneRectangle extends DynamicPlottable<Point2D.Double>
                 setBounds(oldMinX + current.x-start.x, oldMinY + current.y-start.y, oldMaxX + current.x-start.x, oldMaxY + current.y-start.y);
                 break;
             case 0:
-                setBounds(oldMinX + current.x-start.x, oldMinY + current.y-start.y, oldMaxX, oldMaxY);
-                break;
-            case 1:
                 setBounds(oldMinX + current.x-start.x, oldMinY, oldMaxX, oldMaxY);
                 break;
-            case 2:
-                setBounds(oldMinX + current.x-start.x, oldMinY, oldMaxX, oldMaxY + current.y-start.y);
-                break;
-            case 3:
+            case 1:
                 setBounds(oldMinX, oldMinY, oldMaxX, oldMaxY + current.y-start.y);
                 break;
-            case 4:
-                setBounds(oldMinX, oldMinY, oldMaxX + current.x-start.x, oldMaxY + current.y-start.y);
-                break;
-            case 5:
+            case 2:
                 setBounds(oldMinX, oldMinY, oldMaxX + current.x-start.x, oldMaxY);
                 break;
-            case 6:
-                setBounds(oldMinX, oldMinY + current.y-start.y, oldMaxX + current.x-start.x, oldMaxY);
-                break;
-            case 7:
+            case 3:
                 setBounds(oldMinX, oldMinY + current.y-start.y, oldMaxX, oldMaxY);
                 break;
         }

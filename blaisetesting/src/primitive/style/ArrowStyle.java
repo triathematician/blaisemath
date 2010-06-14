@@ -16,14 +16,15 @@ import java.awt.geom.Point2D;
 
 /**
  * <p>
- *   <code>ArrowStyle</code> represents a style that is used to drawArray arrows
+ *   <code>ArrowStyle</code> represents a style that is used to draw arrows
  *   (described by two points). For now the primitive will be displayed as a line segment between the
  *   two points together with an arrow head.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class ArrowStyle extends AbstractPathStyle implements PrimitiveStyle<Point2D.Double[]> {
+public class ArrowStyle extends AbstractPathStyle
+        implements PrimitiveStyle<Point2D.Double[]> {
 
     /** ArrowShape types for the ends of the arrow */
     public enum ArrowShape { NONE, REGULAR, DOT, TRIANGLE }

@@ -5,7 +5,7 @@
 
 package visometry.plottable;
 
-import visometry.PointDragListener;
+import primitive.style.PointLabeledStyle;
 import primitive.style.PointStyle;
 
 /**
@@ -22,11 +22,11 @@ public class VPoint<C> extends VAbstractPoint<C> {
 
     /** Construct to specified coordinate w/ default point style */
     public VPoint(C value) {
-        super(value, new PointStyle());
+        super(value, new PointLabeledStyle());
     }
 
     /** @return current style of stroke for this plottable */
-    public PointStyle getStyle() { return (PointStyle) entry.style; }
+    public PointLabeledStyle getStyle() { return (PointLabeledStyle) entry.style; }
     /** Set current style of stroke for this plottable */
-    public void setStyle(PointStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setStyle(PointLabeledStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 }

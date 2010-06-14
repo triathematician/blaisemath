@@ -36,7 +36,7 @@ public abstract class RealIntervalSamplerProvider extends RealIntervalBroadcaste
     /** @return scale of transformation for the given pixel spacing. */
     public abstract double getScale(float pixSpacing);
 
-    public SampleSet<Double> samplerWithPixelSpacing(final float pixSpacing, int hint) {
+    public SampleSet<Double> samplerWithPixelSpacing(final float pixSpacing, DomainHint hint) {
         final RealIntervalStepSampler result = DomainUtils.stepSamplingDomain(this, getScale(pixSpacing), hint);
         addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) { result.setStep( getScale(pixSpacing) ); }

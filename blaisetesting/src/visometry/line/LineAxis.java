@@ -5,8 +5,8 @@
 
 package visometry.line;
 
+import coordinate.DomainHint;
 import coordinate.RealIntervalNiceSampler;
-import coordinate.ScreenSampleDomainProvider;
 import java.util.ArrayList;
 import java.util.List;
 import primitive.GraphicRuledLine;
@@ -35,8 +35,6 @@ public class LineAxis extends Plottable<Double> {
 
     /** Determines the "ideal" spacing between tick marks, in terms of pixels. */
     private int PIXEL_SPACING = 60;
-    /** Determines "buffer" zone between last numeric label and side of window. */
-    private int BUFFER = 20;
     /** Whether to use multiples of pi for the tick marks. */
     private boolean usePi = false;
 
@@ -86,28 +84,30 @@ public class LineAxis extends Plottable<Double> {
     @Override
     protected void recompute() {
         if (sample == null ) {
-            sample = parent.requestScreenSampleDomain("t", Double.class, PIXEL_SPACING, usePi ? ScreenSampleDomainProvider.HINT_PREFER_PI : ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
+            sample = parent.requestScreenSampleDomain("t", Double.class, PIXEL_SPACING, usePi ? DomainHint.PREFER_PI : DomainHint.REGULAR );
             if (sample == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sample).addChangeListener(this);
         }
 
-        RealIntervalNiceSampler rins = (RealIntervalNiceSampler) sample;
-        line.start = rins.getMinimum();
-        line.end = rins.getMaximum();
+        RealIntervalNiceSampler sampler = (RealIntervalNiceSampler) sample;
+        line.start = sampler.getMinimum();
+        line.end = sampler.getMaximum();
+        double length = line.end - line.start;
+        double vStart = line.start + .02*length;
+        double vEnd = line.start + .98*length;
 
         List<Double> xx = sample.getSamples();
         ArrayList<Double> xx2 = new ArrayList<Double>();
         for(Double x : xx)
-            if (x >= line.start && x <= line.end)
+            if (x >= vStart && x <= vEnd)
                 xx2.add(x);
-        double length = line.end - line.start;
         int size = xx2.size();
         line.ticks = new double[size];
         line.tickLabels = new String[size];
         for(int i = 0; i < size; i++) {
             line.ticks[i] = (xx2.get(i) - line.start) / length;
-            line.tickLabels[i] = PlottableConstants.floatFormat.format(xx2.get(i));
+            line.tickLabels[i] = PlottableConstants.FLOAT_FORMAT.format(xx2.get(i));
         }
 
         needsComputation = false;

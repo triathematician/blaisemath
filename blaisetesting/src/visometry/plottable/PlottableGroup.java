@@ -5,6 +5,7 @@
 package visometry.plottable;
 
 import coordinate.DomainContext;
+import coordinate.DomainHint;
 import coordinate.ScreenSampleDomainProvider;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -35,6 +36,11 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      */
     public PlottableGroup() {
         plottables = new ArrayList<Plottable<C>>();
+    }
+
+    @Override
+    public String toString() {
+        return "Plottable Group [" + plottables.size() + " elements]";
     }
 
     //
@@ -137,18 +143,21 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
     transient Plottable curPlottable; // currently iterating plottable
     transient Iterator<VPrimitiveEntry> pgi; // current iterator
 
+    /** @return an iterator over the entries in the group, returning only those plottables that are visible */
     public Iterator<VPrimitiveEntry> iterator() {
         curIndex = -1;
         return new Iterator<VPrimitiveEntry>() {
             public boolean hasNext() {
                 if (curIndex >= plottables.size())
                     return false;
-                // loop advances to the next plottable with an entry
+                // loop advances to the next VISIBLE plottable with an entry
                 while (pgi == null || !pgi.hasNext()) {
-                    curIndex++;
-                    if (curIndex == plottables.size())
-                        return false;
-                    curPlottable = plottables.get(curIndex);
+                    do {
+                        curIndex++;
+                        if (curIndex == plottables.size())
+                            return false;
+                        curPlottable = plottables.get(curIndex);
+                    } while (!curPlottable.isVisible());
                     pgi = curPlottable instanceof PlottableGroup
                             ? ((PlottableGroup) curPlottable).iterator()
                             : curPlottable.getPrimitives().iterator();
@@ -249,7 +258,7 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      * @return a sampler appropriate for use by the plottable; possibly a null value if an
      *   appropriate sampler cannot be found
      */
-    public <T> SampleSet<T> requestScreenSampleDomain(String id, Class<? extends T> cls, float pixels, int hint) {
+    public <T> SampleSet<T> requestScreenSampleDomain(String id, Class<? extends T> cls, float pixels, DomainHint hint) {
         Domain dom = lookupDomain(id, cls);
         if (dom == null && parent != null)
             dom = parent.requestDomain(id, cls);

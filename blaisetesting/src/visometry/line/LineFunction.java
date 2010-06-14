@@ -39,7 +39,7 @@ public class LineFunction extends VPoint<Double> {
     /** Construct with a particular function. */
     public LineFunction(UnivariateRealFunction func) {
         super(0.0);
-        primitives.add(oEntry = new VPrimitiveEntry(new GraphicString<Double>(0.0, PlottableConstants.floatFormat.format(0.0)),
+        primitives.add(oEntry = new VPrimitiveEntry(new GraphicString<Double>(0.0, PlottableConstants.FLOAT_FORMAT.format(0.0)),
                 new PointLabeledStyle(Color.BLACK, Color.YELLOW, StringStyle.ANCHOR_N)));
         setFunction(func);
     }
@@ -64,10 +64,10 @@ public class LineFunction extends VPoint<Double> {
     @Override
     protected void firePlottableChanged() {
         try {
-            double value = func.value((Double) entry.local);
+            double value = func.value(getPoint());
             GraphicString<Double> gs = ((GraphicString<Double>)oEntry.local);
             gs.anchor = value;
-            gs.string = PlottableConstants.floatFormat.format(value);
+            gs.string = PlottableConstants.FLOAT_FORMAT.format(value);
             oEntry.needsConversion = true;
         } catch (FunctionEvaluationException ex) {
         }

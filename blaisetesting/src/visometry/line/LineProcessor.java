@@ -18,9 +18,6 @@ import visometry.Visometry;
  */
 class LineProcessor extends PlotProcessor<Double> {
 
-    public LineProcessor() {
-    }
-
     @Override
     protected void convert(VPrimitiveEntry entry, Visometry<Double> vis) {
         if (entry.local == null)

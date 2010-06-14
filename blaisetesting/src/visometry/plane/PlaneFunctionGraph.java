@@ -4,7 +4,7 @@
  */
 package visometry.plane;
 
-import coordinate.ScreenSampleDomainProvider;
+import coordinate.DomainHint;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -64,7 +64,7 @@ public class PlaneFunctionGraph extends PlanePathPlottable
     @Override
     protected void recompute() {
         if (sampler == null) {
-            sampler = parent.requestScreenSampleDomain("x", Double.class, 1f, ScreenSampleDomainProvider.HINT_REGULAR);
+            sampler = parent.requestScreenSampleDomain("x", Double.class, 1f, DomainHint.REGULAR);
             if (sampler == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sampler).addChangeListener(this);

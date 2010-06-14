@@ -5,8 +5,8 @@
 
 package visometry.space;
 
+import coordinate.DomainHint;
 import coordinate.RealIntervalNiceSampler;
-import coordinate.ScreenSampleDomainProvider;
 import java.util.ArrayList;
 import java.util.List;
 import primitive.GraphicRuledLine;
@@ -110,9 +110,9 @@ public class SpaceAxes extends Plottable<Point3D> {
     @Override
     protected void recompute() {
         if (sample1 == null || sample2 == null || sample3 == null) {
-            sample1 = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
-            sample2 = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
-            sample3 = parent.requestScreenSampleDomain("z", Double.class, PIXEL_SPACING, ScreenSampleDomainProvider.HINT_PREFER_WHOLE_NUMBERS);
+            sample1 = parent.requestScreenSampleDomain("x", Double.class, PIXEL_SPACING, DomainHint.PREFER_INTS);
+            sample2 = parent.requestScreenSampleDomain("y", Double.class, PIXEL_SPACING, DomainHint.PREFER_INTS);
+            sample3 = parent.requestScreenSampleDomain("z", Double.class, PIXEL_SPACING, DomainHint.PREFER_INTS);
             if (sample1 == null || sample2 == null || sample3 == null)
                 throw new IllegalStateException("Unable to retrieve appropriate domain from parent class!");
             ((ChangeBroadcaster)sample1).addChangeListener(this);
@@ -169,7 +169,7 @@ public class SpaceAxes extends Plottable<Point3D> {
         double length = lEnd - lStart;
         for(int i = 0; i < size; i++) {
             line.ticks[i] = (ts2.get(i) - lStart) / length;
-            line.tickLabels[i] = ts2.get(i) == 0.0 ? null : PlottableConstants.floatFormat.format(ts2.get(i));
+            line.tickLabels[i] = ts2.get(i) == 0.0 ? null : PlottableConstants.FLOAT_FORMAT.format(ts2.get(i));
         }
     }
 }

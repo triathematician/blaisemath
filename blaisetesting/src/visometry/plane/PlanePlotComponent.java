@@ -5,11 +5,13 @@
 
 package visometry.plane;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import scio.coordinate.RealInterval;
 import visometry.PlotComponent;
-import visometry.plottable.VConstrainedPoint;
 
 /**
  * <p>
@@ -33,6 +35,12 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         pGroup.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
         pGroup.registerDomain("time", new RealInterval(0, 100), Double.class);
 
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        super.paintComponent(g);
     }
 
 

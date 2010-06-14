@@ -7,7 +7,6 @@ package visometry.plottable;
 
 import java.util.Arrays;
 import primitive.style.PointLabeledStyle;
-import primitive.style.PointStyle;
 import visometry.PointDragListener;
 
 /**
@@ -27,19 +26,19 @@ public class VPointSet<C> extends VAbstractPointArray<C>
      * @param values the points
      */
     public VPointSet(C... values) {
-        super(new PointStyle(), values);
+        super(new PointLabeledStyle(), values);
         entry.listener = this;
     }
 
     @Override
     public String toString() {
-        return "VPointSet " + Arrays.toString((C[]) entry.local);
+        return "VPointSet " + Arrays.toString(points);
     }
 
     /** @return current style of point for this plottable */
-    public PointStyle getPointStyle() { return (PointStyle) entry.style; }
+    public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) entry.style; }
     /** Set current style of point for this plottable */
-    public void setPointStyle(PointStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setPointStyle(PointLabeledStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 
     public void mouseEntered(Object source, C start) {}
     public void mouseExited(Object source, C start) {}
@@ -49,7 +48,7 @@ public class VPointSet<C> extends VAbstractPointArray<C>
     public void mouseDragged(Object source, C current) {
         int index = entry.getActiveIndex();
         if (index != -1)
-            setPoints(index, current);
+            setPoint(index, current);
     }
     public void mouseDragCompleted(Object source, C end) {
         mouseDragged(source, end);
