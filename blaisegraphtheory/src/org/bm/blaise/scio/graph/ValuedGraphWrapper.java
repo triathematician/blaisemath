@@ -16,8 +16,8 @@ import java.util.TreeMap;
  * @param <N> the type of value associated with each node
  * @author Elisha Peterson
  */
-public class NodeValueGraphWrapper<V,N> extends AbstractWrapperGraph<V>
-        implements NodeValueGraph<V,N> {
+public class ValuedGraphWrapper<V,N> extends AbstractWrapperGraph<V>
+        implements ValuedGraph<V,N> {
 
     TreeMap<V,N> values;
 
@@ -26,21 +26,23 @@ public class NodeValueGraphWrapper<V,N> extends AbstractWrapperGraph<V>
      * Initializes all node values to "null".
      * @param parent the base graph
      */
-    public NodeValueGraphWrapper(Graph<V> parent) {
+    public ValuedGraphWrapper(Graph<V> parent) {
         super(parent);
         values = new TreeMap<V,N>();
         for (V v : parent.nodes())
             values.put(v, null);
     }
 
-    public N getValue(V x) { return values.get(x); }    
-    /**
-     * Sets the value associated with specified node.
-     * Does nothing if the node is not already in the graph.
-     * @param x the node
-     * @param value the value
-     */
-    public void setValue(V x, N value) { if (parent.contains(x)) values.put(x, value); }
+    public N getValue(V x) {
+        return values.get(x);
+    }
+    
+    public void setValue(V x, N value) {
+        if (parent.contains(x))
+            values.put(x, value);
+        else
+            throw new IllegalArgumentException("setValue: graph does not contain vertex " + x);
+    }
 
     @Override
     public String toString() {

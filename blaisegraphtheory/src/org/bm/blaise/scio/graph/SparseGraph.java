@@ -28,7 +28,11 @@ public class SparseGraph<V> implements Graph<V> {
     /** The adjacencies in the graph */
     private TreeMap<V, TreeSet<V>> adjacencies;
 
-    private SparseGraph(boolean directed) { this.directed = directed; adjacencies = new TreeMap<V, TreeSet<V>>(); }
+    /** Do not permit instantiation */
+    private SparseGraph(boolean directed) {
+        this.directed = directed;
+        adjacencies = new TreeMap<V, TreeSet<V>>();
+    }
 
     @Override
     public String toString() {
@@ -58,22 +62,43 @@ public class SparseGraph<V> implements Graph<V> {
         return g;
     }
 
-    public int order() { return adjacencies.size(); }
-    public List<V> nodes() { return new ArrayList<V>(adjacencies.keySet()); }
-    public boolean contains(V x) { return adjacencies.containsKey(x); }
+    public int order() {
+        return adjacencies.size();
+    }
 
-    public boolean isDirected() { return directed; }
-    public boolean adjacent(V x, V y) { return adjacencies.containsKey(x) && adjacencies.get(x).contains(y); }
+    public List<V> nodes() { 
+        return new ArrayList<V>(adjacencies.keySet());
+    }
+
+    public boolean contains(V x) {
+        return adjacencies.containsKey(x);
+    }
+
+    public boolean isDirected() { 
+        return directed;
+
+    }
+    public boolean adjacent(V x, V y) {
+        return adjacencies.containsKey(x) && adjacencies.get(x).contains(y);
+    }
+
     public int degree(V x) { 
         if (!adjacencies.containsKey(x)) return 0;
         TreeSet<V> nbhd = adjacencies.get(x);
         return (!directed && nbhd.contains(x)) ? nbhd.size()+1 : nbhd.size();
     }
-    public List<V> neighbors(V x) { return adjacencies.containsKey(x) ? new ArrayList<V>(adjacencies.get(x)) : (List<V>) Collections.emptyList(); }
+
+    public List<V> neighbors(V x) {
+        return adjacencies.containsKey(x)
+                ? new ArrayList<V>(adjacencies.get(x))
+                : (List<V>) Collections.emptyList();
+    }
+
     public int edgeNumber() {
         int total = 0;
         for (Entry<V, TreeSet<V>> en : adjacencies.entrySet()) {
-            total += en.getValue().size() + (!directed && en.getValue().contains(en.getKey()) ? 1 : 0);
+            total += en.getValue().size()
+                    + (!directed && en.getValue().contains(en.getKey()) ? 1 : 0);
         }
         return directed ? total : total / 2;
     }

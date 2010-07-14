@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,11 +31,11 @@ public class Subgraph<V> implements Graph<V> {
      * @param parent the parent graph
      * @param subset the subset of vertices to include in the subgraph
      */
-    public Subgraph(Graph<V> parent, List<V> subset) {
+    public Subgraph(Graph<V> parent, Collection<V> subset) {
         if (parent == null || subset == null)
             throw new IllegalArgumentException("Called constructor with null values!");
         this.parent = parent;
-        this.subset = subset;
+        this.subset = subset instanceof List ? (List<V>) subset : new ArrayList<V>(subset);
     }
 
     @Override

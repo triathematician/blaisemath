@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
+import util.Matrices;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.
@@ -59,192 +58,7 @@ public class Graphs {
             result.append(" ").append(v).append(": ").append(graph.neighbors(v));
         return result.toString();
     }
-
-    //
-    // CREATION METHODS (SPECIFIC TYPES)
-    //
-
-    /** Returns abstract list of integers 0,...,n-1 */
-    private static List<Integer> intList(final int n) {
-        return new AbstractList<Integer>() {
-            @Override public Integer get(int index) { return index; }
-            @Override public int size() { return n; }
-        };
-    }
-
-    /**
-     * Creates an instance of either a matrix-based graph or a sparse-based graph, depending
-     * upon the number of edges and vertices
-     * @param directed whether graph is directed
-     * @param vertices collection of vertices
-     * @param edges collection of edges as vertex-pairings
-     * @return graph with specified edges
-     */
-    public static <V> Graph<V> getInstance(boolean directed, Collection<V> vertices, Collection<V[]> edges) {
-        int n = vertices.size();
-        int nEdges = edges.size();
-        return (n <= 50 || (n<=100 && nEdges > 1000) )
-                ? MatrixGraph.getInstance(directed, vertices, edges)
-                : SparseGraph.getInstance(directed, vertices, edges);
-    }
-
-    /**
-     * Returns graph with n vertices and no edges
-     * @param n number of vertices
-     * @param directed whether graph is directed
-     * @return empty graph with specified number of vertices
-     */
-    public static Graph<Integer> getEmptyGraphInstance(final int n, boolean directed) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getInstance(directed, intList(n), (Collection) Collections.emptyList());
-    }
-
-    /**
-     * Returns graph with all possible edges.
-     * @param n number of vertices
-     * @param directed whether graph is directed
-     * @return complete graph; if directed, result includes loops
-     */
-    public static Graph<Integer> getCompleteGraphInstance(final int n, boolean directed) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        List<Integer[]> edges;
-        if (!directed) {
-            edges = new ArrayList<Integer[]>();
-            for(int i = 0; i < n; i++)
-                for (int j = i+1; j < n; j++)
-            edges.add(new Integer[]{i, j});
-        } else {
-            edges = new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) { return new Integer[]{ index/n, index%n }; }
-                @Override public int size() { return n*n; }
-            };
-        }
-        return getInstance(directed, intList(n), edges);
-    }
-
-    /**
-     * Returns graph with all edges connected in a loop.
-     * @param n number of vertices
-     * @param directed whether graph is directed
-     * @return cycle graph
-     */
-    public static Graph<Integer> getCycleGraphInstance(final int n, boolean directed) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getInstance(directed, intList(n),
-            new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) { return new Integer[] { index, (index+1)%n }; }
-                @Override public int size() { return n; }
-            }
-        );
-    }
-
-    /** 
-     * Returns graph with all vertices connected to a central hub.
-     * @param n number of vertices
-     * @return star graph (undirected)
-     */
-    public static Graph<Integer> getStarGraphInstance(final int n) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getInstance(false, intList(n),
-            new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) { return new Integer[] { 0, index+1 }; }
-                @Override public int size() { return n==0 ? 0 : n-1; }
-            }
-        );
-    }
-
-    /**
-     * Returns graph with all vertices connected to a central hub, and all other vertices
-     * connected in a cyclic fashion.
-     * @param n number of vertices
-     * @return star graph (undirected)
-     */
-    public static Graph<Integer> getWheelGraphInstance(final int n) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getInstance(false, intList(n),
-            new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) {
-                    return index < n-1
-                            ? new Integer[] { 0, index+1 }
-                         : index == 2*n-2
-                             ? new Integer[] { n-1, 1}
-                             : new Integer[] { index-n+1, index-n+2 };
-
-                }
-                @Override public int size() { return 2*n-1; }
-            }
-        );
-    }
     
-
-    //
-    // CREATION METHODS (RANDOM)
-    //
-
-    /** Ensures probability is valid. */
-    private static void checkProbability(float p) {
-        if (p < 0 || p > 1) throw new IllegalArgumentException("Probalities must be between 0 and 1: (" + p + " was used.");
-    }
-
-    /**
-     * Returns graph with random number of connections between vertices
-     * @param n number of vertices
-     * @param p probability of each edge
-     * @param directed whether resulting graph is directed
-     * @return directed or undirected graph with randomly chosen edges
-     */
-    public static Graph<Integer> getRandomInstance(int n, float p, boolean directed) {
-        if (n < 0) throw new IllegalArgumentException("Numbers must be positive! n="+n);
-        checkProbability(p);
-        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
-        for (int i = 0; i < n; i++)
-            for (int j = directed ? 0 : i+1; j < n; j++)
-                if (Math.random() < p)
-                    edges.add(new Integer[]{i, j});
-        return getInstance(directed, intList(n), edges);
-    }
-
-    /** Used to sort pairs of integers when order of the two matters. */
-    private static final Comparator<Integer[]> PAIR_COMPARE = new Comparator<Integer[]>() {
-        public int compare(Integer[] o1, Integer[] o2) {
-            if (o1.length != 2 || o2.length != 2)
-                throw new IllegalStateException("This object only compares integer pairs.");
-            return o1[0]==o2[0] ? o1[1]-o2[1] : o1[0]-o2[0];
-        }
-    };
-
-    /** Used to sort pairs of integers when order of the two does not matter. */
-    private static final Comparator<Integer[]> PAIR_COMPARE_UNDIRECTED = new Comparator<Integer[]>() {
-        public int compare(Integer[] o1, Integer[] o2) {
-            if (o1.length != 2 || o2.length != 2)
-                throw new IllegalStateException("This object only compares integer pairs.");
-            int min1 = Math.min(o1[0], o1[1]);
-            int min2 = Math.min(o2[0], o2[1]);
-            return min1==min2 ? Math.max(o1[0],o1[1])-Math.max(o2[0],o2[1]) : min1-min2;
-        }
-    };
-
-    /**
-     * Returns a graph with specified number of vertices and edges
-     * @param n number of vertices
-     * @param nEdges number of edges
-     * @param directed whether resulting graph is directed
-     * @return directed or undirected graph with randomly chosen edges
-     */
-    public static Graph<Integer> getRandomInstance(int n, int nEdges, boolean directed) {
-        // TODO - check for appropriate number of edges
-        if (n < 0 || nEdges < 0) throw new IllegalArgumentException("Numbers must be positive! (n,e)=("+n+","+nEdges+")");
-        TreeSet<Integer[]> edges = new TreeSet<Integer[]>(directed ? PAIR_COMPARE : PAIR_COMPARE_UNDIRECTED);
-        Integer[] potential;
-        for (int i = 0; i < nEdges; i++) {
-            do {
-                potential = new Integer[] { (int)(n * Math.random()), (int)(n * Math.random()) };
-            } while ((directed && potential[0]==potential[1]) || edges.contains(potential));
-            edges.add(potential);
-        }
-        return getInstance(directed, intList(n), edges);
-    }
-
     //
     // DUPLICATION METHODS
     //
@@ -269,33 +83,12 @@ public class Graphs {
                     arr[1] = v2;
                     edges.add(arr);
                 }
-        return getInstance(directed, vertices, edges);
+        return GraphFactory.getGraph(directed, vertices, edges);
     }
 
     //
     // ADJACENCY MATRIX METHODS
     //
-
-    /**
-     * Computes product of two matrices of integers
-     * First entry is row, second is column.
-     * Requires # columns in m1 equal to number of rows in m2
-     */
-    private static int[][] matrixProduct(int[][] m1, int[][] m2) {
-        int rows1 = m1.length, cols1 = m1[0].length;
-        int rows2 = m2.length, cols2 = m2[0].length;
-        if (cols1 != rows2)
-            throw new IllegalArgumentException("matrixProduct: incompatible matrix sizes");
-        int[][] result = new int[rows1][cols2];
-        for (int i = 0; i < rows1; i++)
-            for (int j = 0; j < rows2; j++) {
-                int sum = 0;
-                for (int k = 0; k < rows1; k++)
-                    sum += m1[i][k]*m2[k][j];
-                result[i][j] = sum;
-            }
-        return result;
-    }
 
     /**
      * Computes adjacency matrix of a graph
@@ -305,17 +98,13 @@ public class Graphs {
      *      it is symmetric when the graph is undirected, otherwise it may not be symmetric
      */
     public static <V> int[][] adjacencyMatrix(Graph<V> graph) {
-        boolean directed = graph.isDirected();
         List<V> nodes = graph.nodes();
         int n = nodes.size();
         int[][] result = new int[n][n];
         for (int i1 = 0; i1 < n; i1++)
             for (int i2 = 0; i2 < n; i2++)
-                if (graph.adjacent(nodes.get(i1), nodes.get(i2))) {
+                if (graph.adjacent(nodes.get(i1), nodes.get(i2)))
                     result[i1][i2] = 1;
-                    if (!directed)
-                        result[i2][i1] = 1;
-                }
         return result;
     }
 
@@ -333,7 +122,7 @@ public class Graphs {
         result[0] = adj1;
         int cur = 2;
         while (cur <= maxPower) {
-            result[cur - 1] = matrixProduct(result[cur - 2], adj1);
+            result[cur - 1] = Matrices.matrixProduct(result[cur - 2], adj1);
             cur++;
         }
         return result;
@@ -377,7 +166,7 @@ public class Graphs {
      * @return graph with objects associated to each vertex that describe the distance
      *    from the main vertex.
      */
-    public static <V> NodeValueGraph<V,Integer> geodesicTree(Graph<V> graph, V vertex) {
+    public static <V> ValuedGraph<V,Integer> geodesicTree(Graph<V> graph, V vertex) {
         return geodesicTree(graph, vertex, Integer.MAX_VALUE);
     }
 
@@ -393,7 +182,7 @@ public class Graphs {
      * @return graph with objects associated to each vertex that describe the distance
      *    from the main vertex.
      */
-    public static <V> NodeValueGraph<V,Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
+    public static <V> ValuedGraph<V,Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
         // vertices left to add
         ArrayList<V> remaining = new ArrayList<V>(graph.nodes());
         // vertices added already, by distance
@@ -425,8 +214,8 @@ public class Graphs {
         ArrayList<V> vertices = new ArrayList<V>();
         for (HashSet<V> hs : added) vertices.addAll(hs);
         
-        Graph<V> baseGraph = getInstance(graph.isDirected(), vertices, edges);
-        NodeValueGraphWrapper<V,Integer> result = new NodeValueGraphWrapper<V,Integer>(baseGraph);
+        Graph<V> baseGraph = GraphFactory.getGraph(graph.isDirected(), vertices, edges);
+        ValuedGraphWrapper<V,Integer> result = new ValuedGraphWrapper<V,Integer>(baseGraph);
         for (int i = 0; i < added.size(); i++)
             for (V v : added.get(i))
                 result.setValue(v, i);

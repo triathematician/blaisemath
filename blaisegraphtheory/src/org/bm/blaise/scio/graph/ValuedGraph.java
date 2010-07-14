@@ -15,7 +15,7 @@ package org.bm.blaise.scio.graph;
  *
  * @author Elisha Peterson
  */
-public interface NodeValueGraph<V,N> extends Graph<V> {
+public interface ValuedGraph<V,N> extends Graph<V> {
 
     /**
      * Returns the value associated with a node in the graph.
@@ -24,5 +24,12 @@ public interface NodeValueGraph<V,N> extends Graph<V> {
      */
     public N getValue(V x);
 
+    /**
+     * Sets the value associated with specified node.
+     * Does nothing if the node is not already in the graph.
+     * @param x the node
+     * @param value the value
+     */
+    public void setValue(V x, N value);
 
 }

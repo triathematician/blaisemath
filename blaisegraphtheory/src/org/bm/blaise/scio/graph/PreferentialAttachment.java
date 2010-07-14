@@ -7,6 +7,8 @@ package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Provides static utility methods for generating graphs using preferential attachment.
@@ -18,108 +20,183 @@ public class PreferentialAttachment {
     // no instantiation
     private PreferentialAttachment() {}
 
-
     /**
-     * Returns random graph generated with a preferential attachment algorithm,
+     * Returns random undirected graph generated with a preferential attachment algorithm,
      * starting with a specified seed graph.
      *
      * @param seedGraph a graph used to seed the algorithm
      * @param nVertices number of vertices in final graph
      * @param nEdgesPerStep number of edges to attach at each step
+     * @return the randomly generated graph
      */
-    public static Graph<Integer> getRandomInstance(
+    public static Graph<Integer> getSeededInstance(
             Graph<Integer> seedGraph,
-            final int nVertices, int nEdgesPerStep) {
-
-        if (seedGraph.isDirected())
-            throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires an undirected seed graph.");
-        if (seedGraph.edgeNumber() == 0)
-            throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires a seed graph with at least one edge.");
-
-        // prepare parameters for graph to be created
-        ArrayList<Integer> vv = new ArrayList<Integer>(seedGraph.nodes());
-        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
-        int[] degrees = new int[nVertices];
-        int degreeSum = 0;
-        Arrays.fill(degrees, 0);
-
-        // initialize with values from seed graph
-        for (Integer i1 : seedGraph.nodes())
-            for (Integer i2 : seedGraph.nodes())
-                if (seedGraph.adjacent(i1, i2))  {
-                    edges.add(new Integer[]{i1, i2});
-                    degrees[i1]++;
-                    degrees[i2]++;
-                    degreeSum += 2;
-                }
-        
-        int[] newEdges = new int[nEdgesPerStep];
-        int cur = 0;
-        while (vv.size() < nVertices) {
-            while (vv.contains(cur)) cur++;
-            newEdges = weightedRandomVertex(degrees, degreeSum, nEdgesPerStep);
-            for (int i = 0; i < newEdges.length; i++) {
-                edges.add(new Integer[] {cur, newEdges[i]});
-                degrees[cur]++;
-                degrees[newEdges[i]]++;
-                degreeSum += 2;
-            }
-            vv.add(cur);
-        }
-        return Graphs.getInstance(false, vv, edges);
+            int nVertices, int nEdgesPerStep) {
+        return generate(seedGraph, nVertices, (Integer) nEdgesPerStep);
     }
 
     /**
-     * Returns random graph generated via preferential attachment.
+     * Returns random undirected graph generated via preferential attachment,
+     * starting with a specified seed graph.
+     *
      * @param seedGraph a graph used to seed the algorithm
      * @param nVertices number of vertices in final graph
-     * @param connectionProbs probabilities of initial #s of connections
+     * @param connectionProbs probabilities of initial #s of connections; the i'th
+     *   entry is the probability that a new node will have i connections, starting at 0
+     * @return the randomly generated graph
      */
-    public static Graph<Integer> getRandomInstance(
+    public static Graph<Integer> getSeededInstance(
             Graph<Integer> seedGraph,
             int nVertices, float[] connectionProbs) {
+        return generate(seedGraph, nVertices, connectionProbs);
+    }
+
+    /**
+     * Returns random undirected graph generated with a preferential attachment algorithm,
+     * starting with a specified seed graph, as a longitudinal graph.
+     *
+     * @param seedGraph a graph used to seed the algorithm
+     * @param nVertices number of vertices in final graph
+     * @param nEdgesPerStep number of edges to attach at each step
+     * @return the randomly generated graph
+     */
+    public static LongitudinalGraph<Integer> getLongitudinalSeededInstance(
+            Graph<Integer> seedGraph,
+            int nVertices, int nEdgesPerStep) {
+        return generateLongitudinal(seedGraph, nVertices, (Integer) nEdgesPerStep);
+    }
+
+    /**
+     * Returns random undirected graph generated via preferential attachment,
+     * starting with a specified seed graph, as a longitudinal graph.
+     * 
+     * @param seedGraph a graph used to seed the algorithm
+     * @param nVertices number of vertices in final graph
+     * @param connectionProbs probabilities of initial #s of connections; the i'th
+     *   entry is the probability that a new node will have i connections, starting at 0
+     * @return the randomly generated graph
+     */
+    public static LongitudinalGraph<Integer> getLongitudinalSeededInstance(
+            Graph<Integer> seedGraph,
+            int nVertices, float[] connectionProbs) {
+        return generateLongitudinal(seedGraph, nVertices, connectionProbs);
+    }
+
+    /** Common method for preferential attachment algorithm */
+    private static Graph<Integer> generate(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
 
         if (seedGraph.isDirected())
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires an undirected seed graph.");
         if (seedGraph.edgeNumber() == 0)
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires a seed graph with at least one edge.");
-        
+        if (!(edgesPerStep instanceof Integer || edgesPerStep instanceof float[]))
+            throw new IllegalStateException();
+
         // prepare parameters for graph to be created
-        ArrayList<Integer> vv = new ArrayList<Integer>(seedGraph.nodes());
+        ArrayList<Integer> nodes = new ArrayList<Integer>(seedGraph.nodes());
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
-        int[] degrees = new int[nVertices];
+        int[] degrees = new int[nVertices]; Arrays.fill(degrees, 0);
         int degreeSum = 0;
-        Arrays.fill(degrees, 0);
 
         // initialize with values from seed graph
-        for (Integer i1 : seedGraph.nodes())
-            for (Integer i2 : seedGraph.nodes())
-                if (seedGraph.adjacent(i1, i2))  {
-                    edges.add(new Integer[]{i1, i2});
-                    degrees[i1]++;
-                    degrees[i2]++;
-                    degreeSum += 2;
-                }
-
+        for (Integer i1 : nodes)
+            for (Integer i2 : nodes)
+                if (seedGraph.adjacent(i1, i2))
+                    degreeSum += addEdge(edges, degrees, i1, i2);
+        
         int cur = 0;
-        while (vv.size() < nVertices) {
-            int nEdgesThisStep = sampleRandom(connectionProbs);
-            int[] newEdges = new int[nEdgesThisStep];
-            while (vv.contains(cur)) cur++;
-            newEdges = weightedRandomVertex(degrees, degreeSum, nEdgesThisStep);
-            for (int i = 0; i < newEdges.length; i++) {
-                edges.add(new Integer[] {cur, newEdges[i]});
-                degrees[cur]++;
-                degrees[newEdges[i]]++;
-                degreeSum += 2;
-            }
-            vv.add(cur);
+        boolean variableEdgeNumber = edgesPerStep instanceof float[];
+        int numberEdgesToAdd = variableEdgeNumber ? 0 : (Integer) edgesPerStep;
+        float[] connectionProbs = variableEdgeNumber ? (float[]) edgesPerStep : new float[]{};
+
+        while (nodes.size() < nVertices) {
+            while (nodes.contains(cur)) cur++;
+            nodes.add(cur);
+            if (variableEdgeNumber)
+                numberEdgesToAdd = sampleRandom(connectionProbs);
+            degreeSum += addEdge(edges, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
-        return Graphs.getInstance(false, vv, edges);
+        return GraphFactory.getGraph(false, nodes, edges);
     }
 
+    /**
+     * Utility to add specified vertices to the edge set and increment the corresponding degrees.
+     * @param edges current list of edges
+     * @param degrees current list of degrees
+     * @param v1 first vertex of edge to add
+     * @param attachments second vertex (vertices) of edges to add
+     * @return number of new degrees added
+     */
+    private static int addEdge(ArrayList<Integer[]> edges, int[] degrees, int v1, int... attachments) {
+        for (int v : attachments) {
+            edges.add(new Integer[] { v1, v } );
+            degrees[v]++;
+        }
+        degrees[v1] += attachments.length;
+        return attachments.length*2;
+    }
 
+    /** Common method to return longitudinal version of the randomly generated graph. */
+    private static LongitudinalGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
+        if (seedGraph.isDirected())
+            throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires an undirected seed graph.");
+        if (seedGraph.edgeNumber() == 0)
+            throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires a seed graph with at least one edge.");
+        if (!(edgesPerStep instanceof Integer || edgesPerStep instanceof float[]))
+            throw new IllegalStateException();
 
+        // prepare parameters for graph to be created
+        TreeMap<Integer, double[]> nodeTimes = new TreeMap<Integer, double[]>();
+        TreeMap<Integer, Map<Integer, double[]>> edgeTimes = new TreeMap<Integer, Map<Integer, double[]>>();
+        int[] degrees = new int[nVertices]; Arrays.fill(degrees, 0);
+        int degreeSum = 0;
+        double time = 0;
+
+        // initialize with values from seed graph
+        for (Integer i : seedGraph.nodes())
+            nodeTimes.put(i, new double[]{0, nVertices});
+
+        for (Integer i1 : nodeTimes.keySet())
+            for (Integer i2 : nodeTimes.keySet())
+                if (seedGraph.adjacent(i1, i2))
+                    degreeSum += addEdge(nVertices, edgeTimes, time, degrees, i1, i2);
+
+        int cur = 0;
+        boolean variableEdgeNumber = edgesPerStep instanceof float[];
+        int numberEdgesToAdd = variableEdgeNumber ? 0 : (Integer) edgesPerStep;
+        float[] connectionProbs = variableEdgeNumber ? (float[]) edgesPerStep : new float[]{};
+
+        while (nodeTimes.size() < nVertices) {
+            time++;
+            while (nodeTimes.containsKey(cur)) cur++;
+            nodeTimes.put(cur, new double[]{time, nVertices});
+            if (variableEdgeNumber)
+                numberEdgesToAdd = sampleRandom(connectionProbs);
+            degreeSum += addEdge(nVertices, edgeTimes, time, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
+        }
+        return IntervalLongitudinalGraph.getInstance(false, nodeTimes, edgeTimes);
+    }
+
+    /**
+     * Utility to add specified vertices to the edge set and increment the corresponding degrees.
+     * @param edges current list of edges
+     * @param time current time
+     * @param degrees current list of degrees
+     * @param v1 first vertex of edge to add
+     * @param attachments second vertex (vertices) of edges to add
+     * @return number of new degrees added
+     */
+    private static int addEdge(int nVertices, Map<Integer, Map<Integer, double[]>> edges, double time, int[] degrees, int v1, int... attachments) {
+        for (int node : attachments) {
+            if (!edges.containsKey(v1))
+                edges.put(v1, new TreeMap<Integer, double[]>());
+            edges.get(v1).put(node, new double[]{time, nVertices});
+            degrees[node]++;
+        }
+        degrees[v1] += attachments.length;
+        return attachments.length*2;
+    }
+    
     /**
      * Utility to return random vertices in a graph,
      * whose weights are specified by the given array

@@ -10,11 +10,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.Graphs;
-import org.bm.blaise.scio.graph.NodeValueGraph;
+import org.bm.blaise.scio.graph.RandomGraph;
+import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import primitive.GraphicString;
-import primitive.style.PathStylePoints;
+import primitive.style.ArrowStyle;
+import primitive.style.ArrowStyle.ArrowShape;
 import primitive.style.PointLabeledStyle;
 import primitive.style.PointStyle;
 import primitive.style.StringStyle;
@@ -49,13 +50,18 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     /** The underlying graph object. */
     Graph graph;
 
+    /** The initial layout scheme. */
+    private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
+    /** The initial layout parameters */
+    private static final double[] LAYOUT_PARAMETERS = new double[] { 3 };
+
     /** Constructs graph with a sample network */
     public PlaneGraph() {
-        this(Graphs.getRandomInstance(10, 10, true));
+        this(RandomGraph.getInstance(20, 25, true));
     }
 
     public PlaneGraph(Graph graph) {
-        addPrimitive(edgeEntry = new VPrimitiveEntry(null, new PathStylePoints(new Color(96, 192, 96))));
+        addPrimitive(edgeEntry = new VPrimitiveEntry(null, new ArrowStyle(new Color(96, 192, 96))));
         PointLabeledStyle vStyle = new PointLabeledStyle(PointStyle.PointShape.SQUARE, 4, StringStyle.ANCHOR_N);
         vStyle.setLabelColor(new Color(128, 128, 128));
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
@@ -66,37 +72,74 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     public String toString() {
         return "Graph[" + graph.order() + " vertices]";
     }
-
+    
     /** @return current style of point for this plottable */
     public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) vertexEntry.style; }
     /** Set current style of point for this plottable */
     public void setPointStyle(PointLabeledStyle newValue) { if (vertexEntry.style != newValue) { vertexEntry.style = newValue; firePlottableStyleChanged(); } }
+
+    /** @return true if points are visible */
+    public boolean isPointsVisible() { return vertexEntry.visible; }
+    /** Sets visibility of points */
+    public void setPointsVisible(boolean visible) { vertexEntry.visible = visible; firePlottableStyleChanged(); }
+
     /** @return current style for drawing edges of the graph */
-    public PathStylePoints getEdgeStyle() { return (PathStylePoints) edgeEntry.style; }
+    public ArrowStyle getEdgeStyle() { return (ArrowStyle) edgeEntry.style; }
     /** Sets current style for drawing edges of the graph */
-    public void setEdgeStyle(PathStylePoints edgeStyle) { edgeEntry.style = edgeStyle; }
-    
+    public void setEdgeStyle(ArrowStyle edgeStyle) { edgeEntry.style = edgeStyle; }
+
+    /** @return true if edges are visible */
+    public boolean isEdgesVisible() { return edgeEntry.visible; }
+    /** Sets visibility of edges */
+    public void setEdgesVisible(boolean visible) { edgeEntry.visible = visible; firePlottableStyleChanged(); }
+
     /** @return underlying graph */
     public Graph getGraph() { return graph; }
     /**
-     * Sets the underlying graph; uses default vertex positions around a circle
+     * Sets the underlying graph. Resets graph layout if the number of nodes differs
+     * from the current number; otherwise uses the same layout & the user should
+     * reset the layout explicitly if desired.
      * @param graph the new graph
      */
     public void setGraph(Graph graph) {
-        this.graph = graph;
         List nodes = graph.nodes();
         int size = nodes.size();
-        GraphicString[] gsa = new GraphicString[size];
-        Point2D.Double[] pts = StaticGraphLayout.RANDOM.layout(graph, 4.5);
-        if (graph instanceof NodeValueGraph) {
-            NodeValueGraph nvg = (NodeValueGraph) graph;
-            for (int i = 0; i < size; i++)
-                gsa[i] = new GraphicString<Point2D.Double>(pts[i], nvg.getValue(nodes.get(i)).toString());
+        Point2D.Double[] curPts = getPoint();
+        if (vertexEntry.local == null || curPts == null || curPts.length != size) {
+            // if objects do not exist or sizes do not match, create them
+            GraphicString[] gsa = new GraphicString[size];
+            vertexEntry.local = gsa;
+            // initialize the layout, but use old positions whenever available
+            Point2D.Double[] newPts = INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+            if (curPts != null)
+                for (int i = 0; i < Math.min(curPts.length, newPts.length); i++)
+                    newPts[i] = curPts[i];
+            ValuedGraph nvg = graph instanceof ValuedGraph ? (ValuedGraph) graph : null;
+            Object value;
+            for (int i = 0; i < size; i++) {
+                if (nvg != null && (value = nvg.getValue(nodes.get(i))) != null)
+                    gsa[i] = new GraphicString<Point2D.Double>(newPts[i], nvg.getValue(nodes.get(i)).toString());
+                else
+                    gsa[i] = new GraphicString<Point2D.Double>(newPts[i], nodes.get(i).toString());
+            }
         } else {
-            for (int i = 0; i < size; i++)
-                gsa[i] = new GraphicString<Point2D.Double>(pts[i], nodes.get(i).toString());
+            // here the objects exist, and the sizes match, so just need to update the labels
+            GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+            if (graph instanceof ValuedGraph) {
+                ValuedGraph nvg = (ValuedGraph) graph;
+                for (int i = 0; i < size; i++)
+                    gsa[i].string = nvg.getValue(nodes.get(i)).toString();
+            } else {
+                for (int i = 0; i < size; i++)
+                    gsa[i].string = nodes.get(i).toString();
+            }
         }
-        vertexEntry.local = gsa;
+
+        ArrowStyle eStyle = (ArrowStyle) edgeEntry.style;
+        eStyle.setHeadShape(graph.isDirected() ? ArrowStyle.ArrowShape.TRIANGLE : ArrowStyle.ArrowShape.NONE);
+        eStyle.setShapeSize(8);
+
+        this.graph = graph;
         vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
@@ -113,16 +156,21 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
-    /** @return list of all points where vertices are placed */
+    /** @return list of all points where vertices are placed, or null if there is no graph */
     public Point2D.Double[] getPoint() {
+        if (vertexEntry.local == null)
+            return null;
         GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
         Point2D.Double[] result = new Point2D.Double[gsa.length];
         for (int i = 0; i < gsa.length; i++)
             result[i] = (Point2D.Double) gsa[i].anchor;
         return result;
     }
-    /** Sets location of all vertices at once */
+    /** Sets location of all vertices at once. Number of points must match the order of the graph. */
     public void setPoint(Point2D.Double[] loc) {
+        if (loc.length != graph.order())
+            return;
+//            throw new IllegalArgumentException("setPoint: number of points does not match number of nodes.");
         GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
         for (int i = 0; i < gsa.length; i++)
             gsa[i].anchor = loc[i];

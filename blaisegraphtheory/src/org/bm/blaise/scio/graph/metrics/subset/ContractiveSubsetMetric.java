@@ -3,20 +3,21 @@
  * and open the template in the editor.
  */
 
-package org.bm.blaise.scio.graph.metrics;
+package org.bm.blaise.scio.graph.metrics.subset;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.ContractedGraph;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
- * Provides a <code>NodeSubsetMetric</code> computed by contracting all the
+ * Provides a <code>SubsetMetric</code> computed by contracting all the
  * nodes in a subset to a single node, and using a particular <code>NodeMetric</code>
  * on that node.
  *
  * @author Elisha Peterson
  */
-public class ContractiveSubsetMetric<N> implements NodeSubsetMetric<N> {
+public class ContractiveSubsetMetric<N> implements SubsetMetric<N> {
 
     NodeMetric<N> baseMetric;
 

@@ -3,20 +3,33 @@
     <body>
       <p>
           This package contains the primary classes for graphs, including interfaces
-          and default implementations. The two most important implementations are
+          and default implementations. The main interface is <code>Graph</code>, providing
+          the standard API for working with graphs. The two most important implementations are
           <code>SparseGraph</code>, where the edges are encoded using lists, and <code>MatrixGraph</code>,
           where the edges are encoded using arrays.
       </p>
       <p>
-          A few additional graph types
-          (such as those with weighted nodes or edges) are also supported with interfaces
-          and implementations that wrap an existing graph.
+          Standard graphs may be constructed using the methods in <code>GraphFactory</code>, and standard
+          algortihms are contained in the <code>Graphs</code> class. Secondary classes can be used to generate
+          other kinds of graphs: see <code>RandomGraph</code> and <code>PreferentialAttachment</code>
       </p>
       <p>
-          The <code>Graphs</code> class provides several utility methods for generating
-          specific types of graphs, including random graphs, as well as performing some
-          standard computations on graphs, such as finding neighborhoods and shortest
-          path lengths.
+          <code>ContractedGraph</code> and <code>Subgraph</code> generate new graphs based on old ones by
+          either contracting all nodes in a subset to a single node (in the first case), or by focusing only
+          on a subset of nodes (in the second case).
+      </p>
+      <p>
+          Secondary interfaces include <code>ValueGraph</code> (vertices have associated values) and
+          <code>WeightedGraph</code> (edges have associated values). Each of these
+          interfaces has implementations as "wrappers" <code>ValuedGraphWrapper</code>,
+          <code>WeightedGraphWrapper</code>, and <code>WeightedValuedGraphWrapper</code>.
+      </p>
+      <p>
+          <i>Longitudinal graphs</i> are supported with the <code>LongitudinalGraph</code> interface,
+          which provides a time domain, and each time within the domain gives a different "slice".
+          There are two implementations of this: <code>ListLongitudinalGraph</code>, suitable for
+          a list of graphs which occur at discrete times, and <code>IntervalLongitudinalGraph</code>,
+          where a single graph is specified, and vertices/edges each have their own time domains.
       </p>
   </body>
 </html>

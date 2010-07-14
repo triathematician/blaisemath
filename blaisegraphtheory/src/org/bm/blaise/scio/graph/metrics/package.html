@@ -6,8 +6,16 @@
           associated with graphs, such as centrality metrics.
       </p>
       <p>
-          Most metrics are subclassed from <code>NodeMetric</code> and <code>NodeSubsetMetric</code>,
-          which provide metrics for 1 node or any number of nodes, respectively.
+          Most metrics are subclassed from <code>NodeMetric</code>, which provides a method
+          for getting the value of a metric at a single node, and a method for getting the values
+          of a metric for all nodes. If metrics do not depend upon parameters, generally
+          their class will have a <code>getInstance()</code> method returning a singleton instance
+          of the metric.
+      </p>
+      <p>
+          The <code>subset</code> subpackage provides classes for metrics that are defined
+          for more than one node, as well as special implementations <code>AdditiveSubsetMetric</code>
+          and <code>ContractiveSubsetMetric</code> that are derived from single-vertex metrics.
       </p>
   </body>
 </html>

@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph.layout;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
 
@@ -14,12 +15,18 @@ import org.bm.blaise.scio.graph.Graph;
  * 
  * @author Elisha Peterson
  */
-public class EnergyLayout {
+public class EnergyLayout implements IterativeGraphLayout {
 
-    /** Provides vertices and connections */
-    Graph g;
-    /** Provides initial layout */
-    StaticGraphLayout initialLayout = StaticGraphLayout.RANDOM;
+    // STATE VARIABLES
+
+    /** Current locations */
+    Point2D.Double[] loc;
+    /** Current velocities */
+    transient Point2D.Double[] vel;
+    /** Total energy */
+    transient double energy = 0.0;
+
+    // ALGORITHM PARAMETERS
 
     /** Repelling constant */
     double repulsiveC = 1;
@@ -35,41 +42,28 @@ public class EnergyLayout {
     /** Time step per iteration */
     double stepC = 0.1;
 
-    /** Current locations */
-    Point2D.Double[] loc;
-    /** Current velocities */
-    transient Point2D.Double[] vel;
-    /** Total energy */
-    transient double energy = 0.0;
+    //
+    // CONSTRUCTORS
+    //
 
-    /** Construct for given graph */
-    public EnergyLayout(Graph g, double initialRadius) {
-        this.g = g;
-        loc = initialLayout.layout(g, initialRadius);
-        vel = new Point2D.Double[loc.length];
-        for (int i = 0; i < loc.length; i++)
-            vel[i] = new Point2D.Double();
+    /**
+     * Construct for specified graph, using specified default layout
+     * @param g the graph to layout
+     * @param initialLayout the initial layout mechanism
+     * @param initialParameters the parameters for the initial layout
+     */
+    public EnergyLayout(Graph g, StaticGraphLayout initialLayout, double... initialParameters) {
+        reset(g, initialLayout.layout(g, initialParameters));
     }
 
-    /** Construct for given graph, using specified starting locations */
+    /** Construct using specified starting locations */
     public EnergyLayout(Graph g, Point2D.Double[] loc) {
-        initialize(g, loc);
+        reset(g, loc);
     }
-
-    /** Initialzie layout for given graph, given starting locations */
-    public void initialize(Graph g, Point2D.Double[] loc) {
-        this.g = g;
-        this.loc = loc;
-        vel = new Point2D.Double[loc.length];
-        for (int i = 0; i < loc.length; i++)
-            vel[i] = new Point2D.Double();
-    }
-
-    /** @return current active graph */
-    public Graph getGraph() { return g; }
-    /** Updates graph */
-    public void setGraph(Graph newGraph) { g = newGraph; }
-
+    
+    //
+    // BEAN PATTERNS
+    //
 
     public double getRepulsiveForce() { return repulsiveC; }
     public void setRepulsiveForce(double value) { repulsiveC = value; }
@@ -84,14 +78,25 @@ public class EnergyLayout {
     public double getTimeStep() { return stepC; }
     public void setTimeStep(double value) { stepC = value; }
 
+    //
+    // INTERFACE METHODS
+    //
 
-    /** @return current list of point locations */
-    public Point2D.Double[] getPoints() {
-        return loc;
+    /** 
+     * Resets the locations of the nodes in the layout; sets all velocities to zero.
+     * @param loc new node locations
+     */
+    public void reset(Graph g, Point2D.Double[] loc) {
+        if (loc == null || g == null || g.nodes() == null || g.nodes().size() != loc.length)
+            throw new IllegalArgumentException("Cannot reset layout with graph " + g + " and locations " + Arrays.toString(loc));
+        this.loc = loc;
+        vel = new Point2D.Double[loc.length];
+        for (int i = 0; i < loc.length; i++)
+            vel[i] = new Point2D.Double();
     }
 
     /** Iterate the energy layout algorithm, moving the points slightly */
-    public void iterate() {
+    public Point2D.Double[] iterate(Graph g) {
         List l = g.nodes();
         energy = 0;
         double nodeMass = 1;
@@ -119,18 +124,26 @@ public class EnergyLayout {
             loc[i].y += stepC * vel[i].y;
             energy += .5 * nodeMass * speed * speed;
         }
-//        System.out.println("Total energy = " + energy);
+        return loc;
     }
 
+    public Point2D.Double[] getPoints() {
+        return loc;
+    }
+
+    //
+    // UTILITIES
+    //
+
     /** Adds a global attractive force pushing vertex i1 toward the origin */
-    void addGlobalForce(Point2D.Double sum, int i) {
+    private void addGlobalForce(Point2D.Double sum, int i) {
         double dist = loc[i].distance(0, 0);
         sum.x += -globalC * loc[i].x / dist;
         sum.y += -globalC * loc[i].y / dist;
     }
 
     /** Adds repulsive force at vertex i1 pointing away from vertex i2. */
-    void addRepulsiveForce(Point2D.Double sum, int i1, int i2) {
+    private void addRepulsiveForce(Point2D.Double sum, int i1, int i2) {
         if (i1 == i2)
             return;
         double distSq = loc[i1].distanceSq(loc[i2]);
@@ -139,7 +152,7 @@ public class EnergyLayout {
     }
 
     /** Adds spring force at vertex i1 pointing to vertex i2. */
-    void addSpringForce(Point2D.Double sum, int i1, int i2) {
+    private void addSpringForce(Point2D.Double sum, int i1, int i2) {
         if (i1 == i2)
             return;
         double dist = loc[i1].distance(loc[i2]);

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import org.bm.blaise.scio.graph.Graphs;
 import java.util.List;
 import java.util.Map;
@@ -27,57 +26,6 @@ import org.bm.blaise.scio.graph.Subgraph;
  */
 public class GraphMetrics {
 
-    //
-    // SPECIFIC METRICS PROVIDED FOR CONVENIENCE
-    //
-
-    /**
-     * Computes the degree of a vertex in a graph,
-     * i.e. the number of adjacent edges.
-     * Current computational time is linear in the # of edges in the graph.
-     */
-    public static NodeMetric<Integer> DEGREE = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) { return graph.degree(vertex); }
-    };
-
-    /**
-     * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
-     */
-    public static NodeMetric<Integer> DEGREE2 = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
-            return Graphs.neighborhood(graph, vertex, 2).size() - 1;
-        }
-    };
-
-
-    /**
-     * Computes the clique count of a particular vertex,
-     * i.e. the number of connections between edges in the neighborhood
-     * of the vertex, not counting the edges adjacent to the vertex itself.
-     * Current computation time is linear in the # of edges in the graph (vertex case),
-     * and quadratic in the map case (linear in edges * linear in vertices).
-     */
-    public static NodeMetric<Integer> CLIQUE_COUNT = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
-            List<V> nbhd = graph.neighbors(vertex);
-            return new Subgraph(graph, nbhd).edgeNumber();
-        }
-    };
-
-
-    /**
-     * Computes the 2nd order clique count of a particular vertex,
-     * i.e. the number of connections between edges in the 2nd order neighborhood
-     * of the vertex, subtracting the number of vertices in that neighborhood (the 2nd order degree).
-     * Current computation time is linear in the # of edges in the graph (vertex case),
-     * and quadratic in the map case (linear in edges * linear in vertices).
-     */
-    public static NodeMetric<Integer> CLIQUE_COUNT2 = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
-            List<V> nbhd = Graphs.neighborhood(graph, vertex, 2);
-            return new Subgraph(graph, nbhd).edgeNumber() - nbhd.size() + 1;
-        }
-    };
 
 
     //
@@ -85,25 +33,12 @@ public class GraphMetrics {
     //
 
     /**
-     * Returns mapping of vertices to metric value for all vertices in the graph.
-     * Keys in the resulting path are iterated in the same order as in the graph.
-     * @param graph the graph
-     * @param metric metric used to generate the values
-     */
-    public static <V,N> Map<V,N> computeValues(Graph<V> graph, NodeMetric<N> metric) {
-        LinkedHashMap<V,N> result = new LinkedHashMap<V,N>();
-        for (V v : graph.nodes())
-            result.put(v, metric.getValue(graph, v));
-        return result;
-    }
-
-    /**
      * Returns computeDistribution of the values of a particular metric
      * @param graph the graph
      * @param metric metric used to generate values
      */
     public static <N> Map<N,Integer> computeDistribution(Graph graph, NodeMetric<N> metric) {
-        return distribution(computeValues(graph, metric).values());
+        return distribution(metric.getAllValues(graph));
     }
 
     /**
@@ -121,9 +56,81 @@ public class GraphMetrics {
 
         for (N en : values)
             result.put(en, result.containsKey(en) ? result.get(en) + 1 : 1);
-        
+
         return result;
     }
+    
+    //
+    // SPECIFIC METRICS PROVIDED FOR CONVENIENCE
+    //
+
+    /**
+     * Computes the degree of a vertex in a graph,
+     * i.e. the number of adjacent edges.
+     * Current computational time is linear in the # of edges in the graph.
+     */
+    public static NodeMetric<Integer> DEGREE = new NodeMetric<Integer>() {
+        public <V> Integer getValue(Graph<V> graph, V vertex) { return graph.degree(vertex); }
+        public <V> List<Integer> getAllValues(Graph<V> graph) {
+            List<Integer> result = new ArrayList<Integer>(graph.order());
+            for (V v : graph.nodes()) result.add(graph.degree(v));
+            return result;
+        }
+    };
+
+    /**
+     * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
+     */
+    public static NodeMetric<Integer> DEGREE2 = new NodeMetric<Integer>() {
+        public <V> Integer getValue(Graph<V> graph, V vertex) {
+            return Graphs.neighborhood(graph, vertex, 2).size() - 1;
+        }
+        public <V> List<Integer> getAllValues(Graph<V> graph) {
+            List<Integer> result = new ArrayList<Integer>(graph.order());
+            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            return result;
+        }
+    };
+
+
+    /**
+     * Computes the clique count of a particular vertex,
+     * i.e. the number of connections between edges in the neighborhood
+     * of the vertex, not counting the edges adjacent to the vertex itself.
+     * Current computation time is linear in the # of edges in the graph (vertex case),
+     * and quadratic in the map case (linear in edges * linear in vertices).
+     */
+    public static NodeMetric<Integer> CLIQUE_COUNT = new NodeMetric<Integer>() {
+        public <V> Integer getValue(Graph<V> graph, V vertex) {
+            List<V> nbhd = graph.neighbors(vertex);
+            return new Subgraph(graph, nbhd).edgeNumber();
+        }
+        public <V> List<Integer> getAllValues(Graph<V> graph) {
+            List<Integer> result = new ArrayList<Integer>(graph.order());
+            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            return result;
+        }
+    };
+
+
+    /**
+     * Computes the 2nd order clique count of a particular vertex,
+     * i.e. the number of connections between edges in the 2nd order neighborhood
+     * of the vertex, subtracting the number of vertices in that neighborhood (the 2nd order degree).
+     * Current computation time is linear in the # of edges in the graph (vertex case),
+     * and quadratic in the map case (linear in edges * linear in vertices).
+     */
+    public static NodeMetric<Integer> CLIQUE_COUNT2 = new NodeMetric<Integer>() {
+        public <V> Integer getValue(Graph<V> graph, V vertex) {
+            List<V> nbhd = Graphs.neighborhood(graph, vertex, 2);
+            return new Subgraph(graph, nbhd).edgeNumber() - nbhd.size() + 1;
+        }
+        public <V> List<Integer> getAllValues(Graph<V> graph) {
+            List<Integer> result = new ArrayList<Integer>(graph.order());
+            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            return result;
+        }
+    };
 
     //
     // UTILITY METHOD SAVED HERE

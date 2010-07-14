@@ -9,7 +9,9 @@ import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Graphs;
+import org.bm.blaise.scio.graph.RandomGraph;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
@@ -27,7 +29,7 @@ public class TestGraph extends javax.swing.JFrame {
     PlaneGraph pg;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
-    EnergyLayout el;
+    EnergyLayout energyLayout;
 
     /** Creates new form TestPlaneVisometry */
     public TestGraph() {
@@ -38,13 +40,13 @@ public class TestGraph extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-        graphPlot.add(pg = new PlaneGraph(Graphs.getRandomInstance(100, 50, false)));
+        graphPlot.add(pg = new PlaneGraph(RandomGraph.getInstance(70, 100, false)));
         graphPlot.setDesiredRange(-5.0, -5.0, 5.0, 5.0);
 
         // PANELS
 
         rollupPanel1.add("Visometry", new PropertySheet(graphPlot.getVisometry()));
-        rollupPanel1.add("Energy Layout", new PropertySheet(el = new EnergyLayout(pg.getGraph(), pg.getPoint())));
+        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new EnergyLayout(pg.getGraph(), pg.getPoint())));
         for (Plottable p : graphPlot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
@@ -170,29 +172,29 @@ public class TestGraph extends javax.swing.JFrame {
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
-        if (el == null)
-            el = new EnergyLayout(pg.getGraph(), pg.getPoint());
+        Graph graph = pg.getGraph();
+        if (energyLayout == null)
+            energyLayout = new EnergyLayout(graph, pg.getPoint());
         else if (updateEL)
-            el.initialize(pg.getGraph(), pg.getPoint());
-        el.iterate();
-        pg.setPoint(el.getPoints());
+            energyLayout.reset(graph, pg.getPoint());
+        pg.setPoint(energyLayout.iterate(graph));
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
     BetterTimer timer;
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
-        if (el == null)
-            el = new EnergyLayout(pg.getGraph(), pg.getPoint());
+        final Graph graph = pg.getGraph();
+        if (energyLayout == null)
+            energyLayout = new EnergyLayout(pg.getGraph(), pg.getPoint());
         else if (updateEL)
-            el.initialize(pg.getGraph(), pg.getPoint());
+            energyLayout.reset(pg.getGraph(), pg.getPoint());
         timer = new BetterTimer(100);
         timer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (updateEL)
-                    el.initialize(pg.getGraph(), pg.getPoint());
-                el.iterate();
-                pg.setPoint(el.getPoints());
+                    energyLayout.reset(pg.getGraph(), pg.getPoint());
+                pg.setPoint(energyLayout.iterate(graph));
             }
         });
         timer.start();

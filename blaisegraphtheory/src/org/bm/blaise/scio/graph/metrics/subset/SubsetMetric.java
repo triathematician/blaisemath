@@ -1,9 +1,9 @@
 /*
- * VertexMetricInterface.java
+ * SubsetMetric.java
  * Created on Oct 26, 2009
  */
 
-package org.bm.blaise.scio.graph.metrics;
+package org.bm.blaise.scio.graph.metrics.subset;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.*;
@@ -15,10 +15,10 @@ import org.bm.blaise.scio.graph.*;
  * @param <N> the type of value returned
  * @author Elisha Peterson
  */
-public interface NodeSubsetMetric<N> {
+public interface SubsetMetric<N> {
 
     /**
-     * Computes the value of the metric for the given graph and node.
+     * Computes the value of the metric for the given graph and nodes.
      * @param graph the graph
      * @param nodes a collection of nodes in the graph
      * @return value of the metric
