@@ -23,7 +23,7 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
     /** Point style. */
     PointStyle pStyle = new PointStyle();
     /** Segment style. */
-    PathStyle sStyle = new PathStyle();
+    PathStyleShape sStyle = new PathStyleShape();
     /** Area style. */
     ShapeStyle aStyle = new ShapeStyle();
 
@@ -66,9 +66,9 @@ public class MeshStyle extends AbstractPrimitiveStyle<GraphicMesh<Point2D.Double
     public void setPointsVisible(boolean pVisible) { this.pVisible = pVisible; }
 
     /** @return style used to drawArray segments */
-    public PathStyle getSegmentStyle() { return sStyle; }
+    public PathStyleShape getSegmentStyle() { return sStyle; }
     /** Sets style used to drawArray segments */
-    public void setSegmentStyle(PathStyle sStyle) { this.sStyle = sStyle; }
+    public void setSegmentStyle(PathStyleShape sStyle) { this.sStyle = sStyle; }
     /** @return true if segments are visible */
     public boolean isSegmentsVisible() { return sVisible; }
     /** Sets visibility status of segments */

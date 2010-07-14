@@ -13,7 +13,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.util.List;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
 
@@ -33,7 +33,7 @@ public class PlanePolarGrid extends PlanePathPlottable {
 
     /** Constructs a default grid. */
     public PlanePolarGrid() {
-        ((PathStyle) entry.style).setStrokeColor(new Color(224, 224, 255));
+        ((PathStyleShape) entry.style).setStrokeColor(new Color(224, 224, 255));
     }
 
     @Override

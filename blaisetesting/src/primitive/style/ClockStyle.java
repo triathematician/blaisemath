@@ -37,7 +37,7 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
     /** The style of hands. */
     ArrowStyle handStyle = new ArrowStyle(Color.BLACK, 2, ArrowStyle.ArrowShape.DOT, ArrowStyle.ArrowShape.NONE, 5);
     /** The style of ticks. */
-    PathStyle tickStyle = new PathStyle(Color.DARK_GRAY, 2);
+    PathStyleShape tickStyle = new PathStyleShape(Color.DARK_GRAY, 2);
     /** The style of date. */
     StringStyle dateStyle = new StringStyle(StringStyle.ANCHOR_W);
 
@@ -67,9 +67,9 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
     /** Sets style used to display the clock's hands */
     public void setHandStyle(ArrowStyle handStyle) { this.handStyle = handStyle; }
     /** @return path style used to display the hour ticks */
-    public PathStyle getTickStyle() { return tickStyle; }
+    public PathStyleShape getTickStyle() { return tickStyle; }
     /** Sets style used to display the hour ticks */
-    public void setTickStyle(PathStyle tickStyle) { this.tickStyle = tickStyle; }
+    public void setTickStyle(PathStyleShape tickStyle) { this.tickStyle = tickStyle; }
     /** @return style used to display the date */
     public StringStyle getDateStyle() { return dateStyle; }
     /** Sets style used to display the date */
@@ -119,7 +119,7 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
         }
     }
     
-    static void paintTicks(Graphics2D g, ClockModel m, PathStyle style, Point2D.Double p, double r) {
+    static void paintTicks(Graphics2D g, ClockModel m, PathStyleShape style, Point2D.Double p, double r) {
         switch(m) {
             case ARCS:
             case DEFAULT:

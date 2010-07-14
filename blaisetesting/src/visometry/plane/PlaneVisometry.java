@@ -72,7 +72,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
             try {
                 computeTransformation();
             } catch (IllegalStateException e) {
-                System.out.println("Unable to calculate PlaneVisometry!!");
+                System.out.println("Unable to calculate new transformation for PlaneVisometry; attempted to set window bounds to " + newBounds);
             }
         }
     }
@@ -89,14 +89,14 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
      * @throws IllegalArgumentException if the argument is zero or negative
      */
     public void setAspectRatio(double aspectRatio) {
-        if (aspectRatio <= 0) {
+        if (aspectRatio <= 0)
             throw new IllegalArgumentException("Aspect ratio must be positive!");
-        }
         this.aspectRatio = aspectRatio;
         // TODO - operate better here!
         try {
             computeTransformation();
         } catch (IllegalStateException e) {
+                System.out.println("Unable to calculate new PlaneVisometry transformation; attempted to set aspectRatio = " + aspectRatio);
         }
     }
 

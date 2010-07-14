@@ -17,7 +17,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import primitive.style.ShapeStyle;
 import visometry.PaintsCanvas;
 
@@ -54,7 +54,7 @@ public class PlanePlotMouseHandler
     /** Hint box for zooming */
     transient Rectangle2D.Double zoomBox;
     /** Style of zoom box */
-    final static ShapeStyle zoomBoxStyle = new ShapeStyle(new PathStyle(new Color(255, 128, 128, 128), 2f), new Color(255, 128, 128, 128));
+    final static ShapeStyle zoomBoxStyle = new ShapeStyle(new PathStyleShape(new Color(255, 128, 128, 128), 2f), new Color(255, 128, 128, 128));
 
     public void paint(Graphics2D canvas) {
         if (zoomBox != null)

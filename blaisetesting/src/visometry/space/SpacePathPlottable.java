@@ -6,7 +6,7 @@
 package visometry.space;
 
 import java.awt.Color;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import scio.coordinate.Point3D;
 import visometry.VPrimitiveEntry;
 import visometry.plottable.Plottable;
@@ -27,7 +27,7 @@ public abstract class SpacePathPlottable extends Plottable<Point3D> {
 
     /** Constructs the plottable and the corresponding primitive entry. */
     public SpacePathPlottable() {
-        addPrimitive(entry = new VPrimitiveEntry(path, new PathStyle( new Color(64, 0, 0) )));
+        addPrimitive(entry = new VPrimitiveEntry(path, new PathStyleShape( new Color(64, 0, 0) )));
     }
 
 
@@ -36,7 +36,7 @@ public abstract class SpacePathPlottable extends Plottable<Point3D> {
     //
 
     /** @return current style of stroke for this plottable */
-    public PathStyle getStyle() { return (PathStyle) entry.style; }
+    public PathStyleShape getStyle() { return (PathStyleShape) entry.style; }
     /** Set current style of stroke for this plottable */
-    public void setStyle(PathStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setStyle(PathStyleShape newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 }

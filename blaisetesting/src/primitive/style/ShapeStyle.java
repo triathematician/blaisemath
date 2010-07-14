@@ -30,9 +30,9 @@ public class ShapeStyle extends AbstractPathStyle implements PrimitiveStyle<Shap
     /** Construct with defaults. */
     public ShapeStyle() {}
     /** Construct with stroke only. Sets fill color to null so that it is not displayed. */
-    public ShapeStyle(PathStyle style) { this(style, null); }
+    public ShapeStyle(PathStyleShape style) { this(style, null); }
     /** Construct with stroke and fill color */
-    public ShapeStyle(PathStyle style, Color fillColor) { super(style.strokeColor, style.stroke); this.fillColor = fillColor; }
+    public ShapeStyle(PathStyleShape style, Color fillColor) { super(style.strokeColor, style.stroke); this.fillColor = fillColor; }
     /** Construct with specified parameters. */
     public ShapeStyle(Color strokeColor, Color fillColor) { super(strokeColor); this.fillColor = fillColor; }
     /** Construct with specified parameters. */

@@ -10,7 +10,7 @@ import coordinate.RealIntervalNiceSampler;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.util.List;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
 
@@ -28,7 +28,7 @@ public class PlaneGrid extends PlanePathPlottable {
 
     /** Constructs a default grid. */
     public PlaneGrid() {
-        ((PathStyle) entry.style).setStrokeColor(new Color(224, 224, 255));
+        ((PathStyleShape) entry.style).setStrokeColor(new Color(224, 224, 255));
     }
 
     @Override

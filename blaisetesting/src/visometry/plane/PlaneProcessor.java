@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import primitive.*;
 import primitive.style.ArrowStyle;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import primitive.style.PointDirStyle;
 import primitive.style.PathStylePoints;
 import primitive.style.PointRadiusStyle;
@@ -24,7 +24,7 @@ import visometry.VPrimitiveEntry;
  * Handles conversion of graphics primitives from planar type to window type. Supported primitives:
  * <ul>
  *      <li>A single point: <code>Point2D.Double</code>
- *      <li>An array of points: <code>Point2D.Double[]</code> (using a <code>PathStyle</code>, a <code>ShapeStyle</code>, or a <code>PointStyle</code>)
+ *      <li>An array of points: <code>Point2D.Double[]</code> (using a <code>PathStyleShape</code>, a <code>ShapeStyle</code>, or a <code>PointStyle</code>)
  *      <li>A point with attached string: <code>GraphicString</code>
  *      <li>A point with a radius parameter: <code>GraphicParPoint</code>
  *      <li>A path or shape: <code>Shape</code>
@@ -48,7 +48,7 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         else if (entry.local instanceof Point2D.Double)
             entry.primitive = vis.getWindowPointOf((Point2D.Double) entry.local);
 
-        else if (entry.local instanceof Point2D.Double[] && (entry.style instanceof PathStyle || entry.style instanceof ShapeStyle))
+        else if (entry.local instanceof Point2D.Double[] && (entry.style instanceof PathStyleShape || entry.style instanceof ShapeStyle))
         {
             Point2D.Double[] locArr = (Point2D.Double[]) entry.local;
             GeneralPath path = new GeneralPath();
@@ -63,7 +63,7 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             entry.primitive = path;
         }
 
-        else if (entry.local instanceof Point2D.Double[][] && (entry.style instanceof PathStyle || entry.style instanceof ShapeStyle))
+        else if (entry.local instanceof Point2D.Double[][] && (entry.style instanceof PathStyleShape || entry.style instanceof ShapeStyle))
         {
             Point2D.Double[][] locArr = (Point2D.Double[][]) entry.local;
             Shape[] paths = new Shape[locArr.length];

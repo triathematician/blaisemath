@@ -8,7 +8,7 @@ package visometry.plane;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import visometry.VPrimitiveEntry;
 import visometry.plottable.Plottable;
 
@@ -29,11 +29,11 @@ public abstract class PlanePathPlottable extends Plottable<Point2D.Double> {
 
     /** Constructs the plottable and the corresponding primitive entry. */
     public PlanePathPlottable() {
-        addPrimitive(entry = new VPrimitiveEntry(path, new PathStyle( new Color(64, 0, 0) )));
+        addPrimitive(entry = new VPrimitiveEntry(path, new PathStyleShape( new Color(64, 0, 0) )));
     }
 
     /** @return current style of stroke for this plottable */
-    public PathStyle getStyle() { return (PathStyle) entry.style; }
+    public PathStyleShape getStyle() { return (PathStyleShape) entry.style; }
     /** Set current style of stroke for this plottable */
-    public void setStyle(PathStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setStyle(PathStyleShape newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 }

@@ -7,7 +7,7 @@ package visometry.plottable;
 
 import java.awt.Color;
 import java.util.Arrays;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ public class VPath<C> extends VAbstractPointArray<C> {
      * @param path the path
      */
     public VPath(C... path) {
-        super(new PathStyle( new Color(64, 0, 0) ), path);
+        super(new PathStyleShape( new Color(64, 0, 0) ), path);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class VPath<C> extends VAbstractPointArray<C> {
     }
 
     /** @return current style of stroke for this plottable */
-    public PathStyle getStyle() { return (PathStyle) entry.style; }
+    public PathStyleShape getStyle() { return (PathStyleShape) entry.style; }
     /** Set current style of stroke for this plottable */
-    public void setStyle(PathStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public void setStyle(PathStyleShape newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
     
 }

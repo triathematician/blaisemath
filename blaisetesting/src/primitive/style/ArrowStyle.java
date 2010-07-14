@@ -8,6 +8,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -27,7 +28,15 @@ public class ArrowStyle extends AbstractPathStyle
         implements PrimitiveStyle<Point2D.Double[]> {
 
     /** ArrowShape types for the ends of the arrow */
-    public enum ArrowShape { NONE, REGULAR, DOT, TRIANGLE }
+    public enum ArrowShape {
+        NONE(false), 
+        REGULAR(false),
+        DOT(true),
+        TRIANGLE(true);
+        
+        boolean fill;
+        ArrowShape(boolean fill) { this.fill = fill; }
+    }
 
     /** ArrowShape of the arrowhead */
     ArrowShape headShape = ArrowShape.REGULAR;
@@ -67,10 +76,12 @@ public class ArrowStyle extends AbstractPathStyle
     public ArrowShape getAnchorShape() { return anchorShape; }
     /** Sets arrow shape of anchor */
     public void setAnchorShape(ArrowShape anchorShape) { this.anchorShape = anchorShape; }
+
     /** @return arrow shape of head */
     public ArrowShape getHeadShape() { return headShape; }
     /** Sets arrow shape of head */
     public void setHeadShape(ArrowShape shape) { this.headShape = shape; }
+    
     /** @return size of arrow head/anchor */
     public int getShapeSize() { return shapeSize; }
     /** Sets size of arrow head/anchor */
@@ -81,37 +92,24 @@ public class ArrowStyle extends AbstractPathStyle
         canvas.setStroke(stroke);
         canvas.draw(new Line2D.Double(primitive[0], primitive[1]));
         if (headShape != ArrowShape.NONE) {
-            canvas.draw(getShape(primitive[1],
+            java.awt.Shape s = getShape(primitive[1],
                     primitive[1].x - primitive[0].x,
                     primitive[1].y - primitive[0].y,
-                    shapeSize, headShape));
+                    shapeSize, headShape);
+            if (headShape.fill) canvas.fill(s); else canvas.draw(s);
         }
         if (anchorShape != ArrowShape.NONE) {
-            canvas.draw(getShape(primitive[0],
+            Shape s = getShape(primitive[0],
                     primitive[0].x - primitive[1].x,
                     primitive[0].y - primitive[1].y,
-                    shapeSize, anchorShape));
+                    shapeSize, anchorShape);
+            if (anchorShape.fill) canvas.fill(s); else canvas.draw(s);
         }
     }
 
     public void drawArray(Graphics2D canvas, Point2D.Double[][] primitives) {
-        canvas.setColor(strokeColor);
-        canvas.setStroke(stroke);
-        for (Point2D.Double[] arr : primitives) {
-            canvas.draw(new Line2D.Double(arr[0], arr[1]));
-            if (headShape != ArrowShape.NONE) {
-                canvas.draw(getShape(arr[1],
-                        arr[1].x - arr[0].x,
-                        arr[1].y - arr[0].y,
-                        shapeSize, headShape));
-            }
-            if (anchorShape != ArrowShape.NONE) {
-                canvas.draw(getShape(arr[0],
-                        arr[0].x - arr[1].x,
-                        arr[0].y - arr[1].y,
-                        shapeSize, anchorShape));
-            }
-        }
+        for (Point2D.Double[] p : primitives)
+            draw(canvas, p);
     }
 
     public boolean contained(Point2D.Double[] primitive, Graphics2D canvas, Point point) {

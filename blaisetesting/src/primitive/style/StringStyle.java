@@ -76,7 +76,7 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** @return location of anchor point of string relative to provided coordinate */
     public int getAnchor() { return anchor; }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
-    public void setAnchor(int newValue) { anchor = newValue; }
+    public void setAnchor(int newValue) { if (newValue >= 0 && newValue <= 8) anchor = newValue; }
 
     public void draw(Graphics2D canvas, GraphicString<Point2D.Double> gs) {
         canvas.setColor(color);

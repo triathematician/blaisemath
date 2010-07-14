@@ -25,6 +25,8 @@ import primitive.GraphicString;
  */
 public class PointLabeledStyle extends PointStyle {
 
+    /** Whether label is visible */
+    boolean labelVisible = true;
     /** The string style */
     StringStyle sStyle = new StringStyle();
 
@@ -51,17 +53,24 @@ public class PointLabeledStyle extends PointStyle {
     public int getLabelAnchor() { return sStyle.getAnchor(); }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
     public void setLabelAnchor(int newValue) { sStyle.setAnchor(newValue); }
+    /** @return true if label is visible, else false */
+    public boolean isLabelVisible() { return labelVisible; }
+    /** Sets label visibility */
+    public void setLabelVisible(boolean visible) { this.labelVisible = visible; }
+
 
     @Override
     public void draw(Graphics2D canvas, Point2D.Double point) {
         if (point instanceof GraphicString) {
             GraphicString gs = (GraphicString) point;
-            setOffset(gs, sStyle.anchor, 3+radius);
             if (gs.anchor instanceof Point2D.Double)
                 super.draw(canvas, (Point2D.Double) gs.anchor);
             else
                 super.draw(canvas, point);
-            sStyle.draw(canvas, gs);
+            if (labelVisible) {
+                setOffset(gs, sStyle.anchor, 3+radius);
+                sStyle.draw(canvas, gs);
+            }
         } else {
             super.draw(canvas, point);
         }

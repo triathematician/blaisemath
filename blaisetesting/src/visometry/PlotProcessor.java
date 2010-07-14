@@ -19,9 +19,11 @@ import primitive.PrimitiveEntry;
  *
  * After preparation, a renderer will use the data stored here to draw everything.
  *
- * @author Elisha Peterson
- *
  * @param <C> type of the local coordinate
+ *
+ * @see VPrimitiveEntry
+ *
+ * @author Elisha Peterson
  */
 public abstract class PlotProcessor<C> {
 

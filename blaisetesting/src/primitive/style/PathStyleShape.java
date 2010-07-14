@@ -1,5 +1,5 @@
 /**
- * PathStyle.java
+ * PathStyleShape.java
  * Created on Aug 4, 2009
  */
 
@@ -14,7 +14,7 @@ import java.awt.Stroke;
 
 /**
  * <p>
- *   <code>PathStyle</code> represents any style that is applied to paths or lines.
+ *   <code>PathStyleShape</code> represents any style that is applied to paths or lines.
  *   The default options are the <code>Stroke</code> object and the color... I may
  *   consider changing this to alter the stroke directly via patterns here such as
  *   width, dashes, etc. Alternately, I may design a "builder" to construct various
@@ -23,16 +23,16 @@ import java.awt.Stroke;
  *
  * @author Elisha Peterson
  */
-public class PathStyle extends AbstractPathStyle implements PrimitiveStyle<Shape> {
+public class PathStyleShape extends AbstractPathStyle implements PrimitiveStyle<Shape> {
 
     /** Construct with default stroke and color black */
-    public PathStyle() {}
+    public PathStyleShape() {}
     /** Construct with specific color. */
-    public PathStyle(Color color) { super(color); }
+    public PathStyleShape(Color color) { super(color); }
     /** Construct with specific color/width. */
-    public PathStyle(Color color, float width){ super(color, width); }
+    public PathStyleShape(Color color, float width){ super(color, width); }
     /** Construct with specified color/stroke. */
-    public PathStyle(Color color, BasicStroke stroke){ super(color, stroke); }
+    public PathStyleShape(Color color, BasicStroke stroke){ super(color, stroke); }
     
 
     @Override

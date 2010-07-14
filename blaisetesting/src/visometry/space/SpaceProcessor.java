@@ -8,7 +8,7 @@ package visometry.space;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import primitive.*;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import primitive.style.ShapeStyle;
 import scio.coordinate.Point3D;
 import visometry.PlotProcessor;
@@ -19,7 +19,7 @@ import visometry.VPrimitiveEntry;
  * Handles conversion of graphics primitives from planar type to window type. Supported primitives:
  * <ul>
  *      <li>A single point: <code>Point2D.Double</code>
- *      <li>An array of points: <code>Point2D.Double[]</code> (using a <code>PathStyle</code>, a <code>ShapeStyle</code>, or a <code>PointStyle</code>)
+ *      <li>An array of points: <code>Point2D.Double[]</code> (using a <code>PathStyleShape</code>, a <code>ShapeStyle</code>, or a <code>PointStyle</code>)
  *      <li>A point with attached string: <code>GraphicString</code>
  *      <li>A point with a radius parameter: <code>GraphicParPoint</code>
  *      <li>A path or shape: <code>Shape</code>
@@ -38,7 +38,7 @@ public class SpaceProcessor extends PlotProcessor<Point3D> {
         {
             entry.primitive = vis.getWindowPointOf((Point3D) entry.local);
         }
-        else if (entry.local instanceof Point3D[] && (entry.style instanceof PathStyle || entry.style instanceof ShapeStyle))
+        else if (entry.local instanceof Point3D[] && (entry.style instanceof PathStyleShape || entry.style instanceof ShapeStyle))
         {
             Point3D[] locArr = (Point3D[]) entry.local;
             GeneralPath path = new GeneralPath();

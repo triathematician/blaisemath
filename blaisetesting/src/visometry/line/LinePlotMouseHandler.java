@@ -18,7 +18,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import primitive.style.PathStyle;
+import primitive.style.PathStyleShape;
 import primitive.style.ShapeStyle;
 import visometry.PaintsCanvas;
 
@@ -57,7 +57,7 @@ public class LinePlotMouseHandler
     /** Stores vertices of zoom box. */
     transient double[][] cZoom;
     /** Style of zoom box */
-    final static ShapeStyle zoomBoxStyle = new ShapeStyle(new PathStyle(new Color(255, 128, 128, 128), 2f), new Color(255, 216, 216, 128));
+    final static ShapeStyle zoomBoxStyle = new ShapeStyle(new PathStyleShape(new Color(255, 128, 128, 128), 2f), new Color(255, 216, 216, 128));
 
     public void paint(Graphics2D canvas) {
         if (cZoom != null) {

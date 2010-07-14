@@ -13,6 +13,8 @@ import primitive.style.PrimitiveStyle;
  * This is the standard "drawn" object used by plottables.
  *
  * @author Elisha Peterson
+ *
+ * @see PlotProcessor
  */
 public class VPrimitiveEntry extends PrimitiveEntry {
     /** The local primitive. */

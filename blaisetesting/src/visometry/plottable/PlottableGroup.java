@@ -84,11 +84,13 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
     }
 
     /**
-     * Adds specified plottable to the group. Also sets up change listening.
+     * Adds specified plottable to the group, provided it is not already there.
+     * Also sets up change listening.
      * @param plottable the plottable to add.
      */
     public void add(Plottable<C> plottable) {
-        plottables.add(plottable);
+        if (!plottables.contains(plottable))
+            plottables.add(plottable);
         plottable.parent = this;
         fireStateChanged();
     }
@@ -98,9 +100,11 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      * @param plottables the plottables to add.
      */
     public void addAll(Collection<? extends Plottable<C>> pp) {
-        plottables.addAll(pp);
-        for (Plottable p : pp)
+        for (Plottable p : pp) {
+            if (!plottables.contains(p))
+                plottables.add(p);
             p.parent = this;
+        }
         fireStateChanged();
     }
 
