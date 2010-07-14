@@ -42,8 +42,8 @@ public class SubgraphTest {
         EE = new Integer[][] {
             {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
         };
-        UNDIRECTED_INSTANCE = new Subgraph(Graphs.getInstance(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
-        DIRECTED_INSTANCE = new Subgraph(Graphs.getInstance(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        UNDIRECTED_INSTANCE = new Subgraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        DIRECTED_INSTANCE = new Subgraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
     }
 
     @AfterClass

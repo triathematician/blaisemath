@@ -44,8 +44,8 @@ public class ContractedGraphTest {
         EE = new Integer[][] {
             {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
         };
-        UNDIRECTED_INSTANCE = new ContractedGraph(Graphs.getInstance(false, Arrays.asList(VV), Arrays.asList(EE)), SUB, CVX);
-        DIRECTED_INSTANCE = new ContractedGraph(Graphs.getInstance(true, Arrays.asList(VV), Arrays.asList(EE)), SUB, CVX);
+        UNDIRECTED_INSTANCE = new ContractedGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE)), SUB, CVX);
+        DIRECTED_INSTANCE = new ContractedGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE)), SUB, CVX);
     }
 
     @AfterClass

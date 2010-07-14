@@ -63,92 +63,6 @@ public class GraphsTest {
     }
 
     @Test
-    public void testGetInstance() {
-        System.out.println("getInstance");
-        String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
-        Graph<String> result1 = Graphs.getInstance(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
-        Graph<String> result2 = Graphs.getInstance(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
-        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B, D] B: [A, C] C: [B, D] D: [A, C] E: [E]", Graphs.printGraph(result1));
-        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B] B: [C] C: [D] D: [A] E: [E]", Graphs.printGraph(result2));
-    }
-
-    @Test
-    public void testGetEmptyGraphInstance() {
-        System.out.println("getEmptyGraphInstance");
-        assertEquals("0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n", Graphs.getEmptyGraphInstance(4, false).toString());
-        assertEquals("0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n", Graphs.getEmptyGraphInstance(4, true).toString());
-        Graph result = Graphs.getEmptyGraphInstance(10, true);
-        assertEquals(10, result.order());
-        assertEquals(0, result.edgeNumber());
-        for (int i = 0; i < 10; i++)
-            assertTrue(result.contains(i));
-    }
-
-    @Test
-    public void testGetCompleteGraphInstance() {
-        System.out.println("getCompleteGraphInstance");
-        assertEquals("0 1 1 1 \n1 0 1 1 \n1 1 0 1 \n1 1 1 0 \n", Graphs.getCompleteGraphInstance(4, false).toString());
-        assertEquals("1 1 1 1 \n1 1 1 1 \n1 1 1 1 \n1 1 1 1 \n", Graphs.getCompleteGraphInstance(4, true).toString());
-        Graph result = Graphs.getCompleteGraphInstance(6, false);
-        Graph result2 = Graphs.getCompleteGraphInstance(6, true);
-        assertEquals(6, result.order());
-        assertEquals(6, result2.order());
-        assertEquals(15, result.edgeNumber());
-        assertEquals(36, result2.edgeNumber());
-        for (int i = 0; i < 6; i++) {
-            assertTrue(result.contains(i));
-            assertTrue(result2.contains(i));
-        }
-    }
-
-    @Test
-    public void testGetCycleGraphInstance() {
-        System.out.println("getCycleGraphInstance");
-        assertEquals("0 1 0 1 \n1 0 1 0 \n0 1 0 1 \n1 0 1 0 \n", Graphs.getCycleGraphInstance(4, false).toString());
-        assertEquals("0 1 0 0 \n0 0 1 0 \n0 0 0 1 \n1 0 0 0 \n", Graphs.getCycleGraphInstance(4, true).toString());
-    }
-
-    @Test
-    public void testGetStarGraphInstance() {
-        System.out.println("getStarGraphInstance");
-        assertEquals("0 1 1 1 \n1 0 0 0 \n1 0 0 0 \n1 0 0 0 \n", Graphs.getStarGraphInstance(4).toString());
-    }
-
-    @Test
-    public void testGetWheelGraphInstance() {
-        System.out.println("getWheelGraphInstance");
-        assertEquals("0 1 1 1 1 \n1 0 1 0 1 \n1 1 0 1 0 \n1 0 1 0 1 \n1 1 0 1 0 \n", Graphs.getWheelGraphInstance(5).toString());
-    }
-
-    @Test
-    public void testGetRandomInstance_probability() {
-        System.out.println("getRandomInstance (probability): MANUALLY CHECK FOR DESIRED OUTPUT");
-        Graph<Integer> result1 = Graphs.getRandomInstance(10, 0f, false);
-        assertEquals(10, result1.order()); assertEquals(0, result1.edgeNumber());
-        result1 = Graphs.getRandomInstance(10, 1f, true);
-        assertEquals(10, result1.order()); assertEquals(100, result1.edgeNumber());
-        result1 = Graphs.getRandomInstance(10, 1f, false);
-        assertEquals(10, result1.order()); assertEquals(45, result1.edgeNumber());
-        result1 = Graphs.getRandomInstance(10, .25f, false);
-        System.out.println("  UNDIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + Graphs.printGraph(result1));
-        result1 = Graphs.getRandomInstance(10, .25f, true);
-        System.out.println("  DIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + Graphs.printGraph(result1));
-    }
-
-    @Test
-    public void testGetRandomInstance_number_of_edges() {
-        System.out.println("getRandomInstance (number of edges): MANUALLY CHECK FOR DESIRED OUTPUT");
-        Graph<Integer> result1 = Graphs.getRandomInstance(10, 0, false);
-        assertEquals(10, result1.order()); assertEquals(0, result1.edgeNumber());
-        result1 = Graphs.getRandomInstance(10, 30, false);
-        assertEquals(10, result1.order()); assertEquals(30, result1.edgeNumber());
-        System.out.println("  UNDIRECTED: " + Graphs.printGraph(result1));
-        result1 = Graphs.getRandomInstance(10, 30, true);
-        assertEquals(10, result1.order()); assertEquals(30, result1.edgeNumber());
-        System.out.println("  DIRECTED: " + Graphs.printGraph(result1));
-    }
-
-    @Test
     public void testCopyGraph() {
         System.out.println("copyGraph");
         Graph<Integer> copy1 = Graphs.copyGraph(UNDIRECTED_INSTANCE);
@@ -172,8 +86,8 @@ public class GraphsTest {
         assertEquals("[[0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]", Arrays.deepToString(result2));
 
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
-        Graph<String> result3 = Graphs.getInstance(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
-        Graph<String> result4 = Graphs.getInstance(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
+        Graph<String> result3 = GraphFactory.getGraph(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
+        Graph<String> result4 = GraphFactory.getGraph(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
         assertEquals("[[0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 0, 0, 0, 1]]", Arrays.deepToString(Graphs.adjacencyMatrix(result3)));
         assertEquals("[[0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 0, 0, 0, 1]]", Arrays.deepToString(Graphs.adjacencyMatrix(result4)));
     }
@@ -182,8 +96,8 @@ public class GraphsTest {
     public void testAdjacencyMatrixPowers() {
         System.out.println("adjacencyMatrixPowers");
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
-        Graph<String> result1 = Graphs.getInstance(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
-        Graph<String> result2 = Graphs.getInstance(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
+        Graph<String> result1 = GraphFactory.getGraph(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
+        Graph<String> result2 = GraphFactory.getGraph(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
         assertEquals("[[0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 0, 0, 0, 1]]", Arrays.deepToString(Graphs.adjacencyMatrixPowers(result1,12)[0]));
         assertEquals("[[2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [0, 0, 0, 0, 1]]", Arrays.deepToString(Graphs.adjacencyMatrixPowers(result1,12)[1]));
         assertEquals("[[0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 1]]", Arrays.deepToString(Graphs.adjacencyMatrixPowers(result2,12)[1]));
@@ -204,25 +118,25 @@ public class GraphsTest {
     @Test
     public void testGeodesicTree() {
         System.out.println("geodesicTree");
-        NodeValueGraph<Integer, Integer> gd1_2 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 2);
+        ValuedGraph<Integer, Integer> gd1_2 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 2);
         assertEquals(8, gd1_2.order()); assertEquals(7, gd1_2.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd1_11 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 11);
+        ValuedGraph<Integer, Integer> gd1_11 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 11);
         assertEquals(8, gd1_11.order()); assertEquals(7, gd1_11.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd1_15 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 15);
+        ValuedGraph<Integer, Integer> gd1_15 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 15);
         assertEquals(1, gd1_15.order()); assertEquals(0, gd1_15.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd1_20 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 20);
+        ValuedGraph<Integer, Integer> gd1_20 = Graphs.geodesicTree(UNDIRECTED_INSTANCE, 20);
         assertEquals(2, gd1_20.order()); assertEquals(1, gd1_20.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_2 = Graphs.geodesicTree(DIRECTED_INSTANCE, 2);
+        ValuedGraph<Integer, Integer> gd2_2 = Graphs.geodesicTree(DIRECTED_INSTANCE, 2);
         assertEquals(8, gd2_2.order()); assertEquals(7, gd2_2.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_3 = Graphs.geodesicTree(DIRECTED_INSTANCE, 3);
+        ValuedGraph<Integer, Integer> gd2_3 = Graphs.geodesicTree(DIRECTED_INSTANCE, 3);
         assertEquals(1, gd2_3.order()); assertEquals(0, gd2_3.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_11 = Graphs.geodesicTree(DIRECTED_INSTANCE, 11);
+        ValuedGraph<Integer, Integer> gd2_11 = Graphs.geodesicTree(DIRECTED_INSTANCE, 11);
         assertEquals(8, gd2_11.order()); assertEquals(7, gd2_11.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_15 = Graphs.geodesicTree(DIRECTED_INSTANCE, 15);
+        ValuedGraph<Integer, Integer> gd2_15 = Graphs.geodesicTree(DIRECTED_INSTANCE, 15);
         assertEquals(1, gd2_15.order()); assertEquals(0, gd2_15.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_20 = Graphs.geodesicTree(DIRECTED_INSTANCE, 20);
+        ValuedGraph<Integer, Integer> gd2_20 = Graphs.geodesicTree(DIRECTED_INSTANCE, 20);
         assertEquals(2, gd2_20.order()); assertEquals(1, gd2_20.edgeNumber());
-        NodeValueGraph<Integer, Integer> gd2_21 = Graphs.geodesicTree(DIRECTED_INSTANCE, 21);
+        ValuedGraph<Integer, Integer> gd2_21 = Graphs.geodesicTree(DIRECTED_INSTANCE, 21);
         assertEquals(1, gd2_21.order()); assertEquals(0, gd2_21.edgeNumber());
 
         for (int i = 1; i <= 6; i++) {

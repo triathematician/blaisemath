@@ -23,7 +23,7 @@ public class NodeValueGraphWrapperTest {
     static Integer[] VV;
     static Integer[][] EE;
     static MatrixGraph<Integer> UNDIRECTED_INSTANCE, DIRECTED_INSTANCE;
-    static NodeValueGraphWrapper<Integer, String> UNDIR_VALUE, DIR_VALUE;
+    static ValuedGraphWrapper<Integer, String> UNDIR_VALUE, DIR_VALUE;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -35,8 +35,8 @@ public class NodeValueGraphWrapperTest {
         UNDIRECTED_INSTANCE = MatrixGraph.getInstance(false, Arrays.asList(VV), Arrays.asList(EE));
         DIRECTED_INSTANCE = MatrixGraph.getInstance(true, Arrays.asList(VV), Arrays.asList(EE));
 
-        UNDIR_VALUE = new NodeValueGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);
-        DIR_VALUE = new NodeValueGraphWrapper<Integer, String>(DIRECTED_INSTANCE);
+        UNDIR_VALUE = new ValuedGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);
+        DIR_VALUE = new ValuedGraphWrapper<Integer, String>(DIRECTED_INSTANCE);
 
         assertEquals(UNDIRECTED_INSTANCE.adjacent(1, 2), UNDIR_VALUE.adjacent(1, 2));
         assertEquals(UNDIRECTED_INSTANCE.contains(2), UNDIR_VALUE.contains(2));
@@ -77,8 +77,8 @@ public class NodeValueGraphWrapperTest {
     public void testGetValue() {
         System.out.println("getValue/setValue");
 
-        UNDIR_VALUE = new NodeValueGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);
-        DIR_VALUE = new NodeValueGraphWrapper<Integer, String>(DIRECTED_INSTANCE);
+        UNDIR_VALUE = new ValuedGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);
+        DIR_VALUE = new ValuedGraphWrapper<Integer, String>(DIRECTED_INSTANCE);
 
         UNDIR_VALUE.setValue(1, "test1");
         DIR_VALUE.setValue(1, "test1");
@@ -87,10 +87,8 @@ public class NodeValueGraphWrapperTest {
         assertEquals(null, UNDIR_VALUE.getValue(2));
         assertEquals(null, DIR_VALUE.getValue(2));
 
-        UNDIR_VALUE.setValue(999, "xxx");
-        DIR_VALUE.setValue(999, "xxx");
-        assertEquals(null, UNDIR_VALUE.getValue(999));
-        assertEquals(null, DIR_VALUE.getValue(999));
+        try { UNDIR_VALUE.setValue(999, "xxx"); fail("setValue should fire IllegalArgumentException"); } catch (IllegalArgumentException ex) {}
+        try { DIR_VALUE.setValue(999, "xxx"); fail("setValue should fire IllegalArgumentException"); } catch (IllegalArgumentException ex) {}
     }
 
 

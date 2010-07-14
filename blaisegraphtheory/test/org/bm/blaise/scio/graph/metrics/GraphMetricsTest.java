@@ -6,12 +6,10 @@
 package org.bm.blaise.scio.graph.metrics;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.io.SimpleGraphIOTest;
+import org.bm.blaise.scio.graph.io.PajekGraphIOTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,18 +23,11 @@ public class GraphMetricsTest {
 
     static Graph<Integer> SAMPLE_PADGETT, SAMPLE_AIRPORTS;
 
-    public GraphMetricsTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() throws Exception {
         System.out.println("-- GraphMetricsTest --");
-        SAMPLE_PADGETT = SimpleGraphIOTest.samplePadgett();
-        SAMPLE_AIRPORTS = SimpleGraphIOTest.sampleAirports();
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+        SAMPLE_PADGETT = PajekGraphIOTest.sampleXPadgett();
+        SAMPLE_AIRPORTS = PajekGraphIOTest.sampleXAirport();
     }
 
     @Test
@@ -44,9 +35,9 @@ public class GraphMetricsTest {
         System.out.println("DEGREE");
 
         Integer[] eDeg = new Integer[] {1, 3, 2, 3, 3, 1, 4, 1, 6, 1, 3, 0, 3, 2, 4, 3};
-        Map<Integer, Integer> deg = GraphMetrics.computeValues(SAMPLE_PADGETT, GraphMetrics.DEGREE);
+        List<Integer> deg = GraphMetrics.DEGREE.getAllValues(SAMPLE_PADGETT);
         for (int i = 0; i < eDeg.length; i++)
-            assertEquals(eDeg[i], deg.get(i+1));
+            assertEquals(eDeg[i], deg.get(i));
 
         Integer[] eDistr = new Integer[] { 1, 4, 2, 6, 2, 0, 1 };
         Map<Integer, Integer> distr = GraphMetrics.computeDistribution(SAMPLE_PADGETT, GraphMetrics.DEGREE);
@@ -66,9 +57,9 @@ public class GraphMetricsTest {
         System.out.println("DEGREE2");
 
         Integer[] eDeg = new Integer[] {6, 10, 9, 8, 6, 3, 9, 4, 11, 2, 6, 0, 11, 7, 8, 10};
-        Map<Integer, Integer> deg = GraphMetrics.computeValues(SAMPLE_PADGETT, GraphMetrics.DEGREE2);
+        List<Integer> deg = GraphMetrics.DEGREE2.getAllValues(SAMPLE_PADGETT);
         for (int i = 0; i < eDeg.length; i++)
-            assertEquals(eDeg[i], deg.get(i+1));
+            assertEquals(eDeg[i], deg.get(i));
 
         Integer[] eDistr = new Integer[] { 1, 0, 1, 1, 1, 0, 3, 1, 2, 2, 2, 2 };
         Map<Integer, Integer> distr = GraphMetrics.computeDistribution(SAMPLE_PADGETT, GraphMetrics.DEGREE2);
@@ -88,9 +79,9 @@ public class GraphMetricsTest {
         System.out.println("CLIQUE_COUNT");
 
         Integer[] eCC = new Integer[] {0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 1};
-        Map<Integer, Integer> cc = GraphMetrics.computeValues(SAMPLE_PADGETT, GraphMetrics.CLIQUE_COUNT);
+        List<Integer> cc = GraphMetrics.CLIQUE_COUNT.getAllValues(SAMPLE_PADGETT);
         for (int i = 0; i < eCC.length; i++)
-            assertEquals(eCC[i], cc.get(i+1));
+            assertEquals(eCC[i], cc.get(i));
 
         Integer[] eDistr = new Integer[] {9, 5, 2};
         Map<Integer, Integer> distr = GraphMetrics.computeDistribution(SAMPLE_PADGETT, GraphMetrics.CLIQUE_COUNT);
@@ -110,10 +101,10 @@ public class GraphMetricsTest {
         System.out.println("CLIQUE_COUNT2");
 
         Integer[] eCC2 = new Integer[] {1, 2, 3, 3, 3, 0, 4, 0, 3, 0, 2, 0, 6, 1, 5, 3};
-        Map<Integer, Integer> cc2 = GraphMetrics.computeValues(SAMPLE_PADGETT, GraphMetrics.CLIQUE_COUNT2);
+        List<Integer> cc2 = GraphMetrics.CLIQUE_COUNT2.getAllValues(SAMPLE_PADGETT);
         System.out.println(cc2);
         for (int i = 0; i < eCC2.length; i++)
-            assertEquals(eCC2[i], cc2.get(i+1));
+            assertEquals(eCC2[i], cc2.get(i));
 
         Integer[] eDistr = new Integer[] {4, 2, 2, 5, 1, 1, 1};
         Map<Integer, Integer> distr = GraphMetrics.computeDistribution(SAMPLE_PADGETT, GraphMetrics.CLIQUE_COUNT2);
@@ -124,15 +115,6 @@ public class GraphMetricsTest {
                 assertFalse(distr.containsKey(i));
             else
                 assertEquals(eDistr[i], distr.get(i));
-    }
-
-    @Test
-    public void testComputeValues() {
-        System.out.println("computeValues");
-        Integer[] eDeg = new Integer[] {1, 3, 2, 3, 3, 1, 4, 1, 6, 1, 3, 0, 3, 2, 4, 3};
-        Map<Integer, Integer> deg = GraphMetrics.computeValues(SAMPLE_PADGETT, GraphMetrics.DEGREE);
-        for (int i = 0; i < eDeg.length; i++)
-            assertEquals(eDeg[i], deg.get(i+1));
     }
 
     @Test
