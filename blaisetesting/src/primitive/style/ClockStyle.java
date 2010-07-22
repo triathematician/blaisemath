@@ -39,7 +39,7 @@ public class ClockStyle extends AbstractPrimitiveStyle<Point2D.Double> {
     /** The style of ticks. */
     PathStyleShape tickStyle = new PathStyleShape(Color.DARK_GRAY, 2);
     /** The style of date. */
-    StringStyle dateStyle = new StringStyle(StringStyle.ANCHOR_W);
+    StringStyle dateStyle = new StringStyle(StringStyle.Anchor.W);
 
     @Override
     public String toString() {

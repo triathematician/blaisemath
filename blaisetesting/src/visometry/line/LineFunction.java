@@ -40,7 +40,7 @@ public class LineFunction extends VPoint<Double> {
     public LineFunction(UnivariateRealFunction func) {
         super(0.0);
         primitives.add(oEntry = new VPrimitiveEntry(new GraphicString<Double>(0.0, PlottableConstants.FLOAT_FORMAT.format(0.0)),
-                new PointLabeledStyle(Color.BLACK, Color.YELLOW, StringStyle.ANCHOR_N)));
+                new PointLabeledStyle(Color.BLACK, Color.YELLOW, StringStyle.Anchor.N)));
         setFunction(func);
     }
 

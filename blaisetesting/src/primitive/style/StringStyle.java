@@ -24,15 +24,13 @@ import primitive.GraphicString;
 public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Double>> {
 
     /** Anchor point constants. */
-    public static final int ANCHOR_SW = 0;
-    public static final int ANCHOR_W = 1;
-    public static final int ANCHOR_NW = 2;
-    public static final int ANCHOR_N = 3;
-    public static final int ANCHOR_NE = 4;
-    public static final int ANCHOR_E = 5;
-    public static final int ANCHOR_SE = 6;
-    public static final int ANCHOR_S = 7;
-    public static final int ANCHOR_CENTER = 8;
+    public enum Anchor {
+        CENTER(0), 
+        W(0), NW(.25*Math.PI), N(.5*Math.PI), NE(.75*Math.PI),
+        E(Math.PI), SE(1.25*Math.PI), S(1.5*Math.PI), SW(1.75*Math.PI);
+        public double angle;
+        Anchor(double angle) { this.angle = angle; }
+    }
     
     /** Color of the text. */
     Color color = Color.BLACK;    
@@ -41,12 +39,12 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** Stores font size. */
     transient Float fontSize = null;
     /** Stores the anchor. */
-    int anchor = ANCHOR_SW;
+    Anchor anchor = Anchor.SW;
     
     /** Default constructor. */
     public StringStyle() { }
     /** Construct with anchor only */
-    public StringStyle(int orientation) { setAnchor(orientation); }
+    public StringStyle(Anchor anchor) { setAnchor(anchor); }
     /** Construct with color only */
     public StringStyle(Color color) { setColor(color); }
     /** Constructs with provided parameters. */
@@ -54,7 +52,7 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** Constructs with provided parameters. */
     public StringStyle(Color color, Font font) { this.color = color; this.font = font; }
     /** Construct with provided parameters */
-    public StringStyle(Color color, Font font, int anchor) { setAnchor(anchor); setColor(color); setFont(font); }
+    public StringStyle(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
     @Override
     public String toString() {
@@ -74,9 +72,9 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** @param font new font */
     public void setFont(Font font) { this.font = font; }
     /** @return location of anchor point of string relative to provided coordinate */
-    public int getAnchor() { return anchor; }
+    public Anchor getAnchor() { return anchor; }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
-    public void setAnchor(int newValue) { if (newValue >= 0 && newValue <= 8) anchor = newValue; }
+    public void setAnchor(Anchor newValue) { anchor = newValue; }
 
     public void draw(Graphics2D canvas, GraphicString<Point2D.Double> gs) {
         canvas.setColor(color);
@@ -100,25 +98,33 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
         double width = fm.getStringBounds(gs.string, canvas).getWidth();
         double height = fm.getAscent() - fm.getDescent();
 
-        if (anchor == ANCHOR_SW)
+        if (anchor == Anchor.SW)
             return new Rectangle2D.Double(gs.anchor.getX(), gs.anchor.getY(), width, height);
 
         Point2D.Double shift = new Point2D.Double();
 
         switch (anchor) {
-            case ANCHOR_NE: case ANCHOR_E: case ANCHOR_SE:
+            case NE: 
+            case E:
+            case SE:
                 shift.x = -width;
                 break;
-            case ANCHOR_N: case ANCHOR_CENTER: case ANCHOR_S:
+            case N: 
+            case CENTER:
+            case S:
                 shift.x = -width / 2;
                 break;
         }
         
         switch (anchor) {
-            case ANCHOR_NW: case ANCHOR_N: case ANCHOR_NE:
+            case NW: 
+            case N:
+            case NE:
                 shift.y = height;
                 break;
-            case ANCHOR_W: case ANCHOR_CENTER: case ANCHOR_E:
+            case W: 
+            case CENTER:
+            case E:
                 shift.y = height / 2;
                 break;
         }

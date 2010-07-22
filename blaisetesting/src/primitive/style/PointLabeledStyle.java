@@ -31,15 +31,15 @@ public class PointLabeledStyle extends PointStyle {
     StringStyle sStyle = new StringStyle();
 
     /** Construct with defaults. */
-    public PointLabeledStyle() { sStyle.anchor = StringStyle.ANCHOR_N; }
+    public PointLabeledStyle() { sStyle.anchor = StringStyle.Anchor.N; }
     /** Construct with default point style, specified anchor location */
-    public PointLabeledStyle(int anchor) { super(); sStyle.anchor = anchor; }
+    public PointLabeledStyle(StringStyle.Anchor anchor) { super(); sStyle.anchor = anchor; }
     /** Construct with colors only. */
-    public PointLabeledStyle(Color strokeColor, Color fillColor, int anchor) { super(strokeColor, fillColor); sStyle.anchor = anchor; }
+    public PointLabeledStyle(Color strokeColor, Color fillColor, StringStyle.Anchor anchor) { super(strokeColor, fillColor); sStyle.anchor = anchor; }
     /** Construct with specified elements. */
-    public PointLabeledStyle(PointShape shape, int radius, int anchor) { super(shape, radius); sStyle.anchor = anchor; }
+    public PointLabeledStyle(PointShape shape, int radius, StringStyle.Anchor anchor) { super(shape, radius); sStyle.anchor = anchor; }
     /** Construct with specified elements. */
-    public PointLabeledStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, int radius, int anchor) { super(shape, stroke, strokeColor, fillColor, radius); sStyle.anchor = anchor; }
+    public PointLabeledStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, int radius, StringStyle.Anchor anchor) { super(shape, stroke, strokeColor, fillColor, radius); sStyle.anchor = anchor; }
 
     /** @return color of string */
     public Color getLabelColor() { return sStyle.getColor(); }
@@ -50,9 +50,9 @@ public class PointLabeledStyle extends PointStyle {
     /** @param font new font */
     public void setLabelFont(Font font) { sStyle.setFont(font); }
     /** @return location of anchor point of string relative to provided coordinate */
-    public int getLabelAnchor() { return sStyle.getAnchor(); }
+    public StringStyle.Anchor getLabelAnchor() { return sStyle.getAnchor(); }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
-    public void setLabelAnchor(int newValue) { sStyle.setAnchor(newValue); }
+    public void setLabelAnchor(StringStyle.Anchor newValue) { sStyle.setAnchor(newValue); }
     /** @return true if label is visible, else false */
     public boolean isLabelVisible() { return labelVisible; }
     /** Sets label visibility */
@@ -83,23 +83,11 @@ public class PointLabeledStyle extends PointStyle {
      * @param anchor anchor location for string
      * @param radius radius to offset the string
      */
-    static void setOffset(GraphicString gs, int anchor, double radius) {
-        if (anchor == StringStyle.ANCHOR_CENTER) {
+    static void setOffset(GraphicString gs, StringStyle.Anchor anchor, double radius) {
+        if (anchor == StringStyle.Anchor.CENTER)
             gs.offset = new Point2D.Double();
-            return;
-        }
-        double angle = 0;
-        switch(anchor) {
-            case StringStyle.ANCHOR_NE: angle = .75*Math.PI; break;
-            case StringStyle.ANCHOR_N: angle = .5*Math.PI; break;
-            case StringStyle.ANCHOR_NW: angle = .25*Math.PI; break;
-            case StringStyle.ANCHOR_W: angle = 0; break;
-            case StringStyle.ANCHOR_SW: angle = 1.75*Math.PI; break;
-            case StringStyle.ANCHOR_S: angle = 1.5*Math.PI; break;
-            case StringStyle.ANCHOR_SE: angle = 1.25*Math.PI; break;
-            case StringStyle.ANCHOR_E: angle = Math.PI; break;
-        }
-        gs.offset = new Point2D.Double(radius*Math.cos(angle), radius*Math.sin(angle));
+        else
+            gs.offset = new Point2D.Double(radius*Math.cos(anchor.angle), radius*Math.sin(anchor.angle));
     }
 
 }

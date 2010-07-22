@@ -39,9 +39,13 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         if (entry.local == null)
             return;
 
-        if (entry.local instanceof GraphicString)
-            convertGraphicString(entry, (GraphicString) entry.local, vis);
+        if (entry.local instanceof GraphicPointFancy)
+            convertGraphicPointFancy(entry, (GraphicPointFancy) entry.local, vis);
+        else if (entry.local instanceof GraphicPointFancy[])
+            convertGraphicPointFancy(entry, (GraphicPointFancy[]) entry.local, vis);
 
+        else if (entry.local instanceof GraphicString)
+            convertGraphicString(entry, (GraphicString) entry.local, vis);
         else if (entry.local instanceof GraphicString[])
             convertGraphicString(entry, (GraphicString[]) entry.local, vis);
 
@@ -137,6 +141,27 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             throw new IllegalArgumentException( "PlaneProcessor.convert: Unable to handle local primitive of type " + entry.local.getClass() + " (value = " + entry.local + ")" );
         
         entry.needsConversion = false;
+    }
+
+    /** Converts "fancy" graphic points */
+    private static void convertGraphicPointFancy(VPrimitiveEntry entry, GraphicPointFancy loc, Visometry<Point2D.Double> vis) {
+        if (loc.getAnchor() instanceof Point2D.Double) {
+            GraphicPointFancy<Point2D.Double> result;
+            entry.primitive = result = new GraphicPointFancy<Point2D.Double>(vis.getWindowPointOf((Point2D.Double) loc.getAnchor()), loc.getString(), loc.getRadius());
+            result.setLocation(result.anchor);
+        }
+    }
+
+    /** Converts graphic strings */
+    private static void convertGraphicPointFancy(VPrimitiveEntry entry, GraphicPointFancy[] locArr, Visometry<Point2D.Double> vis) {
+        GraphicPointFancy[] winArr = new GraphicPointFancy[locArr.length];
+        for (int i = 0; i < locArr.length; i++) {
+            if (locArr[i].getAnchor() instanceof Point2D.Double) {
+                winArr[i] = new GraphicPointFancy<Point2D.Double>(vis.getWindowPointOf((Point2D.Double) locArr[i].getAnchor()), locArr[i].getString(), locArr[i].getRadius());
+                winArr[i].setLocation((Point2D.Double) winArr[i].anchor);
+            }
+        }
+        entry.primitive = winArr;
     }
 
     /** Converts graphic strings */

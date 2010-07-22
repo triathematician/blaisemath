@@ -8,7 +8,6 @@ package primitive.style;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import primitive.GraphicPointRadius;
 
 /**
@@ -51,13 +50,12 @@ public class PointRadiusStyle extends AbstractPrimitiveStyle<GraphicPointRadius<
     }
 
     public void draw(Graphics2D canvas, GraphicPointRadius<Point2D.Double> primitive) {
-        Point2D.Double[] drawn = new Point2D.Double[2];
         baseStyle.setRadius((int) primitive.rad);
         baseStyle.draw(canvas, primitive.anchor);
     }
 
-    public boolean contained(GraphicPointRadius<Double> primitive, Graphics2D canvas, Point point) {
-        return false;
+    public boolean contained(GraphicPointRadius<Point2D.Double> primitive, Graphics2D canvas, Point point) {
+        return primitive.anchor.distance(point) <= primitive.rad;
     }
 
 }
