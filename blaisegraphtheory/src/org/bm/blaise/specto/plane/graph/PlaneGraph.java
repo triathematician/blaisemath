@@ -9,16 +9,19 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.RandomGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
-import primitive.GraphicString;
+import primitive.GraphicPointFancy;
 import primitive.style.ArrowStyle;
-import primitive.style.ArrowStyle.ArrowShape;
-import primitive.style.PointLabeledStyle;
+import primitive.style.PointFancyStyle;
 import primitive.style.PointStyle;
 import primitive.style.StringStyle;
+import util.ChangeBroadcaster;
 import visometry.PointDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
@@ -41,7 +44,7 @@ import visometry.plottable.VPointSet;
  * @see VPointSet
  */
 public class PlaneGraph extends Plottable<Point2D.Double>
-        implements PointDragListener<Point2D.Double> {
+        implements PointDragListener<Point2D.Double>, ChangeBroadcaster {
 
     /** Vertices; underlying primitive is an array of GraphicString's */
     VPrimitiveEntry vertexEntry;
@@ -50,6 +53,10 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     /** The underlying graph object. */
     Graph graph;
 
+    /** Values associated with the vertices (may be null) */
+    double[] vertexValues;
+
+
     /** The initial layout scheme. */
     private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
     /** The initial layout parameters */
@@ -57,13 +64,17 @@ public class PlaneGraph extends Plottable<Point2D.Double>
 
     /** Constructs graph with a sample network */
     public PlaneGraph() {
-        this(RandomGraph.getInstance(20, 25, true));
+        this(RandomGraph.getInstance(20, 25, false));
     }
 
     public PlaneGraph(Graph graph) {
-        addPrimitive(edgeEntry = new VPrimitiveEntry(null, new ArrowStyle(new Color(96, 192, 96))));
-        PointLabeledStyle vStyle = new PointLabeledStyle(PointStyle.PointShape.SQUARE, 4, StringStyle.ANCHOR_N);
+        ArrowStyle eStyle = new ArrowStyle(new Color(96, 192, 96));
+        eStyle.setThickness(2f);
+        addPrimitive(edgeEntry = new VPrimitiveEntry(null, eStyle));
+
+        PointFancyStyle vStyle = new PointFancyStyle(PointStyle.PointShape.CIRCLE, StringStyle.Anchor.N);
         vStyle.setLabelColor(new Color(128, 128, 128));
+        vStyle.setMaxRadius(2.0);
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
         setGraph(graph);
     }
@@ -74,9 +85,9 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     }
     
     /** @return current style of point for this plottable */
-    public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) vertexEntry.style; }
+    public PointFancyStyle getPointStyle() { return (PointFancyStyle) vertexEntry.style; }
     /** Set current style of point for this plottable */
-    public void setPointStyle(PointLabeledStyle newValue) { if (vertexEntry.style != newValue) { vertexEntry.style = newValue; firePlottableStyleChanged(); } }
+    public void setPointStyle(PointFancyStyle newValue) { if (vertexEntry.style != newValue) { vertexEntry.style = newValue; firePlottableStyleChanged(); } }
 
     /** @return true if points are visible */
     public boolean isPointsVisible() { return vertexEntry.visible; }
@@ -107,8 +118,8 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         Point2D.Double[] curPts = getPoint();
         if (vertexEntry.local == null || curPts == null || curPts.length != size) {
             // if objects do not exist or sizes do not match, create them
-            GraphicString[] gsa = new GraphicString[size];
-            vertexEntry.local = gsa;
+            GraphicPointFancy[] gpfa = new GraphicPointFancy[size];
+            vertexEntry.local = gpfa;
             // initialize the layout, but use old positions whenever available
             Point2D.Double[] newPts = INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
             if (curPts != null)
@@ -118,20 +129,20 @@ public class PlaneGraph extends Plottable<Point2D.Double>
             Object value;
             for (int i = 0; i < size; i++) {
                 if (nvg != null && (value = nvg.getValue(nodes.get(i))) != null)
-                    gsa[i] = new GraphicString<Point2D.Double>(newPts[i], nvg.getValue(nodes.get(i)).toString());
+                    gpfa[i] = new GraphicPointFancy<Point2D.Double>(newPts[i], value.toString(), 5);
                 else
-                    gsa[i] = new GraphicString<Point2D.Double>(newPts[i], nodes.get(i).toString());
+                    gpfa[i] = new GraphicPointFancy<Point2D.Double>(newPts[i], nodes.get(i).toString(), 5);
             }
         } else {
             // here the objects exist, and the sizes match, so just need to update the labels
-            GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+            GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
             if (graph instanceof ValuedGraph) {
                 ValuedGraph nvg = (ValuedGraph) graph;
                 for (int i = 0; i < size; i++)
-                    gsa[i].string = nvg.getValue(nodes.get(i)).toString();
+                    gpfa[i].string = nvg.getValue(nodes.get(i)).toString();
             } else {
                 for (int i = 0; i < size; i++)
-                    gsa[i].string = nodes.get(i).toString();
+                    gpfa[i].string = nodes.get(i).toString();
             }
         }
 
@@ -144,14 +155,36 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         firePlottableChanged();
     }
 
+    /** @return current list of vertex values */
+    public double[] getNodeValues() {
+        return vertexValues;
+    }
+
+    /** Sets current list of vertex values */
+    public void setNodeValues(double[] values) {
+        if (values == null) {
+            vertexValues = null;
+            firePlottableChanged();
+        } else if (vertexEntry.local != null && graph != null) {
+            if (values.length != graph.nodes().size())
+                throw new IllegalArgumentException("setVertexValues requires #nodes = #values");
+            GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
+            for (int i = 0; i < values.length; i++)
+                gpfa[i].rad = values[i];
+            needsRepaint = true;
+            vertexEntry.needsConversion = true;
+            firePlottableChanged();
+        }
+    }
+
 
     /** @return window location of the i'th point */
     public Point2D.Double getPoint(int i) {
-        return (Point2D.Double) ((GraphicString[])vertexEntry.local)[i].anchor;
+        return (Point2D.Double) ((GraphicPointFancy[])vertexEntry.local)[i].anchor;
     }
     /** Sets location of the i'th point */
     public void setPoint(int i, Point2D.Double newValue) {
-        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         gsa[i].anchor = newValue;
         vertexEntry.needsConversion = true;
         firePlottableChanged();
@@ -160,7 +193,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     public Point2D.Double[] getPoint() {
         if (vertexEntry.local == null)
             return null;
-        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         Point2D.Double[] result = new Point2D.Double[gsa.length];
         for (int i = 0; i < gsa.length; i++)
             result[i] = (Point2D.Double) gsa[i].anchor;
@@ -171,7 +204,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         if (loc.length != graph.order())
             return;
 //            throw new IllegalArgumentException("setPoint: number of points does not match number of nodes.");
-        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         for (int i = 0; i < gsa.length; i++)
             gsa[i].anchor = loc[i];
         vertexEntry.needsConversion = true;
@@ -181,7 +214,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     /** Sets label of i'th vertex */
     public void setLabel(int i, String newLabel) {
         // TODO - probably should change this to make use of the <code>NodeValueGraph</code> construction.
-        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         gsa[i].string = newLabel;
         vertexEntry.needsConversion = true;
         firePlottableStyleChanged();
@@ -190,7 +223,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     @Override
     protected void recompute() {
         ArrayList<Point2D.Double[]> edges = new ArrayList<Point2D.Double[]>();
-        GraphicString[] gsa = (GraphicString[]) vertexEntry.local;
+        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         List nodes = graph.nodes();
         int size = nodes.size();
         for (int i1 = 0; i1 < size; i1++)
@@ -207,15 +240,33 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     public void mouseDragInitiated(Object source, Point2D.Double start) {}
     public void mouseDragged(Object source, Point2D.Double current) {
         int index = vertexEntry.getActiveIndex();
-        if (index != -1)
+        if (index != -1) {
             setPoint(index, current);
+            fireStateChanged();
+        }
     }
     public void mouseDragCompleted(Object source, Point2D.Double end) {
         mouseDragged(source, end);
     }
+    
+    //
+    // EVENT HANDLING
+    //
 
-    /** Applies the specified layout to the current graph */
-    public void applyLayout(StaticGraphLayout layoutAlgorithm, double... parameters) {
-        setPoint(layoutAlgorithm.layout(graph, parameters));
+    protected ChangeEvent changeEvent = new ChangeEvent(this);
+    protected EventListenerList listenerList = new EventListenerList();
+
+    public void addChangeListener(ChangeListener l) { listenerList.add(ChangeListener.class, l); }
+    public void removeChangeListener(ChangeListener l) { listenerList.remove(ChangeListener.class, l); }
+
+    /** Notify interested listeners of an (unspecified) change in the plottable. */
+    public void fireStateChanged() {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = listeners.length - 2; i >= 0; i -= 2)
+            if (listeners[i] == ChangeListener.class) {
+                if (changeEvent == null)
+                    return;
+                ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
+            }
     }
 }

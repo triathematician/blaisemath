@@ -5,28 +5,36 @@
 
 package graphexplorer;
 
+import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
-import gui.MPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
+import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.bm.blaise.scio.graph.metrics.subset.AdditiveSubsetMetric;
 import org.bm.blaise.scio.graph.metrics.subset.ContractiveSubsetMetric;
 import org.bm.blaise.scio.graph.metrics.subset.CooperationSubsetMetric;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
+import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -35,8 +43,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.YIntervalRenderer;
 import org.jfree.data.xy.DefaultIntervalXYDataset;
-import org.jfree.data.xy.DefaultXYDataset;
-import org.jfree.data.xy.XYBarDataset;
+import stormtimer.BetterTimer;
 import visometry.plane.PlanePlotComponent;
 import visometry.plottable.Plottable;
 
@@ -44,12 +51,13 @@ import visometry.plottable.Plottable;
  *
  * @author Elisha Peterson
  */
-public class GraphExplorerMain extends javax.swing.JFrame {
+public class GraphExplorerMain extends javax.swing.JFrame
+        implements ChangeListener, GraphExplorerInterface {
 
     /** Tracks the active graph in the explorer */
     PlaneGraph activeGraph;
-    /** Layout engine that may animate */
-    IterativeGraphLayout activeLayout;
+    /** Stores current bean for adjusting visual settings */
+    PlaneGraphBean graphBean;
 
     /** Chart displaying statistical data */
     ChartPanel distributionCP;
@@ -65,6 +73,8 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         distributionCP = new ChartPanel(distributionFC);
         distributionCP.setPreferredSize(new Dimension(400,300));
         boxP2.add(distributionCP, BorderLayout.CENTER);
+
+        toolbar.add(javax.swing.Box.createHorizontalGlue());
     }
 
     /** General actions */
@@ -95,20 +105,36 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        graphProperties = new data.propertysheet.PropertySheet();
-        energyProperties = new data.propertysheet.PropertySheet();
+        labelPS = new data.propertysheet.PropertySheet();
+        edgePS = new data.propertysheet.PropertySheet();
+        nodePS = new data.propertysheet.PropertySheet();
+        layoutPS = new data.propertysheet.PropertySheet();
         mainTM = new graphexplorer.GraphTableModel();
         distributionTableSP = new javax.swing.JScrollPane();
         distributionTable = new javax.swing.JTable();
+        newPM = new javax.swing.JPopupMenu();
+        emptyMI1 = new javax.swing.JMenuItem();
+        circleMI1 = new javax.swing.JMenuItem();
+        starMI1 = new javax.swing.JMenuItem();
+        wheelMI1 = new javax.swing.JMenuItem();
+        completeMI1 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        uniform1MI1 = new javax.swing.JMenuItem();
+        preferentialMI1 = new javax.swing.JMenuItem();
+        layoutPM = new javax.swing.JPopupMenu();
+        circularMI1 = new javax.swing.JMenuItem();
+        randomMI1 = new javax.swing.JMenuItem();
+        energyStartMI1 = new javax.swing.JMenuItem();
         toolbar = new javax.swing.JToolBar();
-        newB = new javax.swing.JButton();
-        loadB = new javax.swing.JButton();
-        saveB = new javax.swing.JButton();
+        newTBB = new javax.swing.JButton();
+        loadTBB = new javax.swing.JButton();
+        saveTBB = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
-        layoutB = new javax.swing.JButton();
-        energyB = new javax.swing.JToggleButton();
+        layoutTBB = new javax.swing.JButton();
+        energyTBB = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        metricB = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        metricCB1 = new javax.swing.JComboBox();
         mainSP = new javax.swing.JSplitPane();
         graphTP = new javax.swing.JTabbedPane();
         propertySP = new javax.swing.JScrollPane();
@@ -129,6 +155,15 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         outputTP = new javax.swing.JTextPane();
         menu = new javax.swing.JMenuBar();
         fileM = new javax.swing.JMenu();
+        newM = new javax.swing.JMenu();
+        emptyMI = new javax.swing.JMenuItem();
+        circleMI = new javax.swing.JMenuItem();
+        starMI = new javax.swing.JMenuItem();
+        wheelMI = new javax.swing.JMenuItem();
+        completeMI = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        uniform1MI = new javax.swing.JMenuItem();
+        preferentialMI = new javax.swing.JMenuItem();
         loadM = new javax.swing.JMenu();
         loadEdgeListMI = new javax.swing.JMenuItem();
         loadPajekMI = new javax.swing.JMenuItem();
@@ -140,19 +175,6 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         savePajekXMI = new javax.swing.JMenuItem();
         closeMI = new javax.swing.JMenuItem();
         quitMI = new javax.swing.JMenuItem();
-        createM = new javax.swing.JMenu();
-        emptyMI = new javax.swing.JMenuItem();
-        circleMI = new javax.swing.JMenuItem();
-        starMI = new javax.swing.JMenuItem();
-        wheelMI = new javax.swing.JMenuItem();
-        completeMI = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        uniform1MI = new javax.swing.JMenuItem();
-        uniform2MI = new javax.swing.JMenuItem();
-        preferentialMI = new javax.swing.JMenuItem();
-        preferentialMI_long = new javax.swing.JMenuItem();
-        preferentialMI2 = new javax.swing.JMenuItem();
-        preferentialMI2_long = new javax.swing.JMenuItem();
         layoutM = new javax.swing.JMenu();
         circularMI = new javax.swing.JMenuItem();
         randomMI = new javax.swing.JMenuItem();
@@ -161,7 +183,7 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         energyStopMI = new javax.swing.JMenuItem();
         energyIterateMI = new javax.swing.JMenuItem();
         metricM = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        cooperationMI = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         distDegreeMI = new javax.swing.JMenuItem();
         distDegree2MI = new javax.swing.JMenuItem();
@@ -193,59 +215,115 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         ));
         distributionTableSP.setViewportView(distributionTable);
 
+        emptyMI1.setAction(actions_gen.GENERATE_EMPTY);
+        emptyMI1.setText("Empty Graph");
+        newPM.add(emptyMI1);
+
+        circleMI1.setAction(actions_gen.GENERATE_CIRCLE);
+        circleMI1.setText("Circle Graph");
+        newPM.add(circleMI1);
+
+        starMI1.setAction(actions_gen.GENERATE_STAR);
+        starMI1.setText("Star Graph");
+        newPM.add(starMI1);
+
+        wheelMI1.setAction(actions_gen.GENERATE_WHEEL);
+        wheelMI1.setText("Wheel Graph");
+        newPM.add(wheelMI1);
+
+        completeMI1.setAction(actions_gen.GENERATE_COMPLETE);
+        completeMI1.setText("Complete Graph");
+        newPM.add(completeMI1);
+        newPM.add(jSeparator5);
+
+        uniform1MI1.setAction(actions_gen.GENERATE_RANDOM);
+        uniform1MI1.setText("Uniform random graph...");
+        newPM.add(uniform1MI1);
+
+        preferentialMI1.setAction(actions_gen.GENERATE_PREFERENTIAL);
+        preferentialMI1.setText("Preferential Attachment...");
+        newPM.add(preferentialMI1);
+
+        circularMI1.setAction(actions_layout.LAYOUT_CIRCULAR);
+        circularMI1.setText("Circular");
+        layoutPM.add(circularMI1);
+
+        randomMI1.setAction(actions_layout.LAYOUT_RANDOM);
+        randomMI1.setText("Random");
+        layoutPM.add(randomMI1);
+
+        energyStartMI1.setAction(actions_layout.LAYOUT_ENERGY_START);
+        energyStartMI1.setText("Start");
+        layoutPM.add(energyStartMI1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Graph Explorer");
 
         toolbar.setRollover(true);
 
-        newB.setText("New");
-        newB.setEnabled(false);
-        newB.setFocusable(false);
-        newB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(newB);
-
-        loadB.setAction(actions_io.LOAD_PAJEK_ACTION);
-        loadB.setText("Load");
-        loadB.setFocusable(false);
-        loadB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        loadB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(loadB);
-
-        saveB.setAction(actions_io.SAVE_PAJEK_ACTION);
-        saveB.setText("Save");
-        saveB.setFocusable(false);
-        saveB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        saveB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(saveB);
-        toolbar.add(jSeparator2);
-
-        layoutB.setText("Layout");
-        layoutB.setEnabled(false);
-        layoutB.setFocusable(false);
-        layoutB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        layoutB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(layoutB);
-
-        energyB.setText("Play");
-        energyB.setToolTipText("Plays/pauses energy layout mechanism for current graph");
-        energyB.setFocusable(false);
-        energyB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        energyB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        energyB.addActionListener(new java.awt.event.ActionListener() {
+        newTBB.setText("New...");
+        newTBB.setComponentPopupMenu(newPM);
+        newTBB.setFocusable(false);
+        newTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        newTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        newTBB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                energyBActionPerformed(evt);
+                newTBBActionPerformed(evt);
             }
         });
-        toolbar.add(energyB);
+        toolbar.add(newTBB);
+
+        loadTBB.setAction(actions_io.LOAD_PAJEK_ACTION);
+        loadTBB.setText("Load");
+        loadTBB.setFocusable(false);
+        loadTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        loadTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolbar.add(loadTBB);
+
+        saveTBB.setAction(actions_io.SAVE_PAJEK_ACTION);
+        saveTBB.setText("Save");
+        saveTBB.setFocusable(false);
+        saveTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        saveTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolbar.add(saveTBB);
+        toolbar.add(jSeparator2);
+
+        layoutTBB.setText("Layout...");
+        layoutTBB.setFocusable(false);
+        layoutTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        layoutTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        layoutTBB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                layoutTBBActionPerformed(evt);
+            }
+        });
+        toolbar.add(layoutTBB);
+
+        energyTBB.setText("Play");
+        energyTBB.setToolTipText("Plays/pauses energy layout mechanism for current graph");
+        energyTBB.setFocusable(false);
+        energyTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        energyTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        energyTBB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                energyTBBActionPerformed(evt);
+            }
+        });
+        toolbar.add(energyTBB);
         toolbar.add(jSeparator3);
 
-        metricB.setText("Metric");
-        metricB.setEnabled(false);
-        metricB.setFocusable(false);
-        metricB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        metricB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(metricB);
+        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 13));
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("Metric: ");
+        toolbar.add(jLabel1);
+
+        metricCB1.setModel(new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values()));
+        metricCB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metricCB1ActionPerformed(evt);
+            }
+        });
+        toolbar.add(metricCB1);
 
         getContentPane().add(toolbar, java.awt.BorderLayout.NORTH);
 
@@ -327,6 +405,39 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         fileM.setText("File");
 
+        newM.setText("New");
+
+        emptyMI.setAction(actions_gen.GENERATE_EMPTY);
+        emptyMI.setText("Empty Graph");
+        newM.add(emptyMI);
+
+        circleMI.setAction(actions_gen.GENERATE_CIRCLE);
+        circleMI.setText("Circle Graph");
+        newM.add(circleMI);
+
+        starMI.setAction(actions_gen.GENERATE_STAR);
+        starMI.setText("Star Graph");
+        newM.add(starMI);
+
+        wheelMI.setAction(actions_gen.GENERATE_WHEEL);
+        wheelMI.setText("Wheel Graph");
+        newM.add(wheelMI);
+
+        completeMI.setAction(actions_gen.GENERATE_COMPLETE);
+        completeMI.setText("Complete Graph");
+        newM.add(completeMI);
+        newM.add(jSeparator1);
+
+        uniform1MI.setAction(actions_gen.GENERATE_RANDOM);
+        uniform1MI.setText("Uniform random graph...");
+        newM.add(uniform1MI);
+
+        preferentialMI.setAction(actions_gen.GENERATE_PREFERENTIAL);
+        preferentialMI.setText("Preferential Attachment...");
+        newM.add(preferentialMI);
+
+        fileM.add(newM);
+
         loadM.setText("Load graph from file");
 
         loadEdgeListMI.setAction(actions_io.LOAD_EDGELIST_ACTION);
@@ -373,55 +484,6 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         menu.add(fileM);
 
-        createM.setText("Create");
-
-        emptyMI.setAction(actions_gen.GENERATE_EMPTY);
-        emptyMI.setText("Empty Graph");
-        createM.add(emptyMI);
-
-        circleMI.setAction(actions_gen.GENERATE_CIRCLE);
-        circleMI.setText("Circle Graph");
-        createM.add(circleMI);
-
-        starMI.setAction(actions_gen.GENERATE_STAR);
-        starMI.setText("Star Graph");
-        createM.add(starMI);
-
-        wheelMI.setAction(actions_gen.GENERATE_WHEEL);
-        wheelMI.setText("Wheel Graph");
-        createM.add(wheelMI);
-
-        completeMI.setAction(actions_gen.GENERATE_COMPLETE);
-        completeMI.setText("Complete Graph");
-        createM.add(completeMI);
-        createM.add(jSeparator1);
-
-        uniform1MI.setAction(actions_gen.GENERATE_RANDOM_PROBABILITY);
-        uniform1MI.setText("Uniform (by edge probability)");
-        createM.add(uniform1MI);
-
-        uniform2MI.setAction(actions_gen.GENERATE_RANDOM_EDGE);
-        uniform2MI.setText("Uniform (by number of edges)");
-        createM.add(uniform2MI);
-
-        preferentialMI.setAction(actions_gen.GENERATE_PREFERENTIAL);
-        preferentialMI.setText("Preferential Attachment");
-        createM.add(preferentialMI);
-
-        preferentialMI_long.setAction(actions_gen.GENERATE_PREFERENTIAL_LONG);
-        preferentialMI_long.setText("Preferential Attachment (longitudinal)");
-        createM.add(preferentialMI_long);
-
-        preferentialMI2.setAction(actions_gen.GENERATE_PREFERENTIAL2);
-        preferentialMI2.setText("Preferential Attachment (varied connection #)");
-        createM.add(preferentialMI2);
-
-        preferentialMI2_long.setAction(actions_gen.GENERATE_PREFERENTIAL2_LONG);
-        preferentialMI2_long.setText("Preferential Attachment (longitudinal, varied connection #)");
-        createM.add(preferentialMI2_long);
-
-        menu.add(createM);
-
         layoutM.setText("Layout");
 
         circularMI.setAction(actions_layout.LAYOUT_CIRCULAR);
@@ -452,13 +514,13 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 
         metricM.setText("Metrics");
 
-        jMenuItem1.setText("Compute Cooperation");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        cooperationMI.setText("Compute Cooperation");
+        cooperationMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                cooperationMIActionPerformed(evt);
             }
         });
-        metricM.add(jMenuItem1);
+        metricM.add(cooperationMI);
         metricM.add(jSeparator4);
 
         distDegreeMI.setAction(actions_stat.STAT_DEGREE);
@@ -523,20 +585,20 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private void graphTPStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_graphTPStateChanged
         // update active graph based on selected tab
         Component active = graphTP.getSelectedComponent();
-        if (active == null) {
-            activeGraph = null;
-        } else if (active instanceof PlanePlotComponent) {
+        if (active == null)
+            setActiveGraph(null);
+        else if (active instanceof PlanePlotComponent) {
 
             PlanePlotComponent ppc = (PlanePlotComponent) active;
             Plottable[] ps = ppc.getPlottableArray();
             if (ps == null || ps.length == 0) {
-                activeGraph = null;
+                setActiveGraph(null);
                 return;
             }
 
             for (Plottable p : ps)
                 if (p instanceof PlaneGraph) {
-                    activeGraph = (PlaneGraph) p;
+                    setActiveGraph((PlaneGraph) p);
                     break;
                 }
 
@@ -554,10 +616,9 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         } else if (active instanceof LongitudinalGraphPanel) {
 
             LongitudinalGraphPanel lgp = (LongitudinalGraphPanel) active;
-            activeGraph = lgp.getPlaneGraph();
-            if (activeGraph == null) {
+            setActiveGraph(lgp.getPlaneGraph());
+            if (activeGraph == null)
                 return;
-            }
 
             Graph graph = activeGraph.getGraph();
 
@@ -583,21 +644,21 @@ public class GraphExplorerMain extends javax.swing.JFrame {
             ((ExplorerStatActions.StatEnum)metricCB.getSelectedItem()).getAction(actions_stat).actionPerformed(evt);
     }//GEN-LAST:event_metricCBActionPerformed
 
-    private void energyBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyBActionPerformed
+    private void energyTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyTBBActionPerformed
         if (activeGraph == null || activeGraph.getGraph() == null)
-            energyB.setSelected(false);
-        boolean status = energyB.isSelected();
+            energyTBB.setSelected(false);
+        boolean status = energyTBB.isSelected();
         if (status) {
             actions_layout.LAYOUT_ENERGY_START.actionPerformed(evt);
-            energyB.setText("Pause");
+            energyTBB.setText("Pause");
         } else {
             actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(evt);
-            energyB.setText("Play");
+            energyTBB.setText("Play");
         }
 
-    }//GEN-LAST:event_energyBActionPerformed
+    }//GEN-LAST:event_energyTBBActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void cooperationMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationMIActionPerformed
         if (activeGraph == null || activeGraph.getGraph() == null)
             return;
         CooperationPanel cp = new CooperationPanel();
@@ -614,7 +675,20 @@ public class GraphExplorerMain extends javax.swing.JFrame {
         double[] v2 = m2.getValue(activeGraph.getGraph(), subset);
         output("Computed additive metric with " + m + "   : selfish = " + v1[0] + ", altruistic = " + v1[1] + ", total = " + (v1[0]+v1[1]));
         output("Computed contractive metric with " + m + ": selfish = " + v2[0] + ", altruistic = " + v2[1] + ", total = " + (v2[0]+v2[1]));
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_cooperationMIActionPerformed
+
+    private void newTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTBBActionPerformed
+        newPM.show(newTBB, 5, 5);
+    }//GEN-LAST:event_newTBBActionPerformed
+
+    private void metricCB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricCB1ActionPerformed
+        metricCB.setSelectedItem(metricCB1.getSelectedItem());
+        metricCBActionPerformed(evt);
+    }//GEN-LAST:event_metricCB1ActionPerformed
+
+    private void layoutTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutTBBActionPerformed
+        layoutPM.show(layoutTBB, 5, 5);
+    }//GEN-LAST:event_layoutTBBActionPerformed
 
     /**
     * @param args the command line arguments
@@ -636,11 +710,14 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JPanel boxPanel;
     private javax.swing.JTabbedPane boxTP1;
     private javax.swing.JMenuItem circleMI;
+    private javax.swing.JMenuItem circleMI1;
     private javax.swing.JMenuItem circularMI;
+    private javax.swing.JMenuItem circularMI1;
     private javax.swing.JMenuItem closeMI;
     private javax.swing.JMenuItem completeMI;
+    private javax.swing.JMenuItem completeMI1;
     private javax.swing.JMenuItem contentMI;
-    private javax.swing.JMenu createM;
+    private javax.swing.JMenuItem cooperationMI;
     private javax.swing.JMenuItem distClique2MI;
     private javax.swing.JMenuItem distClique2MI1;
     private javax.swing.JMenuItem distClique2MI2;
@@ -653,31 +730,36 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem distDegreeMI;
     private javax.swing.JTable distributionTable;
     private javax.swing.JScrollPane distributionTableSP;
+    private data.propertysheet.PropertySheet edgePS;
     private javax.swing.JMenuItem emptyMI;
-    private javax.swing.JToggleButton energyB;
+    private javax.swing.JMenuItem emptyMI1;
     private javax.swing.JMenuItem energyIterateMI;
     private javax.swing.JMenu energyM;
-    private data.propertysheet.PropertySheet energyProperties;
     private javax.swing.JMenuItem energyStartMI;
+    private javax.swing.JMenuItem energyStartMI1;
     private javax.swing.JMenuItem energyStopMI;
+    private javax.swing.JToggleButton energyTBB;
     private javax.swing.JMenu fileM;
-    private data.propertysheet.PropertySheet graphProperties;
     private javax.swing.JTabbedPane graphTP;
     private javax.swing.JMenu helpM;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JButton layoutB;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private data.propertysheet.PropertySheet labelPS;
     private javax.swing.JMenu layoutM;
-    private javax.swing.JButton loadB;
+    private javax.swing.JPopupMenu layoutPM;
+    private data.propertysheet.PropertySheet layoutPS;
+    private javax.swing.JButton layoutTBB;
     private javax.swing.JMenuItem loadEdgeListMI;
     private javax.swing.JMenu loadM;
     private javax.swing.JMenuItem loadPajekMI;
     private javax.swing.JMenuItem loadPajekXLongMI;
     private javax.swing.JMenuItem loadPajekXMI;
+    private javax.swing.JButton loadTBB;
     private javax.swing.JSplitPane mainSP;
     private graphexplorer.GraphTableModel mainTM;
     private javax.swing.JTable mainTable;
@@ -685,93 +767,50 @@ public class GraphExplorerMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane mainTableSP;
     private javax.swing.JToolBar mainTableTB;
     private javax.swing.JMenuBar menu;
-    private javax.swing.JButton metricB;
     private javax.swing.JComboBox metricCB;
+    private javax.swing.JComboBox metricCB1;
     private javax.swing.JLabel metricL;
     private javax.swing.JMenu metricM;
-    private javax.swing.JButton newB;
+    private javax.swing.JMenu newM;
+    private javax.swing.JPopupMenu newPM;
+    private javax.swing.JButton newTBB;
+    private data.propertysheet.PropertySheet nodePS;
     private javax.swing.JScrollPane outputSP;
     private javax.swing.JTextPane outputTP;
     private javax.swing.JMenuItem preferentialMI;
-    private javax.swing.JMenuItem preferentialMI2;
-    private javax.swing.JMenuItem preferentialMI2_long;
-    private javax.swing.JMenuItem preferentialMI_long;
+    private javax.swing.JMenuItem preferentialMI1;
     private gui.RollupPanel propertyRP;
     private javax.swing.JScrollPane propertySP;
     private javax.swing.JMenuItem quitMI;
     private javax.swing.JMenuItem randomMI;
-    private javax.swing.JButton saveB;
+    private javax.swing.JMenuItem randomMI1;
     private javax.swing.JMenuItem saveEdgeListMI;
     private javax.swing.JMenuItem savePajekMI;
     private javax.swing.JMenuItem savePajekXMI;
+    private javax.swing.JButton saveTBB;
     private javax.swing.JMenuItem starMI;
+    private javax.swing.JMenuItem starMI1;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JMenuItem uniform1MI;
-    private javax.swing.JMenuItem uniform2MI;
+    private javax.swing.JMenuItem uniform1MI1;
     private javax.swing.JMenuItem wheelMI;
+    private javax.swing.JMenuItem wheelMI1;
     // End of variables declaration//GEN-END:variables
 
     /** Updates the property panel with active graph and energy layout */
     void updatePropertyPanel() {
-        graphProperties.setBean(activeGraph);
-        if (activeLayout != null)
-            energyProperties.setBean(activeLayout);
-        boolean addedGraph = false, addedEnergy = false;
-        for (Component c : propertyRP.getComponents())
-            if (c instanceof MPanel) {
-                if (((MPanel)c).getComponent() == graphProperties)
-                    addedGraph = true;
-                else if (((MPanel)c).getComponent() == energyProperties)
-                    addedEnergy = true;
-            }
-        if (!addedGraph)
-            propertyRP.add(graphProperties, "Active graph");
-        if (activeLayout != null && !addedEnergy)
-            propertyRP.add(energyProperties, "Energy layout parameters");
-    }
-
-    /** Adds a message to the output window. */
-    void output(String output) {
-        Document d = outputTP.getDocument();
-        try {
-            d.insertString(d.getLength(), output + "\n\n", null);
-        } catch (BadLocationException ex) {
-            Logger.getLogger(GraphExplorerMain.class.getName()).log(Level.SEVERE, null, ex);
+        propertyRP.removeAll();
+        if (activeGraph != null) {
+            if (graphBean != null)
+                graphBean.removeChangeListener(this);
+            graphBean = new PlaneGraphBean(activeGraph);
+            graphBean.addChangeListener(this);
+            propertyRP.add(nodePS = new PropertySheet(graphBean.nodeBean()), "Node Settings");
+            propertyRP.add(edgePS = new PropertySheet(graphBean.edgeBean()), "Edge Settings");
+            propertyRP.add(labelPS = new PropertySheet(graphBean.labelBean()), "Label Settings");
         }
-    }
-
-    /** Loads a graph into the explorer, by creating a new tabbed window that displays it. */
-    void loadGraph(Graph sg, String name) {
-        PlanePlotComponent ppc = new PlanePlotComponent();
-        ppc.add(activeGraph = new PlaneGraph(sg));
-        graphTP.add(name, ppc);
-        graphTP.setSelectedComponent(ppc);
-        if (mainTM.getGraph() != sg)
-            mainTM.setGraph(sg);
-        output("Successfully loaded graph " + name + " with " + sg.order() + " vertices and " + sg.edgeNumber() + " edges.");
-    }
-
-    /** Loads a longitudinal graph into the explorer, by creating a new tabbed window that displays it. */
-    void loadLongitudinalGraph(LongitudinalGraph lg, String name) {
-        LongitudinalGraphPanel lgp = new LongitudinalGraphPanel(lg);
-        graphTP.add(name, lgp);
-        graphTP.setSelectedComponent(lgp);
-        Graph slice = lgp.getActiveSlice();
-        if (mainTM.getGraph() != slice)
-            mainTM.setGraph(slice);
-
-        output("Successfully loaded longitudinal graph " + name
-                + " with time domain [" + lg.getMinimumTime() + ", " + lg.getMaximumTime() + "]"
-                + " and initial slice with " + slice.order() + " vertices and " + slice.edgeNumber() + " edges.");
-    }
-
-    /** Closes the active graph */
-    void closeActiveGraph() {
-        if (actions_layout.timer != null)
-            actions_layout.timer.stop();
-        graphTP.remove(graphTP.getSelectedComponent());
-        if (graphTP.getComponentCount() == 0)
-            mainTM.setGraph(null);
+        if (activeLayout != null)
+            propertyRP.add(layoutPS = new PropertySheet(activeLayout), "Energy layout parameters");
     }
 
     /**
@@ -779,20 +818,38 @@ public class GraphExplorerMain extends javax.swing.JFrame {
      * @param model the model for the table displaying values; also used for the chart's values
      * @param barWidth width of the bars displayed in the chart
      */
-    void setActiveMetric(NodeMetric metric, String metricName) {
-        if (activeGraph == null) {
+    <N extends Number> void setActiveMetric(NodeMetric<N> metric, String metricName) {
+        if (activeGraph == null)
             return;
-        }
-        DistributionTableModel model = new DistributionTableModel(activeGraph.getGraph(), metric);
-        distributionTable.setModel(model);
-        if (mainTM.getGraph() != activeGraph.getGraph())
-            mainTM.initialize(activeGraph.getGraph(), metric);
+
+        Graph graph = activeGraph.getGraph();
+        List nodes = graph.nodes();
+        int n = graph.order();
+
+        // update main table
+        if (mainTM.getGraph() != graph)
+            mainTM.initialize(graph, metric);
         else
             mainTM.setMetric(metric);
+
+        // update visual node sizes
+        double[] data1 = new double[n];
+        double max = 0;
+        for(int i = 0; i < n; i++) {
+            data1[i] = Math.sqrt(metric.getValue(graph, nodes.get(i)).doubleValue());
+            max = Math.max(max, data1[i]);
+        }
+        activeGraph.setNodeValues(data1);
+        graphBean.nodeBean().setSize(8/max);
+
+        // update distribution table
+        DistributionTableModel model = new DistributionTableModel(graph, metric);
+        distributionTable.setModel(model);
         boxP3.add(distributionTableSP, BorderLayout.CENTER);
         boxPanel.validate();
-        int[] counts = model.counts;
 
+        // convert distribution data for the chart
+        int[] counts = model.counts;
         int nSamples = counts.length;
         double[][] data = new double[6][counts.length];
         double x, y;
@@ -828,21 +885,170 @@ public class GraphExplorerMain extends javax.swing.JFrame {
 //                metricName, false,
 //                "Number of Nodes", new XYBarDataset(data, .9),
 //                PlotOrientation.VERTICAL, false, true, false));
-
-
-
-//        int countMax = counts[0];
-//        String countStr = "" + counts[0];
-//        for (int i = 1; i < counts.length; i++) { countStr += "," + counts[i]; countMax = Math.max(countMax, counts[i]); }
-//        String labelStr = "";
-//        for (Object o : model.values) { labelStr += o + "|"; }
-//        output("http://chart.apis.google.com/chart?cht=bvg&chs=800x300&chxt=x,y"
-//                + "&chd=t:" + countStr
-//                + "&chds=" + "0," + countMax
-//                + "&chxr=" + "1,0," + countMax
-//                + "&chxl=0:|" + labelStr
-//                + "&chbh=8,0,1"
-//                );
-
     }
+
+    //
+    // UTILITIES
+    //
+
+    public void output(String output) {
+        Document d = outputTP.getDocument();
+        try {
+            d.insertString(d.getLength(), output + "\n\n", null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(GraphExplorerMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //
+    // PROPERTY GETTERS
+    //
+
+    public Component component() {
+        return this;
+    }
+
+    public Graph activeGraph() {
+        return activeGraph == null ? null : activeGraph.getGraph();
+    }
+
+    public Point2D.Double[] getActivePoints() {
+        return activeGraph == null ? null : activeGraph.getPoint();
+    }
+
+    public void setActivePoints(Point2D.Double[] pos) {
+        if (pos != null && activeGraph != null && pos.length == activeGraph.getGraph().order())
+            activeGraph.setPoint(pos);
+    }
+
+    //
+    // INPUT/OUTPUT
+    //
+
+    /** Sets the currently active graph */
+    void setActiveGraph(PlaneGraph active) {
+        if (activeGraph != null)
+            activeGraph.removeChangeListener(this);
+        activeGraph = active;
+        if (active != null)
+            active.addChangeListener(this);
+    }
+
+    /** Loads a graph into the explorer, by creating a new tabbed window that displays it. */
+    public void loadGraph(Graph sg, String name) {
+        stopLayout();
+        newPositions = null;
+        PlanePlotComponent ppc = new PlanePlotComponent();
+        setActiveGraph(new PlaneGraph(sg));
+        ppc.add(activeGraph);
+        graphTP.add(name, ppc);
+        graphTP.setSelectedComponent(ppc);
+        if (mainTM.getGraph() != sg)
+            mainTM.setGraph(sg);
+        output("Successfully loaded graph " + name + " with " + sg.order() + " vertices and " + sg.edgeNumber() + " edges.");
+    }
+
+    public void loadLongitudinalGraph(LongitudinalGraph lg, String name) {
+        stopLayout();
+        newPositions = null;
+        LongitudinalGraphPanel lgp = new LongitudinalGraphPanel(lg);
+        setActiveGraph(lgp.getPlaneGraph());
+        graphTP.add(name, lgp);
+        graphTP.setSelectedComponent(lgp);
+        Graph slice = lgp.getActiveSlice();
+        if (mainTM.getGraph() != slice)
+            mainTM.setGraph(slice);
+        output("Successfully loaded longitudinal graph " + name
+                + " with time domain [" + lg.getMinimumTime() + ", " + lg.getMaximumTime() + "]"
+                + " and initial slice with " + slice.order() + " vertices and " + slice.edgeNumber() + " edges.");
+    }
+
+    public void closeActiveGraph() {
+        stopLayout();
+        activeGraph = null;
+        mainTM.setGraph(null);
+        graphTP.remove(graphTP.getSelectedComponent());
+    }
+
+    //
+    // LAYOUT METHODS
+    //
+
+    /** Layout engine that may animate */
+    IterativeGraphLayout activeLayout;
+    /** Timer handling animating layouts */
+    BetterTimer layoutTimer;
+    /** New positions for nodes when layout is reset */
+    Point2D.Double[] newPositions = null;
+
+    static final int STATIC = 0, ANIMATING = 1;
+
+    void setLayoutState(int state) {
+        switch(state) {
+            case STATIC: energyTBB.setSelected(false); break;
+            case ANIMATING: energyTBB.setSelected(true); break;
+        }
+    }
+
+    public void initLayout(StaticGraphLayout layout, double... parameters) {
+        stopLayout();
+        activeLayout = null;
+        activeGraph.setPoint(layout.layout(activeGraph.getGraph(), parameters));
+        newPositions = activeGraph.getPoint();
+        setLayoutState(STATIC);
+    }
+
+    public void initLayout(IterativeGraphLayout layout) {
+        stopLayout();
+        if (activeGraph() != null) {
+            if (activeLayout == null || activeLayout != layout)
+                activeLayout = layout;
+            layout.reset(activeGraph(), activeGraph.getPoint());
+            newPositions = null;
+            layoutTimer = new BetterTimer(100);
+            layoutTimer.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    iterateLayout();
+                }
+            });
+            layoutTimer.start();
+            setLayoutState(ANIMATING);
+        } else
+            setLayoutState(STATIC);
+    }
+
+    public void adjustLayout(StaticGraphLayout layout, double... parameters) {
+        if (activeGraph != null && activeGraph() != null)
+            newPositions = layout.layout(activeGraph(), parameters);
+    }
+
+    public void iterateLayout() {
+        if (newPositions != null) {
+            activeLayout.reset(activeGraph.getGraph(), newPositions);
+            newPositions = null;
+        }
+        activeGraph.setPoint(activeLayout.iterate(activeGraph.getGraph()));
+    }
+
+    public void stopLayout() {
+        if (layoutTimer != null)
+            layoutTimer.stop();
+        setLayoutState(STATIC);
+    }
+
+    //
+    // HANDLE CHANGES TO GRAPH
+    //
+
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == null) {
+
+        } else if (e.getSource() == activeGraph) {
+            newPositions = activeGraph.getPoint();
+        } else if (e.getSource() == graphBean) {
+            activeGraph.getParent().plottableStyleChanged(activeGraph);
+        }
+    }
+
+
 }

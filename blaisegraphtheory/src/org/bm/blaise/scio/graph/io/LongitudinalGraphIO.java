@@ -5,12 +5,15 @@
 
 package org.bm.blaise.scio.graph.io;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ListLongitudinalGraph;
@@ -45,12 +48,12 @@ public class LongitudinalGraphIO extends GraphIO {
     /** Factory method @return instanceo of this IO class */
     public static LongitudinalGraphIO getInstance() { return INSTANCE; }
 
-    public Graph<Integer> importGraph(File file) {
+    public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void saveGraph(Graph<Integer> graph, File file) {
+    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -68,14 +71,22 @@ public class LongitudinalGraphIO extends GraphIO {
     public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
         // stores the time associated with imported graphs
         Double curTime = Double.NaN;
+
         // stores the resulting list of graphs
         ListLongitudinalGraph<Integer> result = new ListLongitudinalGraph<Integer>();
         // stores the names of vertices
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
+        // stores points corresponding to vertices
+        TreeMap<Integer,double[]> locations = new TreeMap<Integer,double[]>();
+        // stores times corresponding to vertices
+        TreeMap<Integer,List<double[]>> times = new TreeMap<Integer,List<double[]>>();
+
         // stores the edges
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         // stores the weights of edges
         ArrayList<Double> weights = new ArrayList<Double>();
+        // stores the times corresponding to edges
+        ArrayList<List<double[]>> eTimes = new ArrayList<List<double[]>>();
 
         // Tracks the current input mode
         ImportMode mode = ImportMode.UNKNOWN;
@@ -127,11 +138,11 @@ public class LongitudinalGraphIO extends GraphIO {
                                 case UNKNOWN:
                                     break;
                                 case VERTICES:
-                                    PajekGraphIO.importLine_vertex(lineNumber, line, vertices);
+                                    PajekGraphIO.importLine_vertex(lineNumber, line, vertices, locations, times);
                                     break;
                                 case EDGES:
                                 case ARCS:
-                                    PajekGraphIO.importLine_edge(lineNumber, line, vertices, edges, weights);
+                                    PajekGraphIO.importLine_edge(lineNumber, line, vertices, edges, weights, eTimes);
                                     break;
                                 case MATRIX:
                                     PajekGraphIO.importLine_matrix(lineNumber, line, matrixLine, vertices, edges, weights);

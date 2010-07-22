@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph.io;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
-import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 
 /**
@@ -53,7 +53,7 @@ public final class EdgeListGraphIO extends GraphIO {
     /** Factory method @return instance of this IO class */
     public static EdgeListGraphIO getInstance() { return INSTANCE; }
 
-    public Graph<Integer> importGraph(File file) {        
+    public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file) {
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
         // stores the edges/arcs
@@ -97,7 +97,7 @@ public final class EdgeListGraphIO extends GraphIO {
     }
 
     @Override
-    public void saveGraph(Graph<Integer> graph, File file) {
+    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {

@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph.io;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,7 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -135,13 +138,22 @@ public final class PajekGraphIO extends GraphIO {
         }
     }
 
-    public Graph<Integer> importGraph(File file) {        
+    public Graph<Integer> importGraph(Map<Integer,double[]> locations, File file) {
+
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
+        // stores points corresponding to vertices
+        locations.clear();
+        // stores times corresponding to vertices
+        TreeMap<Integer,List<double[]>> times = new TreeMap<Integer,List<double[]>>();
+
         // stores the edges/arcs
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         // stores the weights of edges, in the same order as the edges list
         ArrayList<Double> weights = new ArrayList<Double>();
+        // stores the times corresponding to edges
+        ArrayList<List<double[]>> eTimes = new ArrayList<List<double[]>>();
+
         // whether resulting graph is directed
         boolean directed = false;
 
@@ -193,11 +205,11 @@ public final class PajekGraphIO extends GraphIO {
                                     // ignore the line
                                     break;
                                 case VERTICES:
-                                    importLine_vertex(lineNumber, line, vertices);
+                                    importLine_vertex(lineNumber, line, vertices, locations, times);
                                     break;
                                 case ARCS:
                                 case EDGES:
-                                    importLine_edge(lineNumber, line, vertices, edges, weights);
+                                    importLine_edge(lineNumber, line, vertices, edges, weights, eTimes);
                                     break;
                                 case ARCSLIST:
                                 case EDGELIST:
@@ -231,51 +243,6 @@ public final class PajekGraphIO extends GraphIO {
 
         directed = edgeModeUsed == ImportMode.MATRIX ? !symmetricMatrix(edges, weights) : edgeModeUsed.directedMode;
         return buildGraph(vertices, edges, weights, directed);
-    }
-
-    @Override
-    public void saveGraph(Graph<Integer> graph, File file) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            try {
-                // write the vertices
-                List<Integer> nodes = graph.nodes();
-                writer.write("*Vertices " + graph.order() + "\n");
-                if (graph instanceof ValuedGraph) {
-                    ValuedGraph nvg = (ValuedGraph) graph;
-                    for (Integer i : nodes) {
-                        Object value = nvg.getValue(i);
-                        writer.write(i + (value == null ? "" : " \"" + value.toString()) + "\"\n");
-                    }
-                } else {
-                    for (Integer i : graph.nodes())
-                        writer.write(i + "\n");
-                }
-                // write the edges; uses one edge per line by default
-                writer.write((graph.isDirected() ? "*Arcs" : "*Edges") + "\n");
-                if (graph instanceof WeightedGraph) {
-                    WeightedGraph wg = (WeightedGraph) graph;
-                    for (Integer i1 : nodes)
-                        for (Integer i2 : nodes) {
-                            if (!graph.isDirected() && i2 < i1) continue;
-                            if (!wg.adjacent(i1, i2)) continue;
-                            Object weight = wg.getWeight(i1, i2);
-                            writer.write(i1 + " " + i2 + (weight == null ? "" : " " + weight.toString()) + "\n");
-                        }
-                } else {
-                    for (Integer i1 : nodes)
-                        for (Integer i2 : nodes) {
-                            if (!graph.isDirected() && i2 < i1) continue;
-                            if (!graph.adjacent(i1, i2)) continue;
-                            writer.write(i1 + " " + i2 + "\n");
-                        }
-                }
-            } finally {
-                writer.close();
-            }
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
     }
 
     public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
@@ -334,31 +301,111 @@ public final class PajekGraphIO extends GraphIO {
         throw new IllegalStateException("parseVerticesModeNumber called for non-vertex-mode-line: " + line);
     }
 
+    /** Reads either a double value or a "*" */
+    static double extendedDouble(String s, boolean positive) {
+        return s.matches("\\s*\\*\\s*")
+                ? (positive ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY)
+                : Double.valueOf(s);
+    }
+
+    /**
+     * Parses a sequence of time intervals within a string.
+     * @param line string containing bracketed time intervals, e.g. [1-3,7]
+     * @return list of time intervals in a string
+     */
+    static List<double[]> parseTimeIntervals(String line) {
+        int i1 = line.indexOf("[");
+        int i2 = line.indexOf("]");
+        ArrayList<double[]> result = null;
+        if (i1 != -1 || i2 != -1) {
+            if (i1 != -1 && i2 != -1 && i2 > i1) {
+                result = new ArrayList<double[]>();
+                String inBracket = line.substring(i1+1, i2);
+                String[] intervals = inBracket.split(",");
+                for (String s : intervals) {
+                    int iDash = s.indexOf("-");
+                    if (iDash == -1) {
+                        double time = Double.valueOf(s);
+                        result.add(new double[]{time, time});
+                    } else {
+                        double t1 = extendedDouble(s.substring(0,iDash), false);
+                        double t2 = extendedDouble(s.substring(iDash+1), true);
+                        result.add(new double[]{t1, t2});
+                    }
+                }
+                if (result.size() > 0) {
+                    System.out.print("Found time intervals for vertex: ");
+                    for (double[] i : result) System.out.print(" " + Arrays.toString(i));
+                }
+            } else {
+                System.out.println("WARNING -- unexpected bracket expression: " + line);
+            }
+        }
+        return result;
+    }
+
     /**
      * Imports a vertex into the graph. The first argument is the vertex #, the second is the name.
      * The name is optional, and may or may not be surrounded by quotes ("...")
      * @param lineNumber number of line in import file
      * @param line the line to import... first argument is vertex #, second is name (optional)
      * @param vertices the map associating integer vertices to string labels of the vertices
+     * @param loc map containing locations of vertices
      * @throws NumberFormatException if unable to decode integer representation of vertex #
      */
-    static void importLine_vertex(int lineNumber, String line, Map<Integer, String> vertices)
+    static void importLine_vertex(int lineNumber, String line,
+                Map<Integer, String> vertices,
+                Map<Integer, double[]> loc,
+                Map<Integer, List<double[]>> times)
             throws NumberFormatException {
         Integer index = null;
         String name = null;
         String[] split = line.split("\\s+", 2);
         index = Integer.decode(split[0]);
-        if (split.length > 1) {
-            if (split[1].startsWith("\"")) {
-                int i2 = split[1].indexOf("\"", 1);
-                if (i2 != -1)
-                    name = split[1].substring(1, i2);
-                else
-                    System.out.println("WARNING -- line " + lineNumber + " has improperly formatted vertex label: " + line);
+        if (split.length == 1) {
+            vertices.put(index, name);
+            return;
+        }
+
+        String remainder = split[1];
+        // decode the vertex's label
+        if (remainder.startsWith("\"")) {
+            int i2 = remainder.indexOf("\"", 1);
+            if (i2 != -1) {
+                name = remainder.substring(1, i2);
+                remainder = remainder.substring(i2+1);
             } else
-                name = split[1].split("\\s+", 2)[0];
+                System.out.println("WARNING -- line " + lineNumber + " has improperly formatted vertex label: " + line);
+        } else {
+            split = remainder.split("\\s+", 2);
+            name = split[0];
+            remainder = split.length == 1 ? "" : split[1];
         }
         vertices.put(index, name);
+        
+        split = remainder.trim().split("\\s+");
+        // attempt to decode the vertex's location
+        if (split.length >= 2) {
+            double[] l = new double[3];
+            int length = 0;
+            try {
+                l[0] = Double.valueOf(split[0]); length = 1;
+                l[1] = Double.valueOf(split[1]); length = 2;
+                l[2] = Double.valueOf(split[2]); length = 3;
+            } catch (Exception ex) {
+            }
+            if (length == 2)
+                loc.put(index, new double[]{l[0], l[1]});
+            else if (length == 3)
+                loc.put(index, l);
+            else
+                System.out.println("WARNING -- line " + lineNumber + " has improperly formatted vertex location: " + remainder);
+        }
+
+        // look for numbers within bracket (specifying time intervals)
+        List<double[]> time = parseTimeIntervals(line);
+        if (time != null && time.size() > 0)
+            times.put(index, time);
     }
 
     /**
@@ -387,21 +434,38 @@ public final class PajekGraphIO extends GraphIO {
      * @param weights list object describing weights of edges
      * @throws NumberFormatException if unable to decode integer representation of a vertex #
      */
-    static void importLine_edge(int lineNumber, String line, Map<Integer,String> vertices, List<Integer[]> edges, List<Double> weights)
-            throws NumberFormatException {
-        // expect this to be completely space delimited... we are only interested in the first 3 entries
+    static void importLine_edge(int lineNumber, String line,
+                Map<Integer,String> vertices,
+                List<Integer[]> edges,
+                List<Double> weights,
+                List<List<double[]>> times) {
+        // expect this to be completely space delimited... we are only interested in the first 3 entries for now
         String[] split = line.split("\\s+", 4);
-        Integer v1 = Integer.decode(split[0]);
-        Integer v2 = Integer.decode(split[1]);
+
+        // read vertices
+        int v1, v2;
+        try {
+            v1 = Integer.decode(split[0]);
+            v2 = Integer.decode(split[1]);
+        } catch (NumberFormatException ex) {
+            return;
+        }
         checkForVertex(v1, vertices, lineNumber, line);
         checkForVertex(v2, vertices, lineNumber, line);
         edges.add(new Integer[]{v1, v2});
+
+        // read weights
         try {
             weights.add(split.length > 2 ? Double.valueOf(split[2]) : 1.0);
         } catch (NumberFormatException ex) {
             System.out.println("WARNING -- found improperly formatted weight " + split[2] + " on line " + lineNumber + ": " + line);
             weights.add(1.0);
         }
+
+        // look for time interval
+        List<double[]> time = parseTimeIntervals(line);
+        if (time != null && time.size() > 0)
+            times.add(time);
     }
     
     /**
@@ -414,8 +478,10 @@ public final class PajekGraphIO extends GraphIO {
      * @param weights list object describing weights of edges
      * @throws NumberFormatException if unable to decode integer representation of a vertex #
      */
-    static void importLine_edgelist(int lineNumber, String line, Map<Integer,String> vertices, List<Integer[]> edges, List<Double> weights)
-            throws NumberFormatException {
+    static void importLine_edgelist(int lineNumber, String line,
+            Map<Integer,String> vertices,
+            List<Integer[]> edges,
+            List<Double> weights) {
         // should be completely space-delimited, each entry a vertex
         String[] split = line.split("\\s+");
         int v0 = Integer.decode(split[0]);
@@ -442,7 +508,10 @@ public final class PajekGraphIO extends GraphIO {
      * @param weights list object describing weights of edges
      * @throws NumberFormatException if unable to decode number representation within the matrix
      */
-    static void importLine_matrix(int lineNumber, String line, int mxLine, Map<Integer, String> vertices, List<Integer[]> edges, List<Double> weights)
+    static void importLine_matrix(int lineNumber, String line, int mxLine,
+            Map<Integer, String> vertices,
+            List<Integer[]> edges,
+            List<Double> weights)
             throws NumberFormatException {
         String[] split = line.split("\\s+");
         checkForVertex(mxLine, vertices, lineNumber, line);
@@ -453,6 +522,64 @@ public final class PajekGraphIO extends GraphIO {
                 edges.add(new Integer[] { mxLine, i+1 } );
                 weights.add(weight);
             }
+        }
+    }
+
+
+    @Override
+    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            try {
+                // write the vertices
+                List<Integer> nodes = graph.nodes();
+                writer.write("*Vertices " + graph.order());
+                writer.newLine();
+                if (graph instanceof ValuedGraph) {
+                    ValuedGraph nvg = (ValuedGraph) graph;
+                    for (int i = 0; i < nodes.size(); i++) {
+                        int node = nodes.get(i);
+                        Object value = nvg.getValue(node);
+                        writer.write(node + (value == null ? "" : " \"" + value.toString()) + "\"");
+                        if (positions != null && positions[i] != null)
+                            writer.write(" " + positions[i].x + " " + positions[i].y);
+                        writer.newLine();
+                    }
+                } else {
+                    for (int i = 0; i < nodes.size(); i++) {
+                        writer.write(nodes.get(i).toString() + " " + nodes.get(i).toString());
+                        if (positions != null && positions[i] != null)
+                            writer.write(" " + positions[i].x + " " + positions[i].y);
+                        writer.newLine();
+                    }
+                }
+                // write the edges; uses one edge per line by default
+                writer.write(graph.isDirected() ? "*Arcs" : "*Edges");
+                writer.newLine();
+                if (graph instanceof WeightedGraph) {
+                    WeightedGraph wg = (WeightedGraph) graph;
+                    for (Integer i1 : nodes)
+                        for (Integer i2 : nodes) {
+                            if (!graph.isDirected() && i2 < i1) continue;
+                            if (!wg.adjacent(i1, i2)) continue;
+                            Object weight = wg.getWeight(i1, i2);
+                            writer.write(i1 + " " + i2 + (weight == null ? "" : " " + weight.toString()));
+                            writer.newLine();
+                        }
+                } else {
+                    for (Integer i1 : nodes)
+                        for (Integer i2 : nodes) {
+                            if (!graph.isDirected() && i2 < i1) continue;
+                            if (!graph.adjacent(i1, i2)) continue;
+                            writer.write(i1 + " " + i2);
+                            writer.newLine();
+                        }
+                }
+            } finally {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            System.err.println(ex);
         }
     }
 }

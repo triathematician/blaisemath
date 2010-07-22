@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph.io;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
-import org.bm.blaise.scio.graph.Graphs;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraphWrapper;
 import org.bm.blaise.scio.graph.WeightedGraphWrapper;
@@ -31,26 +31,29 @@ public abstract class GraphIO {
     
     /**
      * Reads in and returns a graph file
+     * @param locations information about positions of nodes in the file
      * @param file file containing information of the graph
      * @return the graph data structure
      */
-    public Graph<Integer> importGraph(URL file) { 
-        return importGraph(new File(file.getFile()));
+    public Graph<Integer> importGraph(Map<Integer, double[]> locations, URL file) {
+        return importGraph(locations, new File(file.getFile()));
     }
 
     /*
      * Reads in and returns a graph file
+     * @param locations information about positions of nodes in the file
      * @param file file containing information of the graph
      * @return the graph data structure, possibly with node labels attached to the vertices
      */
-    public abstract Graph<Integer> importGraph(File file);
+    public abstract Graph<Integer> importGraph(Map<Integer, double[]> locations, File file);
 
     /**
      * Saves a graph to a file.
-     * @graph the graph data structure
+     * @param graph the graph data structure
+     * @param positions the positions of vertices in the graph, in the same order returned by <code>graph.nodes()</code>
      * @param file the file to save the graph to
      */
-    public abstract void saveGraph(Graph<Integer> graph, File file);
+    public abstract void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file);
 
     //
     // LONGITUDINAL FILES

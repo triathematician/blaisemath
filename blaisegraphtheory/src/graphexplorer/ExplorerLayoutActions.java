@@ -6,16 +6,13 @@
 package graphexplorer;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
-import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
-import stormtimer.BetterTimer;
 
 /**
  * Describes layout actions supporting the graph explorer app.
@@ -24,12 +21,9 @@ import stormtimer.BetterTimer;
 class ExplorerLayoutActions {
 
     /** What this class works with */
-    GraphExplorerMain main;
+    GraphExplorerInterface main;
     /** Construction requires a main class */
-    public ExplorerLayoutActions(GraphExplorerMain main) { this.main = main; }
-
-    BetterTimer timer;
-    boolean updateEL;
+    public ExplorerLayoutActions(GraphExplorerInterface main) { this.main = main; }
 
     public Action LAYOUT_CIRCULAR = new AbstractAction("Circular layout") {
         {
@@ -39,10 +33,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null) {
-                main.activeGraph.applyLayout(StaticGraphLayout.CIRCLE, 5.0);
-                updateEL = true;
-            }
+            if (main.activeGraph() != null)
+                main.initLayout(StaticGraphLayout.CIRCLE, 5.0);
         }
     };
 
@@ -54,10 +46,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null) {
-                main.activeGraph.applyLayout(StaticGraphLayout.RANDOM, 5.0);
-                updateEL = true;
-            }
+            if (main.activeGraph() != null)
+                main.initLayout(StaticGraphLayout.RANDOM, 5.0);
         }
     };
 
@@ -69,35 +59,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null) {
-                if (main.activeLayout == null) {
-                    main.activeLayout = new EnergyLayout(main.activeGraph.getGraph(), main.activeGraph.getPoint());
-                } else if (updateEL)
-                    main.activeLayout.reset(main.activeGraph.getGraph(), main.activeGraph.getPoint());
-                timer = new BetterTimer(100);
-                timer.addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e) {
-                        if (updateEL)
-                            main.activeLayout.reset(main.activeGraph.getGraph(), main.activeGraph.getPoint());
-                        main.activeGraph.setPoint(main.activeLayout.iterate(main.activeGraph.getGraph()));
-                    }
-                });
-                timer.start();
-            }
-        }
-    };
-
-    public Action LAYOUT_ENERGY_STOP = new AbstractAction("Energy layout - stop") {
-        {
-            putValue(SHORT_DESCRIPTION, "Stops energy layout animation");
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK));
-            putValue(MNEMONIC_KEY, KeyEvent.VK_S);
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            if (timer != null)
-                timer.stop();
-            timer = null;
+            main.initLayout(new EnergyLayout(main.activeGraph(), main.getActivePoints()));
         }
     };
 
@@ -109,14 +71,19 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph != null) {
-                Graph graph = main.activeGraph.getGraph();
-                if (main.activeLayout == null) {
-                    main.activeLayout = new EnergyLayout(graph, main.activeGraph.getPoint());
-                } else if (updateEL)
-                    main.activeLayout.reset(graph, main.activeGraph.getPoint());
-                main.activeGraph.setPoint(main.activeLayout.iterate(graph));
-            }
+            main.iterateLayout();
+        }
+    };
+
+    public Action LAYOUT_ENERGY_STOP = new AbstractAction("Energy layout - stop") {
+        {
+            putValue(SHORT_DESCRIPTION, "Stops energy layout animation");
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_MASK));
+            putValue(MNEMONIC_KEY, KeyEvent.VK_S);
+            setEnabled(true);
+        }
+        public void actionPerformed(ActionEvent e) {
+            main.stopLayout();
         }
     };
 

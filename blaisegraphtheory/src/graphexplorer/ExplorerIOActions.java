@@ -8,7 +8,12 @@ package graphexplorer;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -27,9 +32,9 @@ import org.bm.blaise.scio.graph.io.PajekGraphIO;
 class ExplorerIOActions {
 
     /** What this class works with */
-    GraphExplorerMain main;
+    GraphExplorerInterface main;
     /** Construction requires a main class */
-    public ExplorerIOActions(GraphExplorerMain main) { this.main = main; }
+    public ExplorerIOActions(GraphExplorerInterface main) { this.main = main; }
 
 
     JFileChooser fc;
@@ -90,12 +95,20 @@ class ExplorerIOActions {
                 fc.setCurrentDirectory(openFile);
                 fc.setSelectedFile(openFile);
             }
-            if (fc.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(main.component()) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
-                Graph<Integer> sg = loader.importGraph(openFile);
-                if (sg != null)
+                TreeMap<Integer, double[]> loc = new TreeMap<Integer, double[]>();
+                Graph<Integer> sg = loader.importGraph(loc, openFile);
+                if (sg != null) {
                     main.loadGraph(sg, openFile.getName());
-                else
+                    if (loc != null && loc.size() > 0) {
+                        Point2D.Double[] pos = new Point2D.Double[loc.size()];
+                        int i = 0;
+                        for (double[] val : loc.values())
+                            pos[i++] = new Point2D.Double(val[0], val[1]);
+                        main.setActivePoints(pos);
+                    }
+                } else
                     main.output("Attempt to load file " + openFile + " failed!");
             }
         }
@@ -115,7 +128,7 @@ class ExplorerIOActions {
                 fc.setCurrentDirectory(openFile);
                 fc.setSelectedFile(openFile);
             }
-            if (fc.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(main.component()) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
                 LongitudinalGraph<Integer> sg = loader.importLongitudinalGraph(openFile);
                 if (sg != null && sg.getTimes().size() > 0)
@@ -144,11 +157,12 @@ class ExplorerIOActions {
                 fc.setCurrentDirectory(openFile);
                 fc.setSelectedFile(openFile);
             }
-            if (fc.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(main.component()) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
-                Graph active = main.activeGraph.getGraph();
+                Graph<Integer> active = main.activeGraph();
+                List<Integer> l = active.nodes();
                 if (active != null) {
-                    loader.saveGraph(active, openFile);
+                    loader.saveGraph(active, main.getActivePoints(), openFile);
                     main.output("Saved graph to file " + openFile + ".");
                 }
             }

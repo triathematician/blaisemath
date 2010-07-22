@@ -84,6 +84,7 @@ public class EnergyLayout implements IterativeGraphLayout {
 
     /** 
      * Resets the locations of the nodes in the layout; sets all velocities to zero.
+     * @param g the graph to use for layout
      * @param loc new node locations
      */
     public void reset(Graph g, Point2D.Double[] loc) {

@@ -12,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
+import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.PreferentialAttachment;
 import org.bm.blaise.scio.graph.RandomGraph;
 
@@ -91,34 +92,21 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_RANDOM_EDGE = new AbstractAction("Uniform (by number of edges)") {
+    //
+    // RANDOM GRAPHS
+    //
+
+    public Action GENERATE_RANDOM = new AbstractAction("Random graph") {
         {
             putValue(SHORT_DESCRIPTION, "Generate random graph by selecting edges at random");
             putValue(MNEMONIC_KEY, KeyEvent.VK_U);
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for random graph (up to 1 million).", 1, 1000000);
-            if (num == -1) return;
-            int maxEdges = Math.max(num*(num-1)/2,10000000);
-            int numE = showIntegerInputDialog("Enter number of edges in random graph (up to " + maxEdges + ").", 0, maxEdges);
-            if (numE == -1) return;
-            main.loadGraph(RandomGraph.getInstance(num, numE, false), "Random graph");
-        }
-    };
-
-    public Action GENERATE_RANDOM_PROBABILITY = new AbstractAction("Uniform (by probability)") {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph by applying a uniform probability to each edge");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_V);
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for random graph (up to 100000).", 1, 100000);
-            if (num == -1) return;
-            float prob = showFloatInputDialog("Enter probability for each edge", 0f, 1f);
-            if (prob == -1) return;
-            main.loadGraph(RandomGraph.getInstance(num, prob, false), "Random graph");
+            NewRandomGraphPanel nrgp = new NewRandomGraphPanel();
+            JOptionPane.showMessageDialog(main, nrgp);
+            Graph<Integer> result = nrgp.getInstance();
+            main.loadGraph(result, "Random Graph");
         }
     };
 
@@ -129,16 +117,24 @@ class ExplorerGenerateActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            if (num == -1) return;
-            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
-            if (prob == -1) return;
-            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-            if (num2 == -1) return;
-            int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
-            if (num3 == -1) return;
-            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            main.loadGraph(PreferentialAttachment.getSeededInstance(seed, num2, num3), "Preferential attachment graph");
+            NewPreferentialGraphPanel npgp = new NewPreferentialGraphPanel();
+            JOptionPane.showMessageDialog(main, npgp);
+            Object result = npgp.getInstance();
+            if (result instanceof Graph)
+                main.loadGraph((Graph) result, "Random Graph");
+            else if (result instanceof LongitudinalGraph)
+                main.loadLongitudinalGraph((LongitudinalGraph) result, "Random Graph");
+
+//            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
+//            if (num == -1) return;
+//            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
+//            if (prob == -1) return;
+//            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
+//            if (num2 == -1) return;
+//            int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
+//            if (num3 == -1) return;
+//            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
+//            main.loadGraph(PreferentialAttachment.getSeededInstance(seed, num2, num3), "Preferential attachment graph");
         }
     };
 
