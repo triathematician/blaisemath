@@ -7,13 +7,12 @@ package graphexplorer;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
-import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
-import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import util.ListSlider;
 import visometry.plane.PlanePlotComponent;
@@ -78,9 +77,51 @@ public class LongitudinalGraphPanel extends JPanel
         }
     }
 
+    /** @return active time */
+    public double getCurrentTime() {
+        return (Double) lGraph.getTimes().get(slider.getValue());
+    }
+    
+    /** Sets current time to value closest to specified one */
+    public void setCurrentTime(double time) {
+        if (!lGraph.getTimes().contains(time)) {
+            if (time < lGraph.getMinimumTime())
+                time = lGraph.getMinimumTime();
+            else if (time > lGraph.getMaximumTime())
+                time = lGraph.getMaximumTime();
+            else
+                for (Double d : ((List<Double>)lGraph.getTimes()))
+                    if (time < d) {
+                        time = d;
+                        break;
+                    }
+        }
+        Point2D.Double[] pts = visGraph.getPoint();
+        visGraph.setGraph(lGraph.slice(time));
+        visGraph.setPoint(pts);
+    }
+
+    /** @return index of active slice */
+    public int getActiveSliceIndex() {
+        return slider.getValue();
+    }
+
+    /** Sets index of active slice, if index is within bounds */
+    public void setActiveSliceIndex(int index) {
+        if (index >= 0 && index < lGraph.getTimes().size())
+            setCurrentTime((Double) lGraph.getTimes().get(index));
+    }
+
     //
     // ESSENTIAL GETTERS
     //
+
+    /**
+     * @return number of slices
+     */
+    public int getNumSlices() {
+        return visGraph == null ? 0 : lGraph.getTimes().size();
+    }
 
     /**
      * Returns the currently displayed graph slice on the panel
@@ -103,13 +144,8 @@ public class LongitudinalGraphPanel extends JPanel
     //
 
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == slider) {
-            double time = (Double) lGraph.getTimes().get(slider.getValue());
-            Point2D.Double[] pts = visGraph.getPoint();
-            visGraph.setGraph(lGraph.slice(time));
-            for (int i = 0; i < Math.min(pts.length, visGraph.getGraph().order()); i++)
-                visGraph.setPoint(i, pts[i]);
-        }
+        if (e.getSource() == slider)
+            setCurrentTime(slider.getValue());
     }    
 
 }

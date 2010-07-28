@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 
 /**
@@ -42,7 +41,7 @@ import org.bm.blaise.scio.graph.WeightedGraph;
  *
  * @author Elisha Peterson
  */
-public final class EdgeListGraphIO extends GraphIO {
+public final class EdgeListGraphIO extends AbstractGraphIO {
 
     // no instantiation
     private EdgeListGraphIO() { }
@@ -53,7 +52,7 @@ public final class EdgeListGraphIO extends GraphIO {
     /** Factory method @return instance of this IO class */
     public static EdgeListGraphIO getInstance() { return INSTANCE; }
 
-    public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file) {
+    public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file, GraphType type) {
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
         // stores the edges/arcs
@@ -97,7 +96,13 @@ public final class EdgeListGraphIO extends GraphIO {
     }
 
     @Override
-    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+        Graph<Integer> graph = null;
+        try {
+            graph = (Graph<Integer>) go;
+        } catch (ClassCastException ex) {
+            return null;
+        }
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {
@@ -114,16 +119,8 @@ public final class EdgeListGraphIO extends GraphIO {
             }
         } catch (IOException ex) {
             System.err.println(ex);
+            return null;
         }
+        return GraphType.REGULAR;
     }
-
-    public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
-        throw new UnsupportedOperationException("EdgeListGraphIO does not support longitudinal graphs.");
-    }
-
-    @Override
-    public void saveLongitudinalGraph(LongitudinalGraph<Integer> graph, File file) {
-        throw new UnsupportedOperationException("EdgeListGraphIO does not support longitudinal graphs.");
-    }
-
 }

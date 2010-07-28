@@ -34,12 +34,12 @@ public interface IterativeGraphLayout {
      * @param g the graph to layout
      * @return new positions for the nodes.
      */
-    public Point2D.Double[] iterate(Graph g);
+    public void iterate(Graph g);
 
     /**
      * Returns the current list of point locations.
      * @return current list of point locations
      */
-    public Point2D.Double[] getPoints();
+    public Point2D.Double[] getPointArray();
 
 }

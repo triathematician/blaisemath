@@ -7,17 +7,22 @@ package org.bm.blaise.scio.graph.io;
 
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ListLongitudinalGraph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
+import org.bm.blaise.scio.graph.ValuedGraph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
 
 /**
@@ -37,7 +42,7 @@ import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
  *
  * @author elisha
  */
-public class LongitudinalGraphIO extends GraphIO {
+public class LongitudinalGraphIO extends AbstractGraphIO {
 
     // no instantiation
     private LongitudinalGraphIO() {}
@@ -47,28 +52,14 @@ public class LongitudinalGraphIO extends GraphIO {
 
     /** Factory method @return instanceo of this IO class */
     public static LongitudinalGraphIO getInstance() { return INSTANCE; }
-
-    public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveLongitudinalGraph(LongitudinalGraph<Integer> graph, File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
+    
     /*
      * Reads in and returns a longitudinal graph file
      * @param file file containing information of the longitudinal graph
      * @return the longitudinal graph data structure, possibly with node labels attached to the vertices
      */
-    public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
+    @Override
+    public Object importGraph(Map<Integer,double[]> locations, File file, GraphType type) {
         // stores the time associated with imported graphs
         Double curTime = Double.NaN;
 
@@ -76,8 +67,6 @@ public class LongitudinalGraphIO extends GraphIO {
         ListLongitudinalGraph<Integer> result = new ListLongitudinalGraph<Integer>();
         // stores the names of vertices
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
-        // stores points corresponding to vertices
-        TreeMap<Integer,double[]> locations = new TreeMap<Integer,double[]>();
         // stores times corresponding to vertices
         TreeMap<Integer,List<double[]>> times = new TreeMap<Integer,List<double[]>>();
 
@@ -115,7 +104,7 @@ public class LongitudinalGraphIO extends GraphIO {
                         if (mode == ImportMode.ARCS || mode == ImportMode.EDGES || mode == ImportMode.MATRIX) {
                             // store the current graph
                             if (!curTime.isNaN())
-                                result.addGraph(buildGraph(vertices, edges, weights, false), curTime);
+                                result.addGraph(AbstractGraphIO.buildGraph(vertices, edges, weights, false), curTime);
                             weights.clear();
                             edges.clear();
                             // look for associated time in addition to the associated input
@@ -164,9 +153,10 @@ public class LongitudinalGraphIO extends GraphIO {
             System.err.println(ex);
         }
         if (!curTime.isNaN())
-            result.addGraph(buildGraph(vertices, edges, weights, false), curTime);
+            result.addGraph(AbstractGraphIO.buildGraph(vertices, edges, weights, false), curTime);
         return result;
     } // importGraph
+
 
     /**
      * Finds the time associated with a particular header within specified string.
@@ -193,4 +183,67 @@ public class LongitudinalGraphIO extends GraphIO {
             throw new UnsupportedOperationException("LongitudinalGraphIO.parseInputTime: expected 't' or 'time' on the time line (e.g. t=5.5)");
         return Double.valueOf(numberPart);
     } // parseInputTime
+
+
+    @Override
+    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+        LongitudinalGraph<Integer> lg = null;
+        try {
+            lg = (LongitudinalGraph<Integer>) go;
+        } catch (ClassCastException ex) {
+            return null;
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            try {
+                // write the vertices
+                Collection<Integer> nodes = lg.getAllNodes();
+                writer.write("*Vertices " + nodes.size());
+                writer.newLine();
+                int i = 0;
+                for (Integer node : nodes) {
+                    writer.write(node.toString() + " " + node.toString());
+                    if (positions != null && positions[i] != null)
+                        writer.write(" " + positions[i].x + " " + positions[i].y);
+                    writer.newLine();
+                    i++;
+                }
+                // write the edges; uses one edge per line by default
+                Graph<Integer> graph = null;
+                for (double t : lg.getTimes()) {
+                    graph = lg.slice(t);
+                    nodes = graph.nodes();
+                    writer.write(graph.isDirected() ? "*Arcs" : "*Edges");
+                    writer.write(" t=" + t);
+                    writer.newLine();
+                    if (graph instanceof WeightedGraph) {
+                        WeightedGraph wg = (WeightedGraph) graph;
+                        for (Integer i1 : nodes)
+                            for (Integer i2 : nodes) {
+                                if (!graph.isDirected() && i2 < i1) continue;
+                                if (!wg.adjacent(i1, i2)) continue;
+                                Object weight = wg.getWeight(i1, i2);
+                                writer.write(i1 + " " + i2 + (weight == null ? "" : " " + weight.toString()));
+                                writer.newLine();
+                            }
+                    } else {
+                        for (Integer i1 : nodes)
+                            for (Integer i2 : nodes) {
+                                if (!graph.isDirected() && i2 < i1) continue;
+                                if (!graph.adjacent(i1, i2)) continue;
+                                writer.write(i1 + " " + i2);
+                                writer.newLine();
+                            }
+                    }
+                }
+            } finally {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            System.err.println(ex);
+            return null;
+        }
+        return GraphType.LONGITUDINAL;
+    } // saveGraph
+
 }

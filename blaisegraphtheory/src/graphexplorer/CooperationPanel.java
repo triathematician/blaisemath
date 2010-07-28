@@ -32,7 +32,7 @@ public class CooperationPanel extends javax.swing.JPanel {
         Object item = jComboBox1.getSelectedItem();
         if (!(item instanceof StatEnum))
             return null;
-        return ((StatEnum) item).getMetric();
+        return ExplorerStatActions.metricOf((StatEnum) item);
     }
 
     public Collection<Integer> getSubset() {

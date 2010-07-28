@@ -25,11 +25,15 @@ public class EigenCentrality implements NodeMetric<Double> {
     /** Factory method to return instance of eigenvalue centrality */
     public static EigenCentrality getInstance() { return INSTANCE; }
 
-    public <V> Double getValue(Graph<V> graph, V node) {
-        return getAllValues(graph).get(graph.nodes().indexOf(node));
+    public boolean supportsGraph(boolean directed) { return true; }
+    public <V> double nodeMax(boolean directed, int order) { return 1.0; }
+    public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }
+
+    public <V> Double value(Graph<V> graph, V node) {
+        return allValues(graph).get(graph.nodes().indexOf(node));
     }
 
-    public <V> List<Double> getAllValues(Graph<V> graph) {
+    public <V> List<Double> allValues(Graph<V> graph) {
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)
 

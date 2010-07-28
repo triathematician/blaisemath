@@ -6,8 +6,10 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 /**
@@ -51,6 +53,43 @@ public class ListLongitudinalGraph<V> implements LongitudinalGraph<V> {
      */
     public int size() {
         return graphs.size();
+    }
+
+    public boolean isDirected() {
+        return graphs.size() == 0 ? false : graphs.get(graphs.firstKey()).isDirected();
+    }
+
+    public Collection<V> getAllNodes() {
+        HashSet<V> result = new HashSet<V>();
+        for (Graph<V> g : graphs.values())
+            result.addAll(g.nodes());
+        return result;
+    }
+
+    public List<double[]> getNodeIntervals(V v) {
+        boolean found = false;
+        ArrayList<double[]> ivs = new ArrayList<double[]>();
+        for (Entry<Double, Graph<V>> en : graphs.entrySet()) {
+            Graph<V> graph = en.getValue();
+            if (graph.contains(v)) {
+                found = true;
+                ivs.add(new double[]{en.getKey(), en.getKey()});
+            }
+        }
+        return found ? ivs : null;
+    }
+
+    public List<double[]> getEdgeIntervals(V v1, V v2) {
+        boolean found = false;
+        ArrayList<double[]> ivs = new ArrayList<double[]>();
+        for (Entry<Double, Graph<V>> en : graphs.entrySet()) {
+            Graph<V> graph = en.getValue();
+            if (graph.adjacent(v1, v2)) {
+                found = true;
+                ivs.add(new double[]{en.getKey(), en.getKey()});
+            }
+        }
+        return found ? ivs : null;
     }
 
     public Graph<V> slice(double time) {

@@ -81,6 +81,9 @@ public class PlaneGraphBean extends DefaultChangeBroadcaster {
         public void setColor(Color color) { graph.getEdgeStyle().setStrokeColor(color); fireStateChanged(); }
         public float getThickness() { return graph.getEdgeStyle().getThickness(); }
         public void setThickness(float value) { graph.getEdgeStyle().setThickness(value); fireStateChanged(); }
+
+        public int getArrowSize() { return graph.getEdgeStyle().getShapeSize(); }
+        public void setArrowSize(int size) { graph.getEdgeStyle().setShapeSize(size); fireStateChanged(); }
     }
 
 }

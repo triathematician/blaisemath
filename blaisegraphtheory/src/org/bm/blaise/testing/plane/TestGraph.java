@@ -177,7 +177,8 @@ public class TestGraph extends javax.swing.JFrame {
             energyLayout = new EnergyLayout(graph, pg.getPoint());
         else if (updateEL)
             energyLayout.reset(graph, pg.getPoint());
-        pg.setPoint(energyLayout.iterate(graph));
+        energyLayout.iterate(graph);
+        pg.setPoint(energyLayout.getPointArray());
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
@@ -194,7 +195,8 @@ public class TestGraph extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (updateEL)
                     energyLayout.reset(pg.getGraph(), pg.getPoint());
-                pg.setPoint(energyLayout.iterate(graph));
+                energyLayout.iterate(graph);
+                pg.setPoint(energyLayout.getPointArray());
             }
         });
         timer.start();

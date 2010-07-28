@@ -57,8 +57,10 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     double[] vertexValues;
 
 
-    /** The initial layout scheme. */
+    /** The initial layout scheme */
     private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
+    /** The layout scheme for adding vertices */
+    private static final StaticGraphLayout ADDING_LAYOUT = StaticGraphLayout.ORIGIN;
     /** The initial layout parameters */
     private static final double[] LAYOUT_PARAMETERS = new double[] { 3 };
 
@@ -121,7 +123,7 @@ public class PlaneGraph extends Plottable<Point2D.Double>
             GraphicPointFancy[] gpfa = new GraphicPointFancy[size];
             vertexEntry.local = gpfa;
             // initialize the layout, but use old positions whenever available
-            Point2D.Double[] newPts = INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+            Point2D.Double[] newPts = curPts == null ? INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
             if (curPts != null)
                 for (int i = 0; i < Math.min(curPts.length, newPts.length); i++)
                     newPts[i] = curPts[i];
@@ -201,11 +203,8 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     }
     /** Sets location of all vertices at once. Number of points must match the order of the graph. */
     public void setPoint(Point2D.Double[] loc) {
-        if (loc.length != graph.order())
-            return;
-//            throw new IllegalArgumentException("setPoint: number of points does not match number of nodes.");
         GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
-        for (int i = 0; i < gsa.length; i++)
+        for (int i = 0; i < Math.min(gsa.length, loc.length); i++)
             gsa[i].anchor = loc[i];
         vertexEntry.needsConversion = true;
         firePlottableChanged();

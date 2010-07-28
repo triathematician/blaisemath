@@ -144,7 +144,7 @@
           <SubComponents>
             <Menu class="javax.swing.JMenu" name="newM">
               <Properties>
-                <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="text" type="java.lang.String" value="New Graph"/>
               </Properties>
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="emptyMI">
@@ -228,6 +228,14 @@
                     <Property name="text" type="java.lang.String" value="Pajek format (.net)"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="loadPajekMI2">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.LOAD_PAJEKLONG_ACTION" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Pajek format - longitudinal (.net)"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="loadPajekXMI">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -242,6 +250,14 @@
                       <Connection code="actions_io.LOAD_PAJEKXLONG_ACTION" type="code"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Extended Pajek format - longitudinal (.netl)"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="loadPajekMI1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.LOAD_UCINET_ACTION" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="UCINet format (.dat)"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
@@ -267,12 +283,36 @@
                     <Property name="text" type="java.lang.String" value="Pajek format (.net)"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="savePajekMI1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.SAVE_PAJEKLONG_ACTION" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Pajek format - longitudinal (.net)"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="savePajekXMI">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="actions_io.SAVE_PAJEKX_ACTION" type="code"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Extended Pajek format (.netx)"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="savePajekXMI2">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.SAVE_PAJEKXLONG_ACTION" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Extended Pajek format - longitudinal (.netl)"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="savePajekXMI1">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.SAVE_UCINET_ACTION" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="UCINet format (.dat)"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
@@ -284,6 +324,25 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Close current graph"/>
               </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
+            </MenuItem>
+            <Menu class="javax.swing.JMenu" name="exportM">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="exportQTMI">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_io.EXPORT_QT" type="code"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Quicktime movie (.mov)"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="quitMI">
               <Properties>

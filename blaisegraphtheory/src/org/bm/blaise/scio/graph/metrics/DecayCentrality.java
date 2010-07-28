@@ -49,7 +49,11 @@ public class DecayCentrality implements NodeMetric<Double> {
         parameter = newValue;
     }
 
-    public <V> Double getValue(Graph<V> graph, V vertex) {
+    public boolean supportsGraph(boolean directed) { return true; }
+    public <V> double nodeMax(boolean directed, int order) { return parameter*(order-1); }
+    public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }
+
+    public <V> Double value(Graph<V> graph, V vertex) {
         ValuedGraph<V, Integer> nvg = Graphs.geodesicTree(graph, vertex);
         double total = 0.0;
         for (V v : nvg.nodes())
@@ -57,10 +61,10 @@ public class DecayCentrality implements NodeMetric<Double> {
         return total - 1;
     }
 
-    public <V> List<Double> getAllValues(Graph<V> graph) {
+    public <V> List<Double> allValues(Graph<V> graph) {
         List<Double> result = new ArrayList<Double>(graph.order());
         for (V v : graph.nodes())
-            result.add(getValue(graph, v));
+            result.add(value(graph, v));
         return result;
     }
 

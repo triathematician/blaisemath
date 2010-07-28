@@ -45,7 +45,7 @@ public class GraphTableModel extends AbstractTableModel {
     public void initialize(Graph graph, NodeMetric metric) {
         this.graph = graph;
         this.metric = metric;
-        values = (metric == null || graph == null) ? null : metric.getAllValues(graph);
+        values = (metric == null || graph == null) ? null : metric.allValues(graph);
         fireTableDataChanged();
     }
     
@@ -57,7 +57,7 @@ public class GraphTableModel extends AbstractTableModel {
         if (this.graph != graph) {
             this.graph = graph;
             valueGraph = graph instanceof ValuedGraph;
-            values = (metric == null || graph == null) ? null : metric.getAllValues(graph);
+            values = (metric == null || graph == null) ? null : metric.allValues(graph);
             fireTableStructureChanged();
         }
     }
@@ -71,8 +71,8 @@ public class GraphTableModel extends AbstractTableModel {
     public void setMetric(NodeMetric metric) {
         if (this.metric != metric) {
             this.metric = metric;
-            values = (metric == null || graph == null) ? null : metric.getAllValues(graph);
-            fireTableDataChanged();
+            values = (metric == null || graph == null) ? null : metric.allValues(graph);
+            fireTableStructureChanged();
         }
     }
 

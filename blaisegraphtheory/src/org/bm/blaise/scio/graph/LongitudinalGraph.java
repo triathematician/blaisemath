@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,6 +22,30 @@ import java.util.List;
  * @author Elisha Peterson
  */
 public interface LongitudinalGraph<V> {
+
+    /**
+     * Returns <i>all</i> nodes contained in the longitudinal graph, for any time.
+     * @return view of all nodes
+     */
+    public Collection<V> getAllNodes();
+
+    /**
+     * @return whether longituinal graph's edges are directed
+     */
+    public boolean isDirected();
+
+    /**
+     * @param v a node in the graph
+     * @return time intervals of corresponding node, or null if the node is not in the graph
+     */
+    public List<double[]> getNodeIntervals(V v);
+
+    /**
+     * @param v1 first node of the edge
+     * @param v2 second node of the edge
+     * @return time intervals of the corresponding edge, or null if the edge is never in the graph
+     */
+    public List<double[]> getEdgeIntervals(V v1, V v2);
 
     /**
      * Returns a view of the graph at the specified time. Depending upon the

@@ -38,7 +38,7 @@ public class GraphMetrics {
      * @param metric metric used to generate values
      */
     public static <N> Map<N,Integer> computeDistribution(Graph graph, NodeMetric<N> metric) {
-        return distribution(metric.getAllValues(graph));
+        return distribution(metric.allValues(graph));
     }
 
     /**
@@ -70,8 +70,11 @@ public class GraphMetrics {
      * Current computational time is linear in the # of edges in the graph.
      */
     public static NodeMetric<Integer> DEGREE = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) { return graph.degree(vertex); }
-        public <V> List<Integer> getAllValues(Graph<V> graph) {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> double nodeMax(boolean directed, int order) { return order-1; }
+        public <V> double centralMax(boolean directed, int order) { return directed ? (order-1)*(order-1) : (order-1)*(order-2); } // for a star graph
+        public <V> Integer value(Graph<V> graph, V vertex) { return graph.degree(vertex); }
+        public <V> List<Integer> allValues(Graph<V> graph) {
             List<Integer> result = new ArrayList<Integer>(graph.order());
             for (V v : graph.nodes()) result.add(graph.degree(v));
             return result;
@@ -82,12 +85,15 @@ public class GraphMetrics {
      * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
      */
     public static NodeMetric<Integer> DEGREE2 = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> double nodeMax(boolean directed, int order) { return order-1; }
+        public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }
+        public <V> Integer value(Graph<V> graph, V vertex) {
             return Graphs.neighborhood(graph, vertex, 2).size() - 1;
         }
-        public <V> List<Integer> getAllValues(Graph<V> graph) {
+        public <V> List<Integer> allValues(Graph<V> graph) {
             List<Integer> result = new ArrayList<Integer>(graph.order());
-            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            for (V v : graph.nodes()) result.add(value(graph, v));
             return result;
         }
     };
@@ -101,13 +107,17 @@ public class GraphMetrics {
      * and quadratic in the map case (linear in edges * linear in vertices).
      */
     public static NodeMetric<Integer> CLIQUE_COUNT = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
+        public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }
+        public <V> Integer value(Graph<V> graph, V vertex) {
             List<V> nbhd = graph.neighbors(vertex);
             return new Subgraph(graph, nbhd).edgeNumber();
         }
-        public <V> List<Integer> getAllValues(Graph<V> graph) {
+        public <V> double standardization(Graph<V> graph) { return 1.0/((graph.order()-1)*(graph.order()-2)*(graph.isDirected()?2:1)); }
+        public <V> List<Integer> allValues(Graph<V> graph) {
             List<Integer> result = new ArrayList<Integer>(graph.order());
-            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            for (V v : graph.nodes()) result.add(value(graph, v));
             return result;
         }
     };
@@ -121,13 +131,16 @@ public class GraphMetrics {
      * and quadratic in the map case (linear in edges * linear in vertices).
      */
     public static NodeMetric<Integer> CLIQUE_COUNT2 = new NodeMetric<Integer>() {
-        public <V> Integer getValue(Graph<V> graph, V vertex) {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
+        public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }
+        public <V> Integer value(Graph<V> graph, V vertex) {
             List<V> nbhd = Graphs.neighborhood(graph, vertex, 2);
             return new Subgraph(graph, nbhd).edgeNumber() - nbhd.size() + 1;
         }
-        public <V> List<Integer> getAllValues(Graph<V> graph) {
+        public <V> List<Integer> allValues(Graph<V> graph) {
             List<Integer> result = new ArrayList<Integer>(graph.order());
-            for (V v : graph.nodes()) result.add(getValue(graph, v));
+            for (V v : graph.nodes()) result.add(value(graph, v));
             return result;
         }
     };

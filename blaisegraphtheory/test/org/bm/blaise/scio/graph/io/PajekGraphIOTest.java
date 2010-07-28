@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.io.AbstractGraphIO.GraphType;
 import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -33,40 +34,55 @@ public class PajekGraphIOTest {
             X_AIRPORTS;
 
     public static Graph<Integer> sampleAirport() {
-        if (SAMPLE_AIRPORT == null) SAMPLE_AIRPORT = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/USAirport500.net"));
+        if (SAMPLE_AIRPORT == null) SAMPLE_AIRPORT = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/USAirport500.net"), GraphType.REGULAR);
         return SAMPLE_AIRPORT; }
     public static Graph<Integer> sampleErdos991() {
-        if (SAMPLE_ERDOS991 == null) SAMPLE_ERDOS991 = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/ERDOS991.net"));
+        if (SAMPLE_ERDOS991 == null) SAMPLE_ERDOS991 = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/ERDOS991.net"), GraphType.REGULAR);
         return SAMPLE_ERDOS991; }
     public static Graph<Integer> sampleErdos992() {
-        if (SAMPLE_ERDOS992 == null) SAMPLE_ERDOS992 = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/ERDOS992.net"));
+        if (SAMPLE_ERDOS992 == null) SAMPLE_ERDOS992 = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/ERDOS992.net"), GraphType.REGULAR);
         return SAMPLE_ERDOS992; }
     public static Graph<Integer> sampleFrat() {
-        if (SAMPLE_FRAT == null) SAMPLE_FRAT = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/newfrat.net"));
+        if (SAMPLE_FRAT == null) SAMPLE_FRAT = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/newfrat.net"), GraphType.REGULAR);
         return SAMPLE_FRAT; }
     public static Graph<Integer> sampleInternet() {
-        if (SAMPLE_INTERNET == null) SAMPLE_INTERNET = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/InternetISP.net"));
+        if (SAMPLE_INTERNET == null) SAMPLE_INTERNET = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/InternetISP.net"), GraphType.REGULAR);
         return SAMPLE_INTERNET; }
     public static Graph<Integer> samplePadgett1() {
-        if (SAMPLE_PADGETT1 == null) SAMPLE_PADGETT1 = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/padgett.net"));
+        if (SAMPLE_PADGETT1 == null) SAMPLE_PADGETT1 = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/padgett.net"), GraphType.REGULAR);
         return SAMPLE_PADGETT1; }
 //    public static Graph<Integer> samplePadgett2() {
 //        if (SAMPLE_PADGETT2 == null) SAMPLE_PADGETT2 = PajekGraphIO.importGraph(PajekGraphIO.class.getResource("data/padgett2.net"));
 //        return SAMPLE_PADGETT2; }
     public static Graph<Integer> sampleS50D01() {
-        if (SAMPLE_S50_D01 == null) SAMPLE_S50_D01 = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/s50_d01.net"));
+        if (SAMPLE_S50_D01 == null) SAMPLE_S50_D01 = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/s50_d01.net"), GraphType.REGULAR);
         return SAMPLE_S50_D01; }
     public static Graph<Integer> sampleTinamatr() {
-        if (SAMPLE_TINAMATR == null) SAMPLE_TINAMATR = PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/tinamatr.net"));
+        if (SAMPLE_TINAMATR == null) SAMPLE_TINAMATR = (Graph<Integer>) PajekGraphIO.getInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/tinamatr.net"), GraphType.REGULAR);
         return SAMPLE_TINAMATR; }
 
     public static Graph<Integer> sampleXPadgett() {
-        if (X_PADGETT == null) X_PADGETT = PajekGraphIO.getExtendedInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/padgett.txt"));
+        if (X_PADGETT == null) X_PADGETT = (Graph<Integer>) PajekGraphIO.getExtendedInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/padgett.netx"), GraphType.REGULAR);
         return X_PADGETT; }
     public static Graph<Integer> sampleXAirport() {
-        if (X_AIRPORTS == null) X_AIRPORTS = PajekGraphIO.getExtendedInstance().importGraph(new HashMap<Integer,double[]>(), PajekGraphIO.class.getResource("data/USAirport500.txt"));
+        if (X_AIRPORTS == null) X_AIRPORTS = (Graph<Integer>) PajekGraphIO.getExtendedInstance().importGraph(new HashMap<Integer,double[]>(),
+                PajekGraphIO.class.getResource("data/USAirport500.netx"), GraphType.REGULAR);
         return X_AIRPORTS; }
 
+    @Test
+    public void testGetInstance() {
+        System.out.println("getInstance -- no test");
+    }
+    
     @Test
     public void testImportGraph() {
         System.out.println("-- PajekGraphIOTest --");
@@ -218,37 +234,25 @@ public class PajekGraphIOTest {
 
         // basic edges
         PajekGraphIO.importLine_edge(0, "1 2", v, e, w, tt);
-        assertEquals(1, (int)e.get(0)[0]);
-        assertEquals(2, (int)e.get(0)[1]);
-        assertEquals(1.0, w.get(0), 1e-10);
-
-        // weights
         PajekGraphIO.importLine_edge(1, "3 4 .1", v, e, w, tt);
-          assertEquals(3, (int)e.get(1)[0]);
-          assertEquals(4, (int)e.get(1)[1]);
-          assertEquals(0.1, w.get(1), 1e-10);
         PajekGraphIO.importLine_edge(2, "5 6 1 a b c", v, e, w, tt);
-          assertEquals(5, (int)e.get(2)[0]);
-          assertEquals(6, (int)e.get(2)[1]);
-          assertEquals(1.0, w.get(2), 1e-10);
         PajekGraphIO.importLine_edge(3, "7 8 abc", v, e, w, tt);
-          assertEquals(7, (int)e.get(3)[0]);
-          assertEquals(8, (int)e.get(3)[1]);
-          assertEquals(1.0, w.get(3), 1e-10);
-        for (int i = 1; i <= 8; i++) assertTrue(v.containsKey(i));
+          for (int i = 1; i <= 8; i++) assertTrue(v.containsKey(i));
+          assertEquals(1, (int)e.get(0)[0]); assertEquals(2, (int)e.get(0)[1]); assertEquals(1.0, w.get(0), 1e-10);
+          assertEquals(3, (int)e.get(1)[0]); assertEquals(4, (int)e.get(1)[1]); assertEquals(0.1, w.get(1), 1e-10);
+          assertEquals(5, (int)e.get(2)[0]); assertEquals(6, (int)e.get(2)[1]); assertEquals(1.0, w.get(2), 1e-10);
+          assertEquals(7, (int)e.get(3)[0]); assertEquals(8, (int)e.get(3)[1]); assertEquals(1.0, w.get(3), 1e-10);
 
         // times
         List<double[]> t;
         PajekGraphIO.importLine_edge(4, "4 3 4 [2]", v, e, w, tt);
-          t = tt.get(0);
-          assertEquals(1, t.size());
-          assertEquals(2, t.get(0)[0], 1e-10); assertEquals(2, t.get(0)[1], 1e-10);
         PajekGraphIO.importLine_edge(5, "5 2 abc [2-6,*-4,5-*]", v, e, w, tt);
-          t = tt.get(1);
-          assertEquals(3, t.size());
-          assertEquals(2, t.get(0)[0], 1e-10); assertEquals(6, t.get(0)[1], 1e-10);
-          assertEquals(Double.NEGATIVE_INFINITY, t.get(1)[0], 1e-10); assertEquals(4, t.get(1)[1], 1e-10);
-          assertEquals(5, t.get(2)[0], 1e-10); assertEquals(Double.POSITIVE_INFINITY, t.get(2)[1], 1e-10);
+          t = tt.get(0); assertEquals(1, t.size());
+            assertEquals(2, t.get(0)[0], 1e-10); assertEquals(2, t.get(0)[1], 1e-10);
+          t = tt.get(1); assertEquals(3, t.size());
+            assertEquals(2, t.get(0)[0], 1e-10); assertEquals(6, t.get(0)[1], 1e-10);
+            assertEquals(Double.NEGATIVE_INFINITY, t.get(1)[0], 1e-10); assertEquals(4, t.get(1)[1], 1e-10);
+            assertEquals(5, t.get(2)[0], 1e-10); assertEquals(Double.POSITIVE_INFINITY, t.get(2)[1], 1e-10);
 
         // failures
         int num = e.size();
@@ -265,19 +269,14 @@ public class PajekGraphIOTest {
         List<Double> w = new ArrayList<Double>();
 
         PajekGraphIO.importLine_edgelist(0, "1", v, e, w);
-        assertEquals(0, e.size());
-        assertEquals(0, w.size());
         PajekGraphIO.importLine_edgelist(1, "2 3", v, e, w);
-        assertEquals(2, (int)e.get(0)[0]);
-        assertEquals(3, (int)e.get(0)[1]);
         PajekGraphIO.importLine_edgelist(2, "3 1 4 5", v, e, w);
-        assertEquals(3, (int)e.get(1)[0]);
-        assertEquals(1, (int)e.get(1)[1]);
-        assertEquals(3, (int)e.get(2)[0]);
-        assertEquals(4, (int)e.get(2)[1]);
-        assertEquals(3, (int)e.get(3)[0]);
-        assertEquals(5, (int)e.get(3)[1]);
-        for (int i = 1; i <= 5; i++) assertTrue(v.containsKey(i));
+          for (int i = 1; i <= 5; i++) assertTrue(v.containsKey(i));
+          assertEquals(4, e.size()); assertEquals(4, w.size());
+          assertEquals(2, (int)e.get(0)[0]); assertEquals(3, (int)e.get(0)[1]);
+          assertEquals(3, (int)e.get(1)[0]); assertEquals(1, (int)e.get(1)[1]);
+          assertEquals(3, (int)e.get(2)[0]); assertEquals(4, (int)e.get(2)[1]);
+          assertEquals(3, (int)e.get(3)[0]); assertEquals(5, (int)e.get(3)[1]);
         try {
             PajekGraphIO.importLine_edgelist(4, "1 2.1 3", v, e, w);
             fail("Numeric failure expected");
@@ -296,18 +295,10 @@ public class PajekGraphIOTest {
         PajekGraphIO.importLine_matrix(2, "0 0 0 .5", 2, v, e, w);
         PajekGraphIO.importLine_matrix(3, "1 1 0 -1", 3, v, e, w);
         PajekGraphIO.importLine_matrix(4, "0 0 3 0", 4, v, e, w);
-        for (int i = 1; i <= 4; i++) assertTrue(v.containsKey(i));
-        assertEquals(1, (int)e.get(0)[0]);
-        assertEquals(1, (int)e.get(0)[1]);
-        assertEquals(1, w.get(0), 1e-10);
-        assertEquals(1, (int)e.get(1)[0]);
-        assertEquals(3, (int)e.get(1)[1]);
-        assertEquals(1, w.get(1), 1e-10);
-        assertEquals(2, (int)e.get(3)[0]);
-        assertEquals(4, (int)e.get(3)[1]);
-        assertEquals(.5, w.get(3), 1e-10);
-        assertEquals(4, (int)e.get(7)[0]);
-        assertEquals(3, (int)e.get(7)[1]);
-        assertEquals(3, w.get(7), 1e-10);
+          for (int i = 1; i <= 4; i++) assertTrue(v.containsKey(i));
+          assertEquals(1, (int)e.get(0)[0]); assertEquals(1, (int)e.get(0)[1]); assertEquals(1, w.get(0), 1e-10);
+          assertEquals(1, (int)e.get(1)[0]); assertEquals(3, (int)e.get(1)[1]); assertEquals(1, w.get(1), 1e-10);
+          assertEquals(2, (int)e.get(3)[0]); assertEquals(4, (int)e.get(3)[1]); assertEquals(.5, w.get(3), 1e-10);
+          assertEquals(4, (int)e.get(7)[0]); assertEquals(3, (int)e.get(7)[1]); assertEquals(3, w.get(7), 1e-10);
     }
 }

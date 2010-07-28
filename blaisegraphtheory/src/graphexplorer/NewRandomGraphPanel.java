@@ -56,10 +56,10 @@ public class NewRandomGraphPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createTitledBorder("Uniform Random Network"));
 
         edgeTypeBG.add(probRB);
-        probRB.setSelected(true);
         probRB.setText("probability per edge:");
 
         edgeTypeBG.add(numRB);
+        numRB.setSelected(true);
         numRB.setText("total # of edges:");
 
         jLabel1.setText("# nodes:");

@@ -27,7 +27,7 @@ public class RandomGraph {
         checkProbability(p);
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < n; i++)
-            for (int j = directed ? 0 : i+1; j < n; j++)
+            for (int j = (directed ? 0 : i+1); j < n; j++)
                 if (Math.random() < p)
                     edges.add(new Integer[]{i, j});
         return GraphFactory.getGraph(directed, GraphFactory.intList(n), edges);

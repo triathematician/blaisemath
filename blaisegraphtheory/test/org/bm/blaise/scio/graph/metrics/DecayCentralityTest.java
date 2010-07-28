@@ -52,15 +52,15 @@ public class DecayCentralityTest {
     @Test
     public void testGetValue() {
         System.out.println("getValue");
-        assertEquals(0, new DecayCentrality(0).getValue(SAMPLE_PADGETT, 1), 1e-10);
-        assertEquals(14, new DecayCentrality(1).getValue(SAMPLE_PADGETT, 1), 1e-10);
+        assertEquals(0, new DecayCentrality(0).value(SAMPLE_PADGETT, 1), 1e-10);
+        assertEquals(14, new DecayCentrality(1).value(SAMPLE_PADGETT, 1), 1e-10);
     }
 
     @Test
     public void testGetAllValues() {
         System.out.println("getAllValues");
         Double[] eDeg = new Double[] {2.5625, 3.75, 3.3125, 3.28125, 3.0625, 2.125, 3.8125, 2.15625, 4.625, 1.71875, 2.96875, 0.0, 3.875, 2.9375, 3.625, 3.75};
-        List<Double> vals = new DecayCentrality(0.5).getAllValues(SAMPLE_PADGETT);
+        List<Double> vals = new DecayCentrality(0.5).allValues(SAMPLE_PADGETT);
         for (int i = 0; i < eDeg.length; i++)
             assertEquals(eDeg[i], vals.get(i));
         assertEquals("{0.0=1, 1.71875=1, 2.125=1, 2.15625=1, 2.5625=1, 2.9375=1, 2.96875=1, 3.0625=1, 3.28125=1, 3.3125=1, 3.625=1, 3.75=2, 3.8125=1, 3.875=1, 4.625=1}",

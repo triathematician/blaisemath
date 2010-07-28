@@ -46,9 +46,9 @@ public class EigenCentralityTest {
     public void testGetValue() {
         System.out.println("getValue");
         EigenCentrality ec = EigenCentrality.getInstance();
-        assertEquals(.475349771, ec.getValue(TEST2, 1), 1e-8);
-        assertEquals(.564129165, ec.getValue(TEST2, 3), 1e-8);
-        assertEquals(.296008301, ec.getValue(TEST2, 4), 1e-8);
+        assertEquals(.475349771, ec.value(TEST2, 1), 1e-8);
+        assertEquals(.564129165, ec.value(TEST2, 3), 1e-8);
+        assertEquals(.296008301, ec.value(TEST2, 4), 1e-8);
     }
 
 }

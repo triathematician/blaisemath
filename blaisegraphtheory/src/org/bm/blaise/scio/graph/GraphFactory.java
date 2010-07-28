@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * Provides methods for creating and returning graphs of certain types.
@@ -33,6 +35,35 @@ public class GraphFactory {
                 ? MatrixGraph.getInstance(directed, vertices, edges)
                 : SparseGraph.getInstance(directed, vertices, edges);
     }
+       
+    /**
+     * Creates an instance of either a longitudinal graph, implemented using either
+     * <code>IntervalLongitudinalGraph</code> or <code>ListLongitudinalGraph</code>,
+     * depending upon the time parameters.
+     * 
+     * @param directed whether graph is directed
+     * @param vertices map associating vertices to time intervals
+     * @param edges map associating edges to time intervals
+     * @return graph with specified edges
+     */
+    public static <V> LongitudinalGraph<V> getLongitudinalGraph(boolean directed,
+            Map<V, List<double[]>> vertices, Map<V, Map<V, List<double[]>>> edges) {
+
+        // create master table of (sorted) key times
+        TreeSet<Double> allTimes = new TreeSet<Double>();
+        for (List<double[]> tt : vertices.values())
+            for (double[] interval : tt)
+                if (interval != null) for (double d : interval) allTimes.add(d);
+        for (Map<V, List<double[]>> map : edges.values())
+            for (List<double[]> tt : map.values())
+                for (double[] interval : tt)
+                    if (interval != null) for (double d : interval) allTimes.add(d);
+                    
+        System.out.println(" .. getLongitudinalGraph: " + allTimes.size() + " key times: " + allTimes);
+
+        return IntervalLongitudinalGraph.getInstance2(directed, vertices, edges);
+    }
+
 
     /**
      * Returns graph with n vertices and no edges

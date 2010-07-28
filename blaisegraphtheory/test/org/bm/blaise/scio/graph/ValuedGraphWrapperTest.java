@@ -15,9 +15,9 @@ import static org.junit.Assert.*;
  *
  * @author elisha
  */
-public class NodeValueGraphWrapperTest {
+public class ValuedGraphWrapperTest {
 
-    public NodeValueGraphWrapperTest() {
+    public ValuedGraphWrapperTest() {
     }
 
     static Integer[] VV;

@@ -1,5 +1,5 @@
 /*
- * GraphIO.java
+ * AbstractGraphIO.java
  * Created Jul 10, 2010
  */
 
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
@@ -23,7 +24,12 @@ import org.bm.blaise.scio.graph.WeightedValuedGraphWrapper;
  * Provides a framework for graph IO support for a particular format.
  * @author Elisha Peterson
  */
-public abstract class GraphIO {
+public abstract class AbstractGraphIO {
+
+    /** Used to describe whether saved and loaded graphs are of type "regular" or "longitudinal" */
+    public enum GraphType {
+        REGULAR, LONGITUDINAL;
+    }
 
     //
     // REGULAR FILES
@@ -33,59 +39,101 @@ public abstract class GraphIO {
      * Reads in and returns a graph file
      * @param locations information about positions of nodes in the file
      * @param file file containing information of the graph
+     * @param type a type pointer describing whether resulting graph should be regular or longitudinal;
+     *   if impossible to support the specified option, the type pointer will switch to indicate
+     *   a different return type
      * @return the graph data structure
      */
-    public Graph<Integer> importGraph(Map<Integer, double[]> locations, URL file) {
-        return importGraph(locations, new File(file.getFile()));
+    public Object importGraph(Map<Integer, double[]> locations, URL file, GraphType type) {
+        return importGraph(locations, new File(file.getFile()), type);
     }
 
     /*
      * Reads in and returns a graph file
      * @param locations information about positions of nodes in the file
      * @param file file containing information of the graph
+     * @param type a type pointer describing whether resulting graph should be regular or longitudinal;
+     *   if impossible to support the specified option, the type pointer will switch to indicate
+     *   a different return type
      * @return the graph data structure, possibly with node labels attached to the vertices
      */
-    public abstract Graph<Integer> importGraph(Map<Integer, double[]> locations, File file);
+    public abstract Object importGraph(Map<Integer, double[]> locations, File file, GraphType type);
 
     /**
      * Saves a graph to a file.
-     * @param graph the graph data structure
+     * @param graph the graph data structure, either regular or longitudinal
      * @param positions the positions of vertices in the graph, in the same order returned by <code>graph.nodes()</code>
      * @param file the file to save the graph to
+     * @return the type of graph that was saved to the file, or null if the save attempt failed
      */
-    public abstract void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file);
-
-    //
-    // LONGITUDINAL FILES
-    //
-
-    /**
-     * Reads in and returns a longitudinal graph file
-     * @param file file containing information of the graph
-     * @return the longitudinal graph data structure
-     */
-    public LongitudinalGraph<Integer> importLongitudinalGraph(URL file) {
-        return importLongitudinalGraph(new File(file.getFile()));
-    }
-
-    /*
-     * Reads in and returns a longitudinal graph file
-     * @param file file containing information of the graph
-     * @return the longitudinal graph data structure, possibly with node labels attached to the vertices
-     */
-    public abstract LongitudinalGraph<Integer> importLongitudinalGraph(File file);
-
-    /**
-     * Saves a longitudinal graph to a file.
-     * @graph the graph data structure
-     * @param file the file to save the graph to
-     */
-    public abstract void saveLongitudinalGraph(LongitudinalGraph<Integer> graph, File file);
-
+    public abstract GraphType saveGraph(Object graph, Point2D.Double[] positions, File file);
     
     //
     // UTILITIES
     //
+
+    /**
+     * Utility method. Returns a graph of the appropriate type, given the input data in the specified formats.
+     * Returns a longitudinal graph. Each vertex/edge may have one or more intervals; if no interval is given,
+     * it is assumed to last throughout the time period. The resulting time period lasts from the minimum
+     * specified time value to the maximum time value.
+     * 
+     * @param vertices vertices, stored as a map from integer index to string label
+     * @param times list of time intervals corresponding to the vertices
+     * @param edges list of the edges or arcs
+     * @param weights list of weights, in same order as edges
+     * @param eTimes list of time intervals corresponding to the edges
+     * @param directed whether resulting graph should be directed
+     * @return a graph implementation with the desired properties/values
+     */
+    protected static LongitudinalGraph<Integer> buildGraph(
+            Map<Integer,String> vertices,
+            Map<Integer,List<double[]>> times,
+            ArrayList<Integer[]> edges,
+            ArrayList<Double> weights,
+            List<List<double[]>> eTimes,
+            boolean directed) {
+
+        System.out.println(".buildGraph (longitudinal version): " + vertices.size() + " vertices, " + edges.size() + " edges");
+
+        if (edges.size() != weights.size() || edges.size() != eTimes.size())
+            throw new IllegalStateException("buildGraph: size of edges, weights, and eTimes lists should be equal!");
+
+        // determine whether result should be weighted
+        boolean weighted = false;
+        for (Double d : weights)
+            if (!(d==0.0 || d==1.0)) { weighted = true; break; }
+        // determine whether result should have value nodes
+        boolean valued = false;
+        for (String s : vertices.values())
+            if (s != null) { valued = true; break; }
+        if (weighted || valued)
+            System.out.println("WARNING -- longitudinal buildGraph does not currently support weighted or valued edges!");
+
+        // add extra vertices to vertex map
+        for (Integer v : vertices.keySet())
+            if (!times.containsKey(v)) {
+                ArrayList<double[]> ivs = new ArrayList<double[]>();
+                ivs.add(new double[]{-Double.MAX_VALUE, Double.MAX_VALUE});
+                times.put(v, ivs);
+            }
+
+        // create edge map
+        TreeMap<Integer, Map<Integer, List<double[]>>> edgeMap = new TreeMap<Integer, Map<Integer, List<double[]>>>();
+        for (int i = 0; i < edges.size(); i++) {
+            Integer[] edge = edges.get(i);
+            List<double[]> ivs = eTimes.get(i);
+            if (ivs == null) {
+                ivs = new ArrayList<double[]>();
+                ivs.add(new double[]{-Double.MAX_VALUE, Double.MAX_VALUE});
+            }
+            if (!edgeMap.containsKey(edge[0]))
+                edgeMap.put(edge[0], new TreeMap<Integer, List<double[]>>());
+            edgeMap.get(edge[0]).put(edge[1], ivs);
+        }
+
+        return GraphFactory.getLongitudinalGraph(directed, times, edgeMap);
+    }
 
     /**
      * Utility method. Returns a graph of the appropriate type, given the input data in the specified formats.

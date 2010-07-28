@@ -22,6 +22,7 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import stormtimer.BetterTimer;
+import visometry.PlotComponent;
 
 /**
  *
@@ -213,8 +214,16 @@ public class GraphExplorerLite extends javax.swing.JFrame
     // PROPERTY GETTERS
     //
 
-    public Component component() {
+    public Component thisComponent() {
         return this;
+    }
+
+    public Component activePanel() {
+        return mainPlot;
+    }
+
+    public boolean isLongitudinal() {
+        return false;
     }
 
     public Graph activeGraph() {
@@ -288,16 +297,18 @@ public class GraphExplorerLite extends javax.swing.JFrame
                 activeLayout = layout;
             layout.reset(activeGraph(), activeGraph.getPoint());
             newPositions = null;
-            layoutTimer = new BetterTimer(100);
-            layoutTimer.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    iterateLayout();
-                }
-            });
-            layoutTimer.start();
-            setLayoutState(ANIMATING);
         } else
             setLayoutState(STATIC);
+    }
+
+    public void animateLayout() {
+        layoutTimer = new BetterTimer(100);
+        layoutTimer.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                iterateLayout();
+            }
+        });
+        layoutTimer.start();
     }
 
     public void adjustLayout(StaticGraphLayout layout, double... parameters) {
@@ -310,7 +321,8 @@ public class GraphExplorerLite extends javax.swing.JFrame
             activeLayout.reset(activeGraph.getGraph(), newPositions);
             newPositions = null;
         }
-        activeGraph.setPoint(activeLayout.iterate(activeGraph.getGraph()));
+        activeLayout.iterate(activeGraph.getGraph());
+        activeGraph.setPoint(activeLayout.getPointArray());
     }
 
     public void stopLayout() {

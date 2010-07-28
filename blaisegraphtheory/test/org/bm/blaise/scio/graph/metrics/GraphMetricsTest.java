@@ -35,7 +35,7 @@ public class GraphMetricsTest {
         System.out.println("DEGREE");
 
         Integer[] eDeg = new Integer[] {1, 3, 2, 3, 3, 1, 4, 1, 6, 1, 3, 0, 3, 2, 4, 3};
-        List<Integer> deg = GraphMetrics.DEGREE.getAllValues(SAMPLE_PADGETT);
+        List<Integer> deg = GraphMetrics.DEGREE.allValues(SAMPLE_PADGETT);
         for (int i = 0; i < eDeg.length; i++)
             assertEquals(eDeg[i], deg.get(i));
 
@@ -57,7 +57,7 @@ public class GraphMetricsTest {
         System.out.println("DEGREE2");
 
         Integer[] eDeg = new Integer[] {6, 10, 9, 8, 6, 3, 9, 4, 11, 2, 6, 0, 11, 7, 8, 10};
-        List<Integer> deg = GraphMetrics.DEGREE2.getAllValues(SAMPLE_PADGETT);
+        List<Integer> deg = GraphMetrics.DEGREE2.allValues(SAMPLE_PADGETT);
         for (int i = 0; i < eDeg.length; i++)
             assertEquals(eDeg[i], deg.get(i));
 
@@ -79,7 +79,7 @@ public class GraphMetricsTest {
         System.out.println("CLIQUE_COUNT");
 
         Integer[] eCC = new Integer[] {0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 2, 1};
-        List<Integer> cc = GraphMetrics.CLIQUE_COUNT.getAllValues(SAMPLE_PADGETT);
+        List<Integer> cc = GraphMetrics.CLIQUE_COUNT.allValues(SAMPLE_PADGETT);
         for (int i = 0; i < eCC.length; i++)
             assertEquals(eCC[i], cc.get(i));
 
@@ -101,7 +101,7 @@ public class GraphMetricsTest {
         System.out.println("CLIQUE_COUNT2");
 
         Integer[] eCC2 = new Integer[] {1, 2, 3, 3, 3, 0, 4, 0, 3, 0, 2, 0, 6, 1, 5, 3};
-        List<Integer> cc2 = GraphMetrics.CLIQUE_COUNT2.getAllValues(SAMPLE_PADGETT);
+        List<Integer> cc2 = GraphMetrics.CLIQUE_COUNT2.allValues(SAMPLE_PADGETT);
         System.out.println(cc2);
         for (int i = 0; i < eCC2.length; i++)
             assertEquals(eCC2[i], cc2.get(i));

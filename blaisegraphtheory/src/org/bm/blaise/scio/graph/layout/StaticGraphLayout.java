@@ -21,6 +21,16 @@ public interface StaticGraphLayout {
      */
     public Point2D.Double[] layout(Graph g, double... parameters);
 
+    /** Lays out vertices all at the origin. */
+    public static StaticGraphLayout ORIGIN = new StaticGraphLayout(){
+        public Point2D.Double[] layout(Graph g, double... parameters) {
+            Point2D.Double[] result = new Point2D.Double[g.order()];
+            for (int i = 0; i < result.length; i++)
+                result[i] = new Point2D.Double();
+            return result;
+        };
+    };
+
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
     public static StaticGraphLayout CIRCLE = new StaticGraphLayout(){
         public Point2D.Double[] layout(Graph g, double... parameters) {

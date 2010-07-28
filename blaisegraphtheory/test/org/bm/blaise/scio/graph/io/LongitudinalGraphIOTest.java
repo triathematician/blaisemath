@@ -5,8 +5,9 @@
 
 package org.bm.blaise.scio.graph.io;
 
-import org.bm.blaise.scio.graph.ListLongitudinalGraph;
+import java.util.HashMap;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
+import org.bm.blaise.scio.graph.io.AbstractGraphIO.GraphType;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,8 +21,9 @@ public class LongitudinalGraphIOTest {
 
     public static LongitudinalGraph<Integer> sampleNewFrat() {
         if (SAMPLE_NEWFRAT == null)
-            SAMPLE_NEWFRAT = LongitudinalGraphIO.getInstance().importLongitudinalGraph(
-                LongitudinalGraphIO.class.getResource("data/newfrat.txt"));
+            SAMPLE_NEWFRAT = (LongitudinalGraph<Integer>) LongitudinalGraphIO.getInstance().importGraph(
+                new HashMap<Integer,double[]>(),
+                LongitudinalGraphIO.class.getResource("data/newfrat.netx"), GraphType.LONGITUDINAL);
         return SAMPLE_NEWFRAT;
     }
 

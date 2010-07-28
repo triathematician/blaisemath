@@ -167,13 +167,14 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
 
         directedBG.add(directedRB);
         directedRB.setText("directed");
+        directedRB.setEnabled(false);
 
         jLabel2.setText("TOTAL # nodes:");
 
         numNodesS.setModel(new javax.swing.SpinnerNumberModel(100, 1, 100000, 1));
         numNodesS.setToolTipText("Enter the number of nodes in the resulting graph (1-100,000)");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 2, 13));
         jLabel4.setText("Result: ");
 
         resultBG.add(returnRegularRB);
@@ -265,9 +266,9 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(directedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(undirectedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(directedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(undirectedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(numNodesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(jLabel2)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)

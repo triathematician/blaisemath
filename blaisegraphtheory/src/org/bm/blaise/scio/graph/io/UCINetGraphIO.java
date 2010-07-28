@@ -14,13 +14,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 
@@ -31,7 +29,7 @@ import org.bm.blaise.scio.graph.WeightedGraph;
  *
  * @author Elisha Peterson
  */
-public final class UCINetGraphIO extends GraphIO {
+public final class UCINetGraphIO extends AbstractGraphIO {
 
     // no instantiation
     private UCINetGraphIO() { }
@@ -49,17 +47,18 @@ public final class UCINetGraphIO extends GraphIO {
         NODELIST1("nodelist1"),
         UNKNOWN("unknown");
 
+        public String outputLine() { return "FORMAT = " + header.toUpperCase() + (this == FULLMATRIX ? " DIAGONAL PRESENT" : ""); }
+
         String header;
         /**
          * Construct with specified header, used to identify the mode in text files.
          * @param header the code used to denote the mode
          */
-        DataFormat(String header) {
-            this.header = header;
-        }
+        DataFormat(String header) { this.header = header; }
     }
 
-    public Graph<Integer> importGraph(Map<Integer,double[]> locations, File file) {
+    @Override
+    public Object importGraph(Map<Integer,double[]> locations, File file, GraphType type) {
 
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
@@ -72,6 +71,8 @@ public final class UCINetGraphIO extends GraphIO {
         // whether resulting graph is directed
         boolean directed = false;
 
+        // whether the header line "dl" has been found
+        boolean foundDL = false;
         // tracks whether currently in the header
         boolean inHeader = true;
         // whether labels are currently being read
@@ -105,16 +106,19 @@ public final class UCINetGraphIO extends GraphIO {
                             String[] split = line.split("[\\s,]+");
                             for (String s : split)
                                 vertices.put(vertices.size(), s);
-                        } else if(lineLower.startsWith("dl")) {
-                            if(lineLower.matches("dl\\s+n\\s*=\\s*[0-9]+")) {
-                                int i1 = line.indexOf("=");
-                                try {
-                                    expectedOrder = Integer.decode(line.substring(i1 + 1));
-                                } catch (Exception ex) {
-                                    notifyImportFailure(lineNumber, null, line, ex);
-                                }
-                            } else
-                                notifyImportFailure(lineNumber, null, line, null);
+                            continue;
+                        }
+                        
+                        if (lineLower.startsWith("dl"))
+                            foundDL = true;
+
+                        if (lineLower.matches("dl\\s+n\\s*=\\s*[0-9]+") || lineLower.matches("n\\s*=\\s*[0-9]+") ) {
+                            int i1 = line.indexOf("=");
+                            try {
+                                expectedOrder = Integer.decode(line.substring(i1 + 1).trim());
+                            } catch (Exception ex) {
+                                notifyImportFailure(lineNumber, null, line, ex);
+                            }
                         } else if (lineLower.startsWith("format")) {
                             format = parseDataFormat(lineLower);
                         } else if (lineLower.startsWith("labels")) {
@@ -162,24 +166,13 @@ public final class UCINetGraphIO extends GraphIO {
             System.err.println(ex);
         }
 
-        if (expectedOrder != -1 && vertices.size() != expectedOrder) {
+        if (!foundDL)
+            System.out.println("WARNING -- UCINet file imported without expected \"DL\" header line");
+        if (expectedOrder != -1 && vertices.size() != expectedOrder)
             System.out.println("WARNING -- expected " + expectedOrder + " vertices but only found " + vertices.size());
-        }
 
         return buildGraph(vertices, edges, weights, directed);
     }
-
-    public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveLongitudinalGraph(LongitudinalGraph<Integer> graph, File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-
 
     /**
      * Notifies the user of a failure to import a line.
@@ -195,14 +188,16 @@ public final class UCINetGraphIO extends GraphIO {
     /**
      * Checks a format line for a known data format, returning the data format if it does.
      * Otherwise, returns the <code>UNKNOWN</code> data format.
-     * @param line lowercase line starting with "format = "
+     * @param line <b>lowercase</b> line starting with "format = "
      */
     static DataFormat parseDataFormat(String line) {
         int i0 = line.indexOf("=");
-        String code = line.substring(i0 + 1);
+        String code = line.substring(i0 + 1).trim();
         for (DataFormat df : DataFormat.values())
             if (code.equals(df.header.toLowerCase()))
                 return df;
+        if (code.matches("fullmatrix\\s+diagonal\\s+present"))
+            return DataFormat.FULLMATRIX;
         return DataFormat.UNKNOWN;
     }
 
@@ -226,10 +221,10 @@ public final class UCINetGraphIO extends GraphIO {
     private static int checkForVertex(String vertex, Map<Integer,String> vertices) {
         if (vertices.containsValue(vertex)) {
             for (Entry<Integer,String> en : vertices.entrySet())
-                if (en.getValue().equals(vertex))
+                if (vertex.equals(en.getValue()))
                     return en.getKey();
         } else {
-            int i = 0;
+            int i = 1;
             while (vertices.containsKey(i)) i++;
             vertices.put(i, vertex);
             return i;
@@ -245,14 +240,16 @@ public final class UCINetGraphIO extends GraphIO {
      * @param labelsOK whether labels are OK
      * @return index of the vertex
      */
-    static int checkVertex(String s, Map<Integer, String> vertices, boolean labelsOK)
+    protected static int checkVertex(String s, Map<Integer, String> vertices, boolean labelsOK)
             throws NumberFormatException {
+        s = s.trim();
         if (!labelsOK || s.matches("[0-9]+")) {
             int result = Integer.decode(s);
             checkForVertex(result, vertices);
             return result;
-        } else
+        } else if (s.matches("[_A-za-z][_A-za-z0-9]*"))
             return checkForVertex(s, vertices);
+        return -1;
     }
 
     /**
@@ -315,6 +312,10 @@ public final class UCINetGraphIO extends GraphIO {
             int v0 = checkVertex(split[0], vertices, embeddedLabels);
             for (int i=1; i < split.length; i++) {
                 int v = checkVertex(split[i], vertices, embeddedLabels);
+                if (v == -1) {
+                    notifyImportFailure(lineNumber, DataFormat.NODELIST1, line, null);
+                   return;
+                }
                 edges.add(new Integer[]{v0, v});
                 weights.add(1.0);
             }
@@ -345,7 +346,7 @@ public final class UCINetGraphIO extends GraphIO {
             List<Double> weights,
             boolean embeddedLabels)
             throws NumberFormatException {
-        if (mxLine == 0 && embeddedLabels && line.matches("[_A-za-z][_A-za-z0-9]*([,\\s]+[_A-za-z][_A-za-z0-9]*)*")) {
+        if (mxLine == 1 && embeddedLabels && line.matches("[_A-za-z][_A-za-z0-9]*([,\\s]+[_A-za-z][_A-za-z0-9]*)*")) {
             String[] split = line.split("[,\\s]+");
             for (String s : split)
                 checkVertex(s, vertices, embeddedLabels);
@@ -356,25 +357,33 @@ public final class UCINetGraphIO extends GraphIO {
         int startLine = mxLine;
         if (embeddedLabels && split[0].matches("[_A-za-z][_A-za-z0-9]*")) {
             mxLine = checkVertex(split[0], vertices, embeddedLabels);
+            if (mxLine == -1)
+                notifyImportFailure(lineNumber, DataFormat.FULLMATRIX, line, null);
             start1 = true;
         } else {
             checkForVertex(mxLine, vertices);
             start1 = false;
         }
-        for (int i = 0; i < split.length; i++) {
+        for (int i = (start1 ? 1 : 0); i < split.length; i++) {
+            int v2 = start1 ? i : i+1;
             double weight = Double.valueOf(split[i]);
-            checkForVertex(i+1, vertices);
+            checkForVertex(v2, vertices);
             if (weight != 0.0) {
-                edges.add(new Integer[] { mxLine, i+1 } );
+                edges.add(new Integer[] { mxLine, v2 } );
                 weights.add(weight);
             }
         }
         return false;
     }
 
-
     @Override
-    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+        Graph<Integer> graph = null;
+        try {
+            graph = (Graph<Integer>) go;
+        } catch (ClassCastException ex) {
+            return null;
+        }
         DataFormat format = DataFormat.FULLMATRIX;
         List<Integer> nodes = graph.nodes();
         int n = nodes.size();
@@ -385,14 +394,16 @@ public final class UCINetGraphIO extends GraphIO {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {
                 // header
-                writer.write("DL N = " + n);
+                writer.write("DL");
                 writer.newLine();
-                writer.write("format = " + format.header);
+                writer.write("N=" + n);
+                writer.newLine();
+                writer.write(format.outputLine());
                 writer.newLine();
 
                 // vertex labels (1 per line)
                 if (graph instanceof ValuedGraph) {
-                    writer.write("labels:");
+                    writer.write("LABELS:");
                     writer.newLine();
                     ValuedGraph nvg = (ValuedGraph) graph;
                     for (int i = 0; i < n; i++) {
@@ -402,17 +413,16 @@ public final class UCINetGraphIO extends GraphIO {
                 }
 
                 // write the edges; uses one edge per line by default
-                writer.write("data:");
+                writer.write("DATA:");
                 writer.newLine();
                 switch (format) {
                     case FULLMATRIX:
                         for (Integer i1 : nodes) {
                             for (Integer j1 : nodes) {
-                                if (graph.adjacent(i1, j1))
-                                    writer.write("" + (weighted ? wg.getWeight(i1, j1) : 1));
-                                else
-                                    writer.write("0");
                                 writer.write(" ");
+                                writer.write( graph.adjacent(i1, j1)
+                                        ? "" + (weighted ? wg.getWeight(i1, j1) : 1)
+                                        : "0" );
                             }
                             writer.newLine();
                         }
@@ -451,6 +461,8 @@ public final class UCINetGraphIO extends GraphIO {
             }
         } catch (IOException ex) {
             System.err.println(ex);
+            return null;
         }
+        return GraphType.REGULAR;
     }
 }

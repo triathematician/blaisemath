@@ -31,7 +31,7 @@ public class AdditiveSubsetMetric<N extends Number> implements SubsetMetric<N> {
         Double result = 0.0;
         Number val = null;
         for (V v : vertices) {
-            val = (Number) baseMetric.getValue(graph, v);
+            val = (Number) baseMetric.value(graph, v);
             result += val.doubleValue();
         }
         if (val instanceof Integer)

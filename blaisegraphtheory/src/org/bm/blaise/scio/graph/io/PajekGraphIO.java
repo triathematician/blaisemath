@@ -13,9 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,7 +80,7 @@ import org.bm.blaise.scio.graph.WeightedGraph;
  *
  * @author Elisha Peterson
  */
-public final class PajekGraphIO extends GraphIO {
+public final class PajekGraphIO extends AbstractGraphIO {
 
     /** Global flag telling whether to warn when an undeclared vertex is read from file */
     static boolean WARN_UNDECLARED_VERTEX = false;
@@ -138,7 +138,8 @@ public final class PajekGraphIO extends GraphIO {
         }
     }
 
-    public Graph<Integer> importGraph(Map<Integer,double[]> locations, File file) {
+    @Override
+    public Object importGraph(Map<Integer,double[]> locations, File file, GraphType type) {
 
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
@@ -242,19 +243,15 @@ public final class PajekGraphIO extends GraphIO {
             edgeModeUsed = mode;
 
         directed = edgeModeUsed == ImportMode.MATRIX ? !symmetricMatrix(edges, weights) : edgeModeUsed.directedMode;
-        return buildGraph(vertices, edges, weights, directed);
+
+        if (type == GraphType.REGULAR || (times.size() == 0 && eTimes.size() == 0)) {
+            type = GraphType.REGULAR;
+            return buildGraph(vertices, edges, weights, directed);
+        } else {
+            type = GraphType.LONGITUDINAL;
+            return buildGraph(vertices, times, edges, weights, eTimes, directed);
+        }
     }
-
-    public LongitudinalGraph<Integer> importLongitudinalGraph(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveLongitudinalGraph(LongitudinalGraph<Integer> graph, File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
 
 
     /**
@@ -333,10 +330,11 @@ public final class PajekGraphIO extends GraphIO {
                         result.add(new double[]{t1, t2});
                     }
                 }
-                if (result.size() > 0) {
-                    System.out.print("Found time intervals for vertex: ");
-                    for (double[] i : result) System.out.print(" " + Arrays.toString(i));
-                }
+//                if (result.size() > 0) {
+//                    System.out.print("Found time intervals for vertex: ");
+//                    for (double[] i : result) System.out.print(" " + Arrays.toString(i));
+//                    System.out.println("");
+//                }
             } else {
                 System.out.println("WARNING -- unexpected bracket expression: " + line);
             }
@@ -527,7 +525,22 @@ public final class PajekGraphIO extends GraphIO {
 
 
     @Override
-    public void saveGraph(Graph<Integer> graph, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+        try {
+            if (go instanceof LongitudinalGraph) {
+                saveLongitudinal((LongitudinalGraph<Integer>) go, positions, file);
+                return GraphType.LONGITUDINAL;
+            } else {
+                saveRegular((Graph<Integer>) go, positions, file);
+                return GraphType.REGULAR;
+            }
+        } catch (ClassCastException ex) {
+            System.out.println("ERROR saving -- class cast exception ??");
+            return null;
+        }
+    }
+
+    private void saveRegular(Graph<Integer> graph, Point2D.Double[] positions, File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {
@@ -581,5 +594,65 @@ public final class PajekGraphIO extends GraphIO {
         } catch (IOException ex) {
             System.err.println(ex);
         }
+    } // saveGraph
+
+    private void saveLongitudinal(LongitudinalGraph<Integer> lg, Point2D.Double[] positions, File file) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            try {
+                // write the vertices
+                Collection<Integer> nodes = lg.getAllNodes();
+                writer.write("*Vertices " + nodes.size());
+                writer.newLine();
+                int i = 0;
+                for (Integer node : nodes) {
+                    writer.write(node.toString() + " " + node.toString());
+                    if (positions != null && positions.length > i && positions[i] != null)
+                        writer.write(" " + positions[i].x + " " + positions[i].y);
+                    writer.write(" " + convertToString(lg.getNodeIntervals(node)));
+                    writer.newLine();
+                    i++;
+                }
+                // write the edges; uses one edge per line by default
+                writer.write(lg.isDirected() ? "*Arcs" : "*Edges");
+                writer.newLine();
+                for (Integer i1 : nodes)
+                    for (Integer i2 : nodes) {
+                        if (!lg.isDirected() && i2 < i1) continue;
+                        String s = convertToString(lg.getEdgeIntervals(i1, i2));
+                        if (s != null) {
+                            writer.write(i1 + " " + i2 + " " + s);
+                            writer.newLine();
+                        }
+                    }
+            } finally {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+    } // saveLongitudinal
+
+    /**
+     * Converts list of intervals to string
+     * @param ivs list of intervals
+     * @return string representation of intervals, or null if argument is null or empty
+     */
+    private String convertToString(List<double[]> ivs) {
+        if (ivs == null || ivs.size() == 0)
+            return null;
+        StringBuilder result = new StringBuilder("[");
+        for (double[] iv : ivs) {
+            if (iv[0] == iv[1]) {
+                result.append(iv[0]);
+            } else {
+                result.append(Double.isInfinite(iv[0]) ? "*" : iv[0]);
+                result.append("-");
+                result.append(Double.isInfinite(iv[1]) ? "*" : iv[1]);
+            }
+            result.append(",");
+        }
+        result.replace(result.length()-1, result.length(), "]");
+        return result.toString();
     }
 }

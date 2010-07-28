@@ -5,6 +5,7 @@
 
 package graphexplorer;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.table.AbstractTableModel;
@@ -18,22 +19,21 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
  */
 public class DistributionTableModel extends AbstractTableModel {
 
-    Graph graph;
-    NodeMetric metric;
+    /** Stores the values and counts in the table */
+    Map<Object, Integer> distrib;
+
     /** Stores the values in the table. */
     Object[] values;
     /** Stores the number of each value in the table. */
     int[] counts;
 
-    public <N> DistributionTableModel(Graph graph, NodeMetric<N> metric) {
-        this.graph = graph;
-        this.metric = metric;
-        Map<N, Integer> map = GraphMetrics.computeDistribution(graph, metric);
-        values = new Object[map.size()];
+    public <N> DistributionTableModel(List<N> values) {
+        Map<N, Integer> map = GraphMetrics.distribution(values);
+        this.values = new Object[map.size()];
         counts = new int[map.size()];
         int i = 0;
         for (Entry<N, Integer> en : map.entrySet()) {
-            values[i] = en.getKey();
+            this.values[i] = en.getKey();
             counts[i] = en.getValue();
             i++;
         }

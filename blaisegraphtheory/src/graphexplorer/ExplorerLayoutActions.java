@@ -60,6 +60,7 @@ class ExplorerLayoutActions {
         }
         public void actionPerformed(ActionEvent e) {
             main.initLayout(new EnergyLayout(main.activeGraph(), main.getActivePoints()));
+            main.animateLayout();
         }
     };
 

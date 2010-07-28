@@ -8,7 +8,6 @@ package org.bm.blaise.scio.graph.metrics;
 import java.util.Arrays;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
-import org.bm.blaise.scio.graph.Graphs;
 import org.bm.blaise.scio.graph.io.PajekGraphIOTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +24,7 @@ public class BetweenCentralityTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        System.out.println("-- DecayCentralityTest --");
+        System.out.println("-- BetweenCentralityTest --");
         SAMPLE_PADGETT = PajekGraphIOTest.sampleXPadgett();
         TEST2 = GraphFactory.getGraph(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
@@ -48,8 +47,36 @@ public class BetweenCentralityTest {
     public void testGetValue() {
         System.out.println("getValue");
         BetweenCentrality bc = BetweenCentrality.getInstance();
-        assertEquals(0.3333333333333, bc.getValue(TEST2, 1), 1e-10);
-        assertEquals(0.714285714285, bc.getValue(TEST2, 4), 1e-10);
+        assertEquals(1.0, bc.value(TEST2, 1), 1e-10);
+        assertEquals(9.0, bc.value(TEST2, 4), 1e-10);
+
+//        System.out.println(" -- running time for #edges-based random graphs -- ");
+//        System.out.println(" .. directed .. ");
+//        for (int mult : new int[]{1, 2, 5, 10, 20}) {
+//            System.out.println(" :: m=" + mult + "*n :: ");
+//            for (int n : new int[]{50, 100, 200, 500, 1000, 5000, 10000})
+//                bc.allValues(RandomGraph.getInstance(n, n, true));
+//        }
+//        System.out.println(" .. undirected .. ");
+//        for (int mult : new int[]{1, 2, 5, 10, 20}) {
+//            System.out.println(" :: m=" + mult + "*n :: ");
+//            for (int n : new int[]{50, 100, 200, 500, 1000, 5000, 10000})
+//                bc.allValues(RandomGraph.getInstance(n, n, false));
+//        }
+//
+//        System.out.println(" -- running time for density-based random graphs -- ");
+//        System.out.println(" .. directed .. ");
+//        for (float p : new float[]{.1f, .25f, .5f, .75f, .9f}) {
+//            System.out.println(" :: p=" + p + " ::");
+//            for (int n : new int[]{50, 100, 200, 500, 1000, 5000, 10000})
+//                bc.allValues(RandomGraph.getInstance(n, p, true));
+//        }
+//        System.out.println(" .. undirected .. ");
+//        for (float p : new float[]{.1f, .25f, .5f, .75f, .9f}) {
+//            System.out.println(" :: p=" + p + " ::");
+//            for (int n : new int[]{50, 100, 200, 500, 1000, 5000, 10000})
+//                bc.allValues(RandomGraph.getInstance(n, p, false));
+//        }
     }
 
 }

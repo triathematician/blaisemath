@@ -17,6 +17,9 @@ import java.util.TreeSet;
  * each vertex to its adjacent vertices. This is useful for graphs with a large
  * number of vertices and a relatively small number of edges.
  *
+ * If the graph is undirected, it is assumed that adjacencies are stored pointing
+ * in both directions along each edge.
+ *
  * @param <V> the type of the nodes
  *
  * @author Elisha Peterson
