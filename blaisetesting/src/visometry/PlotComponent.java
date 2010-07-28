@@ -151,11 +151,16 @@ public class PlotComponent<C> extends javax.swing.JComponent
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
+        renderTo((Graphics2D) g);
+    }
+
+    /** Renders to an alternate graphics object. */
+    public void renderTo(Graphics2D canvas) {
+        canvas.setColor(getBackground());
+        canvas.fillRect(0, 0, getWidth(), getHeight());
 
         pGroup.recompute();                         // this will recompute objects, but only if necessary
-        canvas = (Graphics2D) g;
+        
         if (processor != null)
             processor.prepare(pGroup, visometry);   // this ensures all primitives have been converted to local coordinates
                                                     // and are positioned properly for the renderer
