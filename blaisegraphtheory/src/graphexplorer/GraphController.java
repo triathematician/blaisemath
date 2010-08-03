@@ -46,6 +46,8 @@ public class GraphController {
     private Set subset = null;
     /** Stores the active metric (may be null) */
     private NodeMetric metric = null;
+    /** Stores values of the metric */
+    private List values = null;
     /** Stores the animating layout (may be null) */
     private IterativeGraphLayout layout = null;
 
@@ -146,6 +148,15 @@ public class GraphController {
     /** @return active metric (maybe null) */
     public NodeMetric getMetric() { return metric; }
 
+    /** @return active metric values */
+    public List getMetricValues() {        
+        if (values == null && metric != null && graph != null)
+            values = metric.allValues(graph);
+        else if (metric == null || graph == null)
+            values = null;
+        return values;
+    }
+
     /** @return active layout (maybe null) */
     public IterativeGraphLayout getIterativeLayout() { return layout; }
 
@@ -193,11 +204,12 @@ public class GraphController {
                 this.nodes.put(o, new Point2D.Double());
             this.subset = new HashSet();
             this.metric = null;
+            this.values = null;
             this.layout = null;
             this.longitudinal = false;
             this.lGraph = null;
             this.time = null;
-            this.activeNodes = null;
+            this.activeNodes = graph.nodes();
             pcs.firePropertyChange("primary", null, graph);
         }
         assert valid();
@@ -218,6 +230,7 @@ public class GraphController {
                 this.nodes.put(o, new Point2D.Double());
             this.subset = new HashSet();
             this.metric = null;
+            this.values = null;
             this.layout = null;
             this.longitudinal = true;
             this.lGraph = graph;
@@ -263,6 +276,7 @@ public class GraphController {
         if (this.metric != metric) {
             Object oldMetric = this.metric;
             this.metric = metric;
+            this.values = null;
             pcs.firePropertyChange("metric", oldMetric, metric);
         }
         assert valid();
@@ -278,13 +292,15 @@ public class GraphController {
         assert valid();
         if (!isLongitudinal())
             throw new IllegalStateException("Should not call setTime when not in longitudinal state!");
-        assert lGraph != null;
         
-        this.graph = lGraph.slice(time, false);
-        this.activeNodes = graph.nodes();
-        Double oldTime = time;
-        this.time = time; // TODO - this needs to be altered in case the returned graph is not at the exact time
-        pcs.firePropertyChange("time", oldTime, time);
+        if (this.time == null || this.time != time || this.graph == null || this.activeNodes == null) {
+            this.graph = lGraph.slice(time, false);
+            this.values = null;
+            this.activeNodes = graph.nodes();
+            Double oldTime = this.time;
+            this.time = time; // TODO - this should be altered in case the returned graph is not at the exact time
+            pcs.firePropertyChange("time", oldTime, time);
+        }
         assert valid();
     }
 
@@ -304,17 +320,17 @@ public class GraphController {
     public void setPositions(Map<Object, Point2D.Double> positions) {
         if (!nodes.keySet().containsAll(positions.keySet()))
             throw new IllegalArgumentException("Position map contains invalid keys!");
-        // TODO - ensure this works well with the layout mechanism
-        nodes.putAll(positions);
+        if (animating)
+            layout.requestPositions(positions);
+        else {
+            nodes.putAll(positions);
+            pcs.firePropertyChange("positions", null, nodes);
+        }
     }
 
     /** Applies specified layout to the active graph */
     void applyLayout(StaticGraphLayout layout, double... parameters) {
-        // stoplayout & activelayout=null ?? or stop iterative layout ??
-        if (this.layout != null)
-            this.layout.requestPositions(layout.layout(graph, parameters));
-        else
-            setPositions(layout.layout(graph, parameters));
+        setPositions(layout.layout(graph, parameters));
     }
 
     /**
@@ -352,11 +368,12 @@ public class GraphController {
             layoutTimer.cancel();
             layoutTimer = null;
         }
-        layoutTimer = new BetterTimer(100);
+        layoutTimer = new BetterTimer(1);
         layoutTimer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 layout.iterate(graph);
-                setPositions(layout.getPositions());
+                nodes.putAll(layout.getPositions());
+                pcs.firePropertyChange("positions", null, nodes);
             }
         });
         layoutTimer.start();
@@ -370,7 +387,8 @@ public class GraphController {
     public void stepLayout() {
         if (!animating) {
             layout.iterate(graph);
-            setPositions(layout.getPositions());
+            nodes.putAll(layout.getPositions());
+            pcs.firePropertyChange("positions", null, nodes);
         }
     }
 

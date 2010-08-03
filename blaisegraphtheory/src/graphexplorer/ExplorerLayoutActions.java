@@ -33,7 +33,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller.valid())
+            if (controller != null && controller.valid())
                 controller.applyLayout(StaticGraphLayout.CIRCLE, 5.0);
         }
     };
@@ -46,7 +46,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller.valid())
+            if (controller != null && controller.valid())
                 controller.applyLayout(StaticGraphLayout.RANDOM, 5.0);
         }
     };
@@ -59,7 +59,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller.valid()) {
+            if (controller != null && controller.valid()) {
                 controller.setIterativeLayout(new EnergyLayout(controller.getPositions()));
                 controller.animateLayout();
             }
@@ -74,7 +74,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller.valid())
+            if (controller != null && controller.valid())
                 controller.stepLayout();
         }
     };
@@ -87,7 +87,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            controller.stopLayout();
+            if (controller != null && controller.valid())
+                controller.stopLayout();
         }
     };
 

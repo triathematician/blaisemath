@@ -7,6 +7,7 @@ package graphexplorer;
 
 import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
+import graphexplorer.ExplorerStatActions.StatEnum;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,13 +15,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
@@ -34,7 +40,11 @@ import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.YIntervalRenderer;
+import org.jfree.data.xy.DefaultIntervalXYDataset;
 import visometry.plane.PlanePlotComponent;
 
 /**
@@ -42,7 +52,8 @@ import visometry.plane.PlanePlotComponent;
  * @author Elisha Peterson
  */
 public class GraphExplorerMain extends javax.swing.JFrame
-        implements GraphExplorerInterface, PropertyChangeListener {
+        implements GraphExplorerInterface,
+            ChangeListener, PropertyChangeListener {
 
     /** Controller */
     GraphControllerMaster master;
@@ -103,6 +114,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         labelPS = new data.propertysheet.PropertySheet();
         edgePS = new data.propertysheet.PropertySheet();
@@ -326,11 +338,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
         toolbar.add(jLabel1);
 
         metricCB1.setModel(new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values()));
-        metricCB1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                metricCB1ActionPerformed(evt);
-            }
-        });
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, metricCB, org.jdesktop.beansbinding.ELProperty.create("${selectedItem}"), metricCB1, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+
         toolbar.add(metricCB1);
 
         getContentPane().add(toolbar, java.awt.BorderLayout.NORTH);
@@ -485,7 +496,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
         jMenu1.add(savePajekMI);
 
         savePajekMI1.setAction(actions_io.SAVE_PAJEKLONG_ACTION);
-        savePajekMI1.setText("Pajek format - longitudinal (.net)");
         jMenu1.add(savePajekMI1);
 
         savePajekXMI.setAction(actions_io.SAVE_PAJEKX_ACTION);
@@ -509,7 +519,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         exportM.setText("Export");
 
-        exportQTMI.setAction(actions_io.EXPORT_QT);
         exportQTMI.setText("Quicktime movie (.mov)");
         exportM.add(exportQTMI);
 
@@ -617,6 +626,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         setJMenuBar(menu);
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -651,10 +662,14 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private void energyTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyTBBActionPerformed
         // this button swaps the current status of the layout between playing & paused
         GraphController gc = activeController();
-        if (gc.isAnimating())
-            gc.stopLayout();
-        else
-            gc.animateLayout();
+        if (gc != null) {
+            if (gc.isAnimating())
+                actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(evt);
+            else
+                actions_layout.LAYOUT_ENERGY_START.actionPerformed(evt);
+        } else {
+            energyTBB.setSelected(false);
+        }
     }//GEN-LAST:event_energyTBBActionPerformed
 
     private void cooperationMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationMIActionPerformed
@@ -680,11 +695,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private void newTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTBBActionPerformed
         newPM.show(newTBB, 5, 5);
     }//GEN-LAST:event_newTBBActionPerformed
-
-    private void metricCB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricCB1ActionPerformed
-        metricCB.setSelectedItem(metricCB1.getSelectedItem());
-        metricCBActionPerformed(evt);
-    }//GEN-LAST:event_metricCB1ActionPerformed
 
     private void layoutTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutTBBActionPerformed
         layoutPM.show(layoutTBB, 5, 5);
@@ -804,6 +814,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem uniform1MI1;
     private javax.swing.JMenuItem wheelMI;
     private javax.swing.JMenuItem wheelMI1;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     //
@@ -840,13 +851,13 @@ public class GraphExplorerMain extends javax.swing.JFrame
     /** Updates the property panel with currently active graph and energy layout */
     private void updatePropertyPanel() {
         propertyRP.removeAll();
-        PlaneGraph active = graphs.get(activeController());
+        PlaneGraph active = activePlaneGraph();
         if (active != null) {
             PlaneGraphBean bean = new PlaneGraphBean(active);
             propertyRP.add(nodePS = new PropertySheet(bean.nodeBean()), "Node Settings");
             propertyRP.add(edgePS = new PropertySheet(bean.edgeBean()), "Edge Settings");
             propertyRP.add(labelPS = new PropertySheet(bean.labelBean()), "Label Settings");
-            IterativeGraphLayout layout = master.getActiveController().getIterativeLayout();
+            IterativeGraphLayout layout = activeController().getIterativeLayout();
             if (layout != null)
                 propertyRP.add(layoutPS = new PropertySheet(layout), "Iterative Layout Settings");
             else
@@ -859,46 +870,145 @@ public class GraphExplorerMain extends javax.swing.JFrame
         }
     }
 
-    /** Updates the currently active graph */
-    private void updateActiveGraph(GraphController gc_old, GraphController gc_new) {
-        if (gc_old != null) {
-            gc_old.removePropertyChangeListener(this);
-        }
-        if (gc_new == null) {
-            // need to remove current active components
-            if (gc_old != null && tabs.containsKey(gc_old)) {
-                graphTP.remove(tabs.get(gc_old));
-                tabs.remove(gc_old);
-                graphs.remove(gc_old);
-            }
-        } else {
-            updating = true;
-            if (tabs.containsKey(gc_new)) {
-                // just need to change active component
-                if (graphTP.getSelectedComponent() != tabs.get(gc_new))
-                    graphTP.setSelectedComponent(tabs.get(gc_new));
-            } else {
-                // need to create new components and set them up
-                Component c;
-                PlaneGraph pg;
-                if (gc_new.isLongitudinal()) {
-                    c = new LongitudinalGraphPanel(gc_new.getLongitudinalGraph());
-                    pg = ((LongitudinalGraphPanel)c).getPlaneGraph();
-                } else {
-                    c = new PlanePlotComponent();
-                    ((PlanePlotComponent)c).add(pg = new PlaneGraph(gc_new.getActiveGraph()));
+    /** Updates metric combo box */
+    private void updateMetricComboBox() {
+        GraphController gc = activeController();
+        if (gc == null)
+            metricCB.setSelectedItem(ExplorerStatActions.StatEnum.NONE);
+        else {
+            NodeMetric nm = activeController().getMetric();
+            StatEnum found = null;
+            for (StatEnum item : StatEnum.values())
+                if (item.getMetric() == nm) {
+                    found = item;
+                    break;
                 }
-                tabs.put(gc_new, c);
-                graphs.put(gc_new, pg);
-                graphTP.add(c, gc_new.getName());
-                graphTP.setSelectedComponent(c);
-            }
-            updatePropertyPanel();
-            gc_new.addPropertyChangeListener(this);
-            actions_stat.controller = gc_new;
-            actions_layout.controller = gc_new;
-            updating = false;
+            metricCB.setSelectedItem(found);
         }
+    }
+
+    /** Updates metric chart and table for current status */
+    private void updateChart() {
+        GraphController gc = activeController();
+        List values = gc == null ? null : gc.getMetricValues();
+        if (values == null) {
+            distributionCP.setChart(null);
+            distributionTable.setModel(new DefaultTableModel());
+            boxP3.remove(distributionTableSP);
+            boxPanel.validate();
+        } else {
+            DistributionTableModel dtm = new DistributionTableModel(values);
+            distributionTable.setModel(dtm);
+
+            int[] counts = dtm.counts;
+            int nSamples = counts.length;
+            double[][] data = new double[6][counts.length];
+            double x, y;
+            for (int i = 0; i < nSamples; i++) {
+                x = ((Number)dtm.values[i]).doubleValue();
+                y = dtm.counts[i];
+                data[0][i] = data[1][i] = data[2][i] = x;
+                data[3][i] = data[5][i] = y;
+                data[4][i] = 0;
+            }
+
+            // set up the chart
+            DefaultIntervalXYDataset chartData = new DefaultIntervalXYDataset();
+                chartData.addSeries(gc.getMetric().toString() + " counts", data);
+            NumberAxis xAxis = new NumberAxis(gc.getMetric().toString());
+                xAxis.setAutoRangeIncludesZero(false);
+            NumberAxis yAxis = new NumberAxis("Number of Nodes");
+            YIntervalRenderer renderer = new YIntervalRenderer();
+            renderer.setBaseToolTipGenerator(new org.jfree.chart.labels.StandardXYToolTipGenerator());
+            XYPlot plot = new XYPlot(chartData, xAxis, yAxis, renderer);
+                plot.setOrientation(PlotOrientation.VERTICAL);
+            distributionCP.setChart(new JFreeChart(
+                    gc.getMetric().toString() + " distribution", JFreeChart.DEFAULT_TITLE_FONT,
+                    plot, false));
+            
+            boxP3.add(distributionTableSP, BorderLayout.CENTER);
+            boxPanel.validate();
+        }
+    }
+
+    /** Updates the sizes of the active nodes */
+    private void updateNodeSizes() {
+        GraphController gc = activeController();
+        if (gc != null) {
+            PlaneGraph pg = activePlaneGraph();
+            List values = gc.getMetricValues();
+            activePlaneGraph().setNodeValues(values);
+
+            if (values == null) {
+                pg.getPointStyle().setRadiusMultiplier(1.0);
+            } else {
+                double max = 0;
+                for(int i = 0; i < values.size(); i++)
+                    max = Math.max(max, ((Number) values.get(i)).doubleValue());
+                pg.getPointStyle().setRadiusMultiplier(1.0/Math.sqrt(max));
+            }
+        }
+    }
+
+    /** Updates the currently active graph */
+    private void updateGraphTabs() {
+//        System.out.println("ugt: " + master.getControllers().size() + " controllers");
+        // remove anything not in the master controller
+        HashSet<GraphController> set = new HashSet<GraphController>();
+        for (GraphController gc : tabs.keySet())
+            if (!master.containsController(gc))
+                set.add(gc);
+
+        for (GraphController gc : set) {
+            gc.removePropertyChangeListener(this);
+            graphs.get(gc).removeChangeListener(this);
+            graphTP.remove(tabs.get(gc));
+            tabs.remove(gc);
+            graphs.remove(gc);
+        }
+
+        // add anything from the master controller
+        set.clear();
+        for (GraphController gc : master.getControllers())
+            if (!(tabs.containsKey(gc)))
+                set.add(gc);
+
+        Component c = null;
+        PlaneGraph pg = null;
+        for (GraphController gc : set) {
+            if (gc.isLongitudinal()) {
+                c = new LongitudinalGraphPanel(gc);
+                pg = ((LongitudinalGraphPanel)c).getPlaneGraph();
+            } else {
+                c = new PlanePlotComponent();
+                ((PlanePlotComponent)c).add(pg = new PlaneGraph(gc.getActiveGraph()));
+            }
+            gc.setPositions(pg.getPositionMap());
+            tabs.put(gc, c);
+            graphs.put(gc, pg);
+            graphTP.add(c, gc.getName());
+        }
+
+        // set up for the active controller
+        GraphController gc = activeController();
+        updating = true;
+        if (graphTP.getSelectedComponent() != tabs.get(gc))
+            graphTP.setSelectedComponent(tabs.get(gc));
+        updatePropertyPanel();
+        updateMetricComboBox();
+        updateChart();
+        updateNodeSizes();
+        if (activePlaneGraph() != null)
+            activePlaneGraph().addChangeListener(this);
+        if (gc != null)
+            gc.addPropertyChangeListener(this);
+        if (gc.isLongitudinal())
+            exportQTMI.setAction(new ExplorerIOActions.MovieAction(gc, (LongitudinalGraphPanel) tabs.get(gc)));
+        else
+            exportQTMI.setEnabled(false);
+        actions_stat.controller = gc;
+        actions_layout.controller = gc;
+        updating = false;
     }
 
     //
@@ -907,45 +1017,54 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
     boolean updating = false;
 
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource() == activePlaneGraph()) {
+            activeController().setPositions(activePlaneGraph().getPositionMap());
+        }
+    }
+
+    int pcn = 0;
+
     public void propertyChange(PropertyChangeEvent evt) {
-        output("Property change src=" + evt.getSource() + " & name=" + evt.getPropertyName());
+        if (!evt.getPropertyName().equals("positions"))
+            output("Property change " + (pcn++) + " src=" + evt.getSource() + " & name=" + evt.getPropertyName());
         if (evt.getSource() == master) {
             if (evt.getPropertyName().equals("active")) {
-                updateActiveGraph((GraphController) evt.getOldValue(), (GraphController) evt.getNewValue());
+                updateGraphTabs();
             } else if (evt.getPropertyName().equals("output")) {
                 output((String) evt.getNewValue());
             } else {
                 output("Unknown property change event, name = " + evt.getPropertyName());
             }
         } else if (evt.getSource() == activeController()) {
+            GraphController gc = activeController();
+            PlaneGraph pg = activePlaneGraph();
             if (evt.getPropertyName().equals("name")) {
-                Component c = tabs.get(activeController());
+                Component c = tabs.get(gc);
                 int index = graphTP.indexOfComponent(c);
                 graphTP.setTitleAt(index, (String) evt.getNewValue());
             } else if (evt.getPropertyName().equals("layout")) {
-                if (evt.getNewValue() == null) {
-                    // TODO - remove/deselect anything that depends on current layout
-                } else {
-                    IterativeGraphLayout layout = (IterativeGraphLayout) evt.getNewValue();
-                    // TODO - activate anything that depends on a currently active layout
-                }
+                updatePropertyPanel();
             } else if (evt.getPropertyName().equals("animating")) {
-                boolean value = (Boolean) evt.getNewValue();
-                // TODO - figure out what needs to happen when animation starts up
+                boolean animating = (Boolean) evt.getNewValue();
+                energyTBB.setSelected(animating);
+                energyTBB.setText(animating ? "Stop" : "Start");
             } else if (evt.getPropertyName().equals("primary")) {
-                // TODO - not sure if this option should be supported
+                // not supported yet!
             } else if (evt.getPropertyName().equals("subset")) {
+                // not supported yet!
                 output("Subset change: " + evt.getNewValue());
             } else if (evt.getPropertyName().equals("metric")) {
-                metricCB.setSelectedItem(evt.getNewValue());
-                metricCB1.setSelectedItem(evt.getNewValue());
-                // TODO - update chart & ensure these changes don't propagate
+                updateMetricComboBox();
+                updateChart();
+                updateNodeSizes();
             } else if (evt.getPropertyName().equals("time")) {
-                LongitudinalGraphPanel panel = (LongitudinalGraphPanel) tabs.get(activeController());
-                panel.setCurrentTime((Double) evt.getNewValue());
+                // longitudinal panel works directly with time & will update the active chart
+                updateChart();
             } else if (evt.getPropertyName().equals("node value")) {
-                PlaneGraph pg = activePlaneGraph();
                 pg.updateLabels();
+            } else if (evt.getPropertyName().equals("positions")) {
+                pg.setPositionMap(gc.getPositions());
             } else if(evt.getPropertyName().equals("output")) {
                 output((String) evt.getNewValue());
             } else {
@@ -953,6 +1072,5 @@ public class GraphExplorerMain extends javax.swing.JFrame
             }
         }
     }
-
 
 }

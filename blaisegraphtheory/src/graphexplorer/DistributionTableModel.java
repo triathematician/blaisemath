@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.table.AbstractTableModel;
-import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.metrics.GraphMetrics;
-import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a basic table for metric distributions

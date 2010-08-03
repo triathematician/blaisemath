@@ -57,9 +57,6 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
     /** The node position map (keeps order of vertices). */
     LinkedHashMap<Object, Point2D.Double> pos;
 
-    /** Values associated with the vertices (may be null) */
-    double[] vertexValues;
-
     /** The initial layout scheme */
     private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
     /** The layout scheme for adding vertices */
@@ -79,7 +76,7 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
 
         PointFancyStyle vStyle = new PointFancyStyle(PointStyle.PointShape.CIRCLE, StringStyle.Anchor.N);
         vStyle.setLabelColor(new Color(128, 128, 128));
-        vStyle.setMaxRadius(2.0);
+        vStyle.setMaxRadius(5.0);
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
         setGraph(graph);
     }
@@ -153,23 +150,19 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
         firePlottableChanged();
     }
 
-    /** @return current list of vertex values */
-    public double[] getNodeValues() {
-        return vertexValues;
-    }
-
     /** Sets current list of vertex values */
-    public void setNodeValues(double[] values) {
+    public void setNodeValues(List values) {
+        GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
         if (values == null) {
-            vertexValues = null;
+            for (int i = 0; i < gpfa.length; i++)
+                gpfa[i].rad = 1;
+            vertexEntry.needsConversion = true;
             firePlottableChanged();
         } else if (vertexEntry.local != null && graph != null) {
-            if (values.length != graph.nodes().size())
+            if (values.size() != graph.nodes().size())
                 throw new IllegalArgumentException("setVertexValues requires #nodes = #values");
-            GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
-            for (int i = 0; i < values.length; i++)
-                gpfa[i].rad = values[i];
-            needsRepaint = true;
+            for (int i = 0; i < values.size(); i++)
+                gpfa[i].rad = Math.sqrt(((Number) values.get(i)).doubleValue());
             vertexEntry.needsConversion = true;
             firePlottableChanged();
         }
@@ -183,14 +176,20 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
      * are used... the remainder are ignored. Okay if this map does not contain
      * all points in the graph.
      */
-    public <V> void setPositionMap(Map<V, Point2D.Double> map) {
+    public void setPositionMap(Map<?, Point2D.Double> map) {
         int i = 0;
         GraphicPointFancy[] arr = (GraphicPointFancy[]) vertexEntry.local;
+        pos = new LinkedHashMap<Object, Point2D.Double>();
         for (Object v : graph.nodes()) {
-            if (map.containsKey(v))
+            if (i >= arr.length || arr[i] == null) break;
+            if (map.containsKey(v)) {
                 arr[i].anchor = map.get(v);
+                pos.put(v, map.get(v));
+            }
             i++;
         }
+        vertexEntry.needsConversion = true;
+        firePlottableChanged();
     }
 
     /** @return window location of the i'th point */
@@ -201,6 +200,7 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
     public void setPoint(int i, Point2D.Double newValue) {
         GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         gsa[i].anchor = newValue;
+        pos.put(graph.nodes().get(i), newValue);
         vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
@@ -217,8 +217,10 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
     /** Sets location of all vertices at once. Number of points must match the order of the graph. */
     public void setPoint(Point2D.Double[] loc) {
         GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
-        for (int i = 0; i < Math.min(gsa.length, loc.length); i++)
+        for (int i = 0; i < Math.min(gsa.length, loc.length); i++) {
             gsa[i].anchor = loc[i];
+            pos.put(graph.nodes().get(i), loc[i]);
+        }
         vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
@@ -241,7 +243,7 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
         for (Object o : nodes) {
             value = vg == null ? o.toString() : vg.getValue(o).toString();
             if (gpfa[i] == null)
-                gpfa[i] = new GraphicPointFancy<Point2D.Double>(pos.get(o), value, 5);
+                gpfa[i] = new GraphicPointFancy<Point2D.Double>(pos.get(o), value, 1);
             else
                 gpfa[i].setString(value);
             i++;

@@ -6,7 +6,6 @@
 package org.bm.blaise.scio.graph.layout;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class EnergyLayout implements IterativeGraphLayout {
     double dampingC = 0.5;
 
     /** Temporary map holding positions to be updated in a future iteration */
-    Map<? extends Object, Point2D.Double> tempLoc = null;
+    Map<Object, Point2D.Double> tempLoc = null;
 
     // ALGORITHM PARAMETERS
 
@@ -116,13 +115,16 @@ public class EnergyLayout implements IterativeGraphLayout {
         tempLoc = null;
     }
 
-    public <V> void requestPositions(Map<V, Point2D.Double> positions) {
-        tempLoc = positions;
+    public void requestPositions(Map<Object, Point2D.Double> positions) {
+        if (tempLoc == null)
+            tempLoc = positions;
+        else
+            tempLoc.putAll(positions);
     }
 
-    @SuppressWarnings("element-type-mismatch")
-    public <V> void iterate(Graph<V> g) {
-        List<V> nodes = g.nodes();
+    public void iterate(Graph g) {
+        long t0 = System.currentTimeMillis();
+        List nodes = g.nodes();
         // check for temporary location updates
         if (tempLoc != null) {
             for (Entry<?, Point2D.Double> en : tempLoc.entrySet())
@@ -133,7 +135,7 @@ public class EnergyLayout implements IterativeGraphLayout {
             tempLoc = null;
         }
         // check for additional nodes not present before
-        for (V v : nodes) {
+        for (Object v : nodes) {
             if (!loc.containsKey(v)) {
                 loc.put(v, new Point2D.Double());
                 vel.put(v, new Point2D.Double());
@@ -154,14 +156,14 @@ public class EnergyLayout implements IterativeGraphLayout {
             addGlobalForce(netForce, iLoc);
             assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
             for (Entry<Object, Point2D.Double> jEntry : loc.entrySet()) {
-                jLoc = iEntry.getValue();
-                dist = iLoc.distance(jLoc);
                 if (iEntry.getKey() != jEntry.getKey()) {
+                    jLoc = jEntry.getValue();
+                    dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
                     addRepulsiveForce(netForce, iLoc, jLoc, dist);
                     assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
                     // symmetric attractive force from adjacencies
-                    if (g.adjacent((V) iEntry.getKey(), (V) jEntry.getKey())) {
+                    if (g.adjacent(iEntry.getKey(), jEntry.getKey())) {
                         addSpringForce(netForce, iLoc, jLoc, dist);
                         assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
                     }
@@ -181,6 +183,7 @@ public class EnergyLayout implements IterativeGraphLayout {
             energy += .5 * nodeMass * speed * speed;
         }
         iteration ++;
+        System.out.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
     }
 
     //
@@ -215,9 +218,8 @@ public class EnergyLayout implements IterativeGraphLayout {
             sum.y += 0;
         } else {
             double multiplier = Math.min(repulsiveC / (dist*dist), MAX_FORCE);
-            if (multiplier > MAX_FORCE) multiplier = MAX_FORCE;
-            sum.x += multiplier * (iLoc.x - iLoc.x) / dist;
-            sum.y += multiplier * (iLoc.y - iLoc.y) / dist;
+            sum.x += multiplier * (iLoc.x - jLoc.x) / dist;
+            sum.y += multiplier * (iLoc.y - jLoc.y) / dist;
         }
     }
 
@@ -233,8 +235,8 @@ public class EnergyLayout implements IterativeGraphLayout {
             sum.y += 0;
         } else {
             double displacement = dist - springL;
-            sum.x += springC * displacement * (iLoc.x - iLoc.x) / dist;
-            sum.y += springC * displacement * (iLoc.y - iLoc.y) / dist;
+            sum.x += springC * displacement * (jLoc.x - iLoc.x) / dist;
+            sum.y += springC * displacement * (jLoc.y - iLoc.y) / dist;
         }
     }
 

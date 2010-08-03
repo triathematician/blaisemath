@@ -32,7 +32,7 @@ public interface IterativeGraphLayout {
      * @param positions map specifying new positions for certain nodes, which should take effect
      *   during the next call to iterate()
      */
-    public <V> void requestPositions(Map<V, Point2D.Double> positions);
+    public void requestPositions(Map<Object, Point2D.Double> positions);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface IterativeGraphLayout {
      *
      * @param g the graph to layout
      */
-    public <V> void iterate(Graph<V> g);
+    public void iterate(Graph g);
 
     /**
      * @return index of current iteration (should reset to 0 whenever the reset method is called)

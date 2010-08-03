@@ -43,25 +43,24 @@ public final class GraphTableModel extends AbstractTableModel
             if (this.gc != null)
                 this.gc.removePropertyChangeListener(this);
             this.gc = gc;
-            if (gc != null) {
+            if (gc != null)
                 gc.addPropertyChangeListener(this);
-                updateValues();
-            }
+            updateValues();
         }
     }
 
     /** Updates table values based on current GraphController */
     private void updateValues() {
-        boolean startNull = values == null;
-        if (gc != null && gc.getMetric() != null && gc.getActiveGraph() != null) {
-            values = gc.getMetric().allValues(gc.getActiveGraph());
-        } else {
-            values = null;
-        }
-        if ((startNull && values != null) || (!startNull && values == null))
+        if (gc == null)
             fireTableStructureChanged();
-        else
-            fireTableDataChanged();
+        else {
+            boolean startNull = values == null;
+            values = gc.getMetricValues();
+            if (startNull != (values == null))
+                fireTableStructureChanged();
+            else
+                fireTableDataChanged();
+        }
     }
 
     //
@@ -133,7 +132,8 @@ public final class GraphTableModel extends AbstractTableModel
         if (evt.getSource() == gc) {
             if (evt.getPropertyName().equals("primary") || evt.getPropertyName().equals("metric")) {
                 updateValues();
-            }
+            } else if (evt.getPropertyName().equals("positions"))
+                fireTableDataChanged();
         } else if (evt.getSource() instanceof GraphControllerMaster) {
             if (evt.getPropertyName().equals("active")) {
                 setController(((GraphControllerMaster)evt.getSource()).getActiveController());

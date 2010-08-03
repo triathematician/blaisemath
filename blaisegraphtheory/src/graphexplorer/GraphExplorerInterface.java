@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * GraphExplorerInterface.java
+ * Created Jul 2010
  */
 
 package graphexplorer;
@@ -8,17 +8,17 @@ package graphexplorer;
 import java.awt.Component;
 
 /**
- * Provides methods that actions classes can use.
- * 
- * @author elisha
+ * Provides methods that actions classes can use, regardless of the GUI.
+ * @author Elisha Peterson
  */
 interface GraphExplorerInterface {
 
     /** Returns component-parent for dialogs */
     Component dialogComponent();
-    /** Adds a message to the output window. */
-    void output(String output);
     /** @return active controller */
     GraphController activeController();
+    
+    /** Adds a message to the output window. */
+    void output(String output);
 
 }

@@ -7,6 +7,8 @@ package graphexplorer;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -26,108 +28,87 @@ import visometry.plane.PlanePlotComponent;
  * @author Elisha Peterson
  */
 public class LongitudinalGraphPanel extends JPanel
-        implements ChangeListener {
+        implements ChangeListener, PropertyChangeListener {
 
     /** Central component of the panel */
     PlanePlotComponent plot;
     /** Active graph displayed in the panel */
     PlaneGraph visGraph;
-    /** Longitudinal graph underlying the panel */
-    LongitudinalGraph lGraph;
+    /** Controller for the panel */
+    GraphController gc;
     /** Slider element */
     ListSlider slider;
 
     /** Constructs a longitudinal graph panel without an actual graph. */
-    public LongitudinalGraphPanel(LongitudinalGraph lGraph) {
+    public LongitudinalGraphPanel(GraphController gc) {
         super(new java.awt.BorderLayout());
         add(plot = new PlanePlotComponent(), java.awt.BorderLayout.CENTER);
         add(slider = new ListSlider(), java.awt.BorderLayout.SOUTH);
         setPreferredSize(new Dimension(500, 500));
-        setLongitudinalGraph(lGraph);
-        slider.addChangeListener(this);
+        this.gc = gc;
+        gc.addPropertyChangeListener(this);
+        LongitudinalGraph lGraph = gc.getLongitudinalGraph();
+        if (lGraph != null) {
+            plot.add(visGraph = new PlaneGraph(gc.getActiveGraph()));
+            visGraph.setPositionMap(gc.getPositions());
+            updateSliderTime();
+            slider.addChangeListener(this);
+        } else {
+            slider.setEnabled(false);
+        }
     }
-
+    
     //
     // BEANS
     //
-
-    /**
-     * Returns the panel's longitudinal graph
-     * @return longitudinal graph corresponding to this panel
-     */
-    public LongitudinalGraph getLongitudinalGraph() {
-        return lGraph;
-    }
-
-    /** 
-     * Sets current active graph, possibly null
-     * @param lGraph a longitudinal graph or null
-     */
-    public void setLongitudinalGraph(LongitudinalGraph lGraph) {
-        this.lGraph = lGraph;
-        if (lGraph == null && visGraph != null) {
-            plot.remove(visGraph);
-            visGraph = null;
-        } else if (lGraph != null) {
-            Graph slice0 = lGraph.slice(lGraph.getMinimumTime(), true);
-            if (visGraph != null)
-                plot.remove(visGraph);
-            plot.add(visGraph = new PlaneGraph(slice0));
-            slider.setValues(lGraph.getTimes());
-        }
-    }
-
-    /** @return active time */
-    public double getCurrentTime() {
-        return (Double) lGraph.getTimes().get(slider.getValue());
-    }
     
-    /** 
-     * Sets current time to value closest to specified one.
-     * Maintains current point locations.
-     */
-    public void setCurrentTime(double time) {
-        Point2D.Double[] pts = visGraph.getPoint();
-        visGraph.setGraph(lGraph.slice(time, false));
-        visGraph.setPoint(pts);
+    /** @return currently displayed graph */
+    public PlaneGraph getPlaneGraph() {
+        return visGraph;
     }
-
-    /** @return index of active slice */
-    public int getActiveSliceIndex() {
-        return slider.getValue();
-    }
-
-    /** Sets index of active slice, if index is within bounds */
-    public void setActiveSliceIndex(int index) {
-        if (index >= 0 && index < lGraph.getTimes().size())
-            setCurrentTime((Double) lGraph.getTimes().get(index));
-    }
-
-    //
-    // ESSENTIAL GETTERS
-    //
 
     /**
      * @return number of slices
      */
     public int getNumSlices() {
+        LongitudinalGraph lGraph = gc.getLongitudinalGraph();
         return visGraph == null ? 0 : lGraph.getTimes().size();
     }
 
-    /**
-     * Returns the currently displayed graph slice on the panel
-     * @return slice of longitudinal graph currently displayed
-     */
-    public Graph getActiveSlice() {
-        return visGraph == null ? null : visGraph.getGraph();
+    /** Sets index of active slice, if index is within bounds */
+    public void setActiveSliceIndex(int index) {
+        slider.setValue(index);
     }
 
-    /**
-     * Returns the currently displayed plane graph
-     * @return plane graph
-     */
-    public PlaneGraph getPlaneGraph() {
-        return visGraph;
+    //
+    // CHANGE HANDLING
+    //
+
+    /** Flag to keep slider from firing unnecessary changes */
+    boolean updating = false;
+
+    /** Updates slider time based on lg time */
+    private void updateSliderTime() {
+        if (!updating) {
+            double time = gc.getTime();
+            List times = gc.getLongitudinalGraph().getTimes();
+            slider.setValues(times);
+            for (int i = 0; i < times.size(); i++) {
+                if (time == times.get(i)) {
+                    slider.setValue(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    /** Used to update slider time based on the controller time. */
+    private void updateControllerTime() {
+        updating = true;
+        gc.setTime((Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue()));
+        visGraph.setGraph(gc.getActiveGraph());
+        visGraph.setPositionMap(gc.getPositions());
+        updating = false;
     }
 
     //
@@ -136,7 +117,20 @@ public class LongitudinalGraphPanel extends JPanel
 
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == slider)
-            setCurrentTime(slider.getValue());
-    }    
+            gc.setTime((Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue()));
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource() == gc) {
+            if (gc.isLongitudinal()) {
+                if (evt.getPropertyName().equals("time")) {
+                    updateControllerTime();
+                } else if (evt.getPropertyName().equals("active")) {
+                    visGraph.setGraph(gc.getActiveGraph());
+                    visGraph.setPositionMap(gc.getPositions());
+                }
+            }
+        }
+    }
 
 }

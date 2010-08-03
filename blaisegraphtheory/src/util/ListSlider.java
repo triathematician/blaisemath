@@ -44,8 +44,8 @@ public class ListSlider extends JSlider {
     private void initCustomLabels() {
         int size = pegs.size();
         setMajorTickSpacing(size < 20 ? 1 : size < 50 ? 5 : size < 100 ? 10 : size < 250 ? 20 : size < 500 ? 50 : size/10);
-        if (size < 20)
-            setSnapToTicks(true);
+        setSnapToTicks(size < 20);
+
         setPaintTicks(true);
         setPaintLabels(true);
         Hashtable result = new Hashtable();

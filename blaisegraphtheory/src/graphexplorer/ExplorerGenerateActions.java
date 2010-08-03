@@ -133,84 +133,8 @@ class ExplorerGenerateActions {
             else if (result instanceof LongitudinalGraph)
                 newC = GraphController.getInstance((LongitudinalGraph) result, "Random Graph");
             master.setActiveController(newC);
-//            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-//            if (num == -1) return;
-//            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
-//            if (prob == -1) return;
-//            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-//            if (num2 == -1) return;
-//            int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
-//            if (num3 == -1) return;
-//            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-//            main.loadGraph(PreferentialAttachment.getSeededInstance(seed, num2, num3), "Preferential attachment graph");
         }
     };
-
-
-    public Action GENERATE_PREFERENTIAL_LONG = new AbstractAction("Preferential attachment (longitudinal)") {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph using preferential attachment algorithm");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            if (num == -1) return;
-            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
-            if (prob == -1) return;
-            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-            if (num2 == -1) return;
-            int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
-            if (num3 == -1) return;
-            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            GraphController newC = GraphController.getInstance(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, num3), "Preferential attachment graph");
-            master.setActiveController(newC);
-        }
-    };
-
-    public Action GENERATE_PREFERENTIAL2 = new AbstractAction("Preferential attachment (varied edge connections)") {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph using preferential attachment algorithm, with varied numbers of addon edge connections");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            if (num == -1) return;
-            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
-            if (prob == -1) return;
-            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-            if (num2 == -1) return;
-            float[] probs = showFloatArrayInputDialog("Enter probabilities of connecting to i vertices as a list of values adding up to 1, e.g. '0.25,0.5,0.25'.", 0f, 1f);
-            if (probs == null) return;
-            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            GraphController newC = GraphController.getInstance(PreferentialAttachment.getSeededInstance(seed, num2, probs), "Preferential attachment graph");
-            master.setActiveController(newC);
-        }
-    };
-
-    public Action GENERATE_PREFERENTIAL2_LONG = new AbstractAction("Preferential attachment (longitudinal, varied edge connections)") {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph using preferential attachment algorithm, with varied numbers of addon edge connections");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
-            if (num == -1) return;
-            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
-            if (prob == -1) return;
-            int num2 = showIntegerInputDialog("Enter number of vertices in final graph (up to 1000000)", 1, 1000000);
-            if (num2 == -1) return;
-            float[] probs = showFloatArrayInputDialog("Enter probabilities of connecting to i vertices as a list of values adding up to 1, e.g. '0.25,0.5,0.25'.", 0f, 1f);
-            if (probs == null) return;
-            Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            GraphController newC = GraphController.getInstance(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, probs), "Preferential attachment graph");
-            master.setActiveController(newC);
-        }
-    };
-
-
 
     //
     // UTILITY METHODS

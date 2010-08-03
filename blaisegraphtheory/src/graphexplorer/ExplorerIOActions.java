@@ -34,11 +34,11 @@ class ExplorerIOActions {
     /** Construction requires a master controller class */
     public ExplorerIOActions(GraphControllerMaster master) { this.master = master; }
     
-    transient JFileChooser fc;
-    transient File openFile;
+    transient static JFileChooser fc;
+    transient static File openFile;
 
     /** Lazy initialization */
-    void initFileChooser() { if (fc == null) fc = new JFileChooser(); }
+    static void initFileChooser() { if (fc == null) fc = new JFileChooser(); }
 
     public Action LOAD_EDGELIST_ACTION = new LoadAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
     public Action SAVE_EDGELIST_ACTION = new SaveAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
@@ -175,27 +175,30 @@ class ExplorerIOActions {
 
     // movie export actions
 
-    Action EXPORT_QT = new AbstractAction() {
-        {
+    static class MovieAction extends AbstractAction {
+        GraphController gc;
+        LongitudinalGraphPanel lgp;
+        public MovieAction(GraphController gc, LongitudinalGraphPanel lgp) {
+            super("Quicktime movie (.mov)");
+            this.gc = gc;
+            this.lgp = lgp;
             putValue(SHORT_DESCRIPTION, "Export longitudinal graph as a QuickTime movie (.mov)");
         }
         public void actionPerformed(ActionEvent e) {
-            GraphController gc = master.getActiveController();
-            if (!gc.isLongitudinal()) {
-                gc.output("Movie output not supported: QTJava not found");
-//                initFileChooser();
-//                fc.setApproveButtonText("Export");
-//                if (openFile != null) {
-//                    fc.setCurrentDirectory(openFile);
-//                    fc.setSelectedFile(openFile);
-//                }
-//                if (fc.showOpenDialog(main.thisComponent()) == JFileChooser.APPROVE_OPTION) {
-//                    openFile = fc.getSelectedFile();
-//                    MovieExport me = new MovieExport(openFile);
-//                    ExportMovieTask emt = new ExportMovieTask(main, (LongitudinalGraphPanel) main.activePanel(), me);
-//                    emt.run();
-//                }
+            if (gc.isLongitudinal()) {
+                initFileChooser();
+                fc.setApproveButtonText("Export");
+                if (openFile != null) {
+                    fc.setCurrentDirectory(openFile);
+                    fc.setSelectedFile(openFile);
+                }
+                if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    openFile = fc.getSelectedFile();
+                    MovieExport me = new MovieExport(openFile);
+                    ExportMovieTask emt = new ExportMovieTask(lgp, me);
+                    emt.run();
+                }
             }
         }
-    };
+    }
 }

@@ -1,3 +1,5 @@
+package graphexplorer;
+
 
 
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
@@ -18,18 +20,18 @@ public class ExportMovieTask {
 
     // time to wait while each frame is rendered
     private static final int _FRAME_DELAY = 10;
-    
-    private GraphExplorerInterface main;
+
     private LongitudinalGraphPanel lg;
+    transient private GraphController gc;
     private MovieExport maker;
 
     private String status = "preparing to start...";
     private boolean stop = false;
     private int curSl = 0;
 
-    public ExportMovieTask(GraphExplorerInterface main, LongitudinalGraphPanel lg, MovieExport maker) {
-        this.main = main;
+    public ExportMovieTask(LongitudinalGraphPanel lg, MovieExport maker) {
         this.lg = lg;
+        this.gc = lg.gc;
         this.maker = maker;
     }
 
@@ -46,7 +48,7 @@ public class ExportMovieTask {
     void captureLayoutSteps(int nFrames) {
         for (int i = 0; i < nFrames; i++) {
             for (int j = 0; j < _STEPS_PER_FRAME; j++)
-                main.iterateLayout();
+                gc.stepLayout();
             maker.captureImage();
             try { Thread.sleep(_FRAME_DELAY); } catch (InterruptedException e) { e.printStackTrace(); }
         }
@@ -56,8 +58,8 @@ public class ExportMovieTask {
         try {
             int endIndex = lg.getNumSlices();
             int numFrames = endIndex * _INTERP_FRAMES;
-            maker.setupMovie(((LongitudinalGraphPanel)main.activePanel()).plot, numFrames);
-            main.initLayout(new EnergyLayout(main.activeGraph(), main.getActivePoints()));
+            maker.setupMovie(lg.plot, numFrames);
+            gc.setIterativeLayout(new EnergyLayout(gc.getPositions()));
             curSl = 0;
             lg.setActiveSliceIndex(curSl);
             captureLayoutSteps(_INITIAL_LAYOUT_FRAMES);

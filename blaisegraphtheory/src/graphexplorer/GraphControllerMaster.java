@@ -8,6 +8,8 @@ package graphexplorer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Provides "master" control for scenario where multiple graphs are open
@@ -44,11 +46,13 @@ public class GraphControllerMaster {
 
     /** Adds and activates a new controller & deactivates those currently active. */
     void setActiveController(GraphController c) {
-        if (!updating && c != null) {
-            controllers.add(c);
-            active = c;
+        GraphController oldActive = active;
+        if (!updating) {
             updating = true;
-            pcs.firePropertyChange("active", null, c);
+            if (c != null && !controllers.contains(c))
+                controllers.add(c);
+            active = c;
+            pcs.firePropertyChange("active", oldActive, active);
             updating = false;
         }
     }
@@ -56,6 +60,16 @@ public class GraphControllerMaster {
     /** @return currently active controller. */
     GraphController getActiveController() { 
         return active;
+    }
+
+    /** @return unmodifiable view of controllers */
+    List<GraphController> getControllers() {
+        return Collections.unmodifiableList(controllers);
+    }
+
+    /** @return true if specified controller is in this master's list */
+    boolean containsController(GraphController gc) {
+        return controllers.contains(gc);
     }
 
     /** Closes the active controller, removing it from the list of controllers;
@@ -67,16 +81,21 @@ public class GraphControllerMaster {
     /** Closes specified controller, removing it from the list of controllers;
      * if no controllers are active, activates the last one & notifies listeners */
     void closeController(GraphController c) {
+//        System.out.println("closing controller " + c);
+//        System.out.println("there are " + controllers.size() + " total controllers.");
         if (controllers.contains(c)) {
             controllers.remove(c);
+            updating = true;
             if (active == c) {
+                active = null;
                 if (controllers.size() > 0)
-                    active = controllers.get(controllers.size()-1);
-                else
-                    active = null;
+                    active = controllers.get(0);
                 pcs.firePropertyChange("active", c, active);
-            }
+            } else
+                pcs.firePropertyChange("active", c, null);
+            updating = false;
         }
+//        System.out.println("... now there are " + controllers.size() + " total controllers.");
     }
 
     //
