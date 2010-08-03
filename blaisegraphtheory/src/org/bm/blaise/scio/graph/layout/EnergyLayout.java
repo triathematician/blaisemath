@@ -7,8 +7,10 @@ package org.bm.blaise.scio.graph.layout;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.bm.blaise.scio.graph.Graph;
 
 /**
@@ -25,16 +27,24 @@ public class EnergyLayout implements IterativeGraphLayout {
     /** Min distance to assume between nodes */
     private static final double MIN_DIST = .01;
     /** Distance outside which global force acts */
-    private static final double GLOBAL_FORCE_DIST = 1;
+    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = 1;
 
     // STATE VARIABLES
 
     /** Current locations */
-    ArrayList<Point2D.Double> loc;
+    Map<Object, Point2D.Double> loc;
     /** Current velocities */
-    transient ArrayList<Point2D.Double> vel;
+    Map<Object, Point2D.Double> vel;
+    
+    /** Iteration number */
+    int iteration = 0;
     /** Total energy */
-    transient double energy = 0.0;
+    double energy = 0.0;
+    /** Damping constant (the "cooling" parameter */
+    double dampingC = 0.5;
+
+    /** Temporary map holding positions to be updated in a future iteration */
+    Map<? extends Object, Point2D.Double> tempLoc = null;
 
     // ALGORITHM PARAMETERS
 
@@ -47,8 +57,6 @@ public class EnergyLayout implements IterativeGraphLayout {
     /** Global attractive constant (keeps vertices closer to origin) */
     double globalC = .5;
 
-    /** Damping constant */
-    double dampingC = 0.45;
     /** Time step per iteration */
     double stepC = 0.1;
 
@@ -62,13 +70,13 @@ public class EnergyLayout implements IterativeGraphLayout {
      * @param initialLayout the initial layout mechanism
      * @param initialParameters the parameters for the initial layout
      */
-    public EnergyLayout(Graph g, StaticGraphLayout initialLayout, double... initialParameters) {
-        reset(g, initialLayout.layout(g, initialParameters));
+    public <V> EnergyLayout(Graph<V> g, StaticGraphLayout initialLayout, double... initialParameters) {
+        reset(initialLayout.layout(g, initialParameters));
     }
 
     /** Construct using specified starting locations */
-    public EnergyLayout(Graph g, Point2D.Double[] loc) {
-        reset(g, loc);
+    public <V> EnergyLayout(Map<V, Point2D.Double> positions) {
+        reset(positions);
     }
     
     //
@@ -92,50 +100,71 @@ public class EnergyLayout implements IterativeGraphLayout {
     // INTERFACE METHODS
     //
 
-    /** 
-     * Resets the locations of the nodes in the layout; sets all velocities to zero.
-     * @param g the graph to use for layout
-     * @param loc new node locations
-     */
-    public void reset(Graph g, Point2D.Double[] loc) {
-        if (loc == null || g == null || g.nodes() == null || g.nodes().size() != loc.length)
-            throw new IllegalArgumentException("Cannot reset layout with graph " + g + " and locations " + Arrays.toString(loc));
-        this.loc = new ArrayList<Point2D.Double>();
-        this.vel = new ArrayList<Point2D.Double>();
-        for (Point2D.Double p : loc) {
-            this.loc.add(p);
-            this.vel.add(new Point2D.Double());
+    public double getCoolingParameter() { return dampingC; }
+    public double getEnergyStatus() { return energy; }
+    public int getIteration() { return iteration; }
+    public Map<Object,Point2D.Double> getPositions() { return loc; }
+
+    public final <V> void reset(Map<V, Point2D.Double> positions) {
+        loc = new HashMap<Object, Point2D.Double>();
+        vel = new HashMap<Object, Point2D.Double>();
+        for (Entry<V, Point2D.Double> en : positions.entrySet()) {
+            loc.put(en.getKey(), en.getValue() == null ? new Point2D.Double() : en.getValue());
+            vel.put(en.getKey(), new Point2D.Double());
         }
+        iteration = 0;
+        tempLoc = null;
     }
 
-    /** Iterate the energy layout algorithm, moving the points slightly */
-    public void iterate(Graph g) {
-        List l = g.nodes();
+    public <V> void requestPositions(Map<V, Point2D.Double> positions) {
+        tempLoc = positions;
+    }
+
+    @SuppressWarnings("element-type-mismatch")
+    public <V> void iterate(Graph<V> g) {
+        List<V> nodes = g.nodes();
+        // check for temporary location updates
+        if (tempLoc != null) {
+            for (Entry<?, Point2D.Double> en : tempLoc.entrySet())
+                if (nodes.contains(en.getKey())) {
+                    loc.put(en.getKey(), en.getValue());
+                    vel.put(en.getKey(), new Point2D.Double());
+                }
+            tempLoc = null;
+        }
+        // check for additional nodes not present before
+        for (V v : nodes) {
+            if (!loc.containsKey(v)) {
+                loc.put(v, new Point2D.Double());
+                vel.put(v, new Point2D.Double());
+            }
+        }
         energy = 0;
         double nodeMass = 1;
-        int order = g.order();
 
-        // ensure appropriate number of elements; otherwise add to or delete from iLoc
-        while (order > loc.size()) {
-            this.loc.add(new Point2D.Double());
-            this.vel.add(new Point2D.Double());
-        }
-
+        // helper variables
+        Point2D.Double iLoc, iVel, jLoc;
+        double dist;
         // compute energies
-        Point2D.Double iLoc, iVel;
-        for (int i = 0; i < order; i++) {
-            iLoc = loc.get(i); iVel = vel.get(i);
+        for (Entry<Object, Point2D.Double> iEntry : loc.entrySet()) {
+            iLoc = iEntry.getValue();
+            iVel = vel.get(iEntry.getKey());
             Point2D.Double netForce = new Point2D.Double();
-            addGlobalForce(netForce, i);
-            if (Double.isNaN(netForce.x)) System.out.println("infinite netforce 1");
-            for (int j = 0; j < order; j++) {
-                // repulsive force from other nodes
-                addRepulsiveForce(netForce, i, j);
-                if (Double.isNaN(netForce.x)) System.out.println("infinite netforce 2");
-                // symmetric attractive force from adjacencies
-                if (g.adjacent(l.get(i), l.get(j)) || g.adjacent(l.get(j), l.get(i))) {
-                    addSpringForce(netForce, i, j);
-                    if (Double.isNaN(netForce.x)) System.out.println("infinite netforce 3");
+            // global force
+            addGlobalForce(netForce, iLoc);
+            assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
+            for (Entry<Object, Point2D.Double> jEntry : loc.entrySet()) {
+                jLoc = iEntry.getValue();
+                dist = iLoc.distance(jLoc);
+                if (iEntry.getKey() != jEntry.getKey()) {
+                    // repulsive force from other nodes
+                    addRepulsiveForce(netForce, iLoc, jLoc, dist);
+                    assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
+                    // symmetric attractive force from adjacencies
+                    if (g.adjacent((V) iEntry.getKey(), (V) jEntry.getKey())) {
+                        addSpringForce(netForce, iLoc, jLoc, dist);
+                        assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
+                    }
                 }
             }
             iVel.x = dampingC * (iVel.x + stepC * netForce.x);
@@ -151,58 +180,61 @@ public class EnergyLayout implements IterativeGraphLayout {
             iLoc.y += stepC * iVel.y;
             energy += .5 * nodeMass * speed * speed;
         }
-    }
-
-    public Point2D.Double[] getPointArray() {
-        return loc.toArray(new Point2D.Double[]{});
+        iteration ++;
     }
 
     //
     // UTILITIES
     //
 
-    /** Adds a global attractive force pushing vertex i1 toward the origin */
-    private void addGlobalForce(Point2D.Double sum, int i) {
-        Point2D.Double iLoc = loc.get(i);
-        double dist = iLoc.distance(0, 0);
-        if (dist > GLOBAL_FORCE_DIST) {
+    /**
+     * Adds a global attractive force pushing vertex at specified location toward the origin
+     * @param sum vector representing the sum of forces (will be adjusted)
+     * @param iLoc location of a single vertex
+     */
+    private void addGlobalForce(Point2D.Double sum, Point2D.Double iLoc) {
+        double dist = iLoc.distance(0,0);
+        if (dist > MINIMUM_GLOBAL_FORCE_DISTANCE) {
             sum.x += -globalC * iLoc.x / dist;
             sum.y += -globalC * iLoc.y / dist;
         }
     }
 
-    /** Adds repulsive force at vertex i1 pointing away from vertex i2. */
-    private void addRepulsiveForce(Point2D.Double sum, int i1, int i2) {
-        if (i1 == i2)
+    /**
+     * Adds repulsive force at vertex i1 pointing away from vertex i2.
+     * @param sum vector representing the sum of forces (will be adjusted)
+     * @param iLoc location of first vertex
+     * @param jLoc location of second vertex
+     * @param dist distance between vertices
+     */
+    private void addRepulsiveForce(Point2D.Double sum, Point2D.Double iLoc, Point2D.Double jLoc, double dist) {
+        if (iLoc == jLoc)
             return;
-        Point2D.Double iLoc1 = loc.get(i1);
-        Point2D.Double iLoc2 = loc.get(i2);
-        double dist = iLoc1.distance(iLoc2);
         if (dist == 0) {
             sum.x += repulsiveC / (MIN_DIST * MIN_DIST);
             sum.y += 0;
         } else {
             double multiplier = Math.min(repulsiveC / (dist*dist), MAX_FORCE);
             if (multiplier > MAX_FORCE) multiplier = MAX_FORCE;
-            sum.x += multiplier * (iLoc1.x - iLoc2.x) / dist;
-            sum.y += multiplier * (iLoc1.y - iLoc2.y) / dist;
+            sum.x += multiplier * (iLoc.x - iLoc.x) / dist;
+            sum.y += multiplier * (iLoc.y - iLoc.y) / dist;
         }
     }
 
-    /** Adds spring force at vertex i1 pointing to vertex i2. */
-    private void addSpringForce(Point2D.Double sum, int i1, int i2) {
-        if (i1 == i2)
-            return;
-        Point2D.Double iLoc1 = loc.get(i1);
-        Point2D.Double iLoc2 = loc.get(i2);
-        double dist = iLoc1.distance(iLoc2);
+    /** Adds spring force at vertex i1 pointing to vertex i2.
+     * @param sum vector representing the sum of forces (will be adjusted)
+     * @param iLoc location of first vertex
+     * @param jLoc location of second vertex
+     * @param dist distance between vertices
+     */
+    private void addSpringForce(Point2D.Double sum, Point2D.Double iLoc, Point2D.Double jLoc, double dist) {
         if (dist == 0) {
             sum.x += springC / (MIN_DIST * MIN_DIST);
             sum.y += 0;
         } else {
             double displacement = dist - springL;
-            sum.x += springC * displacement * (iLoc2.x - iLoc1.x) / dist;
-            sum.y += springC * displacement * (iLoc2.y - iLoc1.y) / dist;
+            sum.x += springC * displacement * (iLoc.x - iLoc.x) / dist;
+            sum.y += springC * displacement * (iLoc.y - iLoc.y) / dist;
         }
     }
 

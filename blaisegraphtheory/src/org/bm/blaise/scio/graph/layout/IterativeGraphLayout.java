@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph.layout;
 
 import java.awt.geom.Point2D;
+import java.util.Map;
 import org.bm.blaise.scio.graph.Graph;
 
 /**
@@ -19,27 +20,56 @@ import org.bm.blaise.scio.graph.Graph;
 public interface IterativeGraphLayout {
 
     /**
-     * Resets the layout algorithm's state, using the specified node locations
-     * as starting locations. Implementations should check that there is one
-     * location for each node in the graph.
-     * @param g the graph
-     * @param loc the locations for nodes in the graph
+     * Resets the layout algorithm's state, using specified map from nodes to positions.
+     * These nodes should be exactly those specified in the graph with later calls to the
+     * <code>iterate()</code> method.
+     * @param positions a map describing the positions for all nodes in the layout
      */
-    public void reset(Graph g, Point2D.Double[] loc);
+    public <V> void reset(Map<V, Point2D.Double> positions);
 
-    /** 
-     * Iterate the energy layout algorithm, returning the locations of the nodes.
-     * The list of nodes returned in order by the graphs <code>nodes()</code> method
-     * corresponds to the order of the list of positions.
-     * @param g the graph to layout
-     * @return new positions for the nodes.
+    /**
+     * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
+     * @param positions map specifying new positions for certain nodes, which should take effect
+     *   during the next call to iterate()
      */
-    public void iterate(Graph g);
+    public <V> void requestPositions(Map<V, Point2D.Double> positions);
+
+    /**
+     * <p>
+     * Iterate the energy layout algorithm. The graph's nodes may not be exactly
+     * the same as for previous calls to iterate (i.e. some may have been added or removed).
+     * If nodes are present for the first time, the algorithm should add in support for
+     * those nodes. If nodes have been removed since the last iteration, the algorithm
+     * should simply ignore those nodes.
+     * </p><p>
+     * If a request has been placed for new locations, the algorithm should adjust
+     * the positions of the requested nodes.
+     * </p>
+     *
+     * @param g the graph to layout
+     */
+    public <V> void iterate(Graph<V> g);
+
+    /**
+     * @return index of current iteration (should reset to 0 whenever the reset method is called)
+     */
+    public int getIteration();
+
+    /**
+     * @return current value of a "cooling parameter"
+     */
+    public double getCoolingParameter();
+
+    /**
+     * @return current "energy" or some double representing the convergence status
+     *   of the layout
+     */
+    public double getEnergyStatus();
 
     /**
      * Returns the current list of point locations.
-     * @return current list of point locations
+     * @return current list of positions
      */
-    public Point2D.Double[] getPointArray();
+    public Map<Object,Point2D.Double> getPositions();
 
 }

@@ -1,4 +1,4 @@
-package graphexplorer;
+
 
 import org.bm.blaise.scio.graph.layout.EnergyLayout;
 

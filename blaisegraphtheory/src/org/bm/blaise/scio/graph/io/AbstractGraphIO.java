@@ -62,11 +62,11 @@ public abstract class AbstractGraphIO {
     /**
      * Saves a graph to a file.
      * @param graph the graph data structure, either regular or longitudinal
-     * @param positions the positions of vertices in the graph, in the same order returned by <code>graph.nodes()</code>
+     * @param positions the positions of vertices in the graph
      * @param file the file to save the graph to
      * @return the type of graph that was saved to the file, or null if the save attempt failed
      */
-    public abstract GraphType saveGraph(Object graph, Point2D.Double[] positions, File file);
+    public abstract GraphType saveGraph(Object graph, Map<Object,Point2D.Double> positions, File file);
     
     //
     // UTILITIES

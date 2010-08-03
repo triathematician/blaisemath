@@ -69,7 +69,7 @@ public class LongitudinalGraphPanel extends JPanel
             plot.remove(visGraph);
             visGraph = null;
         } else if (lGraph != null) {
-            Graph slice0 = lGraph.slice(lGraph.getMinimumTime());
+            Graph slice0 = lGraph.slice(lGraph.getMinimumTime(), true);
             if (visGraph != null)
                 plot.remove(visGraph);
             plot.add(visGraph = new PlaneGraph(slice0));
@@ -82,22 +82,13 @@ public class LongitudinalGraphPanel extends JPanel
         return (Double) lGraph.getTimes().get(slider.getValue());
     }
     
-    /** Sets current time to value closest to specified one */
+    /** 
+     * Sets current time to value closest to specified one.
+     * Maintains current point locations.
+     */
     public void setCurrentTime(double time) {
-        if (!lGraph.getTimes().contains(time)) {
-            if (time < lGraph.getMinimumTime())
-                time = lGraph.getMinimumTime();
-            else if (time > lGraph.getMaximumTime())
-                time = lGraph.getMaximumTime();
-            else
-                for (Double d : ((List<Double>)lGraph.getTimes()))
-                    if (time < d) {
-                        time = d;
-                        break;
-                    }
-        }
         Point2D.Double[] pts = visGraph.getPoint();
-        visGraph.setGraph(lGraph.slice(time));
+        visGraph.setGraph(lGraph.slice(time, false));
         visGraph.setPoint(pts);
     }
 

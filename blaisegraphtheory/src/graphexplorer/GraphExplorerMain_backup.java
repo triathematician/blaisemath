@@ -10,11 +10,12 @@ import data.propertysheet.editor.EditorRegistration;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -24,7 +25,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
+import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.bm.blaise.scio.graph.metrics.subset.AdditiveSubsetMetric;
 import org.bm.blaise.scio.graph.metrics.subset.ContractiveSubsetMetric;
@@ -34,24 +37,46 @@ import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.YIntervalRenderer;
+import org.jfree.data.xy.DefaultIntervalXYDataset;
 import visometry.plane.PlanePlotComponent;
+import visometry.plottable.Plottable;
 
 /**
  *
  * @author Elisha Peterson
  */
-public class GraphExplorerMain extends javax.swing.JFrame
+public class GraphExplorerMain_backup extends javax.swing.JFrame
         implements GraphExplorerInterface, PropertyChangeListener {
 
     /** Controller */
-    GraphControllerMaster master;
-    /** Controllers and associated components */
-    HashMap<GraphController, Component> tabs = new HashMap<GraphController, Component>();
-    /** Controllers and associated plane graph elements */
-    HashMap<GraphController, PlaneGraph> graphs = new HashMap<GraphController, PlaneGraph>();
+    GraphControllerMaster controller;
+
+    /** Tracks the active graph in the explorer */
+    PlaneGraph activeGraph;
+    /** Stores current bean for adjusting visual settings */
+    PlaneGraphBean graphBean;
+
     /** Chart displaying statistical data */
     ChartPanel distributionCP;
+
+    /** Creates new form GraphExplorerMain */
+    public GraphExplorerMain_backup() {
+        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) { }
+        EditorRegistration.registerEditors();
+        initActions();
+        initComponents();
+
+        JFreeChart distributionFC = ChartFactory.createXYBarChart("Metric Distribution", "Value", false, "Number", null, PlotOrientation.VERTICAL, false, true, false);
+        distributionCP = new ChartPanel(distributionFC);
+        distributionCP.setPreferredSize(new Dimension(400,300));
+        boxP2.add(distributionCP, BorderLayout.CENTER);
+
+        toolbar.add(javax.swing.Box.createHorizontalGlue());
+    }
 
     /** General actions */
     ExplorerActions actions;
@@ -64,35 +89,16 @@ public class GraphExplorerMain extends javax.swing.JFrame
     /** Graph-generation actions */
     ExplorerGenerateActions actions_gen;
 
-    /** Creates new form GraphExplorerMain */
-    public GraphExplorerMain() {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) { }
-        EditorRegistration.registerEditors();
-
-        master = new GraphControllerMaster();
-        master.addPropertyChangeListener(this);
-
-        initActions();
-        initComponents();
-        master.addPropertyChangeListener(mainTM);
-        toolbar.add(javax.swing.Box.createHorizontalGlue());
-        initChart();
-    }
-
     private void initActions() {
-        actions_io = new ExplorerIOActions(master);
-        actions_gen = new ExplorerGenerateActions(master);
+        controller = new GraphControllerMaster();
+        controller.addPropertyChangeListener(this);
+
+        actions_io = new ExplorerIOActions(controller);
+        actions_gen = new ExplorerGenerateActions(controller);
         actions_layout = new ExplorerLayoutActions(null); // needs single controller
         actions_stat = new ExplorerStatActions(null); // needs single controller
 
         actions = new ExplorerActions(this);
-    }
-
-    private void initChart() {
-        JFreeChart distributionFC = ChartFactory.createXYBarChart("Metric Distribution", "Value", false, "Number", null, PlotOrientation.VERTICAL, false, true, false);
-        distributionCP = new ChartPanel(distributionFC);
-        distributionCP.setPreferredSize(new Dimension(400,300));
-        boxP2.add(distributionCP, BorderLayout.CENTER);
     }
 
     /** This method is called from within the constructor to
@@ -624,42 +630,79 @@ public class GraphExplorerMain extends javax.swing.JFrame
         // update active graph based on selected tab
         Component active = graphTP.getSelectedComponent();
         if (active == null)
-            master.setActiveController(null);
-        else
-            for (Entry<GraphController, Component> en : tabs.entrySet())
-                if (en.getValue() == active) {
-                    master.setActiveController(en.getKey());
-                    return;
+            setActiveGraph(null);
+        else if (active instanceof PlanePlotComponent) {
+            PlanePlotComponent ppc = (PlanePlotComponent) active;
+            Plottable[] ps = ppc.getPlottableArray();
+            if (ps == null || ps.length == 0) {
+                setActiveGraph(null);
+                return;
+            }
+
+            for (Plottable p : ps)
+                if (p instanceof PlaneGraph) {
+                    setActiveGraph((PlaneGraph) p);
+                    break;
                 }
+
+            Graph graph = activeGraph.getGraph();
+
+            // stop animation of energy layout and set to new parameters
+            actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(null);
+//            if (activeLayout != null)
+//                activeLayout.reset(activeGraph.getPositionMap());
+
+            // update properties & tables
+            updatePropertyPanel();
+//            mainTM.setGraph(graph);
+
+        } else if (active instanceof LongitudinalGraphPanel) {
+
+            LongitudinalGraphPanel lgp = (LongitudinalGraphPanel) active;
+            setActiveGraph(lgp.getPlaneGraph());
+            if (activeGraph == null)
+                return;
+
+            Graph graph = activeGraph.getGraph();
+
+            // stop animation of energy layout and set to new parameters
+            actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(null);
+//            if (activeLayout != null)
+//                activeLayout.reset(activeGraph.getPositionMap());
+
+            // update properties & tables
+            updatePropertyPanel();
+//            mainTM.setGraph(graph);
+        }
     }//GEN-LAST:event_graphTPStateChanged
 
     private void mainTMTableChanged(javax.swing.event.TableModelEvent evt) {//GEN-FIRST:event_mainTMTableChanged
         // only look at individual cell updates
-        if (evt.getType() == TableModelEvent.UPDATE && mainTM.isLabelColumn(evt.getColumn()) && evt.getFirstRow() != TableModelEvent.HEADER_ROW) {
-            Object node = activeGraph().nodes().get(evt.getFirstRow());
-            String label = (String) mainTM.getValueAt(evt.getFirstRow(), evt.getColumn());
-            activeController().setActiveGraphLabel(node, label);
-        }
+        if (evt.getType() == TableModelEvent.UPDATE && evt.getColumn() != TableModelEvent.ALL_COLUMNS && evt.getFirstRow() != TableModelEvent.HEADER_ROW)
+            activeGraph.setLabel(evt.getFirstRow(), (String) mainTM.getValueAt(evt.getFirstRow(), evt.getColumn()));
     }//GEN-LAST:event_mainTMTableChanged
 
     private void metricCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricCBActionPerformed
-        GraphController gc = activeController();
-        if (gc != null)
-            gc.setMetric(((ExplorerStatActions.StatEnum)metricCB.getSelectedItem()).getMetric());
+//        if (activeGraph != null)
+//            actions_stat.actionPerformed((ExplorerStatActions.StatEnum) metricCB.getSelectedItem(), evt);
     }//GEN-LAST:event_metricCBActionPerformed
 
     private void energyTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyTBBActionPerformed
-        // this button swaps the current status of the layout between playing & paused
-        GraphController gc = activeController();
-        if (gc.isAnimating())
-            gc.stopLayout();
-        else
-            gc.animateLayout();
+        if (activeGraph == null || activeGraph.getGraph() == null)
+            energyTBB.setSelected(false);
+        boolean status = energyTBB.isSelected();
+        if (status) {
+            actions_layout.LAYOUT_ENERGY_START.actionPerformed(evt);
+            energyTBB.setText("Pause");
+        } else {
+            actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(evt);
+            energyTBB.setText("Play");
+        }
+
     }//GEN-LAST:event_energyTBBActionPerformed
 
     private void cooperationMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cooperationMIActionPerformed
-        Graph active = activeGraph();
-        if (active == null)
+        if (activeGraph == null || activeGraph.getGraph() == null)
             return;
         CooperationPanel cp = new CooperationPanel();
         JDialog dialog = new JDialog(this, true);
@@ -671,8 +714,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
         Collection<Integer> subset = cp.getSubset();
         CooperationSubsetMetric m1 = new CooperationSubsetMetric(new AdditiveSubsetMetric(m));
         CooperationSubsetMetric m2 = new CooperationSubsetMetric(new ContractiveSubsetMetric(m));
-        double[] v1 = m1.getValue(active, subset);
-        double[] v2 = m2.getValue(active, subset);
+        double[] v1 = m1.getValue(activeGraph.getGraph(), subset);
+        double[] v2 = m2.getValue(activeGraph.getGraph(), subset);
         output("Computed additive metric with " + m + "   : selfish = " + v1[0] + ", altruistic = " + v1[1] + ", total = " + (v1[0]+v1[1]));
         output("Computed contractive metric with " + m + ": selfish = " + v2[0] + ", altruistic = " + v2[1] + ", total = " + (v2[0]+v2[1]));
     }//GEN-LAST:event_cooperationMIActionPerformed
@@ -696,7 +739,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-                new GraphExplorerMain().setVisible(true);
+                new GraphExplorerMain_backup().setVisible(true);
             }
         });
     }
@@ -806,152 +849,227 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem wheelMI1;
     // End of variables declaration//GEN-END:variables
 
+    /** Updates the property panel with active graph and energy layout */
+    void updatePropertyPanel() {
+        propertyRP.removeAll();
+        if (activeGraph != null) {
+//            if (graphBean != null)
+//                graphBean.removeChangeListener(this);
+            graphBean = new PlaneGraphBean(activeGraph);
+//            graphBean.addChangeListener(this);
+            propertyRP.add(nodePS = new PropertySheet(graphBean.nodeBean()), "Node Settings");
+            propertyRP.add(edgePS = new PropertySheet(graphBean.edgeBean()), "Edge Settings");
+            propertyRP.add(labelPS = new PropertySheet(graphBean.labelBean()), "Label Settings");
+        }
+//        if (activeLayout != null)
+//            propertyRP.add(layoutPS = new PropertySheet(activeLayout), "Energy layout parameters");
+    }
+
+    /**
+     * Sets table model for the distribution table. Also updates the displayed chart.
+     * @param model the model for the table displaying values; also used for the chart's values
+     * @param barWidth width of the bars displayed in the chart
+     */
+    <N extends Number> void setActiveMetric(NodeMetric<N> metric, String metricName) {
+        if (activeGraph == null)
+            return;
+
+        Graph graph = activeGraph.getGraph();
+        int n = graph.order();
+
+        // update main table
+//        if (mainTM.getGraph() != graph)
+//            mainTM.initialize(graph, metric);
+//        else
+//            mainTM.setMetric(metric);
+
+        List<Number> values = mainTM.values;
+
+        // update visual node sizes
+        double[] data1 = new double[n];
+        double max = 0;
+        for(int i = 0; i < n; i++) {
+            data1[i] = Math.sqrt(values.get(i).doubleValue());
+            max = Math.max(max, data1[i]);
+        }
+        activeGraph.setNodeValues(data1);
+        graphBean.nodeBean().setSize(8/max);
+
+        // update distribution table & data for chart
+        DistributionTableModel model = new DistributionTableModel(values);
+        distributionTable.setModel(model);
+        boxP3.add(distributionTableSP, BorderLayout.CENTER);
+        boxPanel.validate();
+
+        int[] counts = model.counts;
+        int nSamples = counts.length;
+        double[][] data = new double[6][counts.length];
+        double x, y;
+        for (int i = 0; i < nSamples; i++) {
+            x = ((Number)model.values[i]).doubleValue();
+            y = model.counts[i];
+            data[0][i] = data[1][i] = data[2][i] = x;
+            data[3][i] = data[5][i] = y;
+            data[4][i] = 0;
+        }
+
+        // set up the chart
+        DefaultIntervalXYDataset chartData = new DefaultIntervalXYDataset();
+            chartData.addSeries(metricName + " counts", data);
+        NumberAxis xAxis = new NumberAxis(metricName);
+            xAxis.setAutoRangeIncludesZero(false);
+        NumberAxis yAxis = new NumberAxis("Number of Nodes");
+        YIntervalRenderer renderer = new YIntervalRenderer();
+        renderer.setBaseToolTipGenerator(new org.jfree.chart.labels.StandardXYToolTipGenerator());
+        XYPlot plot = new XYPlot(chartData, xAxis, yAxis, renderer);
+            plot.setOrientation(PlotOrientation.VERTICAL);
+        distributionCP.setChart(new JFreeChart(
+                metricName + " distribution", JFreeChart.DEFAULT_TITLE_FONT,
+                plot, false));
+
+//        double[][] data = new double[2][counts.length];
+//        for (int i = 0; i < nSamples; i++) {
+//            data[0][i] = ((Number)model.values[i]).doubleValue();
+//            data[1][i] = model.counts[i];
+//        }
+//        distributionCP.setChart(
+//                ChartFactory.createXYBarChart(metricName + " Distribution",
+//                metricName, false,
+//                "Number of Nodes", new XYBarDataset(data, .9),
+//                PlotOrientation.VERTICAL, false, true, false));
+    }
+
     //
     // UTILITIES
     //
-
-    public Component dialogComponent() {
-        return this;
-    }
 
     public void output(String output) {
         Document d = outputTP.getDocument();
         try {
             d.insertString(d.getLength(), output + "\n\n", null);
         } catch (BadLocationException ex) {
-            Logger.getLogger(GraphExplorerMain.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GraphExplorerMain_backup.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    //
+    // PROPERTY GETTERS
+    //
+
+    public Component dialogComponent() {
+        return this;
+    }
+
+    public Component activePanel() {
+        return graphTP.getSelectedComponent();
+    }
+
+    public boolean isLongitudinal() {
+        return graphTP.getSelectedComponent() != null && graphTP.getSelectedComponent() instanceof LongitudinalGraphPanel;
+    }
+
+    public Graph activeGraph() {
+        return activeGraph == null ? null : activeGraph.getGraph();
+    }
+
+    public Map<Object, Point2D.Double> getActivePoints() {
+        return activeGraph == null ? null : activeGraph.getPositionMap();
+    }
+
+    public <V> void setActivePoints(Map<V, Point2D.Double> pos) {
+        if (activeGraph != null)
+            activeGraph.setPositionMap(pos);
+    }
+
+
+    //
+    // INPUT/OUTPUT
+    //
+
+    /** Loads a graph into the explorer, by creating a new tabbed window that displays it. */
+    public void loadGraph(Graph sg, String name) {
+        stopLayout();
+//        newPositions = null;
+        PlanePlotComponent ppc = new PlanePlotComponent();
+        setActiveGraph(new PlaneGraph(sg));
+        ppc.add(activeGraph);
+        graphTP.add(name, ppc);
+        graphTP.setSelectedComponent(ppc);
+//        if (mainTM.getGraph() != sg)
+//            mainTM.setGraph(sg);
+        output("Successfully loaded graph " + name + " with " + sg.order() + " vertices and " + sg.edgeNumber() + " edges.");
+    }
+
+    public void loadLongitudinalGraph(LongitudinalGraph lg, String name) {
+        stopLayout();
+//        newPositions = null;
+        LongitudinalGraphPanel lgp = new LongitudinalGraphPanel(lg);
+        setActiveGraph(lgp.getPlaneGraph());
+        graphTP.add(name, lgp);
+        graphTP.setSelectedComponent(lgp);
+        Graph slice = lgp.getActiveSlice();
+//        if (mainTM.getGraph() != slice)
+//            mainTM.setGraph(slice);
+        output("Successfully loaded longitudinal graph " + name
+                + " with time domain [" + lg.getMinimumTime() + ", " + lg.getMaximumTime() + "]"
+                + " and initial slice with " + slice.order() + " vertices and " + slice.edgeNumber() + " edges.");
+    }
+
+    public void closeActiveGraph() {
+        stopLayout();
+        activeGraph = null;
+//        mainTM.setGraph(null);
+        graphTP.remove(graphTP.getSelectedComponent());
+    }
+
+    //
+    // HANDLE CHANGES TO GRAPH
+    //
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource() == controller) {
+            if (evt.getPropertyName().equals("active")) {
+
+            } else if (evt.getPropertyName().equals("output")) {
+                output((String) evt.getNewValue());
+            }
+        } else if (evt.getSource() == controller.getActiveController()) {
+            if (evt.getPropertyName().equals("output")) {
+
+            }
+        }
+    }
+
+    public <V> void initLayout(StaticGraphLayout layout, double... parameters) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void initLayout(IterativeGraphLayout layout) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void animateLayout() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void adjustLayout(StaticGraphLayout layout, double... parameters) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void iterateLayout() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void stopLayout() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void setActiveGraph(Object object) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public GraphController activeController() {
-        return master.getActiveController();
-    }
-
-    Graph activeGraph() {
-        GraphController gc = master.getActiveController();
-        return gc == null ? null : gc.getActiveGraph();
-    }
-
-    PlaneGraph activePlaneGraph() {
-        GraphController gc = master.getActiveController();
-        return graphs.get(gc);
-    }
-
-    /** Updates the property panel with currently active graph and energy layout */
-    private void updatePropertyPanel() {
-        propertyRP.removeAll();
-        PlaneGraph active = graphs.get(activeController());
-        if (active != null) {
-            PlaneGraphBean bean = new PlaneGraphBean(active);
-            propertyRP.add(nodePS = new PropertySheet(bean.nodeBean()), "Node Settings");
-            propertyRP.add(edgePS = new PropertySheet(bean.edgeBean()), "Edge Settings");
-            propertyRP.add(labelPS = new PropertySheet(bean.labelBean()), "Label Settings");
-            IterativeGraphLayout layout = master.getActiveController().getIterativeLayout();
-            if (layout != null)
-                propertyRP.add(layoutPS = new PropertySheet(layout), "Iterative Layout Settings");
-            else
-                layoutPS = null;
-        } else {
-            nodePS = null;
-            edgePS = null;
-            labelPS = null;
-            layoutPS = null;
-        }
-    }
-
-    /** Updates the currently active graph */
-    private void updateActiveGraph(GraphController gc_old, GraphController gc_new) {
-        if (gc_old != null) {
-            gc_old.removePropertyChangeListener(this);
-        }
-        if (gc_new == null) {
-            // need to remove current active components
-            if (gc_old != null && tabs.containsKey(gc_old)) {
-                graphTP.remove(tabs.get(gc_old));
-                tabs.remove(gc_old);
-                graphs.remove(gc_old);
-            }
-        } else {
-            updating = true;
-            if (tabs.containsKey(gc_new)) {
-                // just need to change active component
-                if (graphTP.getSelectedComponent() != tabs.get(gc_new))
-                    graphTP.setSelectedComponent(tabs.get(gc_new));
-            } else {
-                // need to create new components and set them up
-                Component c;
-                PlaneGraph pg;
-                if (gc_new.isLongitudinal()) {
-                    c = new LongitudinalGraphPanel(gc_new.getLongitudinalGraph());
-                    pg = ((LongitudinalGraphPanel)c).getPlaneGraph();
-                } else {
-                    c = new PlanePlotComponent();
-                    ((PlanePlotComponent)c).add(pg = new PlaneGraph(gc_new.getActiveGraph()));
-                }
-                tabs.put(gc_new, c);
-                graphs.put(gc_new, pg);
-                graphTP.add(c, gc_new.getName());
-                graphTP.setSelectedComponent(c);
-            }
-            updatePropertyPanel();
-            gc_new.addPropertyChangeListener(this);
-            actions_stat.controller = gc_new;
-            actions_layout.controller = gc_new;
-            updating = false;
-        }
-    }
-
-    //
-    // PROPERTY CHANGES FED FROM THE CONTROLLERS
-    //
-
-    boolean updating = false;
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        output("Property change src=" + evt.getSource() + " & name=" + evt.getPropertyName());
-        if (evt.getSource() == master) {
-            if (evt.getPropertyName().equals("active")) {
-                updateActiveGraph((GraphController) evt.getOldValue(), (GraphController) evt.getNewValue());
-            } else if (evt.getPropertyName().equals("output")) {
-                output((String) evt.getNewValue());
-            } else {
-                output("Unknown property change event, name = " + evt.getPropertyName());
-            }
-        } else if (evt.getSource() == activeController()) {
-            if (evt.getPropertyName().equals("name")) {
-                Component c = tabs.get(activeController());
-                int index = graphTP.indexOfComponent(c);
-                graphTP.setTitleAt(index, (String) evt.getNewValue());
-            } else if (evt.getPropertyName().equals("layout")) {
-                if (evt.getNewValue() == null) {
-                    // TODO - remove/deselect anything that depends on current layout
-                } else {
-                    IterativeGraphLayout layout = (IterativeGraphLayout) evt.getNewValue();
-                    // TODO - activate anything that depends on a currently active layout
-                }
-            } else if (evt.getPropertyName().equals("animating")) {
-                boolean value = (Boolean) evt.getNewValue();
-                // TODO - figure out what needs to happen when animation starts up
-            } else if (evt.getPropertyName().equals("primary")) {
-                // TODO - not sure if this option should be supported
-            } else if (evt.getPropertyName().equals("subset")) {
-                output("Subset change: " + evt.getNewValue());
-            } else if (evt.getPropertyName().equals("metric")) {
-                metricCB.setSelectedItem(evt.getNewValue());
-                metricCB1.setSelectedItem(evt.getNewValue());
-                // TODO - update chart & ensure these changes don't propagate
-            } else if (evt.getPropertyName().equals("time")) {
-                LongitudinalGraphPanel panel = (LongitudinalGraphPanel) tabs.get(activeController());
-                panel.setCurrentTime((Double) evt.getNewValue());
-            } else if (evt.getPropertyName().equals("node value")) {
-                PlaneGraph pg = activePlaneGraph();
-                pg.updateLabels();
-            } else if(evt.getPropertyName().equals("output")) {
-                output((String) evt.getNewValue());
-            } else {
-                output("Unknown property change event, name = " + evt.getPropertyName());
-            }
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 

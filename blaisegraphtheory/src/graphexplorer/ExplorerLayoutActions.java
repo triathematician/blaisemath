@@ -21,9 +21,9 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 class ExplorerLayoutActions {
 
     /** What this class works with */
-    GraphExplorerInterface main;
-    /** Construction requires a main class */
-    public ExplorerLayoutActions(GraphExplorerInterface main) { this.main = main; }
+    GraphController controller;
+    /** Construction requires a controller */
+    public ExplorerLayoutActions(GraphController controller) { this.controller = controller; }
 
     public Action LAYOUT_CIRCULAR = new AbstractAction("Circular layout") {
         {
@@ -33,8 +33,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph() != null)
-                main.initLayout(StaticGraphLayout.CIRCLE, 5.0);
+            if (controller.valid())
+                controller.applyLayout(StaticGraphLayout.CIRCLE, 5.0);
         }
     };
 
@@ -46,8 +46,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph() != null)
-                main.initLayout(StaticGraphLayout.RANDOM, 5.0);
+            if (controller.valid())
+                controller.applyLayout(StaticGraphLayout.RANDOM, 5.0);
         }
     };
 
@@ -59,8 +59,10 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            main.initLayout(new EnergyLayout(main.activeGraph(), main.getActivePoints()));
-            main.animateLayout();
+            if (controller.valid()) {
+                controller.setIterativeLayout(new EnergyLayout(controller.getPositions()));
+                controller.animateLayout();
+            }
         }
     };
 
@@ -72,7 +74,8 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            main.iterateLayout();
+            if (controller.valid())
+                controller.stepLayout();
         }
     };
 
@@ -84,7 +87,7 @@ class ExplorerLayoutActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            main.stopLayout();
+            controller.stopLayout();
         }
     };
 

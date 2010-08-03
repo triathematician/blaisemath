@@ -92,8 +92,22 @@ public class ListLongitudinalGraph<V> implements LongitudinalGraph<V> {
         return found ? ivs : null;
     }
 
-    public Graph<V> slice(double time) {
-        return graphs.containsKey(time) ? graphs.get(time) : null;
+    public Graph<V> slice(double time, boolean exact) {
+        if (graphs.containsKey(time))
+            return graphs.get(time);
+        else if(!exact) {
+            // return closest graph to given time
+            double minDist = Double.MAX_VALUE;
+            Double minKey = null;
+            for (double d : graphs.keySet())
+                if (Math.abs(d-time) < minDist) {
+                    minDist = Math.abs(d-time);
+                    minKey = d;
+                }
+            return graphs.get(minKey);
+        } else {
+            return null;
+        }
     }
 
     public double getMinimumTime() {

@@ -145,8 +145,8 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         return null;
     }
 
-    public Graph<V> slice(double time) {
-        return new SliceGraph(time);
+    public Graph<V> slice(double time, boolean exact) {
+        return new SliceGraph(time); // here this option is ignored
     }
 
     public double getMinimumTime() {

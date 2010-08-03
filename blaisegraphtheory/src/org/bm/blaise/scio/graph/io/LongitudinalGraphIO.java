@@ -186,7 +186,7 @@ public class LongitudinalGraphIO extends AbstractGraphIO {
 
 
     @Override
-    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Map<Object,Point2D.Double> positions, File file) {
         LongitudinalGraph<Integer> lg = null;
         try {
             lg = (LongitudinalGraph<Integer>) go;
@@ -203,15 +203,15 @@ public class LongitudinalGraphIO extends AbstractGraphIO {
                 int i = 0;
                 for (Integer node : nodes) {
                     writer.write(node.toString() + " " + node.toString());
-                    if (positions != null && positions[i] != null)
-                        writer.write(" " + positions[i].x + " " + positions[i].y);
+                    if (positions != null && positions.get(node) != null)
+                        writer.write(" " + positions.get(node).x + " " + positions.get(node).y);
                     writer.newLine();
                     i++;
                 }
                 // write the edges; uses one edge per line by default
                 Graph<Integer> graph = null;
                 for (double t : lg.getTimes()) {
-                    graph = lg.slice(t);
+                    graph = lg.slice(t, true);
                     nodes = graph.nodes();
                     writer.write(graph.isDirected() ? "*Arcs" : "*Edges");
                     writer.write(" t=" + t);

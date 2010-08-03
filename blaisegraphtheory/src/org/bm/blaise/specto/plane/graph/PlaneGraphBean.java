@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import primitive.style.AbstractPointStyle.PointShape;
 import primitive.style.StringStyle;
 import util.DefaultChangeBroadcaster;
@@ -24,9 +25,15 @@ public class PlaneGraphBean extends DefaultChangeBroadcaster {
     Node nb;
     Edge eb;
     Label lb;
-    public PlaneGraphBean(PlaneGraph graph) { 
+    
+    public PlaneGraphBean(final PlaneGraph graph) {
         this.graph = graph;
-        changeEvent = new ChangeEvent(source = this);
+        changeEvent = new ChangeEvent(this);
+        addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                graph.getParent().plottableStyleChanged(graph);
+            }
+        });
         nb = new Node();
         eb = new Edge();
         lb = new Label();

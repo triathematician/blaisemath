@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
 class ExplorerActions {
 
     /** What this class works with */
-    GraphExplorerMain main;
+    GraphExplorerInterface main;
     /** Construction requires a main class */
-    public ExplorerActions(GraphExplorerMain main) { this.main = main; }
+    public ExplorerActions(GraphExplorerInterface main) { this.main = main; }
     
     //
     // HELP ACTIONS
@@ -31,7 +31,7 @@ class ExplorerActions {
             putValue(SHORT_DESCRIPTION, "About GraphExplorer");
         }
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(main, "GraphExplorer 0.2\nCreated by Elisha Peterson");
+            JOptionPane.showMessageDialog(main.dialogComponent(), "GraphExplorer 0.2\nCreated by Elisha Peterson");
         }
     };
 
@@ -40,7 +40,7 @@ class ExplorerActions {
             putValue(SHORT_DESCRIPTION, "Load help file");
         }
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(main, "Sorry, the help feature is not yet available!");
+            JOptionPane.showMessageDialog(main.dialogComponent(), "Sorry, the help feature is not yet available!");
         }
     };
 

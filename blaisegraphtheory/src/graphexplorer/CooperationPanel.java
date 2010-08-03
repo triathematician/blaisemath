@@ -1,11 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * CooperationPanel.java
- *
  * Created on Jul 14, 2010, 11:15:16 AM
  */
 
@@ -32,7 +26,7 @@ public class CooperationPanel extends javax.swing.JPanel {
         Object item = jComboBox1.getSelectedItem();
         if (!(item instanceof StatEnum))
             return null;
-        return ExplorerStatActions.metricOf((StatEnum) item);
+        return ((StatEnum)item).getMetric();
     }
 
     public Collection<Integer> getSubset() {

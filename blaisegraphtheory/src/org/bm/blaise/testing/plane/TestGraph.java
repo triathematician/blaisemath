@@ -46,7 +46,7 @@ public class TestGraph extends javax.swing.JFrame {
         // PANELS
 
         rollupPanel1.add("Visometry", new PropertySheet(graphPlot.getVisometry()));
-        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new EnergyLayout(pg.getGraph(), pg.getPoint())));
+        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new EnergyLayout(pg.getPositionMap())));
         for (Plottable p : graphPlot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
@@ -155,7 +155,7 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        pg.setPoint(StaticGraphLayout.RANDOM.layout(pg.getGraph(), 5.0));
+        pg.setPositionMap(StaticGraphLayout.RANDOM.layout(pg.getGraph(), 5.0));
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
@@ -168,17 +168,17 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        pg.setPoint(StaticGraphLayout.CIRCLE.layout(pg.getGraph(), 5.0));
+        pg.setPositionMap(StaticGraphLayout.CIRCLE.layout(pg.getGraph(), 5.0));
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         Graph graph = pg.getGraph();
         if (energyLayout == null)
-            energyLayout = new EnergyLayout(graph, pg.getPoint());
+            energyLayout = new EnergyLayout(pg.getPositionMap());
         else if (updateEL)
-            energyLayout.reset(graph, pg.getPoint());
+            energyLayout.reset(pg.getPositionMap());
         energyLayout.iterate(graph);
-        pg.setPoint(energyLayout.getPointArray());
+        pg.setPositionMap(energyLayout.getPositions());
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
@@ -187,16 +187,16 @@ public class TestGraph extends javax.swing.JFrame {
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         final Graph graph = pg.getGraph();
         if (energyLayout == null)
-            energyLayout = new EnergyLayout(pg.getGraph(), pg.getPoint());
+            energyLayout = new EnergyLayout(pg.getPositionMap());
         else if (updateEL)
-            energyLayout.reset(pg.getGraph(), pg.getPoint());
+            energyLayout.reset(pg.getPositionMap());
         timer = new BetterTimer(100);
         timer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if (updateEL)
-                    energyLayout.reset(pg.getGraph(), pg.getPoint());
+                    energyLayout.reset(pg.getPositionMap());
                 energyLayout.iterate(graph);
-                pg.setPoint(energyLayout.getPointArray());
+                pg.setPositionMap(energyLayout.getPositions());
             }
         });
         timer.start();

@@ -10,7 +10,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,18 +29,16 @@ import org.bm.blaise.scio.graph.io.AbstractGraphIO.GraphType;
 class ExplorerIOActions {
 
     /** What this class works with */
-    GraphExplorerInterface main;
-    /** Construction requires a main class */
-    public ExplorerIOActions(GraphExplorerInterface main) { this.main = main; }
+    GraphControllerMaster master;
 
+    /** Construction requires a master controller class */
+    public ExplorerIOActions(GraphControllerMaster master) { this.master = master; }
+    
+    transient JFileChooser fc;
+    transient File openFile;
 
-    JFileChooser fc;
-    File openFile;
-
-    void initFileChooser() {
-        if (fc == null)
-            fc = new JFileChooser();
-    }
+    /** Lazy initialization */
+    void initFileChooser() { if (fc == null) fc = new JFileChooser(); }
 
     public Action LOAD_EDGELIST_ACTION = new LoadAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
     public Action SAVE_EDGELIST_ACTION = new SaveAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
@@ -66,7 +65,7 @@ class ExplorerIOActions {
             putValue(MNEMONIC_KEY, KeyEvent.VK_W);
         }
         public void actionPerformed(ActionEvent e) {
-            main.closeActiveGraph();
+            master.closeController();
         }
     };
 
@@ -100,35 +99,34 @@ class ExplorerIOActions {
                 fc.setCurrentDirectory(openFile);
                 fc.setSelectedFile(openFile);
             }
-            if (fc.showOpenDialog(main.thisComponent()) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
                 TreeMap<Integer, double[]> loc = new TreeMap<Integer, double[]>();
                 GraphType loadType = type;
                 Object loaded = loader.importGraph(loc, openFile, loadType);
                 if (loaded == null) {
-                    main.output("Attempt to load file " + openFile + " failed!");
+                    master.output("Attempt to load file " + openFile + " failed!");
                     return;
                 }
+                GraphController gc = null;
                 switch (loadType) {
                     case REGULAR:
-                        Graph<Integer> sg = (Graph<Integer>) loaded;
-                        main.loadGraph(sg, openFile.getName());
+                        gc = GraphController.getInstance((Graph<Integer>) loaded, openFile.getName());
                         if (loc != null && loc.size() > 0) {
-                            Point2D.Double[] pos = new Point2D.Double[loc.size()];
-                            int i = 0;
-                            for (double[] val : loc.values())
-                                pos[i++] = new Point2D.Double(val[0], val[1]);
-                            main.setActivePoints(pos);
+                            LinkedHashMap<Object,Point2D.Double> pos = new LinkedHashMap<Object,Point2D.Double>();
+                            for (Entry<Integer,double[]> en : loc.entrySet())
+                                pos.put(en.getKey(), new Point2D.Double(en.getValue()[0], en.getValue()[1]));
+                            gc.setPositions(pos);
                         }
                         break;
                     case LONGITUDINAL:
-                        LongitudinalGraph<Integer> lg = (LongitudinalGraph<Integer>) loaded;
-                        if (lg != null && lg.getTimes().size() > 0)
-                            main.loadLongitudinalGraph(lg, openFile.getName());
-                        else
-                            main.output("Attempt to load file " + openFile + " failed!");
+                        gc = GraphController.getInstance((LongitudinalGraph<Integer>) loaded, openFile.getName());
                         break;
                 }
+                if (gc != null)
+                    master.setActiveController(gc);
+                else
+                    master.output("Attempt to load file " + openFile + " failed!");
             }
         }
     }
@@ -151,31 +149,26 @@ class ExplorerIOActions {
 //            return main.activeGraph() != null;
 //        }
         public void actionPerformed(ActionEvent e) {
-            if (main.activeGraph() == null || (type == GraphType.LONGITUDINAL && !main.isLongitudinal()))
+            GraphController gc = master.getActiveController();
+            if (gc == null || !(gc.valid())) {
+                master.output("Save failed: no graph active");
                 return;
+            }
+
             initFileChooser();
             fc.setApproveButtonText("Save");
             if (openFile != null) {
                 fc.setCurrentDirectory(openFile);
                 fc.setSelectedFile(openFile);
             }
-            if (fc.showOpenDialog(main.thisComponent()) == JFileChooser.APPROVE_OPTION) {
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
-                Object active = null;
-                switch (type) {
-                    case REGULAR:
-                        active = main.activeGraph();
-                        break;
-                    case LONGITUDINAL:
-                        LongitudinalGraphPanel lgp = (LongitudinalGraphPanel) main.activePanel();
-                        active = lgp.getLongitudinalGraph();
-                        break;
-                }
-                GraphType saveType = loader.saveGraph(active, main.getActivePoints(), openFile);
+                Object active = gc.getPrimaryGraph();
+                GraphType saveType = loader.saveGraph(active, gc.getPositions(), openFile);
                 if (saveType == null)
-                    main.output("Attempt to save file " + openFile + " failed!");
+                    gc.output("Attempt to save file " + openFile + " failed!");
                 else
-                    main.output("Saved graph to file " + openFile + ".");
+                    gc.output("Saved graph to file " + openFile + ".");
             }
         }
     }
@@ -187,19 +180,21 @@ class ExplorerIOActions {
             putValue(SHORT_DESCRIPTION, "Export longitudinal graph as a QuickTime movie (.mov)");
         }
         public void actionPerformed(ActionEvent e) {
-            if (main.isLongitudinal()) {
-                initFileChooser();
-                fc.setApproveButtonText("Export");
-                if (openFile != null) {
-                    fc.setCurrentDirectory(openFile);
-                    fc.setSelectedFile(openFile);
-                }
-                if (fc.showOpenDialog(main.thisComponent()) == JFileChooser.APPROVE_OPTION) {
-                    openFile = fc.getSelectedFile();
-                    MovieExport me = new MovieExport(openFile);
-                    ExportMovieTask emt = new ExportMovieTask(main, (LongitudinalGraphPanel) main.activePanel(), me);
-                    emt.run();
-                }
+            GraphController gc = master.getActiveController();
+            if (!gc.isLongitudinal()) {
+                gc.output("Movie output not supported: QTJava not found");
+//                initFileChooser();
+//                fc.setApproveButtonText("Export");
+//                if (openFile != null) {
+//                    fc.setCurrentDirectory(openFile);
+//                    fc.setSelectedFile(openFile);
+//                }
+//                if (fc.showOpenDialog(main.thisComponent()) == JFileChooser.APPROVE_OPTION) {
+//                    openFile = fc.getSelectedFile();
+//                    MovieExport me = new MovieExport(openFile);
+//                    ExportMovieTask emt = new ExportMovieTask(main, (LongitudinalGraphPanel) main.activePanel(), me);
+//                    emt.run();
+//                }
             }
         }
     };

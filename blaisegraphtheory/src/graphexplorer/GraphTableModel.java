@@ -5,11 +5,13 @@
 
 package graphexplorer;
 
+import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ValuedGraph;
-import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a model for displaying a table of vertices within a graph. Displays the index of a vertex, its label
@@ -19,12 +21,11 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
  *
  * @author Elisha Peterson
  */
-public class GraphTableModel extends AbstractTableModel {
+public final class GraphTableModel extends AbstractTableModel
+        implements PropertyChangeListener {
 
-    Graph graph = null;
-    NodeMetric metric = null;
-    boolean valueGraph = false;
-    
+    /** The graph being tracked */
+    GraphController gc = null;
     /** Tracks the values for the metric for each vertex */
     transient List<Number> values;
 
@@ -33,113 +34,111 @@ public class GraphTableModel extends AbstractTableModel {
     }
 
     /** Constructs with specified graph. */
-    public GraphTableModel(Graph graph) {
-        setGraph(graph);
+    public GraphTableModel(GraphController gc) {
+        setController(gc);
     }
 
-    /** Constructs with specified graph and metric. */
-    public GraphTableModel(Graph graph, NodeMetric metric) {
-        initialize(graph, metric);
-    }
-
-    public void initialize(Graph graph, NodeMetric metric) {
-        this.graph = graph;
-        this.metric = metric;
-        values = (metric == null || graph == null) ? null : metric.allValues(graph);
-        fireTableDataChanged();
-    }
-    
-    /** @return graph */
-    public Graph getGraph() { return graph; }
-    
-    /** Sets graph */
-    public void setGraph(Graph graph) { 
-        if (this.graph != graph) {
-            this.graph = graph;
-            valueGraph = graph instanceof ValuedGraph;
-            values = (metric == null || graph == null) ? null : metric.allValues(graph);
-            fireTableStructureChanged();
+    public void setController(GraphController gc) {
+        if (this.gc != gc) {
+            if (this.gc != null)
+                this.gc.removePropertyChangeListener(this);
+            this.gc = gc;
+            if (gc != null) {
+                gc.addPropertyChangeListener(this);
+                updateValues();
+            }
         }
     }
 
-    /** @return metric */
-    public NodeMetric getMetric() {
-        return metric;
-    }
-
-    /** Sets metric */
-    public void setMetric(NodeMetric metric) {
-        if (this.metric != metric) {
-            this.metric = metric;
-            values = (metric == null || graph == null) ? null : metric.allValues(graph);
-            fireTableStructureChanged();
+    /** Updates table values based on current GraphController */
+    private void updateValues() {
+        boolean startNull = values == null;
+        if (gc != null && gc.getMetric() != null && gc.getActiveGraph() != null) {
+            values = gc.getMetric().allValues(gc.getActiveGraph());
+        } else {
+            values = null;
         }
+        if ((startNull && values != null) || (!startNull && values == null))
+            fireTableStructureChanged();
+        else
+            fireTableDataChanged();
     }
 
     //
     // TableModel METHODS
     //
 
-    public int getRowCount() { return graph == null ? 0 : graph.order(); }
-
-    // separate setups for labeled and unlabeled graphs
-
-    private static final int            UCOL_OBJECT = 0, UCOL_LOC = 1, UCOL_DEGREE = 2, UCOL_METRIC = 3;
-    String[] UCOL_NAMES =             { "Node",          "Location",   "Degree",        "Metric" };
-    Class[] UCOL_TYPES =              { Object.class,    String.class, Integer.class,   Number.class   };
+    public int getRowCount() {
+        if (gc == null) return 0;
+        Graph graph = gc.getActiveGraph();
+        return graph == null ? 0 : graph.order();
+    }
 
     private static final int           COL_OBJECT = 0,  COL_LABEL = 1, COL_LOC = 2,  COL_DEGREE = 3, COL_METRIC = 4;
     String[] COL_NAMES =             { "Node",          "Label",       "Location",   "Degree",       "Metric" };
     Class[] COL_TYPES =              { Object.class,    String.class,  String.class, Integer.class,  Number.class };
 
-    public int getColumnCount() { 
-        int result = 5; 
-        if (!valueGraph) result--;
-        if (metric==null) result--;
-        return result;
+    public int getColumnCount() {
+        return (gc == null || gc.getMetric() == null) ? 4 : 5;
     }
 
     @Override public String getColumnName(int col) {
-        return valueGraph ? COL_NAMES[col] : UCOL_NAMES[col];
+        return COL_NAMES[col];
     }
 
     @Override public Class<?> getColumnClass(int col) {
-        return valueGraph ? COL_TYPES[col] : UCOL_TYPES[col];
+        return COL_TYPES[col];
     }
 
     public Object getValueAt(int row, int col) {
+        Graph graph = gc.getActiveGraph();
         Object node = graph.nodes().get(row);
-        if (valueGraph)
-            switch (col) {
-                case COL_OBJECT : return node;
-                case COL_LABEL : 
-                    Object value = ((ValuedGraph)graph).getValue(node);
-                    return value == null ? "" : value.toString();
-                case COL_LOC: return "TBD";
-                case COL_DEGREE : return graph.degree(node);
-                case COL_METRIC : return values.get(row);
-            }
-        else
-            switch (col) {
-                case UCOL_OBJECT : return node;
-                case UCOL_LOC: return "TBD";
-                case UCOL_DEGREE : return graph.degree(node);
-                case UCOL_METRIC : return values.get(row);
-            }
+        switch (col) {
+            case COL_OBJECT :
+                return node;
+            case COL_LABEL :
+                Object value = graph instanceof ValuedGraph ? ((ValuedGraph)graph).getValue(node) : null;
+                return value == null ? "" : value.toString();
+            case COL_LOC:
+                Point2D.Double pos = gc.getPositions().get(node);
+                return String.format("(%.3f,%.3f)", pos.x, pos.y);
+            case COL_DEGREE :
+                return graph.degree(node);
+            case COL_METRIC:
+                return values == null ? null : values.get(row);
+        }
         throw new IllegalArgumentException("Graph's table does not contain entry at (row, col) = (" + row + ", " + col + ").");
     }
 
+    public boolean isLabelColumn(int col) {
+        return col == COL_LABEL;
+    }
+
     @Override public boolean isCellEditable(int row, int col) {
-        return valueGraph && col == COL_LABEL;
+        return gc.getActiveGraph() instanceof ValuedGraph && col == COL_LABEL;
     }
     
     @Override
     public void setValueAt(Object aValue, int row, int col) {
+        Graph graph = gc.getActiveGraph();
         if (!isCellEditable(row, col))
             throw new IllegalArgumentException("Cannot set value of graph " + graph + " (row, col) = (" + row + ", " + col + ") to " + aValue);
 
         ((ValuedGraph)graph).setValue(graph.nodes().get(row), aValue);
         fireTableCellUpdated(row, col);
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+//        System.out.println("gtm pc: " + evt.getSource() + " " + evt.getNewValue());
+        if (evt.getSource() == gc) {
+            if (evt.getPropertyName().equals("primary") || evt.getPropertyName().equals("metric")) {
+                updateValues();
+            }
+        } else if (evt.getSource() instanceof GraphControllerMaster) {
+            if (evt.getPropertyName().equals("active")) {
+                setController(((GraphControllerMaster)evt.getSource()).getActiveController());
+            }
+        }
     }
 
 }

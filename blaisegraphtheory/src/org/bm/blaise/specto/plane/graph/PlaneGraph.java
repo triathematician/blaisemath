@@ -8,7 +8,9 @@ package org.bm.blaise.specto.plane.graph;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -43,7 +45,7 @@ import visometry.plottable.VPointSet;
  * @see PlanePlotComponent
  * @see VPointSet
  */
-public class PlaneGraph extends Plottable<Point2D.Double>
+public final class PlaneGraph extends Plottable<Point2D.Double>
         implements PointDragListener<Point2D.Double>, ChangeBroadcaster {
 
     /** Vertices; underlying primitive is an array of GraphicString's */
@@ -52,10 +54,11 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     VPrimitiveEntry edgeEntry;
     /** The underlying graph object. */
     Graph graph;
+    /** The node position map (keeps order of vertices). */
+    LinkedHashMap<Object, Point2D.Double> pos;
 
     /** Values associated with the vertices (may be null) */
     double[] vertexValues;
-
 
     /** The initial layout scheme */
     private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
@@ -115,44 +118,37 @@ public class PlaneGraph extends Plottable<Point2D.Double>
      * @param graph the new graph
      */
     public void setGraph(Graph graph) {
+        this.graph = graph;
         List nodes = graph.nodes();
         int size = nodes.size();
-        Point2D.Double[] curPts = getPoint();
-        if (vertexEntry.local == null || curPts == null || curPts.length != size) {
-            // if objects do not exist or sizes do not match, create them
-            GraphicPointFancy[] gpfa = new GraphicPointFancy[size];
-            vertexEntry.local = gpfa;
-            // initialize the layout, but use old positions whenever available
-            Point2D.Double[] newPts = curPts == null ? INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
-            if (curPts != null)
-                for (int i = 0; i < Math.min(curPts.length, newPts.length); i++)
-                    newPts[i] = curPts[i];
-            ValuedGraph nvg = graph instanceof ValuedGraph ? (ValuedGraph) graph : null;
-            Object value;
-            for (int i = 0; i < size; i++) {
-                if (nvg != null && (value = nvg.getValue(nodes.get(i))) != null)
-                    gpfa[i] = new GraphicPointFancy<Point2D.Double>(newPts[i], value.toString(), 5);
-                else
-                    gpfa[i] = new GraphicPointFancy<Point2D.Double>(newPts[i], nodes.get(i).toString(), 5);
+        // first compute starting graph locations (keep locations for nodes that are the same since last graph)
+        if (pos == null) {
+            pos = new LinkedHashMap<Object, Point2D.Double>();
+            Map<Object, Point2D.Double> initial = INITIAL_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+            for (Object o : nodes)
+                pos.put(o, initial.get(o));
+        } else if (!pos.keySet().containsAll(nodes) || !nodes.containsAll(pos.keySet())){
+            LinkedHashMap<Object, Point2D.Double> newPos = new LinkedHashMap<Object, Point2D.Double>();
+            Map<Object, Point2D.Double> adding = null;
+            for (Object o : nodes) {
+                if (pos.containsKey(o))
+                    newPos.put(o, pos.get(o));
+                else {
+                    if (adding == null) 
+                        adding = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+                    newPos.put(o, adding.get(o));
+                }
             }
-        } else {
-            // here the objects exist, and the sizes match, so just need to update the labels
-            GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
-            if (graph instanceof ValuedGraph) {
-                ValuedGraph nvg = (ValuedGraph) graph;
-                for (int i = 0; i < size; i++)
-                    gpfa[i].string = nvg.getValue(nodes.get(i)).toString();
-            } else {
-                for (int i = 0; i < size; i++)
-                    gpfa[i].string = nodes.get(i).toString();
-            }
+            pos = newPos;
         }
+        // now set up the vertex entry
+        vertexEntry.local = new GraphicPointFancy[size];
+        updateLabels();
 
         ArrowStyle eStyle = (ArrowStyle) edgeEntry.style;
         eStyle.setHeadShape(graph.isDirected() ? ArrowStyle.ArrowShape.TRIANGLE : ArrowStyle.ArrowShape.NONE);
         eStyle.setShapeSize(8);
 
-        this.graph = graph;
         vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
@@ -179,6 +175,23 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         }
     }
 
+    /** @return entire position map */
+    public Map<Object, Point2D.Double> getPositionMap() { return pos; }
+
+    /** 
+     * Sets position map. Only positions corresponding to nodes in the active graph
+     * are used... the remainder are ignored. Okay if this map does not contain
+     * all points in the graph.
+     */
+    public <V> void setPositionMap(Map<V, Point2D.Double> map) {
+        int i = 0;
+        GraphicPointFancy[] arr = (GraphicPointFancy[]) vertexEntry.local;
+        for (Object v : graph.nodes()) {
+            if (map.containsKey(v))
+                arr[i].anchor = map.get(v);
+            i++;
+        }
+    }
 
     /** @return window location of the i'th point */
     public Point2D.Double getPoint(int i) {
@@ -193,12 +206,12 @@ public class PlaneGraph extends Plottable<Point2D.Double>
     }
     /** @return list of all points where vertices are placed, or null if there is no graph */
     public Point2D.Double[] getPoint() {
-        if (vertexEntry.local == null)
+        if (pos == null)
             return null;
-        GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
-        Point2D.Double[] result = new Point2D.Double[gsa.length];
-        for (int i = 0; i < gsa.length; i++)
-            result[i] = (Point2D.Double) gsa[i].anchor;
+        Point2D.Double[] result = new Point2D.Double[pos.size()];
+        int i = 0;
+        for (Point2D.Double p : pos.values())
+            result[i++] = p;
         return result;
     }
     /** Sets location of all vertices at once. Number of points must match the order of the graph. */
@@ -210,13 +223,30 @@ public class PlaneGraph extends Plottable<Point2D.Double>
         firePlottableChanged();
     }
 
-    /** Sets label of i'th vertex */
     public void setLabel(int i, String newLabel) {
         // TODO - probably should change this to make use of the <code>NodeValueGraph</code> construction.
         GraphicPointFancy[] gsa = (GraphicPointFancy[]) vertexEntry.local;
         gsa[i].string = newLabel;
         vertexEntry.needsConversion = true;
         firePlottableStyleChanged();
+    }
+
+    /** Updates all the labels in the graph */
+    public void updateLabels() {
+        List nodes = graph.nodes();
+        GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
+        ValuedGraph vg = graph instanceof ValuedGraph ? (ValuedGraph) graph : null;
+        String value;
+        int i = 0;
+        for (Object o : nodes) {
+            value = vg == null ? o.toString() : vg.getValue(o).toString();
+            if (gpfa[i] == null)
+                gpfa[i] = new GraphicPointFancy<Point2D.Double>(pos.get(o), value, 5);
+            else
+                gpfa[i].setString(value);
+            i++;
+        }
+        firePlottableChanged();
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.util.Map;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,7 +23,6 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import stormtimer.BetterTimer;
-import visometry.PlotComponent;
 
 /**
  *
@@ -30,6 +30,9 @@ import visometry.PlotComponent;
  */
 public class GraphExplorerLite extends javax.swing.JFrame
         implements ChangeListener, GraphExplorerInterface {
+
+    /** Controller */
+    GraphControllerMaster controller;
 
     /** Tracks the active graph in the explorer */
     PlaneGraph activeGraph;
@@ -51,8 +54,9 @@ public class GraphExplorerLite extends javax.swing.JFrame
     ExplorerLayoutActions actions_layout;
 
     private void initActions() {
-        actions_io = new ExplorerIOActions(this);
-        actions_layout = new ExplorerLayoutActions(this);
+        controller = new GraphControllerMaster();
+        actions_io = new ExplorerIOActions(controller);
+        actions_layout = new ExplorerLayoutActions(null);
     }
 
     /** Updates the property panel with active graph and energy layout */
@@ -74,6 +78,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
 
         mainTM = new graphexplorer.GraphTableModel();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        layoutPS = new data.propertysheet.PropertySheet();
         toolbar = new javax.swing.JToolBar();
         loadB = new javax.swing.JButton();
         saveB = new javax.swing.JButton();
@@ -191,6 +196,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
     private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private data.propertysheet.PropertySheet layoutPS;
     private javax.swing.JButton loadB;
     private visometry.plane.PlanePlotComponent mainPlot;
     private javax.swing.JSplitPane mainSP;
@@ -214,7 +220,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
     // PROPERTY GETTERS
     //
 
-    public Component thisComponent() {
+    public Component dialogComponent() {
         return this;
     }
 
@@ -230,13 +236,13 @@ public class GraphExplorerLite extends javax.swing.JFrame
         return activeGraph == null ? null : activeGraph.getGraph();
     }
 
-    public Point2D.Double[] getActivePoints() {
-        return activeGraph == null ? null : activeGraph.getPoint();
+    public Map<Object, Point2D.Double> getActivePoints() {
+        return activeGraph == null ? null : activeGraph.getPositionMap();
     }
 
-    public void setActivePoints(Point2D.Double[] pos) {
-        if (pos != null && activeGraph != null && pos.length == activeGraph.getGraph().order())
-            activeGraph.setPoint(pos);
+    public <V> void setActivePoints(Map<V, Point2D.Double> pos) {
+        if (activeGraph != null)
+            activeGraph.setPositionMap(pos);
     }
 
     //
@@ -247,8 +253,8 @@ public class GraphExplorerLite extends javax.swing.JFrame
         stopLayout();
         activeGraph.setGraph(sg);
         newPositions = null;
-        if (mainTM.getGraph() != sg)
-            mainTM.setGraph(sg);
+//        if (mainTM.getGraph() != sg)
+//            mainTM.setGraph(sg);
         output("Successfully loaded graph " + name + " with " + sg.order() + " vertices and " + sg.edgeNumber() + " edges.");
     }
 
@@ -259,7 +265,8 @@ public class GraphExplorerLite extends javax.swing.JFrame
     public void closeActiveGraph() {
         stopLayout();
         activeGraph.setGraph(null);
-        mainTM.setGraph(null);
+        mainTM.setController(null);
+//        mainTM.setGraph(null);
     }
 
     //
@@ -271,7 +278,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
     /** Timer handling animating layouts */
     BetterTimer layoutTimer;
     /** New positions for nodes when layout is reset */
-    Point2D.Double[] newPositions = null;
+    Map<Object,Point2D.Double> newPositions = null;
 
     static final int STATIC = 0, ANIMATING = 1;
 
@@ -282,23 +289,25 @@ public class GraphExplorerLite extends javax.swing.JFrame
         }
     }
 
-    public void initLayout(StaticGraphLayout layout, double... parameters) {
+    public <V> void initLayout(StaticGraphLayout layout, double... parameters) {
         stopLayout();
         activeLayout = null;
-        activeGraph.setPoint(layout.layout(activeGraph.getGraph(), parameters));
-        newPositions = activeGraph.getPoint();
+        newPositions = layout.layout(activeGraph.getGraph(), parameters);
+        activeGraph.setPositionMap(newPositions);
         setLayoutState(STATIC);
     }
 
     public void initLayout(IterativeGraphLayout layout) {
         stopLayout();
+        setLayoutState(STATIC);
         if (activeGraph() != null) {
             if (activeLayout == null || activeLayout != layout)
                 activeLayout = layout;
-            layout.reset(activeGraph(), activeGraph.getPoint());
+            layout.reset(activeGraph.getPositionMap());
             newPositions = null;
-        } else
-            setLayoutState(STATIC);
+        }
+        if (activeLayout != null)
+            propertyRP.add(layoutPS = new PropertySheet(activeLayout), "Energy layout parameters");
     }
 
     public void animateLayout() {
@@ -318,11 +327,11 @@ public class GraphExplorerLite extends javax.swing.JFrame
 
     public void iterateLayout() {
         if (newPositions != null) {
-            activeLayout.reset(activeGraph.getGraph(), newPositions);
+            activeLayout.reset(newPositions);
             newPositions = null;
         }
         activeLayout.iterate(activeGraph.getGraph());
-        activeGraph.setPoint(activeLayout.getPointArray());
+        activeGraph.setPositionMap(activeLayout.getPositions());
     }
 
     public void stopLayout() {
@@ -337,8 +346,12 @@ public class GraphExplorerLite extends javax.swing.JFrame
 
     public void stateChanged(ChangeEvent e) {
         if (activeGraph != null && e.getSource() == activeGraph) {
-            newPositions = activeGraph.getPoint();
+            newPositions = activeGraph.getPositionMap();
         }
+    }
+
+    public GraphController activeController() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 

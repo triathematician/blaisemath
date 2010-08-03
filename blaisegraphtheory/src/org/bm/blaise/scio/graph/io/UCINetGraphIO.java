@@ -377,7 +377,7 @@ public final class UCINetGraphIO extends AbstractGraphIO {
     }
 
     @Override
-    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Map<Object,Point2D.Double> positions, File file) {
         Graph<Integer> graph = null;
         try {
             graph = (Graph<Integer>) go;

@@ -55,11 +55,16 @@ public interface LongitudinalGraph<V> {
      * cases, the implementation will have graphs that occur at specific times, and
      * the method will pick out the (discrete) graph instance for the specified time.
      *
+     * The second parameter allows the user to request a slice nearby the specified
+     * time, even if it does not exist exactly.
+     *
      * @param time time of interest
+     * @param exact whether should only return graph at the exact time (true),
+     *   or whether to return the closest available graph (false)
      * @return a copy of the graph at the specified time, or null if no graph
      *   exists at that time
      */
-    public Graph<V> slice(double time);
+    public Graph<V> slice(double time, boolean exact);
 
     /**
      * Returns the minimum time encoded by elements in this graph.

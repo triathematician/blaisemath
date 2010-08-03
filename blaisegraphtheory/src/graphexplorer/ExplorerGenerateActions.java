@@ -23,9 +23,10 @@ import org.bm.blaise.scio.graph.RandomGraph;
 class ExplorerGenerateActions {
 
     /** What this class works with */
-    GraphExplorerMain main;
-    /** Construction requires a main class */
-    public ExplorerGenerateActions(GraphExplorerMain main) { this.main = main; }
+    GraphControllerMaster master;
+
+    /** Construction requires a controller */
+    public ExplorerGenerateActions(GraphControllerMaster controller) { this.master = controller; }
 
     public Action GENERATE_EMPTY = new AbstractAction("Empty graph") {
         {
@@ -36,7 +37,8 @@ class ExplorerGenerateActions {
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for empty graph (up to 1 million).", 1, 1000000);
             if (num == -1) return;
-            main.loadGraph(GraphFactory.getEmptyGraph(num, false), "Empty graph");
+            GraphController newC = GraphController.getInstance(GraphFactory.getEmptyGraph(num, false), "Empty graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -49,7 +51,8 @@ class ExplorerGenerateActions {
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for complete graph (up to 1000).", 1, 1000);
             if (num == -1) return;
-            main.loadGraph(GraphFactory.getCompleteGraph(num, false), "Complete graph");
+            GraphController newC = GraphController.getInstance(GraphFactory.getCompleteGraph(num, false), "Complete graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -62,7 +65,8 @@ class ExplorerGenerateActions {
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for circle graph (up to 1 million).", 1, 1000000);
             if (num == -1) return;
-            main.loadGraph(GraphFactory.getCycleGraph(num, false), "Circle graph");
+            GraphController newC = GraphController.getInstance(GraphFactory.getCycleGraph(num, false), "Circle graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -75,7 +79,8 @@ class ExplorerGenerateActions {
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for star graph (up to 1 million).", 1, 1000000);
             if (num == -1) return;
-            main.loadGraph(GraphFactory.getStarGraph(num), "Star graph");
+            GraphController newC = GraphController.getInstance(GraphFactory.getStarGraph(num), "Star graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -88,7 +93,8 @@ class ExplorerGenerateActions {
         public void actionPerformed(ActionEvent e) {
             int num = showIntegerInputDialog("Enter number of vertices for wheel graph (up to 1 million).", 1, 1000000);
             if (num == -1) return;
-            main.loadGraph(GraphFactory.getWheelGraph(num), "Wheel graph");
+            GraphController newC = GraphController.getInstance(GraphFactory.getWheelGraph(num), "Wheel graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -104,9 +110,10 @@ class ExplorerGenerateActions {
         }
         public void actionPerformed(ActionEvent e) {
             NewRandomGraphPanel nrgp = new NewRandomGraphPanel();
-            JOptionPane.showMessageDialog(main, nrgp);
+            JOptionPane.showMessageDialog(null, nrgp);
             Graph<Integer> result = nrgp.getInstance();
-            main.loadGraph(result, "Random Graph");
+            GraphController newC = GraphController.getInstance(result, "Random Graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -118,13 +125,14 @@ class ExplorerGenerateActions {
         }
         public void actionPerformed(ActionEvent e) {
             NewPreferentialGraphPanel npgp = new NewPreferentialGraphPanel();
-            JOptionPane.showMessageDialog(main, npgp);
+            JOptionPane.showMessageDialog(null, npgp);
             Object result = npgp.getInstance();
+            GraphController newC = null;
             if (result instanceof Graph)
-                main.loadGraph((Graph) result, "Random Graph");
+                newC = GraphController.getInstance((Graph) result, "Random Graph");
             else if (result instanceof LongitudinalGraph)
-                main.loadLongitudinalGraph((LongitudinalGraph) result, "Random Graph");
-
+                newC = GraphController.getInstance((LongitudinalGraph) result, "Random Graph");
+            master.setActiveController(newC);
 //            int num = showIntegerInputDialog("Enter number of vertices in seed graph (should be small).", 1, 10000);
 //            if (num == -1) return;
 //            float prob = showFloatInputDialog("Enter probability for each edge in seed graph", 0f, 1f);
@@ -155,7 +163,8 @@ class ExplorerGenerateActions {
             int num3 = showIntegerInputDialog("Enter number of edges to add with each vertex", 0, 1000);
             if (num3 == -1) return;
             Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            main.loadLongitudinalGraph(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, num3), "Preferential attachment graph");
+            GraphController newC = GraphController.getInstance(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, num3), "Preferential attachment graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -175,7 +184,8 @@ class ExplorerGenerateActions {
             float[] probs = showFloatArrayInputDialog("Enter probabilities of connecting to i vertices as a list of values adding up to 1, e.g. '0.25,0.5,0.25'.", 0f, 1f);
             if (probs == null) return;
             Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            main.loadGraph(PreferentialAttachment.getSeededInstance(seed, num2, probs), "Preferential attachment graph");
+            GraphController newC = GraphController.getInstance(PreferentialAttachment.getSeededInstance(seed, num2, probs), "Preferential attachment graph");
+            master.setActiveController(newC);
         }
     };
 
@@ -195,7 +205,8 @@ class ExplorerGenerateActions {
             float[] probs = showFloatArrayInputDialog("Enter probabilities of connecting to i vertices as a list of values adding up to 1, e.g. '0.25,0.5,0.25'.", 0f, 1f);
             if (probs == null) return;
             Graph<Integer> seed = RandomGraph.getInstance(num, prob, false);
-            main.loadLongitudinalGraph(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, probs), "Preferential attachment graph");
+            GraphController newC = GraphController.getInstance(PreferentialAttachment.getLongitudinalSeededInstance(seed, num2, probs), "Preferential attachment graph");
+            master.setActiveController(newC);
         }
     };
 

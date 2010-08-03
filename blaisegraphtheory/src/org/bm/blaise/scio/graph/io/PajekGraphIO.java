@@ -523,9 +523,8 @@ public final class PajekGraphIO extends AbstractGraphIO {
         }
     }
 
-
     @Override
-    public GraphType saveGraph(Object go, Point2D.Double[] positions, File file) {
+    public GraphType saveGraph(Object go, Map<Object,Point2D.Double> positions, File file) {
         try {
             if (go instanceof LongitudinalGraph) {
                 saveLongitudinal((LongitudinalGraph<Integer>) go, positions, file);
@@ -540,7 +539,7 @@ public final class PajekGraphIO extends AbstractGraphIO {
         }
     }
 
-    private void saveRegular(Graph<Integer> graph, Point2D.Double[] positions, File file) {
+    private void saveRegular(Graph<Integer> graph, Map<Object,Point2D.Double> positions, File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {
@@ -554,15 +553,16 @@ public final class PajekGraphIO extends AbstractGraphIO {
                         int node = nodes.get(i);
                         Object value = nvg.getValue(node);
                         writer.write(node + (value == null ? "" : " \"" + value.toString()) + "\"");
-                        if (positions != null && positions[i] != null)
-                            writer.write(" " + positions[i].x + " " + positions[i].y);
+                        if (positions != null && positions.get(node) != null)
+                            writer.write(" " + positions.get(node).x + " " + positions.get(node).y);
                         writer.newLine();
                     }
                 } else {
                     for (int i = 0; i < nodes.size(); i++) {
-                        writer.write(nodes.get(i).toString() + " " + nodes.get(i).toString());
-                        if (positions != null && positions[i] != null)
-                            writer.write(" " + positions[i].x + " " + positions[i].y);
+                        int node = nodes.get(i);
+                        writer.write(node + " \"" + node + "\"");
+                        if (positions != null && positions.get(node) != null)
+                            writer.write(" " + positions.get(node).x + " " + positions.get(node).y);
                         writer.newLine();
                     }
                 }
@@ -596,7 +596,7 @@ public final class PajekGraphIO extends AbstractGraphIO {
         }
     } // saveGraph
 
-    private void saveLongitudinal(LongitudinalGraph<Integer> lg, Point2D.Double[] positions, File file) {
+    private void saveLongitudinal(LongitudinalGraph<Integer> lg, Map<Object,Point2D.Double> positions, File file) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             try {
@@ -607,8 +607,8 @@ public final class PajekGraphIO extends AbstractGraphIO {
                 int i = 0;
                 for (Integer node : nodes) {
                     writer.write(node.toString() + " " + node.toString());
-                    if (positions != null && positions.length > i && positions[i] != null)
-                        writer.write(" " + positions[i].x + " " + positions[i].y);
+                    if (positions != null && positions.get(node) != null)
+                        writer.write(" " + positions.get(node).x + " " + positions.get(node).y);
                     writer.write(" " + convertToString(lg.getNodeIntervals(node)));
                     writer.newLine();
                     i++;
