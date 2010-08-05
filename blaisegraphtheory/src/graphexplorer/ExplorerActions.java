@@ -37,7 +37,7 @@ class ExplorerActions {
             putValue(SHORT_DESCRIPTION, "About GraphExplorer");
         }
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(main.dialogComponent(), "GraphExplorer 0.2\nCreated by Elisha Peterson");
+            JOptionPane.showMessageDialog(main.dialogComponent(), "GraphExplorer 0.5\nCreated by Elisha Peterson");
         }
     };
 
