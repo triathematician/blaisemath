@@ -256,11 +256,13 @@ public class GraphController {
                 this.subset = new HashSet();
                 pcs.firePropertyChange("subset", oldSubset, this.subset);
             } else {
-                if (!nodes.keySet().containsAll(subset))
-                    throw new IllegalArgumentException("Selected subset must be a subset of the nodes of the controller's graph!");
-                this.subset = subset;
-                pcs.firePropertyChange("subset", oldSubset, this.subset);
-                // TODO - property change
+                if (nodes.keySet().containsAll(subset)) {
+                    this.subset = subset;
+                    pcs.firePropertyChange("subset", oldSubset, this.subset);
+                } else {
+                    output("Invalid node subset: " + subset);
+                    pcs.firePropertyChange("subset", oldSubset, this.subset);
+                }
             }
         }
         assert valid();

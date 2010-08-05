@@ -25,7 +25,7 @@ class ExplorerLayoutActions {
     /** Construction requires a controller */
     public ExplorerLayoutActions(GraphController controller) { this.controller = controller; }
 
-    public Action LAYOUT_CIRCULAR = new AbstractAction("Circular layout") {
+    public Action LAYOUT_CIRCULAR = new AbstractAction("Circular layout", ExplorerActions.loadIcon("layout-circle24")) {
         {
             putValue(SHORT_DESCRIPTION, "Layout vertices of current graph around a circle");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_MASK));
@@ -38,7 +38,7 @@ class ExplorerLayoutActions {
         }
     };
 
-    public Action LAYOUT_RANDOM = new AbstractAction("Random layout") {
+    public Action LAYOUT_RANDOM = new AbstractAction("Random layout", ExplorerActions.loadIcon("layout-random24")) {
         {
             putValue(SHORT_DESCRIPTION, "Layout vertices in random locations");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK));

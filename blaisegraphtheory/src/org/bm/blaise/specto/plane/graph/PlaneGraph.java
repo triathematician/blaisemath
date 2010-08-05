@@ -8,6 +8,7 @@ package org.bm.blaise.specto.plane.graph;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,8 +247,21 @@ public final class PlaneGraph extends Plottable<Point2D.Double>
                 gpfa[i] = new GraphicPointFancy<Point2D.Double>(pos.get(o), value, 1);
             else
                 gpfa[i].setString(value);
+//            if (i%2==0) gpfa[i].setColor(Color.RED);
             i++;
         }
+        vertexEntry.needsConversion = true;
+        firePlottableChanged();
+    }
+
+    /** Updates colors to highlight selected nodes only */
+    public void highlightNodes(Collection subset) {
+        List nodes = graph.nodes();
+        GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
+        int i = 0;
+        for (Object o : nodes)
+            gpfa[i++].setColor(subset == null || subset.contains(o) ? Color.RED : null);
+        vertexEntry.needsConversion = true;
         firePlottableChanged();
     }
 

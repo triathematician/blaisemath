@@ -108,6 +108,7 @@ public class LongitudinalGraphPanel extends JPanel
         gc.setTime((Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue()));
         visGraph.setGraph(gc.getActiveGraph());
         visGraph.setPositionMap(gc.getPositions());
+        visGraph.highlightNodes(gc.getNodeSubset());
         updating = false;
     }
 
@@ -128,6 +129,7 @@ public class LongitudinalGraphPanel extends JPanel
                 } else if (evt.getPropertyName().equals("active")) {
                     visGraph.setGraph(gc.getActiveGraph());
                     visGraph.setPositionMap(gc.getPositions());
+                    visGraph.highlightNodes(gc.getNodeSubset());
                 }
             }
         }

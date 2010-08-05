@@ -104,6 +104,8 @@ public final class GraphTableModel extends AbstractTableModel
             case COL_DEGREE :
                 return graph.degree(node);
             case COL_METRIC:
+                if (values == null || row >= values.size())
+                    values = gc.getMetricValues();
                 return values == null ? null : values.get(row);
         }
         throw new IllegalArgumentException("Graph's table does not contain entry at (row, col) = (" + row + ", " + col + ").");
@@ -130,7 +132,8 @@ public final class GraphTableModel extends AbstractTableModel
     public void propertyChange(PropertyChangeEvent evt) {
 //        System.out.println("gtm pc: " + evt.getSource() + " " + evt.getNewValue());
         if (evt.getSource() == gc) {
-            if (evt.getPropertyName().equals("primary") || evt.getPropertyName().equals("metric")) {
+            if (evt.getPropertyName().equals("primary") || evt.getPropertyName().equals("metric")
+                    || evt.getPropertyName().equals("time")) {
                 updateValues();
             } else if (evt.getPropertyName().equals("positions"))
                 fireTableDataChanged();

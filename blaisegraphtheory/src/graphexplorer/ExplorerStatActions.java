@@ -52,11 +52,15 @@ class ExplorerStatActions {
         @Override public String toString() { return s; }
         public NodeMetric getMetric() { return metric; }
     }
+    
+    /** @return action corresponding to specified enum */
+    Action actionOf(StatEnum se) { return new StatAction(se.s, se.metric); }
 
     class StatAction extends AbstractAction {
         String name;
         NodeMetric metric;
         StatAction(String name, NodeMetric metric) {
+            super(name);
             this.name = name;
             this.metric = metric;
             putValue(SHORT_DESCRIPTION, "Compute " + name + " and display distribution");
@@ -66,18 +70,7 @@ class ExplorerStatActions {
             controller.setMetric(metric);
         }
     };
-    
-    public StatAction STAT_DEGREE = new StatAction("degree", GraphMetrics.DEGREE);
-    public StatAction STAT_DEGREE2 = new StatAction("2nd-Order degree", GraphMetrics.DEGREE2);
-    public StatAction STAT_CLIQUE = new StatAction("clique count", GraphMetrics.CLIQUE_COUNT);
-    public StatAction STAT_CLIQUE2 = new StatAction("2nd-order clique count", GraphMetrics.CLIQUE_COUNT2);
-    public StatAction STAT_CLOSENESS = new StatAction("closeness centrality", ClosenessCentrality.getInstance());
-    public StatAction STAT_MAXCLOSE = new StatAction("max-closeness (graph) centrality", ClosenessCentrality.getMaxInstance());
-    public StatAction STAT_BETWEEN = new StatAction("betweenness centrality", BetweenCentrality.getInstance());
-    public StatAction STAT_EIGEN = new StatAction("clique count", EigenCentrality.getInstance());
-    public StatAction STAT_DECAY_25 = new StatAction("decay centrality (0.25)", DEC25);
-    public StatAction STAT_DECAY_50 = new StatAction("decay centrality (0.50)", DEC50);
-    public StatAction STAT_DECAY_75 = new StatAction("decay centrality (0.75)", DEC75);
+
     public Action STAT_DECAY_CUSTOM = new AbstractAction("Compute decay centrality distribution (custom)") {
         {
             putValue(SHORT_DESCRIPTION, "Compute decay centrality distribution with custom parameter and set up metric table with results");

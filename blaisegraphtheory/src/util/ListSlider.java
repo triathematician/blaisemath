@@ -43,7 +43,8 @@ public class ListSlider extends JSlider {
     /** Sets up label table with associated peg marks */
     private void initCustomLabels() {
         int size = pegs.size();
-        setMajorTickSpacing(size < 20 ? 1 : size < 50 ? 5 : size < 100 ? 10 : size < 250 ? 20 : size < 500 ? 50 : size/10);
+        setMajorTickSpacing(size < 20 ? 1 : size < 50 ? 2
+                : size < 100 ? 5 : size < 250 ? 10 : size < 500 ? 25 : size/20);
         setSnapToTicks(size < 20);
 
         setPaintTicks(true);

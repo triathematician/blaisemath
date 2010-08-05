@@ -33,6 +33,8 @@ public class ClosenessCentrality implements NodeMetric<Double> {
         this.useSum = useSum;
     }
 
+    @Override public String toString() { return "Closeness Centrality"; }
+
     /** @return instance of closeness centrality metric (standardized) */
     public static NodeMetric<Double> getInstance() { return new ClosenessCentrality(true); }
     /** @return instance of max-closeness centrality metric, sometimes called <i>graph centrality</i> (standardized) */

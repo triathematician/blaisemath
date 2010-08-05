@@ -36,6 +36,8 @@ public class BetweenCentrality implements NodeMetric<Double> {
     /** Factory method to return instance of between centrality */
     public static BetweenCentrality getInstance() { return INSTANCE; }
 
+    @Override public String toString() { return "Betweenness Centrality"; }
+
     public boolean supportsGraph(boolean directed) { return true; }
     public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
     public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }

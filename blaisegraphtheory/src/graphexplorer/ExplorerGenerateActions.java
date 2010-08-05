@@ -13,8 +13,6 @@ import javax.swing.JOptionPane;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
-import org.bm.blaise.scio.graph.PreferentialAttachment;
-import org.bm.blaise.scio.graph.RandomGraph;
 
 /**
  * Describes graph-generation actions supporting the graph explorer app.
@@ -28,7 +26,7 @@ class ExplorerGenerateActions {
     /** Construction requires a controller */
     public ExplorerGenerateActions(GraphControllerMaster controller) { this.master = controller; }
 
-    public Action GENERATE_EMPTY = new AbstractAction("Empty graph") {
+    public Action GENERATE_EMPTY = new AbstractAction("Empty graph", ExplorerActions.loadIcon("new-empty24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generates an empty graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_E);
@@ -42,7 +40,7 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_COMPLETE = new AbstractAction("Complete graph") {
+    public Action GENERATE_COMPLETE = new AbstractAction("Complete graph", ExplorerActions.loadIcon("new-complete24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generates a complete graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_X);
@@ -56,7 +54,7 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_CIRCLE = new AbstractAction("Circle graph") {
+    public Action GENERATE_CIRCLE = new AbstractAction("Circle graph", ExplorerActions.loadIcon("new-circle24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generates a circle graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_C);
@@ -70,7 +68,7 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_STAR = new AbstractAction("Star graph") {
+    public Action GENERATE_STAR = new AbstractAction("Star graph", ExplorerActions.loadIcon("new-star24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generates graph with central hub connected to all other vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_H);
@@ -84,7 +82,7 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_WHEEL = new AbstractAction("Wheel graph") {
+    public Action GENERATE_WHEEL = new AbstractAction("Wheel graph", ExplorerActions.loadIcon("new-wheel24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generates a wheel graph with specified number of vertices");
             putValue(MNEMONIC_KEY, KeyEvent.VK_W);
@@ -102,7 +100,7 @@ class ExplorerGenerateActions {
     // RANDOM GRAPHS
     //
 
-    public Action GENERATE_RANDOM = new AbstractAction("Random graph") {
+    public Action GENERATE_RANDOM = new AbstractAction("Random graph", ExplorerActions.loadIcon("random-uniform24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generate random graph by selecting edges at random");
             putValue(MNEMONIC_KEY, KeyEvent.VK_U);
@@ -117,7 +115,7 @@ class ExplorerGenerateActions {
         }
     };
 
-    public Action GENERATE_PREFERENTIAL = new AbstractAction("Preferential attachment") {
+    public Action GENERATE_PREFERENTIAL = new AbstractAction("Preferential attachment", ExplorerActions.loadIcon("random-pref24")) {
         {
             putValue(SHORT_DESCRIPTION, "Generate random graph using preferential attachment algorithm");
             putValue(MNEMONIC_KEY, KeyEvent.VK_P);
@@ -154,6 +152,32 @@ class ExplorerGenerateActions {
         return num;
     }
 
+    /**
+     * Shows option pane to retrieve an array of int values in specified range
+     * @return a value between min and max, or null if the user cancelled the dialog
+     */
+    public static int[] showIntegerArrayInputDialog(String message, int min, int max) {
+        int[] result = null;
+        boolean valid;
+        do {
+            valid = true;
+            String response = JOptionPane.showInputDialog(message);
+            if (response == null) return null;
+            String[] responseArr = response.split(",");
+            result = new int[responseArr.length];
+            try {
+                for (int i = 0; i < responseArr.length; i++) {
+                    result[i] = Integer.decode(responseArr[i].trim());
+                    valid = valid && result[i] >= min && result[i] <= max;
+                    if (!valid) System.out.println("showIntegerArrayInputDialog: Element " + responseArr[i] + " interpreted as " + result[i] + " deemed to be outside the boundaries [" + min + "," + max + "]");
+                }
+            } catch (NumberFormatException ex) { 
+                System.out.println("showIntegerArrayInputDialog: Improperly formatted number with input: " + message);
+            }
+        } while (!valid);
+        return result;
+    }
+
     /** 
      * Shows option pane to retrieve a float value in provided range.
      * @return a value between min and max, or -1 if the user cancelled the dialog
@@ -183,10 +207,11 @@ class ExplorerGenerateActions {
             try {
                 float sum = 0f;
                 for (int i = 0; i < responseArr.length; i++) {
-                    result[i] = Float.valueOf(responseArr[i]);
+                    result[i] = Float.valueOf(responseArr[i].trim());
                     sum += result[i];
+                    valid = valid && (result[i] >= min && result[i] <= max);
                 }
-                valid = sum == 1f;
+                valid = valid && sum == 1f;
             } catch (NumberFormatException ex) { System.out.println("Improperly formatted number..."); }
         } while (!valid);
         return result;

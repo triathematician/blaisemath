@@ -70,6 +70,7 @@ public class GraphMetrics {
      * Current computational time is linear in the # of edges in the graph.
      */
     public static NodeMetric<Integer> DEGREE = new NodeMetric<Integer>() {
+        @Override public String toString() { return "Degree"; }
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> double nodeMax(boolean directed, int order) { return order-1; }
         public <V> double centralMax(boolean directed, int order) { return directed ? (order-1)*(order-1) : (order-1)*(order-2); } // for a star graph
@@ -85,6 +86,7 @@ public class GraphMetrics {
      * Computes the second-order degree of a vertex in a graph, i.e. how many vertices are within two hops.
      */
     public static NodeMetric<Integer> DEGREE2 = new NodeMetric<Integer>() {
+        @Override public String toString() { return "2nd-Order Degree"; }
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> double nodeMax(boolean directed, int order) { return order-1; }
         public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }
@@ -107,6 +109,7 @@ public class GraphMetrics {
      * and quadratic in the map case (linear in edges * linear in vertices).
      */
     public static NodeMetric<Integer> CLIQUE_COUNT = new NodeMetric<Integer>() {
+        @Override public String toString() { return "Clique Count"; }
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
         public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }
@@ -131,6 +134,7 @@ public class GraphMetrics {
      * and quadratic in the map case (linear in edges * linear in vertices).
      */
     public static NodeMetric<Integer> CLIQUE_COUNT2 = new NodeMetric<Integer>() {
+        @Override public String toString() { return "2nd-Order Clique Count"; }
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
         public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not yet implemented..."); }

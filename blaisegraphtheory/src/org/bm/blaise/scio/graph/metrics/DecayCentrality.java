@@ -37,6 +37,8 @@ public class DecayCentrality implements NodeMetric<Double> {
     /** @param parameter value of decay parameter */
     public DecayCentrality(double parameter) { setParameter(parameter); }
 
+    @Override public String toString() { return "Decay Centrality (" + parameter + ")"; }
+
     /** @param parameter value of decay parameter
      * @return instance with specified parameter */
     public static DecayCentrality getInstance(double parameter) { return new DecayCentrality(parameter); }
