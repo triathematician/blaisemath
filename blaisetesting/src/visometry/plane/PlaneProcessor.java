@@ -147,7 +147,9 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
     private static void convertGraphicPointFancy(VPrimitiveEntry entry, GraphicPointFancy loc, Visometry<Point2D.Double> vis) {
         if (loc.getAnchor() instanceof Point2D.Double) {
             GraphicPointFancy<Point2D.Double> result;
-            entry.primitive = result = new GraphicPointFancy<Point2D.Double>(vis.getWindowPointOf((Point2D.Double) loc.getAnchor()), loc.getString(), loc.getRadius());
+            entry.primitive = result = new GraphicPointFancy<Point2D.Double>(
+                    vis.getWindowPointOf((Point2D.Double) loc.getAnchor()),
+                    loc.getString(), loc.getRadius(), loc.getColor());
             result.setLocation(result.anchor);
         }
     }
@@ -157,7 +159,9 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         GraphicPointFancy[] winArr = new GraphicPointFancy[locArr.length];
         for (int i = 0; i < locArr.length; i++) {
             if (locArr[i].getAnchor() instanceof Point2D.Double) {
-                winArr[i] = new GraphicPointFancy<Point2D.Double>(vis.getWindowPointOf((Point2D.Double) locArr[i].getAnchor()), locArr[i].getString(), locArr[i].getRadius());
+                winArr[i] = new GraphicPointFancy<Point2D.Double>(
+                        vis.getWindowPointOf((Point2D.Double) locArr[i].getAnchor()),
+                        locArr[i].getString(), locArr[i].getRadius(), locArr[i].getColor());
                 winArr[i].setLocation((Point2D.Double) winArr[i].anchor);
             }
         }

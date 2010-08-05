@@ -19,8 +19,11 @@ import java.awt.geom.Point2D;
  */
 public class GraphicString<C> extends Point2D.Double {
 
-    public String string;
+    /** Anchor point (coincides with location if C is a Point2D.Double) */
     public C anchor;
+    /** String to draw at point */
+    public String string;
+    /** Location of string relative to anchor point */
     public Point2D.Double offset = new Point2D.Double(0, 0);
 
     /**

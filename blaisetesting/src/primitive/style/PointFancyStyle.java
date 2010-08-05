@@ -21,6 +21,8 @@ public class PointFancyStyle extends PointLabeledStyle {
     
     /** Multiplier to scale the points. */
     double maxRadius = 5.0;
+    /** Radius multiplier */
+    double rMult = 1.0;
 
     /** Construct with defaults. */
     public PointFancyStyle() { super(); }
@@ -33,16 +35,23 @@ public class PointFancyStyle extends PointLabeledStyle {
     /** Construct with specified elements. */
     public PointFancyStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, StringStyle.Anchor anchor) { super(shape, stroke, strokeColor, fillColor, 6, anchor); }
 
-    /** @return current maximum radius drawn (applies to drawing multiples only) */
+    /** @return current radius drawn, if max supplied radius is 1 */
     public double getMaxRadius() { return maxRadius; }
-    /** @param length new max radius */
+    /** @param length new max radius, if max supplied radius is 1 */
     public void setMaxRadius(double length) { maxRadius = length; }
+
+    /** @return current radius multiplier */
+    public double getRadiusMultiplier() { return rMult; }
+    /** @param length new radius multiplier */
+    public void setRadiusMultiplier(double length) { rMult = length; }
 
     @Override
     public void draw(Graphics2D canvas, Point2D.Double point) {
+        Color fill = fillColor;
         if (point instanceof GraphicPointFancy) {
             GraphicPointFancy gpf = (GraphicPointFancy) point;
-            setRadius((int) (maxRadius * gpf.rad));
+            setRadius((int) (maxRadius * rMult * gpf.rad));
+            fillColor = gpf.color == null ? fill : gpf.color;
             if (gpf.anchor instanceof Point2D.Double)
                 super.draw(canvas, (Point2D.Double) gpf.anchor);
             else
@@ -53,13 +62,14 @@ public class PointFancyStyle extends PointLabeledStyle {
             }
         } else
             super.draw(canvas, point);
+        fillColor = fill;
     }
 
     @Override
     public boolean contained(Point2D.Double primitive, Graphics2D canvas, Point point) {
         if (primitive instanceof GraphicPointFancy && ((GraphicPointFancy)primitive) instanceof Point2D.Double) {
             GraphicPointFancy<Point2D.Double> gpf = (GraphicPointFancy<Point2D.Double>) primitive;
-            return gpf.anchor.distance(point) <= maxRadius * gpf.rad;
+            return gpf.anchor.distance(point) <= maxRadius * rMult * gpf.rad;
         } else
             return super.contained(primitive, canvas, point);
     }
