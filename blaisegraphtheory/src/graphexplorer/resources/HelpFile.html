@@ -1,0 +1,75 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>GraphExplorer Help File</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+      <h1>Help for GraphExplorer</h1>
+
+      <h2>Graphical User Interface</h2>
+
+      <h2>Generating New Graphs</h2>
+      <p>
+      Currently, the application has support for generating <b>empty</b>, <b>circle</b>,
+      <b>star</b>, <b>wheel</b>, and <b>complete</b> graphs.
+      In addition, a <img src="./random-uniform24.png"></img><b>uniform random graph</b> may be generated (directed or undirected) using either
+      (i) a number of nodes and probability of edge,
+      or (ii) a number of nodes and a number of edges.
+      A <img src="./random-pref24.png"></img><b>preferential attachment graph</b> may be generated, using a small initial uniform      random graph as a seed, in which each vertex is added with either
+      (i) a fixed number of connections,
+      or (ii) a variable number of connections (with a user-specified probability distribution).
+      </p>
+
+      <h2>File Types</h2>
+      Currently supported file types include:
+      <ul>
+          <li><b>Edge list</b> format: each line consists of a pair of integers indicating the edge between two nodes.</li>
+          <li><b>Pajek</b> format (.net): vertex declarations (with positions), and a variety of input formats for edges, including edge lists and adjacency matrices.</li>
+          <li><b>Extended pajek</b> format (.netx): pajek format with additional custom file information
+          <li><b>UCINet</b> format (.dat): supports more general data structures
+      </ul>
+      Note that only part of these formats is currently supported! In the future, we hope to add support
+      for both <b>GraphML</b> and <b>DyNetML</b> formats.
+
+      <h2>Visualization Features</h2>
+      Many visual settings may be adjusted using the property panel at left.
+
+      <h3>Longitudinal Graphs</h3>
+      This application supports longitudinal graphs, which change over time. A sample longitudinal graph
+      may be created using the "preferential attachment" random graph generator, and selecting the
+      longitudinal option. Special features included with the longitudinal view include:
+      <ol>
+          <li>A slider below the main graph that displays the time frame for the longitudinal graph, which
+            may be adjusted dynamically. If a dynamic layout is active, the layout automatically reconfigures
+            for the new graph.</li>
+          <li>A chart displaying the value of the selected metric over time. For this to be active, one or
+            more nodes must be highlighted: use the <code>Layout -> Highlight Nodes</code> to select these nodes.</li>
+      </ol>
+
+      <h2>Layout Methods</h2>
+      Supported layouts are summarized here.
+
+      <h3><img src="./layout-circle24.png"></img>Circular Layout</h3>
+      Places nodes around a circle.
+      <h3><img src="./layout-random24.png"></img>Random Layout</h3>
+      Places nodes at random within a box.
+      <h3><img src="./layout-spring24.png"></img>Spring layout</h3>
+      Uses simulated physics to generate ideal locations for nodes and edges. Forces include
+      (i) a repulsive force between each pair of vertices,
+      (ii) an attractive force between each pair of connected vertices, and
+      (iii) a global force ensuring components stay close to the middle of the screen.
+
+      <h2>Metrics</h2>
+      Currently, one metric at a time may be displayed along with the graph. The metric displays
+      in several ways:
+      (i) the node sizes on the main plot are adjusted to have areas proportional
+      to that node's metric value,
+      (ii) the actual metric values are displayed on the main graph table, and
+      (iii) a chart & table of the distribution of metric values is shown at bottom.
+  </body>
+</html>

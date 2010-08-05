@@ -288,7 +288,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
         toolbar.setRollover(true);
 
         newTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/new-graph.png"))); // NOI18N
-        newTBB.setText("New...");
         newTBB.setComponentPopupMenu(newPM);
         newTBB.setFocusable(false);
         newTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -302,7 +301,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         loadTBB.setAction(actions_io.LOAD_PAJEK_ACTION);
         loadTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/load-graph.png"))); // NOI18N
-        loadTBB.setText("Load (.net)");
         loadTBB.setFocusable(false);
         loadTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         loadTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -310,7 +308,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         saveTBB.setAction(actions_io.SAVE_PAJEK_ACTION);
         saveTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/save-graph.png"))); // NOI18N
-        saveTBB.setText("Save (.net)");
         saveTBB.setFocusable(false);
         saveTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -319,7 +316,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         layoutCircleTBB.setAction(actions_layout.LAYOUT_CIRCULAR);
         layoutCircleTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/layout-circle.png"))); // NOI18N
-        layoutCircleTBB.setText("Circular Layout");
         layoutCircleTBB.setFocusable(false);
         layoutCircleTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         layoutCircleTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -327,14 +323,12 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         layoutRandomTBB.setAction(actions_layout.LAYOUT_RANDOM);
         layoutRandomTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/layout-random.png"))); // NOI18N
-        layoutRandomTBB.setText("Random Layout");
         layoutRandomTBB.setFocusable(false);
         layoutRandomTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         layoutRandomTBB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolbar.add(layoutRandomTBB);
 
         layoutEnergyTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/layout-spring.png"))); // NOI18N
-        layoutEnergyTBB.setText("Spring Layout (Animating)");
         layoutEnergyTBB.setToolTipText("Plays/pauses energy layout mechanism for current graph");
         layoutEnergyTBB.setFocusable(false);
         layoutEnergyTBB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
