@@ -1,0 +1,6 @@
+#summary Describes the graph theory package add-on and the corresponding "GraphExplorer" app.
+#labels Component-AddOns
+
+= Introduction =
+
+`blaisegraphtheory` provides data structures and algorithms for working with graphs and networks, as well as an application "GraphExplorer" for visualizing networks.
