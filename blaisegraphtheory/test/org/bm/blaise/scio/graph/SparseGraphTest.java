@@ -26,9 +26,6 @@ public class SparseGraphTest {
         assertTrue(found.containsAll(expected));
     }
 
-    public SparseGraphTest() {
-    }
-
     static Integer[] VV;
     static Integer[][] EE;
     static SparseGraph<Integer> UNDIRECTED_INSTANCE, DIRECTED_INSTANCE;
@@ -42,10 +39,6 @@ public class SparseGraphTest {
         };
         UNDIRECTED_INSTANCE = SparseGraph.getInstance(false, Arrays.asList(VV), Arrays.asList(EE));
         DIRECTED_INSTANCE = SparseGraph.getInstance(true, Arrays.asList(VV), Arrays.asList(EE));
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     @Test

@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
@@ -25,8 +28,17 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import stormtimer.BetterTimer;
 
 /**
+ * <p>
  * Central class that controls the state of a graph explorer app with a "current active"
  * graph, an active metric, an animating layout, and a highlighted selection of nodes.
+ * </p>
+ * <p>
+ * The values of the metric are not stored by default, but they are cached in case the
+ * user requests the same values more than once. The computation of metric values is done
+ * in a background thread. If a request is sent while the thread is running, the values
+ * returns as null. Otherwise, a property change is sent to notify listeners when the
+ * computed values are available.
+ * </p>
  *
  * @author Elisha Peterson
  */
@@ -118,10 +130,10 @@ public class GraphController {
     // STATUS/OUTPUT
     //
 
-    /** Prints the specified string to output */
-    public void output(String string) {
-        pcs.firePropertyChange("output", null, string);
-    }
+    /** Updates the application reportStatus bar. */
+    public void reportStatus(String string) { pcs.firePropertyChange("status", null, string); }
+    /** Updates the application reportOutput. */
+    public void reportOutput(String string) { pcs.firePropertyChange("output", null, string); }
 
     //
     // GETTERS
@@ -148,13 +160,33 @@ public class GraphController {
     /** @return active metric (maybe null) */
     public NodeMetric getMetric() { return metric; }
 
-    /** @return active metric values */
-    public List getMetricValues() {        
-        if (values == null && metric != null && graph != null)
-            values = metric.allValues(graph);
-        else if (metric == null || graph == null)
-            values = null;
-        return values;
+    boolean running = false;
+
+    /** @return active metric values (the last ones that have been computed) */
+    public List getMetricValues() {
+        if (running)
+            return null;
+        else if (values == null && metric != null && graph != null) {
+            running = true;
+//            System.out.println("getMetricValues computing");
+//            System.out.println(".. metric: " + metric);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(new Runnable(){
+                public void run() {
+                    pcs.firePropertyChange("status", null, "Computing metric " + metric + "...");
+                    long t0 = System.currentTimeMillis();
+                    values = (metric == null || graph == null) ? null
+                            : metric.allValues(graph);
+                    running = false;
+                    long t = System.currentTimeMillis() - t0;
+                    pcs.firePropertyChange("status", null, metric + " computation completed (" + t + "ms).");
+                    pcs.firePropertyChange("values", null, values);
+                }
+            });
+            executor.shutdown();
+        } else
+            return values;
+        return null;
     }
 
     /** @return active layout (maybe null) */
@@ -260,7 +292,7 @@ public class GraphController {
                     this.subset = subset;
                     pcs.firePropertyChange("subset", oldSubset, this.subset);
                 } else {
-                    output("Invalid node subset: " + subset);
+                    reportStatus("Invalid node subset: " + subset);
                     pcs.firePropertyChange("subset", oldSubset, this.subset);
                 }
             }
@@ -387,7 +419,7 @@ public class GraphController {
      * Steps layout animation (if not running).
      */
     public void stepLayout() {
-        if (!animating) {
+        if (!animating && layout != null) {
             layout.iterate(graph);
             nodes.putAll(layout.getPositions());
             pcs.firePropertyChange("positions", null, nodes);
@@ -406,7 +438,7 @@ public class GraphController {
     }
 
     //
-    //
+    // LABELING UPDATES
     //
 
     /**
@@ -424,7 +456,7 @@ public class GraphController {
             vg.setValue(node, label);
             pcs.firePropertyChange("node value", oldValue, label);
         } else {
-            output("Unable to change node label: graph is not a valued graph!");
+            reportStatus("ERROR: unable to change node label: graph is not a valued graph!");
         }
     }
 

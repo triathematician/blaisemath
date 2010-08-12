@@ -5,20 +5,28 @@
 
 package graphexplorer;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
+import javax.swing.ProgressMonitor;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
+import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.io.*;
 import org.bm.blaise.scio.graph.io.AbstractGraphIO.GraphType;
 
@@ -32,61 +40,47 @@ class ExplorerIOActions {
     GraphControllerMaster master;
 
     /** Construction requires a master controller class */
-    public ExplorerIOActions(GraphControllerMaster master) { this.master = master; }
+    public ExplorerIOActions(final GraphControllerMaster master) {
+        this.master = master;
+        master.addPropertyChangeListener("active", new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                GraphController active = master.getActiveController();
+                boolean status = active != null;
+                SAVE_ACTION.setEnabled(status);
+                SAVE_AS_ACTION.setEnabled(status);
+                CLOSE_ACTION.setEnabled(status);
+            }
+        });
+    }
     
-    transient static JFileChooser fc;
+    transient static GraphFileChooser fc;
     transient static File openFile;
 
     /** Lazy initialization */
-    static void initFileChooser() { if (fc == null) fc = new JFileChooser(); }
+    static void initFileChooser() {
+        if (fc == null)
+            fc = new GraphFileChooser();
+    }
 
-    public Action LOAD_EDGELIST_ACTION = new LoadAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
-    public Action SAVE_EDGELIST_ACTION = new SaveAction(-1, EdgeListGraphIO.getInstance(), GraphType.REGULAR);
+    public Action LOAD_ACTION = new LoadAction(KeyEvent.VK_O);
+    public Action SAVE_ACTION = new SaveAction(KeyEvent.VK_S);
+    public Action SAVE_AS_ACTION = new SaveAction(-1);
 
-    public Action LOAD_PAJEK_ACTION = new LoadAction(KeyEvent.VK_O, PajekGraphIO.getInstance(), GraphType.REGULAR);
-    public Action SAVE_PAJEK_ACTION = new SaveAction(KeyEvent.VK_S, PajekGraphIO.getInstance(), GraphType.REGULAR);
-
-    public Action LOAD_PAJEKLONG_ACTION = new LoadAction(-1, PajekGraphIO.getInstance(), GraphType.LONGITUDINAL);
-    public Action SAVE_PAJEKLONG_ACTION = new SaveAction(-1, PajekGraphIO.getInstance(), GraphType.LONGITUDINAL);
-
-    public Action LOAD_PAJEKX_ACTION = new LoadAction(-1, PajekGraphIO.getExtendedInstance(), GraphType.REGULAR);
-    public Action SAVE_PAJEKX_ACTION = new SaveAction(-1, PajekGraphIO.getExtendedInstance(), GraphType.REGULAR);
-
-    public Action LOAD_PAJEKXLONG_ACTION = new LoadAction(-1, LongitudinalGraphIO.getInstance(), GraphType.LONGITUDINAL);
-    public Action SAVE_PAJEKXLONG_ACTION = new SaveAction(-1, LongitudinalGraphIO.getInstance(), GraphType.LONGITUDINAL);
-
-    public Action LOAD_UCINET_ACTION = new LoadAction(-1, UCINetGraphIO.getInstance(), GraphType.REGULAR);
-    public Action SAVE_UCINET_ACTION = new SaveAction(-1, UCINetGraphIO.getInstance(), GraphType.REGULAR);
-
-    public Action CLOSE_ACTION = new AbstractAction("Close graph") {
+    public Action CLOSE_ACTION = new AbstractAction("Close graph", ExplorerActions.loadIcon("close18")) {
         {
             putValue(SHORT_DESCRIPTION, "Closes current graph window");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
             putValue(MNEMONIC_KEY, KeyEvent.VK_W);
+            setEnabled(master != null && master.getActiveController() != null);
         }
         public void actionPerformed(ActionEvent e) {
             master.closeController();
         }
     };
 
-    public Action QUIT_ACTION = new AbstractAction("Exit") {
-        {
-            putValue(SHORT_DESCRIPTION, "Exit Graph Explorer");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_X);
-        }
-        public void actionPerformed(ActionEvent e) {
-            System.exit(0);
-        }
-    };
-
     class LoadAction extends AbstractAction {
-        AbstractGraphIO loader;
-        GraphType type;
-        LoadAction(int accelerator, AbstractGraphIO loader, GraphType type) {
-            super("Load graph");
-            this.loader = loader;
-            this.type = type;
-            putValue(SHORT_DESCRIPTION, "Load a graph from a file");
+        LoadAction(int accelerator) {
+            super("Load graph", ExplorerActions.loadIcon("load-graph18"));
             if (accelerator != -1) {
                 putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator, InputEvent.CTRL_MASK));
                 putValue(MNEMONIC_KEY, accelerator);
@@ -102,56 +96,69 @@ class ExplorerIOActions {
             if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
                 TreeMap<Integer, double[]> loc = new TreeMap<Integer, double[]>();
-                GraphType loadType = type;
-                Object loaded = loader.importGraph(loc, openFile, loadType);
+                AbstractGraphIO loader = fc.activeIO();
+                Object loaded = loader.importGraph(loc, openFile, null);
                 if (loaded == null) {
-                    master.output("Attempt to load file " + openFile + " failed!");
+                    master.reportStatus("Attempt to load file " + openFile + " failed!");
                     return;
                 }
                 GraphController gc = null;
-                switch (loadType) {
-                    case REGULAR:
-                        gc = GraphController.getInstance((Graph<Integer>) loaded, openFile.getName());
-                        if (loc != null && loc.size() > 0) {
-                            LinkedHashMap<Object,Point2D.Double> pos = new LinkedHashMap<Object,Point2D.Double>();
-                            for (Entry<Integer,double[]> en : loc.entrySet())
-                                pos.put(en.getKey(), new Point2D.Double(en.getValue()[0], en.getValue()[1]));
-                            gc.setPositions(pos);
+                if (loaded instanceof LongitudinalGraph)
+                    gc = GraphController.getInstance((LongitudinalGraph<Integer>) loaded, openFile.getName());
+                else if (loaded instanceof Graph) {
+                    Graph<Integer> gl = (Graph<Integer>) loaded;
+                    gc = GraphController.getInstance(gl, openFile.getName());
+                    if (loc != null && loc.size() > 0) {
+                        LinkedHashMap<Object,Point2D.Double> pos = new LinkedHashMap<Object,Point2D.Double>();
+                        for (Entry<Integer,double[]> en : loc.entrySet())
+                            pos.put(en.getKey(), new Point2D.Double(en.getValue()[0], en.getValue()[1]));
+                        gc.setPositions(pos);
+                    }
+                    // look for images attached with file
+                    List nodes = gl.nodes();
+                    if (gl instanceof ValuedGraph && nodes.size() > 0) {
+                        ValuedGraph vg = (ValuedGraph) gl;
+                        Object o1 = vg.getValue(nodes.get(0));
+                        if (o1.getClass().equals(Object[].class)) {
+                            Object[] o2 = (Object[]) o1;
+                            if (o2.length >= 2 && o2[1].getClass().equals(String.class)) {
+                                ValuedGraph<Integer,Object[]> vg2 = (ValuedGraph<Integer,Object[]>) vg;
+                                for (Integer i : vg2.nodes()) {
+                                    String fileName = (String) vg2.getValue(i)[1];
+                                    File imageFile = new File(openFile.getParent(), fileName);
+                                    try {
+                                        Image image = ImageIO.read(imageFile);
+                                        vg2.getValue(i)[1] = image;
+                                    } catch (Exception ex) {
+                                        System.out.println("Failed to read image file " + imageFile);
+                                    }
+                                }
+                            }
                         }
-                        break;
-                    case LONGITUDINAL:
-                        gc = GraphController.getInstance((LongitudinalGraph<Integer>) loaded, openFile.getName());
-                        break;
+                    }
                 }
+                
                 if (gc != null)
                     master.setActiveController(gc);
                 else
-                    master.output("Attempt to load file " + openFile + " failed!");
+                    master.reportStatus("Attempt to load file " + openFile + " failed!");
             }
         }
     }
 
     class SaveAction extends AbstractAction {
-        AbstractGraphIO loader;
-        GraphType type;
-        SaveAction(int accelerator, AbstractGraphIO loader, GraphType type) {
-            super("Save graph");
-            this.loader = loader;
-            this.type = type;
-            putValue(SHORT_DESCRIPTION, "Save current graph to a file");
+        SaveAction(int accelerator) {
+            super("Save graph", ExplorerActions.loadIcon("save-graph18"));
             if (accelerator != -1) {
                 putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator, InputEvent.CTRL_MASK));
                 putValue(MNEMONIC_KEY, accelerator);
             }
+            setEnabled(master != null && master.getActiveController() != null);
         }
-//        @Override
-//        public boolean isEnabled() {
-//            return main.activeGraph() != null;
-//        }
         public void actionPerformed(ActionEvent e) {
             GraphController gc = master.getActiveController();
             if (gc == null || !(gc.valid())) {
-                master.output("Save failed: no graph active");
+                master.reportStatus("Save failed: no graph active");
                 return;
             }
 
@@ -163,28 +170,33 @@ class ExplorerIOActions {
             }
             if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
+                AbstractGraphIO loader = fc.activeIO();
                 Object active = gc.getPrimaryGraph();
                 GraphType saveType = loader.saveGraph(active, gc.getPositions(), openFile);
                 if (saveType == null)
-                    gc.output("Attempt to save file " + openFile + " failed!");
+                    gc.reportStatus("Attempt to save file " + openFile + " failed!");
                 else
-                    gc.output("Saved graph to file " + openFile + ".");
+                    gc.reportStatus("Saved graph to file " + openFile + ".");
             }
         }
     }
 
     // movie export actions
 
-    static class MovieAction extends AbstractAction {
+    static class MovieAction extends AbstractAction implements Runnable {
         GraphController gc;
         LongitudinalGraphPanel lgp;
+        Thread loaderThread = null;
+        ProgressMonitor pm;
         public MovieAction(GraphController gc, LongitudinalGraphPanel lgp) {
-            super("Quicktime movie (.mov)");
+            super("Quicktime movie (.mov)", ExplorerActions.loadIcon("export-mov18"));
             this.gc = gc;
             this.lgp = lgp;
             putValue(SHORT_DESCRIPTION, "Export longitudinal graph as a QuickTime movie (.mov)");
         }
         public void actionPerformed(ActionEvent e) {
+            if (loaderThread != null)
+                return;
             if (gc.isLongitudinal()) {
                 initFileChooser();
                 fc.setApproveButtonText("Export");
@@ -194,11 +206,54 @@ class ExplorerIOActions {
                 }
                 if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     openFile = fc.getSelectedFile();
-                    MovieExport me = new MovieExport(openFile);
-                    ExportMovieTask emt = new ExportMovieTask(lgp, me);
-                    emt.run();
+                    pm = new ProgressMonitor(lgp, "Exporting graph to .mov file", "", 0, 1);
+                    loaderThread = new Thread(this);
+                    loaderThread.start();
                 }
             }
         }
+        public void run() {
+            MovieExport me = new MovieExport(openFile);
+            new ExportMovieTask(lgp, me, pm).run();
+            loaderThread = null;
+        }
+    }
+
+
+
+    /** File chooser that is intended for use with graphs */
+    public static class GraphFileChooser extends javax.swing.JFileChooser {
+
+        /** Input/output algorithms */
+        ArrayList<AbstractGraphIO> ios;
+
+        /** Constructs file chooser w/ current directory & default file formats */
+        public GraphFileChooser() {
+            ios = new ArrayList<AbstractGraphIO>();
+            ios.add(EdgeListGraphIO.getInstance());
+            ios.add(PajekGraphIO.getInstance());
+            ios.add(UCINetGraphIO.getInstance());
+            ios.add(PajekGraphIO.getExtendedInstance());
+            ios.add(PajekLongGraphIO.getInstance());
+            ios.add(GraphMLIO.getInstance());
+
+            initFilters();
+        }
+
+        private void initFilters() {
+            for (AbstractGraphIO agio : ios)
+                addChoosableFileFilter(agio.getFileFilter());
+            setFileFilter(ios.get(1).getFileFilter());
+        }
+
+        /** @return the io method corresponding to the selected filter, or null if the "allow all" option is selected */
+        AbstractGraphIO activeIO() {
+            javax.swing.filechooser.FileFilter activeFilter = getFileFilter();
+            for (AbstractGraphIO agio : ios)
+                if (activeFilter == agio.getFileFilter())
+                    return agio;
+            return null;
+        }
+
     }
 }

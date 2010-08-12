@@ -112,11 +112,16 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
             ArrayList<Object[]> pairs = new ArrayList<Object[]>();
             for (V v1 : edgeTimes.keySet())
                 for (V v2 : edgeTimes.get(v1).keySet()) {
-                    if (edgeTimes.get(v2).get(v1) == null)
+                    if (edgeTimes.get(v2) == null || edgeTimes.get(v2).get(v1) == null)
                         pairs.add(new Object[]{v1, v2});
                 }
-            for (Object[] pair : pairs)
-                edgeTimes.get((V)pair[1]).put((V)pair[0], edgeTimes.get((V)pair[0]).get((V)pair[1]));
+            for (Object[] pair : pairs) {
+                V p0 = (V) pair[0];
+                V p1 = (V) pair[1];
+                if (!edgeTimes.containsKey(p1))
+                    edgeTimes.put(p1, new HashMap<V, List<double[]>>());
+                edgeTimes.get(p1).put(p0, edgeTimes.get(p0).get(p1));
+            }
         }
         return result;
     }

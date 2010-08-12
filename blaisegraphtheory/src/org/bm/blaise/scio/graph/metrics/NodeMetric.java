@@ -9,7 +9,7 @@ import java.util.List;
 import org.bm.blaise.scio.graph.*;
 
 /**
- * This interface provides a single method for returning a value associated with
+ * This interface provides a methods for returning a value associated with
  * a node in a graph. These metrics should ignore any weighting on graphs.
  *
  * @param <N> the type of value returned
@@ -25,21 +25,28 @@ public interface NodeMetric<N> {
     public boolean supportsGraph(boolean directed);
 
     /**
-     * Returns the standardization constant for this metric for given graph,
-     * i.e. the maximum value achievable for a single node
-     * Multiplying by this should result in all values between 0 and 1.
+     * Returns the maximum value of this metric achievable for a single node.
+     * (Also called the standardization constant.)
+     * Dividing by this should result in all values between 0 and 1.
      * @param order order of the graph
      * @return max value achievable by a single node
      */
     public <V> double nodeMax(boolean directed, int order);
 
     /**
-     * Returns the theoretical max value of the centralization score for
-     * an entire graph computed using this metric. This score is the sum of
-     * (max-value), where max is the maximum value for the whole graph.
+     * <p>Returns the theoretical maximum value of the centralization score for
+     * a directed or undirected <b>connected</b> graph of the specified order.</p>
+     * <p>The centralization score is the sum over all nodes n_i of (C_A(n*)-C_A(n_i)),
+     * where C_A is the metric value, and C_A(n*) is the maximum value over all the n_i.
+     * Thus, this measures the total deviation from the maximum value.</p>
+     * <p>This method should return the <i>theoretical maximum value</i> of the
+     * centralization score, i.e. the largest possible such score for any <b>connected</b> graph of
+     * the given order.</p>
+     * <p>This value may not always be known, in which case it suffices to return
+     * <code>Double.NaN</code>.</p>
      * @param order order of the graph
-     * @return maximum value possible to compute via this metric
-     * @throws UnsupportedOperationException if the max value is unknown
+     * @return maximum value possible to compute via this metric, or <code>Double.NaN</code>
+     *      if the value is not known.
      */
     public <V> double centralMax(boolean directed, int order);
 

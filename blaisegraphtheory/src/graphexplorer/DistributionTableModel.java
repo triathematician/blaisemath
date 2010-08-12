@@ -40,11 +40,11 @@ public class DistributionTableModel extends AbstractTableModel {
     String[] LABELS = { "Value", "Count" };
     Class[] TYPES = { Object.class, Integer.class };
 
-    public int getRowCount() { return values.length; }
+    public int getRowCount() { return values == null ? 0 : values.length; }
     public int getColumnCount() { return LABELS.length; }
     @Override public String getColumnName(int col) { return LABELS[col]; }
     @Override public Class<?> getColumnClass(int col) { return TYPES[col]; }
 
-    public Object getValueAt(int row, int col) { return col == 0 ? values[row] : counts[row]; }
+    public Object getValueAt(int row, int col) { return values == null ? null : col == 0 ? values[row] : counts[row]; }
 
 }

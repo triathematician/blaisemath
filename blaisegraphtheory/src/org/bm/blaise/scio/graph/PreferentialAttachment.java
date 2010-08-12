@@ -146,6 +146,7 @@ public class PreferentialAttachment {
             throw new IllegalStateException();
 
         // prepare parameters for graph to be created
+        int nSeed = seedGraph.order();
         TreeMap<Integer, double[]> nodeTimes = new TreeMap<Integer, double[]>();
         TreeMap<Integer, Map<Integer, double[]>> edgeTimes = new TreeMap<Integer, Map<Integer, double[]>>();
         int[] degrees = new int[nVertices]; Arrays.fill(degrees, 0);
@@ -153,13 +154,15 @@ public class PreferentialAttachment {
         double time = 0;
 
         // initialize with values from seed graph
+        final double timeMax = nVertices-nSeed+1;
+        final double[] allTime = new double[]{0, timeMax};
         for (Integer i : seedGraph.nodes())
-            nodeTimes.put(i, new double[]{0, nVertices});
+            nodeTimes.put(i, allTime);
 
         for (Integer i1 : nodeTimes.keySet())
             for (Integer i2 : nodeTimes.keySet())
                 if (seedGraph.adjacent(i1, i2))
-                    degreeSum += addEdge(nVertices, edgeTimes, time, degrees, i1, i2);
+                    degreeSum += addEdge(edgeTimes, allTime, degrees, i1, i2);
 
         int cur = 0;
         boolean variableEdgeNumber = edgesPerStep instanceof float[];
@@ -169,10 +172,11 @@ public class PreferentialAttachment {
         while (nodeTimes.size() < nVertices) {
             time++;
             while (nodeTimes.containsKey(cur)) cur++;
-            nodeTimes.put(cur, new double[]{time, nVertices});
+            nodeTimes.put(cur, new double[]{time, timeMax});
             if (variableEdgeNumber)
                 numberEdgesToAdd = sampleRandom(connectionProbs);
-            degreeSum += addEdge(nVertices, edgeTimes, time, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
+            degreeSum += addEdge(edgeTimes, new double[]{time, timeMax}, degrees, cur,
+                    weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
         return IntervalLongitudinalGraph.getInstance(false, nodeTimes, edgeTimes);
     }
@@ -180,17 +184,18 @@ public class PreferentialAttachment {
     /**
      * Utility to add specified vertices to the edge set and increment the corresponding degrees.
      * @param edges current list of edges
-     * @param time current time
+     * @param timeInterval time interval to use for the edge
      * @param degrees current list of degrees
      * @param v1 first vertex of edge to add
      * @param attachments second vertex (vertices) of edges to add
      * @return number of new degrees added
      */
-    private static int addEdge(int nVertices, Map<Integer, Map<Integer, double[]>> edges, double time, int[] degrees, int v1, int... attachments) {
+    private static int addEdge(Map<Integer, Map<Integer, double[]>> edges, 
+            double[] timeInterval, int[] degrees, int v1, int... attachments) {
         for (int node : attachments) {
             if (!edges.containsKey(v1))
                 edges.put(v1, new TreeMap<Integer, double[]>());
-            edges.get(v1).put(node, new double[]{time, nVertices});
+            edges.get(v1).put(node, timeInterval);
             degrees[node]++;
         }
         degrees[v1] += attachments.length;

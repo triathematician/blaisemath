@@ -61,7 +61,7 @@ public class RandomGraph {
     }
 
     /** Used to sort pairs of integers when order of the two matters. */
-    private static final Comparator<Integer[]> PAIR_COMPARE = new Comparator<Integer[]>() {
+    static final Comparator<Integer[]> PAIR_COMPARE = new Comparator<Integer[]>() {
         public int compare(Integer[] o1, Integer[] o2) {
             if (o1.length != 2 || o2.length != 2)
                 throw new IllegalStateException("This object only compares integer pairs.");
@@ -70,7 +70,7 @@ public class RandomGraph {
     };
 
     /** Used to sort pairs of integers when order of the two does not matter. */
-    private static final Comparator<Integer[]> PAIR_COMPARE_UNDIRECTED = new Comparator<Integer[]>() {
+    static final Comparator<Integer[]> PAIR_COMPARE_UNDIRECTED = new Comparator<Integer[]>() {
         public int compare(Integer[] o1, Integer[] o2) {
             if (o1.length != 2 || o2.length != 2)
                 throw new IllegalStateException("This object only compares integer pairs.");

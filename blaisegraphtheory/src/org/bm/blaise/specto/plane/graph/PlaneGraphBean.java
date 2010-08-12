@@ -7,11 +7,10 @@ package org.bm.blaise.specto.plane.graph;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import primitive.style.AbstractPointStyle.PointShape;
-import primitive.style.StringStyle;
+import primitive.style.Anchor;
 import util.DefaultChangeBroadcaster;
 
 /**
@@ -27,6 +26,8 @@ public class PlaneGraphBean extends DefaultChangeBroadcaster {
     Label lb;
     
     public PlaneGraphBean(final PlaneGraph graph) {
+        if (graph == null)
+            throw new IllegalArgumentException("Cannot construct this bean with null graph!");
         this.graph = graph;
         changeEvent = new ChangeEvent(this);
         addChangeListener(new ChangeListener(){
@@ -51,15 +52,15 @@ public class PlaneGraphBean extends DefaultChangeBroadcaster {
         public boolean isVisible() { return graph.isPointsVisible(); }
         public void setVisible(boolean visible) { graph.setPointsVisible(visible); fireStateChanged(); }
 
-        public Point2D.Double[] getPositions() { return graph.getPoint(); }
-        public Point2D.Double getPositions(int i) { return graph.getPoint(i); }
-        public void setPositions(Point2D.Double[] loc) { graph.setPoint(loc); fireStateChanged(); }
-        public void setPositions(int i, Point2D.Double newValue) { graph.setPoint(i, newValue); fireStateChanged(); }
+//        public Point2D.Double[] getPositions() { return graph.getPoint(); }
+//        public Point2D.Double getPositions(int i) { return graph.getPoint(i); }
+//        public void setPositions(Point2D.Double[] loc) { graph.setPoint(loc); fireStateChanged(); }
+//        public void setPositions(int i, Point2D.Double newValue) { graph.setPoint(i, newValue); fireStateChanged(); }
 
         public PointShape getShape() { return graph.getPointStyle().getShape(); }
         public void setShape(PointShape shape) { graph.getPointStyle().setShape(shape); fireStateChanged(); }
-        public double getSize() { return graph.getPointStyle().getMaxRadius(); }
-        public void setSize(double size) { graph.getPointStyle().setMaxRadius(size); fireStateChanged(); }
+        public int getSize() { return (int) graph.getPointStyle().getMaxRadius(); }
+        public void setSize(int size) { graph.getPointStyle().setMaxRadius(size); fireStateChanged(); }
         public Color getFill() { return graph.getPointStyle().getFillColor(); }
         public void setFill(Color color) { graph.getPointStyle().setFillColor(color); fireStateChanged(); }
         public Color getStroke() { return graph.getPointStyle().getStrokeColor(); }
@@ -75,8 +76,8 @@ public class PlaneGraphBean extends DefaultChangeBroadcaster {
         public void setFont(Font font) { graph.getPointStyle().setLabelFont(font); fireStateChanged(); }
         public Color getColor() { return graph.getPointStyle().getLabelColor(); }
         public void setColor(Color color) { graph.getPointStyle().setLabelColor(color); fireStateChanged(); }
-        public StringStyle.Anchor getAnchor() { return graph.getPointStyle().getLabelAnchor(); }
-        public void setAnchor(StringStyle.Anchor anchor) { graph.getPointStyle().setLabelAnchor(anchor); fireStateChanged(); }
+        public Anchor getAnchor() { return graph.getPointStyle().getLabelAnchor(); }
+        public void setAnchor(Anchor anchor) { graph.getPointStyle().setLabelAnchor(anchor); fireStateChanged(); }
     }
 
     /** Class encoding edge visual properties */

@@ -104,14 +104,14 @@ public class GraphExplorerLite extends javax.swing.JFrame
 
         toolbar.setRollover(true);
 
-        loadB.setAction(actions_io.LOAD_PAJEK_ACTION);
+        loadB.setAction(actions_io.LOAD_ACTION);
         loadB.setText("Load");
         loadB.setFocusable(false);
         loadB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         loadB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolbar.add(loadB);
 
-        saveB.setAction(actions_io.SAVE_PAJEK_ACTION);
+        saveB.setAction(actions_io.SAVE_ACTION);
         saveB.setText("Save");
         saveB.setFocusable(false);
         saveB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -175,7 +175,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
         if (energyLayoutB.isSelected())
             actions_layout.LAYOUT_ENERGY_START.actionPerformed(evt);
         else
-            actions_layout.LAYOUT_ENERGY_STOP.actionPerformed(evt);
+            actions_layout.LAYOUT_STOP.actionPerformed(evt);
     }//GEN-LAST:event_energyLayoutBActionPerformed
 
     /**

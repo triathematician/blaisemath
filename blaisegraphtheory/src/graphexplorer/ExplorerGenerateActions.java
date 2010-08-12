@@ -24,75 +24,72 @@ class ExplorerGenerateActions {
     GraphControllerMaster master;
 
     /** Construction requires a controller */
-    public ExplorerGenerateActions(GraphControllerMaster controller) { this.master = controller; }
+    public ExplorerGenerateActions(GraphControllerMaster controller) { 
+        this.master = controller;
+    }
 
-    public Action GENERATE_EMPTY = new AbstractAction("Empty graph", ExplorerActions.loadIcon("new-empty24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generates an empty graph with specified number of vertices");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_E);
-            setEnabled(true);
-        }
+    public Action GENERATE_EMPTY = new AbstractAction("New empty graph...", ExplorerActions.loadIcon("new-empty18")) {
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for empty graph (up to 1 million).", 1, 1000000);
-            if (num == -1) return;
-            GraphController newC = GraphController.getInstance(GraphFactory.getEmptyGraph(num, false), "Empty graph");
-            master.setActiveController(newC);
+            NewSimpleGraphPanel nsgp = new NewSimpleGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, nsgp, "New empty graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> graph = GraphFactory.getEmptyGraph(nsgp.getOrder(), nsgp.getDirected());
+                GraphController newC = GraphController.getInstance(graph, "Empty graph (" + nsgp.getOrder() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
-    public Action GENERATE_COMPLETE = new AbstractAction("Complete graph", ExplorerActions.loadIcon("new-complete24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generates a complete graph with specified number of vertices");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_X);
-            setEnabled(true);
-        }
+    public Action GENERATE_COMPLETE = new AbstractAction("New complete graph...", ExplorerActions.loadIcon("new-complete18")) {
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for complete graph (up to 1000).", 1, 1000);
-            if (num == -1) return;
-            GraphController newC = GraphController.getInstance(GraphFactory.getCompleteGraph(num, false), "Complete graph");
-            master.setActiveController(newC);
+            NewSimpleGraphPanel nsgp = new NewSimpleGraphPanel(1000);
+            int n = JOptionPane.showOptionDialog(null, nsgp, "New complete graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> graph = GraphFactory.getCompleteGraph(nsgp.getOrder(), nsgp.getDirected());
+                GraphController newC = GraphController.getInstance(graph, "Complete graph (" + nsgp.getOrder() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
-    public Action GENERATE_CIRCLE = new AbstractAction("Circle graph", ExplorerActions.loadIcon("new-circle24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generates a circle graph with specified number of vertices");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_C);
-            setEnabled(true);
-        }
+    public Action GENERATE_CIRCLE = new AbstractAction("New circle graph...", ExplorerActions.loadIcon("new-circle18")) {
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for circle graph (up to 1 million).", 1, 1000000);
-            if (num == -1) return;
-            GraphController newC = GraphController.getInstance(GraphFactory.getCycleGraph(num, false), "Circle graph");
-            master.setActiveController(newC);
+            NewSimpleGraphPanel nsgp = new NewSimpleGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, nsgp, "New circle graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> graph = GraphFactory.getCycleGraph(nsgp.getOrder(), nsgp.getDirected());
+                GraphController newC = GraphController.getInstance(graph, "Circle graph (" + nsgp.getOrder() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
-    public Action GENERATE_STAR = new AbstractAction("Star graph", ExplorerActions.loadIcon("new-star24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generates graph with central hub connected to all other vertices");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_H);
-            setEnabled(true);
-        }
+    public Action GENERATE_STAR = new AbstractAction("New star graph...", ExplorerActions.loadIcon("new-star18")) {
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for star graph (up to 1 million).", 1, 1000000);
-            if (num == -1) return;
-            GraphController newC = GraphController.getInstance(GraphFactory.getStarGraph(num), "Star graph");
-            master.setActiveController(newC);
+            NewSimpleGraphPanel nsgp = new NewSimpleGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, nsgp, "New star graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> graph = GraphFactory.getStarGraph(nsgp.getOrder(), nsgp.getDirected());
+                GraphController newC = GraphController.getInstance(graph, "Star graph (" + nsgp.getOrder() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
-    public Action GENERATE_WHEEL = new AbstractAction("Wheel graph", ExplorerActions.loadIcon("new-wheel24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generates a wheel graph with specified number of vertices");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_W);
-            setEnabled(true);
-        }
+    public Action GENERATE_WHEEL = new AbstractAction("New wheel graph...", ExplorerActions.loadIcon("new-wheel18")) {
         public void actionPerformed(ActionEvent e) {
-            int num = showIntegerInputDialog("Enter number of vertices for wheel graph (up to 1 million).", 1, 1000000);
-            if (num == -1) return;
-            GraphController newC = GraphController.getInstance(GraphFactory.getWheelGraph(num), "Wheel graph");
-            master.setActiveController(newC);
+            NewSimpleGraphPanel nsgp = new NewSimpleGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, nsgp, "New wheel graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> graph = GraphFactory.getWheelGraph(nsgp.getOrder(), nsgp.getDirected());
+                GraphController newC = GraphController.getInstance(graph, "Wheel graph (" + nsgp.getOrder() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
@@ -100,37 +97,65 @@ class ExplorerGenerateActions {
     // RANDOM GRAPHS
     //
 
-    public Action GENERATE_RANDOM = new AbstractAction("Random graph", ExplorerActions.loadIcon("random-uniform24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph by selecting edges at random");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_U);
-            setEnabled(true);
-        }
+    public Action GENERATE_RANDOM = new AbstractAction("New uniform random graph...", ExplorerActions.loadIcon("random-uniform18")) {
         public void actionPerformed(ActionEvent e) {
-            NewRandomGraphPanel nrgp = new NewRandomGraphPanel();
-            JOptionPane.showMessageDialog(null, nrgp);
-            Graph<Integer> result = nrgp.getInstance();
-            GraphController newC = GraphController.getInstance(result, "Random Graph");
-            master.setActiveController(newC);
+            NewRandomGraphPanel ngp = new NewRandomGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, ngp, "New uniform random graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> result = ngp.getInstance();
+                GraphController newC = GraphController.getInstance(result, "Random Graph (" + result.order() + " vertices)");
+                master.setActiveController(newC);
+            }
         }
     };
 
-    public Action GENERATE_PREFERENTIAL = new AbstractAction("Preferential attachment", ExplorerActions.loadIcon("random-pref24")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Generate random graph using preferential attachment algorithm");
-            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
-            setEnabled(true);
-        }
+    public Action GENERATE_SEQUENCE = new AbstractAction("New degree-sequence random graph...", ExplorerActions.loadIcon("random-sequence18")) {
         public void actionPerformed(ActionEvent e) {
-            NewPreferentialGraphPanel npgp = new NewPreferentialGraphPanel();
-            JOptionPane.showMessageDialog(null, npgp);
-            Object result = npgp.getInstance();
-            GraphController newC = null;
-            if (result instanceof Graph)
-                newC = GraphController.getInstance((Graph) result, "Random Graph");
-            else if (result instanceof LongitudinalGraph)
-                newC = GraphController.getInstance((LongitudinalGraph) result, "Random Graph");
-            master.setActiveController(newC);
+            NewDegreeSequenceGraphPanel ngp = new NewDegreeSequenceGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, ngp, "New degree-sequence random graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> result = ngp.getInstance();
+                if (result != null) {
+                    GraphController newC = GraphController.getInstance(result, "Degree-Sequence Random Graph (" + result.order() + " vertices)");
+                    master.setActiveController(newC);
+                }
+            }
+        }
+    };
+
+    public Action GENERATE_WS = new AbstractAction("New Watts-Strogatz random graph...", ExplorerActions.loadIcon("random-watts18")) {
+        public void actionPerformed(ActionEvent e) {
+            NewWSGraphPanel ngp = new NewWSGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, ngp, "New Watts-Strogatz random graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Graph<Integer> result = ngp.getInstance();
+                GraphController newC = GraphController.getInstance(result, "Watts-Strogatz Random Graph (" + result.order() + " vertices)");
+                master.setActiveController(newC);
+            }
+        }
+    };
+
+    public Action GENERATE_PREFERENTIAL = new AbstractAction("New preferential attachment graph...", ExplorerActions.loadIcon("random-pref18")) {
+        public void actionPerformed(ActionEvent e) {
+            NewPreferentialGraphPanel ngp = new NewPreferentialGraphPanel();
+            int n = JOptionPane.showOptionDialog(null, ngp, "New preferential attachment graph",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, JOptionPane.OK_OPTION);
+            if (n == JOptionPane.OK_OPTION) {
+                Object result = ngp.getInstance();
+                GraphController newC = null;
+                if (result instanceof Graph)
+                    newC = GraphController.getInstance((Graph) result, "Preferential Random Graph ("
+                            + ((Graph)result).order() + " vertices)");
+                else if (result instanceof LongitudinalGraph) {
+                    LongitudinalGraph lg = (LongitudinalGraph) result;
+                    newC = GraphController.getInstance(lg, "Preferential Random Graph ("
+                            + lg.getAllNodes().size() + " vertices, " + lg.getTimes().size() + " time steps)");
+                }
+                master.setActiveController(newC);
+            }
         }
     };
 

@@ -21,7 +21,7 @@ public class GraphControllerMaster {
     /** Handles property changes */
     PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    /** Stores the loaded controllers, and their "active" status. */
+    /** Stores the loaded controllers, and their "active" reportStatus. */
     private ArrayList<GraphController> controllers = new ArrayList<GraphController>();
     /** Stores the active controller */
     private GraphController active = null;
@@ -35,10 +35,10 @@ public class GraphControllerMaster {
     // STATUS/OUTPUT
     //
 
-    /** Prints the specified string to output */
-    public void output(String string) {
-        pcs.firePropertyChange("output", null, string);
-    }
+    /** Updates the application reportStatus bar. */
+    public void reportStatus(String string) { pcs.firePropertyChange("status", null, string); }
+    /** Updates the application reportOutput. */
+    public void reportOutput(String string) { pcs.firePropertyChange("output", null, string); }
 
     //
     // CONTROLLER HANDLING

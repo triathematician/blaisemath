@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.Arrays;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -15,6 +16,10 @@ import static org.junit.Assert.*;
  */
 public class GraphFactoryTest {
 
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        System.out.println("-- GraphFactoryTest --");
+    }
 
     @Test
     public void testGetGraph() {
@@ -24,6 +29,12 @@ public class GraphFactoryTest {
         Graph<String> result2 = GraphFactory.getGraph(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
         assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B, D] B: [A, C] C: [B, D] D: [A, C] E: [E]", Graphs.printGraph(result1));
         assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B] B: [C] C: [D] D: [A] E: [E]", Graphs.printGraph(result2));
+    }
+
+    @Test
+    public void testGetLongitudinalGraph() {
+        System.out.println("getLongitudinalGraph");
+        fail("Prototype test...");
     }
 
     @Test
@@ -42,13 +53,13 @@ public class GraphFactoryTest {
     public void testGetCompleteGraphInstance() {
         System.out.println("getCompleteGraphInstance");
         assertEquals("0 1 1 1 \n1 0 1 1 \n1 1 0 1 \n1 1 1 0 \n", GraphFactory.getCompleteGraph(4, false).toString());
-        assertEquals("1 1 1 1 \n1 1 1 1 \n1 1 1 1 \n1 1 1 1 \n", GraphFactory.getCompleteGraph(4, true).toString());
+        assertEquals("0 1 1 1 \n1 0 1 1 \n1 1 0 1 \n1 1 1 0 \n", GraphFactory.getCompleteGraph(4, true).toString());
         Graph result = GraphFactory.getCompleteGraph(6, false);
         Graph result2 = GraphFactory.getCompleteGraph(6, true);
         assertEquals(6, result.order());
         assertEquals(6, result2.order());
         assertEquals(15, result.edgeNumber());
-        assertEquals(36, result2.edgeNumber());
+        assertEquals(30, result2.edgeNumber());
         for (int i = 0; i < 6; i++) {
             assertTrue(result.contains(i));
             assertTrue(result2.contains(i));
@@ -65,12 +76,14 @@ public class GraphFactoryTest {
     @Test
     public void testGetStarGraphInstance() {
         System.out.println("getStarGraphInstance");
-        assertEquals("0 1 1 1 \n1 0 0 0 \n1 0 0 0 \n1 0 0 0 \n", GraphFactory.getStarGraph(4).toString());
+        assertEquals("0 1 1 1 \n1 0 0 0 \n1 0 0 0 \n1 0 0 0 \n", GraphFactory.getStarGraph(4, false).toString());
+        assertEquals("0 1 1 1 \n0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n", GraphFactory.getStarGraph(4, true).toString());
     }
 
     @Test
     public void testGetWheelGraphInstance() {
         System.out.println("getWheelGraphInstance");
-        assertEquals("0 1 1 1 1 \n1 0 1 0 1 \n1 1 0 1 0 \n1 0 1 0 1 \n1 1 0 1 0 \n", GraphFactory.getWheelGraph(5).toString());
+        assertEquals("0 1 1 1 1 \n1 0 1 0 1 \n1 1 0 1 0 \n1 0 1 0 1 \n1 1 0 1 0 \n", GraphFactory.getWheelGraph(5, false).toString());
+        assertEquals("0 1 1 1 1 \n0 0 1 0 1 \n0 1 0 1 0 \n0 0 1 0 1 \n0 1 0 1 0 \n", GraphFactory.getWheelGraph(5, true).toString());
     }
 }

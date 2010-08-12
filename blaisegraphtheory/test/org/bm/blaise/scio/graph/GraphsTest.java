@@ -26,8 +26,6 @@ public class GraphsTest {
         assertTrue(found.containsAll(expected));
     }
 
-    public GraphsTest() {
-    }
     static Integer[] VV;
     static Integer[][] EE;
     static MatrixGraph<Integer> UNDIRECTED_INSTANCE, DIRECTED_INSTANCE;
@@ -41,10 +39,6 @@ public class GraphsTest {
         };
         UNDIRECTED_INSTANCE = MatrixGraph.getInstance(false, Arrays.asList(VV), Arrays.asList(EE));
         DIRECTED_INSTANCE = MatrixGraph.getInstance(true, Arrays.asList(VV), Arrays.asList(EE));
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     @Test

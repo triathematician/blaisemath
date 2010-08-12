@@ -80,22 +80,17 @@ public class GraphFactory {
      * Returns graph with all possible edges.
      * @param n number of vertices
      * @param directed whether graph is directed
-     * @return complete graph; if directed, result includes loops
+     * @return complete graph
      */
     public static Graph<Integer> getCompleteGraph(final int n, boolean directed) {
         if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        List<Integer[]> edges;
-        if (!directed) {
-            edges = new ArrayList<Integer[]>();
-            for(int i = 0; i < n; i++)
-                for (int j = i+1; j < n; j++)
-            edges.add(new Integer[]{i, j});
-        } else {
-            edges = new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) { return new Integer[]{ index/n, index%n }; }
-                @Override public int size() { return n*n; }
-            };
-        }
+        List<Integer[]> edges = new ArrayList<Integer[]>();
+        for(int i = 0; i < n; i++)
+            for (int j = i+1; j < n; j++) {
+                edges.add(new Integer[]{i, j});
+                if (directed)
+                    edges.add(new Integer[]{j, i});
+            }
         return getGraph(directed, intList(n), edges);
     }
 
@@ -120,9 +115,9 @@ public class GraphFactory {
      * @param n number of vertices
      * @return star graph (undirected)
      */
-    public static Graph<Integer> getStarGraph(final int n) {
+    public static Graph<Integer> getStarGraph(final int n, boolean directed) {
         if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getGraph(false, intList(n),
+        return getGraph(directed, intList(n),
             new AbstractList<Integer[]>() {
                 @Override public Integer[] get(int index) { return new Integer[] { 0, index+1 }; }
                 @Override public int size() { return n==0 ? 0 : n-1; }
@@ -134,23 +129,23 @@ public class GraphFactory {
      * Returns graph with all vertices connected to a central hub, and all other vertices
      * connected in a cyclic fashion.
      * @param n number of vertices
+     * @param directed whether result is directed
      * @return star graph (undirected)
      */
-    public static Graph<Integer> getWheelGraph(final int n) {
+    public static Graph<Integer> getWheelGraph(final int n, boolean directed) {
         if (n < 0) throw new IllegalArgumentException("Numbers must be nonnegative! n="+n);
-        return getGraph(false, intList(n),
-            new AbstractList<Integer[]>() {
-                @Override public Integer[] get(int index) {
-                    return index < n-1
-                            ? new Integer[] { 0, index+1 }
-                         : index == 2*n-2
-                             ? new Integer[] { n-1, 1}
-                             : new Integer[] { index-n+1, index-n+2 };
-
-                }
-                @Override public int size() { return 2*n-1; }
-            }
-        );
+        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
+        for (int i = 1; i < n; i++)
+            edges.add(new Integer[]{0,i});
+        for (int i = 1; i < n-1; i++) {
+            edges.add(new Integer[]{i,i+1});
+            if (directed)
+                edges.add(new Integer[]{i+1,i});
+        }
+        edges.add(new Integer[]{n-1,1});
+        if (directed) 
+            edges.add(new Integer[]{1,n-1});
+        return getGraph(directed, intList(n), edges);
     }
 
     //

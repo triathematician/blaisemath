@@ -15,10 +15,7 @@ import static org.junit.Assert.*;
  *
  * @author elisha
  */
-public class WeightedNodeValueGraphWrapperTest {
-
-    public WeightedNodeValueGraphWrapperTest() {
-    }
+public class WeightedValuedGraphWrapperTest {
 
     static Integer[] VV;
     static Integer[][] EE;
@@ -57,10 +54,6 @@ public class WeightedNodeValueGraphWrapperTest {
         assertEquals(DIRECTED_INSTANCE.edgeNumber(), DIR_VALUE.edgeNumber());
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
     public void testToString() {
         System.out.println("toString");
@@ -82,7 +75,7 @@ public class WeightedNodeValueGraphWrapperTest {
     }
 
     @Test
-    public void testGetValue() {
+    public void testGetValue_setValue() {
         System.out.println("getValue/setValue");
 
         UNDIR_VALUE = new WeightedValuedGraphWrapper<Integer, String, String>(UNDIRECTED_INSTANCE);

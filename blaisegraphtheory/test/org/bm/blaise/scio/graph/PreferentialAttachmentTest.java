@@ -24,10 +24,6 @@ public class PreferentialAttachmentTest {
         System.out.println("-- PreferentialAttachmentTest --");
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
     public void testGetSeededInstance_fixed_add_number() {
         System.out.println("getSeededInstance (fixed # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");

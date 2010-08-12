@@ -74,7 +74,7 @@ public class ValuedGraphWrapperTest {
     }
 
     @Test
-    public void testGetValue() {
+    public void testGetValue_setValue() {
         System.out.println("getValue/setValue");
 
         UNDIR_VALUE = new ValuedGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);

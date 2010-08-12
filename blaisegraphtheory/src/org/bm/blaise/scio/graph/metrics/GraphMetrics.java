@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Subgraph;
+import org.bm.blaise.scio.graph.ValuedGraph;
 
 /**
  * <p>
@@ -61,7 +62,7 @@ public class GraphMetrics {
     }
     
     //
-    // SPECIFIC METRICS PROVIDED FOR CONVENIENCE
+    // NODE METRICS
     //
 
     /**
@@ -73,7 +74,12 @@ public class GraphMetrics {
         @Override public String toString() { return "Degree"; }
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> double nodeMax(boolean directed, int order) { return order-1; }
-        public <V> double centralMax(boolean directed, int order) { return directed ? (order-1)*(order-1) : (order-1)*(order-2); } // for a star graph
+        public <V> double centralMax(boolean directed, int order) {
+            // theoretical max occurs for a star graph
+            return directed
+                    ? (order-1)*(order-1)
+                    : (order-1)*(order-2);
+        }
         public <V> Integer value(Graph<V> graph, V vertex) { return graph.degree(vertex); }
         public <V> List<Integer> allValues(Graph<V> graph) {
             List<Integer> result = new ArrayList<Integer>(graph.order());
@@ -150,11 +156,77 @@ public class GraphMetrics {
     };
 
     //
+    // GLOBAL METRICS
+    //
+
+    /** Global metric describing the order of the graph */
+    public static GlobalMetric<Integer> ORDER = new GlobalMetric<Integer>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Integer value(Graph<V> graph) { return graph.order(); }
+    };
+
+    /** Global metric describing the # edges in a graph */
+    public static GlobalMetric<Integer> EDGE_NUMBER = new GlobalMetric<Integer>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Integer value(Graph<V> graph) { return graph.edgeNumber(); }
+    };
+
+    /** Global metric describing the average degree of the graph */
+    public static GlobalMetric<Double> DEGREE_AVERAGE = new GlobalMetric<Double>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Double value(Graph<V> graph) { 
+            return graph.isDirected()
+                    ? graph.edgeNumber() / (double) graph.order()
+                    : 2.0 * graph.edgeNumber() / (double) graph.order();
+        }
+    };
+
+    /** 
+     * Global metric describing the clustering coefficient of the graph;
+     * in the directed case, measures "transitivity", i.e. when a->b,b->c implies a->c
+     */
+    public static GlobalMetric<Double> CLUSTERING = new GlobalMetric<Double>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Double value(Graph<V> graph) {
+            int triangles = 0;
+            int triples = 0;
+            for (V node : graph.nodes()) {
+                List<V> g1 = graph.neighbors(node);
+                int dist1 = g1.size();
+                int aDist1 = new Subgraph(graph, g1).edgeNumber();
+                List<V> g2 = Graphs.neighborhood(graph, node, 2);
+                int dist2 = g2.size()-1 - g1.size();
+
+                if (graph.isDirected()) {
+                    // in the directed case, potential triples are connected nodes at distance 1 and nodes at distance 2
+                    // ... each node at distance 2 contributes a triple, but no triangle
+                    triples += aDist1 + dist2;
+                    triangles += aDist1;
+                } else {
+                    // in undirected case, each pair of nodes @ distance 1 contributes to a triple
+                    // ... each edge in this neighborhood indicates a triangle
+                    // corrections for later: each triangle is counted 3 times
+                    triples += dist1*(dist1-1)/2;
+                    triangles += aDist1;
+                }
+            }
+
+            if (!graph.isDirected()) {
+                triangles /= 3;
+                triples -= 2*triangles;
+            }
+
+            // although each triple & triangle has been counted 3 times too many, it's okay because the return value is a ratio
+            return triangles / (double) triples;
+        }
+    };
+
+    //
     // UTILITY METHOD SAVED HERE
     //
 
     /** Enumerates all subsets of the integer subset [0,1,2,...,n-1] as an abstract list. */
-    static List<List<Integer>> enumerateSubsets(final int n) {
+    private static List<List<Integer>> enumerateSubsets(final int n) {
         return new AbstractList<List<Integer>>() {
             @Override
             public List<Integer> get(int index) {

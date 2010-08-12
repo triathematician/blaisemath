@@ -1,5 +1,5 @@
 /*
- * LongitudinalGraphIO.java
+ * PajekLongGraphIO.java
  * Created Jul 6, 2010
  */
 
@@ -24,34 +24,38 @@ import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
+import util.FileNameExtensionFilter;
 
 /**
  * <p>
- * Extends the features of <code>SimpleGraphIO</code> to support loading files with
+ * Extends the features of <code>PajekGraphIO</code> to support loading files with
  * multiple networks. These files are stored as longitudinal graphs, comprised of
  * pointers to multiple graphs. Here, the data is assumed to consist of a single set
  * of vertices, and multiple sets of edges/adjacencies.
  * </p>
  * <p>
- * Uses the same mode formats as <code>SimpleGraphIO</code>... see the documentation there.
+ * Uses the same mode formats as <code>PajekGraphIO</code>... see the documentation there.
  * The exception is that the "edges", "arcs", and "adjacency" modes now assume that a
  * time flag is also specified, e.g. the line should be something like "*EDGES t=5"
  * </p>
  *
- * @see SimpleGraphIO
+ * @see PajekGraphIO
  *
  * @author elisha
  */
-public class LongitudinalGraphIO extends AbstractGraphIO {
+public class PajekLongGraphIO extends AbstractGraphIO {
 
     // no instantiation
-    private LongitudinalGraphIO() {}
+    private PajekLongGraphIO() {}
 
     // single instance
-    private static final LongitudinalGraphIO INSTANCE = new LongitudinalGraphIO();
+    private static final PajekLongGraphIO INSTANCE = new PajekLongGraphIO();
 
     /** Factory method @return instanceo of this IO class */
-    public static LongitudinalGraphIO getInstance() { return INSTANCE; }
+    public static PajekLongGraphIO getInstance() { return INSTANCE; }
+
+    private static final FileNameExtensionFilter FILTER = new FileNameExtensionFilter("Extended/longitudinal Pajek file (*.net, *.netx, *.netl)", "net", "netx", "netl");
+    public javax.swing.filechooser.FileFilter getFileFilter() { return FILTER; }
     
     /*
      * Reads in and returns a longitudinal graph file

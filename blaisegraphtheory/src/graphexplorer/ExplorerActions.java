@@ -7,6 +7,7 @@ package graphexplorer;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.AbstractAction;
@@ -26,25 +27,31 @@ class ExplorerActions {
     /** What this class works with */
     GraphExplorerInterface main;
     /** Construction requires a main class */
-    public ExplorerActions(GraphExplorerInterface main) { this.main = main; }
+    public ExplorerActions(GraphExplorerInterface main) { 
+        this.main = main;
+    }
+
+    public Action QUIT_ACTION = new AbstractAction("Exit", ExplorerActions.loadIcon("exit18")) {
+        {
+            putValue(SHORT_DESCRIPTION, "Exit Graph Explorer (unsaved changes will be lost).");
+            putValue(MNEMONIC_KEY, KeyEvent.VK_X);
+        }
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+    };
 
     //
     // HELP ACTIONS
     //
 
-    public Action ABOUT_ACTION = new AbstractAction("About") {
-        {
-            putValue(SHORT_DESCRIPTION, "About GraphExplorer");
-        }
+    public Action ABOUT_ACTION = new AbstractAction("About", loadIcon("info18")) {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(main.dialogComponent(), "GraphExplorer 0.5\nCreated by Elisha Peterson");
+            JOptionPane.showMessageDialog(main.dialogComponent(), "GraphExplorer 0.59\nCreated by Elisha Peterson");
         }
     };
 
-    public Action HELP_ACTION = new AbstractAction("Help") {
-        {
-            putValue(SHORT_DESCRIPTION, "Load help file");
-        }
+    public Action HELP_ACTION = new AbstractAction("Show Help File", loadIcon("help18")) {
         public void actionPerformed(ActionEvent e) {
             JEditorPane editorPane = new JEditorPane();
             editorPane.setEditable(false);

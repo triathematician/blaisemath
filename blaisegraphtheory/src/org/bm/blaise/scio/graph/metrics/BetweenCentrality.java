@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.Graphs;
 import util.Matrices;
 
 /**
@@ -39,13 +41,14 @@ public class BetweenCentrality implements NodeMetric<Double> {
     @Override public String toString() { return "Betweenness Centrality"; }
 
     public boolean supportsGraph(boolean directed) { return true; }
-    public <V> double nodeMax(boolean directed, int order) { return (order-1)*(order-2)*(directed ? 1.0 : 0.5); }
-    public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }
+    public <V> double nodeMax(boolean directed, int order) {
+        // maximum potential value occurs for a star graph
+        return (order-1)*(order-2)*(directed ? 1.0 : 0.5);
+    }
+    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
 
     public <V> Double value(Graph<V> graph, V node) {
-        System.out.println("BC-one");
         List<V> nodes = graph.nodes();
-        int n = nodes.size();
         HashMap<V, Double> between = new HashMap<V, Double>();
         for (V v : nodes)
             between.put(v, 0.0);
@@ -73,7 +76,7 @@ public class BetweenCentrality implements NodeMetric<Double> {
         for (V v : nodes) result.add(multiplier * between.get(v));
         System.out.println((System.currentTimeMillis()-l0)+"ms");
         return result;
-    }
+    } // METHOD allValues
 
     /**
      * Breadth-first search algorithm for an unweighted graph to generate betweenness
@@ -89,46 +92,17 @@ public class BetweenCentrality implements NodeMetric<Double> {
         List<V> nodes = graph.nodes();
         if (!nodes.contains(start))
             return new HashMap<V, Double>();
-
+        
         HashMap<V, Integer> numShortest = new HashMap<V, Integer>(); // number of shortest paths to each vertex
-          for (V v : nodes) numShortest.put(v, 0);
-          numShortest.put(start, 1);
         HashMap<V, Integer> lengths = new HashMap<V, Integer>(); // length of shortest paths to each vertex
-          for (V v : nodes) lengths.put(v, -1);
-          lengths.put(start, 0);
-
-        // breadth-first search algorithm
-        LinkedList<V> queue = new LinkedList<V>(); // tracks elements for search algorithm
         Stack<V> stack = new Stack<V>(); // tracks elements in non-increasing order for later use
         HashMap<V,Set<V>> pred = new HashMap<V,Set<V>>(); // tracks vertex predecessors in resulting tree
-          for (V v : nodes) pred.put(v, new HashSet<V>());
-
-        queue.add(start);
-        while (!queue.isEmpty()) {
-            V v = queue.remove();
-            stack.addElement(v);
-            for (V w : graph.neighbors(v)) {
-                // if w is found for the first time in the tree, add it to the queue, and adjust the length
-                if (lengths.get(w) == -1) {
-                    queue.add(w);
-                    lengths.put(w, lengths.get(v) + 1);
-                }
-                // adjust the number of shortest paths to w if shortest path goes through v
-                if (lengths.get(w) == lengths.get(v) + 1) {
-                    numShortest.put(w, numShortest.get(w) + numShortest.get(v));
-                    pred.get(w).add(v);
-                }
-            }
-        }
-//        System.out.println("      lengths: " + lengths);
-//        System.out.println("      #paths:  " + numShortest);
-//        System.out.println("  stack: " + stack);
-//        System.out.println("  preds: " + pred);
-
+        
+        Graphs.breadthFirstSearch(graph, start, numShortest, lengths, stack, pred);
+        
+        // compute betweenness
         HashMap<V, Double> dependencies = new HashMap<V, Double>();
           for (V v : nodes) dependencies.put(v, 0.0);
-
-        // compute betweenness
         while (!stack.isEmpty()) {
             V w = stack.pop();
             for (V v : pred.get(w))
@@ -140,69 +114,74 @@ public class BetweenCentrality implements NodeMetric<Double> {
 //          System.out.println("  dependencies: " + dependencies);
 
         return between;
-    } // brandes
-    
-    /**
-     * Computes matrix of distances and #s of shortest paths between any 2 vertices
-     * @param n size of matrix/graph
-     * @param adj adjacency matrix of graph
-     * @param dists n x n matrix to set up with distances (return value)
-     * @param nPaths n x n matrix to set up with shortest paths (return value)
-     */
-    private static void computeShortestPaths(int n, int[][] adj, int[][] dists, int[][] nPaths) {
-        int[][] curAdj = new int[n][n];
-        int power = 1;
-        for (int i = 0; i < n; i++) {
-            dists[i][i] = 0;
-            nPaths[i][i] = 1;
-            for (int j = 0; j < n; j++) {
-                if (i == j) continue;
-                curAdj[i][j] = adj[i][j];
-                if (adj[i][j] == 0) {
-                    dists[i][j] = nPaths[i][j] = -1;
-                } else {
-                    dists[i][j] = nPaths[i][j] = 1;
-                }
-            }
-        }
-        int nFound = -1;
-        while (nFound != 0) {
-            nFound = 0;
-            curAdj = Matrices.matrixProduct(curAdj, adj);
-            power++;
-            for (int i = 0; i < n; i++)
-                for (int j = 0; j < n; j++) {
-                    if (i == j) continue;
-                    if (dists[i][j] == -1 && curAdj[i][j] != 0) {
-                        dists[i][j] = power;
-                        nPaths[i][j] = curAdj[i][j];
-                        nFound++;
-                    }
-                }
-        }
-    } // computeShortestPaths
 
-    /**
-     * Computes the betweenness of a specified vertex
-     * @param n size of matrix/graph
-     * @param dists the matrix of distances between vertices
-     * @param nPaths the matrix of # of shortest paths between any two vertices
-     * @param v0 the index of the node whose betweenness is to be computed
-     * @param directed whether the graph for the computation is directed or not
-     * @return the betweenness of the vertex
-     */
-    private static double computeBetweenness(int n, int[][] dists, int[][] nPaths, int v0) {
-        double result = 0.0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j)
-                    continue;
-                else if ((i == v0 || j == v0) && dists[i][j] != -1)
-                    result++;
-                else if (dists[i][v0] != -1 && dists[v0][j] != -1 && dists[i][j] != -1 && dists[i][v0] + dists[v0][j] == dists[i][j])
-                    result += nPaths[i][v0] * nPaths[v0][j] / (double) nPaths[i][j];
-            }
-        }
-        return result;
-    }
+    } // METHOD brandes
+
+
+//
+// OLD CODE BASED ON ADJACENCY MATRIX
+//
+//    /**
+//     * Computes matrix of distances and #s of shortest paths between any 2 vertices
+//     * @param n size of matrix/graph
+//     * @param adj adjacency matrix of graph
+//     * @param dists n x n matrix to set up with distances (return value)
+//     * @param nPaths n x n matrix to set up with shortest paths (return value)
+//     */
+//    private static void computeShortestPaths(int n, int[][] adj, int[][] dists, int[][] nPaths) {
+//        int[][] curAdj = new int[n][n];
+//        int power = 1;
+//        for (int i = 0; i < n; i++) {
+//            dists[i][i] = 0;
+//            nPaths[i][i] = 1;
+//            for (int j = 0; j < n; j++) {
+//                if (i == j) continue;
+//                curAdj[i][j] = adj[i][j];
+//                if (adj[i][j] == 0) {
+//                    dists[i][j] = nPaths[i][j] = -1;
+//                } else {
+//                    dists[i][j] = nPaths[i][j] = 1;
+//                }
+//            }
+//        }
+//        int nFound = -1;
+//        while (nFound != 0) {
+//            nFound = 0;
+//            curAdj = Matrices.matrixProduct(curAdj, adj);
+//            power++;
+//            for (int i = 0; i < n; i++)
+//                for (int j = 0; j < n; j++) {
+//                    if (i == j) continue;
+//                    if (dists[i][j] == -1 && curAdj[i][j] != 0) {
+//                        dists[i][j] = power;
+//                        nPaths[i][j] = curAdj[i][j];
+//                        nFound++;
+//                    }
+//                }
+//        }
+//    } // computeShortestPaths
+//
+//    /**
+//     * Computes the betweenness of a specified vertex
+//     * @param n size of matrix/graph
+//     * @param dists the matrix of distances between vertices
+//     * @param nPaths the matrix of # of shortest paths between any two vertices
+//     * @param v0 the index of the node whose betweenness is to be computed
+//     * @param directed whether the graph for the computation is directed or not
+//     * @return the betweenness of the vertex
+//     */
+//    private static double computeBetweenness(int n, int[][] dists, int[][] nPaths, int v0) {
+//        double result = 0.0;
+//        for (int i = 0; i < n; i++) {
+//            for (int j = 0; j < n; j++) {
+//                if (i == j)
+//                    continue;
+//                else if ((i == v0 || j == v0) && dists[i][j] != -1)
+//                    result++;
+//                else if (dists[i][v0] != -1 && dists[v0][j] != -1 && dists[i][j] != -1 && dists[i][v0] + dists[v0][j] == dists[i][j])
+//                    result += nPaths[i][v0] * nPaths[v0][j] / (double) nPaths[i][j];
+//            }
+//        }
+//        return result;
+//    }
 }

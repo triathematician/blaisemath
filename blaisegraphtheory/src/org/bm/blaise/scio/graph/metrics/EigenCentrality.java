@@ -29,13 +29,15 @@ public class EigenCentrality implements NodeMetric<Double> {
 
     public boolean supportsGraph(boolean directed) { return true; }
     public <V> double nodeMax(boolean directed, int order) { return 1.0; }
-    public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }
+    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
 
     public <V> Double value(Graph<V> graph, V node) {
         return allValues(graph).get(graph.nodes().indexOf(node));
     }
 
     public <V> List<Double> allValues(Graph<V> graph) {
+        System.out.print("EC-all (" + graph.order() + " nodes, " + graph.edgeNumber() + " edges): ");
+        long l0 = System.currentTimeMillis();
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)
 
@@ -71,6 +73,7 @@ public class EigenCentrality implements NodeMetric<Double> {
         List<Double> result = new ArrayList<Double>(n);
         for (int i = 0; i < div.length; i++)
             result.add(i, sign*vecf2[i]);
+        System.out.println((System.currentTimeMillis()-l0)+"ms");
         return result;
     }
 

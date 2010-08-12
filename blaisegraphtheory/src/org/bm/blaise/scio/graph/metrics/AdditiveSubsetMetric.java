@@ -3,7 +3,7 @@
  * Created May 18, 2010
  */
 
-package org.bm.blaise.scio.graph.metrics.subset;
+package org.bm.blaise.scio.graph.metrics;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.Graph;

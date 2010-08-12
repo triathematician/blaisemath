@@ -15,15 +15,15 @@ import static org.junit.Assert.*;
  *
  * @author elisha
  */
-public class LongitudinalGraphIOTest {
+public class PajekLongGraphIOTest {
 
     static LongitudinalGraph<Integer> SAMPLE_NEWFRAT;
 
     public static LongitudinalGraph<Integer> sampleNewFrat() {
         if (SAMPLE_NEWFRAT == null)
-            SAMPLE_NEWFRAT = (LongitudinalGraph<Integer>) LongitudinalGraphIO.getInstance().importGraph(
+            SAMPLE_NEWFRAT = (LongitudinalGraph<Integer>) PajekLongGraphIO.getInstance().importGraph(
                 new HashMap<Integer,double[]>(),
-                LongitudinalGraphIO.class.getResource("data/newfrat.netx"), GraphType.LONGITUDINAL);
+                PajekLongGraphIO.class.getResource("data/newfrat.netx"), GraphType.LONGITUDINAL);
         return SAMPLE_NEWFRAT;
     }
 

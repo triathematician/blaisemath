@@ -44,8 +44,10 @@ public class ContractedGraph<V> implements Graph<V> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         List<V> nodes = nodes();
+        result.append("Nodes: ").append(nodes);
+        result.append("; Edges: ");
         for (int i = 0; i < nodes.size(); i++)
-            for (int j = isDirected() ? 0 : i; j < nodes.size(); j++)
+            for (int j = (isDirected() ? 0 : i); j < nodes.size(); j++)
                 if (adjacent(nodes.get(i), nodes.get(j)))
                     result.append("[" + nodes.get(i) + ", " + nodes.get(j) + "], ");
         result.delete(result.length()-2, result.length());
@@ -55,9 +57,9 @@ public class ContractedGraph<V> implements Graph<V> {
     public int order() { return parent.order() - subset.size() + 1; }
     public List<V> nodes() {
         ArrayList<V> result = new ArrayList<V>();
-        result.add(vertex);
         result.addAll(parent.nodes());
         result.removeAll(subset);
+        result.add(0, vertex);
         return result;
     }
     public boolean contains(V x) { return (parent.contains(x) && !subset.contains(x)) || vertex.equals(x); }

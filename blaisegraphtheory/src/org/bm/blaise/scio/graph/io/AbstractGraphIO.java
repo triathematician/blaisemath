@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
+import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.ValuedGraphWrapper;
 import org.bm.blaise.scio.graph.WeightedGraphWrapper;
 import org.bm.blaise.scio.graph.WeightedValuedGraphWrapper;
@@ -28,13 +29,16 @@ public abstract class AbstractGraphIO {
 
     /** Used to describe whether saved and loaded graphs are of type "regular" or "longitudinal" */
     public enum GraphType {
-        REGULAR, LONGITUDINAL;
+        UNKNOWN, REGULAR, LONGITUDINAL;
     }
 
     //
     // REGULAR FILES
     //
     
+    /** @return file filter that can be used for this particular file type */
+    abstract public javax.swing.filechooser.FileFilter getFileFilter();
+
     /**
      * Reads in and returns a graph file
      * @param locations information about positions of nodes in the file
@@ -94,7 +98,7 @@ public abstract class AbstractGraphIO {
             List<List<double[]>> eTimes,
             boolean directed) {
 
-        System.out.println(".buildGraph (longitudinal version): " + vertices.size() + " vertices, " + edges.size() + " edges");
+//        System.out.println(".buildGraph (longitudinal version): " + vertices.size() + " vertices, " + edges.size() + " edges");
 
         if (edges.size() != weights.size() || edges.size() != eTimes.size())
             throw new IllegalStateException("buildGraph: size of edges, weights, and eTimes lists should be equal!");
@@ -149,7 +153,7 @@ public abstract class AbstractGraphIO {
             ArrayList<Double> weights,
             boolean directed) {
 
-        System.out.println(".buildGraph: " + vertices.size() + " vertices, " + edges.size() + " edges");
+//        System.out.println(".buildGraph: " + vertices.size() + " vertices, " + edges.size() + " edges");
 
         if (edges.size() != weights.size())
             throw new IllegalStateException("buildGraph: size of edges and weights lists should be equal!");
@@ -187,6 +191,50 @@ public abstract class AbstractGraphIO {
             return result;
         }
     }
+    /**
+     * Utility method. Returns a graph of the appropriate type, given the input data in the specified formats.
+     * The nodes in the return graph have values of the form {string,image}.
+     * @param vertices vertices, stored as a map from integer index to string label
+     * @param images images associated to certain vertices (by file name only)
+     * @param edges list of the edges or arcs
+     * @param weights list of weights, in same order as edges
+     * @param directed whether resulting graph should be directed
+     * @return a graph implementation with the desired properties/values
+     */
+    protected static ValuedGraph<Integer,Object[]> buildGraph(
+            Map<Integer,String> vertices,
+            Map<Integer,String> images,
+            ArrayList<Integer[]> edges,
+            ArrayList<Double> weights,
+            boolean directed) {
+
+//        System.out.println(".buildGraph: " + vertices.size() + " vertices, " + edges.size() + " edges");
+
+        if (edges.size() != weights.size())
+            throw new IllegalStateException("buildGraph: size of edges and weights lists should be equal!");
+
+        // base graph
+        Graph<Integer> result = GraphFactory.getGraph(directed, vertices.keySet(), edges);
+
+        // determine whether result should be weighted
+        boolean weighted = false;
+        for (Double d : weights)
+            if (!(d==0.0 || d==1.0)) { weighted = true; break; }
+
+        if (weighted) {
+            WeightedValuedGraphWrapper<Integer, Double, Object[]> resultGraph = new WeightedValuedGraphWrapper<Integer, Double, Object[]>(result);
+            for (Integer i : vertices.keySet())
+                resultGraph.setValue(i, new Object[]{vertices.get(i), images.get(i)});
+            for (int i = 0; i < edges.size(); i++)
+                resultGraph.setWeight(edges.get(i)[0], edges.get(i)[1], weights.get(i));
+            return resultGraph;
+        } else {
+            ValuedGraphWrapper<Integer, Object[]> resultGraph = new ValuedGraphWrapper<Integer, Object[]>(result);
+            for (Integer i : vertices.keySet())
+                resultGraph.setValue(i, new Object[]{vertices.get(i), images.get(i)});
+            return resultGraph;
+        }
+    }
 
     /** Looks to see if matrix described by given data is symmetric. */
     protected static final boolean symmetricMatrix(List<Integer[]> edges, List<Double> weights) {
@@ -205,4 +253,5 @@ public abstract class AbstractGraphIO {
         }
         return true;
     }
+
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.WeightedGraph;
+import util.FileNameExtensionFilter;
 
 /**
  * <p>
@@ -48,9 +49,12 @@ public final class EdgeListGraphIO extends AbstractGraphIO {
 
     // single instance
     private static final EdgeListGraphIO INSTANCE = new EdgeListGraphIO();
-
+    
     /** Factory method @return instance of this IO class */
     public static EdgeListGraphIO getInstance() { return INSTANCE; }
+
+    private static final FileNameExtensionFilter FILTER = new FileNameExtensionFilter("Edge list files (*.txt)", "txt", "");
+    public javax.swing.filechooser.FileFilter getFileFilter() { return FILTER; }
 
     public Graph<Integer> importGraph(Map<Integer, double[]> locations, File file, GraphType type) {
         // stores the vertices and associated names

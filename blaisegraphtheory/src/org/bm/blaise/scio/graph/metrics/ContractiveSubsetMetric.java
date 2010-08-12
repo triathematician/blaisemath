@@ -3,12 +3,11 @@
  * and open the template in the editor.
  */
 
-package org.bm.blaise.scio.graph.metrics.subset;
+package org.bm.blaise.scio.graph.metrics;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.ContractedGraph;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a <code>SubsetMetric</code> computed by contracting all the
@@ -30,7 +29,9 @@ public class ContractiveSubsetMetric<N> implements SubsetMetric<N> {
     public <V> N getValue(Graph<V> graph, Collection<V> nodes) {
         V starNode = null;
         for (V v : nodes) { starNode = v; break; }
-        return baseMetric.value(new ContractedGraph<V>(graph, nodes, starNode), starNode);
+        Graph<V> contracted = new ContractedGraph<V>(graph, nodes, starNode);
+        System.out.println("Contractive value: " + contracted);
+        return baseMetric.value(contracted, starNode);
     }
 
 }

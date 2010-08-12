@@ -1,5 +1,5 @@
 /*
- * EnergyLayout.java
+ * SpringLayout.java
  * Created May 13, 2010
  */
 
@@ -17,7 +17,7 @@ import org.bm.blaise.scio.graph.Graph;
  * 
  * @author Elisha Peterson
  */
-public class EnergyLayout implements IterativeGraphLayout {
+public class SpringLayout implements IterativeGraphLayout {
 
     // CONSTANTS
 
@@ -25,6 +25,8 @@ public class EnergyLayout implements IterativeGraphLayout {
     private static final double MAX_FORCE = 100.0;
     /** Min distance to assume between nodes */
     private static final double MIN_DIST = .01;
+    /** Max distance to apply repulsive force */
+    private static final double MAXIMUM_REPEL_DISTANCE = 5;
     /** Distance outside which global force acts */
     private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = 1;
 
@@ -69,12 +71,12 @@ public class EnergyLayout implements IterativeGraphLayout {
      * @param initialLayout the initial layout mechanism
      * @param initialParameters the parameters for the initial layout
      */
-    public <V> EnergyLayout(Graph<V> g, StaticGraphLayout initialLayout, double... initialParameters) {
+    public SpringLayout(Graph g, StaticGraphLayout initialLayout, double... initialParameters) {
         reset(initialLayout.layout(g, initialParameters));
     }
 
     /** Construct using specified starting locations */
-    public <V> EnergyLayout(Map<V, Point2D.Double> positions) {
+    public SpringLayout(Map<Object, Point2D.Double> positions) {
         reset(positions);
     }
     
@@ -125,6 +127,7 @@ public class EnergyLayout implements IterativeGraphLayout {
     public void iterate(Graph g) {
         long t0 = System.currentTimeMillis();
         List nodes = g.nodes();
+        boolean directed = g.isDirected();
         // check for temporary location updates
         if (tempLoc != null) {
             for (Entry<?, Point2D.Double> en : tempLoc.entrySet())
@@ -160,10 +163,12 @@ public class EnergyLayout implements IterativeGraphLayout {
                     jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
-                    addRepulsiveForce(netForce, iLoc, jLoc, dist);
+                    if (dist < MAXIMUM_REPEL_DISTANCE)
+                        addRepulsiveForce(netForce, iLoc, jLoc, dist);
                     assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
                     // symmetric attractive force from adjacencies
-                    if (g.adjacent(iEntry.getKey(), jEntry.getKey())) {
+                    if (g.adjacent(iEntry.getKey(), jEntry.getKey()) || 
+                            (directed && g.adjacent(jEntry.getKey(), iEntry.getKey()))) {
                         addSpringForce(netForce, iLoc, jLoc, dist);
                         assert !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
                     }
@@ -183,7 +188,7 @@ public class EnergyLayout implements IterativeGraphLayout {
             energy += .5 * nodeMass * speed * speed;
         }
         iteration ++;
-        System.out.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
+//        System.out.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
     }
 
     //
@@ -240,5 +245,44 @@ public class EnergyLayout implements IterativeGraphLayout {
         }
     }
 
+    //
+    // STATIC INSTANCES
+    //
+
+    /** A static version of the spring layout algorithm */
+    public static final StaticSpringLayout STATIC_INSTANCE = new StaticSpringLayout();
+
+    /**
+     * Provides a static implementation of the spring layout, formed by iterating
+     * with a cooling parameter until reaching a low-energy state.
+     */
+    public static class StaticSpringLayout implements StaticGraphLayout {
+        int minSteps = 100;
+        int maxSteps = 5000;
+        double energyChangeThreshold = 5e-7;
+        double coolStart = 0.65;
+        double coolEnd = 0.1;
+
+        public Map<Object, Point2D.Double> layout(Graph g, double... parameters) {
+            SpringLayout sl = new SpringLayout(g, StaticGraphLayout.CIRCLE, 5);
+            double lastEnergy = Double.MAX_VALUE;
+            double energyChange = 9999;
+            int step = 0;
+            while (step < minSteps || (step < maxSteps && Math.abs(energyChange) > energyChangeThreshold)) {
+                // adjust cooling parameter
+                double cool01 = 1-step*step/(maxSteps*maxSteps);
+                sl.dampingC = coolStart*cool01 + coolEnd*(1-cool01);
+                sl.iterate(g);
+                energyChange = sl.energy - lastEnergy;
+                lastEnergy = sl.energy;
+                step++;
+                if (step % 50 == 0)
+                    System.out.println("step = " + step + ", energy = " + lastEnergy);
+            }
+            System.out.println("Stopped @ " + step + " steps.");
+            return sl.getPositions();
+        }
+
+    }
 
 }

@@ -78,7 +78,7 @@ public class WeightedGraphWrapperTest {
     }
 
     @Test
-    public void testGetWeight() {
+    public void testGetWeight_setWeight() {
         System.out.println("getWeight/setWeight");
 
         UNDIR_WEIGHTED = new WeightedGraphWrapper<Integer, String>(UNDIRECTED_INSTANCE);

@@ -11,7 +11,8 @@
       <p>
           Standard graphs may be constructed using the methods in <code>GraphFactory</code>, and standard
           algortihms are contained in the <code>Graphs</code> class. Secondary classes can be used to generate
-          other kinds of graphs: see <code>RandomGraph</code> and <code>PreferentialAttachment</code>
+          other kinds of graphs: see <code>RandomGraph</code>, <code>DegreeRandomGraph</code>,
+          <code>WattsStrogatzRandomGraph</code>, and <code>PreferentialAttachment</code>.
       </p>
       <p>
           <code>ContractedGraph</code> and <code>Subgraph</code> generate new graphs based on old ones by
@@ -19,7 +20,7 @@
           on a subset of nodes (in the second case).
       </p>
       <p>
-          Secondary interfaces include <code>ValueGraph</code> (vertices have associated values) and
+          Secondary interfaces include <code>ValuedGraph</code> (vertices have associated values) and
           <code>WeightedGraph</code> (edges have associated values). Each of these
           interfaces has implementations as "wrappers" <code>ValuedGraphWrapper</code>,
           <code>WeightedGraphWrapper</code>, and <code>WeightedValuedGraphWrapper</code>.

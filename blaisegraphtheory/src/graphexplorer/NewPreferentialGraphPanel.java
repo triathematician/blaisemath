@@ -23,8 +23,8 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
 
     /** @return graph corresponding to the current graph settings */
     public Object getInstance() {
-        boolean directed = directedRB.isSelected();
-        int order = (Integer) numNodesS.getValue();
+        boolean directed = basicP.getDirected();
+        int order = basicP.getOrder();
         
         int seedOrder = (Integer) seedNodesS.getValue();
         float seedProb = (Float) seedProbS.getValue();
@@ -79,23 +79,18 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
         probRB = new javax.swing.JRadioButton();
         seedNodesS = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
-        undirectedRB = new javax.swing.JRadioButton();
-        directedRB = new javax.swing.JRadioButton();
-        jLabel2 = new javax.swing.JLabel();
-        numNodesS = new javax.swing.JSpinner();
-        jLabel4 = new javax.swing.JLabel();
-        returnRegularRB = new javax.swing.JRadioButton();
-        returnLongRB = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         fixedStepS = new javax.swing.JSpinner();
         fixedRB = new javax.swing.JRadioButton();
         variableRB = new javax.swing.JRadioButton();
         variableTF = new javax.swing.JTextField();
-        jSeparator1 = new javax.swing.JSeparator();
-
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Preferential Random Network"));
+        basicP = new graphexplorer.NewSimpleGraphPanel(100, 100000, true);
+        jPanel3 = new javax.swing.JPanel();
+        returnRegularRB = new javax.swing.JRadioButton();
+        returnLongRB = new javax.swing.JRadioButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Seed Graph"));
+        jPanel1.setToolTipText("<html>\nThe <b>seed graph</b> will be used as the starting point\n<br>\nfor the construction of the preferential attachment graph.\n<br>\nIdeally, it should contain a relatively small number of vertices.");
 
         edgeTypeBG.add(numRB);
         numRB.setSelected(true);
@@ -119,7 +114,7 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
         seedNodesS.setModel(new javax.swing.SpinnerNumberModel(10, 1, 100000, 1));
         seedNodesS.setToolTipText("Enter the number of nodes in the seed graph (1-100,000)");
 
-        jLabel1.setText("seed # nodes:");
+        jLabel1.setText("Seed # nodes:");
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -161,29 +156,6 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
                     .add(seedEdgesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        directedBG.add(undirectedRB);
-        undirectedRB.setSelected(true);
-        undirectedRB.setText("undirected");
-
-        directedBG.add(directedRB);
-        directedRB.setText("directed");
-        directedRB.setEnabled(false);
-
-        jLabel2.setText("TOTAL # nodes:");
-
-        numNodesS.setModel(new javax.swing.SpinnerNumberModel(100, 1, 100000, 1));
-        numNodesS.setToolTipText("Enter the number of nodes in the resulting graph (1-100,000)");
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 2, 13));
-        jLabel4.setText("Result: ");
-
-        resultBG.add(returnRegularRB);
-        returnRegularRB.setSelected(true);
-        returnRegularRB.setText("regular graph");
-
-        resultBG.add(returnLongRB);
-        returnLongRB.setText("longitudinal graph");
-
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Edges per Step"));
 
         fixedStepS.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1000, 1));
@@ -219,7 +191,7 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
                         .add(fixedRB)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(fixedStepS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -234,52 +206,42 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Result Type"));
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
+
+        resultBG.add(returnRegularRB);
+        returnRegularRB.setSelected(true);
+        returnRegularRB.setText("regular graph");
+        jPanel3.add(returnRegularRB);
+
+        resultBG.add(returnLongRB);
+        returnLongRB.setText("longitudinal graph");
+        jPanel3.add(returnLongRB);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(undirectedRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(directedRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel2)
-                .add(7, 7, 7)
-                .add(numNodesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(layout.createSequentialGroup()
+                .add(1, 1, 1)
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(basicP, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
             .add(layout.createSequentialGroup()
-                .add(jLabel4)
-                .add(2, 2, 2)
-                .add(returnRegularRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(returnLongRB))
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .add(1, 1, 1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .add(directedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(undirectedRB, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(numNodesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(jLabel2)))
+                .add(basicP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel4)
-                    .add(returnRegularRB)
-                    .add(returnLongRB)))
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -287,18 +249,15 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private graphexplorer.NewSimpleGraphPanel basicP;
     private javax.swing.ButtonGroup directedBG;
-    private javax.swing.JRadioButton directedRB;
     private javax.swing.ButtonGroup edgeTypeBG;
     private javax.swing.JRadioButton fixedRB;
     private javax.swing.JSpinner fixedStepS;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSpinner numNodesS;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JRadioButton numRB;
     private javax.swing.JRadioButton probRB;
     private javax.swing.ButtonGroup resultBG;
@@ -308,7 +267,6 @@ public class NewPreferentialGraphPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner seedNodesS;
     private javax.swing.JSpinner seedProbS;
     private javax.swing.ButtonGroup stepBG;
-    private javax.swing.JRadioButton undirectedRB;
     private javax.swing.JRadioButton variableRB;
     private javax.swing.JTextField variableTF;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;

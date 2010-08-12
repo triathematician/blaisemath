@@ -9,12 +9,12 @@ import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,7 @@ import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
+import util.FileNameExtensionFilter;
 
 /**
  * <p>
@@ -92,13 +93,16 @@ public final class PajekGraphIO extends AbstractGraphIO {
 
     // single instance
     private static final PajekGraphIO INSTANCE = new PajekGraphIO(false);
+    private static final FileNameExtensionFilter FILTER = new FileNameExtensionFilter("Pajek files (*.net)", "net");
     private static final PajekGraphIO INSTANCE_X = new PajekGraphIO(true);
+    private static final FileNameExtensionFilter FILTER_X = new FileNameExtensionFilter("Extended Pajek files (*.net, *.netx)", "net", "netx");
 
     /** Factory method @return instance of this IO class */
     public static PajekGraphIO getInstance() { return INSTANCE; }
     /** Factory method @return extended version of this IO class */
     public static PajekGraphIO getExtendedInstance() { return INSTANCE_X; }
 
+    public javax.swing.filechooser.FileFilter getFileFilter() { return extendedMode ? FILTER_X : FILTER; }
 
     /** Specifies expected mode for next input line. */
     enum ImportMode {
@@ -116,6 +120,8 @@ public final class PajekGraphIO extends AbstractGraphIO {
         ARCSLIST(false, "Arcslist", true, true),
         /** A list of edges on each line */
         EDGELIST(false, "Edgeslist", true, false),
+        /** Images to draw at nodes */
+        IMAGES(true, "Images", false, false),
         /** Unknown mode */
         UNKNOWN(false, "Unknown", false, false);
 
@@ -143,6 +149,8 @@ public final class PajekGraphIO extends AbstractGraphIO {
 
         // stores the vertices and associated names
         TreeMap<Integer,String> vertices = new TreeMap<Integer,String>();
+        // stores the vertices and associated images
+        TreeMap<Integer,String> images = new TreeMap<Integer,String>();
         // stores points corresponding to vertices
         locations.clear();
         // stores times corresponding to vertices
@@ -208,6 +216,9 @@ public final class PajekGraphIO extends AbstractGraphIO {
                                 case VERTICES:
                                     importLine_vertex(lineNumber, line, vertices, locations, times);
                                     break;
+                                case IMAGES:
+                                    importLine_image(lineNumber, line, vertices, images, locations, times);
+                                    break;
                                 case ARCS:
                                 case EDGES:
                                     importLine_edge(lineNumber, line, vertices, edges, weights, eTimes);
@@ -220,6 +231,8 @@ public final class PajekGraphIO extends AbstractGraphIO {
                                     importLine_matrix(lineNumber, line, matrixLine, vertices, edges, weights);
                                     matrixLine++;
                                     break;
+                                default:
+                                    System.out.println("PajekGraphIO: unrecognized mode " + mode);
                             }
                         } catch (Exception ex) {
                             notifyImportFailure(lineNumber, mode, line, ex);
@@ -244,9 +257,11 @@ public final class PajekGraphIO extends AbstractGraphIO {
 
         directed = edgeModeUsed == ImportMode.MATRIX ? !symmetricMatrix(edges, weights) : edgeModeUsed.directedMode;
 
-        if (type == GraphType.REGULAR || (times.size() == 0 && eTimes.size() == 0)) {
+        if (times.size() == 0 && eTimes.size() == 0) {
             type = GraphType.REGULAR;
-            return buildGraph(vertices, edges, weights, directed);
+            return images.size() == 0
+                    ? buildGraph(vertices, edges, weights, directed)
+                    : buildGraph(vertices, images, edges, weights, directed);
         } else {
             type = GraphType.LONGITUDINAL;
             return buildGraph(vertices, times, edges, weights, eTimes, directed);
@@ -343,12 +358,29 @@ public final class PajekGraphIO extends AbstractGraphIO {
     }
 
     /**
+     * Checks to see if specified vertex is contained in map; if not contained, adds it and
+     * prints a warning.
+     * @param vertex vertex to check
+     * @param vertices the map of vertices
+     * @param lineNumber number of line in import file
+     * @param line the line to import... first argument is vertex #, second is name (optional)
+     */
+    private static void checkForVertex(int vertex, Map<Integer,String> vertices, int lineNumber, String line) {
+        if (!vertices.containsKey(vertex)) {
+            vertices.put(vertex, null);
+            if (WARN_UNDECLARED_VERTEX)
+                System.out.println("WARNING -- found undeclared vertex " + vertex + " on line " + lineNumber + ": " + line);
+        }
+    }
+
+    /**
      * Imports a vertex into the graph. The first argument is the vertex #, the second is the name.
      * The name is optional, and may or may not be surrounded by quotes ("...")
      * @param lineNumber number of line in import file
      * @param line the line to import... first argument is vertex #, second is name (optional)
      * @param vertices the map associating integer vertices to string labels of the vertices
      * @param loc map containing locations of vertices
+     * @param times map containing time intervals of vertices
      * @throws NumberFormatException if unable to decode integer representation of vertex #
      */
     static void importLine_vertex(int lineNumber, String line,
@@ -356,6 +388,7 @@ public final class PajekGraphIO extends AbstractGraphIO {
                 Map<Integer, double[]> loc,
                 Map<Integer, List<double[]>> times)
             throws NumberFormatException {
+
         Integer index = null;
         String name = null;
         String[] split = line.split("\\s+", 2);
@@ -407,19 +440,49 @@ public final class PajekGraphIO extends AbstractGraphIO {
     }
 
     /**
-     * Checks to see if specified vertex is contained in map; if not contained, adds it and
-     * prints a warning.
-     * @param vertex vertex to check
-     * @param vertices the map of vertices
+     * Imports a vertex image. The first argument is the vertex #, the second is the file name,
+     * which may or may not be surround by quotes ("...").
      * @param lineNumber number of line in import file
      * @param line the line to import... first argument is vertex #, second is name (optional)
+     * @param vertices the map associating integer vertices to string labels of the vertices
+     * @param images the map associating integer vertices to images
+     * @param loc map containing locations of vertices
+     * @param times map containing time intervals of vertices
+     * @throws NumberFormatException if unable to decode integer representation of vertex #
      */
-    private static void checkForVertex(int vertex, Map<Integer,String> vertices, int lineNumber, String line) {
-        if (!vertices.containsKey(vertex)) {
-            vertices.put(vertex, null);
-            if (WARN_UNDECLARED_VERTEX)
-                System.out.println("WARNING -- found undeclared vertex " + vertex + " on line " + lineNumber + ": " + line);
+    static void importLine_image(int lineNumber, String line,
+                Map<Integer, String> vertices,
+                Map<Integer, String> images,
+                Map<Integer, double[]> loc,
+                Map<Integer, List<double[]>> times)
+            throws NumberFormatException {
+
+        Integer index = null;
+        String fileName = null;
+        String[] split = line.split("\\s+", 2);
+        index = Integer.decode(split[0]);
+        if (split.length == 1) {
+            System.out.println("WARNING -- line " + lineNumber + " does not seem to have an image file: " + line);
+            return;
         }
+
+        String remainder = split[1];
+        // decode the vertex's label
+        if (remainder.startsWith("\"")) {
+            int i2 = remainder.indexOf("\"", 1);
+            if (i2 != -1) {
+                fileName = remainder.substring(1, i2);
+                remainder = remainder.substring(i2+1);
+            } else {
+                System.out.println("WARNING -- line " + lineNumber + " has improperly formatted vertex label: " + line);
+                return;
+            }
+        } else {
+            split = remainder.split("\\s+", 2);
+            fileName = split[0];
+            remainder = split.length == 1 ? "" : split[1];
+        }
+        images.put(index, fileName);
     }
 
     /**

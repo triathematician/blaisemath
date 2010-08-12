@@ -5,17 +5,20 @@
 
 package graphexplorer;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.geom.Point2D;
+import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
+import org.jdesktop.layout.GroupLayout;
 import util.ListSlider;
 import visometry.plane.PlanePlotComponent;
 
@@ -38,13 +41,21 @@ public class LongitudinalGraphPanel extends JPanel
     GraphController gc;
     /** Slider element */
     ListSlider slider;
+    /** time label */
+    JLabel timeLabel;
 
     /** Constructs a longitudinal graph panel without an actual graph. */
     public LongitudinalGraphPanel(GraphController gc) {
         super(new java.awt.BorderLayout());
+
+        setPreferredSize(new Dimension(600, 600));
         add(plot = new PlanePlotComponent(), java.awt.BorderLayout.CENTER);
         add(slider = new ListSlider(), java.awt.BorderLayout.SOUTH);
-        setPreferredSize(new Dimension(500, 500));
+        timeLabel = new JLabel("Slice t=??");
+        timeLabel.setFont(timeLabel.getFont().deriveFont(Font.ITALIC, 10f));
+        timeLabel.setForeground(Color.DARK_GRAY);
+        timeLabel.setOpaque(false);
+
         this.gc = gc;
         gc.addPropertyChangeListener(this);
         LongitudinalGraph lGraph = gc.getLongitudinalGraph();
@@ -56,6 +67,46 @@ public class LongitudinalGraphPanel extends JPanel
         } else {
             slider.setEnabled(false);
         }
+        initPlotLayout();
+    }
+
+    /**
+     * Sets up the layout of the main panel; specifically, adds the time label to
+     * the bottom right of the screen
+     */
+    void initPlotLayout() {
+        GroupLayout layout = new GroupLayout(plot);
+        plot.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(GroupLayout.LEADING)
+                .add(GroupLayout.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(213, Short.MAX_VALUE)
+                .add(timeLabel)
+                .addContainerGap()) );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(GroupLayout.LEADING)
+                .add(GroupLayout.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(206, Short.MAX_VALUE)
+                .add(timeLabel)
+                .addContainerGap())
+        );        
+    }
+
+    private static JLabel hideNote;
+
+    void hidePlot() {
+        remove(plot);
+        add(hideNote = new JLabel("Exporting..."));
+        repaint();
+    }
+
+    void showPlot() {
+        remove(hideNote);
+        for (Component c : getComponents())
+            if (c == plot)
+                return;
+        add(plot, java.awt.BorderLayout.CENTER);
+        repaint();
     }
     
     //
@@ -91,6 +142,7 @@ public class LongitudinalGraphPanel extends JPanel
     private void updateSliderTime() {
         if (!updating) {
             double time = gc.getTime();
+            timeLabel.setText("Slice t="+time);
             List times = gc.getLongitudinalGraph().getTimes();
             slider.setValues(times);
             for (int i = 0; i < times.size(); i++) {
@@ -105,7 +157,9 @@ public class LongitudinalGraphPanel extends JPanel
     /** Used to update slider time based on the controller time. */
     private void updateControllerTime() {
         updating = true;
-        gc.setTime((Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue()));
+        double time = (Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue());
+        gc.setTime(time);
+        timeLabel.setText("Slice t="+time);
         visGraph.setGraph(gc.getActiveGraph());
         visGraph.setPositionMap(gc.getPositions());
         visGraph.highlightNodes(gc.getNodeSubset());

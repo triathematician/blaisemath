@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Graphs;
 import org.bm.blaise.scio.graph.RandomGraph;
-import org.bm.blaise.scio.graph.layout.EnergyLayout;
+import org.bm.blaise.scio.graph.layout.SpringLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import stormtimer.BetterTimer;
@@ -29,7 +29,7 @@ public class TestGraph extends javax.swing.JFrame {
     PlaneGraph pg;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
-    EnergyLayout energyLayout;
+    SpringLayout energyLayout;
 
     /** Creates new form TestPlaneVisometry */
     public TestGraph() {
@@ -46,7 +46,7 @@ public class TestGraph extends javax.swing.JFrame {
         // PANELS
 
         rollupPanel1.add("Visometry", new PropertySheet(graphPlot.getVisometry()));
-        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new EnergyLayout(pg.getPositionMap())));
+        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(pg.getPositionMap())));
         for (Plottable p : graphPlot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
@@ -174,7 +174,7 @@ public class TestGraph extends javax.swing.JFrame {
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         Graph graph = pg.getGraph();
         if (energyLayout == null)
-            energyLayout = new EnergyLayout(pg.getPositionMap());
+            energyLayout = new SpringLayout(pg.getPositionMap());
         else if (updateEL)
             energyLayout.reset(pg.getPositionMap());
         energyLayout.iterate(graph);
@@ -187,7 +187,7 @@ public class TestGraph extends javax.swing.JFrame {
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         final Graph graph = pg.getGraph();
         if (energyLayout == null)
-            energyLayout = new EnergyLayout(pg.getPositionMap());
+            energyLayout = new SpringLayout(pg.getPositionMap());
         else if (updateEL)
             energyLayout.reset(pg.getPositionMap());
         timer = new BetterTimer(100);

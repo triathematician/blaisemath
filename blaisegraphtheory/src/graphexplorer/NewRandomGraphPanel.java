@@ -22,10 +22,10 @@ public class NewRandomGraphPanel extends javax.swing.JPanel {
 
     /** @return graph corresponding to the current graph settings */
     public Graph<Integer> getInstance() {
-        int order = (Integer) numNodesS.getValue();
+        int order = basicP.getOrder();
         float prob = (Float) probEdgeS.getValue();
         int numEdge = (Integer) numEdgesS.getValue();
-        boolean directed = directedRB.isSelected();
+        boolean directed = basicP.getDirected();
         boolean byEdgeNumber = numRB.isSelected();
         return byEdgeNumber ? RandomGraph.getInstance(order, numEdge, directed)
                 : RandomGraph.getInstance(order, prob, directed);
@@ -42,94 +42,55 @@ public class NewRandomGraphPanel extends javax.swing.JPanel {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         edgeTypeBG = new javax.swing.ButtonGroup();
-        directedBG = new javax.swing.ButtonGroup();
-        probRB = new javax.swing.JRadioButton();
+        basicP = new graphexplorer.NewSimpleGraphPanel(30,100000,false);
+        jPanel1 = new javax.swing.JPanel();
         numRB = new javax.swing.JRadioButton();
-        jLabel1 = new javax.swing.JLabel();
-        numNodesS = new javax.swing.JSpinner();
         numEdgesS = new javax.swing.JSpinner();
+        probRB = new javax.swing.JRadioButton();
         probEdgeS = new javax.swing.JSpinner();
-        directedRB = new javax.swing.JRadioButton();
-        undirectedRB = new javax.swing.JRadioButton();
-        jSeparator1 = new javax.swing.JSeparator();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Uniform Random Network"));
-
-        edgeTypeBG.add(probRB);
-        probRB.setText("probability per edge:");
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Edge Generation Method"));
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         edgeTypeBG.add(numRB);
         numRB.setSelected(true);
         numRB.setText("total # of edges:");
+        jPanel1.add(numRB);
 
-        jLabel1.setText("# nodes:");
-
-        numNodesS.setModel(new javax.swing.SpinnerNumberModel(20, 1, 100000, 1));
-        numNodesS.setToolTipText("Enter the number of nodes in the resulting graph (1-100,000)");
-
-        numEdgesS.setModel(new javax.swing.SpinnerNumberModel(20, 0, 100000, 1));
+        numEdgesS.setModel(new javax.swing.SpinnerNumberModel(30, 0, 100000, 1));
         numEdgesS.setToolTipText("Enter the number of edges in the resulting graph (0-100,000)");
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, numRB, org.jdesktop.beansbinding.ELProperty.create("${selected}"), numEdgesS, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
+        jPanel1.add(numEdgesS);
+
+        edgeTypeBG.add(probRB);
+        probRB.setText("probability per edge:");
+        jPanel1.add(probRB);
+
         probEdgeS.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.5f), Float.valueOf(0.0f), Float.valueOf(1.0f), Float.valueOf(0.1f)));
         probEdgeS.setToolTipText("Enter the probability of occurence for each edge in the resulting graph (0.00-1.00)");
+        probEdgeS.setPreferredSize(new java.awt.Dimension(70, 22));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, probRB, org.jdesktop.beansbinding.ELProperty.create("${selected}"), probEdgeS, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        directedBG.add(directedRB);
-        directedRB.setText("directed");
-
-        directedBG.add(undirectedRB);
-        undirectedRB.setSelected(true);
-        undirectedRB.setText("undirected");
+        jPanel1.add(probEdgeS);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(5, 5, 5)
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(numNodesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(layout.createSequentialGroup()
-                .addContainerGap()
-                .add(undirectedRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(directedRB))
-            .add(layout.createSequentialGroup()
-                .add(numRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(numEdgesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 71, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(layout.createSequentialGroup()
-                .add(probRB)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(probEdgeS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 385, Short.MAX_VALUE)
+            .add(basicP, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(numNodesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(basicP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(directedRB)
-                    .add(undirectedRB))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(probRB)
-                    .add(probEdgeS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(numRB)
-                    .add(numEdgesS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 92, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         bindingGroup.bind();
@@ -137,17 +98,13 @@ public class NewRandomGraphPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup directedBG;
-    private javax.swing.JRadioButton directedRB;
+    private graphexplorer.NewSimpleGraphPanel basicP;
     private javax.swing.ButtonGroup edgeTypeBG;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner numEdgesS;
-    private javax.swing.JSpinner numNodesS;
     private javax.swing.JRadioButton numRB;
     private javax.swing.JSpinner probEdgeS;
     private javax.swing.JRadioButton probRB;
-    private javax.swing.JRadioButton undirectedRB;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

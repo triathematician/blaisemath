@@ -2,14 +2,15 @@ package graphexplorer;
 
 
 
-import org.bm.blaise.scio.graph.layout.EnergyLayout;
+import javax.swing.ProgressMonitor;
+import org.bm.blaise.scio.graph.layout.SpringLayout;
 
 /**
  * task for managing the exporting of the movie
  * @author skyebend
  *
  */
-public class ExportMovieTask {
+public class ExportMovieTask implements Runnable {
 
     // initial number of layout frames
     private static final int _INITIAL_LAYOUT_FRAMES = 15;
@@ -21,25 +22,35 @@ public class ExportMovieTask {
     // time to wait while each frame is rendered
     private static final int _FRAME_DELAY = 10;
 
-    private LongitudinalGraphPanel lg;
-    transient private GraphController gc;
     private MovieExport maker;
+    private LongitudinalGraphPanel lg;
+    transient private GraphController gc;    
+    
+    private ProgressMonitor pm;
 
     private String status = "preparing to start...";
     private boolean stop = false;
     private int curSl = 0;
+    private int maxSl = 0;
 
-    public ExportMovieTask(LongitudinalGraphPanel lg, MovieExport maker) {
+    public ExportMovieTask(LongitudinalGraphPanel lg, MovieExport maker, ProgressMonitor pm) {
         this.lg = lg;
         this.gc = lg.gc;
         this.maker = maker;
+        this.pm = pm;
     }
 
     public void stop() { stop = true; }
     public boolean isDone() { return stop; }
+    public int getTaskLength() { return maxSl; }
 
     private void reportStatus() {
-        System.out.println("ExportMovieTask: " + status);
+        if (pm == null)
+            gc.reportStatus("ExportMovieTask: " + status);
+        else {
+            pm.setProgress(curSl);
+            pm.setNote(status);
+        }
     }
 
     /**
@@ -55,19 +66,23 @@ public class ExportMovieTask {
     }
 
     public void run() {
+        lg.hidePlot();
         try {
             int endIndex = lg.getNumSlices();
             int numFrames = endIndex * _INTERP_FRAMES;
             maker.setupMovie(lg.plot, numFrames);
-            gc.setIterativeLayout(new EnergyLayout(gc.getPositions()));
+            gc.setIterativeLayout(new SpringLayout(gc.getPositions()));
             curSl = 0;
             lg.setActiveSliceIndex(curSl);
             captureLayoutSteps(_INITIAL_LAYOUT_FRAMES);
             maker.captureImage();
             //movie export loop
-            while (curSl < endIndex - 1) {
+            maxSl = endIndex - 1;
+            if (pm != null)
+                pm.setMaximum(maxSl);
+            while (curSl < maxSl) {
                 curSl++;
-                status = "exporting slice " + curSl;
+                status = "Exporting slice " + curSl;
                 reportStatus();
                 lg.setActiveSliceIndex(curSl);
                 captureLayoutSteps(_INTERP_FRAMES);
@@ -86,5 +101,6 @@ public class ExportMovieTask {
             maker.finishMovie();
             maker = null;
         }
+        lg.showPlot();
     }
 }

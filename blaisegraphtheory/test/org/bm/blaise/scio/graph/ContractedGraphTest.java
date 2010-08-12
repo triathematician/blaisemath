@@ -26,9 +26,6 @@ public class ContractedGraphTest {
         assertTrue(found.containsAll(expected));
     }
 
-    public ContractedGraphTest() {
-    }
-
     static Integer CVX;
     static Integer[] VV;
     static Integer[][] EE;
@@ -48,15 +45,11 @@ public class ContractedGraphTest {
         DIRECTED_INSTANCE = new ContractedGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE)), SUB, CVX);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
     public void testToString() {
         System.out.println("toString");
-        assertEquals("[0, 0], [0, 3], [0, 4], [0, 10], [0, 11], [10, 11], [20, 21]", UNDIRECTED_INSTANCE.toString());
-        assertEquals("[0, 0], [0, 3], [0, 4], [0, 10], [10, 11], [11, 0], [20, 21]", DIRECTED_INSTANCE.toString());
+        assertEquals("Nodes: [0, 3, 4, 10, 11, 20, 21]; Edges: [0, 0], [0, 3], [0, 4], [0, 10], [0, 11], [10, 11], [20, 21]", UNDIRECTED_INSTANCE.toString());
+        assertEquals("Nodes: [0, 3, 4, 10, 11, 20, 21]; Edges: [0, 0], [0, 3], [0, 4], [0, 10], [10, 11], [11, 0], [20, 21]", DIRECTED_INSTANCE.toString());
     }
 
     @Test

@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
+import util.FileNameExtensionFilter;
 
 /**
  * <p>
@@ -39,6 +40,9 @@ public final class UCINetGraphIO extends AbstractGraphIO {
 
     /** Factory method @return instance of this IO class */
     public static UCINetGraphIO getInstance() { return INSTANCE; }
+
+    private static final FileNameExtensionFilter FILTER = new FileNameExtensionFilter("UCINet files (*.dat)", "dat");
+    public javax.swing.filechooser.FileFilter getFileFilter() { return FILTER; }
 
     /** Specifies mode for data. */
     enum DataFormat {

@@ -34,13 +34,19 @@ public class DecayCentrality implements NodeMetric<Double> {
 
     /** Construct with default decay parameter of 0.5 */
     public DecayCentrality() { }
-    /** @param parameter value of decay parameter */
+    /** 
+     * @param parameter value of decay parameter
+     * @throws IllegalArgumentException if value is outside of the range [0,1]
+     */
     public DecayCentrality(double parameter) { setParameter(parameter); }
 
     @Override public String toString() { return "Decay Centrality (" + parameter + ")"; }
 
-    /** @param parameter value of decay parameter
-     * @return instance with specified parameter */
+    /**
+     * @param parameter value of decay parameter
+     * @return instance with specified parameter
+     * @throws IllegalArgumentException if value is outside of the range [0,1]
+     */
     public static DecayCentrality getInstance(double parameter) { return new DecayCentrality(parameter); }
 
     /** @return value of decay parameter */
@@ -52,8 +58,11 @@ public class DecayCentrality implements NodeMetric<Double> {
     }
 
     public boolean supportsGraph(boolean directed) { return true; }
-    public <V> double nodeMax(boolean directed, int order) { return parameter*(order-1); }
-    public <V> double centralMax(boolean directed, int order) { throw new UnsupportedOperationException("Not supported yet."); }
+    public <V> double nodeMax(boolean directed, int order) {
+        // maximum occurs if all elements are at distance 1
+        return parameter*(order-1);
+    }
+    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
 
     public <V> Double value(Graph<V> graph, V vertex) {
         ValuedGraph<V, Integer> nvg = Graphs.geodesicTree(graph, vertex);
