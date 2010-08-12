@@ -1,6 +1,6 @@
 /**
- * StrokeStyle.java
- * Created on Aug 4, 2009
+ * StringStyle.java
+ * Created Sep 2009
  */
 package primitive.style;
 
@@ -22,15 +22,6 @@ import primitive.GraphicString;
  * @author Elisha Peterson
  */
 public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Double>> {
-
-    /** Anchor point constants. */
-    public enum Anchor {
-        CENTER(0), 
-        W(0), NW(.25*Math.PI), N(.5*Math.PI), NE(.75*Math.PI),
-        E(Math.PI), SE(1.25*Math.PI), S(1.5*Math.PI), SW(1.75*Math.PI);
-        public double angle;
-        Anchor(double angle) { this.angle = angle; }
-    }
     
     /** Color of the text. */
     Color color = Color.BLACK;    
@@ -39,7 +30,7 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** Stores font size. */
     transient Float fontSize = null;
     /** Stores the anchor. */
-    Anchor anchor = Anchor.SW;
+    Anchor anchor = Anchor.Southwest;
     
     /** Default constructor. */
     public StringStyle() { }
@@ -54,14 +45,8 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** Construct with provided parameters */
     public StringStyle(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
-    @Override
-    public String toString() {
-        return "StringStyle [" + font + "]";
-    }
-
-    public Class getTargetType() {
-        return GraphicString.class;
-    }
+    @Override public String toString() { return "StringStyle [" + font + "]"; }
+    public Class getTargetType() { return GraphicString.class; }
 
     /** @return color of string */
     public Color getColor() { return color; }
@@ -98,33 +83,33 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
         double width = fm.getStringBounds(gs.string, canvas).getWidth();
         double height = fm.getAscent() - fm.getDescent();
 
-        if (anchor == Anchor.SW)
+        if (anchor == Anchor.Southwest)
             return new Rectangle2D.Double(gs.anchor.getX(), gs.anchor.getY(), width, height);
 
         Point2D.Double shift = new Point2D.Double();
 
         switch (anchor) {
-            case NE: 
-            case E:
-            case SE:
+            case Northeast:
+            case East:
+            case Southeast:
                 shift.x = -width;
                 break;
-            case N: 
-            case CENTER:
-            case S:
+            case North:
+            case Center:
+            case South:
                 shift.x = -width / 2;
                 break;
         }
         
         switch (anchor) {
-            case NW: 
-            case N:
-            case NE:
+            case Northwest:
+            case North:
+            case Northeast:
                 shift.y = height;
                 break;
-            case W: 
-            case CENTER:
-            case E:
+            case West:
+            case Center:
+            case East:
                 shift.y = height / 2;
                 break;
         }

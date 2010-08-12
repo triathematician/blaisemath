@@ -27,13 +27,13 @@ public class PointFancyStyle extends PointLabeledStyle {
     /** Construct with defaults. */
     public PointFancyStyle() { super(); }
     /** Construct with default point style, specified anchor location */
-    public PointFancyStyle(StringStyle.Anchor anchor) { super(anchor); }
+    public PointFancyStyle(Anchor anchor) { super(anchor); }
     /** Construct with colors only. */
-    public PointFancyStyle(Color strokeColor, Color fillColor, StringStyle.Anchor anchor) { super(strokeColor, fillColor, anchor); }
+    public PointFancyStyle(Color strokeColor, Color fillColor, Anchor anchor) { super(strokeColor, fillColor, anchor); }
     /** Construct with specified elements. */
-    public PointFancyStyle(PointShape shape, StringStyle.Anchor anchor) { super(shape, 6, anchor); }
+    public PointFancyStyle(PointShape shape, Anchor anchor) { super(shape, 6, anchor); }
     /** Construct with specified elements. */
-    public PointFancyStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, StringStyle.Anchor anchor) { super(shape, stroke, strokeColor, fillColor, 6, anchor); }
+    public PointFancyStyle(PointShape shape, BasicStroke stroke, Color strokeColor, Color fillColor, Anchor anchor) { super(shape, stroke, strokeColor, fillColor, 6, anchor); }
 
     /** @return current radius drawn, if max supplied radius is 1 */
     public double getMaxRadius() { return maxRadius; }

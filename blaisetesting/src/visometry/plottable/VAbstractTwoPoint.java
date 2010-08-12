@@ -94,15 +94,34 @@ public abstract class VAbstractTwoPoint<C> extends DynamicPlottable<C>
         }
     }
 
+    //
+    // MOUSE METHODS
+    //
+
+    private transient boolean drag1 = true;
+    private transient C start = null, startDrag = null;
+
     public void mouseEntered(Object source, C start) {}
     public void mouseExited(Object source, C start) {}
     public void mouseMoved(Object source, C start) {}
-    public void mouseDragInitiated(Object source, C start) {}
+    public void mouseDragInitiated(Object source, C start) {
+        drag1 = source == entryP1;
+        this.start = drag1 ?  getPoint1() : getPoint2();
+        this.startDrag = start;
+    }
     public void mouseDragged(Object source, C current) {
-        if (source == entryP1)
-            setPoint1(current);
-        else if (source == entryP2)
-            setPoint2(current);
+        if (current instanceof Point2D && start instanceof Point2D) {
+            Point2D ps = (Point2D) start;
+            Point2D psd = (Point2D) startDrag;
+            Point2D pcd = (Point2D) current;
+            Point2D.Double relative = new Point2D.Double(
+                    ps.getX() + pcd.getX() - psd.getX(), ps.getY() + pcd.getY() - psd.getY()
+                    );
+            if (drag1) setPoint1((C) relative);
+            else setPoint2((C) relative);
+        } else
+            if (drag1) setPoint1(current);
+            else setPoint2(current);
     }
     public void mouseDragCompleted(Object source, C end) {
         mouseDragged(source, end);

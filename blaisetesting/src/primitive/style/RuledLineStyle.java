@@ -104,16 +104,16 @@ public class RuledLineStyle extends AbstractPrimitiveStyle<GraphicRuledLine<Poin
 
         // setup for tick mark labels
         Point2D.Double labelOffset = labelsAbove ? new Point2D.Double(1.5*dt.x, 1.5*dt.y) : new Point2D.Double(-1.5*dt.x, -1.5*dt.y);
-        StringStyle.Anchor labelAnchor = labelsAbove && vert ? StringStyle.Anchor.W
-                : vert ? StringStyle.Anchor.E
-                : labelsAbove && !vert ? StringStyle.Anchor.S
-                : StringStyle.Anchor.N;
+        Anchor labelAnchor = labelsAbove && vert ? Anchor.West
+                : vert ? Anchor.East
+                : labelsAbove && !vert ? Anchor.South
+                : Anchor.North;
         Point2D.Double mainLabelOffset = mainLabelOpposite ? new Point2D.Double(-.5*labelOffset.x, -.5*labelOffset.y) : new Point2D.Double(.5*labelOffset.x, .5*labelOffset.y);
-        StringStyle.Anchor mainLabelAnchor = mainLabelOpposite ?
-            (labelsAbove && vert ? StringStyle.Anchor.E
-                : vert ? StringStyle.Anchor.W
-                : labelsAbove && !vert ? StringStyle.Anchor.N
-                : StringStyle.Anchor.S)
+        Anchor mainLabelAnchor = mainLabelOpposite ?
+            (labelsAbove && vert ? Anchor.East
+                : vert ? Anchor.West
+                : labelsAbove && !vert ? Anchor.North
+                : Anchor.South)
                 : labelAnchor;
 
         // draw main label

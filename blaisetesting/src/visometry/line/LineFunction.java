@@ -9,6 +9,7 @@ import java.awt.Color;
 import org.apache.commons.math.FunctionEvaluationException;
 import org.apache.commons.math.analysis.UnivariateRealFunction;
 import primitive.GraphicString;
+import primitive.style.Anchor;
 import primitive.style.PointLabeledStyle;
 import primitive.style.PointStyle;
 import primitive.style.StringStyle;
@@ -40,7 +41,7 @@ public class LineFunction extends VPoint<Double> {
     public LineFunction(UnivariateRealFunction func) {
         super(0.0);
         primitives.add(oEntry = new VPrimitiveEntry(new GraphicString<Double>(0.0, PlottableConstants.FLOAT_FORMAT.format(0.0)),
-                new PointLabeledStyle(Color.BLACK, Color.YELLOW, StringStyle.Anchor.N)));
+                new PointLabeledStyle(Color.BLACK, Color.YELLOW, Anchor.North)));
         setFunction(func);
     }
 

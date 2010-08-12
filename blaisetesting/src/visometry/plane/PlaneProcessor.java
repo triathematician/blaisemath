@@ -8,14 +8,10 @@ package visometry.plane;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import primitive.*;
-import primitive.style.ArrowStyle;
-import primitive.style.PathStyleShape;
-import primitive.style.PointDirStyle;
-import primitive.style.PathStylePoints;
-import primitive.style.PointRadiusStyle;
-import primitive.style.ShapeStyle;
+import primitive.style.*;
 import visometry.PlotProcessor;
 import visometry.Visometry;
 import visometry.VPrimitiveEntry;
@@ -39,7 +35,11 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         if (entry.local == null)
             return;
 
-        if (entry.local instanceof GraphicPointFancy)
+        if (entry.local instanceof GraphicImage)
+            convertGraphicImage(entry, (GraphicImage) entry.local, vis);
+        else if (entry.local instanceof GraphicImage[])
+            convertGraphicImage(entry, (GraphicImage[]) entry.local, vis);
+        else if (entry.local instanceof GraphicPointFancy)
             convertGraphicPointFancy(entry, (GraphicPointFancy) entry.local, vis);
         else if (entry.local instanceof GraphicPointFancy[])
             convertGraphicPointFancy(entry, (GraphicPointFancy[]) entry.local, vis);
@@ -221,6 +221,25 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             Point2D.Double anchor = (Point2D.Double) locArr[i].anchor;
             winArr[i] = new GraphicPointRadius(vis.getWindowPointOf(anchor), locArr[i].rad / maxRad * maxRadPermitted / 2.0);
         }
+        entry.primitive = winArr;
+    }
+
+    private void convertGraphicImage(VPrimitiveEntry entry, GraphicImage loc, Visometry<Double> vis) {
+        if (loc.getAnchor() instanceof Point2D.Double) {
+            entry.primitive = new GraphicImage<Point2D.Double>(
+                    vis.getWindowPointOf((Point2D.Double) loc.getAnchor()),
+                    loc.image, loc.highlight);
+        }
+    }
+
+    private void convertGraphicImage(VPrimitiveEntry entry, GraphicImage[] locArr, Visometry<Double> vis) {
+        GraphicImage[] winArr = new GraphicImage[locArr.length];
+        for (int i = 0; i < locArr.length; i++)
+            if (locArr[i].getAnchor() instanceof Point2D.Double) {
+                winArr[i] = new GraphicImage<Point2D.Double>(
+                        vis.getWindowPointOf((Point2D.Double) locArr[i].getAnchor()),
+                        locArr[i].image, locArr[i].highlight);
+            }
         entry.primitive = winArr;
     }
 }

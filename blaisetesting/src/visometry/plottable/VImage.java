@@ -1,63 +1,57 @@
-/*
- * VAbstractPoint.java
- * Created Apr 12, 2010
+/**
+ * VImage.java
+ * Created on Aug 9, 2010
  */
 
 package visometry.plottable;
 
+import java.awt.Image;
 import java.awt.geom.Point2D;
-import primitive.GraphicString;
-import primitive.style.PointLabeledStyle;
-import primitive.style.PrimitiveStyle;
+import primitive.GraphicImage;
+import primitive.style.ImageStyle;
 import visometry.PointDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
 
 /**
- * Abstract implementation of a point displayed on a window, w/ support for dragging,
- * provided a suitable style is available.
- * Recognizes the style within the entry as either a <code>PointStyle</code> or a <code>PointLabeledStyle</code>,
- * and adjusts the primitive correspondingly to either a regular point or a <code>GraphicString</code>.
+ * <p>
+ *   <code>VImage</code> displays draggable images on a plot canvas.
+ * </p>
  *
  * @author Elisha Peterson
  */
-public abstract class VAbstractPoint<C> extends DynamicPlottable<C> 
+public class VImage<C> extends DynamicPlottable<C>
         implements PointDragListener<C> {
 
     /** Stores the table entry. */
     protected VPrimitiveEntry entry;
 
     /** Constructs w/ specified style. */
-    public VAbstractPoint(C value, PrimitiveStyle<? extends Point2D> style) {
-        addPrimitive(entry = new VDraggablePrimitiveEntry(
-                style instanceof PointLabeledStyle
-                    ? new GraphicString<C>(value, PlottableConstants.formatCoordinate(value))
-                    : value,
-                style, this));
+    public VImage(C anchor, Image image, ImageStyle style) {
+        addPrimitive(entry = new VDraggablePrimitiveEntry(new GraphicImage<C>(anchor, image), style, this));
     }
 
     @Override
     public String toString() {
-        return "Point[" + entry.local + "]";
+        return "VImage[" + entry.local + "]";
     }
+
+    /** @return image style */
+    public ImageStyle getStyle() { return (ImageStyle) entry.style; }
+    /** @param newStyle new image style */
+    public void setStyle(ImageStyle newStyle) { if (entry.style != newStyle) { entry.style = newStyle; firePlottableStyleChanged(); } }
 
     /** @return current location of the coordinate */
     public C getPoint() {
-        return entry.local instanceof GraphicString
-                ? ((GraphicString<C>)entry.local).getAnchor()
-                : (C) entry.local;
+        return ((GraphicImage<C>)entry.local).anchor;
     }
 
     public void setPoint(C value) {
         if (value == null)
             throw new NullPointerException();
         if (!value.equals(getPoint())) {
-            if (entry.style instanceof PointLabeledStyle) {
-                GraphicString<C> gs = (GraphicString<C>) entry.local;
-                gs.setAnchor(value);
-                gs.setString(PlottableConstants.formatCoordinate(value));
-            } else
-                entry.local = value;
+            GraphicImage<C> gs = (GraphicImage<C>) entry.local;
+            gs.setAnchor(value);
             entry.needsConversion = true;
             firePlottableChanged();
         }
@@ -85,6 +79,6 @@ public abstract class VAbstractPoint<C> extends DynamicPlottable<C>
         } else
             setPoint(current);
     }
-    public void mouseDragCompleted(Object source, C end) { mouseDragged(source, end); }
+    public void mouseDragCompleted(Object source, C end) { setPoint(end); }
 
 }

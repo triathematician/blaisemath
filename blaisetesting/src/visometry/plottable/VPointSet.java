@@ -5,6 +5,7 @@
 
 package visometry.plottable;
 
+import java.awt.geom.Point2D;
 import java.util.Arrays;
 import primitive.style.PointLabeledStyle;
 import visometry.PointDragListener;
@@ -40,17 +41,40 @@ public class VPointSet<C> extends VAbstractPointArray<C>
     /** Set current style of point for this plottable */
     public void setPointStyle(PointLabeledStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
 
+
+    //
+    // MOUSE METHODS
+    //
+
+    private transient int dragIndex = -1;
+    private transient C start = null, startDrag = null;
+
     public void mouseEntered(Object source, C start) {}
     public void mouseExited(Object source, C start) {}
     public void mouseMoved(Object source, C start) {}
-    public void mouseDragInitiated(Object source, C start) {}
-
+    public void mouseDragInitiated(Object source, C start) {
+        dragIndex = entry.getActiveIndex();
+        if (dragIndex != -1) {
+            this.start = getPoint(dragIndex);
+            this.startDrag = start;
+        }
+    }
     public void mouseDragged(Object source, C current) {
-        int index = entry.getActiveIndex();
-        if (index != -1)
-            setPoint(index, current);
+        if (dragIndex != -1) {
+            if (current instanceof Point2D && start instanceof Point2D) {
+                Point2D ps = (Point2D) start;
+                Point2D psd = (Point2D) startDrag;
+                Point2D pcd = (Point2D) current;
+                Point2D.Double relative = new Point2D.Double(
+                        ps.getX() + pcd.getX() - psd.getX(), ps.getY() + pcd.getY() - psd.getY()
+                        );
+                setPoint(dragIndex, (C) relative);
+            } else
+                setPoint(dragIndex, current);
+        }
     }
     public void mouseDragCompleted(Object source, C end) {
         mouseDragged(source, end);
+        dragIndex = -1;
     }
 }

@@ -42,6 +42,11 @@ public class GraphicString<C> extends Point2D.Double {
     public String getString() { return string; }
     /** Set the style associated with the graphic string primitive. */
     public void setString(String string) { this.string = string; }
+    /** @return offset from anchor point to draw the primitive */
+    public Point2D.Double getOffset() { return offset; }
+    /** Sets offset from anchor point to draw the primitive */
+    public void setOffset(Point2D.Double newValue) { offset = newValue; }
+    
     /** @return the coordinate anchor point of the graphic string primitive */
     public C getAnchor() { return anchor; }
     /** Set the anchor point of the graphic string primitive.
@@ -52,8 +57,16 @@ public class GraphicString<C> extends Point2D.Double {
         if (anchor instanceof Point2D)
             setLocation((Point2D) newAnchor);
     }
-    /** @return offset from anchor point to draw the primitive */
-    public Point2D.Double getOffset() { return offset; }
-    /** Sets offset from anchor point to draw the primitive */
-    public void setOffset(Point2D.Double newValue) { offset = newValue; }
+    @Override
+    public void setLocation(double x, double y) {
+        super.setLocation(x, y);
+        if (anchor instanceof Point2D)
+            ((Point2D)anchor).setLocation(x, y);
+    }
+    @Override
+    public void setLocation(Point2D p) {
+        super.setLocation(p);
+        if (anchor instanceof Point2D)
+            ((Point2D)anchor).setLocation(x, y);
+    }
 }
