@@ -27,7 +27,8 @@ public abstract class AbstractPrimitiveStyle<C> implements PrimitiveStyle<C> {
     }
 
     public int containedInArray(C[] primitives, Graphics2D canvas, Point point) {
-        for (int i = 0; i < primitives.length; i++)
+        // reverse order of draw
+        for (int i = primitives.length - 1; i >= 0; i--)
             if (contained(primitives[i], canvas, point))
                 return i;
         return -1;

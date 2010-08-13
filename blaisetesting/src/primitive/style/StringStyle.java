@@ -39,9 +39,11 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** Construct with color only */
     public StringStyle(Color color) { setColor(color); }
     /** Constructs with provided parameters. */
-    public StringStyle(Color color, float size) { this.color = color; this.fontSize = size; }
+    public StringStyle(Color color, float size) { setColor(color); setFontSize(size); }
     /** Constructs with provided parameters. */
-    public StringStyle(Color color, Font font) { this.color = color; this.font = font; }
+    public StringStyle(Color color, Font font) { setColor(color); setFont(font); }
+    /** Construct with color, size, anchor */
+    public StringStyle(Color color, float size, Anchor anchor) { setColor(color); setFontSize(size); setAnchor(anchor); }
     /** Construct with provided parameters */
     public StringStyle(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
@@ -56,6 +58,10 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     public Font getFont() { return font; }
     /** @param font new font */
     public void setFont(Font font) { this.font = font; }
+    /** @return current font size */
+    public float getFontSize() { return font == null ? fontSize : font.getSize2D(); }
+    /** @param size new font */
+    public void setFontSize(float size) { fontSize = size; if (font != null) font = font.deriveFont(size); }
     /** @return location of anchor point of string relative to provided coordinate */
     public Anchor getAnchor() { return anchor; }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
