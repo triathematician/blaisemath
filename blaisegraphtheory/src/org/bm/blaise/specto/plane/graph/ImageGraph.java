@@ -36,8 +36,8 @@ public final class ImageGraph extends AbstractPlaneGraph<GraphicImage<Point2D.Do
     /** Constructs with specified graph */
     public ImageGraph(Graph graph) {
         super(graph, new ImageStyle());
-        getImageStyle().setMaxHeight(150);
-        getImageStyle().setMaxWidth(150);
+        getImageStyle().setMaxHeight(80);
+        getImageStyle().setMaxWidth(80);
     }
 
     @Override

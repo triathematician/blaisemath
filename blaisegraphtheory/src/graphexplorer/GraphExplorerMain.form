@@ -217,36 +217,17 @@
             <Menu class="javax.swing.JMenu" name="exportImageM">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export image"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
-              <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jpgMI">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="JPEG format (.jpg)"/>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="pngMI">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Portable Network Graphics format (.png)"/>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="gifMI">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Graphics Interchange Format (.gif)"/>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
-                </MenuItem>
-              </SubComponents>
             </Menu>
             <Menu class="javax.swing.JMenu" name="exportMovieM">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export movie"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="exportQTMI">
+                <MenuItem class="javax.swing.JMenuItem" name="export_movMI">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Quicktime (.mov)"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </MenuItem>

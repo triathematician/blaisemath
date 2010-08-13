@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
@@ -46,6 +47,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.YIntervalRenderer;
 import org.jfree.data.xy.DefaultIntervalXYDataset;
+import visometry.PlotComponent;
 import visometry.plane.PlanePlotComponent;
 
 /**
@@ -213,11 +215,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
         closeMI = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         exportImageM = new javax.swing.JMenu();
-        jpgMI = new javax.swing.JMenuItem();
-        pngMI = new javax.swing.JMenuItem();
-        gifMI = new javax.swing.JMenuItem();
         exportMovieM = new javax.swing.JMenu();
-        exportQTMI = new javax.swing.JMenuItem();
+        export_movMI = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         quitMI = new javax.swing.JMenuItem();
         layoutM = new javax.swing.JMenu();
@@ -506,26 +505,14 @@ public class GraphExplorerMain extends javax.swing.JFrame
         fileM.add(jSeparator7);
 
         exportImageM.setText("Export image");
-
-        jpgMI.setText("JPEG format (.jpg)");
-        jpgMI.setEnabled(false);
-        exportImageM.add(jpgMI);
-
-        pngMI.setText("Portable Network Graphics format (.png)");
-        pngMI.setEnabled(false);
-        exportImageM.add(pngMI);
-
-        gifMI.setText("Graphics Interchange Format (.gif)");
-        gifMI.setEnabled(false);
-        exportImageM.add(gifMI);
-
+        exportImageM.setEnabled(false);
         fileM.add(exportImageM);
 
         exportMovieM.setText("Export movie");
+        exportMovieM.setEnabled(false);
 
-        exportQTMI.setText("Quicktime (.mov)");
-        exportQTMI.setEnabled(false);
-        exportMovieM.add(exportQTMI);
+        export_movMI.setEnabled(false);
+        exportMovieM.add(export_movMI);
 
         fileM.add(exportMovieM);
         fileM.add(jSeparator6);
@@ -680,9 +667,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem energyStopMI;
     private javax.swing.JMenu exportImageM;
     private javax.swing.JMenu exportMovieM;
-    private javax.swing.JMenuItem exportQTMI;
+    private javax.swing.JMenuItem export_movMI;
     private javax.swing.JMenu fileM;
-    private javax.swing.JMenuItem gifMI;
     private javax.swing.JMenu globalMetricM;
     private javax.swing.JTabbedPane graphTP;
     private javax.swing.JMenu helpM;
@@ -697,7 +683,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator9;
-    private javax.swing.JMenuItem jpgMI;
     private data.propertysheet.PropertySheet labelPS;
     private javax.swing.JButton layoutCircleTBB;
     private javax.swing.JToggleButton layoutEnergyTBB;
@@ -724,7 +709,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private data.propertysheet.PropertySheet nodePS;
     private javax.swing.JScrollPane outputSP;
     private javax.swing.JTextPane outputTP;
-    private javax.swing.JMenuItem pngMI;
     private javax.swing.JMenuItem preferentialMI;
     private javax.swing.JMenuItem preferentialMI1;
     private gui.RollupPanel propertyRP;
@@ -780,6 +764,17 @@ public class GraphExplorerMain extends javax.swing.JFrame
     AbstractPlaneGraph activePlaneGraph() {
         GraphController gc = master.getActiveController();
         return graphs.get(gc);
+    }
+
+    PlotComponent activePlotComponent() {
+        GraphController gc = master.getActiveController();
+        Component c = tabs.get(gc);
+        if (c instanceof PlotComponent)
+            return (PlotComponent) c;
+        else if (c instanceof LongitudinalGraphPanel) {
+            return ((LongitudinalGraphPanel)c).plot;
+        }
+        return null;
     }
 
     /** Updates the property panel with currently active graph and energy layout */
@@ -978,12 +973,26 @@ public class GraphExplorerMain extends javax.swing.JFrame
         updateLongChart();
         if (activePlaneGraph() != null)
             activePlaneGraph().addChangeListener(this);
-        if (gc != null)
+
+        if (gc != null) {
             gc.addPropertyChangeListener(this);
-        if (gc != null && gc.isLongitudinal())
-            exportQTMI.setAction(new ExplorerIOActions.MovieAction(gc, (LongitudinalGraphPanel) tabs.get(gc)));
-        else
-            exportQTMI.setEnabled(false);
+            exportImageM.setEnabled(true);
+            exportImageM.removeAll();
+            for (Action a : actions_io.imageActions(activePlotComponent()))
+                exportImageM.add(a);
+        } else {
+            exportImageM.setEnabled(false);
+            exportImageM.removeAll();
+        }
+
+        if (gc != null && gc.isLongitudinal()) {
+            export_movMI.setAction(new ExplorerIOActions.MovieAction(gc, (LongitudinalGraphPanel) tabs.get(gc)));
+            exportMovieM.setEnabled(true);
+        } else {
+            export_movMI.setEnabled(false);
+            exportMovieM.setEnabled(false);
+        }
+
         actions_stat.setController(gc);
         actions_layout.setController(gc);
         updating = false;

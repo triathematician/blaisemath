@@ -5,15 +5,20 @@
 
 package graphexplorer;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -29,6 +34,7 @@ import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.io.*;
 import org.bm.blaise.scio.graph.io.AbstractGraphIO.GraphType;
+import visometry.PlotComponent;
 
 /**
  * Describes file/IO actions supporting the graph explorer app.
@@ -181,6 +187,51 @@ class ExplorerIOActions {
         }
     }
 
+    // image actions
+
+    Action[] imageActions(PlotComponent plot) {
+        if (plot == null)
+            return new Action[]{};
+        List supportedFormats = Arrays.asList(ImageIO.getWriterFormatNames());
+        ArrayList<Action> result = new ArrayList<Action>();
+        if (supportedFormats.contains("jpg")) result.add(new ExportImageAction("JPEG format (.jpg, .jpeg)", "jpg", plot));
+        if (supportedFormats.contains("png")) result.add(new ExportImageAction("Portable Network Graphics format (.png)", "png", plot));
+        if (supportedFormats.contains("gif")) result.add(new ExportImageAction("Graphics Interchange Format (.gif)", "gif", plot));
+        if (supportedFormats.contains("bmp")) result.add(new ExportImageAction("Bitmap format (.bmp)", "bmp", plot));
+        return result.toArray(new Action[]{});
+    }
+
+    static class ExportImageAction extends AbstractAction {
+        PlotComponent plot;
+        String ext;
+        ExportImageAction(String text, String ext, PlotComponent plot) {
+            super(text);
+            this.plot = plot;
+            this.ext = ext;
+        }
+        public void actionPerformed(ActionEvent e) {
+            initFileChooser();
+            fc.setApproveButtonText("Export");
+            if (openFile != null) {
+                fc.setCurrentDirectory(openFile);
+                fc.setSelectedFile(openFile);
+            }
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                openFile = fc.getSelectedFile();
+                BufferedImage image = new BufferedImage(plot.getWidth(), plot.getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics2D canvas = image.createGraphics();
+                canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                plot.renderTo(canvas);
+                canvas.dispose();
+                try {
+                    ImageIO.write(image, ext, openFile);
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+    }
+
     // movie export actions
 
     static class MovieAction extends AbstractAction implements Runnable {
@@ -220,6 +271,9 @@ class ExplorerIOActions {
     }
 
 
+    //
+    // INNER CLASSES
+    //
 
     /** File chooser that is intended for use with graphs */
     public static class GraphFileChooser extends javax.swing.JFileChooser {

@@ -16,9 +16,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
+import primitive.GraphicString;
 import primitive.style.ArrowStyle;
 import primitive.style.PrimitiveStyle;
+import primitive.style.StringStyle;
 import util.ChangeBroadcaster;
 import visometry.PointDragListener;
 import visometry.VDraggablePrimitiveEntry;
@@ -48,6 +51,8 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     VPrimitiveEntry vertexEntry;
     /** Edges; underlying primitive is an array of point-pairs */
     VPrimitiveEntry edgeEntry;
+    /** Entry for edge weights */
+    VPrimitiveEntry edgeWeightEntry;
     /** The underlying graph object. */
     Graph graph;
     /** The node position map (keeps order of vertices). */
@@ -62,9 +67,13 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
 
     public AbstractPlaneGraph(Graph graph, PrimitiveStyle vStyle) {
         ArrowStyle eStyle = new ArrowStyle(new Color(96, 192, 96));
+        eStyle.setShapeSize(12);
         eStyle.setThickness(2f);
         addPrimitive(edgeEntry = new VPrimitiveEntry(null, eStyle));
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
+        StringStyle sStyle = new StringStyle(Color.DARK_GRAY, 10, primitive.style.Anchor.Center);
+        addPrimitive(edgeWeightEntry = new VPrimitiveEntry(null, sStyle));
+        edgeWeightEntry.visible = false;
         setGraph(graph);
     }
 
@@ -124,7 +133,8 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
 
         ArrowStyle eStyle = (ArrowStyle) edgeEntry.style;
         eStyle.setHeadShape(graph.isDirected() ? ArrowStyle.ArrowShape.TRIANGLE : ArrowStyle.ArrowShape.NONE);
-        eStyle.setShapeSize(8);
+
+        edgeWeightEntry.visible = graph instanceof WeightedGraph;
 
         firePlottableChanged();
     }
@@ -201,16 +211,33 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
 
     @Override
     protected void recompute() {
-        ArrayList<Point2D.Double[]> edges = new ArrayList<Point2D.Double[]>();
+        WeightedGraph wg = null;
+        if (graph instanceof WeightedGraph)
+            wg = (WeightedGraph) graph;
+
         Point2D.Double[] arr = (Point2D.Double[]) vertexEntry.local;
+        ArrayList<Point2D.Double[]> edges = new ArrayList<Point2D.Double[]>();
+        ArrayList<GraphicString<Point2D.Double>> weights = new ArrayList<GraphicString<Point2D.Double>>();
+
         List nodes = graph.nodes();
         int size = nodes.size();
         for (int i1 = 0; i1 < size; i1++)
-            for (int i2 = 0; i2 < size; i2++)
-                if (graph.adjacent(nodes.get(i1), nodes.get(i2)))
-                    edges.add(new Point2D.Double[]{(Point2D.Double)arr[i1], (Point2D.Double)arr[i2]});
+            for (int i2 = (graph.isDirected() ? 0 : i1+1); i2 < size; i2++)
+                if (graph.adjacent(nodes.get(i1), nodes.get(i2))) {
+                    edges.add(new Point2D.Double[]{arr[i1], arr[i2]});
+                    if (wg != null) {
+                        Object wt = wg.getWeight(nodes.get(i1), nodes.get(i2));
+                        Point2D.Double midPt = new Point2D.Double(.5*(arr[i1].x+arr[i2].x), .5*(arr[i1].y+arr[i2].y));
+                        weights.add(new GraphicString<Point2D.Double>(midPt, wt.toString()));
+                    }
+                }
         edgeEntry.local = edges.toArray(new Point2D.Double[][]{});
         edgeEntry.needsConversion = true;
+
+        if (wg != null) {
+            edgeWeightEntry.local = weights.toArray(new GraphicString[]{});
+            edgeWeightEntry.needsConversion = true;
+        }
     }
 
     //
