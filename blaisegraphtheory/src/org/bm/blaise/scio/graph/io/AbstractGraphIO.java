@@ -46,7 +46,8 @@ public abstract class AbstractGraphIO {
      * @param type a type pointer describing whether resulting graph should be regular or longitudinal;
      *   if impossible to support the specified option, the type pointer will switch to indicate
      *   a different return type
-     * @return the graph data structure
+     * @return the graph data structure;
+     *   or possibly return null if there is an error reading the specified file
      */
     public Object importGraph(Map<Integer, double[]> locations, URL file, GraphType type) {
         return importGraph(locations, new File(file.getFile()), type);
@@ -59,7 +60,8 @@ public abstract class AbstractGraphIO {
      * @param type a type pointer describing whether resulting graph should be regular or longitudinal;
      *   if impossible to support the specified option, the type pointer will switch to indicate
      *   a different return type
-     * @return the graph data structure, possibly with node labels attached to the vertices
+     * @return the graph data structure, possibly with node labels attached to the vertices;
+     *   or possibly return null if there is an error reading the specified file
      */
     public abstract Object importGraph(Map<Integer, double[]> locations, File file, GraphType type);
 
@@ -90,7 +92,7 @@ public abstract class AbstractGraphIO {
      * @param directed whether resulting graph should be directed
      * @return a graph implementation with the desired properties/values
      */
-    protected static LongitudinalGraph<Integer> buildGraph(
+    public static LongitudinalGraph<Integer> buildGraph(
             Map<Integer,String> vertices,
             Map<Integer,List<double[]>> times,
             ArrayList<Integer[]> edges,
@@ -147,7 +149,7 @@ public abstract class AbstractGraphIO {
      * @param directed whether resulting graph should be directed
      * @return a graph implementation with the desired properties/values
      */
-    protected static Graph<Integer> buildGraph(
+    public static Graph<Integer> buildGraph(
             Map<Integer,String> vertices,
             ArrayList<Integer[]> edges,
             ArrayList<Double> weights,
@@ -201,7 +203,7 @@ public abstract class AbstractGraphIO {
      * @param directed whether resulting graph should be directed
      * @return a graph implementation with the desired properties/values
      */
-    protected static ValuedGraph<Integer,Object[]> buildGraph(
+    public static ValuedGraph<Integer,Object[]> buildGraph(
             Map<Integer,String> vertices,
             Map<Integer,String> images,
             ArrayList<Integer[]> edges,

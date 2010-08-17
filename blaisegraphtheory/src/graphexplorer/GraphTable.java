@@ -87,7 +87,7 @@ public class GraphTable extends javax.swing.JTable
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            Object node = model.gtm.getValueAt(row, GraphTableModel.COL_NODE);
+            Object node = model.getValueAt(row, GraphTableModel.COL_NODE);
             if (model.gtm.gc.getNodeSubset().contains(node))
                 c.setForeground(Color.RED);
             else

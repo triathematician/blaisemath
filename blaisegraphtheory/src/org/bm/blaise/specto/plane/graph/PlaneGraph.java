@@ -55,6 +55,7 @@ public final class PlaneGraph extends AbstractPlaneGraph<GraphicPointFancy<Point
 
     /** Sets current list of vertex values */
     public void setNodeValues(List values) {
+//        System.out.println("setNodeValues");
         GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
         if (values == null) {
             return;
@@ -82,6 +83,7 @@ public final class PlaneGraph extends AbstractPlaneGraph<GraphicPointFancy<Point
 
     /** Updates all the labels in the graph */
     public void updateLabels() {
+//        System.out.println("updateLabels");
         List nodes = graph.nodes();
         int size = nodes.size();
         if (vertexEntry.local == null || ((GraphicPointFancy[])vertexEntry.local).length != size)
@@ -105,6 +107,7 @@ public final class PlaneGraph extends AbstractPlaneGraph<GraphicPointFancy<Point
 
     /** Updates colors to highlight selected nodes only */
     public void highlightNodes(Collection subset) {
+//        System.out.println("highlight nodes");
         List nodes = graph.nodes();
         GraphicPointFancy[] gpfa = (GraphicPointFancy[]) vertexEntry.local;
         int i = 0;

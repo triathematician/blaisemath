@@ -92,7 +92,7 @@ class ExplorerLayoutActions {
         }
     };
 
-    public Action LAYOUT_ENERGY_START = new AbstractAction("Spring layout - start", ExplorerActions.loadIcon("start18")) {
+    public Action LAYOUT_ENERGY_START = new AbstractAction("Spring layout - start", ExplorerActions.loadIcon("play18")) {
         {
             putValue(SHORT_DESCRIPTION, "Set the active layout algorithm to a spring-based layout algorithm," +
                     " and begin animation.");

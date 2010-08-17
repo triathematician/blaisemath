@@ -16,12 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.bm.blaise.scio.graph.FilteredWeightedGraph;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
@@ -50,8 +51,8 @@ public class GraphController {
     /** Name of graph */
     private String name = null;
 
-    /** Stores the graph (current graph for longitudinal case) */
-    private Graph graph = null;
+    /** Stores the base graph (pre-filter) */
+    private Graph baseGraph = null;
     /** Stores the set of nodes & their locations (all nodes for longitudinal graphs) */
     private Map<Object,Point2D.Double> nodes = null;
     /** Stores the "subset" of the graph that is currently of interest (may be null or empty) */
@@ -62,6 +63,11 @@ public class GraphController {
     private List values = null;
     /** Stores the animating layout (may be null) */
     private IterativeGraphLayout layout = null;
+
+    /** Flag indicating whether current graph is filtered */
+    private boolean filtered = false;
+    /** The filtered graph */
+    private FilteredWeightedGraph fGraph = null;
 
     /** Flag indicating whether current graph is longitudinal */
     private boolean longitudinal = false;
@@ -119,9 +125,11 @@ public class GraphController {
 
     /** @return true if controller is in a valid state */
     public boolean valid() {
-        if (graph == null)
+        if (baseGraph == null)
             return false;
         if (longitudinal && lGraph == null)
+            return false;
+        if (filtered && fGraph == null)
             return false;
         return true;
     }
@@ -143,7 +151,9 @@ public class GraphController {
     public String getName() { return name; }
 
     /** @return primary object */
-    public Object getPrimaryGraph() { return longitudinal ? lGraph : graph; }
+    public Object getPrimaryGraph() {
+        return longitudinal ? lGraph : baseGraph;
+    }
 
     /** @return all nodes */
     public Set getPrimaryNodes() { return nodes.keySet(); }
@@ -152,7 +162,9 @@ public class GraphController {
     public Map<Object, Point2D.Double> getPositions() { return nodes; }
 
     /** @return active graph */
-    public Graph getActiveGraph() { return graph; }
+    public Graph getActiveGraph() { 
+        return filtered ? fGraph : baseGraph;
+    }
 
     /** @return highlighted subset of nodes (non-null, but maybe empty) */
     public Set getNodeSubset() { return subset; }
@@ -166,7 +178,7 @@ public class GraphController {
     public List getMetricValues() {
         if (running)
             return null;
-        else if (values == null && metric != null && graph != null) {
+        else if (values == null && metric != null && getActiveGraph() != null) {
             running = true;
 //            System.out.println("getMetricValues computing");
 //            System.out.println(".. metric: " + metric);
@@ -175,8 +187,8 @@ public class GraphController {
                 public void run() {
                     pcs.firePropertyChange("status", null, "Computing metric " + metric + "...");
                     long t0 = System.currentTimeMillis();
-                    values = (metric == null || graph == null) ? null
-                            : metric.allValues(graph);
+                    values = (metric == null || getActiveGraph() == null) ? null
+                            : metric.allValues(getActiveGraph());
                     running = false;
                     long t = System.currentTimeMillis() - t0;
                     pcs.firePropertyChange("status", null, metric + " computation completed (" + t + "ms).");
@@ -207,6 +219,18 @@ public class GraphController {
     /** @return nodes for current longitudinal graph slice */
     public List getActiveNodes() { return activeNodes; }
 
+    /** @return filter status */
+    public boolean isFiltered() {
+        assert valid();
+        return filtered;
+    }
+
+    /** @return filtered graph */
+    public FilteredWeightedGraph getFilteredGraph() { return fGraph; }
+
+    /** @return filter threshold */
+    public Double getFilterThreshold() { return fGraph == null ? null : fGraph.getThreshold(); }
+
     //
     // SETTERS
     //
@@ -229,8 +253,8 @@ public class GraphController {
     public void setPrimaryGraph(Graph graph) {
         if (graph == null)
             throw new NullPointerException("setGraph called with null argument");
-        if (this.graph != graph) {
-            this.graph = graph;
+        if (this.baseGraph != graph) {
+            this.baseGraph = graph;
             this.nodes = new TreeMap<Object, Point2D.Double>();
             for (Object o : graph.nodes())
                 this.nodes.put(o, new Point2D.Double());
@@ -242,6 +266,8 @@ public class GraphController {
             this.lGraph = null;
             this.time = null;
             this.activeNodes = graph.nodes();
+            this.filtered = false;
+            this.fGraph = null;
             pcs.firePropertyChange("primary", null, graph);
         }
         assert valid();
@@ -256,7 +282,7 @@ public class GraphController {
         if (graph == null)
             throw new NullPointerException("setGraph called with null argument");
         if (this.lGraph != graph) {
-            this.graph = null;
+            this.baseGraph = null;
             this.nodes = new TreeMap<Object, Point2D.Double>();
             for (Object o : graph.getAllNodes())
                 this.nodes.put(o, new Point2D.Double());
@@ -266,6 +292,8 @@ public class GraphController {
             this.layout = null;
             this.longitudinal = true;
             this.lGraph = graph;
+            this.filtered = false;
+            this.fGraph = null;
             pcs.firePropertyChange("primary", null, graph);
             setTime(lGraph.getMinimumTime());
         }
@@ -321,21 +349,63 @@ public class GraphController {
      * does not contain a slice at the specified time, returns a graph at the
      * closest available time; the time stored is then the exact time of the slice.
      * @param time the new time
+     * @throw IllegalStateException if not in longitudinal state
      */
     public void setTime(double time) {
         assert valid();
         if (!isLongitudinal())
             throw new IllegalStateException("Should not call setTime when not in longitudinal state!");
         
-        if (this.time == null || this.time != time || this.graph == null || this.activeNodes == null) {
-            this.graph = lGraph.slice(time, false);
+        if (this.time == null || this.time != time || this.baseGraph == null || this.activeNodes == null) {
+            this.baseGraph = lGraph.slice(time, false);
+            if (filtered && baseGraph instanceof WeightedGraph) {
+                double threshold = fGraph.getThreshold();
+                fGraph = FilteredWeightedGraph.getInstance((WeightedGraph) baseGraph);
+                fGraph.setThreshold(threshold);
+            }
             this.values = null;
-            this.activeNodes = graph.nodes();
+            this.activeNodes = baseGraph.nodes();
             Double oldTime = this.time;
             this.time = time; // TODO - this should be altered in case the returned graph is not at the exact time
             pcs.firePropertyChange("time", oldTime, time);
         }
         assert valid();
+    }
+
+    /**
+     * Sets filter status
+     */
+    public void setFiltered(boolean value) {
+        if (value == true && !(baseGraph instanceof WeightedGraph))
+            return;
+        if (filtered != value) {
+            filtered = value;
+            if (filtered) {
+                if (fGraph == null || fGraph.getBaseGraph() != baseGraph)
+                    fGraph = FilteredWeightedGraph.getInstance((WeightedGraph) baseGraph);
+            }
+            pcs.firePropertyChange("filtered", !filtered, filtered);
+        }
+    }
+
+    /**
+     * Sets filter threshold
+     */
+    public void setFilterThreshold(double value) {
+        if (!(baseGraph instanceof WeightedGraph))
+            return;
+        if (!filtered) {
+            filtered = true;
+            if (filtered) {
+                if (fGraph == null || fGraph.getBaseGraph() != baseGraph)
+                    fGraph = FilteredWeightedGraph.getInstance((WeightedGraph) baseGraph);
+            }
+            pcs.firePropertyChange("filtered", false, true);
+        } else {
+            double oldValue = fGraph.getThreshold();
+            fGraph.setThreshold(value);
+            pcs.firePropertyChange("filter threshold", oldValue, value);
+        }
     }
 
     //
@@ -364,7 +434,7 @@ public class GraphController {
 
     /** Applies specified layout to the active graph */
     void applyLayout(StaticGraphLayout layout, double... parameters) {
-        setPositions(layout.layout(graph, parameters));
+        setPositions(layout.layout(getActiveGraph(), parameters));
     }
 
     /**
@@ -405,7 +475,7 @@ public class GraphController {
         layoutTimer = new BetterTimer(1);
         layoutTimer.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                layout.iterate(graph);
+                layout.iterate(getActiveGraph());
                 nodes.putAll(layout.getPositions());
                 pcs.firePropertyChange("positions", null, nodes);
             }
@@ -420,7 +490,7 @@ public class GraphController {
      */
     public void stepLayout() {
         if (!animating && layout != null) {
-            layout.iterate(graph);
+            layout.iterate(getActiveGraph());
             nodes.putAll(layout.getPositions());
             pcs.firePropertyChange("positions", null, nodes);
         }
@@ -450,8 +520,8 @@ public class GraphController {
      * @param label the label of the node
      */
     public void setActiveGraphLabel(Object node, String label) {
-        if (graph instanceof ValuedGraph) {
-            ValuedGraph vg = (ValuedGraph) graph;
+        if (baseGraph instanceof ValuedGraph) {
+            ValuedGraph vg = (ValuedGraph) baseGraph;
             Object oldValue = vg.getValue(node);
             vg.setValue(node, label);
             pcs.firePropertyChange("node value", oldValue, label);

@@ -106,6 +106,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
      * @param graph the new graph
      */
     public void setGraph(Graph graph) {
+//        System.out.println("setGraph");
         this.graph = graph;
         List nodes = graph.nodes();
         // first compute starting graph locations (keep locations for nodes that are the same since last graph)
@@ -151,6 +152,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
      * all points in the graph.
      */
     public void setPositionMap(Map<?, Point2D.Double> map) {
+//        System.out.println("setPositionMap");
         int i = 0;
 
         Point2D.Double[] arr = (Point2D.Double[]) vertexEntry.local;
@@ -174,6 +176,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     }
     /** Sets location of the i'th point */
     public void setPoint(int i, Point2D.Double newValue) {
+//        System.out.println("setPoint i");
         Point2D.Double[] arr = (Point2D.Double[]) vertexEntry.local;
         arr[i].setLocation(newValue);
         pos.put(graph.nodes().get(i), newValue);
@@ -192,6 +195,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     }
     /** Sets location of all vertices at once. Number of points must match the order of the graph. */
     public void setPoint(Point2D.Double[] loc) {
+//        System.out.println("setPoint all");
         Point2D.Double[] arr = (Point2D.Double[]) vertexEntry.local;
         for (int i = 0; i < Math.min(arr.length, loc.length); i++) {
             arr[i].setLocation(loc[i]);
@@ -209,8 +213,14 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     /** Updates colors to highlight selected nodes only */
     abstract public void highlightNodes(Collection subset);
 
+    /** Requests that this graph be "recomputed", in effect refreshing its set of visual edges. */
+    public void requestComputation() {
+        firePlottableChanged();
+    }
+
     @Override
     protected void recompute() {
+//        System.out.println("recompute");
         WeightedGraph wg = null;
         if (graph instanceof WeightedGraph)
             wg = (WeightedGraph) graph;
@@ -238,6 +248,8 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
             edgeWeightEntry.local = weights.toArray(new GraphicString[]{});
             edgeWeightEntry.needsConversion = true;
         }
+
+        needsComputation = false;
     }
 
     //
@@ -281,7 +293,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     public void removeChangeListener(ChangeListener l) { listenerList.remove(ChangeListener.class, l); }
 
     /** Notify interested listeners of an (unspecified) change in the plottable. */
-    public void fireStateChanged() {
+    protected void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2)
             if (listeners[i] == ChangeListener.class) {

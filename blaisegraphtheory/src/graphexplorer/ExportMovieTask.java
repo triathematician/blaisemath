@@ -13,11 +13,11 @@ import org.bm.blaise.scio.graph.layout.SpringLayout;
 public class ExportMovieTask implements Runnable {
 
     // initial number of layout frames
-    private static final int _INITIAL_LAYOUT_FRAMES = 15;
+    private static final int _INITIAL_LAYOUT_FRAMES = 50;
     // number of layout frames per slice
-    private static final int _INTERP_FRAMES = 5;
+    private static final int _INTERP_FRAMES = 30;
     // number of steps per frame
-    private static final int _STEPS_PER_FRAME = 4;
+    private static final int _STEPS_PER_FRAME = 3;
 
     // time to wait while each frame is rendered
     private static final int _FRAME_DELAY = 10;

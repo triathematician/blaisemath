@@ -29,13 +29,13 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.bm.blaise.specto.plane.graph.*;
@@ -175,6 +175,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
         jLabel1 = new javax.swing.JLabel();
         metricCB1 = new javax.swing.JComboBox();
         jSeparator9 = new javax.swing.JToolBar.Separator();
+        jPanel2 = new javax.swing.JPanel();
+        filterCB = new javax.swing.JCheckBox();
+        filterSp = new javax.swing.JSpinner();
+        jSeparator8 = new javax.swing.JToolBar.Separator();
         mainP = new javax.swing.JPanel();
         mainSP = new javax.swing.JSplitPane();
         graphTP = new javax.swing.JTabbedPane();
@@ -335,6 +339,32 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         toolbar.add(jPanel1);
         toolbar.add(jSeparator9);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        filterCB.setText("Filter weighted graph:");
+        filterCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterCBActionPerformed(evt);
+            }
+        });
+        jPanel2.add(filterCB);
+
+        filterSp.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), null, null, Double.valueOf(0.1d)));
+        filterSp.setToolTipText("Change to display only nodes whose value is at least as large as this.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, filterCB, org.jdesktop.beansbinding.ELProperty.create("${selected}"), filterSp, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        filterSp.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                filterSpStateChanged(evt);
+            }
+        });
+        jPanel2.add(filterSp);
+
+        toolbar.add(jPanel2);
+        toolbar.add(jSeparator8);
 
         getContentPane().add(toolbar, java.awt.BorderLayout.NORTH);
 
@@ -629,6 +659,25 @@ public class GraphExplorerMain extends javax.swing.JFrame
         newPM.show(newTBB, 5, 5);
     }//GEN-LAST:event_newTBBActionPerformed
 
+    private void filterCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterCBActionPerformed
+        GraphController gc = activeController();
+        if (gc != null) {
+            if (filterCB.isSelected())
+                gc.setFilterThreshold((Double) filterSp.getValue());
+            else
+                gc.setFiltered(false);
+        }
+        if (filterCB.isSelected() != gc.isFiltered())
+            filterCB.setSelected(gc.isFiltered());
+    }//GEN-LAST:event_filterCBActionPerformed
+
+    private void filterSpStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_filterSpStateChanged
+        GraphController gc = activeController();
+        if (gc != null) {
+            gc.setFilterThreshold((Double) filterSp.getValue());
+        }
+    }//GEN-LAST:event_filterSpStateChanged
+
     /**
     * @param args the command line arguments
     */
@@ -669,12 +718,15 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenu exportMovieM;
     private javax.swing.JMenuItem export_movMI;
     private javax.swing.JMenu fileM;
+    private javax.swing.JCheckBox filterCB;
+    private javax.swing.JSpinner filterSp;
     private javax.swing.JMenu globalMetricM;
     private javax.swing.JTabbedPane graphTP;
     private javax.swing.JMenu helpM;
     private javax.swing.JMenuItem highlightMI;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
@@ -682,6 +734,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar.Separator jSeparator9;
     private data.propertysheet.PropertySheet labelPS;
     private javax.swing.JButton layoutCircleTBB;
@@ -959,6 +1012,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
             }
             tabs.put(gc, c);
             graphTP.add(c, gc.getName());
+            activePlaneGraph().addChangeListener(this);
         }
 
         // set up for the active controller
@@ -971,10 +1025,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
         updateChart();
         updateNodeSizes();
         updateLongChart();
-        if (activePlaneGraph() != null)
-            activePlaneGraph().addChangeListener(this);
 
         if (gc != null) {
+            gc.removePropertyChangeListener(this);
             gc.addPropertyChangeListener(this);
             exportImageM.setEnabled(true);
             exportImageM.removeAll();
@@ -991,6 +1044,16 @@ public class GraphExplorerMain extends javax.swing.JFrame
         } else {
             export_movMI.setEnabled(false);
             exportMovieM.setEnabled(false);
+        }
+
+        AbstractPlaneGraph pg = activePlaneGraph();
+        if (gc != null && gc.isFiltered()) {
+            pg.setGraph(gc.getFilteredGraph());
+            pg.updateLabels();
+            filterCB.setEnabled(true);
+        } else {
+            if (pg != null && pg.getGraph() != gc.getActiveGraph())
+                pg.setGraph(gc.getActiveGraph());
         }
 
         actions_stat.setController(gc);
@@ -1012,8 +1075,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
     int pcn = 0;
 
     public void propertyChange(PropertyChangeEvent evt) {
-//        if (!evt.getPropertyName().equals("positions"))
-//            reportOutput("Property change " + (pcn++) + " src=" + evt.getSource() + " & name=" + evt.getPropertyName());
+        if (!evt.getPropertyName().equals("positions"))
+            System.out.println("Property change " + (pcn++) + " src=" + evt.getSource() + " & name=" + evt.getPropertyName());
+        
         if (evt.getPropertyName().equals("output"))
             output((String) evt.getNewValue());
         else if (evt.getPropertyName().equals("status"))
@@ -1037,8 +1101,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 layoutEnergyTBB.setText(animating ? "Stop" : "Start");
             } else if (evt.getPropertyName().equals("metric")) {
                 updateMetricComboBox();
-            } else if (evt.getPropertyName().equals("time") || evt.getPropertyName().equals("values")) {
+            } else if (evt.getPropertyName().equals("time")) {
                 // longitudinal panel works directly with time & will update the active displayed graph
+            } else if (evt.getPropertyName().equals("values")) {
                 updateChart();
                 updateNodeSizes();
             } else if (evt.getPropertyName().equals("layout"))
@@ -1049,7 +1114,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 activePlaneGraph().setPositionMap(gc.getPositions());
             else if (evt.getPropertyName().equals("subset"))
                 activePlaneGraph().highlightNodes(gc.getNodeSubset());
-            else
+            else if (evt.getPropertyName().equals("filtered") || evt.getPropertyName().equals("filter threshold")) {
+                updateActiveGraph();
+            } else
                 output("Unknown property change event, name = " + evt.getPropertyName());
         }
     }

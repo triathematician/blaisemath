@@ -290,6 +290,7 @@ class ExplorerIOActions {
             ios.add(PajekGraphIO.getExtendedInstance());
             ios.add(PajekLongGraphIO.getInstance());
             ios.add(GraphMLIO.getInstance());
+            ios.add(DynetMLIO.getInstance());
 
             initFilters();
         }

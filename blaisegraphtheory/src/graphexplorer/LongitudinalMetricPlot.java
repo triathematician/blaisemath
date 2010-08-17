@@ -10,8 +10,10 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.bm.blaise.scio.graph.FilteredWeightedGraph;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -84,6 +86,10 @@ public class LongitudinalMetricPlot
             double[][][] dataArr = new double[n_subset][2][n_time];
             for (int i_time = 0; i_time < n_time; i_time++) {
                 Graph g = lg.slice(times.get(i_time), true);
+                if (gc.isFiltered()) {
+                    g = FilteredWeightedGraph.getInstance((WeightedGraph) g);
+                    ((FilteredWeightedGraph)g).setThreshold(gc.getFilterThreshold());
+                }
                 List nodes = g.nodes();
                 List values = metric.allValues(g);
                 for (int i_subset = 0; i_subset < n_subset; i_subset++) {
@@ -111,7 +117,9 @@ public class LongitudinalMetricPlot
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource().equals(gc)) {
             String pn = evt.getPropertyName();
-            if (pn.equals("primary") || pn.equals("metric") || pn.equals("subset"))
+            if (pn.equals("primary") || pn.equals("metric") || pn.equals("subset") 
+                    || pn.equals("time")
+                    || pn.equals("filtered") || pn.equals("filter threshold"))
                 updateChart();
         }
     }
