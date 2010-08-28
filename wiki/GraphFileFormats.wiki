@@ -1,0 +1,131 @@
+#summary Description of file formats supported in GraphExplorer
+
+In what follows, *edge* denotes an undirected edge in a graph, while *arc* denotes a directed edge.
+
+= _Edge list_ =
+The simplest file contains a pair of integers (representing an arc) on each line, for example:
+{{{
+1 5
+2 3
+1 4
+3 4
+4 5
+}}}
+The integers may also be separated by any combination of commas and spaces:
+{{{
+1, 5
+2, 3
+1  ,4
+3, 4
+4 , 5
+}}}
+Anything after the second integer is ignored. The returned result is a directed graph, whose vertices correspond to the integers in the file.
+
+
+
+= _pajek_ =
+
+The _pajek_ file format has more support than any other format, although still only a few features from the standard format are supported. _Pajek_ files use integers to represent nodes, and are divided into sections whose headers begin with an asterisk `*`. The next section describes support for the standard features, and the one following describes some extensions that have been added on to support GraphExplorer.
+
+== Standard _pajek_ ==
+
+Standard _pajek_ files usually contain a section describing the vertices and a section describing the edges. If the vertex section is omitted, the vertices in the resulting graph are inferred from the edges.
+
+=== Vertex Mode ===
+A standard vertex declaration is:
+{{{
+*Vertices 4
+1 "vertex 1"
+2 "vertex 2"
+3 "vertex 3"
+4 last_vertex
+}}}
+The first entry in each line is the node's index, and the second is the node's label. Quotes are necessary if there is a space in the label. It is permissible to omit the label, but only if the line is not followed by another argument.
+
+*Position argument*: The label may be followed by two (or three) float values representing the position of the node, for example:
+{{{
+*Vertices 4
+1 "O" 0.0 0.0
+2 "1" 1.0 0.0
+3 "i" 0.0 1.0
+4 "-i" 0.0 -1.0
+}}}
+Currently, a third float, if it exists, is ignored.
+
+*Time argument*: If a bracketed expression `[...]` occurs somewhere in the line after the label, it represents one or more time intervals at which the vertex "exists". For example:
+{{{
+*Vertices 2
+1 "A" [0,3.2-*]
+2 "B" [1-2,3.5-4.5,5-6]
+}}}
+Each time interval expression consists of a list of time intervals (integers or floats), or single time instances. The `*` indicates plus or minus infinity, depending on its relative position. _*WARNING:* strict _pajek_ may require only integer times... I'm not sure on this_
+
+*Other arguments*: Sorry, no other arguments (shape, color, size, etc.) are currently supported.
+
+=== Edge list Modes (1 per line) ===
+To represent arcs (undirected edges) with one per line:
+{{{
+*Arcs
+1 2
+2 3
+3 4
+4 5
+}}}
+To represent edges, the format is the same
+{{{
+*Edges
+1 2
+2 3
+3 4
+4 5
+}}}
+
+*Weight argument*: A float representing an edge weight may be used as a third argument. Any omitted value is assumed to be 1. Negative values are permissible. For example:
+{{{
+*Edges
+1 2 1.0
+2 3 -3.2
+3 4 
+4 5 4
+}}}
+
+=== Edge list Modes (multiple per line) ===
+If the arcs/edges are unweighted, list modes can be used to include more than one edge per line. The directed version is:
+{{{
+*Arcslist
+1 2 3 4 5 6
+5 2 3
+6 1
+}}}
+This creates a graph with edges pointing from 1 to each of 2,3,4,5,6; from 5 to each of 2,3; and from 6 to 1.
+
+The undirected version works the same:
+{{{
+*Edgeslist
+1 2 3 4
+4 2 3
+}}}
+
+=== Matrix Mode ===
+The matrix mode represents a weighted (or unweighted) graph with a single matrix, for example, here is a directed, unweighted graph:
+{{{
+*Matrix
+0 0 1 1
+1 0 0 1
+0 1 0 0
+1 0 0 0
+}}}
+And an undirected weighted graph:
+{{{
+*Matrix
+0.0 2.0 1.0 0.0
+2.0 0.0 3.5 -1.0
+1.0 3.5 0.0 0.0
+0.0 -1.0 0.0 0.0
+}}}
+_*NOTE:* In the case of a matrix, the resulting graph will be undirected if the matrix is symmetric._
+
+== Modified _pajek_ ==
+
+
+== Additional Comments on _pajek_ Format ==
