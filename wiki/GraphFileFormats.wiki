@@ -97,6 +97,13 @@ To represent edges, the format is the same
 4 5 4
 }}}
 
+ * *Time argument*: If a bracketed expression `[...]` occurs somewhere in the line after the edge, it represents one or more time intervals at which the edge"exists". The format is the same as for vertices, for example:
+{{{
+*Edges
+1 2 [0,3.2-*]
+2 3 [1-2,3.5-4.5,5-6]
+}}}
+
 == Edge list Modes (multiple per line) ==
 If the arcs/edges are unweighted, list modes can be used to include more than one edge per line. The directed version is:
 {{{
