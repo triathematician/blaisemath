@@ -23,6 +23,8 @@ public class GraphicImage<C> extends Point2D.Double {
     public Image image;
     /** Anchor point */
     public C anchor;
+    /** Second point (if non-null the image will be sized between these two points) */
+    public C corner;
     /** Highlight/select toggle */
     public boolean highlight = false;
 
@@ -69,6 +71,13 @@ public class GraphicImage<C> extends Point2D.Double {
         anchor = newAnchor;
         if (anchor instanceof Point2D)
             setLocation((Point2D) newAnchor);
+    }
+
+    /** @return the coordinate anchor point of the graphic image primitive */
+    public C getCorner() { return corner; }
+    /** Set the anchor point of the graphic string primitive. */
+    public void setCorner(C newCorner) {
+        corner = newCorner;
     }
 
 

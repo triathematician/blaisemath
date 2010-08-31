@@ -38,7 +38,7 @@ import visometry.PaintsCanvas;
  *
  * @author Elisha Peterson
  */
-public class LinePlotMouseHandler
+class LinePlotMouseHandler
         implements MouseListener, MouseMotionListener, MouseWheelListener, PaintsCanvas {
 
     LinePlotComponent plot;

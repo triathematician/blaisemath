@@ -34,12 +34,30 @@ public class PrimitiveEntry {
     /** Stores active index of a primitive, e.g. when one point among many is selected. */
     int activeIndex = -1;
 
-    /** @return index of currently "active" primitive if this entry represents an array of primitives, or -1 if none is currently active */
+    /** 
+     * Used to retrieve the index of the last primitive object that was the target result of a call
+     * to the <code>handles</code> method, e.g. the index of the object that the mouse moved over.
+     *
+     * @return index of currently "active" primitive if this entry represents an array of primitives,
+     * or -1 if none is currently active
+     */
     public int getActiveIndex() {
         return activeIndex;
     }
 
-    /** @return true if the entry can handle the specified mouse event, otherwise return false */
+    /**
+     * <p>
+     * Determines if the primitive can "handle" the mouse event, i.e. if when it is drawn
+     * on screen the mouse coordinate location is over what is drawn. This is primarily where
+     * the style's <i>contained</i> and <i>containedInArray</i> methods are used.
+     * </p>
+     * <p>
+     * If the primitive is an array, and one of the array's objects corresponds to the event,
+     * then this class stores the index of that object for later retrieval by <code>getActiveIndex()</code>.
+     * </p>
+     *
+     * @return true if the entry can handle the specified mouse event, otherwise return false
+     */
     public boolean handles(Graphics2D canvas, MouseEvent e) {
         if (style == null || primitive == null)
             return false;

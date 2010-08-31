@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import primitive.GraphicString;
 import primitive.style.PointLabeledStyle;
 import primitive.style.PrimitiveStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
 
@@ -22,7 +22,7 @@ import visometry.VPrimitiveEntry;
  * @author Elisha Peterson
  */
 public abstract class VAbstractPoint<C> extends DynamicPlottable<C> 
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C> {
 
     /** Stores the table entry. */
     protected VPrimitiveEntry entry;

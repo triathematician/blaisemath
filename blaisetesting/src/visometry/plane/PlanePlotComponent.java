@@ -25,6 +25,9 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
 
     public PlanePlotComponent() {
         super(new PlaneVisometry(), new PlaneProcessor());
+
+        setPreferredSize(new java.awt.Dimension(400, 400));
+
         defaultMouseListener = new PlanePlotMouseHandler((PlaneVisometry) visometry, this);
         defaultMouseWheelListener = (MouseWheelListener) defaultMouseListener;
         
@@ -34,7 +37,6 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         pGroup.registerDomain("y", pv.getVerticalDomain(), Double.class);
         pGroup.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
         pGroup.registerDomain("time", new RealInterval(0, 100), Double.class);
-
     }
 
     @Override
@@ -51,13 +53,13 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
     /**
      * Set desired range of values to display.
      * Recomputes transformation after setting.
-     * @param minX
-     * @param minY
-     * @param maxX
-     * @param maxY
+     * @param min1 first coordinate min
+     * @param min2 second coordinate min
+     * @param max1 first coordinate max
+     * @param max2 second coordinate max
      */
     public void setDesiredRange(double min1, double min2, double max1, double max2) {
-        ((PlaneVisometry) visometry).setDesiredRange(min2, min2, max2, max2);
+        ((PlaneVisometry) visometry).setDesiredRange(min1, min2, max1, max2);
     }
 
     /**

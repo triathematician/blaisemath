@@ -10,7 +10,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import primitive.style.HandleStyle;
 import primitive.style.ShapeStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.plottable.DynamicPlottable;
 
@@ -23,7 +23,7 @@ import visometry.plottable.DynamicPlottable;
  * @author Elisha Peterson
  */
 public class PlaneEllipse extends DynamicPlottable<Point2D.Double>
-        implements PointDragListener<Point2D.Double> {
+        implements VMouseDragListener<Point2D.Double> {
 
     /** Boundaries. */
     double minX, minY, maxX, maxY;

@@ -1,20 +1,20 @@
 /*
- * PointDragListener.java
+ * VMouseDragListener.java
  * Created Apr 12, 2010
  */
 
 package visometry;
 
 /**
- * A <code>PointDragListener</code> is capable of handling mouseDragged events, which are
+ * A <code>VMouseDragListener</code> is capable of handling mouseDragged events, which are
  * specified by a "start" location and an "end" location. These are given in the
  * coordinates specified by the parameter.
  *
- * @param <C> the coordinate system underlying the mouseDragged
+ * @param <C> the coordinate system for the visometry
  *
  * @author Elisha Peterson
  */
-public interface PointDragListener<C> {
+public interface VMouseDragListener<C> {
 
     /**
      * Called when the mouse enters the domain

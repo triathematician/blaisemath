@@ -62,6 +62,8 @@ public class PlotComponent<C> extends javax.swing.JComponent
         implements ChangeListener, ComponentListener, 
             MouseListener, MouseMotionListener, MouseWheelListener {
 
+    // PROPERTIES
+
     /** Stores the visual components. */
     protected PlottableGroup<C> pGroup;
     /** Used for the translation process. */
@@ -71,10 +73,15 @@ public class PlotComponent<C> extends javax.swing.JComponent
     /** Responsible for the drawing process. */
     protected SimplePlotRenderer renderer = new SimplePlotRenderer();
 
+    /** For default click/drag events */
+    private VMouseInputListener<C> mouseInputListener = null;
+
     /** Default handler for mouse events. */
-    protected MouseListener defaultMouseListener;
+    protected MouseListener defaultMouseListener = null;
     /** Default handler for mouse wheel events. */
-    protected MouseWheelListener defaultMouseWheelListener;
+    protected MouseWheelListener defaultMouseWheelListener = null;
+
+    // CONSTRUCTOR
 
     /** Construction of a generic plot component requires a visometry and a processor. */
     public PlotComponent(Visometry<C> vis, PlotProcessor<C> proc) {
@@ -99,22 +106,26 @@ public class PlotComponent<C> extends javax.swing.JComponent
     // BEAN PROPERTY PATTERNS
     //
 
+    /** @return visometry underlying the component */
     public Visometry<C> getVisometry() {
         return visometry;
     }
 
+    /** Sets up a new visometry for the component */
     public void setVisometry(Visometry<C> visometry) {
         this.visometry = visometry;
+        repaint();
     }
 
-    public SimplePlotRenderer getRenderer() {
-        return renderer;
+    /** @return current mouse input listener, or null if there is none */
+    public VMouseInputListener<C> getMouseInputListener() {
+        return mouseInputListener;
     }
 
-    public void setRenderer(SimplePlotRenderer renderer) {
-        this.renderer = renderer;
+    /** Sets current mouse input listener */
+    public void setMouseInputListener(VMouseInputListener<C> listener) {
+        mouseInputListener = listener;
     }
-
 
     //
     // COMPOSITE METHODS
@@ -122,6 +133,10 @@ public class PlotComponent<C> extends javax.swing.JComponent
 
     public void add(Plottable<C> plottable) {
         pGroup.add(plottable);
+    }
+
+    public void add(int index, Plottable<C> plottable) {
+        pGroup.add(index, plottable);
     }
 
     public void addAll(Collection<? extends Plottable<C>> pp) {
@@ -202,56 +217,61 @@ public class PlotComponent<C> extends javax.swing.JComponent
     /** Starting point of drag. */
     C dragStart, dragCurrent;
 
+    private static final boolean MOUSEVERBOSE = true;
+
     /** Finds an appropriate handler for the event, using the last drawn canvas to supply font metric info, etc. */
-    private VDraggablePrimitiveEntry primitiveForEvent(MouseEvent e) {
-        for (VPrimitiveEntry en : pGroup)
+    private static VDraggablePrimitiveEntry primitiveForMouseEvent(Iterable<VPrimitiveEntry> entries, Graphics2D canvas, MouseEvent e) {
+        VPrimitiveEntry result = null;
+        // TODO - this is done by iterating through ALL plottables. Would work better to be able
+        // to iterate in the reverse order so the last drawn is the first selected for the primitive
+        // OR could be done by offering the user a disambiguation-option in some cases
+        for (VPrimitiveEntry en : entries)
             if (en instanceof VDraggablePrimitiveEntry && en.handles(canvas, e))
-                return (VDraggablePrimitiveEntry) en;
-        return null;
+                result = en;
+        return (VDraggablePrimitiveEntry) result;
+    }
+
+    /** Iterates over all primitives to find the primitive at the top of the draw pile that was clicked. */
+    private static VPrimitiveEntry primitiveForClick(Iterable<VPrimitiveEntry> entries, Graphics2D canvas, MouseEvent e) {
+        VPrimitiveEntry result = null;
+        for (VPrimitiveEntry en : entries)
+            if (en.handles(canvas, e))
+                result = en;
+        return result;
     }
 
     public void mousePressed(MouseEvent e) { 
-        handler = primitiveForEvent(e);
-        if (handler != null)
+        handler = primitiveForMouseEvent(pGroup, canvas, e);
+        if (mouseInputListener != null && mouseInputListener.handlesDragEvents())
+            mouseInputListener.mouseDragInitiated( dragStart = visometry.getCoordinateOf(e.getPoint()) );
+        else if (handler != null)
             handler.fireDragInitiated( dragStart = visometry.getCoordinateOf(e.getPoint()) );
         else if (defaultMouseListener != null)
             defaultMouseListener.mousePressed(e);
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (handler != null)
+        if (mouseInputListener != null && mouseInputListener.handlesDragEvents())
+            mouseInputListener.mouseDragged( dragCurrent = visometry.getCoordinateOf(e.getPoint()) );
+        else if (handler != null)
             handler.fireDragged( dragCurrent = visometry.getCoordinateOf(e.getPoint()) );
         else if (defaultMouseListener != null && defaultMouseListener instanceof MouseMotionListener)
             ((MouseMotionListener) defaultMouseListener).mouseDragged(e);    }
 
     public void mouseReleased(MouseEvent e) {
-        if (handler != null)
+        if (mouseInputListener != null && mouseInputListener.handlesDragEvents())
+            mouseInputListener.mouseDragCompleted( dragCurrent = visometry.getCoordinateOf(e.getPoint()) );
+        else if (handler != null)
             handler.fireDragCompleted( dragCurrent = visometry.getCoordinateOf(e.getPoint()) );
         else if (defaultMouseListener != null)
             defaultMouseListener.mouseReleased(e);
         handler = null;
         dragStart = null;
     }
-
-    public void mouseClicked(MouseEvent e) {
-        // TODO - handle code, possibly for all entries...
-        if (defaultMouseListener != null)
-            defaultMouseListener.mouseClicked(e);
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        if (defaultMouseListener != null)
-            defaultMouseListener.mouseEntered(e);
-    }
-
-    public void mouseExited(MouseEvent e) {
-        if (defaultMouseListener != null)
-            defaultMouseListener.mouseExited(e);
-    }
     
     public void mouseMoved(MouseEvent e) {
         Object coord = visometry.getCoordinateOf(e.getPoint());
-        VDraggablePrimitiveEntry newHandler = primitiveForEvent(e);
+        VDraggablePrimitiveEntry newHandler = primitiveForMouseEvent(pGroup, canvas, e);
         if (newHandler != handler) {
             if (handler != null)
                 handler.fireExited(coord);
@@ -264,6 +284,30 @@ public class PlotComponent<C> extends javax.swing.JComponent
             handler.fireMoved(coord);
         } else if (defaultMouseListener != null && defaultMouseListener instanceof MouseMotionListener)
             ((MouseMotionListener)defaultMouseListener).mouseMoved(e);
+    }
+
+    // the events below are not passed along to plottables
+
+    public void mouseClicked(MouseEvent e) {
+        if (MOUSEVERBOSE) {
+            VPrimitiveEntry clicked = primitiveForClick(pGroup, canvas, e);
+            System.out.println("Mouse click event occurred at primitive: " + clicked);
+        }
+
+        if (mouseInputListener != null)
+            mouseInputListener.mouseClicked( visometry.getCoordinateOf(e.getPoint()) );
+        else if (defaultMouseListener != null)
+            defaultMouseListener.mouseClicked(e);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        if (defaultMouseListener != null)
+            defaultMouseListener.mouseEntered(e);
+    }
+
+    public void mouseExited(MouseEvent e) {
+        if (defaultMouseListener != null)
+            defaultMouseListener.mouseExited(e);
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {

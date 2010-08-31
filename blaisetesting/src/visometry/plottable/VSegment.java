@@ -8,7 +8,7 @@ package visometry.plottable;
 import java.awt.Color;
 import primitive.style.PathStylePoints;
 import primitive.style.PointLabeledStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 
 /**
  * <p>
@@ -19,7 +19,7 @@ import visometry.PointDragListener;
  * @author Elisha Peterson
  */
 public class VSegment<C> extends VAbstractTwoPoint<C>
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C> {
     
     /** Style for points. */
     PointLabeledStyle pointStyle;

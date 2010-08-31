@@ -18,10 +18,10 @@ import primitive.style.PrimitiveStyle;
 public class VDraggablePrimitiveEntry extends VPrimitiveEntry {
 
     /** Object that will handle dragging events that pass through this entry. */
-    public PointDragListener listener;
+    public VMouseDragListener listener;
 
     /** Construct with specified primitive, style, and drag */
-    public VDraggablePrimitiveEntry(Object localPrimitive, PrimitiveStyle style, PointDragListener pdl) {
+    public VDraggablePrimitiveEntry(Object localPrimitive, PrimitiveStyle style, VMouseDragListener pdl) {
         super(localPrimitive, style);
         listener = pdl;
     }

@@ -10,7 +10,7 @@ import primitive.GraphicString;
 import primitive.style.PointLabeledStyle;
 import primitive.style.PointStyle;
 import primitive.style.PrimitiveStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
 
@@ -23,7 +23,7 @@ import visometry.VPrimitiveEntry;
  * @author Elisha Peterson
  */
 public abstract class VAbstractTwoPoint<C> extends DynamicPlottable<C>
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C> {
 
     /** The two points */
     VDraggablePrimitiveEntry entryP1, entryP2;

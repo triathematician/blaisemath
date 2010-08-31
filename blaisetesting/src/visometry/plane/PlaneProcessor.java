@@ -74,14 +74,15 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             GeneralPath path;
             int j = 0;
             for (Point2D.Double[] arr : locArr) {
-                paths[j] = path = new GeneralPath();
-                path.moveTo((float) arr[0].x, (float) arr[0].y);
-                for (int i = 0; i < arr.length; i++)
-                    path.lineTo((float) arr[i].x, (float) arr[i].y);
-                if (entry.style instanceof ShapeStyle)
-                    path.closePath();
-                path.transform(((PlaneVisometry)vis).at);
-                j++;
+                paths[j++] = path = new GeneralPath();
+                if (arr.length > 0) {
+                    path.moveTo((float) arr[0].x, (float) arr[0].y);
+                    for (int i = 0; i < arr.length; i++)
+                        path.lineTo((float) arr[i].x, (float) arr[i].y);
+                    if (entry.style instanceof ShapeStyle)
+                        path.closePath();
+                    path.transform(((PlaneVisometry)vis).at);
+                }
             }
             entry.primitive = paths;
         }
@@ -226,9 +227,12 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
 
     private void convertGraphicImage(VPrimitiveEntry entry, GraphicImage loc, Visometry<Double> vis) {
         if (loc.getAnchor() instanceof Point2D.Double) {
-            entry.primitive = new GraphicImage<Point2D.Double>(
+            GraphicImage<Point2D.Double> prim = new GraphicImage<Point2D.Double>(
                     vis.getWindowPointOf((Point2D.Double) loc.getAnchor()),
                     loc.image, loc.highlight);
+            entry.primitive = prim;
+            if (loc.corner != null && loc.corner instanceof Point2D.Double)
+                prim.corner = vis.getWindowPointOf((Point2D.Double) loc.corner);
         }
     }
 
@@ -236,9 +240,12 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
         GraphicImage[] winArr = new GraphicImage[locArr.length];
         for (int i = 0; i < locArr.length; i++)
             if (locArr[i].getAnchor() instanceof Point2D.Double) {
-                winArr[i] = new GraphicImage<Point2D.Double>(
+                GraphicImage<Point2D.Double> prim = new GraphicImage<Point2D.Double>(
                         vis.getWindowPointOf((Point2D.Double) locArr[i].getAnchor()),
                         locArr[i].image, locArr[i].highlight);
+                winArr[i] = prim;
+                if (locArr[i].corner != null && locArr[i].corner instanceof Point2D.Double)
+                    prim.corner = vis.getWindowPointOf((Point2D.Double) locArr[i].corner);
             }
         entry.primitive = winArr;
     }

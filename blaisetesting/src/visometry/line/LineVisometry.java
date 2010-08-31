@@ -5,19 +5,11 @@
 
 package visometry.line;
 
-import coordinate.DomainUtils;
-import coordinate.RealIntervalBroadcaster;
-import coordinate.RealIntervalNiceSampler;
 import coordinate.RealIntervalSamplerProvider;
-import coordinate.RealIntervalStepSampler;
-import coordinate.ScreenSampleDomainProvider;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
 import util.DefaultChangeBroadcaster;
 import visometry.Visometry;
@@ -28,7 +20,7 @@ import visometry.Visometry;
  *
  * @author Elisha Peterson
  */
-public class LineVisometry implements Visometry<Double>,
+class LineVisometry implements Visometry<Double>,
         ChangeBroadcaster, ChangeListener {
 
     /** Stores the boundary of the display window, in window coordinates. */

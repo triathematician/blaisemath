@@ -117,10 +117,10 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     /**
      * Set desired range of values.
      * Recomputes transformation after setting.
-     * @param minX
-     * @param minY
-     * @param maxX
-     * @param maxY
+     * @param minX first coordinate min
+     * @param minY second coordinate min
+     * @param maxX first coordinate max
+     * @param maxY second coordinate max
      */
     public void setDesiredRange(double minX, double minY, double maxX, double maxY) {
         if (minX == maxX || minY == maxY) {

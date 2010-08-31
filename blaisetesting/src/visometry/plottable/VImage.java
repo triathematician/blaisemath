@@ -9,7 +9,7 @@ import java.awt.Image;
 import java.awt.geom.Point2D;
 import primitive.GraphicImage;
 import primitive.style.ImageStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
 
@@ -21,10 +21,15 @@ import visometry.VPrimitiveEntry;
  * @author Elisha Peterson
  */
 public class VImage<C> extends DynamicPlottable<C>
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C> {
 
     /** Stores the table entry. */
     protected VPrimitiveEntry entry;
+
+    /** Constructs w/ default stlye. */
+    public VImage(C anchor, Image image) {
+        addPrimitive(entry = new VDraggablePrimitiveEntry(new GraphicImage<C>(anchor, image), new ImageStyle(), this));
+    }
 
     /** Constructs w/ specified style. */
     public VImage(C anchor, Image image, ImageStyle style) {
@@ -41,17 +46,45 @@ public class VImage<C> extends DynamicPlottable<C>
     /** @param newStyle new image style */
     public void setStyle(ImageStyle newStyle) { if (entry.style != newStyle) { entry.style = newStyle; firePlottableStyleChanged(); } }
 
-    /** @return current location of the coordinate */
-    public C getPoint() {
+    /** @return current location of the image's anchor */
+    public C getAnchor() {
         return ((GraphicImage<C>)entry.local).anchor;
     }
-
-    public void setPoint(C value) {
+    /** Sets location of image's anchor point */
+    public void setAnchor(C value) {
         if (value == null)
-            throw new NullPointerException();
-        if (!value.equals(getPoint())) {
+            throw new IllegalArgumentException("Non-null value required.");
+        if (!value.equals(getAnchor())) {
             GraphicImage<C> gs = (GraphicImage<C>) entry.local;
             gs.setAnchor(value);
+            entry.needsConversion = true;
+            firePlottableChanged();
+        }
+    }
+
+    /** @return current location of image's corner */
+    public C getCorner() {
+        return ((GraphicImage<C>)entry.local).corner;
+    }
+    /** Sets location of image's corner point */
+    public void setCorner(C value) {
+        if ((value == null && getCorner() != null) || !value.equals(getCorner())) {
+            GraphicImage<C> gs = (GraphicImage<C>) entry.local;
+            gs.setCorner(value);
+            entry.needsConversion = true;
+            firePlottableChanged();
+        }
+    }
+
+    public Image getImage() {
+        return ((GraphicImage<C>)entry.local).image;
+    }
+
+    public void setImage(Image img) {
+        if (img == null)
+            throw new IllegalArgumentException("Non-null value required.");
+        if (img != getImage()) {
+            ((GraphicImage<C>)entry.local).image = img;
             entry.needsConversion = true;
             firePlottableChanged();
         }
@@ -61,24 +94,32 @@ public class VImage<C> extends DynamicPlottable<C>
     // MOUSE METHODS
     //
 
-    private transient C start = null, startDrag = null;
+    private transient C startA = null, startC, startDrag = null;
 
     public void mouseEntered(Object source, C start) {}
     public void mouseExited(Object source, C start) {}
     public void mouseMoved(Object source, C start) {}
-    public void mouseDragInitiated(Object source, C start) { this.start = getPoint(); this.startDrag = start; }
+    public void mouseDragInitiated(Object source, C start) { startA = getAnchor(); startC = getCorner(); startDrag = start; }
     public void mouseDragged(Object source, C current) {
-        if (current instanceof Point2D && start instanceof Point2D) {
-            Point2D ps = (Point2D) start;
+        if (current instanceof Point2D && startA instanceof Point2D) {
+            Point2D ps = (Point2D) startA;
             Point2D psd = (Point2D) startDrag;
             Point2D pcd = (Point2D) current;
             Point2D.Double relative = new Point2D.Double(
                     ps.getX() + pcd.getX() - psd.getX(), ps.getY() + pcd.getY() - psd.getY()
                     );
-            setPoint((C) relative);
+            setAnchor((C) relative);
+
+            if (startC != null) {
+                ps = (Point2D) startC;
+                relative = new Point2D.Double(
+                    ps.getX() + pcd.getX() - psd.getX(), ps.getY() + pcd.getY() - psd.getY()
+                    );
+                setCorner((C) relative);
+            }
         } else
-            setPoint(current);
+            setAnchor(current);
     }
-    public void mouseDragCompleted(Object source, C end) { setPoint(end); }
+    public void mouseDragCompleted(Object source, C end) { mouseDragged(source, end); }
 
 }

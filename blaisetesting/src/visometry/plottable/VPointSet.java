@@ -6,21 +6,24 @@
 package visometry.plottable;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import primitive.style.PointLabeledStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
+import visometry.VMouseInputListener;
 
 /**
  * <p>
  *   <code>VPointSet</code> is a set of points in the visometry. Each point is
- *   displayed as a separate entity. The individual points may be moved, if the
- *   <code>editable</code> property is set to <code>TRUE</code>.
+ *   displayed as a separate entity. Points may be dragged around the screen. If this
+ *   is registered as a plot component's <i>mouse input listener</i>, then screen-clicks
+ *   result in points being added to the plottable.
  * </p>
  * @author Elisha Peterson
  * @seealso VPath
  */
 public class VPointSet<C> extends VAbstractPointArray<C>
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C>, VMouseInputListener<C> {
 
     /**
      * Construct with sequence of points
@@ -43,23 +46,26 @@ public class VPointSet<C> extends VAbstractPointArray<C>
 
 
     //
-    // MOUSE METHODS
+    // MOUSE DRAG METHODS
     //
 
     private transient int dragIndex = -1;
     private transient C start = null, startDrag = null;
 
-    public void mouseEntered(Object source, C start) {}
-    public void mouseExited(Object source, C start) {}
-    public void mouseMoved(Object source, C start) {}
-    public void mouseDragInitiated(Object source, C start) {
+    private static final boolean MOUSEVERBOSE = false;
+    private static final void verboseOut(String s, Object pt) { if (MOUSEVERBOSE) System.out.println("VPointSet: " + s + " @ " + pt); }
+
+    public void mouseEntered(Object source, C current) { verboseOut("mouseEntered", current); }
+    public void mouseExited(Object source, C current) { verboseOut("mouseExited", current); }
+    public void mouseMoved(Object source, C current) { verboseOut("mouseMoved", current); }
+    public void mouseDragInitiated(Object source, C start) { verboseOut("mouseDragInitiated", start);
         dragIndex = entry.getActiveIndex();
         if (dragIndex != -1) {
             this.start = getPoint(dragIndex);
             this.startDrag = start;
         }
     }
-    public void mouseDragged(Object source, C current) {
+    public void mouseDragged(Object source, C current) { verboseOut("mouseDragged", current);
         if (dragIndex != -1) {
             if (current instanceof Point2D && start instanceof Point2D) {
                 Point2D ps = (Point2D) start;
@@ -73,8 +79,25 @@ public class VPointSet<C> extends VAbstractPointArray<C>
                 setPoint(dragIndex, current);
         }
     }
-    public void mouseDragCompleted(Object source, C end) {
+    public void mouseDragCompleted(Object source, C end) { verboseOut("mouseDragCompleted", end);
         mouseDragged(source, end);
         dragIndex = -1;
     }
+
+    //
+    // MOUSE INPUT METHODS
+    //
+
+    public void mouseClicked(C point) { verboseOut("i:mouseClicked", point);
+        // click adds a point to the array
+        C[] newArr = (C[]) Array.newInstance(point.getClass(), points.length + 1);
+        System.arraycopy(points, 0, newArr, 0, points.length);
+        newArr[points.length] = point;
+        setPoint(newArr);
+    }
+
+    public boolean handlesDragEvents() { return false; }
+    public void mouseDragInitiated(C start) { verboseOut("i:mouseDragInitiated", start); }
+    public void mouseDragged(C current) { verboseOut("i:mouseDragged", current); }
+    public void mouseDragCompleted(C end) { verboseOut("i:mouseDragCompleted", end); }
 }

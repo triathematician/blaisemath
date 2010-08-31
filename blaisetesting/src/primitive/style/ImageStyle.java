@@ -74,9 +74,12 @@ public class ImageStyle extends AbstractPrimitiveStyle<GraphicImage<Point2D.Doub
 
     /** @return boundaries of the string for the current settings */
     Rectangle2D.Double bounds(GraphicImage<Point2D.Double> gi) {
+        if (gi.getCorner() != null)
+            return new Rectangle2D.Double(gi.anchor.x, gi.anchor.y, gi.corner.x - gi.anchor.x, gi.corner.y - gi.anchor.y);
+
         double width = scale*gi.image.getWidth(null);
         double height = scale*gi.image.getHeight(null);
-        
+
         double factor = Math.max(width/maxWidth, height/maxHeight);
         if (factor > 1) {
             width /= factor;

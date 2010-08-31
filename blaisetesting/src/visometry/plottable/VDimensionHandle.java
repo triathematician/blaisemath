@@ -7,7 +7,7 @@ package visometry.plottable;
 
 import java.awt.geom.Point2D;
 import primitive.style.DimensionHandleStyle;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 
 /**
@@ -19,7 +19,7 @@ import visometry.VDraggablePrimitiveEntry;
  * @author Elisha Peterson
  */
 public class VDimensionHandle<C> extends DynamicPlottable<C>
-        implements PointDragListener<C> {
+        implements VMouseDragListener<C> {
 
     /** Entry describing the handle. */
     VDraggablePrimitiveEntry entry;

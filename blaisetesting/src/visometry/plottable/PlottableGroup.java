@@ -95,6 +95,14 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
         fireStateChanged();
     }
 
+    public void add(int index, Plottable<C> plottable) {
+        if (plottables.contains(plottable) && plottables.indexOf(plottable) != index)
+            plottables.remove(plottable);
+        plottables.add(index, plottable);
+        plottable.parent = this;
+        fireStateChanged();
+    }
+
     /**
      * Adds specified plottables to the group. Also sets up change listening.
      * @param plottables the plottables to add.
