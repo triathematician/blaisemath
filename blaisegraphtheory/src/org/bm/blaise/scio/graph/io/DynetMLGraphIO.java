@@ -1,5 +1,5 @@
 /*
- * DynetMLIO.java
+ * DynetMLGraphIO.java
  * Created Aug 16, 2010
  */
 
@@ -31,19 +31,19 @@ import util.XMLUtils;
  * Basic support for the <i>DyNetML</i> XML file structure.
  * @author elisha
  */
-public class DynetMLIO extends AbstractGraphIO {
+public class DynetMLGraphIO extends AbstractGraphIO {
 
     /** Used to construct the document */
     DocumentBuilder builder = null;
 
     // no instantiation
-    private DynetMLIO() { }
+    private DynetMLGraphIO() { }
 
-    private static final DynetMLIO INSTANCE = new DynetMLIO();
+    private static final DynetMLGraphIO INSTANCE = new DynetMLGraphIO();
     private static final FileNameExtensionFilter FILTER = new FileNameExtensionFilter("DyNetML files (*.xml)", "xml");
 
     /** Factory method @return instance of this IO class */
-    public static DynetMLIO getInstance() { return INSTANCE; }
+    public static DynetMLGraphIO getInstance() { return INSTANCE; }
 
     public FileFilter getFileFilter() { return FILTER; }
 
@@ -52,6 +52,7 @@ public class DynetMLIO extends AbstractGraphIO {
         Document doc = XMLUtils.constructDocument(file);
         if (doc == null) { System.out.println("File error: problem constructing org.w3c.dom.Document from file " + file); return null; }
         Node dnNode = XMLUtils.descendent(doc, "DynamicNetwork");
+        if (dnNode == null) dnNode = XMLUtils.descendent(doc, "DynamicMetaNetwork");
         if (dnNode == null) { System.out.println("DyNetML input error: no DynamicNetwork node found in XML file!"); return null; }
         Node metaNode = XMLUtils.descendent(dnNode, "MetaNetwork");
         if (metaNode == null) { System.out.println("DyNetML input error: no MetaNetwork found in XML file!"); return null; }

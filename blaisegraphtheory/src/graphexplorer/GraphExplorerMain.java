@@ -9,8 +9,11 @@ import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
 import graphexplorer.ExplorerStatActions.GlobalStatEnum;
 import graphexplorer.ExplorerStatActions.StatEnum;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
@@ -33,9 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.ValuedGraph;
-import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
 import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.bm.blaise.specto.plane.graph.*;
@@ -167,6 +169,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
         loadTBB = new javax.swing.JButton();
         saveTBB = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
+        jButton1 = new javax.swing.JButton();
+        jSeparator10 = new javax.swing.JToolBar.Separator();
         layoutCircleTBB = new javax.swing.JButton();
         layoutRandomTBB = new javax.swing.JButton();
         layoutEnergyTBB = new javax.swing.JToggleButton();
@@ -179,7 +183,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
         filterCB = new javax.swing.JCheckBox();
         filterSp = new javax.swing.JSpinner();
         jSeparator8 = new javax.swing.JToolBar.Separator();
-        mainP = new javax.swing.JPanel();
+        statusB = new javax.swing.JPanel();
+        statusL = new javax.swing.JLabel();
+        mainSP2 = new javax.swing.JSplitPane();
         mainSP = new javax.swing.JSplitPane();
         graphTP = new javax.swing.JTabbedPane();
         propertySP = new javax.swing.JScrollPane();
@@ -198,8 +204,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
         boxP3 = new javax.swing.JPanel();
         outputSP = new javax.swing.JScrollPane();
         outputTP = new javax.swing.JTextPane();
-        statusB = new javax.swing.JPanel();
-        statusL = new javax.swing.JLabel();
         menu = new javax.swing.JMenuBar();
         fileM = new javax.swing.JMenu();
         newM = new javax.swing.JMenu();
@@ -223,6 +227,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
         export_movMI = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         quitMI = new javax.swing.JMenuItem();
+        viewM = new javax.swing.JMenu();
+        fitMI = new javax.swing.JMenuItem();
+        fullScreenMI = new javax.swing.JMenuItem();
         layoutM = new javax.swing.JMenu();
         circularMI = new javax.swing.JMenuItem();
         randomMI = new javax.swing.JMenuItem();
@@ -300,6 +307,14 @@ public class GraphExplorerMain extends javax.swing.JFrame
         toolbar.add(saveTBB);
         toolbar.add(jSeparator2);
 
+        jButton1.setAction(actions.FIT_ACTION);
+        jButton1.setText("Fit");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toolbar.add(jButton1);
+        toolbar.add(jSeparator10);
+
         layoutCircleTBB.setAction(actions_layout.LAYOUT_CIRCULAR);
         layoutCircleTBB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/layout-circle24.png"))); // NOI18N
         layoutCircleTBB.setFocusable(false);
@@ -368,7 +383,29 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         getContentPane().add(toolbar, java.awt.BorderLayout.NORTH);
 
-        mainP.setLayout(new java.awt.BorderLayout());
+        statusB.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+
+        statusL.setFont(new java.awt.Font("Tahoma", 0, 12));
+        statusL.setText("Status: ...");
+        statusL.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        org.jdesktop.layout.GroupLayout statusBLayout = new org.jdesktop.layout.GroupLayout(statusB);
+        statusB.setLayout(statusBLayout);
+        statusBLayout.setHorizontalGroup(
+            statusBLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(statusL, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE)
+        );
+        statusBLayout.setVerticalGroup(
+            statusBLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(statusL)
+        );
+
+        getContentPane().add(statusB, java.awt.BorderLayout.PAGE_END);
+
+        mainSP2.setDividerSize(8);
+        mainSP2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        mainSP2.setResizeWeight(0.8);
+        mainSP2.setOneTouchExpandable(true);
 
         mainSP.setDividerSize(8);
         mainSP.setOneTouchExpandable(true);
@@ -386,7 +423,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         mainSP.setLeftComponent(propertySP);
 
-        mainP.add(mainSP, java.awt.BorderLayout.CENTER);
+        mainSP2.setTopComponent(mainSP);
 
         boxPanel.setPreferredSize(new java.awt.Dimension(800, 250));
         boxPanel.setLayout(new javax.swing.BoxLayout(boxPanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -450,28 +487,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         boxPanel.add(boxP3);
 
-        mainP.add(boxPanel, java.awt.BorderLayout.PAGE_END);
+        mainSP2.setBottomComponent(boxPanel);
 
-        getContentPane().add(mainP, java.awt.BorderLayout.CENTER);
-
-        statusB.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-
-        statusL.setFont(new java.awt.Font("Tahoma", 0, 12));
-        statusL.setText("Status: ...");
-        statusL.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        org.jdesktop.layout.GroupLayout statusBLayout = new org.jdesktop.layout.GroupLayout(statusB);
-        statusB.setLayout(statusBLayout);
-        statusBLayout.setHorizontalGroup(
-            statusBLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(statusL, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE)
-        );
-        statusBLayout.setVerticalGroup(
-            statusBLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(statusL)
-        );
-
-        getContentPane().add(statusB, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(mainSP2, java.awt.BorderLayout.CENTER);
 
         fileM.setText("File");
 
@@ -552,6 +570,23 @@ public class GraphExplorerMain extends javax.swing.JFrame
         fileM.add(quitMI);
 
         menu.add(fileM);
+
+        viewM.setText("View");
+
+        fitMI.setAction(actions.FIT_ACTION);
+        fitMI.setText("Fit to Graph");
+        viewM.add(fitMI);
+
+        fullScreenMI.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.SHIFT_MASK));
+        fullScreenMI.setText("Full Screen");
+        fullScreenMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fullScreenMIActionPerformed(evt);
+            }
+        });
+        viewM.add(fullScreenMI);
+
+        menu.add(viewM);
 
         layoutM.setText("Layout");
 
@@ -678,6 +713,25 @@ public class GraphExplorerMain extends javax.swing.JFrame
         }
     }//GEN-LAST:event_filterSpStateChanged
 
+    private void fullScreenMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMIActionPerformed
+        GraphicsDevice dev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        if (dev.getFullScreenWindow() == this) {
+            setVisible(false);
+            dispose();
+            setUndecorated(false);
+            setResizable(true);
+            dev.setFullScreenWindow(null);
+            setVisible(true);
+        } else {
+            setVisible(false);
+            dispose();
+            setUndecorated(true);
+            setResizable(false);
+            dev.setFullScreenWindow(this);
+            setVisible(true);
+        }
+    }//GEN-LAST:event_fullScreenMIActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -720,14 +774,18 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenu fileM;
     private javax.swing.JCheckBox filterCB;
     private javax.swing.JSpinner filterSp;
+    private javax.swing.JMenuItem fitMI;
+    private javax.swing.JMenuItem fullScreenMI;
     private javax.swing.JMenu globalMetricM;
     private javax.swing.JTabbedPane graphTP;
     private javax.swing.JMenu helpM;
     private javax.swing.JMenuItem highlightMI;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
@@ -745,8 +803,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem loadMI;
     private javax.swing.JButton loadTBB;
     private javax.swing.JMenu localMetricM;
-    private javax.swing.JPanel mainP;
     private javax.swing.JSplitPane mainSP;
+    private javax.swing.JSplitPane mainSP2;
     private graphexplorer.GraphTable mainTable;
     private javax.swing.JScrollPane mainTableSP;
     private javax.swing.JToolBar mainTableTB;
@@ -781,6 +839,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JToolBar toolbar;
     private javax.swing.JMenuItem uniform1MI;
     private javax.swing.JMenuItem uniform1MI1;
+    private javax.swing.JMenu viewM;
     private javax.swing.JMenuItem wattsMI;
     private javax.swing.JMenuItem wattsMI1;
     private javax.swing.JMenuItem wheelMI;
@@ -819,7 +878,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         return graphs.get(gc);
     }
 
-    PlotComponent activePlotComponent() {
+    public PlotComponent activePlotComponent() {
         GraphController gc = master.getActiveController();
         Component c = tabs.get(gc);
         if (c instanceof PlotComponent)
@@ -840,6 +899,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
             labelPS = null;
             layoutPS = null;
         } else {
+            propertyRP.add(new PropertySheet(new BackgroundBean()), "Background");
             if (active instanceof PlaneGraph) {
                 PlaneGraphBean bean = new PlaneGraphBean((PlaneGraph)active);
                 propertyRP.add(nodePS = new PropertySheet(bean.nodeBean()), "Node Settings");
@@ -1008,7 +1068,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 ((PlanePlotComponent)c).add(plottedGraph);
                 graphs.put(gc, plottedGraph);
                 plottedGraph.highlightNodes(gc.getNodeSubset());
-                gc.setPositions(plottedGraph.getPositionMap());
+                if (gc.isInNeedOfLayout())
+                    gc.setPositions(plottedGraph.getPositionMap());
+                else
+                    plottedGraph.setPositionMap(gc.getPositions());
             }
             tabs.put(gc, c);
             graphTP.add(c, gc.getName());
@@ -1119,6 +1182,11 @@ public class GraphExplorerMain extends javax.swing.JFrame
             } else
                 output("Unknown property change event, name = " + evt.getPropertyName());
         }
+    }
+
+    public class BackgroundBean {
+        public Color getColor() { return activePlotComponent() == null ? Color.WHITE : activePlotComponent().getBackground(); }
+        public void setColor(Color col) { if (activePlotComponent() != null) activePlotComponent().setBackground(col); }
     }
 
 }

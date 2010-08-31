@@ -26,8 +26,13 @@ public class WattsStrogatzRandomGraphTest {
 
     @Test
     public void testGetInstance() {
-        System.out.println("getInstance");
-        fail("The test case is a prototype.");
+        System.out.println("getInstance: MANUALLY CHECK FOR DESIRED OUTPUT");
+        Graph<Integer> result1 = WattsStrogatzRandomGraph.getInstance(10, 2, 0f);
+        assertEquals(10, result1.order()); assertEquals(10, result1.edgeNumber());
+        for (int i = 0; i < 10; i++) assertTrue(result1.adjacent(i, (i+1)%10));
+        Graph<Integer> result2 = WattsStrogatzRandomGraph.getInstance(50, 4, .5f);
+        System.out.println(result2);
+        assertEquals(50, result2.order()); assertEquals(100, result2.edgeNumber());
     }
 
 }

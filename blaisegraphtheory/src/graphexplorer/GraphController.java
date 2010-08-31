@@ -53,6 +53,8 @@ public class GraphController {
 
     /** Stores the base graph (pre-filter) */
     private Graph baseGraph = null;
+    /** Flag indicating whether layout has been activated */
+    private boolean hasLayout = false;
     /** Stores the set of nodes & their locations (all nodes for longitudinal graphs) */
     private Map<Object,Point2D.Double> nodes = null;
     /** Stores the "subset" of the graph that is currently of interest (may be null or empty) */
@@ -158,6 +160,9 @@ public class GraphController {
     /** @return all nodes */
     public Set getPrimaryNodes() { return nodes.keySet(); }
 
+    /** @return true if graph has not yet received a layout */
+    public boolean isInNeedOfLayout() { return !hasLayout; }
+
     /** @return all nodes with positions */
     public Map<Object, Point2D.Double> getPositions() { return nodes; }
 
@@ -255,6 +260,7 @@ public class GraphController {
             throw new NullPointerException("setGraph called with null argument");
         if (this.baseGraph != graph) {
             this.baseGraph = graph;
+            this.hasLayout = false;
             this.nodes = new TreeMap<Object, Point2D.Double>();
             for (Object o : graph.nodes())
                 this.nodes.put(o, new Point2D.Double());
@@ -283,6 +289,7 @@ public class GraphController {
             throw new NullPointerException("setGraph called with null argument");
         if (this.lGraph != graph) {
             this.baseGraph = null;
+            this.hasLayout = false;
             this.nodes = new TreeMap<Object, Point2D.Double>();
             for (Object o : graph.getAllNodes())
                 this.nodes.put(o, new Point2D.Double());
@@ -349,7 +356,7 @@ public class GraphController {
      * does not contain a slice at the specified time, returns a graph at the
      * closest available time; the time stored is then the exact time of the slice.
      * @param time the new time
-     * @throw IllegalStateException if not in longitudinal state
+     * @throws IllegalStateException if not in longitudinal state
      */
     public void setTime(double time) {
         assert valid();
@@ -430,6 +437,7 @@ public class GraphController {
             nodes.putAll(positions);
             pcs.firePropertyChange("positions", null, nodes);
         }
+        hasLayout = true;
     }
 
     /** Applies specified layout to the active graph */

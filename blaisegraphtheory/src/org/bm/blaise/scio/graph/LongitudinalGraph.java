@@ -35,12 +35,14 @@ public interface LongitudinalGraph<V> {
     public boolean isDirected();
 
     /**
+     * Returns the time intervals corresponding to the given node.
      * @param v a node in the graph
      * @return time intervals of corresponding node, or null if the node is not in the graph
      */
     public List<double[]> getNodeIntervals(V v);
 
     /**
+     * Returns the time intervals corresponding to the given edge.
      * @param v1 first node of the edge
      * @param v2 second node of the edge
      * @return time intervals of the corresponding edge, or null if the edge is never in the graph

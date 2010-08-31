@@ -9,7 +9,6 @@ import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -62,6 +61,11 @@ import util.FileNameExtensionFilter;
  *  <li>Edges list = list of vertices adjacent to each vertex, undirected graph only (section denoted by <code>*Edgeslist</code>)
  *      <br/>Input lines have the same format as for "arcs list".
  *  </li>
+ *  <li><font style="color:red">
+ *      Images = list of images associated to vertices (section denoted by <code>*Images</code>)
+ *      <br/>Input lines have the format <code>vn "file_name"</code>, where <code>vn</code> is the index of
+ *          a vertex and <code>file_name</code> is the relative path to a corresponding image file.
+ *  </font></li>
  * </ul>
  * </p>
  * <p>
@@ -217,7 +221,7 @@ public final class PajekGraphIO extends AbstractGraphIO {
                                     importLine_vertex(lineNumber, line, vertices, locations, times);
                                     break;
                                 case IMAGES:
-                                    importLine_image(lineNumber, line, vertices, images, locations, times);
+                                    importLine_image(lineNumber, line, images);
                                     break;
                                 case ARCS:
                                 case EDGES:
@@ -434,6 +438,7 @@ public final class PajekGraphIO extends AbstractGraphIO {
         }
 
         // look for numbers within bracket (specifying time intervals)
+        // TODO - do not parse the entire line; only what has not yet been parsed
         List<double[]> time = parseTimeIntervals(line);
         if (time != null && time.size() > 0)
             times.put(index, time);
@@ -444,17 +449,11 @@ public final class PajekGraphIO extends AbstractGraphIO {
      * which may or may not be surround by quotes ("...").
      * @param lineNumber number of line in import file
      * @param line the line to import... first argument is vertex #, second is name (optional)
-     * @param vertices the map associating integer vertices to string labels of the vertices
      * @param images the map associating integer vertices to images
-     * @param loc map containing locations of vertices
-     * @param times map containing time intervals of vertices
      * @throws NumberFormatException if unable to decode integer representation of vertex #
      */
     static void importLine_image(int lineNumber, String line,
-                Map<Integer, String> vertices,
-                Map<Integer, String> images,
-                Map<Integer, double[]> loc,
-                Map<Integer, List<double[]>> times)
+                Map<Integer, String> images)
             throws NumberFormatException {
 
         Integer index = null;

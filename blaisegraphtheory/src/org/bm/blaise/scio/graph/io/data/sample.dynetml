@@ -1,0 +1,71 @@
+<?xml version="1.0" standalone="yes"?>
+
+<DynamicMetaNetwork id="Erdos-Renyi">
+<MetaNetwork id="Erdos-Renyi">
+<nodes>
+<nodeclass type="Agent" id="Agent">
+<node id="Agent_1"/>
+<node id="Agent_2"/>
+<node id="Agent_3"/>
+<node id="Agent_4"/>
+<node id="Agent_5"/>
+<node id="Agent_6"/>
+<node id="Agent_7"/>
+<node id="Agent_8"/>
+<node id="Agent_9"/>
+<node id="Agent_10"/>
+<node id="Agent_11"/>
+<node id="Agent_12"/>
+<node id="Agent_13"/>
+<node id="Agent_14"/>
+<node id="Agent_15"/>
+<node id="Agent_16"/>
+<node id="Agent_17"/>
+<node id="Agent_18"/>
+<node id="Agent_19"/>
+<node id="Agent_20"/></nodeclass>
+</nodes>
+<networks>
+<network sourceType="Agent" source="Agent" targetType="Agent" target="Agent" id="Erdos-Renyi network">
+<link source="Agent_1" target="Agent_13"/>
+<link source="Agent_3" target="Agent_4"/>
+<link source="Agent_3" target="Agent_13"/>
+<link source="Agent_3" target="Agent_17"/>
+<link source="Agent_4" target="Agent_3"/>
+<link source="Agent_4" target="Agent_9"/>
+<link source="Agent_4" target="Agent_16"/>
+<link source="Agent_5" target="Agent_10"/>
+<link source="Agent_5" target="Agent_18"/>
+<link source="Agent_6" target="Agent_13"/>
+<link source="Agent_7" target="Agent_9"/>
+<link source="Agent_7" target="Agent_12"/>
+<link source="Agent_8" target="Agent_12"/>
+<link source="Agent_8" target="Agent_19"/>
+<link source="Agent_8" target="Agent_20"/>
+<link source="Agent_9" target="Agent_4"/>
+<link source="Agent_9" target="Agent_7"/>
+<link source="Agent_9" target="Agent_10"/>
+<link source="Agent_9" target="Agent_15"/>
+<link source="Agent_10" target="Agent_5"/>
+<link source="Agent_10" target="Agent_9"/>
+<link source="Agent_10" target="Agent_14"/>
+<link source="Agent_12" target="Agent_7"/>
+<link source="Agent_12" target="Agent_8"/>
+<link source="Agent_13" target="Agent_1"/>
+<link source="Agent_13" target="Agent_3"/>
+<link source="Agent_13" target="Agent_6"/>
+<link source="Agent_14" target="Agent_10"/>
+<link source="Agent_14" target="Agent_18"/>
+<link source="Agent_15" target="Agent_9"/>
+<link source="Agent_15" target="Agent_19"/>
+<link source="Agent_16" target="Agent_4"/>
+<link source="Agent_17" target="Agent_3"/>
+<link source="Agent_18" target="Agent_5"/>
+<link source="Agent_18" target="Agent_14"/>
+<link source="Agent_19" target="Agent_8"/>
+<link source="Agent_19" target="Agent_15"/>
+<link source="Agent_20" target="Agent_8"/></network>
+</networks>
+</MetaNetwork>
+</DynamicMetaNetwork>
+

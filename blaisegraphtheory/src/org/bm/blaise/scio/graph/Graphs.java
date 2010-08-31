@@ -295,7 +295,7 @@ public class Graphs {
      * Computes all (connected) components of an undirected graph.
      * @param graph the graph to examine; must be undirected
      * @return list of lists of the vertices in various components
-     * @throw IllegalArgumentException if provided graph is directed
+     * @throws IllegalArgumentException if provided graph is directed
      */
     public static <V> List<List<V>> components(Graph<V> graph) {
         if (graph.isDirected())
@@ -316,7 +316,7 @@ public class Graphs {
      * graphs describing the components.
      * @param graph the graph to examine; must be undirected
      * @return list of lists of the vertices in various components
-     * @throw IllegalArgumentException if provided graph is directed
+     * @throws IllegalArgumentException if provided graph is directed
      */
     public static <V> List<Graph<V>> componentGraphs(Graph<V> graph) {
         if (graph.isDirected())

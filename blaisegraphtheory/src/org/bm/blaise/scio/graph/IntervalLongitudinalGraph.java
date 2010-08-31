@@ -49,7 +49,7 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     /**
      * Factory method to generate longitudinal graph with given properties.
-     * @param boolean whether graph is directed
+     * @param directed whether graph is directed
      * @param nodeTimes mapping of vertices together with time intervals
      * @param edgeTimes mapping of edges together with time intervals
      */
@@ -81,18 +81,21 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
             ArrayList<Object[]> pairs = new ArrayList<Object[]>();
             for (V v1 : result.edgeTimes.keySet())
                 for (V v2 : result.edgeTimes.get(v1).keySet()) {
-                    if (result.edgeTimes.get(v2).get(v1) == null)
+                    if (result.edgeTimes.get(v2) == null || result.edgeTimes.get(v2).get(v1) == null)
                         pairs.add(new Object[]{v1, v2});
                 }
-            for (Object[] pair : pairs)
+            for (Object[] pair : pairs) {
+                if (result.edgeTimes.get((V)pair[1]) == null)
+                    result.edgeTimes.put((V)pair[1], new HashMap<V, List<double[]>>());
                 result.edgeTimes.get((V)pair[1]).put((V)pair[0], result.edgeTimes.get((V)pair[0]).get((V)pair[1]));
+            }
         }
         return result;
     }
 
     /** 
      * Factory method to generate longitudinal graph with given properties.
-     * @param boolean whether graph is directed
+     * @param directed whether graph is directed
      * @param nodeTimes mapping of vertices together with list of node time intervals
      * @param edgeTimes mapping of edges together with list of edge time intervals
      */
@@ -258,10 +261,13 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         }
 
         public boolean adjacent(V x, V y) {
-            if (!contains(x) || !contains(y) || !edgeTimes.containsKey(x) || !edgeTimes.get(x).containsKey(y) )
+            if (!(contains(x) && contains(y)))
                 return false;
-            List<double[]> intervals = edgeTimes.get(x).get(y);
-            return in(intervals);
+            boolean dirOK = edgeTimes.containsKey(x) && edgeTimes.get(x).containsKey(y);
+            boolean undirOK = dirOK || (edgeTimes.containsKey(y) && edgeTimes.get(y).containsKey(x));
+            if ((directed && !dirOK) || (!directed && !undirOK))
+                return false;
+            return dirOK ? in(edgeTimes.get(x).get(y)) : in(edgeTimes.get(y).get(x));
         }
 
         public int degree(V x) {

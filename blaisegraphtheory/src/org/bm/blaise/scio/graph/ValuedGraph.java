@@ -11,7 +11,7 @@ package org.bm.blaise.scio.graph;
  *
  * @param <V> the type of nodes in the graph
  * @param <N> the type of value associated with each node
- * @see NodeValueGraphWrapper
+ * @see ValuedGraphWrapper, WeightedValueGraphWrapper
  *
  * @author Elisha Peterson
  */

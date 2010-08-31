@@ -46,8 +46,8 @@ public class GraphControllerMaster {
 
     /** Adds and activates a new controller & deactivates those currently active. */
     void setActiveController(GraphController c) {
-        GraphController oldActive = active;
-        if (!updating) {
+        if (active != c && !updating) {
+            GraphController oldActive = active;
             updating = true;
             if (c != null && !controllers.contains(c))
                 controllers.add(c);

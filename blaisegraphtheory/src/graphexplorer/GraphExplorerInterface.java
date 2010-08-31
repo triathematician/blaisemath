@@ -6,6 +6,7 @@
 package graphexplorer;
 
 import java.awt.Component;
+import visometry.PlotComponent;
 
 /**
  * Provides methods that actions classes can use, regardless of the GUI.
@@ -13,6 +14,8 @@ import java.awt.Component;
  */
 interface GraphExplorerInterface {
 
+    /** Returns active graph component displayed (or null if none is active) */
+    PlotComponent activePlotComponent();
     /** Returns component-parent for dialogs */
     Component dialogComponent();
     /** @return active controller */

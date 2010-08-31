@@ -23,7 +23,7 @@ import primitive.style.ArrowStyle;
 import primitive.style.PrimitiveStyle;
 import primitive.style.StringStyle;
 import util.ChangeBroadcaster;
-import visometry.PointDragListener;
+import visometry.VMouseDragListener;
 import visometry.VDraggablePrimitiveEntry;
 import visometry.VPrimitiveEntry;
 import visometry.plane.PlanePlotComponent;
@@ -45,7 +45,7 @@ import visometry.plottable.Plottable;
  * @see PlanePlotComponent
  */
 public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plottable<Point2D.Double>
-        implements PointDragListener<Point2D.Double>, ChangeBroadcaster {
+        implements VMouseDragListener<Point2D.Double>, ChangeBroadcaster {
 
     /** Vertices; underlying primitive is an array of GraphicString's */
     VPrimitiveEntry vertexEntry;
@@ -67,14 +67,15 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
 
     public AbstractPlaneGraph(Graph graph, PrimitiveStyle vStyle) {
         ArrowStyle eStyle = new ArrowStyle(new Color(96, 192, 96));
-        eStyle.setShapeSize(12);
-        eStyle.setThickness(2f);
+        int n = graph.order(), ne = graph.edgeNumber();
+        eStyle.setThickness(ne/n > 12 || ne > 500 ? .5f : ne/n > 6 || ne > 100 ? 1f : 2f);
+        eStyle.setShapeSize((int) (eStyle.getThickness() * 6));
         addPrimitive(edgeEntry = new VPrimitiveEntry(null, eStyle));
         addPrimitive(vertexEntry = new VDraggablePrimitiveEntry(null, vStyle, this));
         StringStyle sStyle = new StringStyle(Color.DARK_GRAY, 10, primitive.style.Anchor.Center);
         addPrimitive(edgeWeightEntry = new VPrimitiveEntry(null, sStyle));
-        edgeWeightEntry.visible = false;
         setGraph(graph);
+        edgeWeightEntry.visible = graph instanceof WeightedGraph && ne <= 100;
     }
 
     @Override

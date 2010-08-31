@@ -29,7 +29,7 @@ public interface WeightedGraph<V,E> extends Graph<V> {
      * Sets the weight associated with an edge in the graph.
      * @param x the first node of the edge
      * @param y the second node of the edge
-     * @param weight the weight associatd with the edge
+     * @param value the weight associatd with the edge
      */
     public void setWeight(V x, V y, E value);
 

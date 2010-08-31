@@ -21,7 +21,6 @@ import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ListLongitudinalGraph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
-import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
 import util.FileNameExtensionFilter;
@@ -166,7 +165,7 @@ public class PajekLongGraphIO extends AbstractGraphIO {
      * Finds the time associated with a particular header within specified string.
      * It should occur as "*Edges t=5.5" for example.
      * @param mode the mode matching the header line
-     * @return the time stored in the line, i.e. what goes along with "t=XXX"
+     * @return the time stored in the line, i.e. what goes along with "t=**"
      * @throws NumberFormatException if the time is not in the proper format.
      */
     static double parseInputTime(String line, ImportMode mode) throws NumberFormatException {

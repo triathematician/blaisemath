@@ -69,7 +69,7 @@ public class XMLUtils {
     /**
      * Outputs an XML document to a file
      * @param doc the document to output
-     * @param xmlFile the file to output the document to
+     * @param file the file to output the document to
      */
     public static void writeXMLDocument(org.w3c.dom.Document doc, java.io.File file) {
         try {

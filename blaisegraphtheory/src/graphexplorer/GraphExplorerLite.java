@@ -23,6 +23,7 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import org.bm.blaise.specto.plane.graph.PlaneGraphBean;
 import stormtimer.BetterTimer;
+import visometry.PlotComponent;
 
 /**
  *
@@ -220,18 +221,8 @@ public class GraphExplorerLite extends javax.swing.JFrame
     // PROPERTY GETTERS
     //
 
-    public Component dialogComponent() {
-        return this;
-    }
-
-    public Component activePanel() {
-        return mainPlot;
-    }
-
-    public boolean isLongitudinal() {
-        return false;
-    }
-
+    public Component dialogComponent() { return this; }
+    public PlotComponent activePlotComponent() { return mainPlot; }
     public Graph activeGraph() {
         return activeGraph == null ? null : activeGraph.getGraph();
     }

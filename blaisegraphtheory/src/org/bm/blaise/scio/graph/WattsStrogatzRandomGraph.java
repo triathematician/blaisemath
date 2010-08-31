@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 /**
@@ -31,7 +32,7 @@ public class WattsStrogatzRandomGraph {
         if (rewiring < 0 || rewiring > 1)
             throw new IllegalArgumentException("Invalid rewiring parameter = " + rewiring + " (should be between 0 and 1)");
 
-        TreeSet<Integer[]> edges = new TreeSet<Integer[]>(RandomGraph.PAIR_COMPARE_UNDIRECTED);
+        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < n; i++)
             for (int off = 1; off <= (deg/2); off++)
                 edges.add(new Integer[]{i, (i+off)%n});
@@ -46,16 +47,18 @@ public class WattsStrogatzRandomGraph {
     }
 
     /** 
-     * Randomly rewires the specified  edge. This replaces the edge with
-     * another edge found by randomly moving one of its endpoints, provided the
-     * resulting edge does not already exist.
+     * Randomly rewires the specified edge, by randomly moving
+     * one of the edge's endpoints, provided the resulting edge does not already exist in the set.
      * @param edges current list of edges
      * @param e the edge to rewire
      * @param n total # of vertices
+     * @return new edge.
      */
-    private static void randomlyRewire(TreeSet<Integer[]> edges, Integer[] e, int n) {
+    private static void randomlyRewire(ArrayList<Integer[]> edges, Integer[] e, int n) {
         Integer[] potential = new Integer[] {e[0], e[1]};
-        while (edges.contains(potential)) {
+        TreeSet<Integer[]> edgeTree = new TreeSet<Integer[]>(RandomGraph.PAIR_COMPARE_UNDIRECTED);
+        edgeTree.addAll(edges);
+        while (edgeTree.contains(potential)) {
             if (Math.random() < .5)
                 potential = new Integer[] {e[0], randomNot(e[0], n)};
             else

@@ -63,12 +63,6 @@ public class UCINetGraphIOTest {
     }
 
     @Test
-    public void testSaveGraph() {
-        System.out.println("saveGraph");
-        fail("The test case is a prototype.");
-    }
-
-    @Test
     public void testParseDataFormat() {
         System.out.println("parseDataFormat");
         assertEquals(DataFormat.FULLMATRIX, UCINetGraphIO.parseDataFormat("format = fullmatrix"));

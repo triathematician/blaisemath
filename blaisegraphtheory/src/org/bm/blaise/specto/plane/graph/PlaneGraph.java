@@ -40,7 +40,9 @@ public final class PlaneGraph extends AbstractPlaneGraph<GraphicPointFancy<Point
         super(graph, new PointFancyStyle(PointStyle.PointShape.CIRCLE, Anchor.North));
         PointFancyStyle vStyle = ((PointFancyStyle) vertexEntry.style);
         vStyle.setLabelColor(new Color(128, 128, 128));
-        vStyle.setMaxRadius(5.0);
+        int n = graph.order();
+        vStyle.setMaxRadius(n > 500 ? 2.0 : n > 250 ? 3.0 : n > 100 ? 4.0 : n > 25 ? 5.0 : 8.0);
+        vStyle.setLabelVisible(n <= 100);
     }
 
     @Override

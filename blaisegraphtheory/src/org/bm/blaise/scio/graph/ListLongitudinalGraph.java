@@ -33,7 +33,7 @@ public class ListLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     @Override
     public String toString() {        
-        return graphs.toString();
+        return "LongitudinalGraph " + graphs.toString();
     }
 
     /**
@@ -95,7 +95,7 @@ public class ListLongitudinalGraph<V> implements LongitudinalGraph<V> {
     public Graph<V> slice(double time, boolean exact) {
         if (graphs.containsKey(time))
             return graphs.get(time);
-        else if(!exact) {
+        else if (!exact) {
             // return closest graph to given time
             double minDist = Double.MAX_VALUE;
             Double minKey = null;
@@ -105,9 +105,8 @@ public class ListLongitudinalGraph<V> implements LongitudinalGraph<V> {
                     minKey = d;
                 }
             return graphs.get(minKey);
-        } else {
+        } else
             return null;
-        }
     }
 
     public double getMinimumTime() {

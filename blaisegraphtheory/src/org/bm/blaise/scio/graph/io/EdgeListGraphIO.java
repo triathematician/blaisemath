@@ -24,7 +24,7 @@ import util.FileNameExtensionFilter;
 /**
  * <p>
  *  Provides input/output for text files consisting of several lines each of which has
- *  two numbers describing the edges of a graph. The graph returned is directed.
+ *  two integers describing the edges of a graph. The graph returned is directed.
  * </p>
  * <p>
  * <b>EXAMPLE:</b>
@@ -32,6 +32,7 @@ import util.FileNameExtensionFilter;
  * <code>1 5<br/>2 3<br/>1 4<br/>3 4<br/>4 5</code>
  * </p>
  * <p>
+ * Commas may also be used between the numbers.
  * Any blank lines are ignored, but any non-blank lines without two spaced (or tabbed)
  * integers results in an error.
  * </p>
@@ -76,7 +77,7 @@ public final class EdgeListGraphIO extends AbstractGraphIO {
                         // ignore spaces on either side of line
                         line = line.trim();
                         // expect this to be completely space delimited... we are only interested in the first 2 entries
-                        String[] split = line.split("\\s+");
+                        String[] split = line.split("[,\\]s+");
                         if (split.length > 2)
                             System.out.println("WARNING -- lines should not have more than 2 entries on line " + lineNumber + ": " + line);
                         Integer v1 = Integer.decode(split[0]);
