@@ -133,7 +133,6 @@ class PlaneProcessor extends PlotProcessor<Point2D.Double> {
             entry.primitive = new GraphicRuledLine<Point2D.Double> (
                     vis.getWindowPointOf((Point2D.Double) lRule.start),
                     vis.getWindowPointOf((Point2D.Double) lRule.end),
-                    lRule.label,
                     lRule.ticks,
                     lRule.tickLabels );
         }

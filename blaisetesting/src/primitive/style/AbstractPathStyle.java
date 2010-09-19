@@ -5,6 +5,7 @@
 
 package primitive.style;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ public abstract class AbstractPathStyle {
 
     protected BasicStroke stroke = PrimitiveStyle.DEFAULT_STROKE;
     protected Color strokeColor = Color.BLACK;
+    protected float opacity = .5f;
 
     /** Construct with default stroke and color black */
     public AbstractPathStyle() {}
@@ -51,36 +53,48 @@ public abstract class AbstractPathStyle {
     public Color getStrokeColor() { return strokeColor; }
     /** @param color new color for current stroke */
     public void setStrokeColor(Color color) { this.strokeColor = color; }
+    /** @return opacity of opacity */
+    public float getStrokeOpacity() { return opacity; }
+    /** Sets opacity of opacity */
+    public void setStrokeOpacity(float opacity) { this.opacity = opacity; }
+
 
 
     /** Draws a single path via a shape */
     public void drawPath(Graphics2D canvas, Shape path) {
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
+        canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         canvas.draw(path);
+        canvas.setComposite(AlphaComposite.SrcOver);
     }
     /** Draws several shapes */
     public void drawPaths(Graphics2D canvas, Shape[] paths) {
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
+        canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         for (Shape p : paths)
             canvas.draw(p);
+        canvas.setComposite(AlphaComposite.SrcOver);
 
     }
     /** Draws a single path via an array of points */
     public void drawPath(Graphics2D canvas, Point2D.Double[] path) {
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
+        canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         GeneralPath gp = new GeneralPath();
         gp.moveTo((float)path[0].x, (float)path[0].y);
         for (int i = 0; i < path.length; i++)
             gp.lineTo((float)path[i].x, (float)path[i].y);
         canvas.draw(gp);
+        canvas.setComposite(AlphaComposite.SrcOver);
     }
     /** Draws several paths */
     public void drawPaths(Graphics2D canvas, Point2D.Double[][] paths) {
         canvas.setColor(strokeColor);
         canvas.setStroke(stroke);
+        canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         GeneralPath gp = new GeneralPath();
         for (Point2D.Double[] path : paths) {
             gp.moveTo((float)path[0].x, (float)path[0].y);
@@ -88,6 +102,7 @@ public abstract class AbstractPathStyle {
                 gp.lineTo((float)path[i].x, (float)path[i].y);
         }
         canvas.draw(gp);
+        canvas.setComposite(AlphaComposite.SrcOver);
     }
 
 

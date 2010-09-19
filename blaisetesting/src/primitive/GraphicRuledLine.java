@@ -17,7 +17,6 @@ public class GraphicRuledLine<C> {
 
     public C start;
     public C end;
-    public String label;
     public double[] ticks;
     public String[] tickLabels;
 
@@ -25,14 +24,12 @@ public class GraphicRuledLine<C> {
      * Construct with all possible parameters.
      * @param start start position of line
      * @param end end position of line
-     * @param label "global" label to use for the line
      * @param ticks location of ticks relative to the start of the line, as a percentage of total distance
      * @param tickLabels labels of ticks
      */
-    public GraphicRuledLine(C start, C end, String label, double[] ticks, String[] tickLabels) {
+    public GraphicRuledLine(C start, C end, double[] ticks, String[] tickLabels) {
         this.start = start;
         this.end = end;
-        this.label = label;
         this.ticks = ticks;
         this.tickLabels = tickLabels;
     }

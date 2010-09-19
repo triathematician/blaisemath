@@ -48,7 +48,6 @@ class LineProcessor extends PlotProcessor<Double> {
             entry.primitive = new GraphicRuledLine<Point2D.Double> (
                     vis.getWindowPointOf((Double) lRule.start),
                     vis.getWindowPointOf((Double) lRule.end),
-                    lRule.label,
                     lRule.ticks,
                     lRule.tickLabels );
         } else

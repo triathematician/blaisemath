@@ -89,7 +89,6 @@ public class SpaceProcessor extends PlotProcessor<Point3D> {
 
             entry.primitive = new GraphicRuledLine<Point2D.Double> (
                     p2s, p2e,
-                    lRule.label,
                     newTicks,
                     lRule.tickLabels );
         } else
