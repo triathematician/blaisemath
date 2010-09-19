@@ -12,8 +12,14 @@
 package gtest;
 
 import data.propertysheet.PropertySheet;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import primitive.style.PathStylePoints;
 import visometry.line.LineFunction;
 import visometry.line.LinePlotComponent;
+import visometry.line.TimelinePlot;
+import visometry.plottable.VPoint;
+import visometry.plottable.VSegment;
 
 /**
  *
@@ -22,7 +28,7 @@ import visometry.line.LinePlotComponent;
 public class DemoLineVisometry extends javax.swing.JFrame {
 
     LinePlotComponent l1, l2, l3;
-    LineFunction lf;
+    TimelinePlot l4;
 
     /** Creates new form DemoLineVisometry */
     public DemoLineVisometry() {
@@ -33,12 +39,26 @@ public class DemoLineVisometry extends javax.swing.JFrame {
         tabs.add("Basic", l1 = new LinePlotComponent());
         tabs.add("Generic", l2 = new LinePlotComponent());
         tabs.add("Function", l3 = new LinePlotComponent());
+        tabs.add("Timeline", l4 = new TimelinePlot());
 
         props.add("Visometry 1", new PropertySheet(l1.getVisometry()));
         props.add("Axis 1", new PropertySheet(l1.getAxis()));
-        
+
+        LineFunction lf;
         l3.add(lf = new LineFunction());
         props.add("Function 3", new PropertySheet(lf));
+
+        VPoint<Double> p1;
+        l4.add(p1 = new VPoint<Double>(0.0));
+        props.add("Timeline Axis 4", new PropertySheet(l4.getAxis()));
+        props.add("Point 4", new PropertySheet(p1));
+        VSegment seg1 = new VSegment<Double>(0.1, 0.78);
+        PathStylePoints segStyle = new PathStylePoints(Color.yellow);
+        segStyle.setStroke(new BasicStroke(60f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+        segStyle.setStrokeOpacity(.5f);
+        seg1.setStrokeStyle(segStyle);
+        l4.add(seg1);
+        props.add("Segment", new PropertySheet(seg1));
     }
 
     /** This method is called from within the constructor to
@@ -56,20 +76,9 @@ public class DemoLineVisometry extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Line Visometry Test");
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(tabs, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(props, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(tabs, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, props, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-        );
+        tabs.setPreferredSize(new java.awt.Dimension(500, 400));
+        getContentPane().add(tabs, java.awt.BorderLayout.CENTER);
+        getContentPane().add(props, java.awt.BorderLayout.EAST);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
