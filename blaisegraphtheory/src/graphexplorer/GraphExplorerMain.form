@@ -317,6 +317,16 @@
                     </Property>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="timeStartMI">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="actions_layout.LAYOUT_TIME_START" type="code"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/graphexplorer/resources/play18.png"/>
+                    </Property>
+                  </Properties>
+                </MenuItem>
               </SubComponents>
             </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="energyIterateMI">
@@ -547,7 +557,7 @@
             <Component class="javax.swing.JComboBox" name="metricCB1">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values())" type="code"/>
+                  <Connection code="new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values())" type="code"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Compute and display the specified metric.&lt;br&gt;&#xa;&lt;font color=&quot;gray&quot;&gt;&lt;i&gt;&#xa;Currently, the values &quot;None&quot;, &quot;Other&quot;,&#xa;and &quot;Decay centrality (custom parameter)&quot; are nonfunctional.&#xa;&lt;/i&gt;&lt;/font&gt;"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -742,7 +752,7 @@
                     <Component class="javax.swing.JComboBox" name="metricCB">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values())" type="code"/>
+                          <Connection code="new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values())" type="code"/>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Compute and display the specified metric.&lt;br&gt;&#xa;&lt;font color=&quot;gray&quot;&gt;&lt;i&gt;&#xa;Currently, the values &quot;None&quot;, &quot;Other&quot;,&#xa;and &quot;Decay centrality (custom parameter)&quot; are nonfunctional.&#xa;&lt;/i&gt;&lt;/font&gt;"/>
                       </Properties>
@@ -764,7 +774,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="graphexplorer.GraphTable" name="mainTable">
+                    <Component class="graphexplorer.views.GraphTable" name="mainTable">
                     </Component>
                   </SubComponents>
                 </Container>

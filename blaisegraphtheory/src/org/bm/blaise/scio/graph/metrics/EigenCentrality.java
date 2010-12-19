@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Graphs;
-import util.Matrices;
+import util.stats.Matrices;
 
 /**
  * Implementation of the eigenvalue centrality calculation.

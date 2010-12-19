@@ -23,7 +23,7 @@ import org.bm.blaise.scio.graph.ListLongitudinalGraph;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.io.PajekGraphIO.ImportMode;
-import util.FileNameExtensionFilter;
+import util.io.FileNameExtensionFilter;
 
 /**
  * <p>

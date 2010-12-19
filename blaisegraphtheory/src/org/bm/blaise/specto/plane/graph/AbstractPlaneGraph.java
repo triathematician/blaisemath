@@ -19,6 +19,7 @@ import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import primitive.GraphicString;
+import primitive.style.AbstractPointStyle;
 import primitive.style.ArrowStyle;
 import primitive.style.PrimitiveStyle;
 import primitive.style.StringStyle;
@@ -218,6 +219,7 @@ public abstract class AbstractPlaneGraph<P extends Point2D.Double> extends Plott
     public void requestComputation() {
         firePlottableChanged();
     }
+
 
     @Override
     protected void recompute() {

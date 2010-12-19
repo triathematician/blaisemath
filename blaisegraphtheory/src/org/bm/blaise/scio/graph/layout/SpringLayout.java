@@ -21,14 +21,14 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // CONSTANTS
 
+    /** Distance outside which global force acts */
+    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = 1;
     /** Maximum force that can be applied between nodes */
     private static final double MAX_FORCE = 100.0;
     /** Min distance to assume between nodes */
     private static final double MIN_DIST = .01;
     /** Max distance to apply repulsive force */
     private static final double MAXIMUM_REPEL_DISTANCE = 5;
-    /** Distance outside which global force acts */
-    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = 1;
 
     // STATE VARIABLES
 
@@ -49,17 +49,18 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // ALGORITHM PARAMETERS
 
-    /** Repelling constant */
-    double repulsiveC = 1;
-    /** Attractive constant */
-    double springC = 10;
-    /** Natural spring length */
-    double springL = .5;
     /** Global attractive constant (keeps vertices closer to origin) */
     double globalC = .5;
+    /** Attractive constant */
+    double springC = 10;
+    /** Repelling constant */
+    double repulsiveC = 1;
+
+    /** Natural spring length */
+    double springL = .5;
 
     /** Time step per iteration */
-    double stepC = 0.1;
+    double stepT = 0.1;
 
     //
     // CONSTRUCTORS
@@ -94,8 +95,8 @@ public class SpringLayout implements IterativeGraphLayout {
     public void setGlobalForce(double value) { globalC = value; }
     public double getDampingConstant() { return dampingC; }
     public void setDampingConstant(double value) { dampingC = value; }
-    public double getTimeStep() { return stepC; }
-    public void setTimeStep(double value) { stepC = value; }
+    public double getTimeStep() { return stepT; }
+    public void setTimeStep(double value) { stepT = value; }
 
     //
     // INTERFACE METHODS
@@ -109,9 +110,9 @@ public class SpringLayout implements IterativeGraphLayout {
     public final <V> void reset(Map<V, Point2D.Double> positions) {
         loc = new HashMap<Object, Point2D.Double>();
         vel = new HashMap<Object, Point2D.Double>();
-        for (Entry<V, Point2D.Double> en : positions.entrySet()) {
-            loc.put(en.getKey(), en.getValue() == null ? new Point2D.Double() : en.getValue());
-            vel.put(en.getKey(), new Point2D.Double());
+        for (V v : positions.keySet()) {
+            loc.put(v, positions.get(v) == null ? new Point2D.Double() : positions.get(v));
+            vel.put(v, new Point2D.Double());
         }
         iteration = 0;
         tempLoc = null;
@@ -126,17 +127,20 @@ public class SpringLayout implements IterativeGraphLayout {
 
     public void iterate(Graph g) {
         long t0 = System.currentTimeMillis();
+
         List nodes = g.nodes();
         boolean directed = g.isDirected();
+
         // check for temporary location updates
         if (tempLoc != null) {
             for (Entry<?, Point2D.Double> en : tempLoc.entrySet())
                 if (nodes.contains(en.getKey())) {
                     loc.put(en.getKey(), en.getValue());
-                    vel.put(en.getKey(), new Point2D.Double());
+                    vel.get(en.getKey()).setLocation(0, 0);
                 }
             tempLoc = null;
         }
+
         // check for additional nodes not present before
         for (Object v : nodes) {
             if (!loc.containsKey(v)) {
@@ -144,8 +148,8 @@ public class SpringLayout implements IterativeGraphLayout {
                 vel.put(v, new Point2D.Double());
             }
         }
+
         energy = 0;
-        double nodeMass = 1;
 
         // helper variables
         Point2D.Double iLoc, iVel, jLoc;
@@ -174,8 +178,8 @@ public class SpringLayout implements IterativeGraphLayout {
                     }
                 }
             }
-            iVel.x = dampingC * (iVel.x + stepC * netForce.x);
-            iVel.y = dampingC * (iVel.y + stepC * netForce.y);
+            iVel.x = dampingC * (iVel.x + stepT * netForce.x);
+            iVel.y = dampingC * (iVel.y + stepT * netForce.y);
             // cap the total speed
             double speed = iVel.distance(0,0);
             if (speed > 2) {
@@ -183,9 +187,9 @@ public class SpringLayout implements IterativeGraphLayout {
                 iVel.y /= speed;
                 speed = 2;
             }
-            iLoc.x += stepC * iVel.x;
-            iLoc.y += stepC * iVel.y;
-            energy += .5 * nodeMass * speed * speed;
+            iLoc.x += stepT * iVel.x;
+            iLoc.y += stepT * iVel.y;
+            energy += .5 * speed * speed;
         }
         iteration ++;
 //        System.out.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
@@ -219,8 +223,9 @@ public class SpringLayout implements IterativeGraphLayout {
         if (iLoc == jLoc)
             return;
         if (dist == 0) {
-            sum.x += repulsiveC / (MIN_DIST * MIN_DIST);
-            sum.y += 0;
+            double angle = Math.random()*2*Math.PI;
+            sum.x += repulsiveC * Math.cos(angle);
+            sum.y += repulsiveC * Math.sin(angle);
         } else {
             double multiplier = Math.min(repulsiveC / (dist*dist), MAX_FORCE);
             sum.x += multiplier * (iLoc.x - jLoc.x) / dist;

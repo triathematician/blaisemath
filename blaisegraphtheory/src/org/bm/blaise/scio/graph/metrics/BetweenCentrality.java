@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.Stack;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Graphs;
-import util.Matrices;
+import util.stats.Matrices;
 
 /**
  * <p>

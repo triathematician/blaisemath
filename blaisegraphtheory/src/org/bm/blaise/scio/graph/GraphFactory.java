@@ -46,7 +46,7 @@ public class GraphFactory {
      * @param edges map associating edges to time intervals
      * @return graph with specified edges
      */
-    public static <V> LongitudinalGraph<V> getLongitudinalGraph(boolean directed,
+    public static <V> LongitudinalGraph<V> getLongitudinalGraph(boolean directed, int timeSteps,
             Map<V, List<double[]>> vertices, Map<V, Map<V, List<double[]>>> edges) {
 
         // create master table of (sorted) key times
@@ -61,7 +61,7 @@ public class GraphFactory {
                     
         System.out.println(" .. getLongitudinalGraph: " + allTimes.size() + " key times: " + allTimes);
 
-        return IntervalLongitudinalGraph.getInstance2(directed, vertices, edges);
+        return IntervalLongitudinalGraph.getInstance2(directed, allTimes.size(), vertices, edges);
     }
 
 

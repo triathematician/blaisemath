@@ -5,6 +5,10 @@
 
 package graphexplorer;
 
+import graphexplorer.controller.GraphControllerMaster;
+import graphexplorer.controller.GraphController;
+import graphexplorer.actions.ExplorerLayoutActions;
+import graphexplorer.actions.ExplorerIOActions;
 import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
 import java.awt.Component;
@@ -77,7 +81,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainTM = new graphexplorer.GraphTableModel();
+        mainTM = new graphexplorer.views.GraphTableModel();
         buttonGroup1 = new javax.swing.ButtonGroup();
         layoutPS = new data.propertysheet.PropertySheet();
         toolbar = new javax.swing.JToolBar();
@@ -201,7 +205,7 @@ public class GraphExplorerLite extends javax.swing.JFrame
     private javax.swing.JButton loadB;
     private visometry.plane.PlanePlotComponent mainPlot;
     private javax.swing.JSplitPane mainSP;
-    private graphexplorer.GraphTableModel mainTM;
+    private graphexplorer.views.GraphTableModel mainTM;
     private gui.RollupPanel propertyRP;
     private javax.swing.JScrollPane propertySP;
     private javax.swing.JButton randomLayoutB;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import util.Matrices;
+import util.stats.Matrices;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.

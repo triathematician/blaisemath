@@ -138,7 +138,7 @@ public abstract class AbstractGraphIO {
             edgeMap.get(edge[0]).put(edge[1], ivs);
         }
 
-        return GraphFactory.getLongitudinalGraph(directed, times, edgeMap);
+        return GraphFactory.getLongitudinalGraph(directed, 100, times, edgeMap);
     }
 
     /**

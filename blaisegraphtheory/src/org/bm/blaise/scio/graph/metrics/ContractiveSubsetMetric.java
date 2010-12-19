@@ -30,7 +30,7 @@ public class ContractiveSubsetMetric<N> implements SubsetMetric<N> {
         V starNode = null;
         for (V v : nodes) { starNode = v; break; }
         Graph<V> contracted = new ContractedGraph<V>(graph, nodes, starNode);
-        System.out.println("Contractive value: " + contracted);
+//        System.out.println("Contractive value: " + contracted);
         return baseMetric.value(contracted, starNode);
     }
 

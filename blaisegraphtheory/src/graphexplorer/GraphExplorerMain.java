@@ -5,10 +5,20 @@
 
 package graphexplorer;
 
+import graphexplorer.controller.GraphControllerMaster;
+import graphexplorer.controller.GraphController;
+import graphexplorer.views.LongitudinalMetricPlot;
+import util.stats.views.FrequencyTableModel;
+import graphexplorer.actions.ExplorerLayoutActions;
+import graphexplorer.actions.ExplorerGenerateActions;
+import graphexplorer.actions.ExplorerActions;
+import graphexplorer.actions.ExplorerIOActions;
 import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
-import graphexplorer.ExplorerStatActions.GlobalStatEnum;
-import graphexplorer.ExplorerStatActions.StatEnum;
+import graphexplorer.actions.ExplorerStatActions;
+import graphexplorer.actions.ExplorerStatActions.GlobalStatEnum;
+import graphexplorer.actions.ExplorerStatActions.StatEnum;
+import graphexplorer.controller.LongitudinalGraphController;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,7 +37,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
@@ -196,7 +205,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         metricL = new javax.swing.JLabel();
         metricCB = new javax.swing.JComboBox();
         mainTableSP = new javax.swing.JScrollPane();
-        mainTable = new graphexplorer.GraphTable();
+        mainTable = new graphexplorer.views.GraphTable();
         boxP2 = new javax.swing.JPanel();
         boxTP2 = new javax.swing.JTabbedPane();
         distributionTableSP = new javax.swing.JScrollPane();
@@ -237,6 +246,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         energyM = new javax.swing.JMenu();
         energyStartMI = new javax.swing.JMenuItem();
+        timeStartMI = new javax.swing.JMenuItem();
         energyIterateMI = new javax.swing.JMenuItem();
         energyStopMI = new javax.swing.JMenuItem();
         metricM = new javax.swing.JMenu();
@@ -343,7 +353,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         jLabel1.setText("Metric: ");
         jPanel1.add(jLabel1);
 
-        metricCB1.setModel(new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values()));
+        metricCB1.setModel(new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values()));
         metricCB1.setToolTipText("<html>\nCompute and display the specified metric.<br>\n<font color=\"gray\"><i>\nCurrently, the values \"None\", \"Other\",\nand \"Decay centrality (custom parameter)\" are nonfunctional.\n</i></font>");
         metricCB1.setMaximumSize(new java.awt.Dimension(32767, 22));
 
@@ -436,7 +446,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         metricL.setText("Metric: ");
         mainTableTB.add(metricL);
 
-        metricCB.setModel(new DefaultComboBoxModel(graphexplorer.ExplorerStatActions.StatEnum.values()));
+        metricCB.setModel(new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values()));
         metricCB.setToolTipText("<html>\nCompute and display the specified metric.<br>\n<font color=\"gray\"><i>\nCurrently, the values \"None\", \"Other\",\nand \"Decay centrality (custom parameter)\" are nonfunctional.\n</i></font>");
         metricCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -607,6 +617,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
         energyStartMI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/play18.png"))); // NOI18N
         energyM.add(energyStartMI);
 
+        timeStartMI.setAction(actions_layout.LAYOUT_TIME_START);
+        timeStartMI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphexplorer/resources/play18.png"))); // NOI18N
+        energyM.add(timeStartMI);
+
         layoutM.add(energyM);
 
         energyIterateMI.setAction(actions_layout.LAYOUT_ITERATE);
@@ -681,7 +695,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         // this button swaps the current reportStatus of the layout between playing & paused
         GraphController gc = activeController();
         if (gc != null) {
-            if (gc.isAnimating())
+            if (gc.isLayoutAnimating())
                 actions_layout.LAYOUT_STOP.actionPerformed(evt);
             else
                 actions_layout.LAYOUT_ENERGY_START.actionPerformed(evt);
@@ -700,10 +714,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
             if (filterCB.isSelected())
                 gc.setFilterThreshold((Double) filterSp.getValue());
             else
-                gc.setFiltered(false);
+                gc.setFilterEnabled(false);
         }
-        if (filterCB.isSelected() != gc.isFiltered())
-            filterCB.setSelected(gc.isFiltered());
+        if (filterCB.isSelected() != gc.isFilterEnabled())
+            filterCB.setSelected(gc.isFilterEnabled());
     }//GEN-LAST:event_filterCBActionPerformed
 
     private void filterSpStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_filterSpStateChanged
@@ -805,7 +819,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenu localMetricM;
     private javax.swing.JSplitPane mainSP;
     private javax.swing.JSplitPane mainSP2;
-    private graphexplorer.GraphTable mainTable;
+    private graphexplorer.views.GraphTable mainTable;
     private javax.swing.JScrollPane mainTableSP;
     private javax.swing.JToolBar mainTableTB;
     private javax.swing.JMenuBar menu;
@@ -836,6 +850,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem starMI1;
     private javax.swing.JPanel statusB;
     private javax.swing.JLabel statusL;
+    private javax.swing.JMenuItem timeStartMI;
     private javax.swing.JToolBar toolbar;
     private javax.swing.JMenuItem uniform1MI;
     private javax.swing.JMenuItem uniform1MI1;
@@ -870,7 +885,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
     Graph activeGraph() {
         GraphController gc = master.getActiveController();
-        return gc == null ? null : gc.getActiveGraph();
+        return gc == null ? null : gc.getViewGraph();
     }
 
     AbstractPlaneGraph activePlaneGraph() {
@@ -910,7 +925,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 propertyRP.add(nodePS = new PropertySheet(bean.nodeBean()), "Node Settings");
                 propertyRP.add(edgePS = new PropertySheet(bean.edgeBean()), "Edge Settings");
             }
-            IterativeGraphLayout layout = activeController().getIterativeLayout();
+            IterativeGraphLayout layout = activeController().getLayoutAlgorithm();
             if (layout != null)
                 propertyRP.add(layoutPS = new PropertySheet(layout), "Iterative Layout Settings");
             else
@@ -946,16 +961,16 @@ public class GraphExplorerMain extends javax.swing.JFrame
             distributionTable.setModel(new DefaultTableModel());
             boxPanel.validate();
         } else {
-            DistributionTableModel dtm = new DistributionTableModel(values);
+            FrequencyTableModel dtm = new FrequencyTableModel(values);
             distributionTable.setModel(dtm);
 
-            int[] counts = dtm.counts;
+            int[] counts = dtm.getCounts();
             int nSamples = counts.length;
             double[][] data = new double[6][counts.length];
             double x, y;
             for (int i = 0; i < nSamples; i++) {
-                x = ((Number)dtm.values[i]).doubleValue();
-                y = dtm.counts[i];
+                x = ((Number)dtm.getValue(i)).doubleValue();
+                y = counts[i];
                 data[0][i] = data[1][i] = data[2][i] = x;
                 data[3][i] = data[5][i] = y;
                 data[4][i] = 0;
@@ -982,8 +997,8 @@ public class GraphExplorerMain extends javax.swing.JFrame
     /** Updates the longitudinal metric chart, provided the graph is longitudinal */
     private void updateLongChart() {
         GraphController gc = activeController();
-        if (gc != null && gc.isLongitudinal()) {
-            LongitudinalMetricPlot lmp = new LongitudinalMetricPlot(gc);
+        if (gc != null && gc instanceof LongitudinalGraphController) {
+            LongitudinalMetricPlot lmp = new LongitudinalMetricPlot((LongitudinalGraphController) gc);
             longMetricCP.setChart(lmp.getChart());
             boxTP2.add(longMetricCP, "Longitudinal Metric Chart");
         } else {
@@ -1039,7 +1054,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         for (GraphController gc : set) {
             // check to see if graph contains images (ad-hoc)
-            Graph ag = gc.getActiveGraph();
+            Graph ag = gc.getViewGraph();
             List nodes = ag.nodes();
             if (ag instanceof ValuedGraph && nodes.size() > 0) {
                 ValuedGraph vg = (ValuedGraph) ag;
@@ -1051,27 +1066,27 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 }
             }
 
-            if (gc.isLongitudinal()) {
-                c = new LongitudinalGraphPanel(gc);
+            if (gc instanceof LongitudinalGraphController) {
+                c = new LongitudinalGraphPanel((LongitudinalGraphController) gc);
                 PlaneGraph plottedGraph = ((LongitudinalGraphPanel)c).getPlaneGraph();
                 graphs.put(gc, plottedGraph);
-                gc.setPositions(plottedGraph.getPositionMap());
+                gc.setNodePositions(plottedGraph.getPositionMap());
             } else if (imageGraph) {
                 c = new PlanePlotComponent();
                 ImageGraph plottedGraph = new ImageGraph(ag);
                 ((PlanePlotComponent)c).add(plottedGraph);
                 graphs.put(gc, plottedGraph);
-                gc.setPositions(plottedGraph.getPositionMap());
+                gc.setNodePositions(plottedGraph.getPositionMap());
             } else {
                 c = new PlanePlotComponent();
-                PlaneGraph plottedGraph = new PlaneGraph(gc.getActiveGraph());
+                PlaneGraph plottedGraph = new PlaneGraph(gc.getViewGraph());
                 ((PlanePlotComponent)c).add(plottedGraph);
                 graphs.put(gc, plottedGraph);
-                plottedGraph.highlightNodes(gc.getNodeSubset());
-                if (gc.isInNeedOfLayout())
-                    gc.setPositions(plottedGraph.getPositionMap());
+                plottedGraph.highlightNodes(gc.getHighlightNodes());
+                if (gc.getNodePositions() == null)
+                    gc.setNodePositions(plottedGraph.getPositionMap());
                 else
-                    plottedGraph.setPositionMap(gc.getPositions());
+                    plottedGraph.setPositionMap(gc.getNodePositions());
             }
             tabs.put(gc, c);
             graphTP.add(c, gc.getName());
@@ -1101,7 +1116,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
             exportImageM.removeAll();
         }
 
-        if (gc != null && gc.isLongitudinal()) {
+        if (gc != null && gc instanceof LongitudinalGraphController) {
             export_movMI.setAction(new ExplorerIOActions.MovieAction(gc, (LongitudinalGraphPanel) tabs.get(gc)));
             exportMovieM.setEnabled(true);
         } else {
@@ -1110,13 +1125,13 @@ public class GraphExplorerMain extends javax.swing.JFrame
         }
 
         AbstractPlaneGraph pg = activePlaneGraph();
-        if (gc != null && gc.isFiltered()) {
-            pg.setGraph(gc.getFilteredGraph());
+        if (gc != null && gc.isFilterEnabled()) {
+            pg.setGraph(gc.getViewGraph());
             pg.updateLabels();
             filterCB.setEnabled(true);
         } else {
-            if (pg != null && pg.getGraph() != gc.getActiveGraph())
-                pg.setGraph(gc.getActiveGraph());
+            if (pg != null && pg.getGraph() != gc.getViewGraph())
+                pg.setGraph(gc.getViewGraph());
         }
 
         actions_stat.setController(gc);
@@ -1132,7 +1147,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == activePlaneGraph())
-            activeController().setPositions(activePlaneGraph().getPositionMap());
+            activeController().setNodePositions(activePlaneGraph().getPositionMap());
     }
 
     int pcn = 0;
@@ -1174,9 +1189,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
             else if (evt.getPropertyName().equals("node value"))
                 activePlaneGraph().updateLabels();
             else if (evt.getPropertyName().equals("positions"))
-                activePlaneGraph().setPositionMap(gc.getPositions());
+                activePlaneGraph().setPositionMap(gc.getNodePositions());
             else if (evt.getPropertyName().equals("subset"))
-                activePlaneGraph().highlightNodes(gc.getNodeSubset());
+                activePlaneGraph().highlightNodes(gc.getHighlightNodes());
             else if (evt.getPropertyName().equals("filtered") || evt.getPropertyName().equals("filter threshold")) {
                 updateActiveGraph();
             } else

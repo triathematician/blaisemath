@@ -33,6 +33,6 @@ public class SubsetMetric2<N> {
      * @return value of the metric
      */
     public <V> N getValue(Graph<V> graph, Collection<V> participants, Collection<V> subset) {
-        return (N) baseM.getValue(new Subgraph(graph, participants), subset);
+        return (N) baseM.getValue(Subgraph.getInstance(graph, participants), subset);
     }
 }

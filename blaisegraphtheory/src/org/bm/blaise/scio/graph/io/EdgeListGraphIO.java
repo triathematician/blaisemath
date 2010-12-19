@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.WeightedGraph;
-import util.FileNameExtensionFilter;
+import util.io.FileNameExtensionFilter;
 
 /**
  * <p>

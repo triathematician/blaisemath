@@ -7,7 +7,6 @@ package org.bm.blaise.scio.graph.metrics;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a <code>SubsetMetric</code> computed by adding together the

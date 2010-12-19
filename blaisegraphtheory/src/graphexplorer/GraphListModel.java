@@ -5,6 +5,8 @@
 
 package graphexplorer;
 
+import graphexplorer.controller.GraphControllerMaster;
+import graphexplorer.controller.GraphController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -34,13 +36,18 @@ public class GraphListModel extends AbstractListModel
         setController(gc);
     }
 
+    /** @return underlying controller */
+    public GraphController getController() {
+        return gc;
+    }
+
     /** Sets the controller that contains the data backed by this model. */
     public void setController(GraphController gc) {
         if (this.gc != gc) {
             if (this.gc != null)
                 this.gc.removePropertyChangeListener(this);
             this.gc = gc;
-            primaryNodes = new ArrayList(gc.getPrimaryNodes());
+            primaryNodes = new ArrayList(gc.getViewNodes());
             if (gc != null)
                 gc.addPropertyChangeListener(this);
             fireContentsChanged(this, 0, getSize());
@@ -49,7 +56,7 @@ public class GraphListModel extends AbstractListModel
 
     public int getSize() {
         if (gc == null) return 0;
-        Graph graph = gc.getActiveGraph();
+        Graph graph = gc.getViewGraph();
         return graph == null ? 0 : primaryNodes.size();
     }
 
@@ -57,7 +64,7 @@ public class GraphListModel extends AbstractListModel
         if (gc == null || primaryNodes == null)
             return null;
         Object node = primaryNodes.get(index);
-        Graph active = gc.getActiveGraph();
+        Graph active = gc.getViewGraph();
         if (active instanceof ValuedGraph && active.contains(node))
             return ((ValuedGraph)active).getValue(node);
         return node;

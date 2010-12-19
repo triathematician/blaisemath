@@ -7,16 +7,15 @@ package org.bm.blaise.scio.graph.metrics;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import org.bm.blaise.scio.graph.Graphs;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.Stack;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.Subgraph;
-import org.bm.blaise.scio.graph.ValuedGraph;
+import util.stats.MapStatUtils;
 
 /**
  * <p>
@@ -39,26 +38,7 @@ public class GraphMetrics {
      * @param metric metric used to generate values
      */
     public static <N> Map<N,Integer> computeDistribution(Graph graph, NodeMetric<N> metric) {
-        return distribution(metric.allValues(graph));
-    }
-
-    /**
-     * Computes the computeDistribution associated with a given map, i.e. the number of entries corresponding
-     * to each particular value. If the values are of a <code>Comparable</code> type, the map is sorted
-     * according to that order.
-     * @param values the values to consolidate
-     * @return a mapping from the values to the count of those values
-     */
-    public static <N> Map<N, Integer> distribution(Collection<N> values) {
-        if (values.size() == 0) return Collections.emptyMap();
-        boolean comparable = false;
-        for (N en : values) { comparable = en instanceof Comparable; break; }
-        Map<N, Integer> result = comparable ? new TreeMap<N, Integer>() : new HashMap<N, Integer>();
-
-        for (N en : values)
-            result.put(en, result.containsKey(en) ? result.get(en) + 1 : 1);
-
-        return result;
+        return MapStatUtils.distribution(metric.allValues(graph));
     }
     
     //
@@ -171,6 +151,17 @@ public class GraphMetrics {
         public <V> Integer value(Graph<V> graph) { return graph.edgeNumber(); }
     };
 
+    /** Global metric describing the density of the graph (# edges divided by # possible) */
+    public static GlobalMetric<Double> DENSITY = new GlobalMetric<Double>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Double value(Graph<V> graph) {
+            int n = graph.order();
+            return graph.isDirected()
+                    ? graph.edgeNumber() / (n*(n-1))
+                    : graph.edgeNumber() / (n*(n-1)/2.0);
+        }
+    };
+
     /** Global metric describing the average degree of the graph */
     public static GlobalMetric<Double> DEGREE_AVERAGE = new GlobalMetric<Double>() {
         public boolean supportsGraph(boolean directed) { return true; }
@@ -178,6 +169,29 @@ public class GraphMetrics {
             return graph.isDirected()
                     ? graph.edgeNumber() / (double) graph.order()
                     : 2.0 * graph.edgeNumber() / (double) graph.order();
+        }
+    };
+
+    /** 
+     * Global metric describes the diameter of the graph, or the largest diameter
+     * of one of its subcomponents.
+     */
+    public static GlobalMetric<Integer> DIAMETER = new GlobalMetric<Integer>() {
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Integer value(Graph<V> graph) {
+            if (graph.order() == 0)
+                return 0;
+            int maxLength = 0;
+            HashMap<V,Integer> lengths = new HashMap<V,Integer>();
+            for (V node : graph.nodes()) {
+                Graphs.breadthFirstSearch(graph, node, 
+                        new HashMap<V,Integer>(), lengths,
+                        new Stack<V>(), new HashMap<V,Set<V>>());
+                for (Integer i : lengths.values())
+                    if (i > maxLength)
+                        maxLength = i;
+            }
+            return maxLength;
         }
     };
 
@@ -216,7 +230,6 @@ public class GraphMetrics {
                 triples -= 2*triangles;
             }
 
-            // although each triple & triangle has been counted 3 times too many, it's okay because the return value is a ratio
             return triangles / (double) triples;
         }
     };

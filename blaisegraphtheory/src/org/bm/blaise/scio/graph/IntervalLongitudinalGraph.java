@@ -36,6 +36,9 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     /** Stores the time domain via the minimum time and maximum time. */
     double minTime, maxTime;
 
+    /** # of time steps to use (impacts how time slices are done) */
+    int timeSteps = 100;
+
     /** Do not permit instantiation */
     private IntervalLongitudinalGraph(boolean directed) {
         this.directed = directed;
@@ -50,16 +53,18 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     /**
      * Factory method to generate longitudinal graph with given properties.
      * @param directed whether graph is directed
+     * @param timeSteps how many time steps to use
      * @param nodeTimes mapping of vertices together with time intervals
      * @param edgeTimes mapping of edges together with time intervals
      */
-    public static <V> IntervalLongitudinalGraph<V> getInstance(boolean directed,
+    public static <V> IntervalLongitudinalGraph<V> getInstance(boolean directed, int timeSteps,
             Map<V, double[]> nodeTimes,
             Map<V, Map<V, double[]>> edgeTimes) {
         if (nodeTimes == null || edgeTimes == null)
             throw new NullPointerException("getInstance: nodeTimes and edgeTimes must be non-null!");
 
         IntervalLongitudinalGraph<V> result = new IntervalLongitudinalGraph<V>(directed);
+        result.timeSteps = timeSteps;
         for (Entry<V, double[]> en : nodeTimes.entrySet()) {
             ArrayList<double[]> ivs = new ArrayList<double[]>();
             ivs.add(en.getValue());
@@ -96,16 +101,18 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     /** 
      * Factory method to generate longitudinal graph with given properties.
      * @param directed whether graph is directed
+     * @param timeSteps how many time steps to use
      * @param nodeTimes mapping of vertices together with list of node time intervals
      * @param edgeTimes mapping of edges together with list of edge time intervals
      */
-    public static <V> IntervalLongitudinalGraph<V> getInstance2(boolean directed,
+    public static <V> IntervalLongitudinalGraph<V> getInstance2(boolean directed, int timeSteps,
             Map<V, List<double[]>> nodeTimes,
             Map<V, Map<V, List<double[]>>> edgeTimes) {
         if (nodeTimes == null || edgeTimes == null)
             throw new NullPointerException("getInstance: nodeTimes and edgeTimes must be non-null!");
 
         IntervalLongitudinalGraph<V> result = new IntervalLongitudinalGraph<V>(directed);
+        result.timeSteps = timeSteps;
         result.nodeTimes.putAll(nodeTimes);
         result.edgeTimes.putAll(edgeTimes);
         result.adjustDomain();
@@ -168,7 +175,7 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     public List<Double> getTimes() {
         return new AbstractList<Double>() {
             public Double get(int index) { return minTime + index*(maxTime-minTime)/(double)size(); }
-            public int size() { return 100; }
+            public int size() { return timeSteps; }
         };
     }
 

@@ -5,6 +5,7 @@
 
 package graphexplorer;
 
+import graphexplorer.controller.GraphController;
 import java.awt.Component;
 import visometry.PlotComponent;
 
@@ -12,7 +13,7 @@ import visometry.PlotComponent;
  * Provides methods that actions classes can use, regardless of the GUI.
  * @author Elisha Peterson
  */
-interface GraphExplorerInterface {
+public interface GraphExplorerInterface {
 
     /** Returns active graph component displayed (or null if none is active) */
     PlotComponent activePlotComponent();

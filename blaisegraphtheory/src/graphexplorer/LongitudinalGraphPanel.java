@@ -5,6 +5,8 @@
 
 package graphexplorer;
 
+import graphexplorer.controller.GraphController;
+import graphexplorer.controller.LongitudinalGraphController;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,7 +21,7 @@ import javax.swing.event.ChangeListener;
 import org.bm.blaise.scio.graph.LongitudinalGraph;
 import org.bm.blaise.specto.plane.graph.PlaneGraph;
 import org.jdesktop.layout.GroupLayout;
-import util.ListSlider;
+import util.swing.ListSlider;
 import visometry.plane.PlanePlotComponent;
 
 /**
@@ -38,14 +40,14 @@ public class LongitudinalGraphPanel extends JPanel
     /** Active graph displayed in the panel */
     PlaneGraph visGraph;
     /** Controller for the panel */
-    GraphController gc;
+    LongitudinalGraphController gc;
     /** Slider element */
     ListSlider slider;
     /** time label */
     JLabel timeLabel;
 
     /** Constructs a longitudinal graph panel without an actual graph. */
-    public LongitudinalGraphPanel(GraphController gc) {
+    public LongitudinalGraphPanel(LongitudinalGraphController gc) {
         super(new java.awt.BorderLayout());
 
         setPreferredSize(new Dimension(600, 600));
@@ -60,14 +62,24 @@ public class LongitudinalGraphPanel extends JPanel
         gc.addPropertyChangeListener(this);
         LongitudinalGraph lGraph = gc.getLongitudinalGraph();
         if (lGraph != null) {
-            plot.add(visGraph = new PlaneGraph(gc.getActiveGraph()));
-            visGraph.setPositionMap(gc.getPositions());
+            plot.add(visGraph = new PlaneGraph(gc.getViewGraph()));
+            visGraph.setPositionMap(gc.getNodePositions());
             updateSliderTime();
             slider.addChangeListener(this);
         } else {
             slider.setEnabled(false);
         }
         initPlotLayout();
+    }
+
+    /** @return underlying controller */
+    public GraphController getController() {
+        return gc;
+    }
+
+    /** @return plot */
+    public PlanePlotComponent getPlot() {
+        return plot;
     }
 
     /**
@@ -94,13 +106,13 @@ public class LongitudinalGraphPanel extends JPanel
 
     private static JLabel hideNote;
 
-    void hidePlot() {
+    public void hidePlot() {
         remove(plot);
         add(hideNote = new JLabel("Exporting..."));
         repaint();
     }
 
-    void showPlot() {
+    public void showPlot() {
         remove(hideNote);
         for (Component c : getComponents())
             if (c == plot)
@@ -160,9 +172,9 @@ public class LongitudinalGraphPanel extends JPanel
         double time = (Double) gc.getLongitudinalGraph().getTimes().get(slider.getValue());
         gc.setTime(time);
         timeLabel.setText("Slice t="+time);
-        visGraph.setGraph(gc.getActiveGraph());
-        visGraph.setPositionMap(gc.getPositions());
-        visGraph.highlightNodes(gc.getNodeSubset());
+        visGraph.setGraph(gc.getViewGraph());
+        visGraph.setPositionMap(gc.getNodePositions());
+        visGraph.highlightNodes(gc.getHighlightNodes());
         updating = false;
     }
 
@@ -177,13 +189,13 @@ public class LongitudinalGraphPanel extends JPanel
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == gc) {
-            if (gc.isLongitudinal()) {
-                if (evt.getPropertyName().equals("time")) {
+            if (gc instanceof LongitudinalGraph) {
+                if (evt.getPropertyName().equals(LongitudinalGraphController.$TIME)) {
                     updateControllerTime();
-                } else if (evt.getPropertyName().equals("active")) {
-                    visGraph.setGraph(gc.getActiveGraph());
-                    visGraph.setPositionMap(gc.getPositions());
-                    visGraph.highlightNodes(gc.getNodeSubset());
+                } else if (evt.getPropertyName().equals(GraphController.$VIEWGRAPH)) {
+                    visGraph.setGraph(gc.getViewGraph());
+                    visGraph.setPositionMap(gc.getNodePositions());
+                    visGraph.highlightNodes(gc.getHighlightNodes());
                 }
             }
         }

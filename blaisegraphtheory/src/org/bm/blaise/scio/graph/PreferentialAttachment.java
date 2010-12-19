@@ -178,7 +178,7 @@ public class PreferentialAttachment {
             degreeSum += addEdge(edgeTimes, new double[]{time, timeMax}, degrees, cur,
                     weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
-        return IntervalLongitudinalGraph.getInstance(false, nodeTimes, edgeTimes);
+        return IntervalLongitudinalGraph.getInstance(false, (int)(timeMax), nodeTimes, edgeTimes);
     }
 
     /**

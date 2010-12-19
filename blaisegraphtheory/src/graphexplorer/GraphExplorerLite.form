@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="graphexplorer.GraphTableModel" name="mainTM">
+    <Component class="graphexplorer.views.GraphTableModel" name="mainTM">
       <Events>
         <EventHandler event="tableChanged" listener="javax.swing.event.TableModelListener" parameters="javax.swing.event.TableModelEvent" handler="mainTMTableChanged"/>
       </Events>
