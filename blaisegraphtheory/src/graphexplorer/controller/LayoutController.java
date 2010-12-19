@@ -69,7 +69,7 @@ public class LayoutController extends AbstractGraphController {
     public LayoutController(GraphController gc) {
         gc.addViewGraphFollower(this);
         addPropertyChangeListener(gc);
-        setBaseGraph(gc.getBaseGraph());
+        setBaseGraph(gc.getViewGraph());
     }
 
     //
@@ -144,7 +144,7 @@ public class LayoutController extends AbstractGraphController {
 
     /** @return position of specified node */
     Point2D.Double positionOf(Object node) {
-        return positions.get(node);
+        return positions == null ? null : positions.get(node);
     }
 
     /** @return true if iterative layout algorithm is currently running */

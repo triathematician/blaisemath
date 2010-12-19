@@ -115,7 +115,7 @@ public final class GraphTableModel extends AbstractTableModel
                 }
             case COL_LOC:
                 Point2D.Double pos = gc.positionOf(node);
-                return String.format("(%.2f,%.2f)", pos.x, pos.y);
+                return pos == null ? "unknown" : String.format("(%.2f,%.2f)", pos.x, pos.y);
             case COL_DEGREE :
                 return graph.degree(node);
             case COL_METRIC:
@@ -143,21 +143,19 @@ public final class GraphTableModel extends AbstractTableModel
 
     public void propertyChange(PropertyChangeEvent evt) {
         String $PROP = evt.getPropertyName();
-        if (evt.getSource() == gc) {
-            if ($PROP.equals(GraphController.$VIEWGRAPH) || $PROP.equals(LayoutController.$POSITIONS))
-                fireTableDataChanged();
-            else if ($PROP.equals(StatController.$VALUES))
-                updateValues();
-            else if ($PROP.equals(StatController.$METRIC)) {
-                NodeMetric m = gc.getMetric();
-                String newTitle = m == null ? "Metric" : m.toString();
-                colNames[COL_METRIC] = newTitle;
-                fireTableDataChanged();
-            }
-        } else if (evt.getSource() instanceof GraphControllerMaster) {
+        if (evt.getSource() instanceof GraphControllerMaster) {
             if ($PROP.equals(GraphControllerMaster.$ACTIVE)) {
                 setController(((GraphControllerMaster)evt.getSource()).getActiveController());
             }
+        } else if ($PROP.equals(GraphController.$VIEWGRAPH) || $PROP.equals(LayoutController.$POSITIONS))
+            fireTableDataChanged();
+        else if ($PROP.equals(StatController.$VALUES)) {
+            NodeMetric m = gc.getMetric();
+            String newTitle = m == null ? "Metric" : m.toString();
+            System.out.println("new col title: " + newTitle);
+            colNames[COL_METRIC] = newTitle;
+            updateValues();
+            fireTableDataChanged();
         }
     }
 }

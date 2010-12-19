@@ -201,8 +201,12 @@ public class GraphController extends AbstractGraphController
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!$BASE.equals(evt.getPropertyName()))
+        if (FilterController.$FILTERED_GRAPH.equals(evt.getPropertyName()))
+            pcs.firePropertyChange($VIEWGRAPH, evt.getOldValue(), evt.getNewValue());
+        else if(!$BASE.equals(evt.getPropertyName())) {
+            System.out.println("GC propChange: " + evt.getPropertyName() + " -> " + evt.getNewValue());
             pcs.firePropertyChange(evt);
+        }
     }
 
 }

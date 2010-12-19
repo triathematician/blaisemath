@@ -43,6 +43,10 @@ public class StatController extends AbstractGraphController {
     /** Stores getValues of the metric */
     private List values = null;
 
+    //
+    // CONSTRUCTOR
+    //
+
     /** Constructs a new instance. */
     public StatController(GraphController gc) {
         gc.addViewGraphFollower(this);
@@ -54,11 +58,29 @@ public class StatController extends AbstractGraphController {
     // METRIC COMPUTATIONS
     //
 
+
+    /** Used to perform calculations */
+    private static ExecutorService exec = Executors.newSingleThreadExecutor();
+    /** Flag to prevent running the same computation more than once. */
+    boolean running = false;
+
     @Override
     protected void updateGraph() {
-        // TODO - need to rethink how these metric computations are done.
-        // Perhaps provide a single static thread within this class that does the updates.
-        getValues();
+        if (metric != null && baseGraph != null) {
+            running = true;
+            exec.execute(new Runnable(){
+                public void run() {
+                    pcs.firePropertyChange($STATUS, null, "Computing metric " + metric + "...");
+                    long t0 = System.currentTimeMillis();
+                    values = (metric == null || baseGraph == null) ? null
+                            : metric.allValues(baseGraph);
+                    running = false;
+                    long t = System.currentTimeMillis() - t0;
+                    pcs.firePropertyChange($STATUS, null, metric + " computation completed (" + t + "ms).");
+                    pcs.firePropertyChange($VALUES, null, values);
+                }
+            });
+        }
     }
 
     //
@@ -87,33 +109,8 @@ public class StatController extends AbstractGraphController {
     // COMPUTATION
     //
 
-    /** Flag to prevent running the same computation more than once. */
-    boolean running = false;
-
     /** @return active metric getValues (the last ones that have been computed) */
     public List getValues() {
-        if (running)
-            return null;
-        else if (values == null && metric != null && baseGraph != null) {
-            running = true;
-//            System.out.println("getValues computing");
-//            System.out.println(".. metric: " + metric);
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(new Runnable(){
-                public void run() {
-                    pcs.firePropertyChange($STATUS, null, "Computing metric " + metric + "...");
-                    long t0 = System.currentTimeMillis();
-                    values = (metric == null || baseGraph == null) ? null
-                            : metric.allValues(baseGraph);
-                    running = false;
-                    long t = System.currentTimeMillis() - t0;
-                    pcs.firePropertyChange($STATUS, null, metric + " computation completed (" + t + "ms).");
-                    pcs.firePropertyChange($VALUES, null, values);
-                }
-            });
-            executor.shutdown();
-        } else
-            return values;
-        return null;
+        return values;
     }
 }
