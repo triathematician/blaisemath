@@ -1,5 +1,5 @@
 /*
- * LayoutController.java
+ * GraphLayoutController.java
  * Created Nov 18, 2010
  */
 
@@ -33,7 +33,7 @@ import stormtimer.BetterTimer;
  * 
  * @author elisha
  */
-public class LayoutController extends AbstractGraphController {
+public class GraphLayoutController extends AbstractGraphController {
 
     //
     // PROPERTY CHANGE NAMES
@@ -66,7 +66,7 @@ public class LayoutController extends AbstractGraphController {
     //
 
     /** Constructs a new instance. */
-    public LayoutController(GraphController gc) {
+    public GraphLayoutController(GraphController gc) {
         gc.addViewGraphFollower(this);
         addPropertyChangeListener(gc);
         setBaseGraph(gc.getViewGraph());

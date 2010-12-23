@@ -89,7 +89,7 @@ public class LongitudinalMetricPlot
                 Graph g = lg.slice(times.get(i_time), true);
                 if (gc.isFilterEnabled()) {
                     g = FilteredWeightedGraph.getInstance((WeightedGraph) g);
-                    ((FilteredWeightedGraph)g).setThreshold(gc.getFilterThreshold());
+                    ((FilteredWeightedGraph)g).setThreshold(gc.getFilterController().getFilterThreshold());
                 }
                 List nodes = g.nodes();
                 List values = metric.allValues(g);

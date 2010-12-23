@@ -36,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
@@ -48,7 +47,6 @@ import javax.swing.text.Document;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
-import org.bm.blaise.scio.graph.metrics.NodeMetric;
 import org.bm.blaise.specto.plane.graph.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -75,8 +73,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     HashMap<GraphController, Component> tabs = new HashMap<GraphController, Component>();
     /** Controllers and associated plane graph elements */
     HashMap<GraphController, AbstractPlaneGraph> graphs = new HashMap<GraphController, AbstractPlaneGraph>();
-    /** Chart displaying statistical data */
-    ChartPanel distributionCP;
     /** Chart displaying longitudinal metric data */
     ChartPanel longMetricCP;
 
@@ -108,8 +104,9 @@ public class GraphExplorerMain extends javax.swing.JFrame
             }
         toolbar.add(javax.swing.Box.createHorizontalGlue());
 
+        master.addActiveGraphListeners(mainTable, filterBar, metricBar1, metricBar2, metricPlot1);
+        
         initMetricMenus();
-        master.addPropertyChangeListener(mainTable);
         initCharts();
     }
 
@@ -140,10 +137,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     }
 
     private void initCharts() {
-        JFreeChart distributionFC = ChartFactory.createXYBarChart("Metric Distribution", "Value", false, "Number", null, PlotOrientation.VERTICAL, false, true, false);
-        distributionCP = new ChartPanel(distributionFC);
-        distributionCP.setPreferredSize(new Dimension(400,300));
-        boxTP2.add(distributionCP, "Metric Chart", 0);
         longMetricCP = new ChartPanel(null);
     }
 
@@ -155,7 +148,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         labelPS = new data.propertysheet.PropertySheet();
         edgePS = new data.propertysheet.PropertySheet();
@@ -185,12 +177,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
         layoutEnergyTBB = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        metricCB1 = new javax.swing.JComboBox();
+        metricBar1 = new graphexplorer.views.GraphMetricBar();
         jSeparator9 = new javax.swing.JToolBar.Separator();
+        filterBar = new graphexplorer.views.GraphFilterBar();
         jPanel2 = new javax.swing.JPanel();
-        filterCB = new javax.swing.JCheckBox();
-        filterSp = new javax.swing.JSpinner();
         jSeparator8 = new javax.swing.JToolBar.Separator();
         statusB = new javax.swing.JPanel();
         statusL = new javax.swing.JLabel();
@@ -202,12 +192,12 @@ public class GraphExplorerMain extends javax.swing.JFrame
         boxPanel = new javax.swing.JPanel();
         boxP1 = new javax.swing.JPanel();
         mainTableTB = new javax.swing.JToolBar();
-        metricL = new javax.swing.JLabel();
-        metricCB = new javax.swing.JComboBox();
+        metricBar2 = new graphexplorer.views.GraphMetricBar();
         mainTableSP = new javax.swing.JScrollPane();
         mainTable = new graphexplorer.views.GraphTable();
         boxP2 = new javax.swing.JPanel();
         boxTP2 = new javax.swing.JTabbedPane();
+        metricPlot1 = new graphexplorer.views.GraphStatPlot();
         distributionTableSP = new javax.swing.JScrollPane();
         distributionTable = new javax.swing.JTable();
         boxP3 = new javax.swing.JPanel();
@@ -347,47 +337,12 @@ public class GraphExplorerMain extends javax.swing.JFrame
         toolbar.add(jSeparator3);
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 13));
-        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setText("Metric: ");
-        jPanel1.add(jLabel1);
-
-        metricCB1.setModel(new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values()));
-        metricCB1.setToolTipText("<html>\nCompute and display the specified metric.<br>\n<font color=\"gray\"><i>\nCurrently, the values \"None\", \"Other\",\nand \"Decay centrality (custom parameter)\" are nonfunctional.\n</i></font>");
-        metricCB1.setMaximumSize(new java.awt.Dimension(32767, 22));
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, metricCB, org.jdesktop.beansbinding.ELProperty.create("${selectedItem}"), metricCB1, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
-        bindingGroup.addBinding(binding);
-
-        jPanel1.add(metricCB1);
-
         toolbar.add(jPanel1);
+        toolbar.add(metricBar1);
         toolbar.add(jSeparator9);
+        toolbar.add(filterBar);
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
-
-        filterCB.setText("Filter weighted graph:");
-        filterCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterCBActionPerformed(evt);
-            }
-        });
-        jPanel2.add(filterCB);
-
-        filterSp.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), null, null, Double.valueOf(0.1d)));
-        filterSp.setToolTipText("Change to display only nodes whose value is at least as large as this.");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, filterCB, org.jdesktop.beansbinding.ELProperty.create("${selected}"), filterSp, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        filterSp.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                filterSpStateChanged(evt);
-            }
-        });
-        jPanel2.add(filterSp);
-
         toolbar.add(jPanel2);
         toolbar.add(jSeparator8);
 
@@ -442,18 +397,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         mainTableTB.setFloatable(false);
         mainTableTB.setRollover(true);
-
-        metricL.setText("Metric: ");
-        mainTableTB.add(metricL);
-
-        metricCB.setModel(new DefaultComboBoxModel(graphexplorer.actions.ExplorerStatActions.StatEnum.values()));
-        metricCB.setToolTipText("<html>\nCompute and display the specified metric.<br>\n<font color=\"gray\"><i>\nCurrently, the values \"None\", \"Other\",\nand \"Decay centrality (custom parameter)\" are nonfunctional.\n</i></font>");
-        metricCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                metricCBActionPerformed(evt);
-            }
-        });
-        mainTableTB.add(metricCB);
+        mainTableTB.add(metricBar2);
 
         boxP1.add(mainTableTB, java.awt.BorderLayout.PAGE_START);
 
@@ -466,6 +410,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
         boxP2.setLayout(new java.awt.BorderLayout());
 
         boxTP2.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        boxTP2.addTab("Metric Plot", metricPlot1);
 
         distributionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -667,8 +612,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
 
         setJMenuBar(menu);
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -684,12 +627,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
                     return;
                 }
     }//GEN-LAST:event_graphTPStateChanged
-
-    private void metricCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricCBActionPerformed
-        GraphController gc = activeController();
-        if (gc != null)
-            gc.setMetric(((ExplorerStatActions.StatEnum)metricCB.getSelectedItem()).getMetric());
-    }//GEN-LAST:event_metricCBActionPerformed
 
     private void layoutEnergyTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutEnergyTBBActionPerformed
         // this button swaps the current reportStatus of the layout between playing & paused
@@ -707,25 +644,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private void newTBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTBBActionPerformed
         newPM.show(newTBB, 5, 5);
     }//GEN-LAST:event_newTBBActionPerformed
-
-    private void filterCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterCBActionPerformed
-        GraphController gc = activeController();
-        if (gc != null) {
-            if (filterCB.isSelected())
-                gc.setFilterThreshold((Double) filterSp.getValue());
-            else
-                gc.setFilterEnabled(false);
-        }
-        if (filterCB.isSelected() != gc.isFilterEnabled())
-            filterCB.setSelected(gc.isFilterEnabled());
-    }//GEN-LAST:event_filterCBActionPerformed
-
-    private void filterSpStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_filterSpStateChanged
-        GraphController gc = activeController();
-        if (gc != null) {
-            gc.setFilterThreshold((Double) filterSp.getValue());
-        }
-    }//GEN-LAST:event_filterSpStateChanged
 
     private void fullScreenMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullScreenMIActionPerformed
         GraphicsDevice dev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -786,8 +704,7 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenu exportMovieM;
     private javax.swing.JMenuItem export_movMI;
     private javax.swing.JMenu fileM;
-    private javax.swing.JCheckBox filterCB;
-    private javax.swing.JSpinner filterSp;
+    private graphexplorer.views.GraphFilterBar filterBar;
     private javax.swing.JMenuItem fitMI;
     private javax.swing.JMenuItem fullScreenMI;
     private javax.swing.JMenu globalMetricM;
@@ -795,7 +712,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenu helpM;
     private javax.swing.JMenuItem highlightMI;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -823,11 +739,11 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JScrollPane mainTableSP;
     private javax.swing.JToolBar mainTableTB;
     private javax.swing.JMenuBar menu;
-    private javax.swing.JComboBox metricCB;
-    private javax.swing.JComboBox metricCB1;
-    private javax.swing.JLabel metricL;
+    private graphexplorer.views.GraphMetricBar metricBar1;
+    private graphexplorer.views.GraphMetricBar metricBar2;
     private javax.swing.JMenu metricM;
     private javax.swing.ButtonGroup metricMenuBG;
+    private graphexplorer.views.GraphStatPlot metricPlot1;
     private javax.swing.JMenu newM;
     private javax.swing.JPopupMenu newPM;
     private javax.swing.JButton newTBB;
@@ -859,7 +775,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
     private javax.swing.JMenuItem wattsMI1;
     private javax.swing.JMenuItem wheelMI;
     private javax.swing.JMenuItem wheelMI1;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     //
@@ -933,63 +848,16 @@ public class GraphExplorerMain extends javax.swing.JFrame
         }
     }
 
-    /** Updates metric combo box */
-    private void updateMetricComboBox() {
-        GraphController gc = activeController();
-        if (gc == null) {
-            metricCB.setSelectedItem(StatEnum.NONE);
-            locMetricMI.get(StatEnum.NONE).setSelected(true);
-        } else {
-            NodeMetric nm = activeController().getMetric();
-            StatEnum found = null;
-            for (StatEnum item : StatEnum.values())
-                if (item.getMetric() == nm) {
-                    found = item;
-                    break;
-                }
-            metricCB.setSelectedItem(found);
-            locMetricMI.get(found).setSelected(true);
-        }
-    }
-
     /** Updates metric chart and table for current reportStatus */
     private void updateChart() {
         GraphController gc = activeController();
         List values = gc == null ? null : gc.getMetricValues();
         if (values == null) {
-            distributionCP.setChart(null);
             distributionTable.setModel(new DefaultTableModel());
             boxPanel.validate();
         } else {
             FrequencyTableModel dtm = new FrequencyTableModel(values);
             distributionTable.setModel(dtm);
-
-            int[] counts = dtm.getCounts();
-            int nSamples = counts.length;
-            double[][] data = new double[6][counts.length];
-            double x, y;
-            for (int i = 0; i < nSamples; i++) {
-                x = ((Number)dtm.getValue(i)).doubleValue();
-                y = counts[i];
-                data[0][i] = data[1][i] = data[2][i] = x;
-                data[3][i] = data[5][i] = y;
-                data[4][i] = 0;
-            }
-
-            // set up the chart
-            DefaultIntervalXYDataset chartData = new DefaultIntervalXYDataset();
-                chartData.addSeries(gc.getMetric().toString() + " counts", data);
-            NumberAxis xAxis = new NumberAxis(gc.getMetric().toString());
-                xAxis.setAutoRangeIncludesZero(false);
-            NumberAxis yAxis = new NumberAxis("Number of Nodes");
-            YIntervalRenderer renderer = new YIntervalRenderer();
-            renderer.setBaseToolTipGenerator(new org.jfree.chart.labels.StandardXYToolTipGenerator());
-            XYPlot plot = new XYPlot(chartData, xAxis, yAxis, renderer);
-                plot.setOrientation(PlotOrientation.VERTICAL);
-            distributionCP.setChart(new JFreeChart(
-                    gc.getMetric().toString() + " distribution", JFreeChart.DEFAULT_TITLE_FONT,
-                    plot, false));
-            
             boxPanel.validate();
         }
     }
@@ -1099,7 +967,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
         if (graphTP.getSelectedComponent() != tabs.get(gc))
             graphTP.setSelectedComponent(tabs.get(gc));
         updatePropertyPanel();
-        updateMetricComboBox();
         updateChart();
         updateNodeSizes();
         updateLongChart();
@@ -1128,7 +995,6 @@ public class GraphExplorerMain extends javax.swing.JFrame
         if (gc != null && gc.isFilterEnabled()) {
             pg.setGraph(gc.getViewGraph());
             pg.updateLabels();
-            filterCB.setEnabled(true);
         } else {
             if (pg != null && pg.getGraph() != gc.getViewGraph())
                 pg.setGraph(gc.getViewGraph());
@@ -1178,7 +1044,10 @@ public class GraphExplorerMain extends javax.swing.JFrame
                 layoutEnergyTBB.setSelected(animating);
                 layoutEnergyTBB.setText(animating ? "Stop" : "Start");
             } else if (evt.getPropertyName().equals("metric")) {
-                updateMetricComboBox();
+                if (gc == null)
+                    locMetricMI.get(StatEnum.NONE).setSelected(true);
+                else
+                    locMetricMI.get(StatEnum.itemOf(gc.getMetric())).setSelected(true);
             } else if (evt.getPropertyName().equals("time")) {
                 // longitudinal panel works directly with time & will update the active displayed graph
             } else if (evt.getPropertyName().equals("values")) {

@@ -5,6 +5,8 @@
 
 package graphexplorer.views;
 
+import graphexplorer.controller.GraphController;
+import graphexplorer.controller.GraphControllerListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
@@ -25,7 +27,7 @@ import javax.swing.table.TableColumn;
  * @author Elisha Peterson
  */
 public class GraphTable extends javax.swing.JTable
-        implements PropertyChangeListener {
+        implements GraphControllerListener {
 
     /** Base model containing the data */
     SortableGraphTableModel model;
@@ -63,6 +65,12 @@ public class GraphTable extends javax.swing.JTable
         getTableHeader().setComponentPopupMenu(sortMenu);
     }
 
+    public void setController(GraphController gc) {
+        model.gtm.setController(gc);
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {}
+
     @Override
     public void tableChanged(TableModelEvent e) {
         if (getColumnModel().getColumnCount() == 5) {
@@ -73,10 +81,6 @@ public class GraphTable extends javax.swing.JTable
             getTableHeader().repaint();
         }
         super.tableChanged(e);
-    }
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        model.gtm.propertyChange(evt);
     }
 
     @Override

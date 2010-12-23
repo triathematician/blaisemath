@@ -1,5 +1,5 @@
 /*
- * StatController.java
+ * GraphStatController.java
  * Created Nov 11, 2010
  */
 
@@ -23,7 +23,7 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
  * </p>
  * @author elisha
  */
-public class StatController extends AbstractGraphController {
+public class GraphStatController extends AbstractGraphController {
 
     //
     // PROPERTY CHANGE NAMES
@@ -48,7 +48,7 @@ public class StatController extends AbstractGraphController {
     //
 
     /** Constructs a new instance. */
-    public StatController(GraphController gc) {
+    public GraphStatController(GraphController gc) {
         gc.addViewGraphFollower(this);
         addPropertyChangeListener(gc);
         setBaseGraph(gc.getBaseGraph());

@@ -7,7 +7,7 @@ package graphexplorer.actions;
 
 import graphexplorer.controller.GraphController;
 import graphexplorer.GraphListModel;
-import graphexplorer.panels.CooperationPanel;
+import graphexplorer.dialogs.CooperationPanel;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.HashMap;
@@ -153,7 +153,6 @@ public class ExplorerStatActions {
     /** Encodes values for various actions that compute distributions. */
     public enum StatEnum {
         NONE("None", null),
-//        CUSTOM("Custom", null),
         DEGREE("Degree", GraphMetrics.DEGREE),
         DEGREE2("2nd Order Degree", GraphMetrics.DEGREE2),
         CLIQUE_COUNT("Clique Count", GraphMetrics.CLIQUE_COUNT),
@@ -165,13 +164,23 @@ public class ExplorerStatActions {
         DECAY25("Decay Centrality (0.25)", DEC25),
         DECAY50("Decay Centrality (0.50)", DEC50),
         DECAY75("Decay Centrality (0.75)", DEC75),
-        DECAY_CUSTOM("Decay Centrality (custom parameter)", null);
+        OTHER("Other", null);
 
         NodeMetric metric;
         String s;
         StatEnum(String s, NodeMetric metric) { this.s = s; this.metric = metric; }
         @Override public String toString() { return s; }
+        /** @return metric corresponding to this enum */
         public NodeMetric getMetric() { return metric; }
+        /** @return enum corresponding to specified metric, if it exists; null otherwise */
+        public static StatEnum itemOf(NodeMetric m) {
+            if (m == null)
+                return NONE;
+            for (StatEnum s : values())
+                if (s.metric == m)
+                    return s;
+            return OTHER;
+        }
     }
 
     /** Encodes global metric options */

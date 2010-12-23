@@ -1,5 +1,5 @@
 /*
- * DecorController.java
+ * GraphDecorController.java
  * Created Nov 18, 2010
  */
 
@@ -9,8 +9,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.bm.blaise.scio.graph.ValuedGraph;
+import org.bm.blaise.scio.graph.WeightedGraph;
 
 /**
  * <p>
@@ -20,7 +22,7 @@ import org.bm.blaise.scio.graph.ValuedGraph;
  *
  * @author elisha
  */
-public class DecorController extends AbstractGraphController
+public class GraphDecorController extends AbstractGraphController
         implements PropertyChangeListener {
 
     //
@@ -38,15 +40,17 @@ public class DecorController extends AbstractGraphController
 
     /** Stores the "subset" of the graph that is currently of interest (may be null or empty) */
     private Set subset = null;
+    /** Stores values of the metric */
+    private List values = null;
 
     //
     // CONSTRUCTORS
     //
 
     /** Set up with listening for specified controllers. */
-    public DecorController(GraphController gc, StatController mc) {
+    public GraphDecorController(GraphController gc, GraphStatController mc) {
         gc.addViewGraphFollower(this);
-        mc.addPropertyChangeListener(StatController.$VALUES, this);
+        mc.addPropertyChangeListener(GraphStatController.$VALUES, this);
         addPropertyChangeListener(gc);
         setBaseGraph(gc.getBaseGraph());
     }
@@ -56,7 +60,10 @@ public class DecorController extends AbstractGraphController
     //
 
     public void propertyChange(PropertyChangeEvent evt) {
-
+        if (evt.getPropertyName().equals(GraphStatController.$VALUES)) {
+            values = (List) evt.getNewValue();
+            pcs.firePropertyChange($DECOR, null, null);
+        }
     }
 
 
@@ -92,6 +99,47 @@ public class DecorController extends AbstractGraphController
             }
         }
     }
+
+    //
+    // DECOR PROPERTY GETTERS
+    //
+
+    /** @return label corresponding to specified node in graph */
+    public String labelOf(Object node) {
+        if (baseGraph instanceof ValuedGraph) {
+            return ((ValuedGraph) baseGraph).getValue(node).toString();
+        } else {
+            reportStatus("ERROR: unable to return node label: graph is not a valued graph!");
+            return node.toString();
+        }
+    }
+
+    /** @return weight/size of specified node (as a percentage of maximum size) */
+    public double weightOf(Object node) {
+        if (values == null) return 1.0;
+        int i = baseGraph.nodes().indexOf(node);
+        if (i == -1) return 1.0;
+        Object value = values.get(i);
+        return value instanceof Number
+                ? ((Number)value).doubleValue()
+                : 1.0;
+    }
+
+    /** @return weight of an edge */
+    public double weightOf(Object node1, Object node2) {
+        if (baseGraph instanceof WeightedGraph) {
+            WeightedGraph wg = (WeightedGraph) baseGraph;
+            Object weight = wg.getWeight(node1, node2);
+            return weight instanceof Number
+                    ? ((Number)weight).doubleValue()
+                    : 1.0;
+        }
+        return 1.0;
+    }
+
+    //
+    // DECOR PROPERTY SETTERS
+    //
 
     /**
      * Sets the label corresponding to the specified node in the graph.

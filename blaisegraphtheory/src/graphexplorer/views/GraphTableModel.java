@@ -5,10 +5,12 @@
 
 package graphexplorer.views;
 
+import graphexplorer.controller.GraphControllerListener;
 import graphexplorer.controller.GraphController;
 import graphexplorer.controller.GraphControllerMaster;
-import graphexplorer.controller.LayoutController;
-import graphexplorer.controller.StatController;
+import graphexplorer.controller.GraphDecorController;
+import graphexplorer.controller.GraphLayoutController;
+import graphexplorer.controller.GraphStatController;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,9 +33,9 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
  * @author Elisha Peterson
  */
 public final class GraphTableModel extends AbstractTableModel
-        implements PropertyChangeListener {
+        implements GraphControllerListener {
 
-    /** The graph being tracked */
+    /** The overall graph controller */
     GraphController gc = null;
     /** Tracks the getValues for the metric for each vertex */
     transient List<Number> values;
@@ -51,12 +53,26 @@ public final class GraphTableModel extends AbstractTableModel
     public void setController(GraphController gc) {
         if (this.gc != gc) {
             if (this.gc != null)
-                this.gc.removePropertyChangeListener(this);
+                this.gc.removeAllPropertyChangeListener(this);
             this.gc = gc;
             if (gc != null)
-                gc.addPropertyChangeListener(this);
+                gc.addAllPropertyChangeListener(this, true, false, true, true, true);
             updateValues();
         }
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        String $PROP = evt.getPropertyName();
+        if ($PROP.equals(GraphController.$VIEWGRAPH) || $PROP.equals(GraphLayoutController.$POSITIONS))
+            fireTableDataChanged();
+        else if ($PROP.equals(GraphStatController.$VALUES)) {
+            NodeMetric m = gc.getMetric();
+            String newTitle = m == null ? "Metric" : m.toString();
+            System.out.println("new col title: " + newTitle);
+            colNames[COL_METRIC] = newTitle;
+            updateValues();
+        } else if ($PROP.equals(GraphDecorController.$DECOR))
+            fireTableDataChanged();
     }
 
     /** Updates table getValues based on current GraphController */
@@ -141,21 +157,4 @@ public final class GraphTableModel extends AbstractTableModel
         gc.setNodeLabel(gc.getViewGraph().nodes().get(row), aValue.toString());
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        String $PROP = evt.getPropertyName();
-        if (evt.getSource() instanceof GraphControllerMaster) {
-            if ($PROP.equals(GraphControllerMaster.$ACTIVE)) {
-                setController(((GraphControllerMaster)evt.getSource()).getActiveController());
-            }
-        } else if ($PROP.equals(GraphController.$VIEWGRAPH) || $PROP.equals(LayoutController.$POSITIONS))
-            fireTableDataChanged();
-        else if ($PROP.equals(StatController.$VALUES)) {
-            NodeMetric m = gc.getMetric();
-            String newTitle = m == null ? "Metric" : m.toString();
-            System.out.println("new col title: " + newTitle);
-            colNames[COL_METRIC] = newTitle;
-            updateValues();
-            fireTableDataChanged();
-        }
-    }
 }

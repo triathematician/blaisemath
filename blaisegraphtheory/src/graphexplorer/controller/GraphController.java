@@ -54,13 +54,13 @@ public class GraphController extends AbstractGraphController
     private String name = null;
 
     /** Handles the filter */
-    private FilterController fc = null;
+    private GraphFilterController gfc = null;
     /** Handles the layout */
-    private LayoutController lc = null;
+    private GraphLayoutController glc = null;
     /** Handles the metric */
-    private StatController sc = null;
+    private GraphStatController gsc = null;
     /** Handles node decorations */
-    private DecorController dc = null;
+    private GraphDecorController gdc = null;
 
     //
     // CONSTRUCTORS & FACTORY METHODS
@@ -68,10 +68,10 @@ public class GraphController extends AbstractGraphController
 
     /** Constructs controller without an object */
     protected GraphController() {
-        fc = new FilterController(this);
-        sc = new StatController(this);
-        lc = new LayoutController(this);
-        dc = new DecorController(this, sc);
+        gfc = new GraphFilterController(this);
+        gsc = new GraphStatController(this);
+        glc = new GraphLayoutController(this);
+        gdc = new GraphDecorController(this, gsc);
     }
 
     /** Construct instance of controller for a regular graph */
@@ -121,58 +121,94 @@ public class GraphController extends AbstractGraphController
     // GRAPH DELEGATES
     //
 
-    /** @return true if filter is enabled */
-    public boolean isFilterEnabled() { return fc.isEnabled(); }
-    /** Sets filter to be enabled or disabled */
-    public void setFilterEnabled(boolean val) { fc.setEnabled(val); }
-    /** @return filter threshold */
-    public double getFilterThreshold() { return fc.getFilterThreshold(); }
-    /** Set filter threshold */
-    public void setFilterThreshold(double threshold) { fc.setFilterThreshold(threshold); }
+    /** @return filter controller */
+    public GraphFilterController getFilterController() { return gfc; }
+    /** @return layout controller */
+    public GraphLayoutController getLayoutController() { return glc; }
+    /** @return stat controller */
+    public GraphStatController getStatController() { return gsc; }
+    /** @return decor controller */
+    public GraphDecorController getDecorController() { return gdc; }
+    
     /** @return filtered graph, which is currently visible */
-    public Graph getViewGraph() { return fc.getFilteredGraph(); }
+    public Graph getViewGraph() { return gfc.getFilteredGraph(); }
     /** @return viewable nodes */
-    public List getViewNodes() { return fc.getFilteredGraph().nodes(); }
+    public List getViewNodes() { return gfc.getFilteredGraph().nodes(); }
+
+    /** @return true if filter is enabled */
+    public boolean isFilterEnabled() { return gfc.isEnabled(); }
+    /** Sets filter to be enabled or disabled */
+    public void setFilterEnabled(boolean val) { gfc.setEnabled(val); }
 
     /** @return active node metric */
-    public NodeMetric getMetric() { return sc.getMetric(); }
+    public NodeMetric getMetric() { return gsc.getMetric(); }
     /** Sets underlying metric */
-    public void setMetric(NodeMetric m) { sc.setMetric(m); }
+    public void setMetric(NodeMetric m) { gsc.setMetric(m); }
     /** Returns metric values */
-    public List getMetricValues() { return sc.getValues(); }
+    public List getMetricValues() { return gsc.getValues(); }
 
     /** @return map with positions of all nodes */
-    public Map<Object, Point2D.Double> getNodePositions() { return lc.getPositions(); }
+    public Map<Object, Point2D.Double> getNodePositions() { return glc.getPositions(); }
     /** @return position of specified node */
-    public Point2D.Double positionOf(Object node) { return lc.positionOf(node); }
+    public Point2D.Double positionOf(Object node) { return glc.positionOf(node); }
     /** Sets positions of nodes in current graph */
-    public void setNodePositions(Map<Object, Point2D.Double> pos) { lc.setPositions(pos); }
+    public void setNodePositions(Map<Object, Point2D.Double> pos) { glc.setPositions(pos); }
 
     /** Apply specified static layout algorithm (graph will keep animating) */
-    public void applyLayout(StaticGraphLayout layout, double... parameters) { lc.applyLayout(layout, parameters); }
+    public void applyLayout(StaticGraphLayout layout, double... parameters) { glc.applyLayout(layout, parameters); }
     /** Steps current iterative graph layout */
-    public void stepLayout() { lc.stepLayout(); }
+    public void stepLayout() { glc.stepLayout(); }
     /** @return active layout algorithm */
-    public IterativeGraphLayout getLayoutAlgorithm() { return lc.getLayoutAlgorithm(); }
+    public IterativeGraphLayout getLayoutAlgorithm() { return glc.getLayoutAlgorithm(); }
     /** Sets active layout algorithm */
-    public void setLayoutAlgorithm(IterativeGraphLayout layout) { lc.setLayoutAlgorithm(layout); }
+    public void setLayoutAlgorithm(IterativeGraphLayout layout) { glc.setLayoutAlgorithm(layout); }
     /** @return true if layout animation is on */
-    public boolean isLayoutAnimating() { return lc.isAnimating(); }
+    public boolean isLayoutAnimating() { return glc.isAnimating(); }
     /** Turns on/off layout animation */
-    public void setLayoutAnimating(boolean value) { lc.setAnimating(value); }
+    public void setLayoutAnimating(boolean value) { glc.setAnimating(value); }
 
     /** @return set of nodes that have highlights */
-    public Set getHighlightNodes() { return dc.getHighlightNodes(); }
+    public Set getHighlightNodes() { return gdc.getHighlightNodes(); }
     /** Sets nodes that have highlights */
-    public void setHighlightNodes(Set subset) { dc.setHighlightNodes(subset); }
+    public void setHighlightNodes(Set subset) { gdc.setHighlightNodes(subset); }
+    /** @return label of specified node */
+    public Object getNodeLabel(Object node) { return gdc.labelOf(node); }
     /** Sets visible label at specified node */
-    public void setNodeLabel(Object node, String label) { dc.setNodeLabel(node, label); }
-
-
+    public void setNodeLabel(Object node, String label) { gdc.setNodeLabel(node, label); }
 
     //
     // EVENT HANDLING
     //
+
+    /**
+     * Sets up event forwarding from various subcontrollers
+     * @param l the listener
+     * @param main if listens to main changes
+     * @param filter if listens to filter changes
+     * @param stat if listens to stat changes
+     * @param layout if listens to layout changes
+     * @param decor if listens to decor changes
+     */
+    public void addAllPropertyChangeListener(PropertyChangeListener l,
+            boolean main, boolean filter, boolean stat, boolean layout, boolean decor) {
+        if (main) addPropertyChangeListener(l);
+        if (filter) gfc.addPropertyChangeListener(l);
+        if (stat) gsc.addPropertyChangeListener(l);
+        if (layout) glc.addPropertyChangeListener(l);
+        if (decor) gdc.addPropertyChangeListener(l);
+    }
+
+    /**
+     * Removes event listening for this controller and all sub-controllers
+     * @param l the listener
+     */
+    public void removeAllPropertyChangeListener(PropertyChangeListener l) {
+        this.removePropertyChangeListener(l);
+        gfc.removePropertyChangeListener(l);
+        gsc.removePropertyChangeListener(l);
+        glc.removePropertyChangeListener(l);
+        gdc.removePropertyChangeListener(l);
+    }
 
     /**
      * Sets up a "follows" relationship for the specified controller.
@@ -201,12 +237,16 @@ public class GraphController extends AbstractGraphController
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (FilterController.$FILTERED_GRAPH.equals(evt.getPropertyName()))
+        if (GraphFilterController.$FILTERED_GRAPH.equals(evt.getPropertyName()))
             pcs.firePropertyChange($VIEWGRAPH, evt.getOldValue(), evt.getNewValue());
-        else if(!$BASE.equals(evt.getPropertyName())) {
-            System.out.println("GC propChange: " + evt.getPropertyName() + " -> " + evt.getNewValue());
-            pcs.firePropertyChange(evt);
-        }
+
+// the following is auto-broadcasting of subcontroller changes; taking this out for the moment
+// requiring direct use of subcontrollers
+//
+//        else if(!$BASE.equals(evt.getPropertyName())) {
+//            System.out.println("GC propChange: " + evt.getPropertyName() + " -> " + evt.getNewValue());
+//            pcs.firePropertyChange(evt);
+//        }
     }
 
 }

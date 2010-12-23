@@ -37,6 +37,8 @@ public class GraphControllerMaster {
 
     /** Handles property changes */
     PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    /** Listeners that will be updated when the active controller changes. */
+    List<GraphControllerListener> activeListeners = new ArrayList<GraphControllerListener>();
 
     /** Stores the loaded controllers, and their "active" reportStatus. */
     private ArrayList<GraphController> controllers = new ArrayList<GraphController>();
@@ -77,14 +79,14 @@ public class GraphControllerMaster {
 
     /** Adds and activates a new controller & deactivates those currently active. */
     public synchronized void setActiveController(GraphController c) {
-        if (active != c) { // && !updating) {
+        if (active != c) {
             GraphController oldActive = active;
-//            updating = true;
             if (c != null && !controllers.contains(c))
                 controllers.add(c);
             active = c;
             pcs.firePropertyChange($ACTIVE, oldActive, active);
-//            updating = false;
+            for (GraphControllerListener gcv : activeListeners)
+                gcv.setController(active);
         }
     }
 
@@ -112,11 +114,8 @@ public class GraphControllerMaster {
     /** Closes specified controller, removing it from the list of controllers;
      * if no controllers are active, activates the last one & notifies listeners */
     public synchronized void closeController(GraphController c) {
-//        System.out.println("closing controller " + c);
-//        System.out.println("there are " + controllers.size() + " total controllers.");
         if (controllers.contains(c)) {
             controllers.remove(c);
-//                updating = true;
             if (active == c) {
                 active = null;
                 if (controllers.size() > 0)
@@ -124,29 +123,24 @@ public class GraphControllerMaster {
                 pcs.firePropertyChange($ACTIVE, c, active);
             } else
                 pcs.firePropertyChange($ACTIVE, c, null);
-//                updating = false;
         }
-//        System.out.println("... now there are " + controllers.size() + " total controllers.");
     }
 
     //
     // PropertyChangeSupport methods
     //
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(propertyName, listener);
-    }
+    
+    /** Will notify the specified controller view whenever the active controller updates */
+    public synchronized void addActiveGraphListener(GraphControllerListener l) { activeListeners.add(l); }
+    /** Will notify the specified controller view whenever the active controller updates */
+    public synchronized void addActiveGraphListeners(GraphControllerListener... l) { for (GraphControllerListener gcl : l) activeListeners.add(gcl); }
+    /** Removes listener from notification of active controller events */
+    public synchronized void removeActiveGraphController(GraphControllerListener l) { activeListeners.remove(l); }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(listener);
-    }
-
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(propertyName, listener);
-    }
-
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
+    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) { pcs.removePropertyChangeListener(propertyName, listener); }
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) { pcs.removePropertyChangeListener(listener); }
+    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) { pcs.addPropertyChangeListener(propertyName, listener); }
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) { pcs.addPropertyChangeListener(listener); }
 
 }

@@ -1,5 +1,5 @@
 /*
- * FilterController.java
+ * GraphFilterController.java
  * Created Nov 18, 2010
  */
 
@@ -14,7 +14,7 @@ import org.bm.blaise.scio.graph.WeightedGraph;
  * 
  * @author elisha
  */
-public class FilterController extends AbstractGraphController {
+public class GraphFilterController extends AbstractGraphController {
 
     //
     // PROPERTY CHANGE NAMES
@@ -35,7 +35,7 @@ public class FilterController extends AbstractGraphController {
     Graph filtered;
 
     /** Construct with no base object. */
-    public FilterController(GraphController gc) {
+    public GraphFilterController(GraphController gc) {
         gc.addBaseGraphFollower(this);
         addPropertyChangeListener(gc);
         setBaseGraph(gc.getBaseGraph());
@@ -72,6 +72,11 @@ public class FilterController extends AbstractGraphController {
     /** Return the filtered graph (or the base graph if the filter is "off") */
     public Graph getFilteredGraph() {
         return filtered;
+    }
+
+    /** @return filter status */
+    public boolean isApplicable() {
+        return baseGraph instanceof WeightedGraph;
     }
 
     /** @return filter status */
