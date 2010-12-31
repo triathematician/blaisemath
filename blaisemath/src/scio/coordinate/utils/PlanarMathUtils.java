@@ -119,9 +119,8 @@ public final class PlanarMathUtils {
      */
     public static Point2D.Double normalize(Point2D.Double vector) {
         double magn = magnitude(vector);
-        if (magn == 0) {
+        if (magn == 0)
             return vector;
-        }
         vector.x /= magn;
         vector.y /= magn;
         return vector;
