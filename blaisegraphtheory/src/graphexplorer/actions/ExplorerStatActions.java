@@ -5,8 +5,8 @@
 
 package graphexplorer.actions;
 
-import graphexplorer.controller.GraphController;
-import graphexplorer.GraphListModel;
+import graphexplorer.views.GraphListModel;
+import graphexplorer.controller.GraphStatController;
 import graphexplorer.dialogs.CooperationPanel;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -36,20 +36,19 @@ import org.bm.blaise.scio.graph.metrics.NodeMetric;
 public class ExplorerStatActions {
 
     /** What this class works with */
-    GraphController controller;
+    GraphStatController controller;
     /** Mapping of enums to actions */
     HashMap<Object, AbstractAction> actionCache;
     /** Construction requires a controller */
-    public ExplorerStatActions(GraphController controller) {
+    public ExplorerStatActions(GraphStatController controller) {
         actionCache = new HashMap<Object, AbstractAction>();
         setController(controller);
     }
 
-    public void setController(GraphController controller) {
+    public void setController(GraphStatController controller) {
         this.controller = controller;
-        boolean nonNull = controller != null && controller.getViewGraph() != null;
+        boolean nonNull = controller != null && controller.getBaseGraph() != null;
         STAT_DECAY_CUSTOM.setEnabled(nonNull);
-        HIGHLIGHT.setEnabled(nonNull);
         COOPERATION.setEnabled(nonNull);
         for (AbstractAction aa : actionCache.values())
             aa.setEnabled(nonNull);
@@ -59,7 +58,7 @@ public class ExplorerStatActions {
     public Action actionOf(StatEnum se) {
         if (!actionCache.containsKey(se)) {
             StatAction sa = new StatAction(se.s, se.metric);
-            sa.setEnabled(controller != null && controller.getViewGraph() != null);
+            sa.setEnabled(controller != null && controller.getBaseGraph() != null);
             actionCache.put(se, sa);
             return sa;
         } else
@@ -70,7 +69,7 @@ public class ExplorerStatActions {
     public Action actionOf(GlobalStatEnum se) {
         if (!actionCache.containsKey(se)) {
             GlobalStatAction sa = new GlobalStatAction(se.s, se.metric);
-            sa.setEnabled(controller != null && controller.getViewGraph() != null);
+            sa.setEnabled(controller != null && controller.getBaseGraph() != null);
             actionCache.put(se, sa);
             return sa;
         } else
@@ -93,46 +92,13 @@ public class ExplorerStatActions {
         }
     };
 
-    public Action HIGHLIGHT = new AbstractAction("Highlight subset of nodes", ExplorerActions.loadIcon("highlight18")) {
-        {
-            putValue(SHORT_DESCRIPTION, "Select 1 or more nodes to display as highlighted.");
-            setEnabled(true);
-        }
-        public void actionPerformed(ActionEvent e) {
-            GraphListModel glm = new GraphListModel(controller);
-            JList jl = new JList(glm);
-            jl.setLayoutOrientation(JList.VERTICAL_WRAP);
-            int result = JOptionPane.showConfirmDialog(null, new JScrollPane(jl), "Select 1 or more nodes",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
-                int[] selected = jl.getSelectedIndices();
-                TreeSet set = new TreeSet();
-                for (int i : selected)
-                    set.add(glm.getElementAt(i));
-                controller.setHighlightNodes(set);
-            }
-
-//            int[] subset = ExplorerGenerateActions.showIntegerArrayInputDialog(
-//                    "Enter comma-separated list of vertices (by integer index, 0-" + (nodes.size()-1) + ")",
-//                    0, nodes.size()-1);
-//            if (subset == null)
-//                activeController().setNodeSubset(null);
-//            else {
-//                TreeSet set = new TreeSet();
-//                for (int i : subset)
-//                    set.add(nodes.get(i));
-//                activeController().setNodeSubset(set);
-//            }
-        }
-    };
-
     public Action COOPERATION = new AbstractAction("Compute cooperation scores (experimental)", ExplorerActions.loadIcon("cooperation18")) {
         {
             putValue(SHORT_DESCRIPTION, "Compute cooperation scores for active graph, based upon a metric and a selected subset.");
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            Graph active = controller.getViewGraph();
+            Graph active = controller.getBaseGraph();
             if (active == null)
                 return;
             CooperationPanel cp = new CooperationPanel();
@@ -228,8 +194,8 @@ public class ExplorerStatActions {
             setEnabled(true);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller != null && controller.getViewGraph() != null) {
-                Object value = metric.value(controller.getViewGraph());
+            if (controller != null && controller.getBaseGraph() != null) {
+                Object value = metric.value(controller.getBaseGraph());
                 controller.reportOutput("Value of metric " + name + " on active graph: " + value);
             }
         }

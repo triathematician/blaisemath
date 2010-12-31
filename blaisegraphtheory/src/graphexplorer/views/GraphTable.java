@@ -10,7 +10,6 @@ import graphexplorer.controller.GraphControllerListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;

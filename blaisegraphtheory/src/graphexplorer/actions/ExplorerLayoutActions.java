@@ -5,7 +5,7 @@
 
 package graphexplorer.actions;
 
-import graphexplorer.controller.GraphController;
+import graphexplorer.controller.GraphLayoutController;
 import graphexplorer.controller.LongitudinalGraphController;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -28,13 +28,13 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 public class ExplorerLayoutActions {
 
     /** What this class works with */
-    private GraphController controller;
+    private GraphLayoutController controller;
     /** Construction requires a controller */
-    public ExplorerLayoutActions(GraphController controller) { 
+    public ExplorerLayoutActions(GraphLayoutController controller) {
         setController(controller);
     }
     
-    public void setController(GraphController controller) {
+    public void setController(GraphLayoutController controller) {
         this.controller = controller;
         boolean nonNull = controller != null;
         LAYOUT_CIRCULAR.setEnabled(nonNull);
@@ -107,8 +107,8 @@ public class ExplorerLayoutActions {
         }
         public void actionPerformed(ActionEvent e) {
             if (controller != null) {
-                controller.setLayoutAlgorithm(new SpringLayout(controller.getNodePositions()));
-                controller.setLayoutAnimating(true);
+                controller.setLayoutAlgorithm(new SpringLayout(controller.getPositions()));
+                controller.setAnimating(true);
             }
         }
     };
@@ -119,21 +119,21 @@ public class ExplorerLayoutActions {
                     " and begin animation.");
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_MASK));
             putValue(MNEMONIC_KEY, KeyEvent.VK_E);
-            setEnabled(true);
+            setEnabled(false);
         }
         public void actionPerformed(ActionEvent e) {
-            if (controller != null && controller instanceof LongitudinalGraphController) {
-                final LongitudinalGraphController lgc = (LongitudinalGraphController) controller;
-                final SimultaneousLayout sl = new SimultaneousLayout(lgc.getLongitudinalGraph());
-                sl.setCurTime(lgc.getTime());
-                controller.addPropertyChangeListener(LongitudinalGraphController.$TIME, new PropertyChangeListener(){
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        sl.setCurTime(lgc.getTime());
-                    }
-                });
-                controller.setLayoutAlgorithm(sl);
-                controller.setLayoutAnimating(true);
-            }
+//            if (controller != null && controller instanceof LongitudinalGraphController) {
+//                final LongitudinalGraphController lgc = (LongitudinalGraphController) controller;
+//                final SimultaneousLayout sl = new SimultaneousLayout(lgc.getLongitudinalGraph());
+//                sl.setCurTime(lgc.getTime());
+//                controller.addPropertyChangeListener(LongitudinalGraphController.$TIME, new PropertyChangeListener(){
+//                    public void propertyChange(PropertyChangeEvent evt) {
+//                        sl.setCurTime(lgc.getTime());
+//                    }
+//                });
+//                controller.setLayoutAlgorithm(sl);
+//                controller.setLayoutAnimating(true);
+//            }
         }
     };
 
@@ -159,7 +159,7 @@ public class ExplorerLayoutActions {
         }
         public void actionPerformed(ActionEvent e) {
             if (controller != null)
-                controller.setLayoutAnimating(false);
+                controller.setAnimating(false);
         }
     };
 

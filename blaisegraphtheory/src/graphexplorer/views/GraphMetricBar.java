@@ -8,7 +8,6 @@ package graphexplorer.views;
 import graphexplorer.controller.GraphControllerListener;
 import graphexplorer.actions.ExplorerStatActions;
 import graphexplorer.controller.GraphController;
-import graphexplorer.controller.GraphControllerMaster;
 import graphexplorer.controller.GraphStatController;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

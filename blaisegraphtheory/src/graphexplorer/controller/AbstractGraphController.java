@@ -5,7 +5,6 @@
 
 package graphexplorer.controller;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import org.bm.blaise.scio.graph.Graph;
@@ -19,7 +18,7 @@ import org.bm.blaise.scio.graph.Graph;
  * 
  * @author elisha
  */
-abstract class AbstractGraphController {
+abstract public class AbstractGraphController {
 
     //
     // PROPERTY CHANGE NAMES

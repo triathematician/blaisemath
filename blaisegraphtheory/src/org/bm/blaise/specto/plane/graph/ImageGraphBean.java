@@ -6,10 +6,8 @@
 package org.bm.blaise.specto.plane.graph;
 
 import java.awt.Color;
-import java.awt.Font;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import primitive.style.AbstractPointStyle.PointShape;
 import primitive.style.Anchor;
 import util.DefaultChangeBroadcaster;
 

@@ -7,13 +7,11 @@ package graphexplorer.views;
 
 import graphexplorer.controller.GraphControllerListener;
 import graphexplorer.controller.GraphController;
-import graphexplorer.controller.GraphControllerMaster;
 import graphexplorer.controller.GraphDecorController;
 import graphexplorer.controller.GraphLayoutController;
 import graphexplorer.controller.GraphStatController;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;

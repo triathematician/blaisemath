@@ -3,10 +3,10 @@
  * Created Aug 10, 2010
  */
 
-package graphexplorer;
+package graphexplorer.views;
 
-import graphexplorer.controller.GraphControllerMaster;
-import graphexplorer.controller.GraphController;
+import graphexplorer.controller.AbstractGraphController;
+import graphexplorer.controller.GraphDecorController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class GraphListModel extends AbstractListModel
         implements PropertyChangeListener {
 
     /** The graph being tracked */
-    GraphController gc = null;
+    AbstractGraphController gc = null;
     /** List of primary nodes */
     List primaryNodes = null;
 
@@ -32,22 +32,22 @@ public class GraphListModel extends AbstractListModel
     }
 
     /** Constructs with specified graph. */
-    public GraphListModel(GraphController gc) {
+    public GraphListModel(AbstractGraphController gc) {
         setController(gc);
     }
 
     /** @return underlying controller */
-    public GraphController getController() {
+    public AbstractGraphController getController() {
         return gc;
     }
 
     /** Sets the controller that contains the data backed by this model. */
-    public void setController(GraphController gc) {
+    public void setController(AbstractGraphController gc) {
         if (this.gc != gc) {
             if (this.gc != null)
                 this.gc.removePropertyChangeListener(this);
             this.gc = gc;
-            primaryNodes = new ArrayList(gc.getViewNodes());
+            primaryNodes = new ArrayList(gc.getBaseGraph().nodes());
             if (gc != null)
                 gc.addPropertyChangeListener(this);
             fireContentsChanged(this, 0, getSize());
@@ -56,7 +56,7 @@ public class GraphListModel extends AbstractListModel
 
     public int getSize() {
         if (gc == null) return 0;
-        Graph graph = gc.getViewGraph();
+        Graph graph = gc.getBaseGraph();
         return graph == null ? 0 : primaryNodes.size();
     }
 
@@ -64,7 +64,7 @@ public class GraphListModel extends AbstractListModel
         if (gc == null || primaryNodes == null)
             return null;
         Object node = primaryNodes.get(index);
-        Graph active = gc.getViewGraph();
+        Graph active = gc.getBaseGraph();
         if (active instanceof ValuedGraph && active.contains(node))
             return ((ValuedGraph)active).getValue(node);
         return node;
@@ -72,14 +72,8 @@ public class GraphListModel extends AbstractListModel
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == gc) {
-            if (evt.getPropertyName().equals("primary") || evt.getPropertyName().equals("metric")
-                    || evt.getPropertyName().equals("time")) {
+            if (evt.getPropertyName().equals(AbstractGraphController.$BASE))
                 fireContentsChanged(this, 0, getSize());
-            }
-        } else if (evt.getSource() instanceof GraphControllerMaster) {
-            if (evt.getPropertyName().equals("active")) {
-                setController(((GraphControllerMaster)evt.getSource()).getActiveController());
-            }
         }
     }
 
