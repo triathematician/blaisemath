@@ -25,6 +25,8 @@ public class GraphicPointFancy<C> extends GraphicString<C> {
     public double rad = 1.0;
     /** Color of point */
     public Color color = null;
+    /** Opacity */
+    public float opacity = 1.0f;
 
     /**
      * Construct GraphicPointFancy with specified anchor, string label, and radius.

@@ -1,5 +1,5 @@
 /*
- * PointLabeledStyle.java
+ * PointFancyStyle.java
  * Created Jul 20, 2010
  */
 
