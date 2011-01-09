@@ -48,17 +48,18 @@ public class DemoLineVisometry extends javax.swing.JFrame {
         l3.add(lf = new LineFunction());
         props.add("Function 3", new PropertySheet(lf));
 
+        VSegment seg1 = new VSegment<Double>(0.1, 0.78);
+        PathStylePoints segStyle = new PathStylePoints(Color.yellow);
+        segStyle.setStroke(new BasicStroke(64f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
+        segStyle.setStrokeOpacity(.5f);
+        seg1.setStrokeStyle(segStyle);
+        seg1.setPointsVisible(false);
+        l4.add(seg1);
         VPoint<Double> p1;
         l4.add(p1 = new VPoint<Double>(0.0));
         props.add("Timeline Axis 4", new PropertySheet(l4.getAxis()));
+        props.add("Segment 4", new PropertySheet(seg1));
         props.add("Point 4", new PropertySheet(p1));
-        VSegment seg1 = new VSegment<Double>(0.1, 0.78);
-        PathStylePoints segStyle = new PathStylePoints(Color.yellow);
-        segStyle.setStroke(new BasicStroke(60f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-        segStyle.setStrokeOpacity(.5f);
-        seg1.setStrokeStyle(segStyle);
-        l4.add(seg1);
-        props.add("Segment", new PropertySheet(seg1));
     }
 
     /** This method is called from within the constructor to

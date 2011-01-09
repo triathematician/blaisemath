@@ -10,9 +10,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.util.Map;
+import static primitive.style.StyleUtils.*;
 
 /**
  * Contains basic feature support for a stroke and a color setting, for use with
@@ -24,6 +25,12 @@ import java.awt.geom.Point2D;
  */
 
 public abstract class AbstractPathStyle {
+
+    private static final Map<String,Class> $KEY_MAP = keyMap(
+            $KEY_STROKE, BasicStroke.class,
+            $KEY_THICKNESS, Float.class,
+            $KEY_STROKE_COLOR, Color.class,
+            $KEY_OPACITY, float.class);
 
     protected BasicStroke stroke = PrimitiveStyle.DEFAULT_STROKE;
     protected Color strokeColor = Color.BLACK;
@@ -37,9 +44,11 @@ public abstract class AbstractPathStyle {
     public AbstractPathStyle(Color color, float width){ this.strokeColor = color; this.stroke = new BasicStroke(width); }
     /** Construct with specified color/stroke. */
     public AbstractPathStyle(Color color, BasicStroke stroke){ this.strokeColor = color; this.stroke = stroke; }
-    
+
+    public Map<String, Class> getCustomKeys() { return $KEY_MAP; }
+
     /** @return stroke */
-    public Stroke getStroke() { return stroke; }
+    public BasicStroke getStroke() { return stroke; }
     /** @param stroke new stroke */
     public void setStroke(BasicStroke stroke) { this.stroke = stroke; }
     /** @return thickness of current stroke */
@@ -57,8 +66,6 @@ public abstract class AbstractPathStyle {
     public float getStrokeOpacity() { return opacity; }
     /** Sets opacity of opacity */
     public void setStrokeOpacity(float opacity) { this.opacity = opacity; }
-
-
 
     /** Draws a single path via a shape */
     public void drawPath(Graphics2D canvas, Shape path) {

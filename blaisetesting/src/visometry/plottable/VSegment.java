@@ -37,7 +37,10 @@ public class VSegment<C> extends VAbstractTwoPoint<C>
     /** @return true if points at vertices of polygon are visible */
     public boolean isPointsVisible() { return entryP1.visible; }
     /** Sets visiblity of the vertices. */
-    public void setPointsVisible(boolean value) { if (entryP1.visible != value) { entryP1.visible = value; entryP2.visible = false; firePlottableStyleChanged(); } }
+    public void setPointsVisible(boolean value) { 
+        if (entryP1.visible != value) { entryP1.visible = entryP2.visible = value; firePlottableStyleChanged();
+        }
+    }
 
     /** @return current style of stroke for this plottable */
     public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) entryP1.style; }

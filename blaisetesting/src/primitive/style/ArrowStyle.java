@@ -4,6 +4,7 @@
  */
 package primitive.style;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -12,6 +13,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.Map;
+import static primitive.style.StyleUtils.*;
 
 /**
  * <p>
@@ -24,6 +27,16 @@ import java.awt.geom.Point2D;
  */
 public class ArrowStyle extends AbstractPathStyle
         implements PrimitiveStyle<Point2D.Double[]> {
+
+    private static final Map<String,Class> $KEY_MAP = keyMap(
+            $KEY_STROKE, BasicStroke.class,
+            $KEY_THICKNESS, Float.class,
+            $KEY_STROKE_COLOR, Color.class,
+            $KEY_OPACITY, float.class,
+            $KEY_HEAD_SHAPE, ArrowShape.class,
+            $KEY_ANCHOR_SHAPE, ArrowShape.class,
+            $KEY_SIZE, Integer.class
+            );
 
     /** ArrowShape types for the ends of the arrow */
     public enum ArrowShape {
@@ -60,15 +73,9 @@ public class ArrowStyle extends AbstractPathStyle
         result.stroke = stroke; result.strokeColor = strokeColor;
         return result;
     }
-
-    @Override
-    public String toString() {
-        return "ArrowStyle["+headShape + ", " + anchorShape + "]";
-    }
-
-    public Class<? extends Point2D.Double[]> getTargetType() {
-        return Point2D.Double[].class;
-    }
+    @Override public String toString() { return "ArrowStyle["+headShape + ", " + anchorShape + "]"; }
+    public Class<? extends Point2D.Double[]> getTargetType() { return Point2D.Double[].class; }
+    @Override public Map<String, Class> getCustomKeys() { return $KEY_MAP; }
 
     /** @return arrow shape of anchor */
     public ArrowShape getAnchorShape() { return anchorShape; }
@@ -124,6 +131,8 @@ public class ArrowStyle extends AbstractPathStyle
     //
     // SPECIALIZED DRAW METHODS
     //
+
+    // TODO - transfer this to the shapes class
 
     java.awt.Shape getShape(Point2D.Double point, double dx, double dy, double headSize, ArrowShape shape) {
         double headAngle = Math.PI / 6;

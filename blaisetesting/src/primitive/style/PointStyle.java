@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.util.Map;
 
 /**
  * <p>
@@ -46,8 +47,12 @@ public class PointStyle extends AbstractPointStyle implements PrimitiveStyle<Poi
         return Point2D.Double.class;
     }
 
+    //
+    // DRAW METHODS
+    //
+
     public void draw(Graphics2D canvas, Point2D.Double point) {
-        Shape s = getShape(shape, point.x, point.y, Math.abs(radius));
+        Shape s = shape.getShape(point.x, point.y, Math.abs(radius));
         if (fillColor != null) {
             canvas.setColor( radius < 0 ? lighterVersionOf(fillColor) : fillColor );
             canvas.fill(s);
@@ -59,13 +64,13 @@ public class PointStyle extends AbstractPointStyle implements PrimitiveStyle<Poi
         }
     }
 
-    public boolean contained(Point2D.Double primitive, Graphics2D canvas, Point point) {
-        return primitive.distance(point) <= radius;
-    }
-
     public void drawArray(Graphics2D canvas, Point2D.Double[] primitives) {
         for (Point2D.Double p : primitives)
             draw(canvas, p);
+    }
+
+    public boolean contained(Point2D.Double primitive, Graphics2D canvas, Point point) {
+        return primitive.distance(point) <= radius;
     }
 
     public int containedInArray(Point2D.Double[] primitives, Graphics2D canvas, Point point) {
@@ -74,7 +79,6 @@ public class PointStyle extends AbstractPointStyle implements PrimitiveStyle<Poi
                 return i;
         return -1;
     }
-
 
     private static Color lighterVersionOf(Color c) {
         return new Color(lighten(c.getRed()), lighten(c.getGreen()), lighten(c.getBlue()));

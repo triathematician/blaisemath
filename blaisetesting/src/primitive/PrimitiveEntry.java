@@ -7,11 +7,13 @@ package primitive;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import primitive.style.PrimitiveStyle;
+import primitive.style.StyleCustomizer;
 
 /**
- * Stores information required for a renderer to drawArray an object, including both the
- * object and an associated style.
+ * Stores information required for a renderer to draw an object, including both the
+ * object and an associated style. The object may be an array of objects.
  *
  * @author Elisha Peterson
  */
@@ -20,6 +22,8 @@ public class PrimitiveEntry {
     public Object primitive;
     /** The associated style. */
     public PrimitiveStyle style;
+    /** Customizer map */
+    public Map<Object,StyleCustomizer> customizer;
     /** Flag determining whether plottable will be shown in the eventual render. */
     public boolean visible = true;
     /** Flag determining whether plottable should be "highlighted". */
@@ -62,9 +66,9 @@ public class PrimitiveEntry {
         if (style == null || primitive == null)
             return false;
         if (style.getTargetType().isAssignableFrom( primitive.getClass() ))
-            return style.contained(primitive, canvas, e.getPoint());
+            return style.contained(e.getPoint(), primitive, canvas, customizer == null ? null : customizer.get(primitive));
         else if (primitive.getClass().isArray() && style.getTargetType().isAssignableFrom( primitive.getClass().getComponentType() )) {
-            activeIndex = style.containedInArray((Object[]) primitive, canvas, e.getPoint());
+            activeIndex = style.containedInArray(e.getPoint(), (Object[]) primitive, canvas, customizer);
             return activeIndex != -1;
         }
         return false;

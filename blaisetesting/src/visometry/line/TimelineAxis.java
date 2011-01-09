@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import primitive.GraphicRuledLine;
 import primitive.style.Anchor;
+import primitive.style.LineStyle;
+import primitive.style.PathStylePoints;
 import primitive.style.RuledLineStyle;
 import scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
@@ -26,11 +28,15 @@ import visometry.plottable.PlottableConstants;
  */
 public class TimelineAxis extends Plottable<Double> {
 
+    /** Style for top and bottom lines */
+    private PathStylePoints styleLine = null;
     /** Style for large tick marks */
     private RuledLineStyle styleLarge = null;
     /** Style for small tick marks */
     private RuledLineStyle styleSmall = null, styleSmall2 = null;
 
+    /** Entry for first horizontal line */
+    private Double[] line = null;
     /** Entry displaying large labeled lines */
     private GraphicRuledLine<Double> large = null;
     /** Entry displaying small unlabeled ticks */
@@ -55,6 +61,7 @@ public class TimelineAxis extends Plottable<Double> {
         addPrimitive(new VPrimitiveEntry(small, styleSmall2 = new RuledLineStyle() ) );
           styleSmall2.setRuleLeft(22); styleSmall2.setRuleRight(30);
           styleSmall2.setLabelsVisible(false);
+          styleSmall2.setRuleStyle(styleSmall.getRuleStyle());
 
         addPrimitive(new VPrimitiveEntry(
                 large = new GraphicRuledLine<Double>(-10.0, 10.0, null, null),
@@ -62,6 +69,10 @@ public class TimelineAxis extends Plottable<Double> {
           styleLarge.setLabelPosition(1);
           styleLarge.setRuleLeft(-30); styleLarge.setRuleRight(30);
           styleLarge.getLabelStyle().setAnchor(Anchor.Southwest);
+
+        addPrimitive(new VPrimitiveEntry(
+                line = new Double[]{-10.0, 10.0},
+                styleLine = new LineStyle() ));
     }
 
     @Override
@@ -73,6 +84,34 @@ public class TimelineAxis extends Plottable<Double> {
     public String toString() {
         return "TimelineAxis";
     }
+
+    //
+    // BEANS
+    //
+
+    /** @return style of large rules */
+    public RuledLineStyle getStyleLarge() {
+        return styleLarge;
+    }
+
+    /** Sets style of large rules */
+    public void setStyleLarge(RuledLineStyle styleLarge) {
+        this.styleLarge = styleLarge;
+        firePlottableStyleChanged();
+    }
+
+    /** Gets style of small rules */
+    public RuledLineStyle getStyleSmall() {
+        return styleSmall;
+    }
+
+    /** Sets style of small rules */
+    public void setStyleSmall(RuledLineStyle styleSmall) {
+        this.styleSmall = styleSmall;
+        firePlottableStyleChanged();
+    }
+
+
 
     //
     // COMPUTATION

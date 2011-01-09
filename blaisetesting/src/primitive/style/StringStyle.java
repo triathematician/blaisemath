@@ -67,13 +67,13 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     /** @param newValue new location of anchor point of string relative to provided coordinate */
     public void setAnchor(Anchor newValue) { anchor = newValue; }
 
-    public void draw(Graphics2D canvas, GraphicString<Point2D.Double> gs) {
+    public void draw(Graphics2D canvas, GraphicString<Point2D.Double> gs, StyleCustomizer customizer) {
         canvas.setColor(color);
         Rectangle2D.Double bounds = bounds(canvas, gs);
         canvas.drawString(gs.string, (float) (bounds.x + gs.offset.x), (float) (bounds.y + gs.offset.y));
     }
 
-    public boolean contained(GraphicString<Point2D.Double> primitive, Graphics2D canvas, Point point) {
+    public boolean contained(Point point, GraphicString<Point2D.Double> primitive, Graphics2D canvas, StyleCustomizer customizer) {
         return bounds(canvas, primitive).contains(point);
     }
 

@@ -7,7 +7,6 @@ package visometry;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
-import primitive.GraphicPointDir;
 import primitive.style.PointStyle;
 import primitive.PrimitiveEntry;
 
@@ -28,17 +27,13 @@ public class SimplePlotRenderer {
         for (PrimitiveEntry pe : prims) {
             if (!pe.visible)
                 continue;
-//            if (pe instanceof VPrimitiveEntry)
-//                System.out.println("Drawing " + pe.primitive + " (converted from " + ((VPrimitiveEntry)pe).local + ")");
-//            else
-//                System.out.println("Drawing simple primitive " + pe.primitive);
             try {
                 if (pe.style == null)
                     drawWithDefaultStyle(gr, pe.primitive);
                 else if (pe.primitive.getClass() != pe.style.getTargetType() && pe.primitive.getClass().isArray())
-                    pe.style.drawArray(gr, (Object[]) pe.primitive);
+                    pe.style.drawArray(gr, (Object[]) pe.primitive, pe.customizer);
                 else
-                    pe.style.draw(gr, pe.primitive);
+                    pe.style.draw(gr, pe.primitive, pe.customizer == null ? null : pe.customizer.get(pe.primitive));
             } catch (Exception ex) {
                 System.out.println("SimplePlotRenderer.draw: error drawing: " + pe.primitive + " with style " + pe.style + " (" + ex + ")");
 //                ex.printStackTrace();

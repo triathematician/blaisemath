@@ -9,7 +9,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Map;
 import primitive.GraphicPointDir;
+import static primitive.style.StyleUtils.*;
 
 /**
  * Displays an anchor point together with a direction. Also supports a scaling parameter that
@@ -19,6 +21,11 @@ import primitive.GraphicPointDir;
  * @author Elisha Peterson
  */
 public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2D.Double>> {
+
+    private static final Map<String,Class> $KEY_MAP = keyMap(
+            $KEY_CENTERED, Boolean.class,
+            $KEY_MAX_LENGTH, Double.class
+            );
 
     /** Arrow style used to drawArray. */
     ArrowStyle baseStyle = new ArrowStyle();
@@ -32,6 +39,9 @@ public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2
         baseStyle = new ArrowStyle(color, shape, size);
     }
 
+    public Class getTargetType() { return GraphicPointDir.class; }
+    public Map<String, Class> getCustomKeys() { return $KEY_MAP; }
+
     /** @return true if arrows are centered at points */
     public boolean isCentered() { return centered; }
     /** @param center true if arrows are centered at points */
@@ -44,11 +54,6 @@ public class PointDirStyle extends AbstractPrimitiveStyle<GraphicPointDir<Point2
     public ArrowStyle getBaseStyle() { return baseStyle; }
     /** Sets base style for drawing */
     public void setBaseStyle(ArrowStyle style) { this.baseStyle = style; }
-
-
-    public Class getTargetType() {
-        return GraphicPointDir.class;
-    }
 
     public void draw(Graphics2D canvas, GraphicPointDir<Point2D.Double> primitive) {
         Point2D.Double[] drawn = new Point2D.Double[2];
