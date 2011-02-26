@@ -1,5 +1,6 @@
 package org.bm.blaise.scio.graph;
 
+import org.bm.blaise.scio.graph.time.ListTimeGraph;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ public class ListLongtiduinalGraphTest {
 
     static Integer[] VV;
     static Integer[][][] EE;
-    static ListLongitudinalGraph<Integer> UNDIR, DIR, EMPTY;
+    static ListTimeGraph<Integer> UNDIR, DIR, EMPTY;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -27,18 +28,18 @@ public class ListLongtiduinalGraphTest {
             {{1,3},{3,5},{5,1},{2,4},{4,6},{6,2}},
             {{1,4},{2,5},{3,6}},
             {} };
-        UNDIR = new ListLongitudinalGraph();
+        UNDIR = new ListTimeGraph();
           UNDIR.addGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE[0])), 0.0);
           UNDIR.addGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE[1])), 1.0);
           UNDIR.addGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE[2])), 2.0);
           UNDIR.addGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE[3])), 3.0);
           UNDIR.addGraph(GraphFactory.getGraph(false, Arrays.asList(VV), Arrays.asList(EE[0])), 4.0);
-        DIR = new ListLongitudinalGraph();
+        DIR = new ListTimeGraph();
           DIR.addGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE[0])), 5.0);
           DIR.addGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE[1])), -10.0);
           DIR.addGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE[2])), 20.0);
           DIR.addGraph(GraphFactory.getGraph(true, Arrays.asList(VV), Arrays.asList(EE[3])), 0.0);
-        EMPTY = new ListLongitudinalGraph();
+        EMPTY = new ListTimeGraph();
     }
 
     @Test

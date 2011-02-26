@@ -1,5 +1,6 @@
 package org.bm.blaise.scio.graph;
 
+import org.bm.blaise.scio.graph.time.IntervalTimeGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ import static org.bm.blaise.scio.graph.AssertUtils.*;
  */
 public class IntervalLongitudinalGraphTest {
 
-    static IntervalLongitudinalGraph<Integer> UNDIR, DIR, UNDIR2;
+    static IntervalTimeGraph<Integer> UNDIR, DIR, UNDIR2;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -34,8 +35,8 @@ public class IntervalLongitudinalGraphTest {
         putEdge(edgeTimes, 4, 1, new double[]{1,3});
         putEdge(edgeTimes, 5, 4, new double[]{10,20});
 
-        UNDIR = IntervalLongitudinalGraph.getInstance(false, nodeTimes, edgeTimes);
-        DIR = IntervalLongitudinalGraph.getInstance(true, nodeTimes, edgeTimes);
+        UNDIR = IntervalTimeGraph.getInstance(false, nodeTimes, edgeTimes);
+        DIR = IntervalTimeGraph.getInstance(true, nodeTimes, edgeTimes);
 
         TreeMap<Integer, List<double[]>> nodeTimes2 = new TreeMap<Integer, List<double[]>>();
         nodeTimes2.put(1, Arrays.asList(new double[]{1,5}));
@@ -50,7 +51,7 @@ public class IntervalLongitudinalGraphTest {
         putEdge(edgeTimes2, 4, 1, Arrays.asList(new double[]{1,3}));
         putEdge(edgeTimes2, 5, 4, Arrays.asList(new double[]{10,20}));
 
-        UNDIR2 = IntervalLongitudinalGraph.getInstance2(false, nodeTimes2, edgeTimes2);
+        UNDIR2 = IntervalTimeGraph.getInstance2(false, nodeTimes2, edgeTimes2);
     }
 
     static List<double[]> makeList(double[] arr1, double[] arr2) {

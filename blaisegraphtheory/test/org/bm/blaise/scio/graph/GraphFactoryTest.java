@@ -27,8 +27,8 @@ public class GraphFactoryTest {
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
         Graph<String> result1 = GraphFactory.getGraph(false, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
         Graph<String> result2 = GraphFactory.getGraph(true, Arrays.asList("A","B","C","D","E"), Arrays.asList(edges));
-        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B, D] B: [A, C] C: [B, D] D: [A, C] E: [E]", Graphs.printGraph(result1));
-        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B] B: [C] C: [D] D: [A] E: [E]", Graphs.printGraph(result2));
+        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B, D] B: [A, C] C: [B, D] D: [A, C] E: [E]", GraphUtils.printGraph(result1));
+        assertEquals("NODES: [A, B, C, D, E]  EDGES: A: [B] B: [C] C: [D] D: [A] E: [E]", GraphUtils.printGraph(result2));
     }
 
     @Test

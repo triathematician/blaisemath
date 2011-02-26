@@ -24,9 +24,9 @@ public class RandomGraphTest {
         result1 = RandomGraph.getInstance(10, 1f, false);
         assertEquals(10, result1.order()); assertEquals(45, result1.edgeNumber());
         result1 = RandomGraph.getInstance(10, .25f, false);
-        System.out.println("  UNDIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + Graphs.printGraph(result1));
+        System.out.println("  UNDIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + GraphUtils.printGraph(result1));
         result1 = RandomGraph.getInstance(10, .25f, true);
-        System.out.println("  DIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + Graphs.printGraph(result1));
+        System.out.println("  DIRECTED (.25 probability): " + result1.edgeNumber() + " edges, " + GraphUtils.printGraph(result1));
     }
 
     @Test
@@ -36,10 +36,10 @@ public class RandomGraphTest {
         assertEquals(10, result1.order()); assertEquals(0, result1.edgeNumber());
         result1 = RandomGraph.getInstance(10, 30, false);
         assertEquals(10, result1.order()); assertEquals(30, result1.edgeNumber());
-        System.out.println("  UNDIRECTED: " + Graphs.printGraph(result1));
+        System.out.println("  UNDIRECTED: " + GraphUtils.printGraph(result1));
         result1 = RandomGraph.getInstance(10, 30, true);
         assertEquals(10, result1.order()); assertEquals(30, result1.edgeNumber());
-        System.out.println("  DIRECTED: " + Graphs.printGraph(result1));
+        System.out.println("  DIRECTED: " + GraphUtils.printGraph(result1));
     }
 
 }
