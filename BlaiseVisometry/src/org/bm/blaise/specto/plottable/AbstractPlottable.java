@@ -2,7 +2,7 @@
  * AbstractPlottable.java
  * Created on Sep 14, 2007, 7:49:09 AM
  */
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.graphics.GraphicVisibility;
 import javax.swing.event.ChangeListener;

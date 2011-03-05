@@ -3,10 +3,8 @@
  * Created on Apr 8, 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
-import org.bm.blaise.scio.coordinate.RealInterval;
-import scio.coordinate.*;
 import java.util.List;
 
 /**

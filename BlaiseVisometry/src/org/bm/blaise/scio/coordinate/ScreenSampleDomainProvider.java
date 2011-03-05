@@ -3,7 +3,7 @@
  * Created on Apr 7, 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import org.bm.blaise.scio.coordinate.sample.SampleSet;
 

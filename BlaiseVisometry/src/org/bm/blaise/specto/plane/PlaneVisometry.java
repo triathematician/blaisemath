@@ -2,14 +2,8 @@
  * PlaneVisometry.java
  * Created on Jul 30, 2009
  */
-package visometry.plane;
+package org.bm.blaise.specto.plane;
 
-import coordinate.DomainHint;
-import coordinate.SquareDomainStepSampler;
-import coordinate.RealIntervalSamplerProvider;
-import coordinate.ScreenSampleDomainProvider;
-import coordinate.RealIntervalStepSampler;
-import coordinate.SquareDomainBroadcaster;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import org.bm.blaise.scio.coordinate.sample.SampleSet;
@@ -20,9 +14,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.bm.blaise.scio.coordinate.DomainHint;
+import org.bm.blaise.scio.coordinate.RealIntervalSamplerProvider;
+import org.bm.blaise.scio.coordinate.RealIntervalStepSampler;
+import org.bm.blaise.scio.coordinate.ScreenSampleDomainProvider;
+import org.bm.blaise.scio.coordinate.SquareDomainBroadcaster;
+import org.bm.blaise.scio.coordinate.SquareDomainStepSampler;
+import org.bm.blaise.specto.Visometry;
 import util.ChangeBroadcaster;
 import util.DefaultChangeBroadcaster;
-import visometry.Visometry;
 
 /**
  * <p>

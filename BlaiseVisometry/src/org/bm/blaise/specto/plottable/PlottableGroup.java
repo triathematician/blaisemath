@@ -2,17 +2,17 @@
  * PlottableGroup.java
  * Created on Feb 25, 2008
  */
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
-import coordinate.DomainContext;
-import coordinate.DomainHint;
-import coordinate.ScreenSampleDomainProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.bm.blaise.scio.coordinate.Domain;
+import org.bm.blaise.scio.coordinate.DomainContext;
+import org.bm.blaise.scio.coordinate.DomainHint;
+import org.bm.blaise.scio.coordinate.ScreenSampleDomainProvider;
 import org.bm.blaise.scio.coordinate.sample.SampleSet;
-import visometry.graphics.VCompositeGraphicEntry;
-import visometry.graphics.VGraphicEntry;
+import org.bm.blaise.specto.graphics.VCompositeGraphicEntry;
+import org.bm.blaise.specto.graphics.VGraphicEntry;
 
 /**
  * <p>

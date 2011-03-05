@@ -3,11 +3,11 @@
  * Created Apr 12, 2010
  */
 
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import java.awt.geom.Point2D;
+import org.bm.blaise.specto.graphics.VPointEntry;
 import utils.RelativePointBean;
-import visometry.graphics.VPointEntry;
 
 /**
  * A point displayed on a window, w/ support for dragging

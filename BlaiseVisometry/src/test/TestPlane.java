@@ -18,10 +18,14 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
+import org.bm.blaise.specto.plane.PlanePlotComponent;
+import org.bm.blaise.specto.plottable.VPoint;
+import org.bm.blaise.specto.plottable.VPointGraph;
+import org.bm.blaise.specto.plottable.VPointSet;
+import org.bm.blaise.specto.plottable.VPolygonalPath;
+import org.bm.blaise.specto.plottable.VSegment;
 import utils.IndexedGetter;
 import utils.MapGetter;
-import visometry.plane.PlanePlotComponent;
-import visometry.plottable.*;
 
 /**
  *

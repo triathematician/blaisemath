@@ -4,11 +4,11 @@
  * Substantial Revision Jan 28, 2011
  */
 
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import org.bm.blaise.graphics.GraphicEntry;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
 
 /**
  * Stores a graphic entry that exists in a local coordinate system. Looks a lot

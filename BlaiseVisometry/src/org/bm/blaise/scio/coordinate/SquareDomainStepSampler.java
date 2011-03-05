@@ -3,7 +3,7 @@
  * Created Apr 7, 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import java.awt.geom.Point2D;
 import java.util.AbstractList;

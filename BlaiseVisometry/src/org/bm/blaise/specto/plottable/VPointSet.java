@@ -3,15 +3,15 @@
  * Created Apr 12, 2010
  */
 
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.graphics.renderer.BasicPointRenderer;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
+import org.bm.blaise.specto.graphics.VGraphicEntry;
+import org.bm.blaise.specto.graphics.VPointSetEntry;
 import utils.IndexedGetter;
 import utils.IndexedGetterSetter;
-import visometry.graphics.VGraphicEntry;
-import visometry.graphics.VPointSetEntry;
 
 /**
  * Displays a set of points as specified in local coordinates. Points can be dragged by default

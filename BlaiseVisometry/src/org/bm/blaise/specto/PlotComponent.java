@@ -2,24 +2,20 @@
  * PlotComponent.java
  * Created on Jul 30, 2009
  */
+package org.bm.blaise.specto;
 
-package visometry;
-
-import org.bm.blaise.graphics.CompositeGraphicEntry;
-import visometry.graphics.VGraphicCache;
-import visometry.plottable.PlottableGroup;
-import visometry.plottable.Plottable;
 import org.bm.blaise.graphics.GraphicComponent;
-import org.bm.blaise.graphics.GraphicEntry;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Collection;
-import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.bm.blaise.specto.graphics.VGraphicCache;
+import org.bm.blaise.specto.plottable.Plottable;
+import org.bm.blaise.specto.plottable.PlottableGroup;
 
 /**
  * <p>

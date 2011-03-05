@@ -3,7 +3,7 @@
  * Created Apr 13, 2010
  */
 
-package visometry;
+package org.bm.blaise.specto;
 
 import java.awt.Graphics2D;
 

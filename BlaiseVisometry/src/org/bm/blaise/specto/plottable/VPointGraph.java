@@ -2,7 +2,7 @@
  * VPointGraph.java
  * Created Jan 29, 2011
  */
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import org.bm.blaise.graphics.renderer.GraphicRendererProvider;
@@ -12,13 +12,13 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.bm.blaise.specto.graphics.VCompositeGraphicEntry;
+import org.bm.blaise.specto.graphics.VGraphicEntry;
+import org.bm.blaise.specto.graphics.VPolygonalPathEntry;
+import org.bm.blaise.specto.graphics.VSegmentEntry;
 import utils.RelativePointBean;
 import utils.IndexedGetter;
 import utils.MapGetter;
-import visometry.graphics.VCompositeGraphicEntry;
-import visometry.graphics.VGraphicEntry;
-import visometry.graphics.VPolygonalPathEntry;
-import visometry.graphics.VSegmentEntry;
 
 /**
  * Draws both a set of points and a set of edges on a plot.

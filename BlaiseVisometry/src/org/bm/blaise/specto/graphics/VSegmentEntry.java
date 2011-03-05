@@ -2,15 +2,14 @@
  * VSegmentEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import utils.RelativePointBean;
 import org.bm.blaise.graphics.BasicShapeEntry;
-import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.geom.Line2D;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
 
 /**
  * An entry for a segment drawn between two points.

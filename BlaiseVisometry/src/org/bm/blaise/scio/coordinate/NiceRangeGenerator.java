@@ -2,7 +2,7 @@
  * NiceRangeGenerator.java
  * Created on Mar 22, 2008
  */
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import java.util.AbstractList;
 import java.util.ArrayList;

@@ -2,14 +2,14 @@
  * VGraphicCache.java
  * Created Jan 28, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import org.bm.blaise.graphics.GraphicCache;
 import org.bm.blaise.graphics.GraphicEntry;
 import javax.swing.event.ChangeEvent;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
-import visometry.plottable.PlottableGroup;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
+import org.bm.blaise.specto.plottable.PlottableGroup;
 
 /**
  * Extends basic graphic cache with support for visometry handling.

@@ -2,7 +2,7 @@
  * VAbstractGraphicEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import org.bm.blaise.graphics.AbstractGraphicEntry;
 

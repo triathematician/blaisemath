@@ -3,7 +3,7 @@
  * Created Jun 3, 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 /**
  * Provides a few hint constants used by domain providers to generate values.

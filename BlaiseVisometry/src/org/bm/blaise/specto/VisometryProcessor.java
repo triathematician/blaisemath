@@ -3,7 +3,7 @@
  * Created Jul 2009 (based on earlier work)
  */
 
-package visometry;
+package org.bm.blaise.specto;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;

@@ -2,7 +2,7 @@
  * SquareDomainBroadcaster.java
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;

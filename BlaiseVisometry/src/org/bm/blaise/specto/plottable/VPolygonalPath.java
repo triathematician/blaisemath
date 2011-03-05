@@ -3,12 +3,12 @@
  * Created Jan 29, 2011
  */
 
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import java.awt.geom.Point2D;
+import org.bm.blaise.specto.graphics.VPolygonalPathEntry;
 import utils.IndexedGetterSetter;
-import visometry.graphics.VPolygonalPathEntry;
 
 /**
  * Displays a set of points as specified in local coordinates. Points can be dragged by default

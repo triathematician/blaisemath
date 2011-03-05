@@ -3,7 +3,7 @@
  * Created Apr 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import java.util.HashMap;
 import org.bm.blaise.scio.coordinate.Domain;

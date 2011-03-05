@@ -3,9 +3,10 @@
  * Created Jan 18, 2011
  */
 
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
-import visometry.graphics.VGraphicEntry;
+import org.bm.blaise.specto.graphics.VGraphicEntry;
+
 
 /**
  * Common interface for plottable objects. This class has the minimal elements

@@ -3,7 +3,7 @@
  * Created Apr 14, 2010
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

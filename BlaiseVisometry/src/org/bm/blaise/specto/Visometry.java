@@ -2,7 +2,7 @@
  * Visometry.java
  * Created on Sep 14, 2007, 7:42:38 AM
  */
-package visometry;
+package org.bm.blaise.specto;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;

@@ -2,7 +2,7 @@
  * VCompositeGraphicEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import org.bm.blaise.graphics.CompositeGraphicEntry;
 import org.bm.blaise.graphics.GraphicEntry;
@@ -12,9 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
 import util.DefaultChangeBroadcaster;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
 
 /**
  * Groups together several <code>VGraphicEntry</code>'s.

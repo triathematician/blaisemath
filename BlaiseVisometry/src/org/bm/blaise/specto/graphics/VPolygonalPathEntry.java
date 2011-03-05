@@ -2,14 +2,14 @@
  * VPolygonalPathEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import org.bm.blaise.graphics.BasicShapeEntry;
 import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import java.awt.geom.GeneralPath;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
 import utils.IndexedGetter;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
 
 /**
  * An entry for a polygonal path, drawn using a stroke renderer.

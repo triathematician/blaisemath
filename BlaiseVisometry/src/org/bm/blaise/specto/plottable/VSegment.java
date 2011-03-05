@@ -2,14 +2,14 @@
  * VSegment.java
  * Created Jan 29, 2011
  */
-package visometry.plottable;
+package org.bm.blaise.specto.plottable;
 
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import org.bm.blaise.graphics.renderer.ShapeRenderer;
+import org.bm.blaise.specto.graphics.VCompositeGraphicEntry;
+import org.bm.blaise.specto.graphics.VGraphicEntry;
+import org.bm.blaise.specto.graphics.VSegmentEntry;
 import utils.RelativePointBean;
-import visometry.graphics.VCompositeGraphicEntry;
-import visometry.graphics.VGraphicEntry;
-import visometry.graphics.VSegmentEntry;
 
 /**
  * Draws a pair of (draggable) points and the edge between them

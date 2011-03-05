@@ -3,7 +3,7 @@
  * Created on Aug 4, 2009
  */
 
-package visometry.plane;
+package org.bm.blaise.specto.plane;
 
 import org.bm.blaise.graphics.GraphicVisibility;
 import org.bm.blaise.graphics.renderer.BasicShapeRenderer;
@@ -19,7 +19,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import visometry.PaintsCanvas;
+import org.bm.blaise.specto.PaintsCanvas;
 
 /**
  * <p>

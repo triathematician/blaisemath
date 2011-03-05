@@ -2,7 +2,7 @@
  * VPointEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import utils.IndexedGetter;
 import org.bm.blaise.graphics.BasicPointEntry;
@@ -10,10 +10,10 @@ import org.bm.blaise.graphics.CompositeGraphicEntry;
 import org.bm.blaise.graphics.GraphicEntry;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
+import org.bm.blaise.specto.VisometryUtils;
 import utils.IndexedGetterSetter;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
-import visometry.VisometryUtils;
 
 /**
  * An entry for a (large) collection of draggable points at arbitrary local coordinates

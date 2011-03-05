@@ -2,14 +2,14 @@
  * VPointEntry.java
  * Created Jan 29, 2011
  */
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import utils.RelativePointBean;
 import org.bm.blaise.graphics.BasicPointEntry;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
-import visometry.Visometry;
-import visometry.VisometryProcessor;
+import org.bm.blaise.specto.Visometry;
+import org.bm.blaise.specto.VisometryProcessor;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.

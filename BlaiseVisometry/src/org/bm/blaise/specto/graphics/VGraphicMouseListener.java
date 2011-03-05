@@ -3,7 +3,7 @@
  * Created Jan 12, 2011
  */
 
-package visometry.graphics;
+package org.bm.blaise.specto.graphics;
 
 import utils.RelativePointBean;
 import org.bm.blaise.graphics.GraphicMouseEvent;

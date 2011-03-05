@@ -3,7 +3,7 @@
  * Created on Nov 18, 2009
  */
 
-package coordinate;
+package org.bm.blaise.scio.coordinate;
 
 import org.bm.blaise.scio.coordinate.MinMaxBean;
 import org.bm.blaise.scio.coordinate.RealInterval;

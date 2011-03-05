@@ -3,12 +3,12 @@
  * Created on Jul 30, 2009
  */
 
-package visometry.plane;
+package org.bm.blaise.specto.plane;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import org.bm.blaise.scio.coordinate.RealInterval;
-import visometry.PlotComponent;
+import org.bm.blaise.specto.PlotComponent;
 
 /**
  * <p>
