@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphUtils;
-import scio.matrix.Matrices;
+import org.bm.blaise.scio.matrix.Matrices;
 
 /**
  * Implementation of the eigenvalue centrality calculation.
@@ -62,8 +62,8 @@ public class EigenCentrality implements NodeMetric<Double> {
         // estimate eigenvalue for testing purposes
         double[] div = new double[n];
         for (int i = 0; i < div.length; i++) div[i] = vecf2[i] / vecf1[i];
-        System.out.println("WARNING -- this algorithm currently only **approximates** eigenvalue centrality and should be fixed to compute exact eigenvalues!!");
-        System.out.println("  eigenCentrality.evals = " + Arrays.toString(div));
+        System.err.println("WARNING -- this algorithm currently only **approximates** eigenvalue centrality and should be fixed to compute exact eigenvalues!!");
+        System.err.println("  eigenCentrality.evals = " + Arrays.toString(div));
 
         Matrices.normalize(vecf2);
         for (int i = 0; i < n-1; i++)
