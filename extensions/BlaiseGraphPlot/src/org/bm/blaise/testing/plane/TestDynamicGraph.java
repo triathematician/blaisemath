@@ -11,8 +11,7 @@ import org.bm.blaise.scio.graph.layout.SpringLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.GraphManager;
 import org.bm.blaise.specto.plane.graph.PlaneGraphAdapter;
-import visometry.plane.PlanePlotComponent;
-import visometry.plottable.Plottable;
+import org.bm.blaise.specto.plottable.Plottable;
 
 /**
  *

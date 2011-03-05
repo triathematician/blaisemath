@@ -7,18 +7,16 @@ package org.bm.blaise.testing.plane;
 
 import data.propertysheet.PropertySheet;
 import data.propertysheet.editor.EditorRegistration;
-import graphics.renderer.BasicPointRenderer;
-import graphics.renderer.PointRenderer;
-import java.awt.Color;
+import org.bm.blaise.graphics.renderer.BasicPointRenderer;
+import org.bm.blaise.graphics.renderer.PointRenderer;
 import org.bm.blaise.scio.graph.GraphFactory;
 import org.bm.blaise.scio.graph.GraphFactory.PrimeNumberGraph;
 import org.bm.blaise.scio.graph.layout.SpringLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.specto.plane.graph.GraphManager;
 import org.bm.blaise.specto.plane.graph.PlaneGraphAdapter;
+import org.bm.blaise.specto.plottable.Plottable;
 import utils.MapGetter;
-import visometry.plane.PlanePlotComponent;
-import visometry.plottable.Plottable;
 
 /**
  *

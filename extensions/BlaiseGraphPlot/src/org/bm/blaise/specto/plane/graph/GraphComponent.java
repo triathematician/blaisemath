@@ -6,7 +6,7 @@
 package org.bm.blaise.specto.plane.graph;
 
 import org.bm.blaise.scio.graph.Graph;
-import visometry.plane.PlanePlotComponent;
+import org.bm.blaise.specto.plane.PlanePlotComponent;
 
 /**
  * Provides a view of a graph, using a <code>GraphManager</code> for positions/layout

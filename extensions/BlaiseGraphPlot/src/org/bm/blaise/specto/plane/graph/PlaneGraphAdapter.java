@@ -5,11 +5,12 @@
 
 package org.bm.blaise.specto.plane.graph;
 
+import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
+import org.bm.blaise.graphics.renderer.PointRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
+import org.bm.blaise.specto.plottable.VPointGraph;
 import java.util.HashSet;
 import java.util.Set;
-import graphics.renderer.BasicStrokeRenderer;
-import graphics.renderer.PointRenderer;
-import graphics.renderer.ShapeRenderer;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
@@ -28,7 +29,6 @@ import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.scio.graph.WeightedGraph;
 import utils.IndexedGetter;
 import utils.MapGetter;
-import visometry.plottable.VPointGraph;
 import static org.bm.blaise.specto.plane.graph.GraphManager.*;
 
 /**
