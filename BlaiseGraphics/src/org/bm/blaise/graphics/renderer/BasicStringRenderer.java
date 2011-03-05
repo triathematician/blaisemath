@@ -1,12 +1,10 @@
 /**
- * StringStyle.java
- * Created Sep 2009
+ * BasicStringRenderer.java
+ * Created Jan 22, 2011 absed on earlier <code>StringStyle.java</code>
  */
-package old.styles.verified;
+package org.bm.blaise.graphics.renderer;
 
-import old.styles.verified.AbstractPrimitiveStyle;
-import old.other.StyleMap;
-import old.styles.verified.GraphicString;
+import org.bm.blaise.graphics.GraphicVisibility;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,17 +12,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.bm.blaise.graphics.renderer.Anchor;
 
 /**
  * <p>
- *   <code>StringStyle</code> draws/colors textual elements.
- *   Initial development mimics standard CSS styling options.
+ *   BasicStringRenderer draws/colors textual elements.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Double>> {
+public class BasicStringRenderer implements StringRenderer {
     
     /** Color of the text. */
     Color color = Color.BLACK;    
@@ -32,26 +28,20 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     Font font;
     /** Stores font size. */
     transient Float fontSize = null;
-    /** Stores the anchor. */
+
+    /** Offset from main anchor point */
+    Point offset = new Point();
+    /** Stores the anchor for the text block. */
     Anchor anchor = Anchor.Southwest;
     
     /** Default constructor. */
-    public StringStyle() { }
-    /** Construct with anchor only */
-    public StringStyle(Anchor anchor) { setAnchor(anchor); }
-    /** Construct with color only */
-    public StringStyle(Color color) { setColor(color); }
-    /** Constructs with provided parameters. */
-    public StringStyle(Color color, float size) { setColor(color); setFontSize(size); }
-    /** Constructs with provided parameters. */
-    public StringStyle(Color color, Font font) { setColor(color); setFont(font); }
+    public BasicStringRenderer() { }
     /** Construct with color, size, anchor */
-    public StringStyle(Color color, float size, Anchor anchor) { setColor(color); setFontSize(size); setAnchor(anchor); }
+    public BasicStringRenderer(Color color, float size, Anchor anchor) { setColor(color); setFontSize(size); setAnchor(anchor); }
     /** Construct with provided parameters */
-    public StringStyle(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
+    public BasicStringRenderer(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
-    @Override public String toString() { return "StringStyle [" + font + "]"; }
-    public Class getTargetType() { return GraphicString.class; }
+    @Override public String toString() { return "BasicStringRenderer [" + font + "]"; }
 
     /** @return color of string */
     public Color getColor() { return color; }
@@ -65,23 +55,23 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
     public float getFontSize() { return font == null ? fontSize : font.getSize2D(); }
     /** @param size new font */
     public void setFontSize(float size) { fontSize = size; if (font != null) font = font.deriveFont(size); }
+
+    /** @return offset for the string */
+    public Point getOffset() { return offset; }
+    /** Sets offset for the string */
+    public void setOffset(Point off) { this.offset = off; }
     /** @return location of anchor point of string relative to provided coordinate */
     public Anchor getAnchor() { return anchor; }
     /** @param newValue new location of anchor point of string relative to provided coordinate */
     public void setAnchor(Anchor newValue) { anchor = newValue; }
 
-    public void draw(Graphics2D canvas, GraphicString<Point2D.Double> gs, StyleMap customizer) {
+    public void draw(Point2D point, String string, Graphics2D canvas, GraphicVisibility visibility) {
         canvas.setColor(color);
-        Rectangle2D.Double bounds = bounds(canvas, gs);
-        canvas.drawString(gs.string, (float) (bounds.x + gs.offset.x), (float) (bounds.y + gs.offset.y));
+        Rectangle2D bounds = bounds(point, string, canvas);
+        canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 
-    public boolean contained(Point point, GraphicString<Point2D.Double> primitive, Graphics2D canvas, StyleMap customizer) {
-        return bounds(canvas, primitive).contains(point);
-    }
-
-    /** @return boundaries of the string for the current settings */
-    Rectangle2D.Double bounds(Graphics2D canvas, GraphicString<Point2D.Double> gs) {
+    public Rectangle2D bounds(Point2D point, String string, Graphics2D canvas) {
         if (fontSize != null && font == null) {
             font = canvas.getFont().deriveFont((float) fontSize);
             canvas.setFont(font);
@@ -89,11 +79,11 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
             canvas.setFont(font);
 
         FontMetrics fm = canvas.getFontMetrics();
-        double width = fm.getStringBounds(gs.string, canvas).getWidth();
+        double width = fm.getStringBounds(string, canvas).getWidth();
         double height = fm.getAscent() - fm.getDescent();
 
         if (anchor == Anchor.Southwest)
-            return new Rectangle2D.Double(gs.anchor.getX(), gs.anchor.getY(), width, height);
+            return new Rectangle2D.Double(point.getX() + offset.x, point.getY() + offset.y-height, width, height);
 
         Point2D.Double shift = new Point2D.Double();
 
@@ -123,6 +113,6 @@ public class StringStyle extends AbstractPrimitiveStyle<GraphicString<Point2D.Do
                 break;
         }
 
-        return new Rectangle2D.Double(gs.anchor.getX() + shift.x, gs.anchor.getY() + shift.y, width, height);
+        return new Rectangle2D.Double(point.getX() + offset.x + shift.x, point.getY() + offset.y + shift.y-height, width, height);
     }
 }

@@ -13,8 +13,8 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import graphics.renderer.ShapeRenderer;
-import static graphics.renderer.StyleUtils.*;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
+import static org.bm.blaise.graphics.renderer.StyleUtils.*;
 
 /**
  * Contains basic feature support for a stroke and a color setting, for use with

@@ -12,8 +12,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import graphics.renderer.Anchor;
-import graphics.renderer.ShapeLibrary;
+import org.bm.blaise.graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.ShapeLibrary;
 
 /**
  * Draws a point that comes along with a radius and a label.

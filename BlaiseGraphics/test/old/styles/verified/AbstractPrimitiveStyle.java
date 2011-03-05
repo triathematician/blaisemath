@@ -6,7 +6,7 @@
 package old.styles.verified;
 
 import old.other.StyleMap;
-import graphics.renderer.ShapeRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Collections;

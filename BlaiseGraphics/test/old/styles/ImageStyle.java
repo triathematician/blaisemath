@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.Anchor;
 
 /**
  * Draws an image on a canvas

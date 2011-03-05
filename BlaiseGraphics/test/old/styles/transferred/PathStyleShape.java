@@ -6,7 +6,7 @@
 package old.styles.transferred;
 
 import old.styles.verified.AbstractPathStyle;
-import graphics.renderer.ShapeRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

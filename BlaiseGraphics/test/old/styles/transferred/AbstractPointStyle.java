@@ -6,12 +6,12 @@
 package old.styles.transferred;
 
 import old.other.StyleMap;
-import graphics.renderer.ShapeRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.Map;
-import graphics.renderer.ShapeLibrary;
-import static graphics.renderer.StyleUtils.*;
+import org.bm.blaise.graphics.renderer.ShapeLibrary;
+import static org.bm.blaise.graphics.renderer.StyleUtils.*;
 
 /**
  * <p>

@@ -1,0 +1,40 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>graphics package</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+      <p>
+        The <code>graphics</code> library is for managing and drawing a lot of shapes
+        on a <code>Graphics2d</code> canvas, and providing some <i>light</i> interactivity
+        (particularly mouse event handling).
+      </p>
+      <h1>Design</h1>
+      <p>
+          <code>ShapeComponent</code> is the top-level swing component, and works primarily
+          with two classes: a <code>ShapeCache</code> and a <code>ShapeCacheRenderer</code>.
+          As might be expected, the first is responsible for storing the shapes and the
+          second for drawing the shapes. However, most of the stylistic information for
+          the shapes is stored within the cache itself; the renderer is available if this
+          default styling (or the default draw order of shapes specified by the cache) needs
+          to be overridden in some way.
+      </p>
+      <p>
+          Shapes within the <code>ShapeCache</code> are stored as a <code>ShapeEntry</code>, which
+          is comprised of (i) the shape itself, (ii) a renderer for that shape, (iii) a parent for
+          that shape, and (iv) visibility status (<code>ShapeVisibility</code>).
+      </p>
+      <p>
+          The <code>ShapeCache</code> maintains the shapes that are to be drawn, including both
+          the shapes themselves and the order in which they are drawn. The cache also listens to
+          mouse events from the <code>ShapeComponent</code>, which it passes along as a
+          <code>ShapeMouseEvent</code> to the top-most <code>ShapeEntry</code> (in terms of draw
+          order) whose parent is a <code>ShapeMouseListener</code>.
+      </p>
+  </body>
+</html>

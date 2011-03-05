@@ -11,8 +11,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
-import graphics.renderer.Anchor;
-import graphics.renderer.ShapeLibrary;
+import org.bm.blaise.graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.ShapeLibrary;
 import old.styles.verified.PointStyle;
 import old.styles.verified.StringStyle;
 

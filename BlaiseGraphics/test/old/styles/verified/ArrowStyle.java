@@ -5,7 +5,7 @@
 package old.styles.verified;
 
 import old.styles.verified.AbstractPathStyle;
-import graphics.renderer.ShapeRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,7 +16,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import static graphics.renderer.StyleUtils.*;
+import static org.bm.blaise.graphics.renderer.StyleUtils.*;
 
 /**
  * <p>

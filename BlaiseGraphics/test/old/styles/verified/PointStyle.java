@@ -5,7 +5,7 @@
 package old.styles.verified;
 
 import old.styles.transferred.AbstractPointStyle;
-import graphics.renderer.ShapeRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -13,7 +13,7 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import graphics.renderer.ShapeLibrary;
+import org.bm.blaise.graphics.renderer.ShapeLibrary;
 
 /**
  * <p>

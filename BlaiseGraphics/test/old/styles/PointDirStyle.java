@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import static graphics.renderer.StyleUtils.*;
+import static org.bm.blaise.graphics.renderer.StyleUtils.*;
 
 /**
  * Displays an anchor point together with a direction. Also supports a scaling parameter that

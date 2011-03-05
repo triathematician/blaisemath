@@ -20,7 +20,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.Anchor;
 
 /**
  * <p>
