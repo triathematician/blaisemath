@@ -6,8 +6,6 @@ package visometry;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import javax.swing.Action;
-import scio.coordinate.Domain;
 import util.ChangeBroadcaster;
 
 /**
@@ -63,13 +61,13 @@ public interface Visometry<C> extends ChangeBroadcaster {
      * @param coordinate the local coordinate
      * @return a point within the window
      */
-    public Point2D.Double getWindowPointOf(C coordinate);
+    public Point2D.Double toWindow(C coordinate);
 
     /**
      * Converts a window point to a local coordinate.
      * @param point the window point
      * @return an underlying coordinate
      */
-    public C getCoordinateOf(Point2D point);
+    public C toLocal(Point2D point);
 
 }

@@ -1,29 +1,48 @@
-/**
- * VPoint.java
- * Created on Sep 23, 2009
+/*
+ * VAbstractPoint.java
+ * Created Apr 12, 2010
  */
 
 package visometry.plottable;
 
-import primitive.style.PointLabeledStyle;
+import java.awt.geom.Point2D;
+import utils.RelativePointBean;
+import visometry.graphics.VPointEntry;
 
 /**
- * <p>
- *   <code>VPoint</code> is a class for points that are displayed
- *   on the plot.
- * </p>
+ * A point displayed on a window, w/ support for dragging
+ * (supported by default in <code>VPointEntry</code>).
  *
  * @author Elisha Peterson
  */
-public class VPoint<C> extends VAbstractPoint<C> {
+public class VPoint<C> extends AbstractPlottable<C>
+        implements RelativePointBean<C> {
 
-    /** Construct to specified coordinate w/ default point style */
-    public VPoint(C value) {
-        super(value, new PointLabeledStyle());
+    protected C point;
+    protected VPointEntry en;
+
+    public VPoint(C point) {
+        this.point = point;
+        en = new VPointEntry<C>(this);
     }
 
-    /** @return current style of stroke for this plottable */
-    public PointLabeledStyle getStyle() { return (PointLabeledStyle) entry.style; }
-    /** Set current style of stroke for this plottable */
-    public void setStyle(PointLabeledStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public VPointEntry getGraphicEntry() { return en; }
+    public C getPoint() { return point; }
+    public void setPoint(C point) {
+        if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
+            this.point = point;
+            firePlottableChanged(false);
+        }
+    }
+
+    public void setPoint(C initial, C dragStart, C dragFinish) {
+        C newPoint;
+        if (initial instanceof Point2D) {
+            Point2D i = (Point2D) initial, s = (Point2D) dragStart, f = (Point2D) dragFinish;
+            newPoint = (C) new Point2D.Double(i.getX()+f.getX()-s.getX(), i.getY()+f.getY()-s.getY());
+        } else
+            newPoint = dragFinish;
+        setPoint(newPoint);
+    }
+
 }

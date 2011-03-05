@@ -11,10 +11,31 @@
 
 package gtest;
 
+import visometry.plottable.VPoint;
+import minimal.visometry.plottable.VPointSet;
+import minimal.visometry.plottable.VShape;
+import minimal.visometry.plottable.VPath;
+import later.visometry.plottable.VConstrainedPoint;
+import later.visometry.plottable.VLine;
+import later.visometry.plottable.VRay;
+import later.visometry.plottable.VSegment;
+import later.visometry.plottable.VClock;
+import later.visometry.plottable.VDimensionHandle;
+import minimal.visometry.plane.PlaneFunctionGraph;
+import minimal.visometry.plane.PlaneGrid;
+import minimal.visometry.plane.PlaneRectangle;
+import minimal.visometry.plane.PlaneAxes;
+import later.visometry.plane.PlanePolarGrid;
+import later.visometry.plane.PlaneParametricArea;
+import later.visometry.plane.PlaneSurfaceFunction;
+import later.visometry.plane.PlaneParametricCurve;
+import later.visometry.plane.PlaneEllipse;
+import later.visometry.plane.PlaneTriangle;
+import later.visometry.plane.PlaneVectorField;
 import data.propertysheet.PropertySheet;
 import java.awt.BorderLayout;
 import java.awt.geom.Point2D;
-import visometry.line.LinePlotComponent;
+import later.visometry.line.LinePlotComponent;
 import visometry.plane.*;
 import visometry.plottable.*;
 

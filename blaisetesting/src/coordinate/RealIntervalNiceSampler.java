@@ -5,6 +5,7 @@
 
 package coordinate;
 
+import org.bm.blaise.scio.coordinate.RealInterval;
 import scio.coordinate.*;
 import java.util.List;
 

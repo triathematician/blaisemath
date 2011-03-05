@@ -1,66 +1,39 @@
 /*
- * AbstractPlottable.java
- * Created on Sep 14, 2007, 7:49:09 AM
+ * Plottable.java
+ * Created Jan 18, 2011
  */
+
 package visometry.plottable;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import primitive.style.PrimitiveStyle;
-import visometry.VPrimitiveEntry;
+import visometry.graphics.VGraphicEntry;
 
 /**
- * <p>
- *   Base class for elements that can be drawn on a plot component.
- * </p>
- *
- * @param <C> the coordinate type of the plottable
- *
- * @author Elisha Peterson
+ * Common interface for plottable objects. This class has the minimal elements
+ * necessary to create a tree of plottables.
+ * 
+ * @author Elisha
  */
-public abstract class Plottable<C>
-        implements ChangeListener {
-
-    /** Stores the objects that will be redrawn... populated when the plottable "recomputes". */
-    protected ArrayList<VPrimitiveEntry> primitives = new ArrayList<VPrimitiveEntry>();
-    /** Parent group of the plottable, possibly null */
-    protected PlottableGroup parent = null;
-    /** Determines visibility of the plottable. */
-    protected boolean visible = true;
-    /** Flag indicating whether the plottable needs to be recomputed. The parent object
-     * will request that this object "recomputes" prior to grabbing its current set of primitives.
-     * If false, the parent will assume that no computation is necessary and may used
-     * a cached version of the primitives. */
-    transient protected boolean needsComputation = true;
-    /** Flag indicating whether the plottable needs to be repainted. */
-    transient protected boolean needsRepaint = true;
+public interface Plottable<C> {
 
     /**
-     * Default constructor
+     * Generate or provide a graphic entry that can be drawn. This may be either
+     * a single entry or a composite entry with lots of elements.
+     * @return graphic entry associated with the plottable
      */
-    public Plottable() {
-    }
+    public VGraphicEntry getGraphicEntry();
 
-    /** 
-     * Default constructor uses a parent group for construction.
-     * @parent the parent group of the plottable
-     */
-    public Plottable(PlottableGroup parent) {
-        this.parent = parent;
-    }
+    /** @return parent object of the plottable */
+    public PlottableGroup<C> getParent();
+    /** Set parent object of the plottable */
+    public void setParent(PlottableGroup<C> parent);
 
-    /** @return current parent of this plottable */
-    public PlottableGroup getParent() { return parent; }
-    /** Sets current parent of this plottable */
-    public void setParent(PlottableGroup par) { if (parent != par) { parent = par; firePlottableChanged(); } }
+//    /** @return the visibility status of the shape(s) */
+//    public GraphicVisibility getVisibility();
+//    /** Sets the visibility status of the shape */
+//    public void setVisibility(GraphicVisibility vis);
 
-    /** @return visibility status of plottable */
-    public boolean isVisible() { return visible; }
-    /** Sets visibility status of plottable */
-    public void setVisible(boolean newValue) { if (visible != newValue) { visible = newValue; firePlottableChanged(); } }
-
+    /** @return true if the plottable needs to be recomputed */
+    public boolean isUncomputed();
     /**
      * <p>
      * This method is called during the drawing process before any "local" primitive elements are converted into "window" primitive elements.
@@ -75,59 +48,6 @@ public abstract class Plottable<C>
      * needs to be recomputed, and this is where that computation should be done.
      * </p>
      */
-    protected void recompute() { needsComputation = false; }
-
-    /**
-     * Adds a primitive as an object/style pairing
-     * @param object primitive object
-     * @param style style associated with the object (null directs renderer to use default style)
-     */
-    protected void addPrimitive(Object object, PrimitiveStyle style) {
-        primitives.add(new VPrimitiveEntry(object, style));
-    }
-
-    /**
-     * Adds a primitive to the list of primitives.
-     * @param primitives one or more primitives
-     */
-    protected void addPrimitive(VPrimitiveEntry... vpes) {
-        for (VPrimitiveEntry vpe : vpes)
-            primitives.add(vpe);
-    }
-
-    /**
-     * Return primitives associated with the plottable.
-     * @return list of primitive objects represent the visualization of the plottable (in local coordinates)
-     */
-    protected List<VPrimitiveEntry> getPrimitives() {
-        return primitives;
-    }
-
-    //
-    // CHANGE EVENT HANDLING
-    //
-
-    /**
-     * Handles a change event. The event is <b>assumed</b> to change the visualization in some way, and so
-     * the net result is to alter the appropriate flag and to notify the parent.
-     * @param e the change event
-     */
-    public void stateChanged(ChangeEvent e) {
-        firePlottableChanged();
-    }
-
-    /** Fires a notification to the parent object that the plottable has changed in some way. */
-    protected void firePlottableChanged() {
-        needsComputation = true;
-        needsRepaint = true;
-        if (parent != null)
-            parent.plottableChanged(this);
-    }
-
-    /** Fires a notification to the parent object that the visual style of the plottable has changed in some way. */
-    protected void firePlottableStyleChanged() {
-        needsRepaint = true;
-        if (parent != null)
-            parent.plottableStyleChanged(this);
-    }
+    public void recompute();
+    
 }

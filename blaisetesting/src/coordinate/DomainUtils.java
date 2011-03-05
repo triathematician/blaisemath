@@ -5,7 +5,7 @@
 
 package coordinate;
 
-import scio.coordinate.RealInterval;
+import org.bm.blaise.scio.coordinate.RealInterval;
 
 /**
  * Utilities for working with domains.

@@ -1,50 +1,57 @@
 /**
  * VSegment.java
- * Created on Apr 8, 2010
+ * Created Jan 29, 2011
  */
-
 package visometry.plottable;
 
-import java.awt.Color;
-import primitive.style.PathStylePoints;
-import primitive.style.PointLabeledStyle;
-import visometry.VMouseDragListener;
+import org.bm.blaise.graphics.renderer.PointRenderer;
+import org.bm.blaise.graphics.renderer.ShapeRenderer;
+import utils.RelativePointBean;
+import visometry.graphics.VCompositeGraphicEntry;
+import visometry.graphics.VGraphicEntry;
+import visometry.graphics.VSegmentEntry;
 
 /**
- * <p>
- *   <code>VSegment</code> displays a segment between two points. It is dynamic, allowing
- *   the points to be moved around.
- * </p>
- *
- * @author Elisha Peterson
+ * Draws a pair of (draggable) points and the edge between them
+ * @param<C> base coordinate system
+ * @author Elisha
  */
-public class VSegment<C> extends VAbstractTwoPoint<C>
-        implements VMouseDragListener<C> {
-    
-    /** Style for points. */
-    PointLabeledStyle pointStyle;
+public class VSegment<C> extends VPointSet<C> {
 
-    /** Construct to specified coordinates */
-    public VSegment(C... values) {
-        super(values, new PointLabeledStyle(), new PathStylePoints(new Color(64, 0, 0)));
-    }
+    VCompositeGraphicEntry comp;
+    VSegmentEntry eEntry;
 
-    /** @return current style of stroke for this plottable */
-    public PathStylePoints getStrokeStyle() { return (PathStylePoints) entrySeg.style; }
-    /** Set current style of stroke for this plottable */
-    public void setStrokeStyle(PathStylePoints newValue) { if (entrySeg.style != newValue) { entrySeg.style = newValue; firePlottableStyleChanged(); } }
+    private static <C> C[] toArr(C... pts) { return pts; }
 
-    /** @return true if points at vertices of polygon are visible */
-    public boolean isPointsVisible() { return entryP1.visible; }
-    /** Sets visiblity of the vertices. */
-    public void setPointsVisible(boolean value) { 
-        if (entryP1.visible != value) { entryP1.visible = entryP2.visible = value; firePlottableStyleChanged();
+    public VSegment(C point1, C point2) { super(toArr(point1, point2)); }
+    public VSegment(C point1, C point2, PointRenderer rend) { super(toArr(point1, point2), rend); }
+
+    @Override
+    public VGraphicEntry getGraphicEntry() {
+        if (comp == null) {
+            comp = new VCompositeGraphicEntry();
+            if (eEntry == null) {
+                // edge entry is dynamic and updates automatically based on the point positions
+                eEntry = new VSegmentEntry(
+                        new RelativePointBean<C>() { public C getPoint() { return point[0]; }
+                            public void setPoint(C point) {}
+                            public void setPoint(C initial, C dragStart, C dragFinish) {} },
+                        new RelativePointBean<C>() { public C getPoint() { return point[1]; }
+                            public void setPoint(C point) {}
+                            public void setPoint(C initial, C dragStart, C dragFinish) {} }
+                        );
+            }
+            comp.addEntry(eEntry);
+            comp.addEntry(super.getGraphicEntry());
         }
+        return comp;
     }
 
-    /** @return current style of stroke for this plottable */
-    public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) entryP1.style; }
-    /** Set current style of stroke for this plottable */
-    public void setPointStyle(PointLabeledStyle newValue) { if (entryP1.style != newValue) { entryP1.style = newValue; entryP2.style = newValue; firePlottableStyleChanged(); } }
+    //
+    // DELEGATE PROPERTIES
+    //
+
+    public ShapeRenderer getEdgeRenderer() { return eEntry == null ? null : eEntry.getRenderer(); }
+    public void setEdgeRenderer(ShapeRenderer r) { eEntry.setRenderer(r); }
 
 }

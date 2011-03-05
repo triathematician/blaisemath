@@ -11,6 +11,12 @@
 
 package gtest;
 
+import later.visometry.space.SpacePlotComponent;
+import later.visometry.space.SpaceAxes;
+import later.visometry.space.SpaceVectorField;
+import later.visometry.space.SpaceBox;
+import later.visometry.space.SpaceParametricCurve;
+import later.visometry.space.SpaceFunctionGraph;
 import data.propertysheet.PropertySheet;
 import visometry.space.*;
 

@@ -5,12 +5,9 @@
 
 package visometry.plane;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
-import scio.coordinate.RealInterval;
+import org.bm.blaise.scio.coordinate.RealInterval;
 import visometry.PlotComponent;
 
 /**
@@ -23,28 +20,29 @@ import visometry.PlotComponent;
  */
 public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
 
+    PlanePlotMouseHandler mouseListener;
+
     public PlanePlotComponent() {
-        super(new PlaneVisometry(), new PlaneProcessor());
+        super(new PlaneVisometry());
 
-        setPreferredSize(new java.awt.Dimension(400, 400));
+        PlaneVisometry pv = (PlaneVisometry) getVisometry();
 
-        defaultMouseListener = new PlanePlotMouseHandler((PlaneVisometry) visometry, this);
-        defaultMouseWheelListener = (MouseWheelListener) defaultMouseListener;
+        vCache.setDefaultMouseListener(mouseListener = new PlanePlotMouseHandler(pv, this));
+        addMouseWheelListener(mouseListener);
         
         // set up the default domains for the plot
-        PlaneVisometry pv = (PlaneVisometry) visometry;
-        pGroup.registerDomain("x", pv.getHorizontalDomain(), Double.class);
-        pGroup.registerDomain("y", pv.getVerticalDomain(), Double.class);
-        pGroup.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
-        pGroup.registerDomain("time", new RealInterval(0, 100), Double.class);
+        plottables.registerDomain("x", pv.getHorizontalDomain(), Double.class);
+        plottables.registerDomain("y", pv.getVerticalDomain(), Double.class);
+        plottables.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
+        plottables.registerDomain("time", new RealInterval(0, 100), Double.class);
+        
+        setPreferredSize(new java.awt.Dimension(400, 400));
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        super.paintComponent(g);
+    protected void renderOverlay(Graphics2D canvas) {
+        mouseListener.paint(canvas);
     }
-
 
     //
     // DELEGATE METHODS
@@ -59,7 +57,7 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
      * @param max2 second coordinate max
      */
     public void setDesiredRange(double min1, double min2, double max1, double max2) {
-        ((PlaneVisometry) visometry).setDesiredRange(min1, min2, max1, max2);
+        ((PlaneVisometry) getVisometry()).setDesiredRange(min1, min2, max1, max2);
     }
 
     /**
@@ -68,6 +66,6 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
      * @param ratio new aspect ratio
      */
     public void setAspectRatio(double ratio) {
-        ((PlaneVisometry) visometry).setAspectRatio(ratio);
+        ((PlaneVisometry) getVisometry()).setAspectRatio(ratio);
     }
 }

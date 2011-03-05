@@ -5,7 +5,7 @@
 
 package coordinate;
 
-import scio.coordinate.sample.SampleSet;
+import org.bm.blaise.scio.coordinate.sample.SampleSet;
 
 /**
  * <p>

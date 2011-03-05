@@ -7,9 +7,9 @@ package coordinate;
 import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import scio.coordinate.Domain;
-import scio.coordinate.MinMaxBean;
-import scio.random.RandomCoordinateGenerator;
+import org.bm.blaise.scio.coordinate.Domain;
+import org.bm.blaise.scio.coordinate.MinMaxBean;
+import org.bm.blaise.scio.random.RandomCoordinateGenerator;
 import util.ChangeBroadcaster;
 import util.DefaultChangeBroadcaster;
 

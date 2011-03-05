@@ -6,7 +6,7 @@
 package coordinate;
 
 import java.util.HashMap;
-import scio.coordinate.Domain;
+import org.bm.blaise.scio.coordinate.Domain;
 
 /**
  * Keeps track of a collection of domains identified by strings. Intended to be used

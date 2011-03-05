@@ -1,103 +1,92 @@
-/**
- * VPointSet.java
- * Created on Jul 30, 2009
+/*
+ * VAbstractPoint.java
+ * Created Apr 12, 2010
  */
 
 package visometry.plottable;
 
+import org.bm.blaise.graphics.renderer.BasicPointRenderer;
+import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import primitive.style.PointLabeledStyle;
-import visometry.VMouseDragListener;
-import visometry.VMouseInputListener;
+import utils.IndexedGetter;
+import utils.IndexedGetterSetter;
+import visometry.graphics.VGraphicEntry;
+import visometry.graphics.VPointSetEntry;
 
 /**
- * <p>
- *   <code>VPointSet</code> is a set of points in the visometry. Each point is
- *   displayed as a separate entity. Points may be dragged around the screen. If this
- *   is registered as a plot component's <i>mouse input listener</i>, then screen-clicks
- *   result in points being added to the plottable.
- * </p>
+ * Displays a set of points as specified in local coordinates. Points can be dragged by default
+ * (build into the <code>VPointSetEntry</code>).
+ *
  * @author Elisha Peterson
- * @seealso VPath
  */
-public class VPointSet<C> extends VAbstractPointArray<C>
-        implements VMouseDragListener<C>, VMouseInputListener<C> {
+public class VPointSet<C> extends AbstractPlottable<C>
+        implements IndexedGetterSetter.Relative<C> {
 
-    /**
-     * Construct with sequence of points
-     * @param values the points
-     */
-    public VPointSet(C... values) {
-        super(new PointLabeledStyle(), values);
-        entry.listener = this;
+    protected C[] point;
+    protected VPointSetEntry en;
+
+    public VPointSet(C[] point) {
+        this.point = point;
+        en = new VPointSetEntry<C>(this);
     }
 
-    @Override
-    public String toString() {
-        return "VPointSet " + Arrays.toString(points);
+    public VPointSet(C[] point, PointRenderer rend) {
+        this(point);
+        en.setRenderer(rend);
     }
 
-    /** @return current style of point for this plottable */
-    public PointLabeledStyle getPointStyle() { return (PointLabeledStyle) entry.style; }
-    /** Set current style of point for this plottable */
-    public void setPointStyle(PointLabeledStyle newValue) { if (entry.style != newValue) { entry.style = newValue; firePlottableStyleChanged(); } }
+    public VPointSet(C[] point, IndexedGetter<PointRenderer> custom) {
+        this(point);
+        en.setIndexedRenderer(custom);
+    }
 
+    public VGraphicEntry getGraphicEntry() { return en; }
 
-    //
-    // MOUSE DRAG METHODS
-    //
-
-    private transient int dragIndex = -1;
-    private transient C start = null, startDrag = null;
-
-    private static final boolean MOUSEVERBOSE = false;
-    private static final void verboseOut(String s, Object pt) { if (MOUSEVERBOSE) System.out.println("VPointSet: " + s + " @ " + pt); }
-
-    public void mouseEntered(Object source, C current) { verboseOut("mouseEntered", current); }
-    public void mouseExited(Object source, C current) { verboseOut("mouseExited", current); }
-    public void mouseMoved(Object source, C current) { verboseOut("mouseMoved", current); }
-    public void mouseDragInitiated(Object source, C start) { verboseOut("mouseDragInitiated", start);
-        dragIndex = entry.getActiveIndex();
-        if (dragIndex != -1) {
-            this.start = getPoint(dragIndex);
-            this.startDrag = start;
+    public synchronized int getSize() { return point.length; }
+    
+    public synchronized C getElement(int i) { return point[i]; }
+    public synchronized void setElement(int i, C point) {
+        if (!((this.point[i] == null && point == null) || (this.point[i] != null && this.point[i].equals(point)))) {
+            this.point[i] = point;
+            en.setUnconverted(true);
+            firePlottableChanged(true);
         }
     }
-    public void mouseDragged(Object source, C current) { verboseOut("mouseDragged", current);
-        if (dragIndex != -1) {
-            if (current instanceof Point2D && start instanceof Point2D) {
-                Point2D ps = (Point2D) start;
-                Point2D psd = (Point2D) startDrag;
-                Point2D pcd = (Point2D) current;
-                Point2D.Double relative = new Point2D.Double(
-                        ps.getX() + pcd.getX() - psd.getX(), ps.getY() + pcd.getY() - psd.getY()
-                        );
-                setPoint(dragIndex, (C) relative);
-            } else
-                setPoint(dragIndex, current);
-        }
+    public synchronized C[] getElement() { return point; }
+    public synchronized void setElement(C[] point) {
+        if (this.point != point)
+            this.point = point;
+        en.setUnconverted(true);
+        firePlottableChanged(true);
     }
-    public void mouseDragCompleted(Object source, C end) { verboseOut("mouseDragCompleted", end);
-        mouseDragged(source, end);
-        dragIndex = -1;
+
+    public synchronized void setElement(int i, C initial, C dragStart, C dragFinish) {
+        C newPoint;
+        if (initial instanceof Point2D) {
+            Point2D in = (Point2D) initial, s = (Point2D) dragStart, f = (Point2D) dragFinish;
+            newPoint = (C) new Point2D.Double(in.getX()+f.getX()-s.getX(), in.getY()+f.getY()-s.getY());
+        } else
+            newPoint = dragFinish;
+        setElement(i, newPoint);
     }
 
     //
-    // MOUSE INPUT METHODS
+    // DELEGATE PROPERTIES
     //
 
-    public void mouseClicked(C point) { verboseOut("i:mouseClicked", point);
-        // click adds a point to the array
-        C[] newArr = (C[]) Array.newInstance(point.getClass(), points.length + 1);
-        System.arraycopy(points, 0, newArr, 0, points.length);
-        newArr[points.length] = point;
-        setPoint(newArr);
+    public PointRenderer getPointRenderer() { 
+        if (en.getRenderer() == null)
+            en.setRenderer(new BasicPointRenderer());
+        return en.getRenderer();
     }
+    public void setPointRenderer(PointRenderer r) { en.setRenderer(r); }
 
-    public boolean handlesDragEvents() { return false; }
-    public void mouseDragInitiated(C start) { verboseOut("i:mouseDragInitiated", start); }
-    public void mouseDragged(C current) { verboseOut("i:mouseDragged", current); }
-    public void mouseDragCompleted(C end) { verboseOut("i:mouseDragCompleted", end); }
+    public IndexedGetter<PointRenderer> getIndexedPointRenderer() { return en.getIndexedRenderer(); }
+    public void setIndexedPointRenderer(IndexedGetter<PointRenderer> renderer) { en.setIndexedRenderer(renderer); }
+
+    public IndexedGetter<String> getTooltips() { return en.getTooltips(); }
+    public void setTooltips(IndexedGetter<String> tooltips) { en.setTooltips(tooltips); }
+
+    public IndexedGetter<String> getLabels() { return null; }
+    public void setLabels(IndexedGetter<String> labels) { }
 }

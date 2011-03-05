@@ -5,6 +5,8 @@
 
 package visometry.plane;
 
+import org.bm.blaise.graphics.GraphicVisibility;
+import org.bm.blaise.graphics.renderer.BasicShapeRenderer;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -17,8 +19,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import primitive.style.PathStyleShape;
-import primitive.style.ShapeStyle;
 import visometry.PaintsCanvas;
 
 /**
@@ -53,12 +53,12 @@ public class PlanePlotMouseHandler
 
     /** Hint box for zooming */
     transient Rectangle2D.Double zoomBox;
-    /** Style of zoom box */
-    final static ShapeStyle zoomBoxStyle = new ShapeStyle(new PathStyleShape(new Color(255, 128, 128, 128), 2f), new Color(255, 128, 128, 128));
+    /** Renderer for zoom box */
+    final static BasicShapeRenderer rend = new BasicShapeRenderer(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
 
     public void paint(Graphics2D canvas) {
         if (zoomBox != null)
-            zoomBoxStyle.draw(canvas, zoomBox);
+            rend.draw(zoomBox, canvas, GraphicVisibility.Regular);
     }
 
     //
@@ -75,6 +75,7 @@ public class PlanePlotMouseHandler
     transient protected Point2D.Double oldMax = null;
 
     public void mousePressed(MouseEvent e) {
+        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
         pressedAt = e.getPoint();
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (mode.equals("Alt+Button1")) { // rectangle resize mode
@@ -86,7 +87,9 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseDragged(MouseEvent e) {
+        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
         if (pressedAt != null) {
+            try {
             Point winPt = e.getPoint();
             if (mode.equals("Alt+Button1")) { // rectangle resize mode (ensure positive values)
                 if (winPt.x < pressedAt.x) {
@@ -112,8 +115,8 @@ public class PlanePlotMouseHandler
                     else
                         winPt.x = pressedAt.x;
                 }
-                Point2D.Double newC = vis.getCoordinateOf(winPt); // new coordinate in current visometry
-                Point2D.Double oldC = vis.getCoordinateOf(pressedAt); // original coordinate in current visometry
+                Point2D.Double newC = vis.toLocal(winPt); // new coordinate in current visometry
+                Point2D.Double oldC = vis.toLocal(pressedAt); // original coordinate in current visometry
 
                 vis.setDesiredRange(
                         oldMin.x - newC.x + oldC.x, oldMin.y - newC.y + oldC.y,
@@ -122,7 +125,7 @@ public class PlanePlotMouseHandler
                 // second pass to snap to boundaries of window
                 if (SNAP_ENABLED) {
                     final int SNAP_RANGE = 30;
-                    Point2D.Double winOrigin = vis.getWindowPointOf(new Point2D.Double(0, 0)); // current location of origin
+                    Point2D.Double winOrigin = vis.toWindow(new Point2D.Double(0, 0)); // current location of origin
                     RectangularShape win = vis.getWindowBounds();
                     double shiftX = 0, shiftY = 0;
                     if (winOrigin.x >= win.getMinX() && winOrigin.x <= win.getMinX() + SNAP_RANGE)
@@ -142,9 +145,13 @@ public class PlanePlotMouseHandler
                     }
                 }
             }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
     public void mouseReleased(MouseEvent e) {
+        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
         mouseDragged(e);
         if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
             zoomBoxAnimated(vis, zoomBox);
@@ -158,6 +165,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseMoved(MouseEvent e) {
+        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
         if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt"))
             plot.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         else
@@ -165,6 +173,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
+        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
         Point2D.Double mouseLoc = new Point2D.Double(e.getPoint().x, e.getPoint().y);
 
         // ensure the point is within the window
@@ -174,7 +183,7 @@ public class PlanePlotMouseHandler
         mouseLoc.y = Math.max(mouseLoc.y, bounds.getMinY());
         mouseLoc.y = Math.min(mouseLoc.y, bounds.getMaxY());
 
-        zoomPoint(vis, vis.getCoordinateOf(mouseLoc),
+        zoomPoint(vis, vis.toLocal(mouseLoc),
                 (e.getWheelRotation() > 0) ? 1.05 : 0.95);
     }
 
@@ -247,8 +256,8 @@ public class PlanePlotMouseHandler
      */
     public static void zoomBoxAnimated(PlaneVisometry vis, Rectangle2D winBoundary) {
         zoomCoordBoxAnimated(vis,
-                vis.getCoordinateOf(new Point2D.Double(winBoundary.getMinX(), winBoundary.getMinY())),
-                vis.getCoordinateOf(new Point2D.Double(winBoundary.getMaxX(), winBoundary.getMaxY())) );
+                vis.toLocal(new Point2D.Double(winBoundary.getMinX(), winBoundary.getMinY())),
+                vis.toLocal(new Point2D.Double(winBoundary.getMaxX(), winBoundary.getMaxY())) );
     }
 
     /**

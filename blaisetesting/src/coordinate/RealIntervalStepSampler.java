@@ -5,12 +5,13 @@
 
 package coordinate;
 
+import org.bm.blaise.scio.coordinate.RealInterval;
 import javax.swing.event.ChangeEvent;
-import scio.coordinate.*;
+import org.bm.blaise.scio.coordinate.*;
 import java.util.AbstractList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import scio.coordinate.sample.SampleSet;
+import org.bm.blaise.scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
 import util.DefaultChangeBroadcaster;
 

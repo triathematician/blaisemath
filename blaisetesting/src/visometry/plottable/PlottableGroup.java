@@ -7,35 +7,40 @@ package visometry.plottable;
 import coordinate.DomainContext;
 import coordinate.DomainHint;
 import coordinate.ScreenSampleDomainProvider;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import scio.coordinate.Domain;
-import scio.coordinate.sample.SampleSet;
-import visometry.VPrimitiveEntry;
+import org.bm.blaise.scio.coordinate.Domain;
+import org.bm.blaise.scio.coordinate.sample.SampleSet;
+import visometry.graphics.VCompositeGraphicEntry;
+import visometry.graphics.VGraphicEntry;
 
 /**
  * <p>
- *  Represents a group of plottables.
+ *  Represents a group of plottables. Maintains a reference to the graphical entries
+ *  corresponding to the plottables, which can be drawn on a graphics canvas.
+ * </p>
+ * <p>
+ *  Generating the actual graphic entries occurs after the plottables are recomputed.
  * </p>
  *
  * @param <C> class representing the underlying coordinate
  *
  * @author Elisha Peterson
  */
-public class PlottableGroup<C> extends DynamicPlottable<C>
-        implements Iterable<VPrimitiveEntry> {
+public final class PlottableGroup<C> extends AbstractPlottable<C> {
+//        implements Iterable<VGraphicEntry> {
 
     /** Stores the elements in the group. */
     protected ArrayList<Plottable<C>> plottables;
+    /** The graphic entry container for the plottables */
+    protected VCompositeGraphicEntry<C> compositeEntry;
 
     /**
      * Constructs, initializing list of plottables.
      */
     public PlottableGroup() {
         plottables = new ArrayList<Plottable<C>>();
+        compositeEntry = new VCompositeGraphicEntry<C>();
     }
 
     @Override
@@ -44,29 +49,40 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
     }
 
     //
+    // PROPERTIES
+    //
+
+    public VCompositeGraphicEntry getGraphicEntry() {
+        return compositeEntry;
+    }
+
+    //
     // INDEXED BEAN PROPERTIES
     //
 
-    public Plottable[] getPlottableArray() {
-        if (plottables == null) {
-            return (Plottable[]) Array.newInstance(Plottable.class, 0);
-        }
-        return plottables.toArray( (Plottable[]) Array.newInstance(Plottable.class, 0) );
+    public Plottable[] getPlottable() {
+        return plottables.toArray(new Plottable[]{});
     }
-
-    public void setPlottableArray(Plottable[] pl) {
-        plottables.clear();
-        for (int i = 0; i < pl.length; i++) {
-            add(pl[i]);
-        }
-    }
-
-    public Plottable getPlottableArray(int i) {
+    public Plottable getPlottable(int i) {
         return plottables.get(i);
     }
 
-    public void setPlottableArray(int i, Plottable p) {
+    public void setPlottable(Plottable[] pl) {
+        plottables.clear();
+        for (int i = 0; i < pl.length; i++) {
+            if (plottables.get(i) != null)
+                plottables.get(i).setParent(null);
+            pl[i].setParent(this);
+            add(pl[i]);
+        }
+        fireStateChanged();
+    }
+    public void setPlottable(int i, Plottable p) {
+        if (plottables.get(i) != null)
+            plottables.get(i).setParent(null);
         plottables.set(i, p);
+        p.setParent(this);
+        fireStateChanged();
     }
 
     //
@@ -78,7 +94,8 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      */
     public void clear() {
         for (Plottable p : plottables)
-            p.parent = null;
+            if (p.getParent() == this)
+                p.setParent(null);
         plottables.clear();
         fireStateChanged();
     }
@@ -91,7 +108,7 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
     public void add(Plottable<C> plottable) {
         if (!plottables.contains(plottable))
             plottables.add(plottable);
-        plottable.parent = this;
+        plottable.setParent(this);
         fireStateChanged();
     }
 
@@ -99,7 +116,7 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
         if (plottables.contains(plottable) && plottables.indexOf(plottable) != index)
             plottables.remove(plottable);
         plottables.add(index, plottable);
-        plottable.parent = this;
+        plottable.setParent(this);
         fireStateChanged();
     }
 
@@ -111,7 +128,7 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
         for (Plottable p : pp) {
             if (!plottables.contains(p))
                 plottables.add(p);
-            p.parent = this;
+            p.setParent(this);
         }
         fireStateChanged();
     }
@@ -123,7 +140,8 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      */
     public boolean remove(Plottable<C> plottable) {
         if (plottables.remove(plottable)) {
-            plottable.parent = null;
+            if (plottable.getParent() == this)
+                plottable.setParent(null);
             fireStateChanged();
             return true;
         }
@@ -135,54 +153,54 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
     //
 
     @Override
-    public void recompute() {
+    public boolean isUncomputed() {
+        if (needsComputation)
+            return true;
         for (Plottable p : plottables)
-            if (p.needsComputation)
-                p.recompute();
-        needsComputation = false;
+            if (p.isUncomputed())
+                return true;
+        return false;
     }
 
     @Override
-    protected List<VPrimitiveEntry> getPrimitives() {
-        throw new UnsupportedOperationException("getPrimitives not supported for PlottableGroup... iterate over entries instead");
+    public synchronized void recompute() {
+        boolean change = false;
+        for (Plottable p : plottables) {
+            if (p.isUncomputed()) {
+                p.recompute();
+                change = true;
+            }
+        }
+        if (change)
+            updateEntries();
+        needsComputation = false;
     }
 
-    //
-    // ITERATION METHODS: PlottableGroup AS AN ITERATION OVER VPrimitiveEntry's
-    //
+    public synchronized void recomputeAll() {
+        for (Plottable p : plottables) {
+            if (p instanceof PlottableGroup)
+                ((PlottableGroup)p).recomputeAll();
+            else
+                p.recompute();
+        }
+        updateEntries();
+        needsComputation = false;
+    }
 
-    transient int curIndex; // currently iterating plottable
-    transient Plottable curPlottable; // currently iterating plottable
-    transient Iterator<VPrimitiveEntry> pgi; // current iterator
+    protected void updateEntries() {
+        ArrayList<VGraphicEntry<C>> oldEntries = new ArrayList<VGraphicEntry<C>>(compositeEntry.getEntries()),
+                remove = new ArrayList<VGraphicEntry<C>>(oldEntries);
 
-    /** @return an iterator over the entries in the group, returning only those plottables that are visible */
-    public Iterator<VPrimitiveEntry> iterator() {
-        curIndex = -1;
-        return new Iterator<VPrimitiveEntry>() {
-            public boolean hasNext() {
-                if (curIndex >= plottables.size())
-                    return false;
-                // loop advances to the next VISIBLE plottable with an entry
-                while (pgi == null || !pgi.hasNext()) {
-                    do {
-                        curIndex++;
-                        if (curIndex == plottables.size())
-                            return false;
-                        curPlottable = plottables.get(curIndex);
-                    } while (!curPlottable.isVisible());
-                    pgi = curPlottable instanceof PlottableGroup
-                            ? ((PlottableGroup) curPlottable).iterator()
-                            : curPlottable.getPrimitives().iterator();
-                }
-                return true;
-            }
-            public VPrimitiveEntry next() {
-                return pgi.next();
-            }
-            public void remove() {
-                throw new UnsupportedOperationException("Not supported.");
-            }
-        };
+        for (Plottable p : plottables) {
+            VGraphicEntry<C> en = p.getGraphicEntry();
+            if (oldEntries.contains(en))
+                remove.remove(en);
+            else
+                compositeEntry.addEntry(en);
+        }
+
+        for (VGraphicEntry<C> en : remove)
+            compositeEntry.removeEntry(en);
     }
 
     //
@@ -197,8 +215,7 @@ public class PlottableGroup<C> extends DynamicPlottable<C>
      * @param p the plottable
      */
     public void plottableChanged(Plottable p) {
-        // the DynamicPlottable superclass notifies the parent and also fires a change event to interested listeners
-        firePlottableChanged();
+        firePlottableChanged(p.isUncomputed());
     }
 
     /**

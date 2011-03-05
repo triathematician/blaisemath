@@ -6,7 +6,7 @@
 package coordinate;
 
 import javax.swing.event.ChangeListener;
-import scio.coordinate.RealInterval;
+import org.bm.blaise.scio.coordinate.RealInterval;
 import util.ChangeBroadcaster;
 import util.DefaultChangeBroadcaster;
 

@@ -12,7 +12,7 @@ import coordinate.RealIntervalStepSampler;
 import coordinate.SquareDomainBroadcaster;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
-import scio.coordinate.sample.SampleSet;
+import org.bm.blaise.scio.coordinate.sample.SampleSet;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
@@ -218,7 +218,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         changer.fireStateChanged();
     }
 
-    public Point2D.Double getWindowPointOf(Point2D.Double coordinate) {
+    public Point2D.Double toWindow(Point2D.Double coordinate) {
         if (at == null)
             throw new IllegalStateException();
         if (Double.isInfinite(coordinate.x))
@@ -241,7 +241,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     }
 
 
-    public Point2D.Double getCoordinateOf(Point2D point) {
+    public Point2D.Double toLocal(Point2D point) {
         if (at == null)
             throw new IllegalStateException();
         try {

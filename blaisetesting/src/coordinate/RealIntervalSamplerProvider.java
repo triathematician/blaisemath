@@ -7,7 +7,7 @@ package coordinate;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import scio.coordinate.sample.SampleSet;
+import org.bm.blaise.scio.coordinate.sample.SampleSet;
 import util.ChangeBroadcaster;
 
 /**

@@ -14,12 +14,12 @@ package gtest;
 import data.propertysheet.PropertySheet;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import primitive.style.PathStylePoints;
-import visometry.line.LineFunction;
-import visometry.line.LinePlotComponent;
-import visometry.line.TimelinePlot;
+import primitive.style.temp.PathStylePoints;
+import later.visometry.line.LineFunction;
+import later.visometry.line.LinePlotComponent;
+import later.visometry.line.TimelinePlot;
 import visometry.plottable.VPoint;
-import visometry.plottable.VSegment;
+import later.visometry.plottable.VSegment;
 
 /**
  *
