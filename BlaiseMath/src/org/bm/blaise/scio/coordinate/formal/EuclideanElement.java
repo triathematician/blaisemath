@@ -5,8 +5,6 @@
 
 package org.bm.blaise.scio.coordinate.formal;
 
-import scio.coordinate.*;
-
 /**
  * <p>
  *   Necessary methods for defining an element of Euclidean space (ordered n-vector of doubles). There are no restrictions
