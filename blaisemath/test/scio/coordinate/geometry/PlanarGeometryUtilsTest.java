@@ -5,11 +5,12 @@
 
 package scio.coordinate.geometry;
 
+import org.bm.blaise.scio.coordinate.utils.PlanarMathUtils;
 import scio.coordinate.utils.*;
 import java.awt.geom.Point2D.Double;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static scio.coordinate.geometry.PlanarGeometryUtils.*;
+import static org.bm.blaise.scio.coordinate.geometry.PlanarGeometryUtils.*;
 import static scio.coordinate.utils.PlanarMathUtilsTest.*;
 
 /**

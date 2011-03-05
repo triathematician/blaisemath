@@ -5,8 +5,9 @@
 
 package scio.coordinate.utils;
 
+import org.bm.blaise.scio.coordinate.Point3D;
 import scio.coordinate.*;
-import scio.coordinate.utils.SpacialMathUtils;
+import org.bm.blaise.scio.coordinate.utils.SpacialMathUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

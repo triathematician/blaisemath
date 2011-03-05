@@ -5,6 +5,7 @@
 
 package scio.coordinate.utils;
 
+import org.bm.blaise.scio.coordinate.utils.BasicMathUtils;
 import java.awt.geom.Point2D;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -5,7 +5,7 @@
 
 package deprecated;
 
-import scio.coordinate.formal.EuclideanElement;
+import org.bm.blaise.scio.coordinate.formal.EuclideanElement;
 import scio.coordinate.*;
 
 

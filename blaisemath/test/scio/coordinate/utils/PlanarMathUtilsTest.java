@@ -4,13 +4,13 @@
  */
 package scio.coordinate.utils;
 
-import scio.coordinate.utils.PlanarMathUtils;
+import org.bm.blaise.scio.coordinate.utils.PlanarMathUtils;
 import java.awt.geom.Point2D.Double;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static scio.coordinate.utils.PlanarMathUtils.*;
+import static org.bm.blaise.scio.coordinate.utils.PlanarMathUtils.*;
 import static org.junit.Assert.*;
 
 /**

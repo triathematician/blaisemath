@@ -4,9 +4,9 @@
  */
 package deprecated;
 
-import scio.function.Function;
+import org.bm.blaise.scio.function.Function;
 import java.util.Vector;
-import scio.coordinate.formal.EuclideanElement;
+import org.bm.blaise.scio.coordinate.formal.EuclideanElement;
 
 /**
  * <p>
