@@ -8,6 +8,8 @@ package org.bm.blaise.specto.plottable;
 import org.bm.blaise.graphics.renderer.BasicPointRenderer;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
+import org.bm.blaise.graphics.renderer.BasicStringRenderer;
+import org.bm.blaise.graphics.renderer.StringRenderer;
 import org.bm.blaise.specto.graphics.VGraphicEntry;
 import org.bm.blaise.specto.graphics.VPointSetEntry;
 import utils.IndexedGetter;
@@ -69,10 +71,9 @@ public class VPointSet<C> extends AbstractPlottable<C>
             newPoint = dragFinish;
         setElement(i, newPoint);
     }
+    
 
-    //
-    // DELEGATE PROPERTIES
-    //
+// <editor-fold defaultstate="collapsed" desc="STYLE DELEGATES">
 
     public PointRenderer getPointRenderer() { 
         if (en.getRenderer() == null)
@@ -80,13 +81,21 @@ public class VPointSet<C> extends AbstractPlottable<C>
         return en.getRenderer();
     }
     public void setPointRenderer(PointRenderer r) { en.setRenderer(r); }
-
     public IndexedGetter<PointRenderer> getIndexedPointRenderer() { return en.getIndexedRenderer(); }
     public void setIndexedPointRenderer(IndexedGetter<PointRenderer> renderer) { en.setIndexedRenderer(renderer); }
 
     public IndexedGetter<String> getTooltips() { return en.getTooltips(); }
     public void setTooltips(IndexedGetter<String> tooltips) { en.setTooltips(tooltips); }
 
-    public IndexedGetter<String> getLabels() { return null; }
-    public void setLabels(IndexedGetter<String> labels) { }
+    public IndexedGetter<String> getLabels() { return en.getLabels(); }
+    public void setLabels(IndexedGetter<String> labels) { en.setLabels(labels); }
+    public StringRenderer getLabelRenderer() { 
+        if (en.getLabelRenderer() == null)
+            en.setLabelRenderer(new BasicStringRenderer());
+        return en.getLabelRenderer();
+    }
+    public void setLabelRenderer(StringRenderer r) { en.setLabelRenderer(r); }
+
+// </editor-fold>
+    
 }

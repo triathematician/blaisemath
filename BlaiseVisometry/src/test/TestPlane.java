@@ -18,7 +18,8 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
-import org.bm.blaise.specto.plane.PlanePlotComponent;
+import org.bm.blaise.graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.BasicStringRenderer;
 import org.bm.blaise.specto.plottable.VPoint;
 import org.bm.blaise.specto.plottable.VPointGraph;
 import org.bm.blaise.specto.plottable.VPointSet;
@@ -36,32 +37,37 @@ public class TestPlane extends javax.swing.JFrame {
     /** Creates new form TestPlane */
     public TestPlane() {
         initComponents();
-        PlanePlotComponent ppc = new PlanePlotComponent();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 50; i++) {
             ppc.add(new VPoint<Point2D.Double>(new Point2D.Double(Math.random(), Math.random())));
         }
 
-        final Point2D.Double[] arr = new Point2D.Double[100];
+        final Point2D.Double[] arr = new Point2D.Double[50];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = new Point2D.Double(-Math.random(), -Math.random());
         }
-        ppc.add(new VPointSet<Point2D.Double>(arr, new BasicPointRenderer().fill(Color.blue).stroke(Color.white).radius(3)));
+        VPointSet vps1 = new VPointSet<Point2D.Double>(arr, new BasicPointRenderer().fill(Color.blue).stroke(Color.white).radius(10));
+        vps1.setLabels(new IndexedGetter<String>(){
+            public int getSize() { return arr.length; }
+            public String getElement(int i) { return ""+i; }
+        });
+        vps1.setLabelRenderer(new BasicStringRenderer().color(Color.white).fontSize(10f).offset(0,0).anchor(Anchor.Center));
+        ppc.add(vps1);
 
-        final Point2D.Double[] arr2 = new Point2D.Double[100];
+        final Point2D.Double[] arr2 = new Point2D.Double[50];
         for (int i = 0; i < arr2.length; i++) {
             arr2[i] = new Point2D.Double(2-Math.random(), -Math.random());
         }
         ppc.add(new VPointSet<Point2D.Double>(arr2, new IndexedGetter<PointRenderer>() {
             public PointRenderer getElement(int i) { return new BasicPointRenderer()
-                    .fill(new Color((2*i) % 255, (7*i) % 255, (17*i) %255))
+                    .fill(new Color(255, (7*i) % 255, (17*i) %255))
                     .stroke(Color.red)
                     .radius(i % 10); }
             public void setElement(int i, PointRenderer point) { }
             public int getSize() { return arr2.length; }
         }));
 
-        final Point2D.Double[] arr3 = new Point2D.Double[500];
+        final Point2D.Double[] arr3 = new Point2D.Double[100];
         arr3[0] = new Point2D.Double(-1.0, 1.0);
         for (int i = 1; i < arr3.length; i++) {
             arr3[i] = new Point2D.Double(arr3[i-1].x + .02*Math.random(), arr3[i-1].y - .02*Math.random());
@@ -75,24 +81,24 @@ public class TestPlane extends javax.swing.JFrame {
         for (int i = 0; i < arr4.length; i++) {
             arr4[i] = new Point2D.Double(-Math.random(), 1+Math.random());
         }
-        int[][] arr4e = new int[200][2];
+        int[][] arr4e = new int[50][2];
         for (int i = 0; i < arr4e.length; i++) {
             arr4e[i] = new int[] { (int)(arr4.length*Math.random()), (int)(arr4.length*Math.random()) };
         }
         ppc.add(new VPointGraph<Point2D.Double>(arr4, arr4e, new IndexedGetter<PointRenderer>() {
             public PointRenderer getElement(int i) { return new BasicPointRenderer()
-                    .fill(new Color((2*i)%255, (7*i)%255, (17*i)%255, 128+(29*i)%127))
+                    .fill(new Color((2*i)%255, 255, (17*i)%255, 128+(29*i)%127))
                     .stroke(Color.red)
                     .radius(i % 10); }
             public void setElement(int i, PointRenderer point) { }
             public int getSize() { return arr2.length; }
         }));
 
-        final Point2D.Double[] arr5 = new Point2D.Double[100];
+        final Point2D.Double[] arr5 = new Point2D.Double[50];
         for (int i = 0; i < arr5.length; i++) {
             arr5[i] = new Point2D.Double(-1-Math.random(), Math.random());
         }
-        int[][] arr5e = new int[200][2];
+        int[][] arr5e = new int[50][2];
         Map<int[],BasicStrokeRenderer> arr5em = new HashMap<int[],BasicStrokeRenderer>();
         for (int i = 0; i < arr5e.length; i++) {
             arr5e[i] = new int[] { (int)(arr5.length*Math.random()), (int)(arr5.length*Math.random()) };
@@ -104,11 +110,15 @@ public class TestPlane extends javax.swing.JFrame {
         }
         VPointGraph vpg = new VPointGraph<Point2D.Double>(arr5, arr5e, new IndexedGetter<PointRenderer>() {
             public PointRenderer getElement(int i) { return new BasicPointRenderer()
-                    .fill(new Color((2*i) % 255, (7*i) % 255, (17*i) %255))
+                    .fill(new Color((2*i) % 255, (7*i) % 255, 255))
                     .stroke(Color.red)
                     .radius(i % 10); }
             public void setElement(int i, PointRenderer point) { }
-            public int getSize() { return arr2.length; }
+            public int getSize() { return arr5.length; }
+        });
+        vpg.setLabels(new IndexedGetter<String>() {
+            public int getSize() { return arr5.length; }
+            public String getElement(int i) { return ""+i; }
         });
         ppc.add(vpg);
         vpg.setEdgeCustomizer(new MapGetter.MapInstance(arr5em));
@@ -127,7 +137,16 @@ public class TestPlane extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        ppc = new org.bm.blaise.specto.plane.PlanePlotComponent();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().add(ppc, java.awt.BorderLayout.CENTER);
+
+        jScrollPane1.setViewportView(jTree1);
+
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.EAST);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,6 +163,9 @@ public class TestPlane extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTree jTree1;
+    private org.bm.blaise.specto.plane.PlanePlotComponent ppc;
     // End of variables declaration//GEN-END:variables
 
 }

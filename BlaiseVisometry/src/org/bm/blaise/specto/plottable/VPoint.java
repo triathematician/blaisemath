@@ -31,7 +31,7 @@ public class VPoint<C> extends AbstractPlottable<C>
     public void setPoint(C point) {
         if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
             this.point = point;
-            firePlottableChanged(false);
+            firePlottableChanged(true);
         }
     }
 

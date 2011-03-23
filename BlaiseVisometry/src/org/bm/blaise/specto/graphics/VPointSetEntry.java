@@ -5,11 +5,12 @@
 package org.bm.blaise.specto.graphics;
 
 import utils.IndexedGetter;
-import org.bm.blaise.graphics.BasicPointEntry;
 import org.bm.blaise.graphics.CompositeGraphicEntry;
 import org.bm.blaise.graphics.GraphicEntry;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import java.awt.geom.Point2D;
+import org.bm.blaise.graphics.compound.LabeledPointEntry;
+import org.bm.blaise.graphics.renderer.StringRenderer;
 import org.bm.blaise.specto.Visometry;
 import org.bm.blaise.specto.VisometryProcessor;
 import org.bm.blaise.specto.VisometryUtils;
@@ -26,8 +27,8 @@ public class VPointSetEntry<C> extends AbstractVGraphicEntry<C> {
     IndexedGetterSetter.Relative<C> local;
     /** The window group entry */
     CompositeGraphicEntry window;
-    /** The window entries */
-    BasicPointEntry[] wPoints;
+    /** The window entries (unlabeled) */
+    LabeledPointEntry[] wPoints;
 
     /** Default renderer used to draw the points (may be null) */
     PointRenderer rend;
@@ -35,6 +36,11 @@ public class VPointSetEntry<C> extends AbstractVGraphicEntry<C> {
     IndexedGetter<PointRenderer> rFactory;
     /** Custom tooltips by point */
     IndexedGetter<String> tips;
+
+    /** Renderer for the labels */
+    StringRenderer labelRenderer;
+    /** Customer labels by point */
+    IndexedGetter<String> labels;
 
     /** Construct with specified bean to handle dragging (may be null) */
     public VPointSetEntry(IndexedGetterSetter.Relative local) {
@@ -53,12 +59,12 @@ public class VPointSetEntry<C> extends AbstractVGraphicEntry<C> {
         if (window == null)
             window = new CompositeGraphicEntry();
         int n = local.getSize();
-        if (wPoints == null)
-            wPoints = new BasicPointEntry[n];
-        else if (wPoints.length != n) {
+        if (wPoints == null) {
+            wPoints = new LabeledPointEntry[n];
+        } else if (wPoints.length != n) {
             // TODO might think about efficiency when not all need to be removed
             window.clearEntries();
-            wPoints = new BasicPointEntry[n];
+            wPoints = new LabeledPointEntry[n];
         }
         for (int i = 0; i < n; i++) {
             C loc = local.getElement(i);
@@ -71,26 +77,30 @@ public class VPointSetEntry<C> extends AbstractVGraphicEntry<C> {
                     tips != null ? tips.getElement(i)
                     : loc instanceof Point2D ? VisometryUtils.formatPoint((Point2D) loc, 2)
                     : loc + "");
+            wPoints[i].setString(labels != null ? labels.getElement(i) : null);
         }
         setUnconverted(false);
     }
 
     /** Set up entry... possibly use custom renderer, add it to the composite, enable dragging. */
     private void createEntry(Point2D p, int i) {
-        wPoints[i] = new BasicPointEntry(p,
+        wPoints[i] = new LabeledPointEntry(p, "",
                 rFactory == null ? rend :
                     i < rFactory.getSize() ? rFactory.getElement(i)
                     : null);
+
         window.addEntry(wPoints[i]);
         wPoints[i].setMouseListener(new VGraphicMouseListener.IndexedPointDragger<C>(local, i).adapter());
+        wPoints[i].setStringRenderer(labelRenderer);
     }
 
     /** Updates the entry, particularly the display point and the renderer if it has changed */
     private void updateEntry(Point2D p, int i) {
         wPoints[i].setPoint(p);
-        wPoints[i].setRenderer(rFactory == null ? rend :
+        wPoints[i].setPointRenderer(rFactory == null ? rend :
                     i < rFactory.getSize() ? rFactory.getElement(i)
                     : null);
+        wPoints[i].setStringRenderer(labelRenderer);
     }
 
     //
@@ -120,6 +130,22 @@ public class VPointSetEntry<C> extends AbstractVGraphicEntry<C> {
     public void setTooltips(IndexedGetter<String> tooltips) {
         if (this.tips != tooltips) {
             this.tips = tooltips;
+            setUnconverted(true);
+        }
+    }
+
+    public IndexedGetter<String> getLabels() { return labels; }
+    public void setLabels(IndexedGetter<String> labels) {
+        if (this.labels != labels) {
+            this.labels = labels;
+            setUnconverted(true);
+        }
+    }
+
+    public StringRenderer getLabelRenderer() { return labelRenderer; }
+    public void setLabelRenderer(StringRenderer r) {
+        if (labelRenderer != r) {
+            labelRenderer = r;
             setUnconverted(true);
         }
     }
