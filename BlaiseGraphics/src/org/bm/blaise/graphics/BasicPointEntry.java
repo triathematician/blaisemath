@@ -18,11 +18,11 @@ public class BasicPointEntry extends AbstractGraphicEntry
         implements GraphicMouseListener.PointBean {
 
     /** The object that will be drawn. */
-    Point2D point;
+    private Point2D point;
     /** Angle specifying point orientation */
-    double angle = 0;
+    private double angle = 0;
     /** The associated renderer (may be null). */
-    PointRenderer renderer;
+    private PointRenderer renderer;
 
     //
     // CONSTRUCTORS
@@ -70,10 +70,6 @@ public class BasicPointEntry extends AbstractGraphicEntry
     // DRAW METHODS
     //
 
-    /** Draws the primitive on the specified graphics canvas, using current style.
-     * @param canvas graphics canvas
-     * @param rend the default renderer to use if the shape entry has none
-     */
     public void draw(Graphics2D canvas, GraphicRendererProvider rend) {
         if (renderer == null)
             rend.getPointRenderer().draw(point, angle, canvas, visibility);
@@ -81,14 +77,6 @@ public class BasicPointEntry extends AbstractGraphicEntry
             renderer.draw(point, angle, canvas, visibility);
     }
 
-    //
-    // POINT & MOUSE METHODS
-    //
-
-    /**
-     * Checks to see if the provided window point is covered by the primitive, when drawn in this style.
-     * @param point the window point
-     */
     public boolean contains(Point p, GraphicRendererProvider factory) {
         try {
         return renderer != null ? renderer.shape(point).contains(p)

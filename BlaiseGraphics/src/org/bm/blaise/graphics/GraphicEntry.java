@@ -17,6 +17,14 @@ import java.awt.Point;
  */
 public interface GraphicEntry {
 
+    /** @return parent of the entry, possibly null */
+    public GraphicEntry getParent();
+    /** Sets parent of the entry */
+    public void setParent(GraphicEntry parent);
+    
+    /** Notification that the specified entry has changed in some way. */
+    public void stateChanged(GraphicEntry en);
+
     /** @return the visibility status of the shape(s) */
     public GraphicVisibility getVisibility();
     /** Sets the visibility status of the shape */

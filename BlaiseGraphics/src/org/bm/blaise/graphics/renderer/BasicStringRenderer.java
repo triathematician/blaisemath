@@ -33,7 +33,10 @@ public class BasicStringRenderer implements StringRenderer {
     Point offset = new Point();
     /** Stores the anchor for the text block. */
     Anchor anchor = Anchor.Southwest;
-    
+
+
+// <editor-fold defaultstate="collapsed" desc="CONSTRUCTORS & INITIALIZERS">
+
     /** Default constructor. */
     public BasicStringRenderer() { }
     /** Construct with color, size, anchor */
@@ -41,7 +44,28 @@ public class BasicStringRenderer implements StringRenderer {
     /** Construct with provided parameters */
     public BasicStringRenderer(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
-    @Override public String toString() { return "BasicStringRenderer [" + font + "]"; }
+    @Override
+    public String toString() { 
+        return "BasicStringRenderer [" + font + "]";
+    }
+
+    /** Sets color & returns pointer to object */
+    public BasicStringRenderer color(Color color) { this.color = color; return this; }
+    /** Sets font & returns pointer to object */
+    public BasicStringRenderer font(Font font) { this.font = font; return this; }
+    /** Sets font size & returns pointer to object */
+    public BasicStringRenderer fontSize(float size) { this.fontSize = size; return this; }
+    /** Sets offset & returns pointer to object */
+    public BasicStringRenderer offset(Point off) { this.offset = off; return this; }
+    /** Sets offset & returns pointer to object */
+    public BasicStringRenderer offset(int x, int y) { this.offset = new Point(x,y); return this; }
+    /** Sets anchor & returns pointer to object */
+    public BasicStringRenderer anchor(Anchor anchor) { this.anchor = anchor; return this; }
+
+// </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
 
     /** @return color of string */
     public Color getColor() { return color; }
@@ -65,9 +89,16 @@ public class BasicStringRenderer implements StringRenderer {
     /** @param newValue new location of anchor point of string relative to provided coordinate */
     public void setAnchor(Anchor newValue) { anchor = newValue; }
 
+// </editor-fold>
+
+    
     public void draw(Point2D point, String string, Graphics2D canvas, GraphicVisibility visibility) {
-        canvas.setColor(color);
+        if (string == null || string.length() == 0)
+            return;
         Rectangle2D bounds = bounds(point, string, canvas);
+//        canvas.setColor(new Color(250, 250, 250, 100));
+//        canvas.fill(bounds);
+        canvas.setColor(color);
         canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 

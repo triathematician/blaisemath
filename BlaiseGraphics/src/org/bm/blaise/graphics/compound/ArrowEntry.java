@@ -18,7 +18,6 @@ import java.awt.geom.Point2D;
 
 /**
  * Displays an arrow between two points.
- *
  * TODO - write delegate so that start/end renderers do not have full point render functionality
  *
  * @author Elisha
@@ -26,16 +25,21 @@ import java.awt.geom.Point2D;
 public class ArrowEntry extends AbstractGraphicEntry {
 
     /** Point at start of arrow */
-    BasicPointEntry pEntryStart;
+    private final BasicPointEntry pEntryStart;
     /** Point renderer at start of arrow */
-    BasicPointRenderer pRendStart;
+    private BasicPointRenderer pRendStart;
     /** Point at end of arrow */
-    BasicPointEntry pEntryEnd;
+    private final BasicPointEntry pEntryEnd;
     /** Point renderer at end of arrow */
-    BasicPointRenderer pRendEnd;
+    private BasicPointRenderer pRendEnd;
 
     /** Entry with the line */
-    BasicShapeEntry lineEntry;
+    private final BasicShapeEntry lineEntry;
+
+    
+    //
+    // CONSTRUCTORS
+    //
 
     /** Construct arrow between specified points */
     public ArrowEntry(Point2D.Double start, Point2D.Double end) {
@@ -54,21 +58,55 @@ public class ArrowEntry extends AbstractGraphicEntry {
         pEntryEnd.setAngle(angle);
     }
 
+    
+    //
+    // PROPERTY PATTERNS
+    //
+
     public Point2D getStartPoint() { return pEntryStart.getPoint(); }
-    public void setStartPoint(Point2D p) { if (!pEntryStart.getPoint().equals(p)) { pEntryStart.setPoint(p); updateAngle(); fireStateChanged(); } }
+    public void setStartPoint(Point2D p) { 
+        if (!pEntryStart.getPoint().equals(p)) {
+            pEntryStart.setPoint(p);
+            updateAngle();
+            fireStateChanged();
+        }
+    }
 
     public Point2D getEndPoint() { return pEntryStart.getPoint(); }
-    public void setEndPoint(Point2D p) { if (!pEntryStart.getPoint().equals(p)) { pEntryStart.setPoint(p); updateAngle(); fireStateChanged(); } }
+    public void setEndPoint(Point2D p) { 
+        if (!pEntryStart.getPoint().equals(p)) {
+            pEntryStart.setPoint(p);
+            updateAngle();
+            fireStateChanged();
+        }
+    }
 
     public BasicPointRenderer getStartPointRenderer() { return pRendStart; }
-    public void setStartPointRenderer(BasicPointRenderer r) { if (pRendStart != r) { pRendStart = r; pEntryStart.setRenderer(r); fireStateChanged(); } }
+    public void setStartPointRenderer(BasicPointRenderer r) { 
+        if (pRendStart != r) {
+            pRendStart = r;
+            pEntryStart.setRenderer(r);
+            fireStateChanged();
+        }
+    }
 
     public BasicPointRenderer getEndPointRenderer() { return pRendEnd; }
-    public void setEndPointRenderer(BasicPointRenderer r) { if (pRendEnd != r) { pRendEnd = r; pEntryEnd.setRenderer(r); fireStateChanged(); } }
+    public void setEndPointRenderer(BasicPointRenderer r) { 
+        if (pRendEnd != r) {
+            pRendEnd = r;
+            pEntryEnd.setRenderer(r);
+            fireStateChanged();
+        }
+    }
 
     public ShapeRenderer getLineRenderer() { return lineEntry.getRenderer(); }
     public void setLineRenderer(ShapeRenderer r) { if (lineEntry.getRenderer() != r) { lineEntry.setRenderer(r); fireStateChanged(); } }
 
+
+    //
+    // DRAW METHODS
+    //
+    
     public void draw(Graphics2D canvas, GraphicRendererProvider factory) {
         lineEntry.draw(canvas, factory);
         if (pRendStart != null)

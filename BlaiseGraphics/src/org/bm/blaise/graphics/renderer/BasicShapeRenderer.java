@@ -58,8 +58,9 @@ public class BasicShapeRenderer implements ShapeRenderer {
     }
 
     public void draw(Shape s, Graphics2D canvas, GraphicVisibility visibility) {
-        if (thickness != 1f)
-            canvas.setStroke(new BasicStroke(thickness));
+        if (thickness <= 0) return;
+        
+        canvas.setStroke(new BasicStroke(thickness));
 
         if (fill != null) {
             canvas.setColor(visibility == GraphicVisibility.Highlight ? StyleUtils.lighterThan(fill) : fill);
@@ -70,13 +71,12 @@ public class BasicShapeRenderer implements ShapeRenderer {
             canvas.draw(s);
         }
 
-        if (thickness != 1f)
-            canvas.setStroke(StyleUtils.DEFAULT_STROKE);
+        canvas.setStroke(StyleUtils.DEFAULT_STROKE);
     }
 
     public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, GraphicVisibility visibility) {
-        if (thickness != 1f)
-            canvas.setStroke(new BasicStroke(thickness));
+        if (thickness <= 0) return;
+        canvas.setStroke(new BasicStroke(thickness));
 
         for (Shape s : primitives) {
             if (fill != null) {
@@ -89,8 +89,7 @@ public class BasicShapeRenderer implements ShapeRenderer {
             }
         }
 
-        if (thickness != 1f)
-            canvas.setStroke(StyleUtils.DEFAULT_STROKE);
+        canvas.setStroke(StyleUtils.DEFAULT_STROKE);
     }
 
 }

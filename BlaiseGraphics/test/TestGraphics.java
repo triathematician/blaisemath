@@ -11,8 +11,6 @@ import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import org.bm.blaise.graphics.compound.ArrowEntry;
 import org.bm.blaise.graphics.compound.LabeledPointEntry;
 import org.bm.blaise.graphics.*;
-import graphics.compound.*;
-import graphics.renderer.*;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.*;

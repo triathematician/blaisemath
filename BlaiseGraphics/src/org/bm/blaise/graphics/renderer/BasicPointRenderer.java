@@ -20,8 +20,16 @@ public class BasicPointRenderer extends AbstractPointRenderer {
     /** Delegate renderer used to draw the point */
     BasicShapeRenderer rend = new BasicShapeRenderer(Color.lightGray, Color.darkGray);
 
+
 // <editor-fold defaultstate="collapsed" desc="Constructors & Initializers">
+
+    /** Construct instance with default settings */
     public BasicPointRenderer() { }
+
+    @Override
+    public BasicPointRenderer clone() {
+        return new BasicPointRenderer().fill(rend.fill).stroke(rend.stroke).thickness(rend.thickness).radius(radius).shape(shaper);
+    }
 
     /** Sets radius & returns pointer to object */
     public BasicPointRenderer radius(float radius) { this.radius = radius; return this; }
@@ -36,10 +44,6 @@ public class BasicPointRenderer extends AbstractPointRenderer {
 
 // </editor-fold>
 
-    @Override
-    public BasicPointRenderer clone() {
-        return new BasicPointRenderer().fill(rend.fill).stroke(rend.stroke).thickness(rend.thickness).radius(radius).shape(shaper);
-    }
 
 // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 

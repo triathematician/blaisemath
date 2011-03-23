@@ -26,8 +26,8 @@ import javax.swing.event.EventListenerList;
  * 
  * @author Elisha
  */
-public class CompositeGraphicEntry implements GraphicEntry,
-        ChangeListener {
+public class CompositeGraphicEntry extends AbstractGraphicEntry
+        implements ChangeListener {
 
     //
     // PROPERTIES
@@ -35,8 +35,6 @@ public class CompositeGraphicEntry implements GraphicEntry,
 
     /** Stores the shapes and their styles */
     List<GraphicEntry> entries = Collections.synchronizedList(new ArrayList<GraphicEntry>());
-    /** Flag determining whether plottable will be shown in the eventual render. */
-    GraphicVisibility visibility = GraphicVisibility.Regular;
     
     /** The associated renderer; overrides the default renderer for the components in the composite (may be null). */
     GraphicRendererProvider rProvider;
@@ -54,10 +52,8 @@ public class CompositeGraphicEntry implements GraphicEntry,
 
     /** @return iterator over the entries, in draw order */
     public Iterable<GraphicEntry> getEntries() { return entries; }
+    /** @return iterator over the entries, in reverse of draw order */
     public Iterable<GraphicEntry> getEntriesReversed() { return reverseEntries(); }
-
-    public GraphicVisibility getVisibility() { return visibility; }
-    public void setVisibility(GraphicVisibility vis) { if (this.visibility != vis) { visibility = vis; fireStateChanged(); } }
 
     /** @return default renderer factory for all child entries (may be null) */
     public GraphicRendererProvider getRendererProvider() { return rProvider; }
@@ -67,18 +63,6 @@ public class CompositeGraphicEntry implements GraphicEntry,
     //
     // COMPOSITE PATTERNS
     //
-
-    /** Add w/o events */
-    private boolean addHelp(GraphicEntry en) {
-        if (entries.add(en)) {
-            if (en instanceof CompositeGraphicEntry)
-                ((CompositeGraphicEntry)en).addChangeListener(this);
-            else if (en instanceof AbstractGraphicEntry)
-                ((AbstractGraphicEntry)en).parent = this;
-            return true;
-        }
-        return false;
-    }
 
     /** Add an entry to the composite. */
     public final void addEntry(GraphicEntry en) {
@@ -93,20 +77,6 @@ public class CompositeGraphicEntry implements GraphicEntry,
             change = addHelp(en) || change;
         if (change)
             fireStateChanged();
-    }
-
-    /** Remove w/o events */
-    private boolean removeHelp(GraphicEntry en) {
-        if (entries.remove(en)) {
-            if (en instanceof CompositeGraphicEntry)
-                ((CompositeGraphicEntry)en).removeChangeListener(this);
-            else if (en instanceof AbstractGraphicEntry) {
-                if (((AbstractGraphicEntry)en).parent == this)
-                    ((AbstractGraphicEntry)en).parent = null;
-            }
-            return true;
-        }
-        return false;
     }
 
     /** Remove an entry from the composite */
@@ -167,6 +137,7 @@ public class CompositeGraphicEntry implements GraphicEntry,
         return null;
     }
 
+    @Override
     public GraphicMouseListener getMouseListener(Point point) {
         GraphicMouseListener l;
         for (GraphicEntry en : getEntriesReversed()) {
@@ -181,6 +152,7 @@ public class CompositeGraphicEntry implements GraphicEntry,
         return entryAt(point, rProvider == null ? provider : rProvider) != null;
     }
 
+    @Override
     public String getTooltip(Point p, GraphicRendererProvider provider) {
         String l = null;
         for (GraphicEntry en : getEntriesReversed()) {
@@ -201,27 +173,16 @@ public class CompositeGraphicEntry implements GraphicEntry,
                 en.draw(canvas, defRenderer);
     }
 
-    //
-    // UTILITIES
-    //
 
-    /** @return reverse list iterator */
-    private Iterable<GraphicEntry> reverseEntries() {
-        return new Iterable<GraphicEntry>() {
-            public Iterator<GraphicEntry> iterator() {
-                final ListIterator<GraphicEntry> li = entries.listIterator(entries.size());
-                return new Iterator<GraphicEntry>() {
-                    public boolean hasNext() { return li.hasPrevious(); }
-                    public GraphicEntry next() { return li.previous(); }
-                    public void remove() { li.remove(); }
-                };
-            }
-        };
+// <editor-fold defaultstate="collapsed" desc="Change Event Handling (including changes from child entries)">
+
+    /** Notify interested listeners of an (unspecified) change in the plottable. */
+    @Override
+    protected void fireStateChanged() { 
+        if (parent != null)
+            parent.stateChanged(this);
+        fireStateChanged(changeEvent);
     }
-
-    //
-    // CHANGE HANDLING
-    //
 
     public void stateChanged(ChangeEvent e) { fireStateChanged(e); }
 
@@ -240,8 +201,43 @@ public class CompositeGraphicEntry implements GraphicEntry,
                 ((ChangeListener) listeners[i + 1]).stateChanged(e);
             }
     }
-    
-    /** Notify interested listeners of an (unspecified) change in the plottable. */
-    protected void fireStateChanged() { fireStateChanged(changeEvent); }
+// </editor-fold>
 
+
+// <editor-fold defaultstate="collapsed" desc="Private Utilities">
+
+    /** @return reverse list iterator */
+    private Iterable<GraphicEntry> reverseEntries() {
+        return new Iterable<GraphicEntry>() {
+            public Iterator<GraphicEntry> iterator() {
+                final ListIterator<GraphicEntry> li = entries.listIterator(entries.size());
+                return new Iterator<GraphicEntry>() {
+                    public boolean hasNext() { return li.hasPrevious(); }
+                    public GraphicEntry next() { return li.previous(); }
+                    public void remove() { li.remove(); }
+                };
+            }
+        };
+    }
+
+    /** Add w/o events */
+    private boolean addHelp(GraphicEntry en) {
+        if (entries.add(en)) {
+            en.setParent(this);
+            return true;
+        }
+        return false;
+    }
+
+    /** Remove w/o events */
+    private boolean removeHelp(GraphicEntry en) {
+        if (entries.remove(en)) {
+            if (en.getParent() == this)
+                en.setParent(null);
+            return true;
+        }
+        return false;
+    }
+
+// </editor-fold>
 }
