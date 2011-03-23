@@ -177,7 +177,7 @@ public final class GlobalMetrics { private GlobalMetrics() {}
                 triples += aDist1 + dist2;
                 triangles += aDist1;
             } else {
-                // in undirected case, each pair of nodes @ distance 1 contributes to a triple
+                // in undirectedCopy case, each pair of nodes @ distance 1 contributes to a triple
                 // ... each edge in this neighborhood indicates a triangle
                 // corrections for later: each triangle is counted 3 times
                 triples += dist1*(dist1-1)/2;

@@ -66,7 +66,7 @@ public class GraphFactory {
                 for (double[] interval : tt)
                     if (interval != null) for (double d : interval) allTimes.add(d);
                     
-        System.out.println(" .. getLongitudinalGraph: " + allTimes.size() + " key times: " + allTimes);
+        System.err.println(" .. getLongitudinalGraph: " + allTimes.size() + " key times: " + allTimes);
 
         return IntervalTimeGraph.getInstance2(directed, allTimes.size(), vertices, edges);
     }

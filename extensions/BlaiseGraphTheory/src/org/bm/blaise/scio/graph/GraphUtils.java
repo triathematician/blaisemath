@@ -77,7 +77,7 @@ public class GraphUtils {
         ArrayList<V> vertices = new ArrayList<V>(graph.nodes());
         ArrayList<V[]> edges = new ArrayList<V[]>(graph.edgeNumber());
         for (V v1 : vertices)
-            for (V v2 : vertices)
+            for (V v2 : graph.neighbors(v1))
                 if (graph.adjacent(v1, v2)) {
                     V[] arr = (V[]) Array.newInstance(v1.getClass(), 2);
                     arr[0] = v1;
@@ -85,6 +85,45 @@ public class GraphUtils {
                     edges.add(arr);
                 }
         return GraphFactory.getGraph(directed, vertices, edges);
+    }
+
+    /** Creates an undirected copy of the specified graph. */
+    public static <V> Graph<V> undirectedCopy(Graph<V> g) {
+        ArrayList<V> vertices = new ArrayList<V>(g.nodes());
+        ArrayList<V[]> edges = new ArrayList<V[]>(g.edgeNumber());
+        for (V v1 : vertices)
+            for (V v2 : g.neighbors(v1)) {
+                V[] arr = (V[]) Array.newInstance(v1.getClass(), 2);
+                arr[0] = v1;
+                arr[1] = v2;
+                edges.add(arr);
+            }
+        return GraphFactory.getGraph(false, vertices, edges);
+    }
+
+    /** Creates an undirected view of the specified graph. */
+    public static <V> Graph<V> undirectedWrapper(final Graph<V> g) {
+        return new Graph<V>() {
+            public int order() { return g.order(); }
+            public List<V> nodes() { return g.nodes(); }
+            public boolean contains(V x) { return g.contains(x); }
+            public boolean isDirected() { return false; }
+            public boolean adjacent(V x, V y) { return g.adjacent(x,y) || g.adjacent(y,x); }
+            public int degree(V x) { return neighbors(x).size(); }
+            public Set<V> neighbors(V x) {
+                if (!g.isDirected())
+                    return g.neighbors(x);
+                Set<V> result = new HashSet<V>();
+                for (V v : nodes())
+                    if (adjacent(x, v))
+                        result.add(v);
+                return result;
+            }
+            public int edgeNumber() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        };
     }
 
     //
@@ -133,7 +172,7 @@ public class GraphUtils {
      * @param <V> type of vertex in the graph
      * @param graph the input graph
      * @return matrix of integers describing adjacencies... contains 0's and 1's...
-     *      it is symmetric when the graph is undirected, otherwise it may not be symmetric
+     *      it is symmetric when the graph is undirectedCopy, otherwise it may not be symmetric
      */
     public static <V> boolean[][] adjacencyMatrix(Graph<V> graph) {
         List<V> nodes = graph.nodes();
@@ -151,7 +190,7 @@ public class GraphUtils {
      * @param graph the input graph
      * @param maxPower maximum power of the adjacency matrix to include in result
      * @return matrix of integers describing adjacencies... contains 0's and 1's...
-     *      it is symmetric when the graph is undirected, otherwise it may not be symmetric
+     *      it is symmetric when the graph is undirectedCopy, otherwise it may not be symmetric
      */
     public static <V> int[][][] adjacencyMatrixPowers(Graph<V> graph, int maxPower) {
         boolean[][] adj0 = adjacencyMatrix(graph);
@@ -332,8 +371,8 @@ public class GraphUtils {
     }
 
     /**
-     * Computes all (connected) components of an undirected graph.
-     * @param graph the graph to examine; must be undirected
+     * Computes all (connected) components of an undirectedCopy graph.
+     * @param graph the graph to examine; must be undirectedCopy
      * @return list of lists of the vertices in various components
      * @throws IllegalArgumentException if provided graph is directed
      */
@@ -352,9 +391,9 @@ public class GraphUtils {
     }
 
     /**
-     * Computes all (connected) components of an undirected graph, returning a list of new
+     * Computes all (connected) components of an undirectedCopy graph, returning a list of new
      * graphs describing the components.
-     * @param graph the graph to examine; must be undirected
+     * @param graph the graph to examine; must be undirectedCopy
      * @return list of lists of the vertices in various components
      * @throws IllegalArgumentException if provided graph is directed
      */

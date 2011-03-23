@@ -32,16 +32,14 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
         this.base = base;
         double lastT = 0;
         for (Double d : base.getTimes()) {
-            if (times.isEmpty())
-                times.add(d);
-            else {
+            if (!times.isEmpty()) {
                 double ts = (d-lastT)/(steps+1.0);
                 for (double t = lastT+ts; t < d-.5*ts; t += ts)
                     times.add(t);
             }
+            times.add(d);
             lastT = d;
         }
-        times.add(base.getMaximumTime());
     }
 
     public Collection<V> getAllNodes() { return base.getAllNodes(); }
@@ -58,9 +56,9 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
             return new InterpolatorGraph(getMinimumTime(), getMinimumTime(), getMinimumTime());
         else if (time >= getMaximumTime())
             return new InterpolatorGraph(getMaximumTime(), getMaximumTime(), getMaximumTime());
-        for (Double d : getTimes()) {
+        for (Double d : base.getTimes()) {
             if (time == d)
-                return base.slice(time, true);
+                return new InterpolatorGraph(d, d, d);
             else if (time < d)
                 return new InterpolatorGraph(dLast, time, d);
             dLast = d;
@@ -76,12 +74,18 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
         public InterpolatorGraph(double t0, double t, double t1) {
             slice0 = base.slice(t0, true);
             slice1 = base.slice(t1, true);
-            wt0 = (t-t0)/(t1-t0);
-            wt1 = 1-(t-t0)/(t1-t0);
+            if (t0 == t1) {
+                wt0 = 1;
+                wt1 = 0;
+            } else {
+                wt0 = 1-(t-t0)/(t1-t0);
+                wt1 = (t-t0)/(t1-t0);
+            }
             HashSet<V> n = new HashSet<V>();
             n.addAll(slice0.nodes());
             n.addAll(slice1.nodes());
             nodes.addAll(n);
+//            System.err.printf("t0=%.3f, t=%.3f, t1=%.3f, wt0=%.3f, wt1=%.3f, nodes=%s\n", t0, t, t1, wt0, wt1, nodes);
         }
 
         public Double getWeight(V x, V y) {
@@ -92,15 +96,16 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
                 Object w0o = ((WeightedGraph)slice0).getWeight(x, y);
                 if (w0o instanceof Number)
                     w0 = ((Number)w0o).doubleValue();
-            }
+            } else if (!slice0.adjacent(x,y))
+                w0 = 0;
             if (slice1 instanceof WeightedGraph) {
                 Object w1o = ((WeightedGraph)slice1).getWeight(x, y);
                 if (w1o instanceof Number)
                     w1 = ((Number)w1o).doubleValue();
-            }
+            } else if (!slice1.adjacent(x,y))
+                w1 = 0;
             return w0*wt0 + w1*wt1;
         }
-
         public void setWeight(V x, V y, Double value) { throw new UnsupportedOperationException("Not supported yet."); }
         public int order() { return nodes.size(); }
         public List<V> nodes() { return nodes; }
@@ -109,7 +114,7 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
         public boolean adjacent(V x, V y) { return slice0.adjacent(x, y) || slice1.adjacent(x, y); }
         public int degree(V x) { return neighbors(x).size(); }
         public Set<V> neighbors(V x) {
-            Set<V> nbrs = slice0.neighbors(x);
+            Set<V> nbrs = new HashSet<V>(slice0.neighbors(x));
             nbrs.addAll(slice1.neighbors(x));
             return nbrs;
         }

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.GraphUtils;
 import org.bm.blaise.scio.graph.WeightedGraph;
 
 /**
@@ -173,6 +174,9 @@ public class SpringLayout implements IterativeGraphLayout {
     public final void iterate(Graph g) throws ConcurrentModificationException {
         long t0 = System.currentTimeMillis();
         List nodes = g.nodes();
+
+        if (g.isDirected())
+            g = GraphUtils.undirectedCopy(g);
 
         // check for temporary location updates
         checkForNodeUpdate(nodes);
