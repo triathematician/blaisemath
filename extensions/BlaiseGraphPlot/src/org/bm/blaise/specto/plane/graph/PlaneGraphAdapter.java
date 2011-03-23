@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.plane.graph;
 
+import org.bm.blaise.graphics.renderer.StringRenderer;
 import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import org.bm.blaise.graphics.renderer.PointRenderer;
 import org.bm.blaise.graphics.renderer.ShapeRenderer;
@@ -58,6 +59,7 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
     /** Construct adapter with the specified manager. */
     public PlaneGraphAdapter(GraphManager manager) {
         this.manager = manager;
+
         Object[] graphData = manager.getGraphData();
         nodes = (List) graphData[0];
         Point2D.Double[] pos = (Point2D.Double[]) graphData[1];
@@ -66,6 +68,7 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
         if (manager.getGraph() instanceof WeightedGraph)
             updateWeightedEdges(vGraph, (WeightedGraph) manager.getGraph(), nodes, edges);
         useStandardTooltips(nodes);
+        useStandardLabels(nodes);
         manager.addPropertyChangeListener(this);
         vGraph.addChangeListener(this);
     }
@@ -122,6 +125,7 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
                 else
                     vGraph.setEdgeCustomizer(null);
                 useStandardTooltips(nodes);
+                useStandardLabels(nodes);
             }
         } else if (prop.equals($EDGES)) {
             nodes = (List) ((Object[])evt.getNewValue())[0];
@@ -133,82 +137,57 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
             System.err.println("Unsupported Property: " + evt);
     }
     // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Style and Customization Property Patterns">
     
-    // <editor-fold defaultstate="collapsed" desc="Style and Customization Property Patterns">
     private MapGetter.IndexedAdapter<?,String> nLabel, eLabel;
     private MapGetter.IndexedAdapter<?,String> nTip, eTip;
     private MapGetter.IndexedAdapter<?,PointRenderer> nRend;
 
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getNodeLabels() { 
-        return nLabel == null ? null : nLabel.getMap();
-    }
-    /** Sets tooltips */
-    public void setNodeLabels(MapGetter<String> map) {
-        vGraph.setLabels(nLabel = new MapGetter.IndexedAdapter<Object, String>(nodes, map));
-    }
-
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getNodeTooltips() { 
-        return nTip == null ? null : nTip.getMap();
-    }
-    /** Sets tooltips */
-    public void setNodeTooltips(MapGetter<String> map) {
-        vGraph.setTooltips(nTip = new MapGetter.IndexedAdapter<Object, String>(nodes, map));
-    }
-
     /** @return default node renderer to use in absence of customization */
-    public PointRenderer getNodeRenderer() { 
-        return vGraph.getPointRenderer();
-    }
+    public PointRenderer getNodeRenderer() { return vGraph.getPointRenderer(); }
     /** Set default node renderer to use in absence of customization */
-    public void setNodeRenderer(PointRenderer rend) { 
-        vGraph.setPointRenderer(rend);
-    }
-
+    public void setNodeRenderer(PointRenderer rend) { vGraph.setPointRenderer(rend); }
     /** @return node customization map */
-    public MapGetter<PointRenderer> getNodeCustomizer() { 
-        return nRend == null ? null : nRend.getMap();
-    }
+    public MapGetter<PointRenderer> getNodeCustomizer() { return nRend == null ? null : nRend.getMap(); }
     /** Sets customization for nodes */
-    public void setNodeCustomizer(MapGetter<PointRenderer> map) {
-        if (map != null)
-            vGraph.setIndexedPointRenderer(nRend = new MapGetter.IndexedAdapter<Object, PointRenderer>(nodes, map));
-    }
+    public void setNodeCustomizer(MapGetter<PointRenderer> map) { if (map != null) vGraph.setIndexedPointRenderer(nRend = new MapGetter.IndexedAdapter<Object, PointRenderer>(nodes, map)); }
 
     /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getEdgeLabels() { 
-        return eLabel == null ? null : eLabel.getMap();
-    }
+    public MapGetter<String> getNodeLabels() { return nLabel == null ? null : nLabel.getMap(); }
     /** Sets tooltips */
-    public void setEdgeLabels(MapGetter<String> map) {
-    }
+    public void setNodeLabels(MapGetter<String> map) { vGraph.setLabels(nLabel = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
+    /** @return renderer used for nodes */
+    public StringRenderer getNodeLabelRenderer() { return vGraph.getLabelRenderer(); }
+    /** Sets renderer used for nodes */
+    public void setNodeLabelRenderer(StringRenderer r) { vGraph.setLabelRenderer(r); }
 
     /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getEdgeTooltips() { 
-        return eTip == null ? null : eTip.getMap();
-    }
+    public MapGetter<String> getNodeTooltips() { return nTip == null ? null : nTip.getMap(); }
     /** Sets tooltips */
-    public void setEdgeTooltips(MapGetter<String> map) {
-    }
+    public void setNodeTooltips(MapGetter<String> map) { vGraph.setTooltips(nTip = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
 
+    
     /** @return default edge renderer to use in absence of customization */
-    public BasicStrokeRenderer getEdgeRenderer() {
-        return vGraph.getEdgeRenderer();
-    }
+    public BasicStrokeRenderer getEdgeRenderer() { return vGraph.getEdgeRenderer(); }
     /** Set default edge renderer to use in absence of customization */
-    public void setEdgeRenderer(BasicStrokeRenderer rend) {
-        vGraph.setEdgeRenderer(rend);
-    }
-
+    public void setEdgeRenderer(BasicStrokeRenderer rend) { vGraph.setEdgeRenderer(rend); }
     /** @return edge customization map */
-    public MapGetter<ShapeRenderer> getEdgeCustomizer() { 
-        return vGraph.getEdgeCustomizer();
-    }
+    public MapGetter<ShapeRenderer> getEdgeCustomizer() { return vGraph.getEdgeCustomizer(); }
     /** Sets customization for edges */
-    public void setEdgeCustomizer(MapGetter<ShapeRenderer> map) { 
-        vGraph.setEdgeCustomizer(map);
-    }
+    public void setEdgeCustomizer(MapGetter<ShapeRenderer> map) {  vGraph.setEdgeCustomizer(map); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getEdgeLabels() { return eLabel == null ? null : eLabel.getMap(); }
+    /** Sets tooltips */
+    public void setEdgeLabels(MapGetter<String> map) { System.err.println("Edge labels currently unsupported."); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getEdgeTooltips() { return eTip == null ? null : eTip.getMap(); }
+    /** Sets tooltips */
+    public void setEdgeTooltips(MapGetter<String> map) { System.err.println("Edge tips currently unsupported"); }
+    
     // </editor-fold>
 
 
@@ -220,6 +199,22 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
         vGraph.setTooltips(new IndexedGetter<String>(){
             public int getSize() { return tipper.size(); }
             public String getElement(int i) { return tipper.get(i); }
+        });
+    }
+
+    public void updateNodeLabels() {
+        List nn = (List) manager.getGraphData()[0];
+        useStandardLabels(nn);
+    }
+
+    private void useStandardLabels(List nodes) {
+        final List<String> labeler = new ArrayList<String>();
+        ValuedGraph vg = manager.getGraph() instanceof ValuedGraph ? ((ValuedGraph)manager.getGraph()) : null;
+        for (Object n : nodes)
+            labeler.add( vg == null ? n.toString() : vg.getValue(n).toString() );
+        vGraph.setLabels(new IndexedGetter<String>(){
+            public int getSize() { return labeler.size(); }
+            public String getElement(int i) { return labeler.get(i); }
         });
     }
     
