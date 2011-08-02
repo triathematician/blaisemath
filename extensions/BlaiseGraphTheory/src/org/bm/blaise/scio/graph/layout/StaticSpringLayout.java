@@ -5,7 +5,10 @@
 
 package org.bm.blaise.scio.graph.layout;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.io.PrintStream;
 import java.util.Map;
 import org.bm.blaise.scio.graph.Graph;
 
@@ -14,13 +17,40 @@ import org.bm.blaise.scio.graph.Graph;
  * @author elisha
  */
 public class StaticSpringLayout implements StaticGraphLayout {
-    int minSteps = 100;
-    int maxSteps = 5000;
-    double energyChangeThreshold = 5e-7;
-    double coolStart = 0.65;
-    double coolEnd = 0.1;
+    public int minSteps = 100;
+    public int maxSteps = 5000;
+    public double energyChangeThreshold = 5e-7;
+    public double coolStart = 0.65;
+    public double coolEnd = 0.1;
+    
+    /** Used to print status */
+    PrintStream statusStream;
+    /** Used to notify status */
+    ActionListener al;
+    
+    public StaticSpringLayout(PrintStream status, ActionListener al) {
+        this.statusStream = status;
+    }
+    
+    /** Sets output stream for updates */
+    public void setStatusStream(PrintStream s) {
+        this.statusStream = s;
+    }
+    /** Sets listener for layout updates */
+    public void setLayoutListener(ActionListener al) {
+        this.al = al;
+    }
+    
+    /** Maintain singleton instance of the class */
+    private static StaticSpringLayout INST;
+    /** Return a singleton instance of the class (using default settings) */
+    public static StaticSpringLayout getInstance() {
+        if (INST == null)
+            INST = new StaticSpringLayout(System.out, null);
+        return INST;        
+    }
 
-    public Map<Object, Point2D.Double> layout(Graph g, double... parameters) {
+    public synchronized Map<Object, Point2D.Double> layout(Graph g, double... parameters) {
         double irad = parameters.length > 0 ? parameters[0] : 5;
         SpringLayout sl = new SpringLayout(g, StaticGraphLayout.CIRCLE, irad);
         double lastEnergy = Double.MAX_VALUE;
@@ -35,9 +65,18 @@ public class StaticSpringLayout implements StaticGraphLayout {
             lastEnergy = sl.energy;
             step++;
             if (step % 100 == 0)
-                System.out.println("step = " + step + ", energy = " + lastEnergy);
+                updateStatus("", step, lastEnergy);
         }
-        System.out.println("Stopped @ " + step + " steps.");
+        updateStatus("stop, ", step, lastEnergy);
         return sl.getPositions();
+    }
+    
+    void updateStatus(String prefix, int step, double lastEnergy) {
+        String status = String.format("%sstep = %d/%d, energy=%.2f (threshold=%.2f)", 
+                prefix, step, maxSteps, lastEnergy, energyChangeThreshold);
+        if (statusStream != null)
+            statusStream.println(status);
+        if (al != null)
+            al.actionPerformed(new ActionEvent(this, 0, status));
     }
 }
