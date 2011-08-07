@@ -42,6 +42,12 @@ public interface PointRenderer {
     public void drawAll(Iterable<Point2D> points, Graphics2D canvas, GraphicVisibility visibility);
 
     /**
+     * Returns the (approximate) window radius of the associated point
+     * @return radius in window pixels
+     */
+    public float getRadius();
+    
+    /**
      * Returns the shape corresponding to the given point, for the renderer's current settings.
      * @param point the point to draw
      * @return the shape corresponding to the specified point
@@ -50,7 +56,7 @@ public interface PointRenderer {
 
     /**
      * Returns the shape corresponding to the given point, for the renderer's current settings.
-     * @param point the point to draw
+     * @param p the point to draw
      * @param angle angle of rotation for the point
      * @return the shape corresponding to the specified point
      */
