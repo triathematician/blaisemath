@@ -19,6 +19,7 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import org.bm.blaise.graphics.renderer.Anchor;
+import org.bm.blaise.graphics.renderer.ArrowStrokeRenderer;
 import org.bm.blaise.graphics.renderer.BasicStringRenderer;
 import org.bm.blaise.specto.plottable.VPoint;
 import org.bm.blaise.specto.plottable.VPointGraph;
@@ -38,10 +39,12 @@ public class TestPlane extends javax.swing.JFrame {
     public TestPlane() {
         initComponents();
 
+        // 1. test points (center)
         for (int i = 0; i < 50; i++) {
             ppc.add(new VPoint<Point2D.Double>(new Point2D.Double(Math.random(), Math.random())));
         }
 
+        // 2. test point set w/ central labels (lower left)
         final Point2D.Double[] arr = new Point2D.Double[50];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = new Point2D.Double(-Math.random(), -Math.random());
@@ -54,6 +57,7 @@ public class TestPlane extends javax.swing.JFrame {
         vps1.setLabelRenderer(new BasicStringRenderer().color(Color.white).fontSize(10f).offset(0,0).anchor(Anchor.Center));
         ppc.add(vps1);
 
+        // 3. test point set with customized colors (lower right)
         final Point2D.Double[] arr2 = new Point2D.Double[50];
         for (int i = 0; i < arr2.length; i++) {
             arr2[i] = new Point2D.Double(2-Math.random(), -Math.random());
@@ -67,6 +71,7 @@ public class TestPlane extends javax.swing.JFrame {
             public int getSize() { return arr2.length; }
         }));
 
+        // 4. test random polygonal path (dashed line down center)
         final Point2D.Double[] arr3 = new Point2D.Double[100];
         arr3[0] = new Point2D.Double(-1.0, 1.0);
         for (int i = 1; i < arr3.length; i++) {
@@ -77,23 +82,27 @@ public class TestPlane extends javax.swing.JFrame {
         }
         ppc.add(new VPolygonalPath<Point2D.Double>(arr3));
 
+        // 5. test point graph with custom vertices, edges only to boundary of node (top, greenish)
         final Point2D.Double[] arr4 = new Point2D.Double[100];
         for (int i = 0; i < arr4.length; i++) {
             arr4[i] = new Point2D.Double(-Math.random(), 1+Math.random());
         }
-        int[][] arr4e = new int[50][2];
+        final int[][] arr4e = new int[50][2];
         for (int i = 0; i < arr4e.length; i++) {
             arr4e[i] = new int[] { (int)(arr4.length*Math.random()), (int)(arr4.length*Math.random()) };
         }
-        ppc.add(new VPointGraph<Point2D.Double>(arr4, arr4e, new IndexedGetter<PointRenderer>() {
+        VPointGraph<Point2D.Double> vpg0 = new VPointGraph<Point2D.Double>(arr4, arr4e, new IndexedGetter<PointRenderer>() {
             public PointRenderer getElement(int i) { return new BasicPointRenderer()
-                    .fill(new Color((2*i)%255, 255, (17*i)%255, 128+(29*i)%127))
+                    .fill(new Color((2*i)%255, 255, (17*i)%255, 64+(29*i)%63))
                     .stroke(Color.red)
-                    .radius(i % 10); }
+                    .radius(2+(i%10)); }
             public void setElement(int i, PointRenderer point) { }
-            public int getSize() { return arr2.length; }
-        }));
+            public int getSize() { return arr4.length; }
+        });
+        vpg0.setEdgeRenderer(new ArrowStrokeRenderer(Color.red, 10f));
+        ppc.add(vpg0);
 
+        // 6. test point graph with custom edges (left)
         final Point2D.Double[] arr5 = new Point2D.Double[50];
         for (int i = 0; i < arr5.length; i++) {
             arr5[i] = new Point2D.Double(-1-Math.random(), Math.random());
@@ -123,6 +132,7 @@ public class TestPlane extends javax.swing.JFrame {
         ppc.add(vpg);
         vpg.setEdgeCustomizer(new MapGetter.MapInstance(arr5em));
 
+        // 7. test segment (across the middle)
         ppc.add(new VSegment<Point2D.Double>(new Point2D.Double(-3,-3), new Point2D.Double(3,3)));
 
         add(ppc);

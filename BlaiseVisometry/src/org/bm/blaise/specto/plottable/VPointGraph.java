@@ -35,8 +35,9 @@ public class VPointGraph<C> extends VPointSet<C> {
     private final VCompositeGraphicEntry comp = new VCompositeGraphicEntry();
     /** The edge entry (if a composite) */
     private final VCompositeGraphicEntry eEntry = new VCompositeGraphicEntry();
-    /** The edge render map */
-    private MapGetter<ShapeRenderer> edgeRend;
+    
+    /** The edge renderer map (provides customized edge colors) */
+    private MapGetter<ShapeRenderer> edgeCustomizer;
 
     // <editor-fold defaultstate="collapsed" desc="Constructors">
     //
@@ -71,6 +72,20 @@ public class VPointGraph<C> extends VPointSet<C> {
     //
     // PROPERTIES
     //
+    
+    /** Whether to use radial values of points to draw segments only from the edges */
+    private boolean shortSegment = true;
+    
+    public synchronized boolean isShortSegment() {
+        return shortSegment;
+    }
+    public synchronized void setShortSegment(boolean val) {
+        if (shortSegment != val) {
+            shortSegment = val;
+            eEntry.setUnconverted(true);
+            firePlottableChanged(true);
+        }
+    }
 
     public synchronized int[][] getEdges() {
         return edgeHandler.getEdges();
@@ -82,7 +97,7 @@ public class VPointGraph<C> extends VPointSet<C> {
         firePlottableChanged(true);
     }
 
-    public synchronized void setGraph(C[] nodes, int[][] edges) {
+    public synchronized void setGraph(C[] nodes, int[][] edges) {        
 //        System.out.println("::setGraph started");
         if (this.point != nodes)
             this.point = nodes;
@@ -101,12 +116,31 @@ public class VPointGraph<C> extends VPointSet<C> {
 
     @Override
     public void recompute() {
-        if (edgeRend == null) {
+        if (shortSegment) {
+            List<VSegmentEntry<C>> nue = new ArrayList<VSegmentEntry<C>>();
+            for (int[] e : edgeHandler.getEdges()) {
+                // TODO - creating all these relative point beans might lead to some inefficiencies
+                RelativePointBean<C> get1 = createGetter(e[0]);
+                RelativePointBean<C> get2 = createGetter(e[1]);
+                PointRenderer pr = en.getRenderer();
+                IndexedGetter<PointRenderer> ipr = en.getIndexedRenderer();
+                PointRenderer prr = ipr == null ? null : ipr.getElement(e[0]);
+                float rad1 = prr != null ? prr.getRadius() : pr.getRadius();
+                prr = ipr == null ? null : ipr.getElement(e[1]);
+                float rad2 = prr != null ? prr.getRadius() : pr.getRadius();
+                nue.add(new VSegmentEntry<C>(get1, rad1, get2, rad2, 
+                        edgeCustomizer != null ? edgeCustomizer.getElement(e) : getEdgeRenderer()));
+            }
+            eEntry.replaceEntries(nue);
+        } else if (edgeCustomizer == null) {
             eEntry.replaceEntries(Arrays.asList(new VPolygonalPathEntry(edgeHandler)));
         } else {
             List<VSegmentEntry<C>> nue = new ArrayList<VSegmentEntry<C>>();
-            for (int[] e : edgeHandler.getEdges())
-                nue.add(new VSegmentEntry<C>(createGetter(e[0]), createGetter(e[1]), edgeRend.getElement(e)));
+            for (int[] e : edgeHandler.getEdges()) {
+                RelativePointBean<C> get1 = createGetter(e[0]);
+                RelativePointBean<C> get2 = createGetter(e[1]);
+                nue.add(new VSegmentEntry<C>(get1, get2, edgeCustomizer.getElement(e)));
+            }
             eEntry.replaceEntries(nue);
         }
         comp.addAllEntries(Arrays.asList(eEntry, super.getGraphicEntry()));
@@ -121,6 +155,7 @@ public class VPointGraph<C> extends VPointSet<C> {
         public synchronized int getSize() { return 3 * edges.length; }
         public synchronized C getElement(int i) { return i%3 == 2 ? null : point[edges[i/3][i%3]]; }
     }
+    
 
     // <editor-fold defaultstate="collapsed" desc="Delegate Properties">
     //
@@ -134,10 +169,10 @@ public class VPointGraph<C> extends VPointSet<C> {
         eEntry.setRenderer(new GraphicRendererProvider.PathProvider(r));
     }
 
-    public MapGetter<ShapeRenderer> getEdgeCustomizer() { return edgeRend; }
+    public MapGetter<ShapeRenderer> getEdgeCustomizer() { return edgeCustomizer; }
     public void setEdgeCustomizer(MapGetter<ShapeRenderer> r) { 
-        if (this.edgeRend != r) {
-            this.edgeRend = r;
+        if (this.edgeCustomizer != r) {
+            this.edgeCustomizer = r;
             firePlottableChanged(true);
         }
     }
