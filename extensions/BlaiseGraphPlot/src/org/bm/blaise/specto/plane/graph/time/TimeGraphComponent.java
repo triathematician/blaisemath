@@ -146,8 +146,10 @@ public final class TimeGraphComponent extends JPanel
                 Object[] arr = (Object[]) evt.getNewValue();
                 Double time = (Double) arr[0];
                 Map<Object,Point2D.Double> pos = (Map<Object, Point2D.Double>) arr[1];
-                if (updateWithTime)
-                    plot.getGraphManager().setGraph(manager.getSlice());
+                if (updateWithTime) {
+                    Graph gr = manager.getSlice();
+                    plot.getGraphManager().setGraph(gr);
+                }
                 if (pos != null)
                     plot.getGraphManager().requestPositionMap(pos);
                 timeLabel.setText("Slice t="+time);

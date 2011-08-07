@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -110,8 +111,9 @@ public final class GraphManager {
 
     /** @return current graph data, including nodes, locations, and edges */
     public synchronized Object[] getGraphData() {
-        if (edges == null) edges = GraphUtils.getEdges(graph);
-        return new Object[] { locator.nodes, locator.getLocationArray(), edges };
+        if (edges == null) 
+            edges = GraphUtils.getEdges(graph);
+        return new Object[] { locator.locNodes, locator.getLocationArray(), edges };
     }
 
     /** @return the current mapping of nodes to locations */
@@ -300,7 +302,7 @@ public final class GraphManager {
     private static class NodeLocationManager {
         
         /** List of active nodes */
-        final List nodes = Collections.synchronizedList(new ArrayList());
+        final List locNodes = Collections.synchronizedList(new ArrayList());
         /** Current locations */
         final Map<Object, Point2D.Double> cur = Collections.synchronizedMap(new HashMap<Object, Point2D.Double>());
         /** Cached locations */
@@ -318,8 +320,12 @@ public final class GraphManager {
          */
         private synchronized void setActiveNodes(List nodes) {
             Set cs = cur.keySet();
-            if (cs.containsAll(nodes) && nodes.containsAll(cs))
+            if (cs.containsAll(nodes) && nodes.containsAll(cs)) {
+                locNodes.clear();
+                locNodes.addAll(nodes);
+                updateArray(arr.length != nodes.size());
                 return;
+            }
 
             // store objects that we need to cache
             Set toCache = new HashSet();
@@ -343,8 +349,8 @@ public final class GraphManager {
                 }
 
             // update node list
-            this.nodes.clear();
-            this.nodes.addAll(nodes);
+            locNodes.clear();
+            locNodes.addAll(nodes);
             updateArray(true);
         }
 
@@ -359,17 +365,17 @@ public final class GraphManager {
         }
 
         private synchronized void setNodePositions(Point2D.Double[] pos) {
-            for (int i = 0; i < Math.min(pos.length, nodes.size()); i++)
-                cur.put(nodes.get(i), pos[i]);
+            for (int i = 0; i < Math.min(pos.length, locNodes.size()); i++)
+                cur.put(locNodes.get(i), pos[i]);
             updateArray(false);
         }
 
         /** Updates the array of locations */
         private synchronized void updateArray(boolean nodeUpdate) {
             if (nodeUpdate)
-                arr = new Point2D.Double[nodes.size()];
+                arr = new Point2D.Double[locNodes.size()];
             for (int i = 0; i < arr.length; i++)
-                arr[i] = cur.get(nodes.get(i));
+                arr[i] = cur.get(locNodes.get(i));
         }
 
         /** Maximum cache size */
@@ -401,7 +407,7 @@ public final class GraphManager {
 
     /** The entire graph has changed: nodes, positions, edges */
     private synchronized void fireGraphChanged() { 
-        pcs.firePropertyChange($GRAPH, null, new Object[]{nodes, locator.getLocationArray(), edges});
+        pcs.firePropertyChange($GRAPH, null, getGraphData());
     }
     /** The node positions have changed */
     private synchronized void firePositionChanged() {

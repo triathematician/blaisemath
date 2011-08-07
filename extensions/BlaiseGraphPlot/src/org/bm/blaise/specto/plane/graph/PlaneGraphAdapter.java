@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.plane.graph;
 
+import org.bm.blaise.graphics.renderer.ArrowStrokeRenderer;
 import org.bm.blaise.graphics.renderer.StringRenderer;
 import org.bm.blaise.graphics.renderer.BasicStrokeRenderer;
 import org.bm.blaise.graphics.renderer.PointRenderer;
@@ -52,6 +53,11 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
     /** The last node set used */
     private List nodes = null;
 
+    //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORS">
+    //
+    // CONSTRUCTORS
+    //
+    
     /** Construct adapter with the specified graph. */
     public PlaneGraphAdapter(Graph graph) {
         this(new GraphManager(graph));
@@ -72,6 +78,13 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
         manager.addPropertyChangeListener(this);
         vGraph.addChangeListener(this);
     }
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
     public GraphManager getGraphManager() {
         return manager;
@@ -80,7 +93,14 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
     public VPointGraph<Double> getViewGraph() {
         return vGraph;
     }
-
+    //</editor-fold>
+   
+    
+    // <editor-fold defaultstate="collapsed" desc="STYLE AND CUSTOMIZATION PROPERTY PATTERNS">
+    //
+    // STYLE AND CUSTOMIZATION PROPERTY PATTERNS
+    //
+    
     public void copyAppearanceOf(PlaneGraphAdapter adapter) {
         setNodeRenderer(adapter.getNodeRenderer());
         setNodeCustomizer(adapter.getNodeCustomizer());
@@ -91,8 +111,74 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
         setEdgeLabels(adapter.getEdgeLabels());
         setEdgeTooltips(adapter.getEdgeTooltips());
     }
+    
+    private MapGetter.IndexedAdapter<?,String> nLabel, eLabel;
+    private MapGetter.IndexedAdapter<?,String> nTip, eTip;
+    private MapGetter.IndexedAdapter<?,PointRenderer> nRend;
 
-    // <editor-fold defaultstate="collapsed" desc="Event Handling">
+    /** @return default node renderer to use in absence of customization */
+    public PointRenderer getNodeRenderer() { return vGraph.getPointRenderer(); }
+    /** Set default node renderer to use in absence of customization */
+    public void setNodeRenderer(PointRenderer rend) { vGraph.setPointRenderer(rend); }
+    /** @return node customization map */
+    public MapGetter<PointRenderer> getNodeCustomizer() { return nRend == null ? null : nRend.getMap(); }
+    /** Sets customization for nodes */
+    public void setNodeCustomizer(MapGetter<PointRenderer> map) { if (map != null) vGraph.setIndexedPointRenderer(nRend = new MapGetter.IndexedAdapter<Object, PointRenderer>(nodes, map)); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getNodeLabels() { return nLabel == null ? null : nLabel.getMap(); }
+    /** Sets tooltips */
+    public void setNodeLabels(MapGetter<String> map) { vGraph.setLabels(nLabel = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
+    /** @return renderer used for nodes */
+    public StringRenderer getNodeLabelRenderer() { return vGraph.getLabelRenderer(); }
+    /** Sets renderer used for nodes */
+    public void setNodeLabelRenderer(StringRenderer r) { vGraph.setLabelRenderer(r); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getNodeTooltips() { return nTip == null ? null : nTip.getMap(); }
+    /** Sets tooltips */
+    public void setNodeTooltips(MapGetter<String> map) { vGraph.setTooltips(nTip = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
+    
+    /** @return default edge renderer to use in absence of customization */
+    public BasicStrokeRenderer getEdgeRenderer() { return vGraph.getEdgeRenderer(); }
+    /** Set default edge renderer to use in absence of customization */
+    public void setEdgeRenderer(BasicStrokeRenderer rend) { 
+        if (rend != null && manager.getGraph().isDirected() && !(rend instanceof ArrowStrokeRenderer))
+            vGraph.setEdgeRenderer(new ArrowStrokeRenderer(rend));
+        else
+            vGraph.setEdgeRenderer(rend); 
+    }
+    /** @return edge customization map */
+    public MapGetter<ShapeRenderer> getEdgeCustomizer() { return vGraph.getEdgeCustomizer(); }
+    /** Sets customization for edges */
+    public void setEdgeCustomizer(MapGetter<ShapeRenderer> map) {  vGraph.setEdgeCustomizer(map); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getEdgeLabels() { return eLabel == null ? null : eLabel.getMap(); }
+    /** Sets tooltips */
+    public void setEdgeLabels(MapGetter<String> map) { System.err.println("Edge labels currently unsupported."); }
+
+    /** @return object supplying tooltips (mapping from node objects to strings) */
+    public MapGetter<String> getEdgeTooltips() { return eTip == null ? null : eTip.getMap(); }
+    /** Sets tooltips */
+    public void setEdgeTooltips(MapGetter<String> map) { System.err.println("Edge tips currently unsupported"); }
+    
+    // </editor-fold>
+
+    
+    // <editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //
+    // EVENT HANDLING
+    //
+
+    /** 
+     * Call to refresh the underlying node labels.
+     * TODO - consider converting behavior to a property change event
+     */
+    public void updateNodeLabels() {
+        List nn = (List) manager.getGraphData()[0];
+        useStandardLabels(nn);
+    }
 
     /** Call to notify that the appearance has changed (e.g. one of the customizers has changed internally) */
     public void appearanceChanged() {
@@ -137,59 +223,12 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
             System.err.println("Unsupported Property: " + evt);
     }
     // </editor-fold>
-
-
-// <editor-fold defaultstate="collapsed" desc="Style and Customization Property Patterns">
     
-    private MapGetter.IndexedAdapter<?,String> nLabel, eLabel;
-    private MapGetter.IndexedAdapter<?,String> nTip, eTip;
-    private MapGetter.IndexedAdapter<?,PointRenderer> nRend;
-
-    /** @return default node renderer to use in absence of customization */
-    public PointRenderer getNodeRenderer() { return vGraph.getPointRenderer(); }
-    /** Set default node renderer to use in absence of customization */
-    public void setNodeRenderer(PointRenderer rend) { vGraph.setPointRenderer(rend); }
-    /** @return node customization map */
-    public MapGetter<PointRenderer> getNodeCustomizer() { return nRend == null ? null : nRend.getMap(); }
-    /** Sets customization for nodes */
-    public void setNodeCustomizer(MapGetter<PointRenderer> map) { if (map != null) vGraph.setIndexedPointRenderer(nRend = new MapGetter.IndexedAdapter<Object, PointRenderer>(nodes, map)); }
-
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getNodeLabels() { return nLabel == null ? null : nLabel.getMap(); }
-    /** Sets tooltips */
-    public void setNodeLabels(MapGetter<String> map) { vGraph.setLabels(nLabel = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
-    /** @return renderer used for nodes */
-    public StringRenderer getNodeLabelRenderer() { return vGraph.getLabelRenderer(); }
-    /** Sets renderer used for nodes */
-    public void setNodeLabelRenderer(StringRenderer r) { vGraph.setLabelRenderer(r); }
-
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getNodeTooltips() { return nTip == null ? null : nTip.getMap(); }
-    /** Sets tooltips */
-    public void setNodeTooltips(MapGetter<String> map) { vGraph.setTooltips(nTip = new MapGetter.IndexedAdapter<Object, String>(nodes, map)); }
-
     
-    /** @return default edge renderer to use in absence of customization */
-    public BasicStrokeRenderer getEdgeRenderer() { return vGraph.getEdgeRenderer(); }
-    /** Set default edge renderer to use in absence of customization */
-    public void setEdgeRenderer(BasicStrokeRenderer rend) { vGraph.setEdgeRenderer(rend); }
-    /** @return edge customization map */
-    public MapGetter<ShapeRenderer> getEdgeCustomizer() { return vGraph.getEdgeCustomizer(); }
-    /** Sets customization for edges */
-    public void setEdgeCustomizer(MapGetter<ShapeRenderer> map) {  vGraph.setEdgeCustomizer(map); }
-
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getEdgeLabels() { return eLabel == null ? null : eLabel.getMap(); }
-    /** Sets tooltips */
-    public void setEdgeLabels(MapGetter<String> map) { System.err.println("Edge labels currently unsupported."); }
-
-    /** @return object supplying tooltips (mapping from node objects to strings) */
-    public MapGetter<String> getEdgeTooltips() { return eTip == null ? null : eTip.getMap(); }
-    /** Sets tooltips */
-    public void setEdgeTooltips(MapGetter<String> map) { System.err.println("Edge tips currently unsupported"); }
-    
-    // </editor-fold>
-
+    //<editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
+    //
+    // PRIVATE METHODS
+    //
 
     private void useStandardTooltips(List nodes) {
         final List<String> tipper = new ArrayList<String>();
@@ -200,11 +239,6 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
             public int getSize() { return tipper.size(); }
             public String getElement(int i) { return tipper.get(i); }
         });
-    }
-
-    public void updateNodeLabels() {
-        List nn = (List) manager.getGraphData()[0];
-        useStandardLabels(nn);
     }
 
     private void useStandardLabels(List nodes) {
@@ -218,7 +252,10 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
         });
     }
     
-    // <editor-fold defaultstate="collapsed" desc="Special Sauce for Weighted Graphs">
+    //</editor-fold>
+    
+    
+    // <editor-fold defaultstate="collapsed" desc="WEIGHTED GRAPH STUFF">
     //
     // WEIGHTED GRAPH STUFF
     //
@@ -284,4 +321,5 @@ public class PlaneGraphAdapter implements ChangeListener, PropertyChangeListener
     }
 
     // </editor-fold>
+    
 }
