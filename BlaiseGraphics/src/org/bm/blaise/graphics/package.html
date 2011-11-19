@@ -1,40 +1,92 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>graphics package</title>
+    <title>org.bm.blaise.graphics package</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
       <p>
         The <code>graphics</code> library is for managing and drawing a lot of shapes
-        on a <code>Graphics2d</code> canvas, and providing some <i>light</i> interactivity
+        on a {@link java.awt.Graphics2D} canvas, and providing some <i>light</i> interactivity
         (particularly mouse event handling).
       </p>
-      <h1>Design</h1>
+      <h2>The Graphics Component and the Graphics Tree</h2>
       <p>
-          <code>ShapeComponent</code> is the top-level swing component, and works primarily
-          with two classes: a <code>ShapeCache</code> and a <code>ShapeCacheRenderer</code>.
+          {@link org.bm.blaise.graphics.GraphicComponent} is the top-level swing component, 
+          and works primarily with two classes: 
+          a {@link org.bm.blaise.graphics.GraphicRoot} and a {@link org.bm.blaise.style.StyleProvider}.
           As might be expected, the first is responsible for storing the shapes and the
-          second for drawing the shapes. However, most of the stylistic information for
-          the shapes is stored within the cache itself; the renderer is available if this
-          default styling (or the default draw order of shapes specified by the cache) needs
-          to be overridden in some way.
+          second for drawing the shapes. However, the shapes stored in the {@code GraphicRoot}
+          may also provide their own style information.
+          Shapes within the {@link org.bm.blaise.graphics.GraphicRoot} are stored as 
+          {@link org.bm.blaise.graphics.Graphic}s, comprised of:
+      </p>
+      <ol>
+          <li>the graphic object and a means to draw it (in the form of a {@code contains} method and a {@code draw} method),</li>
+          <li>a parent for that shape, and </li>
+          <li>a tooltip for the shape (parametrized by point),</li>
+          <li>a mouse listener for the shape (parametrized by point),</li>
+          <li>visibility status ({@link org.bm.blaise.style.VisibilityKey}).</li>
+      </ol>
+      <p>
+          The {@link org.bm.blaise.graphics.GraphicRoot} maintains the shapes that are to be drawn, including both
+          the shapes themselves and the order in which they are drawn. This object also listens to
+          mouse events from the {@link org.bm.blaise.graphics.GraphicComponent}, which it passes along as a
+          {@link org.bm.blaise.graphics.GraphicMouseEvent} to the top-most {@link org.bm.blaise.graphics.Graphic}
+          (in terms of draw order) whose parent is a {@link org.bm.blaise.graphics.GraphicMouseListener}.
+      </p>
+      <h2>Specific Graphics</h2>
+      <p>
+          Implementing {@link org.bm.blaise.graphics.Graphic} should be straightforward.
+          {@link org.bm.blaise.graphics.GraphicSupport} contains much of the code
+          required, apart from the {@code draw} and {@code contains} methods.
+          {@link org.bm.blaise.graphics.GraphicComposite} groups together several
+          {@code Graphic}s, and also has an overridable {@link org.bm.blaise.style.StyleProvider},
+          which can be used to set a default style for its constituents.
+          {@code Graphic}s are typically implemented in one of two ways: either with
+          concrete styles, or with styles that are chosen/generated as the
+          object is drawn, depending on a "source object". The first are labeled
+          by "{@code Basic}" and the second by "{@code Custom}".
       </p>
       <p>
-          Shapes within the <code>ShapeCache</code> are stored as a <code>ShapeEntry</code>, which
-          is comprised of (i) the shape itself, (ii) a renderer for that shape, (iii) a parent for
-          that shape, and (iv) visibility status (<code>ShapeVisibility</code>).
+          Within the package, a few specific {@code Graphic}s
+          are implemented, as described in the table below:
       </p>
-      <p>
-          The <code>ShapeCache</code> maintains the shapes that are to be drawn, including both
-          the shapes themselves and the order in which they are drawn. The cache also listens to
-          mouse events from the <code>ShapeComponent</code>, which it passes along as a
-          <code>ShapeMouseEvent</code> to the top-most <code>ShapeEntry</code> (in terms of draw
-          order) whose parent is a <code>ShapeMouseListener</code>.
-      </p>
+      <table>
+          <thead>
+              <tr>
+                  <th>Class Name</th>
+                  <th>Description</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>{@link org.bm.blaise.graphics.BasicPointGraphic}</td>
+                  <td>A draggable point, rendered by a {@link org.bm.blaise.style.PointStyle}</td>
+              </tr>
+              <tr>
+                  <td>{@link org.bm.blaise.graphics.BasicPointSetGraphic}</td>
+                  <td>Several points, rendered by a common {@link org.bm.blaise.style.PointStyle}</td>
+              </tr>
+              <tr>
+                  <td>{@link org.bm.blaise.graphics.BasicShapeGraphic}</td>
+                  <td>An arbitrary shape or path, rendered by a common
+                      {@link org.bm.blaise.style.ShapeStyle} or
+                      {@link org.bm.blaise.style.PathStyle}
+                  </td>
+              </tr>   
+              <tr>
+                  <td>{@link org.bm.blaise.graphics.BasicStringGraphic}</td>
+                  <td>A string located at a point on the graphics canvas, rendered by a
+                      {@link org.bm.blaise.style.StringStyle}
+                  </td>
+              </tr>     
+              <tr>
+                  <td>{@link org.bm.blaise.graphics.CustomPointSetGraphic}</td>
+                  <td>Several points, with references to source objects, rendered
+                      by a {@link org.bm.blaise.style.PointStyle} delegate.
+                  </td>
+              </tr>        
+          </tbody>
+      </table>
   </body>
 </html>
