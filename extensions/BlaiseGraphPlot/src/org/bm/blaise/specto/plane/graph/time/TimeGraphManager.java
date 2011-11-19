@@ -15,7 +15,6 @@ import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 import org.bm.blaise.scio.graph.time.SimultaneousLayout;
 import org.bm.blaise.scio.graph.time.TimeGraph;
-import org.bm.blaise.specto.plane.graph.GraphManager;
 
 /**
  * Manages visual display of a time graph (slices over time). Keeps track of slices
@@ -25,21 +24,15 @@ import org.bm.blaise.specto.plane.graph.GraphManager;
  * @author elisha
  */
 public class TimeGraphManager {
-
-    // <editor-fold defaultstate="collapsed" desc="Property Change Constants">
-    /** Change in time slice */
-    public static final String $TIME = "time";
-    // </editor-fold>
     
-    // <editor-fold desc="Properties">
     /** The time graph */
     private final TimeGraph tGraph;
     /** The active time */
     private double time;
     /** The active slice */
     private Graph slice;
-    // </editor-fold>
 
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor">
     /** Constructs manager for the specified graph */
     public TimeGraphManager(TimeGraph graph) {
@@ -50,14 +43,19 @@ public class TimeGraphManager {
     }
     // </editor-fold>
 
+    
     Double thresh = null;
 
     /** Hack method for filtered graph layouts */
     public void setFilter(Double thresh) {
         this.thresh = thresh;
     }
+    
 
-    // <editor-fold defaultstate="collapsed" desc="Property Patterns">
+    // <editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
 
     /** @return the manager's graph (immutable) */
     public TimeGraph getTimeGraph() { return tGraph; }
@@ -69,24 +67,43 @@ public class TimeGraphManager {
     /** Sets the active time, which determines the currently active graph */
     public void setTime(double time, boolean exact) {
         if (this.time != time) {
-            double old = this.time;
+            this.time = time;
             slice = tGraph.slice(time, exact);
-            if (layout == null)
-                fireTimeChanged(old, time, null);
-            else
-                fireTimeChanged(old, time, layout.getPositionMap(time));
+            fireTimeChanged();
         }
     }
-    /** @return the current slice */
+    
+    /** 
+     * Return current graph slice
+     * @return the current slice 
+     */
     public Graph getSlice() { 
         if (slice == null)
             slice = tGraph.slice(time, false);
         return slice;
     }
+    
     /** Use to overwrite the default graph slice selection. Use with caution!! */
     public void setSlice(Graph slice) {
         this.slice = slice;
     }
+    
+    /**
+     * Return time data, an array including the time and the node positions as a map
+     * @return time data (time, node positions as a map)
+     */
+    public synchronized Object[] getTimeData() {
+        return new Object[]{ time, layout == null ? null : layout.getPositionMap(time) };
+    }
+    
+    /**
+     * Return node positions
+     * @return node positions
+     */
+    public synchronized Map<Object, Point2D.Double> getNodePositions() {
+        return layout.getPositionMap(getTime());
+    }
+    
     // </editor-fold>
 
 
@@ -130,7 +147,7 @@ public class TimeGraphManager {
                 startLayoutTask(DEFAULT_DELAY, DEFAULT_ITER);
             else
                 stopLayoutTask();
-            fireAnimatingChanged(old, value);
+            fireAnimatingChanged();
         }
     }
 
@@ -192,16 +209,17 @@ public class TimeGraphManager {
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     
     /** The entire graph has changed: nodes, positions, edges */
-    private synchronized void fireTimeChanged(double old, double nue, Map<Object, Point2D.Double> nuePos) {
-        pcs.firePropertyChange($TIME, new Object[]{old, null}, new Object[]{nue, nuePos});
+    private synchronized void fireTimeChanged() {
+        pcs.firePropertyChange("timeData", null, getTimeData());
     }
     /** The layout algorithm has started/stopped its timer */
-    private synchronized void fireAnimatingChanged(boolean old, boolean nue) {
-        pcs.firePropertyChange(GraphManager.$ANIMATING, old, nue);
+    private synchronized void fireAnimatingChanged() {
+        boolean val = isLayoutAnimating();
+        pcs.firePropertyChange("layoutAnimating", !val, val);
     }
     /** The node positions have changed */
     private synchronized void firePositionChanged() {
-        pcs.firePropertyChange(GraphManager.$POSITIONS, null, layout.getPositionMap(getTime()));
+        pcs.firePropertyChange("nodePositions", null, getNodePositions());
     }
 
     /** Handles property change events */

@@ -8,31 +8,27 @@ package org.bm.blaise.specto.plane.graph;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimerTask;
 import org.bm.blaise.scio.graph.Graph;
-import org.bm.blaise.scio.graph.GraphUtils;
 import org.bm.blaise.scio.graph.layout.IterativeGraphLayout;
 import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
+import org.bm.util.Delegator;
+import org.bm.util.PointManager;
 
 /**
  * Manages a graph and its node locations. Also manages a single iterative layout
  * that can change the positions of the nodes. Broadcasts changes when they occur.
  * Provides six property changes:
  * <ul>
- * <li><code>$GRAPH</code>: the underlying graph has changed, including nodes and edges</li>
- * <li><code>$EDGES</code>: the nodes haven't changed, but the set of edges has</li>
- * <li><code>$LAYOUT_ALGORITHM</code>: the layout algorithm has changed</li>
- * <li><code>$ANIMATING</code>: the timer controlling layout iteration has started or stopped</li>
- * <li><code>$POSITIONS</code>: the positions of nodes has changed</li>
+ * <li>{@code graphData}: the underlying graph has changed, including nodes and edges</li>
+ * <li>{@code edgeData}: the nodes haven't changed, but the set of edges has</li>
+ * <li>{@code layoutAlgorithm}: the layout algorithm has changed</li>
+ * <li>{@code layoutAnimating}: the timer controlling layout iteration has started or stopped</li>
+ * <li>{@code positionData}: the positions of nodes has changed</li>
  * </ul>
  * External changes to this class are heavily managed. The following methods may be accessed to change thigns:
  * <ul>
@@ -51,30 +47,18 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
  */
 public final class GraphManager {
 
-    // <editor-fold defaultstate="collapsed" desc="Property Change Constants">
-    /** Changes to the underlying graph (set of nodes and edges) */
-    public static final String $GRAPH = "graph";
-    /** Changes to the edge set only */
-    public static final String $EDGES = "edges";
-    /** Changes to layout algorithm */
-    public static final String $LAYOUT_ALGORITHM = "layout algorithm";
-    /** Changes to animating status */
-    public static final String $ANIMATING = "animating";
-    /** Changes to node positions */
-    public static final String $POSITIONS = "positions";
-    // </editor-fold>
-
-    // <editor-fold desc="Properties">
     /** The underlying graph */
     private Graph graph;
     /** Stores the current list of graph nodes */
     private transient List nodes;
-    /** Stores the edges as an array of int[] pairs */
-    private transient int[][] edges;
     /** Manages locations of nodes in the graph */
-    private final NodeLocationManager locator = new NodeLocationManager();;
-    // </editor-fold>
+    private final PointManager<Object, Point2D.Double> locator = new PointManager<Object, Point2D.Double>(
+            // provide inital position to objects (origin)
+            new Delegator<Object, Point2D.Double>(){
+                public Point2D.Double of(Object src) { return new Point2D.Double(); }
+            });
 
+    
     // <editor-fold defaultstate="collapsed" desc="Constructor">
     /** Constructs manager for the specified graph. */
     public GraphManager(Graph graph) {
@@ -82,10 +66,19 @@ public final class GraphManager {
     }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Property Patterns">
+    
+    // <editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
 
-    /** @return the adapter's graph */
-    public synchronized Graph getGraph() { return graph; }
+    /** 
+     * Return the graph
+     * @return the adapter's graph 
+     */
+    public Graph getGraph() { 
+        return graph; 
+    }
     /** Changes the graph */
     public synchronized void setGraph(Graph g) {
         if (g == null)
@@ -93,35 +86,23 @@ public final class GraphManager {
         if (this.graph == null) {
             this.graph = g;
             nodes = graph.nodes();
-            edges = GraphUtils.getEdges(graph);
-            locator.setActiveNodes(nodes);
-            locator.setNodePositions(INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS));
+            locator.setObjects(nodes);
+            locator.setLocationMap(INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS));
             if (iLayout != null)
-                iLayout.requestPositions(locator.cur, true);
+                iLayout.requestPositions(locator.getLocationMap(), true);
         } else {
             this.graph = g;
             nodes = graph.nodes();
-            edges = GraphUtils.getEdges(graph);
-            locator.setActiveNodes(nodes);
+            locator.setObjects(nodes);
             if (iLayout != null)
-                iLayout.requestPositions(locator.cur, true);
+                iLayout.requestPositions(locator.getLocationMap(), true);
         }
-        fireGraphChanged();
+        fireLocationsChanged();
     }
-
-    /** @return current graph data, including nodes, locations, and edges */
-    public synchronized Object[] getGraphData() {
-        if (edges == null) 
-            edges = GraphUtils.getEdges(graph);
-        return new Object[] { locator.locNodes, locator.getLocationArray(), edges };
-    }
-
-    /** @return the current mapping of nodes to locations */
-    public Map<Object, Point2D.Double> getNodePositions() { return Collections.unmodifiableMap(locator.cur); }
-    /** @return the location of a single node */
-    public Point2D.Double getNodePosition(Object node) { return locator.cur.get(node); }
+    
     // </editor-fold>
 
+    
     // <editor-fold defaultstate="collapsed" desc="Methods that Update the Graph/Node Positions Externally">
     //
     // UPDATE METHODS
@@ -129,17 +110,17 @@ public final class GraphManager {
     /** Call this method to notify that the set of vertices AND edges has changed. */
     public synchronized void updateGraph() {
         nodes = graph.nodes();
-        edges = GraphUtils.getEdges(graph);
-        locator.setActiveNodes(nodes);
+        locator.setObjects(nodes);
         if (iLayout != null)
-            iLayout.requestPositions(locator.cur, true);
-        fireGraphChanged();
+            iLayout.requestPositions(locator.getLocationMap(), true);
+        fireLocationsChanged();
     }
-
-    /** Call this method to notify that the set of edges has changed. */
-    public synchronized void updateEdges() {
-        edges = GraphUtils.getEdges(graph);
-        fireEdgesChanged();
+    
+    /**
+     * Returns location map of the graph
+     */
+    public Map<Object, Point2D.Double> getLocationMap() {
+        return locator.getLocationMap();
     }
 
     /** Update the locations of the specified nodes with the specified values */
@@ -148,8 +129,8 @@ public final class GraphManager {
             if (iLayout != null)
                 iLayout.requestPositions(nodePositions, false);
             else {
-                locator.setNodePositions(nodePositions);
-                firePositionChanged();
+                locator.setLocationMap(nodePositions);
+                fireLocationsChanged();
             }
     }
     /**
@@ -165,10 +146,11 @@ public final class GraphManager {
                     pMap.put(nodes.get(i), pos[i]);
                 iLayout.requestPositions(pMap, false);
             } else
-                locator.setNodePositions(pos);
+                locator.setLocationArray(pos);
     }
     // </editor-fold>
 
+    
     // <editor-fold defaultstate="collapsed" desc="Layout Code">
     //
     // LAYOUT METHODS
@@ -200,10 +182,10 @@ public final class GraphManager {
      */
     public void applyLayout(StaticGraphLayout layout, double... parameters) {
         Map<Object,Point2D.Double> pos = layout.layout(graph, parameters);
-        locator.setNodePositions(pos);
+        locator.setLocationMap(pos);
         if (iLayout != null)
             iLayout.requestPositions(pos, false);
-        firePositionChanged();
+        fireLocationsChanged();
     }
 
     /** @return current iterative layout algorithm */
@@ -220,7 +202,7 @@ public final class GraphManager {
             IterativeGraphLayout old = iLayout;
             stopLayoutTask();
             iLayout = layout;
-            iLayout.requestPositions(locator.cur, true);
+            iLayout.requestPositions(locator.getLocationMap(), true);
             fireAlgorithmChanged(old, layout);
         }
     }
@@ -256,8 +238,8 @@ public final class GraphManager {
                 System.err.println("Failed Layout Iteration: ConcurrentModificationException");
             }
             long t1 = System.currentTimeMillis();
-            locator.setNodePositions(iLayout.getPositions());
-            firePositionChanged();
+            locator.setLocationMap(iLayout.getPositions());
+            fireLocationsChanged();
             long t2 = System.currentTimeMillis();
             if ((t1-t0) > 100)
                 System.err.println("Long Iterative Layout Step " + (++_i) + ": " + (t1-t0) + "ms");
@@ -293,137 +275,26 @@ public final class GraphManager {
         }
     }// </editor-fold>   
 
-    // <editor-fold defaultstate="collapsed" desc="Inner Classes">
-    //
-    // INNER CLASSES
-    //
-
-    /** Manages locations of vertices in the graph. */
-    private static class NodeLocationManager {
-        
-        /** List of active nodes */
-        final List locNodes = Collections.synchronizedList(new ArrayList());
-        /** Current locations */
-        final Map<Object, Point2D.Double> cur = Collections.synchronizedMap(new HashMap<Object, Point2D.Double>());
-        /** Cached locations */
-        final Map<Object, Point2D.Double> cache = Collections.synchronizedMap(new HashMap<Object, Point2D.Double>());
-        
-        /** Array of current point locations; order/size is that of nodes object, objects that of cur. */
-        private transient Point2D.Double[] arr;
-
-        /** Return location array for specified nodes */
-        private synchronized Point2D.Double[] getLocationArray() { return arr; }
-
-        /** 
-         * Sets the set of "active" nodes. Anything in cur not here will be returned to the cache.
-         * @param nodes list of node objects to be active
-         */
-        private synchronized void setActiveNodes(List nodes) {
-            Set cs = cur.keySet();
-            if (cs.containsAll(nodes) && nodes.containsAll(cs)) {
-                locNodes.clear();
-                locNodes.addAll(nodes);
-                updateArray(arr.length != nodes.size());
-                return;
-            }
-
-            // store objects that we need to cache
-            Set toCache = new HashSet();
-            for (Object o : cs)
-                if (!nodes.contains(o))
-                    toCache.add(o);
-            for (Object o : toCache)
-                cache.put(o, cur.remove(o));
-            resizeCache();
-
-            // find new objects and add them to cs
-            // use cached locations if possible; otherwise, add near the origin
-            int nz = 0; double r, th;
-            for (Object o : nodes)
-                if (!cs.contains(o)) {
-                    nz++;
-                    r = .001*Math.log10(nz);
-                    th = .01*nz;
-                    cur.put(o, cache.containsKey(o) ? cache.get(o)
-                            : new Point2D.Double(r*Math.cos(th), r*Math.sin(th)));
-                }
-
-            // update node list
-            locNodes.clear();
-            locNodes.addAll(nodes);
-            updateArray(true);
-        }
-
-        /** 
-         * Updates positions of specified nodes (adds all to current position map).
-         * The key set here does not necessarily correspond to the "active" nodes,
-         * but will update
-         */
-        private synchronized void setNodePositions(Map<Object, Point2D.Double> pos) {
-            cur.putAll(pos);
-            updateArray(false);
-        }
-
-        private synchronized void setNodePositions(Point2D.Double[] pos) {
-            for (int i = 0; i < Math.min(pos.length, locNodes.size()); i++)
-                cur.put(locNodes.get(i), pos[i]);
-            updateArray(false);
-        }
-
-        /** Updates the array of locations */
-        private synchronized void updateArray(boolean nodeUpdate) {
-            if (nodeUpdate)
-                arr = new Point2D.Double[locNodes.size()];
-            for (int i = 0; i < arr.length; i++)
-                arr[i] = cur.get(locNodes.get(i));
-        }
-
-        /** Maximum cache size */
-        private static final int MAX_CACHE = 5000;
-        /** Ensure the cache doesn't get too big */
-        private void resizeCache() {
-            int nRemove = cache.size() - MAX_CACHE;
-            if (nRemove > 0) {
-                List toRemove = new ArrayList();
-                for (Object o : cache.keySet()) {
-                    toRemove.add(o);
-                    if (toRemove.size() >= nRemove)
-                        break;
-                }
-                System.err.println("Removing " + nRemove + " elements from node location cache: " + toRemove);
-                for (Object o : toRemove)
-                    cache.remove(o);
-                System.err.println("... new size: " + cache.size());
-            }
-        }
-    }
-
-    // </editor-fold>
-
+    
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     //
     // EVENT HANDLING
     //
 
     /** The entire graph has changed: nodes, positions, edges */
-    private synchronized void fireGraphChanged() { 
-        pcs.firePropertyChange($GRAPH, null, getGraphData());
-    }
-    /** The node positions have changed */
-    private synchronized void firePositionChanged() {
-        pcs.firePropertyChange($POSITIONS, null, new Object[]{nodes, locator.getLocationArray()});
-    }
-    /** The edges have changed */
-    private synchronized void fireEdgesChanged() { 
-        pcs.firePropertyChange($EDGES, null, new Object[]{nodes, edges});
+    private synchronized void fireLocationsChanged() { 
+        Object[] loc = locator.getLocationArray();
+        Point2D.Double[] pLoc = new Point2D.Double[loc.length];
+        System.arraycopy(loc, 0, pLoc, 0, loc.length);
+        pcs.firePropertyChange("locationArray", null, pLoc);
     }
     /** The layout algorithm has changed */
     private synchronized void fireAlgorithmChanged(IterativeGraphLayout old, IterativeGraphLayout nue) { 
-        pcs.firePropertyChange($LAYOUT_ALGORITHM, old, nue);
+        pcs.firePropertyChange("layoutAlgorithm", old, nue);
     }
     /** The layout algorithm has started/stopped its timer */
     private synchronized void fireAnimatingChanged(boolean old, boolean nue) { 
-        pcs.firePropertyChange($ANIMATING, old, nue);
+        pcs.firePropertyChange("layoutAnimating", old, nue);
     }
 
     /** Handles property change events */
@@ -433,5 +304,6 @@ public final class GraphManager {
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) { pcs.removePropertyChangeListener(listener); }
     public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) { pcs.addPropertyChangeListener(propertyName, listener); }
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) { pcs.addPropertyChangeListener(listener); }
+
     // </editor-fold>
 }

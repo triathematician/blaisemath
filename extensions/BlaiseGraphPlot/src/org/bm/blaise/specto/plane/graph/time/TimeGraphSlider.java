@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import util.swing.ListSlider;
+import org.bm.util.gui.ListSlider;
 
 /**
  * A slider component that manages a longitudinal graph.
@@ -61,7 +61,7 @@ public final class TimeGraphSlider extends JComponent
 
     public void propertyChange(PropertyChangeEvent evt) {
         String prop = evt.getPropertyName();
-        if (prop.equals(TimeGraphManager.$TIME)) {
+        if (prop.equals("timeData")) {
             if (updating)
                 return;
             Object[] nue = (Object[]) evt.getNewValue();

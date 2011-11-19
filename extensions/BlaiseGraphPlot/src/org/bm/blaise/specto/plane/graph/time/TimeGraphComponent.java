@@ -142,7 +142,7 @@ public final class TimeGraphComponent extends JPanel
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == manager) {
-            if (evt.getPropertyName().equals(TimeGraphManager.$TIME)) {
+            if (evt.getPropertyName().equals("timeData")) {
                 Object[] arr = (Object[]) evt.getNewValue();
                 Double time = (Double) arr[0];
                 Map<Object,Point2D.Double> pos = (Map<Object, Point2D.Double>) arr[1];
@@ -153,7 +153,7 @@ public final class TimeGraphComponent extends JPanel
                 if (pos != null)
                     plot.getGraphManager().requestPositionMap(pos);
                 timeLabel.setText("Slice t="+time);
-            } else if (evt.getPropertyName().equals(GraphManager.$POSITIONS)) {
+            } else if (evt.getPropertyName().equals("nodePositions")) {
                 plot.getGraphManager().requestPositionMap((Map<Object, Point2D.Double>) evt.getNewValue());
             }
         }
@@ -162,7 +162,7 @@ public final class TimeGraphComponent extends JPanel
     // </editor-fold>
 
 
-// <editor-fold defaultstate="collapsed" desc="Deprecated Behavior: Show/Hide Label">
+// <editor-fold defaultstate="collapsed" desc="Show/Hide Label">
     private static JLabel hideNote;
 
     public void hidePlot() {

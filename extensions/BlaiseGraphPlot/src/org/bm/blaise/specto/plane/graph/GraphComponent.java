@@ -18,23 +18,29 @@ public class GraphComponent extends PlanePlotComponent {
     /** Manages the visual elements of the underlying graph */
     private PlaneGraphAdapter pga;
 
-    // <editor-fold defaultstate="collapsed" desc="Constructors">
-
-    /** Construct without a graph */
-    public GraphComponent() { setDesiredRange(-5.0, -5.0, 5.0, 5.0); }
+    /** 
+     * Construct without a graph 
+     */
+    public GraphComponent() { 
+        this((GraphManager) null);
+    }
 
     /** 
      * Construct with specified graph 
      * @param graph the graph to initialize with
      */
-    public GraphComponent(Graph graph) { setGraphManager(new GraphManager(graph)); }
-
+    public GraphComponent(Graph graph) { 
+        this(new GraphManager(graph));
+    }
+    
     /** 
      * Construct with specified graph manager (contains graph and positions)
      * @param gm graph manager to initialize with
      */
-    public GraphComponent(GraphManager gm) { setGraphManager(gm); }
-    // </editor-fold>
+    public GraphComponent(GraphManager gm) { 
+        setDesiredRange(-5.0, -5.0, 5.0, 5.0); 
+        setGraphManager(gm); 
+    }
 
     /** 
      * Return the adapter that contains the graph manager and the graph, responsible for handling the visual appearance. 
@@ -64,11 +70,11 @@ public class GraphComponent extends PlanePlotComponent {
                 thisGM.removePropertyChangeListener(pga);
             }
             if (pga != null)
-                remove(pga.getViewGraph());
+                getVisometryGraphicRoot().removeGraphic(pga.getViewGraph());
             pga = null;
             if (gm != null) {
                 pga = new PlaneGraphAdapter(gm);
-                add(pga.getViewGraph());
+                getVisometryGraphicRoot().addGraphic(pga.getViewGraph());
             }
         }
     }
