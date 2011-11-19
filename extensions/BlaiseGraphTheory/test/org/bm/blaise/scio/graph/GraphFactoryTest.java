@@ -44,7 +44,7 @@ public class GraphFactoryTest {
         assertEquals("0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n0 0 0 0 \n", GraphFactory.getEmptyGraph(4, true).toString());
         Graph result = GraphFactory.getEmptyGraph(10, true);
         assertEquals(10, result.order());
-        assertEquals(0, result.edgeNumber());
+        assertEquals(0, result.edgeCount());
         for (int i = 0; i < 10; i++)
             assertTrue(result.contains(i));
     }
@@ -58,8 +58,8 @@ public class GraphFactoryTest {
         Graph result2 = GraphFactory.getCompleteGraph(6, true);
         assertEquals(6, result.order());
         assertEquals(6, result2.order());
-        assertEquals(15, result.edgeNumber());
-        assertEquals(30, result2.edgeNumber());
+        assertEquals(15, result.edgeCount());
+        assertEquals(30, result2.edgeCount());
         for (int i = 0; i < 6; i++) {
             assertTrue(result.contains(i));
             assertTrue(result2.contains(i));

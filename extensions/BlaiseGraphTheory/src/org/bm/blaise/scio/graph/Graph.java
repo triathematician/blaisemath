@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -94,6 +95,6 @@ public interface Graph<V> {
      * Returns the size of the graph, the number of edges.
      * @return the number of edges in the graph
      */
-    public int edgeNumber();
+    public int edgeCount();
 
 }

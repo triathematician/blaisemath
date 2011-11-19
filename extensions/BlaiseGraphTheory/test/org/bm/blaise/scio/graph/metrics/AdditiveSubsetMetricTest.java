@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph.metrics;
 
+import org.bm.blaise.scio.graph.metrics.subset.AdditiveSubsetMetric;
 import java.util.Arrays;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
@@ -24,7 +25,7 @@ public class AdditiveSubsetMetricTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         System.out.println("-- AdditiveSubsetMetricTest --");
-        INST = new AdditiveSubsetMetric(GraphMetrics.DEGREE);
+        INST = new AdditiveSubsetMetric(new DegreeCentrality());
         TEST2 = GraphFactory.getGraph(false, Arrays.asList(1,2,3,4,5,6,7),
                 Arrays.asList(
                     new Integer[]{1,2},

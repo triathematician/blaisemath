@@ -1,4 +1,4 @@
-package org.bm.blaise.scio.graph;
+package org.bm.blaise.scio.graph.time;
 
 import org.bm.blaise.scio.graph.time.IntervalTimeGraph;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.bm.blaise.scio.graph.Graph;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,7 +16,7 @@ import static org.bm.blaise.scio.graph.AssertUtils.*;
  *
  * @author elisha
  */
-public class IntervalLongitudinalGraphTest {
+public class IntervalTimeGraphTest {
 
     static IntervalTimeGraph<Integer> UNDIR, DIR, UNDIR2;
 
@@ -188,12 +189,12 @@ public class IntervalLongitudinalGraphTest {
         Graph<Integer> slice = UNDIR.slice(0.0, true);
         assertFalse(slice.isDirected());
         assertEquals(1, slice.order());
-        assertEquals(0, slice.edgeNumber());
+        assertEquals(0, slice.edgeCount());
 
         slice = UNDIR.slice(3.0, true);
         assertFalse(slice.isDirected());
         assertEquals(4, slice.order());
-        assertEquals(2, slice.edgeNumber());
+        assertEquals(2, slice.edgeCount());
         assertEquals(2, slice.degree(1));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4), slice.nodes());
         assertTrue(slice.contains(1));
@@ -210,7 +211,7 @@ public class IntervalLongitudinalGraphTest {
         slice = DIR.slice(3.0, true);
         assertTrue(slice.isDirected());
         assertEquals(4, slice.order());
-        assertEquals(3, slice.edgeNumber());
+        assertEquals(3, slice.edgeCount());
         assertEquals(2, slice.degree(1));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4), slice.nodes());
         assertTrue(slice.contains(1));
@@ -227,22 +228,22 @@ public class IntervalLongitudinalGraphTest {
         slice = DIR.slice(4.0, true);
         assertTrue(slice.isDirected());
         assertEquals(3, slice.order());
-        assertEquals(1, slice.edgeNumber());
+        assertEquals(1, slice.edgeCount());
         assertEquals(1, slice.degree(1));
 
         slice = UNDIR2.slice(3.0, true);
         assertFalse(slice.isDirected());
         assertEquals(4, slice.order());
-        assertEquals(2, slice.edgeNumber());
+        assertEquals(2, slice.edgeCount());
 
         slice = UNDIR2.slice(3.5, true);
         assertFalse(slice.isDirected());
         assertEquals(3, slice.order());
-        assertEquals(0, slice.edgeNumber());
+        assertEquals(0, slice.edgeCount());
 
         slice = UNDIR.slice(-3.5, true);
         assertFalse(slice.isDirected());
         assertEquals(0, slice.order());
-        assertEquals(0, slice.edgeNumber());
+        assertEquals(0, slice.edgeCount());
     }
 }

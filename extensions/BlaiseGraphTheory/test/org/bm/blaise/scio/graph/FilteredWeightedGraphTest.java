@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.List;
+import java.util.Set;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -132,8 +133,8 @@ public class FilteredWeightedGraphTest {
         System.out.println("neighbors");
         Object x = null;
         FilteredWeightedGraph instance = null;
-        List expResult = null;
-        List result = instance.neighbors(x);
+        Set expResult = null;
+        Set result = instance.neighbors(x);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
@@ -143,7 +144,7 @@ public class FilteredWeightedGraphTest {
         System.out.println("edgeNumber");
         FilteredWeightedGraph instance = null;
         int expResult = 0;
-        int result = instance.edgeNumber();
+        int result = instance.edgeCount();
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

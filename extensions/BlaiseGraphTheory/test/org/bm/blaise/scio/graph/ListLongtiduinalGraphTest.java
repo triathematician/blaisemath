@@ -166,19 +166,19 @@ public class ListLongtiduinalGraphTest {
         Graph<Integer> slice = UNDIR.slice(0.0, true);
         assertFalse(slice.isDirected());
         assertEquals(6, slice.order());
-        assertEquals(5, slice.edgeNumber());
+        assertEquals(5, slice.edgeCount());
         assertEquals(2, slice.degree(2));
 
         slice = DIR.slice(0.0, true);
         assertTrue(slice.isDirected());
         assertEquals(6, slice.order());
-        assertEquals(0, slice.edgeNumber());
+        assertEquals(0, slice.edgeCount());
         assertEquals(0, slice.degree(2));
 
         slice = DIR.slice(19.0, false);
         assertTrue(slice.isDirected());
         assertEquals(6, slice.order());
-        assertEquals(3, slice.edgeNumber());
+        assertEquals(3, slice.edgeCount());
         assertEquals(1, slice.degree(2));
 
         assertNull(UNDIR.slice(1.5, true));

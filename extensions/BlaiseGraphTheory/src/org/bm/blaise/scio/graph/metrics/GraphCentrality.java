@@ -25,14 +25,13 @@ import org.bm.blaise.scio.graph.GraphUtils;
  * </p>
  * @author elisha
  */
-public class ClosenessCentrality extends NodeMetricSupport<Double> {
+public class GraphCentrality extends NodeMetricSupport<Double> {
 
-    private final boolean useSum = true;
+    private final boolean useSum = false;
     
-    public ClosenessCentrality() {
-        super("Closeness Centrality", true, true);
+    public GraphCentrality() {
+        super("Graph Centrality (Maximum Distance)", true, true);
     }
-    
     public double nodeMax(boolean directed, int order) { return useSum ? 1/(order-1.0) : 1.0; }
     public double centralMax(boolean directed, int order) { return Double.NaN; }
 

@@ -1,5 +1,5 @@
 /*
- * VertexMetricInterface.java
+ * NodeMetric.java
  * Created on Oct 26, 2009
  */
 
@@ -12,26 +12,51 @@ import org.bm.blaise.scio.graph.*;
  * This interface provides a methods for returning a value associated with
  * a node in a graph. These metrics should ignore any weighting on graphs.
  *
- * @param <N> the type of value returned
+ * @param <N> the type of value returned (usually a number)
+ * 
  * @author Elisha Peterson
  */
 public interface NodeMetric<N> {
 
     /**
      * Checks to see if graph is supported by this algorithm.
+     * 
      * @param directed true if graph is directed, else false
      * @return true if metric supports graph of given specs
      */
     public boolean supportsGraph(boolean directed);
 
     /**
+     * Computes the value of the metric for the given graph and node.
+     * 
+     * @param graph the graph
+     * @param node a node in the graph
+     * @return value of the metric
+     */
+    public <V> N value(Graph<V> graph, V node);
+
+    /**
+     * Computes the value of the metric for <i>all</i> nodes in the given graph.
+     * Particularly useful when it is more computationally efficient to compute
+     * all values at once instead of one value at a time.
+     * 
+     * @param graph the graph
+     * 
+     * @return values of the metric, ordered as the list of nodes in the graph
+     */
+    public <V> List<N> allValues(Graph<V> graph);
+
+    /**
      * Returns the maximum value of this metric achievable for a single node.
      * (Also called the standardization constant.)
      * Dividing by this should result in all values between 0 and 1.
+     * 
+     * @param directed whether graph is directed
      * @param order order of the graph
+     * 
      * @return max value achievable by a single node
      */
-    public <V> double nodeMax(boolean directed, int order);
+    public double nodeMax(boolean directed, int order);
 
     /**
      * <p>Returns the theoretical maximum value of the centralization score for
@@ -44,25 +69,13 @@ public interface NodeMetric<N> {
      * the given order.</p>
      * <p>This value may not always be known, in which case it suffices to return
      * <code>Double.NaN</code>.</p>
+     * 
+     * @param directed whether graph is directed
      * @param order order of the graph
+     * 
      * @return maximum value possible to compute via this metric, or <code>Double.NaN</code>
      *      if the value is not known.
      */
-    public <V> double centralMax(boolean directed, int order);
-
-    /**
-     * Computes the value of the metric for the given graph and node.
-     * @param graph the graph
-     * @param node a node in the graph
-     * @return value of the metric
-     */
-    public <V> N value(Graph<V> graph, V node);
-
-    /**
-     * Computes the value of the metric for <i>all</i> nodes in the given graph.
-     * @param graph the graph
-     * @return values of the metric, ordered as the list of nodes in the graph
-     */
-    public <V> List<N> allValues(Graph<V> graph);
+    public double centralMax(boolean directed, int order);
 
 }

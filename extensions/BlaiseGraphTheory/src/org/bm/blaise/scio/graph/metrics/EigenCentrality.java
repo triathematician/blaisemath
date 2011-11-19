@@ -17,26 +17,26 @@ import org.bm.blaise.scio.matrix.Matrices;
  *
  * @author Elisha Peterson
  */
-public class EigenCentrality implements NodeMetric<Double> {
+public class EigenCentrality extends NodeMetricSupport<Double> {
 
-    private EigenCentrality() {}
-    private static final EigenCentrality INSTANCE = new EigenCentrality();
+    public EigenCentrality() {
+        super("Approximated Eigenvalue Centrality", true, true);
+    }
 
-    /** Factory method to return instance of eigenvalue centrality */
-    public static EigenCentrality getInstance() { return INSTANCE; }
-
-    @Override public String toString() { return "Eigenvalue Centrality (approx)"; }
-
-    public boolean supportsGraph(boolean directed) { return true; }
-    public <V> double nodeMax(boolean directed, int order) { return 1.0; }
-    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
+    public double nodeMax(boolean directed, int order) { 
+        return 1.0; 
+    }
+    
+    public double centralMax(boolean directed, int order) { 
+        return Double.NaN; 
+    }
 
     public <V> Double value(Graph<V> graph, V node) {
         return allValues(graph).get(graph.nodes().indexOf(node));
     }
 
     public <V> List<Double> allValues(Graph<V> graph) {
-        System.out.print("EC-all (" + graph.order() + " nodes, " + graph.edgeNumber() + " edges): ");
+        System.out.print("EC-all (" + graph.order() + " nodes, " + graph.edgeCount() + " edges): ");
         long l0 = System.currentTimeMillis();
         // computes eigenvalue centrality via repeated powers of the adjacency matrix
         // (this finds the largest-magnitude eigenvector)

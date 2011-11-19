@@ -138,8 +138,8 @@ public class ContractedGraphTest {
     @Test
     public void testEdgeNumber() {
         System.out.println("edgeNumber");
-        assertEquals(7, UNDIRECTED_INSTANCE.edgeNumber());
-        assertEquals(7, DIRECTED_INSTANCE.edgeNumber());
+        assertEquals(7, UNDIRECTED_INSTANCE.edgeCount());
+        assertEquals(7, DIRECTED_INSTANCE.edgeCount());
     }
 
 }

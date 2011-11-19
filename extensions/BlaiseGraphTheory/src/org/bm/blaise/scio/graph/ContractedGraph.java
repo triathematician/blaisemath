@@ -22,12 +22,12 @@ import java.util.Set;
  * @see Subgraph
  * @author Elisha Peterson
  */
-public class ContractedGraph<V> implements Graph<V> {
+public class ContractedGraph<V> extends GraphSupport<V> {
 
-    Graph<V> parent;
-    Collection<V> subset;
-    V vertex;
-
+    protected final Graph<V> parent;
+    protected final Collection<V> subset;
+    protected final V vertex;
+    
     /**
      * Construct a contraction view of another graph, found by "shrinking" the specified subset to a point.
      * @param parent the parent graph
@@ -35,37 +35,13 @@ public class ContractedGraph<V> implements Graph<V> {
      * @param vertex the object for the vertex representing the contracted points
      */
     public ContractedGraph(Graph<V> parent, Collection<V> subset, V vertex) {
-        if (vertex == null || parent == null || subset == null)
-            throw new IllegalArgumentException("Called constructor with null values!");
+        super(GraphUtils.contractedNodeList(parent.nodes(), subset, vertex), parent.isDirected());
         this.parent = parent;
         this.subset = subset;
         this.vertex = vertex;
     }
-
+    
     @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        List<V> nodes = nodes();
-        result.append("Nodes: ").append(nodes);
-        result.append("; Edges: ");
-        for (int i = 0; i < nodes.size(); i++)
-            for (int j = (isDirected() ? 0 : i); j < nodes.size(); j++)
-                if (adjacent(nodes.get(i), nodes.get(j)))
-                    result.append("[" + nodes.get(i) + ", " + nodes.get(j) + "], ");
-        result.delete(result.length()-2, result.length());
-        return result.toString();
-    }
-
-    public int order() { return parent.order() - subset.size() + 1; }
-    public List<V> nodes() {
-        ArrayList<V> result = new ArrayList<V>();
-        result.addAll(parent.nodes());
-        result.removeAll(subset);
-        result.add(0, vertex);
-        return result;
-    }
-    public boolean contains(V x) { return (parent.contains(x) && !subset.contains(x)) || vertex.equals(x); }
-    public boolean isDirected() { return parent.isDirected(); }
     public boolean adjacent(V x, V y) {
         if (!(contains(x) && contains(y)))
             return false;
@@ -85,10 +61,13 @@ public class ContractedGraph<V> implements Graph<V> {
         } else
             return parent.adjacent(x, y);
     }
+    
+    @Override
     public int degree(V x) {
         Set<V> nbhd = neighbors(x);
         return nbhd.size() + (!isDirected() && adjacent(x,x) ? 1 : 0);
     }
+    
     public Set<V> neighbors(V x) {
         if (!contains(x)) return Collections.emptySet();
         HashSet<V> result = new HashSet<V>();
@@ -107,7 +86,8 @@ public class ContractedGraph<V> implements Graph<V> {
             return result;
         }
     }
-    public int edgeNumber() {
+    
+    public int edgeCount() {
         int sum = 0;
         List<V> nodes = nodes();
         for (V v1 : nodes)
@@ -116,5 +96,5 @@ public class ContractedGraph<V> implements Graph<V> {
                     sum += v1==v2 && !isDirected() ? 2 : 1;
         return isDirected() ? sum : sum/2;
     }
-
+    
 }

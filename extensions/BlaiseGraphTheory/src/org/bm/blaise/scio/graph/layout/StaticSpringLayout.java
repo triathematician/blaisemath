@@ -1,4 +1,4 @@
-/**
+ /**
  * StaticSpringLayout.java
  * Created Feb 6, 2011
  */
@@ -59,7 +59,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         while (step < minSteps || (step < maxSteps && Math.abs(energyChange) > energyChangeThreshold)) {
             // adjust cooling parameter
             double cool01 = 1-step*step/(maxSteps*maxSteps);
-            sl.dampingC = coolStart*cool01 + coolEnd*(1-cool01);
+            sl.parameters.dampingC = coolStart*cool01 + coolEnd*(1-cool01);
             sl.iterate(g);
             energyChange = sl.energy - lastEnergy;
             lastEnergy = sl.energy;

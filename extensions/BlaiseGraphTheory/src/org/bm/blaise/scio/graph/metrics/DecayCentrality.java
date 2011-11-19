@@ -27,27 +27,29 @@ import org.bm.blaise.scio.graph.ValuedGraph;
  *
  * @author Elisha Peterson
  */
-public class DecayCentrality implements NodeMetric<Double> {
+public class DecayCentrality extends NodeMetricSupport<Double> {
 
     /** Decay parameter */
-    double parameter = 0.5;
+    protected double parameter = 0.5;
 
     /** Construct with default decay parameter of 0.5 */
-    public DecayCentrality() { }
+    public DecayCentrality() { 
+        this(0.5);
+    }
+    
     /** 
      * @param parameter value of decay parameter
      * @throws IllegalArgumentException if value is outside of the range [0,1]
      */
-    public DecayCentrality(double parameter) { setParameter(parameter); }
+    public DecayCentrality(double parameter) { 
+        super("Decay Centrality", true, true);
+        setParameter(parameter);
+    }
 
-    @Override public String toString() { return "Decay Centrality (" + parameter + ")"; }
-
-    /**
-     * @param parameter value of decay parameter
-     * @return instance with specified parameter
-     * @throws IllegalArgumentException if value is outside of the range [0,1]
-     */
-    public static DecayCentrality getInstance(double parameter) { return new DecayCentrality(parameter); }
+    @Override 
+    public String toString() { 
+        return "Decay Centrality (" + parameter + ")"; 
+    }
 
     /** @return value of decay parameter */
     public double getParameter() { return parameter; }
@@ -57,27 +59,18 @@ public class DecayCentrality implements NodeMetric<Double> {
         parameter = newValue;
     }
 
-    public boolean supportsGraph(boolean directed) { return true; }
-    public <V> double nodeMax(boolean directed, int order) {
+    public double nodeMax(boolean directed, int order) {
         // maximum occurs if all elements are at distance 1
         return parameter*(order-1);
     }
-    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
+    public double centralMax(boolean directed, int order) { return Double.NaN; }
 
     public <V> Double value(Graph<V> graph, V vertex) {
         ValuedGraph<V, Integer> nvg = GraphUtils.geodesicTree(graph, vertex);
         double total = 0.0;
         for (V v : nvg.nodes())
             total += Math.pow(parameter, nvg.getValue(v));
-        return total - 1;
+        return total;
     }
-
-    public <V> List<Double> allValues(Graph<V> graph) {
-        List<Double> result = new ArrayList<Double>(graph.order());
-        for (V v : graph.nodes())
-            result.add(value(graph, v));
-        return result;
-    }
-
 
 }

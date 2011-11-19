@@ -132,8 +132,8 @@ public class SparseGraphTest {
     @Test
     public void testEdgeNumber() {
         System.out.println("edgeNumber");
-        assertEquals(11, UNDIR.edgeNumber());
-        assertEquals(12, DIR.edgeNumber());
+        assertEquals(11, UNDIR.edgeCount());
+        assertEquals(12, DIR.edgeCount());
     }
 
 }

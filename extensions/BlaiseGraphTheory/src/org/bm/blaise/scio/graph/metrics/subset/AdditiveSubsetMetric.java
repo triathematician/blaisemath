@@ -3,10 +3,11 @@
  * Created May 18, 2010
  */
 
-package org.bm.blaise.scio.graph.metrics;
+package org.bm.blaise.scio.graph.metrics.subset;
 
 import java.util.Collection;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.metrics.NodeMetric;
 
 /**
  * Provides a <code>SubsetMetric</code> computed by adding together the

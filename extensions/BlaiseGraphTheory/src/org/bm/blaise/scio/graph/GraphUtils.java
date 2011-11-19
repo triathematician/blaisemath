@@ -6,12 +6,19 @@
 package org.bm.blaise.scio.graph;
 
 import java.lang.reflect.Array;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import org.bm.blaise.scio.matrix.Matrices;
@@ -75,7 +82,7 @@ public class GraphUtils {
     public static <V> Graph<V> copyGraph(Graph<V> graph) {
         boolean directed = graph.isDirected();
         ArrayList<V> vertices = new ArrayList<V>(graph.nodes());
-        ArrayList<V[]> edges = new ArrayList<V[]>(graph.edgeNumber());
+        ArrayList<V[]> edges = new ArrayList<V[]>(graph.edgeCount());
         for (V v1 : vertices)
             for (V v2 : graph.neighbors(v1))
                 if (graph.adjacent(v1, v2)) {
@@ -90,7 +97,7 @@ public class GraphUtils {
     /** Creates an undirected copy of the specified graph. */
     public static <V> Graph<V> undirectedCopy(Graph<V> g) {
         ArrayList<V> vertices = new ArrayList<V>(g.nodes());
-        ArrayList<V[]> edges = new ArrayList<V[]>(g.edgeNumber());
+        ArrayList<V[]> edges = new ArrayList<V[]>(g.edgeCount());
         for (V v1 : vertices)
             for (V v2 : g.neighbors(v1)) {
                 V[] arr = (V[]) Array.newInstance(v1.getClass(), 2);
@@ -101,28 +108,36 @@ public class GraphUtils {
         return GraphFactory.getGraph(false, vertices, edges);
     }
 
-    /** Creates an undirected view of the specified graph. */
-    public static <V> Graph<V> undirectedWrapper(final Graph<V> g) {
-        return new Graph<V>() {
-            public int order() { return g.order(); }
-            public List<V> nodes() { return g.nodes(); }
-            public boolean contains(V x) { return g.contains(x); }
+    /** 
+     * Creates an undirected view of the specified graph. Neighbor sets are
+     * computed upon request by iterating through all the nodes, which may cause
+     * some performance problems.
+     * 
+     * @param g a directed graph
+     * @return an undirected view of the graph
+     */
+    public static <V> Graph<V> undirectedWrapper(Graph<V> g) {
+        return new AbstractWrapperGraph<V>(g) {
+            @Override
             public boolean isDirected() { return false; }
-            public boolean adjacent(V x, V y) { return g.adjacent(x,y) || g.adjacent(y,x); }
+            @Override
+            public boolean adjacent(V x, V y) { return parent.adjacent(x,y) || parent.adjacent(y,x); }
+            @Override
             public int degree(V x) { return neighbors(x).size(); }
+            @Override
             public Set<V> neighbors(V x) {
-                if (!g.isDirected())
-                    return g.neighbors(x);
+                if (!parent.isDirected())
+                    return parent.neighbors(x);
                 Set<V> result = new HashSet<V>();
                 for (V v : nodes())
                     if (adjacent(x, v))
                         result.add(v);
                 return result;
             }
-            public int edgeNumber() {
+            @Override
+            public int edgeCount() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
-
         };
     }
 
@@ -161,6 +176,38 @@ public class GraphUtils {
         if (t1-t0>20)
             System.err.println("GraphUtils.getEdges took " + (t1-t0) + "ms");
         return res;
+    }
+    
+    /**
+     * Converts a graph into a dynamic mapping
+     * @param <V> vertex type in graph
+     * @return graph of node adjacencies
+     */
+    public static <V> Map<V,Set<V>> getEdgeMap(final Graph<V> graph) {
+        return new AbstractMap<V, Set<V>>() {
+            @Override
+            public Set<Entry<V, Set<V>>> entrySet() {
+                return new AbstractSet<Entry<V, Set<V>>>() {
+                    @Override
+                    public Iterator<Entry<V, Set<V>>> iterator() {
+                        final Iterator<V> it1 = graph.nodes().iterator();
+                        return new Iterator<Entry<V, Set<V>>>() {
+                            public boolean hasNext() { return it1.hasNext(); }
+                            public Entry<V, Set<V>> next() { 
+                                final V key = it1.next();
+                                return new Entry<V, Set<V>>(){
+                                    public V getKey() { return key; }
+                                    public Set<V> getValue() { return graph.neighbors(key); }
+                                    public Set<V> setValue(Set<V> value) { return null; }
+                                }; }
+                            public void remove() {}
+                        };
+                    }
+                    @Override
+                    public int size() { return graph.nodes().size(); }
+                };
+            }            
+        };
     }
 
     //
@@ -348,6 +395,21 @@ public class GraphUtils {
     //
 
     /**
+     * Generates list of nodes from an adjacency map
+     * @param adj an adjacency map
+     * @return list of nodes
+     */
+    public static <V> List<V> nodes(Map<V, Set<V>> adj) {
+        Set<V> result = new HashSet<V>();
+        for (V node : adj.keySet()) {
+            result.add(node);
+            result.addAll(adj.get(node));
+        }
+        return new ArrayList<V>(result);
+    }
+    
+    
+    /**
      * Computes neighborhood about provided vertex up to a given radius,
      * as a set of vertices. The result <b>always includes</b> the vertex itself.
      * @param graph the graph
@@ -358,57 +420,78 @@ public class GraphUtils {
     public static <V> List<V> neighborhood(Graph<V> graph, V vertex, int radius) {
         return geodesicTree(graph, vertex, radius).nodes();
     }
-
+    
     /**
-     * Computes component of specified vertex in the graph
-     * (only the forward component if the graph is directed).
-     * @param graph the graph under consideration
-     * @param vertex the starting vertex
-     * @return list of other vertices in the specified vertex's component
+     * Generates connected components from an adjacency map.
+     * @param adj an adjacency map
+     * @return set of components, as a set of sets
      */
-    public static <V> List<V> component(Graph<V> graph, V vertex) {
-        return geodesicTree(graph, vertex).nodes();
-    }
-
-    /**
-     * Computes all (connected) components of an undirectedCopy graph.
-     * @param graph the graph to examine; must be undirectedCopy
-     * @return list of lists of the vertices in various components
-     * @throws IllegalArgumentException if provided graph is directed
-     */
-    public static <V> List<List<V>> components(Graph<V> graph) {
-        if (graph.isDirected())
-            throw new IllegalArgumentException("Currently unable to compute components for a directed graph.");
-        List<List<V>> result = new ArrayList<List<V>>();
-        ArrayList<V> left = new ArrayList<V>();
-        left.addAll(graph.nodes());
-        while (! left.isEmpty()) {
-            List<V> cpt = component(graph, left.get(0));
-            result.add(cpt);
-            left.removeAll(cpt);
+    public static <V> Set<Set<V>> components(Map<V, Set<V>> adj) {
+        HashSet<Set<V>> result = new HashSet<Set<V>>();
+        for (V node : adj.keySet()) {
+            Set<V> nbhd = adj.get(node);
+            boolean found = false;
+            for (Set<V> component : result)
+                if (component.contains(node) || !Collections.disjoint(component, nbhd)) {
+                    component.add(node);
+                    component.addAll(nbhd);
+                    found = true;
+                    break;
+                }
+            if (!found) {
+                HashSet<V> component = new HashSet<V>();
+                component.add(node);
+                component.addAll(nbhd);
+                result.add(component);
+            }
         }
         return result;
     }
-
+    
     /**
-     * Computes all (connected) components of an undirectedCopy graph, returning a list of new
-     * graphs describing the components.
-     * @param graph the graph to examine; must be undirectedCopy
-     * @return list of lists of the vertices in various components
-     * @throws IllegalArgumentException if provided graph is directed
+     * Generates connected components as a list of subgraphs.
+     * @param graph the graph of interest
+     * @return list of connected component subgraphs
      */
-    public static <V> List<Graph<V>> componentGraphs(Graph<V> graph) {
-        if (graph.isDirected())
-            throw new IllegalArgumentException("Currently unable to compute components for a directed graph.");
-        List<Graph<V>> result = new ArrayList<Graph<V>>();
-        ArrayList<V> left = new ArrayList<V>();
-        left.addAll(graph.nodes());
-        while (! left.isEmpty()) {
-            List<V> cpt = component(graph, left.get(0));
-            result.add(copyGraph(new Subgraph(graph, cpt)));
-            left.removeAll(cpt);
+    public static <V> List<Graph<V>> getComponentGraphs(Graph<V> graph) {
+        GraphComponents<V> gc = new GraphComponents<V>(graph, components(graph));
+        return gc.getComponentGraphs();
+        
+    }
+    
+    /**
+     * Generates adjacency map from a subgraph.
+     * @param graph the graph
+     * @param nodes subset of nodes
+     * @return adjacency map restricted to the given subset
+     */
+    public static <V> Map<V, Set<V>> adjacencies(Graph<V> graph, Collection<V> nodes) {
+        Map<V, Set<V>> result = new HashMap<V, Set<V>>();
+        for (V v : nodes) {
+            HashSet<V> nbhd = new HashSet<V>(graph.neighbors(v));
+            nbhd.retainAll(nodes);
+            result.put(v, nbhd);
         }
         return result;
+    }
+    
+    /**
+     * Generates connected components from a graph.
+     * @param graph the graph
+     * @return set of connected components
+     */
+    public static <V> Set<Set<V>> components(Graph<V> graph) {
+        return components(adjacencies(graph, graph.nodes()));
+    }
+    
+    /**
+     * Generates connected components from a subset of vertices in a graph.
+     * @param graph the graph
+     * @param nodes subset of nodes
+     * @return set of connected components
+     */
+    public static <V> Set<Set<V>> components(Graph<V> graph, Collection<V> nodes) {
+        return components(adjacencies(graph, nodes));
     }
 
     
@@ -461,4 +544,31 @@ public class GraphUtils {
 
     } // METHOD breadthFirstSearch
 
+
+    //
+    // CONTRACTED ELEMENTS
+    //
+    
+    /** Contracts list of nodes, replacing all the "contract" nodes with "replace". */
+    public static <V> List<V> contractedNodeList(List<V> nodes, Collection<V> contract, V replace) {
+        ArrayList<V> result = new ArrayList<V>(nodes);
+        result.removeAll(contract);
+        result.add(0, replace);
+        return result;
+        
+    }
+
+    /** Contracts list of components, combining all components with vertices in subset. */
+    public static <V> Set<Set<V>> contractedComponents(Collection<Set<V>> components, Collection<V> subset, V vertex) {
+        HashSet<Set<V>> result = new HashSet<Set<V>>();
+        Set<V> contracted = new HashSet<V>();
+        contracted.add(vertex);
+        result.add(contracted);
+        for (Set<V> c : components)
+            if (Collections.disjoint(c, subset))
+                result.add(new HashSet<V>(c));
+            else
+                contracted.addAll(c);
+        return result;
+    }
 }

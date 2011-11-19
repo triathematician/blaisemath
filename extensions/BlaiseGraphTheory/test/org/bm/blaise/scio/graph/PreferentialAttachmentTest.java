@@ -32,14 +32,14 @@ public class PreferentialAttachmentTest {
         Graph<Integer> seed = RandomGraph.getInstance(4, .5f, false);
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         Graph<Integer> pref = PreferentialAttachment.getSeededInstance(seed, 10, 1);
-        System.out.println("    result: " + pref.edgeNumber() + " edges, " + GraphUtils.printGraph(pref));
-        assertEquals(seed.edgeNumber()+(pref.order()-seed.order()), pref.edgeNumber());
+        System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
+        assertEquals(seed.edgeCount()+(pref.order()-seed.order()), pref.edgeCount());
 
         seed = GraphFactory.getCycleGraph(4, false);
         pref = PreferentialAttachment.getSeededInstance(seed, 10, 2);
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
-        System.out.println("    result: " + pref.edgeNumber() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeNumber()+2*(pref.order()-seed.order())) + " edges or less");
+        System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edgeCount()+2*(pref.order()-seed.order())) + " edges or less");
 
         try { PreferentialAttachment.getSeededInstance(GraphFactory.getEmptyGraph(5, false), 20, -1);
             fail("Should not be able to construct preferential attachment with negative connection numbers.");
@@ -60,15 +60,15 @@ public class PreferentialAttachmentTest {
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         float[] probs1 = {.5f, .5f};
         Graph<Integer> pref = PreferentialAttachment.getSeededInstance(seed, 10, probs1);
-        System.out.println("    result (probs .5, .5): " + pref.edgeNumber() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeNumber()+probs1[1]*(pref.order()-seed.order())) + " edges");
+        System.out.println("    result (probs .5, .5): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edgeCount()+probs1[1]*(pref.order()-seed.order())) + " edges");
 
         seed = GraphFactory.getCycleGraph(4, false);
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         float[] probs2 = {0f, .5f, .25f, .25f};
         pref = PreferentialAttachment.getSeededInstance(seed, 10, probs2);
-        System.out.println("    result (probs 0, .5, .25, .25): " + pref.edgeNumber() + " edges, " + GraphUtils.printGraph(pref));
-        System.out.println("    expected " + (seed.edgeNumber()+(probs2[1]+2*probs2[2]+3*probs2[3])*(pref.order()-seed.order())) + " edges");
+        System.out.println("    result (probs 0, .5, .25, .25): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
+        System.out.println("    expected " + (seed.edgeCount()+(probs2[1]+2*probs2[2]+3*probs2[3])*(pref.order()-seed.order())) + " edges");
 
         try { PreferentialAttachment.getSeededInstance(GraphFactory.getEmptyGraph(5, false), 20, new float[]{.25f,0f,-1f});
             fail("Should not be able to construct preferential attachment with bad probability vector.");
@@ -89,10 +89,10 @@ public class PreferentialAttachmentTest {
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         TimeGraph<Integer> pref = PreferentialAttachment.getLongitudinalSeededInstance(seed, 10, 1);
         Graph<Integer> slice = pref.slice(0.0, true);
-        System.out.println("    result (t=0): " + slice.edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        System.out.println("    result (t=3): " + (slice=pref.slice(3.0, true)).edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        assertEquals(seed.edgeNumber()+(slice.order()-seed.order()), slice.edgeNumber());
+        System.out.println("    result (t=0): " + slice.edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        System.out.println("    result (t=3): " + (slice=pref.slice(3.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        assertEquals(seed.edgeCount()+(slice.order()-seed.order()), slice.edgeCount());
 
         try { PreferentialAttachment.getLongitudinalSeededInstance(GraphFactory.getEmptyGraph(5, false), 20, -1);
             fail("Should not be able to construct preferential attachment with negative connection numbers.");
@@ -115,10 +115,10 @@ public class PreferentialAttachmentTest {
         float[] probs1 = {.5f, .5f};
         TimeGraph<Integer> pref = PreferentialAttachment.getTimeSeededInstance(seed, 10, probs1);
         Graph<Integer> slice = pref.slice(0.0, true);
-        System.out.println("    result (t=0): " + slice.edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        System.out.println("    result (t=3): " + (slice=pref.slice(3.0, true)).edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeNumber() + " edges, " + GraphUtils.printGraph(slice));
-        System.out.println("    expected " + (seed.edgeNumber()+probs1[1]*(slice.order()-seed.order())) + " edges");
+        System.out.println("    result (t=0): " + slice.edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        System.out.println("    result (t=3): " + (slice=pref.slice(3.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
+        System.out.println("    expected " + (seed.edgeCount()+probs1[1]*(slice.order()-seed.order())) + " edges");
 
         try { PreferentialAttachment.getTimeSeededInstance(GraphFactory.getEmptyGraph(5, false), 20, new float[]{.25f,0f,-1f});
             fail("Should not be able to construct preferential attachment with bad probability vector.");

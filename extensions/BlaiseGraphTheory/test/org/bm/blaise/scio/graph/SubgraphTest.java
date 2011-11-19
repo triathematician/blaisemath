@@ -140,8 +140,8 @@ public class SubgraphTest {
     @Test
     public void testEdgeNumber() {
         System.out.println("edgeNumber");
-        assertEquals(5, UNDIRECTED_INSTANCE.edgeNumber());
-        assertEquals(6, DIRECTED_INSTANCE.edgeNumber());
+        assertEquals(5, UNDIRECTED_INSTANCE.edgeCount());
+        assertEquals(6, DIRECTED_INSTANCE.edgeCount());
     }
 
 }

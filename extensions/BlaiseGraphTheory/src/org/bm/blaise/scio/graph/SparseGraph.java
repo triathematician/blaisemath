@@ -5,9 +5,7 @@
 
 package org.bm.blaise.scio.graph;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,36 +13,22 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
- * Provides an implementation of a graph that is backed by a map associating
- * each vertex to its adjacent vertices. This is useful for graphs with a large
- * number of vertices and a relatively small number of edges.
- *
- * If the graph is undirected, it is assumed that adjacencies are stored pointing
- * in both directions along each edge.
- *
- * The graph's nodes and connections are immutable; they cannot change after construction.
+ * <p>
+ *   Stores graph structure as a map associating each vertex to its neighboring vertices.
+ *   Stores each component in a separate map for speed. If the graph is undirected,
+ *   the adjacency map stores both directions. This implementation does not allow
+ *   the graph to change once it has been constructed.
+ * </p>
  *
  * @param <V> the type of the nodes
  *
  * @author Elisha Peterson
  */
-public class SparseGraph<V> implements Graph<V> {
-
-    /** Whether graph is directed or not. */
-    private final boolean directed;
-    /** The adjacencies in the graph */
-    private final Map<V, Set<V>> adjacencies;
-
-    /** Do not permit instantiation */
-    private SparseGraph(boolean directed, Map<V, Set<V>> adjacencies) {
-        this.directed = directed;
-        this.adjacencies = adjacencies;
-    }
-
-    @Override
-    public String toString() {
-        return adjacencies.toString();
-    }
+public class SparseGraph<V> extends GraphSupport<V> {
+    
+    //
+    // FACTORY METHODS
+    //
 
     /**
      * Factory method to return an immutable instance of a sparse graph. Adds all nodes and edges. If an edge
@@ -68,27 +52,34 @@ public class SparseGraph<V> implements Graph<V> {
         }
         return new SparseGraph<V>(directed, adj);
     }
+    
+    //
+    // IMPLEMENTATION
+    //
 
-    public int order() {
-        return adjacencies.size();
+    /** The adjacencies in components of the graph */
+    private final Map<V, Set<V>> adjacencies;
+    /** Information about the graph's components */
+    private final GraphComponents<V> components;
+
+    /** Do not permit instantiation */
+    private SparseGraph(boolean directed, Map<V, Set<V>> adjacencies) {
+        super(GraphUtils.nodes(adjacencies), directed);
+        this.adjacencies = adjacencies;
+        this.components = new GraphComponents(this, GraphUtils.components(adjacencies));
     }
 
-    public List<V> nodes() {
-        return new ArrayList<V>(adjacencies.keySet());
+    @Override
+    public String toString() {
+        return adjacencies.toString();
     }
-
-    public boolean contains(V x) {
-        return adjacencies.containsKey(x);
-    }
-
-    public boolean isDirected() { 
-        return directed;
-
-    }
+    
+    @Override
     public boolean adjacent(V x, V y) {
         return adjacencies.containsKey(x) && adjacencies.get(x).contains(y);
     }
 
+    @Override
     public int degree(V x) { 
         if (!adjacencies.containsKey(x)) return 0;
         Set<V> nbhd = adjacencies.get(x);
@@ -103,7 +94,7 @@ public class SparseGraph<V> implements Graph<V> {
             return adj;
     }
 
-    public int edgeNumber() {
+    public int edgeCount() {
         int total = 0;
         for (Entry<V, Set<V>> en : adjacencies.entrySet()) {
             total += en.getValue().size()

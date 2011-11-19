@@ -5,6 +5,7 @@
 
 package org.bm.blaise.scio.graph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 public abstract class AbstractWrapperGraph<V> implements Graph<V> {
 
-    Graph<V> parent;
+    protected Graph<V> parent;
 
     /**
      * Construct graph using specified graph as the base.
@@ -36,5 +37,5 @@ public abstract class AbstractWrapperGraph<V> implements Graph<V> {
     public boolean adjacent(V x, V y) { return parent.adjacent(x, y); }
     public int degree(V x) { return parent.degree(x); }
     public Set<V> neighbors(V x) { return parent.neighbors(x); }
-    public int edgeNumber() { return parent.edgeNumber(); }
+    public int edgeCount() { return parent.edgeCount(); }
 }

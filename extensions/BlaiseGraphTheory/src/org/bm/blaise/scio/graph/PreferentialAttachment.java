@@ -90,7 +90,7 @@ public class PreferentialAttachment {
 
         if (seedGraph.isDirected())
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires an undirected seed graph.");
-        if (seedGraph.edgeNumber() == 0)
+        if (seedGraph.edgeCount() == 0)
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires a seed graph with at least one edge.");
         if (!(edgesPerStep instanceof Integer || edgesPerStep instanceof float[]))
             throw new IllegalStateException();
@@ -143,7 +143,7 @@ public class PreferentialAttachment {
     private static TimeGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
         if (seedGraph.isDirected())
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires an undirected seed graph.");
-        if (seedGraph.edgeNumber() == 0)
+        if (seedGraph.edgeCount() == 0)
             throw new IllegalArgumentException("getRandomInstance: preferential attachment algorithm requires a seed graph with at least one edge.");
         if (!(edgesPerStep instanceof Integer || edgesPerStep instanceof float[]))
             throw new IllegalStateException();
@@ -181,9 +181,11 @@ public class PreferentialAttachment {
             degreeSum += addEdge(edgeTimes, new double[]{time, timeMax}, degrees, cur,
                     weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
-        return new InterpolationTimeGraph(
-                IntervalTimeGraph.getInstance(false, (int)(timeMax), nodeTimes, edgeTimes),
-                3);
+        
+        return IntervalTimeGraph.getInstance(false, (int)(timeMax), nodeTimes, edgeTimes);
+//        return new InterpolationTimeGraph(
+//                IntervalTimeGraph.getInstance(false, (int)(timeMax), nodeTimes, edgeTimes),
+//                3);
     }
 
     /**

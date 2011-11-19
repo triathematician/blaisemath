@@ -20,7 +20,16 @@ import org.bm.blaise.scio.graph.Subgraph;
  * </p>
  * @author Elisha Peterson
  */
-public final class GlobalMetrics { private GlobalMetrics() {}
+public final class GlobalMetrics { 
+    private GlobalMetrics() {}
+
+    /** Number of components in the graph */
+    public static GlobalMetric<Integer> COMPONENTS = new GlobalMetric<Integer>() {
+        public String getName() { return "Components"; }
+        public String getDescription() { return "Number of connected components in the graph."; }
+        public boolean supportsGraph(boolean directed) { return true; }
+        public <V> Integer value(Graph<V> graph) { return GraphUtils.components(graph).size(); }
+    };
 
     /** Global metric describing the order of the graph */
     public static GlobalMetric<Integer> ORDER = new GlobalMetric<Integer>() {
@@ -35,7 +44,7 @@ public final class GlobalMetrics { private GlobalMetrics() {}
         public String getName() { return "Edge Number"; }
         public String getDescription() { return "Number of edges in the graph."; }
         public boolean supportsGraph(boolean directed) { return true; }
-        public <V> Integer value(Graph<V> graph) { return graph.edgeNumber(); }
+        public <V> Integer value(Graph<V> graph) { return graph.edgeCount(); }
     };
 
     /** Global metric describing the density of the graph (# edges divided by # possible) */
@@ -46,8 +55,8 @@ public final class GlobalMetrics { private GlobalMetrics() {}
         public <V> Double value(Graph<V> graph) {
             int n = graph.order();
             return graph.isDirected()
-                    ? graph.edgeNumber() / (n*(n-1))
-                    : graph.edgeNumber() / (n*(n-1)/2.0);
+                    ? graph.edgeCount() / (n*(n-1))
+                    : graph.edgeCount() / (n*(n-1)/2.0);
         }
     };
 
@@ -58,8 +67,8 @@ public final class GlobalMetrics { private GlobalMetrics() {}
         public boolean supportsGraph(boolean directed) { return true; }
         public <V> Double value(Graph<V> graph) { 
             return graph.isDirected()
-                    ? graph.edgeNumber() / (double) graph.order()
-                    : 2.0 * graph.edgeNumber() / (double) graph.order();
+                    ? graph.edgeCount() / (double) graph.order()
+                    : 2.0 * graph.edgeCount() / (double) graph.order();
         }
     };
 
@@ -167,7 +176,7 @@ public final class GlobalMetrics { private GlobalMetrics() {}
         for (V node : graph.nodes()) {
             Set<V> g1 = graph.neighbors(node);
             int dist1 = g1.size();
-            int aDist1 = new Subgraph(graph, g1).edgeNumber();
+            int aDist1 = new Subgraph(graph, g1).edgeCount();
             List<V> g2 = GraphUtils.neighborhood(graph, node, 2);
             int dist2 = g2.size()-1 - g1.size();
 

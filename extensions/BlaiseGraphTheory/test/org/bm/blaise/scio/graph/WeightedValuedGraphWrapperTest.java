@@ -42,7 +42,7 @@ public class WeightedValuedGraphWrapperTest {
         assertEquals(UNDIRECTED_INSTANCE.neighbors(2), UNDIR_VALUE.neighbors(2));
         assertEquals(UNDIRECTED_INSTANCE.nodes(), UNDIR_VALUE.nodes());
         assertEquals(UNDIRECTED_INSTANCE.order(), UNDIR_VALUE.order());
-        assertEquals(UNDIRECTED_INSTANCE.edgeNumber(), UNDIR_VALUE.edgeNumber());
+        assertEquals(UNDIRECTED_INSTANCE.edgeCount(), UNDIR_VALUE.edgeCount());
 
         assertEquals(DIRECTED_INSTANCE.adjacent(1, 2), DIR_VALUE.adjacent(1, 2));
         assertEquals(DIRECTED_INSTANCE.contains(2), DIR_VALUE.contains(2));
@@ -51,7 +51,7 @@ public class WeightedValuedGraphWrapperTest {
         assertEquals(DIRECTED_INSTANCE.neighbors(2), DIR_VALUE.neighbors(2));
         assertEquals(DIRECTED_INSTANCE.nodes(), DIR_VALUE.nodes());
         assertEquals(DIRECTED_INSTANCE.order(), DIR_VALUE.order());
-        assertEquals(DIRECTED_INSTANCE.edgeNumber(), DIR_VALUE.edgeNumber());
+        assertEquals(DIRECTED_INSTANCE.edgeCount(), DIR_VALUE.edgeCount());
     }
 
     @Test

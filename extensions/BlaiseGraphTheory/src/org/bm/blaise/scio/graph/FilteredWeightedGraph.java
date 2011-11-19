@@ -16,25 +16,34 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
-public class FilteredWeightedGraph<V> implements WeightedGraph<V,Double> {
-
-    WeightedGraph<V,? extends Number> base;
-    double threshold = 1.0;
-
-    /** Constructs a filtered graph instance based upon the specified weighted graph */
-    public FilteredWeightedGraph(WeightedGraph<V,? extends Number> baseGraph) {
-        this.base = baseGraph;
-    }
-
-    /** Constructs a filtered graph instance based upon the specified weighted graph */
-    public FilteredWeightedGraph(WeightedGraph<V,? extends Number> baseGraph, double thresh) {
-        this.base = baseGraph;
-        this.threshold = thresh;
-    }
+public class FilteredWeightedGraph<V> extends AbstractWrapperGraph<V> {
+    
+    //
+    // FACTORY METHODS
+    //
 
     /** Constructs a filtered version of the specified graph; will be valued if the underlying graph is valued. */
     public static <V> FilteredWeightedGraph getInstance(WeightedGraph<V,? extends Number> baseGraph) {
         return baseGraph instanceof ValuedGraph ? new Valued(baseGraph) : new FilteredWeightedGraph(baseGraph);
+    }
+    
+    //
+    // IMPLEMENTATION
+    //
+    
+    protected final WeightedGraph<V,? extends Number> base;
+    protected double threshold;
+
+    /** Constructs a filtered graph instance based upon the specified weighted graph */
+    public FilteredWeightedGraph(WeightedGraph<V,? extends Number> baseGraph) {
+        this(baseGraph, 1.0);
+    }
+
+    /** Constructs a filtered graph instance based upon the specified weighted graph */
+    public FilteredWeightedGraph(WeightedGraph<V,? extends Number> baseGraph, double thresh) {
+        super(baseGraph);
+        this.base = baseGraph;
+        this.threshold = thresh;
     }
 
     /** @return threshold parameter */
@@ -45,21 +54,13 @@ public class FilteredWeightedGraph<V> implements WeightedGraph<V,Double> {
     /** @return base graph for filter */
     public WeightedGraph<V,? extends Number> getBaseGraph() { return base; }
 
-    public boolean isDirected() { return base.isDirected(); }
-    public int order() { return base.order(); }
-    public List<V> nodes() { return base.nodes(); }
-    public boolean contains(V x) { return base.contains(x); }
-    
+    @Override
     public boolean adjacent(V x, V y) {
         return base.adjacent(x, y)
                 && Math.abs(base.getWeight(x, y).doubleValue()) >= threshold;
     }
-    public Double getWeight(V x, V y) { return base.getWeight(x,y).doubleValue(); }
 
-    public void setWeight(V x, V y, Double value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    @Override
     public int degree(V x) {
         int result = 0;
         for (V v : base.neighbors(x))
@@ -68,6 +69,7 @@ public class FilteredWeightedGraph<V> implements WeightedGraph<V,Double> {
         return result;
     }
 
+    @Override
     public Set<V> neighbors(V x) {
         HashSet<V> result = new HashSet<V>();
         for (V v : base.neighbors(x))
@@ -76,7 +78,8 @@ public class FilteredWeightedGraph<V> implements WeightedGraph<V,Double> {
         return result;
     }
 
-    public int edgeNumber() {
+    @Override
+    public int edgeCount() {
         int sum = 0;
         List<V> nodes = base.nodes();
         int n = nodes.size();

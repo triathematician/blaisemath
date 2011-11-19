@@ -26,22 +26,19 @@ import org.bm.blaise.scio.graph.GraphUtils;
  *
  * @author Elisha Peterson
  */
-public class BetweenCentrality implements NodeMetric<Double> {
+public class BetweenCentrality extends NodeMetricSupport<Double> {
 
-    private BetweenCentrality() {}
-    private static final BetweenCentrality INSTANCE = new BetweenCentrality();
+    public BetweenCentrality() {
+        super("Betweenness Centrality", true, true);
+    }
 
-    /** Factory method to return instance of between centrality */
-    public static BetweenCentrality getInstance() { return INSTANCE; }
-
-    @Override public String toString() { return "Betweenness Centrality"; }
-
-    public boolean supportsGraph(boolean directed) { return true; }
-    public <V> double nodeMax(boolean directed, int order) {
+    public double nodeMax(boolean directed, int order) {
         // maximum potential value occurs for a star graph
         return (order-1)*(order-2)*(directed ? 1.0 : 0.5);
     }
-    public <V> double centralMax(boolean directed, int order) { return Double.NaN; }
+    public double centralMax(boolean directed, int order) { 
+        return Double.NaN; 
+    }
 
     public <V> Double value(Graph<V> graph, V node) {
         List<V> nodes = graph.nodes();
@@ -55,7 +52,7 @@ public class BetweenCentrality implements NodeMetric<Double> {
     }
 
     public <V> List<Double> allValues(Graph<V> graph) {
-        System.out.print("BC-all (" + graph.order() + " nodes, " + graph.edgeNumber() + " edges): ");
+        System.out.print("BC-all (" + graph.order() + " nodes, " + graph.edgeCount() + " edges): ");
         long l0 = System.currentTimeMillis();
         List<V> nodes = graph.nodes();
         int n = nodes.size();

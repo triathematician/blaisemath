@@ -18,6 +18,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.GraphSupport;
+import org.bm.blaise.scio.graph.GraphUtils;
 
 /**
  * A graph whose nodes and edges all come with associated time intervals. When queried
@@ -29,29 +31,10 @@ import org.bm.blaise.scio.graph.Graph;
  * @author Elisha Peterson
  */
 public class IntervalTimeGraph<V> implements TimeGraph<V> {
-
-    /** Whether graph is directed. */
-    boolean directed;
-    /** Stores the start/stop times for each node; also stores the vertices. */
-    private TreeMap<V, List<double[]>> nodeTimes;
-    /** Stores the edges with associated start/stop times. */
-    private TreeMap<V, Map<V, List<double[]>>> edgeTimes;
-    /** Stores the time domain via the minimum time and maximum time. */
-    double minTime, maxTime;
-
-    /** # of time steps to use (impacts how time slices are done) */
-    int timeSteps = 100;
-
-    /** Do not permit instantiation */
-    private IntervalTimeGraph(boolean directed) {
-        this.directed = directed;
-        nodeTimes = new TreeMap<V, List<double[]>>();
-        edgeTimes = new TreeMap<V, Map<V, List<double[]>>>();
-    }
-
-    @Override public String toString() {
-        return "NODES: " + nodeTimes + "; EDGES: " + edgeTimes;
-    }
+    
+    //
+    // FACTORY METHODS
+    //
 
     /**
      * Factory method to generate longitudinal graph with given properties.
@@ -138,6 +121,33 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         }
         return result;
     }
+    
+    //
+    // IMPLEMENTATION
+    //
+
+    /** Whether graph is directed. */
+    boolean directed;
+    /** Stores the start/stop times for each node; also stores the vertices. */
+    private TreeMap<V, List<double[]>> nodeTimes;
+    /** Stores the edges with associated start/stop times. */
+    private TreeMap<V, Map<V, List<double[]>>> edgeTimes;
+    /** Stores the time domain via the minimum time and maximum time. */
+    double minTime, maxTime;
+
+    /** # of time steps to use (impacts how time slices are done) */
+    int timeSteps = 100;
+
+    /** Do not permit instantiation */
+    private IntervalTimeGraph(boolean directed) {
+        this.directed = directed;
+        nodeTimes = new TreeMap<V, List<double[]>>();
+        edgeTimes = new TreeMap<V, Map<V, List<double[]>>>();
+    }
+
+    @Override public String toString() {
+        return "NODES: " + nodeTimes + "; EDGES: " + edgeTimes;
+    }
 
 
     public boolean isDirected() {
@@ -164,7 +174,7 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
     }
 
     public Graph<V> slice(double time, boolean exact) {
-        return new SliceGraph(time); // here this option is ignored
+        return new SliceGraph(this, time); // here this option is ignored
     }
 
     public double getMinimumTime() {
@@ -225,79 +235,51 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
      * Inner class represents a slice of the graph at a specified time.
      * All calculations are done using the underlying graph.
      */
-    private class SliceGraph implements Graph<V> {
+    private static class SliceGraph<V> extends GraphSupport<V> {
+        
+        /** Parent graph */
+        protected final IntervalTimeGraph<V> parent;
         /** Time of the slice. */
-        double time;
+        protected final double time;
+        /** Components */
+        protected final Set<Set<V>> components;
 
         /** Constructs slice at the specified time. */
-        SliceGraph(double time) {
+        private SliceGraph(IntervalTimeGraph<V> parent, double time) {
+            super(nodeSlice(parent, time), parent.isDirected());
+            this.parent = parent;
             this.time = time;
+            this.components = GraphUtils.components(this, nodes);
         }
 
-        /** 
-         * Checks to see if current time is in stated interval(s)
-         * @param ivs list of intervals
-         * @return true if current time is in any of the intervals, false otherwise & if argument is null
-         */
-        private boolean in(List<double[]> ivs) {
-            if (ivs == null) return false;
-            for (double[] iv : ivs)
-                if (iv[0] <= time && iv[1] >= time)
-                    return true;
-            return false;
+        public Collection<Set<V>> components() {
+            return components;
         }
 
-        public int order() {
-            return nodes().size();
-        }
-
-        public List<V> nodes() {
-            ArrayList<V> nodes = new ArrayList<V>();
-            for (V v : nodeTimes.keySet())
-                if (contains(v))
-                    nodes.add(v);
-            return nodes;
-        }
-
-        public boolean contains(V x) {
-            if (!nodeTimes.containsKey(x))
-                return false;
-            List<double[]> intervals = nodeTimes.get(x);
-            return in(intervals);
-        }
-
-        public boolean isDirected() {
-            return directed;
-        }
-
+        @Override
         public boolean adjacent(V x, V y) {
             if (!(contains(x) && contains(y)))
                 return false;
-            boolean dirOK = edgeTimes.containsKey(x) && edgeTimes.get(x).containsKey(y);
-            boolean undirOK = dirOK || (edgeTimes.containsKey(y) && edgeTimes.get(y).containsKey(x));
+            boolean dirOK = parent.edgeTimes.containsKey(x) && parent.edgeTimes.get(x).containsKey(y);
+            boolean undirOK = dirOK || (parent.edgeTimes.containsKey(y) && parent.edgeTimes.get(y).containsKey(x));
             if ((directed && !dirOK) || (!directed && !undirOK))
                 return false;
-            return dirOK ? in(edgeTimes.get(x).get(y)) : in(edgeTimes.get(y).get(x));
-        }
-
-        public int degree(V x) {
-            return neighbors(x).size();
+            return dirOK ? in(time, parent.edgeTimes.get(x).get(y)) : in(time, parent.edgeTimes.get(y).get(x));
         }
 
         public Set<V> neighbors(V x) {
-            if (!contains(x) || !edgeTimes.containsKey(x))
+            if (!contains(x) || !parent.edgeTimes.containsKey(x))
                 return Collections.emptySet();
-            Map<V, List<double[]>> adj = edgeTimes.get(x);
+            Map<V, List<double[]>> adj = parent.edgeTimes.get(x);
             HashSet<V> nbhd = new HashSet<V>();
             for (Entry<V, List<double[]>> en : adj.entrySet())
-                if (in(en.getValue()))
+                if (in(time, en.getValue()))
                     nbhd.add(en.getKey());
             return nbhd;
         }
 
-        public int edgeNumber() {
+        public int edgeCount() {
             int total = 0;
-            List<V> nodes = nodes(); // look at nodes in current time-slice only
             for (V v1 : nodes)
                 for (V v2 : nodes)
                     if (adjacent(v1, v2))
@@ -306,4 +288,33 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         }
     } // INNER CLASS SliceGraph
 
+    
+    //
+    // UTILITIES
+    //
+    
+    /** Construct nodes at specified time. */
+    private static <V> List<V> nodeSlice(IntervalTimeGraph<V> parent, double time) {
+        ArrayList<V> nodes = new ArrayList<V>();
+        for (V v : parent.nodeTimes.keySet()) {
+            List<double[]> intervals = parent.nodeTimes.get(v);
+            if (in(time, intervals))
+                nodes.add(v);
+        }
+        return nodes;
+    }
+
+    /** 
+     * Checks to see if time is in stated interval(s)
+     * @param time the time
+     * @param ivs list of intervals
+     * @return true if current time is in any of the intervals, false otherwise & if argument is null
+     */
+    private static boolean in(double time, List<double[]> ivs) {
+        if (ivs == null) return false;
+        for (double[] iv : ivs)
+            if (iv[0] <= time && iv[1] >= time)
+                return true;
+        return false;
+    }
 }

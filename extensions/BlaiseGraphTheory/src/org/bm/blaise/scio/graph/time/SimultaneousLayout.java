@@ -33,8 +33,23 @@ public class SimultaneousLayout {
 
     // ALGORITHM PARAMETERS
 
-    /** Force per distance */
-    double springC = 5;
+    //<editor-fold defaultstate="collapsed" desc="Parameters CLASS DEF">
+    
+    public static class Parameters extends SpringLayout.Parameters {
+        /** Force per distance */
+        double springC = 5;
+
+        public double getTimeForce() {
+            return springC;
+        }
+
+        public void setTimeForce(double springC) {
+            this.springC = springC;
+        }
+    }
+    //</editor-fold>
+    
+    protected Parameters parameters = new Parameters();
 
     // STATE VARIABLES
 
@@ -52,6 +67,19 @@ public class SimultaneousLayout {
             slices.add(new LayoutSlice(i, tg.slice(times.get(i), true), copy(ip)));
             masterPos.add(new HashMap<Object,Point2D.Double>());
         }
+        parameters.setGlobalForce(1.0);
+//            super.setSpringForce(25.0);
+//            super.setSpringLength(1.0);
+        parameters.setDampingConstant(.6);
+        parameters.setRepulsiveForce(1.0);
+    }
+
+    public Parameters getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Parameters parameters) {
+        this.parameters = parameters;
     }
 
     private Map<Object,Point2D.Double> copy(Map<Object,Point2D.Double> ip) {
@@ -71,6 +99,10 @@ public class SimultaneousLayout {
         }
         return Collections.emptyMap();
     }
+    
+    //
+    // ITERATION
+    //
 
     public void iterate() {
         iterate(null);
@@ -94,7 +126,7 @@ public class SimultaneousLayout {
 
     /** Overrides SpringLayout to add time factor at each slice */
     private class LayoutSlice extends SpringLayout {
-
+        
         int tIndex;
         Graph graph;
 
@@ -102,11 +134,7 @@ public class SimultaneousLayout {
             super(ip);
             this.tIndex = ti;
             this.graph = g;
-            super.setGlobalForce(1.0);
-//            super.setSpringForce(25.0);
-//            super.setSpringLength(1.0);
-            super.setDampingConstant(.6);
-            super.setRepulsiveForce(1.0);
+            this.parameters = SimultaneousLayout.this.parameters;
         }
 
         /** Hack job to iterate filtered graphs */
@@ -145,9 +173,9 @@ public class SimultaneousLayout {
                 Point2D.Double adj1 = masterPos.get(i).get(io);
                 if (adj1 != null) {
                     double dist = adj1.distance(iLoc);
-                    if (dist > .02) {
-                        sum.x += wt * springC * (adj1.x - iLoc.x) * dist * iter;
-                        sum.y += wt * springC * (adj1.y - iLoc.y) * dist * iter;
+                    if (dist > .002) {
+                        sum.x += wt * SimultaneousLayout.this.parameters.springC * (adj1.x - iLoc.x) * dist * iter;
+                        sum.y += wt * SimultaneousLayout.this.parameters.springC * (adj1.y - iLoc.y) * dist * iter;
                     }
                 }
             }

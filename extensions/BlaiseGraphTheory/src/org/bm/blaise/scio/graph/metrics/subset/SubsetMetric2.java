@@ -3,9 +3,12 @@
  * Created on Oct 26, 2009
  */
 
-package org.bm.blaise.scio.graph.metrics;
+package org.bm.blaise.scio.graph.metrics.subset;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.bm.blaise.scio.graph.*;
 
 /**
@@ -34,5 +37,24 @@ public class SubsetMetric2<N> {
      */
     public <V> N getValue(Graph<V> graph, Collection<V> participants, Collection<V> subset) {
         return (N) baseM.getValue(Subgraph.getInstance(graph, participants), subset);
+    }
+
+    //
+    // UTILITY METHOD SAVED HERE
+    //
+
+    /** Enumerates all subsets of the integer subset [0,1,2,...,n-1] as an abstract list. */
+    private static List<List<Integer>> enumerateSubsets(final int n) {
+        return new AbstractList<List<Integer>>() {
+            @Override
+            public List<Integer> get(int index) {
+                ArrayList<Integer> summand = new ArrayList<Integer>();
+                for (int bit = 0; bit < n; bit++)
+                    if ((index >> bit) % 2 == 1) summand.add(bit);
+                return summand;
+            }
+            @Override
+            public int size() { return (int) Math.pow(2, n); }
+        };
     }
 }

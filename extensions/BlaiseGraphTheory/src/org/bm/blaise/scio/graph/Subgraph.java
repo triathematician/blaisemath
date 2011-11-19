@@ -14,8 +14,7 @@ import java.util.Set;
 
 /**
  * Provides a wrapper implementation of a graph that is the restriction of a "parent"
- * graph to a specified subset of nodes.
- * All of its methods use the "parent" graph and the
+ * graph to a specified subset of nodes. All of its methods use the "parent" graph and the
  * subset to compute results when the methods are called, without storing any
  * additional data about the graph.
  *
@@ -23,10 +22,11 @@ import java.util.Set;
  * @see ContractedGraph
  * @author Elisha Peterson
  */
-public class Subgraph<V> implements Graph<V> {
-
-    Graph<V> parent;
-    List<V> subset;
+public class Subgraph<V> extends GraphSupport<V> {
+    
+    //
+    // FACTORY METHODS
+    //
 
     /**
      * Factory method returns subgraph of a graph; return type will match the type of the parent object
@@ -42,62 +42,77 @@ public class Subgraph<V> implements Graph<V> {
         else
             return new Subgraph(parent, subset);
     }
+    
     /**
      * Factory method returns subgraph of a weighted graph.
      */
-    public static <V,E> WeightedGraph<V,E> getWeightedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { return new Weighted(parent, subset); }
+    public static <V,E> WeightedGraph<V,E> getWeightedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { 
+        return new Weighted(parent, subset); 
+    }
+    
     /**
      * Factory method returns subgraph of a valued graph.
      */
-    public static <V,N> ValuedGraph<V,N> getValuedInstance(ValuedGraph<V,N> parent, Collection<V> subset) { return new Valued(parent, subset); }
+    public static <V,N> ValuedGraph<V,N> getValuedInstance(ValuedGraph<V,N> parent, Collection<V> subset) { 
+        return new Valued(parent, subset); 
+    }
+    
     /**
      * Factory method returns subgraph of a weighted, valued graph.
      */
-    public static <V,E,N> WeightedGraph<V,E> getWeightedValuedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { return new WeightedValued(parent, subset); }
+    public static <V,E,N> WeightedGraph<V,E> getWeightedValuedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { 
+        return new WeightedValued(parent, subset); 
+    }
 
+    
+    //
+    // IMPLEMENTATION
+    //
+
+    /** Parent graph */
+    protected final Graph<V> parent;
+    /** The connected components of the subgraph. */
+    private final Set<Set<V>> components;
+    
     /**
      * Construct a subgraph comprised of a particular subset of vertices within the parent.
      * @param parent the parent graph
      * @param subset the subset of vertices to include in the subgraph
      */
     public Subgraph(Graph<V> parent, Collection<V> subset) {
-        if (parent == null || subset == null)
-            throw new IllegalArgumentException("Called constructor with null values!");
+        super(subset instanceof List ? (List<V>) subset : new ArrayList<V>(subset), parent.isDirected());
         this.parent = parent;
-        this.subset = subset instanceof List ? (List<V>) subset : new ArrayList<V>(subset);
+        this.components = GraphUtils.components(parent, subset);
+    }
+
+    public Collection<Set<V>> components() {
+        return components;
     }
 
     @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < subset.size(); i++)
-            for (int j = isDirected() ? 0 : i; j < subset.size(); j++)
-                if (adjacent(subset.get(i), subset.get(j)))
-                    result.append("[" + subset.get(i) + ", " + subset.get(j) + "], ");
-        result.delete(result.length()-2, result.length());
-        return result.toString();
+    public boolean adjacent(V x, V y) { 
+        return nodes.contains(x) && nodes.contains(y) && parent.adjacent(x, y); 
     }
-
-    public int order() { return subset.size(); }
-    public List<V> nodes() { return Collections.unmodifiableList(subset); }
-    public boolean contains(V x) { return subset.contains(x); }
-    public boolean isDirected() { return parent.isDirected(); }
-    public boolean adjacent(V x, V y) { return subset.contains(x) && subset.contains(y) && parent.adjacent(x, y); }
+    
+    @Override
     public int degree(V x) { 
         Set<V> nbhd = neighbors(x);
         return nbhd.size() + (!isDirected() && nbhd.contains(x) ? 1 : 0);
     }
+    
     public Set<V> neighbors(V x) {
-        if (!contains(x)) return Collections.emptySet();
+        if (!contains(x)) 
+            return Collections.emptySet();
         HashSet<V> result = new HashSet<V>();
         result.addAll(parent.neighbors(x));
-        result.retainAll(subset);
+        result.retainAll(nodes);
         return result;
     }
-    public int edgeNumber() {
+    
+    public int edgeCount() {
         int sum = 0;
-        for (V v1 : subset)
-            for (V v2 : subset)
+        for (V v1 : nodes)
+            for (V v2 : nodes)
                 if (parent.adjacent(v1, v2))
                     sum += v1==v2 && !isDirected() ? 2 : 1;
         return isDirected() ? sum : sum/2;
@@ -115,7 +130,7 @@ public class Subgraph<V> implements Graph<V> {
             wg = (WeightedGraph<V,E>) parent;
         }
         public E getWeight(V x, V y) {
-            return subset.contains(x) && subset.contains(y) ? wg.getWeight(x, y) : null;
+            return nodes.contains(x) && nodes.contains(y) ? wg.getWeight(x, y) : null;
         }
         /** This method does nothing. Use the corresponding method in the superclass instead. */
         public void setWeight(V x, V y, E value) {}
@@ -129,7 +144,7 @@ public class Subgraph<V> implements Graph<V> {
             vg = (ValuedGraph<V,N>) parent;
         }
         public N getValue(V x) {
-            return subset.contains(x) ? vg.getValue(x) : null;
+            return nodes.contains(x) ? vg.getValue(x) : null;
         }
         /** This method does nothing. Use the corresponding method in the superclass instead. */
         public void setValue(V x, N value) {}
@@ -143,7 +158,7 @@ public class Subgraph<V> implements Graph<V> {
             vg = (ValuedGraph<V,N>) parent;
         }
         public N getValue(V x) {
-            return subset.contains(x) ? vg.getValue(x) : null;
+            return nodes.contains(x) ? vg.getValue(x) : null;
         }
         /** This method does nothing. Use the corresponding method in the superclass instead. */
         public void setValue(V x, N value) {}

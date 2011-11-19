@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphFactory;
-import org.bm.blaise.scio.graph.RandomGraph;
 import org.bm.blaise.scio.graph.io.PajekGraphIOTest;
 import org.junit.BeforeClass;
 import org.junit.Test;

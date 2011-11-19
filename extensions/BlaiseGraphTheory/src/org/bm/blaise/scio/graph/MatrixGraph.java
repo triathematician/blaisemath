@@ -6,6 +6,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -21,36 +22,11 @@ import java.util.Set;
  *
  * @author Elisha Peterson
  */
-public class MatrixGraph<V> implements Graph<V> {
-
-    /** Whether graph is directed or not. */
-    final boolean directed;
-    /** The nodes in the graph */
-    private ArrayList<V> nodes;
-    /** Adjacency matrix. */
-    int[][] mx;
-
-    private MatrixGraph(boolean directed, Iterable<V> nodes) {
-        this.directed = directed;
-        this.nodes = new ArrayList<V>();
-        for (V v : nodes) this.nodes.add(v);
-        int n = this.nodes.size();
-        mx = new int[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                mx[i][j] = 0;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < mx.length; i++) {
-            for (int j = 0; j < mx.length; j++)
-                result.append(mx[i][j]).append(" ");
-            result.append("\n");
-        }
-        return result.toString();
-    }
+public class MatrixGraph<V> extends GraphSupport<V> {
+    
+    //
+    // FACTORY METHODS
+    //
     
     /**
      * Factory method to return an immutable instance of a matrix graph. Adds all nodes and edges. If an edge
@@ -66,7 +42,7 @@ public class MatrixGraph<V> implements Graph<V> {
             if (!allNodes.contains(e[0])) allNodes.add(e[0]);
             if (!allNodes.contains(e[1])) allNodes.add(e[1]);
         }
-        MatrixGraph<V> g = new MatrixGraph<V>(directed, allNodes);
+        MatrixGraph<V> g = new MatrixGraph<V>(allNodes, directed);
         int i1, i2;
         for (V[] e : edges) {
             i1 = allNodes.indexOf(e[0]);
@@ -76,14 +52,51 @@ public class MatrixGraph<V> implements Graph<V> {
         }
         return g;
     }
+    
+    //
+    // IMPLEMENTATION
+    //
 
-    public int order() { return nodes.size(); }
-    public List<V> nodes() { return Collections.unmodifiableList(nodes); }
-    public boolean contains(V x) { return nodes.contains(x); }
+    /** Adjacency matrix. */
+    protected final int[][] mx;
+    /** Components */
+    protected final Set<Set<V>> components;
 
-    public boolean isDirected() { return directed; }
-    public boolean adjacent(V x, V y) { return adjacentByIndex(nodes.indexOf(x), nodes.indexOf(y)); }
-    private boolean adjacentByIndex(int i1, int i2) { return i1 != -1 && i2 != -1 && mx[i1][i2] != 0; }
+    private MatrixGraph(Iterable<V> nodes, boolean directed) {
+        super(listOf(nodes), directed);
+        int n = this.nodes.size();
+        mx = new int[n][n];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                mx[i][j] = 0;
+        components = GraphUtils.components(this, this.nodes);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < mx.length; i++) {
+            for (int j = 0; j < mx.length; j++)
+                result.append(mx[i][j]).append(" ");
+            result.append("\n");
+        }
+        return result.toString();
+    }
+
+    public Collection<Set<V>> components() {
+        return components;
+    }
+
+    @Override
+    public boolean adjacent(V x, V y) { 
+        return adjacentByIndex(nodes.indexOf(x), nodes.indexOf(y)); 
+    }
+    
+    private boolean adjacentByIndex(int i1, int i2) { 
+        return i1 != -1 && i2 != -1 && mx[i1][i2] != 0; 
+    }
+    
+    @Override
     public int degree(V x) {
         if (!nodes.contains(x)) return 0;
         int ix = nodes.indexOf(x);
@@ -94,6 +107,7 @@ public class MatrixGraph<V> implements Graph<V> {
         return sum;
 
     }
+    
     public Set<V> neighbors(V x) {
         if (!nodes.contains(x)) return Collections.emptySet();
         int ix = nodes.indexOf(x);
@@ -103,7 +117,8 @@ public class MatrixGraph<V> implements Graph<V> {
         return result;
         
     }
-    public int edgeNumber() {
+    
+    public int edgeCount() {
         int sum = 0;
         int n = mx.length;
         for (int i = 0; i < n; i++)
@@ -111,5 +126,19 @@ public class MatrixGraph<V> implements Graph<V> {
                 if (mx[i][j] != 0)
                     sum += (i==j && !directed) ? 2 : 1;
         return directed ? sum : sum/2;
+    }
+    
+    
+    //
+    // STATIC UTILITIES
+    //
+    
+    private static <V> List<V> listOf(Iterable<V> it) {
+        if (it instanceof List)
+            return (List) it;
+        List<V> result = new ArrayList<V>();
+        for (V v: it)
+            result.add(v);
+        return result;
     }
 }

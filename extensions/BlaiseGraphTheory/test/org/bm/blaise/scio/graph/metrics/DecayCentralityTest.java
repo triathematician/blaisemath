@@ -8,7 +8,6 @@ package org.bm.blaise.scio.graph.metrics;
 import java.util.List;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.io.PajekGraphIOTest;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;

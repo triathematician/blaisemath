@@ -163,8 +163,8 @@ public class GraphMetricsTest {
         System.out.println("EDGE_NUMBER");
         assertEquals(10, GraphMetrics.EDGE_NUMBER.value(GraphFactory.getCycleGraph(10, true)), 1e-6);
         assertEquals(18, GraphMetrics.EDGE_NUMBER.value(GraphFactory.getWheelGraph(10, false)), 1e-6);
-        assertEquals(SAMPLE_AIRPORTS.edgeNumber(), GraphMetrics.EDGE_NUMBER.value(SAMPLE_AIRPORTS), 0.0);
-        assertEquals(SAMPLE_PADGETT.edgeNumber(), GraphMetrics.EDGE_NUMBER.value(SAMPLE_PADGETT), 0.0);
+        assertEquals(SAMPLE_AIRPORTS.edgeCount(), GraphMetrics.EDGE_NUMBER.value(SAMPLE_AIRPORTS), 0.0);
+        assertEquals(SAMPLE_PADGETT.edgeCount(), GraphMetrics.EDGE_NUMBER.value(SAMPLE_PADGETT), 0.0);
     }
 
     @Test

@@ -140,8 +140,8 @@ public class MatrixGraphTest {
     @Test
     public void testEdgeNumber() {
         System.out.println("edgeNumber");
-        assertEquals(11, UNDIRECTED_INSTANCE.edgeNumber());
-        assertEquals(12, DIRECTED_INSTANCE.edgeNumber());
+        assertEquals(11, UNDIRECTED_INSTANCE.edgeCount());
+        assertEquals(12, DIRECTED_INSTANCE.edgeCount());
     }
 
 }
