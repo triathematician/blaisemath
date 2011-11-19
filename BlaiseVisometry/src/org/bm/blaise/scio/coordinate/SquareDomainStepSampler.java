@@ -11,8 +11,7 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.bm.blaise.scio.coordinate.sample.SampleSet;
-import util.ChangeBroadcaster;
-import util.DefaultChangeBroadcaster;
+import org.bm.util.ChangeSupport;
 
 /**
  * <p>
@@ -21,7 +20,7 @@ import util.DefaultChangeBroadcaster;
  * @author Elisha Peterson
  */
 public class SquareDomainStepSampler extends AbstractList<Point2D.Double>
-        implements SampleSet<Point2D.Double>, ChangeBroadcaster, ChangeListener {
+        implements SampleSet<Point2D.Double>, ChangeListener {
 
     RealIntervalStepSampler sampler1;
     RealIntervalStepSampler sampler2;
@@ -62,13 +61,19 @@ public class SquareDomainStepSampler extends AbstractList<Point2D.Double>
     }
 
 
+    
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
-    // ChangeEvent HANDLING
+    // EVENT HANDLING
     //
+    public void stateChanged(ChangeEvent e) { 
+        changer.fireStateChanged(); 
+    }
 
-    DefaultChangeBroadcaster changer = new DefaultChangeBroadcaster();
+    protected ChangeSupport changer = new ChangeSupport();
     public void addChangeListener(ChangeListener l) { changer.addChangeListener(l); }
     public void removeChangeListener(ChangeListener l) { changer.removeChangeListener(l); }
-    public void stateChanged(ChangeEvent e) { changer.fireStateChanged(); }
+    
+    //</editor-fold>
 
 }

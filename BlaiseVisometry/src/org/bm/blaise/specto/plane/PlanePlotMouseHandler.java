@@ -5,8 +5,8 @@
 
 package org.bm.blaise.specto.plane;
 
-import org.bm.blaise.graphics.GraphicVisibility;
-import org.bm.blaise.graphics.renderer.BasicShapeRenderer;
+import org.bm.blaise.style.VisibilityKey;
+import org.bm.blaise.style.BasicShapeStyle;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -19,7 +19,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import org.bm.blaise.specto.PaintsCanvas;
 
 /**
  * <p>
@@ -38,7 +37,7 @@ import org.bm.blaise.specto.PaintsCanvas;
  * @author Elisha Peterson
  */
 public class PlanePlotMouseHandler 
-        implements MouseListener, MouseMotionListener, MouseWheelListener, PaintsCanvas {
+        implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     PlanePlotComponent plot;
     PlaneVisometry vis;
@@ -54,11 +53,11 @@ public class PlanePlotMouseHandler
     /** Hint box for zooming */
     transient Rectangle2D.Double zoomBox;
     /** Renderer for zoom box */
-    final static BasicShapeRenderer rend = new BasicShapeRenderer(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
+    final static BasicShapeStyle rend = new BasicShapeStyle(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
 
     public void paint(Graphics2D canvas) {
         if (zoomBox != null)
-            rend.draw(zoomBox, canvas, GraphicVisibility.Regular);
+            rend.draw(zoomBox, canvas, VisibilityKey.Regular);
     }
 
     //
@@ -87,7 +86,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
+        if (e.isConsumed()) { System.err.println("alread consumed"); return; }
         if (pressedAt != null) {
             try {
             Point winPt = e.getPoint();
@@ -262,7 +261,9 @@ public class PlanePlotMouseHandler
 
     /**
      * Zooms to the boundaries of a particular box.
-     * @param winBoundary the boundary of the zoom box (in window coordinates)
+     * @param vis associated visometry
+     * @param newMin min of zoom box
+     * @param newMax max of zoom box
      */
     public static void zoomCoordBoxAnimated(final PlaneVisometry vis, final Point2D.Double newMin, final Point2D.Double newMax) {
         final Point2D.Double min = vis.getMinPointVisible();
@@ -285,7 +286,8 @@ public class PlanePlotMouseHandler
 
     /**
      * Animates an asepct ratio change.
-     * @param newAspect the new aspect ratio.
+     * @param vis associated visometry
+     * @param aspect the new aspect ratio.
      */
     public static void aspectAnimated(final PlaneVisometry vis, final double aspect) {
         if (aspect <= 0)

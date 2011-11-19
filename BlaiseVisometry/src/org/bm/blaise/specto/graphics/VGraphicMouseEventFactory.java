@@ -4,10 +4,9 @@
  */
 package org.bm.blaise.specto.graphics;
 
-import org.bm.blaise.graphics.GraphicEntry;
+import org.bm.blaise.graphics.Graphic;
 import org.bm.blaise.graphics.GraphicMouseEvent;
 import java.awt.Point;
-import org.bm.blaise.specto.Visometry;
 
 /**
  * @param <C> local coordinate type
@@ -23,7 +22,7 @@ public class VGraphicMouseEventFactory<C> extends GraphicMouseEvent.Factory {
     }
 
     @Override
-    public GraphicMouseEvent createEvent(GraphicEntry s, Point p) {
+    public GraphicMouseEvent createEvent(Graphic s, Point p) {
         return new VGraphicMouseEvent(s, p, vis.toLocal(p));
     }
 }

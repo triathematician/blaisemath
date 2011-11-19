@@ -4,7 +4,7 @@
  */
 package org.bm.blaise.specto.graphics;
 
-import org.bm.blaise.graphics.GraphicEntry;
+import org.bm.blaise.graphics.Graphic;
 import org.bm.blaise.graphics.GraphicMouseEvent;
 import java.awt.Point;
 
@@ -17,7 +17,7 @@ import java.awt.Point;
 public class VGraphicMouseEvent<C> extends GraphicMouseEvent {
     final C local;
 
-    public VGraphicMouseEvent(GraphicEntry s, Point point, C local) {
+    public VGraphicMouseEvent(Graphic s, Point point, C local) {
         super(s, point);
         this.local = local;
     }

@@ -2,27 +2,22 @@
  * Visometry.java
  * Created on Sep 14, 2007, 7:42:38 AM
  */
-package org.bm.blaise.specto;
+package org.bm.blaise.specto.graphics;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import util.ChangeBroadcaster;
 
 /**
  * <p>
- *   The purpose of a visometry is to provide the essential methods for translating
- *   between a visual rectangle on the computer screen and a particular coordinate system.
+ *   Provides the essential methods for translating
+ *   between a visual window on the computer screen and a particular coordinate system.
  * </p>
  * 
  * @param <C> the underlying coordinate system in use
  *
  * @author Elisha Peterson
  */
-public interface Visometry<C> extends ChangeBroadcaster {
-
-    //
-    // TRANSFORMATIONS
-    //
+public interface Visometry<C> {
 
     /**
      * Returns bounds of the screen viewable part of the visometry.
@@ -70,4 +65,19 @@ public interface Visometry<C> extends ChangeBroadcaster {
      */
     public C toLocal(Point2D point);
 
+    //
+    // EVENT HANDLING
+    //
+    
+    /** 
+     * Add a change listener.
+     * @param l a change listener
+     */
+    public void addChangeListener(javax.swing.event.ChangeListener l);
+
+    /** 
+     * Remove a change listener.
+     * @param l a change listener
+     */
+    public void removeChangeListener(javax.swing.event.ChangeListener l);
 }

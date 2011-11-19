@@ -7,18 +7,15 @@ package org.bm.blaise.scio.coordinate;
 import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.bm.blaise.scio.coordinate.Domain;
-import org.bm.blaise.scio.coordinate.MinMaxBean;
 import org.bm.blaise.scio.random.RandomCoordinateGenerator;
-import util.ChangeBroadcaster;
-import util.DefaultChangeBroadcaster;
+import org.bm.util.ChangeSupport;
 
 /**
  *
  * @author ae3263
  */
 public class SquareDomainBroadcaster
-        implements Domain<Point2D.Double>, RandomCoordinateGenerator<Point2D.Double>, MinMaxBean<Point2D.Double>, ChangeBroadcaster, ChangeListener {
+        implements Domain<Point2D.Double>, RandomCoordinateGenerator<Point2D.Double>, MinMaxBean<Point2D.Double>, ChangeListener {
 
     RealIntervalBroadcaster x, y;
 
@@ -61,9 +58,18 @@ public class SquareDomainBroadcaster
         return new Point2D.Double(x.getMaximum(), y.getMaximum());
     }
 
-    DefaultChangeBroadcaster changer = new DefaultChangeBroadcaster();
+    
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //
+    // EVENT HANDLING
+    //
+    public void stateChanged(ChangeEvent e) { 
+        changer.fireStateChanged(); 
+    }
+
+    protected ChangeSupport changer = new ChangeSupport();
     public void addChangeListener(ChangeListener l) { changer.addChangeListener(l); }
     public void removeChangeListener(ChangeListener l) { changer.removeChangeListener(l); }
-
-    public void stateChanged(ChangeEvent e) { changer.fireStateChanged(); }
+    
+    //</editor-fold>
 }

@@ -5,15 +5,12 @@
 
 package org.bm.blaise.scio.coordinate;
 
-import org.bm.blaise.scio.coordinate.RealInterval;
 import javax.swing.event.ChangeEvent;
-import org.bm.blaise.scio.coordinate.*;
 import java.util.AbstractList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.bm.blaise.scio.coordinate.sample.SampleSet;
-import util.ChangeBroadcaster;
-import util.DefaultChangeBroadcaster;
+import org.bm.util.ChangeSupport;
 
 /**
  * <p>
@@ -33,7 +30,7 @@ import util.DefaultChangeBroadcaster;
  * @author Elisha Peterson
  */
 public class RealIntervalStepSampler extends AbstractList<Double>
-        implements SampleSet<Double>, ChangeBroadcaster, ChangeListener {
+        implements SampleSet<Double>, ChangeListener {
 
     /** Domain of sampler. */
     RealInterval domain;
@@ -43,8 +40,6 @@ public class RealIntervalStepSampler extends AbstractList<Double>
     public RealIntervalStepSampler(RealInterval domain, double step) {
         this.domain = domain;
         this.step = step;
-        if (domain instanceof ChangeBroadcaster)
-            ((ChangeBroadcaster)domain).addChangeListener(this);
         update();
     }
     
@@ -107,12 +102,19 @@ public class RealIntervalStepSampler extends AbstractList<Double>
         return step;
     }
 
+    
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
-    // ChangeEvent HANDLING
+    // EVENT HANDLING
     //
+    public void stateChanged(ChangeEvent e) { 
+        update(); 
+        changer.fireStateChanged(); 
+    }
 
-    DefaultChangeBroadcaster changer = new DefaultChangeBroadcaster();
+    protected ChangeSupport changer = new ChangeSupport();
     public void addChangeListener(ChangeListener l) { changer.addChangeListener(l); }
     public void removeChangeListener(ChangeListener l) { changer.removeChangeListener(l); }
-    public void stateChanged(ChangeEvent e) { update(); changer.fireStateChanged(); }
+    
+    //</editor-fold>
 }

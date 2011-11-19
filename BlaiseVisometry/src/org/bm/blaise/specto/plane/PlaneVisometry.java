@@ -20,13 +20,12 @@ import org.bm.blaise.scio.coordinate.RealIntervalStepSampler;
 import org.bm.blaise.scio.coordinate.ScreenSampleDomainProvider;
 import org.bm.blaise.scio.coordinate.SquareDomainBroadcaster;
 import org.bm.blaise.scio.coordinate.SquareDomainStepSampler;
-import org.bm.blaise.specto.Visometry;
-import util.ChangeBroadcaster;
-import util.DefaultChangeBroadcaster;
+import org.bm.blaise.specto.graphics.Visometry;
+import org.bm.util.ChangeSupport;
 
 /**
  * <p>
- *   <code>PlaneVisometry</code> converts a standard Euclidean plane onto a window.
+ *   Converts a standard Euclidean plane onto a window.
  *   The class ensures that all of a desired range is kept within the window, and that
  *   the aspect ratio is also maintained. The displayed window is the smallest possible
  *   around the desired range with the specified aspect.
@@ -35,7 +34,7 @@ import util.DefaultChangeBroadcaster;
  * @author Elisha Peterson
  */
 public class PlaneVisometry implements Visometry<Point2D.Double>,
-        ChangeBroadcaster, ChangeListener {
+        ChangeListener {
 
     /** Stores the boundary of the display window, in window coordinates. */
     RectangularShape windowBounds;
@@ -272,7 +271,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
             changer.fireStateChanged();
     }
 
-    protected DefaultChangeBroadcaster changer = new DefaultChangeBroadcaster(this);
+    protected ChangeSupport changer = new ChangeSupport(this);
     public void addChangeListener(ChangeListener l) { changer.addChangeListener(l); }
     public void removeChangeListener(ChangeListener l) { changer.removeChangeListener(l); }
 
@@ -287,23 +286,27 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
 
     /** @return domain associated with the horizontal axis */
     public RealIntervalSamplerProvider getHorizontalDomain() {
-        if (xDomain == null)
-            xDomain = new RealIntervalSamplerProvider(this) {
+        if (xDomain == null) {
+            xDomain = new RealIntervalSamplerProvider() {
                 public double getNewMinimum() { return PlaneVisometry.this.displayRange.x; }
                 public double getNewMaximum() { return PlaneVisometry.this.displayRange.x + PlaneVisometry.this.displayRange.width; }
                 public double getScale(float pixSpacing) { return Math.abs(pixSpacing / PlaneVisometry.this.getHorizontalScale()); }
             }; 
+            addChangeListener(xDomain);
+        }
         return xDomain;
     }
 
     /** @return domain associated with the vertical axis */
     public RealIntervalSamplerProvider getVerticalDomain() {
-        if (yDomain == null)
-            yDomain = new RealIntervalSamplerProvider(this) {
+        if (yDomain == null) {
+            yDomain = new RealIntervalSamplerProvider() {
                 public double getNewMinimum() { return PlaneVisometry.this.displayRange.y; }
                 public double getNewMaximum() { return PlaneVisometry.this.displayRange.y + PlaneVisometry.this.displayRange.height; }
                 public double getScale(float pixSpacing) { return Math.abs(pixSpacing / PlaneVisometry.this.getVerticalScale()); }
             };
+            addChangeListener(yDomain);
+        }
         return yDomain;
     }
 

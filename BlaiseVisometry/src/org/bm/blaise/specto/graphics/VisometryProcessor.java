@@ -3,36 +3,20 @@
  * Created Jul 2009 (based on earlier work)
  */
 
-package org.bm.blaise.specto;
+package org.bm.blaise.specto.graphics;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-import utils.IndexedGetter;
 
 /**
  * <p>
  *  Contains necessary functions to convert points, arrays of points, etc. from
  *  visometry coordinates to window coordinates for rendering.
  * </p>
- * <br>
- * <p style="color:gray">
- *  <i><b>THIS IS A SUBSTANTIAL DEPARTURE FROM THE PRIOR ARCHITECTURE.</b></i> It used to be
- *  that the processor was responsible for handling arbitrary object types. Now it is
- *  only responsible for handling types easily derived from the visometry. Classes requiring
- *  special capability will have to conduct the translation themselves. The primary use case
- *  for the previous case was 3D graphics, in which case an intermediate step was necessary
- *  to order the primitives properly. In the current implementation, the reordering step
- *  would happen in graphics.GraphicCache, which handles the ordering of displayed elements.
- * </p>
  *
  * @param <C> type of the local coordinate
- *
- * @see graphics.GraphicCache
- *
- * @see VPrimitiveEntry
  *
  * @author Elisha Peterson
  */
@@ -78,33 +62,52 @@ public class VisometryProcessor<C> {
         return gp;
     }
 
-    /** Converts an indexed bean of local points to a window path */
-    public GeneralPath convertToPath(IndexedGetter<C> points, Visometry<C> vis) {
-        ArrayList<C> lp = new ArrayList<C>();
-        for (int i = 0; i < points.getSize(); i++)
-            try {
-                lp.add(points.getElement(i));
-            } catch (Exception ex) {
-                break;
+    /** Converts an iterable of local points to a window path */
+    public GeneralPath convertToPath(C[] point, Visometry<C> vis) {
+        GeneralPath gp = new GeneralPath();
+        boolean started = false;
+        for (C c : point) {
+            if (c == null) {
+                started = false;
+                continue;
             }
-        return convertToPath(lp, vis);
-    }
-
-    /** Copies an indexed bean's elements into a list */
-    private static <C> List<C> copy(IndexedGetter<C> bean) {
-        List<C> result = new ArrayList<C>();
-        for (int i = 0; i < bean.getSize(); i++) {
-            result.add(bean.getElement(i));
+            Point2D.Double win = vis.toWindow(c);
+            if (!started)
+                gp.moveTo((float) win.getX(), (float) win.getY());
+            else
+                gp.lineTo((float) win.getX(), (float) win.getY());
+            started = true;
         }
-        return result;
+        return gp;
     }
 
-    /** Wrap an indexed bean as a list */
-    private static <C> List<C> asList(final IndexedGetter<C> bean) {
-        return new AbstractList<C>() {
-            @Override public C get(int index) { return bean.getElement(index); }
-            @Override public int size() { return bean.getSize(); }
-        };
-    }
+//    /** Converts an indexed bean of local points to a window path */
+//    public GeneralPath convertToPath(IndexedGetter<C> points, Visometry<C> vis) {
+//        ArrayList<C> lp = new ArrayList<C>();
+//        for (int i = 0; i < points.getSize(); i++)
+//            try {
+//                lp.add(points.getElement(i));
+//            } catch (Exception ex) {
+//                break;
+//            }
+//        return convertToPath(lp, vis);
+//    }
+//
+//    /** Copies an indexed bean's elements into a list */
+//    private static <C> List<C> copy(IndexedGetter<C> bean) {
+//        List<C> result = new ArrayList<C>();
+//        for (int i = 0; i < bean.getSize(); i++) {
+//            result.add(bean.getElement(i));
+//        }
+//        return result;
+//    }
+//
+//    /** Wrap an indexed bean as a list */
+//    private static <C> List<C> asList(final IndexedGetter<C> bean) {
+//        return new AbstractList<C>() {
+//            @Override public C get(int index) { return bean.getElement(index); }
+//            @Override public int size() { return bean.getSize(); }
+//        };
+//    }
 
 }

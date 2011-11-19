@@ -6,9 +6,7 @@
 package org.bm.blaise.scio.coordinate;
 
 import javax.swing.event.ChangeListener;
-import org.bm.blaise.scio.coordinate.RealInterval;
-import util.ChangeBroadcaster;
-import util.DefaultChangeBroadcaster;
+import org.bm.util.ChangeSupport;
 
 /**
  * <p>
@@ -16,8 +14,7 @@ import util.DefaultChangeBroadcaster;
  * </p>
  * @author Elisha Peterson
  */
-public class RealIntervalBroadcaster extends RealInterval
-        implements ChangeBroadcaster {
+public class RealIntervalBroadcaster extends RealInterval {
 
     /** 
      * Constructs real interval with specified min and max (included by default in the interval)
@@ -65,8 +62,15 @@ public class RealIntervalBroadcaster extends RealInterval
         }
         changer.fireStateChanged();
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //
+    // EVENT HANDLING
+    //
 
-    protected DefaultChangeBroadcaster changer = new DefaultChangeBroadcaster();
+    protected ChangeSupport changer = new ChangeSupport();
     public void addChangeListener(ChangeListener l) { changer.addChangeListener(l); }
     public void removeChangeListener(ChangeListener l) { changer.removeChangeListener(l); }
+    //</editor-fold>
+    
 }

@@ -12,7 +12,7 @@ import org.bm.blaise.specto.PlotComponent;
 
 /**
  * <p>
- *   <code>PlanePlotComponent</code> is a <code>PlotComponent</code> for a
+ *   <code>PlanePlotComponent</code> is a <code>VGraphicComponent</code> for a
  *   two-dimensional Euclidean plane.
  * </p>
  *
@@ -20,14 +20,16 @@ import org.bm.blaise.specto.PlotComponent;
  */
 public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
 
+    /** Handles mouse gestures on the component, e.g. drag and zoom */
     PlanePlotMouseHandler mouseListener;
 
+    /** Construct */
     public PlanePlotComponent() {
         super(new PlaneVisometry());
 
         PlaneVisometry pv = (PlaneVisometry) getVisometry();
 
-        vCache.setDefaultMouseListener(mouseListener = new PlanePlotMouseHandler(pv, this));
+        root.setDefaultMouseListener(mouseListener = new PlanePlotMouseHandler(pv, this));
         addMouseWheelListener(mouseListener);
         
         // set up the default domains for the plot
