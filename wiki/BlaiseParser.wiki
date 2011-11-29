@@ -3,7 +3,7 @@
 #sidebar TableOfContents
 
 = Overview =
-The *BlaiseParser* library provides basic parsing functionality, currently supporting parsing *real-valued expressions* and basic *boolean-valued expressions*. The parser is _case insensitive_ and also supports various _pseudonyms_ (e.g. "avg" and "average" can both be used for the average of a list of numbers). Developers can download the library as a `.jar` file under the *Downloads* tab. Documentation may be downloaded there, and is also available from http://blaisemath.googlecode.com/svn/BlaiseParser/dist/javadoc/index.html. The source code for *BlaiseParser* is contained in the `BlaiseParser` folder.
+The *BlaiseParser* library provides basic parsing functionality, currently supporting parsing *real-valued expressions* and basic *boolean-valued expressions*. The parser is _case insensitive_ and also supports various _pseudonyms_ (e.g. "avg" and "average" can both be used for the average of a list of numbers). Developers can download the library as a `.jar` file under the *Downloads* tab. Documentation may be downloaded there, and is also available from http://blaisemath.googlecode.com/svn/trunk/BlaiseParser/dist/javadoc/index.html. The source code for *BlaiseParser* is contained in the `BlaiseParser` folder.
 
 The API for *BlaiseParser* is built to be as simple to use as possible. Here is a sample usage, to compile and evaluate the expression `sin(x)` at the value `x=pi`:
 {{{
