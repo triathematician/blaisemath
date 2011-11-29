@@ -22,6 +22,18 @@ To use the full functionality of _Blaise_, you will need to checkout all of the 
   * BlaiseMath: mathematical functionality, building on the Apache Commons library
   * BlaiseCore: the core library, implementing the plot libraries and plotting architecture
 
+== Package Dependencies ==
+
+Here are the dependencies for the various Blaise packages, with links to their location in the repository and dependencies:
+|| *Package Name* || *Link* || *Dependencies* ||
+|| Firestarter || http://code.google.com/p/javafirestorm/source/browse/#svn/trunk/firestarter || _none_ (Java 1.5) ||
+|| BlaiseParser || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseParser/ || _none_ (Java 1.5) ||
+|| BlaiseMath || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseMath/ || Apache Commons Math (Java 1.5) ||
+|| BlaiseGraphics || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseGraphics/ || _none_ (Java 1.5) ||
+|| BlaiseVisometry || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseVisometry/ || BlaiseMath, BlaiseGraphics (Java 1.5) ||
+|| BlaiseGraphTheory (extension) || http://code.google.com/p/blaisemath/source/browse/#svn/extensions/BlaiseGraphTheory/ || BlaiseMath (Java 1.6) ||
+|| BlaiseGraphPlot (extension) || http://code.google.com/p/blaisemath/source/browse/#svn/extensions/BlaiseGraphPlot/ || BlaiseGraphTheory, BlaiseVisometry ||
+
 
 
 = Additional Instructions =
