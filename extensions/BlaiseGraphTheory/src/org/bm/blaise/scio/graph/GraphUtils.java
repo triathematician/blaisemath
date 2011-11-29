@@ -59,14 +59,14 @@ public class GraphUtils {
         else if (printNodes && !printEdges)
             return "NODES: " + graph.nodes();
 
-        StringBuilder result = printNodes 
+        StringBuilder result = printNodes
                 ? new StringBuilder("NODES: ").append(graph.nodes()).append("  EDGES:")
                 : new StringBuilder("EDGES:");
         for (V v : graph.nodes())
             result.append(" ").append(v).append(": ").append(graph.neighbors(v));
         return result.toString();
     }
-    
+
     //
     // DUPLICATION METHODS
     //
@@ -108,11 +108,11 @@ public class GraphUtils {
         return GraphFactory.getGraph(false, vertices, edges);
     }
 
-    /** 
+    /**
      * Creates an undirected view of the specified graph. Neighbor sets are
      * computed upon request by iterating through all the nodes, which may cause
      * some performance problems.
-     * 
+     *
      * @param g a directed graph
      * @return an undirected view of the graph
      */
@@ -177,7 +177,7 @@ public class GraphUtils {
             System.err.println("GraphUtils.getEdges took " + (t1-t0) + "ms");
         return res;
     }
-    
+
     /**
      * Converts a graph into a dynamic mapping
      * @param <V> vertex type in graph
@@ -193,7 +193,7 @@ public class GraphUtils {
                         final Iterator<V> it1 = graph.nodes().iterator();
                         return new Iterator<Entry<V, Set<V>>>() {
                             public boolean hasNext() { return it1.hasNext(); }
-                            public Entry<V, Set<V>> next() { 
+                            public Entry<V, Set<V>> next() {
                                 final V key = it1.next();
                                 return new Entry<V, Set<V>>(){
                                     public V getKey() { return key; }
@@ -206,7 +206,7 @@ public class GraphUtils {
                     @Override
                     public int size() { return graph.nodes().size(); }
                 };
-            }            
+            }
         };
     }
 
@@ -337,10 +337,10 @@ public class GraphUtils {
                 remaining.removeAll(toRemove);
             }
         }
-        
+
         ArrayList<V> vertices = new ArrayList<V>();
         for (HashSet<V> hs : added) vertices.addAll(hs);
-        
+
         Graph<V> baseGraph = GraphFactory.getGraph(graph.isDirected(), vertices, edges);
         ValuedGraphWrapper<V,Integer> result = new ValuedGraphWrapper<V,Integer>(baseGraph);
         for (int i = 0; i < added.size(); i++)
@@ -386,7 +386,7 @@ public class GraphUtils {
                 remaining.removeAll(toRemove);
             }
         } while (sRemaining != remaining.size());
-        
+
         return -1;
     }
 
@@ -407,8 +407,8 @@ public class GraphUtils {
         }
         return new ArrayList<V>(result);
     }
-    
-    
+
+
     /**
      * Computes neighborhood about provided vertex up to a given radius,
      * as a set of vertices. The result <b>always includes</b> the vertex itself.
@@ -420,34 +420,42 @@ public class GraphUtils {
     public static <V> List<V> neighborhood(Graph<V> graph, V vertex, int radius) {
         return geodesicTree(graph, vertex, radius).nodes();
     }
-    
+
     /**
      * Generates connected components from an adjacency map.
      * @param adj an adjacency map
      * @return set of components, as a set of sets
      */
-    public static <V> Set<Set<V>> components(Map<V, Set<V>> adj) {
-        HashSet<Set<V>> result = new HashSet<Set<V>>();
+    public static <V> Collection<Set<V>> components(Map<V, Set<V>> adj) {
+        List<Set<V>> result = new ArrayList<Set<V>>();
         for (V node : adj.keySet()) {
             Set<V> nbhd = adj.get(node);
-            boolean found = false;
+            Set<Set<V>> joins = new HashSet<Set<V>>();
+
+            // look for components with common elements
             for (Set<V> component : result)
-                if (component.contains(node) || !Collections.disjoint(component, nbhd)) {
-                    component.add(node);
-                    component.addAll(nbhd);
-                    found = true;
-                    break;
+                if (component.contains(node) || !Collections.disjoint(component, nbhd))
+                    joins.add(component);
+
+            if (joins.size() == 1) {
+                // if just one common element found, add stuff to it
+                joins.iterator().next().addAll(nbhd);
+                joins.iterator().next().add(node);
+            } else {
+                // otherwise create a new set from all the joined elements, and remove the old ones
+                HashSet<V> nue = new HashSet<V>(nbhd);
+                nue.add(node);
+                for (Set<V> j : joins) {
+                    nue.addAll(j);
+                    if (!result.remove(j))
+                        System.err.println("Failed to remove component: " +j);
                 }
-            if (!found) {
-                HashSet<V> component = new HashSet<V>();
-                component.add(node);
-                component.addAll(nbhd);
-                result.add(component);
+                result.add(nue);
             }
         }
         return result;
     }
-    
+
     /**
      * Generates connected components as a list of subgraphs.
      * @param graph the graph of interest
@@ -456,9 +464,9 @@ public class GraphUtils {
     public static <V> List<Graph<V>> getComponentGraphs(Graph<V> graph) {
         GraphComponents<V> gc = new GraphComponents<V>(graph, components(graph));
         return gc.getComponentGraphs();
-        
+
     }
-    
+
     /**
      * Generates adjacency map from a subgraph.
      * @param graph the graph
@@ -474,27 +482,27 @@ public class GraphUtils {
         }
         return result;
     }
-    
+
     /**
      * Generates connected components from a graph.
      * @param graph the graph
      * @return set of connected components
      */
-    public static <V> Set<Set<V>> components(Graph<V> graph) {
+    public static <V> Collection<Set<V>> components(Graph<V> graph) {
         return components(adjacencies(graph, graph.nodes()));
     }
-    
+
     /**
      * Generates connected components from a subset of vertices in a graph.
      * @param graph the graph
      * @param nodes subset of nodes
      * @return set of connected components
      */
-    public static <V> Set<Set<V>> components(Graph<V> graph, Collection<V> nodes) {
+    public static <V> Collection<Set<V>> components(Graph<V> graph, Collection<V> nodes) {
         return components(adjacencies(graph, nodes));
     }
 
-    
+
 
     /**
      * Performs breadth-first search algorithm to enumerate the nodes in a graph,
@@ -503,7 +511,7 @@ public class GraphUtils {
      * @param start the starting node.
      * @param numShortest a map that will be filled with info on the # of shortest paths
      * @param lengths a map that will be filled with info on the lengths of shortest paths
-     * @param stack a stack that will be filled with elements in non-increasing order of distance 
+     * @param stack a stack that will be filled with elements in non-increasing order of distance
      * @param pred a map that will be filled with adjacency information for the shortest paths
      */
     public static <V> void breadthFirstSearch(Graph<V> graph, V start,
@@ -548,14 +556,14 @@ public class GraphUtils {
     //
     // CONTRACTED ELEMENTS
     //
-    
+
     /** Contracts list of nodes, replacing all the "contract" nodes with "replace". */
     public static <V> List<V> contractedNodeList(List<V> nodes, Collection<V> contract, V replace) {
         ArrayList<V> result = new ArrayList<V>(nodes);
         result.removeAll(contract);
         result.add(0, replace);
         return result;
-        
+
     }
 
     /** Contracts list of components, combining all components with vertices in subset. */

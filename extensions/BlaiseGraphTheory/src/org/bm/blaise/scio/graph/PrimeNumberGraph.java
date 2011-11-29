@@ -16,14 +16,14 @@ import java.util.TreeSet;
 
 /**
  * Sample graph with node & edge weights depending on numeric properties of integer vertices.
- * 
+ *
  * @author elisha
  */
 public class PrimeNumberGraph extends GraphSupport<Integer> implements WeightedGraph<Integer, Integer>, ValuedGraph<Integer, Integer> {
-    
+
     int min;
-    
-    Set<Set<Integer>> cpts;
+
+    Collection<Set<Integer>> cpts;
 
     public PrimeNumberGraph(final int n, int minWt) {
         super(new AbstractList<Integer>() {
@@ -98,10 +98,10 @@ public class PrimeNumberGraph extends GraphSupport<Integer> implements WeightedG
         }
         return sum / 2;
     }
-    
+
     /** Cached list of no common factors */
     static TreeMap<Integer, TreeSet<Integer>> noCommon = new TreeMap<Integer, TreeSet<Integer>>();
-    
+
     /** Cached list of common factors */
     static TreeMap<Integer, TreeMap<Integer, Integer>> inCommon = new TreeMap<Integer, TreeMap<Integer, Integer>>();
 
@@ -140,7 +140,7 @@ public class PrimeNumberGraph extends GraphSupport<Integer> implements WeightedG
         }
         return l1;
     }
-    
+
     /** Cached list of factors */
     static TreeMap<Integer, List<Integer>> factors = new TreeMap<Integer, List<Integer>>();
 
@@ -158,7 +158,7 @@ public class PrimeNumberGraph extends GraphSupport<Integer> implements WeightedG
         factors.put(n, result);
         return result;
     }
-    
+
     /** Cached list of primes */
     static TreeSet<Integer> primes = new TreeSet<Integer>();
 
@@ -175,5 +175,5 @@ public class PrimeNumberGraph extends GraphSupport<Integer> implements WeightedG
         primes.add(n);
         return true;
     }
-    
+
 }

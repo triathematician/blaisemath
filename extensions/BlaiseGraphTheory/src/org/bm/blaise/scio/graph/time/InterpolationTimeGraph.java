@@ -73,15 +73,15 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
             }
         return new InterpolatorGraph(base.slice(t0, true), t0, time, base.slice(t1, true), t1);
     }
-    
-    
-    
+
+
+
     /** Interpolator graph interpolates between two adjacent graph slices. */
     public static class InterpolatorGraph<V> extends GraphSupport<V> implements WeightedGraph<V,Double> {
-        
+
         private final Graph<V> slice0, slice1;
         private final double wt0, wt1;
-        private final Set<Set<V>> compts;
+        private final Collection<Set<V>> compts;
 
         public InterpolatorGraph(Graph<V> slice0, double t0, double t, Graph<V> slice1, double t1) {
             super(union(slice0.nodes(), slice1.nodes()), slice0.isDirected() || slice1.isDirected());
@@ -100,7 +100,7 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
         public Collection<Set<V>> components() {
             return compts;
         }
-        
+
         public Double getWeight(V x, V y) {
             if (!adjacent(x,y))
                 return 0.0;
@@ -119,14 +119,14 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
                 w1 = 0;
             return w0*wt0 + w1*wt1;
         }
-        
-        public void setWeight(V x, V y, Double value) { 
-            throw new UnsupportedOperationException("Not supported yet."); 
+
+        public void setWeight(V x, V y, Double value) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
-        
+
         @Override
-        public boolean adjacent(V x, V y) { 
-            return slice0.adjacent(x, y) || slice1.adjacent(x, y); 
+        public boolean adjacent(V x, V y) {
+            return slice0.adjacent(x, y) || slice1.adjacent(x, y);
         }
 
         public Set<V> neighbors(V x) {
@@ -134,7 +134,7 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
             nbrs.addAll(slice1.neighbors(x));
             return nbrs;
         }
-        
+
         public int edgeCount() {
             int count = 0;
             for (V v : nodes())
@@ -145,9 +145,9 @@ public class InterpolationTimeGraph<V> implements TimeGraph<V> {
         }
     }
 
-    
-    
-    
+
+
+
     private static <V> List<V> union(Collection<V> c1, Collection<V> c2) {
         Set<V> result = new HashSet<V>(c1);
         result.addAll(c2);

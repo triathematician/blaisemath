@@ -14,26 +14,26 @@ import java.util.Set;
  * useful in a variety of circumstances. Since this information may or may not be
  * easily obtained from the basic representation of the graph, this class provides
  * a decoupled cache and access to this info.
- * 
+ *
  * @author elisha
  */
 public class GraphComponents<V> {
-    
+
     /** What this class is modifying/describing. */
     private final Graph<V> graph;
     /** The connected components of the graph. */
-    private final Set<Set<V>> components;
+    private final Collection<Set<V>> components;
 
-    /** 
-     * Construct components for specified graph. 
+    /**
+     * Construct components for specified graph.
      * @param source graph
      * @param components the graph's components
      */
-    public GraphComponents(Graph<V> graph, Set<Set<V>> components) {
+    public GraphComponents(Graph<V> graph, Collection<Set<V>> components) {
         this.graph = graph;
         this.components = components;
     }
-    
+
     /**
      * Return source graph
      * @return graph
@@ -41,7 +41,7 @@ public class GraphComponents<V> {
     public Graph<V> getGraph() {
         return graph;
     }
-    
+
     /**
      * The connected components of the graph, copied into new subgraph representations.
      * @return subcomponents
@@ -52,7 +52,7 @@ public class GraphComponents<V> {
             result.add(GraphUtils.copyGraph(new Subgraph(graph, compt)));
         return result;
     }
-    
+
     /**
      * The graph's connected components.
      * @return connected components
@@ -60,7 +60,7 @@ public class GraphComponents<V> {
     public Collection<Set<V>> getComponents() {
         return components;
     }
-    
+
     /**
      * Returns the number of components in the graph.
      * @return number of components
@@ -69,7 +69,7 @@ public class GraphComponents<V> {
         return components.size();
     }
 
-    
+
     /**
      * The component of a particular node.
      * @param x a node
@@ -81,5 +81,5 @@ public class GraphComponents<V> {
                 return compt;
         return null;
     }
-    
+
 }

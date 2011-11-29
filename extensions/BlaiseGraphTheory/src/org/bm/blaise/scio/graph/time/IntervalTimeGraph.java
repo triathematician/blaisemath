@@ -27,11 +27,11 @@ import org.bm.blaise.scio.graph.GraphUtils;
  * that exist at the specified time. Implemented as a sparse graph.
  *
  * @param <V> the type of the nodes
- * 
+ *
  * @author Elisha Peterson
  */
 public class IntervalTimeGraph<V> implements TimeGraph<V> {
-    
+
     //
     // FACTORY METHODS
     //
@@ -84,7 +84,7 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         return result;
     }
 
-    /** 
+    /**
      * Factory method to generate longitudinal graph with given properties.
      * @param directed whether graph is directed
      * @param timeSteps how many time steps to use
@@ -102,7 +102,7 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         result.nodeTimes.putAll(nodeTimes);
         result.edgeTimes.putAll(edgeTimes);
         result.adjustDomain();
-        
+
         // ensure symmetric if undirected
         if (!directed) {
             ArrayList<Object[]> pairs = new ArrayList<Object[]>();
@@ -121,7 +121,7 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         }
         return result;
     }
-    
+
     //
     // IMPLEMENTATION
     //
@@ -236,13 +236,13 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
      * All calculations are done using the underlying graph.
      */
     private static class SliceGraph<V> extends GraphSupport<V> {
-        
+
         /** Parent graph */
         protected final IntervalTimeGraph<V> parent;
         /** Time of the slice. */
         protected final double time;
         /** Components */
-        protected final Set<Set<V>> components;
+        protected final Collection<Set<V>> components;
 
         /** Constructs slice at the specified time. */
         private SliceGraph(IntervalTimeGraph<V> parent, double time) {
@@ -284,15 +284,15 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
                 for (V v2 : nodes)
                     if (adjacent(v1, v2))
                         total += v1==v2 ? 2 : 1;
-            return directed ? total : total / 2;                   
+            return directed ? total : total / 2;
         }
     } // INNER CLASS SliceGraph
 
-    
+
     //
     // UTILITIES
     //
-    
+
     /** Construct nodes at specified time. */
     private static <V> List<V> nodeSlice(IntervalTimeGraph<V> parent, double time) {
         ArrayList<V> nodes = new ArrayList<V>();
@@ -304,7 +304,7 @@ public class IntervalTimeGraph<V> implements TimeGraph<V> {
         return nodes;
     }
 
-    /** 
+    /**
      * Checks to see if time is in stated interval(s)
      * @param time the time
      * @param ivs list of intervals

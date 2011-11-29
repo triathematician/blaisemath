@@ -23,7 +23,7 @@ import java.util.Set;
  * @author Elisha Peterson
  */
 public class Subgraph<V> extends GraphSupport<V> {
-    
+
     //
     // FACTORY METHODS
     //
@@ -32,7 +32,7 @@ public class Subgraph<V> extends GraphSupport<V> {
      * Factory method returns subgraph of a graph; return type will match the type of the parent object
      * (i.e. if parent is weighted/valued, the result will be also).
      */
-    public static <V> Graph<V> getInstance(Graph<V> parent, Collection<V> subset) { 
+    public static <V> Graph<V> getInstance(Graph<V> parent, Collection<V> subset) {
         if (parent instanceof WeightedGraph && parent instanceof ValuedGraph)
             return getWeightedValuedInstance((WeightedGraph) parent, subset);
         else if (parent instanceof WeightedGraph)
@@ -42,29 +42,29 @@ public class Subgraph<V> extends GraphSupport<V> {
         else
             return new Subgraph(parent, subset);
     }
-    
+
     /**
      * Factory method returns subgraph of a weighted graph.
      */
-    public static <V,E> WeightedGraph<V,E> getWeightedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { 
-        return new Weighted(parent, subset); 
+    public static <V,E> WeightedGraph<V,E> getWeightedInstance(WeightedGraph<V,E> parent, Collection<V> subset) {
+        return new Weighted(parent, subset);
     }
-    
+
     /**
      * Factory method returns subgraph of a valued graph.
      */
-    public static <V,N> ValuedGraph<V,N> getValuedInstance(ValuedGraph<V,N> parent, Collection<V> subset) { 
-        return new Valued(parent, subset); 
+    public static <V,N> ValuedGraph<V,N> getValuedInstance(ValuedGraph<V,N> parent, Collection<V> subset) {
+        return new Valued(parent, subset);
     }
-    
+
     /**
      * Factory method returns subgraph of a weighted, valued graph.
      */
-    public static <V,E,N> WeightedGraph<V,E> getWeightedValuedInstance(WeightedGraph<V,E> parent, Collection<V> subset) { 
-        return new WeightedValued(parent, subset); 
+    public static <V,E,N> WeightedGraph<V,E> getWeightedValuedInstance(WeightedGraph<V,E> parent, Collection<V> subset) {
+        return new WeightedValued(parent, subset);
     }
 
-    
+
     //
     // IMPLEMENTATION
     //
@@ -72,8 +72,8 @@ public class Subgraph<V> extends GraphSupport<V> {
     /** Parent graph */
     protected final Graph<V> parent;
     /** The connected components of the subgraph. */
-    private final Set<Set<V>> components;
-    
+    private final Collection<Set<V>> components;
+
     /**
      * Construct a subgraph comprised of a particular subset of vertices within the parent.
      * @param parent the parent graph
@@ -90,25 +90,25 @@ public class Subgraph<V> extends GraphSupport<V> {
     }
 
     @Override
-    public boolean adjacent(V x, V y) { 
-        return nodes.contains(x) && nodes.contains(y) && parent.adjacent(x, y); 
+    public boolean adjacent(V x, V y) {
+        return nodes.contains(x) && nodes.contains(y) && parent.adjacent(x, y);
     }
-    
+
     @Override
-    public int degree(V x) { 
+    public int degree(V x) {
         Set<V> nbhd = neighbors(x);
         return nbhd.size() + (!isDirected() && nbhd.contains(x) ? 1 : 0);
     }
-    
+
     public Set<V> neighbors(V x) {
-        if (!contains(x)) 
+        if (!contains(x))
             return Collections.emptySet();
         HashSet<V> result = new HashSet<V>();
         result.addAll(parent.neighbors(x));
         result.retainAll(nodes);
         return result;
     }
-    
+
     public int edgeCount() {
         int sum = 0;
         for (V v1 : nodes)

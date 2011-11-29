@@ -23,11 +23,11 @@ import java.util.Set;
  * @author Elisha Peterson
  */
 public class MatrixGraph<V> extends GraphSupport<V> {
-    
+
     //
     // FACTORY METHODS
     //
-    
+
     /**
      * Factory method to return an immutable instance of a matrix graph. Adds all nodes and edges. If an edge
      * is specified by a node not in the set of nodes, that node is included in the resulting graph's nodes.
@@ -52,7 +52,7 @@ public class MatrixGraph<V> extends GraphSupport<V> {
         }
         return g;
     }
-    
+
     //
     // IMPLEMENTATION
     //
@@ -60,7 +60,7 @@ public class MatrixGraph<V> extends GraphSupport<V> {
     /** Adjacency matrix. */
     protected final int[][] mx;
     /** Components */
-    protected final Set<Set<V>> components;
+    protected final Collection<Set<V>> components;
 
     private MatrixGraph(Iterable<V> nodes, boolean directed) {
         super(listOf(nodes), directed);
@@ -88,14 +88,14 @@ public class MatrixGraph<V> extends GraphSupport<V> {
     }
 
     @Override
-    public boolean adjacent(V x, V y) { 
-        return adjacentByIndex(nodes.indexOf(x), nodes.indexOf(y)); 
+    public boolean adjacent(V x, V y) {
+        return adjacentByIndex(nodes.indexOf(x), nodes.indexOf(y));
     }
-    
-    private boolean adjacentByIndex(int i1, int i2) { 
-        return i1 != -1 && i2 != -1 && mx[i1][i2] != 0; 
+
+    private boolean adjacentByIndex(int i1, int i2) {
+        return i1 != -1 && i2 != -1 && mx[i1][i2] != 0;
     }
-    
+
     @Override
     public int degree(V x) {
         if (!nodes.contains(x)) return 0;
@@ -107,7 +107,7 @@ public class MatrixGraph<V> extends GraphSupport<V> {
         return sum;
 
     }
-    
+
     public Set<V> neighbors(V x) {
         if (!nodes.contains(x)) return Collections.emptySet();
         int ix = nodes.indexOf(x);
@@ -115,9 +115,9 @@ public class MatrixGraph<V> extends GraphSupport<V> {
         for (int i = 0; i < mx.length; i++)
             if (mx[ix][i] != 0) result.add(nodes.get(i));
         return result;
-        
+
     }
-    
+
     public int edgeCount() {
         int sum = 0;
         int n = mx.length;
@@ -127,12 +127,12 @@ public class MatrixGraph<V> extends GraphSupport<V> {
                     sum += (i==j && !directed) ? 2 : 1;
         return directed ? sum : sum/2;
     }
-    
-    
+
+
     //
     // STATIC UTILITIES
     //
-    
+
     private static <V> List<V> listOf(Iterable<V> it) {
         if (it instanceof List)
             return (List) it;
