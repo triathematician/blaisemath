@@ -18,7 +18,7 @@ This project is being developed within Netbeans (http://www.netbeans.org). We re
 
 To use the full functionality of _Blaise_, you will need to checkout all of the following packages from the repository hosted on this project site:
 
-  * [Parser BlaiseParser2]: parsing engine
+  * [Parser BlaiseParser]: parsing engine
   * BlaiseMath: mathematical functionality, building on the Apache Commons library
   * BlaiseGraphics: the core graphics library, enabling custom graphics on a swing component
   * BlaiseVisometry: the core mathematics graphics library, adapting graphics capabilities to particular coordinate systems
