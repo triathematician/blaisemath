@@ -1,27 +1,18 @@
-#summary `BlaiseGraphics` is a lightweight library used to render and interact with collections of 2D shapes.
+#summary BlaiseGraphics is a lightweight library used to render and interact with collections of 2D shapes.
 
-`BlaiseGraphics` package is a lightweight library used to render and interact with collections of 2d shapes. Functionally, it is something like a drawing package, with pluggable support for rendering and mouse handling.
+`BlaiseGraphics` is a lightweight library used to render and interact with collections of 2d shapes.
 
-Requirements:
+=Usage=
+The simplest way to use the library is to draw stylized shapes on a `Graphics2D` object. Doing this is a simple matter of creating a `GraphicComponent` and adding a number of `Graphic` objects to that component.
+
+_EXAMPLES TO BE ADDED LATER_
+
+=Design=
+
+==Design Requirements==
  * Render a tree of Graphics2D shapes (including text)
  * Separate style customization from shapes
  * Display tooltips for shapes as necessary
  * Feed mouse events to shapes' registered objects as necessary
  * Forward changes from shapes to get a redraw
  * Display mouseover and other "highlight" effects
-	
-Primary Interfaces:
- * GraphicEntry:
- * CompositeGraphicEntry:
-	
-=Javadoc=
-The graphics library is for managing and drawing a lot of shapes on a Graphics2D canvas, and providing some light interactivity (particularly mouse event handling).
-
-==Design==
-ShapeComponent is the top-level swing component, and works primarily with two classes: a ShapeCache and a ShapeCacheRenderer. As might be expected, the first is responsible for storing the shapes and the second for drawing the shapes. However, most of the stylistic information for the shapes is stored within the cache itself; the renderer is available if this default styling (or the default draw order of shapes specified by the cache) needs to be overridden in some way.
-
-==Shapes Tree==
-Shapes within the ShapeCache are stored as a ShapeEntry, which is comprised of (i) the shape itself, (ii) a renderer for that shape, (iii) a parent for that shape, and (iv) visibility status (ShapeVisibility). The main entry types are BasicShapeEntry and CompositeShapeEntry.
-
-==Event Handling==
-The ShapeCache maintains the shapes that are to be drawn, including both the shapes themselves and the order in which they are drawn. The cache also listens to mouse events from the ShapeComponent, which it passes along as a ShapeMouseEvent to the top-most ShapeEntry (in terms of draw order) whose parent is a ShapeMouseListener.
