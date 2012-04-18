@@ -3,13 +3,19 @@
 
   * [GettingStarted Getting Started]
   * [BlaiseGraphics]
+   * [PrimitiveStyle Primitives and Styles]
   * [BlaiseVisometry]
-  * [BlaiseParser]
-  * [BlaiseMath]
-  * [Plottables]
+  * *[Plottables]*
     * [GenericPlottables Generic]
     * [1DPlottables 1D Plottables]
     * [2DPlottables 2D Plottables]
     * [3DPlottables 3D Plottables]
     * [PrimitiveMappingPlottable]
-  * [PrimitiveStyle Primitives and Styles]
+  * *Utility Libraries*
+   * [FireStarter]
+   * [BlaiseParser]
+   * [BlaiseMath]
+  * *Extensions*
+   * [BlaiseGraphTheory]
+   * [BlaiseGraphPlot]
+   * [BlaiseComplex]
