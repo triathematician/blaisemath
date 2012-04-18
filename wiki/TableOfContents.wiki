@@ -2,6 +2,8 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
+  * [BlaiseGraphics]
+  * [BlaiseVisometry]
   * [BlaiseParser]
   * [BlaiseMath]
   * [Plottables]
