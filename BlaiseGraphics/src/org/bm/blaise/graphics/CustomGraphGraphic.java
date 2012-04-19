@@ -47,7 +47,7 @@ public class CustomGraphGraphic<Src> extends CustomPointSetGraphic<Src> {
     /** 
      * Construct with no style (will use the default) 
      * @param edges the source objects
-     * @param styler the styler used for point conversion
+     * @param delegate used for point conversion
      */
     public CustomGraphGraphic(Map<? extends Src,? extends Set<? extends Src>> edges, Delegator<Src, Point2D> delegate) { 
         super(new ArrayList<Src>(edges.keySet()), delegate);
@@ -87,7 +87,7 @@ public class CustomGraphGraphic<Src> extends CustomPointSetGraphic<Src> {
     /**
      * Sets the current style styler. If null, will use the default style
      * provided by the parent.
-     * @param pointStyler 
+     * @param styler used for custom edge styles 
      */
     public void setEdgeStyler(ObjectStyler<Object[], PathStyle> styler) {
         if (this.edgeStyler != styler) {

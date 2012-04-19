@@ -53,7 +53,7 @@ public class ObjectStyler<Src, Style> {
     /**
      * Sets the current style delegate. If null, will use the default style
      * provided by the parent.
-     * @param pointStyler 
+     * @param styler used to style object 
      */
     public void setStyleDelegate(Delegator<Src, Style> styler) {
         if (this.styles != styler) {
@@ -110,7 +110,7 @@ public class ObjectStyler<Src, Style> {
 
     /**
      * Sets the current tip delegate. If null, uses the default tooltip.
-     * @param tips the new tips
+     * @param tipper generates tips for the object
      */
     public void setTipDelegate(Delegator<Src, String> tipper) {
         if (this.tips != tipper) {

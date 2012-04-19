@@ -46,7 +46,7 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord>, IndexedP
     
     /** 
      * Constructs an instance of the point manager, given an object describing initial positions
-     * @param pointer the initial point locator
+     * @param initialPointer the initial point locator
      */
     public PointManager(Delegator<Src, Coord> initialPointer) {
         this.initialPointer = initialPointer;

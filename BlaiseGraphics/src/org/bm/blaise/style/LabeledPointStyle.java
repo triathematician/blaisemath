@@ -86,7 +86,7 @@ public class LabeledPointStyle implements PointStyle {
 
     /**
      * Draws specified point on the graphics canvas with visibility options
-     * @param point the point to draw
+     * @param p the point to draw
      * @param label the point's label
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
@@ -101,7 +101,7 @@ public class LabeledPointStyle implements PointStyle {
 
     /**
      * Draws specified point on the graphics canvas with visibility options
-     * @param point the point to draw
+     * @param p the point to draw
      * @param angle orientation of the point
      * @param label the point's label
      * @param canvas graphics element to draw on
