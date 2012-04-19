@@ -62,7 +62,7 @@ public class CustomPointSetGraphic<Src> extends GraphicSupport {
     /** 
      * Construct with no style (will use the default) 
      * @param objects the source objects
-     * @param styler the styler used for point placement
+     * @param delegate used for point placement
      */
     public CustomPointSetGraphic(List<? extends Src> objects, Delegator<Src, Point2D> delegate) { 
         if (delegate != null)
