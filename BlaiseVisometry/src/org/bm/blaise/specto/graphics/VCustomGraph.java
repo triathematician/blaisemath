@@ -27,7 +27,7 @@ public class VCustomGraph<C, Src> extends VCustomPointSet<C, Src> {
     public VCustomGraph(C[] initialPoint) {
         super(initialPoint);
         super.window = window = new CustomGraphGraphic<Src>();
-        window.setMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
     }
     
     //
