@@ -5,6 +5,7 @@
 
 package org.bm.blaise.specto.graphics;
 
+import java.awt.Point;
 import org.bm.blaise.graphics.GraphicMouseEvent;
 import org.bm.blaise.graphics.GraphicMouseListener;
 
@@ -45,12 +46,15 @@ public interface VGraphicMouseListener<C> {
 
         public GraphicMouseListener adapter() {
             return new GraphicMouseListener(){
+                // TODO - check... is this the proper logic ??
+                public boolean interestedIn(Point p) { return true; }
                 public void mouseEntered(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mouseEntered((VGraphicMouseEvent<C>) e); }
                 public void mouseExited(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mouseExited((VGraphicMouseEvent<C>) e); }
                 public void mousePressed(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mousePressed((VGraphicMouseEvent<C>) e); }
                 public void mouseDragged(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mouseDragged((VGraphicMouseEvent<C>) e); }
                 public void mouseReleased(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mouseReleased((VGraphicMouseEvent<C>) e); }
                 public void mouseClicked(GraphicMouseEvent e) { VGraphicMouseListener.Adapter.this.mouseClicked((VGraphicMouseEvent<C>) e); }
+
             };
         }
     }

@@ -34,7 +34,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
      */
     public VCustomPointSet(C[] initialPoint) {
         this.point = initialPoint;
-        window.setMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
     }
     
     //
