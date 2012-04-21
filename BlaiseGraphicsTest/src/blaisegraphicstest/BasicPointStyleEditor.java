@@ -27,8 +27,9 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.bm.blaise.shape.ShapeLibrary;
+import org.bm.blaise.shape.ShapeProvider;
 import org.bm.blaise.style.BasicPointStyle;
-import org.bm.blaise.style.ShapeLibrary;
 import org.bm.blaise.style.VisibilityKey;
 import org.bm.firestarter.propertysheet.editor.ColorEditor;
 
@@ -105,7 +106,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         gbc.gridheight = 2;
         gbc.weightx = 0; gbc.weighty = 0.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(shapeCombo = new JComboBox(ShapeLibrary.values()), gbc);
+        add(shapeCombo = new JComboBox(ShapeLibrary.getAvailableShapers().toArray()), gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(this);
         
@@ -137,7 +138,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == shapeCombo) {
-            rend.setShape((ShapeLibrary) shapeCombo.getSelectedItem());
+            rend.setShape((ShapeProvider) shapeCombo.getSelectedItem());
             firePropertyChange("style", null, rend);
         }
     }
@@ -176,22 +177,22 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             JLabel result = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             result.setToolTipText(value.toString());
             result.setText(null);
-            result.setIcon(new ShapeIcon((ShapeLibrary)value));            
+            result.setIcon(new ShapeIcon((ShapeProvider)value));            
             return result;
         }
     }
     
     /** Icon for drawing stylized point on a component */
     private class ShapeIcon implements Icon {
-        private final ShapeLibrary shape;
-        private ShapeIcon(ShapeLibrary shape) {
+        private final ShapeProvider shape;
+        private ShapeIcon(ShapeProvider shape) {
             this.shape = shape;
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
-            ShapeLibrary shape1 = rend.getShape();
+            ShapeProvider shape1 = rend.getShape();
             rend.setShape(shape);
             rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, VisibilityKey.Regular);
             rend.setShape(shape1);

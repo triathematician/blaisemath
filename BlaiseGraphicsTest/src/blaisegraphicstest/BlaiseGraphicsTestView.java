@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
-import org.bm.blaise.specto.plane.PlanePlotComponent;
 
 /**
  * The application's main frame.

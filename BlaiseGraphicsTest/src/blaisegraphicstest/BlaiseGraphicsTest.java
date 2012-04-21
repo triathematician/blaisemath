@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import org.bm.blaise.graphics.*;
 import org.bm.blaise.graphics.compound.*;
+import org.bm.blaise.shape.ShapeLibrary;
 import org.bm.blaise.specto.graphics.*;
 import org.bm.blaise.specto.plane.*;
 import org.bm.blaise.style.*;
@@ -71,7 +72,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         bp.setStyle(RandomStyles.point());
         bp.setTooltip("<html><b>Point</b>: <i> " + pt + "</i>");
         final GraphicMouseListener ml = bp.getMouseListener(null);
-        bp.setMouseListener(new GraphicMouseListener.Adapter(){
+        bp.addMouseListener(new GraphicMouseListener.Adapter(){
             @Override public void mousePressed(GraphicMouseEvent e) { ml.mousePressed(e); }
             @Override public void mouseDragged(GraphicMouseEvent e) { ml.mouseDragged(e); }
             @Override public void mouseReleased(GraphicMouseEvent e) { ml.mouseReleased(e); }
@@ -142,7 +143,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             public PointStyle of(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.setRadius(i1+5);
-                r.setShape(ShapeLibrary.values()[i2+3]);
+                r.setShape(ShapeLibrary.getAvailableShapers().get(i2+3));
                 r.setThickness(2+i3/3f);
                 r.setFill(new Color((i4*10+10) % 255, (i4*20+25) % 255, (i4*30+50) % 255));
                 ((BasicStringStyle)lps.getLabelStyle()).color(r.getFill());
