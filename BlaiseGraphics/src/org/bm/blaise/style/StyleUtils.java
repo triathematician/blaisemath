@@ -9,8 +9,6 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Provides standard style keys, and useful utilities for style classes.

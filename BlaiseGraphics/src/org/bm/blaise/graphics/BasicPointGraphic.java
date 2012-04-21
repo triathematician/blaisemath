@@ -56,7 +56,7 @@ public class BasicPointGraphic extends GraphicSupport
     public BasicPointGraphic(Point2D p, PointStyle style) {
         this.point = p;
         this.style = style;
-        setMouseListener(new GraphicPointDragger(this));
+        addMouseListener(new GraphicPointDragger(this));
     }
 
     //

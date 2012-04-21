@@ -60,7 +60,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     public BasicPointSetGraphic(Point2D[] p, PointStyle style) {
         this.points = p;
         this.style = style;
-        setMouseListener(new GraphicIndexedPointDragger(this));
+        addMouseListener(new GraphicIndexedPointDragger(this));
     }
 
     //

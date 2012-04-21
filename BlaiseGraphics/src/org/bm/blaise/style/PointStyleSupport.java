@@ -5,23 +5,33 @@
 
 package org.bm.blaise.style;
 
+import org.bm.blaise.shape.ShapeProvider;
 import java.awt.Shape;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 /**
- * Draws a point on the graphics canvas.
+ * Provides most of the functionality to draw a point on a graphics canvas.
+ * Sub-classes must provide a {@link ShapeProvider} to describe the shapes associated
+ * with points, and a {@link ShapeStyle} to render those shapes on the canvas.
+ * 
  * @author Elisha
  */
 public abstract class PointStyleSupport implements PointStyle {
 
-    /** Return object used to create the shape */
-    abstract public ShapeLibrary getShape();
-    /** Return radius of the point */
-    abstract public float getRadius();
-    /** Return object used to draw the shape */
-    abstract protected ShapeStyle getShapeStyle();
+    /** 
+     * Return object used to create the shape.
+     * @return object that will create the point's shape
+     */
+    public abstract ShapeProvider getShape();
+    
+    /** 
+     * Return object used to draw the shape.
+     * @return style, used to draw the shape on the canvas
+     */
+    protected abstract ShapeStyle getShapeStyle();
 
+    
     public void draw(Point2D p, Graphics2D canvas, VisibilityKey visibility) {
         getShapeStyle().draw(shape(p), canvas, visibility);
     }

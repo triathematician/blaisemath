@@ -5,6 +5,8 @@
 
 package org.bm.blaise.style;
 
+import org.bm.blaise.shape.ShapeProvider;
+import org.bm.blaise.shape.ShapeLibrary;
 import java.awt.Color;
 
 /**
@@ -14,7 +16,7 @@ import java.awt.Color;
 public class BasicPointStyle extends PointStyleSupport {
 
     /** Style of the point */
-    ShapeProvider shaper = ShapeLibrary.CIRCLE;
+    ShapeProvider shaper = new ShapeLibrary.CircleShape();
     /** Radius of the displayed point */
     float radius = 4;
     /** Delegate style used to draw the point */
@@ -78,11 +80,11 @@ public class BasicPointStyle extends PointStyleSupport {
         this.shapeStyle = r;
     }
 
-    public ShapeLibrary getShape() { 
-        return (ShapeLibrary) shaper;
+    public ShapeProvider getShape() { 
+        return shaper;
     }
     
-    public void setShape(ShapeLibrary shaper) { 
+    public void setShape(ShapeProvider shaper) { 
         this.shaper = shaper;
     }
 

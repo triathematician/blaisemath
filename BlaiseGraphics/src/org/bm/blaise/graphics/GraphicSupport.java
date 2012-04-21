@@ -6,6 +6,8 @@ package org.bm.blaise.graphics;
 
 import org.bm.blaise.style.VisibilityKey;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -24,8 +26,6 @@ public abstract class GraphicSupport implements Graphic {
     protected GraphicComposite parent;
     /** Stores visibility status */
     protected VisibilityKey visibility = VisibilityKey.Regular;
-    /** Stores a mouse handler for the entry */
-    protected GraphicMouseListener mouseHandler = null;
     /** Stores a tooltip for the entry (may be null) */
     protected String tooltip;
     
@@ -61,18 +61,6 @@ public abstract class GraphicSupport implements Graphic {
         this.tooltip = tooltip; 
     }
 
-    public GraphicMouseListener getMouseListener(Point p) { 
-        return mouseHandler; 
-    }
-    
-    /** 
-     * Sets a default mouse handler that will be used for this entry 
-     * @param handler default mouse handler
-     */
-    public void setMouseListener(GraphicMouseListener handler) { 
-        mouseHandler = handler; 
-    }
-
     /** Notify interested listeners of a change in the plottable. */
     protected void fireGraphicChanged() {
         if (parent != null)
@@ -83,6 +71,39 @@ public abstract class GraphicSupport implements Graphic {
     public void fireAppearanceChanged() {
         if (parent != null)
             parent.appearanceChanged(this);
+    }
+    
+    //
+    // MOUSE HANDLING
+    //    
+    
+    /** Stores a mouse handler for the entry */
+    protected final List<GraphicMouseListener> mouseHandlers = new ArrayList<GraphicMouseListener>();
+
+
+    public GraphicMouseListener getMouseListener(Point p) { 
+        for (GraphicMouseListener handler : mouseHandlers)
+            if (handler.interestedIn(p))
+                return handler;
+        return null;
+    }
+    
+    /** 
+     * Sets a default mouse handler that will be used for this entry 
+     * @param handler default mouse handler
+     */
+    public void addMouseListener(GraphicMouseListener handler) { 
+        if (handler == null)
+            throw new IllegalArgumentException();
+        mouseHandlers.add(handler);
+    }
+    
+    /**
+     * Removes a mouse listener.
+     * @param handler mouse listener
+     */
+    public void removeMouseListener(GraphicMouseListener handler) {
+        mouseHandlers.remove(handler);
     }
 
 }

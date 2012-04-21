@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import org.bm.blaise.graphics.BasicShapeGraphic;
 import org.bm.blaise.style.BasicPointStyle;
-import org.bm.blaise.style.ShapeLibrary;
+import org.bm.blaise.shape.ShapeLibrary;
 import org.bm.blaise.style.ShapeStyle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
