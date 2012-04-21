@@ -195,7 +195,9 @@ public class GraphicComposite extends GraphicSupport {
      * @return first "hit" on a shape entry, or null if none can be found 
      */
     protected Graphic mouseListenerGraphicAt(Point point) {
-        if (mouseHandler != null && contains(point))
+        if (!contains(point))
+            return null;
+        if (super.getMouseListener(point) != null)
             return this;
         
         for (Graphic en : getGraphicsReversed()) {
@@ -230,8 +232,11 @@ public class GraphicComposite extends GraphicSupport {
 
     @Override
     public GraphicMouseListener getMouseListener(Point point) {
-        if (mouseHandler != null && contains(point))
-            return mouseHandler;
+        if (!contains(point))
+            return null;
+        GraphicMouseListener handler = super.getMouseListener(point);
+        if (handler != null)
+            return handler;
         
         GraphicMouseListener l;
         for (Graphic en : getGraphicsReversed()) {

@@ -3,7 +3,7 @@
  * Created Jan 22, 2011
  */
 
-package org.bm.blaise.style;
+package org.bm.blaise.shape;
 
 import java.awt.Shape;
 import java.awt.geom.Point2D;

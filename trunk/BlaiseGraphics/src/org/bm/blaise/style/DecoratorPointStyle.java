@@ -4,10 +4,12 @@
  */
 package org.bm.blaise.style;
 
+import org.bm.blaise.shape.ShapeProvider;
 import java.awt.Color;
 
 /**
  * A style that generally defers to a base style, except for radius and color.
+ * 
  * @author elisha
  */
 public class DecoratorPointStyle extends PointStyleSupport {
@@ -51,11 +53,10 @@ public class DecoratorPointStyle extends PointStyleSupport {
     }
     
     @Override 
-    public ShapeLibrary getShape() { 
+    public ShapeProvider getShape() { 
         return base.getShape();
     }
         
-    @Override 
     public float getRadius() { 
         return rad * base.getRadius();
     }

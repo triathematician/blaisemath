@@ -46,10 +46,12 @@ public class GraphicComponent extends javax.swing.JComponent {
         setToolTipText("Canvas");
     }
 
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
-
+    
     /** 
      * Return graphic root managing the shapes to be rendered
      * @return shapes root 
@@ -91,7 +93,57 @@ public class GraphicComponent extends javax.swing.JComponent {
         antialias = aa;
         repaint();
     }
+    
+    //</editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="DELEGATES">
+    //
+    // DELEGATES
+    //
+
+    /**
+     * Add graphics to the component
+     * @param add graphics to add
+     */
+    public final void addGraphics(Iterable<? extends Graphic> add) {
+        root.addGraphics(add);
+    }
+
+    /**
+     * Add a single graphic to the component
+     * @param gfc graphic to add
+     */
+    public final void addGraphic(Graphic gfc) {
+        root.addGraphic(gfc);
+    }
+
+    /**
+     * Remove graphics from the component
+     * @param remove graphics to remove
+     */
+    public final void removeGraphics(Iterable<? extends Graphic> remove) {
+        root.removeGraphics(remove);
+    }
+
+    /**
+     * Remove a single graphic from the component
+     * @param gfc graphic to remove
+     */
+    public void removeGraphic(Graphic gfc) {
+        root.removeGraphic(gfc);
+    }
+
+    /**
+     * Remove all graphics from the component.
+     */
+    public void clearGraphics() {
+        root.clearGraphics();
+    }
+    
+    //</editor-fold>
+    
+    
     //
     // PAINT METHODS
     //

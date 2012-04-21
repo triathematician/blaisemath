@@ -14,7 +14,7 @@ import org.bm.blaise.graphics.GraphicComposite;
 import org.bm.blaise.style.VisibilityKey;
 import org.bm.blaise.style.ShapeStyle;
 import org.bm.blaise.style.BasicPointStyle;
-import org.bm.blaise.style.ShapeLibrary;
+import org.bm.blaise.shape.ShapeLibrary;
 
 /**
  * This primitive is designed for objects such as a plot's axes, which display a line

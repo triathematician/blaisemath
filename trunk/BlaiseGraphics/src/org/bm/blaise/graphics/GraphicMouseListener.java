@@ -15,6 +15,13 @@ import java.awt.Point;
  * @author Elisha Peterson
  */
 public interface GraphicMouseListener {
+    
+    /**
+     * Whether listener is interested in a particular mouse location.
+     * @param e a point
+     * @return true if interested, false otherwise
+     */
+    public boolean interestedIn(Point p);
 
     /** 
      * Called when mouse enters a shape.
@@ -56,7 +63,7 @@ public interface GraphicMouseListener {
     
     /** Adapter class with empty methods */
     public static class Adapter implements GraphicMouseListener {
-        
+        public boolean interestedIn(Point p) { return true; }
         public void mouseEntered(GraphicMouseEvent e) {}
         public void mouseExited(GraphicMouseEvent e) {}
         public void mousePressed(GraphicMouseEvent e) {}
@@ -74,7 +81,7 @@ public interface GraphicMouseListener {
      * Instead of working with all six mouse methods, subclasses can work with
      * two or three (dragInitiated, dragInProgress, and optionally dragCompleted).
      */
-    public abstract static class Dragger implements GraphicMouseListener {
+    public abstract static class Dragger extends Adapter {
         
         /** Stores the starting point of the drag */
         protected Point start;
@@ -100,25 +107,25 @@ public interface GraphicMouseListener {
          */
         public void mouseDragCompleted(GraphicMouseEvent e, Point start) {}
 
-        public void mouseClicked(GraphicMouseEvent e) {}
-        
-        public final void mouseEntered(GraphicMouseEvent e) {}
-        
+        @Override
         public final void mouseExited(GraphicMouseEvent e) { 
             if (start != null) 
                 mouseReleased(e); 
         }
         
+        @Override
         public final void mousePressed(GraphicMouseEvent e) { 
             start = e.point; 
             mouseDragInitiated(e, start); 
         }
         
+        @Override
         public final void mouseDragged(GraphicMouseEvent e) { 
             if (start == null) mousePressed(e); 
             mouseDragInProgress(e, start); 
         }
         
+        @Override
         public final void mouseReleased(GraphicMouseEvent e) { 
             if (start != null) {
                 mouseDragCompleted(e, start);
