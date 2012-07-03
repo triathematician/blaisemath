@@ -23,6 +23,7 @@ public interface StaticGraphLayout {
      */
     public Map<Object,Point2D.Double> layout(Graph g, double... parameters);
 
+    
     /** Lays out vertices all at the origin. */
     public static StaticGraphLayout ORIGIN = new StaticGraphLayout(){
         public Map<Object, Point2D.Double> layout(Graph g, double... parameters) {

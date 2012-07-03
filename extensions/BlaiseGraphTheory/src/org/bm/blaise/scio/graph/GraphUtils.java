@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 import org.bm.blaise.scio.matrix.Matrices;
 
 /**
@@ -33,6 +35,8 @@ public class GraphUtils {
     // Ensure non-instantiability
     private GraphUtils() {}
 
+
+    //<editor-fold defaultstate="collapsed" desc="GENERIC PRINT METHODS">
     //
     // GENERIC PRINT METHODS
     //
@@ -67,6 +71,10 @@ public class GraphUtils {
         return result.toString();
     }
 
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="COPY/DUPLICATION">
     //
     // DUPLICATION METHODS
     //
@@ -141,8 +149,12 @@ public class GraphUtils {
         };
     }
 
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="EDGE ACCESSORS">
     //
-    // EDGE METHODS
+    // EDGE ACCESSORS
     //
 
     /**
@@ -210,6 +222,47 @@ public class GraphUtils {
         };
     }
 
+    /**
+     * Generates reverse links for a directed graph.
+     * @param graph source graph
+     * @return map describing reverse links
+     */
+    public static Map<Object,Set<Object>> reverseLinks(Graph graph) {
+        Map<Object,Set<Object>> map = new HashMap<Object,Set<Object>>();
+        for (Object n : graph.nodes())
+            for (Object m : graph.neighbors(n)) {
+                if (!map.containsKey(m))
+                    map.put(m, new HashSet<Object>());
+                map.get(m).add(n);
+            }
+        return map;
+    }
+
+    /**
+     * Generates bidirectional links for a directed graph
+     * @param graph source graph
+     * @return map describing both forward and reverse links
+     */
+    public static Map<Object,Set<Object>> anyLinks(Graph graph) {
+        Map<Object,Set<Object>> map = new HashMap<Object,Set<Object>>();
+        for (Object n : graph.nodes()) {
+            if (!map.containsKey(n))
+                map.put(n, new HashSet<Object>());
+            Set neighbors = graph.neighbors(n);
+            map.get(n).addAll(neighbors);
+            for (Object m : neighbors) {
+                if (!map.containsKey(m))
+                    map.put(m, new HashSet<Object>());
+                map.get(m).add(n);
+            }
+        }
+        return map;
+    }
+
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="ADJACENCY MATRIX">
     //
     // ADJACENCY MATRIX METHODS
     //
@@ -255,12 +308,17 @@ public class GraphUtils {
         return result;
     }
 
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="DEGREE">
     //
     // DEGREE METHODS
     //
 
     /**
      * Computes and returns degree distribution.
+     * @param graph the graph
      * @return int array in which the ith entry is the number of vertices with degree i;
      *  the size is the maximum degree of any vertex in the graph
      */
@@ -279,6 +337,27 @@ public class GraphUtils {
         return result2;
     }
 
+    /**
+     * Computes and returns degree distribution.
+     * @param graph the graph
+     * @return map associating degree #s with counts, sorted by degree
+     */
+    public static <V> Map<Integer,Integer> degreeDistributionMap(Graph<V> graph) {
+        Map<Integer,Integer> result = new TreeMap<Integer,Integer>();
+        for (V v : graph.nodes()) {
+            int degree = graph.degree(v);
+            if (result.containsKey(degree))
+                result.put(degree, result.get(degree)+1);
+            else
+                result.put(degree, 1);
+        }
+        return result;
+    }
+
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="GEODESIC & SPANNING TREE METHODS">
     //
     // GEODESIC & SPANNING TREE METHODS
     //
@@ -390,6 +469,10 @@ public class GraphUtils {
         return -1;
     }
 
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="NEIGHBORHOOD & COMPONENT">
     //
     // NEIGHBORHOOD & COMPONENT METHODS
     //
@@ -552,7 +635,10 @@ public class GraphUtils {
 
     } // METHOD breadthFirstSearch
 
+    //</editor-fold>
 
+
+    //<editor-fold defaultstate="collapsed" desc="CONTRACTING ELEMENTS">
     //
     // CONTRACTED ELEMENTS
     //
@@ -579,4 +665,24 @@ public class GraphUtils {
                 contracted.addAll(c);
         return result;
     }
+
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="SORTING">
+    //
+    // SORTING
+    //
+
+    /** Used to sort graphs in descending order by size */
+    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>(){
+        @Override
+        public int compare(Graph o1, Graph o2) {
+            return -(o1.order() == o2.order() && o1.edgeCount() == o2.edgeCount() ? o1.nodes().toString().compareTo(o2.nodes().toString())
+                    : o1.order() == o2.order() ? o1.edgeCount() - o2.edgeCount()
+                    : o1.order() - o2.order());
+        }
+    };
+
+    //</editor-fold>
 }
