@@ -2,7 +2,6 @@
  * GraphicMouseListener.java
  * Created Jan 12, 2011
  */
-
 package org.bm.blaise.graphics;
 
 import java.awt.Point;
@@ -16,10 +15,10 @@ import org.bm.blaise.style.VisibilityKey;
  * @author Elisha Peterson
  */
 public interface GraphicMouseListener {
-    
+
     /**
      * Whether listener is interested in a particular mouse location.
-     * @param e a point
+     * @param p a point
      * @return true if interested, false otherwise
      */
     public boolean interestedIn(Point p);
@@ -60,21 +59,31 @@ public interface GraphicMouseListener {
      */
     public void mouseClicked(GraphicMouseEvent e);
 
-
-
     /** Adapter class with empty methods */
     public static class Adapter implements GraphicMouseListener {
-        public boolean interestedIn(Point p) { return true; }
-        public void mouseEntered(GraphicMouseEvent e) {}
-        public void mouseExited(GraphicMouseEvent e) {}
-        public void mousePressed(GraphicMouseEvent e) {}
-        public void mouseDragged(GraphicMouseEvent e) {}
-        public void mouseReleased(GraphicMouseEvent e) {}
-        public void mouseClicked(GraphicMouseEvent e) {}
 
+        public boolean interestedIn(Point p) {
+            return true;
+        }
+
+        public void mouseEntered(GraphicMouseEvent e) {
+        }
+
+        public void mouseExited(GraphicMouseEvent e) {
+        }
+
+        public void mousePressed(GraphicMouseEvent e) {
+        }
+
+        public void mouseDragged(GraphicMouseEvent e) {
+        }
+
+        public void mouseReleased(GraphicMouseEvent e) {
+        }
+
+        public void mouseClicked(GraphicMouseEvent e) {
+        }
     } // INNER CLASS Adapter
-
-
     /** Static instance of highlighter */
     public final static Highlighter HIGHLIGHTER = new Highlighter();
 
@@ -82,12 +91,21 @@ public interface GraphicMouseListener {
      * Class that turns on highlight key whenever the mouse is over the graphic.
      */
     public static class Highlighter extends Adapter {
-        @Override
-        public void mouseEntered(GraphicMouseEvent e) { if (e.graphic.getVisibility() != VisibilityKey.Invisible) e.graphic.setVisibility(VisibilityKey.Highlight); }
-        @Override
-        public void mouseExited(GraphicMouseEvent e) { if (e.graphic.getVisibility() != VisibilityKey.Invisible) e.graphic.setVisibility(VisibilityKey.Regular); }
-    }
 
+        @Override
+        public void mouseEntered(GraphicMouseEvent e) {
+            if (e.graphic.getVisibility() != VisibilityKey.Invisible) {
+                e.graphic.setVisibility(VisibilityKey.Highlight);
+            }
+        }
+
+        @Override
+        public void mouseExited(GraphicMouseEvent e) {
+            if (e.graphic.getVisibility() != VisibilityKey.Invisible) {
+                e.graphic.setVisibility(VisibilityKey.Regular);
+            }
+        }
+    }
 
     /**
      * Class that also captures starting point of a drag event,
@@ -119,34 +137,36 @@ public interface GraphicMouseListener {
          * @param e the source event (stores the point and graphic for the event)
          * @param start the initial drag point
          */
-        public void mouseDragCompleted(GraphicMouseEvent e, Point start) {}
+        public void mouseDragCompleted(GraphicMouseEvent e, Point start) {
+        }
 
         @Override
-        public final void mouseExited(GraphicMouseEvent e) { 
-            if (start != null) 
-                mouseReleased(e); 
+        public final void mouseExited(GraphicMouseEvent e) {
+            if (start != null) {
+                mouseReleased(e);
+            }
         }
-        
+
         @Override
-        public final void mousePressed(GraphicMouseEvent e) { 
-            start = e.point; 
-            mouseDragInitiated(e, start); 
+        public final void mousePressed(GraphicMouseEvent e) {
+            start = e.point;
+            mouseDragInitiated(e, start);
         }
-        
+
         @Override
-        public final void mouseDragged(GraphicMouseEvent e) { 
-            if (start == null) mousePressed(e); 
-            mouseDragInProgress(e, start); 
+        public final void mouseDragged(GraphicMouseEvent e) {
+            if (start == null) {
+                mousePressed(e);
+            }
+            mouseDragInProgress(e, start);
         }
-        
+
         @Override
-        public final void mouseReleased(GraphicMouseEvent e) { 
+        public final void mouseReleased(GraphicMouseEvent e) {
             if (start != null) {
                 mouseDragCompleted(e, start);
                 start = null;
             }
         }
-
     } // INNER CLASS Dragger
-
 }
