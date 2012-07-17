@@ -11,6 +11,7 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import org.bm.blaise.style.VisibilityKey;
 
 /**
  * A shape or path with an associated style.
@@ -19,17 +20,17 @@ import java.awt.Shape;
  *
  * @see ShapeStyle
  * @see PathStyle
- * 
+ *
  * @author Elisha Peterson
  */
-public class BasicShapeGraphic extends GraphicSupport implements Graphic {
+public class BasicShapeGraphic extends GraphicSupport {
 
     /** The object that will be drawn. */
     private Shape primitive;
-    
+
     /** Whether to use stroke or fill style (if not specified) */
     private boolean strokeOnly;
-    
+
     /** The associated style (may be null). */
     private ShapeStyle style;
 
@@ -48,8 +49,8 @@ public class BasicShapeGraphic extends GraphicSupport implements Graphic {
         this.strokeOnly = strokeOnly;
     }
 
-    /** 
-     * Construct with given primitive and style. 
+    /**
+     * Construct with given primitive and style.
      * @param primitive the shape to draw
      * @param style style used to draw
      */
@@ -67,10 +68,10 @@ public class BasicShapeGraphic extends GraphicSupport implements Graphic {
      * Return the shape for the graphic.
      * @return shape
      */
-    public Shape getPrimitive() { 
-        return primitive; 
+    public Shape getPrimitive() {
+        return primitive;
     }
-    
+
     /**
      * Set the shape for the graphic.
      * @param primitive shape
@@ -84,10 +85,10 @@ public class BasicShapeGraphic extends GraphicSupport implements Graphic {
      * Return the style for the graphic.
      * @return style
      */
-    public ShapeStyle getStyle() { 
-        return style; 
+    public ShapeStyle getStyle() {
+        return style;
     }
-    
+
     /**
      * Sets the style for the graphic
      * @param style the style
@@ -102,10 +103,10 @@ public class BasicShapeGraphic extends GraphicSupport implements Graphic {
     //
     // DRAW METHODS
     //
-    
+
     /** Return true if painting as a stroke. */
     private boolean asStroke() { return (style == null && strokeOnly) || style instanceof PathStyle; }
-    
+
     /** Return the actual style used for drawing */
     private ShapeStyle drawStyle() {
         return style == null ?
@@ -121,6 +122,8 @@ public class BasicShapeGraphic extends GraphicSupport implements Graphic {
     public static final BasicStroke CONTAINS_STROKE = new BasicStroke(5f);
 
     public boolean contains(Point point) {
+        if (visibility == VisibilityKey.Invisible)
+            return false;
         return asStroke() ? CONTAINS_STROKE.createStrokedShape(primitive).contains(point)
                 : primitive.contains(point);
     }
