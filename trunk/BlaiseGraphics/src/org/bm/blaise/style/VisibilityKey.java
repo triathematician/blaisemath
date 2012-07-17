@@ -8,7 +8,7 @@ package org.bm.blaise.style;
 /**
  * The visibility status of a shape, used to set whether a shape is drawn,
  * hidden, highlighted, or otherwise emphasized.
- * 
+ *
  * @author Elisha
  */
 public enum VisibilityKey {
@@ -18,6 +18,10 @@ public enum VisibilityKey {
     Highlight,
     /** Obscure setting */
     Obscure,
-    /** Invisible setting (do not draw) */
-    Invisible;
+    /** Invisible setting (do not draw or receive events) */
+    Invisible,
+    /** Hidden setting (do not draw, do not receive events) */
+    Hidden,
+    /** Draws the outline only */
+    Outline;
 }

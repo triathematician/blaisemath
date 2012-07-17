@@ -6,12 +6,13 @@
 package org.bm.blaise.graphics;
 
 import java.awt.Point;
+import org.bm.blaise.style.VisibilityKey;
 
 /**
  * Allows a graphic to interact with a mouse, via the six standard mouse events
  * (enter, exit, press, drag, release, click).
  * Also provides an inner adapter {@link Adapter} to simplify implementations.
- * 
+ *
  * @author Elisha Peterson
  */
 public interface GraphicMouseListener {
@@ -23,44 +24,44 @@ public interface GraphicMouseListener {
      */
     public boolean interestedIn(Point p);
 
-    /** 
+    /**
      * Called when mouse enters a shape.
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mouseEntered(GraphicMouseEvent e);
-    
-    /** 
+
+    /**
      * Called when mouse exits a shape.
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mouseExited(GraphicMouseEvent e);
-    
-    /** 
+
+    /**
      * Called when mouse press on a shape.
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mousePressed(GraphicMouseEvent e);
-    
-    /** 
+
+    /**
      * Called when mouse dragged on a shape.
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mouseDragged(GraphicMouseEvent e);
-    
-    /** 
+
+    /**
      * Called when mouse released on a shape.
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mouseReleased(GraphicMouseEvent e);
-    
-    /** 
+
+    /**
      * Called when mouse clicked on a shape .
      * @param e the source event (stores the point and graphic for the event)
      */
     public void mouseClicked(GraphicMouseEvent e);
 
-    
-    
+
+
     /** Adapter class with empty methods */
     public static class Adapter implements GraphicMouseListener {
         public boolean interestedIn(Point p) { return true; }
@@ -70,37 +71,50 @@ public interface GraphicMouseListener {
         public void mouseDragged(GraphicMouseEvent e) {}
         public void mouseReleased(GraphicMouseEvent e) {}
         public void mouseClicked(GraphicMouseEvent e) {}
-        
-    } // INNER CLASS Adapter
-    
-    
 
-    /** 
-     * Class that also captures starting point of a drag event, 
+    } // INNER CLASS Adapter
+
+
+    /** Static instance of highlighter */
+    public final static Highlighter HIGHLIGHTER = new Highlighter();
+
+    /**
+     * Class that turns on highlight key whenever the mouse is over the graphic.
+     */
+    public static class Highlighter extends Adapter {
+        @Override
+        public void mouseEntered(GraphicMouseEvent e) { if (e.graphic.getVisibility() != VisibilityKey.Invisible) e.graphic.setVisibility(VisibilityKey.Highlight); }
+        @Override
+        public void mouseExited(GraphicMouseEvent e) { if (e.graphic.getVisibility() != VisibilityKey.Invisible) e.graphic.setVisibility(VisibilityKey.Regular); }
+    }
+
+
+    /**
+     * Class that also captures starting point of a drag event,
      * making it easier to implement drag behavior.
      * Instead of working with all six mouse methods, subclasses can work with
      * two or three (dragInitiated, dragInProgress, and optionally dragCompleted).
      */
     public abstract static class Dragger extends Adapter {
-        
+
         /** Stores the starting point of the drag */
         protected Point start;
 
-        /** 
+        /**
          * Called when the mouse is pressed, starting the drag
          * @param e the source event
          * @param start the initial drag point
          */
         public abstract void mouseDragInitiated(GraphicMouseEvent e, Point start);
-        
-        /** 
-         * Called as mouse drag is in progress 
+
+        /**
+         * Called as mouse drag is in progress
          * @param e the source event (stores the point and graphic for the event)
          * @param start the initial drag point
          */
         public abstract void mouseDragInProgress(GraphicMouseEvent e, Point start);
-        
-        /** 
+
+        /**
          * Called when the mouse is released, finishing the drag. Does nothing by default.
          * @param e the source event (stores the point and graphic for the event)
          * @param start the initial drag point
@@ -129,10 +143,10 @@ public interface GraphicMouseListener {
         public final void mouseReleased(GraphicMouseEvent e) { 
             if (start != null) {
                 mouseDragCompleted(e, start);
-                start = null; 
-            } 
+                start = null;
+            }
         }
-        
+
     } // INNER CLASS Dragger
 
 }

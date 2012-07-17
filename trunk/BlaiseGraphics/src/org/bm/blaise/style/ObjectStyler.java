@@ -7,6 +7,7 @@ package org.bm.blaise.style;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import org.bm.util.Delegator;
+import org.bm.util.NonDelegator;
 
 /**
  * Groups together a collection of delegators for points, including the object's
@@ -14,30 +15,30 @@ import org.bm.util.Delegator;
  *
  * @param <Src> the type of source object
  * @param <Style> the primary style type used to draw
- * 
+ *
  * @author elisha
  */
 public class ObjectStyler<Src, Style> {
 
     /** Delegate for point rendering */
     protected Delegator<Src, Style> styles;
-    
+
     /** Delegate for point labels (only used if the styler returns a label style) */
     protected Delegator<Src, String> labels;
     /** Delegate for point label styles */
     protected Delegator<Src, StringStyle> labelStyles;
-    
+
     /** Delegate for tooltips (with default) */
     protected Delegator<Src, String> tips = new Delegator<Src, String>() {
         public String of(Src src) { return src == null ? "null" : src.toString(); }
     };
 
-    
+
     /** Constructs the delegator */
     public ObjectStyler() {
     }
 
-    
+
     //
     // PROPERTIES
     //
@@ -63,6 +64,14 @@ public class ObjectStyler<Src, Style> {
     }
 
     /**
+     * Sets the style directly.
+     * @param style style to use for all objects
+     */
+    public void setStyle(Style style) {
+        setStyleDelegate(new NonDelegator<Src,Style>(style));
+    }
+
+    /**
      * Returns the current label delegate
      * @return  label delegate
      */
@@ -80,7 +89,7 @@ public class ObjectStyler<Src, Style> {
             pcs.firePropertyChange("labelDelegate", null, styles);
         }
     }
-    
+
     /**
      * Returns the current label style delegate
      * @return  label style delegate
@@ -88,7 +97,7 @@ public class ObjectStyler<Src, Style> {
     public Delegator<Src, StringStyle> getLabelStyleDelegate() {
         return labelStyles;
     }
-    
+
     /**
      * Sets the current label style delegate. If null, uses a default style.
      * @param labelStyler the new label styler
@@ -101,8 +110,16 @@ public class ObjectStyler<Src, Style> {
     }
 
     /**
+     * Sets the label style directly.
+     * @param style style to use for all objects
+     */
+    public void setLabelStyle(StringStyle style) {
+        setLabelStyleDelegate(new NonDelegator<Src, StringStyle>(style));
+    }
+
+    /**
      * Returns the current tip delegate
-     * @return  tip delegate
+     * @return tip delegate
      */
     public Delegator<Src, String> getTipDelegate() {
         return tips;
@@ -118,13 +135,13 @@ public class ObjectStyler<Src, Style> {
             pcs.firePropertyChange("tipDelegate", null, tips);
         }
     }
-    
-    
+
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE HANDLING">
     //
     // PROPERTY CHANGE HANDLING
     //
-    
+
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
@@ -142,9 +159,9 @@ public class ObjectStyler<Src, Style> {
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-    
+
     //</editor-fold>
-    
-    
-    
+
+
+
 }
