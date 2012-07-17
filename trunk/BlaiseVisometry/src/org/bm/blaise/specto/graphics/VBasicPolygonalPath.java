@@ -10,15 +10,15 @@ import java.awt.geom.GeneralPath;
 
 /**
  * An entry for a polygonal path, drawn using a stroke renderer.
- * 
+ *
  * @author Elisha
  */
 public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
 
     /** Contains the local points */
-    private final C[] local;
+    private C[] local;
     /** The window entries */
-    private BasicShapeGraphic window;
+    private BasicShapeGraphic window = new BasicShapeGraphic(null, null);
 
     /** Default renderer used to draw the points (may be null) */
     private BasicPathStyle rend;
@@ -26,6 +26,26 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
     /** Construct with specified bean to handle dragging (may be null) */
     public VBasicPolygonalPath(C[] local) {
         this.local = local;
+    }
+
+    public synchronized C getPoint(int i) {
+        return local[i];
+    }
+
+    public synchronized void setPoint(int i, C point) {
+        if (!((this.local == null && point == null) || (this.local != null && this.local.equals(point)))) {
+            this.local[i] = point;
+            setUnconverted(true);
+        }
+    }
+
+    public synchronized C[] getPoint() {
+        return local;
+    }
+
+    public synchronized void setPoint(C[] point) {
+        this.local = point;
+        setUnconverted(true);
     }
 
     public BasicShapeGraphic getWindowEntry() {

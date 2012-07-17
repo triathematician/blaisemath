@@ -13,7 +13,7 @@ import org.bm.util.PointFormatters;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.
- * 
+ *
  * @param <C> local coordinate type
  * @author Elisha
  */
@@ -29,7 +29,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
         this.point = initialPoint;
         window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
     }
-    
+
     //
     // PROPERTIES
     //
@@ -45,38 +45,47 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
     public void setStyle(PointStyle rend) {
         window.setStyle(rend);
     }
-    
+
     //
     // DraggablePointBean PROPERTIES
     //
-    
-    public C getPoint(int i) { 
+
+    public synchronized C getPoint(int i) {
         return point[i];
     }
-    
-    public void setPoint(int i, C point) {
+
+    public synchronized void setPoint(int i, C point) {
         if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
-            this.point[i] = point;                            
+            this.point[i] = point;
             setUnconverted(true);
         }
     }
 
-    public int getPointCount() {
+    public synchronized C[] getPoint() {
+        return point;
+    }
+
+    public synchronized void setPoint(C[] point) {
+        this.point = point;
+        setUnconverted(true);
+    }
+
+    public synchronized int getPointCount() {
         return point.length;
     }
 
-    public int indexOf(Point2D pt, C dragStart) {
+    public synchronized int indexOf(Point2D pt, C dragStart) {
         return window.indexOf(pt, pt);
     }
-    
-    public void setPoint(int index, C initial, C dragStart, C dragFinish) {
+
+    public synchronized void setPoint(int index, C initial, C dragStart, C dragFinish) {
         setPoint(index, VBasicPoint.relativePoint(initial, dragStart, dragFinish));
     }
-    
+
     //
     // CONVERSION
     //
-    
+
     VisTipDelegate<C> tipper = new VisTipDelegate<C>();
 
     public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
@@ -86,7 +95,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
         window.setPointTipDelegate(tipper);
         setUnconverted(false);
     }
-    
+
     /** Converts a point to a tip string */
     public static class VisTipDelegate<C> implements Delegator<Point2D,String> {
         Visometry<C> vis;
