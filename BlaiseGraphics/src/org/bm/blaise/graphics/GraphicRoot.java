@@ -26,7 +26,7 @@ import org.bm.blaise.style.StyleUtils.DefaultStyleProvider;
  *      to avoid expensive recomputation, or (ii) sorting the shapes into an alternate draw order
  *      (e.g. for projections from 3D to 2D).
  * </p>
- * 
+ *
  * @author Elisha
  */
 public class GraphicRoot extends GraphicComposite
@@ -34,7 +34,7 @@ public class GraphicRoot extends GraphicComposite
 
     /** Parent component upon which the graphics are drawn. */
     protected Component component;
-    
+
     /** Default mouse listener */
     protected MouseListener defaultListener;
     /** Provides a pluggable way to generate mouse events */
@@ -44,7 +44,7 @@ public class GraphicRoot extends GraphicComposite
     public GraphicRoot() {
         setStyleProvider(new DefaultStyleProvider());
     }
-    
+
     /**
      * Sets the component associated with the graphic tree.
      * Sets up mouse handling, and allows repainting to occur when the graphics change.
@@ -63,43 +63,43 @@ public class GraphicRoot extends GraphicComposite
             }
         }
     }
-    
+
     //
     // PROPERTIES
     //
-    
+
     @Override
-    public final void setStyleProvider(StyleProvider rend) { 
+    public final void setStyleProvider(StyleProvider rend) {
         if (rend == null)
             throw new IllegalArgumentException("GraphicRoot must have a non-null StyleProvider!");
         super.setStyleProvider(rend);
     }
 
-    /** 
-     * Returns default mouse listener 
+    /**
+     * Returns default mouse listener
      * @return default listener, or null if there is none
      */
-    public MouseListener getDefaultMouseListener() { 
-        return defaultListener; 
-    }
-    
-    /** 
-     * Sets default mouse listener 
-     * @param l the default listener
-     */
-    public void setDefaultMouseListener(MouseListener l) { 
-        defaultListener = l; 
+    public MouseListener getDefaultMouseListener() {
+        return defaultListener;
     }
 
-    /** 
-     * Modifies how mouse events are created. 
+    /**
+     * Sets default mouse listener
+     * @param l the default listener
+     */
+    public void setDefaultMouseListener(MouseListener l) {
+        defaultListener = l;
+    }
+
+    /**
+     * Modifies how mouse events are created.
      * @param factory responsible for generating mouse events
      */
     public void setMouseEventFactory(GraphicMouseEvent.Factory factory) {
         this.mouseFactory = factory;
     }
-    
-    
+
+
     //
     // EVENT HANDLING
     //
@@ -109,7 +109,7 @@ public class GraphicRoot extends GraphicComposite
         if (component != null)
             component.repaint();
     }
-    
+
     @Override
     public void fireAppearanceChanged() {
         if (component != null)
@@ -121,7 +121,7 @@ public class GraphicRoot extends GraphicComposite
     //
     // MOUSE HANDLING
     //
-    
+
     /** Stores the current shape */
     transient Graphic cur = null;
     /** Stores the current mouse handler */
@@ -142,6 +142,7 @@ public class GraphicRoot extends GraphicComposite
             handler = cur == null ? null : cur.getMouseListener(p);
             if (handler != null)
                 handler.mouseEntered(mouseFactory.createEvent(cur, p));
+//            System.out.println("cur: " + handler);
         }
     }
 
@@ -234,5 +235,5 @@ public class GraphicRoot extends GraphicComposite
             defaultListener.mouseExited(e);
     }
     //</editor-fold>
-    
+
 }

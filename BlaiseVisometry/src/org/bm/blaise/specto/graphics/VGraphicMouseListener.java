@@ -16,7 +16,7 @@ import org.bm.blaise.graphics.GraphicMouseListener;
  * @author Elisha
  */
 public interface VGraphicMouseListener<C> {
-    
+
     /** Called when mouse enters a shape */
     public void mouseEntered(VGraphicMouseEvent<C> e);
     /** Called when mouse exits a shape */
@@ -33,8 +33,8 @@ public interface VGraphicMouseListener<C> {
     /** Provides an adapter that converts regular events to VGME's by simple casting. */
     public GraphicMouseListener adapter();
 
-    
-    
+
+
     /** Adapter class with empty methods */
     public static class Adapter<C> implements VGraphicMouseListener<C> {
         public void mouseEntered(VGraphicMouseEvent<C> e) {}
@@ -58,8 +58,8 @@ public interface VGraphicMouseListener<C> {
             };
         }
     }
-    
-    
+
+
 
     /** Class that also captures starting point of a drag event, making it easier to implement drag behavior */
     public abstract static class Dragger<C> extends Adapter<C> {
@@ -73,27 +73,27 @@ public interface VGraphicMouseListener<C> {
         /** Called when the mouse is released, finishing the drag */
         public void mouseDragCompleted(VGraphicMouseEvent<C> e, C start) {}
 
-        @Override public final void mousePressed(VGraphicMouseEvent<C> e) { 
-            start = e.local; 
-            mouseDragInitiated(e, start); 
+        @Override public void mousePressed(VGraphicMouseEvent<C> e) {
+            start = e.local;
+            mouseDragInitiated(e, start);
         }
-        
-        @Override public final void mouseDragged(VGraphicMouseEvent<C> e) { 
-            if (start == null) 
-                mousePressed(e); 
-            mouseDragInProgress(e, start); 
+
+        @Override public void mouseDragged(VGraphicMouseEvent<C> e) {
+            if (start == null)
+                mousePressed(e);
+            mouseDragInProgress(e, start);
         }
-        
-        @Override public final void mouseReleased(VGraphicMouseEvent<C> e) { 
+
+        @Override public void mouseReleased(VGraphicMouseEvent<C> e) {
             if (start != null) {
                 mouseDragCompleted(e, start);
                 start = null;
-            } 
+            }
         }
-        
-        @Override public final void mouseExited(VGraphicMouseEvent<C> e) { 
+
+        @Override public void mouseExited(VGraphicMouseEvent<C> e) {
             if (start != null)
-                mouseReleased(e); 
+                mouseReleased(e);
         }
     }
 

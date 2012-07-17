@@ -17,7 +17,7 @@ import java.util.List;
  *      when the entry has changed. Does not implement {@link Graphic#draw(java.awt.Graphics2D)}
  *      or {@link Graphic#contains(java.awt.Point)}.
  * </p>
- * 
+ *
  * @author Elisha
  */
 public abstract class GraphicSupport implements Graphic {
@@ -28,20 +28,20 @@ public abstract class GraphicSupport implements Graphic {
     protected VisibilityKey visibility = VisibilityKey.Regular;
     /** Stores a tooltip for the entry (may be null) */
     protected String tooltip;
-    
-    
-    public GraphicComposite getParent() { 
-        return parent; 
-    }
-    
-    public void setParent(GraphicComposite p) { 
-        this.parent = p; 
+
+
+    public GraphicComposite getParent() {
+        return parent;
     }
 
-    public VisibilityKey getVisibility() { 
-        return visibility; 
+    public void setParent(GraphicComposite p) {
+        this.parent = p;
     }
-    
+
+    public VisibilityKey getVisibility() {
+        return visibility;
+    }
+
     public void setVisibility(VisibilityKey visibility) {
         if (this.visibility != visibility) {
             this.visibility = visibility;
@@ -49,16 +49,16 @@ public abstract class GraphicSupport implements Graphic {
         }
     }
 
-    public String getTooltip(Point p) { 
-        return tooltip; 
+    public String getTooltip(Point p) {
+        return tooltip;
     }
-    
-    /** 
-     * Sets the tooltip for this entry 
+
+    /**
+     * Sets the tooltip for this entry
      * @param tooltip the tooltip
      */
-    public void setTooltip(String tooltip) { 
-        this.tooltip = tooltip; 
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
     }
 
     /** Notify interested listeners of a change in the plottable. */
@@ -66,38 +66,44 @@ public abstract class GraphicSupport implements Graphic {
         if (parent != null)
             parent.graphicChanged(this);
     }
-    
+
     /** Notify interested listeners of an appearance-only change for the plottable. */
     public void fireAppearanceChanged() {
         if (parent != null)
             parent.appearanceChanged(this);
     }
-    
+
     //
     // MOUSE HANDLING
-    //    
-    
+    //
+
     /** Stores a mouse handler for the entry */
     protected final List<GraphicMouseListener> mouseHandlers = new ArrayList<GraphicMouseListener>();
 
-
-    public GraphicMouseListener getMouseListener(Point p) { 
+    public GraphicMouseListener getMouseListener(Point p) {
         for (GraphicMouseListener handler : mouseHandlers)
             if (handler.interestedIn(p))
                 return handler;
         return null;
     }
-    
-    /** 
-     * Sets a default mouse handler that will be used for this entry 
+
+    /**
+     * Clears out all mouse listeners.
+     */
+    public void clearMouseListeners() {
+        mouseHandlers.clear();
+    }
+
+    /**
+     * Sets a default mouse handler that will be used for this entry
      * @param handler default mouse handler
      */
-    public void addMouseListener(GraphicMouseListener handler) { 
+    public void addMouseListener(GraphicMouseListener handler) {
         if (handler == null)
             throw new IllegalArgumentException();
         mouseHandlers.add(handler);
     }
-    
+
     /**
      * Removes a mouse listener.
      * @param handler mouse listener
