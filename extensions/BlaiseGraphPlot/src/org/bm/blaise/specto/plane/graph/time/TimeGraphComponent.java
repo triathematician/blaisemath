@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.bm.blaise.scio.graph.Graph;
+import org.bm.blaise.scio.graph.time.TimeGraph;
 import org.bm.blaise.specto.plane.graph.GraphComponent;
 import org.bm.blaise.specto.plane.graph.GraphManager;
 import org.bm.blaise.specto.plane.graph.PlaneGraphAdapter;
@@ -98,6 +99,11 @@ public final class TimeGraphComponent extends JPanel
 
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
+    /** Sets the underlying graph */
+    public void setTimeGraph(TimeGraph g) {
+        setManager(new TimeGraphManager(g));
+    }
+    
     /** @return plot on which graph is displayed */
     public GraphComponent getGraphComponent() { return plot; }
 
@@ -107,6 +113,9 @@ public final class TimeGraphComponent extends JPanel
     /** @return manager for the longitudinal graph */
     public TimeGraphManager getManager() { return manager; }
 
+    /** @return manager for graph */
+    public GraphManager getGraphManager() { return plot.getGraphManager(); }
+    
     /** Changes the manager for the longitudinal graph */
     public void setManager(TimeGraphManager m) { setManager(m, null); }
     
@@ -180,4 +189,5 @@ public final class TimeGraphComponent extends JPanel
         repaint();
     }
 // </editor-fold>
+
 }

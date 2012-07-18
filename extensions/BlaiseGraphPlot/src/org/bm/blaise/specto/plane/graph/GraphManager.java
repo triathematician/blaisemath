@@ -253,7 +253,7 @@ public final class GraphManager {
     private static int _p = 0;
 
     /** Iterates layout, if an iterative layout has been provided. */
-    private synchronized void iterateLayout() {
+    public synchronized void iterateLayout() {
 //        System.out.println("Starting layout");
         if (iLayout != null) {
             long t0 = System.currentTimeMillis();
