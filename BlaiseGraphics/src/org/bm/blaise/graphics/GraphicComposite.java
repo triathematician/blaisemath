@@ -5,6 +5,7 @@
 
 package org.bm.blaise.graphics;
 
+import java.awt.event.MouseEvent;
 import org.bm.blaise.style.VisibilityKey;
 import org.bm.blaise.style.StyleProvider;
 import java.awt.Graphics2D;
@@ -37,6 +38,11 @@ public class GraphicComposite extends GraphicSupport {
     
     /** Constructs with default settings */
     public GraphicComposite() {
+    }
+
+    @Override
+    public String toString() {
+        return "Group";
     }
 
     
@@ -189,27 +195,33 @@ public class GraphicComposite extends GraphicSupport {
         return null;
     }
 
+    @Override
+    public boolean interestedIn(MouseEvent e) {
+        return getGraphic(e) != null;
+    }
+    
     /**
-     * Return the first "hit" on a graphic that supports mouse listening
-     * @param point the window point
-     * @return first "hit" on a shape entry, or null if none can be found 
+     * Return first graphic interested in given mouse event
+     * @param e event
+     * @return first interested graphic, or null if there are none
      */
-    protected Graphic mouseListenerGraphicAt(Point point) {
-        if (!contains(point))
+    protected Graphic getGraphic(MouseEvent e) {
+        if (!contains(e.getPoint()))
             return null;
-        if (super.getMouseListener(point) != null)
+        
+        if (super.interestedIn(e))
             return this;
         
-        for (Graphic en : getGraphicsReversed()) {
+        for (Graphic en : getGraphicsReversed())
             if (en instanceof GraphicComposite) {
-                Graphic s = ((GraphicComposite)en).mouseListenerGraphicAt(point);
+                Graphic s = ((GraphicComposite)en).getGraphic(e);
                 if (s != null)
                     return s;
             } else
-                if (en.contains(point) && en.getMouseListener(point) != null)
+                if (en.interestedIn(e))
                     return en;
-        }
-        return null;
+        
+        return null;                       
     }
 
     public boolean contains(Point point) {
@@ -228,23 +240,6 @@ public class GraphicComposite extends GraphicSupport {
             }
         }
         return tooltip;
-    }
-
-    @Override
-    public GraphicMouseListener getMouseListener(Point point) {
-        if (!contains(point))
-            return null;
-        GraphicMouseListener handler = super.getMouseListener(point);
-        if (handler != null)
-            return handler;
-        
-        GraphicMouseListener l;
-        for (Graphic en : getGraphicsReversed()) {
-            l = en.getMouseListener(point);
-            if (l != null)
-                return l;
-        }
-        return null;
     }
 
     public void draw(Graphics2D canvas) {
@@ -278,6 +273,77 @@ public class GraphicComposite extends GraphicSupport {
 
     // </editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="MOUSE EVENT HANDLING">
+    //
+    // MOUSE EVENT HANDLING
+    //
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseClicked(e);
+        else if (g != null)
+            g.mouseClicked(e);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseDragged(e);
+        else if (g != null)
+            g.mouseDragged(e);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseEntered(e);
+        else if (g != null)
+            g.mouseEntered(e);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseExited(e);
+        else if (g != null)
+            g.mouseExited(e);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseMoved(e);
+        else if (g != null)
+            g.mouseMoved(e);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mousePressed(e);
+        else if (g != null)
+            g.mousePressed(e);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        Graphic g = getGraphic((GMouseEvent) e);
+        if (g == this)
+            super.mouseReleased(e);
+        else if (g != null)
+            g.mouseReleased(e);
+    }
+    
+    //</editor-fold>
+    
 
     // <editor-fold defaultstate="collapsed" desc="PRIVATE UTILITIES">
     //

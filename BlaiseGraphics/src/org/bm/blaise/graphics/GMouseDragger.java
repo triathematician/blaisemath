@@ -1,5 +1,5 @@
 /*
- * GraphicPointDragger.java
+ * GMouseDragger.java
  * Created Jan 12, 2011
  */
 package org.bm.blaise.graphics;
@@ -13,7 +13,7 @@ import org.bm.util.PointBean;
  * Implementation of an object dragger using a point property pattern.
  * @author elisha
  */
-public class GraphicPointDragger extends GraphicMouseListener.Dragger {
+public class GMouseDragger extends GMouseListener.Dragger {
     
     private final DraggablePointBean<Point2D> bean;
     private transient Point2D beanStart;
@@ -22,7 +22,7 @@ public class GraphicPointDragger extends GraphicMouseListener.Dragger {
      * Construct with specified object that can get and set a point
      * @param bean object that can get/set a point
      */
-    public GraphicPointDragger(final PointBean<Point2D> bean) {
+    public GMouseDragger(final PointBean<Point2D> bean) {
         this.bean = new DraggablePointBean<Point2D>(){
             public void setPoint(Point2D initial, Point2D start, Point2D finish) {
                 bean.setPoint(new Point2D.Double(
@@ -39,17 +39,17 @@ public class GraphicPointDragger extends GraphicMouseListener.Dragger {
      * Construct with specified object that can get and set a point
      * @param bean object that can get/set a point
      */
-    public GraphicPointDragger(final DraggablePointBean<Point2D> bean) {
+    public GMouseDragger(final DraggablePointBean<Point2D> bean) {
         this.bean = bean;
     }
 
     @Override
-    public void mouseDragInitiated(GraphicMouseEvent e, Point start) {
+    public void mouseDragInitiated(GMouseEvent e, Point start) {
         beanStart = bean.getPoint();
     }
 
     @Override
-    public void mouseDragInProgress(GraphicMouseEvent e, Point start) {
+    public void mouseDragInProgress(GMouseEvent e, Point start) {
         bean.setPoint(beanStart, start, e.getPoint());
     }
     

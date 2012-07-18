@@ -78,7 +78,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
     // PROPERTIES
     //
 
-    public Graphic getWindowEntry() {
+    public CustomPointSetGraphic<Src> getWindowEntry() {
         return window;
     }
 

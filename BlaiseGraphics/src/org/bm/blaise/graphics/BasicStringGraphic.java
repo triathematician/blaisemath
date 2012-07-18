@@ -4,11 +4,14 @@
  */
 package org.bm.blaise.graphics;
 
+import java.awt.event.ActionEvent;
 import org.bm.blaise.style.StringStyle;
 import org.bm.util.PointBean;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
 /**
  * Draws a string at a point.
@@ -45,6 +48,19 @@ public class BasicStringGraphic extends GraphicSupport
         this.point = point;
         this.text = s;
         this.style = style;
+        actions.add(new AbstractAction("Edit..."){
+            public void actionPerformed(ActionEvent e) {
+                String nue = JOptionPane.showInputDialog("Enter string:", text);
+                if (nue != null)
+                    setString(nue);
+            }
+        });
+        addMouseListener(new GMouseDragger(this));
+    }
+
+    @Override
+    public String toString() {
+        return "String";
     }
 
     //

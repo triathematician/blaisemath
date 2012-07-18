@@ -17,7 +17,6 @@ import org.bm.firestarter.propertysheet.editor.EditorRegistration;
  */
 public class TestDynamicGraph extends javax.swing.JFrame {
 
-    GraphManager gm;
     PlaneGraphAdapter pga;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
@@ -31,14 +30,13 @@ public class TestDynamicGraph extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         initComponents();
 
-        gm = new GraphManager(graph);
-        plot.setGraphManager(gm);
+        plot.setGraph(graph);
 
         // PANELS
 
         rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
-                gm.getLocationMap()
+                plot.getGraphManager().getLocationMap()
                 )));
         for (Plottable p : plot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
@@ -208,46 +206,46 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        gm.applyLayout(StaticGraphLayout.RANDOM, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, 5.0);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        gm.applyLayout(StaticGraphLayout.CIRCLE, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 5.0);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(gm.getLocationMap());
-        gm.setLayoutAlgorithm(energyLayout);
-        gm.iterateLayout();
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+        plot.getGraphManager().setLayoutAlgorithm(energyLayout);
+        plot.getGraphManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(gm.getLocationMap());
-        gm.setLayoutAlgorithm(energyLayout);
-        gm.startLayoutTask(50, 2);
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+        plot.getGraphManager().setLayoutAlgorithm(energyLayout);
+        plot.getGraphManager().startLayoutTask(50, 2);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        gm.stopLayoutTask();
+        plot.getGraphManager().stopLayoutTask();
     }//GEN-LAST:event_energySBActionPerformed
 
     private void addVerticesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticesBActionPerformed
         graph.addVertices(5);
-        gm.updateGraph();
+        plot.getGraphManager().updateGraph();
     }//GEN-LAST:event_addVerticesBActionPerformed
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
-        gm.updateGraph();
+        plot.getGraphManager().updateGraph();
     }//GEN-LAST:event_addEdgesBActionPerformed
 
     private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
         graph.rewire(10, 5);
-        gm.updateGraph();
+        plot.getGraphManager().updateGraph();
     }//GEN-LAST:event_rewireBActionPerformed
 
     java.util.Timer t = new java.util.Timer();
@@ -257,13 +255,13 @@ public class TestDynamicGraph extends javax.swing.JFrame {
         if (tt != null) tt.cancel();
         tt = new java.util.TimerTask(){
             @Override public void run() {
-                synchronized(gm) {
+                synchronized(plot.getGraphManager()) {
                     graph.removeVertices(1);
                     graph.removeEdges(10);
                     graph.addVertices(1);
                     graph.addEdges(2);
                 }
-                gm.updateGraph();
+                plot.getGraphManager().updateGraph();
             }
         };
         t.schedule(tt, 100, 500);

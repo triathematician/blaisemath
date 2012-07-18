@@ -25,7 +25,6 @@ import org.bm.util.Delegator;
  */
 public class TestGraph extends javax.swing.JFrame {
 
-    GraphManager gm;
     PlaneGraphAdapter pga;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
@@ -40,8 +39,7 @@ public class TestGraph extends javax.swing.JFrame {
 
 //        MyTestGraph png = new MyTestGraph();
         final PrimeNumberGraph png = GraphFactory.getPrimeNumberGraph(200, 2);
-        gm = new GraphManager(png);
-        plot.setGraphManager(gm);
+        plot.setGraph(png);
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Delegator<Object, PointStyle>(){
             public PointStyle of(Object o) {
                 Integer i = (Integer) o;
@@ -70,7 +68,7 @@ public class TestGraph extends javax.swing.JFrame {
 
         rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
-                gm.getLocationMap()
+                plot.getGraphManager().getLocationMap()
                 )));
         for (Plottable p : plot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
@@ -174,31 +172,31 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        gm.applyLayout(StaticGraphLayout.RANDOM, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, 5.0);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        gm.applyLayout(StaticGraphLayout.CIRCLE, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 5.0);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(gm.getLocationMap());
-        gm.setLayoutAlgorithm(energyLayout);
-        gm.iterateLayout();
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+        plot.getGraphManager().setLayoutAlgorithm(energyLayout);
+        plot.getGraphManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(gm.getLocationMap());
-        gm.setLayoutAlgorithm(energyLayout);
-        gm.startLayoutTask(10, 2);
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+        plot.getGraphManager().setLayoutAlgorithm(energyLayout);
+        plot.getGraphManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        gm.stopLayoutTask();
+        plot.getGraphManager().stopLayoutTask();
     }//GEN-LAST:event_energySBActionPerformed
 
     /**

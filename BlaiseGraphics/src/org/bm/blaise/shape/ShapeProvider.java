@@ -9,7 +9,8 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 
 /**
- * Provides basic shapes, by specifying a point and a radius.
+ * Generates shapes at a given point. Angle and radius parameters allow the shape
+ * to be sized and oriented as well.
  * 
  * @author Elisha
  */

@@ -40,7 +40,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
         vRoot = new VGraphicRoot<C>(vis);
         vRoot.initComponent(this);
 
-        root.setMouseEventFactory(new VGraphicMouseEventFactory(vis));
+        root.setMouseEventFactory(new VGMouseEvent.Factory<C>(vis));
         root.addGraphic(vRoot.windowEntry);
 
         addComponentListener(new ComponentAdapter(){

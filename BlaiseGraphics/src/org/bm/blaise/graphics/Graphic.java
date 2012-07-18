@@ -8,6 +8,11 @@ package org.bm.blaise.graphics;
 import org.bm.blaise.style.VisibilityKey;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.List;
+import javax.swing.Action;
 
 /**
  * <p>
@@ -33,7 +38,7 @@ import java.awt.Point;
  *
  * @author Elisha Peterson
  */
- public interface Graphic {
+ public interface Graphic extends MouseListener, MouseMotionListener {
      
     /** 
       * Return parent of the entry
@@ -71,7 +76,7 @@ import java.awt.Point;
      * @return true if the entry contains the point, else false
      */
     public boolean contains(Point point);
-    
+
     /**
      * Return tooltip for the specified point
      * @param point the point
@@ -80,10 +85,17 @@ import java.awt.Point;
     public String getTooltip(Point point);
 
     /**
-     * Return an appropriate mouse handler for the specified point.
-     * @param point the window point
-     * @return the mouse handler that can deal with mouse events for this entry at specified point (may be null)
+     * Checks to see if graphic is interested in handling specified mouse event
+     * @param event the event
+     * @return true if interested, false otherwise
      */
-    public GraphicMouseListener getMouseListener(Point point);
-
+    public boolean interestedIn(MouseEvent event);
+    
+    
+    /**
+     * Return actions associated with the graphic
+     * @return actions (null okay)
+     */
+    public List<Action> getActions();
+    
 }

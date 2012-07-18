@@ -11,7 +11,7 @@ import org.bm.util.DraggablePointBean;
  *
  * @author elisha
  */
-public class VGraphicPointDragger<C> extends VGraphicMouseListener.Dragger<C> {
+public class VGraphicPointDragger<C> extends VGMouseListener.Dragger<C> {
     
     DraggablePointBean<C> bean;
     C beanStart;
@@ -21,12 +21,12 @@ public class VGraphicPointDragger<C> extends VGraphicMouseListener.Dragger<C> {
     }
 
     @Override
-    public void mouseDragInitiated(VGraphicMouseEvent<C> e, C start) {
+    public void mouseDragInitiated(VGMouseEvent<C> e, C start) {
         beanStart = bean.getPoint();
     }
 
     @Override
-    public void mouseDragInProgress(VGraphicMouseEvent<C> e, C start) {
+    public void mouseDragInProgress(VGMouseEvent<C> e, C start) {
         bean.setPoint(beanStart, start, e.local);
     }
     

@@ -23,7 +23,7 @@ public abstract class VGraphicSupport<C> implements VGraphic<C> {
     private boolean notConverted = true;
     
     /** Stores a mouse handler for the entry (may be null) */
-    protected VGraphicMouseListener mouseHandler;
+    protected VGMouseListener mouseHandler;
 
 
     
