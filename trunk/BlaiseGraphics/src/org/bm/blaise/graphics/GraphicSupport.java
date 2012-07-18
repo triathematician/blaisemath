@@ -4,9 +4,12 @@
  */
 package org.bm.blaise.graphics;
 
+import java.awt.event.MouseEvent;
+import javax.swing.Action;
 import org.bm.blaise.style.VisibilityKey;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,7 +31,14 @@ public abstract class GraphicSupport implements Graphic {
     protected VisibilityKey visibility = VisibilityKey.Regular;
     /** Stores a tooltip for the entry (may be null) */
     protected String tooltip;
+    /** Actions associated with the graphic */
+    protected final List<Action> actions = new ArrayList<Action>();
 
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
 
     public GraphicComposite getParent() {
         return parent;
@@ -60,6 +70,9 @@ public abstract class GraphicSupport implements Graphic {
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
+    
+    //</editor-fold>
+    
 
     /** Notify interested listeners of a change in the plottable. */
     protected void fireGraphicChanged() {
@@ -73,19 +86,14 @@ public abstract class GraphicSupport implements Graphic {
             parent.appearanceChanged(this);
     }
 
+    
+    //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
     //
     // MOUSE HANDLING
     //
 
     /** Stores a mouse handler for the entry */
-    protected final List<GraphicMouseListener> mouseHandlers = new ArrayList<GraphicMouseListener>();
-
-    public GraphicMouseListener getMouseListener(Point p) {
-        for (GraphicMouseListener handler : mouseHandlers)
-            if (handler.interestedIn(p))
-                return handler;
-        return null;
-    }
+    protected final List<GMouseListener> mouseHandlers = new ArrayList<GMouseListener>();
 
     /**
      * Clears out all mouse listeners.
@@ -98,7 +106,7 @@ public abstract class GraphicSupport implements Graphic {
      * Sets a default mouse handler that will be used for this entry
      * @param handler default mouse handler
      */
-    public void addMouseListener(GraphicMouseListener handler) {
+    public void addMouseListener(GMouseListener handler) {
         if (handler == null)
             throw new IllegalArgumentException();
         mouseHandlers.add(handler);
@@ -108,8 +116,93 @@ public abstract class GraphicSupport implements Graphic {
      * Removes a mouse listener.
      * @param handler mouse listener
      */
-    public void removeMouseListener(GraphicMouseListener handler) {
+    public void removeMouseListener(GMouseListener handler) {
         mouseHandlers.remove(handler);
+    }
+    
+    public boolean interestedIn(MouseEvent e) {
+        if (!contains(e.getPoint()))
+            return false;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(e))
+                return true;
+        return false;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseClicked(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseEntered(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mouseExited(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseExited(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mousePressed(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseReleased(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseDragged(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        GMouseEvent gme = (GMouseEvent) e;
+        for (GMouseListener g : mouseHandlers)
+            if (g.interestedIn(gme)) {
+                g.mouseMoved(gme);
+                if (gme.isConsumed())
+                    return;
+            }
+    }
+    
+    //</editor-fold>
+
+    public List<Action> getActions() {
+        return actions;
     }
 
 }

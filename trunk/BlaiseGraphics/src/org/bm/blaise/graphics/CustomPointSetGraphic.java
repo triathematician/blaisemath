@@ -68,7 +68,12 @@ public class CustomPointSetGraphic<Src> extends GraphicSupport {
         if (delegate != null)
             pointManager.setInitialPointDelegate(delegate);
         pointManager.setObjects(objects);
-        addMouseListener(new GraphicIndexedPointDragger(pointManager));
+        addMouseListener(new GMouseIndexedDragger(pointManager));
+    }
+
+    @Override
+    public String toString() {
+        return "Point Set";
     }
 
     //

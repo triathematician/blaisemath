@@ -54,6 +54,11 @@ public class CustomGraphGraphic<Src> extends CustomPointSetGraphic<Src> {
         this.edges = edges;                 
     }
 
+    @Override
+    public String toString() {
+        return "Graph";
+    }
+
     //
     // PROPERTIES
     //

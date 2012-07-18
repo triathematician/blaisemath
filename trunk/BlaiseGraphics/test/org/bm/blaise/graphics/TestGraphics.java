@@ -38,7 +38,20 @@ public class TestGraphics extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        blaiseSlider1 = new org.bm.blaise.graphics.BlaiseSlider();
         graphicComponent1 = new org.bm.blaise.graphics.GraphicComponent();
+        blaiseSlider2 = new org.bm.blaise.graphics.BlaiseSlider();
+
+        org.jdesktop.layout.GroupLayout blaiseSlider1Layout = new org.jdesktop.layout.GroupLayout(blaiseSlider1);
+        blaiseSlider1.setLayout(blaiseSlider1Layout);
+        blaiseSlider1Layout.setHorizontalGroup(
+            blaiseSlider1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 300, Short.MAX_VALUE)
+        );
+        blaiseSlider1Layout.setVerticalGroup(
+            blaiseSlider1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 200, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,14 +59,27 @@ public class TestGraphics extends javax.swing.JFrame {
         graphicComponent1.setLayout(graphicComponent1Layout);
         graphicComponent1Layout.setHorizontalGroup(
             graphicComponent1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 400, Short.MAX_VALUE)
+            .add(0, 623, Short.MAX_VALUE)
         );
         graphicComponent1Layout.setVerticalGroup(
             graphicComponent1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 300, Short.MAX_VALUE)
+            .add(0, 161, Short.MAX_VALUE)
         );
 
         getContentPane().add(graphicComponent1, java.awt.BorderLayout.CENTER);
+
+        org.jdesktop.layout.GroupLayout blaiseSlider2Layout = new org.jdesktop.layout.GroupLayout(blaiseSlider2);
+        blaiseSlider2.setLayout(blaiseSlider2Layout);
+        blaiseSlider2Layout.setHorizontalGroup(
+            blaiseSlider2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 623, Short.MAX_VALUE)
+        );
+        blaiseSlider2Layout.setVerticalGroup(
+            blaiseSlider2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 200, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(blaiseSlider2, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -94,6 +120,8 @@ public class TestGraphics extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.bm.blaise.graphics.BlaiseSlider blaiseSlider1;
+    private org.bm.blaise.graphics.BlaiseSlider blaiseSlider2;
     private org.bm.blaise.graphics.GraphicComponent graphicComponent1;
     // End of variables declaration//GEN-END:variables
 }

@@ -60,6 +60,11 @@ public class BasicShapeGraphic extends GraphicSupport {
         this.strokeOnly = style instanceof PathStyle;
     }
 
+    @Override
+    public String toString() {
+        return "Shape";
+    }
+
     //
     // PROPERTIES
     //

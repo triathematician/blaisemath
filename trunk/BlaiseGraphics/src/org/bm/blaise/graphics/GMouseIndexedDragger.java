@@ -1,5 +1,5 @@
 /*
- * GraphicIndexedPointDragger.java
+ * GMouseIndexedDragger.java
  * Created Oct 5, 2011
  */
 package org.bm.blaise.graphics;
@@ -14,7 +14,7 @@ import org.bm.util.IndexedPointBean;
  * 
  * @author Elisha Peterson
  */
-public class GraphicIndexedPointDragger extends GraphicMouseListener.Dragger {
+public class GMouseIndexedDragger extends GMouseListener.Dragger {
     
     private final DraggableIndexedPointBean<Point2D> bean;
     private transient Point2D beanStart;
@@ -24,7 +24,7 @@ public class GraphicIndexedPointDragger extends GraphicMouseListener.Dragger {
      * Construct with specified object that can get and set a point
      * @param bean object that can get/set a point
      */
-    public GraphicIndexedPointDragger(final IndexedPointBean<Point2D> bean) {
+    public GMouseIndexedDragger(final IndexedPointBean<Point2D> bean) {
         this.bean = new DraggableIndexedPointBean<Point2D>(){
             public void setPoint(int i, Point2D initial, Point2D start, Point2D finish) {
                 bean.setPoint(i, new Point2D.Double(
@@ -44,19 +44,19 @@ public class GraphicIndexedPointDragger extends GraphicMouseListener.Dragger {
      * Construct with specified object that can get and set a point
      * @param bean object that can get/set a point
      */
-    public GraphicIndexedPointDragger(final DraggableIndexedPointBean<Point2D> bean) {
+    public GMouseIndexedDragger(final DraggableIndexedPointBean<Point2D> bean) {
         this.bean = bean;
     }
 
     @Override
-    public void mouseDragInitiated(GraphicMouseEvent e, Point start) {
+    public void mouseDragInitiated(GMouseEvent e, Point start) {
         indexStart = bean.indexOf(start, start);
         if (indexStart != -1)
             beanStart = bean.getPoint(indexStart);
     }
 
     @Override
-    public void mouseDragInProgress(GraphicMouseEvent e, Point start) {
+    public void mouseDragInProgress(GMouseEvent e, Point start) {
         if (indexStart != -1)
             bean.setPoint(indexStart, beanStart, start, e.getPoint());
     }
