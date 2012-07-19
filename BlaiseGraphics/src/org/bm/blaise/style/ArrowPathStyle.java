@@ -74,12 +74,4 @@ public class ArrowPathStyle extends BasicPathStyle {
         }
     }
 
-    @Override
-    public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, VisibilityKey visibility) {
-        if(thickness <= 0f && color != null)
-            return;
-        for (Shape s : primitives)
-            canvas.draw(s);
-    }
-
 }

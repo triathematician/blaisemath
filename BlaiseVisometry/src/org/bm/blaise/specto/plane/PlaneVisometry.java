@@ -71,7 +71,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
             try {
                 computeTransformation();
             } catch (IllegalStateException e) {
-                System.out.println("Unable to calculate new transformation for PlaneVisometry; attempted to set window bounds to " + newBounds);
+                Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Unable to calculate new transformation for PlaneVisometry; attempted to set window bounds to {0}", newBounds);
             }
         }
     }
@@ -81,7 +81,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         return aspectRatio;
     }
 
-    /** 
+    /**
      * Sets aspect ratio of the plot. Must be positive. This is guaranteed to be obeyed.
      * Recomputes transformation after setting.
      * @param aspectRatio new aspect ratio
@@ -95,7 +95,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         try {
             computeTransformation();
         } catch (IllegalStateException e) {
-                System.out.println("Unable to calculate new PlaneVisometry transformation; attempted to set aspectRatio = " + aspectRatio);
+            Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Unable to calculate new PlaneVisometry transformation; attempted to set aspectRatio = {0}", aspectRatio);
         }
     }
 
@@ -141,7 +141,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         try {
             computeTransformation();
         } catch (IllegalStateException e) {
-            System.out.println("Error setting plane visometry transformation: " + e);
+//            Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Error setting plane visometry transformation: {0}", e);
         }
     }
 
@@ -255,7 +255,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
         throw new IllegalStateException();
     }
 
-    
+
     //
     // EVENT HANDLING
     //
@@ -291,7 +291,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
                 public double getNewMinimum() { return PlaneVisometry.this.displayRange.x; }
                 public double getNewMaximum() { return PlaneVisometry.this.displayRange.x + PlaneVisometry.this.displayRange.width; }
                 public double getScale(float pixSpacing) { return Math.abs(pixSpacing / PlaneVisometry.this.getHorizontalScale()); }
-            }; 
+            };
             addChangeListener(xDomain);
         }
         return xDomain;
@@ -311,7 +311,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     }
 
     /** @return domain associated with both axes. */
-    public SquareDomainBroadcaster getPlaneDomain() { 
+    public SquareDomainBroadcaster getPlaneDomain() {
         if (planeDomain == null)
             planeDomain = new PlaneDomain();
         return planeDomain;
@@ -328,7 +328,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
                     (RealIntervalStepSampler) getHorizontalDomain().samplerWithPixelSpacing(pixSpacing, hint),
                     (RealIntervalStepSampler) getVerticalDomain().samplerWithPixelSpacing(pixSpacing, hint) );
             addChangeListener(new ChangeListener(){
-                public void stateChanged(ChangeEvent e) { 
+                public void stateChanged(ChangeEvent e) {
                     result.setStep1( Math.abs(pixSpacing/getHorizontalScale()) );
                     result.setStep2( Math.abs(pixSpacing/getVerticalScale()) );
                 }

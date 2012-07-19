@@ -33,23 +33,6 @@ public interface PointStyle {
     public void draw(Point2D point, double angle, Graphics2D canvas, VisibilityKey visibility);
 
     /**
-     * Draws specified points on the graphics canvas with visibility options
-     * @param points the points to draw
-     * @param canvas graphics element to draw on
-     * @param visibility visibility & highlight settings
-     */
-    public void drawAll(Iterable<Point2D> points, Graphics2D canvas, VisibilityKey visibility);
-
-    /**
-     * Draws specified points on the graphics canvas with visibility options
-     * @param points the points to draw
-     * @param angle angle of rotation
-     * @param canvas graphics element to draw on
-     * @param visibility visibility & highlight settings
-     */
-    public void drawAll(Iterable<Point2D> points, double angle, Graphics2D canvas, VisibilityKey visibility);
-    
-    /**
      * Returns the shape corresponding to the given point, for the style's current settings.
      * @param point the point to draw
      * @return the shape corresponding to the specified point

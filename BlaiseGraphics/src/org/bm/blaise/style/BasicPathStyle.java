@@ -12,14 +12,14 @@ import java.awt.Graphics2D;
 
 /**
  * Draws a path with arbitrary color and width.
- * 
+ *
  * @author Elisha
  */
 public class BasicPathStyle implements PathStyle {
 
     Color color = Color.black;
     float thickness = 1f;
-    
+
     public BasicPathStyle() {
     }
 
@@ -39,7 +39,7 @@ public class BasicPathStyle implements PathStyle {
     public void setColor(Color stroke) {
         this.color = stroke;
     }
-    
+
     public BasicPathStyle color(Color stroke) {
         this.color = stroke;
         return this;
@@ -66,19 +66,6 @@ public class BasicPathStyle implements PathStyle {
 
         canvas.setColor(visibility == VisibilityKey.Highlight  ? StyleUtils.lighterThan(getColor()) : getColor());
         canvas.draw(s);
-
-        canvas.setStroke(StyleUtils.DEFAULT_STROKE);
-    }
-
-    public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, VisibilityKey visibility) {
-        if(getWidth() <= 0f && getColor() != null)
-            return;
-
-        canvas.setStroke(new BasicStroke(getWidth()));
-
-        canvas.setColor(visibility == VisibilityKey.Highlight  ? StyleUtils.lighterThan(getColor()) : getColor());
-        for (Shape s : primitives)
-            canvas.draw(s);
 
         canvas.setStroke(StyleUtils.DEFAULT_STROKE);
     }

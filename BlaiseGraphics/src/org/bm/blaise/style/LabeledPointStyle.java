@@ -12,7 +12,7 @@ import org.bm.util.PointFormatters;
 /**
  * Adds a label to a point style. The points' style and labels' style can
  * be manipulated separately. Label visibility may be turned on and off.
- * 
+ *
  * @author elisha
  */
 public class LabeledPointStyle implements PointStyle {
@@ -31,19 +31,19 @@ public class LabeledPointStyle implements PointStyle {
         this.base = new BasicPointStyle();
     }
 
-    /** 
+    /**
      * Construct with specified base style
      * @param base the base style
      */
     public LabeledPointStyle(PointStyle base) {
         this.base = base;
     }
-    
+
 
     //
     // PROPERTIES
     //
-    
+
     public PointStyle getBaseStyle() {
         return base;
     }
@@ -71,7 +71,7 @@ public class LabeledPointStyle implements PointStyle {
     //
     // PointStyle METHODS
     //
-    
+
     public Shape shape(Point2D point) {
         return base.shape(point);
     }
@@ -119,17 +119,5 @@ public class LabeledPointStyle implements PointStyle {
 
     public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityKey visibility) {
         draw(p, angle, PointFormatters.formatPoint(p, 2), canvas, visibility);
-    }
-
-    public void drawAll(Iterable<Point2D> pts, Graphics2D canvas, VisibilityKey visibility) {
-        for (Point2D p : pts) {
-            draw(p, canvas, visibility);
-        }
-    }
-
-    public void drawAll(Iterable<Point2D> pts, double angle, Graphics2D canvas, VisibilityKey visibility) {
-        for (Point2D p : pts) {
-            draw(p, angle, canvas, visibility);
-        }
     }
 }

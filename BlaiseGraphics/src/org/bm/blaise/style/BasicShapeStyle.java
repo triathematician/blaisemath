@@ -56,50 +56,24 @@ public class BasicShapeStyle implements ShapeStyle {
     }
 
     public void draw(Shape s, Graphics2D canvas, VisibilityKey visibility) {
-        if (thickness <= 0) 
+        if (thickness <= 0)
             return;
-        
+
         canvas.setStroke(new BasicStroke(thickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5.0f, null, 0.0f));
 
         if (fill != null) {
             canvas.setColor(
-                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill) 
+                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill)
                     : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(fill)
                     : fill);
             canvas.fill(s);
         }
         if (stroke != null) {
             canvas.setColor(
-                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(stroke) 
+                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(stroke)
                     : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(stroke)
                     : stroke);
             canvas.draw(s);
-        }
-
-        canvas.setStroke(StyleUtils.DEFAULT_STROKE);
-    }
-
-    public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, VisibilityKey visibility) {
-        if (thickness <= 0) 
-            return;
-        
-        canvas.setStroke(new BasicStroke(thickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5.0f, null, 0.0f));
-
-        for (Shape s : primitives) {
-            if (fill != null) {
-                canvas.setColor(
-                        visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill) 
-                        : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(fill)
-                        : fill);
-                canvas.fill(s);
-            }
-            if (stroke != null) {
-                canvas.setColor(
-                        visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(stroke) 
-                        : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(stroke)
-                        : stroke);
-                canvas.draw(s);
-            }
         }
 
         canvas.setStroke(StyleUtils.DEFAULT_STROKE);

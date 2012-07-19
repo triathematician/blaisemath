@@ -7,6 +7,7 @@ package org.bm.blaise.specto.graphics;
 import java.util.Map;
 import java.util.Set;
 import org.bm.blaise.graphics.CustomGraphGraphic;
+import org.bm.blaise.graphics.GMouseIndexedHighlighter;
 import org.bm.blaise.style.ObjectStyler;
 import org.bm.blaise.style.PathStyle;
 
@@ -28,7 +29,8 @@ public class VCustomGraph<C, Src> extends VCustomPointSet<C, Src> {
         super(initialPoint);
         super.window = window = new CustomGraphGraphic<Src>();
         window.clearMouseListeners();
-        window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGMouseIndexedDragger<C>(this).adapter());
+        window.addMouseListener(new GMouseIndexedHighlighter());
     }
 
     //

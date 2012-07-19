@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 
 /**
  * Fills a shape using a specified color (no outline).
- * 
+ *
  * @author Elisha
  */
 public class BasicFillStyle implements ShapeStyle {
@@ -33,21 +33,10 @@ public class BasicFillStyle implements ShapeStyle {
     public void draw(Shape s, Graphics2D canvas, VisibilityKey visibility) {
         if (fill != null) {
             canvas.setColor(
-                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill) 
+                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill)
                     : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(fill)
                     : fill);
             canvas.fill(s);
-        }
-    }
-
-    public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, VisibilityKey visibility) {
-        if (fill != null) {
-            canvas.setColor(
-                    visibility == VisibilityKey.Highlight ? StyleUtils.lighterThan(fill) 
-                    : visibility == VisibilityKey.Obscure ? StyleUtils.blanderThan(fill)
-                    : fill);
-            for (Shape s : primitives)
-                canvas.fill(s);
         }
     }
 

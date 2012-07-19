@@ -148,12 +148,12 @@ public class VGraphicComponent<C> extends GraphicComponent {
     private static int _rec = 0, _conv = 0, _draw = 0;
     /** Prints warning messages if any of the render steps takes too long */
     private void instrument(long t0, long t1, long t2, long t3) {
-        if (t1-t0 > THRESH)
-            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables recompute {0}: {1}", new Object[]{++_rec, t1-t0});
-        if (t2-t1 > THRESH)
-            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables conversion {0}: {1}", new Object[]{++_conv, t2-t1});
-        if (t3-t2 > THRESH)
-            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long redraw {0}: {1}", new Object[]{++_draw, t3-t2});
+//        if (t1-t0 > THRESH)
+//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables recompute {0}: {1}", new Object[]{++_rec, t1-t0});
+//        if (t2-t1 > THRESH)
+//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables conversion {0}: {1}", new Object[]{++_conv, t2-t1});
+//        if (t3-t2 > THRESH)
+//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long redraw {0}: {1}", new Object[]{++_draw, t3-t2});
     }
     //</editor-fold>
 

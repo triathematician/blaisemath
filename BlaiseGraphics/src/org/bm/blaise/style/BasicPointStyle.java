@@ -23,11 +23,11 @@ public class BasicPointStyle extends PointStyleSupport {
     BasicShapeStyle shapeStyle = new BasicShapeStyle(Color.lightGray, Color.darkGray);
 
 
-// <editor-fold defaultstate="collapsed" desc="Constructors & Initializers">
+    // <editor-fold defaultstate="collapsed" desc="Constructors & Initializers">
 
     /** Construct instance with default settings */
     public BasicPointStyle() { }
-    
+
     @Override
     public String toString() {
         return String.format("BasicPointStyle[fill=%s, stroke=%s, stroke_width=%.1f, radius=%.1f, shape=%s]", shapeStyle.fill, shapeStyle.stroke, shapeStyle.thickness, radius, shaper);
@@ -39,85 +39,85 @@ public class BasicPointStyle extends PointStyleSupport {
     }
 
     /** Sets radius & returns pointer to object */
-    public BasicPointStyle radius(float radius) { 
-        this.radius = radius;     
+    public BasicPointStyle radius(float radius) {
+        this.radius = radius;
         return this;
     }
-    
+
     /** Sets stroke color & returns pointer to object */
-    public BasicPointStyle stroke(Color c) { 
-        shapeStyle.stroke = c; 
-        return this; 
+    public BasicPointStyle stroke(Color c) {
+        shapeStyle.stroke = c;
+        return this;
     }
-    
+
     /** Sets fill color & returns pointer to object */
-    public BasicPointStyle fill(Color c) { 
+    public BasicPointStyle fill(Color c) {
         shapeStyle.fill = c;
-        return this; 
+        return this;
     }
-    
+
     /** Sets shape & returns pointer to object */
     public BasicPointStyle shape(ShapeProvider s) {
         this.shaper = s;
         return this;
     }
-    
+
     /** Sets thickness & returns pointer to object */
     public BasicPointStyle thickness(float thick) {
-        shapeStyle.thickness = thick; 
-        return this; 
+        shapeStyle.thickness = thick;
+        return this;
     }
 
-// </editor-fold>
+    // </editor-fold>
 
 
-// <editor-fold defaultstate="collapsed" desc="Property Patterns">
+    // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
-    protected BasicShapeStyle getShapeStyle() { 
-        return shapeStyle; 
+    protected BasicShapeStyle getShapeStyle() {
+        return shapeStyle;
     }
     protected void setShapeStyle(BasicShapeStyle r) {
         this.shapeStyle = r;
     }
 
-    public ShapeProvider getShape() { 
+    public ShapeProvider getShape() {
         return shaper;
     }
-    
-    public void setShape(ShapeProvider shaper) { 
+
+    public void setShape(ShapeProvider shaper) {
         this.shaper = shaper;
     }
 
-    public float getRadius() { 
+    public float getRadius() {
         return radius;
     }
-    
-    public final void setRadius(float r) { 
+
+    public final void setRadius(float r) {
         radius = Math.max(r, 1);
     }
 
-    public Color getFill() { 
+    public Color getFill() {
         return shapeStyle.getFill();
     }
-    public void setFill(Color fill) { 
+    public void setFill(Color fill) {
         shapeStyle.setFill(fill);
     }
 
     public Color getStroke() {
-        return shapeStyle.getStroke(); 
+        return shapeStyle.getStroke();
     }
-    
-    public void setStroke(Color stroke) { 
+
+    public void setStroke(Color stroke) {
         shapeStyle.setStroke(stroke);
     }
 
-    public float getThickness() { 
+    public float getThickness() {
         return shapeStyle.getThickness();
     }
-    
+
     public void setThickness(float thickness) {
-        shapeStyle.setThickness(thickness); 
+        shapeStyle.setThickness(thickness);
     }
-// </editor-fold>
+    // </editor-fold>
 
 }
