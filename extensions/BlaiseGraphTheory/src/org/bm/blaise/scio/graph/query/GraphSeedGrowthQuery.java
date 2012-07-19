@@ -31,13 +31,13 @@ public class GraphSeedGrowthQuery implements GraphQuery {
     private static final String EXEC_ALGO_NAME = GraphSeedGrowthQuery.class.getName()+"#execute";
 
     public Set execute(Graph graph, SeedCallback callback) {
-        GAInstrument.start(EXEC_ALGO_NAME);
+        int id = GAInstrument.start(EXEC_ALGO_NAME);
         Set seedNodes = seedRule.execute(graph);
-        GAInstrument.middle(EXEC_ALGO_NAME, "seeded");
+        GAInstrument.middle(id, "seeded");
         if (callback != null)
             callback.seedSubset(seedNodes);
         Set result = growRule.grow(graph, seedNodes);
-        GAInstrument.end(EXEC_ALGO_NAME);
+        GAInstrument.end(id);
         return result;
     }
 

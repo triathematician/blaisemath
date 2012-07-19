@@ -8,12 +8,12 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bm.blaise.scio.graph.Graph;
 import org.bm.blaise.scio.graph.GraphUtils;
-import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
 
 /**
  * This layout places components of a graph in a spiral pattern, with the largest
@@ -26,11 +26,20 @@ import org.bm.blaise.scio.graph.layout.StaticGraphLayout;
  */
 public class ComponentCircleLayout implements StaticGraphLayout {
 
+    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>(){
+        @Override
+        public int compare(Graph o1, Graph o2) {
+            return -(o1.order() == o2.order() && o1.edgeCount() == o2.edgeCount() ? o1.nodes().toString().compareTo(o2.nodes().toString())
+                    : o1.order() == o2.order() ? o1.edgeCount() - o2.edgeCount()
+                    : o1.order() - o2.order());
+        }
+    };
+
     public Map<Object, Point2D.Double> layout(Graph graph, double... doubles) {
         if (graph.isDirected())
             graph = GraphUtils.undirectedCopy(graph);
         List<Graph> components = GraphUtils.getComponentGraphs(graph);
-        Collections.sort(components, GraphUtils.GRAPH_SIZE_DESCENDING);
+        Collections.sort(components, GRAPH_SIZE_DESCENDING);
 
         Map<Object,Point2D.Double> result = new HashMap<Object,Point2D.Double>();
 
@@ -51,11 +60,24 @@ public class ComponentCircleLayout implements StaticGraphLayout {
         Rectangle2D.Double nxt = nextBounds(n, priors, layers);
         double cx = nxt.getCenterX(), cy = nxt.getCenterY();
         double rad = Math.min(nxt.getWidth(), nxt.getHeight());
-        int rots = (int) (Math.sqrt(n)/2);
-        for (int i = 0; i < n; i++) {
-            double pct = i/(double) n;
-            double theta = rots*2*Math.PI*pct;
-            result.put(nodes.get(i), new Point2D.Double(cx+pct*rad*Math.cos(theta), cy+pct*rad*Math.sin(theta)));
+
+        if (n == 3 && graph.edgeCount() == 2) {
+            Object n1 = nodes.get(0);
+            Object n2 = nodes.get(1);
+            Object n3 = nodes.get(2);
+            if (graph.degree(n1) == 2) { Object nt = n2; n2 = n1; n1 = nt; }
+            if (graph.degree(n3) == 2) { Object nt = n2; n2 = n3; n3 = nt; }
+            assert graph.degree(n2) == 2;
+            result.put(n1, new Point2D.Double(cx-rad,0));
+            result.put(n2, new Point2D.Double(0,0));
+            result.put(n3, new Point2D.Double(cx+rad,0));
+        } else {
+            int rots = (int) (Math.sqrt(n)/2);
+            for (int i = 0; i < n; i++) {
+                double pct = i/(double) n;
+                double theta = rots*2*Math.PI*pct;
+                result.put(nodes.get(i), new Point2D.Double(cx+pct*rad*Math.cos(theta), cy+pct*rad*Math.sin(theta)));
+            }
         }
         return result;
     }

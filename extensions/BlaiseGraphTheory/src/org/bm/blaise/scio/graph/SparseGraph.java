@@ -6,11 +6,11 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import java.util.TreeSet;
  * @author Elisha Peterson
  */
 public class SparseGraph<V> extends GraphSupport<V> {
-    
+
     //
     // FACTORY METHODS
     //
@@ -38,21 +38,24 @@ public class SparseGraph<V> extends GraphSupport<V> {
      * @param edges the edges in the graph, as node pairs; each must have a 0 element and a 1 element
      */
     public static <V> SparseGraph<V> getInstance(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
-        Map<V,Set<V>> adj = new TreeMap<V,Set<V>>();
+        Map<V,Set<V>> adj = new HashMap<V,Set<V>>();
         for (V v : nodes)
-            adj.put(v, new TreeSet<V>());
+            adj.put(v, new HashSet<V>());
         for (V[] e : edges) {
-            if (!adj.containsKey(e[0]))
-                adj.put(e[0], new TreeSet<V>());
-            if (!adj.containsKey(e[1]))
-                adj.put(e[1], new TreeSet<V>());
-            adj.get(e[0]).add(e[1]);
-            if (!directed)
-                adj.get(e[1]).add(e[0]);
+            Set<V> get0 = adj.get(e[0]);
+            if (get0 == null)
+                adj.put(e[0], get0 = new HashSet<V>());
+            get0.add(e[1]);
+            if (!directed) {
+                Set<V> get1 = adj.get(e[1]);
+                if (get1 == null)
+                    adj.put(e[1], get1 = new HashSet<V>());
+                get1.add(e[0]);
+            }
         }
         return new SparseGraph<V>(directed, adj);
     }
-    
+
     //
     // IMPLEMENTATION
     //
@@ -69,29 +72,30 @@ public class SparseGraph<V> extends GraphSupport<V> {
         this.components = new GraphComponents(this, GraphUtils.components(adjacencies));
     }
 
+    public GraphComponents<V> getComponentInfo() {
+        return components;
+    }
+
     @Override
     public String toString() {
         return adjacencies.toString();
     }
-    
+
     @Override
     public boolean adjacent(V x, V y) {
-        return adjacencies.containsKey(x) && adjacencies.get(x).contains(y);
+        Set<V> get = adjacencies.get(x);
+        return get != null && get.contains(y);
     }
 
     @Override
-    public int degree(V x) { 
-        if (!adjacencies.containsKey(x)) return 0;
+    public int degree(V x) {
         Set<V> nbhd = adjacencies.get(x);
-        return (!directed && nbhd.contains(x)) ? nbhd.size()+1 : nbhd.size();
+        return nbhd == null ? 0 : (!directed && nbhd.contains(x)) ? nbhd.size()+1 : nbhd.size();
     }
 
     public Set<V> neighbors(V x) {
         Set<V> adj = adjacencies.get(x);
-        if (adj == null)
-            return Collections.emptySet();
-        else
-            return adj;
+        return adj == null ? Collections.EMPTY_SET : adj;
     }
 
     public int edgeCount() {

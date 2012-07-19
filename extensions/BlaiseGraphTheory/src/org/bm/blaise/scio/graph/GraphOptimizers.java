@@ -43,21 +43,21 @@ public class GraphOptimizers {
     public static class OptimizedGraph implements Graph {
 
         /** Nodes */
-        List nodes = new ArrayList();
+        private final List nodes = new ArrayList();
         /** Degrees */
-        Map<Object,Integer> degrees = new HashMap<Object,Integer>();
+        private final Map<Object,Integer> degrees = new HashMap<Object,Integer>();
 
         /** Isolate nodes (deg = 0) */
-        Set isolates = new HashSet();
+        private final Set isolates = new HashSet();
         /** Leaf nodes (deg = 1) */
-        Set leafNodes = new HashSet();
+        private final Set leafNodes = new HashSet();
         /** Non-leaf nodes (deg >= 2) */
-        Set coreNodes = new HashSet();
+        private final Set coreNodes = new HashSet();
 
         /** General objects adjacent to each node */
-        Map<Object,Set> neighbors = new HashMap<Object,Set>();
+        private final Map<Object,Set> neighbors = new HashMap<Object,Set>();
         /** Leaf objects adjacent to each node. Values consist of objects that have degree 1 ONLY. */
-        Map<Object,Set> leaves = new HashMap<Object,Set>();
+        private final Map<Object,Set> leaves = new HashMap<Object,Set>();
 
         /**
          * Construct optimized graph from general graph
@@ -84,17 +84,16 @@ public class GraphOptimizers {
 
             // iterate through edges
             for (Object o1 : nodes)
-                for (Object o2 : nodes)
-                    if (g.adjacent(o1, o2)) {
-                        if (degrees.get(o1) > 1)
-                            neighbors.get(o2).add(o1);
-                        else
-                            leaves.get(o2).add(o1);
-                        if (degrees.get(o2) > 1)
-                            neighbors.get(o1).add(o2);
-                        else
-                            leaves.get(o1).add(o2);
-                    }
+                for (Object o2 : g.neighbors(o1)) {
+                    if (degrees.get(o1) > 1)
+                        neighbors.get(o2).add(o1);
+                    else
+                        leaves.get(o2).add(o1);
+                    if (degrees.get(o2) > 1)
+                        neighbors.get(o1).add(o2);
+                    else
+                        leaves.get(o1).add(o2);
+                }
         }
 
         public int order() { return nodes.size(); }
@@ -122,7 +121,8 @@ public class GraphOptimizers {
                     || (leaves.containsKey(x) && leaves.get(x).contains(y));
         }
         public int degree(Object x) {
-            return degrees.containsKey(x) ? degrees.get(x) : 0;
+            Integer i = degrees.get(x);
+            return i == null ? 0 : i;
         }
         public Set neighbors(Object x) {
             Set result = new HashSet();
@@ -150,34 +150,63 @@ public class GraphOptimizers {
      * to the "core" nodes (those with degree > 1).
      */
     public static class OptimizedGraphCore implements Graph {
-        OptimizedGraph base;
-        List coreNodeList = new ArrayList();
+
+        private final OptimizedGraph base;
+        private final List coreNodeList = new ArrayList();
+        private final Map<Object, Set> neighbors;
+        private final Map<Object, Integer> degrees;
+
         public OptimizedGraphCore(OptimizedGraph og) {
             this.base = og;
+            this.neighbors = base.neighbors;
             coreNodeList.addAll(og.coreNodes);
+            degrees = new HashMap<Object, Integer>();
+            for (Object o : coreNodeList) {
+                Set get = neighbors.get(o);
+                degrees.put(o, get == null ? 0 : get.size());
+            }
         }
+
         public OptimizedGraph getBase() { return base; }
+
         @Override
-        public int order() { return coreNodeList.size(); }
+        public int order() {
+            return coreNodeList.size();
+        }
+
         @Override
-        public List nodes() { return coreNodeList; }
+        public List nodes() {
+            return coreNodeList;
+        }
+
         @Override
-        public boolean contains(Object x) { return base.coreNodes.contains(x); } // faster to use hashset than list
+        public boolean contains(Object x) {
+            // faster to use hashset than list
+            return base.coreNodes.contains(x);
+        }
+
         @Override
         public boolean adjacent(Object x, Object y) {
-            return base.neighbors.containsKey(x) && base.neighbors.get(x).contains(y);
+            Set get = neighbors.get(x);
+            return get != null && get.contains(y);
         }
+
         @Override
         public int degree(Object x) {
-            return base.neighbors.containsKey(x) ? base.neighbors.get(x).size() : 0;
+            Integer i = degrees.get(x);
+            return i == null ? 0 : i;
         }
+
         @Override
         public Set neighbors(Object x) {
-            return base.neighbors.containsKey(x) ? base.neighbors.get(x) : Collections.emptySet();
+            Set get = neighbors.get(x);
+            return get == null ? Collections.EMPTY_SET : get;
         }
+
         public boolean isDirected() {
             return false;
         }
+
         public int edgeCount() {
             int degCount = 0;
             for (Object o : coreNodeList)

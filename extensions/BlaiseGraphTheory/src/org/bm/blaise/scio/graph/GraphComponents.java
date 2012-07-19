@@ -5,6 +5,7 @@
 package org.bm.blaise.scio.graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,8 @@ public class GraphComponents<V> {
     private final Graph<V> graph;
     /** The connected components of the graph. */
     private final Collection<Set<V>> components;
+    /** Stored components as graphs. */
+    private final List<Graph<V>> componentGraphs;
 
     /**
      * Construct components for specified graph.
@@ -32,6 +35,13 @@ public class GraphComponents<V> {
     public GraphComponents(Graph<V> graph, Collection<Set<V>> components) {
         this.graph = graph;
         this.components = components;
+        if (components.size() == 1)
+            componentGraphs = Arrays.asList(graph);
+        else {
+            this.componentGraphs = new ArrayList<Graph<V>>();
+            for (Set<V> compt : components)
+                componentGraphs.add(GraphUtils.copyGraph(new Subgraph(graph, compt)));
+        }
     }
 
     /**
@@ -47,10 +57,7 @@ public class GraphComponents<V> {
      * @return subcomponents
      */
     public List<Graph<V>> getComponentGraphs() {
-        List<Graph<V>> result = new ArrayList<Graph<V>>();
-        for (Set<V> compt : components)
-            result.add(GraphUtils.copyGraph(new Subgraph(graph, compt)));
-        return result;
+        return componentGraphs;
     }
 
     /**

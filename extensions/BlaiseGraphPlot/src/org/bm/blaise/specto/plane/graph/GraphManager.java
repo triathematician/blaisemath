@@ -112,7 +112,7 @@ public final class GraphManager {
             locator.setLocationMap(INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS));
             if (iLayout != null)
                 iLayout.requestPositions(locator.getLocationMap(), true);
-            fireLocationsChanged();
+            fireGraphChanged();
         } else {
             this.graph = g;
             updateGraph();
@@ -127,7 +127,7 @@ public final class GraphManager {
         locator.setObjects(nodes);
         if (iLayout != null)
             iLayout.requestPositions(locator.getLocationMap(), true);
-        fireLocationsChanged();
+        fireGraphChanged();
     }
 
     /**
@@ -203,7 +203,7 @@ public final class GraphManager {
         locator.setLocationMap(pos);
         if (iLayout != null)
             iLayout.requestPositions(pos, false);
-        fireLocationsChanged();
+        fireGraphChanged();
     }
 
     /** @return current iterative layout algorithm */
@@ -264,12 +264,12 @@ public final class GraphManager {
             }
             long t1 = System.currentTimeMillis();
             locator.setLocationMap(iLayout.getPositions());
-            fireLocationsChanged();
+            fireGraphChanged();
             long t2 = System.currentTimeMillis();
-            if ((t1-t0) > 100)
-                Logger.getLogger(GraphManager.class.getName()).log(Level.WARNING, "Long Iterative Layout Step {0}: {1}ms", new Object[]{++_i, t1-t0});
-            if ((t2-t1) > 100)
-                Logger.getLogger(GraphManager.class.getName()).log(Level.WARNING, "Long Position Update {0}: {1}ms", new Object[]{++_p, t2-t1});
+//            if ((t1-t0) > 200)
+//                Logger.getLogger(GraphManager.class.getName()).log(Level.WARNING, "Long Iterative Layout Step {0}: {1}ms", new Object[]{++_i, t1-t0});
+//            if ((t2-t1) > 200)
+//                Logger.getLogger(GraphManager.class.getName()).log(Level.WARNING, "Long Position Update {0}: {1}ms", new Object[]{++_p, t2-t1});
         }
 //        System.out.println("... layout complete");
     }
@@ -307,7 +307,14 @@ public final class GraphManager {
     // EVENT HANDLING
     //
 
-    /** The entire graph has changed: nodes, positions, edges */
+    /** The entire graph has changed */
+    private synchronized void fireGraphChanged() {
+        Object[] loc = locator.getLocationArray();
+        Point2D.Double[] pLoc = new Point2D.Double[loc.length];
+        System.arraycopy(loc, 0, pLoc, 0, loc.length);
+        pcs.firePropertyChange("graph", null, pLoc);
+    }
+    /** Only the positions have changed */
     private synchronized void fireLocationsChanged() {
         Object[] loc = locator.getLocationArray();
         Point2D.Double[] pLoc = new Point2D.Double[loc.length];

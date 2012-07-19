@@ -4,7 +4,6 @@
  */
 package org.bm.blaise.specto.plane.graph;
 
-import java.awt.geom.Point2D.Double;
 import org.bm.blaise.scio.graph.ValuedGraph;
 import org.bm.blaise.style.PointStyle;
 import java.awt.geom.Point2D;
@@ -28,7 +27,7 @@ import org.bm.util.Delegator;
  *
  * @author Elisha Peterson
  */
-public class PlaneGraphAdapter {
+public class PlaneGraphAdapter implements PropertyChangeListener {
 
     /** Manages graph and node locations */
     private GraphManager manager;
@@ -41,7 +40,10 @@ public class PlaneGraphAdapter {
             if (vGraph.getEdgeStyler() instanceof GraphEdgeStyler)
                 ((GraphEdgeStyler)vGraph.getEdgeStyler()).setGraph(graph);
         }
+        public void locationsUpdated(Point2D.Double[] points) {
+        }
     };
+
 
 
     //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
@@ -55,13 +57,6 @@ public class PlaneGraphAdapter {
             return vg == null ? src.toString() : vg.getValue(src).toString();
         }
     };
-
-    private final PropertyChangeListener MANAGER_LISTENER = new PropertyChangeListener(){
-        public void propertyChange(PropertyChangeEvent evt) {
-            graphUpdated(manager.getGraph(), (Point2D.Double[]) evt.getNewValue());
-        }
-    };
-
     /**
      * Initialize adapter with an empty graph.
      */
@@ -111,6 +106,25 @@ public class PlaneGraphAdapter {
     //</editor-fold>
 
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource() == manager) {
+            if (evt.getPropertyName().equals("graph")) {
+                Point2D.Double[] points = (Point2D.Double[]) evt.getNewValue();
+                Graph graph = manager.getGraph();
+                vGraph.setEdges(GraphUtils.getEdgeMap(graph));
+                vGraph.setPoint(points);
+                if (updater != null)
+                    updater.graphUpdated(graph, points);
+            } else if (evt.getPropertyName().equals("locationArray")) {
+                Point2D.Double[] points = (Point2D.Double[]) evt.getNewValue();
+                vGraph.setPoint(points);
+                if (updater != null)
+                    updater.locationsUpdated(points);
+            }
+        }
+    }
+
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
@@ -126,12 +140,13 @@ public class PlaneGraphAdapter {
 
     public final void setGraphManager(GraphManager manager) {
         if (this.manager != manager) {
-            if (this.manager != null)
-                this.manager.removePropertyChangeListener("locationArray", MANAGER_LISTENER);
+            if (this.manager != null) {
+                this.manager.removePropertyChangeListener(this);
+            }
             this.manager = manager;
             this.manager = manager;
             initGraph(manager.getGraph());
-            this.manager.addPropertyChangeListener("locationArray", MANAGER_LISTENER);
+            this.manager.addPropertyChangeListener(this);
         }
     }
 
@@ -186,27 +201,6 @@ public class PlaneGraphAdapter {
     // </editor-fold>
 
 
-    // <editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
-    //
-    // EVENT HANDLING
-    //
-
-    /**
-     * Call to update the appearance.
-     */
-    public final void updateAppearance() {
-        vGraph.getWindowEntry().fireAppearanceChanged();
-    }
-
-    protected synchronized void graphUpdated(Graph graph, Point2D.Double[] points) {
-        vGraph.setEdges(GraphUtils.getEdgeMap(graph));
-        vGraph.setPoint(points);
-        if (updater != null)
-            updater.graphUpdated(graph, points);
-    }
-
-    // </editor-fold>
-
 
     /** Class providing functionality to update a graph */
     public static interface GraphUpdater {
@@ -216,6 +210,11 @@ public class PlaneGraphAdapter {
          * @param points locations of nodes in the graph
          */
         public void graphUpdated(Graph graph, Point2D.Double[] points);
+        /**
+         * Called when locations only are updated.
+         * @param points locations of nodes in the graph
+         */
+        public void locationsUpdated(Point2D.Double[] points);
     }
 
 }

@@ -90,7 +90,7 @@ public class GraphUtils {
     public static <V> Graph<V> copyGraph(Graph<V> graph) {
         boolean directed = graph.isDirected();
         ArrayList<V> vertices = new ArrayList<V>(graph.nodes());
-        ArrayList<V[]> edges = new ArrayList<V[]>(graph.edgeCount());
+        ArrayList<V[]> edges = new ArrayList<V[]>();
         for (V v1 : vertices)
             for (V v2 : graph.neighbors(v1))
                 if (graph.adjacent(v1, v2)) {
@@ -125,6 +125,8 @@ public class GraphUtils {
      * @return an undirected view of the graph
      */
     public static <V> Graph<V> undirectedWrapper(Graph<V> g) {
+        if (!g.isDirected())
+            return g;
         return new AbstractWrapperGraph<V>(g) {
             @Override
             public boolean isDirected() { return false; }
@@ -545,8 +547,11 @@ public class GraphUtils {
      * @return list of connected component subgraphs
      */
     public static <V> List<Graph<V>> getComponentGraphs(Graph<V> graph) {
-        GraphComponents<V> gc = new GraphComponents<V>(graph, components(graph));
-        return gc.getComponentGraphs();
+        int id = GAInstrument.start("componentGraphs", ""+graph.order());
+        List<Graph<V>> result = graph instanceof SparseGraph ? ((SparseGraph)graph).getComponentInfo().getComponentGraphs()
+                : new GraphComponents<V>(graph, components(graph)).getComponentGraphs();
+        GAInstrument.end(id);
+        return result;
 
     }
 
@@ -572,7 +577,10 @@ public class GraphUtils {
      * @return set of connected components
      */
     public static <V> Collection<Set<V>> components(Graph<V> graph) {
-        return components(adjacencies(graph, graph.nodes()));
+        if (graph instanceof SparseGraph)
+            return ((SparseGraph)graph).getComponentInfo().getComponents();
+        else
+            return components(adjacencies(graph, graph.nodes()));
     }
 
     /**
