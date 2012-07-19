@@ -28,7 +28,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
     public VBasicPointSet(C[] initialPoint) {
         this.point = initialPoint;
         window.clearMouseListeners();
-        window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGMouseIndexedDragger<C>(this).adapter());
     }
 
     //

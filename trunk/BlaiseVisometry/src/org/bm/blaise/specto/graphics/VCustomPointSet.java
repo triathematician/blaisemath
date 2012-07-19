@@ -7,7 +7,7 @@ package org.bm.blaise.specto.graphics;
 import java.awt.geom.Point2D;
 import java.util.List;
 import org.bm.blaise.graphics.CustomPointSetGraphic;
-import org.bm.blaise.graphics.Graphic;
+import org.bm.blaise.graphics.GMouseIndexedHighlighter;
 import org.bm.blaise.style.ObjectStyler;
 import org.bm.blaise.style.PointStyle;
 import org.bm.util.DraggableIndexedPointBean;
@@ -35,7 +35,8 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
     public VCustomPointSet(C[] initialPoint) {
         this.point = initialPoint;
         window.clearMouseListeners();
-        window.addMouseListener(new VGraphicIndexedPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGMouseIndexedDragger<C>(this).adapter());
+        window.addMouseListener(new GMouseIndexedHighlighter());
     }
 
     //
@@ -67,7 +68,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
     }
 
     public synchronized int indexOf(Point2D pt, C dragStart) {
-        return window.indexOf(pt);
+        return window.indexOf(pt, null);
     }
 
     public void setPoint(int index, C initial, C dragStart, C dragFinish) {

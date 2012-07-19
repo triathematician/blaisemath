@@ -9,6 +9,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bm.blaise.style.VisibilityKey;
 import org.bm.util.Delegator;
 import org.bm.util.IndexedPointBean;
 import org.bm.util.PointFormatters;
@@ -16,27 +19,29 @@ import org.bm.util.PointFormatters;
 /**
  * A set of points with position.
  * The point set is not dynamic, and all points have the same style.
- * 
+ *
  * @see PointStyle
- * 
+ *
  * @author Elisha Peterson
  */
-public class BasicPointSetGraphic extends GraphicSupport implements IndexedPointBean<Point2D> {
+public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisibilityGraphic<Point2D> {
 
     /** The object that will be drawn. */
     Point2D[] points;
     /** Angle specifying point orientation */
     private double angle = 0;
-    
+
     /** The associated style (may be null). */
     PointStyle style;
-    /** Optional elegate for tooltips */
+    /** Optional delegate for tooltips */
     protected Delegator<Point2D, String> pointTipper;
+    /** Optional delegate for visibility keys */
+    protected Delegator<Point2D, VisibilityKey> visibilityDelegate;
 
     //
     // CONSTRUCTORS
     //
-    
+
     /**
      * Construct with no point (defaults to origin)
      */
@@ -44,15 +49,15 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         this(new Point2D[]{}, null);
     }
 
-    /** 
-     * Construct with no style (will use the default) 
+    /**
+     * Construct with no style (will use the default)
      * @param p initial point
      */
-    public BasicPointSetGraphic(Point2D[] p) { 
-        this(p, null); 
+    public BasicPointSetGraphic(Point2D[] p) {
+        this(p, null);
     }
 
-    /** 
+    /**
      * Construct with given primitive and style.
      * @param p initial point
      * @param style the style
@@ -60,7 +65,9 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     public BasicPointSetGraphic(Point2D[] p, PointStyle style) {
         this.points = p;
         this.style = style;
+        clearMouseListeners();
         addMouseListener(new GMouseIndexedDragger(this));
+        addMouseListener(new GMouseIndexedHighlighter());
     }
 
     @Override
@@ -68,6 +75,8 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         return "Point Set";
     }
 
+
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
@@ -79,10 +88,10 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
             fireGraphicChanged();
         }
     }
-    public Point2D getPoint(int i) { 
-        return points[i]; 
+    public Point2D getPoint(int i) {
+        return points[i];
     }
-    public void setPoint(int i, Point2D pt) { 
+    public void setPoint(int i, Point2D pt) {
         points[i] = pt;
         fireGraphicChanged();
     }
@@ -100,7 +109,18 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         }
         return -1;
     }
-    
+
+    public void setVisibility(final int i, final VisibilityKey key) {
+        if (i == -1) {
+            visibilityDelegate = null;
+            visibility = key;
+        } else {
+            setVisibilityDelegate(new Delegator<Point2D, VisibilityKey>(){
+                public VisibilityKey of(Point2D src) { return i < points.length && src == points[i] ? key : visibility; }
+                });
+        }
+        fireGraphicChanged();
+    }
 
     /**
      * Return orientation/angle of the point
@@ -122,10 +142,10 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      * Return the style for the point
      * @return style, or null if there is none
      */
-    public PointStyle getStyle() { 
-        return style; 
+    public PointStyle getStyle() {
+        return style;
     }
-    
+
     /**
      * Set the style for the point
      * @param style the style; may be null
@@ -145,19 +165,32 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         this.pointTipper = pointTipper;
     }
 
+    public Delegator<Point2D, VisibilityKey> getVisibilityDelegate() {
+        return visibilityDelegate;
+    }
+
+    public void setVisibilityDelegate(Delegator<Point2D, VisibilityKey> visibilityDelegate) {
+        this.visibilityDelegate = visibilityDelegate;
+    }
+
+    //</editor-fold>
+
+
+    //<editor-fold defaultstate="collapsed" desc="DRAW METHODS">
     //
     // DRAW METHODS
     //
-    
+
     /** Return the actual style used for drawing */
     private PointStyle drawStyle() {
         return style == null ? parent.getStyleProvider().getPointStyle() : style;
     }
 
     public void draw(Graphics2D canvas) {
-        drawStyle().drawAll(Arrays.asList(points), angle, canvas, visibility);
+        for (Point2D p : points)
+            drawStyle().draw(p, canvas, visibilityDelegate == null ? visibility : visibilityDelegate.of(p));
     }
-    
+
     public boolean contains(Point p) {
         return indexOf(p, p) != -1;
     }
@@ -167,7 +200,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         int i = indexOf(p, p);
         return i == -1 ? getPointTooltip(null) : getPointTooltip(points[i]);
     }
-    
+
     /**
      * Overridable method that generates the default tooltip on a point
      * @param pt the point
@@ -181,5 +214,8 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         else
             return pointTipper.of(pt);
     }
-    
+
+    //</editor-fold>
+
+
 }

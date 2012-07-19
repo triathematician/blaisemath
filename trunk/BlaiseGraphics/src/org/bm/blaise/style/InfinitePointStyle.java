@@ -11,16 +11,16 @@ import java.awt.geom.Rectangle2D;
 
 /**
  * Draws a point along with a ray from the point to the outer edge of the graphics canvas.
- * 
+ *
  * @author elisha
  */
 public class InfinitePointStyle extends BasicPointStyle {
-    
+
     /** Line style for drawing the ray */
     private PathStyle rayStyle = StyleUtils.DEFAULT_STYLE_PROVIDER.PATH;
     /** Whether to extend in both directions, or just forward */
     private boolean extendBoth = false;
-    
+
     /** Construct the style */
     public InfinitePointStyle() {
     }
@@ -40,8 +40,8 @@ public class InfinitePointStyle extends BasicPointStyle {
     public void setExtendBoth(boolean extendBoth) {
         this.extendBoth = extendBoth;
     }
-    
-    
+
+
 
     @Override
     public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityKey visibility) {
@@ -55,19 +55,13 @@ public class InfinitePointStyle extends BasicPointStyle {
         super.draw(p, angle, canvas, visibility);
     }
 
-    @Override
-    public void drawAll(Iterable<Point2D> pts, double angle, Graphics2D canvas, VisibilityKey visibility) {
-        for (Point2D p : pts)
-            draw(p, angle, canvas, visibility);
-    }
 
-    
-    
-    
+
+
     //
     // UTILITY
     //
-    
+
     /**
      * Returns points at which the ray beginning at p1 and passing through p2 intersects the boundary of the window.
      * @param p1p first point
@@ -107,5 +101,5 @@ public class InfinitePointStyle extends BasicPointStyle {
         return new Point2D.Double(p2.x, p2.y);
     }
 
-    
+
 }

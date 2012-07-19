@@ -12,7 +12,7 @@ import org.bm.util.PointFormatters;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.
- * 
+ *
  * @param <C> local coordinate type
  * @author Elisha
  */
@@ -26,9 +26,9 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
     /** Construct without a drag handler */
     public VBasicPoint(final C initialPoint) {
         this.point = initialPoint;
-        window.addMouseListener(new VGraphicPointDragger<C>(this).adapter());
+        window.addMouseListener(new VGMouseDragger<C>(this).adapter());
     }
-    
+
     //
     // PROPERTIES
     //
@@ -44,26 +44,26 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
     public void setStyle(PointStyle rend) {
         window.setStyle(rend);
     }
-    
+
     //
     // DraggablePointBean PROPERTIES
     //
-    
-    public C getPoint() { 
+
+    public C getPoint() {
         return point;
     }
-    
+
     public void setPoint(C point) {
         if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
-            this.point = point;                            
+            this.point = point;
             setUnconverted(true);
         }
     }
-    
+
     public void setPoint(C initial, C dragStart, C dragFinish) {
         setPoint(relativePoint(initial, dragStart, dragFinish));
     }
-    
+
     public static <C> C relativePoint(C initial, C dragStart, C dragFinish) {
         C newPoint;
         if (initial instanceof Point2D) {
@@ -88,9 +88,9 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
             }
         } else
             newPoint = dragFinish;
-        return newPoint;        
+        return newPoint;
     }
-    
+
     //
     // CONVERSION
     //

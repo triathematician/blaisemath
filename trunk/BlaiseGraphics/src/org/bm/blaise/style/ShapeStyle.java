@@ -23,12 +23,4 @@ public interface ShapeStyle {
      */
     public void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas, VisibilityKey visibility);
 
-    /**
-     * Draws several shape on the provided canvas
-     * @param primitives the shape to draw
-     * @param canvas the canvas on which to paint
-     * @param visibility whether drawn result should be "highlighted" or otherwise emphasized
-     */
-    public void drawAll(Iterable<java.awt.Shape> primitives, java.awt.Graphics2D canvas, VisibilityKey visibility);
-
 }

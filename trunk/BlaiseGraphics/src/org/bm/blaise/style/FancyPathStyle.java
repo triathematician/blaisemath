@@ -20,7 +20,7 @@ public class FancyPathStyle extends BasicPathStyle {
 
     public FancyPathStyle() {
     }
-    
+
     public FancyPathStyle(Color stroke) {
         super(stroke);
     }
@@ -72,14 +72,6 @@ public class FancyPathStyle extends BasicPathStyle {
             canvas.setColor(color);
             canvas.draw(shape);
         }
-    }
-
-    @Override
-    public void drawAll(Iterable<Shape> primitives, Graphics2D canvas, VisibilityKey visibility) {
-        if(thickness <= 0f && color != null)
-            return;
-        for (Shape s : primitives)
-            canvas.draw(s);
     }
 
 }

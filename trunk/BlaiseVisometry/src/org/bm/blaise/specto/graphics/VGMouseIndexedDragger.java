@@ -1,5 +1,5 @@
 /*
- * VGraphicIndexedPointDragger.java
+ * VGMouseIndexedDragger.java
  * Created Jan 12, 2011
  */
 package org.bm.blaise.specto.graphics;
@@ -11,13 +11,13 @@ import org.bm.util.DraggableIndexedPointBean;
  *
  * @author elisha
  */
-public class VGraphicIndexedPointDragger<C> extends VGMouseListener.Dragger<C> {
+public class VGMouseIndexedDragger<C> extends VGMouseListener.Dragger<C> {
 
     private DraggableIndexedPointBean<C> bean;
     private transient C beanStart;
     private transient int indexStart;
 
-    public VGraphicIndexedPointDragger(DraggableIndexedPointBean<C> b) {
+    public VGMouseIndexedDragger(DraggableIndexedPointBean<C> b) {
         this.bean = b;
     }
 
