@@ -9,13 +9,16 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.bm.blaise.style.Anchor;
 import org.bm.blaise.style.BasicShapeStyle;
+import org.bm.blaise.style.BasicStringStyle;
 import org.bm.blaise.style.ShapeStyle;
 
 /**
@@ -37,22 +40,24 @@ public class BlaiseSlider extends GraphicComponent implements ChangeListener {
     private final BasicShapeGraphic trackGr;
     /** Component for the position on track */
     private final BasicShapeGraphic posGr;
+    /** Label for current value */
+    private final BasicStringGraphic strGr;
     
     /** Style for track */
     private ShapeStyle tStyle;
     /** Inserts for track */
-    private Insets tIn = new Insets(8,3,8,3);
+    private Insets tIn = new Insets(6,4,6,4);
     /** Rounding for track */
-    private int tRnd = 20;
+    private int tRnd = 30;
     
     /** Handle style */
     private ShapeStyle hStyle;
     /** Minimum width of handle */
-    private int hWid = 20;
+    private int hWid = 24;
     /** Extent of handle beyond track location. */
-    private int hExt = 4;
+    private int hExt = -1;
     /** Rounding on handle rectangle */
-    private int hRnd = 10;
+    private int hRnd = 24;
     
     //
     // CONSTRUCTORS
@@ -60,48 +65,38 @@ public class BlaiseSlider extends GraphicComponent implements ChangeListener {
     
     /** Initialize without arguments */
     public BlaiseSlider() {
-//        setBackground(Color.black);
         tStyle = new BasicShapeStyle(new Color(96,96,100,192), new Color(128,128,128,192));
-        hStyle = new BasicShapeStyle(new Color(192,192,192,192), new Color(128,128,128,192));
+        hStyle = new BasicShapeStyle(new Color(192,192,192,192), new Color(64,64,64,192));
         addGraphic(trackGr = new BasicShapeGraphic(null, tStyle));
         addGraphic(posGr = new BasicShapeGraphic(null, hStyle));
+        addGraphic(strGr = new BasicStringGraphic(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+""));
+        strGr.setStyle(new BasicStringStyle(Color.white, hRnd/2f, Anchor.South));
         updateGraphics();
         
         posGr.addMouseListener(new GMouseDragger.Dragger() {
+            Integer value0 = null;
             @Override 
             public void mouseDragInitiated(GMouseEvent e, Point start) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                value0 = (int) ( model.getMinimum()+(model.getMaximum()-model.getMinimum())*(e.getX()-tIn.left-hWid/2)/(double)xwid() );
             }
             @Override
             public void mouseDragInProgress(GMouseEvent e, Point start) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                int value = (int) ( model.getMinimum()+(model.getMaximum()-model.getMinimum())*(e.getX()-tIn.left-hWid/2)/(double)xwid() );
+                model.setValue(value);
+            }
+            @Override
+            public void mouseDragCompleted(GMouseEvent e, Point start) {
+                value0 = null;
             }
         });
         
-        setPreferredSize(new Dimension(200,40));
+        setPreferredSize(new Dimension(200,hRnd+tIn.bottom+tIn.top));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         setMinimumSize(new Dimension(50,10));
+        
+        model.addChangeListener(this);
     }
 
-    public void stateChanged(ChangeEvent e) {
-        assert e.getSource() == model;
-        
-    }
-    
-    private void updateGraphics() {
-        int wid = getWidth(), ht = getHeight();
-        int x0 = tIn.left, y0 = tIn.top, xwid = wid-tIn.left-tIn.right, yht = ht-tIn.top-tIn.bottom;
-        boolean onePt = model.getExtent() == 0;
-        double xc = x0+xwid*((model.getValue()-model.getMinimum())/(double)(model.getMaximum()-model.getMinimum()));
-        double xc2 = onePt ? xc  : xc+xwid*model.getExtent()/(double)(model.getMaximum()-model.getMinimum());
-        trackGr.setPrimitive(new RoundRectangle2D.Double(x0,y0,xwid,yht, tRnd, tRnd));
-        if (onePt) {
-            int rad = Math.min(hWid/2, xwid/10);
-            posGr.setPrimitive(new RoundRectangle2D.Double(xc-rad, y0-hExt, 2*rad, yht+2*hExt, hRnd, hRnd));
-        } else
-            posGr.setPrimitive(new RoundRectangle2D.Double(xc, y0-hExt, xc2-xc, yht+2*hExt, hRnd, hRnd));
-    }
-    
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
@@ -124,6 +119,35 @@ public class BlaiseSlider extends GraphicComponent implements ChangeListener {
     }
     
     //</editor-fold>
+    
+    
+    public void stateChanged(ChangeEvent e) {
+        assert e.getSource() == model;
+        repaint();
+    }
+    
+    private int xwid() {
+        return getWidth()-tIn.left-tIn.right-hWid;
+    }
+    
+    private int yht() {
+        return getHeight()-tIn.top-tIn.bottom;
+    }
+    
+    private void updateGraphics() {
+        int x0 = tIn.left, y0 = tIn.top, xwid = xwid(), yht = yht();
+        boolean onePt = model.getExtent() == 0;
+        double xc = x0+hWid/2-hExt+(xwid+2*hExt)*((model.getValue()-model.getMinimum())/(double)(model.getMaximum()-model.getMinimum()));
+        double xc2 = onePt ? xc : xc+xwid*model.getExtent()/(double)(model.getMaximum()-model.getMinimum());
+        trackGr.setPrimitive(new RoundRectangle2D.Double(x0,y0,xwid+hWid,yht, tRnd, tRnd));
+        if (onePt) {
+            int rad = Math.min(hWid/2, xwid/10);
+            posGr.setPrimitive(new RoundRectangle2D.Double(xc-rad, y0-hExt, 2*rad, yht+2*hExt, hRnd, hRnd));
+        } else
+            posGr.setPrimitive(new RoundRectangle2D.Double(xc, y0-hExt, xc2-xc, yht+2*hExt, hRnd, hRnd));
+        strGr.setPoint(new Point2D.Double(xc, getHeight()/2+((BasicStringStyle)strGr.getStyle()).getFontSize()/2));
+        strGr.setString(model.getValue()+"");
+    }
 
     @Override
     protected void paintComponent(Graphics g) {

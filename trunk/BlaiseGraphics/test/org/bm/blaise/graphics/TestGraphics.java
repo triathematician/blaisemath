@@ -12,6 +12,9 @@ package org.bm.blaise.graphics;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
+import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.bm.blaise.style.BasicShapeStyle;
 
 /**
@@ -20,13 +23,19 @@ import org.bm.blaise.style.BasicShapeStyle;
  */
 public class TestGraphics extends javax.swing.JFrame {
 
+    BasicShapeGraphic gr = new BasicShapeGraphic(new Rectangle2D.Double(10,10,100,100), new BasicShapeStyle(Color.yellow, Color.red));
+    
     /** Creates new form TestGraphics */
     public TestGraphics() {
         initComponents();
-        graphicComponent1.addGraphic(new BasicShapeGraphic(
-                new Rectangle2D.Double(10,10,100,100),
-                new BasicShapeStyle(Color.yellow, Color.red)
-                ));
+        graphicComponent1.addGraphic(gr);
+        blaiseSlider2.setModel(new DefaultBoundedRangeModel(200,0,50,300));
+        blaiseSlider2.getModel().addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                int val = blaiseSlider2.getModel().getValue();
+                gr.setPrimitive(new Rectangle2D.Double(10,10,val,val));
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -38,20 +47,8 @@ public class TestGraphics extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        blaiseSlider1 = new org.bm.blaise.graphics.BlaiseSlider();
         graphicComponent1 = new org.bm.blaise.graphics.GraphicComponent();
         blaiseSlider2 = new org.bm.blaise.graphics.BlaiseSlider();
-
-        org.jdesktop.layout.GroupLayout blaiseSlider1Layout = new org.jdesktop.layout.GroupLayout(blaiseSlider1);
-        blaiseSlider1.setLayout(blaiseSlider1Layout);
-        blaiseSlider1Layout.setHorizontalGroup(
-            blaiseSlider1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 300, Short.MAX_VALUE)
-        );
-        blaiseSlider1Layout.setVerticalGroup(
-            blaiseSlider1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 200, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,7 +60,7 @@ public class TestGraphics extends javax.swing.JFrame {
         );
         graphicComponent1Layout.setVerticalGroup(
             graphicComponent1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 161, Short.MAX_VALUE)
+            .add(0, 321, Short.MAX_VALUE)
         );
 
         getContentPane().add(graphicComponent1, java.awt.BorderLayout.CENTER);
@@ -76,7 +73,7 @@ public class TestGraphics extends javax.swing.JFrame {
         );
         blaiseSlider2Layout.setVerticalGroup(
             blaiseSlider2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 200, Short.MAX_VALUE)
+            .add(0, 40, Short.MAX_VALUE)
         );
 
         getContentPane().add(blaiseSlider2, java.awt.BorderLayout.SOUTH);
@@ -120,7 +117,6 @@ public class TestGraphics extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.bm.blaise.graphics.BlaiseSlider blaiseSlider1;
     private org.bm.blaise.graphics.BlaiseSlider blaiseSlider2;
     private org.bm.blaise.graphics.GraphicComponent graphicComponent1;
     // End of variables declaration//GEN-END:variables
