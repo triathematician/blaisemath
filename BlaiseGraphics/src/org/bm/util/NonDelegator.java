@@ -15,13 +15,26 @@ package org.bm.util;
 public final class NonDelegator<Src,Value> implements Delegator<Src,Value> {
 
     /** The value */
-    private final Value value;
+    private Value value;
+    /**
+     * Construct the delegator for the specified value.
+     */
+    public NonDelegator() {
+    }
 
     /**
      * Construct the delegator for the specified value.
      * @param value value to return.
      */
     public NonDelegator(Value value) {
+        this.value = value;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public void setValue(Value value) {
         this.value = value;
     }
 
