@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<simulation stepTime="0.1" pitchSize="60.0" numTeams="3" numSteps="250" name="Sahara" maxSteps="1000" gameType="3">
+    <teams topSpeed="6.5" start="1" sensorRange="20.0" name="Lions" leadFactor="0.0" commRange="50.0" behavior="7">
+        <tes name="# Agents" editorType="2" displayed="false" editable="false"/>
+        <tes name="Starting Loc" editorType="5" displayed="false" editable="false"/>
+        <tes name="Speed" editorType="1" displayed="false" editable="false"/>
+        <tes name="Sensor Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Comm Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Behavior" editorType="5" displayed="false" editable="false"/>
+        <tes name="Lead Factor" editorType="3" displayed="false" editable="false"/>
+        <tes name="Position(t)" editorType="0" displayed="false" editable="false"/>
+        <tes name="Color" editorType="201" displayed="false" editable="false"/>
+        <capture>
+            <vs name="Opponent" editorType="5" displayed="false" editable="false"/>
+            <vs name="Threshhold" editorType="1" displayed="false" editable="false"/>
+            <vs name="Type" editorType="5" displayed="false" editable="false"/>
+            <vs name="Cooperation" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 2" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 4" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 3" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 1" editorType="7" displayed="false" editable="false"/>
+        </capture>
+        <victory>
+            <vs name="Opponent" editorType="5" displayed="false" editable="false"/>
+            <vs name="Threshhold" editorType="1" displayed="false" editable="false"/>
+            <vs name="Type" editorType="5" displayed="false" editable="false"/>
+            <vs name="Cooperation" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 2" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 4" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 3" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 1" editorType="7" displayed="false" editable="false"/>
+            <endGame>false</endGame>
+        </victory>
+        <control topSpeed="5.0" sensorRange="20.0" name="Agent" leadFactor="0.0" commRange="50.0" behaviorType="0"/>
+        <startAgents topSpeed="6.5" sensorRange="20.0" name="Agent 2" leadFactor="0.0" commRange="50.0" behaviorType="7"/>
+        <startAgents topSpeed="6.5" sensorRange="20.0" name="Agent 4" leadFactor="0.0" commRange="50.0" behaviorType="7"/>
+        <startAgents topSpeed="6.5" sensorRange="20.0" name="Agent 3" leadFactor="0.0" commRange="50.0" behaviorType="7"/>
+        <startAgents topSpeed="6.5" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorType="7"/>
+        <startingLocations>
+            <x>-51.66311349322923</x>
+            <y>52.55981508401385</y>
+        </startingLocations>
+        <startingLocations>
+            <x>-54.62083557102077</x>
+            <y>-20.001123868334084</y>
+        </startingLocations>
+        <startingLocations>
+            <x>-44.356747688651105</x>
+            <y>17.87851804886924</y>
+        </startingLocations>
+        <startingLocations>
+            <x>57.231603437943264</x>
+            <y>-6.938609898483698</y>
+        </startingLocations>
+    </teams>
+    <teams topSpeed="5.0" start="1" sensorRange="20.0" name="Wildebeast" leadFactor="0.0" commRange="50.0" behavior="1">
+        <tes name="# Agents" editorType="2" displayed="false" editable="false"/>
+        <tes name="Starting Loc" editorType="5" displayed="false" editable="false"/>
+        <tes name="Speed" editorType="1" displayed="false" editable="false"/>
+        <tes name="Sensor Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Comm Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Behavior" editorType="5" displayed="false" editable="false"/>
+        <tes name="Lead Factor" editorType="3" displayed="false" editable="false"/>
+        <tes name="Position(t)" editorType="0" displayed="false" editable="false"/>
+        <tes name="Color" editorType="201" displayed="false" editable="false"/>
+        <capture>
+            <vs name="Opponent" editorType="5" displayed="false" editable="false"/>
+            <vs name="Threshhold" editorType="1" displayed="false" editable="false"/>
+            <vs name="Type" editorType="5" displayed="false" editable="false"/>
+            <vs name="Cooperation" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 3" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 2" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 4" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 1" editorType="7" displayed="false" editable="false"/>
+        </capture>
+        <victory>
+            <vs name="Opponent" editorType="5" displayed="false" editable="false"/>
+            <vs name="Threshhold" editorType="1" displayed="false" editable="false"/>
+            <vs name="Type" editorType="5" displayed="false" editable="false"/>
+            <vs name="Cooperation" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 3" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 2" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 4" editorType="7" displayed="false" editable="false"/>
+            <vs tooltipText="Select agents used for valuation." name="Agent 1" editorType="7" displayed="false" editable="false"/>
+            <endGame>false</endGame>
+        </victory>
+        <control topSpeed="5.0" sensorRange="20.0" name="Agent" leadFactor="0.0" commRange="50.0" behaviorType="0"/>
+        <startAgents topSpeed="5.0" sensorRange="20.0" name="Agent 3" leadFactor="0.0" commRange="50.0" behaviorType="1"/>
+        <startAgents topSpeed="5.0" sensorRange="20.0" name="Agent 2" leadFactor="0.0" commRange="50.0" behaviorType="1"/>
+        <startAgents topSpeed="5.0" sensorRange="20.0" name="Agent 4" leadFactor="0.0" commRange="50.0" behaviorType="1"/>
+        <startAgents topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorType="1"/>
+        <startingLocations>
+            <x>-4.632943816943666</x>
+            <y>-2.5014559079285945</y>
+        </startingLocations>
+        <startingLocations>
+            <x>-39.06467188998108</x>
+            <y>-19.073346432899953</y>
+        </startingLocations>
+        <startingLocations>
+            <x>28.680538552155213</x>
+            <y>-29.843814823103894</y>
+        </startingLocations>
+        <startingLocations>
+            <x>1.4940887759849488</x>
+            <y>-41.63477937258939</y>
+        </startingLocations>
+    </teams>
+    <teams topSpeed="5.0" start="1" sensorRange="20.0" name="Water" leadFactor="0.0" commRange="50.0" behavior="0">
+        <tes name="# Agents" editorType="2" displayed="false" editable="false"/>
+        <tes name="Starting Loc" editorType="5" displayed="false" editable="false"/>
+        <tes name="Speed" editorType="1" displayed="false" editable="false"/>
+        <tes name="Sensor Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Comm Range" editorType="1" displayed="false" editable="false"/>
+        <tes name="Behavior" editorType="5" displayed="false" editable="false"/>
+        <tes name="Lead Factor" editorType="3" displayed="false" editable="false"/>
+        <tes name="Position(t)" editorType="0" displayed="false" editable="false"/>
+        <tes name="Color" editorType="201" displayed="false" editable="false"/>
+        <control topSpeed="5.0" sensorRange="20.0" name="Agent" leadFactor="0.0" commRange="50.0" behaviorType="0"/>
+        <startAgents topSpeed="5.0" sensorRange="20.0" name="Agent 1" leadFactor="0.0" commRange="50.0" behaviorType="0"/>
+        <startingLocations>
+            <x>-58.98306877883256</x>
+            <y>30.85974579155949</y>
+        </startingLocations>
+    </teams>
+</simulation>

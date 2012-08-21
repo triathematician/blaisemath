@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="1" hostname="elisha-PC" name="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" tests="8" time="7.855" timestamp="2010-08-10T18:26:22">
+  <properties>
+    <property name="netbeans.autoupdate.country" value="US" />
+    <property name="profiler.settings.sort.results.by.thread.cpu.time" value="false" />
+    <property name="profiler.info.single.file" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\test\org\bm\blaise\scio\graph\metrics\ClosenessCentralityTest.java" />
+    <property name="javac.test.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes:C:\Program Files\NetBeans 6.8\platform11\modules\ext\junit-4.5.jar" />
+    <property name="org.openide.TopManager.GUI" value="true" />
+    <property name="profiler.settings.profiling.type" value="8" />
+    <property name="libs.junit.javadoc" value="C:\Program Files\NetBeans 6.8\java3\docs\junit-3.8.2-api.zip" />
+    <property name="profiler.settings.cpu.quick.filterprofiler.simple.filter.value" value="" />
+    <property name="javac.includes" value="org/bm/blaise/scio/graph/metrics/ClosenessCentralityTest.java" />
+    <property name="libs.OperationsResearch.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\or124.jar" />
+    <property name="ant.core.lib" value="C:\Program Files\NetBeans 6.8\java3\ant\lib\ant.jar" />
+    <property name="libs.swing-app-framework.src" value="" />
+    <property name="javadoc.windowtitle" value="" />
+    <property name="libs.toplink.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\toplink\toplink-essentials.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\toplink\toplink-essentials-agent.jar" />
+    <property name="ant.file.blaisegraphtheory-impl" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\nbproject\build-impl.xml" />
+    <property name="user.dir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory" />
+    <property name="libs.hibernate-persistence.javadoc" value="" />
+    <property name="java.vm.version" value="1.5.0_19-b02" />
+    <property name="profiler.settings.sampling.interval" value="10" />
+    <property name="profiler.session.port.no" value="5140" />
+    <property name="libs.MySQLDriver.classpath" value="C:\Program Files\NetBeans 6.8\ide12\modules\ext\mysql-connector-java-5.1.6-bin.jar" />
+    <property name="libs.OperationsResearch.src" value="" />
+    <property name="javadoc.notree" value="false" />
+    <property name="netbeans.autoupdate.version" value="1.23" />
+    <property name="libs.hibernate-support.maven-pom" value="" />
+    <property name="libs.hibernate-support.javadoc" value="" />
+    <property name="jdk.home" value="C:\Program Files\Java\jdk1.6.0_07" />
+    <property name="libs.javac-api.src" value="" />
+    <property name="javadoc.noindex" value="false" />
+    <property name="sun.os.patch.level" value="Service Pack 2" />
+    <property name="profiler.info.oomeprotection" value="yes" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="nb.show.statistics.ui" value="usageStatisticsEnabled" />
+    <property name="netbeans.autoupdate.variant" value="" />
+    <property name="have.tests" value="true" />
+    <property name="org.xml.sax.driver" value="com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser" />
+    <property name="libs.javac-api.javadoc" value="" />
+    <property name="os.name" value="Windows Vista" />
+    <property name="libs.beans-binding.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar" />
+    <property name="libs.JWSAntTasks.maven-pom" value="" />
+    <property name="libs.Firestarter.javadoc" value="C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\javadoc" />
+    <property name="profiler.info.javaPlatform" value="JDK_1.5" />
+    <property name="profiler.settings.profilingpoints.enabled" value="true" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="profiler.settings.instr.scheme" value="3" />
+    <property name="libs.jaxb.maven-pom" value="" />
+    <property name="profiler.info.project.dir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory" />
+    <property name="os.arch" value="x86" />
+    <property name="libs.eclipselink.src" value="" />
+    <property name="user.name" value="elisha" />
+    <property name="manifest.available+main.class" value="true" />
+    <property name="libs.swing-layout.maven-pom" value="" />
+    <property name="build.classes.dir" value="build/classes" />
+    <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
+    <property name="build.sysclasspath" value="ignore" />
+    <property name="libs.jaxws21.javadoc" value="C:\Program Files\NetBeans 6.8\java3\docs\jaxws-api-doc.zip" />
+    <property name="libs.Firestarter.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar" />
+    <property name="includes" value="**" />
+    <property name="platforms.default_fx_platform.java" value="C:\Program Files\Java\jdk1.6.0_07\jre\bin\java.exe" />
+    <property name="user.country" value="US" />
+    <property name="manifest.file" value="manifest.mf" />
+    <property name="javadoc.encoding" value="UTF-8" />
+    <property name="platform.home" value="C:\Program Files\Java\jdk1.5.0_19" />
+    <property name="javac.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip" />
+    <property name="platform.bootcp" value="C:\Program Files\Java\jdk1.5.0_19\jre\lib\rt.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\i18n.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jce.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.5.0_19\jre\classes;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\sunpkcs11.jar" />
+    <property name="debug-transport" value="dt_shmem" />
+    <property name="netbeans.home" value="C:\Program Files\NetBeans 6.8\platform11" />
+    <property name="build.compiler.emacs" value="true" />
+    <property name="libs.ejb3-persistence.src" value="" />
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.5.0_19\jre\lib\endorsed" />
+    <property name="netbeans.dynamic.classpath" value="C:\Program Files\NetBeans 6.8\platform11\core\core.jar;C:\Program Files\NetBeans 6.8\platform11\core\org-openide-filesystems.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\core_ja.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\core_pt_BR.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\core_zh_CN.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\org-openide-filesystems_ja.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\org-openide-filesystems_pt_BR.jar;C:\Program Files\NetBeans 6.8\platform11\core\locale\org-openide-filesystems_zh_CN.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\org-netbeans-upgrader.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\core_nb.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\core_nb_ja.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\core_nb_pt_BR.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\core_nb_zh_CN.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\org-netbeans-upgrader_ja.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\org-netbeans-upgrader_pt_BR.jar;C:\Program Files\NetBeans 6.8\nb6.8\core\locale\org-netbeans-upgrader_zh_CN.jar" />
+    <property name="profiler.settings.instrumentation.filter.selectedprofiler.simple.filter.type" value="2" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="libs.CommonsMath.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar" />
+    <property name="libs.hibernate-persistence.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\antlr-2.7.6.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\asm.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\asm-attrs.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\cglib-2.1.3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\commons-collections-2.1.1.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\commons-logging-1.1.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\dom4j-1.6.1.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\ehcache-1.2.3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\jdbc2_0-stdext.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\jta.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-tools.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-annotations.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-commons-annotations.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-entitymanager.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\javassist.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\ejb3-persistence.jar" />
+    <property name="libs.jaxws21.src" value="" />
+    <property name="libs.QTJava.src" value="" />
+    <property name="application.title" value="blaisegraphtheory" />
+    <property name="libs.swing-app-framework.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\appframework-1.0.3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\swing-worker-1.1.jar" />
+    <property name="netbeans.autoupdate.language" value="en" />
+    <property name="profiler.settings.override.jvm.args" value="" />
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.OperationsResearch.javadoc" value="" />
+    <property name="libs.StormTimer.javadoc" value="C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\javadoc" />
+    <property name="javac.debug" value="true" />
+    <property name="libs.BlaiseMath.javadoc" value="C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\javadoc" />
+    <property name="javadoc.splitindex" value="true" />
+    <property name="file.separator" value="\" />
+    <property name="libs.junit_4.maven-pom" value="" />
+    <property name="netbeans.buildnumber" value="200912041610" />
+    <property name="libs.JWSAntTasks.javadoc" value="" />
+    <property name="build.generated.sources.dir" value="build/generated-sources" />
+    <property name="user.variant" value="" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="libs.junit.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\junit-3.8.2.jar" />
+    <property name="profiler.settings.obj.alloc.stack.sampling.interval" value="10" />
+    <property name="libs.jaxb.javadoc" value="C:\Program Files\NetBeans 6.8\ide12\docs\jaxb-api-doc.zip" />
+    <property name="profiler.settings.cpu.quick.filterprofiler.filter.type" value="profiler.simple.filter" />
+    <property name="javac.includes.binary" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build\test\classes\org\bm\blaise\scio\graph\metrics\ClosenessCentralityTest.class" />
+    <property name="ant.home" value="C:\Program Files\NetBeans 6.8\java3\ant" />
+    <property name="libs.junit_4.src" value="C:\Program Files\NetBeans 6.8\java3\docs\junit-4.5-src.jar" />
+    <property name="libs.Firestarter.src" value="C:\Users\elisha\Documents\NetBeansProjects\firestarter\src" />
+    <property name="libs.JFreeChart.javadoc" value="" />
+    <property name="libs.absolutelayout.maven-pom" value="" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="java.library.path" value="C:\Program Files\Java\jdk1.5.0_19\bin;.;C:\Windows\system32;C:\Windows;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files\MiKTeX 2.7\miktex\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Program Files\Intel\DMIX;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Windows Live\Shared;C:\Program Files\QuickTime\QTSystem\" />
+    <property name="javadoc.author" value="false" />
+    <property name="profiler.settings.run.gc.on.get.results.in.memory.profiling" value="true" />
+    <property name="manifest.available+main.class-mkdist.available" value="true" />
+    <property name="libs.JFreeChart.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar" />
+    <property name="java.util.logging.config.class" value="org.netbeans.core.startup.TopLogging" />
+    <property name="profiler.settings.instrumentation.filter.selectedprofiler.simple.filter.value" value="org.bm.blaise.testing.plane. org.bm.blaise.specto.plane.graph. org.bm.blaise.scio.graph. org.bm.blaise.scio.graph.metrics. org.bm.blaise.scio.graph.io. org.bm.blaise.scio.graph.layout. graphexplorer. util." />
+    <property name="libs.PostgreSQLDriver.src" value="" />
+    <property name="sun.arch.data.model" value="32" />
+    <property name="profiler.session.jvm.args" value="" />
+    <property name="basedir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory" />
+    <property name="jar.compress" value="true" />
+    <property name="path.separator" value=";" />
+    <property name="platform.javac" value="C:\Program Files\Java\jdk1.5.0_19/bin/javac" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="libs.QTJava.maven-pom" value="" />
+    <property name="libs.jaxws21.classpath" value="C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\activation.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\api\jaxb-api.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\jaxb-impl.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\jaxb-xjc.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\api\jsr173_api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\FastInfoset.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\gmbal-api-only.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\http.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\api\jaxws-api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\jaxws-rt.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\jaxws-tools.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\api\jsr181-api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\api\jsr250-api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\management-api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\mimepull.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\policy.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\api\saaj-api.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\saaj-impl.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\stax-ex.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\streambuffer.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\jaxws22\woodstox.jar" />
+    <property name="compile.on.save" value="false" />
+    <property name="user.language" value="en" />
+    <property name="libs.spring-framework.classpath" value="C:\Program Files\NetBeans 6.8\ide12\modules\ext\commons-logging-1.1.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\cglib-2.2.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\spring\spring-2.5.jar" />
+    <property name="profiler.settings.instrumentation.filter.selectedprofiler.filter.type" value="profiler.simple.filter" />
+    <property name="libs.eclipselink.maven-pom" value="" />
+    <property name="profiler.info.oomeprotection.dumppath" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\nbproject\private\profiler" />
+    <property name="application.vendor" value="ae3263" />
+    <property name="libs.BlaiseMath.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar" />
+    <property name="profiler.settings.thread.cpu.timer.on" value="false" />
+    <property name="manifest.available" value="true" />
+    <property name="run.test.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes:C:\Program Files\NetBeans 6.8\platform11\modules\ext\junit-4.5.jar:build/test/classes" />
+    <property name="useJavaUtilZip" value="true" />
+    <property name="libs.swing-layout.javadoc" value="C:\Program Files\NetBeans 6.8\platform11\docs\swing-layout-1.0.4-doc.zip" />
+    <property name="libs.swing-app-framework.javadoc" value="C:\Program Files\NetBeans 6.8\java3\docs\appframework-1.0.3-doc.zip" />
+    <property name="libs.ejb3-persistence.maven-pom" value="" />
+    <property name="https.nonProxyHosts" value="localhost|127.0.0.1|elisha-PC" />
+    <property name="libs.PostgreSQLDriver.maven-pom" value="" />
+    <property name="java.class.version" value="49.0" />
+    <property name="libs.QTJava.javadoc" value="" />
+    <property name="platforms.JDK_1.5.home" value="C:\Program Files\Java\jdk1.5.0_19" />
+    <property name="profiler.settings.instrumentation.root.methods.size" value="1" />
+    <property name="netbeans.system_http_proxy" value="DIRECT" />
+    <property name="libs.eclipselink.javadoc" value="" />
+    <property name="user.properties.file" value="C:\Users\elisha\.netbeans\6.8\build.properties" />
+    <property name="platforms.default_fx_platform.bootclasspath" value="C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\shared\javafxc.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\shared\javafxrt.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\rt15.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-geom.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-ui-common.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-ui-desktop.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-ui-swing.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\fxdloader.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\websvc.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-ui-controls.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-ui-charts.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-common.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-io.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\eula.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-anim.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-runtime.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-sse.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-d3d.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-j2d-rsl.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-ogl.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\decora-j2d-jogl.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-sg-common.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\javafx-sg-swing.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\jogl.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\gluegen-rt.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\jmc.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\desktop\script-api.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\javafxapi-cldc.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\cldc_1.1.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\midp_2.0.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr120_1.1.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr135_1.1.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr172_1.0.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr177_1.0.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr179_1.0.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr184_1.1.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr234_1.0.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr256_1.1.jar;C:\Users\elisha\.netbeans\6.8\javafx-sdk\lib\mobile\jsr75_1.0.jar" />
+    <property name="profiler.settings.instrumentation.marker.methods.size" value="0" />
+    <property name="runtime.encoding" value="UTF-8" />
+    <property name="profiler.settings.istrumentation.root.methods-0" value="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest,&lt;all&gt;," />
+    <property name="libs.spring-framework.src" value="" />
+    <property name="libs.javac-api.maven-pom" value="" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="libs.JWSAntTasks.classpath" value="C:\Program Files\NetBeans 6.8\java3\ant\extra\org-netbeans-modules-javawebstart-anttasks.jar" />
+    <property name="empty.dir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build\empty" />
+    <property name="platforms.default_fx_platform.compiler" value="modern" />
+    <property name="version-output" value="java version &quot;1.5.0_19&quot;
+Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_19-b02)
+Java HotSpot(TM) Client VM (build 1.5.0_19-b02, mixed mode, sharing)" />
+    <property name="javadoc.preview" value="true" />
+    <property name="libs.StormTimer.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar" />
+    <property name="nbplatform.default.harness.dir" value="C:\Program Files\NetBeans 6.8/harness" />
+    <property name="java.home" value="C:\Program Files\Java\jdk1.5.0_19\jre" />
+    <property name="ant.file.blaisegraphtheory" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build.xml" />
+    <property name="debug.test.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes:C:\Program Files\NetBeans 6.8\platform11\modules\ext\junit-4.5.jar:build/test/classes" />
+    <property name="libs.OperationsResearch.maven-pom" value="" />
+    <property name="netbeans.importclass" value="org.netbeans.upgrade.AutoUpgrade" />
+    <property name="org.openide.TopManager" value="org.netbeans.core.NonGui" />
+    <property name="libs.toplink.maven-pom" value="" />
+    <property name="libs.PostgreSQLDriver.javadoc" value="" />
+    <property name="libs.BlaiseParser.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\BlaiseParser\dist\BlaiseParser.jar" />
+    <property name="profiler.settings.instrumentation.filter.selectedprofiler.simple.filter.name" value="Profile only project classes" />
+    <property name="libs.MySQLDriver.maven-pom" value="" />
+    <property name="libs.StormTimer.src" value="C:\Users\elisha\Documents\NetBeansProjects\StormTimer\src" />
+    <property name="http.nonProxyHosts" value="localhost|127.0.0.1|elisha-PC" />
+    <property name="libs.junit_4.javadoc" value="C:\Program Files\NetBeans 6.8\java3\docs\junit-4.5-api.zip" />
+    <property name="libs.toplink.src" value="" />
+    <property name="profiler.settigns.ispreset" value="true" />
+    <property name="profile.class" value="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" />
+    <property name="run.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes" />
+    <property name="libs.hibernate-support.src" value="" />
+    <property name="profiler.settings.cpu.exclude.wait.time" value="true" />
+    <property name="profiler.settings.override" value="false" />
+    <property name="profiler.settings.cpu.quick.filterprofiler.simple.filter.type" value="1" />
+    <property name="profiler.session.args" value="" />
+    <property name="libs.JCommon.classpath" value="C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar" />
+    <property name="sun.management.compiler" value="HotSpot Client Compiler" />
+    <property name="javac.deprecation" value="false" />
+    <property name="javadoc.use" value="true" />
+    <property name="jna.boot.library.path" value="C:\Users\elisha\.netbeans\6.8\var\cache\jna" />
+    <property name="sun.java2d.noddraw" value="true" />
+    <property name="javac.compilerargs" value="" />
+    <property name="libs.CommonsMath.javadoc" value="C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0-javadoc.jar" />
+    <property name="ant.file" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build.xml" />
+    <property name="libs.beans-binding.maven-pom" value="" />
+    <property name="sun.awt.exception.handler" value="org.netbeans.core.startup.TopLogging$AWTHandler" />
+    <property name="subversion.native.library" value="C:\Users\elisha\.netbeans\6.8\modules\lib\libsvnjavahl-1.dll" />
+    <property name="libs.beans-binding.src" value="" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.swing-layout.src" value="C:\Program Files\NetBeans 6.8\platform11\docs\swing-layout-1.0.4-src.zip" />
+    <property name="org.openide.major.version" value="IDE/1" />
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
+    <property name="netbeans.user" value="C:\Users\elisha\.netbeans\6.8" />
+    <property name="javadoc.additionalparam" value="" />
+    <property name="profiler.session.java.architecture" value="32" />
+    <property name="java.io.tmpdir" value="C:\Users\elisha\AppData\Local\Temp\" />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="endorsed.classpath.cmd.line.arg" value="" />
+    <property name="profiler.settings.instrument.spawned.threads" value="false" />
+    <property name="libs.JCommon.src" value="C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\source" />
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.5.0_19\jre\bin" />
+    <property name="have.sources" value="true" />
+    <property name="debug.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes" />
+    <property name="javadoc.private" value="false" />
+    <property name="test.src.dir" value="test" />
+    <property name="libs.JFreeChart.src" value="C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\source" />
+    <property name="meta.inf.dir" value="src/META-INF" />
+    <property name="javadoc.encoding.used" value="UTF-8" />
+    <property name="libs.JCommon.javadoc" value="" />
+    <property name="dist.jar" value="dist/blaisegraphtheory.jar" />
+    <property name="profiler.settings.code.region.cpu.res.buf.size" value="1000" />
+    <property name="java.runtime.name" value="Java(TM) 2 Runtime Environment, Standard Edition" />
+    <property name="profiler.info.jvmargs" value=" -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\nbproject\private\profiler " />
+    <property name="ant.project.name" value="blaisegraphtheory" />
+    <property name="netbeans.hash.code" value="unique=NB_FX_JAVA0ac1367b7-b1d4-4b32-bb5d-ab2a286f5c70_4008b433-d5eb-488c-8eee-c2d4011c3d3a" />
+    <property name="platform.javadoc" value="C:\Program Files\Java\jdk1.5.0_19/bin/javadoc" />
+    <property name="platform.javadoc.tmp" value="${platforms.JDK_1.5.javadoc}" />
+    <property name="manifest.available-mkdist.available" value="true" />
+    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86" />
+    <property name="libs.CopyLibs.javadoc" value="" />
+    <property name="platform.compiler" value="${platforms.JDK_1.5.compile}" />
+    <property name="profiler.settings.n.profiled.threads.limit" value="32" />
+    <property name="org.openide.specification.version" value="6.2" />
+    <property name="libs.hibernate-support.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\antlr-2.7.6.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\asm.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\asm-attrs.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\cglib-2.1.3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\commons-collections-2.1.1.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\commons-logging-1.1.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\dom4j-1.6.1.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\ehcache-1.2.3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\jdbc2_0-stdext.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\jta.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate3.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-tools.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-annotations.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-commons-annotations.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\hibernate-entitymanager.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\javassist.jar" />
+    <property name="user.home" value="C:\Users\elisha" />
+    <property name="debug-args-line" value="-Xdebug" />
+    <property name="platform.javac.tmp" value="${platforms.JDK_1.5.javac}" />
+    <property name="libs.CommonsMath.maven-pom" value="" />
+    <property name="libs.JWSAntTasks.src" value="" />
+    <property name="libs.CopyLibs.maven-pom" value="" />
+    <property name="libs.hibernate-persistence.maven-pom" value="" />
+    <property name="libs.absolutelayout.javadoc" value="" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="libs.swing-app-framework.maven-pom" value="" />
+    <property name="reference.blaisetesting.jar" value="../blaisetesting/dist/blaisetesting.jar" />
+    <property name="profiler.settings.threads.monitoring.enabled" value="false" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.javac-api.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\javac-api-nb-7.0-b07.jar" />
+    <property name="platforms.default_fx_platform.home" value="C:\Program Files\Java\jdk1.6.0_07\jre" />
+    <property name="java.version" value="1.5.0_19" />
+    <property name="javadoc.version" value="false" />
+    <property name="libs.MySQLDriver.javadoc" value="" />
+    <property name="org.openide.version" value="deprecated" />
+    <property name="platforms.JDK_1.5.compiler" value="modern" />
+    <property name="platform.java" value="C:\Program Files\Java\jdk1.5.0_19/bin/java" />
+    <property name="source.encoding" value="UTF-8" />
+    <property name="libs.junit.maven-pom" value="" />
+    <property name="netbeans.home+have.tests" value="true" />
+    <property name="profiler.info.jvm" value="C:\Program Files\Java\jdk1.5.0_19\bin\java.exe" />
+    <property name="libs.jaxb.src" value="" />
+    <property name="libs.JFreeChart.maven-pom" value="" />
+    <property name="work.dir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory" />
+    <property name="libs.jaxb.classpath" value="C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\activation.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\api\jaxb-api.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\jaxb-impl.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\jaxb1-impl.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\jaxb-xjc.jar;C:\Program Files\NetBeans 6.8\ide12\modules\ext\jaxb\api\jsr173_api.jar" />
+    <property name="do.depend" value="false" />
+    <property name="dist.javadoc.dir" value="dist/javadoc" />
+    <property name="libs.swing-layout.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar" />
+    <property name="build.generated.dir" value="build/generated" />
+    <property name="javac.source" value="1.5" />
+    <property name="profiler.info.dir" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory" />
+    <property name="libs.hibernate-persistence.src" value="" />
+    <property name="line.separator" value="
+" />
+    <property name="profiler.session.working.dir" value="C:\Program Files\NetBeans 6.8" />
+    <property name="java.specification.version" value="1.5" />
+    <property name="profiler.settings.cpu.quick.filterprofiler.simple.filter.name" value="Quick filter..." />
+    <property name="libs.jaxws21.maven-pom" value="" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="platform.java.tmp" value="${platforms.JDK_1.5.java}" />
+    <property name="libs.spring-framework.maven-pom" value="" />
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.5.0_19\jre\lib\rt.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\i18n.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jce.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.5.0_19\jre\classes;C:\Program Files\NetBeans 6.8\profiler3\lib/jfluid-server.jar;C:\Program Files\NetBeans 6.8\profiler3\lib/jfluid-server-15.jar" />
+    <property name="javac.target" value="1.5" />
+    <property name="libs.BlaiseMath.maven-pom" value="" />
+    <property name="built-jar.properties" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build\built-jar.properties" />
+    <property name="build.test.classes.dir" value="build/test/classes" />
+    <property name="libs.BlaiseParser.src" value="C:\Users\elisha\Documents\NetBeansProjects\BlaiseParser\src" />
+    <property name="src.dir" value="src" />
+    <property name="sun.awt.keepWorkingSetOnMinimize" value="true" />
+    <property name="profiler.settings.instrument.method.invoke" value="true" />
+    <property name="nbplatform.default.netbeans.dest.dir" value="C:\Program Files\NetBeans 6.8" />
+    <property name="jaxbwiz.endorsed.dirs" value="&quot;C:\Program Files\NetBeans 6.8\platform11/../ide12/modules/ext/jaxb/api&quot;" />
+    <property name="profiler.settings.override.working.dir" value="" />
+    <property name="dist.dir" value="dist" />
+    <property name="profiler.settings.istrument.getter.setter.methods" value="false" />
+    <property name="profiler.session.class.name" value="graphexplorer.GraphExplorerMain" />
+    <property name="profiler.settings.profile.underlying.framework" value="false" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="default.javac.source" value="1.6" />
+    <property name="profiler.session.java.version" value="jdk15" />
+    <property name="debug-transport-by-os" value="dt_shmem" />
+    <property name="libs.BlaiseParser.javadoc" value="C:\Users\elisha\Documents\NetBeansProjects\BlaiseParser\dist\javadoc" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
+    <property name="libs.MySQLDriver.src" value="" />
+    <property name="platforms.default_fx_platform.fxhome" value="C:\Users\elisha\.netbeans\6.8\javafx-sdk" />
+    <property name="project.blaisetesting" value="../blaisetesting" />
+    <property name="profiler.settings.obj.alloc.stack.sampling.depth" value="0" />
+    <property name="java.runtime.version" value="1.5.0_19-b02" />
+    <property name="build.test.results.dir" value="build/test/results" />
+    <property name="libs.ejb3-persistence.javadoc" value="" />
+    <property name="manifest.available+main.class+mkdist.available" value="true" />
+    <property name="profiler.session.class.path" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar:C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar:../blaisetesting/dist/blaisetesting.jar:C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar:C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar:C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar:C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar:C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar:C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar:C:\Program Files\QuickTime\QTSystem\QTJava.zip:build/classes" />
+    <property name="default.javac.target" value="1.6" />
+    <property name="libs.StormTimer.maven-pom" value="" />
+    <property name="libs.junit_4.classpath" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\junit-4.5.jar" />
+    <property name="user.timezone" value="America/New_York" />
+    <property name="do.jar" value="true" />
+    <property name="netbeans.dirs" value="C:\Program Files\NetBeans 6.8\nb6.8;C:\Program Files\NetBeans 6.8\ergonomics2;C:\Program Files\NetBeans 6.8\ide12;C:\Program Files\NetBeans 6.8\java3;C:\Program Files\NetBeans 6.8\xml2;C:\Program Files\NetBeans 6.8\apisupport1;C:\Program Files\NetBeans 6.8\webcommon1;C:\Program Files\NetBeans 6.8\websvccommon1;C:\Program Files\NetBeans 6.8\enterprise6;C:\Program Files\NetBeans 6.8\mobility8;C:\Program Files\NetBeans 6.8\profiler3;C:\Program Files\NetBeans 6.8\ruby2;C:\Program Files\NetBeans 6.8\python1;C:\Program Files\NetBeans 6.8\php1;C:\Program Files\NetBeans 6.8\visualweb2;C:\Program Files\NetBeans 6.8\soa2;C:\Program Files\NetBeans 6.8\identity2;C:\Program Files\NetBeans 6.8\uml6;C:\Program Files\NetBeans 6.8\harness;C:\Program Files\NetBeans 6.8\cnd3;C:\Program Files\NetBeans 6.8\dlight2;C:\Program Files\NetBeans 6.8\groovy2;C:\Program Files\NetBeans 6.8\extra;C:\Program Files\NetBeans 6.8\javafx2;C:\Program Files\NetBeans 6.8\javacard1" />
+    <property name="manifest.available+mkdist.available" value="true" />
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext" />
+    <property name="endorsed.classpath" value="" />
+    <property name="libs.absolutelayout.classpath" value="C:\Users\elisha\.netbeans\6.8\modules\ext\AbsoluteLayout.jar" />
+    <property name="excludes" value="" />
+    <property name="libs.BlaiseParser.maven-pom" value="" />
+    <property name="apple.laf.useScreenMenuBar" value="true" />
+    <property name="java.class.path" value="C:\Program Files\NetBeans 6.8\platform11\modules\ext\swing-layout-1.0.4.jar;C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0.jar;C:\Users\elisha\Documents\NetBeansProjects\blaisetesting\dist\blaisetesting.jar;C:\Users\elisha\Documents\NetBeansProjects\blaisemath\dist\blaisemath.jar;C:\Users\elisha\Documents\NetBeansProjects\firestarter\dist\firestarter.jar;C:\Users\elisha\Documents\NetBeansProjects\StormTimer\dist\StormTimer.jar;C:\Users\elisha\Documents\NetBeansProjects\jcommon-1.0.16\jcommon-1.0.16.jar;C:\Users\elisha\Documents\NetBeansProjects\jfreechart-1.0.13\lib\jfreechart-1.0.13.jar;C:\Program Files\NetBeans 6.8\java3\modules\ext\beansbinding-1.2.1.jar;C:\Program Files\QuickTime\QTSystem\QTJava.zip;C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build\classes;C:\Program Files\NetBeans 6.8\platform11\modules\ext\junit-4.5.jar;C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\build\test\classes;C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory;C:\Program Files\Java\jre6\lib\ext\QTJava.zip;C:\Program Files\NetBeans 6.8\java3\ant\lib\ant-launcher.jar;C:\Program Files\NetBeans 6.8\java3\ant\lib\ant.jar;C:\Program Files\NetBeans 6.8\java3\ant\patches\72080.jar" />
+    <property name="do.mkdist" value="true" />
+    <property name="libs.absolutelayout.src" value="" />
+    <property name="libs.Firestarter.maven-pom" value="" />
+    <property name="profiler.settings.instrument.empty.methods" value="false" />
+    <property name="libs.BlaiseMath.src" value="C:\Users\elisha\Documents\NetBeansProjects\blaisemath\src" />
+    <property name="os.version" value="6.0" />
+    <property name="application.args" value="" />
+    <property name="profiler.session.java.executable" value="C:\Program Files\Java\jdk1.5.0_19\bin\java.exe" />
+    <property name="main.class.available" value="true" />
+    <property name="libs.QTJava.classpath" value="C:\Program Files\QuickTime\QTSystem\QTJava.zip" />
+    <property name="libs.toplink.javadoc" value="" />
+    <property name="sun.desktop" value="windows" />
+    <property name="libs.eclipselink.classpath" value="C:\Users\elisha\.netbeans\6.8\modules\ext\eclipselink\eclipselink-2.0.0.jar;C:\Users\elisha\.netbeans\6.8\modules\ext\eclipselink\eclipselink-javax.persistence-2.0.jar" />
+    <property name="platforms.JDK_1.5.bootclasspath" value="C:\Program Files\Java\jdk1.5.0_19\jre\lib\rt.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\i18n.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\jce.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.5.0_19\jre\classes;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.5.0_19\jre\lib\ext\sunpkcs11.jar" />
+    <property name="profiler.settings.settings.name" value="Analyze Performance" />
+    <property name="libs.beans-binding.javadoc" value="C:\Program Files\NetBeans 6.8\java3\docs\beansbinding-1.2.1-doc.zip" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="libs.JCommon.maven-pom" value="" />
+    <property name="profiler.info.jvmargs.agent" value="-agentpath:C:/Program Files/NetBeans 6.8/profiler3/lib/deployed/jdk15/windows/profilerinterface.dll=C:\Program Files\NetBeans 6.8\profiler3\lib,5140,10" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.CopyLibs.classpath" value="C:\Program Files\NetBeans 6.8\java3\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar" />
+    <property name="ant.file.-profiler-impl" value="C:\Users\elisha\Documents\NetBeansProjects\blaisegraphtheory\nbproject\profiler-build-impl.xml" />
+    <property name="libs.CommonsMath.src" value="C:\Users\elisha\Documents\NetBeansProjects\commons-math-2.0\commons-math-2.0-sources.jar" />
+    <property name="run.jvmargs" value="" />
+    <property name="libs.ejb3-persistence.classpath" value="C:\Program Files\NetBeans 6.8\java3\modules\ext\hibernate\ejb3-persistence.jar" />
+    <property name="libs.spring-framework.javadoc" value="" />
+    <property name="libs.PostgreSQLDriver.classpath" value="C:\Program Files\NetBeans 6.8\ide12\modules\ext\postgresql-8.3-603.jdbc3.jar" />
+    <property name="libs.junit.src" value="" />
+    <property name="main.class" value="graphexplorer.GraphExplorerMain" />
+    <property name="libs.CopyLibs.src" value="" />
+    <property name="build.dir" value="build" />
+    <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="build.classes.excludes" value="**/*.java,**/*.form" />
+    <property name="javadoc.nonavbar" value="false" />
+    <property name="platform.active" value="JDK_1.5" />
+    <property name="profiler.settings.cpu.profiling.type" value="0" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+  </properties>
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testValue" time="0.038">
+    <failure message="expected:&lt;0.07692307692307693&gt; but was:&lt;0.46153846153846156&gt;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: expected:&lt;0.07692307692307693&gt; but was:&lt;0.46153846153846156&gt;
+	at org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest.testValue(ClosenessCentralityTest.java:54)
+</failure>
+  </testcase>
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testAllValues" time="0.019" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testToString" time="0.0020" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testGetInstance_getMaxInstance" time="0.0010" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testSupportsGraph" time="0.0030" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testNodeMax" time="0.0020" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testCentralMax" time="0.0020" />
+  <testcase classname="org.bm.blaise.scio.graph.metrics.ClosenessCentralityTest" name="testProfile" time="7.023" />
+  <system-out><![CDATA[-- ClosenessCentralityTest --
+value
+allValues
+CC-all (7 nodes, 7 edges): 5ms
+CC-all (7 nodes, 7 edges): 5ms
+toString
+getInstance/getMaxInstance
+supportsGraph
+nodeMax
+centralMax
+ (profile test) 
+CC-all (200 nodes, 200 edges): 6974ms
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
