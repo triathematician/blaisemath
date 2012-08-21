@@ -6,13 +6,13 @@ package org.blaise.graphics.demo;
 
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
-import org.blaise.graph.modules.PreferentialAttachment;
-import org.blaise.graph.random.RandomGraph;
 import org.blaise.graph.dynamic.TimeGraph;
 import org.blaise.graph.dynamic.view.MultiGraphComponent;
 import org.blaise.graph.dynamic.view.TimeGraphComponent;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
+import org.blaise.graph.modules.EdgeCountBuilder;
+import org.blaise.graph.modules.PreferentialAttachment;
 import org.blaise.graph.view.PlaneGraphAdapter;
 import org.blaise.util.gui.RollupPanel;
 
@@ -34,9 +34,9 @@ public class TestTimeGraph extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         initComponents();
         // BASIC ELEMENTS
-        TimeGraph<Integer> g = PreferentialAttachment.getTimeSeededInstance(
-                RandomGraph.getInstance(10, 10, false),
-                100, new float[]{0,.95f,.05f});
+        TimeGraph<Integer> g = new PreferentialAttachment(
+                new EdgeCountBuilder(false, 10, 10).createGraph(),
+                100, new float[]{0,.95f,.05f}).createTimeGraph();
         plot.setTimeGraph(g);
         plot.getManager().initLayoutAlgorithm();
 
