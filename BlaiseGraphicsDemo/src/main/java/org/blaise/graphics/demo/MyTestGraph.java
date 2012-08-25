@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.blaise.graph.Graph;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 
 /**
  *

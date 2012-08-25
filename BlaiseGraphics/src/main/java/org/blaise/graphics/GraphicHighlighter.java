@@ -19,14 +19,13 @@ public class GraphicHighlighter extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).graphic;
-        if (g.getVisibility() != VisibilityHint.Hidden)
-            g.setVisibility(VisibilityHint.Highlight);
+        g.setVisibilityHint(VisibilityHint.Highlight, true);
     }
     
     @Override
     public void mouseExited(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).graphic;
-        if (g.getVisibility() != VisibilityHint.Hidden)
-            g.setVisibility(VisibilityHint.Regular);
+        g.setVisibilityHint(VisibilityHint.Highlight, false);
     }
+
 }

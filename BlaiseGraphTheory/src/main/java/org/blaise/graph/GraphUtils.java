@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 import org.blaise.math.linear.Matrices;
 
 /**

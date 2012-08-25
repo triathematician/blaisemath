@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Set;
 
 /**
  * Draws a point along with a ray from the point to the outer edge of the graphics canvas.
@@ -44,7 +45,7 @@ public class InfinitePointStyle extends BasicPointStyle {
 
 
     @Override
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, double angle, Graphics2D canvas, Set<VisibilityHint> visibility) {
         Point2D p2 = new Point2D.Double(p.getX() + Math.cos(angle), p.getY() + Math.sin(angle));
         Point2D endpt = boundaryHit(p, p2, canvas.getClipBounds());
         if (extendBoth) {

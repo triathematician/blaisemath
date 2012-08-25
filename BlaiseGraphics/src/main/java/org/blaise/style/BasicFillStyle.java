@@ -5,9 +5,10 @@
 
 package org.blaise.style;
 
-import java.awt.Shape;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.util.Set;
 
 /**
  * Fills a shape using a specified color (no outline).
@@ -30,12 +31,9 @@ public class BasicFillStyle implements ShapeStyle {
         this.fill = fill;
     }
 
-    public void draw(Shape s, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if (fill != null) {
-            canvas.setColor(
-                    visibility == VisibilityHint.Highlight ? StyleUtils.lighterThan(fill)
-                    : visibility == VisibilityHint.Obscure ? StyleUtils.blanderThan(fill)
-                    : fill);
+            canvas.setColor(StyleUtils.applyHints(fill, visibility));
             canvas.fill(s);
         }
     }

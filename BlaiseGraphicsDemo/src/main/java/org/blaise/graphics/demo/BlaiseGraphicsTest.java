@@ -16,26 +16,26 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import org.blaise.graphics.BasicPointGraphic;
 import org.blaise.graphics.BasicPointSetGraphic;
 import org.blaise.graphics.BasicShapeGraphic;
 import org.blaise.graphics.BasicStringGraphic;
+import org.blaise.graphics.ContextMenuInitializer;
 import org.blaise.graphics.CustomGraphGraphic;
 import org.blaise.graphics.CustomPointSetGraphic;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 import org.blaise.graphics.GraphicComponent;
 import org.blaise.graphics.GraphicHighlighter;
 import org.blaise.graphics.GraphicRoot;
-import org.blaise.graphics.compound.LabeledPointGraphic;
-import org.blaise.graphics.compound.RulerGraphic;
-import org.blaise.graphics.compound.SegmentGraphic;
-import org.blaise.graphics.compound.TwoPointGraphicSupport;
+//import org.blaise.graphics.compound.LabeledPointGraphic;
+//import org.blaise.graphics.compound.RulerGraphic;
+//import org.blaise.graphics.compound.SegmentGraphic;
+//import org.blaise.graphics.compound.TwoPointGraphicSupport;
 import org.blaise.style.Anchor;
-import org.blaise.style.ArrowPathStyle;
 import org.blaise.style.BasicPointStyle;
 import org.blaise.style.BasicStringStyle;
 import org.blaise.style.FancyPathStyle;
-import org.blaise.style.InfinitePointStyle;
 import org.blaise.style.LabeledPointStyle;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
@@ -93,8 +93,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         Point2D pt = randomPoint();
         final BasicPointGraphic bp = new BasicPointGraphic(pt);
         bp.setStyle(RandomStyles.point());
-        bp.setTooltip("<html><b>Point</b>: <i> " + pt + "</i>");
-        bp.addMouseListener(new GraphicHighlighter());
+        bp.setDefaultTooltip("<html><b>Point</b>: <i> " + pt + "</i>");
         root1.addGraphic(bp);
     }
     
@@ -103,7 +102,11 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         BasicPointSetGraphic bp = new BasicPointSetGraphic(
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.bps);
-        bp.addMouseListener(new GraphicHighlighter());
+        bp.addContextMenuInitializer(new ContextMenuInitializer(){
+            public void initialize(JPopupMenu menu, Point point) {
+                menu.add(getContext().getActionMap().get("editPointSetStyle"));
+            }
+        });
         root1.addGraphic(bp);
     }
     
@@ -120,7 +123,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     public void addSegment() {        
         Line2D.Double line = new Line2D.Double(randomPoint(), randomPoint());
         BasicShapeGraphic bs = new BasicShapeGraphic(line, RandomStyles.path());
-        bs.setTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
+        bs.setDefaultTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
         bs.addMouseListener(new GraphicHighlighter());
         root1.addGraphic(bs);
     }
@@ -130,7 +133,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         Rectangle2D.Double rect = new Rectangle2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight(), 100*Math.random(), 100*Math.random());
         BasicShapeGraphic bs = new BasicShapeGraphic(rect, RandomStyles.shape());
         bs.addMouseListener(new GraphicHighlighter());
-        bs.setTooltip("<html><b>Rectangle</b>: <i>" + rect + "</i>");
+        bs.setDefaultTooltip("<html><b>Rectangle</b>: <i>" + rect + "</i>");
         root1.addGraphic(bs);
     }
     
@@ -211,7 +214,8 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             }
         }
         gr.setEdges(edges);
-        gr.setPointDelegate(new Delegator<Point2D,Point2D>(){ public Point2D of(Point2D src) { return src; } });
+        gr.getPointManager().setInitialPointDelegate(new Delegator<Point2D,Point2D>(){ 
+            public Point2D of(Point2D src) { return src; } });
         gr.getStyler().setLabelDelegate(new Delegator<Point2D,String>(){ public String of(Point2D src) { return String.format("(%.1f,%.1f)", src.getX(), src.getY()); } });     
         gr.getStyler().setLabelStyleDelegate(new Delegator<Point2D,StringStyle>(){
             BasicStringStyle bss = new BasicStringStyle();
@@ -249,50 +253,50 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     
     //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
     
-    @Action
-    public void addArrow() {      
-        Point2D p1 = randomPoint(), p2 = randomPoint();
-        SegmentGraphic ag = new SegmentGraphic(p1, p2);
-        ag.setTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(ag);
-    }
+//    @Action
+//    public void addArrow() {      
+//        Point2D p1 = randomPoint(), p2 = randomPoint();
+//        SegmentGraphic ag = new SegmentGraphic(p1, p2);
+//        ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
+//        ag.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(ag);
+//    }
     
-    @Action
-    public void addLabeledPoint() {
-         Point2D p1 = randomPoint();
-        LabeledPointGraphic lpg = new LabeledPointGraphic(
-                p1,
-                String.format("(%.2f,%.2f)", p1.getX(), p1.getY()),
-                RandomStyles.point()
-                );
-        lpg.setTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
-        lpg.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(lpg);        
-    }
+//    @Action
+//    public void addLabeledPoint() {
+//         Point2D p1 = randomPoint();
+//        LabeledPointGraphic lpg = new LabeledPointGraphic(
+//                p1,
+//                String.format("(%.2f,%.2f)", p1.getX(), p1.getY()),
+//                RandomStyles.point()
+//                );
+//        lpg.setDefaultTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
+//        lpg.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(lpg);        
+//    }
     
-    @Action
-    public void addRuler() {
-         Point2D p1 = randomPoint(), p2 = randomPoint();
-        RulerGraphic lg = new RulerGraphic(p1, p2);
-        
-        lg.setTickPositions(new float[]{(float)Math.random(), (float)Math.random(), (float)Math.random()});
-        lg.setTickLabels(new String[]{"A", "B", "C"});
-        lg.setRuleLeft((int)(10*Math.random()));
-        lg.setRuleRight((int)(-10*Math.random()));
-        
-        lg.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(lg);        
-    }
+//    @Action
+//    public void addRuler() {
+//         Point2D p1 = randomPoint(), p2 = randomPoint();
+//        RulerGraphic lg = new RulerGraphic(p1, p2);
+//        
+//        lg.setTickPositions(new float[]{(float)Math.random(), (float)Math.random(), (float)Math.random()});
+//        lg.setTickLabels(new String[]{"A", "B", "C"});
+//        lg.setRuleLeft((int)(10*Math.random()));
+//        lg.setRuleRight((int)(-10*Math.random()));
+//        
+//        lg.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(lg);        
+//    }
     
-    @Action
-    public void add2Point() {
-      Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
-        ag.setTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(ag);        
-    }
+//    @Action
+//    public void add2Point() {
+//      Point2D p1 = randomPoint(), p2 = randomPoint();
+//        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+//        ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
+//        ag.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(ag);        
+//    }
     
     //</editor-fold>
     
@@ -307,30 +311,30 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         root1.addGraphic(bp);
     }
     
-    @Action
-    public void addRay() {
-      Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
-        InfinitePointStyle ips = new InfinitePointStyle();
-        ips.setRayStyle(new ArrowPathStyle());
-        ag.setEndPointStyle(ips);
-        ag.setTooltip("<html><b>Ray</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(ag);        
-    }
+//    @Action
+//    public void addRay() {
+//      Point2D p1 = randomPoint(), p2 = randomPoint();
+//        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+//        InfinitePointStyle ips = new InfinitePointStyle();
+//        ips.setRayStyle(new ArrowPathStyle());
+//        ag.setEndPointStyle(ips);
+//        ag.setDefaultTooltip("<html><b>Ray</b>: <i>" + p1 + ", " + p2 + "</i>");
+//        ag.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(ag);        
+//    }
     
-    @Action
-    public void addLine() {
-      Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
-        InfinitePointStyle ips = new InfinitePointStyle();
-        ips.setRayStyle(new ArrowPathStyle());
-        ips.setExtendBoth(true);
-        ag.setEndPointStyle(ips);
-        ag.setTooltip("<html><b>Line</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
-        root1.addGraphic(ag);        
-    }
+//    @Action
+//    public void addLine() {
+//      Point2D p1 = randomPoint(), p2 = randomPoint();
+//        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+//        InfinitePointStyle ips = new InfinitePointStyle();
+//        ips.setRayStyle(new ArrowPathStyle());
+//        ips.setExtendBoth(true);
+//        ag.setEndPointStyle(ips);
+//        ag.setDefaultTooltip("<html><b>Line</b>: <i>" + p1 + ", " + p2 + "</i>");
+//        ag.addMouseListener(new GraphicHighlighter());
+//        root1.addGraphic(ag);        
+//    }
     
     //</editor-fold>
     

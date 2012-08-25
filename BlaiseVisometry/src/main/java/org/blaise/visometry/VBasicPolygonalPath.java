@@ -75,7 +75,7 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
                 window = new BasicShapeGraphic(gp, rend);
         } else
             window.setPrimitive(gp);
-        window.setTooltip("Polygonal path");
+        window.setDefaultTooltip("Polygonal path");
         setUnconverted(false);
     }
 }

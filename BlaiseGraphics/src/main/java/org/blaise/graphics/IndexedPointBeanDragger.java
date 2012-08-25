@@ -51,14 +51,16 @@ public class IndexedPointBeanDragger extends AbstractGraphicDragger {
     @Override
     public void mouseDragInitiated(GraphicMouseEvent e, Point start) {
         indexStart = bean.indexOf(start, start);
-        if (indexStart != -1)
+        if (indexStart != -1) {
             beanStart = bean.getPoint(indexStart);
+        }
     }
 
     @Override
     public void mouseDragInProgress(GraphicMouseEvent e, Point start) {
-        if (indexStart != -1)
+        if (indexStart != -1) {
             bean.setPoint(indexStart, beanStart, start, e.getPoint());
+        }
     }
     
 }

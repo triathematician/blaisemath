@@ -80,8 +80,8 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
                 .fill(Color.black);
         start.setStyle(style);
         end.setStyle(style);
-        start.setVisibility(VisibilityHint.Hidden);
-        end.setVisibility(VisibilityHint.Hidden);
+        start.setVisibilityHint(VisibilityHint.Hidden, true);
+        end.setVisibilityHint(VisibilityHint.Hidden, true);
     }
 
     /** Updates the angles of the tick marks */

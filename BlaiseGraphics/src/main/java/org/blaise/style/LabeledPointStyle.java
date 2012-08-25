@@ -7,6 +7,7 @@ package org.blaise.style;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.util.Set;
 import org.blaise.util.PointFormatters;
 
 /**
@@ -91,7 +92,7 @@ public class LabeledPointStyle implements PointStyle {
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D p, String label, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, String label, Graphics2D canvas, Set<VisibilityHint> visibility) {
         base.draw(p, canvas, visibility);
         if (showLabel) {
             ((BasicStringStyle)labelStyle).offset(base.getRadius());
@@ -107,17 +108,17 @@ public class LabeledPointStyle implements PointStyle {
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D p, double angle, String label, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, double angle, String label, Graphics2D canvas, Set<VisibilityHint> visibility) {
         base.draw(p, angle, canvas, visibility);
         if (showLabel)
             labelStyle.draw(p, label, canvas, visibility);
     }
 
-    public void draw(Point2D p, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, Graphics2D canvas, Set<VisibilityHint> visibility) {
         draw(p, PointFormatters.formatPoint(p, 2), canvas, visibility);
     }
 
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, double angle, Graphics2D canvas, Set<VisibilityHint> visibility) {
         draw(p, angle, PointFormatters.formatPoint(p, 2), canvas, visibility);
     }
 }

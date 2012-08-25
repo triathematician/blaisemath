@@ -9,6 +9,7 @@ import java.awt.Shape;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Set;
 
 /**
  * Draws a point on the screen.
@@ -55,24 +56,15 @@ public class BasicShapeStyle implements ShapeStyle {
         this.thickness = thickness;
     }
 
-    public void draw(Shape s, Graphics2D canvas, VisibilityHint visibility) {
-        if (thickness <= 0)
-            return;
-
-        canvas.setStroke(new BasicStroke(thickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5.0f, null, 0.0f));
-
+    public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if (fill != null) {
-            canvas.setColor(
-                    visibility == VisibilityHint.Highlight ? StyleUtils.lighterThan(fill)
-                    : visibility == VisibilityHint.Obscure ? StyleUtils.blanderThan(fill)
-                    : fill);
+            canvas.setColor(StyleUtils.applyHints(fill, visibility));
             canvas.fill(s);
         }
-        if (stroke != null) {
-            canvas.setColor(
-                    visibility == VisibilityHint.Highlight ? StyleUtils.lighterThan(stroke)
-                    : visibility == VisibilityHint.Obscure ? StyleUtils.blanderThan(stroke)
-                    : stroke);
+        if (stroke != null && thickness >= 0) {
+            canvas.setColor(StyleUtils.applyHints(stroke, visibility));
+            canvas.setStroke(visibility != null && visibility.contains(VisibilityHint.Highlight)
+                    ? new BasicStroke(thickness+1f) : new BasicStroke(thickness));
             canvas.draw(s);
         }
 

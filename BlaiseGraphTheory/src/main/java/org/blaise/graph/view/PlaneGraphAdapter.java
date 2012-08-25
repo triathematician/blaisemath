@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphUtils;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 import org.blaise.style.BasicPathStyle;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;

@@ -8,6 +8,7 @@ package org.blaise.style;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Set;
 
 /**
  * Draws a string on a graphics canvas. Contains methods for determining the bounding
@@ -24,7 +25,7 @@ public interface StringStyle {
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D point, String text, Graphics2D canvas, VisibilityHint visibility);
+    public void draw(Point2D point, String text, Graphics2D canvas, Set<VisibilityHint> visibility);
 
     /** 
      * Compute and return the bounding box for a string drawn on the canvas.

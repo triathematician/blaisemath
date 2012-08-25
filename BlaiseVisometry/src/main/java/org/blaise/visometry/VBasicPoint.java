@@ -98,7 +98,7 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
     public void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
         Point2D p = processor.convert(point, vis);
         window.setPoint(p);
-        window.setTooltip(
+        window.setDefaultTooltip(
                 point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
                 : point + "");
         setUnconverted(false);

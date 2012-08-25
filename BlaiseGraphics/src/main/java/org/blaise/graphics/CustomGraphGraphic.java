@@ -15,6 +15,7 @@ import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Delegator;
+import org.blaise.util.Edge;
 
 /**
  * A graph with fully-customizable points, edges, and tooltips. The styles and

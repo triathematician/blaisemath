@@ -50,6 +50,7 @@ public class GraphicComponent extends javax.swing.JComponent {
         setBackground(Color.WHITE);
         setOpaque(true);
         setPreferredSize(new Dimension(300, 200));
+        // this line enables tooltips
         setToolTipText("");
     }
 

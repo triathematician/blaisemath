@@ -68,8 +68,9 @@ public class LabeledPointGraphic extends GraphicComposite
 
     @Override
     public void graphicChanged(Graphic source) {
-        if (source == point)
+        if (source == point) {
             string.setPoint(getPoint());
+        }
         super.graphicChanged(source);
     }
 

@@ -40,6 +40,14 @@ public class BasicShapeGraphic extends GraphicSupport {
     /**
      * Construct with no style (will use the default)
      * @param primitive the shape to draw
+     */
+    public BasicShapeGraphic(Shape primitive) {
+        this(primitive, false);
+    }
+
+    /**
+     * Construct with no style (will use the default)
+     * @param primitive the shape to draw
      * @param strokeOnly determines whether to use the solid style or the path/edge style
      */
     public BasicShapeGraphic(Shape primitive, boolean strokeOnly) {

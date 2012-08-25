@@ -6,10 +6,14 @@
 package org.blaise.graphics;
 
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import org.blaise.style.StyleProvider;
 import org.blaise.style.StyleUtils.DefaultStyleProvider;
 import org.blaise.style.VisibilityHint;
@@ -32,14 +36,25 @@ import org.blaise.style.VisibilityHint;
 public class GraphicRoot extends GraphicComposite implements MouseListener, MouseMotionListener {
 
     /** Parent component upon which the graphics are drawn. */
-    protected JComponent component;
-
+    protected JComponent owner;
+    /** Context menu for actions on the graphics */
+    protected JPopupMenu popup = new JPopupMenu();
     /** Provides a pluggable way to generate mouse events */
     protected GraphicMouseEvent.Factory mouseFactory = new GraphicMouseEvent.Factory();
 
     /** Construct a default instance */
     public GraphicRoot() {
         setStyleProvider(new DefaultStyleProvider());
+        popup.addPopupMenuListener(new PopupMenuListener(){
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                if (mouseLoc != null) {
+                    popup.removeAll();
+                    initialize(popup, mouseLoc);
+                }
+            }
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
     }
 
     @Override
@@ -53,29 +68,30 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
      * @param c the component
      */
     void initComponent(JComponent c) {
-        if (this.component != c) {
-            if (this.component != null) {
-                this.component.removeMouseListener(this);
-                this.component.removeMouseMotionListener(this);
-//                this.component.setComponentPopupMenu(null);
+        if (this.owner != c) {
+            if (this.owner != null) {
+                this.owner.removeMouseListener(this);
+                this.owner.removeMouseMotionListener(this);
+                this.owner.setComponentPopupMenu(null);
             }
-            this.component = c;
-            if (this.component != null) {
-                c.addMouseListener(this);
-                c.addMouseMotionListener(this);
-//                c.setComponentPopupMenu(popup);
+            this.owner = c;
+            if (this.owner != null) {
+                this.owner.addMouseListener(this);
+                this.owner.addMouseMotionListener(this);
+                this.owner.setComponentPopupMenu(popup);
             }
         }
     }
-
+    
     //
     // PROPERTIES
     //
 
     @Override
     public final void setStyleProvider(StyleProvider rend) {
-        if (rend == null)
+        if (rend == null) {
             throw new IllegalArgumentException("GraphicRoot must have a non-null StyleProvider!");
+        }
         super.setStyleProvider(rend);
     }
 
@@ -91,16 +107,27 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
 
     @Override
     public void graphicChanged(Graphic source) {
-        if (component != null)
-            component.repaint();
+        if (owner != null) {
+            owner.repaint();
+        }
     }
 
 
     //<editor-fold defaultstate="collapsed" desc="MOUSE HANDLING">
     //
     // MOUSE HANDLING
+    // this code handles translation of mouse events on the component
+    //   to mouse events on the graphics
     //
 
+    /**
+     * Return current object used to generate mouse events.
+     * @return mouse event factory
+     */
+    public GraphicMouseEvent.Factory getMouseEventFactory() {
+        return mouseFactory;
+    }
+    
     /**
      * Modifies how mouse events are created.
      * @param factory responsible for generating mouse events
@@ -113,7 +140,9 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     private transient Graphic mouseGraphic;
 
     private void updateMouseGraphic(MouseEvent e, boolean keepCurrent) {
-        if (keepCurrent && mouseGraphic != null && mouseGraphic.getVisibility() != VisibilityHint.Hidden && mouseGraphic.contains(e.getPoint()))
+        if (keepCurrent && mouseGraphic != null 
+                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.Hidden) 
+                && mouseGraphic.contains(e.getPoint()))
             return;
         Graphic nue = mouseGraphicAt(e.getPoint());
         if (mouseGraphic != nue) {
@@ -149,10 +178,14 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
         }
     }
 
+    /** Tracks current mouse location */
+    Point mouseLoc;
+    
     public void mouseMoved(MouseEvent e) {
+        mouseLoc = e.getPoint();
         updateMouseGraphic(e, false);
         if (mouseGraphic != null) {
-            component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
             for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
                 l.mouseMoved(gme);
@@ -160,7 +193,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
                     return;
             }
         } else
-            component.setCursor(Cursor.getDefaultCursor());
+            owner.setCursor(Cursor.getDefaultCursor());
     }
 
     public void mousePressed(MouseEvent e) {

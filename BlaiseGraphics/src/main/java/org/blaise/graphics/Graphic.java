@@ -11,6 +11,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Set;
+import javax.swing.JPopupMenu;
 import org.blaise.style.VisibilityHint;
 
 /**
@@ -37,10 +39,10 @@ import org.blaise.style.VisibilityHint;
  *
  * @author Elisha Peterson
  */
- public interface Graphic {
+ public interface Graphic extends ContextMenuInitializer {
      
      //
-     // BASIC STATE
+     // COMPOSITION API
      //
      
     /** 
@@ -54,20 +56,9 @@ import org.blaise.style.VisibilityHint;
      */
     public void setParent(GraphicComposite parent);
 
-    /** 
-     * Return visibility state of the entry
-     * @return the visibility status of the entry
-     */
-    public VisibilityHint getVisibility();
-    /** 
-     * Sets the visibility status of the shape 
-     * @param vis visiblity
-     */
-    public void setVisibility(VisibilityHint vis);
-    
     
     //
-    // DRAW
+    // STYLE & DRAWING API
     //
 
     /**
@@ -75,10 +66,27 @@ import org.blaise.style.VisibilityHint;
      * @param canvas graphics canvas
      */
     public void draw(Graphics2D canvas);
+ 
+    /** 
+     * Return visibility state of the entry
+     * @return the visibility status of the entry
+     */
+    public Set<VisibilityHint> getVisibilityHints();
+    /** 
+     * Sets the visibility status of the shape 
+     * @param vis hints
+     */
+    public void setVisibilityHints(Set<VisibilityHint> vis);
+    /**
+     * Sets the status of a single visibility hint
+     * @param hint a visibility hint
+     * @param status new status
+     */
+    public void setVisibilityHint(VisibilityHint hint, boolean status);
     
     
     //
-    // BOUNDS
+    // LOCATOR API
     //
     
     /**
@@ -88,19 +96,42 @@ import org.blaise.style.VisibilityHint;
      * have the opportunity to receive events if the graphic is the topmost element
      * containing the event's point.
      * 
-     * 
      * @param point the window point
      * @return true if the entry contains the point, else false
      */
     public boolean contains(Point point);
     
     /**
-     * Checks to see if the graphic intersects the area within specified rectangle
+     * Checks to see if the graphic intersects the area within specified rectangle.
      * @param box rectangle to check against
      * @return true if it intersects, false otherwise
      */
     public boolean intersects(Rectangle box);
 
+    
+    //
+    // SELECTION API
+    //
+    
+    /**
+     * Return true if graphic can be selected. If this flag is set to true,
+     * the locator API will be used to map selection gestures (e.g. click to
+     * select, or select graphics in box).
+     * @return selection flag
+     */
+    public boolean isSelectionEnabled();
+    
+    
+    //
+    // TOOLTIP API
+    //
+    
+    /**
+     * Return true if tips are enabled/supported
+     * @return true if yes
+     */
+    public boolean isTooltipEnabled();
+    
     /**
      * Return tooltip for the specified point
      * @param point the point
@@ -108,16 +139,39 @@ import org.blaise.style.VisibilityHint;
      */
     public String getTooltip(Point point);
 
+    
+    //
+    // CONTEXT MENU API
+    //
+    
+    /**
+     * Whether graphic supports context menu building
+     * @return true if yes
+     */
+    public boolean isContextMenuEnabled();
+    
+    /**
+     * Add context menu initializer
+     * @param init initializer
+     */
+    public void addContextMenuInitializer(ContextMenuInitializer init);
+    
+    /**
+     * Remove context menu initializer
+     * @param init initializer
+     */
+    public void removeContextMenuInitializer(ContextMenuInitializer init);
+    
+    
+    //
+    // MOUSE HANDLING API
+    //
+
     /**
      * Whether the object should receive mouse events.
      * @return true if yes, false otherwise
      */
-    public boolean isMouseSupported();
-    
-    
-    //
-    // EVENT HANDLING
-    //
+    public boolean isMouseEnabled();
 
     /**
      * Adds a mouse listener to the graphic

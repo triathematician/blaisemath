@@ -41,7 +41,7 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
                 .stroke(null)
                 .radius(2)
                 .fill(Color.black));
-        start.setVisibility(VisibilityHint.Hidden);
+        start.setVisibilityHint(VisibilityHint.Hidden, true);
         
         end.setStyle(new BasicPointStyle()
                 .shape(ShapeLibrary.ARROWHEAD));

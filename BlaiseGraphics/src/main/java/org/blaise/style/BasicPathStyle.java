@@ -6,9 +6,10 @@
 package org.blaise.style;
 
 import java.awt.BasicStroke;
-import java.awt.Shape;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.util.Set;
 
 /**
  * Draws a path with arbitrary color and width.
@@ -58,13 +59,13 @@ public class BasicPathStyle implements PathStyle {
         return this;
     }
 
-    public void draw(Shape s, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if(getWidth() <= 0f || getColor() == null)
             return;
 
         canvas.setStroke(new BasicStroke(getWidth()));
 
-        canvas.setColor(visibility == VisibilityHint.Highlight  ? StyleUtils.lighterThan(getColor()) : getColor());
+        canvas.setColor(StyleUtils.applyHints(getColor(), visibility));
         canvas.draw(s);
 
         canvas.setStroke(StyleUtils.DEFAULT_STROKE);

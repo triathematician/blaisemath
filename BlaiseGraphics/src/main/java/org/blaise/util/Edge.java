@@ -3,7 +3,7 @@
  * Created Aug 5, 2012
  */
 
-package org.blaise.graphics;
+package org.blaise.util;
 
 /**
  * An edge in a graph.

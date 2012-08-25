@@ -8,6 +8,7 @@ package org.blaise.style;
 import java.awt.Shape;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.Set;
 
 /**
  * Provides most of the functionality to draw a point on a graphics canvas.
@@ -31,11 +32,11 @@ public abstract class PointStyleSupport implements PointStyle {
     protected abstract ShapeStyle getShapeStyle();
 
 
-    public void draw(Point2D p, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, Graphics2D canvas, Set<VisibilityHint> visibility) {
         getShapeStyle().draw(shape(p), canvas, visibility);
     }
 
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D p, double angle, Graphics2D canvas, Set<VisibilityHint> visibility) {
         getShapeStyle().draw(shape(p, angle), canvas, visibility);
     }
 

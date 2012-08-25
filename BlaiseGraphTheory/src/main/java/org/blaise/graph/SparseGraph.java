@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 
 /**
  * <p>

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 
 /**
  * Implements the methods of {@link Graph} that can be inferred from other methods.

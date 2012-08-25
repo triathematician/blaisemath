@@ -6,7 +6,7 @@ package org.blaise.graph.view;
 
 import java.awt.Color;
 import java.util.Map;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 import org.blaise.style.DecoratorPathStyle;
 import org.blaise.style.PathStyle;
 import org.blaise.util.Delegator;

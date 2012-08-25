@@ -4,9 +4,9 @@
  */
 package org.blaise.graphics;
 
-import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import org.blaise.style.PointStyle;
 import org.blaise.util.PointBean;
@@ -25,7 +25,6 @@ public class BasicPointGraphic extends GraphicSupport implements PointBean<Point
     Point2D point;
     /** Angle specifying point orientation */
     private double angle = 0;
-    
     /** The associated style (may be null). */
     PointStyle style;
 

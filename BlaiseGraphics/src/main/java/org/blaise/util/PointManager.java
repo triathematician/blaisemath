@@ -5,6 +5,8 @@
 package org.blaise.util;
 
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +50,14 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord>, IndexedP
     
     /** Cached locations */
     private final Map<Src, Coord> cache = Collections.synchronizedMap(new HashMap<Src, Coord>());
+    
+    /**
+     * Constructs instance without an initial position object.
+     * This object MUST be set for this manager to properly handle new points.
+     */
+    public PointManager() {
+        this(Collections.EMPTY_MAP);
+    }
     
     /** 
      * Constructs an instance of the point manager, given an object describing initial positions
@@ -104,7 +114,7 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord>, IndexedP
                 i++;
             }
         }
-        // TODO - notify listeners (?)
+        pcs.firePropertyChange("locationMap", null, getLocationMap());
     }
     
     
@@ -153,6 +163,12 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord>, IndexedP
      */
     public synchronized void setObjects(Set<? extends Src> obj) {
         Set<Src> curObjects = map.keySet();
+        if (curObjects == null) {
+            curObjects = Collections.EMPTY_SET;
+        }
+        if (obj == null) {
+            obj = Collections.EMPTY_SET;
+        }
         
         // easy option when the set of objects did not change
         if (curObjects.containsAll(obj) && obj.containsAll(curObjects)) {
@@ -276,5 +292,29 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord>, IndexedP
             System.err.println("... new size: " + cache.size());
         }
     }
+ 
+    // PROPERTY CHANGE LISTENING
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
+    
+    
+    
+    
     
 }

@@ -5,23 +5,25 @@
 
 package org.blaise.graphics;
 
-import java.awt.Rectangle;
-import java.util.Set;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
+import javax.swing.JPopupMenu;
 import org.blaise.style.StyleProvider;
 import org.blaise.style.VisibilityHint;
 
 /**
- * Maintains a collection of {@link Graphic}s in iterable draw order.
- * May also control the default styling for the graphics contained in the composite
- * via a {@link StyleProvider}.
+ * An ordered collection of {@link Graphic}s, where the ordering indicates draw order.
+ * May also have a {@link StyleProvider} that graphics can reference when rendering.
+ * 
+ * XXX - need to place a lock on changes to the graphic tree when iterating through!
  * 
  * @author Elisha
  */
@@ -29,7 +31,6 @@ public class GraphicComposite extends GraphicSupport {
 
     /** Stores the shapes and their styles */
     private final List<Graphic> entries = Collections.synchronizedList(new ArrayList<Graphic>());
-    
     /** The associated style provider; overrides the default style for the components in the composite (may be null). */
     private StyleProvider styleProvider;
 
@@ -57,16 +58,17 @@ public class GraphicComposite extends GraphicSupport {
      * Get the entries in draw order
      * @return iterator over the entries, in draw order 
      */
-    public synchronized Iterable<Graphic> getGraphics() { 
+    public synchronized List<Graphic> getGraphics() { 
         return Collections.unmodifiableList(entries); 
     }
     
     /**
-     * Get entries in reverse draw order
-     * @return iterator over the entries, in reverse of draw order 
+     * Explicit set entries
+     * @param graphics graphics in the composite
      */
-    public synchronized Iterable<Graphic> getGraphicsReversed() { 
-        return reverseGraphics(); 
+    public synchronized void setGraphics(List<Graphic> graphics) {
+        clearGraphics();
+        addGraphics(graphics);
     }
 
     /** 
@@ -75,10 +77,12 @@ public class GraphicComposite extends GraphicSupport {
      * @throws IllegalStateException if the object returned would be null
      */
     public StyleProvider getStyleProvider() { 
-        if (styleProvider != null)
+        if (styleProvider != null) {
             return styleProvider;
-        if (parent == null || parent.getStyleProvider() == null)
+        }
+        if (parent == null || parent.getStyleProvider() == null) {
             throw new IllegalStateException("getStyleProvider() in GraphicComposite should never return a null value!");
+        }
         return parent.getStyleProvider();
     }
     
@@ -188,9 +192,10 @@ public class GraphicComposite extends GraphicSupport {
      */
     protected synchronized Graphic mouseGraphicAt(Point point) {
         // return the first graphic containing the point, in draw order
-        for (Graphic en : getGraphicsReversed()) {
-            if (en.getVisibility() == VisibilityHint.Hidden || !en.isMouseSupported())
+        for (Graphic en : reverseGraphics()) {
+            if (!en.isMouseEnabled() || en.getVisibilityHints().contains(VisibilityHint.Hidden)) {
                 continue;
+            }
             if (en instanceof GraphicComposite) {
                 Graphic s = ((GraphicComposite)en).mouseGraphicAt(point);
                 if (s != null)
@@ -209,9 +214,10 @@ public class GraphicComposite extends GraphicSupport {
      */
     public synchronized Graphic graphicAt(Point point) {
         // return the first graphic containing the point, in draw order
-        for (Graphic en : getGraphicsReversed()) {
-            if (en.getVisibility() == VisibilityHint.Hidden)
+        for (Graphic en : reverseGraphics()) {
+            if (en.getVisibilityHints().contains(VisibilityHint.Hidden)) {
                 continue;
+            }
             if (en instanceof GraphicComposite) {
                 Graphic s = ((GraphicComposite)en).graphicAt(point);
                 if (s != null)
@@ -228,9 +234,11 @@ public class GraphicComposite extends GraphicSupport {
     }
 
     public synchronized boolean intersects(Rectangle box) {
-        for (Graphic en : getGraphics())
-            if (en.intersects(box))
+        for (Graphic en : entries) {
+            if (en.intersects(box)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -238,20 +246,40 @@ public class GraphicComposite extends GraphicSupport {
     public synchronized String getTooltip(Point p) {
         // return the first non-null tooltip, in draw order
         String l = null;
-        for (Graphic en : getGraphicsReversed()) {
-            if (en.getVisibility() != VisibilityHint.Hidden && en.contains(p)) {
+        for (Graphic en : reverseGraphics()) {
+            if (en.isTooltipEnabled() && 
+                    !en.getVisibilityHints().contains(VisibilityHint.Hidden) 
+                    && en.contains(p)) {
                 l = en.getTooltip(p);
-                if (l != null)
+                if (l != null) {
                     return l;
+                }
             }
         }
-        return tooltip;
+        return tipText;
     }
 
+    @Override
+    public void initialize(JPopupMenu menu, Point point) {
+        for (Graphic en : reverseGraphics()) {
+            if (en.isContextMenuEnabled() && 
+                    !en.getVisibilityHints().contains(VisibilityHint.Hidden) 
+                    && en.contains(point)) {
+                en.initialize(menu, point);
+            }
+        }
+
+        // behavior adds composite actions after adding individual graphic actions
+        if (isContextMenuEnabled()) {
+            super.initialize(menu, point);
+        }
+    }
     public synchronized void draw(Graphics2D canvas) {
-        for (Graphic en : entries)
-            if (en.getVisibility() != VisibilityHint.Hidden)
+        for (Graphic en : entries) {
+            if (!en.getVisibilityHints().contains(VisibilityHint.Hidden)) {
                 en.draw(canvas);
+            }
+        }
     }
     
     // </editor-fold>    
@@ -267,23 +295,50 @@ public class GraphicComposite extends GraphicSupport {
      * @param source the entry changed
      */
     public void graphicChanged(Graphic source) {
-        if (parent != null)
+        if (parent != null) {
             parent.graphicChanged(source);
+        }
     }
 
     // </editor-fold>
 
+    /**
+     * Return selectable graphic at given point
+     * @param point point of interest
+     * @return graphic at point that can be selected
+     */
+    public synchronized Graphic selectableGraphicAt(Point point) {
+        for (Graphic en : reverseGraphics()) {
+            if (en.getVisibilityHints().contains(VisibilityHint.Hidden)) {
+                continue;
+            }
+            if (en instanceof GraphicComposite) {
+                Graphic s = ((GraphicComposite)en).selectableGraphicAt(point);
+                if (s != null) {
+                    return s;
+                }
+            } else if (en.isSelectionEnabled() && en.contains(point)) {
+                return en;
+            }
+        }
+        return isSelectionEnabled() && contains(point) ? this : null;
+    }
     
     /**
      * Return collection of graphics in the composite in specified bounding box
      * @param box bounding box
      * @return graphics within bounds
      */
-    public synchronized Set<Graphic> selectGraphics(Rectangle box) {
+    public synchronized Set<Graphic> selectableGraphicsIn(Rectangle box) {
         Set<Graphic> result = new HashSet<Graphic>();
-        for (Graphic g : entries)
-            if (g.intersects(box))
+        for (Graphic g : entries) {
+            if (g instanceof GraphicComposite) {
+                result.addAll(((GraphicComposite)g).selectableGraphicsIn(box));
+            }
+            if (g.intersects(box)) {
                 result.add(g);
+            }
+        }
         return result;
     }
     
@@ -293,7 +348,12 @@ public class GraphicComposite extends GraphicSupport {
     // PRIVATE UTILITIES
     //
 
-    /** @return reverse list iterator */
+    /**
+     * Generate reverse-order view of graphics. Since the iterator depends on the
+     * entries object, this should ONLY be used with a lock on this object
+     * (i.e. within a synchronized method call).
+     * @return reverse list iterator 
+     */
     private Iterable<Graphic> reverseGraphics() {
         return new Iterable<Graphic>() {
             public Iterator<Graphic> iterator() {

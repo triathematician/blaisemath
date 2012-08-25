@@ -7,10 +7,8 @@ package org.blaise.visometry;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import org.blaise.graphics.CustomPointSetGraphic;
-import org.blaise.graphics.IndexedGraphicHighlighter;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
-import org.blaise.util.DraggableIndexedPointBean;
 
 /**
  * A set of draggable points defined in local coordinates. Properties of the objects
@@ -21,7 +19,7 @@ import org.blaise.util.DraggableIndexedPointBean;
  *
  * @author elisha
  */
-public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements DraggableIndexedPointBean<C> {
+public class VCustomPointSet<C, Src> extends VGraphicSupport<C> {
 
     /** The points */
     protected C[] point;
@@ -34,10 +32,6 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
      */
     public VCustomPointSet(C[] initialPoint) {
         this.point = initialPoint;
-        window.removeMouseListeners();
-        window.removeMouseMotionListeners();
-        window.addMouseListener(new VGMouseIndexedDragger<C>(this));
-        window.addMouseListener(new IndexedGraphicHighlighter());
     }
 
     //
@@ -66,10 +60,6 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Dragg
 
     public int getPointCount() {
         return point.length;
-    }
-
-    public synchronized int indexOf(Point2D pt, C dragStart) {
-        return window.indexOf(pt, null);
     }
 
     public void setPoint(int index, C initial, C dragStart, C dragFinish) {
