@@ -57,7 +57,7 @@ public class PlanePlotMouseHandler
 
     public void paint(Graphics2D canvas) {
         if (zoomBox != null)
-            rend.draw(zoomBox, canvas, VisibilityHint.Regular);
+            rend.draw(zoomBox, canvas, null);
     }
 
     //

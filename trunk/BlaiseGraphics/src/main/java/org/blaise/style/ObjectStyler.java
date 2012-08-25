@@ -10,8 +10,8 @@ import org.blaise.util.Delegator;
 import org.blaise.util.NonDelegator;
 
 /**
- * Groups together a collection of delegators for points, including the object's
- * label, the tip, the object style, and the label style.
+ * Groups together a collection of delegators for a generic object that can be
+ * used to customize its style, tooltip, label, and label style.
  *
  * @param <Src> the type of source object
  * @param <Style> the primary style type used to draw

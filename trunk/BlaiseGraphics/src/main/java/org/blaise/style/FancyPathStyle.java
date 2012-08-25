@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.util.Set;
 
 /**
  * Draws a color on the screen, using a fancy outlined style.
@@ -46,7 +47,7 @@ public class FancyPathStyle extends BasicPathStyle {
     }
 
     @Override
-    public void draw(Shape s, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if(thickness <= 0f && color != null)
             return;
         if (s instanceof Line2D.Double || s instanceof GeneralPath) {

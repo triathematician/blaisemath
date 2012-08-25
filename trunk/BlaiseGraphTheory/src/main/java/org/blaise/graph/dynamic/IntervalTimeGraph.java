@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.blaise.graph.Graph;
 import org.blaise.graph.SparseGraph;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 
 /**
  * A graph whose nodes and edges all come with associated time intervals. When queried

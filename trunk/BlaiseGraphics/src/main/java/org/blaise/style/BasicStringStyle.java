@@ -8,9 +8,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Set;
 
 /**
  * <p>
@@ -102,7 +102,7 @@ public class BasicStringStyle implements StringStyle {
 // </editor-fold>
 
     
-    public void draw(Point2D point, String string, Graphics2D canvas, VisibilityHint visibility) {
+    public void draw(Point2D point, String string, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if (string == null || string.length() == 0)
             return;
         if (fontSize != null && font == null) {
@@ -111,7 +111,7 @@ public class BasicStringStyle implements StringStyle {
         } else if (font != null)
             canvas.setFont(font);
         Rectangle2D bounds = bounds(point, string, canvas);
-        canvas.setColor(color);
+        canvas.setColor(StyleUtils.applyHints(color, visibility));
         canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 

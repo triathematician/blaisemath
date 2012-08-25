@@ -126,7 +126,8 @@ public class TwoPointGraphicSupport extends GraphicComposite {
     public void graphicChanged(Graphic source) {
         if (source == start || source == end) {
             pointsUpdated();
-        } else
+        } else {
             super.graphicChanged(source);
+        }
     }
 }

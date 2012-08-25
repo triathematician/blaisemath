@@ -7,7 +7,7 @@ package org.blaise.graph;
 
 import java.util.Collection;
 import java.util.Set;
-import org.blaise.graphics.Edge;
+import org.blaise.util.Edge;
 
 /**
  * <p>

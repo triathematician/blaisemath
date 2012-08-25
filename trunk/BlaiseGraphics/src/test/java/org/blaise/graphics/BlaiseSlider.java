@@ -71,8 +71,8 @@ public class BlaiseSlider extends GraphicComponent implements ChangeListener {
         addGraphic(posGr = new BasicShapeGraphic(null, hStyle));
         addGraphic(strGr = new BasicStringGraphic(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+""));
         strGr.setStyle(new BasicStringStyle(Color.white, hRnd/2f, Anchor.South));
-        trackGr.setMouseSupported(false);
-        strGr.setMouseSupported(false);
+        trackGr.setMouseEnabled(false);
+        strGr.setMouseEnabled(false);
         updateGraphics();
         
         AbstractGraphicDragger dragger = new AbstractGraphicDragger() {
@@ -127,7 +127,7 @@ public class BlaiseSlider extends GraphicComponent implements ChangeListener {
     
     public void stateChanged(ChangeEvent e) {
         assert e.getSource() == model;
-        posGr.setTooltip(model.getValue()+"");
+        posGr.setDefaultTooltip(model.getValue()+"");
         repaint();
     }
     

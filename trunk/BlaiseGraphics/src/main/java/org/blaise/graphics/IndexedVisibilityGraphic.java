@@ -17,8 +17,9 @@ public interface IndexedVisibilityGraphic<C> extends IndexedPointBean<C> {
     /**
      * Updates visibility of a single item in the graphic
      * @param i index of item, or -1 for all
-     * @param visibilityKey new visibility key
+     * @param hint new visibility key
+     * @param val new value
      */
-    public void setVisibility(int i, VisibilityHint visibilityKey);
+    public void setVisibilityHint(int i, VisibilityHint hint, boolean val);
 
 }

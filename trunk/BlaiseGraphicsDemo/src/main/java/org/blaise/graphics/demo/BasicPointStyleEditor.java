@@ -127,8 +127,11 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         strokeSp.setValue(rend.getThickness());
         fillEd.setValue(rend.getFill());
         strokeEd.setValue(rend.getStroke());
-        shapeCombo.setSelectedItem(rend.getShape());
-        shapeCombo.repaint();
+        for (int i = 0; i < shapeCombo.getItemCount(); i++) {
+            if (shapeCombo.getItemAt(i).getClass() == rend.getShape().getClass()) {
+                shapeCombo.setSelectedIndex(i);
+            }
+        }
     }
     
     
@@ -194,7 +197,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
             ShapeProvider shape1 = rend.getShape();
             rend.setShape(shape);
-            rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, VisibilityHint.Regular);
+            rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, null);
             rend.setShape(shape1);
         }
 

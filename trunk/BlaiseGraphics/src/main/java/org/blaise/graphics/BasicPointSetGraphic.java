@@ -9,29 +9,28 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import org.blaise.style.PointStyle;
-import org.blaise.style.VisibilityHint;
 import org.blaise.util.Delegator;
+import org.blaise.util.IndexedPointBean;
 import org.blaise.util.PointFormatters;
 
 /**
- * A collection of points, all rendered with the same style. Tooltips and
- * {@link VisibilityHint}s may depend on the point.
- *
+ * A collection of points that are treated as a single graphic.
+ * Customization is provided for tooltips and for dragging individual points,
+ * but to customize any other attribute of graphics for individual points,
+ * use {@link CustomPointSetGraphic} instead.
  * @see PointStyle
+ * @see CustomPointSetGraphic
  *
  * @author Elisha Peterson
  */
-public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisibilityGraphic<Point2D> {
+public class BasicPointSetGraphic extends GraphicSupport implements IndexedPointBean<Point2D> {
 
     /** The points that will be drawn. */
     protected Point2D[] points;
-
     /** The associated style (may be null). */
     protected PointStyle style;
     /** Optional delegate for tooltips */
     protected Delegator<Point2D, String> pointTipper;
-    /** Optional delegate for visibility keys */
-    protected Delegator<Point2D, VisibilityHint> visibilityDelegate;
 
     //
     // CONSTRUCTORS
@@ -60,10 +59,13 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisib
     public BasicPointSetGraphic(Point2D[] p, PointStyle style) {
         this.points = p;
         this.style = style;
+        initDragging();
+    }
+    
+    protected void initDragging() {
         IndexedPointBeanDragger dragger = new IndexedPointBeanDragger(this);
         addMouseListener(dragger);
         addMouseMotionListener(dragger);
-        addMouseListener(new IndexedGraphicHighlighter());
     }
 
     @Override
@@ -106,18 +108,6 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisib
         return -1;
     }
 
-    public void setVisibility(final int i, final VisibilityHint key) {
-        if (i == -1) {
-            visibilityDelegate = null;
-            visibility = key;
-        } else {
-            setVisibilityDelegate(new Delegator<Point2D, VisibilityHint>(){
-                public VisibilityHint of(Point2D src) { return i < points.length && src == points[i] ? key : visibility; }
-                });
-        }
-        fireGraphicChanged();
-    }
-
     /**
      * Return the style for the point
      * @return style, or null if there is none
@@ -143,14 +133,6 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisib
 
     public void setPointTipDelegate(Delegator<Point2D, String> pointTipper) {
         this.pointTipper = pointTipper;
-    }
-
-    public Delegator<Point2D, VisibilityHint> getVisibilityDelegate() {
-        return visibilityDelegate;
-    }
-
-    public void setVisibilityDelegate(Delegator<Point2D, VisibilityHint> visibilityDelegate) {
-        this.visibilityDelegate = visibilityDelegate;
     }
 
     //</editor-fold>
@@ -204,8 +186,9 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedVisib
 
     public void draw(Graphics2D canvas) {
         PointStyle drawer = drawStyle();
-        for (Point2D p : points)
-            drawer.draw(p, canvas, visibilityDelegate == null ? visibility : visibilityDelegate.of(p));
+        for (Point2D p : points) {
+            drawer.draw(p, canvas, visibility);
+        }
     }
 
 }

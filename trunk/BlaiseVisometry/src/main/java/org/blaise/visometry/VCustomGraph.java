@@ -6,8 +6,7 @@ package org.blaise.visometry;
 
 import java.util.Set;
 import org.blaise.graphics.CustomGraphGraphic;
-import org.blaise.graphics.Edge;
-import org.blaise.graphics.IndexedGraphicHighlighter;
+import org.blaise.util.Edge;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 
@@ -30,8 +29,6 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
         super.window = window = new CustomGraphGraphic<Src,EdgeType>();
         window.removeMouseListeners();
         window.removeMouseMotionListeners();
-        window.addMouseListener(new VGMouseIndexedDragger<C>(this));
-        window.addMouseListener(new IndexedGraphicHighlighter());
     }
 
     //

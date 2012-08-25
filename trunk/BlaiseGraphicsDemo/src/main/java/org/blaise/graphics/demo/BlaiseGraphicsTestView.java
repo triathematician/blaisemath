@@ -14,6 +14,7 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import org.blaise.graphics.GraphicComponent;
+import org.blaise.graphics.GraphicSelector;
 import org.blaise.visometry.plane.PlanePlotComponent;
 
 /**
@@ -85,7 +86,9 @@ public class BlaiseGraphicsTestView extends FrameView {
 
         mainPanel = new javax.swing.JPanel();
         canvas1 = new GraphicComponent();
+        new GraphicSelector(canvas1);
         canvas2 = new PlanePlotComponent();
+        new GraphicSelector(canvas2);
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -216,39 +219,39 @@ public class BlaiseGraphicsTestView extends FrameView {
         jMenuItem6.setName("jMenuItem6"); // NOI18N
         jMenu1.add(jMenuItem6);
 
-        jSeparator2.setName("jSeparator2"); // NOI18N
-        jMenu1.add(jSeparator2);
-
-        jMenuItem3.setAction(actionMap.get("addArrow")); // NOI18N
-        jMenuItem3.setName("jMenuItem3"); // NOI18N
-        jMenu1.add(jMenuItem3);
-
-        jMenuItem4.setAction(actionMap.get("addLabeledPoint")); // NOI18N
-        jMenuItem4.setName("jMenuItem4"); // NOI18N
-        jMenu1.add(jMenuItem4);
-
-        jMenuItem12.setAction(actionMap.get("addRuler")); // NOI18N
-        jMenuItem12.setName("jMenuItem12"); // NOI18N
-        jMenu1.add(jMenuItem12);
-
-        jMenuItem13.setAction(actionMap.get("add2Point")); // NOI18N
-        jMenuItem13.setName("jMenuItem13"); // NOI18N
-        jMenu1.add(jMenuItem13);
-
-        jSeparator3.setName("jSeparator3"); // NOI18N
-        jMenu1.add(jSeparator3);
-
-        jMenuItem1.setAction(actionMap.get("addRay")); // NOI18N
-        jMenuItem1.setName("jMenuItem1"); // NOI18N
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setAction(actionMap.get("addLine")); // NOI18N
-        jMenuItem2.setName("jMenuItem2"); // NOI18N
-        jMenu1.add(jMenuItem2);
-
-        jMenuItem21.setAction(actionMap.get("addLabeledPointSet")); // NOI18N
-        jMenuItem21.setName("jMenuItem21"); // NOI18N
-        jMenu1.add(jMenuItem21);
+//        jSeparator2.setName("jSeparator2"); // NOI18N
+//        jMenu1.add(jSeparator2);
+//
+//        jMenuItem3.setAction(actionMap.get("addArrow")); // NOI18N
+//        jMenuItem3.setName("jMenuItem3"); // NOI18N
+//        jMenu1.add(jMenuItem3);
+//
+//        jMenuItem4.setAction(actionMap.get("addLabeledPoint")); // NOI18N
+//        jMenuItem4.setName("jMenuItem4"); // NOI18N
+//        jMenu1.add(jMenuItem4);
+//
+//        jMenuItem12.setAction(actionMap.get("addRuler")); // NOI18N
+//        jMenuItem12.setName("jMenuItem12"); // NOI18N
+//        jMenu1.add(jMenuItem12);
+//
+//        jMenuItem13.setAction(actionMap.get("add2Point")); // NOI18N
+//        jMenuItem13.setName("jMenuItem13"); // NOI18N
+//        jMenu1.add(jMenuItem13);
+//
+//        jSeparator3.setName("jSeparator3"); // NOI18N
+//        jMenu1.add(jSeparator3);
+//
+//        jMenuItem1.setAction(actionMap.get("addRay")); // NOI18N
+//        jMenuItem1.setName("jMenuItem1"); // NOI18N
+//        jMenu1.add(jMenuItem1);
+//
+//        jMenuItem2.setAction(actionMap.get("addLine")); // NOI18N
+//        jMenuItem2.setName("jMenuItem2"); // NOI18N
+//        jMenu1.add(jMenuItem2);
+//
+//        jMenuItem21.setAction(actionMap.get("addLabeledPointSet")); // NOI18N
+//        jMenuItem21.setName("jMenuItem21"); // NOI18N
+//        jMenu1.add(jMenuItem21);
 
         menuBar.add(jMenu1);
 

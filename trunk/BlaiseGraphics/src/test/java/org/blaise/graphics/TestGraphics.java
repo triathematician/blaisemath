@@ -29,7 +29,7 @@ public class TestGraphics extends javax.swing.JFrame {
             public void stateChanged(ChangeEvent e) {
                 int val = blaiseSlider2.getModel().getValue();
                 gr.setPrimitive(new Rectangle2D.Double(10,10,val,val));
-                gr.setTooltip(val + "x" + val);
+                gr.setDefaultTooltip(val + "x" + val);
             }
         });
     }

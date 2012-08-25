@@ -4,6 +4,8 @@
  */
 package org.blaise.graphics;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,7 @@ public class GraphicSelectionModel {
     //
     // PROPERTIES
     //
+    
     public Set<Graphic> getSelection() {
         return selected;
     }
@@ -39,29 +42,71 @@ public class GraphicSelectionModel {
     public synchronized void setSelection(Set<Graphic> selection) {
         if (!selection.containsAll(selected) || !selected.containsAll(selection)) {
             synchronized (selected) {
+                HashSet<Graphic> old = new HashSet<Graphic>(selected);
                 selected.clear();
                 selected.addAll(selection);
-                fireSelectionChanged();
+                pcs.firePropertyChange("selection", old, selected);
             }
         }
     }
-    //</editor-fold>
-    
-    
-    private final EventListenerList listeners = new EventListenerList();
 
-    private void fireSelectionChanged() {
-        ChangeEvent e = new ChangeEvent(this);
-        for (ChangeListener cl : listeners.getListeners(ChangeListener.class)) {
-            cl.stateChanged(e);
+    public synchronized void addSelection(Graphic g) {
+        if (g != null && !selected.contains(g)) {
+            HashSet<Graphic> old = new HashSet<Graphic>(selected);
+            selected.add(g);
+            pcs.firePropertyChange("selection", old, selected);
         }
     }
 
-    public synchronized void addChangeListener(ChangeListener l) {
-        listeners.add(ChangeListener.class, l);
+    public synchronized void removeSelection(Graphic g) {
+        HashSet<Graphic> old = new HashSet<Graphic>(selected);
+        if (g != null && selected.remove(g)) {
+            pcs.firePropertyChange("selection", old, selected);
+        }
     }
 
-    public synchronized void removeChangeListener(ChangeListener l) {
-        listeners.remove(ChangeListener.class, l);
+    /**
+     * Toggle selection status of g
+     * @param g graphic
+     */
+    public synchronized void toggleSelection(Graphic g) {
+        if (g != null) {
+            HashSet<Graphic> old = new HashSet<Graphic>(selected);
+            if (selected.contains(g)) {
+                selected.remove(g);
+            } else {
+                selected.add(g);
+            }
+            pcs.firePropertyChange("selection", old, selected);
+        }
     }
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
+    //
+    // EVENT HANDLING
+    //
+    
+    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
+
+    //</editor-fold>
+
 }

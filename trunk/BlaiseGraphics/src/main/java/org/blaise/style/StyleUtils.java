@@ -9,6 +9,7 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
+import java.util.Set;
 
 /**
  * Provides standard style keys, and useful utilities for style classes.
@@ -48,6 +49,19 @@ public class StyleUtils {
         Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
         Color c2 = Color.getHSBColor(hsb[0], .5f*hsb[1], hsb[2]);
         return new Color(c2.getRed(), c2.getGreen(), c2.getBlue(), c.getAlpha());
+    }
+
+    /**
+     * Changes specified color based on visibility hints
+     * @param color color to change
+     * @param hints hints to apply
+     * @return modified color
+     */
+    public static Color applyHints(Color color, Set<VisibilityHint> hints) {
+        return hints == null ? color
+                : hints.contains(VisibilityHint.Highlight) ? lighterThan(color)
+                : hints.contains(VisibilityHint.Obscure) ? blanderThan(color)
+                : color;
     }
 
     private static int lighten(int i) {
