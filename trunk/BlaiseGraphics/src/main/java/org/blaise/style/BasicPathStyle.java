@@ -33,7 +33,7 @@ public class BasicPathStyle implements PathStyle {
         this.thickness = thickness;
     }
 
-    public Color getColor() {
+    public Color getStroke() {
         return color;
     }
 
@@ -46,7 +46,7 @@ public class BasicPathStyle implements PathStyle {
         return this;
     }
 
-    public float getWidth() {
+    public float getThickness() {
         return thickness;
     }
 
@@ -60,12 +60,12 @@ public class BasicPathStyle implements PathStyle {
     }
 
     public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
-        if(getWidth() <= 0f || getColor() == null)
+        if(getThickness() <= 0f || getStroke() == null)
             return;
 
-        canvas.setStroke(new BasicStroke(getWidth()));
+        canvas.setStroke(new BasicStroke(getThickness()));
 
-        canvas.setColor(StyleUtils.applyHints(getColor(), visibility));
+        canvas.setColor(StyleUtils.applyHints(getStroke(), visibility));
         canvas.draw(s);
 
         canvas.setStroke(StyleUtils.DEFAULT_STROKE);

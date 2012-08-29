@@ -180,10 +180,11 @@ public class SpringLayout implements IterativeGraphLayout {
     }
 
     public synchronized void requestPositions(Map<Object, Point2D.Double> positions, boolean resetNodes) {
-        if (tempLoc == null)
+        if (tempLoc == null) {
             tempLoc = positions;
-        else
+        } else {
             tempLoc.putAll(positions);
+        }
         this.resetNodes = resetNodes;
     }
     // </editor-fold>
@@ -197,10 +198,11 @@ public class SpringLayout implements IterativeGraphLayout {
                 Object n = en.getKey();
                 if (nodes.contains(n)) {
                     loc.put(n, en.getValue());
-                    if (vel.containsKey(n))
+                    if (vel.containsKey(n)) {
                         vel.get(n).setLocation(0, 0);
-                    else
+                    } else {
                         vel.put(en, new Point2D.Double());
+                    }
                 }
             }
             if (resetNodes) {
@@ -225,8 +227,9 @@ public class SpringLayout implements IterativeGraphLayout {
         long t0 = System.currentTimeMillis();
         Set nodes = g.nodes();
 
-        if (g.isDirected())
+        if (g.isDirected()) {
             g = GraphUtils.copyUndirected(g);
+        }
 
         // check for temporary location updates
         checkForNodeUpdate(nodes);
@@ -260,8 +263,9 @@ public class SpringLayout implements IterativeGraphLayout {
 
             boolean test = !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
             assert test;
-            if (!test)
+            if (!test) {
                 System.err.println("Computed infinite force: " + netForce + " for " + io);
+            }
         }
             
             // adjusts velocity with damping;
@@ -270,8 +274,9 @@ public class SpringLayout implements IterativeGraphLayout {
         }
 
         // move nodes
-        for (Object o : nodes)
+        for (Object o : nodes) {
             adjustPosition(loc.get(o), vel.get(o));
+        }
         
         iteration ++;
 //        if (iteration % 100 == 0)
@@ -372,7 +377,7 @@ public class SpringLayout implements IterativeGraphLayout {
         Point2D.Double jLoc;
         double dist;
         for (Object o : g.neighbors(io)) {
-            if (!(o.equals(io))) {
+            if (o != io) {
                 jLoc = loc.get(o);
                 if (jLoc == null) {
                     jLoc = new Point2D.Double();

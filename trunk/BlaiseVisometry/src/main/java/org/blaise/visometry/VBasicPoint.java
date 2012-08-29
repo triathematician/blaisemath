@@ -5,9 +5,10 @@
 package org.blaise.visometry;
 
 import java.awt.geom.Point2D;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.blaise.graphics.BasicPointGraphic;
 import org.blaise.style.PointStyle;
-import org.blaise.util.DraggablePointBean;
 import org.blaise.util.PointFormatters;
 
 /**
@@ -16,7 +17,7 @@ import org.blaise.util.PointFormatters;
  * @param <C> local coordinate type
  * @author Elisha
  */
-public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePointBean<C> {
+public class VBasicPoint<C> extends VGraphicSupport<C> implements ChangeListener {
 
     /** The point */
     protected C point;
@@ -26,15 +27,26 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
     /** Construct without a drag handler */
     public VBasicPoint(final C initialPoint) {
         this.point = initialPoint;
-        window.addMouseListener(new VGMouseDragger<C>(this));
+        window.addChangeListener(this);
     }
-
+    
     //
     // PROPERTIES
     //
-
-    public BasicPointGraphic getWindowEntry() {
+    
+    public synchronized BasicPointGraphic getWindowEntry() {
         return window;
+    }
+
+    public synchronized C getPoint() {
+        return point;
+    }
+
+    public synchronized void setPoint(C point) {
+        if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
+            this.point = point;
+            setUnconverted(true);
+        }
     }
 
     public PointStyle getStyle() {
@@ -44,60 +56,28 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements DraggablePoint
     public void setStyle(PointStyle rend) {
         window.setStyle(rend);
     }
-
+    
     //
-    // DraggablePointBean PROPERTIES
+    // CONVERSION
     //
+    
+    protected transient Point2D winPt = null;
 
-    public C getPoint() {
-        return point;
-    }
-
-    public void setPoint(C point) {
-        if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
-            this.point = point;
+    public synchronized void stateChanged(ChangeEvent e) {
+        if (e.getSource() == window) {
+            winPt = window.getPoint();
             setUnconverted(true);
         }
     }
 
-    public void setPoint(C initial, C dragStart, C dragFinish) {
-        setPoint(relativePoint(initial, dragStart, dragFinish));
-    }
-
-    public static <C> C relativePoint(C initial, C dragStart, C dragFinish) {
-        C newPoint;
-        if (initial instanceof Point2D) {
-            Point2D i = (Point2D) initial, s = (Point2D) dragStart, f = (Point2D) dragFinish;
-            newPoint = (C) new Point2D.Double(i.getX()+f.getX()-s.getX(), i.getY()+f.getY()-s.getY());
-        } else if (initial instanceof Number) {
-            Number i = (Number) initial, s = (Number) dragStart, f = (Number) dragFinish;
-            Double nue = i.doubleValue() + f.doubleValue() - s.doubleValue();
-            if (i instanceof Double)
-                newPoint = (C) nue;
-            else if (i instanceof Float)
-                newPoint = (C) new Float(nue.floatValue());
-            else if (i instanceof Integer)
-                newPoint = (C) new Integer(nue.intValue());
-            else if (i instanceof Long)
-                newPoint = (C) new Long(nue.longValue());
-            else if (i instanceof Short)
-                newPoint = (C) new Short(nue.shortValue());
-            else {
-                System.err.println("VPointGraphic: Unsupported type for drag: initial point = " + i);
-                newPoint = null;
-            }
-        } else
-            newPoint = dragFinish;
-        return newPoint;
-    }
-
-    //
-    // CONVERSION
-    //
-
-    public void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
-        Point2D p = processor.convert(point, vis);
-        window.setPoint(p);
+    public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
+        if (winPt != null) {
+            C loc = vis.toLocal(winPt);
+            this.point = loc;
+        } else {
+            window.setPoint(processor.convert(point, vis));
+        }
+        winPt = null;
         window.setDefaultTooltip(
                 point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
                 : point + "");

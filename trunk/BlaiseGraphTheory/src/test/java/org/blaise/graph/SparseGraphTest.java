@@ -8,6 +8,7 @@ package org.blaise.graph;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.blaise.graph.modules.EdgeProbabilityBuilder;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -122,6 +123,13 @@ public class SparseGraphTest {
         for (int i = 0; i < VV.length; i++) {
             assertCollectionContentsSame(Arrays.asList(nbrs1[i]), UNDIR.neighbors(VV[i]));
             assertCollectionContentsSame(Arrays.asList(nbrs1[i]), DIR.neighbors(VV[i]));
+        }
+        
+        Graph<Integer> graph = new EdgeProbabilityBuilder(false, 200, .1f).createGraph();
+        for (Integer v : graph.nodes()) {
+            if (graph.neighbors(v).contains(null)) {
+                fail("Neighbors of " + v + " contains null value");
+            }
         }
     }
 

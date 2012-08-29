@@ -60,8 +60,8 @@ public class WeightedEdgeStyler implements Delegator<Edge, PathStyle> {
             maxWeight = Math.max(maxWeight, Math.abs(n));
             boolean positive = n >= 0;
             double relativeWeight = Math.abs(n) / maxWeight;
-            Color c = positive ? positiveColor(parent.getColor(), relativeWeight)
-                    : negativeColor(parent.getColor(), relativeWeight);
+            Color c = positive ? positiveColor(parent.getStroke(), relativeWeight)
+                    : negativeColor(parent.getStroke(), relativeWeight);
             return new DecoratorPathStyle(parent, (float) (2 * relativeWeight), c);
         } else if (wt instanceof Color) {
             return new DecoratorPathStyle(parent, (Color) wt);

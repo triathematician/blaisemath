@@ -16,6 +16,8 @@ import java.awt.event.MouseEvent;
  */
 public class GraphicMouseEvent extends MouseEvent {
     
+    /** Source event */
+    protected final MouseEvent source;
     /** The graphic associated with the event. */
     protected final Graphic graphic;
 
@@ -26,8 +28,10 @@ public class GraphicMouseEvent extends MouseEvent {
      */
     public GraphicMouseEvent(MouseEvent evt, Graphic gfc) {
         super((Component) evt.getSource(), evt.getID(), evt.getWhen(), evt.getModifiers(), evt.getX(), evt.getY(), evt.getClickCount(), evt.isPopupTrigger(), evt.getButton());
-        if (evt.isConsumed())
+        this.source = evt;
+        if (evt.isConsumed()) {
             consume();
+        }
         this.graphic = gfc;
     }
 
@@ -35,7 +39,20 @@ public class GraphicMouseEvent extends MouseEvent {
      * Return the graphic source of the event.
      * @return graphic associated with the event
      */
-    public Graphic getEntry() { return graphic; }
+    public Graphic getEntry() { 
+        return graphic; 
+    }
+
+    @Override
+    public boolean isConsumed() {
+        return super.isConsumed() || source.isConsumed();
+    }
+
+    @Override
+    public void consume() {
+        super.consume();
+        source.consume();
+    }
 
 
     /**

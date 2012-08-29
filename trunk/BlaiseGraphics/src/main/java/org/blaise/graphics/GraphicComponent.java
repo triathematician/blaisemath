@@ -202,8 +202,9 @@ public class GraphicComponent extends javax.swing.JComponent {
      * @param canvas the canvas to render to
      */
     protected void renderUnderlay(Graphics2D canvas) {
-        for (CanvasPainter p : underlays)
+        for (CanvasPainter p : underlays) {
             p.paint(this, canvas);
+        }
     }
     
     /** 
@@ -211,8 +212,9 @@ public class GraphicComponent extends javax.swing.JComponent {
      * @param canvas the canvas to render to
      */
     protected void renderOverlay(Graphics2D canvas) {
-        for (CanvasPainter p : overlays)
+        for (CanvasPainter p : overlays) {
             p.paint(this, canvas);
+        }
     }
 
     /**

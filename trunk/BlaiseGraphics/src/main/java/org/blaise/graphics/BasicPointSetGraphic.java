@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Delegator;
 import org.blaise.util.IndexedPointBean;
@@ -59,10 +61,6 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     public BasicPointSetGraphic(Point2D[] p, PointStyle style) {
         this.points = p;
         this.style = style;
-        initDragging();
-    }
-    
-    protected void initDragging() {
         IndexedPointBeanDragger dragger = new IndexedPointBeanDragger(this);
         addMouseListener(dragger);
         addMouseMotionListener(dragger);
@@ -82,16 +80,22 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     public Point2D[] getPoint() { return points; }
     public void setPoint(Point2D[] p) {
         if (points != p) {
+            Object old = points;
             points = p;
             fireGraphicChanged();
+            pcs.firePropertyChange("point", old, points);
         }
     }
     public Point2D getPoint(int i) {
         return points[i];
     }
     public void setPoint(int i, Point2D pt) {
-        points[i] = pt;
-        fireGraphicChanged();
+        if (points[i] != pt) {
+            Point2D old = points[i];
+            points[i] = pt;
+            fireGraphicChanged();
+            pcs.fireIndexedPropertyChange("point", i, old, points[i]);
+        }
     }
 
     public int getPointCount() {
@@ -101,9 +105,11 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     public int indexOf(Point2D nearby, Point2D start2) {
         PointStyle rend = drawStyle();
         synchronized(points) {
-            for (int i = points.length-1; i >= 0; i--)
-                if (rend.shape(points[i]).contains(nearby))
+            for (int i = points.length-1; i >= 0; i--) {
+                if (rend.shape(points[i]).contains(nearby)) {
                     return i;
+                }
+            }
         }
         return -1;
     }
@@ -148,9 +154,11 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     public boolean intersects(Rectangle box) {
         PointStyle drawer = drawStyle();
-        for (Point2D p : points)
-            if (drawer.shape(p).intersects(box))
+        for (Point2D p : points) {
+            if (drawer.shape(p).intersects(box)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -191,4 +199,23 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         }
     }
 
+    // PROPERTY CHANGE LISTENING
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
 }

@@ -20,6 +20,21 @@
       <artifactId>swing-layout</artifactId>
       <version>1.0.3</version>
       <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jdesktop</groupId>
+      <artifactId>appframework</artifactId>
+      <version>1.0.3</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.blaise</groupId>
+      <artifactId>Firestarter</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+      <type>jar</type>
     </dependency>
   </dependencies>
 </project>

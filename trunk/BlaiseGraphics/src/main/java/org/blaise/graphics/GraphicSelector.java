@@ -4,6 +4,7 @@
  */
 package org.blaise.graphics;
 
+import org.blaise.util.SetSelectionModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -32,7 +33,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     /** Determines which objects can be selected */
     private final GraphicComposite domain;
     /** Model of selected items */
-    private final GraphicSelectionModel selection = new GraphicSelectionModel();
+    private final SetSelectionModel<Graphic> selection = new SetSelectionModel<Graphic>();
     /** Style for drawing */
     private BasicShapeStyle style = new BasicShapeStyle(new Color(128,128,255,32), new Color(0,0,128,64));
 
@@ -73,7 +74,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
         this.style = style;
     }
 
-    public GraphicSelectionModel getSelectionModel() {
+    public SetSelectionModel getSelectionModel() {
         return selection;
     }
     
@@ -87,18 +88,21 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
                 // XXX - add bounding box to selection to show the user
             }
         }
-        if (box.width > 0 && box.height > 0) {
+        if (box != null && box.width > 0 && box.height > 0) {
             style.draw(box, canvas, Collections.EMPTY_SET);
         }
     }
 
     private transient Point pressPt;
     private transient Point dragPt;
-    private final transient Rectangle box = new Rectangle(0,0,0,0);
+    private transient Rectangle box = null;
     private transient Point releasePt;
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (e.isConsumed()) {
+            return;
+        }
         int mod = e.getModifiersEx();
         if ((mod & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
             Graphic g = domain.selectableGraphicAt(e.getPoint());
@@ -119,20 +123,34 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.isConsumed()) {
+            return;
+        }
         pressPt = e.getPoint();
+        if (box == null) {
+            box = new Rectangle();
+        }
         box.setFrameFromDiagonal(pressPt, pressPt);
+        e.consume();
     }
     
     public void mouseDragged(MouseEvent e) {
+        if (e.isConsumed()) {
+            return;
+        }
         dragPt = e.getPoint();
         box.setFrameFromDiagonal(pressPt, dragPt);
         if (e.getSource() instanceof Component) {
             ((Component)e.getSource()).repaint();
         }
+        e.consume();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.isConsumed() || box == null || pressPt == null) {
+            return;
+        }
         releasePt = e.getPoint();
         box.setFrameFromDiagonal(pressPt, releasePt);
         if (box.getWidth() > 0 && box.getHeight() > 0) {
@@ -142,6 +160,10 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
                 ((Component)e.getSource()).repaint();
             }
         }
+        pressPt = null;
+        dragPt = null;
+        releasePt = null;
+        e.consume();
     }
 
     public void mouseMoved(MouseEvent e) {}

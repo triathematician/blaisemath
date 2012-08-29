@@ -47,7 +47,7 @@ public interface PointStyle {
      * @return the shape corresponding to the specified point
      */
     public Shape shape(Point2D p, double angle);
-
+    
     /**
      * Returns the (approximate) window radius of the associated point
      * @return radius in window pixels
