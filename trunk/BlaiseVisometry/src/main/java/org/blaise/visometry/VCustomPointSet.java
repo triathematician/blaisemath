@@ -16,8 +16,8 @@ import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
 
 /**
- * A set of draggable points defined in local coordinates. Properties of the objects
- * (including style, tooltips, locations, etc.) are managed by delegates.
+ * A set of draggable points defined in local coordinates. The local coordinates are updated
+ * when the user drags the points in the window.
  *
  * @param <C> the local coordinate
  * @param <Src> the type of object being displayed
@@ -27,16 +27,43 @@ import org.blaise.style.PointStyle;
 public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements PropertyChangeListener {
 
     /** Local coordinates of the points */
-    protected Map<Src, C> localCoords = new HashMap<Src, C>();
+    protected final Map<Src, C> localCoords = new HashMap<Src, C>();
     /** The window entry */
     protected DelegatingPointSetGraphic<Src> window = new DelegatingPointSetGraphic<Src>();
 
     /**
      * Initialize set
+     * @param loc initial locations of points
      */
-    public VCustomPointSet(C[] initialPoint) {
+    public VCustomPointSet(Map<Src, ? extends C> loc) {
+        addObjects(loc);
         window.getPointManager().addPropertyChangeListener(this);
     }
+
+    public synchronized void propertyChange(PropertyChangeEvent evt) {
+        // user has dragged points around
+        if (evt.getSource() == window.getPointManager()) {
+            Visometry<C> vis = parent.getVisometry();
+            if ("add".equals(evt.getPropertyName())) {
+                Map<Src,Point2D> added = (Map<Src,Point2D>) evt.getNewValue();
+                for (Src s : added.keySet()) {
+                    localCoords.put(s, vis.toLocal(added.get(s)));
+                }
+            } else if ("cache".equals(evt.getPropertyName())) {
+                Map<Src,Point2D> removed = (Map<Src,Point2D>) evt.getNewValue();
+                for (Src s : removed.keySet()) {
+                    localCoords.remove(s);
+                }
+            } else if ("remove".equals(evt.getPropertyName())) {
+                Set<Src> removed = (Set<Src>) evt.getNewValue();
+                for (Src s : removed) {
+                    localCoords.remove(s);
+                }
+            }
+        }
+    }
+
+
 
     //
     // PROPERTIES
@@ -46,8 +73,13 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
         return window;
     }
 
-    public Set<? extends Src> getObjects() {
+    public synchronized Set<? extends Src> getObjects() {
         return window.getObjects();
+    }
+
+    public synchronized void addObjects(Map<Src, ? extends C> loc) {
+        localCoords.putAll(loc);
+        setUnconverted(true);
     }
 
     public ObjectStyler<Src, PointStyle> getStyler() {
@@ -63,18 +95,11 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
     //
 
     public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
-        window.
-        if (draggedPoint) {
-            Point2D[] arr = window.getPointManager().getLocationArray();
-            for (int i = 0; i < point.length; i++) {
-                point[i] = vis.toLocal(arr[i]);
-            } 
-        } else {
-            Point2D[] p = processor.convertToArray(point, vis);
-            window.getPointManager().setLocationArray(p);
+        Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
+        for (Src s : localCoords.keySet()) {
+            winmap.put(s, processor.convert(localCoords.get(s), vis));
         }
-        draggedPoint = false;
-        setUnconverted(false);
+        window.getPointManager().update(winmap);
     }
 
 }

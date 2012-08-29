@@ -24,16 +24,19 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements ChangeListener
     /** The window entry */
     protected final BasicPointGraphic window = new BasicPointGraphic();
 
-    /** Construct without a drag handler */
+    /**
+     * Initialize point
+     * @param initialPoint point's local coords
+     */
     public VBasicPoint(final C initialPoint) {
         this.point = initialPoint;
         window.addChangeListener(this);
     }
-    
+
     //
     // PROPERTIES
     //
-    
+
     public synchronized BasicPointGraphic getWindowEntry() {
         return window;
     }
@@ -56,28 +59,22 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements ChangeListener
     public void setStyle(PointStyle rend) {
         window.setStyle(rend);
     }
-    
+
     //
     // CONVERSION
     //
-    
-    protected transient Point2D winPt = null;
 
     public synchronized void stateChanged(ChangeEvent e) {
         if (e.getSource() == window) {
-            winPt = window.getPoint();
-            setUnconverted(true);
+            this.point = (C) parent.getVisometry().toLocal(window.getPoint());
+            window.setDefaultTooltip(
+                    point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
+                    : point + "");
         }
     }
 
     public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
-        if (winPt != null) {
-            C loc = vis.toLocal(winPt);
-            this.point = loc;
-        } else {
-            window.setPoint(processor.convert(point, vis));
-        }
-        winPt = null;
+        window.setPoint(processor.convert(point, vis));
         window.setDefaultTooltip(
                 point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
                 : point + "");
