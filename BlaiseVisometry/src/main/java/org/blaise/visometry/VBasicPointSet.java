@@ -5,10 +5,12 @@
 package org.blaise.visometry;
 
 import java.awt.geom.Point2D;
+import java.beans.IndexedPropertyChangeEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.blaise.graphics.BasicPointSetGraphic;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Delegator;
-import org.blaise.util.DraggableIndexedPointBean;
 import org.blaise.util.PointFormatters;
 
 /**
@@ -17,7 +19,7 @@ import org.blaise.util.PointFormatters;
  * @param <C> local coordinate type
  * @author Elisha
  */
-public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIndexedPointBean<C> {
+public class VBasicPointSet<C> extends VGraphicSupport<C> implements PropertyChangeListener {
 
     /** The points */
     protected C[] point;
@@ -27,9 +29,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
     /** Construct without a drag handler */
     public VBasicPointSet(C[] initialPoint) {
         this.point = initialPoint;
-        window.removeMouseListeners();
-        window.removeMouseMotionListeners();
-        window.addMouseListener(new VGMouseIndexedDragger<C>(this));
+        window.addPropertyChangeListener(this);
     }
 
     //
@@ -72,27 +72,36 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements DraggableIn
         setUnconverted(true);
     }
 
-    public synchronized int getPointCount() {
-        return point.length;
-    }
-
-    public synchronized int indexOf(Point2D pt, C dragStart) {
-        return window.indexOf(pt, pt);
-    }
-
-    public synchronized void setPoint(int index, C initial, C dragStart, C dragFinish) {
-        setPoint(index, VBasicPoint.relativePoint(initial, dragStart, dragFinish));
-    }
-
     //
     // CONVERSION
     //
+    
+    protected transient Point2D winPt = null;
+    protected transient int idx = -1;
+
+    public synchronized void propertyChange(PropertyChangeEvent evt) {
+        if (evt instanceof IndexedPropertyChangeEvent) {
+            IndexedPropertyChangeEvent ipce = (IndexedPropertyChangeEvent) evt;
+            winPt = (Point2D) ipce.getNewValue();
+            idx = ipce.getIndex();
+            setUnconverted(true);
+        }
+    }
 
     VisTipDelegate<C> tipper = new VisTipDelegate<C>();
 
-    public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
-        Point2D[] p = processor.convertToArray(point, vis);
-        window.setPoint(p);
+    public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
+        if (winPt != null) {
+            C loc = vis.toLocal(winPt);
+            if (idx >= 0 && idx < point.length) {
+                point[idx] = loc;
+            }
+        } else {
+            Point2D[] p = processor.convertToArray(point, vis);
+            window.setPoint(p);
+        }
+        winPt = null;
+        idx = -1;
         tipper.vis = vis;
         window.setPointTipDelegate(tipper);
         setUnconverted(false);

@@ -36,13 +36,13 @@ public class DecoratorPathStyle extends BasicPathStyle {
     }
 
     @Override
-    public Color getColor() {
-        return color == null ? base.getColor() : color;
+    public Color getStroke() {
+        return color == null ? base.getStroke() : color;
     }
 
     @Override
-    public float getWidth() {
-        return thickness * base.getWidth();
+    public float getThickness() {
+        return thickness * base.getThickness();
     }   
     
 }

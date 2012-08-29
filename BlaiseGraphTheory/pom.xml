@@ -43,5 +43,12 @@
       <artifactId>commons-collections</artifactId>
       <version>3.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.blaise</groupId>
+      <artifactId>Firestarter</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 </project>

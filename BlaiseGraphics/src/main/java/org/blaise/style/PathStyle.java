@@ -20,12 +20,12 @@ public interface PathStyle extends ShapeStyle {
      * Return path color
      * @return color
      */
-    public Color getColor();
+    public Color getStroke();
     
     /**
      * Return path thickness
      * @return thickness of path
      */
-    public float getWidth();
+    public float getThickness();
     
 }

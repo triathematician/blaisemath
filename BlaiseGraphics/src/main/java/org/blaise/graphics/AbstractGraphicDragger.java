@@ -47,6 +47,7 @@ public abstract class AbstractGraphicDragger extends MouseAdapter implements Mou
     public final void mousePressed(MouseEvent e) {
         start = e.getPoint();
         mouseDragInitiated((GraphicMouseEvent) e, start);
+        e.consume();
     }
 
     public final void mouseDragged(MouseEvent e) {

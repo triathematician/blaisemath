@@ -5,8 +5,13 @@
 package org.blaise.visometry;
 
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-import org.blaise.graphics.CustomPointSetGraphic;
+import org.blaise.graphics.DelegatingPointSetGraphic;
+import org.blaise.graphics.Graphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
 
@@ -19,58 +24,25 @@ import org.blaise.style.PointStyle;
  *
  * @author elisha
  */
-public class VCustomPointSet<C, Src> extends VGraphicSupport<C> {
+public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements PropertyChangeListener {
 
-    /** The points */
-    protected C[] point;
+    /** Local coordinates of the points */
+    protected Map<Src, C> localCoords = new HashMap<Src, C>();
     /** The window entry */
-    protected CustomPointSetGraphic<Src> window = new CustomPointSetGraphic<Src>();
+    protected DelegatingPointSetGraphic<Src> window = new DelegatingPointSetGraphic<Src>();
 
     /**
-     * Construct point set with specified objects.
-     * @param pointer object used for point locations
+     * Initialize set
      */
     public VCustomPointSet(C[] initialPoint) {
-        this.point = initialPoint;
-    }
-
-    //
-    // DraggablePointBean PROPERTIES
-    //
-
-    public synchronized C getPoint(int i) {
-        return point[i];
-    }
-
-    public synchronized void setPoint(int i, C point) {
-        if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
-            this.point[i] = point;
-            setUnconverted(true);
-        }
-    }
-
-    public synchronized C[] getPoint() {
-        return point;
-    }
-
-    public synchronized void setPoint(C[] point) {
-        this.point = point;
-        setUnconverted(true);
-    }
-
-    public int getPointCount() {
-        return point.length;
-    }
-
-    public void setPoint(int index, C initial, C dragStart, C dragFinish) {
-        setPoint(index, VBasicPoint.relativePoint(initial, dragStart, dragFinish));
+        window.getPointManager().addPropertyChangeListener(this);
     }
 
     //
     // PROPERTIES
     //
 
-    public CustomPointSetGraphic<Src> getWindowEntry() {
+    public Graphic getWindowEntry() {
         return window;
     }
 
@@ -78,17 +50,12 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> {
         return window.getObjects();
     }
 
-    public synchronized void setObjects(Set<? extends Src> objects) {
-        window.setObjects(objects);
-        setUnconverted(true);
+    public ObjectStyler<Src, PointStyle> getStyler() {
+        return window.getStyler();
     }
 
     public synchronized void setStyler(ObjectStyler<Src, PointStyle> styler) {
         window.setStyler(styler);
-    }
-
-    public ObjectStyler<Src, PointStyle> getStyler() {
-        return window.getStyler();
     }
 
     //
@@ -96,8 +63,17 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> {
     //
 
     public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
-        Point2D[] p = processor.convertToArray(point, vis);
-        window.getPointManager().setLocationArray(p);
+        window.
+        if (draggedPoint) {
+            Point2D[] arr = window.getPointManager().getLocationArray();
+            for (int i = 0; i < point.length; i++) {
+                point[i] = vis.toLocal(arr[i]);
+            } 
+        } else {
+            Point2D[] p = processor.convertToArray(point, vis);
+            window.getPointManager().setLocationArray(p);
+        }
+        draggedPoint = false;
         setUnconverted(false);
     }
 

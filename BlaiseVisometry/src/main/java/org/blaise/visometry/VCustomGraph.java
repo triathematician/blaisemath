@@ -5,7 +5,8 @@
 package org.blaise.visometry;
 
 import java.util.Set;
-import org.blaise.graphics.CustomGraphGraphic;
+import org.blaise.graphics.DelegatingNodeLinkGraphic;
+import org.blaise.graphics.Graphic;
 import org.blaise.util.Edge;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
@@ -21,14 +22,13 @@ import org.blaise.style.PathStyle;
  */
 public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPointSet<C, Src> {
 
-    CustomGraphGraphic<Src,EdgeType> window;
+    DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
 
     /** Construct point set with specified objects. */
     public VCustomGraph(C[] initialPoint) {
         super(initialPoint);
-        super.window = window = new CustomGraphGraphic<Src,EdgeType>();
-        window.removeMouseListeners();
-        window.removeMouseMotionListeners();
+        gwindow = new DelegatingNodeLinkGraphic<Src,EdgeType>();
+        window = gwindow.getPointGraphic();
     }
 
     //
@@ -36,24 +36,24 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
     //
 
     @Override
-    public CustomGraphGraphic<Src,EdgeType> getWindowEntry() {
-        return window;
+    public Graphic getWindowEntry() {
+        return gwindow;
     }
 
     public Set<EdgeType> getEdges() {
-        return window.getEdges();
+        return gwindow.getEdges();
     }
 
     public void setEdges(Set<EdgeType> edges) {
-        window.setEdges(edges);
+        gwindow.setEdges(edges);
     }
 
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
-        window.setEdgeStyler(styler);
+        gwindow.setEdgeStyler(styler);
     }
 
     public ObjectStyler<EdgeType, PathStyle> getEdgeStyler() {
-        return window.getEdgeStyler();
+        return gwindow.getEdgeStyler();
     }
 
 }

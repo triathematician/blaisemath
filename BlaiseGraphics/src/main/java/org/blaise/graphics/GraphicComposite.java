@@ -41,6 +41,7 @@ public class GraphicComposite extends GraphicSupport {
     
     /** Constructs with default settings */
     public GraphicComposite() {
+        setTooltipEnabled(true);
     }
 
     @Override

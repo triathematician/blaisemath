@@ -5,11 +5,8 @@
 package org.blaise.graphics;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import org.blaise.style.PointStyle;
-import org.blaise.util.PointBean;
 
 /**
  * A point with position, orientation, and an associated style.
@@ -19,10 +16,8 @@ import org.blaise.util.PointBean;
  * 
  * @author Elisha Peterson
  */
-public class BasicPointGraphic extends GraphicSupport implements PointBean<Point2D> {
+public class BasicPointGraphic extends AbstractPointGraphic {
 
-    /** The object that will be drawn. */
-    Point2D point;
     /** Angle specifying point orientation */
     private double angle = 0;
     /** The associated style (may be null). */
@@ -53,29 +48,8 @@ public class BasicPointGraphic extends GraphicSupport implements PointBean<Point
      * @param style the style
      */
     public BasicPointGraphic(Point2D p, PointStyle style) {
-        this.point = p;
-        this.style = style;
-        PointBeanDragger dragger = new PointBeanDragger(this);
-        addMouseListener(dragger);
-        addMouseMotionListener(dragger);
-    }
-
-    @Override
-    public String toString() {
-        return "Point";
-    }
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    public Point2D getPoint() { return point; }
-    public void setPoint(Point2D p) {
-        if (point != p) {
-            point = new Point2D.Double(p.getX(), p.getY());
-            fireGraphicChanged();
-        }
+        super(p);
+        setStyle(style);
     }
 
     /**
@@ -112,29 +86,9 @@ public class BasicPointGraphic extends GraphicSupport implements PointBean<Point
             fireGraphicChanged();
         }
     }
-    
-    //</editor-fold>
-    
-
-    //
-    // GRAPHIC METHODS
-    //
-
-    public boolean contains(Point p) {
-        return drawStyle().shape(point).contains(p);
-    }
-
-    public boolean intersects(Rectangle box) {
-        return drawStyle().shape(point).intersects(box);
-    }
-    
-
-    //
-    // DRAW METHODS
-    //
-    
+        
     /** Return the actual style used for drawing */
-    private PointStyle drawStyle() {
+    public PointStyle drawStyle() {
         return style == null ? parent.getStyleProvider().getPointStyle(this) : style;
     }
 

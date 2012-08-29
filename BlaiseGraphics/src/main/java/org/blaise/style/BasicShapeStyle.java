@@ -5,17 +5,18 @@
 
 package org.blaise.style;
 
-import java.awt.Shape;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.Set;
 
 /**
- * Draws a point on the screen.
+ * Draws a shape.
+ * 
  * @author Elisha
  */
-public class BasicShapeStyle implements ShapeStyle {
+public class BasicShapeStyle implements PathStyle {
 
     Color fill;
     Color stroke;

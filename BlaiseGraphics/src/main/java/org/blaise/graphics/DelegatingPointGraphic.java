@@ -5,33 +5,31 @@
 package org.blaise.graphics;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
 import org.blaise.style.StringStyle;
+import org.blaise.util.Delegator;
 
 /**
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
  * 
  * @author Elisha
  */
-public class DelegatingPointGraphic<Src> extends GraphicSupport {
+public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
 
     /** Source object */
     protected Src src;
-    /** Location */
-    protected Point2D pt;
     /** Manages delegators */
     protected ObjectStyler<Src, PointStyle> styler = new ObjectStyler<Src, PointStyle>();
 
     public DelegatingPointGraphic() {
+        this(null, new Point2D.Double());
     }
 
     public DelegatingPointGraphic(Src src, Point2D pt) {
-        this.src = src;
-        this.pt = pt;
+        super(pt);
+        setSourceObject(src);
     }
     
     public Src getSourceObject() {
@@ -40,32 +38,40 @@ public class DelegatingPointGraphic<Src> extends GraphicSupport {
     
     public void setSourceObject(Src src) {
         this.src = src;
+        setDefaultTooltip(styler.getTipDelegate().of(src));
         fireGraphicChanged();
     }
-    
-    public Point2D getPoint() {
-        return pt;
+
+    public ObjectStyler<Src, PointStyle> getStyler() {
+        return styler;
     }
-    
-    public void setPoint(Point2D pt) {
-        this.pt = pt;
+
+    public void setStyler(ObjectStyler<Src, PointStyle> styler) {
+        this.styler = styler;
+        setDefaultTooltip(styler.getTipDelegate().of(src));
         fireGraphicChanged();
+    }
+
+    @Override
+    public PointStyle drawStyle() {
+        PointStyle style = styler.getStyleDelegate().of(src);
+        return style == null ? parent.getStyleProvider().getPointStyle(this) : style;
     }
     
     public void draw(Graphics2D canvas) {
-        styler.getStyleDelegate().of(src).draw(pt, canvas, visibility);
-        String label = styler.getLabelDelegate().of(src);
-        if (label != null && label.length() > 0) {
-            styler.getLabelStyleDelegate().of(src).draw(pt, label, canvas, visibility);
+        PointStyle ps = styler.getStyleDelegate().of(src);
+        ps.draw(point, canvas, visibility);
+        
+        if (styler.getLabelDelegate() != null) {
+            String label = styler.getLabelDelegate().of(src);
+            if (label != null && label.length() > 0) {
+                Delegator<Src, StringStyle> lStyler = styler.getLabelStyleDelegate();
+                if (lStyler != null) {
+                    lStyler.of(src).draw(point, label, canvas, visibility);
+                }
+            }
         }
-    }
+    }  
 
-    public boolean contains(Point point) {
-        return styler.getStyleDelegate().of(src).shape(pt).contains(point);
-    }
-
-    public boolean intersects(Rectangle box) {
-        return styler.getStyleDelegate().of(src).shape(pt).intersects(box);
-    }
-
+    
 }

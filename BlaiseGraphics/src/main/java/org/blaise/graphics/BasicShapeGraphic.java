@@ -5,10 +5,6 @@
 
 package org.blaise.graphics;
 
-import java.awt.Rectangle;
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
 import org.blaise.style.PathStyle;
 import org.blaise.style.ShapeStyle;
@@ -23,19 +19,10 @@ import org.blaise.style.ShapeStyle;
  *
  * @author Elisha Peterson
  */
-public class BasicShapeGraphic extends GraphicSupport {
+public class BasicShapeGraphic extends AbstractShapeGraphic {
 
-    /** The object that will be drawn. */
-    private Shape primitive;
-    /** Whether to use stroke or fill style (if not specified) */
-    private boolean strokeOnly;
     /** The associated style (may be null). */
     private ShapeStyle style;
-    
-
-    //
-    // CONSTRUCTORS
-    //
 
     /**
      * Construct with no style (will use the default)
@@ -51,9 +38,7 @@ public class BasicShapeGraphic extends GraphicSupport {
      * @param strokeOnly determines whether to use the solid style or the path/edge style
      */
     public BasicShapeGraphic(Shape primitive, boolean strokeOnly) {
-        this.primitive = primitive;
-        this.style = null;
-        this.strokeOnly = strokeOnly;
+        super(primitive, strokeOnly);
     }
 
     /**
@@ -62,37 +47,8 @@ public class BasicShapeGraphic extends GraphicSupport {
      * @param style style used to draw
      */
     public BasicShapeGraphic(Shape primitive, ShapeStyle style) {
-        this.primitive = primitive;
-        this.style = style;
-        this.strokeOnly = style instanceof PathStyle;
-    }
-
-    @Override
-    public String toString() {
-        return "Shape";
-    }
-    
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    /**
-     * Return the shape for the graphic.
-     * @return shape
-     */
-    public Shape getPrimitive() {
-        return primitive;
-    }
-
-    /**
-     * Set the shape for the graphic.
-     * @param primitive shape
-     */
-    public void setPrimitive(Shape primitive) {
-        this.primitive = primitive;
-        fireGraphicChanged();
+        super(primitive, style instanceof PathStyle);
+        setStyle(style);
     }
 
     /**
@@ -113,44 +69,14 @@ public class BasicShapeGraphic extends GraphicSupport {
             fireGraphicChanged();
         }
     }
-    
-    //</editor-fold>
-    
-    
-    //
-    // GRAPHIC METHODS
-    //
-
-    /** Used to test contains */
-    public static final BasicStroke CONTAINS_STROKE = new BasicStroke(5f);
-
-    public boolean contains(Point point) {
-        return asStroke() ? CONTAINS_STROKE.createStrokedShape(primitive).contains(point)
-                : primitive.contains(point);
-    }
-
-    public boolean intersects(Rectangle box) {
-        return asStroke() ? CONTAINS_STROKE.createStrokedShape(primitive).intersects(box)
-                : primitive.intersects(box);
-    }
-    
-
-    //
-    // DRAW METHODS
-    //
-
-    /** Return true if painting as a stroke. */
-    private boolean asStroke() { return (style == null && strokeOnly) || style instanceof PathStyle; }
 
     /** Return the actual style used for drawing */
-    private ShapeStyle drawStyle() {
-        return style == null ?
-                (asStroke() ? parent.getStyleProvider().getPathStyle(this) : parent.getStyleProvider().getShapeStyle(this))
-                : style;
-    }
-
-    public void draw(Graphics2D canvas) {
-        drawStyle().draw(primitive, canvas, visibility);
+    public ShapeStyle drawStyle() {
+        if (style != null) {
+            return style;
+        }
+        return isStrokeOnly() ? parent.getStyleProvider().getPathStyle(this)
+                : parent.getStyleProvider().getShapeStyle(this);
     }
     
 }

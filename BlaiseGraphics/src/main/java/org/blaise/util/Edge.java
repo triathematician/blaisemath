@@ -23,6 +23,9 @@ public class Edge<V> {
      * @param v2 second vertex
      */
     public Edge(V v1, V v2) {
+        if (v1 == null || v2 == null) {
+            throw new IllegalArgumentException();
+        }
         this.v1 = v1;
         this.v2 = v2;
     }
@@ -54,7 +57,7 @@ public class Edge<V> {
      * @return true if v1==v or v2==v
      */
     public boolean adjacent(V v) {
-        return v1==v || v2==v;
+        return v1.equals(v) || v2.equals(v);
     }
     
     /**
@@ -63,7 +66,7 @@ public class Edge<V> {
      * @return opposite vertex, or null if vertex is not part of this edge
      */
     public V opposite(V v) {
-        return v1==v ? v2 : v2==v ? v1 : null;
+        return v1.equals(v) ? v2 : v2.equals(v) ? v1 : null;
     }
 
 }

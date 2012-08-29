@@ -23,7 +23,7 @@ public class ArrowPathStyle extends BasicPathStyle {
     public ArrowPathStyle() { super(); }
     public ArrowPathStyle(Color stroke) { super(stroke); }
     public ArrowPathStyle(Color stroke, float thickness) { super(stroke, thickness); }
-    public ArrowPathStyle(BasicPathStyle rend) { super(rend.getColor(), rend.getWidth()); }
+    public ArrowPathStyle(BasicPathStyle rend) { super(rend.getStroke(), rend.getThickness()); }
 
     /** Returns arrow between two points */
     public GeneralPath getArrowPath(float x1, float y1, float x2, float y2) {

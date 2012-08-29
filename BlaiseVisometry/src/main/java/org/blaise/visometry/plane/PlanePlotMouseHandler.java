@@ -74,7 +74,9 @@ public class PlanePlotMouseHandler
     transient protected Point2D.Double oldMax = null;
 
     public void mousePressed(MouseEvent e) {
-        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
+        if (e.isConsumed()) { 
+            return;
+        }
         pressedAt = e.getPoint();
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (mode.equals("Alt+Button1")) { // rectangle resize mode
@@ -86,7 +88,9 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed()) { System.err.println("alread consumed"); return; }
+        if (e.isConsumed()) { 
+            return;
+        }
         if (pressedAt != null) {
             try {
             Point winPt = e.getPoint();
@@ -150,7 +154,9 @@ public class PlanePlotMouseHandler
         }
     }
     public void mouseReleased(MouseEvent e) {
-        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
+        if (e.isConsumed()) { 
+            return;
+        }
         mouseDragged(e);
         if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
             zoomBoxAnimated(vis, zoomBox);
@@ -164,7 +170,9 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
+        if (e.isConsumed()) { 
+            return;
+        }
         if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt"))
             plot.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         else
@@ -172,7 +180,9 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isConsumed()) { System.out.println("alread consumed"); return; }
+        if (e.isConsumed()) { 
+            return;
+        }
         Point2D.Double mouseLoc = new Point2D.Double(e.getPoint().x, e.getPoint().y);
 
         // ensure the point is within the window
