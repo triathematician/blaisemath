@@ -15,60 +15,67 @@ import org.blaise.style.StyleProvider;
  * Encapsulates a collection of {@link VGraphic}s.
  *
  * @param <C> local coordinate type
- * 
+ *
  * @see Graphic
  * @see GraphicComposite
- * 
+ *
  * @author Elisha
  */
 public class VGraphicComposite<C> extends VGraphicSupport<C> {
 
     /** Stores the local entries */
     protected final List<VGraphic<C>> entries = Collections.synchronizedList(new ArrayList<VGraphic<C>>());
-    
+
     /** Stores the window entry */
     protected final GraphicComposite windowEntry = new GraphicComposite();
 
-    
     //
     // PROPERTIES (DELEGATES)
     //
 
-    /** 
-     * Return unmodifiable ordered list of graphics.
-     * @return list of entries (unmodifiable) 
+    /**
+     * Return visometry
+     * @return visometry
      */
-    public Iterable<VGraphic<C>> getGraphics() { 
-        return Collections.unmodifiableList(entries); 
+    public Visometry<C> getVisometry() {
+        return parent.getVisometry();
     }
 
-    public GraphicComposite getWindowEntry() { 
-        return windowEntry; 
+    /**
+     * Return unmodifiable ordered list of graphics.
+     * @return list of entries (unmodifiable)
+     */
+    public Iterable<VGraphic<C>> getGraphics() {
+        return Collections.unmodifiableList(entries);
     }
 
-    /** 
+    public GraphicComposite getWindowEntry() {
+        return windowEntry;
+    }
+
+    /**
      * Return render factory used to draw elements.
      * @return render factory used for drawing
      * @throws IllegalStateException if the object returned would be null
      */
-    public StyleProvider getRenderFactory() { 
-        return windowEntry.getStyleProvider(); 
+    public StyleProvider getRenderFactory() {
+        return windowEntry.getStyleProvider();
     }
-    
-    /** 
-     * Sets default renderer factory for all child entries (may be null) 
+
+    /**
+     * Sets default renderer factory for all child entries (may be null)
      * @param rend the renderer provider (may be null)
      */
-    public void setRenderFactory(StyleProvider rend) { 
-        windowEntry.setStyleProvider(rend); 
+    public void setRenderFactory(StyleProvider rend) {
+        windowEntry.setStyleProvider(rend);
     }
 
     //
     // COMPOSITE METHODS
     //
 
-    /** 
-     * Add an entry to the composite. 
+    /**
+     * Add an entry to the composite.
      * @param gfc the entry
      */
     public final void addGraphic(VGraphic gfc) {
@@ -76,8 +83,8 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
             fireConversionNeeded();
     }
 
-    /** 
-     * Remove an entry from the composite 
+    /**
+     * Remove an entry from the composite
      * @param gfc the entry to remove
      */
     public void removeGraphic(VGraphic gfc) {
@@ -85,8 +92,8 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
             fireConversionNeeded();
     }
 
-    /** 
-     * Adds several entries to the composite 
+    /**
+     * Adds several entries to the composite
      * @param add the entries to add
      */
     public void addGraphics(Iterable<? extends VGraphic> add) {
@@ -97,8 +104,8 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
             fireConversionNeeded();
     }
 
-    /** 
-     * Removes several entries from the composite 
+    /**
+     * Removes several entries from the composite
      * @param remove the entries to remove
      */
     public final void removeGraphics(Iterable<? extends VGraphic> remove) {
@@ -109,7 +116,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
             fireConversionNeeded();
     }
 
-    /** 
+    /**
      * Removes all entries from the composite and replaces them
      * @param add the entries to add
      */
@@ -207,19 +214,19 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
     // EVENT HANDLING
     //
 
-    /** 
+    /**
      * Called by graphics to notify the composite that the graphic needs to
      * be converted before being redrawn.
-     * 
+     *
      * @param en the graphic making the request
      */
     public void conversionNeeded(VGraphic en) {
         if (!settingConvertFlag)
             fireConversionNeeded();
     }
-    
+
     // </editor-fold>
-    
+
 
     // <editor-fold defaultstate="collapsed" desc="PRIVATE UTILITIES">
     //
@@ -244,7 +251,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
         }
         return false;
     }
-    
+
     // </editor-fold>
-    
+
 }

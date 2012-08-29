@@ -28,17 +28,17 @@ import org.blaise.graphics.GraphicRoot;
  * </ul>
  * <p>
  *      The {@code Plottable} maintains the generic source object, and has the logic to generate one or more {@code VGraphic}s.
- *      Passing from the {@code Plottable} to the {@code VGraphic} requires <em>recomputation</em> 
+ *      Passing from the {@code Plottable} to the {@code VGraphic} requires <em>recomputation</em>
  *          (see {@link Plottable#recompute()} and {@link Plottable#getGraphicEntry()}).
  *      The {@code VGraphic} maintains a graphics primitive in local coordinates.
- *      Passing from the {@code VGraphic} to the {@code Graphic} requires <em>reconversion</em> 
+ *      Passing from the {@code VGraphic} to the {@code Graphic} requires <em>reconversion</em>
  *          (see {@link VGraphic#setUnconverted(boolean)} and {@link VGraphic#getWindowEntry()}).
  *      The conversion step is completed with the help of the {@code Visometry} and the {@code VisometryProcessor}.
  *      Both the computation and conversion steps are currently completed within
  *      the {@link VGraphicComponent#renderTo(java.awt.Graphics2D)} method.
  * </p>
  * <p>
- *      While in some cases, the duplication of objects may be inefficient, 
+ *      While in some cases, the duplication of objects may be inefficient,
  *      it allows certain things to be done without expensive recomputation.
  *      This is particularly true when the recomputation steps or conversion steps
  *      take a substantial amount of time, or it makes sense to separate them.
@@ -51,9 +51,9 @@ import org.blaise.graphics.GraphicRoot;
  *      customizing or manipulating the draw order of the graphics primitives,
  *      which is also important for 3D graphics.
  * </p>
- * 
+ *
  * @param <C> type of local coordinates
- * 
+ *
  * @author Elisha Peterson
  */
 public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListener {
@@ -66,11 +66,11 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
     /** Stores the processor used to translate coordinates */
     protected final VisometryProcessor<C> processor = new VisometryProcessor<C>();
 
-    
+
     //
     // CONSTRUCTOR
     //
-    
+
     /** Construct with visometry */
     public VGraphicRoot(Visometry<C> vis) {
         if (vis == null)
@@ -79,7 +79,7 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
         visometry.addChangeListener(this);
         setUnconverted(true);
     }
-    
+
     /**
      * Sets the component associated with the graphic tree.
      * @param c the component
@@ -92,18 +92,15 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
     // PROPERTY PATTERNS
     //
 
-    /** 
-     * Return current visometry.
-     * @return current visometry 
-     */
-    public Visometry<C> getVisometry() { 
-        return visometry; 
+    @Override
+    public Visometry<C> getVisometry() {
+        return visometry;
     }
-    
+
     //
     // EVENT HANDLING
     //
-    
+
     /**
      * Repaints when a conversion is needed
      * @param en the requestor
@@ -119,9 +116,9 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
         if (component != null)
             component.repaint();
     }
-    
-    /** 
-     * Updates all graphic entries needing conversion from local to window coordinates 
+
+    /**
+     * Updates all graphic entries needing conversion from local to window coordinates
      */
     public void reconvert()  {
         convert(visometry, processor);

@@ -4,12 +4,13 @@
  */
 package org.blaise.visometry;
 
+import java.util.Map;
 import java.util.Set;
 import org.blaise.graphics.DelegatingNodeLinkGraphic;
 import org.blaise.graphics.Graphic;
-import org.blaise.util.Edge;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
+import org.blaise.util.Edge;
 
 /**
  * A set of draggable points defined in local coordinates. Properties of the objects
@@ -17,6 +18,7 @@ import org.blaise.style.PathStyle;
  *
  * @param <C> the local coordinate
  * @param <Src> the type of object being displayed
+ * @param <EdgeType> object type of edge
  *
  * @author elisha
  */
@@ -24,11 +26,16 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
 
     DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
 
-    /** Construct point set with specified objects. */
-    public VCustomGraph(C[] initialPoint) {
-        super(initialPoint);
+    /**
+     * Construct point set with specified objects.
+     * @param loc initial locations of points
+     */
+    public VCustomGraph(Map<Src,? extends C> loc) {
+        super(loc);
+        window = null;
         gwindow = new DelegatingNodeLinkGraphic<Src,EdgeType>();
         window = gwindow.getPointGraphic();
+        window.getPointManager().addPropertyChangeListener(this);
     }
 
     //
