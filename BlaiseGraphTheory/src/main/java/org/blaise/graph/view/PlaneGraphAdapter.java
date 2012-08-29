@@ -9,7 +9,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.blaise.graph.Graph;
 import org.blaise.style.BasicPathStyle;
 import org.blaise.style.ObjectStyler;
@@ -37,7 +38,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     /** Stores the visible graph */
     private VCustomGraph<Point2D.Double,Object,Edge<Object>> vGraph;
 
-    /** 
+    /**
      * Handles updates to the graph or locations. Called after the graph changes
      * or the positions of the graph change.
      */
@@ -52,7 +53,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     private final Delegator<Object, String> DEFAULT_LABEL_DELEGATE = new Delegator<Object, String>(){
         public String of(Object src) { return ""+src; }
     };
-    
+
     /**
      * Initialize adapter with an empty graph.
      */
@@ -77,12 +78,11 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     }
 
     final void initGraph(Graph g) {
-        int n = g.nodes().size();
-        Point2D.Double[] pos = new Point2D.Double[n];
-        Arrays.fill(pos, new Point2D.Double());
-        vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(pos);
-        // XXX - removed set by index updating through graph component
-        vGraph.setObjects(g.nodes());
+        Map<Object,Point2D.Double> pts = new HashMap<Object,Point2D.Double>();
+        for (Object n : g.nodes()) {
+            pts.put(n, new Point2D.Double());
+        }
+        vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(pts);
         vGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
         vGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
 
@@ -204,8 +204,8 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
          */
         public void locationsUpdated(Point2D.Double[] points);
     }
-        
-    /** 
+
+    /**
      * Adapter class that can be subclassed for custom functionality
      */
     public static class GraphUpdaterAdapter implements GraphUpdater {

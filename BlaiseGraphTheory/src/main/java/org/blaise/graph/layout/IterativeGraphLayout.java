@@ -14,7 +14,7 @@ import org.blaise.graph.Graph;
  * class may have internal parameters that are used to accomplish the layout, and
  * an internal state which changes over the course of the layout. The methods here
  * allow the user to reset the layout scheme and to iterate the layout scheme.
- * 
+ *
  * @author Elisha Peterson
  */
 public interface IterativeGraphLayout {
@@ -33,7 +33,7 @@ public interface IterativeGraphLayout {
      *   during the next call to iterate()
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
      */
-    public void requestPositions(Map<Object, Point2D.Double> positions, boolean resetNodes);
+    public <V> void requestPositions(Map<V, Point2D.Double> positions, boolean resetNodes);
 
     /**
      * <p>
@@ -71,6 +71,6 @@ public interface IterativeGraphLayout {
      * Returns the current list of point locations.
      * @return current list of positions
      */
-    public Map<Object,Point2D.Double> getPositions();
+    public <V> Map<V,Point2D.Double> getPositions();
 
 }
