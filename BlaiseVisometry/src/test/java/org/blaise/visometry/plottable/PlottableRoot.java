@@ -2,20 +2,20 @@
  * PlottableRoot.java
  * Created Sep 19, 2011
  */
-package org.blaise.visometry;
+package org.blaise.visometry.plottable;
 
 import java.awt.Component;
 
 /**
  * Root node for a collection of plottables.
- * 
+ *
  * @author Elisha Peterson
  */
 public class PlottableRoot<C> extends PlottableComposite<C> {
-    
+
     /** Parent component upon which the graphics are drawn. */
     protected Component component;
-    
+
     /**
      * Sets the component associated with the graphic tree.
      * @param c the component
@@ -27,7 +27,7 @@ public class PlottableRoot<C> extends PlottableComposite<C> {
     //
     // EVENT HANDLING
     //
-    
+
     /**
      * Repaints when a computation is needed.
      * @param p the requestor

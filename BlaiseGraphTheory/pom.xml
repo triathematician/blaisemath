@@ -23,16 +23,6 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-math</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-visometry</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.swinglabs</groupId>
       <artifactId>swing-layout</artifactId>
       <version>1.0.3</version>
@@ -49,6 +39,11 @@
       <version>1.0.0</version>
       <scope>test</scope>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>blaise-visometry</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

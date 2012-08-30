@@ -2,9 +2,11 @@
  * PlotComponent.java
  * Created Sep 19, 2011
  */
-package org.blaise.visometry;
+package org.blaise.visometry.plottable;
 
 import java.util.Collection;
+import org.blaise.visometry.VGraphicComponent;
+import org.blaise.visometry.Visometry;
 
 /**
  * Contains a group of plottables that can be recomputed, reconverted, and rendered

@@ -112,16 +112,20 @@ public class GAInstrument {
         }
     }
 
-    public static void print(PrintStream out) {
+    public static void print(PrintStream out, long minT) {
         try {
             out.println("Graph Algorithm Log");
             for (String a : log.keySet()) {
                 out.println(" -- Algorithm " + a + " --");
                 for (LogEvent l : log.get(a))
-                    if (l.dur > 5)
+                    if (l.dur >= minT)
                         out.println(l);
             }
         } catch (Exception e) {}
+    }
+
+    public static void print(PrintStream out) {
+        print(out, 10);
     }
 
 }

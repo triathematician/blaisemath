@@ -8,7 +8,6 @@ package org.blaise.graphics;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +16,9 @@ import java.util.Map;
 import java.util.Set;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
+import org.blaise.util.CoordinateListener;
 import org.blaise.util.Edge;
-import org.blaise.util.PointManager;
+import org.blaise.util.CoordinateManager;
 
 /**
  * <p>
@@ -26,29 +26,28 @@ import org.blaise.util.PointManager;
  * </p>
  * @author elisha
  */
-public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite implements PropertyChangeListener {
-    
+public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite implements CoordinateListener {
+
     /** The edges in the graphic. */
     protected final Map<EdgeType,DelegatingShapeGraphic<EdgeType>> edges = new HashMap<EdgeType,DelegatingShapeGraphic<EdgeType>>();
     /** Styler for edges */
     protected ObjectStyler<EdgeType,PathStyle> edgeStyler = new ObjectStyler<EdgeType,PathStyle>();
 
     /** Point manager. Maintains objects and their locations, and enables mouse dragging. */
-    protected PointManager<Src, Point2D> pointManager;
-    
+    protected CoordinateManager<Src, Point2D> pointManager;
+
     /** Initialize without arguments */
     public DelegatingEdgeSetGraphic() {}
 
-    public synchronized void propertyChange(PropertyChangeEvent e) {
-        // update when node locations change
-        if (e.getPropertyName().equalsIgnoreCase("add")) {
-            update(pointManager.getLocationMap());
-        }
+    public synchronized void coordinatesAdded(Map added) {
+        update(pointManager.getCoordinates(), new ArrayList<Graphic>());
     }
-    
-    private void update(Map<Src,Point2D> locs) {
+
+    public synchronized void coordinatesRemoved(Set removed) {
+    }
+
+    private void update(Map<Src,Point2D> locs, List<Graphic> removeMe) {
         List<Graphic> addMe = new ArrayList<Graphic>();
-        List<Graphic> removeMe = new ArrayList<Graphic>();
         if (edges != null) {
             for (EdgeType edge : edges.keySet()) {
                 DelegatingShapeGraphic<EdgeType> dsg = edges.get(edge);
@@ -89,9 +88,9 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
     /**
      * Sets map describing graphs edges.
      * Also updates the set of objects to be the nodes within the edges
-     * @param ee new edges to add
+     * @param ee new edges to put
      */
-    public final synchronized void setEdges(Set<EdgeType> ee) {
+    public final synchronized void setEdges(Set<? extends EdgeType> ee) {
         Set<EdgeType> addMe = new HashSet<EdgeType>();
         Set<EdgeType> removeMe = new HashSet<EdgeType>();
         for (EdgeType e : ee) {
@@ -105,13 +104,14 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
             }
         }
         if (removeMe.size() > 0 || addMe.size() > 0) {
+            List<Graphic> remove = new ArrayList<Graphic>();
             for (EdgeType e : removeMe) {
-                edges.remove(e);
+                remove.add(edges.remove(e));
             }
             for (EdgeType e : addMe) {
                 edges.put(e, null);
             }
-            update(pointManager.getLocationMap());
+            update(pointManager.getCoordinates(), remove);
         }
     }
 
@@ -126,30 +126,30 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
     /**
      * Sets the current style styler. If null, will use the default style
      * provided by the parent.
-     * @param styler used for custom edge styles 
+     * @param styler used for custom edge styles
      */
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
         if (this.edgeStyler != styler) {
             this.edgeStyler = styler;
             fireGraphicChanged();
         }
-    }   
+    }
 
-    public PointManager<Src, Point2D> getPointManager() {
+    public CoordinateManager<Src, Point2D> getPointManager() {
         return pointManager;
     }
 
-    public void setPointManager(PointManager<Src, Point2D> pointManager) {
+    public void setPointManager(CoordinateManager<Src, Point2D> pointManager) {
         if (this.pointManager != pointManager) {
             if (this.pointManager != null) {
-                this.pointManager.removePropertyChangeListener(this);
+                this.pointManager.removeCoordinateListener(this);
             }
             this.pointManager = pointManager;
-            update(pointManager.getLocationMap());
+            update(pointManager.getCoordinates(), new ArrayList<Graphic>());
             if (this.pointManager != null) {
-                this.pointManager.addPropertyChangeListener(this);
+                this.pointManager.addCoordinateListener(this);
             }
         }
     }
-    
+
 }

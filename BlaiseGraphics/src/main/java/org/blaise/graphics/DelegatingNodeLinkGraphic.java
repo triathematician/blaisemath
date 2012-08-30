@@ -11,14 +11,14 @@ import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Edge;
-import org.blaise.util.PointManager;
+import org.blaise.util.CoordinateManager;
 
 /**
  * A graph with fully-customizable points, edges, and tooltips. The styles and
  * point values are computed at runtime. Edges are maintained as a set of {@link Edge}s.
- * 
+ *
  * @see PointStyle
- * 
+ *
  * @author Elisha Peterson
  */
 public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite {
@@ -27,14 +27,14 @@ public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends G
     private final DelegatingPointSetGraphic<Src> points;
     /** Edges */
     private final DelegatingEdgeSetGraphic<Src,EdgeType> edges;
-    
+
     /**
      * Construct with no points
      */
     public DelegatingNodeLinkGraphic() {
         addGraphic(edges = new DelegatingEdgeSetGraphic<Src,EdgeType>());
         addGraphic(points = new DelegatingPointSetGraphic<Src>());
-        edges.setPointManager(points.getPointManager());
+        edges.setPointManager(points.getCoordinateManager());
     }
 
     @Override
@@ -49,21 +49,21 @@ public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends G
     public DelegatingEdgeSetGraphic<Src, EdgeType> getEdgeGraphic() {
         return edges;
     }
-    
+
     //
     // POINTS
     //
 
-    public PointManager<Src, Point2D> getPointManager() {
-        return points.getPointManager();
+    public CoordinateManager<Src, Point2D> getPointManager() {
+        return points.getCoordinateManager();
     }
 
     public Set<? extends Src> getObjects() {
         return points.getObjects();
     }
-    
+
     public void setPoints(Map<Src, Point2D> pts) {
-        points.getPointManager().add(pts);
+        points.getCoordinateManager().putAll(pts);
     }
 
     public ObjectStyler<Src, PointStyle> getStyler() {
@@ -73,7 +73,7 @@ public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends G
     public void setStyler(ObjectStyler<Src, PointStyle> styler) {
         points.setStyler(styler);
     }
-    
+
     //
     // EDGES
     //
@@ -82,7 +82,7 @@ public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends G
         return edges.getEdges();
     }
 
-    public void setEdges(Set<EdgeType> edges) {
+    public void setEdges(Set<? extends EdgeType> edges) {
         this.edges.setEdges(edges);
     }
 
@@ -93,5 +93,5 @@ public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends G
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
         edges.setEdgeStyler(styler);
     }
-    
+
 }

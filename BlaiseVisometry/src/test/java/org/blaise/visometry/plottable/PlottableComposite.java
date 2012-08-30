@@ -2,7 +2,7 @@
  * PlottableComposite.java
  * Created on Feb 25, 2008
  */
-package org.blaise.visometry;
+package org.blaise.visometry.plottable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,8 @@ import org.blaise.math.coordinate.DomainContext;
 import org.blaise.math.coordinate.DomainHint;
 import org.blaise.math.coordinate.SampleSet;
 import org.blaise.math.coordinate.ScreenSampleDomainProvider;
+import org.blaise.visometry.VGraphic;
+import org.blaise.visometry.VGraphicComposite;
 
 /**
  * <p>
@@ -79,7 +81,7 @@ public class PlottableComposite<C> extends PlottableSupport<C> {
     // COMPOSITIONAL
     //
 
-    /** 
+    /**
      * Remove all plottables from the group. Also de-registers each as a listener.
      */
     public void clear() {
@@ -212,7 +214,7 @@ public class PlottableComposite<C> extends PlottableSupport<C> {
         fireComputeNeeded();
     }
 
-    
+
     //<editor-fold defaultstate="collapsed" desc="DOMAINS/CONTEXTUAL METHODS">
     //
     // DOMAINS/CONTEXTUAL METHODS
@@ -281,7 +283,7 @@ public class PlottableComposite<C> extends PlottableSupport<C> {
             return ((ScreenSampleDomainProvider)dom).samplerWithPixelSpacing(pixels, hint);
         return null;
     }
-    
+
     //</editor-fold>
 
 }

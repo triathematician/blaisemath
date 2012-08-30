@@ -17,8 +17,10 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import javax.swing.JComponent;
+import org.blaise.graphics.CanvasPainter;
 import org.blaise.style.BasicShapeStyle;
-import org.blaise.style.VisibilityHint;
+import org.blaise.visometry.VGraphicComponent;
 
 /**
  * <p>
@@ -36,16 +38,16 @@ import org.blaise.style.VisibilityHint;
  *
  * @author Elisha Peterson
  */
-public class PlanePlotMouseHandler 
-        implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class PlanePlotMouseHandler
+        implements MouseListener, MouseMotionListener, MouseWheelListener, CanvasPainter {
 
-    PlanePlotComponent plot;
+    VGraphicComponent<Point2D.Double> plot;
     PlaneVisometry vis;
 
     /** Determines whether to snap to the coordinate axes. */
     boolean SNAP_ENABLED = true;
 
-    public PlanePlotMouseHandler(PlaneVisometry vis, PlanePlotComponent plot) {
+    public PlanePlotMouseHandler(PlaneVisometry vis, VGraphicComponent<Point2D.Double> plot) {
         this.vis = vis;
         this.plot = plot;
     }
@@ -55,7 +57,7 @@ public class PlanePlotMouseHandler
     /** Renderer for zoom box */
     final static BasicShapeStyle rend = new BasicShapeStyle(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
 
-    public void paint(Graphics2D canvas) {
+    public void paint(JComponent component, Graphics2D canvas) {
         if (zoomBox != null)
             rend.draw(zoomBox, canvas, null);
     }
@@ -63,7 +65,7 @@ public class PlanePlotMouseHandler
     //
     // MOUSE OPERATIONS
     //
-    
+
     /** Location mouse was first pressed at. */
     transient protected Point pressedAt = null;
     /** Stores keyboard modifiers for mouse. */
@@ -74,7 +76,7 @@ public class PlanePlotMouseHandler
     transient protected Point2D.Double oldMax = null;
 
     public void mousePressed(MouseEvent e) {
-        if (e.isConsumed()) { 
+        if (e.isConsumed()) {
             return;
         }
         pressedAt = e.getPoint();
@@ -88,7 +90,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed()) { 
+        if (e.isConsumed()) {
             return;
         }
         if (pressedAt != null) {
@@ -154,7 +156,7 @@ public class PlanePlotMouseHandler
         }
     }
     public void mouseReleased(MouseEvent e) {
-        if (e.isConsumed()) { 
+        if (e.isConsumed()) {
             return;
         }
         mouseDragged(e);
@@ -170,7 +172,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (e.isConsumed()) { 
+        if (e.isConsumed()) {
             return;
         }
         if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt"))
@@ -180,7 +182,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isConsumed()) { 
+        if (e.isConsumed()) {
             return;
         }
         Point2D.Double mouseLoc = new Point2D.Double(e.getPoint().x, e.getPoint().y);

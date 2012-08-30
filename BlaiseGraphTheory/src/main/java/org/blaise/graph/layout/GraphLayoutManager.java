@@ -1,9 +1,9 @@
 /*
- * GraphManager.java
+ * GraphLayoutManager.java
  * Created Jan 29, 2011
  */
 
-package org.blaise.graph.view;
+package org.blaise.graph.layout;
 
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
@@ -15,13 +15,12 @@ import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphBuilders;
-import org.blaise.graph.layout.IterativeGraphLayout;
-import org.blaise.graph.layout.StaticGraphLayout;
-import org.blaise.util.PointManager;
+import org.blaise.util.CoordinateListener;
+import org.blaise.util.CoordinateManager;
 
 /**
  * <p>
- *   Links up a {@link IterativeGraphLayout} with a {@link PointManager} to maintain
+ *   Links up a {@link IterativeGraphLayout} with a {@link CoordinateManager} to maintain
  *   consistent positions of nodes in a {@link Graph}.
  *   Also provides timers/threads for executing iterative layouts, and notifies
  *   listeners when the positions change.
@@ -30,7 +29,7 @@ import org.blaise.util.PointManager;
  * @param <C> type of node in graph
  * @author elisha
  */
-public final class GraphManager<C> implements PropertyChangeListener {
+public final class GraphLayoutManager<C> implements CoordinateListener {
 
     //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
     /** Default time between layout iterations. */
@@ -51,7 +50,7 @@ public final class GraphManager<C> implements PropertyChangeListener {
     /** Used for iterative graph layouts */
     private transient IterativeGraphLayout iLayout;
     /** Maintains locations of nodes in the graph (in local coordinates) */
-    private final PointManager<C, Point2D.Double> locations = new PointManager<C, Point2D.Double>();
+    private final CoordinateManager<C, Point2D.Double> locations = new CoordinateManager<C, Point2D.Double>();
 
     /** Timer that performs iterative layout */
     private transient java.util.Timer layoutTimer;
@@ -60,7 +59,7 @@ public final class GraphManager<C> implements PropertyChangeListener {
 
 
     /** Initializes with an empty graph */
-    public GraphManager() {
+    public GraphLayoutManager() {
         this(GraphBuilders.EMPTY_GRAPH);
     }
 
@@ -68,18 +67,18 @@ public final class GraphManager<C> implements PropertyChangeListener {
      * Constructs manager for the specified graph.
      * @param graph the graph
      */
-    public GraphManager(Graph<C> graph) {
+    public GraphLayoutManager(Graph<C> graph) {
         setGraph(graph);
-        locations.addPropertyChangeListener(this);
+        locations.addCoordinateListener(this);
     }
 
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
-        // pass changes from point manager to active layout
-        if (evt.getSource() == locations) {
-            iLayout.requestPositions(locations.getLocationMap(), true);
-        }
+    public void coordinatesAdded(Map added) {
+        iLayout.requestPositions(locations.getCoordinates(), true);
     }
-    
+
+    public void coordinatesRemoved(Set removed) {
+    }
+
 
     // <editor-fold defaultstate="collapsed" desc="PROPERTIES & UPDATE METHODS">
     //
@@ -98,7 +97,7 @@ public final class GraphManager<C> implements PropertyChangeListener {
      * Changes the graph. Uses the default initial position layout to position
      * nodes if the current graph was null, otherwise uses the adding layout for
      * any nodes that do not have current positions.
-     * 
+     *
      * @param g the graph
      */
     public synchronized void setGraph(Graph<C> g) {
@@ -106,72 +105,75 @@ public final class GraphManager<C> implements PropertyChangeListener {
             Graph old = this.graph;
             if (g == null) {
                 setLayoutAnimating(false);
-                locations.cache(locations.getObjects());
+                locations.cacheObjects(locations.getObjects());
             } else if (this.graph != g) {
                 this.graph = g;
-                Set<C> oldNodes = new HashSet<C>(old.nodes());
-                oldNodes.removeAll(g.nodes());
-                locations.cache(oldNodes);
+                if (old != null) {
+                    Set<C> oldNodes = new HashSet<C>(old.nodes());
+                    oldNodes.removeAll(g.nodes());
+                    locations.cacheObjects(oldNodes);
+                }
                 Map<C,Point2D.Double> newLoc = old == null ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
                 for (C c : locations.getObjects()) {
                     newLoc.remove(c);
                 }
-                locations.add(newLoc);
+                locations.putAll(newLoc);
             }
             pcs.firePropertyChange("graph", old, g);
         }
     }
-    
+
     /**
      * Call to indicate that the structure of the graph has changed.
      */
     public synchronized void graphUpdated() {
         Set<C> oldNodes = new HashSet<C>(locations.getObjects());
         oldNodes.removeAll(graph.nodes());
-        locations.cache(oldNodes);
+        locations.cacheObjects(oldNodes);
         Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
         for (C c : locations.getObjects()) {
             newLoc.remove(c);
         }
-        locations.add(newLoc);
+        locations.putAll(newLoc);
     }
 
     /**
      * Object used to map locations of points.
      * @return point manager
      */
-    public PointManager<C, Point2D.Double> getPointManager() {
+    public CoordinateManager<C, Point2D.Double> getCoordinateManager() {
         return locations;
     }
-    
+
     /**
      * Returns the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
     public Map<C, Point2D.Double> getLocations() {
-        return locations.getLocationMap();
+        return locations.getCoordinates();
     }
 
     /**
      * Update the locations of the specified nodes with the specified values.
      * If an iterative layout is currently active, locations are updated at the
      * layout. Otherwise, locations are updated by the point manager.
-     * 
+     *
      * @param nodePositions new locations for objects
      */
     public synchronized void requestLocations(Map<C, Point2D.Double> nodePositions) {
+//        System.out.println("glm.reqloc");
         if (nodePositions != null) {
             if (iLayout != null) {
                 iLayout.requestPositions(nodePositions, false);
-            } else {
-                locations.update(nodePositions);
             }
+            locations.putAll(nodePositions);
         }
     }
-    
+
     /**
      * Update positions using specified layout algorithm.
      * @param layout static layout algorithm
+     * @param parameters layout parameters
      */
     public synchronized void applyLayout(StaticGraphLayout layout, double... parameters){
         requestLocations(layout.layout(graph, parameters));
@@ -185,9 +187,9 @@ public final class GraphManager<C> implements PropertyChangeListener {
     // LAYOUT METHODS
     //
 
-    /** 
+    /**
      * Get layout algorithm
-     * @return current iterative layout algorithm 
+     * @return current iterative layout algorithm
      */
     public synchronized IterativeGraphLayout getLayoutAlgorithm() {
         return iLayout;
@@ -203,7 +205,7 @@ public final class GraphManager<C> implements PropertyChangeListener {
             stopLayoutTask();
             IterativeGraphLayout old = iLayout;
             iLayout = layout;
-            iLayout.requestPositions(locations.getLocationMap(), true);
+            iLayout.requestPositions(locations.getCoordinates(), true);
             pcs.firePropertyChange("layoutAlgorithm", old, layout);
         }
     }
@@ -235,7 +237,7 @@ public final class GraphManager<C> implements PropertyChangeListener {
     /**
      * Activates the layout timer, if an iterative layout has been provided.
      * @param delay delay in ms between layout calls
-     * @param iter number of iterations per update
+     * @param iter number of iterations per updateCoordinates
      */
     public void startLayoutTask(int delay, final int iter) {
         if (iLayout == null) {
@@ -255,8 +257,8 @@ public final class GraphManager<C> implements PropertyChangeListener {
         layoutTimer.schedule(layoutTask, delay, delay);
     }
 
-    /** 
-     * Stops the layout timer 
+    /**
+     * Stops the layout timer
      */
     public void stopLayoutTask() {
         if (layoutTask != null) {
@@ -265,8 +267,8 @@ public final class GraphManager<C> implements PropertyChangeListener {
         }
     }
 
-    /** 
-     * Iterates layout, if an iterative layout has been provided. 
+    /**
+     * Iterates layout, if an iterative layout has been provided.
      */
     public synchronized void iterateLayout() {
         if (iLayout != null) {
@@ -274,14 +276,14 @@ public final class GraphManager<C> implements PropertyChangeListener {
             try {
                 Map<C, Point2D.Double> locs = iLayout.iterate(graph);
                 GAInstrument.middle(id, "iLayout.iterate completed");
-                locations.update(locs);
+                locations.putAll(locs);
             } catch (ConcurrentModificationException ex) {
-                Logger.getLogger(GraphManager.class.getName()).log(Level.WARNING, "Failed Layout Iteration: ConcurrentModificationException");
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, "Failed Layout Iteration: ConcurrentModificationException");
             }
             GAInstrument.end(id);
         }
     }
-    
+
     // </editor-fold>
 
 

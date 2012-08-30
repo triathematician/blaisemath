@@ -28,11 +28,11 @@ import org.blaise.util.Edge;
 public class SparseGraph<V> extends GraphSupport<V> {
 
     /** The adjacencies in components of the graph */
-    private final Map<V,Map<V,Set<Edge<V>>>> adjacencies = new HashMap<V, Map<V,Set<Edge<V>>>>();
+    protected final Map<V,Map<V,Set<Edge<V>>>> adjacencies = new HashMap<V, Map<V,Set<Edge<V>>>>();
     /** Edges in graph (replicated for speed) */
-    private final Set<Edge<V>> edges = new HashSet<Edge<V>>();
+    protected final Set<Edge<V>> edges = new HashSet<Edge<V>>();
     /** Information about the graph's components (replicated for speed) */
-    private final GraphComponents<V> components;
+    protected final GraphComponents<V> components;
 
     /**
      * Construct graph with specific nodes and edges
@@ -57,8 +57,8 @@ public class SparseGraph<V> extends GraphSupport<V> {
         }
         this.components = new GraphComponents(this, GraphUtils.componentsEdgeMap(adjacencies));
     }
-    
-    /** 
+
+    /**
      * Construct graph with a sparse adjacency representation.
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
@@ -72,8 +72,8 @@ public class SparseGraph<V> extends GraphSupport<V> {
         }
         this.components = new GraphComponents(this, GraphUtils.components(adjacencies));
     }
-    
-    private void addEdge(V x, V y) {
+
+    protected synchronized void addEdge(V x, V y) {
         Map<V, Set<Edge<V>>> getx = adjacencies.get(x);
         Map<V, Set<Edge<V>>> gety = adjacencies.get(y);
 
@@ -89,7 +89,7 @@ public class SparseGraph<V> extends GraphSupport<V> {
         } else if (!directed && ( (getx != null && getx.containsKey(y)) || (gety != null && gety.containsKey(x)) ) ) {
             return;
         }
-        
+
         // once checks have been made, create the edge and add it
         Edge<V> edge = new Edge<V>(x,y);
         if (getx == null) {
@@ -107,6 +107,51 @@ public class SparseGraph<V> extends GraphSupport<V> {
         }
         gety.get(x).add(edge);
         edges.add(edge);
+    }
+
+    @Override
+    public boolean adjacent(V x, V y) {
+        Map<V, Set<Edge<V>>> map = adjacencies.get(x);
+        if (map == null) {
+            return false;
+        }
+        Set<Edge<V>> set = map.get(y);
+        return set != null && !set.isEmpty();
+    }
+
+    /**
+     * Remove edge between two vertices, if it exists
+     * @param v1 first vertex
+     * @param v2 second vertex
+     * @return true if edge was found and removed
+     */
+    protected synchronized boolean removeEdge(V v1, V v2) {
+        Map<V, Set<Edge<V>>> map = adjacencies.get(v1);
+        Set<Edge<V>> remove = new HashSet<Edge<V>>();
+        boolean found = false;
+        if (map != null) {
+            Set<Edge<V>> set = map.get(v2);
+            if (set != null && !set.isEmpty()) {
+                remove.addAll(set);
+                map.remove(v2);
+                found = true;
+            } else if (set != null) {
+                map.remove(v2);
+            }
+        }
+        map = adjacencies.get(v2);
+        if (map != null) {
+            Set<Edge<V>> set = map.get(v1);
+            if (set != null && !set.isEmpty()) {
+                remove.addAll(set);
+                map.remove(v1);
+                found = true;
+            } else if (set != null) {
+                map.remove(v1);
+            }
+        }
+        edges.removeAll(remove);
+        return found;
     }
 
     public GraphComponents<V> getComponentInfo() {
@@ -133,6 +178,6 @@ public class SparseGraph<V> extends GraphSupport<V> {
         }
         return res;
     }
-    
+
 
 }

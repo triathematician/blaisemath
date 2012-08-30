@@ -11,8 +11,8 @@ import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
+import org.blaise.graphics.Graphic;
 import org.blaise.util.gui.RollupPanel;
-import org.blaise.visometry.Plottable;
 
 
 /**
@@ -42,7 +42,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
                 plot.getGraphManager().getLocations()
                 )));
-        for (Plottable p : plot.getPlottableArray()) {
+        for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
     }
@@ -244,35 +244,41 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
-        plot.getGraphManager().graphUpdated();
+        plot.getAdapter().getViewGraph().setEdges(graph.edges());
     }//GEN-LAST:event_addEdgesBActionPerformed
 
     private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
-        graph.rewire(10, 5);
-        plot.getGraphManager().graphUpdated();
+        synchronized (graph) {
+            graph.rewire(50, 5);
+            plot.getGraphManager().graphUpdated();
+            plot.getAdapter().getViewGraph().setEdges(graph.edges());
+        }
     }//GEN-LAST:event_rewireBActionPerformed
 
     java.util.Timer t = new java.util.Timer();
     java.util.TimerTask tt;
 
     private void addThreadedBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addThreadedBActionPerformed
-        if (tt != null) tt.cancel();
+        if (tt != null)
+            tt.cancel();
         tt = new java.util.TimerTask(){
             @Override public void run() {
-                synchronized(plot.getGraphManager()) {
+                synchronized (graph) {
                     graph.removeVertices(1);
                     graph.removeEdges(10);
                     graph.addVertices(1);
                     graph.addEdges(2);
+                    plot.getGraphManager().graphUpdated();
+                    plot.getAdapter().getViewGraph().setEdges(graph.edges());
                 }
-                plot.getGraphManager().graphUpdated();
             }
         };
         t.schedule(tt, 100, 500);
     }//GEN-LAST:event_addThreadedBActionPerformed
 
     private void threadStopBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threadStopBActionPerformed
-        if (tt != null) tt.cancel();
+        if (tt != null)
+            tt.cancel();
     }//GEN-LAST:event_threadStopBActionPerformed
 
 

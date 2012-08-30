@@ -4,6 +4,8 @@
  */
 package org.blaise.visometry;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.graphics.DelegatingNodeLinkGraphic;
@@ -26,6 +28,10 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
 
     DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
 
+    public VCustomGraph() {
+        this(Collections.EMPTY_MAP);
+    }
+
     /**
      * Construct point set with specified objects.
      * @param loc initial locations of points
@@ -35,7 +41,7 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
         window = null;
         gwindow = new DelegatingNodeLinkGraphic<Src,EdgeType>();
         window = gwindow.getPointGraphic();
-        window.getPointManager().addPropertyChangeListener(this);
+        window.getCoordinateManager().addCoordinateListener(this);
     }
 
     //
@@ -51,8 +57,9 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
         return gwindow.getEdges();
     }
 
-    public void setEdges(Set<EdgeType> edges) {
-        gwindow.setEdges(edges);
+    public void setEdges(Set<? extends EdgeType> edges) {
+        // make a copy to prevent errors in updating edges
+        gwindow.setEdges(new HashSet<EdgeType>(edges));
     }
 
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
