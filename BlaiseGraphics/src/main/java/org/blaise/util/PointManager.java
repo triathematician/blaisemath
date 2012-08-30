@@ -93,7 +93,7 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord> {
         }
         if (!changed.isEmpty()) {
             map.putAll(changed);
-            fireNodeUpdate("add", changed);
+            pcs.firePropertyChange("add", null, changed);
         }
     }
 
@@ -122,7 +122,7 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord> {
         if (!cached.isEmpty()) {
             cache.putAll(cached);
             // TODO - check cache size
-            fireNodesRemoved(cached.keySet());
+            pcs.firePropertyChange("remove",null,cached.keySet());
         }
         add(coords);
     }
@@ -141,7 +141,7 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord> {
         if (!cached.isEmpty()) {
             cache.putAll(cached);
             // TODO - check cache size
-            fireNodesRemoved(cached.keySet());
+            pcs.firePropertyChange("remove",null,cached.keySet());
         }
     }
 
@@ -157,25 +157,8 @@ public class PointManager<Src, Coord> implements Delegator<Src, Coord> {
             }
         }
         if (!removed.isEmpty()) {
-            fireNodesRemoved(removed);
+            pcs.firePropertyChange("remove",null,removed);
         }
-    }
-
-    /**
-     * Notify listeners that the specified coordinates have changed.
-     * @param key used as property in generated event
-     * @param changed new coords
-     */
-    private void fireNodeUpdate(String key, Map<Src, Coord> changed) {
-        pcs.firePropertyChange(key, null, changed);
-    }
-
-    /**
-     * Notify listeners that the specified coordinates have been removed.
-     * @param obj objects whose coords were removed
-     */
-    private void fireNodesRemoved(Set<Src> obj) {
-        pcs.firePropertyChange("remove", null, obj);
     }
 
 

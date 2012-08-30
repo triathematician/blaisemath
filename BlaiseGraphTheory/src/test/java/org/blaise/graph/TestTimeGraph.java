@@ -207,7 +207,7 @@ public class TestTimeGraph extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getManager().iterateLayout();
         updateEL = false;
@@ -215,7 +215,7 @@ public class TestTimeGraph extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_energyABActionPerformed
@@ -226,14 +226,14 @@ public class TestTimeGraph extends javax.swing.JFrame {
 
     private void timeEnergyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeEnergyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_timeEnergyIBActionPerformed
 
     private void timeEnergyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeEnergyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_timeEnergyABActionPerformed
 

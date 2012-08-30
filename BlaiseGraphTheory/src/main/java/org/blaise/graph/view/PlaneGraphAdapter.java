@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.blaise.graph.Graph;
 import org.blaise.style.BasicPathStyle;
 import org.blaise.style.ObjectStyler;
@@ -37,19 +38,10 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     private GraphManager manager;
     /** Stores the visible graph */
     private VCustomGraph<Point2D.Double,Object,Edge<Object>> vGraph;
+    /** Handles updates to the graph or locations. Called after the graph changes or the positions of the graph change. */
+    protected GraphLocationUpdater updater = null;
 
-    /**
-     * Handles updates to the graph or locations. Called after the graph changes
-     * or the positions of the graph change.
-     */
-    protected GraphUpdater updater = new GraphUpdaterAdapter();
-
-
-    //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
-    //
-    // INITIALIZATION
-    //
-
+    /** Used to label objects in the graph */
     private final Delegator<Object, String> DEFAULT_LABEL_DELEGATE = new Delegator<Object, String>(){
         public String of(Object src) { return ""+src; }
     };
@@ -77,37 +69,34 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
         setGraphManager(manager);
     }
 
-    final void initGraph(Graph g) {
-        Map<Object,Point2D.Double> pts = new HashMap<Object,Point2D.Double>();
-        for (Object n : g.nodes()) {
-            pts.put(n, new Point2D.Double());
+    /**
+     * Initializes view graph for the graph in the graph manager.
+     */
+    protected final void initViewGraph() {
+        synchronized(manager) {
+            Map<Object,Point2D.Double> loc = manager.getLocations();
+            vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(loc);
+            vGraph.setEdges(manager.getGraph().edges());
         }
-        vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(pts);
         vGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
         vGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
 
+        // default edge style
         ObjectStyler<Edge<Object>, PathStyle> ges = new ObjectStyler<Edge<Object>, PathStyle>();
         ges.setStyleDelegate(new NonDelegator<Edge<Object>,PathStyle>(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
         vGraph.setEdgeStyler(ges);
     }
 
-    //</editor-fold>
-
-
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == manager) {
-            if (evt.getPropertyName().equals("graph")) {
-                Point2D.Double[] points = (Point2D.Double[]) evt.getNewValue();
-                Graph graph = manager.getGraph();
-                vGraph.setEdges(graph.edges());
-                vGraph.setPoint(points);
-                if (updater != null)
-                    updater.graphUpdated(graph, points);
-            } else if (evt.getPropertyName().equals("locationArray")) {
-                Point2D.Double[] points = (Point2D.Double[]) evt.getNewValue();
-                vGraph.setPoint(points);
-                if (updater != null)
-                    updater.locationsUpdated(points);
+            if ("graph".equals(evt.getPropertyName())) {
+                initViewGraph();
+            }
+        } else if (evt.getSource() == manager.getPointManager()) {
+            if ("add".equals(evt.getPropertyName())) {
+                vGraph.addObjects((Map<Object,Point2D.Double>) evt.getNewValue());
+            } else if ("remove".equals(evt.getPropertyName())) {
+                vGraph.removeObjects((Set) evt.getNewValue());
             }
         }
     }
@@ -129,12 +118,13 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     public final void setGraphManager(GraphManager manager) {
         if (this.manager != manager) {
             if (this.manager != null) {
-                this.manager.removePropertyChangeListener(this);
+                this.manager.removePropertyChangeListener("graph", this);
+                this.manager.getPointManager().removePropertyChangeListener(this);
             }
             this.manager = manager;
-            this.manager = manager;
-            initGraph(manager.getGraph());
-            this.manager.addPropertyChangeListener(this);
+            initViewGraph();
+            this.manager.addPropertyChangeListener("graph", this);
+            this.manager.getPointManager().addPropertyChangeListener(this);
         }
     }
 
@@ -178,39 +168,15 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
         vGraph.setEdgeStyler(styler);
     }
 
-    public GraphUpdater getUpdater() {
+    public GraphLocationUpdater getUpdater() {
         return updater;
     }
 
-    public void setGraphUpdater(GraphUpdater updater) {
+    public void setGraphUpdater(GraphLocationUpdater updater) {
         this.updater = updater;
     }
 
     // </editor-fold>
 
-
-
-    /** Class providing functionality to update a graph */
-    public static interface GraphUpdater {
-        /**
-         * Called when the graph is updated.
-         * @param graph the new graph
-         * @param points locations of nodes in the graph
-         */
-        public void graphUpdated(Graph graph, Point2D.Double[] points);
-        /**
-         * Called when locations only are updated.
-         * @param points locations of nodes in the graph
-         */
-        public void locationsUpdated(Point2D.Double[] points);
-    }
-
-    /**
-     * Adapter class that can be subclassed for custom functionality
-     */
-    public static class GraphUpdaterAdapter implements GraphUpdater {
-        public void graphUpdated(Graph graph, Double[] points) {}
-        public void locationsUpdated(Double[] points) {}
-    }
 
 }

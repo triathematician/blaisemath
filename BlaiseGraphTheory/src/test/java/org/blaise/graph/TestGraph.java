@@ -56,7 +56,7 @@ public class TestGraph extends javax.swing.JFrame {
 
         rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
-                plot.getGraphManager().getLocationMap()
+                plot.getGraphManager().getLocations()
                 )));
         for (Plottable p : plot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
@@ -170,7 +170,7 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getGraphManager().iterateLayout();
         updateEL = false;
@@ -178,7 +178,7 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getGraphManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_energyABActionPerformed

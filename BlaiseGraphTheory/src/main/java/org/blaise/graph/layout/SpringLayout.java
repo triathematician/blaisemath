@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphUtils;
 
@@ -166,12 +167,15 @@ public class SpringLayout implements IterativeGraphLayout {
     public double getCoolingParameter() { return parameters.dampingC; }
     public double getEnergyStatus() { return energy; }
     public int getIteration() { return iteration; }
-    public Map<Object,Point2D.Double> getPositions() { return loc; }
+    
+    public synchronized Map<Object,Point2D.Double> getPositions() { 
+        return new HashMap<Object,Point2D.Double>(loc); 
+    }
 
-    public final <V> void reset(Map<V, Point2D.Double> positions) {
+    public final void reset(Map<?, Point2D.Double> positions) {
         loc.clear();
         vel.clear();
-        for (V v : positions.keySet()) {
+        for (Object v : positions.keySet()) {
             loc.put(v, positions.get(v) == null ? new Point2D.Double() : positions.get(v));
             vel.put(v, new Point2D.Double());
         }
@@ -179,9 +183,9 @@ public class SpringLayout implements IterativeGraphLayout {
         tempLoc = null;
     }
 
-    public synchronized void requestPositions(Map<Object, Point2D.Double> positions, boolean resetNodes) {
+    public synchronized void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes) {
         if (tempLoc == null) {
-            tempLoc = positions;
+            tempLoc = new HashMap<Object,Point2D.Double>(positions);
         } else {
             tempLoc.putAll(positions);
         }
@@ -223,9 +227,9 @@ public class SpringLayout implements IterativeGraphLayout {
         }
     }
 
-    public final void iterate(Graph g) throws ConcurrentModificationException {
-        long t0 = System.currentTimeMillis();
-        Set nodes = g.nodes();
+    public final <V> Map<V,Point2D.Double> iterate(Graph<V> g) throws ConcurrentModificationException {
+        int id = GAInstrument.start("SpringLayout.iterate", ""+g.nodeCount(), ""+g.edgeCount());
+        Set<V> nodes = g.nodes();
 
         if (g.isDirected()) {
             g = GraphUtils.copyUndirected(g);
@@ -241,8 +245,8 @@ public class SpringLayout implements IterativeGraphLayout {
         Point2D.Double iLoc, iVel;
 
         // compute forces
-        Map<Object, Point2D.Double> forces = new HashMap<Object,Point2D.Double>();
-        for (Object io : nodes) {
+        Map<V, Point2D.Double> forces = new HashMap<V,Point2D.Double>();
+        for (V io : nodes) {
             iLoc = loc.get(io);
             if (iLoc == null) {
                 iLoc = new Point2D.Double();
@@ -267,20 +271,29 @@ public class SpringLayout implements IterativeGraphLayout {
                 System.err.println("Computed infinite force: " + netForce + " for " + io);
             }
         }
+        GAInstrument.middle(id, "forces computed");
             
-            // adjusts velocity with damping;
-        for (Object io : nodes) {
+        // adjusts velocity with damping;
+        for (V io : nodes) {
             adjustVelocity(vel.get(io), forces.get(io));
         }
 
         // move nodes
-        for (Object o : nodes) {
+        for (V o : nodes) {
             adjustPosition(loc.get(o), vel.get(o));
         }
         
         iteration ++;
 //        if (iteration % 100 == 0)
 //            System.err.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
+        
+        HashMap<V,Point2D.Double> res = new HashMap<V,Point2D.Double>();
+        for (V v : nodes) {
+            res.put(v, loc.get(v));
+        }
+        
+        GAInstrument.end(id);
+        return res;
     }
     // </editor-fold>
 

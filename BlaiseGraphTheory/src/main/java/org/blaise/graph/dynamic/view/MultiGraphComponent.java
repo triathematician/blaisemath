@@ -88,10 +88,10 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
             Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionMap(time);
             if (gm == null && gr != null) {
                 setGraphManager(gm = new GraphManager(gr));
-                gm.requestPositionMap(positionMap);
+                gm.requestLocations(positionMap);
             } else if (gm != null) {
                 gm.setGraph(gr);
-                gm.requestPositionMap(positionMap);
+                gm.requestLocations(positionMap);
             }
             getVisometry().setWindowBounds(new Rectangle(0, 0, 200, 200));
             setBorder(BorderFactory.createTitledBorder("Time = " + time));

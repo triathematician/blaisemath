@@ -40,7 +40,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
         rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
-                plot.getGraphManager().getLocationMap()
+                plot.getGraphManager().getLocations()
                 )));
         for (Plottable p : plot.getPlottableArray()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
@@ -220,7 +220,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getGraphManager().iterateLayout();
         updateEL = false;
@@ -228,7 +228,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocationMap());
+            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getGraphManager().startLayoutTask(50, 2);
     }//GEN-LAST:event_energyABActionPerformed
@@ -239,17 +239,17 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void addVerticesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticesBActionPerformed
         graph.addVertices(5);
-        plot.getGraphManager().updateGraph();
+        plot.getGraphManager().graphUpdated();
     }//GEN-LAST:event_addVerticesBActionPerformed
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
-        plot.getGraphManager().updateGraph();
+        plot.getGraphManager().graphUpdated();
     }//GEN-LAST:event_addEdgesBActionPerformed
 
     private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
         graph.rewire(10, 5);
-        plot.getGraphManager().updateGraph();
+        plot.getGraphManager().graphUpdated();
     }//GEN-LAST:event_rewireBActionPerformed
 
     java.util.Timer t = new java.util.Timer();
@@ -265,7 +265,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
                     graph.addVertices(1);
                     graph.addEdges(2);
                 }
-                plot.getGraphManager().updateGraph();
+                plot.getGraphManager().graphUpdated();
             }
         };
         t.schedule(tt, 100, 500);
