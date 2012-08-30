@@ -6,7 +6,6 @@ package org.blaise.graphics;
 
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,14 +18,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
+import org.blaise.util.CoordinateListener;
 import org.blaise.util.Delegator;
 import org.blaise.util.Delegators;
-import org.blaise.util.PointManager;
+import org.blaise.util.CoordinateManager;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
- * and therefore fully customizable. Point locations are handled by a {@link PointManager}.
- * 
+ * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager}.
+ *
  * @param <Src> the type of object being displayed
  *
  * @see PointStyle
@@ -34,10 +34,10 @@ import org.blaise.util.PointManager;
  *
  * @author Elisha Peterson
  */
-public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements ChangeListener, PropertyChangeListener {
+public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements ChangeListener, CoordinateListener {
 
     /** Manages locations of points */
-    protected final PointManager<Src,Point2D> manager = new PointManager<Src,Point2D>();
+    protected final CoordinateManager<Src,Point2D> manager = new CoordinateManager<Src,Point2D>();
     /** Objects for individual points */
     protected final Map<Src, DelegatingPointGraphic<Src>> points = new HashMap<Src, DelegatingPointGraphic<Src>>();
     /** Generates styles for graphics */
@@ -58,7 +58,7 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     public DelegatingPointSetGraphic(Set<? extends Src> objects, Delegator<Src, Point2D> delegate) {
         this(Delegators.apply(delegate, objects));
     }
-    
+
 
     /**
      * Construct with source objects and locations as a map
@@ -70,7 +70,7 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
                 return src+"";
             }
         });
-        manager.addPropertyChangeListener(this);
+        manager.addCoordinateListener(this);
         addObjects(map);
     }
 
@@ -78,7 +78,7 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     public String toString() {
         return "DelegatingPointSet";
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     //
     // EVENT HANDLERS
@@ -87,28 +87,13 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     public synchronized void stateChanged(ChangeEvent e) {
         if (e.getSource() instanceof DelegatingPointGraphic) {
             DelegatingPointGraphic<Src> dpg = (DelegatingPointGraphic<Src>) e.getSource();
-            manager.update(dpg.getSourceObject(), dpg.getPoint());
+            manager.put(dpg.getSourceObject(), dpg.getPoint());
         }
     }
-    
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
-        // when the point manager moves points
-        if (evt.getSource() == manager) {
-            if ("add".equals(evt.getPropertyName())) {
-                add((Map<Src,Point2D>) evt.getNewValue());
-            } else if ("cache".equals(evt.getPropertyName())) {
-                Map<Src,Point2D> toRemove = (Map<Src,Point2D>) evt.getNewValue();
-                remove(toRemove.keySet());
-            } else if ("remove".equals(evt.getPropertyName())) {
-                remove((Set<Src>) evt.getNewValue());
-            }
-        }
-    }
-    
-    /** Only execute when manager has changed */
-    private synchronized void add(Map<Src,Point2D> map) {
+
+    public synchronized void coordinatesAdded(Map added) {
         List<Graphic> addMe = new ArrayList<Graphic>();
-        for (Entry<Src, Point2D> en : map.entrySet()) {
+        for (Entry<Src, Point2D> en : ((Map<Src,Point2D>)added).entrySet()) {
             Src src = en.getKey();
             DelegatingPointGraphic<Src> dpg = points.get(src);
             if (dpg == null) {
@@ -122,28 +107,27 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
         }
         addGraphics(addMe);
     }
-    
-    /** Only execute when manager has changed */
-    private synchronized void remove(Set<Src> set) {
+
+    public synchronized void coordinatesRemoved(Set removed) {
         Set<DelegatingPointGraphic<Src>> removeMe = new HashSet<DelegatingPointGraphic<Src>>();
-        for (Src s : set) {
+        for (Src s : (Set<Src>) removed) {
             removeMe.add(points.get(s));
             points.remove(s);
         }
         removeGraphics(removeMe);
     }
-    
+
     //</editor-fold>
-    
+
 
     /**
      * Manager responsible for tracking point locations
      * @return manager
      */
-    public PointManager<Src, Point2D> getPointManager() {
+    public CoordinateManager<Src, Point2D> getCoordinateManager() {
         return manager;
     }
-    
+
     /**
      * Return source objects
      * @return source objects
@@ -151,13 +135,13 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     public synchronized Set<? extends Src> getObjects() {
         return manager.getObjects();
     }
-    
+
     /**
      * Adds objects to the graphic
-     * @param obj objects to add
+     * @param obj objects to put
      */
     public synchronized void addObjects(Map<Src, Point2D> obj) {
-        manager.add(obj);
+        manager.putAll(obj);
     }
 
     /**

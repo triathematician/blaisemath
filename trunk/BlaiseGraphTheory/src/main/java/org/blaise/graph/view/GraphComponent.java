@@ -5,21 +5,26 @@
 
 package org.blaise.graph.view;
 
+import java.awt.geom.Point2D;
 import org.blaise.graph.Graph;
-import org.blaise.util.Edge;
+import org.blaise.graph.layout.GraphLayoutManager;
+import org.blaise.graphics.GraphicSelector;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
-import org.blaise.visometry.plane.PlanePlotComponent;
+import org.blaise.util.Edge;
+import org.blaise.visometry.VGraphicComponent;
+import org.blaise.visometry.plane.PlanePlotMouseHandler;
+import org.blaise.visometry.plane.PlaneVisometry;
 
 
 /**
- * Provides a view of a graph, using a {@link GraphManager} for positions/layout
+ * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
  * and a {@link PlaneGraphAdapter} for appearance.
  *
  * @author elisha
  */
-public class GraphComponent extends PlanePlotComponent {
+public class GraphComponent extends VGraphicComponent<Point2D.Double> {
 
     /** Manages the visual elements of the underlying graph */
     protected final PlaneGraphAdapter adapter;
@@ -34,7 +39,7 @@ public class GraphComponent extends PlanePlotComponent {
      * Construct without a graph
      */
     public GraphComponent() {
-        this(new GraphManager());
+        this(new GraphLayoutManager());
     }
 
     /**
@@ -42,17 +47,27 @@ public class GraphComponent extends PlanePlotComponent {
      * @param graph the graph to initialize with
      */
     public GraphComponent(Graph graph) {
-        this(new GraphManager(graph));
+        this(new GraphLayoutManager(graph));
     }
 
     /**
      * Construct with specified graph manager (contains graph and positions)
      * @param gm graph manager to initialize with
      */
-    public GraphComponent(GraphManager gm) {
+    public GraphComponent(GraphLayoutManager gm) {
+        super(new PlaneVisometry());
         adapter = new PlaneGraphAdapter(gm);
         getVisometryGraphicRoot().addGraphic(adapter.getViewGraph());
-        setDesiredRange(-5.0, -5.0, 5.0, 5.0);
+        ((PlaneVisometry) getVisometry()).setDesiredRange(-5.0, -5.0, 5.0, 5.0);
+        setPreferredSize(new java.awt.Dimension(400, 400));
+        // enable selection
+        GraphicSelector gs = new GraphicSelector(this);
+        // enable zoom and drag
+        PlanePlotMouseHandler ppmh = new PlanePlotMouseHandler(((PlaneVisometry) getVisometry()), this);
+        addMouseListener(ppmh);
+        addMouseMotionListener(ppmh);
+        addMouseWheelListener(ppmh);
+        overlays.add(ppmh);
     }
 
     //</editor-fold>
@@ -91,11 +106,11 @@ public class GraphComponent extends PlanePlotComponent {
      * Return the graph manager underlying the component, responsible for handling the graph and node locations.
      * @return the manager
      */
-    public GraphManager getGraphManager() {
+    public GraphLayoutManager getGraphManager() {
         return adapter.getGraphManager();
     }
 
-    public void setGraphManager(GraphManager gm) {
+    public void setGraphManager(GraphLayoutManager gm) {
         adapter.setGraphManager(gm);
     }
 

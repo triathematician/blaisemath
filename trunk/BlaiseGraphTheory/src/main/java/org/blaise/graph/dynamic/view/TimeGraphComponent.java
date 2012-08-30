@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import org.blaise.graph.Graph;
 import org.blaise.graph.dynamic.TimeGraph;
 import org.blaise.graph.view.GraphComponent;
-import org.blaise.graph.view.GraphManager;
+import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.graph.view.PlaneGraphAdapter;
 import org.jdesktop.layout.GroupLayout;
 
@@ -42,7 +42,7 @@ public final class TimeGraphComponent extends JPanel
     private final GraphComponent plot;
     /** Flag telling component whether to update its own graph upon receiving a property time change */
     private boolean updateWithTime = true;
-    
+
     /** Time label (overlays on plot) */
     private final JLabel timeLabel;
 
@@ -60,7 +60,7 @@ public final class TimeGraphComponent extends JPanel
     }
 
     /** Construct instance with specified graph manager */
-    public TimeGraphComponent(TimeGraphManager m, GraphManager gm) {
+    public TimeGraphComponent(TimeGraphManager m, GraphLayoutManager gm) {
         super(new java.awt.BorderLayout());
         plot = new GraphComponent();
         slider = new TimeGraphSlider();
@@ -68,7 +68,7 @@ public final class TimeGraphComponent extends JPanel
         initComponents();
         setManager(m, gm);
     }
-    
+
     private void initComponents() {
         timeLabel.setFont(timeLabel.getFont().deriveFont(Font.ITALIC, 10f));
         timeLabel.setForeground(Color.DARK_GRAY);
@@ -103,7 +103,7 @@ public final class TimeGraphComponent extends JPanel
     public void setTimeGraph(TimeGraph g) {
         setManager(new TimeGraphManager(g));
     }
-    
+
     /** @return plot on which graph is displayed */
     public GraphComponent getGraphComponent() { return plot; }
 
@@ -114,13 +114,13 @@ public final class TimeGraphComponent extends JPanel
     public TimeGraphManager getManager() { return manager; }
 
     /** @return manager for graph */
-    public GraphManager getGraphManager() { return plot.getGraphManager(); }
-    
+    public GraphLayoutManager getGraphManager() { return plot.getGraphManager(); }
+
     /** Changes the manager for the longitudinal graph */
     public void setManager(TimeGraphManager m) { setManager(m, null); }
-    
+
     /** Changes the manager for the longitudinal graph */
-    private void setManager(TimeGraphManager m, GraphManager gm) {
+    private void setManager(TimeGraphManager m, GraphLayoutManager gm) {
         if (this.manager != m) {
             if (this.manager != null)
                 this.manager.removePropertyChangeListener(this);
@@ -130,7 +130,7 @@ public final class TimeGraphComponent extends JPanel
                 m.addPropertyChangeListener(this);
             if (gm == null) {
                 Graph g = m == null ? null : m.getSlice();
-                plot.setGraphManager(g == null ? null : new GraphManager(g));
+                plot.setGraphManager(g == null ? null : new GraphLayoutManager(g));
             } else {
                 plot.setGraphManager(gm);
             }
@@ -147,7 +147,7 @@ public final class TimeGraphComponent extends JPanel
 
     // </editor-fold>
 
-    
+
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == manager) {

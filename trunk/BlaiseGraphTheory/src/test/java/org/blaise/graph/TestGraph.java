@@ -7,17 +7,16 @@ package org.blaise.graph;
 
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
-import org.blaise.graph.Graph;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.modules.EdgeProbabilityBuilder;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
+import org.blaise.graphics.Graphic;
 import org.blaise.style.BasicPointStyle;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Delegator;
 import org.blaise.util.gui.RollupPanel;
-import org.blaise.visometry.Plottable;
 
 /**
  *
@@ -46,11 +45,11 @@ public class TestGraph extends javax.swing.JFrame {
                 return new BasicPointStyle().radius((int) (4+Math.sqrt(i)));
             }
         });
-        
+
         plot.getAdapter().getNodeStyler().setLabelDelegate(new Delegator<Object, String>(){
             public String of(Object src) { return src == null ? "null" : src.toString(); }
         });
-        
+
 
         // PANELS
 
@@ -58,7 +57,7 @@ public class TestGraph extends javax.swing.JFrame {
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
                 plot.getGraphManager().getLocations()
                 )));
-        for (Plottable p : plot.getPlottableArray()) {
+        for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
     }

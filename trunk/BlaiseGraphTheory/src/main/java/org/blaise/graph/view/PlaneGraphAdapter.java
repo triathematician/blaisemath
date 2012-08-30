@@ -4,40 +4,50 @@
  */
 package org.blaise.graph.view;
 
+import org.blaise.graph.layout.GraphLocationUpdater;
 import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.graph.Graph;
+import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.style.BasicPathStyle;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
+import org.blaise.util.CoordinateListener;
 import org.blaise.util.Delegator;
 import org.blaise.util.Edge;
 import org.blaise.util.NonDelegator;
 import org.blaise.visometry.VCustomGraph;
 import org.blaise.visometry.plane.PlanePlotComponent;
 
-/**
+
+
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
+
+    /**
  * <p>
- *  Combines a {@link GraphManager} with a {@link VCustomGraph} to manage the positions of a displayed graph;
+ *  Combines a {@link GraphLayoutManager} with a {@link VCustomGraph} to manage the positions of a displayed graph;
  *  also manages the visual appearance of the graph. The provided {@link VCustomGraph} may then be added
  *  to an arbitrary {@link PlanePlotComponent}.
  * </p>
  *
+ * XXX - this should synchronize the pointmanager of the vgraph class and the manager class
+ *
  * @author Elisha Peterson
  */
-public class PlaneGraphAdapter implements PropertyChangeListener {
+public class PlaneGraphAdapter implements PropertyChangeListener, CoordinateListener {
 
     /** Manages graph and node locations */
-    private GraphManager manager;
+    private GraphLayoutManager manager;
     /** Stores the visible graph */
-    private VCustomGraph<Point2D.Double,Object,Edge<Object>> vGraph;
+    private VCustomGraph vGraph;
     /** Handles updates to the graph or locations. Called after the graph changes or the positions of the graph change. */
     protected GraphLocationUpdater updater = null;
 
@@ -50,7 +60,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * Initialize adapter with an empty graph.
      */
     public PlaneGraphAdapter() {
-        this(new GraphManager());
+        this(new GraphLayoutManager());
     }
 
     /**
@@ -58,14 +68,14 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * @param graph the graph to display
      */
     public PlaneGraphAdapter(Graph graph) {
-        this(new GraphManager(graph));
+        this(new GraphLayoutManager(graph));
     }
 
     /**
      * Construct adapter with the specified manager.
-     * @param manager a GraphManager with the graph to display
+     * @param manager a GraphLayoutManager with the graph to display
      */
-    public PlaneGraphAdapter(final GraphManager manager) {
+    public PlaneGraphAdapter(final GraphLayoutManager manager) {
         setGraphManager(manager);
     }
 
@@ -75,7 +85,11 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     protected final void initViewGraph() {
         synchronized(manager) {
             Map<Object,Point2D.Double> loc = manager.getLocations();
-            vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(loc);
+            if (vGraph == null) {
+                vGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(loc);
+            } else {
+                vGraph.setObjects(loc);
+            }
             vGraph.setEdges(manager.getGraph().edges());
         }
         vGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
@@ -89,42 +103,39 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == manager) {
+//            System.out.println("pga.pc/manager");
             if ("graph".equals(evt.getPropertyName())) {
                 initViewGraph();
-            }
-        } else if (evt.getSource() == manager.getPointManager()) {
-            if ("add".equals(evt.getPropertyName())) {
-                vGraph.addObjects((Map<Object,Point2D.Double>) evt.getNewValue());
-            } else if ("remove".equals(evt.getPropertyName())) {
-                vGraph.removeObjects((Set) evt.getNewValue());
             }
         }
     }
 
+    public void coordinatesAdded(Map added) {
+        vGraph.addObjects((Map<Object,Point2D.Double>) added);
+    }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
+    public void coordinatesRemoved(Set removed) {
+        vGraph.removeObjects(removed);
+    }
 
-    /**
-     * Return the GraphManager with position data
-     * @return GraphManager
+/**
+     * Return the GraphLayoutManager with position data
+     * @return GraphLayoutManager
      */
-    public GraphManager getGraphManager() {
+    public GraphLayoutManager getGraphManager() {
         return manager;
     }
 
-    public final void setGraphManager(GraphManager manager) {
+    public final void setGraphManager(GraphLayoutManager manager) {
         if (this.manager != manager) {
             if (this.manager != null) {
                 this.manager.removePropertyChangeListener("graph", this);
-                this.manager.getPointManager().removePropertyChangeListener(this);
+                this.manager.getCoordinateManager().removeCoordinateListener(this);
             }
             this.manager = manager;
             initViewGraph();
             this.manager.addPropertyChangeListener("graph", this);
-            this.manager.getPointManager().addPropertyChangeListener(this);
+            this.manager.getCoordinateManager().addCoordinateListener(this);
         }
     }
 
@@ -132,7 +143,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * Return the VPointGraph for display
      * @return the VPointGraph
      */
-    public VCustomGraph<Point2D.Double,Object,Edge<Object>> getViewGraph() {
+    public VCustomGraph getViewGraph() {
         return vGraph;
     }
 

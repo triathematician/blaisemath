@@ -5,8 +5,7 @@
 package org.blaise.visometry;
 
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +13,8 @@ import org.blaise.graphics.DelegatingPointSetGraphic;
 import org.blaise.graphics.Graphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
+import org.blaise.util.CoordinateListener;
+import org.blaise.util.CoordinateManager;
 
 /**
  * A set of draggable points defined in local coordinates. The local coordinates are updated
@@ -24,12 +25,16 @@ import org.blaise.style.PointStyle;
  *
  * @author elisha
  */
-public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements PropertyChangeListener {
+public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements CoordinateListener {
 
     /** Local coordinates of the points */
-    protected final Map<Src, C> localCoords = new HashMap<Src, C>();
+    private final CoordinateManager<Src,C> localCoords = new CoordinateManager<Src,C>();
     /** The window entry */
     protected DelegatingPointSetGraphic<Src> window = new DelegatingPointSetGraphic<Src>();
+
+    public VCustomPointSet() {
+        this(Collections.EMPTY_MAP);
+    }
 
     /**
      * Initialize set
@@ -37,33 +42,22 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
      */
     public VCustomPointSet(Map<Src, ? extends C> loc) {
         addObjects(loc);
-        window.getPointManager().addPropertyChangeListener(this);
+        window.getCoordinateManager().addCoordinateListener(this);
     }
 
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
-        // user has dragged points around
-        if (evt.getSource() == window.getPointManager()) {
-            Visometry<C> vis = parent.getVisometry();
-            if ("add".equals(evt.getPropertyName())) {
-                Map<Src,Point2D> added = (Map<Src,Point2D>) evt.getNewValue();
-                for (Src s : added.keySet()) {
-                    localCoords.put(s, vis.toLocal(added.get(s)));
-                }
-            } else if ("cache".equals(evt.getPropertyName())) {
-                Map<Src,Point2D> removed = (Map<Src,Point2D>) evt.getNewValue();
-                for (Src s : removed.keySet()) {
-                    localCoords.remove(s);
-                }
-            } else if ("remove".equals(evt.getPropertyName())) {
-                Set<Src> removed = (Set<Src>) evt.getNewValue();
-                for (Src s : removed) {
-                    localCoords.remove(s);
-                }
-            }
+    public synchronized void coordinatesAdded(Map added) {
+        Visometry<C> vis = parent.getVisometry();
+        Map<Src,Point2D> add = (Map<Src,Point2D>) added;
+        Map<Src,C> local = new HashMap<Src,C>();
+        for (Src s : add.keySet()) {
+            local.put(s, vis.toLocal(add.get(s)));
         }
+        localCoords.putAll(local);
     }
 
-
+    public synchronized void coordinatesRemoved(Set removed) {
+        localCoords.removeObjects(removed);
+    }
 
     //
     // PROPERTIES
@@ -73,19 +67,34 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
         return window;
     }
 
+    public CoordinateManager<Src, C> getCoordinateManager() {
+        return localCoords;
+    }
+
     public synchronized Set<? extends Src> getObjects() {
         return window.getObjects();
     }
 
+    /**
+     * Add a collection of objects to the view
+     * @param loc objects to put
+     */
     public synchronized void addObjects(Map<Src, ? extends C> loc) {
         localCoords.putAll(loc);
         setUnconverted(true);
     }
-    
+
+    /**
+     * Replaces the current objects in the set with a new set
+     * @param loc new objects
+     */
+    public synchronized void setObjects(Map<Src, ? extends C> loc) {
+        localCoords.setCoordinateMap(loc);
+        setUnconverted(true);
+    }
+
     public synchronized void removeObjects(Set<Src> obj) {
-        for (Src c : obj) {
-            localCoords.remove(c);
-        }
+        localCoords.removeObjects(obj);
         setUnconverted(true);
     }
 
@@ -103,10 +112,11 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
 
     public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
         Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
-        for (Src s : localCoords.keySet()) {
-            winmap.put(s, processor.convert(localCoords.get(s), vis));
+        for (Src s : localCoords.getObjects()) {
+            winmap.put(s, processor.convert(localCoords.of(s), vis));
         }
-        window.getPointManager().update(winmap);
+        window.getCoordinateManager().putAll(winmap);
+        setUnconverted(false);
     }
 
 }

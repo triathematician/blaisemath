@@ -16,12 +16,12 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import org.blaise.graph.Graph;
 import org.blaise.graph.view.GraphComponent;
-import org.blaise.graph.view.GraphManager;
+import org.blaise.graph.layout.GraphLayoutManager;
 
 /**
  * Displays multiple graphs in a common component. Implemented as a {@link JList}
  * with a custom {@link ListCellRenderer}.
- * 
+ *
  * @author elisha
  */
 public class MultiGraphComponent extends JList implements PropertyChangeListener {
@@ -42,14 +42,14 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         super.setVisibleRowCount(10);
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
     /** @return manager for the longitudinal graph */
-    public TimeGraphManager getManager() { 
-        return manager; 
+    public TimeGraphManager getManager() {
+        return manager;
     }
-    
+
     /** Changes the manager for the longitudinal graph */
     public void setManager(TimeGraphManager m) {
         if (this.manager != m) {
@@ -66,8 +66,8 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     }
 
     // </editor-fold>
-    
-    
+
+
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     public void propertyChange(PropertyChangeEvent evt) {
         repaint();
@@ -75,8 +75,8 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     }
 
     // </editor-fold>
-    
-    
+
+
     private class GraphCellRenderer extends GraphComponent implements ListCellRenderer {
         public GraphCellRenderer() {
             setPreferredSize(new Dimension(200, 200));
@@ -84,10 +84,10 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Double time = (Double) value;
             Graph gr = MultiGraphComponent.this.manager.getTimeGraph().slice(time, false);
-            GraphManager gm = getAdapter() == null ? null : getGraphManager();
+            GraphLayoutManager gm = getAdapter() == null ? null : getGraphManager();
             Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionMap(time);
             if (gm == null && gr != null) {
-                setGraphManager(gm = new GraphManager(gr));
+                setGraphManager(gm = new GraphLayoutManager(gr));
                 gm.requestLocations(positionMap);
             } else if (gm != null) {
                 gm.setGraph(gr);

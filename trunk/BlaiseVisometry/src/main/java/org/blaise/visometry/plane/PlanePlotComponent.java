@@ -5,10 +5,9 @@
 
 package org.blaise.visometry.plane;
 
-import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import org.blaise.math.line.RealInterval;
-import org.blaise.visometry.PlotComponent;
+import org.blaise.visometry.VGraphicComponent;
 
 /**
  * <p>
@@ -18,7 +17,7 @@ import org.blaise.visometry.PlotComponent;
  *
  * @author Elisha Peterson
  */
-public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
+public class PlanePlotComponent extends VGraphicComponent<Point2D.Double> {
 
     /** Handles mouse gestures on the component, e.g. drag and zoom */
     PlanePlotMouseHandler mouseListener;
@@ -32,19 +31,16 @@ public class PlanePlotComponent extends PlotComponent<Point2D.Double> {
         addMouseListener(mouseListener = new PlanePlotMouseHandler(pv, this));
         addMouseMotionListener(mouseListener);
         addMouseWheelListener(mouseListener);
-        
-        // set up the default domains for the plot
-        plottables.registerDomain("x", pv.getHorizontalDomain(), Double.class);
-        plottables.registerDomain("y", pv.getVerticalDomain(), Double.class);
-        plottables.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
-        plottables.registerDomain("time", new RealInterval(0, 100), Double.class);
-        
-        setPreferredSize(new java.awt.Dimension(400, 400));
-    }
+        overlays.add(mouseListener);
 
-    @Override
-    protected void renderOverlay(Graphics2D canvas) {
-        mouseListener.paint(canvas);
+// below applies for Plottable elements only
+//        // set up the default domains for the plot
+//        plottables.registerDomain("x", pv.getHorizontalDomain(), Double.class);
+//        plottables.registerDomain("y", pv.getVerticalDomain(), Double.class);
+//        plottables.registerDomain("xy", pv.getPlaneDomain(), Point2D.Double.class);
+//        plottables.registerDomain("time", new RealInterval(0, 100), Double.class);
+
+        setPreferredSize(new java.awt.Dimension(400, 400));
     }
 
     //

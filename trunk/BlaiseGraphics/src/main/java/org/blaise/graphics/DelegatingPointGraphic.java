@@ -13,7 +13,7 @@ import org.blaise.util.Delegator;
 
 /**
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
- * 
+ *
  * @author Elisha
  */
 public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
@@ -31,11 +31,11 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
         super(pt);
         setSourceObject(src);
     }
-    
+
     public Src getSourceObject() {
         return src;
     }
-    
+
     public void setSourceObject(Src src) {
         this.src = src;
         setDefaultTooltip(styler.getTipDelegate().of(src));
@@ -54,14 +54,20 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
 
     @Override
     public PointStyle drawStyle() {
-        PointStyle style = styler.getStyleDelegate().of(src);
-        return style == null ? parent.getStyleProvider().getPointStyle(this) : style;
+        PointStyle style = null;
+        if (styler != null && styler.getStyleDelegate() != null) {
+            style = styler.getStyleDelegate().of(src);
+        }
+        if (style == null) {
+            style = parent.getStyleProvider().getPointStyle(this);
+        }
+        return style;
     }
-    
+
     public void draw(Graphics2D canvas) {
-        PointStyle ps = styler.getStyleDelegate().of(src);
+        PointStyle ps = drawStyle();
         ps.draw(point, canvas, visibility);
-        
+
         if (styler.getLabelDelegate() != null) {
             String label = styler.getLabelDelegate().of(src);
             if (label != null && label.length() > 0) {
@@ -71,7 +77,7 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
                 }
             }
         }
-    }  
+    }
 
-    
+
 }
