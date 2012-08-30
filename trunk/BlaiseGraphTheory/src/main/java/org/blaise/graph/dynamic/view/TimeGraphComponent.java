@@ -160,10 +160,10 @@ public final class TimeGraphComponent extends JPanel
                     plot.getGraphManager().setGraph(gr);
                 }
                 if (pos != null)
-                    plot.getGraphManager().requestPositionMap(pos);
+                    plot.getGraphManager().requestLocations(pos);
                 timeLabel.setText("Slice t="+time);
             } else if (evt.getPropertyName().equals("nodePositions")) {
-                plot.getGraphManager().requestPositionMap((Map<Object, Point2D.Double>) evt.getNewValue());
+                plot.getGraphManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
             }
         }
     }

@@ -25,7 +25,7 @@ public interface IterativeGraphLayout {
      * <code>iterate()</code> method.
      * @param positions a map describing the positions for all nodes in the layout
      */
-    public <V> void reset(Map<V, Point2D.Double> positions);
+    public void reset(Map<?, Point2D.Double> positions);
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
@@ -33,7 +33,7 @@ public interface IterativeGraphLayout {
      *   during the next call to iterate()
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
      */
-    public <V> void requestPositions(Map<V, Point2D.Double> positions, boolean resetNodes);
+    public void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes);
 
     /**
      * <p>
@@ -47,9 +47,11 @@ public interface IterativeGraphLayout {
      * the positions of the requested nodes.
      * </p>
      *
+     * @param <V> node type of graph
      * @param g the graph to layout
+     * @return map with current associating of nodes to points
      */
-    public void iterate(Graph g);
+    public <V> Map<V,Point2D.Double> iterate(Graph<V> g);
 
     /**
      * @return index of current iteration (should reset to 0 whenever the reset method is called)
@@ -71,6 +73,6 @@ public interface IterativeGraphLayout {
      * Returns the current list of point locations.
      * @return current list of positions
      */
-    public <V> Map<V,Point2D.Double> getPositions();
+    public Map<?,Point2D.Double> getPositions();
 
 }

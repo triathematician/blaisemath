@@ -81,6 +81,13 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Prope
         localCoords.putAll(loc);
         setUnconverted(true);
     }
+    
+    public synchronized void removeObjects(Set<Src> obj) {
+        for (Src c : obj) {
+            localCoords.remove(c);
+        }
+        setUnconverted(true);
+    }
 
     public ObjectStyler<Src, PointStyle> getStyler() {
         return window.getStyler();
