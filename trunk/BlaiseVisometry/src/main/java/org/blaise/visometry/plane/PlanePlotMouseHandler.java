@@ -9,11 +9,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
@@ -156,13 +152,12 @@ public class PlanePlotMouseHandler
         }
     }
     public void mouseReleased(MouseEvent e) {
-        if (e.isConsumed()) {
-            return;
-        }
-        mouseDragged(e);
-        if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
-            zoomBoxAnimated(vis, zoomBox);
-        else { // pan mode
+        if (!e.isConsumed()) {
+            mouseDragged(e);
+            if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
+                zoomBoxAnimated(vis, zoomBox);
+            else { // pan mode
+            }
         }
         zoomBox = null;
         pressedAt = null;
@@ -172,13 +167,6 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseMoved(MouseEvent e) {
-        if (e.isConsumed()) {
-            return;
-        }
-        if (MouseEvent.getModifiersExText(e.getModifiersEx()).equals("Alt"))
-            plot.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-        else
-            plot.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {

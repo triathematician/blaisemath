@@ -86,7 +86,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
             }
         }
     }
-    
+
     //
     // PROPERTIES
     //
@@ -131,7 +131,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     public GraphicMouseEvent.Factory getMouseEventFactory() {
         return mouseFactory;
     }
-    
+
     /**
      * Modifies how mouse events are created.
      * @param factory responsible for generating mouse events
@@ -139,13 +139,13 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     public void setMouseEventFactory(GraphicMouseEvent.Factory factory) {
         this.mouseFactory = factory;
     }
-    
+
     /** Current owner of mouse events. Gets first priority for mouse events that occur. */
     private transient Graphic mouseGraphic;
 
     private void updateMouseGraphic(MouseEvent e, boolean keepCurrent) {
-        if (keepCurrent && mouseGraphic != null 
-                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.Hidden) 
+        if (keepCurrent && mouseGraphic != null
+                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.Hidden)
                 && mouseGraphic.contains(e.getPoint())) {
             return;
         }
@@ -188,12 +188,12 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
 
     /** Tracks current mouse location */
     Point mouseLoc;
-    
+
     public void mouseMoved(MouseEvent e) {
         mouseLoc = e.getPoint();
         updateMouseGraphic(e, false);
         if (mouseGraphic != null) {
-            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
             for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
                 l.mouseMoved(gme);
@@ -202,7 +202,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
                 }
             }
         } else {
-            owner.setCursor(Cursor.getDefaultCursor());
+//            owner.setCursor(Cursor.getDefaultCursor());
         }
     }
 
@@ -257,7 +257,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
             }
         }
     }
-    
+
     //</editor-fold>
-    
+
 }

@@ -84,13 +84,11 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
         }
         viewGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
         viewGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
-
-        // default edge style
-        ObjectStyler<Edge<Object>, PathStyle> ges = new ObjectStyler<Edge<Object>, PathStyle>();
-        ges.setStyleDelegate(new NonDelegator<Edge<Object>,PathStyle>(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
-        viewGraph.setEdgeStyler(ges);
+        if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
+            viewGraph.getEdgeStyler().setStyleDelegate(new NonDelegator<Edge<Object>,PathStyle>(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
+        }
     }
-    
+
     //
     // EVENT HANDLERS
     //
@@ -103,7 +101,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
             }
         }
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
@@ -167,7 +165,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     public void setEdgeStyler(ObjectStyler<Edge<Object>, PathStyle> styler) {
         viewGraph.setEdgeStyler(styler);
     }
-    
+
     //</editor-fold>
 
 }

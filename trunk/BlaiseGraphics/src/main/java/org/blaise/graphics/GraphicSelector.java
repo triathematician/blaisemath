@@ -30,15 +30,15 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     /** Whether selector is enabled */
     private boolean enabled = true;
     /** Determines which objects can be selected */
-    private final GraphicComposite domain;
+    private final GraphicComponent component;
     /** Model of selected items */
     private final SetSelectionModel<Graphic> selection = new SetSelectionModel<Graphic>();
     /** Style for drawing */
     private BasicShapeStyle style = new BasicShapeStyle(new Color(128,128,255,32), new Color(0,0,128,64));
 
     /** Initialize for specified component */
-    public GraphicSelector(GraphicComposite domain) {
-        this.domain = domain;
+    public GraphicSelector(GraphicComponent domain) {
+        this.component = domain;
 
         // highlight updates
         selection.addPropertyChangeListener(new PropertyChangeListener(){
@@ -65,7 +65,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     public boolean isSelectionEnabled() {
         return enabled;
     }
-    
+
     public void setSelectionEnabled(boolean b) {
         enabled = b;
     }
@@ -77,7 +77,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     public SetSelectionModel<Graphic> getSelectionModel() {
         return selection;
     }
-    
+
     public BasicShapeStyle getStyle() {
         return style;
     }
@@ -113,7 +113,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
             selection.setSelection(Collections.EMPTY_SET);
             return;
         }
-        Graphic g = domain.selectableGraphicAt(e.getPoint());
+        Graphic g = component.getGraphicRoot().selectableGraphicAt(e.getPoint());
         if (e.isShiftDown()) {
             selection.removeSelection(g);
         } else if (e.isAltDown()) {
@@ -137,7 +137,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (!enabled || e.isConsumed() || box == null) {
+        if (!enabled || e.isConsumed() || box == null || pressPt == null) {
             return;
         }
         dragPt = e.getPoint();
@@ -156,7 +156,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
         releasePt = e.getPoint();
         box.setFrameFromDiagonal(pressPt, releasePt);
         if (box.getWidth() > 0 && box.getHeight() > 0) {
-            Set<Graphic> gg = domain.selectableGraphicsIn(box);
+            Set<Graphic> gg = component.getGraphicRoot().selectableGraphicsIn(box);
             if (e.isShiftDown()) {
                 Set<Graphic> res = new HashSet<Graphic>(selection.getSelection());
                 res.removeAll(gg);
@@ -176,7 +176,39 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
         e.consume();
     }
 
-    public void mouseMoved(MouseEvent e) {}
+//    Graphic mouseover = null;
+//    Set<VisibilityHint> oldhints = null;
+
+    public void mouseMoved(MouseEvent e) {
+        if (e.isConsumed()) {
+            return;
+        }
+        Graphic g = component.getGraphicRoot().selectableGraphicAt(e.getPoint());
+        component.setCursor(g == null ? Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+                : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        if (mouseover != g) {
+//            if (mouseover != null) {
+//                mouseover.setVisibilityHints(oldhints);
+//            }
+//            mouseover = g;
+//            if (g != null) {
+//                oldhints = new HashSet<VisibilityHint>(g.getVisibilityHints());
+//                Set<VisibilityHint> newhints = new HashSet<VisibilityHint>(oldhints);
+//                newhints.add(VisibilityHint.Highlight);
+//                g.setVisibilityHints(newhints);
+//            } else {
+//                oldhints = null;
+//            }
+//        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+//        mouseover = null;
+//        oldhints = null;
+    }
+
+
 
 
 }

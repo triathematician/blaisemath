@@ -32,19 +32,19 @@ public class GraphicComponent extends javax.swing.JComponent {
     /** The visible shapes. */
     protected final GraphicRoot root = new GraphicRoot();
     /** Used for selecting graphics */
-    protected final GraphicSelector selector = new GraphicSelector(root);
+    protected final GraphicSelector selector = new GraphicSelector(this);
     /** Underlay painters */
     protected final List<CanvasPainter> underlays = new ArrayList<CanvasPainter>();
     /** Overlay painters */
     protected final List<CanvasPainter> overlays = new ArrayList<CanvasPainter>();
-    
+
     /** Whether antialias is enabled */
     protected boolean antialias = true;
 
     // CONSTRUCTOR
 
-    /** 
-     * Construction of a generic graphics view component. 
+    /**
+     * Construction of a generic graphics view component.
      */
     public GraphicComponent() {
         root.initComponent(this);
@@ -61,34 +61,34 @@ public class GraphicComponent extends javax.swing.JComponent {
         setToolTipText("");
     }
 
-    
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
-    
-    /** 
+
+    /**
      * Return graphic root managing the shapes to be rendered
-     * @return shapes root 
+     * @return shapes root
      */
-    public GraphicRoot getGraphicRoot() { 
-        return root; 
+    public GraphicRoot getGraphicRoot() {
+        return root;
     }
-    
-    /** 
+
+    /**
      * Return the default render factory used to draw shapes
-     * @return current style provider used to draw shapes in the component 
+     * @return current style provider used to draw shapes in the component
      */
-    public StyleProvider getStyleProvider() { 
-        return root.getStyleProvider(); 
+    public StyleProvider getStyleProvider() {
+        return root.getStyleProvider();
     }
-    
-    /** 
+
+    /**
      * Sets the default render factory used to draw shapes
      * @param factory render factory
      * @throws IllegalArgumentException if the factory is null
      */
-    public void setStyleProvider(StyleProvider factory) { 
+    public void setStyleProvider(StyleProvider factory) {
         root.setStyleProvider(factory);
     }
 
@@ -103,7 +103,7 @@ public class GraphicComponent extends javax.swing.JComponent {
     public SetSelectionModel<Graphic> getSelectionModel() {
         return selector.getSelectionModel();
     }
-    
+
     /**
      * Return true if antialias is enabled
      * @return antialias setting
@@ -111,7 +111,7 @@ public class GraphicComponent extends javax.swing.JComponent {
     public boolean isAntialiasOn() {
         return antialias;
     }
-    
+
     /**
      * Sets antialias status
      * @param aa antialias status
@@ -120,10 +120,10 @@ public class GraphicComponent extends javax.swing.JComponent {
         antialias = aa;
         repaint();
     }
-    
+
     //</editor-fold>
 
-    
+
     //<editor-fold defaultstate="collapsed" desc="DELEGATES">
     //
     // DELEGATES
@@ -167,10 +167,10 @@ public class GraphicComponent extends javax.swing.JComponent {
     public void clearGraphics() {
         root.clearGraphics();
     }
-    
+
     //</editor-fold>
-    
-    
+
+
     //
     // PAINT METHODS
     //
@@ -201,12 +201,12 @@ public class GraphicComponent extends javax.swing.JComponent {
         renderTo((Graphics2D) g);
     }
 
-    /** 
+    /**
      * Renders all shapes in root to specified graphics object.
      * @param canvas graphics canvas to render to
      */
     public void renderTo(Graphics2D canvas) {
-        canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+        canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 antialias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF );
         canvas.setColor(getBackground());
         canvas.fillRect(0, 0, getWidth(), getHeight());
@@ -216,7 +216,7 @@ public class GraphicComponent extends javax.swing.JComponent {
     }
 
     /**
-     * Hook to render underlay elements. Called after the background is drawn, 
+     * Hook to render underlay elements. Called after the background is drawn,
      * but before anything else.
      * @param canvas the canvas to render to
      */
@@ -225,9 +225,9 @@ public class GraphicComponent extends javax.swing.JComponent {
             p.paint(this, canvas);
         }
     }
-    
-    /** 
-     * Hook to render overlay elements. Called after everything else is drawn. 
+
+    /**
+     * Hook to render overlay elements. Called after everything else is drawn.
      * @param canvas the canvas to render to
      */
     protected void renderOverlay(Graphics2D canvas) {

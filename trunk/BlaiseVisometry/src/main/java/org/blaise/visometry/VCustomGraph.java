@@ -28,7 +28,7 @@ import org.blaise.util.Edge;
 public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPointSet<C, Src> {
 
     /** Maintains collection of edges */
-    DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
+    protected final DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
 
     /**
      * Initialize without any points or edges

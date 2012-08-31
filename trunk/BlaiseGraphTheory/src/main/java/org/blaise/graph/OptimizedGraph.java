@@ -5,11 +5,7 @@
 
 package org.blaise.graph;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -67,8 +63,8 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
         super(directed, nodes, edges);
         initCachedElements();
     }
-    
-    /** 
+
+    /**
      * Construct graph with a sparse adjacency representation.
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
@@ -77,7 +73,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
         super(directed, adjacencies);
         initCachedElements();
     }
-    
+
     private void initCachedElements() {
         for (V v : nodes) {
             int deg = super.degree(v);
@@ -93,34 +89,58 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
         }
         for (V v : nodes) {
             for (V y : neighbors.get(v)) {
+                Integer get = degrees.get(y);
+                if (get == null) {
+                    throw new IllegalStateException("Node " + y + " (neighbor of " + v + ") was not found in provided node set");
+                }
                 if (degrees.get(y) == 1) {
                     adjLeaves.get(v).add(y);
                 }
             }
         }
-    }    
+    }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
 
+    /**
+     * Nodes with deg 0
+     * @return nodes
+     */
     public Set<V> getIsolates() {
         return isolates;
     }
 
+    /**
+     * Nodes with deg 1
+     * @return nodes
+     */
     public Set<V> getLeafNodes() {
         return leafNodes;
     }
 
+    /**
+     * Nodes with deg 2
+     * @return nodes
+     */
     public Set<V> getConnectorNodes() {
         return connectorNodes;
     }
 
+    /**
+     * Nodes with deg >= 3
+     * @return nodes
+     */
     public Set<V> getCoreNodes() {
         return coreNodes;
     }
 
+    /**
+     * Collection of neighbors
+     * @return neighbors
+     */
     public Map<V, Set<V>> getNeighbors() {
         return neighbors;
     }
@@ -135,7 +155,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
     public Set<V> getAdjacentLeafNodes(V v) {
         return adjLeaves.get(v);
     }
-    
+
 
     //
     // OVERRIDES
@@ -155,7 +175,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
     public int degree(V x) {
         return degrees.get(x);
     }
-    
-    
+
+
 
 }
