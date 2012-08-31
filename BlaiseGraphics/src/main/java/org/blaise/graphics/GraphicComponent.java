@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import org.blaise.style.StyleProvider;
+import org.blaise.util.SetSelectionModel;
 
 /**
  * <p>
@@ -30,6 +31,8 @@ public class GraphicComponent extends javax.swing.JComponent {
 
     /** The visible shapes. */
     protected final GraphicRoot root = new GraphicRoot();
+    /** Used for selecting graphics */
+    protected final GraphicSelector selector = new GraphicSelector(root);
     /** Underlay painters */
     protected final List<CanvasPainter> underlays = new ArrayList<CanvasPainter>();
     /** Overlay painters */
@@ -45,6 +48,10 @@ public class GraphicComponent extends javax.swing.JComponent {
      */
     public GraphicComponent() {
         root.initComponent(this);
+        selector.setSelectionEnabled(false);
+        addMouseListener(selector);
+        addMouseMotionListener(selector);
+        overlays.add(selector);
 
         setDoubleBuffered(true);
         setBackground(Color.WHITE);
@@ -83,6 +90,18 @@ public class GraphicComponent extends javax.swing.JComponent {
      */
     public void setStyleProvider(StyleProvider factory) { 
         root.setStyleProvider(factory);
+    }
+
+    public boolean isSelectionEnabled() {
+        return selector.isSelectionEnabled();
+    }
+
+    public void setSelectionEnabled(boolean b) {
+        selector.setSelectionEnabled(b);
+    }
+
+    public SetSelectionModel<Graphic> getSelectionModel() {
+        return selector.getSelectionModel();
     }
     
     /**

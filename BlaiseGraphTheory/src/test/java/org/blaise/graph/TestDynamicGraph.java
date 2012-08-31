@@ -5,6 +5,8 @@
  */
 package org.blaise.graph;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.layout.SpringLayout;
@@ -45,6 +47,13 @@ public class TestDynamicGraph extends javax.swing.JFrame {
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
+        
+        addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GAInstrument.print(System.out, 50);
+            }
+        });
     }
 
     /** This method is called from within the constructor to

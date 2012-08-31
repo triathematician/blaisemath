@@ -5,9 +5,6 @@
 
 package org.blaise.util;
 
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Receives updates regarding the locations of a collection of objects.
  *
@@ -18,14 +15,8 @@ public interface CoordinateListener<Coord> {
 
     /**
      * Called when coordinates/points are added.
-     * @param added coordinates that were added
+     * @param evt description of what coordinates were added/removed/changed
      */
-    void coordinatesAdded(Map<?,Coord> added);
-
-    /**
-     * Called when coordinates have been removed
-     * @param removed objects whose coordinates were removed
-     */
-    void coordinatesRemoved(Set<?> removed);
+    void coordinatesChanged(CoordinateChangeEvent evt);
 
 }

@@ -261,18 +261,18 @@ public class GraphicComposite extends GraphicSupport {
     }
 
     @Override
-    public void initialize(JPopupMenu menu, Point point) {
+    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
         for (Graphic en : reverseGraphics()) {
-            if (en.isContextMenuEnabled() && 
-                    !en.getVisibilityHints().contains(VisibilityHint.Hidden) 
+            if ((en instanceof GraphicComposite || en.isContextMenuEnabled()) 
+                    && !en.getVisibilityHints().contains(VisibilityHint.Hidden) 
                     && en.contains(point)) {
-                en.initialize(menu, point);
+                en.initialize(menu, point, focus, selection);
             }
         }
 
         // behavior adds composite actions after adding individual graphic actions
         if (isContextMenuEnabled()) {
-            super.initialize(menu, point);
+            super.initialize(menu, point, focus, selection);
         }
     }
     public synchronized void draw(Graphics2D canvas) {

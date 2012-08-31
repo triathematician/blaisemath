@@ -7,7 +7,7 @@ package org.blaise.graph.metrics;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 import org.blaise.graph.Graph;
 
 /**

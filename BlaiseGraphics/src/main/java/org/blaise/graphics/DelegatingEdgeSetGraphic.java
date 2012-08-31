@@ -5,17 +5,19 @@
 
 package org.blaise.graphics;
 
+import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JPopupMenu;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
+import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
 import org.blaise.util.Edge;
 import org.blaise.util.CoordinateManager;
@@ -39,11 +41,8 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
     /** Initialize without arguments */
     public DelegatingEdgeSetGraphic() {}
 
-    public synchronized void coordinatesAdded(Map added) {
+    public void coordinatesChanged(CoordinateChangeEvent evt) {
         update(pointManager.getCoordinates(), new ArrayList<Graphic>());
-    }
-
-    public synchronized void coordinatesRemoved(Set removed) {
     }
 
     private void update(Map<Src,Point2D> locs, List<Graphic> removeMe) {
@@ -90,7 +89,7 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
      * Also updates the set of objects to be the nodes within the edges
      * @param ee new edges to put
      */
-    public final synchronized void setEdges(Set<? extends EdgeType> ee) {
+    public final void setEdges(Set<? extends EdgeType> ee) {
         Set<EdgeType> addMe = new HashSet<EdgeType>();
         Set<EdgeType> removeMe = new HashSet<EdgeType>();
         for (EdgeType e : ee) {
@@ -150,6 +149,13 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
                 this.pointManager.addCoordinateListener(this);
             }
         }
+    }
+    
+    @Override
+    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        // provide additional info for context menu
+        Graphic gfc = graphicAt(point);
+        super.initialize(menu, point, gfc instanceof DelegatingShapeGraphic ? ((DelegatingShapeGraphic)gfc).getSourceObject() : focus, selection);
     }
 
 }

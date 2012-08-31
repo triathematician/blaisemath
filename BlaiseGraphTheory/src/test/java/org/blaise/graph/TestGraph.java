@@ -5,6 +5,11 @@
  */
 package org.blaise.graph;
 
+import java.awt.Point;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Set;
+import javax.swing.JPopupMenu;
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.layout.SpringLayout;
@@ -12,6 +17,7 @@ import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.modules.EdgeProbabilityBuilder;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
+import org.blaise.graphics.ContextMenuInitializer;
 import org.blaise.graphics.Graphic;
 import org.blaise.style.BasicPointStyle;
 import org.blaise.style.PointStyle;
@@ -49,6 +55,38 @@ public class TestGraph extends javax.swing.JFrame {
         plot.getAdapter().getNodeStyler().setLabelDelegate(new Delegator<Object, String>(){
             public String of(Object src) { return src == null ? "null" : src.toString(); }
         });
+        
+        plot.addContextMenuInitializer("Graph", new ContextMenuInitializer(){
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+                if (menu.getComponentCount() > 0) {
+                    menu.addSeparator();
+                }
+                if (focus != null) {
+                    menu.add("Graph Focus: " + focus);
+                }
+                menu.add("Selection: " + (selection == null ? 0 : selection.size()) + " selected items");
+            }
+        });
+        plot.addContextMenuInitializer("Node", new ContextMenuInitializer(){
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+                if (menu.getComponentCount() > 0) {
+                    menu.addSeparator();
+                }
+                if (focus != null) {
+                    menu.add("Node: " + focus);
+                }
+            }
+        });
+        plot.addContextMenuInitializer("Link", new ContextMenuInitializer(){
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+                if (menu.getComponentCount() > 0) {
+                    menu.addSeparator();
+                }
+                if (focus != null) {
+                    menu.add("Link: " + focus);
+                }
+            }
+        });
 
 
         // PANELS
@@ -60,6 +98,13 @@ public class TestGraph extends javax.swing.JFrame {
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), new PropertySheet(p));
         }
+        
+        addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GAInstrument.print(System.out, 50);
+            }
+        });
     }
 
     /** This method is called from within the constructor to

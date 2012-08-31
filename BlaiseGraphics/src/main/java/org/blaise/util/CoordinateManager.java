@@ -74,16 +74,8 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
      * @param coords new coordinates
      */
     public synchronized void putAll(Map<Src, ? extends Coord> coords) {
-//        Map<Src,Coord> changed = new HashMap<Src,Coord>();
-//        for (Src k : coords.keySet()) {
-//            Coord c = coords.get(k);
-//            if (!c.equals(map.get(k))) {
-//                changed.put(k, c);
-//            }
-//        }
         map.putAll(coords);
-        // fire event even if changed map is empty, since pointers might have been overridden
-        fireCoordinatesAdded(coords);
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coords));
     }
 
     /**
@@ -101,8 +93,9 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
             map.remove(s);
         }
         cache.putAll(cached);
-        // TODO - check cacheObjects size
-        fireCoordinatesRemoved(cached.keySet());
+        checkCache();
+        map.putAll(coords);
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coords, cached.keySet()));
     }
 
     /**
@@ -116,7 +109,7 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
                 removed.add(k);
             }
         }
-        fireCoordinatesRemoved(removed);
+        fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, removed));
     }
 
     /**
@@ -131,8 +124,12 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
             }
         }
         cache.putAll(cached);
-        // TODO - check cacheObjects size
-        fireCoordinatesRemoved(cached.keySet());
+        checkCache();
+        fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, cached.keySet()));
+    }
+
+    /** Call to ensure appropriate size of cache */
+    private void checkCache() {
     }
 
 
@@ -143,15 +140,9 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
 
     private final List<CoordinateListener> listeners = new ArrayList<CoordinateListener>();
 
-    protected final void fireCoordinatesRemoved(Set<? extends Src> set) {
+    protected final void fireCoordinatesChanged(CoordinateChangeEvent evt) {
         for (CoordinateListener cl : listeners) {
-            cl.coordinatesRemoved(set);
-        }
-    }
-
-    protected final void fireCoordinatesAdded(Map<Src,? extends Coord> map) {
-        for (CoordinateListener cl : listeners) {
-            cl.coordinatesAdded(map);
+            cl.coordinatesChanged(evt);
         }
     }
 

@@ -109,9 +109,9 @@ public abstract class GraphicSupport implements Graphic {
         }
     }
 
-    public void initialize(JPopupMenu menu, Point point) {
+    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
         for (ContextMenuInitializer cmi : cInits) {
-            cmi.initialize(menu, point);
+            cmi.initialize(menu, point, focus, selection);
         }
     }
 

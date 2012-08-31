@@ -4,6 +4,8 @@
  */
 package org.blaise.graph;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.dynamic.TimeGraph;
@@ -50,6 +52,13 @@ public class TestTimeGraph extends javax.swing.JFrame {
         rollupPanel1.add("Edges", new PropertySheet(plot.getGraphComponent().getAdapter().getEdgeStyler()));
         
         rollupPanel1.add("Simultaneous Layout", new PropertySheet(plot.getManager().getLayoutAlgorithm().getParameters()));
+        
+        addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GAInstrument.print(System.out, 50);
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -209,7 +218,7 @@ public class TestTimeGraph extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
-        plot.getManager().iterateLayout();
+        plot.getGraphManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_energyIBActionPerformed
 
@@ -217,11 +226,11 @@ public class TestTimeGraph extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
-        plot.getManager().startLayoutTask(10, 2);
+        plot.getGraphManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        plot.getManager().stopLayoutTask();
+        plot.getGraphManager().stopLayoutTask();
     }//GEN-LAST:event_energySBActionPerformed
 
     private void timeEnergyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeEnergyIBActionPerformed
