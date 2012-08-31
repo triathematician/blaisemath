@@ -31,7 +31,10 @@ public class PreferentialAttachmentTest {
     public void testGetSeededInstance_fixed_add_number() {
         System.out.println("getSeededInstance (fixed # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
 
-        Graph<Integer> seed = new EdgeProbabilityBuilder(false, 4, .5f).createGraph();
+        Graph<Integer> seed = null;
+        while (seed == null || seed.edgeCount() == 0) {
+            seed = new EdgeProbabilityBuilder(false, 4, .5f).createGraph();
+        }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         Graph<Integer> pref = new PreferentialAttachment(seed, 10, 1).createGraph();
         System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));

@@ -27,6 +27,8 @@ import org.blaise.util.SetSelectionModel;
  */
 public class GraphicSelector extends MouseAdapter implements MouseMotionListener, CanvasPainter {
 
+    /** Whether selector is enabled */
+    private boolean enabled = true;
     /** Determines which objects can be selected */
     private final GraphicComposite domain;
     /** Model of selected items */
@@ -35,11 +37,8 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     private BasicShapeStyle style = new BasicShapeStyle(new Color(128,128,255,32), new Color(0,0,128,64));
 
     /** Initialize for specified component */
-    public GraphicSelector(GraphicComponent gc) {
-        this.domain = gc.getGraphicRoot();
-        gc.addMouseListener(this);
-        gc.addMouseMotionListener(this);
-        gc.getOverlays().add(this);
+    public GraphicSelector(GraphicComposite domain) {
+        this.domain = domain;
 
         // highlight updates
         selection.addPropertyChangeListener(new PropertyChangeListener(){
@@ -63,30 +62,40 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     // PROPERTIES
     //
 
-    public BasicShapeStyle getStyle() {
-        return style;
+    public boolean isSelectionEnabled() {
+        return enabled;
+    }
+    
+    public void setSelectionEnabled(boolean b) {
+        enabled = b;
     }
 
     public void setStyle(BasicShapeStyle style) {
         this.style = style;
     }
 
-    public SetSelectionModel getSelectionModel() {
+    public SetSelectionModel<Graphic> getSelectionModel() {
         return selection;
+    }
+    
+    public BasicShapeStyle getStyle() {
+        return style;
     }
 
     //</editor-fold>
 
 
     public void paint(JComponent component, Graphics2D canvas) {
-        synchronized(selection) {
-            Rectangle bds;
-            for (Graphic g : selection.getSelection()) {
-                // XXX - add bounding box to selection to show the user
+        if (enabled) {
+            synchronized(selection) {
+                Rectangle bds;
+                for (Graphic g : selection.getSelection()) {
+                    // XXX - add bounding box to selection to show the user
+                }
             }
-        }
-        if (box != null && box.width > 0 && box.height > 0) {
-            style.draw(box, canvas, Collections.EMPTY_SET);
+            if (box != null && box.width > 0 && box.height > 0) {
+                style.draw(box, canvas, Collections.EMPTY_SET);
+            }
         }
     }
 
@@ -97,10 +106,11 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.isConsumed() || !e.isControlDown()) {
-            if (!e.isConsumed()) {
-                selection.setSelection(Collections.EMPTY_SET);
-            }
+        if (!enabled || !(e.getButton()==MouseEvent.BUTTON1) || e.isConsumed()) {
+            return;
+        }
+        if (!e.isControlDown()) {
+            selection.setSelection(Collections.EMPTY_SET);
             return;
         }
         Graphic g = domain.selectableGraphicAt(e.getPoint());
@@ -115,7 +125,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.isConsumed() || !e.isControlDown()) {
+        if (!enabled || e.isConsumed() || !(e.getButton()==MouseEvent.BUTTON1) || !e.isControlDown()) {
             return;
         }
         pressPt = e.getPoint();
@@ -127,7 +137,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed() || box == null) {
+        if (!enabled || e.isConsumed() || box == null) {
             return;
         }
         dragPt = e.getPoint();
@@ -140,7 +150,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.isConsumed() || box == null || pressPt == null) {
+        if (!enabled || e.isConsumed() || box == null || pressPt == null) {
             return;
         }
         releasePt = e.getPoint();
@@ -167,5 +177,6 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
     }
 
     public void mouseMoved(MouseEvent e) {}
+
 
 }

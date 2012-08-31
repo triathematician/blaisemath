@@ -31,10 +31,10 @@ public class TestSelection extends javax.swing.JFrame {
         gc.addGraphic(g2);
         
         // all it takes to add selection capability!
-        final GraphicSelector gs = new GraphicSelector(gc);
-        gs.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+        gc.setSelectionEnabled(true);
+        gc.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
             public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println(gs.getSelectionModel().getSelection());
+                System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
             }
         });
     }

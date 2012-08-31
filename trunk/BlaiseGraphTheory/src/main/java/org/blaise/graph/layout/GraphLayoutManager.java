@@ -6,7 +6,6 @@
 package org.blaise.graph.layout;
 
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -15,6 +14,7 @@ import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphBuilders;
+import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
 import org.blaise.util.CoordinateManager;
 
@@ -50,7 +50,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
     /** Used for iterative graph layouts */
     private transient IterativeGraphLayout iLayout;
     /** Maintains locations of nodes in the graph (in local coordinates) */
-    private final CoordinateManager<C, Point2D.Double> locations = new CoordinateManager<C, Point2D.Double>();
+    private final CoordinateManager<C, Point2D.Double> coordManager = new CoordinateManager<C, Point2D.Double>();
 
     /** Timer that performs iterative layout */
     private transient java.util.Timer layoutTimer;
@@ -69,14 +69,15 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      */
     public GraphLayoutManager(Graph<C> graph) {
         setGraph(graph);
-        locations.addCoordinateListener(this);
+        coordManager.addCoordinateListener(this);
     }
 
-    public void coordinatesAdded(Map added) {
-        iLayout.requestPositions(locations.getCoordinates(), true);
-    }
-
-    public void coordinatesRemoved(Set removed) {
+    public void coordinatesChanged(CoordinateChangeEvent evt) {
+        synchronized (coordManager) {
+            if (iLayout != null) {
+                iLayout.requestPositions(coordManager.getCoordinates(), true);
+            }
+        }
     }
 
 
@@ -100,41 +101,45 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      *
      * @param g the graph
      */
-    public synchronized void setGraph(Graph<C> g) {
-        if (this.graph != g) {
-            Graph old = this.graph;
-            if (g == null) {
-                setLayoutAnimating(false);
-                locations.cacheObjects(locations.getObjects());
-            } else if (this.graph != g) {
-                this.graph = g;
-                if (old != null) {
-                    Set<C> oldNodes = new HashSet<C>(old.nodes());
-                    oldNodes.removeAll(g.nodes());
-                    locations.cacheObjects(oldNodes);
+    public void setGraph(Graph<C> g) {
+        synchronized (coordManager) {
+            if (this.graph != g) {
+                Graph old = this.graph;
+                if (g == null) {
+                    setLayoutAnimating(false);
+                    coordManager.cacheObjects(coordManager.getObjects());
+                } else if (this.graph != g) {
+                    this.graph = g;
+                    if (old != null) {
+                        Set<C> oldNodes = new HashSet<C>(old.nodes());
+                        oldNodes.removeAll(g.nodes());
+                        coordManager.cacheObjects(oldNodes);
+                    }
+                    Map<C,Point2D.Double> newLoc = old == null ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
+                    for (C c : coordManager.getObjects()) {
+                        newLoc.remove(c);
+                    }
+                    coordManager.putAll(newLoc);
                 }
-                Map<C,Point2D.Double> newLoc = old == null ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
-                for (C c : locations.getObjects()) {
-                    newLoc.remove(c);
-                }
-                locations.putAll(newLoc);
+                pcs.firePropertyChange("graph", old, g);
             }
-            pcs.firePropertyChange("graph", old, g);
         }
     }
 
     /**
      * Call to indicate that the structure of the graph has changed.
      */
-    public synchronized void graphUpdated() {
-        Set<C> oldNodes = new HashSet<C>(locations.getObjects());
-        oldNodes.removeAll(graph.nodes());
-        locations.cacheObjects(oldNodes);
-        Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
-        for (C c : locations.getObjects()) {
-            newLoc.remove(c);
+    public void graphUpdated() {
+        synchronized (coordManager) {
+            Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
+            oldNodes.removeAll(graph.nodes());
+            coordManager.cacheObjects(oldNodes);
+            Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+            for (C c : coordManager.getObjects()) {
+                newLoc.remove(c);
+            }
+            coordManager.putAll(newLoc);
         }
-        locations.putAll(newLoc);
     }
 
     /**
@@ -142,7 +147,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * @return point manager
      */
     public CoordinateManager<C, Point2D.Double> getCoordinateManager() {
-        return locations;
+        return coordManager;
     }
 
     /**
@@ -150,33 +155,45 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * @return locations, as a copy of the map provided in the point manager
      */
     public Map<C, Point2D.Double> getLocations() {
-        return locations.getCoordinates();
+        return coordManager.getCoordinates();
     }
 
     /**
      * Update the locations of the specified nodes with the specified values.
      * If an iterative layout is currently active, locations are updated at the
-     * layout. Otherwise, locations are updated by the point manager.
+     * layout. Otherwise, locations are updated by the point manager. Nodes that are
+     * in the graph but whose positions are not in the provided map will not be moved.
      *
      * @param nodePositions new locations for objects
      */
-    public synchronized void requestLocations(Map<C, Point2D.Double> nodePositions) {
+    public void requestLocations(Map<C, Point2D.Double> nodePositions) {
 //        System.out.println("glm.reqloc");
-        if (nodePositions != null) {
-            if (iLayout != null) {
-                iLayout.requestPositions(nodePositions, false);
+        synchronized (coordManager) {
+            if (nodePositions != null) {
+                if (isLayoutAnimating()) {
+                    iLayout.requestPositions(nodePositions, false);
+                } else {
+                    coordManager.putAll(nodePositions);
+                }
             }
-            locations.putAll(nodePositions);
         }
     }
 
     /**
-     * Update positions using specified layout algorithm.
+     * Update positions of current using specified layout algorithm. This method will
+     * replace the coordinates of objects in the graph.
      * @param layout static layout algorithm
      * @param parameters layout parameters
      */
-    public synchronized void applyLayout(StaticGraphLayout layout, double... parameters){
-        requestLocations(layout.layout(graph, parameters));
+    public void applyLayout(StaticGraphLayout layout, double... parameters){
+        synchronized (coordManager) {
+            Map<C, Point2D.Double> pos = layout.layout(graph, parameters);
+            if (isLayoutAnimating()) {
+                iLayout.requestPositions(pos, false);
+            } else {
+                coordManager.setCoordinateMap(pos);
+            }
+        }
     }
 
     // </editor-fold>
@@ -191,7 +208,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Get layout algorithm
      * @return current iterative layout algorithm
      */
-    public synchronized IterativeGraphLayout getLayoutAlgorithm() {
+    public IterativeGraphLayout getLayoutAlgorithm() {
         return iLayout;
     }
 
@@ -200,12 +217,12 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Does not start a new layout.
      * @param layout the layout algorithm
      */
-    public synchronized void setLayoutAlgorithm(IterativeGraphLayout layout) {
+    public void setLayoutAlgorithm(IterativeGraphLayout layout) {
         if (layout != iLayout) {
             stopLayoutTask();
             IterativeGraphLayout old = iLayout;
             iLayout = layout;
-            iLayout.requestPositions(locations.getCoordinates(), true);
+            iLayout.requestPositions(coordManager.getCoordinates(), true);
             pcs.firePropertyChange("layoutAlgorithm", old, layout);
         }
     }
@@ -222,7 +239,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Sets layout to animate
      * @param value true to animate, false to stop animating
      */
-    public synchronized void setLayoutAnimating(boolean value) {
+    public void setLayoutAnimating(boolean value) {
         boolean old = layoutTask != null;
         if (value != old) {
             if (value) {
@@ -270,17 +287,19 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
     /**
      * Iterates layout, if an iterative layout has been provided.
      */
-    public synchronized void iterateLayout() {
-        if (iLayout != null) {
-            int id = GAInstrument.start("GraphManager.iterateLayout");
-            try {
-                Map<C, Point2D.Double> locs = iLayout.iterate(graph);
-                GAInstrument.middle(id, "iLayout.iterate completed");
-                locations.putAll(locs);
-            } catch (ConcurrentModificationException ex) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, "Failed Layout Iteration: ConcurrentModificationException");
+    public void iterateLayout() {
+        synchronized(coordManager) {
+            if (iLayout != null) {
+                int id = GAInstrument.start("GraphManager.iterateLayout");
+                try {
+                    Map<C, Point2D.Double> locs = iLayout.iterate(graph);
+                    GAInstrument.middle(id, "iLayout.iterate completed");
+                    coordManager.setCoordinateMap(locs);
+                } catch (ConcurrentModificationException ex) {
+                    Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, "Failed Layout Iteration: ConcurrentModificationException");
+                }
+                GAInstrument.end(id);
             }
-            GAInstrument.end(id);
         }
     }
 

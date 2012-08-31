@@ -10,7 +10,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JComponent;
+import java.util.Set;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -36,7 +36,7 @@ import org.blaise.style.VisibilityHint;
 public class GraphicRoot extends GraphicComposite implements MouseListener, MouseMotionListener {
 
     /** Parent component upon which the graphics are drawn. */
-    protected JComponent owner;
+    protected GraphicComponent owner;
     /** Context menu for actions on the graphics */
     protected JPopupMenu popup = new JPopupMenu();
     /** Provides a pluggable way to generate mouse events */
@@ -49,7 +49,11 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
                     popup.removeAll();
-                    initialize(popup, mouseLoc);
+                    Set<Graphic> selected = owner.isSelectionEnabled() ? owner.getSelectionModel().getSelection() : null;
+                    initialize(popup, mouseLoc, null, selected);
+                    if (popup.getComponentCount() == 0) {
+                        // cancel popup
+                    }
                 }
             }
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
@@ -67,7 +71,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
      * Sets up mouse handling, and allows repainting to occur when the graphics change.
      * @param c the component
      */
-    void initComponent(JComponent c) {
+    void initComponent(GraphicComponent c) {
         if (this.owner != c) {
             if (this.owner != null) {
                 this.owner.removeMouseListener(this);

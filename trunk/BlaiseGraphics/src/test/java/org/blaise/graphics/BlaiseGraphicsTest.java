@@ -35,6 +35,7 @@ import org.blaise.style.StringStyle;
 import org.blaise.util.Delegator;
 import org.blaise.util.Delegators;
 import org.blaise.util.Edge;
+import org.blaise.util.PointFormatters;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -102,11 +103,13 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     
     @Action
     public void addPointSet() {      
-        BasicPointSetGraphic bp = new BasicPointSetGraphic(
+        final BasicPointSetGraphic bp = new BasicPointSetGraphic(
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.bps);
         bp.addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point) {
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+                Point2D pt = bp.getPoint(bp.indexOf(point, point));
+                menu.add(PointFormatters.formatPoint(pt, 2));
                 menu.add(getContext().getActionMap().get("editPointSetStyle"));
             }
         });

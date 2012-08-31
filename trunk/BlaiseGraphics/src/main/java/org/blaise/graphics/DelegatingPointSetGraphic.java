@@ -4,8 +4,8 @@
  */
 package org.blaise.graphics;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,14 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
+import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
+import org.blaise.util.CoordinateManager;
 import org.blaise.util.Delegator;
 import org.blaise.util.Delegators;
-import org.blaise.util.CoordinateManager;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
@@ -84,41 +86,48 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     // EVENT HANDLERS
     //
 
+    boolean updatingPoint = false;
+    
     public synchronized void stateChanged(ChangeEvent e) {
-        if (e.getSource() instanceof DelegatingPointGraphic) {
+        if (!updatingPoint && e.getSource() instanceof DelegatingPointGraphic) {
             DelegatingPointGraphic<Src> dpg = (DelegatingPointGraphic<Src>) e.getSource();
             manager.put(dpg.getSourceObject(), dpg.getPoint());
         }
     }
 
-    public synchronized void coordinatesAdded(Map added) {
+    public synchronized void coordinatesChanged(CoordinateChangeEvent evt) {
+        // when coordinate manager changes
+        Map added = evt.getAdded();
         List<Graphic> addMe = new ArrayList<Graphic>();
-        for (Entry<Src, Point2D> en : ((Map<Src,Point2D>)added).entrySet()) {
-            Src src = en.getKey();
-            DelegatingPointGraphic<Src> dpg = points.get(src);
-            if (dpg == null) {
-                points.put(src, dpg = new DelegatingPointGraphic<Src>(en.getKey(), en.getValue()));
-                dpg.setStyler(styler);
-                dpg.addChangeListener(this);
-                addMe.add(dpg);
-            } else {
-                dpg.setPoint(en.getValue());
+        if (added != null) {
+            for (Entry<Src, Point2D> en : ((Map<Src,Point2D>)added).entrySet()) {
+                Src src = en.getKey();
+                DelegatingPointGraphic<Src> dpg = points.get(src);
+                if (dpg == null) {
+                    points.put(src, dpg = new DelegatingPointGraphic<Src>(en.getKey(), en.getValue()));
+                    dpg.setStyler(styler);
+                    dpg.addChangeListener(this);
+                    addMe.add(dpg);
+                } else {
+                    // this should not result in manager changing
+                    updatingPoint = true;
+                    dpg.setPoint(en.getValue());
+                    updatingPoint = false;
+                }
             }
         }
-        addGraphics(addMe);
-    }
-
-    public synchronized void coordinatesRemoved(Set removed) {
+        Set removed = evt.getRemoved();
         Set<DelegatingPointGraphic<Src>> removeMe = new HashSet<DelegatingPointGraphic<Src>>();
-        for (Src s : (Set<Src>) removed) {
-            removeMe.add(points.get(s));
-            points.remove(s);
+        if (removed != null) {
+            for (Src s : (Set<Src>) removed) {
+                removeMe.add(points.get(s));
+                points.remove(s);
+            }
         }
-        removeGraphics(removeMe);
+        replaceGraphics(removeMe, addMe);
     }
 
     //</editor-fold>
-
 
     /**
      * Manager responsible for tracking point locations
@@ -161,4 +170,11 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
         fireGraphicChanged();
     }
 
+    @Override
+    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        // provide additional info for context menu
+        Graphic gfc = graphicAt(point);
+        super.initialize(menu, point, gfc instanceof DelegatingPointGraphic ? ((DelegatingPointGraphic)gfc).getSourceObject() : focus, selection);
+    }
+    
 }

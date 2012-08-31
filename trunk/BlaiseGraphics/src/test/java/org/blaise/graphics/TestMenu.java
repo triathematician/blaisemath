@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 
@@ -24,7 +25,7 @@ public class TestMenu extends javax.swing.JFrame {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
         g1.addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point) {
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
                 menu.add(""+point);
                 menu.add(new AbstractAction("press me"){
                     public void actionPerformed(ActionEvent e) { System.out.println("pressed"); }
@@ -36,9 +37,11 @@ public class TestMenu extends javax.swing.JFrame {
         BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100));
         gc.addGraphic(g2);
         
+        gc.setSelectionEnabled(true);
         gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point) {
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
                 menu.setLabel("root label");
+                menu.add((selection == null ? 0 : selection.size()) + " graphics selected");
                 if (menu.getComponentCount() > 0)
                     menu.addSeparator();
                 menu.add("Root menu option");

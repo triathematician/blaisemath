@@ -23,7 +23,7 @@ public class TestGraphics extends javax.swing.JFrame {
     public TestGraphics() {
         initComponents();
         graphicComponent1.addGraphic(gr);
-        GraphicSelector sel = new GraphicSelector(graphicComponent1);
+        graphicComponent1.setSelectionEnabled(true);
         blaiseSlider2.setModel(new DefaultBoundedRangeModel(200,0,50,300));
         blaiseSlider2.getModel().addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {

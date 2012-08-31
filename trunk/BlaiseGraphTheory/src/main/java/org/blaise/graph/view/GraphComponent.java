@@ -8,7 +8,8 @@ package org.blaise.graph.view;
 import java.awt.geom.Point2D;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
-import org.blaise.graphics.GraphicSelector;
+import org.blaise.graphics.ContextMenuInitializer;
+import org.blaise.graphics.DelegatingNodeLinkGraphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
@@ -61,7 +62,7 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
         ((PlaneVisometry) getVisometry()).setDesiredRange(-5.0, -5.0, 5.0, 5.0);
         setPreferredSize(new java.awt.Dimension(400, 400));
         // enable selection
-        GraphicSelector gs = new GraphicSelector(this);
+        setSelectionEnabled(true);
         // enable zoom and drag
         PlanePlotMouseHandler ppmh = new PlanePlotMouseHandler(((PlaneVisometry) getVisometry()), this);
         addMouseListener(ppmh);
@@ -131,6 +132,39 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
     }
 
     //</editor-fold>
+
+    
+    /**
+     * Adds context menu element to specified object
+     * @param key either "graph", "node", or "link" 
+     * @param init used to initialize the context menu
+     */
+    public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
+        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph().getWindowEntry();
+        if ("graph".equalsIgnoreCase(key)) {
+            getGraphicRoot().addContextMenuInitializer(init);
+        } else if ("node".equalsIgnoreCase(key)) {
+            win.getPointGraphic().addContextMenuInitializer(init);
+        } else if ("link".equalsIgnoreCase(key)) {
+            win.getEdgeGraphic().addContextMenuInitializer(init);
+        }
+    }
+    
+    /**
+     * Removes context menu element from specified object
+     * @param key either "graph", "node", or "link" 
+     * @param init used to initialize the context menu
+     */
+    public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {
+        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph().getWindowEntry();
+        if ("graph".equals(key)) {
+            getGraphicRoot().removeContextMenuInitializer(init);
+        } else if ("node".equals(key)) {
+            win.getPointGraphic().removeContextMenuInitializer(init);
+        } else if ("link".equals(key)) {
+            win.getEdgeGraphic().removeContextMenuInitializer(init);
+        }
+    }
 
 
 

@@ -70,8 +70,9 @@ public class TimeGraphManager {
      * @return the current slice 
      */
     public Graph getSlice() { 
-        if (slice == null)
+        if (slice == null) {
             slice = tGraph.slice(time, false);
+        }
         return slice;
     }
     
