@@ -8,19 +8,14 @@ package org.blaise.graphics;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.swing.JPopupMenu;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
-import org.blaise.util.Edge;
 import org.blaise.util.CoordinateManager;
+import org.blaise.util.Edge;
 
 /**
  * <p>
@@ -130,6 +125,11 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
         if (this.edgeStyler != styler) {
             this.edgeStyler = styler;
+            for (DelegatingShapeGraphic<EdgeType> dsg : edges.values()) {
+                if (dsg != null) {
+                    dsg.setStyler(styler);
+                }
+            }
             fireGraphicChanged();
         }
     }
@@ -150,12 +150,13 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
             }
         }
     }
-    
+
     @Override
     public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
         // provide additional info for context menu
         Graphic gfc = graphicAt(point);
-        super.initialize(menu, point, gfc instanceof DelegatingShapeGraphic ? ((DelegatingShapeGraphic)gfc).getSourceObject() : focus, selection);
+        super.initialize(menu, point, gfc instanceof DelegatingShapeGraphic
+                ? ((DelegatingShapeGraphic)gfc).getSourceObject() : focus, selection);
     }
 
 }

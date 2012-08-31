@@ -13,7 +13,7 @@ import org.blaise.util.Edge;
 
 /**
  * Implements the methods of {@link Graph} that can be inferred from other methods.
- * 
+ *
  * @author Elisha Peterson
  */
 public abstract class GraphSupport<V> implements Graph<V> {
@@ -22,8 +22,8 @@ public abstract class GraphSupport<V> implements Graph<V> {
     protected final boolean directed;
     /** The nodes of the graph */
     protected final Set<V> nodes;
-    
-    /** 
+
+    /**
      * Constructs with the set of nodes.
      * @param nodes graph's nodes
      * @param directed if graph is directed
@@ -32,8 +32,8 @@ public abstract class GraphSupport<V> implements Graph<V> {
         this.nodes = new HashSet<V>(Arrays.asList(nodes));
         this.directed = directed;
     }
-    
-    /** 
+
+    /**
      * Constructs with the set of nodes.
      * @param nodes graph's nodes
      * @param directed if graph is directed
@@ -42,7 +42,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         this.nodes = new HashSet<V>(nodes);
         this.directed = directed;
     }
-    
+
     @Override
     public String toString() {
         return GraphUtils.printGraph(this);
@@ -71,53 +71,53 @@ public abstract class GraphSupport<V> implements Graph<V> {
     //
     // EDGES
     //
-    
+
     public int edgeCount() {
         return edges().size();
     }
-    
-    
+
+
     //
     // ADJACENCY
     //
-    
+
     public boolean adjacent(V x, V y) {
         for (Edge<V> e : edgesAdjacentTo(x)) {
-            if (e.opposite(x) == y) {
+            if (y.equals(e.opposite(x))) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public Set<V> outNeighbors(V x) {
         if (!directed) {
             return neighbors(x);
         } else {
             Set<V> result = new HashSet<V>();
             for (Edge<V> e : edgesAdjacentTo(x)) {
-                if (e.getNode1() == x) {
+                if (x.equals(e.getNode1())) {
                     result.add(e.getNode2());
                 }
             }
             return result;
         }
     }
-    
+
     public Set<V> inNeighbors(V x) {
         if (!directed) {
             return neighbors(x);
         } else {
             Set<V> result = new HashSet<V>();
             for (Edge<V> e : edgesAdjacentTo(x)) {
-                if (e.getNode2() == x) {
+                if (x.equals(e.getNode2())) {
                     result.add(e.getNode1());
                 }
             }
             return result;
         }
     }
-    
+
     public Set<V> neighbors(V x) {
         Set<V> result = new HashSet<V>();
         for (Edge<V> e : edgesAdjacentTo(x)) {
@@ -132,7 +132,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         } else {
             int result = 0;
             for (Edge<V> e : edgesAdjacentTo(x)) {
-                if (e.getNode1() == x) {
+                if (x.equals(e.getNode1())) {
                     result++;
                 }
             }
@@ -146,7 +146,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         } else {
             int result = 0;
             for (Edge<V> e : edgesAdjacentTo(x)) {
-                if (e.getNode2() == x) {
+                if (x.equals(e.getNode2())) {
                     result++;
                 }
             }
@@ -157,14 +157,14 @@ public abstract class GraphSupport<V> implements Graph<V> {
     public int degree(V x) {
         int result = 0;
         for (Edge<V> e : edgesAdjacentTo(x)) {
-            if (e.getNode1() == x) {
+            if (x.equals(e.getNode1())) {
                 result++;
             }
-            if (e.getNode2() == x) {
+            if (x.equals(e.getNode2())) {
                 result++;
             }
         }
         return result;
     }
-    
+
 }

@@ -15,13 +15,13 @@ import org.blaise.style.VisibilityHint;
  * @author elisha
  */
 public class GraphicHighlighter extends MouseAdapter {
-    
+
     @Override
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).graphic;
         g.setVisibilityHint(VisibilityHint.Highlight, true);
     }
-    
+
     @Override
     public void mouseExited(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).graphic;

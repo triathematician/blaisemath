@@ -133,10 +133,10 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
 
     //</editor-fold>
 
-    
+
     /**
      * Adds context menu element to specified object
-     * @param key either "graph", "node", or "link" 
+     * @param key either "graph", "node", or "link"
      * @param init used to initialize the context menu
      */
     public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
@@ -149,10 +149,10 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
             win.getEdgeGraphic().addContextMenuInitializer(init);
         }
     }
-    
+
     /**
      * Removes context menu element from specified object
-     * @param key either "graph", "node", or "link" 
+     * @param key either "graph", "node", or "link"
      * @param init used to initialize the context menu
      */
     public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {

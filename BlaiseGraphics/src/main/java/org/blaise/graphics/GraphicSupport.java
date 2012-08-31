@@ -5,7 +5,6 @@
 package org.blaise.graphics;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
@@ -40,9 +39,14 @@ public abstract class GraphicSupport implements Graphic {
     protected boolean mouseEnabled = true;
     /** Flag indicating whether the object can be selected */
     protected boolean selectEnabled = true;
-    
+
     /** Default text of tooltip */
     protected String tipText = null;
+
+    public GraphicSupport() {
+        addMouseListener(new GraphicHighlighter());
+    }
+
 
     //
     // COMPOSITION
@@ -55,11 +59,11 @@ public abstract class GraphicSupport implements Graphic {
     public void setParent(GraphicComposite p) {
         this.parent = p;
     }
-    
+
     //
     // STYLE & DRAWING
     //
-    
+
     public Set<VisibilityHint> getVisibilityHints() {
         return visibility;
     }
@@ -79,18 +83,18 @@ public abstract class GraphicSupport implements Graphic {
             fireGraphicChanged();
         }
     }
-    
+
     //
     // CONTEXT MENU
     //
 
     /** Context initializers */
     protected final List<ContextMenuInitializer> cInits = new ArrayList<ContextMenuInitializer>();
-    
+
     public boolean isContextMenuEnabled() {
         return popupEnabled;
     }
-    
+
     public void setContextMenuEnabled(boolean val) {
         popupEnabled = val;
     }
@@ -115,15 +119,15 @@ public abstract class GraphicSupport implements Graphic {
         }
     }
 
-    
+
     //
     // SELECTION
     //
-    
+
     public boolean isSelectionEnabled() {
         return selectEnabled;
     }
-    
+
     public void setSelectionEnabled(boolean val) {
         selectEnabled = val;
     }
@@ -135,15 +139,15 @@ public abstract class GraphicSupport implements Graphic {
     public boolean isTooltipEnabled() {
         return tipEnabled;
     }
-    
+
     public void setTooltipEnabled(boolean val) {
         tipEnabled = val;
     }
-    
+
     public String getTooltip(Point p) {
         return tipEnabled ? tipText : null;
     }
-    
+
     /**
      * Return the default tooltip for this object
      * @return tip
@@ -180,7 +184,7 @@ public abstract class GraphicSupport implements Graphic {
     //
     // MOUSE HANDLING
     //
-    
+
     public boolean isMouseEnabled() {
         return mouseEnabled;
     }
@@ -193,12 +197,12 @@ public abstract class GraphicSupport implements Graphic {
         for (MouseListener m : getMouseListeners())
             handlers.remove(MouseListener.class, m);
     }
-    
+
     public void removeMouseMotionListeners() {
         for (MouseMotionListener m : getMouseMotionListeners())
             handlers.remove(MouseMotionListener.class, m);
     }
-    
+
     public void addMouseListener(MouseListener handler) {
         if (handler == null)
             throw new IllegalArgumentException();
@@ -208,11 +212,11 @@ public abstract class GraphicSupport implements Graphic {
     public void removeMouseListener(MouseListener handler) {
         handlers.remove(MouseListener.class, handler);
     }
-    
+
     public MouseListener[] getMouseListeners() {
         return handlers.getListeners(MouseListener.class);
     }
-    
+
     public void addMouseMotionListener(MouseMotionListener handler) {
         if (handler == null)
             throw new IllegalArgumentException();
@@ -222,11 +226,11 @@ public abstract class GraphicSupport implements Graphic {
     public void removeMouseMotionListener(MouseMotionListener handler) {
         handlers.remove(MouseMotionListener.class, handler);
     }
-    
+
     public MouseMotionListener[] getMouseMotionListeners() {
         return handlers.getListeners(MouseMotionListener.class);
     }
-    
+
     //</editor-fold>
 
 }
