@@ -2,7 +2,7 @@
  * AbstractVGraphicDragger.java
  * Created Aug 2, 2012
  */
-package org.blaise.visometry;
+package org.blaise.visometry.plottable;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

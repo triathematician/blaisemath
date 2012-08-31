@@ -75,7 +75,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
                 this.bps);
         bp.addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point) {
+            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
                 menu.add(getContext().getActionMap().get("editPointSetStyle"));
             }
         });

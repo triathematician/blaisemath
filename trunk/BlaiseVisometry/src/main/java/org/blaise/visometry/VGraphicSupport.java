@@ -37,15 +37,17 @@ public abstract class VGraphicSupport<C> implements VGraphic<C> {
     
     public void setUnconverted(boolean flag) {
         notConverted = flag;
-        if (flag)
+        if (flag) {
             fireConversionNeeded();
+        }
     }
 
     /** 
      * Notify listeners of a need for conversion.
      */
     protected void fireConversionNeeded() {
-        if (parent != null)
+        if (parent != null) {
             parent.conversionNeeded(this);
+        }
     }
 }

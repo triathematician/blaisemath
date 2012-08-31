@@ -2,11 +2,12 @@
  * VGMouseEvent.java
  * Created Jan 28, 2011
  */
-package org.blaise.visometry;
+package org.blaise.visometry.plottable;
 
 import java.awt.event.MouseEvent;
 import org.blaise.graphics.Graphic;
 import org.blaise.graphics.GraphicMouseEvent;
+import org.blaise.visometry.Visometry;
 
 /**
  * Encapsulates a graphic mouse event with a visometry entry and a local coordinate.

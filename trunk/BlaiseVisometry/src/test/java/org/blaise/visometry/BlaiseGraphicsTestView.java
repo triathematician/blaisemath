@@ -24,10 +24,8 @@ public class BlaiseGraphicsTestView extends FrameView {
     
     private void initComponents(Application app) {
         mainPanel = new javax.swing.JPanel();
-        canvas1 = new GraphicComponent();
-        new GraphicSelector(canvas1);
-        canvas2 = new PlanePlotComponent();
-        new GraphicSelector(canvas2);
+        canvas1 = new GraphicComponent(); canvas1.setSelectionEnabled(true);
+        canvas2 = new PlanePlotComponent(); canvas2.setSelectionEnabled(true);
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu("File");
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();

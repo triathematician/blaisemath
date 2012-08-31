@@ -13,6 +13,7 @@ import org.blaise.graphics.DelegatingPointSetGraphic;
 import org.blaise.graphics.Graphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
+import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
 import org.blaise.util.CoordinateManager;
 
@@ -28,12 +29,24 @@ import org.blaise.util.CoordinateManager;
 public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements CoordinateListener {
 
     /** Local coordinates of the points */
-    private final CoordinateManager<Src,C> localCoords = new CoordinateManager<Src,C>();
+    private CoordinateManager<Src,C> coordManager;
     /** The window entry */
     protected DelegatingPointSetGraphic<Src> window = new DelegatingPointSetGraphic<Src>();
 
+    /**
+     * Initialize with no points
+     */
     public VCustomPointSet() {
         this(Collections.EMPTY_MAP);
+    }
+    
+    /**
+     * Initialize with specified coordinate manager.
+     * @param mgr coordinate manager
+     */
+    public VCustomPointSet(CoordinateManager<Src,C> mgr) {
+        setCoordinateManager(mgr);
+        window.getCoordinateManager().addCoordinateListener(this);
     }
 
     /**
@@ -41,22 +54,36 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * @param loc initial locations of points
      */
     public VCustomPointSet(Map<Src, ? extends C> loc) {
-        addObjects(loc);
-        window.getCoordinateManager().addCoordinateListener(this);
+        this(new CoordinateManager<Src,C>());
+        coordManager.putAll(loc);
     }
 
-    public synchronized void coordinatesAdded(Map added) {
-        Visometry<C> vis = parent.getVisometry();
-        Map<Src,Point2D> add = (Map<Src,Point2D>) added;
-        Map<Src,C> local = new HashMap<Src,C>();
-        for (Src s : add.keySet()) {
-            local.put(s, vis.toLocal(add.get(s)));
+    public void coordinatesChanged(CoordinateChangeEvent evt) {
+        if (converting) {
+            return;
         }
-        localCoords.putAll(local);
-    }
-
-    public synchronized void coordinatesRemoved(Set removed) {
-        localCoords.removeObjects(removed);
+        if (evt.getSource() == coordManager) {
+            // local coords changed
+            setUnconverted(true);
+        } else if (evt.getSource() == window.getCoordinateManager()) {
+            // window coords changed (from dragging)
+            synchronized (coordManager) {
+                if (evt.isAddEvent()) {
+                    Visometry<C> vis = parent.getVisometry();
+                    Map<Src,Point2D> add = (Map<Src,Point2D>) evt.getAdded();
+                    if (add != null) {
+                        Map<Src,C> local = new HashMap<Src,C>();
+                        for (Src s : add.keySet()) {
+                            local.put(s, vis.toLocal(add.get(s)));
+                        }
+                        coordManager.putAll(local);
+                    }
+                }
+                if (evt.isRemoveEvent()) {
+                    coordManager.removeObjects(evt.getRemoved());
+                }
+            }
+        }
     }
 
     //
@@ -68,10 +95,26 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     }
 
     public CoordinateManager<Src, C> getCoordinateManager() {
-        return localCoords;
+        return coordManager;
     }
 
-    public synchronized Set<? extends Src> getObjects() {
+    /**
+     * Initialize coordinate manager for this set.
+     * @param mgr manager
+     */
+    public void setCoordinateManager(CoordinateManager mgr) {
+        if (this.coordManager != mgr) {
+            if (this.coordManager != null) {
+                coordManager.removeCoordinateListener(this);
+            }
+            coordManager = mgr;
+            if (coordManager != null) {
+                coordManager.addCoordinateListener(this);
+            }
+        }
+    }
+
+    public Set<? extends Src> getObjects() {
         return window.getObjects();
     }
 
@@ -79,8 +122,8 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * Add a collection of objects to the view
      * @param loc objects to put
      */
-    public synchronized void addObjects(Map<Src, ? extends C> loc) {
-        localCoords.putAll(loc);
+    public void addObjects(Map<Src, ? extends C> loc) {
+        coordManager.putAll(loc);
         setUnconverted(true);
     }
 
@@ -88,35 +131,45 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * Replaces the current objects in the set with a new set
      * @param loc new objects
      */
-    public synchronized void setObjects(Map<Src, ? extends C> loc) {
-        localCoords.setCoordinateMap(loc);
+    public void setObjects(Map<Src, ? extends C> loc) {
+        coordManager.setCoordinateMap(loc);
         setUnconverted(true);
     }
 
-    public synchronized void removeObjects(Set<Src> obj) {
-        localCoords.removeObjects(obj);
-        setUnconverted(true);
+    public void removeObjects(Set<Src> obj) {
+        if (obj.size() > 0) {
+            coordManager.removeObjects(obj);
+            setUnconverted(true);
+        }
     }
 
     public ObjectStyler<Src, PointStyle> getStyler() {
         return window.getStyler();
     }
 
-    public synchronized void setStyler(ObjectStyler<Src, PointStyle> styler) {
+    public void setStyler(ObjectStyler<Src, PointStyle> styler) {
         window.setStyler(styler);
     }
 
     //
     // CONVERSION
     //
+    
+    /** Ignore changes while converting */
+    boolean converting = false;
 
-    public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
-        Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
-        for (Src s : localCoords.getObjects()) {
-            winmap.put(s, processor.convert(localCoords.of(s), vis));
+    public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
+        // conversion should never occur while points are changing
+        synchronized (coordManager) {
+            converting = true;
+            Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
+            for (Src s : coordManager.getObjects()) {
+                winmap.put(s, processor.convert(coordManager.of(s), vis));
+            }
+            window.getCoordinateManager().setCoordinateMap(winmap);
+            setUnconverted(false);
+            converting = false;
         }
-        window.getCoordinateManager().putAll(winmap);
-        setUnconverted(false);
     }
 
 }
