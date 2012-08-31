@@ -12,6 +12,7 @@ import org.blaise.graphics.DelegatingNodeLinkGraphic;
 import org.blaise.graphics.Graphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
+import org.blaise.util.CoordinateManager;
 import org.blaise.util.Edge;
 
 /**
@@ -26,10 +27,26 @@ import org.blaise.util.Edge;
  */
 public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPointSet<C, Src> {
 
+    /** Maintains collection of edges */
     DelegatingNodeLinkGraphic<Src,EdgeType> gwindow;
 
+    /**
+     * Initialize without any points or edges
+     */
     public VCustomGraph() {
         this(Collections.EMPTY_MAP);
+    }
+
+    /**
+     * Initialize with specified coordinate manager
+     * @param mgr coordinate manager
+     */
+    public VCustomGraph(CoordinateManager<Src, C> mgr) {
+        super(mgr);
+        window = null;
+        gwindow = new DelegatingNodeLinkGraphic<Src,EdgeType>();
+        window = gwindow.getPointGraphic();
+        window.getCoordinateManager().addCoordinateListener(this);
     }
 
     /**
