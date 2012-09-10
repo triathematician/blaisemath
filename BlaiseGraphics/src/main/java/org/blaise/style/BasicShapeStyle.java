@@ -13,7 +13,7 @@ import java.util.Set;
 
 /**
  * Draws a shape.
- * 
+ *
  * @author Elisha
  */
 public class BasicShapeStyle implements PathStyle {
@@ -64,7 +64,8 @@ public class BasicShapeStyle implements PathStyle {
         }
         if (stroke != null && thickness >= 0) {
             canvas.setColor(StyleUtils.applyHints(stroke, visibility));
-            canvas.setStroke(visibility != null && visibility.contains(VisibilityHint.Highlight)
+            canvas.setStroke(visibility != null
+                    && (visibility.contains(VisibilityHint.Highlight) || visibility.contains(VisibilityHint.Selected))
                     ? new BasicStroke(thickness+1f) : new BasicStroke(thickness));
             canvas.draw(s);
         }

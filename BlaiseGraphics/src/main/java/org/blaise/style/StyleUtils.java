@@ -23,8 +23,8 @@ public class StyleUtils {
     public static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
     /** Default composite */
     public static Composite DEFAULT_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
-    
-    
+
+
     //<editor-fold defaultstate="collapsed" desc="COLOR MODIFIERS">
     //
     // COLOR MODIFIERS
@@ -37,8 +37,8 @@ public class StyleUtils {
      */
     public static Color lighterThan(Color c) {
         return new Color(lighten(c.getRed()), lighten(c.getGreen()), lighten(c.getBlue()), c.getAlpha());
-    } 
-    
+    }
+
     /**
      * Produces a color that is "blander" than the specified color (reducing saturation)
      * @param c source color
@@ -59,7 +59,7 @@ public class StyleUtils {
      */
     public static Color applyHints(Color color, Set<VisibilityHint> hints) {
         return hints == null ? color
-                : hints.contains(VisibilityHint.Highlight) ? lighterThan(color)
+                : hints.contains(VisibilityHint.Highlight) || hints.contains(VisibilityHint.Selected) ? lighterThan(color)
                 : hints.contains(VisibilityHint.Obscure) ? blanderThan(color)
                 : color;
     }
@@ -69,15 +69,15 @@ public class StyleUtils {
     }
     //</editor-fold>
 
-    
+
     //<editor-fold defaultstate="collapsed" desc="StyleProvider IMPLEMENTATIONS">
     //
     // StyleProvider IMPLEMENTATIONS
     //
-    
+
     /** Default instance */
     public static final DefaultStyleProvider DEFAULT_STYLE_PROVIDER = new DefaultStyleProvider();
-    
+
     /** Default instance of the style provider */
     public static final class DefaultStyleProvider implements StyleProvider<Object> {
         final ShapeStyle SOLID = new BasicShapeStyle(Color.white, Color.black);
@@ -90,7 +90,7 @@ public class StyleUtils {
         public PointStyle getPointStyle(Object o) { return POINT; }
         public StringStyle getStringStyle(Object o) { return STRING; }
     } // INNER CLASS StyleProvider.Default
-        
+
     //</editor-fold>
-    
+
 }
