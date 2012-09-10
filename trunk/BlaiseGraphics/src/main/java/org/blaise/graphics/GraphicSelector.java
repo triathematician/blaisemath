@@ -47,11 +47,11 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
                 Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
                 for (Graphic g : old) {
                     if (!nue.contains(g)) {
-                        g.setVisibilityHint(VisibilityHint.Highlight, false);
+                        g.setVisibilityHint(VisibilityHint.Selected, false);
                     }
                 }
                 for (Graphic g : nue) {
-                    g.setVisibilityHint(VisibilityHint.Highlight, true);
+                    g.setVisibilityHint(VisibilityHint.Selected, true);
                 }
             }
         });
