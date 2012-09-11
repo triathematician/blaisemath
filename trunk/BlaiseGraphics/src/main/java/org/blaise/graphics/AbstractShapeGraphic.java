@@ -81,7 +81,7 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
             fireGraphicChanged();
         }
     }
-    
+
     /**
      * Return style used to draw the shape.
      * @return style
@@ -89,7 +89,7 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
     public abstract ShapeStyle drawStyle();
 
     /** Return true if painting as a stroke. */
-    protected boolean paintingAsStroke() { 
+    protected boolean paintingAsStroke() {
         ShapeStyle style = drawStyle();
         if (style == null && strokeOnly) {
             return true;
@@ -108,9 +108,11 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         if (!paintingAsStroke() && primitive.contains(point)) {
             return true;
         }
-        float thickness = style == null || !(style instanceof PathStyle) ? 1f
-                : ((PathStyle)style).getThickness();
-        return new BasicStroke(thickness).createStrokedShape(primitive).contains(point);
+        if (style == null || !(style instanceof PathStyle)) {
+            return new BasicStroke(1f).createStrokedShape(primitive).contains(point);
+        } else {
+            return ((PathStyle)style).getPathShape(primitive).contains(point);
+        }
     }
 
     public boolean intersects(Rectangle box) {
@@ -126,5 +128,5 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
     public void draw(Graphics2D canvas) {
         drawStyle().draw(primitive, canvas, visibility);
     }
-    
+
 }

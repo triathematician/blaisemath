@@ -6,6 +6,7 @@
 package org.blaise.style;
 
 import java.awt.Color;
+import java.awt.Shape;
 
 /**
  * <p>
@@ -21,11 +22,18 @@ public interface PathStyle extends ShapeStyle {
      * @return color
      */
     public Color getStroke();
-    
+
     /**
      * Return path thickness
      * @return thickness of path
      */
     public float getThickness();
-    
+
+    /**
+     * Return shape of path drawn (may be null)
+     * @param primitive shape primitive
+     * @return path shape
+     */
+    public Shape getPathShape(Shape primitive);
+
 }
