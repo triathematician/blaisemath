@@ -5,6 +5,7 @@
 package org.blaise.graphics;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
@@ -48,8 +49,17 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
 
     public void setStyler(ObjectStyler<Src, PointStyle> styler) {
         this.styler = styler;
-        setDefaultTooltip(styler.getTipDelegate().of(src));
         fireGraphicChanged();
+    }
+
+    @Override
+    public String getTooltip(Point p) {
+        if (tipEnabled) {
+            String txt = styler.getTipDelegate().of(src);
+            return txt == null ? tipText : txt;
+        } else {
+            return null;
+        }
     }
 
     @Override

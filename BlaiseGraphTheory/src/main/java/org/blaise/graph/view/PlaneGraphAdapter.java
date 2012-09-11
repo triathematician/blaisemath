@@ -82,8 +82,12 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
             }
             viewGraph.setEdges(layoutManager.getGraph().edges());
         }
-        viewGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
-        viewGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
+        if (viewGraph.getStyler().getLabelDelegate() == null) {
+            viewGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
+        }
+        if (viewGraph.getStyler().getTipDelegate() == null) {
+            viewGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
+        }
         if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
             viewGraph.getEdgeStyler().setStyleDelegate(new NonDelegator<Edge<Object>,PathStyle>(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
         }
