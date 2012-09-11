@@ -57,6 +57,10 @@ public class BasicShapeStyle implements PathStyle {
         this.thickness = thickness;
     }
 
+    public Shape getPathShape(Shape primitive) {
+        return primitive;
+    }
+
     public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
         if (fill != null) {
             canvas.setColor(StyleUtils.applyHints(fill, visibility));

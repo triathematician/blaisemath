@@ -50,6 +50,10 @@ public class BasicPathStyle implements PathStyle {
         return thickness;
     }
 
+    public Shape getPathShape(Shape primitive) {
+        return new BasicStroke(thickness).createStrokedShape(primitive);
+    }
+
     public void setWidth(float thickness) {
         this.thickness = thickness;
     }
