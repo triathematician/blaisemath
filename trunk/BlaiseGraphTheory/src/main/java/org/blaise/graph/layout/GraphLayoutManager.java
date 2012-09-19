@@ -115,11 +115,20 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
                         oldNodes.removeAll(g.nodes());
                         coordManager.cacheObjects(oldNodes);
                     }
-                    Map<C,Point2D.Double> newLoc = old == null ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS) : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
-                    for (C c : coordManager.getObjects()) {
-                        newLoc.remove(c);
+                    // defer to existing locations if possible
+                    if (coordManager.locatesAll(g.nodes())) {
+                        coordManager.restoreCached(g.nodes());
+                    } else {
+                        // lays out new graph entirely
+                        Map<C,Point2D.Double> newLoc = old == null
+                                ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS)
+                                : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
+                        // remove objects that are already in coordinate manager
+                        newLoc.keySet().removeAll(coordManager.getObjects());
+                        newLoc.keySet().removeAll(coordManager.getCachedObjects());
+                        coordManager.restoreCached(g.nodes());
+                        coordManager.putAll(newLoc);
                     }
-                    coordManager.putAll(newLoc);
                 }
                 pcs.firePropertyChange("graph", old, g);
             }
