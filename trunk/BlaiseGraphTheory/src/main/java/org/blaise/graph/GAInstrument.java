@@ -8,9 +8,12 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Provides centralized instrumentation for potentially long-executing graph algorithms.
@@ -25,30 +28,11 @@ public class GAInstrument {
     private static final String START = "start";
     private static final String END = "end";
 
-    private static class LogEvent {
-        int id;
-        long start;
-        long dur;
-        Map<String,List<String>> info = new TreeMap<String,List<String>>();
-        public LogEvent(String[] info) {
-            this.id = nextId();
-            this.start = System.currentTimeMillis();
-            this.info.put("0", Arrays.asList(info));
-        }
-        void addInfo(String[] info) {
-            this.info.put(this.info.size()+"", Arrays.asList(info));
-        }
-        void end() {
-            info.put(this.info.size()+"", Arrays.asList(END));
-            dur = System.currentTimeMillis()-start;
-        }
-        @Override
-        public String toString() {
-            return "LogEvent{" + "id=" + id + ", start=" + start + ", dur=" + dur + ", info=" + info + '}';
-        }
-    }
-
-    private static final List<LogEvent> all = new ArrayList<LogEvent>();
+    /** Max number to keep in log */
+    private static int maxEvents = 10000;
+    /** All log events */
+    private static final Map<Integer,LogEvent> all = new LinkedHashMap<Integer,LogEvent>();
+    /** Log events split by algorithm */
     private static final Map<String,List<LogEvent>> log = new HashMap<String,List<LogEvent>>();
 
     /**
@@ -82,11 +66,11 @@ public class GAInstrument {
 
     private static synchronized void log(int id, String event, String... info) {
         try {
-            if (id < all.size()) {
-                LogEvent le = all.get(id);
-                if (event == END)
+            LogEvent le = all.get(id);
+            if (le != null) {
+                if (event == END) {
                     le.end();
-                else {
+                } else {
                     String[] logged = new String[info.length+1];
                     logged[0] = event;
                     System.arraycopy(info, 0, logged, 1, info.length);
@@ -98,14 +82,31 @@ public class GAInstrument {
 
     private static synchronized int log(String algorithm, String event, String... info) {
         try {
-            if (!log.containsKey(algorithm))
+            if (!log.containsKey(algorithm)) {
                 log.put(algorithm, new ArrayList<LogEvent>());
+            }
             String[] logged = new String[info.length+1];
             logged[0] = event;
             System.arraycopy(info, 0, logged, 1, info.length);
             LogEvent e = new LogEvent(logged);
             log.get(algorithm).add(e);
-            all.add(e);
+            all.put(e.id,e);
+            if (all.size() > 1.5*maxEvents) {
+                Set<Integer> rid = new HashSet<Integer>();
+                Set<LogEvent> rem = new HashSet<LogEvent>();
+                int n = 0;
+                for (Entry<Integer,LogEvent> i : all.entrySet()) {
+                    rid.add(i.getKey());
+                    rem.add(i.getValue());
+                    if (n++ > .75*maxEvents) {
+                        break;
+                    }
+                }
+                all.keySet().removeAll(rid);
+                for (List<LogEvent> l : log.values()) {
+                    l.removeAll(rem);
+                }
+            }
             return e.id;
         } catch (Exception e) {
             return -1;
@@ -117,9 +118,11 @@ public class GAInstrument {
             out.println("Graph Algorithm Log");
             for (String a : log.keySet()) {
                 out.println(" -- Algorithm " + a + " --");
-                for (LogEvent l : log.get(a))
-                    if (l.dur >= minT)
+                for (LogEvent l : log.get(a)) {
+                    if (l.dur >= minT) {
                         out.println(l);
+                    }
+                }
             }
         } catch (Exception e) {}
     }
@@ -128,4 +131,41 @@ public class GAInstrument {
         print(out, 10);
     }
 
+
+
+    //
+    // INNER CLASS
+    //
+
+    /** Captures a single event */
+    private static class LogEvent {
+        int id;
+        long start;
+        long dur;
+        List<String[]> info = new ArrayList<String[]>();
+        LogEvent(String... info) {
+            this.id = nextId();
+            this.start = System.currentTimeMillis();
+            this.info.add(info);
+        }
+        void addInfo(String... info) {
+            this.info.add(info);
+        }
+        void end() {
+            info.add(new String[]{END});
+            dur = System.currentTimeMillis()-start;
+        }
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder(100);
+            sb.append(String.format("LogEvent[id=%d, start=%d, dur=%d]\t", id, start, dur));
+            for (String[] arr : info) {
+                sb.append(String.format("\t%s", Arrays.asList(arr)));
+            }
+            return sb.toString();
+        }
+    }
+
+    private GAInstrument() {
+    }
 }
