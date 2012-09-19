@@ -5,7 +5,13 @@
 
 package org.blaise.graph.view;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.geom.Point2D;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.graphics.ContextMenuInitializer;
@@ -69,6 +75,13 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
         addMouseMotionListener(ppmh);
         addMouseWheelListener(ppmh);
         overlays.add(ppmh);
+        addHierarchyListener(new HierarchyListener(){
+            public void hierarchyChanged(HierarchyEvent e) {
+                if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
+                    setLayoutAnimating(false);
+                }
+            }
+        });
     }
 
     //</editor-fold>
