@@ -48,6 +48,29 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
     }
 
     /**
+     * Returns cached objects
+     * @return cached objects
+     */
+    public synchronized Set<Src> getCachedObjects() {
+        return cache.keySet();
+    }
+
+    /**
+     * Tests to see if all provided items are contained in either current
+     * locations or cached locations.
+     * @param obj objects to test
+     * @return true if all are tracked, false otherwise
+     */
+    public synchronized boolean locatesAll(Collection<? extends Src> obj) {
+        for (Src s : obj) {
+            if (!map.containsKey(s) && !cache.containsKey(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Returns copy of map with object locations
      * @return object locations
      */
@@ -128,8 +151,26 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
         fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, cached.keySet()));
     }
 
+    /**
+     * Call to restore locations from the cache.
+     * @param obj objects to restore
+     */
+    public synchronized void restoreCached(Set<? extends Src> obj) {
+        Map<Src,Coord> restored = new HashMap<Src,Coord>();
+        for (Src k : obj) {
+            Coord c = cache.remove(k);
+            if (c != null && !map.containsKey(k)) {
+                restored.put(k, c);
+            }
+        }
+        putAll(restored);
+    }
+
     /** Call to ensure appropriate size of cache */
     private void checkCache() {
+        for (Object m : map.keySet()) {
+            cache.remove(m);
+        }
     }
 
 
