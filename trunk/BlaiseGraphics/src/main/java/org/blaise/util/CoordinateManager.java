@@ -18,6 +18,10 @@ import java.util.*;
  * Three constructors are provided, both of which require parameters ensuring that
  * objects have initial positions.
  * </p>
+ * <p>
+ * The object is thread safe, so the points in the manager can be read from or written to
+ * by multiple threads.
+ * </p>
  *
  * @param <Src> type of source object
  * @param <Coord> type of point
@@ -168,7 +172,7 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
 
     /** Call to ensure appropriate size of cache */
     private void checkCache() {
-        for (Object m : map.keySet()) {
+        for (Src m : map.keySet()) {
             cache.remove(m);
         }
     }

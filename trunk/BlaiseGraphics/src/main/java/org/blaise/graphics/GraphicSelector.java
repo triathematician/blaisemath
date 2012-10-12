@@ -87,8 +87,8 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
 
     public void paint(JComponent component, Graphics2D canvas) {
         if (enabled) {
+            Rectangle bds;
             synchronized(selection) {
-                Rectangle bds;
                 for (Graphic g : selection.getSelection()) {
                     // XXX - add bounding box to selection to show the user
                 }
