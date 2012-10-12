@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-graph</artifactId>
-  <version>0.5.1</version>
+  <version>0.5.2</version>
   <packaging>jar</packaging>
 
   <name>BlaiseGraphTheory</name>
@@ -37,7 +37,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>blaise-visometry</artifactId>
-      <version>0.5.1</version>
+      <version>0.5.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
