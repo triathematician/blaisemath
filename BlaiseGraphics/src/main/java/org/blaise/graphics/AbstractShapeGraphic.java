@@ -111,7 +111,8 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         if (style == null || !(style instanceof PathStyle)) {
             return new BasicStroke(1f).createStrokedShape(primitive).contains(point);
         } else {
-            return ((PathStyle)style).getPathShape(primitive).contains(point);
+            Shape shape = ((PathStyle)style).getPathShape(primitive);
+            return shape != null && shape.contains(point);
         }
     }
 

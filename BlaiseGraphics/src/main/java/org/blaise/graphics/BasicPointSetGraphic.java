@@ -143,7 +143,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     //</editor-fold>
 
-    
+
     //
     // GRAPHIC METHODS
     //
@@ -154,9 +154,11 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     public boolean intersects(Rectangle box) {
         PointStyle drawer = drawStyle();
-        for (Point2D p : points) {
-            if (drawer.shape(p).intersects(box)) {
-                return true;
+        synchronized (points) {
+            for (Point2D p : points) {
+                if (drawer.shape(p).intersects(box)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -174,14 +176,15 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      * @return formatted location of the point
      */
     public String getPointTooltip(Point2D pt) {
-        if (pt == null)
+        if (pt == null) {
             return null;
-        else if (pointTipper == null)
+        } else if (pointTipper == null) {
             return PointFormatters.formatPoint(pt, 1);
-        else
+        } else {
             return pointTipper.of(pt);
+        }
     }
-    
+
 
     //
     // DRAW METHODS
@@ -194,28 +197,30 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     public void draw(Graphics2D canvas) {
         PointStyle drawer = drawStyle();
-        for (Point2D p : points) {
-            drawer.draw(p, canvas, visibility);
+        synchronized (points) {
+            for (Point2D p : points) {
+                drawer.draw(p, canvas, visibility);
+            }
         }
     }
 
     // PROPERTY CHANGE LISTENING
-    
+
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 }

@@ -54,7 +54,7 @@ public class ObjectStyler<Src, Style> {
     /**
      * Sets the current style delegate. If null, will use the default style
      * provided by the parent.
-     * @param styler used to style object 
+     * @param styler used to style object
      */
     public void setStyleDelegate(Delegator<Src, Style> styler) {
         if (this.styles != styler) {
@@ -144,19 +144,19 @@ public class ObjectStyler<Src, Style> {
 
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
