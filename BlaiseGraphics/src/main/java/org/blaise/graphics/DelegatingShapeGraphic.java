@@ -17,7 +17,7 @@ import org.blaise.style.ShapeStyle;
  * @author elisha
  */
 public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
-    
+
     /** Source object */
     protected Src source;
     /** Styler managing delgators */
@@ -40,7 +40,7 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
 
     public void setSourceObject(Src edge) {
         this.source = edge;
-        setDefaultTooltip(styler.getTipDelegate().of(edge));
+        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().of(edge));
         fireGraphicChanged();
     }
 
@@ -56,11 +56,11 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
 
     @Override
     public ShapeStyle drawStyle() {
-        ShapeStyle style = styler.getStyleDelegate().of(source);
+        ShapeStyle style = styler.getStyleDelegate() == null ? null : styler.getStyleDelegate().of(source);
         if (style != null) {
             return style;
         }
-        return paintingAsStroke() ? parent.getStyleProvider().getPathStyle(this)
+        return isStrokeOnly() ? parent.getStyleProvider().getPathStyle(this)
                 : parent.getStyleProvider().getShapeStyle(this);
     }
 
