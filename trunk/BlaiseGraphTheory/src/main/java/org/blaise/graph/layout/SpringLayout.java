@@ -15,13 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphUtils;
 
 /**
  * Simple energy-layout engine
- * 
+ *
  * @author Elisha Peterson
  */
 public class SpringLayout implements IterativeGraphLayout {
@@ -43,12 +45,12 @@ public class SpringLayout implements IterativeGraphLayout {
     private final Map<Object, Point2D.Double> loc = new HashMap<Object, Point2D.Double>();
     /** Current velocities */
     private final Map<Object, Point2D.Double> vel = new HashMap<Object, Point2D.Double>();
-    
+
     /** Iteration number */
     int iteration = 0;
     /** Total energy */
     double energy = 0.0;
-    
+
     /** The maximum weight between edges (used for weighted graphs only) */
     double maxWeight = 1;
 
@@ -69,7 +71,7 @@ public class SpringLayout implements IterativeGraphLayout {
         double springL = .5;
         /** Repelling constant */
         double repulsiveC = 1;
-        
+
         /** Damping constant (the "cooling" parameter */
         double dampingC = 0.5;
         /** Time step per iteration */
@@ -132,14 +134,14 @@ public class SpringLayout implements IterativeGraphLayout {
         public void setStepTime(double stepT) {
             this.stepT = stepT;
         }
-        
-        
+
+
     }
     //</editor-fold>
 
     protected Parameters parameters = new Parameters();
-    
-    
+
+
     // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     /**
@@ -149,7 +151,11 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param initialParameters the parameters for the initial layout
      */
     public SpringLayout(Graph g, StaticGraphLayout initialLayout, double... initialParameters) {
-        reset(initialLayout.layout(g, initialParameters));
+        try {
+            reset(initialLayout.layout(g, initialParameters));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SpringLayout.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** Construct using specified starting locations */
@@ -161,15 +167,15 @@ public class SpringLayout implements IterativeGraphLayout {
 
     public Parameters getParameters() { return parameters; }
     public void setParameters(Parameters p) { this.parameters = p; }
-    
+
     // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
 
     public double getCoolingParameter() { return parameters.dampingC; }
     public double getEnergyStatus() { return energy; }
     public int getIteration() { return iteration; }
-    
-    public synchronized Map<Object,Point2D.Double> getPositions() { 
-        return new HashMap<Object,Point2D.Double>(loc); 
+
+    public synchronized Map<Object,Point2D.Double> getPositions() {
+        return new HashMap<Object,Point2D.Double>(loc);
     }
 
     public final void reset(Map<?, Point2D.Double> positions) {
@@ -218,7 +224,7 @@ public class SpringLayout implements IterativeGraphLayout {
             resetNodes = false;
             tempLoc = null;
         }
-        
+
         for (Object v : nodes) {
             if (!loc.containsKey(v)) {
                 loc.put(v, new Point2D.Double());
@@ -272,7 +278,7 @@ public class SpringLayout implements IterativeGraphLayout {
             }
         }
         GAInstrument.middle(id, "forces computed");
-            
+
         // adjusts velocity with damping;
         for (V io : nodes) {
             adjustVelocity(vel.get(io), forces.get(io));
@@ -282,16 +288,16 @@ public class SpringLayout implements IterativeGraphLayout {
         for (V o : nodes) {
             adjustPosition(loc.get(o), vel.get(o));
         }
-        
+
         iteration ++;
 //        if (iteration % 100 == 0)
 //            System.err.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
-        
+
         HashMap<V,Point2D.Double> res = new HashMap<V,Point2D.Double>();
         for (V v : nodes) {
             res.put(v, loc.get(v));
         }
-        
+
         GAInstrument.end(id);
         return res;
     }
@@ -378,8 +384,8 @@ public class SpringLayout implements IterativeGraphLayout {
             sum.y += multiplier * (iLoc.y - jLoc.y) / dist;
         }
     }
-    
-    /** 
+
+    /**
      * Adds symmetric attractive force from adjacencies
      * @param g the graph
      * @param sum the total force for the current object

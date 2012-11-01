@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-graph</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>BlaiseGraphTheory</name>
@@ -35,11 +35,6 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-visometry</artifactId>
-      <version>0.5.2</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math</artifactId>
       <version>2.2</version>
@@ -50,6 +45,11 @@
       <artifactId>swing-layout</artifactId>
       <version>1.0.3</version>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>blaise-visometry</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
