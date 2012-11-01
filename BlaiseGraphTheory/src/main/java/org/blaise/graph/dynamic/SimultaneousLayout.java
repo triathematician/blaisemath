@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
@@ -32,7 +34,7 @@ public class SimultaneousLayout {
     // ALGORITHM PARAMETERS
 
     //<editor-fold defaultstate="collapsed" desc="Parameters CLASS DEF">
-    
+
     public static class Parameters extends SpringLayout.Parameters {
         /** Force per distance */
         double springC = 5;
@@ -46,7 +48,7 @@ public class SimultaneousLayout {
         }
     }
     //</editor-fold>
-    
+
     protected Parameters parameters = new Parameters();
 
     // STATE VARIABLES
@@ -60,7 +62,12 @@ public class SimultaneousLayout {
     public SimultaneousLayout(TimeGraph tg) {
         this.tg = tg;
         times = tg.getTimes();
-        Map<Object,Point2D.Double> ip = StaticGraphLayout.RANDOM.layout(tg.slice(tg.getMaximumTime(), true), 4.0);
+        Map<Object,Point2D.Double> ip = null;
+        try {
+            ip = StaticGraphLayout.RANDOM.layout(tg.slice(tg.getMaximumTime(), true), 4.0);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SimultaneousLayout.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for (int i = 0; i < times.size(); i++) {
             slices.add(new LayoutSlice(i, tg.slice(times.get(i), true), copy(ip)));
             masterPos.add(new HashMap<Object,Point2D.Double>());
@@ -97,7 +104,7 @@ public class SimultaneousLayout {
         }
         return Collections.emptyMap();
     }
-    
+
     //
     // ITERATION
     //
@@ -119,7 +126,7 @@ public class SimultaneousLayout {
 
     /** Overrides SpringLayout to add time factor at each slice */
     private class LayoutSlice extends SpringLayout {
-        
+
         int tIndex;
         Graph graph;
 

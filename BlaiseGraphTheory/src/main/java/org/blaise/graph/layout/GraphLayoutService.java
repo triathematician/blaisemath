@@ -31,8 +31,9 @@ public interface GraphLayoutService {
      * @param graph the graph
      * @param ic initial conditions (positions on some nodes), can be null if there are none
      * @param callback function to be executed when results are returned
+     * @throws InterruptedException if running on a background thread which is interrupted
      */
-    public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback);
+    public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) throws InterruptedException;
 
 
     //
@@ -45,7 +46,7 @@ public interface GraphLayoutService {
         public StaticLayoutService(StaticGraphLayout layout) {
             this.layout = layout;
         }
-        public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) {
+        public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) throws InterruptedException {
             callback.layoutCompleted(graph, ic, layout.layout(graph));
         }
         public IterativeGraphLayout getLayoutAlgorithm(Graph g) {
@@ -53,5 +54,5 @@ public interface GraphLayoutService {
         }
     }
 
-    
+
 }

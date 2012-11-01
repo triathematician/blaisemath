@@ -110,25 +110,31 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
                     coordManager.cacheObjects(coordManager.getObjects());
                 } else if (this.graph != g) {
                     this.graph = g;
-                    if (old != null) {
-                        Set<C> oldNodes = new HashSet<C>(old.nodes());
-                        oldNodes.removeAll(g.nodes());
-                        coordManager.cacheObjects(oldNodes);
-                    }
+                    Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
+                    oldNodes.removeAll(g.nodes());
+                    coordManager.cacheObjects(oldNodes);
                     // defer to existing locations if possible
                     if (coordManager.locatesAll(g.nodes())) {
                         coordManager.restoreCached(g.nodes());
                     } else {
-                        // lays out new graph entirely
-                        Map<C,Point2D.Double> newLoc = old == null
-                                ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS)
-                                : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
-                        // remove objects that are already in coordinate manager
-                        newLoc.keySet().removeAll(coordManager.getObjects());
-                        newLoc.keySet().removeAll(coordManager.getCachedObjects());
-                        coordManager.restoreCached(g.nodes());
-                        coordManager.putAll(newLoc);
+                        try {
+                            // lays out new graph entirely
+                            Map<C,Point2D.Double> newLoc = old == null
+                                    ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS)
+                                    : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
+                            // remove objects that are already in coordinate manager
+                            newLoc.keySet().removeAll(coordManager.getObjects());
+                            newLoc.keySet().removeAll(coordManager.getCachedObjects());
+                            coordManager.restoreCached(g.nodes());
+                            coordManager.putAll(newLoc);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                }
+                boolean check = coordManager.getObjects().size() == g.nodeCount();
+                if (!check) {
+                    System.err.println("Object sizes don't match: "+coordManager.getObjects().size()+" locations, but " + g.nodeCount()+ " nodes!");
                 }
                 pcs.firePropertyChange("graph", old, g);
             }
@@ -140,14 +146,18 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      */
     public void graphUpdated() {
         synchronized (coordManager) {
-            Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
-            oldNodes.removeAll(graph.nodes());
-            coordManager.cacheObjects(oldNodes);
-            Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
-            for (C c : coordManager.getObjects()) {
-                newLoc.remove(c);
+            try {
+                Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
+                oldNodes.removeAll(graph.nodes());
+                coordManager.cacheObjects(oldNodes);
+                Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+                for (C c : coordManager.getObjects()) {
+                    newLoc.remove(c);
+                }
+                coordManager.putAll(newLoc);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            coordManager.putAll(newLoc);
         }
     }
 
@@ -196,11 +206,15 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      */
     public void applyLayout(StaticGraphLayout layout, double... parameters){
         synchronized (coordManager) {
-            Map<C, Point2D.Double> pos = layout.layout(graph, parameters);
-            if (isLayoutAnimating()) {
-                iLayout.requestPositions(pos, false);
-            } else {
-                coordManager.setCoordinateMap(pos);
+            try {
+                Map<C, Point2D.Double> pos = layout.layout(graph, parameters);
+                if (isLayoutAnimating()) {
+                    iLayout.requestPositions(pos, false);
+                } else {
+                    coordManager.setCoordinateMap(pos);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
