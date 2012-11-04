@@ -39,22 +39,28 @@ public class CoordinateChangeEvent extends EventObject {
         evt.removed = removed;
         return evt;
     }
-    
+
     /** Added coords */
     Map added = null;
     /** Removed coords */
     Set removed = null;
-    
+
     /** Initialize without arguments */
     public CoordinateChangeEvent(Object src) {
         super(src);
     }
-    
+
+    @Override
+    public String toString() {
+        return String.format("CoordinateChangeEvent[%d added,%d removed,source=%s]",
+                added==null?0:added.size(), removed==null?0:removed.size(), source);
+    }
+
     /** Whether event indicates added coords */
     public boolean isAddEvent() {
         return added != null;
     }
-    
+
     /** Whether event indicates removed coords */
     public boolean isRemoveEvent() {
         return removed != null;
