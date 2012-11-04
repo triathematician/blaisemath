@@ -116,11 +116,9 @@ public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
                 cached.put(s, map.get(s));
             }
         }
-        for (Src s : cached.keySet()) {
-            map.remove(s);
-        }
         cache.putAll(cached);
         checkCache();
+        map.keySet().removeAll(cached.keySet());
         map.putAll(coords);
         fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coords, cached.keySet()));
     }
