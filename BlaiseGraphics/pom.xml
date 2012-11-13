@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-graphics</artifactId>
-  <version>0.9.1</version>
+  <version>0.9.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>BlaiseGraphics</name>
