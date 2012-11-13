@@ -18,6 +18,8 @@ public enum VisibilityHint {
     Selected,
     /** De-highlight/de-emphasis */
     Obscure,
+    /** Draw outline only */
+    Outline,
     /** This hint means the graphic is not drawn and receives no events from its parent. */
     Hidden;
 }
