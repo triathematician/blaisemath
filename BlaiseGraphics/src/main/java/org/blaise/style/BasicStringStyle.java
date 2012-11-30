@@ -20,9 +20,9 @@ import java.util.Set;
  * @author Elisha Peterson
  */
 public class BasicStringStyle implements StringStyle {
-    
+
     /** Color of the text. */
-    Color color = Color.BLACK;    
+    Color color = Color.BLACK;
     /** Font of the text. */
     Font font = new Font("Dialog", Font.PLAIN, 12);
     /** Stores font size. */
@@ -44,7 +44,7 @@ public class BasicStringStyle implements StringStyle {
     public BasicStringStyle(Color color, Font font, Anchor anchor) { setAnchor(anchor); setColor(color); setFont(font); }
 
     @Override
-    public String toString() { 
+    public String toString() {
         return "BasicStringStyle [" + font + "]";
     }
 
@@ -58,16 +58,16 @@ public class BasicStringStyle implements StringStyle {
     public BasicStringStyle offset(Point2D off) { this.offset = off; return this; }
     /** Sets offset & returns pointer to object */
     public BasicStringStyle offset(double x, double y) { this.offset = new Point2D.Double(x,y); return this; }
-    /** 
-     * Sets offset & returns pointer to object 
+    /**
+     * Sets offset & returns pointer to object
      * @param r how far from center to offset (angle is generated from anchor)
      */
-    public BasicStringStyle offset(double r) { 
+    public BasicStringStyle offset(double r) {
         if (anchor == Anchor.Center)
             offset = new Point2D.Double();
         else
-            offset(r*Math.cos(anchor.getAngle()),r*Math.sin(anchor.getAngle())); 
-        return this; 
+            offset(r*Math.cos(anchor.getAngle()),r*Math.sin(anchor.getAngle()));
+        return this;
     }
     /** Sets anchor & returns pointer to object */
     public BasicStringStyle anchor(Anchor anchor) { this.anchor = anchor; return this; }
@@ -101,15 +101,17 @@ public class BasicStringStyle implements StringStyle {
 
 // </editor-fold>
 
-    
+
     public void draw(Point2D point, String string, Graphics2D canvas, Set<VisibilityHint> visibility) {
-        if (string == null || string.length() == 0)
+        if (string == null || string.length() == 0) {
             return;
+        }
         if (fontSize != null && font == null) {
             font = canvas.getFont().deriveFont((float) fontSize);
             canvas.setFont(font);
-        } else if (font != null)
+        } else if (font != null) {
             canvas.setFont(font);
+        }
         Rectangle2D bounds = bounds(point, string, canvas);
         canvas.setColor(StyleUtils.applyHints(color, visibility));
         canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
@@ -120,8 +122,9 @@ public class BasicStringStyle implements StringStyle {
         double width = fm.getStringBounds(string, canvas).getWidth();
         double height = fm.getAscent() - fm.getDescent();
 
-        if (anchor == Anchor.Southwest)
+        if (anchor == Anchor.Southwest) {
             return new Rectangle2D.Double(point.getX() + offset.getX(), point.getY() + offset.getY()-height, width, height);
+        }
 
         Point2D.Double shift = new Point2D.Double();
 
@@ -137,7 +140,7 @@ public class BasicStringStyle implements StringStyle {
                 shift.x = -width / 2;
                 break;
         }
-        
+
         switch (anchor) {
             case Northwest:
             case North:
