@@ -39,6 +39,18 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
         setSourceObject(obj);
     }
 
+    /**
+     * Initialize with source (source object) and graphic
+     * @param obj the source object
+     * @param shape the shape to use
+     * @param strokeOnly whether object should be stroked only
+     */
+    public DelegatingShapeGraphic(Src obj, Shape shape, ObjectStyler<Src,? extends ShapeStyle> styler) {
+        super(shape, false);
+        setSourceObject(obj);
+        setStyler(styler);
+    }
+
     public Src getSourceObject() {
         return source;
     }
