@@ -56,8 +56,12 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
                     }
                 }
             }
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
-            public void popupMenuCanceled(PopupMenuEvent e) {}
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                popup.removeAll();
+            }
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                popup.removeAll();
+            }
         });
     }
 

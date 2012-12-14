@@ -26,13 +26,13 @@ public class SetSelectionModel<G> {
     /** Initialize without arguments */
     public SetSelectionModel() {
     }
-    
+
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
-    
+
     public Set<G> getSelection() {
         return selected;
     }
@@ -78,30 +78,30 @@ public class SetSelectionModel<G> {
             pcs.firePropertyChange("selection", old, selected);
         }
     }
-    
+
     //</editor-fold>
-    
-    
+
+
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
     // EVENT HANDLING
     //
-    
+
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
