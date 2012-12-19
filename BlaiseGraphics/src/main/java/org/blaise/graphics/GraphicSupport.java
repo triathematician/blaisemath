@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +43,14 @@ public abstract class GraphicSupport implements Graphic {
 
     /** Default text of tooltip */
     protected String tipText = null;
+    /** Highlighter */
+    protected final GraphicHighlighter highlighter = new GraphicHighlighter();
 
+    /**
+     * Initialize graphic
+     */
     public GraphicSupport() {
-        addMouseListener(new GraphicHighlighter());
+        addMouseListener(highlighter);
     }
 
 
@@ -130,6 +136,20 @@ public abstract class GraphicSupport implements Graphic {
 
     public void setSelectionEnabled(boolean val) {
         selectEnabled = val;
+    }
+
+    public boolean isHighlightEnabled() {
+        return Arrays.asList(handlers.getListenerList()).contains(highlighter);
+    }
+
+    public void setHighlightEnabled(boolean val) {
+        if (val != isHighlightEnabled()) {
+            if (val) {
+                addMouseListener(highlighter);
+            } else {
+                removeMouseListener(highlighter);
+            }
+        }
     }
 
     //
