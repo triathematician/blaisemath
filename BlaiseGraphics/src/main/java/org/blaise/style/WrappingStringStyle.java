@@ -69,7 +69,9 @@ public class WrappingStringStyle extends BasicStringStyle {
         } else {
             // need to wrap string
             drawInRectangle(string, canvas,
-                    new Rectangle2D.Double(clip.getX()+clip.getWidth()*.2, clip.getY()+clip.getHeight()*.2, clip.getWidth()*.6, clip.getHeight()*.6)
+                    new Rectangle2D.Double(
+                    clip.getX()+clip.getWidth()*.15, clip.getY()+clip.getHeight()*.15,
+                    clip.getWidth()*.7, clip.getHeight()*.7)
                     );
         }
     }
@@ -83,16 +85,16 @@ public class WrappingStringStyle extends BasicStringStyle {
         }
         float sz = canvas.getFont().getSize2D();
         List<String> lines = wrappedString(string, canvas, rClip.getWidth(), rClip.getHeight());
-        double y0 = rClip.getY();
+        double y0;
         switch (anchor) {
             case North: case Northwest: case Northeast:
-                y0 += sz+2;
+                y0 = rClip.getY()+sz+2;
                 break;
             case South: case Southwest: case Southeast:
-                y0 += rClip.getHeight()-lines.size()*(sz+2)+sz;
+                y0 = rClip.getMaxY()-lines.size()*(sz+2)+sz;
                 break;
             default:
-                y0 += rClip.getCenterY()-(lines.size()/2.0)*(sz+2)+sz;
+                y0 = rClip.getCenterY()-(lines.size()/2.0)*(sz+2)+sz;
         }
         for (String s : lines) {
             double wid = canvas.getFontMetrics().getStringBounds(s, canvas).getWidth();
@@ -101,10 +103,10 @@ public class WrappingStringStyle extends BasicStringStyle {
                     canvas.drawString(s, (float)(rClip.getX()+2), (float) y0);
                     break;
                 case East: case Southeast: case Northeast:
-                    canvas.drawString(s, (float)(rClip.getX()+rClip.getWidth()-wid-2), (float) y0);
+                    canvas.drawString(s, (float)(rClip.getMaxX()-wid-2), (float) y0);
                     break;
                 default:
-                    canvas.drawString(s, (float)(rClip.getX()+rClip.getCenterX()-wid/2.0), (float) y0);
+                    canvas.drawString(s, (float)(rClip.getCenterX()-wid/2.0), (float) y0);
             }
             y0 += sz+2;
         }
@@ -134,7 +136,7 @@ public class WrappingStringStyle extends BasicStringStyle {
             lines.add(string);
         } else {
             // need to wrap string
-            double lineHt = sz+2;
+            double totHt = sz+2;
             int pos0 = 0;
             int pos1 = 1;
             while (pos1 < string.length()) {
@@ -146,10 +148,12 @@ public class WrappingStringStyle extends BasicStringStyle {
                     if (idx > pos0) {
                         pos1 = idx + 2;
                     }
+                } else {
+                    pos1 = string.length()+1;
                 }
                 String s = string.substring(pos0, pos1 - 1);
-                lineHt += sz+2;
-                if (lineHt >= height-2) {
+                totHt += sz+2;
+                if (totHt >= height-2) {
                     // will be the last line, may need to truncate
                     if (pos1-1 < string.length()) {
                         s = s + "...";
