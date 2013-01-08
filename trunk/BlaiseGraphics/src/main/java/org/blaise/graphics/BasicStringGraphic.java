@@ -13,7 +13,7 @@ import org.blaise.util.PointBean;
 
 /**
  * Draws a string at a point.
- * 
+ *
  * @author Elisha
  */
 public class BasicStringGraphic extends GraphicSupport
@@ -23,7 +23,7 @@ public class BasicStringGraphic extends GraphicSupport
     protected Point2D point;
     /** The object that will be drawn. */
     protected String text;
-    
+
     /** The associated style (may be null). */
     protected StringStyle style;
 
@@ -32,12 +32,12 @@ public class BasicStringGraphic extends GraphicSupport
     //
 
     /** Construct with no style (will use the default) */
-    public BasicStringGraphic(Point2D point, String s) { 
-        this(point, s, null); 
+    public BasicStringGraphic(Point2D point, String s) {
+        this(point, s, null);
     }
 
-    /** 
-     * Construct with given primitive and style. 
+    /**
+     * Construct with given primitive and style.
      * @param point location of string
      * @param s string to draw
      * @param style draws the string
@@ -56,17 +56,17 @@ public class BasicStringGraphic extends GraphicSupport
         return "String";
     }
 
-    
+
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
 
-    public Point2D getPoint() { 
-        return point; 
+    public Point2D getPoint() {
+        return point;
     }
-    
-    public void setPoint(Point2D p) { 
+
+    public void setPoint(Point2D p) {
         if (!point.equals(p)) {
             point = new Point2D.Double(p.getX(), p.getY());
             fireGraphicChanged();
@@ -77,10 +77,10 @@ public class BasicStringGraphic extends GraphicSupport
      * Return the string to be drawn.
      * @return the string
      */
-    public String getString() { 
-        return text; 
+    public String getString() {
+        return text;
     }
-    
+
     /**
      * Set the string to be drawn.
      * @param s the string
@@ -96,10 +96,10 @@ public class BasicStringGraphic extends GraphicSupport
      * Return the style used to draw.
      * @return style
      */
-    public StringStyle getStyle() { 
-        return style; 
+    public StringStyle getStyle() {
+        return style;
     }
-    
+
     /**
      * Sets the style used to draw.
      * @param style the style
@@ -110,10 +110,10 @@ public class BasicStringGraphic extends GraphicSupport
             fireGraphicChanged();
         }
     }
-    
+
     //</editor-fold>
 
-    
+
     //
     // GRAPHIC METHODS
     //
@@ -129,12 +129,12 @@ public class BasicStringGraphic extends GraphicSupport
             return false;
         return drawStyle().bounds(point, text, lastGr).intersects(box);
     }
-    
+
 
     //
     // DRAW METHODS
     //
-    
+
     /** Return the actual style used for drawing */
     private StringStyle drawStyle() {
         return style == null ? parent.getStyleProvider().getStringStyle(this) : style;
@@ -144,8 +144,9 @@ public class BasicStringGraphic extends GraphicSupport
     private transient Graphics2D lastGr = null;
 
     public void draw(Graphics2D canvas) {
-        if (text == null || text.length() == 0)
+        if (text == null || text.length() == 0) {
             return;
+        }
         lastGr = canvas;
         drawStyle().draw(point, text, canvas, visibility);
     }
