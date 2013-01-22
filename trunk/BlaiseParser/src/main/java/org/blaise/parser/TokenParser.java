@@ -104,7 +104,7 @@ public class TokenParser implements GrammarParser {
         return topNode;
     }
 
-    /** 
+    /**
      * Adds specified token to tree, and updates tree's position;
      * Returns the new current node.
      */
@@ -217,8 +217,12 @@ public class TokenParser implements GrammarParser {
         static Pattern P$FL = Pattern.compile($FLOAT);
 
         // generic identifier pattern
-        static String $IDENTIFIER = "([_A-Za-z][_A-Za-z0-9]*)";
+        static String $IDENTIFIER = "([_A-Za-z][_A-Za-z0-9]*|\".*?\")";
         static Pattern P$IDENTIFIER = Pattern.compile($IDENTIFIER);
+
+        // to eliminate quotes from output
+        static String $NO_DOUBLE_QUOTES = "[^\"]*";
+        static Pattern P$NO_DOUBLE_QUOTES = Pattern.compile($NO_DOUBLE_QUOTES);
 
         /** parenthetical patterns */
         Pattern P$PAR_OPEN, P$PAR_CLOSE;
@@ -243,12 +247,14 @@ public class TokenParser implements GrammarParser {
 
         /**
          * Translates provided input into a String of tokens. Places results at the end of specified arrays.
+         * Single quotes or double quotes can be used to surround IDENTIFIER
          *
          * @param input
          * @param tokens
          * @param types
          */
         public void tokenize(String input, ArrayList<String> tokens, ArrayList<TokenType> types) throws ParseException {
+            input = input.replaceAll("'","\""); //Convert all single quotes to double quotes for processing later
             if (VERBOSE) System.out.println("Tokenizing string " + input);
             input = input.trim(); // remove whitespace
             if (input.length()==0) return;
@@ -283,8 +289,16 @@ public class TokenParser implements GrammarParser {
                 throw new ParseException("Unable to retrieve token type from pattern... this should never happen!");
             }
 
-            tokens.add(match.group());
-            types.add(addType);
+            //Do not include quotes in output
+            Matcher outputMatch = P$NO_DOUBLE_QUOTES.matcher(match.group());
+            while  (outputMatch.find()){
+            	if (outputMatch.group().length()!=0){
+                	tokens.add(outputMatch.group());
+                	types.add(addType);
+                	break;
+            	}
+            }
+
             tokenize( input.substring(match.end()), tokens, types );
         }
     }
@@ -315,7 +329,7 @@ public class TokenParser implements GrammarParser {
         return false;
     }
 
-    /** 
+    /**
      * Looks through a list of tokens with associated types, and converts any identifiers
      * that are recognized by the grammar as functions to be of type <code>TokenType.FUNCTION</code>.
      * The change takes place in the list of types.
@@ -435,5 +449,5 @@ public class TokenParser implements GrammarParser {
         }
         return null;
     }
-    
+
 }
