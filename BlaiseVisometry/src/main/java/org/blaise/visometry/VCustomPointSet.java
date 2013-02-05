@@ -39,7 +39,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     public VCustomPointSet() {
         this(Collections.EMPTY_MAP);
     }
-    
+
     /**
      * Initialize with specified coordinate manager.
      * @param mgr coordinate manager
@@ -59,6 +59,13 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     }
 
     public void coordinatesChanged(CoordinateChangeEvent evt) {
+//        if (evt.getSource() == coordManager) {
+//            System.err.println((converting?"VCPS: CM-CONV: ":"VCPS: CM-UNCO: ") + evt);
+//        } else if (evt.getSource() == window.getCoordinateManager()) {
+//            System.err.println((converting?"VCPS:WCM-CONV: ":"VCPS:WCM-UNCO: ") + evt);
+//        } else {
+//            System.err.println("VCPS-UNEXPECTED EVENT SOURCE");
+//        }
         if (converting) {
             return;
         }
@@ -111,6 +118,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
             if (coordManager != null) {
                 coordManager.addCoordinateListener(this);
             }
+            setUnconverted(true);
         }
     }
 
@@ -154,7 +162,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     //
     // CONVERSION
     //
-    
+
     /** Ignore changes while converting */
     boolean converting = false;
 
@@ -163,10 +171,15 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
         synchronized (coordManager) {
             converting = true;
             Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
+            int n = coordManager.getObjects().size();
             for (Src s : coordManager.getObjects()) {
                 winmap.put(s, processor.convert(coordManager.of(s), vis));
             }
             window.getCoordinateManager().setCoordinateMap(winmap);
+            int n2 = window.getCoordinateManager().getObjects().size();
+            if (n != n2) {
+                throw new IllegalStateException("Object sizes do not match!");
+            }
             setUnconverted(false);
             converting = false;
         }

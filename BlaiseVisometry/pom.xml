@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-visometry</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>BlaiseVisometry</name>
@@ -27,11 +27,6 @@
       <version>0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-graphics</artifactId>
-      <version>0.9.1</version>
-    </dependency>
-    <dependency>
       <groupId>org.jdesktop</groupId>
       <artifactId>appframework</artifactId>
       <version>1.0.3</version>
@@ -44,6 +39,11 @@
       <version>1.0.0</version>
       <scope>test</scope>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>blaise-graphics</artifactId>
+      <version>0.9.6-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
