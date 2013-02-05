@@ -50,9 +50,9 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
         super.setSourceObject(src);
         if (labelGraphic != null) {
             labelGraphic.setString(src == null ? "" : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+src
-                    : getStyler().getLabelDelegate().of(src));
+                    : getStyler().getLabelDelegate().apply(src));
             BasicStringStyle ss = (BasicStringStyle) (getStyler() == null || getStyler().getLabelStyleDelegate() == null ? null
-                                        : getStyler().getLabelStyleDelegate().of(src));
+                                        : getStyler().getLabelStyleDelegate().apply(src));
             labelStyle = (WrappingStringStyle) (ss == null ? null
                     : new WrappingStringStyle()
                         .anchor(ss.getAnchor())

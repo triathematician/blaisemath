@@ -19,12 +19,14 @@ import java.util.List;
 /**
  * Provides several custom shapes that can be used to draw points.
  * 
+ * TODO - configure these shapes in a resource file
+ * 
  * @author Elisha Peterson
  */
 public final class ShapeLibrary {
     
     /** Retrieve list of available shapes. */
-    public static List<ShapeProvider> getAvailableShapers() {
+    public static List<ShapeFactory> getAvailableShapers() {
         return Arrays.asList(
                 NONE, CIRCLE, SQUARE, DIAMOND, TRIANGLE,
                 STAR, STAR7, STAR11,
@@ -58,28 +60,28 @@ public final class ShapeLibrary {
     
     
     /** Blank shape, draws nothing */
-    public static class NoShape implements ShapeProvider {
+    public static class NoShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             return EMPTY_PATH;
         }
     }
     
     /** Circle centered at point */
-    public static class CircleShape implements ShapeProvider {
+    public static class CircleShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             return new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2*radius, 2*radius);
         }
     }
     
     /** Square */
-    public static class SquareShape implements ShapeProvider {
+    public static class SquareShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             return new Rectangle2D.Double(p.getX() - radius/Math.sqrt(2), p.getY() - radius/Math.sqrt(2), 2*radius/Math.sqrt(2), 2*radius/Math.sqrt(2));
         }
     }
     
     /** Diamond */
-    public static class DiamondShape implements ShapeProvider {
+    public static class DiamondShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp = new GeneralPath();
@@ -93,7 +95,7 @@ public final class ShapeLibrary {
     }
 
     /** Triangle, with peak pointed up */
-    public static class TriangleShape implements ShapeProvider {
+    public static class TriangleShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp2 = new GeneralPath();
@@ -106,7 +108,7 @@ public final class ShapeLibrary {
     }
     
     /** 5-Pointed Star */
-    public static class StarShape implements ShapeProvider {
+    public static class StarShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp5 = new GeneralPath();
@@ -123,7 +125,7 @@ public final class ShapeLibrary {
     }
     
     /** 7-Pointed Star */
-    public static class Star7Shape implements ShapeProvider {
+    public static class Star7Shape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp6 = new GeneralPath();
@@ -140,7 +142,7 @@ public final class ShapeLibrary {
     }
     
     /** 11-Pointed Star */
-    public static class Star11Shape implements ShapeProvider {
+    public static class Star11Shape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp7 = new GeneralPath();
@@ -157,7 +159,7 @@ public final class ShapeLibrary {
     }
     
     /** A "+" shape */
-    public static class PlusShape implements ShapeProvider {
+    public static class PlusShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp3 = new GeneralPath();
@@ -170,7 +172,7 @@ public final class ShapeLibrary {
     }
     
     /** A "x" shape */
-    public static class CrossShape implements ShapeProvider {
+    public static class CrossShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp4 = new GeneralPath();
@@ -184,7 +186,7 @@ public final class ShapeLibrary {
     }
     
     /** Cross-hairs (path only, no fill) */
-    public static class CrosshairsShape implements ShapeProvider {
+    public static class CrosshairsShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp3 = new GeneralPath();
@@ -198,7 +200,7 @@ public final class ShapeLibrary {
     }
 
     /** Happy face shape */
-    public static class HappyFaceShape implements ShapeProvider {
+    public static class HappyFaceShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             Area a = new Area(new Ellipse2D.Double(x - radius, y - radius, 2*radius, 2*radius));
@@ -210,7 +212,7 @@ public final class ShapeLibrary {
     }
     
     /** House shape */
-    public static class HouseShape implements ShapeProvider {
+    public static class HouseShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp13 = new GeneralPath();
@@ -225,7 +227,7 @@ public final class ShapeLibrary {
     }
     
     /** Simple arrow (path only) */
-    public static class SimpleArrowShape implements ShapeProvider {
+    public static class SimpleArrowShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp = new GeneralPath();
@@ -238,7 +240,7 @@ public final class ShapeLibrary {
     }
     
     /** Triangle shape (pointed to the side) */
-    public static class TrianglePointerShape implements ShapeProvider {
+    public static class TrianglePointerShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp9 = new GeneralPath();
@@ -251,7 +253,7 @@ public final class ShapeLibrary {
     }
     
     /** Triangle shape (flag) */
-    public static class TriangleFlagShape implements ShapeProvider {
+    public static class TriangleFlagShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp10 = new GeneralPath();
@@ -265,7 +267,7 @@ public final class ShapeLibrary {
     }
     
     /** Teardrop shape */
-    public static class TeardropShape implements ShapeProvider {
+    public static class TeardropShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp11 = new GeneralPath();
@@ -280,7 +282,7 @@ public final class ShapeLibrary {
     }
     
     /** Car shape */
-    public static class CarShape implements ShapeProvider {
+    public static class CarShape implements ShapeFactory {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp12 = new GeneralPath();

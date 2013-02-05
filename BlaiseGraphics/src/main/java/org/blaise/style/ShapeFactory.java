@@ -1,5 +1,5 @@
 /*
- * ShapeProvider.java
+ * ShapeFactory.java
  * Created Jan 22, 2011
  */
 
@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
  * 
  * @author Elisha
  */
-public interface ShapeProvider {
+public interface ShapeFactory {
 
     /**
      * Generates a shape at specified point with specified radius.

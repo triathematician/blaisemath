@@ -4,13 +4,13 @@
  */
 package org.blaise.visometry;
 
+import com.google.common.base.Function;
 import java.awt.geom.Point2D;
 import java.beans.IndexedPropertyChangeEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.blaise.graphics.BasicPointSetGraphic;
 import org.blaise.style.PointStyle;
-import org.blaise.util.Delegator;
 import org.blaise.util.PointFormatters;
 
 /**
@@ -108,9 +108,9 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> implements PropertyCha
     }
 
     /** Converts a point to a tip string */
-    public static class VisTipDelegate<C> implements Delegator<Point2D,String> {
+    public static class VisTipDelegate<C> implements Function<Point2D,String> {
         Visometry<C> vis;
-        public String of(Point2D src) {
+        public String apply(Point2D src) {
             C local = vis.toLocal(src);
             return local instanceof Point2D ? PointFormatters.formatPoint((Point2D) local, 2)
                     : local + "";

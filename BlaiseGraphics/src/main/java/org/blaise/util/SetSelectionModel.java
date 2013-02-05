@@ -4,6 +4,8 @@
  */
 package org.blaise.util;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
@@ -21,7 +23,7 @@ import javax.swing.ListSelectionModel;
  */
 public class SetSelectionModel<G> {
 
-    private final Set<G> selected = Collections.synchronizedSet(new HashSet<G>());
+    private final Set<G> selected = Sets.newHashSet();
 
     /** Initialize without arguments */
     public SetSelectionModel() {
@@ -33,33 +35,31 @@ public class SetSelectionModel<G> {
     // PROPERTIES
     //
 
-    public Set<G> getSelection() {
-        return selected;
+    public synchronized Set<G> getSelection() {
+        return ImmutableSet.copyOf(selected);
     }
 
     public synchronized void setSelection(Set<G> selection) {
         if (!selection.containsAll(selected) || !selected.containsAll(selection)) {
-            synchronized (selected) {
-                HashSet<G> old = new HashSet<G>(selected);
-                selected.clear();
-                selected.addAll(selection);
-                pcs.firePropertyChange("selection", old, selected);
-            }
+            Set<G> old = getSelection();
+            selected.clear();
+            selected.addAll(selection);
+            pcs.firePropertyChange("selection", old, getSelection());
         }
     }
 
     public synchronized void addSelection(G g) {
         if (g != null && !selected.contains(g)) {
-            HashSet<G> old = new HashSet<G>(selected);
+            Set<G> old = getSelection();
             selected.add(g);
-            pcs.firePropertyChange("selection", old, selected);
+            pcs.firePropertyChange("selection", old, getSelection());
         }
     }
 
     public synchronized void removeSelection(G g) {
-        HashSet<G> old = new HashSet<G>(selected);
         if (g != null && selected.remove(g)) {
-            pcs.firePropertyChange("selection", old, selected);
+            Set<G> old = getSelection();
+            pcs.firePropertyChange("selection", old, getSelection());
         }
     }
 
@@ -69,13 +69,13 @@ public class SetSelectionModel<G> {
      */
     public synchronized void toggleSelection(G g) {
         if (g != null) {
-            HashSet<G> old = new HashSet<G>(selected);
+            Set<G> old = getSelection();
             if (selected.contains(g)) {
                 selected.remove(g);
             } else {
                 selected.add(g);
             }
-            pcs.firePropertyChange("selection", old, selected);
+            pcs.firePropertyChange("selection", old, getSelection());
         }
     }
 

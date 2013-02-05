@@ -4,6 +4,7 @@
  */
 package org.blaise.util;
 
+import com.google.common.base.Function;
 import java.util.*;
 
 /**
@@ -28,14 +29,14 @@ import java.util.*;
  *
  * @author Elisha Peterson
  */
-public class CoordinateManager<Src, Coord> implements Delegator<Src, Coord> {
+public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
 
     /** Map with current objects and locations (stores the data) */
     private final Map<Src, Coord> map = new HashMap<Src, Coord>();
     /** Cached locations */
     private final Map<Src, Coord> cache = new HashMap<Src, Coord>();
 
-    public synchronized Coord of(Src src) {
+    public synchronized Coord apply(Src src) {
         return map.get(src);
     }
 

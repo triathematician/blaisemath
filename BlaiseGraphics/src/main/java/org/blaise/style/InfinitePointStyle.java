@@ -18,12 +18,18 @@ import java.util.Set;
 public class InfinitePointStyle extends BasicPointStyle {
 
     /** Line style for drawing the ray */
-    private PathStyle rayStyle = StyleUtils.DEFAULT_STYLE_PROVIDER.PATH;
+    private PathStyle rayStyle = DefaultStyleContext.getInstance().PATH;
+    
     /** Whether to extend in both directions, or just forward */
     private boolean extendBoth = false;
 
     /** Construct the style */
     public InfinitePointStyle() {
+    }
+
+    @Override
+    public BasicPointStyle clone() {
+        return super.clone();
     }
 
     public PathStyle getRayStyle() {

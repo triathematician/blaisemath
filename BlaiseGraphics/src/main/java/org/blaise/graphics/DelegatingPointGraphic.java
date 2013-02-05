@@ -4,13 +4,13 @@
  */
 package org.blaise.graphics;
 
+import com.google.common.base.Function;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
 import org.blaise.style.StringStyle;
-import org.blaise.util.Delegator;
 
 /**
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
@@ -39,7 +39,7 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
 
     public void setSourceObject(Src src) {
         this.src = src;
-        setDefaultTooltip(styler.getTipDelegate().of(src));
+        setDefaultTooltip(styler.getTipDelegate().apply(src));
         fireGraphicChanged();
     }
 
@@ -55,7 +55,7 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
     @Override
     public String getTooltip(Point p) {
         if (tipEnabled) {
-            String txt = styler.getTipDelegate().of(src);
+            String txt = styler.getTipDelegate().apply(src);
             return txt == null ? tipText : txt;
         } else {
             return null;
@@ -66,10 +66,10 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
     public PointStyle drawStyle() {
         PointStyle style = null;
         if (styler != null && styler.getStyleDelegate() != null) {
-            style = styler.getStyleDelegate().of(src);
+            style = styler.getStyleDelegate().apply(src);
         }
         if (style == null) {
-            style = parent.getStyleProvider().getPointStyle(this);
+            style = parent.getStyleContext().getPointStyle(this);
         }
         return style;
     }
@@ -79,11 +79,11 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
         ps.draw(point, canvas, visibility);
 
         if (styler.getLabelDelegate() != null) {
-            String label = styler.getLabelDelegate().of(src);
+            String label = styler.getLabelDelegate().apply(src);
             if (label != null && label.length() > 0) {
-                Delegator<Src, StringStyle> lStyler = styler.getLabelStyleDelegate();
+                Function<? super Src,StringStyle> lStyler = styler.getLabelStyleDelegate();
                 if (lStyler != null) {
-                    lStyler.of(src).draw(point, label, canvas, visibility);
+                    lStyler.apply(src).draw(point, label, canvas, visibility);
                 }
             }
         }

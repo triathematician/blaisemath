@@ -64,8 +64,9 @@ public class BasicPathStyle implements PathStyle {
     }
 
     public void draw(Shape s, Graphics2D canvas, Set<VisibilityHint> visibility) {
-        if(getThickness() <= 0f || getStroke() == null)
+        if(getThickness() <= 0f || getStroke() == null) {
             return;
+        }
 
         canvas.setStroke(new BasicStroke(getThickness()));
 

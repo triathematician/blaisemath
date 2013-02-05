@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-graphics</artifactId>
-  <version>0.9.6-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>BlaiseGraphics</name>
@@ -33,6 +33,18 @@
       <groupId>org.blaise</groupId>
       <artifactId>Firestarter</artifactId>
       <version>1.0.0</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>13.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
       <scope>test</scope>
       <type>jar</type>
     </dependency>

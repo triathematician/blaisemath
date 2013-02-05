@@ -52,7 +52,7 @@ public class DecoratorPointStyle extends PointStyleSupport {
     }
     
     @Override 
-    public ShapeProvider getShape() { 
+    public ShapeFactory getShape() { 
         return base.getShape();
     }
         

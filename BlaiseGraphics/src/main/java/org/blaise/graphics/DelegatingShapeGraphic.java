@@ -57,7 +57,7 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
 
     public void setSourceObject(Src edge) {
         this.source = edge;
-        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().of(edge));
+        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(edge));
         fireGraphicChanged();
     }
 
@@ -67,18 +67,18 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
 
     public void setStyler(ObjectStyler<Src,? extends ShapeStyle> styler) {
         this.styler = styler;
-        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().of(source));
+        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(source));
         fireGraphicChanged();
     }
 
     @Override
     public ShapeStyle drawStyle() {
-        ShapeStyle style = styler.getStyleDelegate() == null ? null : styler.getStyleDelegate().of(source);
+        ShapeStyle style = styler.getStyleDelegate() == null ? null : styler.getStyleDelegate().apply(source);
         if (style != null) {
             return style;
         }
-        return isStrokeOnly() ? parent.getStyleProvider().getPathStyle(this)
-                : parent.getStyleProvider().getShapeStyle(this);
+        return isStrokeOnly() ? parent.getStyleContext().getPathStyle(this)
+                : parent.getStyleContext().getShapeStyle(this);
     }
 
 }

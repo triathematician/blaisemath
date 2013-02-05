@@ -4,20 +4,18 @@
  */
 package org.blaise.graph.view;
 
+import com.google.common.base.Functions;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.style.BasicPathStyle;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
-import org.blaise.util.Delegator;
 import org.blaise.util.Edge;
-import org.blaise.util.NonDelegator;
 import org.blaise.visometry.VCustomGraph;
 import org.blaise.visometry.plane.PlanePlotComponent;
 
@@ -37,11 +35,6 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     private GraphLayoutManager layoutManager;
     /** Stores the visible graph */
     private VCustomGraph viewGraph;
-
-    /** Used to label objects in the graph */
-    private final Delegator<Object, String> DEFAULT_LABEL_DELEGATE = new Delegator<Object, String>(){
-        public String of(Object src) { return ""+src; }
-    };
 
     /**
      * Initialize adapter with an empty graph.
@@ -83,13 +76,13 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
             viewGraph.setEdges(layoutManager.getGraph().edges());
         }
         if (viewGraph.getStyler().getLabelDelegate() == null) {
-            viewGraph.getStyler().setLabelDelegate(DEFAULT_LABEL_DELEGATE);
+            viewGraph.getStyler().setLabelDelegate(Functions.toStringFunction());
         }
         if (viewGraph.getStyler().getTipDelegate() == null) {
-            viewGraph.getStyler().setTipDelegate(DEFAULT_LABEL_DELEGATE);
+            viewGraph.getStyler().setTipDelegate(Functions.toStringFunction());
         }
         if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-            viewGraph.getEdgeStyler().setStyleDelegate(new NonDelegator<Edge<Object>,PathStyle>(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
+            viewGraph.getEdgeStyler().setStyleDelegate(Functions.constant(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
         }
     }
 

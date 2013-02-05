@@ -4,6 +4,9 @@
  */
 package org.blaise.graphics;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -11,7 +14,6 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import org.blaise.style.PointStyle;
-import org.blaise.util.Delegator;
 import org.blaise.util.IndexedPointBean;
 import org.blaise.util.PointFormatters;
 
@@ -32,7 +34,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     /** The associated style (may be null). */
     protected PointStyle style;
     /** Optional delegate for tooltips */
-    protected Delegator<Point2D, String> pointTipper;
+    protected Function<Point2D, String> pointTipper;
 
     //
     // CONSTRUCTORS
@@ -133,11 +135,11 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         }
     }
 
-    public Delegator<Point2D, String> getPointTipDelegate() {
+    public Function<Point2D, String> getPointTipDelegate() {
         return pointTipper;
     }
 
-    public void setPointTipDelegate(Delegator<Point2D, String> pointTipper) {
+    public void setPointTipDelegate(Function<Point2D, String> pointTipper) {
         this.pointTipper = pointTipper;
     }
 
@@ -167,7 +169,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     @Override
     public String getTooltip(Point p) {
         int i = indexOf(p, p);
-        return i == -1 ? getPointTooltip(null) : getPointTooltip(points[i]);
+        return i == -1 ? null : getPointTooltip(points[i]);
     }
 
     /**
@@ -176,13 +178,10 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      * @return formatted location of the point
      */
     public String getPointTooltip(Point2D pt) {
-        if (pt == null) {
-            return null;
-        } else if (pointTipper == null) {
-            return PointFormatters.formatPoint(pt, 1);
-        } else {
-            return pointTipper.of(pt);
-        }
+        Preconditions.checkNotNull(pt);
+        return pointTipper == null
+                ? PointFormatters.formatPoint(pt, 1)
+                : pointTipper.apply(pt);
     }
 
 
@@ -192,7 +191,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     /** Return the actual style used for drawing */
     private PointStyle drawStyle() {
-        return style == null ? parent.getStyleProvider().getPointStyle(this) : style;
+        return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 
     public void draw(Graphics2D canvas) {
@@ -204,23 +203,26 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         }
     }
 
-    // PROPERTY CHANGE LISTENING
-
+    
+    //<editor-fold defaultstate="collapsed" desc="PropertyChangeSupport METHODS">
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
+    
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
-
+    
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
-
+    
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
-
+    
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
+    //</editor-fold>
+
+    
 }

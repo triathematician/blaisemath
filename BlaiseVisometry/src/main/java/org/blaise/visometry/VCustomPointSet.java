@@ -173,7 +173,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
             Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
             int n = coordManager.getObjects().size();
             for (Src s : coordManager.getObjects()) {
-                winmap.put(s, processor.convert(coordManager.of(s), vis));
+                winmap.put(s, processor.convert(coordManager.apply(s), vis));
             }
             window.getCoordinateManager().setCoordinateMap(winmap);
             int n2 = window.getCoordinateManager().getObjects().size();

@@ -4,6 +4,7 @@
  */
 package org.blaise.graphics;
 
+import com.google.common.collect.Sets;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -45,12 +46,10 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
             public void propertyChange(PropertyChangeEvent evt) {
                 Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
                 Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
-                for (Graphic g : old) {
-                    if (!nue.contains(g)) {
-                        g.setVisibilityHint(VisibilityHint.Selected, false);
-                    }
+                for (Graphic g : Sets.difference(old, nue)) {
+                    g.setVisibilityHint(VisibilityHint.Selected, false);
                 }
-                for (Graphic g : nue) {
+                for (Graphic g : Sets.difference(nue, old)) {
                     g.setVisibilityHint(VisibilityHint.Selected, true);
                 }
             }
@@ -136,6 +135,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
         e.consume();
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (!enabled || e.isConsumed() || box == null || pressPt == null) {
             return;
@@ -179,6 +179,7 @@ public class GraphicSelector extends MouseAdapter implements MouseMotionListener
 //    Graphic mouseover = null;
 //    Set<VisibilityHint> oldhints = null;
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         if (e.isConsumed()) {
             return;

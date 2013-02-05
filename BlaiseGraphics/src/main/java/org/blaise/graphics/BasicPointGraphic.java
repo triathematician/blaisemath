@@ -89,7 +89,7 @@ public class BasicPointGraphic extends AbstractPointGraphic {
         
     /** Return the actual style used for drawing */
     public PointStyle drawStyle() {
-        return style == null ? parent.getStyleProvider().getPointStyle(this) : style;
+        return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 
     public void draw(Graphics2D canvas) {

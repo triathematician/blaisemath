@@ -14,7 +14,7 @@ import java.awt.Color;
 public class BasicPointStyle extends PointStyleSupport {
 
     /** Style of the point */
-    ShapeProvider shaper = new ShapeLibrary.CircleShape();
+    ShapeFactory shaper = new ShapeLibrary.CircleShape();
     /** Radius of the displayed point */
     float radius = 4;
     /** Delegate style used to draw the point */
@@ -55,7 +55,7 @@ public class BasicPointStyle extends PointStyleSupport {
     }
 
     /** Sets shape & returns pointer to object */
-    public BasicPointStyle shape(ShapeProvider s) {
+    public BasicPointStyle shape(ShapeFactory s) {
         this.shaper = s;
         return this;
     }
@@ -78,11 +78,11 @@ public class BasicPointStyle extends PointStyleSupport {
         this.shapeStyle = r;
     }
 
-    public ShapeProvider getShape() {
+    public ShapeFactory getShape() {
         return shaper;
     }
 
-    public void setShape(ShapeProvider shaper) {
+    public void setShape(ShapeFactory shaper) {
         this.shaper = shaper;
     }
 
