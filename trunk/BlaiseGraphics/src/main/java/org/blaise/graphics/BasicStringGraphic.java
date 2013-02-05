@@ -137,7 +137,7 @@ public class BasicStringGraphic extends GraphicSupport
 
     /** Return the actual style used for drawing */
     private StringStyle drawStyle() {
-        return style == null ? parent.getStyleProvider().getStringStyle(this) : style;
+        return style == null ? parent.getStyleContext().getStringStyle(this) : style;
     }
 
     /** Need this to be able to compute string bounds for the contains() method. */

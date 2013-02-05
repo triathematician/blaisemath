@@ -1,10 +1,8 @@
 /*
- * StyleProvider.java
+ * StyleContext.java
  * Created Jan 22, 2011
  */
 package org.blaise.style;
-
-import org.blaise.style.StyleUtils.DefaultStyleProvider;
 
 /**
  * Delegates all styles to a parent style. This class is designed to be overridden
@@ -14,15 +12,15 @@ import org.blaise.style.StyleUtils.DefaultStyleProvider;
  * 
  * @author elisha
  */
-public abstract class StyleDelegator<Src> implements StyleProvider<Src> {
+public abstract class DelegatingStyleContext<Src> implements StyleContext<Src> {
     
-    private final StyleProvider<Src> parent;
+    private final StyleContext<Src> parent;
 
-    public StyleDelegator() {
-        this(new DefaultStyleProvider());
+    public DelegatingStyleContext() {
+        this(DefaultStyleContext.getInstance());
     }
 
-    public StyleDelegator(StyleProvider parent) {
+    public DelegatingStyleContext(StyleContext parent) {
         this.parent = parent;
     }
 
@@ -30,7 +28,7 @@ public abstract class StyleDelegator<Src> implements StyleProvider<Src> {
      * Return the parent factory used for delegation
      * @return parent
      */
-    public StyleProvider getParentFactory() {
+    public StyleContext getParentContext() {
         return parent;
     }
 

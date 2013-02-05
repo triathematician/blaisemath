@@ -214,18 +214,21 @@ public abstract class GraphicSupport implements Graphic {
     }
 
     public void removeMouseListeners() {
-        for (MouseListener m : getMouseListeners())
+        for (MouseListener m : getMouseListeners()) {
             handlers.remove(MouseListener.class, m);
+        }
     }
 
     public void removeMouseMotionListeners() {
-        for (MouseMotionListener m : getMouseMotionListeners())
+        for (MouseMotionListener m : getMouseMotionListeners()) {
             handlers.remove(MouseMotionListener.class, m);
+        }
     }
 
-    public void addMouseListener(MouseListener handler) {
-        if (handler == null)
+    public final void addMouseListener(MouseListener handler) {
+        if (handler == null) {
             throw new IllegalArgumentException();
+        }
         handlers.add(MouseListener.class, handler);
     }
 
@@ -238,8 +241,9 @@ public abstract class GraphicSupport implements Graphic {
     }
 
     public void addMouseMotionListener(MouseMotionListener handler) {
-        if (handler == null)
+        if (handler == null) {
             throw new IllegalArgumentException();
+        }
         handlers.add(MouseMotionListener.class, handler);
     }
 

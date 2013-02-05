@@ -4,19 +4,19 @@
  */
 package org.blaise.graph.view;
 
+import com.google.common.base.Function;
 import java.awt.Color;
 import java.util.Map;
 import org.blaise.util.Edge;
 import org.blaise.style.DecoratorPathStyle;
 import org.blaise.style.PathStyle;
-import org.blaise.util.Delegator;
 
 /**
  * Provides a default node customizer suitable for a weighted-edge graph.
  *
  * @author elisha
  */
-public class WeightedEdgeStyler implements Delegator<Edge, PathStyle> {
+public class WeightedEdgeStyler implements Function<Edge, PathStyle> {
 
     /** Parent style */
     protected final PathStyle parent;
@@ -53,7 +53,7 @@ public class WeightedEdgeStyler implements Delegator<Edge, PathStyle> {
         }
     }
 
-    public synchronized PathStyle of(Edge o) {
+    public synchronized PathStyle apply(Edge o) {
         Object wt = weights.get(o);
         if (wt instanceof Number) {
             float n = ((Number) wt).floatValue();

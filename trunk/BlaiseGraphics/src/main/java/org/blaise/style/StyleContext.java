@@ -1,5 +1,5 @@
 /*
- * StyleProvider.java
+ * StyleContext.java
  * Created Jan 22, 2011
  */
 package org.blaise.style;
@@ -15,7 +15,7 @@ package org.blaise.style;
  *
  * @author Elisha Peterson
  */
-public interface StyleProvider<Src> {
+public interface StyleContext<Src> {
 
     /** 
      * Return style used for solid shapes (fill and stroke)

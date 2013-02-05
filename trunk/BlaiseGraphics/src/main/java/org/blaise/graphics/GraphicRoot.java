@@ -5,7 +5,6 @@
 
 package org.blaise.graphics;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,8 +13,8 @@ import java.util.Set;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import org.blaise.style.StyleProvider;
-import org.blaise.style.StyleUtils.DefaultStyleProvider;
+import org.blaise.style.DefaultStyleContext;
+import org.blaise.style.StyleContext;
 import org.blaise.style.VisibilityHint;
 
 /**
@@ -44,7 +43,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
 
     /** Construct a default instance */
     public GraphicRoot() {
-        setStyleProvider(new DefaultStyleProvider());
+        setStyleContext(DefaultStyleContext.getInstance());
         popup.addPopupMenuListener(new PopupMenuListener(){
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
@@ -96,11 +95,11 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     //
 
     @Override
-    public final void setStyleProvider(StyleProvider rend) {
+    public final void setStyleContext(StyleContext rend) {
         if (rend == null) {
             throw new IllegalArgumentException("GraphicRoot must have a non-null StyleProvider!");
         }
-        super.setStyleProvider(rend);
+        super.setStyleContext(rend);
     }
 
 

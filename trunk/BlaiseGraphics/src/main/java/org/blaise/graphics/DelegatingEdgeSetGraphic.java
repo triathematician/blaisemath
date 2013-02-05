@@ -42,25 +42,23 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
 
     private void update(Map<Src,Point2D> locs, List<Graphic> removeMe) {
         List<Graphic> addMe = new ArrayList<Graphic>();
-        if (edges != null) {
-            for (EdgeType edge : edges.keySet()) {
-                DelegatingShapeGraphic<EdgeType> dsg = edges.get(edge);
-                Point2D p1 = locs.get(edge.getNode1());
-                Point2D p2 = locs.get(edge.getNode2());
-                if (p1 == null || p2 == null) {
-                    if (dsg != null) {
-                        removeMe.add(dsg);
-                        edges.put(edge, null);
-                    }
+        for (EdgeType edge : edges.keySet()) {
+            DelegatingShapeGraphic<EdgeType> dsg = edges.get(edge);
+            Point2D p1 = locs.get(edge.getNode1());
+            Point2D p2 = locs.get(edge.getNode2());
+            if (p1 == null || p2 == null) {
+                if (dsg != null) {
+                    removeMe.add(dsg);
+                    edges.put(edge, null);
+                }
+            } else {
+                Line2D.Double line = new Line2D.Double(p1, p2);
+                if (dsg == null) {
+                    edges.put(edge, dsg = new DelegatingShapeGraphic<EdgeType>(edge, line, true));
+                    dsg.setStyler(edgeStyler);
+                    addMe.add(dsg);
                 } else {
-                    Line2D.Double line = new Line2D.Double(p1, p2);
-                    if (dsg == null) {
-                        edges.put(edge, dsg = new DelegatingShapeGraphic<EdgeType>(edge, line, true));
-                        dsg.setStyler(edgeStyler);
-                        addMe.add(dsg);
-                    } else {
-                        dsg.setPrimitive(line);
-                    }
+                    dsg.setPrimitive(line);
                 }
             }
         }

@@ -16,8 +16,6 @@ import java.util.Set;
  * @author elisha
  */
 public class StyleUtils {
-    /** Utility class */
-    private StyleUtils(){}
 
     /** Default stroke of 1 unit width. */
     public static final BasicStroke DEFAULT_STROKE = new BasicStroke(1.0f);
@@ -69,28 +67,7 @@ public class StyleUtils {
     }
     //</editor-fold>
 
-
-    //<editor-fold defaultstate="collapsed" desc="StyleProvider IMPLEMENTATIONS">
-    //
-    // StyleProvider IMPLEMENTATIONS
-    //
-
-    /** Default instance */
-    public static final DefaultStyleProvider DEFAULT_STYLE_PROVIDER = new DefaultStyleProvider();
-
-    /** Default instance of the style provider */
-    public static final class DefaultStyleProvider implements StyleProvider<Object> {
-        final ShapeStyle SOLID = new BasicShapeStyle(Color.white, Color.black);
-        final PathStyle PATH = new BasicPathStyle(Color.black);
-        final PointStyle POINT = new BasicPointStyle();
-        final StringStyle STRING = new BasicStringStyle();
-
-        public ShapeStyle getShapeStyle(Object o) { return SOLID; }
-        public PathStyle getPathStyle(Object o) { return PATH; }
-        public PointStyle getPointStyle(Object o) { return POINT; }
-        public StringStyle getStringStyle(Object o) { return STRING; }
-    } // INNER CLASS StyleProvider.Default
-
-    //</editor-fold>
+    /** Utility class */
+    private StyleUtils(){}
 
 }

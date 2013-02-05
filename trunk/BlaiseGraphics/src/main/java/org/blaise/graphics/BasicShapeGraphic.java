@@ -75,8 +75,8 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
         if (style != null) {
             return style;
         }
-        return isStrokeOnly() ? parent.getStyleProvider().getPathStyle(this)
-                : parent.getStyleProvider().getShapeStyle(this);
+        return isStrokeOnly() ? parent.getStyleContext().getPathStyle(this)
+                : parent.getStyleContext().getShapeStyle(this);
     }
     
 }

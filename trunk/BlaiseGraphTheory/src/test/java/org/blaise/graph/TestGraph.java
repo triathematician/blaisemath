@@ -5,6 +5,8 @@
  */
 package org.blaise.graph;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -21,7 +23,6 @@ import org.blaise.graphics.ContextMenuInitializer;
 import org.blaise.graphics.Graphic;
 import org.blaise.style.BasicPointStyle;
 import org.blaise.style.PointStyle;
-import org.blaise.util.Delegator;
 import org.blaise.util.gui.RollupPanel;
 
 /**
@@ -45,16 +46,14 @@ public class TestGraph extends javax.swing.JFrame {
 //        MyTestGraph png = new MyTestGraph();
         final Graph<Integer> graph = new EdgeProbabilityBuilder(false, 200, .1f).createGraph();
         plot.setGraph(graph);
-        plot.getAdapter().getNodeStyler().setStyleDelegate(new Delegator<Object, PointStyle>(){
-            public PointStyle of(Object o) {
+        plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, PointStyle>(){
+            public PointStyle apply(Object o) {
                 Integer i = (Integer) o;
                 return new BasicPointStyle().radius((int) (4+Math.sqrt(i)));
             }
         });
 
-        plot.getAdapter().getNodeStyler().setLabelDelegate(new Delegator<Object, String>(){
-            public String of(Object src) { return src == null ? "null" : src.toString(); }
-        });
+        plot.getAdapter().getNodeStyler().setLabelDelegate(Functions.toStringFunction());
         
         plot.addContextMenuInitializer("Graph", new ContextMenuInitializer(){
             public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {

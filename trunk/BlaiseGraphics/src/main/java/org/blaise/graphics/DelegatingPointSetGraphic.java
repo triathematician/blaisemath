@@ -4,6 +4,7 @@
  */
 package org.blaise.graphics;
 
+import com.google.common.base.Functions;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -22,8 +23,6 @@ import org.blaise.style.PointStyle;
 import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
 import org.blaise.util.CoordinateManager;
-import org.blaise.util.Delegator;
-import org.blaise.util.Delegators;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
@@ -53,25 +52,11 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
     }
 
     /**
-     * Construct with no style (will use the default)
-     * @param objects the source objects
-     * @param delegate used for point placement
-     */
-    public DelegatingPointSetGraphic(Set<? extends Src> objects, Delegator<Src, Point2D> delegate) {
-        this(Delegators.apply(delegate, objects));
-    }
-
-
-    /**
      * Construct with source objects and locations as a map
      * @param map locations
      */
     public DelegatingPointSetGraphic(Map<Src, Point2D> map) {
-        styler.setTipDelegate(new Delegator<Src,String>(){
-            public String of(Src src) {
-                return src+"";
-            }
-        });
+        styler.setTipDelegate(Functions.toStringFunction());
         manager.addCoordinateListener(this);
         addObjects(map);
     }

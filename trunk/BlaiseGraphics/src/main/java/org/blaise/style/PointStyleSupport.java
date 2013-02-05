@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * Provides most of the functionality to draw a point on a graphics canvas.
- * Sub-classes must provide a {@link ShapeProvider} to describe the shapes associated
+ * Sub-classes must provide a {@link ShapeFactory} to describe the shapes associated
  * with points, and a {@link ShapeStyle} to render those shapes on the canvas.
  *
  * @author Elisha
@@ -23,7 +23,7 @@ public abstract class PointStyleSupport implements PointStyle {
      * Return object used to create the shape.
      * @return object that will create the point's shape
      */
-    public abstract ShapeProvider getShape();
+    public abstract ShapeFactory getShape();
 
     /**
      * Return object used to draw the shape.

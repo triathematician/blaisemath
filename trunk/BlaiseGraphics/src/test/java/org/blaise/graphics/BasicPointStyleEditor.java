@@ -30,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import org.blaise.firestarter.editor.ColorEditor;
 import org.blaise.style.BasicPointStyle;
 import org.blaise.style.ShapeLibrary;
-import org.blaise.style.ShapeProvider;
+import org.blaise.style.ShapeFactory;
 
 /**
  * GUI form for editing a {@link BasicPointStyle}.
@@ -140,7 +140,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == shapeCombo) {
-            rend.setShape((ShapeProvider) shapeCombo.getSelectedItem());
+            rend.setShape((ShapeFactory) shapeCombo.getSelectedItem());
             firePropertyChange("style", null, rend);
         }
     }
@@ -179,22 +179,22 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             JLabel result = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             result.setToolTipText(value.toString());
             result.setText(null);
-            result.setIcon(new ShapeIcon((ShapeProvider)value));            
+            result.setIcon(new ShapeIcon((ShapeFactory)value));            
             return result;
         }
     }
     
     /** Icon for drawing stylized point on a component */
     private class ShapeIcon implements Icon {
-        private final ShapeProvider shape;
-        private ShapeIcon(ShapeProvider shape) {
+        private final ShapeFactory shape;
+        private ShapeIcon(ShapeFactory shape) {
             this.shape = shape;
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
-            ShapeProvider shape1 = rend.getShape();
+            ShapeFactory shape1 = rend.getShape();
             rend.setShape(shape);
             rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, null);
             rend.setShape(shape1);

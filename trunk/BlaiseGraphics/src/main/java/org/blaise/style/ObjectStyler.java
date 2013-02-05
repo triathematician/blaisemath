@@ -4,10 +4,10 @@
  */
 package org.blaise.style;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import org.blaise.util.Delegator;
-import org.blaise.util.NonDelegator;
 
 /**
  * Groups together a collection of delegators for a generic object that can be
@@ -21,16 +21,18 @@ import org.blaise.util.NonDelegator;
 public class ObjectStyler<Src, Style> {
 
     /** Delegate for point rendering */
-    protected Delegator<Src, Style> styles;
+    protected Function<? super Src, Style> styles;
 
     /** Delegate for point labels (only used if the styler returns a label style) */
-    protected Delegator<Src, String> labels;
+    protected Function<? super Src, String> labels;
     /** Delegate for point label styles */
-    protected Delegator<Src, StringStyle> labelStyles;
+    protected Function<? super Src, StringStyle> labelStyles;
 
     /** Delegate for tooltips (with default) */
-    protected Delegator<Src, String> tips = new Delegator<Src, String>() {
-        public String of(Src src) { return src == null ? "null" : src.toString(); }
+    protected Function<? super Src, String> tips = new Function<Src, String>() {
+        public String apply(Src src) { 
+            return src == null ? "null" : src.toString(); 
+        }
     };
 
 
@@ -47,7 +49,7 @@ public class ObjectStyler<Src, Style> {
      * Returns the current style delegate
      * @return style delegate
      */
-    public Delegator<Src, Style> getStyleDelegate() {
+    public Function<? super Src, Style> getStyleDelegate() {
         return styles;
     }
 
@@ -56,7 +58,7 @@ public class ObjectStyler<Src, Style> {
      * provided by the parent.
      * @param styler used to style object
      */
-    public void setStyleDelegate(Delegator<Src, Style> styler) {
+    public void setStyleDelegate(Function<? super Src, Style> styler) {
         if (this.styles != styler) {
             this.styles = styler;
             pcs.firePropertyChange("styleDelegate", null, styles);
@@ -68,14 +70,14 @@ public class ObjectStyler<Src, Style> {
      * @param style style to use for all objects
      */
     public void setStyle(Style style) {
-        setStyleDelegate(new NonDelegator<Src,Style>(style));
+        setStyleDelegate(Functions.constant(style));
     }
 
     /**
      * Returns the current label delegate
      * @return  label delegate
      */
-    public Delegator<Src, String> getLabelDelegate() {
+    public Function<? super Src, String> getLabelDelegate() {
         return labels;
     }
 
@@ -83,7 +85,7 @@ public class ObjectStyler<Src, Style> {
      * Sets the current label delegate. If null, uses a default label.
      * @param labeler the new labeler
      */
-    public void setLabelDelegate(Delegator<Src, String> labeler) {
+    public void setLabelDelegate(Function<? super Src, String> labeler) {
         if (this.labels != labeler) {
             this.labels = labeler;
             pcs.firePropertyChange("labelDelegate", null, styles);
@@ -94,7 +96,7 @@ public class ObjectStyler<Src, Style> {
      * Returns the current label style delegate
      * @return  label style delegate
      */
-    public Delegator<Src, StringStyle> getLabelStyleDelegate() {
+    public Function<? super Src, StringStyle> getLabelStyleDelegate() {
         return labelStyles;
     }
 
@@ -102,7 +104,7 @@ public class ObjectStyler<Src, Style> {
      * Sets the current label style delegate. If null, uses a default style.
      * @param labelStyler the new label styler
      */
-    public void setLabelStyleDelegate(Delegator<Src, StringStyle> labelStyler) {
+    public void setLabelStyleDelegate(Function<? super Src, StringStyle> labelStyler) {
         if (this.labelStyles != labelStyler) {
             this.labelStyles = labelStyler;
             pcs.firePropertyChange("labelStyleDelegate", null, labelStyles);
@@ -114,14 +116,14 @@ public class ObjectStyler<Src, Style> {
      * @param style style to use for all objects
      */
     public void setLabelStyle(StringStyle style) {
-        setLabelStyleDelegate(new NonDelegator<Src, StringStyle>(style));
+        setLabelStyleDelegate(Functions.constant(style));
     }
 
     /**
      * Returns the current tip delegate
      * @return tip delegate
      */
-    public Delegator<Src, String> getTipDelegate() {
+    public Function<? super Src, String> getTipDelegate() {
         return tips;
     }
 
@@ -129,7 +131,7 @@ public class ObjectStyler<Src, Style> {
      * Sets the current tip delegate. If null, uses the default tooltip.
      * @param tipper generates tips for the object
      */
-    public void setTipDelegate(Delegator<Src, String> tipper) {
+    public void setTipDelegate(Function<? super Src, String> tipper) {
         if (this.tips != tipper) {
             this.tips = tipper;
             pcs.firePropertyChange("tipDelegate", null, tips);

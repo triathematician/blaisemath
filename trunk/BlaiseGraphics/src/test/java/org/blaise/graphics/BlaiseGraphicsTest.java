@@ -4,6 +4,10 @@
 
 package org.blaise.graphics;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Line2D;
@@ -17,10 +21,10 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import org.blaise.graphics.compound.LabeledPointGraphic;
-import org.blaise.graphics.compound.RulerGraphic;
-import org.blaise.graphics.compound.SegmentGraphic;
-import org.blaise.graphics.compound.TwoPointGraphicSupport;
+import dev.compound.LabeledPointGraphic;
+import dev.compound.RulerGraphic;
+import dev.compound.SegmentGraphic;
+import dev.compound.TwoPointGraphicSupport;
 import org.blaise.style.Anchor;
 import org.blaise.style.ArrowPathStyle;
 import org.blaise.style.BasicPointStyle;
@@ -32,8 +36,6 @@ import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
 import org.blaise.style.ShapeLibrary;
 import org.blaise.style.StringStyle;
-import org.blaise.util.Delegator;
-import org.blaise.util.Delegators;
 import org.blaise.util.Edge;
 import org.blaise.util.PointFormatters;
 import org.jdesktop.application.Action;
@@ -133,16 +135,16 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     @Action
     public void addDelegatingPointSet() {
         Set<String> list = new HashSet<String>(Arrays.asList("Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
-        final DelegatingPointSetGraphic<String> bp = new DelegatingPointSetGraphic<String>(
-                list, 
-                new Delegator<String,Point2D>(){ 
-                    public Point2D of(String src) { return new Point(10*src.length(), 50 + 10*src.indexOf(" ")); } 
-                });
-        bp.getStyler().setLabelDelegate(new Delegator<String,String>(){ public String of(String src) { return src; } });
-        bp.getStyler().setStyleDelegate(new Delegator<String,PointStyle>(){
+        Map<String,Point2D> crds = Maps.newLinkedHashMap();
+        for (String s : list) {
+            crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
+        }
+        final DelegatingPointSetGraphic<String> bp = new DelegatingPointSetGraphic<String>(crds);
+        bp.getStyler().setLabelDelegate(new Function<String,String>(){ public String apply(String src) { return src; } });
+        bp.getStyler().setStyleDelegate(new Function<String,PointStyle>(){
             BasicPointStyle r = new BasicPointStyle();
             LabeledPointStyle lps = new LabeledPointStyle(r);
-            public PointStyle of(String src) {
+            public PointStyle apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.setRadius(i1+5);
                 r.setShape(ShapeLibrary.getAvailableShapers().get(i2+3));
@@ -158,15 +160,17 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     
     @Action
     public void addDelegatingPointSet2() {
-        final DelegatingPointSetGraphic<Integer> bp = new DelegatingPointSetGraphic<Integer>(
-                new HashSet<Integer>(Arrays.asList(1,2,3,4,5,6,7,8,9,10)),
-                new Delegator<Integer,Point2D>(){ public Point2D of(Integer src) { return randomPoint(); } });
-        bp.getStyler().setLabelDelegate(new Delegator<Integer,String>(){ public String of(Integer src) { return src.toString(); } });
-        bp.getStyler().setStyleDelegate(new Delegator<Integer,PointStyle>(){
+        Map<Integer,Point2D> points2 = Maps.newLinkedHashMap();
+        for (int i = 1; i <= 10; i++) {
+            points2.put(i, randomPoint());
+        }
+        final DelegatingPointSetGraphic<Integer> bp = new DelegatingPointSetGraphic<Integer>(points2);
+        bp.getStyler().setLabelDelegate(Functions.toStringFunction());
+        bp.getStyler().setStyleDelegate(new Function<Integer,PointStyle>(){
             BasicPointStyle r = new BasicPointStyle();
             LabeledPointStyle lps = new LabeledPointStyle(r);
             { ((BasicStringStyle)lps.getLabelStyle()).setAnchor(Anchor.Center); }
-            public PointStyle of(Integer src) {
+            public PointStyle apply(Integer src) {
                 r.setRadius(src+2);
                 r.setFill(new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
                 ((BasicStringStyle)lps.getLabelStyle())
@@ -195,26 +199,26 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         }
         // create graphic
         DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>>();
-        Map<Point2D, Point2D> pMap = Delegators.apply(new Delegator<Point2D,Point2D>(){ public Point2D of(Point2D src) { return src; } }, new HashSet<Point2D>(Arrays.asList(pts)));
-        gr.setPoints(pMap);
-        gr.getStyler().setStyleDelegate(new Delegator<Point2D,PointStyle>(){
-            public PointStyle of(Point2D src) {
+        ImmutableMap<Point2D, Point2D> idx = Maps.uniqueIndex(Arrays.asList(pts), Functions.<Point2D>identity());
+        gr.setPoints(idx);
+        gr.getStyler().setStyleDelegate(new Function<Point2D,PointStyle>(){
+            public PointStyle apply(Point2D src) {
                 int yy = (int) Math.min(src.getX()/3, 255);
                 return new BasicPointStyle()
                         .radius((float) Math.sqrt(src.getY()))
                         .fill(new Color(yy,0,255-yy));
             }
         });
-        gr.getStyler().setLabelDelegate(new Delegator<Point2D,String>(){ public String of(Point2D src) { return String.format("(%.1f,%.1f)", src.getX(), src.getY()); } });     
-        gr.getStyler().setLabelStyleDelegate(new Delegator<Point2D,StringStyle>(){
+        gr.getStyler().setLabelDelegate(new Function<Point2D,String>(){ public String apply(Point2D src) { return String.format("(%.1f,%.1f)", src.getX(), src.getY()); } });     
+        gr.getStyler().setLabelStyleDelegate(new Function<Point2D,StringStyle>(){
             BasicStringStyle bss = new BasicStringStyle();
-            public StringStyle of(Point2D src) {
+            public StringStyle apply(Point2D src) {
                 return bss;                
             }
         });
         gr.setEdges(edges);
-        gr.getEdgeStyler().setStyleDelegate(new Delegator<Edge<Point2D>,PathStyle>(){
-            public PathStyle of(Edge<Point2D> src) {
+        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Point2D>,PathStyle>(){
+            public PathStyle apply(Edge<Point2D> src) {
                 Point2D src0 = src.getNode1(), src1 = src.getNode2();
                 int dx = (int) (src0.getX() - src1.getX());
                 dx = Math.min(Math.abs(dx/2), 255);

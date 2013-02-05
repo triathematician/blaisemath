@@ -13,7 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import org.blaise.style.StyleProvider;
+import org.blaise.style.StyleContext;
 import org.blaise.util.SetSelectionModel;
 
 /**
@@ -61,6 +61,18 @@ public class GraphicComponent extends javax.swing.JComponent {
         setToolTipText("");
     }
 
+    /**
+     * Return the tooltip associated with the mouse event's point.
+     * This will look for the topmost {@link Graphic} beneath the mouse and return that.
+     * @param event the event with the point for the tooltip
+     * @return tooltip for the point
+     */
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        String ct = root.getTooltip(event.getPoint());
+        return ct != null ? ct : "".equals(super.getToolTipText()) ? null : super.getToolTipText();
+    }
+
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
@@ -79,8 +91,8 @@ public class GraphicComponent extends javax.swing.JComponent {
      * Return the default render factory used to draw shapes
      * @return current style provider used to draw shapes in the component
      */
-    public StyleProvider getStyleProvider() {
-        return root.getStyleProvider();
+    public StyleContext getStyleContext() {
+        return root.getStyleContext();
     }
 
     /**
@@ -88,8 +100,8 @@ public class GraphicComponent extends javax.swing.JComponent {
      * @param factory render factory
      * @throws IllegalArgumentException if the factory is null
      */
-    public void setStyleProvider(StyleProvider factory) {
-        root.setStyleProvider(factory);
+    public void setStyleContext(StyleContext factory) {
+        root.setStyleContext(factory);
     }
 
     public boolean isSelectionEnabled() {
@@ -234,18 +246,6 @@ public class GraphicComponent extends javax.swing.JComponent {
         for (CanvasPainter p : overlays) {
             p.paint(this, canvas);
         }
-    }
-
-    /**
-     * Return the tooltip associated with the mouse event's point.
-     * This will look for the topmost {@link Graphic} beneath the mouse and return that.
-     * @param event the event with the point for the tooltip
-     * @return tooltip for the point
-     */
-    @Override
-    public String getToolTipText(MouseEvent event) {
-        String ct = root.getTooltip(event.getPoint());
-        return ct != null ? ct : "".equals(super.getToolTipText()) ? null : super.getToolTipText();
     }
 
 }
