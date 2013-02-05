@@ -13,14 +13,14 @@ import org.blaise.util.PointBean;
  * Implementation of an object dragger using a point property pattern. Maintains
  * a record of the initial point and the relative movement to set a new point
  * as the object is being dragged.
- * 
+ *
  * @see PointBean
  * @see DraggablePointBean
- * 
+ *
  * @author elisha
  */
 public class PointBeanDragger extends AbstractGraphicDragger {
-    
+
     private final DraggablePointBean<Point2D> bean;
     private transient Point2D beanStart;
 
@@ -32,7 +32,7 @@ public class PointBeanDragger extends AbstractGraphicDragger {
         this.bean = new DraggablePointBean<Point2D>(){
             public void setPoint(Point2D initial, Point2D start, Point2D finish) {
                 bean.setPoint(new Point2D.Double(
-                        beanStart.getX() + finish.getX() - start.getX(), 
+                        beanStart.getX() + finish.getX() - start.getX(),
                         beanStart.getY() + finish.getY() - start.getY()
                         ));
             }
@@ -40,7 +40,7 @@ public class PointBeanDragger extends AbstractGraphicDragger {
             public void setPoint(Point2D p) { bean.setPoint(p); }
         };
     }
-    
+
     /**
      * Construct with specified object that can get and set a point
      * @param bean object that can get/set a point
@@ -51,7 +51,7 @@ public class PointBeanDragger extends AbstractGraphicDragger {
 
     @Override
     public void mouseDragInitiated(GraphicMouseEvent e, Point start) {
-        beanStart = bean.getPoint();
+        beanStart = new Point2D.Double(bean.getPoint().getX(), bean.getPoint().getY());
     }
 
     @Override
@@ -63,5 +63,5 @@ public class PointBeanDragger extends AbstractGraphicDragger {
     public void mouseDragCompleted(GraphicMouseEvent e, Point start) {
         beanStart = null;
     }
-    
+
 }
