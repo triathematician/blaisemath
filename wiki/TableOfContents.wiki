@@ -5,12 +5,12 @@
   * [BlaiseGraphics]
    * [PrimitiveStyle Primitives and Styles]
   * [BlaiseVisometry]
-  * *[Plottables]*
-    * [GenericPlottables Generic]
-    * [1DPlottables 1D Plottables]
-    * [2DPlottables 2D Plottables]
-    * [3DPlottables 3D Plottables]
-    * [PrimitiveMappingPlottable]
+   * *[Plottables]*
+   * [GenericPlottables Generic]
+   * [1DPlottables 1D Plottables]
+   * [2DPlottables 2D Plottables]
+   * [3DPlottables 3D Plottables]
+   * [PrimitiveMappingPlottable]
   * *Utility Libraries*
    * [FireStarter]
    * [BlaiseParser]
