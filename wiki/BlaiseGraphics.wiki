@@ -1,6 +1,7 @@
 #summary BlaiseGraphics is a lightweight library used to render and interact with collections of 2D shapes.
+#sidebar TableOfContents
 
-`BlaiseGraphics` is a lightweight library used to render and interact with collections of 2d shapes.
+`BlaiseGraphics` is a [http://en.wikipedia.org/wiki/Scene_graph scene graph] library, used to render and interact with collections of 2d shapes on a Java graphics canvas.
 
 =Usage=
 The simplest way to use the library is to draw stylized shapes on a `Graphics2D` object. Doing this is a simple matter of creating a `GraphicComponent` and adding a number of `Graphic` objects to that component.
