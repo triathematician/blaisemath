@@ -1,5 +1,5 @@
 #summary Description of generic plottable objects defined for all visometries
-#labels Module-Blaise,Component-Plottable
+#labels Module-Blaise,Component-Plottable,Deprecated
 #sidebar TableOfContents
 
 These plottables are generic typed classes in the `blaisecore` package. Annotations are as follows:
