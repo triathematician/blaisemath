@@ -11,14 +11,14 @@ _EXAMPLES TO BE ADDED LATER_
 
 =Graphic=
 `Graphic` is the basic building block of the library, representing an object that can be drawn on a `Graphics2D` canvas. Graphics have the following attributes & methods:
- * Parent object (a `GraphicComposite`)
- * A draw method
- * Visibility hints to customize how the object is drawn
- * Methods to test whether the graphic contains a given point, or intersects a given rectangle
- * Flag indicating whether the graphic can be selected
- * Tooltip (optional)
- * Customized context menu (optional), in the form of one or more `ContextMenuInitializer`s
- * Support for adding `MouseListener`s and `MouseMotionListener`s
+ * *PARENT*: a `GraphicComposite`
+ * *DRAW*: method to draw graphic on canvas
+ * *DRAW CUSTOMIZATION*: a set of "visibility hints" to customize object appearance
+ * *LOCATION*: methods to test whether the graphic contains a given point, or intersects a given rectangle
+ * *SELECTION*: flag indicating whether the graphic can be selected
+ * *TOOLTIP*: display tooltip at given point (may be disabled)
+ * *CONTEXT MENU*: support for populating a context menu, using one or more `ContextMenuInitializer`s
+ * *MOUSE HANDLING*: support for both `MouseListener`s and `MouseMotionListener`s (receiving `GraphicMouseEvent`s that include the source graphic as well as usual `MouseEvent` properties)
 
 
 =Design=
