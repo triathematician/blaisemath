@@ -2,10 +2,11 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
+ * Main Libraries
+  * [Firestarter]
+  * [BlaiseMath]
+  * [BlaiseParser]
   * [BlaiseGraphics]
    * [PrimitiveStyle Primitives and Styles]
   * [BlaiseVisometry]
-  * [BlaiseParser]
-  * [BlaiseMath]
-  * [Firestarter]
   * [BlaiseGraphTheory]
