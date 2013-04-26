@@ -2,7 +2,6 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
- * Main Libraries
   * [Firestarter]
   * [BlaiseMath]
   * [BlaiseParser]
