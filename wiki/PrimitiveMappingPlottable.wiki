@@ -1,5 +1,5 @@
 #summary Specific type of plottable used to display multiple objects on the screen at different points (e.g. a vector field)
-#labels Component-Plottable,Phase-Implementation,Module-Blaise
+#labels Component-Plottable,Phase-Implementation,Module-Blaise,Deprecated
 #sidebar TableOfContents
 
 = Sample Use Cases =
