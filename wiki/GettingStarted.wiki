@@ -2,48 +2,12 @@
 #labels Featured,Module-Blaise
 #sidebar TableOfContents
 
-= Required Downloads =
-
-== Recommended IDE ==
-
-This project is being developed within Netbeans (http://www.netbeans.org). We recommended downloading the latest version, and installing any updates, before downloading any of the source code for the projects here.
-
-== Required External Packages ==
-
-*Apache Commons Math* (_available at http://commons.apache.org/downloads/download_math.cgi _) is an open-source library of useful mathematical classes and algorithms. To install the library, download and extract the binary [http://datadispensary.com/apache/commons/math/binaries/commons-math-2.0.zip .zip] file at the above link. You'll then need to add the `.jar` file to the projects which require it (currently `blaisemath`, `blaiseparser`, and `blaisecore`). We recommend adding the library to the Netbeans Library Manger. To do this, select the menu option `Tools>>Libraries`, click `New Library...`, and add the `.jar` files in the download for `Classpath` (required), `Sources` (optional), and `Documentation` (optional).
-
-*Firestarter* (_available at http://javafirestorm.googlecode.com _) is an open-source project that implements, among other things, property tables and various other layout functionality used in _Blaise_. You will either need to download the `.zip` file from the linked website to get the `.jar` file for the project, or checkout the project from the website.
-
-== Projects to Checkout ==
-
-To use the full functionality of _Blaise_, you will need to checkout all of the following packages from the repository hosted on this project site:
-
-  * [BlaiseParser]: parsing engine
-  * BlaiseMath: mathematical functionality, building on the Apache Commons library
-  * BlaiseGraphics: the core graphics library, enabling custom graphics on a swing component
-  * BlaiseVisometry: the core mathematics graphics library, adapting graphics capabilities to particular coordinate systems
-
-== Package Dependencies ==
-
-Here are the dependencies for the various Blaise packages, with links to their location in the repository and dependencies:
-|| *Package Name* || *Link* || *Dependencies* ||
-|| Firestarter || http://code.google.com/p/javafirestorm/source/browse/#svn/trunk/firestarter || _none_ (Java 1.5) ||
-|| BlaiseParser || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseParser/ || _none_ (Java 1.5) ||
-|| BlaiseMath || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseMath/ || Apache Commons Math (Java 1.5) ||
-|| BlaiseGraphics || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseGraphics/ || _none_ (Java 1.5) ||
-|| BlaiseVisometry || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseVisometry/ || BlaiseMath, BlaiseGraphics (Java 1.5) ||
-|| BlaiseGraphTheory (extension) || http://code.google.com/p/blaisemath/source/browse/#svn/extensions/BlaiseGraphTheory/ || BlaiseMath (Java 1.6) ||
-|| BlaiseGraphPlot (extension) || http://code.google.com/p/blaisemath/source/browse/#svn/extensions/BlaiseGraphPlot/ || BlaiseGraphTheory, BlaiseVisometry ||
-
-
-
-= Additional Instructions =
-
-If you're just getting started with this, and have little programming experience, here’s the programs you’ll need to install and get this running. The main thing is to get Netbeans installed. The rest is just software code that will be used for the project. If you would like to contribute code, you'll need a google account and should contact the project owner.
-
-  * *Netbeans and Java 1.5 JDK*: This is the IDE, which will be used to write and edit the java source files. Go to  http://java.sun.com/j2se/1.5.0/download-netbeans.html and follow the download instructions to download and install the software. 
-  * *Apache Commons Math Library*: This contains standard mathematical algorithms for integration, complex numbers, etc. Go to http://commons.apache.org/downloads/download_math.cgi and download the ZIP file listed under “Binary”. Extract the ZIP file to a convenient folder. You may wish to create a “Programming” or “Java” folder under My Documents… there might be a number of things to keep track of, so try to keep it in one place.
-  * *Blaisemath*: You can grab the code directly from Netbeans. To do this, open up Netbeans, and select from the menu “Team>>Subversion>>Checkout…” For the repository URL, type in http://blaisemath.googlecode.com/svn <http://blaisemath.googlecode.com/svn> . Click “Next>” and when the window changes click “Browse…” Ctrl-select the folders “blaisecore”, “blaisemath”, and “blaiseparser2” (the three main projects). Click “OK”, choose a folder to save the projects in, and then after the files are downloaded select “OK” to import the projects into Netbeans.
-  * *Firestarter*: This contains some useful interface tools. Follow the previous instructions with the URL repository http://javafirestorm.googlecode.com/svn <http://javafirestorm.googlecode.com/svn>  and select the folder “firestarter”.
-
-Once this has all been done, you will need to fix a few of the project dependencies, and then you should be able to compile the projects.
+= Package Dependencies =
+*blaisemath* projects use [http://en.wikipedia.org/wiki/Apache_Maven Apache maven] build files, which specify dependencies required to build the projects. Netbeans and Eclipse can load maven projects directly, and automatically download dependencies from the central maven repository. Currently, most projects use [https://code.google.com/p/guava-libraries/ Google Guava], and the BlaiseGraphTheory project also uses [http://commons.apache.org/proper/commons-math/ Apache commons math]. The remaining project dependencies are on other blaise libraries, or on [https://code.google.com/p/javafirestorm/ Firestarter]. Explicitly, here are the dependencies for the various packages, with links to source code:
+|| *Package Name* || *Link* || *Blaise Dependencies* || *External Dependencies* ||
+|| Firestarter || http://code.google.com/p/javafirestorm/source/browse/#svn/trunk/firestarter || _none_ || _none_ ||
+|| BlaiseMath || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseMath/ || _none_ || _none_ ||
+|| BlaiseParser || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseParser/ || _none_ || _none_ ||
+|| BlaiseGraphics || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseGraphics/ || _none_ || guava-13.0.1 ||
+|| BlaiseVisometry || http://code.google.com/p/blaisemath/source/browse/#svn/trunk/BlaiseVisometry/ || BlaiseMath, BlaiseGraphics  || guava-13.0.1 ||
+|| BlaiseGraphTheory (extension) || http://code.google.com/p/blaisemath/source/browse/#svn/extensions/BlaiseGraphTheory/ || BlaiseMath, BlaiseGraphics, BlaiseVisometry || guava-13.0.1, commons-math-2.2, swing-layout-1.0.3 ||
