@@ -1,5 +1,5 @@
 #summary Description of 2D plottables in the `blaisecore` package
-#labels Module-Blaise,Phase-Implementation,Component-Plottable
+#labels Module-Blaise,Phase-Implementation,Component-Plottable,Deprecated
 #sidebar TableOfContents
 
 This page describes the planar plottables that have been implemented in `blaisecore`. See also the list of GenericPlottables.
