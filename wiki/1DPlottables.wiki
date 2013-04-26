@@ -1,5 +1,5 @@
 #summary Description of 1D plottables in the `blaisecore` package
-#labels Module-Blaise,Phase-Implementation,Component-Plottable
+#labels Module-Blaise,Phase-Implementation,Component-Plottable,Deprecated
 #sidebar TableOfContents
 
 This page describes the 1d plottables that have been implemented in `blaisecore`. See also the list of GenericPlottables.
