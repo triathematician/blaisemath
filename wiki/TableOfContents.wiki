@@ -7,5 +7,5 @@
   * [BlaiseVisometry]
   * [BlaiseParser]
   * [BlaiseMath]
-  * [FireStarter]
+  * [Firestarter]
   * [BlaiseGraphTheory]
