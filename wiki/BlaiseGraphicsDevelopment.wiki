@@ -1,0 +1,63 @@
+#summary Architecture & coding conventions for BlaiseGraphics
+
+= Dependencies =
+BlaiseGraphics uses JDK 1.6+, and depends on the [https://code.google.com/p/guava-libraries/ guava library] and jsr305 for building.
+
+= Packages =
+ * `org.blaise.graphics` - graphics object and scene tree, depends on style and utility packages
+ * `org.blaise.style` - self-contained style classes, uses the utility library
+ * `org.blaise.util` - self-contained utility library
+
+= Style Library =
+== Style Classes ==
+The primary classes in the style library are the style classes:
+ * `ShapeStyle` (I)
+  * `BasicShapeStyle`
+ * `PathStyle` (I) (extends `ShapeStyle`)
+  * `BasicPathStyle`
+   * `ArrowPathStyle`
+   * `BezierPathStyle`
+   * `DecoratorPathStyle`
+ * `StringStyle` (I)
+  * `BasicStringStyle`
+   * `WrappingStringStyle`
+ * `PointStyle` (I)
+  * `PointStyleSupport`
+   * `BasicPointStyle`
+    * `InfinitePointStyle`
+   * `DecoratorPointStyle`
+  * `LabeledPointStyle`
+
+These classes obey the following conventions:
+ * _bean pattern_ (no-argument constructor, with get/set property methods)
+ * property names are aligned where possible with SVG attribute names
+ * toString() method implemented
+ * clone() method implemented
+ * _builder pattern_ for quickly setting properties
+ * `@Nullable` annotations indicating whether null properties are permitted
+
+Additionally, the names follow the conventions:
+ * "Basic" style classes are simple objects with necessary style attributes.
+ * "Decorator" style classes defer some of their style attributes to an underlying class, possibly in an indirect way (e.g. some attributes may be multiplicative).
+ * "Support" style classes are generally abstract, partial implementations of style classes.
+
+== Context Classes ==
+Context classes are:
+ * `StyleContext` (I)
+  * `DefaultStyleContext`
+  * `DelegatingStyleContext`
+These are essentially factory classes providing instances of the four main style types.
+
+== `ObjectStyler` ==
+The `ObjectStyler` class provides several _delegate_ functions used to generate styles for an object of arbitrary type, specifically for _labels_, _label style_, _object style_, and _tooltip_.
+
+== Markers ==
+Markers are objects used to draw a shape at a given location and orientation.
+ * `Marker` - generates shapes at a given point
+ * `MarkerLibrary` - contains several instances of `Marker`
+
+== `VisibilityHint` ==
+`VisibilityHint` is a render hint that is disjoint from styles and is universal, similar to a _CSS class_. It may be used, e.g. to highlight a collection of shapes. Styles are responsible for how they handle different hints.
+
+== Factory and utility methods ==
+The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
