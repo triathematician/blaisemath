@@ -2,10 +2,10 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
+  * [BlaiseGraphics]
+   * [PrimitiveStyle Primitives and Styles]
   * [Firestarter]
   * [BlaiseMath]
   * [BlaiseParser]
-  * [BlaiseGraphics]
-   * [PrimitiveStyle Primitives and Styles]
   * [BlaiseVisometry]
   * [BlaiseGraphTheory]
