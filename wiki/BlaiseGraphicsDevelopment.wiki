@@ -57,7 +57,7 @@ Markers are objects used to draw a shape at a given location and orientation.
  * `MarkerLibrary` - contains several instances of `Marker`
 
 == `VisibilityHint` ==
-`VisibilityHint` is a render hint that is disjoint from styles and is universal, similar to a _CSS class_. It may be used, e.g. to highlight a collection of shapes. Styles are responsible for how they handle different hints.
+`VisibilityHint` is a render hint that is disjoint from styles and is universal, similar to a _CSS class_. It may be used, e.g. to highlight a collection of shapes. Styles are responsible for how they handle different hints. The class `VisibilityHintSet` aggregates a collection of hints into a single object, with event handling support.
 
 == Factory and utility methods ==
 The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
