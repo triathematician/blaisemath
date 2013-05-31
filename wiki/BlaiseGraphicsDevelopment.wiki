@@ -90,9 +90,9 @@ The general graphics classes are:
 
 `GraphicComposite` maintains a list of graphics and a `StyleContext`. Its primary responsibility is to defer supported functionality to its children. It also listens to changes from its children.
 
-`GraphicRoot` ...
+`GraphicRoot` hooks up a tree of graphic objects to a `GraphicComponent`. It maintains a root `StyleContext`, the component's popup menu, and the conversion and delegation of `MouseEvent`s to `GraphicMouseEvent`s. It cannot be added to another `GraphicComposite`. It also asks the component to repaint whenever a graphic in its tree has changed.
 
-`GraphicComponent` ...
+`GraphicComponent` maintains a `GraphicRoot`, a set of _underlays_ and _overlays_ (`CanvasPainter` objects), and a `SetSelectionModel` with a set of selected graphics.
 
 == `Graphic` Implementations ==
 The following implementations of `Graphic` are all derived from the `GraphicSupport` base class:
