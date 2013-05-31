@@ -62,6 +62,54 @@ Markers are objects used to draw a shape at a given location and orientation.
 == Factory and utility methods ==
 The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
 
+---
+= Graphics Library =
+In general, `Graphic` objects combine the state information (e.g. location, shape, etc.) with the style information used to draw them. Graphics also provide support for:
+ * tooltips
+ * labels
+ * mouse handling
+ * location testing (bounding box & contains)
+ * selection
+ * context menu
+
+Graphics are put together in a "scene graph" using composite classes, and are added to a `GraphicRoot` object that is owned by a `GraphicComponent`.
+
+== General `Graphic` Objects ==
+The general graphics classes are:
+ * `Graphic` (I)
+  * `GraphicSupport`
+   * `GraphicComposite`
+    * `GraphicRoot`
+
+== `Graphic` Implementations ==
+The following implementations of `Graphic` are all derived from the `GraphicSupport` base class:
+ * `AbstractPointGraphic`
+  * `BasicPointGraphic`
+  * `DelegatingPointGraphic`
+ * `AbstractShapeGraphic`
+  * `BasicShapeGraphic`
+  * `DelegatingShapeGraphic`
+   * `LabeledShapeGraphic`
+ * `BasicPointSetGraphic`
+ * `BasicStringGraphic`
+In addition, the following composite graphics are derived from `GraphicComposite`:
+ * `DelegatingEdgeSetGraphic`
+ * `DelegatingNodeLinkGraphic`
+ * `DelegatingPointSetGraphic`
+
+The naming convention followed above:
+ * `Abstract` classes provide partial support, primarily the state of the graphic object to be represented.
+ * `Basic` classes contain one of the main style classes directly as a property.
+ * `Delegating` classes defer style, labels, and tooltips to an `ObjectStyler` class.
+
+== Mouse Handling ==
+The `GraphicRoot` class is responsible for delegating mouse events to graphic objects beneath the mouse. Rather than regular `MouseEvent`s, it passes `GraphicMouseEvent`s that indicate the source `Graphic` of the event. Classes supporting mouse handling are:
+ * `GraphicMouseEvent` - wraps a `MouseEvent` to include a `Graphic`
+ * `GraphicMouseEvent.Factory` - creates a `GraphicMouseEvent` from a source `Graphic` and `MouseEvent` (intended to be overridden to customize the event beyond what is supported by the default `GraphicMouseEvent`)
+ * `AbstractGraphicDragger` - provides supporting functionality for dragging graphics, translating general mouse handling methods to drag methods _mouseDragInitiated_, _mouseDragInProgress_, and _mouseDragCompleted_ that take as arguments `GraphicMouseEvent`s and the starting `Point` of the drag gesture
+
+
+---
 = Utility Library =
 == Coordinate Handling ==
  * `CoordinateManager` - maintains a collection of points associated with source objects, as well as a cache of "stale" values for points no longer maintained in the collection
