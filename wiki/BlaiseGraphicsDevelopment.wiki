@@ -62,15 +62,19 @@ Markers are objects used to draw a shape at a given location and orientation.
 == Factory and utility methods ==
 The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
 
----
+
+
+
+-----
 = Graphics Library =
-In general, `Graphic` objects combine the state information (e.g. location, shape, etc.) with the style information used to draw them. Graphics also provide support for:
- * tooltips
- * labels
- * mouse handling
- * location testing (bounding box & contains)
+In general, `Graphic` objects combine the state information (e.g. location, shape, etc.) with the style information used to draw them. All graphics provide support for:
+ * drawing on a {@link Graphics2D} canvas
+ * "visibility hints", e.g. highlight
+ * location testing (bounding box & rectangle intersect)
  * selection
+ * tooltips
  * context menu
+ * mouse handling
 
 Graphics are put together in a "scene graph" using composite classes, and are added to a `GraphicRoot` object that is owned by a `GraphicComponent`.
 
@@ -80,6 +84,15 @@ The general graphics classes are:
   * `GraphicSupport`
    * `GraphicComposite`
     * `GraphicRoot`
+ * `GraphicComponent`
+
+`GraphicSupport` implements all functionality on `Graphic`, with the exception of the _draw_, _contains_, and _intersects_ methods. It also adds support for multiple `ContextMenuInitializer`s, _highlighting_ on mouseover events, a _default tooltip_, and an _event trigger_ notifying the parent graphic when its state/style has changed. It provides flags for enabling/disabling _tooltips_, _menus_, _mouse listening_, and _selection_.
+
+`GraphicComposite` maintains a list of graphics and a `StyleContext`. Its primary responsibility is to defer supported functionality to its children. It also listens to changes from its children.
+
+`GraphicRoot` ...
+
+`GraphicComponent` ...
 
 == `Graphic` Implementations ==
 The following implementations of `Graphic` are all derived from the `GraphicSupport` base class:
@@ -106,10 +119,23 @@ The naming convention followed above:
 The `GraphicRoot` class is responsible for delegating mouse events to graphic objects beneath the mouse. Rather than regular `MouseEvent`s, it passes `GraphicMouseEvent`s that indicate the source `Graphic` of the event. Classes supporting mouse handling are:
  * `GraphicMouseEvent` - wraps a `MouseEvent` to include a `Graphic`
  * `GraphicMouseEvent.Factory` - creates a `GraphicMouseEvent` from a source `Graphic` and `MouseEvent` (intended to be overridden to customize the event beyond what is supported by the default `GraphicMouseEvent`)
+
+=== Dragging ===
+Additional classes are provided to simplify drag gestures:
  * `AbstractGraphicDragger` - provides supporting functionality for dragging graphics, translating general mouse handling methods to drag methods _mouseDragInitiated_, _mouseDragInProgress_, and _mouseDragCompleted_ that take as arguments `GraphicMouseEvent`s and the starting `Point` of the drag gesture
+  * `PointBeanDragger` - constructed with a `PointBean` or `DraggablePointBean` to provide drag support (e.g. used in `AbstractPointGraphic` to provide default draggability of points)
+  * `IndexedPointBeanDragger` - constructed with a `IndexedPointBean` or `IndexedDraggablePointBean` to provide drag support
+
+=== Selection ===
+Selection of graphics is built into `GraphicComponent`, but is enabled by default. The following class provides the mouse handling supporting selection of graphic objects:
+ * `GraphicSelector`
+The selector also implements `CanvasPainter`, allowing a selection box to be drawn on the component.
+
+=== Highlighting ===
+ * `GraphicHighlighter` - changes the _highlight_ visibility hint as the mouse enters or exits graphics; enabled by default in `GraphicSupport`, but can also be disabled.
 
 
----
+-----
 = Utility Library =
 == Coordinate Handling ==
  * `CoordinateManager` - maintains a collection of points associated with source objects, as well as a cache of "stale" values for points no longer maintained in the collection
@@ -130,3 +156,9 @@ The `GraphicRoot` class is responsible for delegating mouse events to graphic ob
 
 == Graph structures == 
 `Edge` is a data structure with two vertices of common type, as typically used within a graph data structure.
+
+== Graphics canvas ==
+`CanvasPainter` is an interface with a method for painting on a `Graphics2D` canvas on a `Component`. This is primarily used in BlaiseGraphics as a lightweight method to render overlays like a selection box.
+
+== Context menu ==
+`ContextMenuInitializer` is an interface for preparing a context menu, whose method _initialize_ is used to populate a context menu with any actions appropriate for its parameters, which include (1) the source object/graphic, (2) the location, (3) a focus object (optional), and (4) a selection of objects (optional). The `Graphic` class extends this interface, and the `GraphicSupport` class allows multiple initializers to be added to a graphic.
