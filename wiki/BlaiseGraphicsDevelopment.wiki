@@ -61,3 +61,22 @@ Markers are objects used to draw a shape at a given location and orientation.
 
 == Factory and utility methods ==
 The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
+
+Utility Library
+Coordinate Handling
+CoordinateManager - maintains a collection of points associated with source objects, as well as a cache of "stale" values for points no longer maintained in the collection
+CoordinateListener - listener interface notified when coordinates within the manager change
+CoordinateChangeEvent - may indicate add, remove, or combined add/remove of objects and points in the CoordinateManager
+Mouse Handling
+PointBean - marks a class as having a point attribute
+DraggablePointBean - provides a setPoint method used for drag gestures
+IndexedPointBean - marks a class as having an indexed point attribute
+DraggableIndexedPointBean - provides an indexed setPoint method used for drag gestures on one of many points in an object
+Selection
+SetSelectionModel maintains a thread-safe set of selected items, and notifies listeners of changes to the set.
+
+Formatting
+PointFormatters is a utility library for formatting Points and Point2Ds.
+
+Graph structures
+Edge is a data structure with two vertices of common type, as typically used within a Graph data structure.
