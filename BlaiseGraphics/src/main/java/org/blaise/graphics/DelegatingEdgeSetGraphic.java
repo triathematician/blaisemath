@@ -26,7 +26,7 @@ import org.blaise.util.Edge;
 public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite implements CoordinateListener {
 
     /** The edges in the graphic. */
-    protected final Map<EdgeType,DelegatingShapeGraphic<EdgeType>> edges = new HashMap<EdgeType,DelegatingShapeGraphic<EdgeType>>();
+    protected final Map<EdgeType,DelegatingShapeGraphic<EdgeType>> edges = new LinkedHashMap<EdgeType,DelegatingShapeGraphic<EdgeType>>();
     /** Styler for edges */
     protected ObjectStyler<EdgeType,PathStyle> edgeStyler = new ObjectStyler<EdgeType,PathStyle>();
 
@@ -83,7 +83,7 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
      * @param ee new edges to put
      */
     public final void setEdges(Set<? extends EdgeType> ee) {
-        Set<EdgeType> addMe = new HashSet<EdgeType>();
+        Set<EdgeType> addMe = new LinkedHashSet<EdgeType>();
         Set<EdgeType> removeMe = new HashSet<EdgeType>();
         for (EdgeType e : ee) {
             if (!edges.containsKey(e)) {
