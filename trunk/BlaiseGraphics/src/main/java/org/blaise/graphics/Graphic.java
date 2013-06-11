@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.swing.JPopupMenu;
 import org.blaise.style.VisibilityHint;
@@ -24,10 +25,10 @@ import org.blaise.style.VisibilityHint;
  *      Key additional features are:
  * </p>
  * <ul>
- *      <li>A <em>parent</em> (via get and set methods), 
- *          which is a {@link GraphicComposite} 
+ *      <li>A <em>parent</em> (via get and set methods),
+ *          which is a {@link GraphicComposite}
  *          and provides access to default styles of various types.</li>
- *      <li>Visibility settings (via get and set methods). 
+ *      <li>Visibility settings (via get and set methods).
  *          See {@link VisibilityHint} for the parameters.</li>
  *      <li>Three methods based on a point on the canvas:
  *          <ul>
@@ -40,23 +41,23 @@ import org.blaise.style.VisibilityHint;
  * @author Elisha Peterson
  */
  public interface Graphic extends ContextMenuInitializer {
-     
+
      //
      // COMPOSITION API
      //
-     
-    /** 
+
+    /**
       * Return parent of the entry
-      * @return parent, possibly null 
+      * @return parent, possibly null
       */
     public GraphicComposite getParent();
-    /** 
-     * Sets parent of the entry 
+    /**
+     * Sets parent of the entry
      * @param parent the parent
      */
     public void setParent(GraphicComposite parent);
 
-    
+
     //
     // STYLE & DRAWING API
     //
@@ -66,14 +67,14 @@ import org.blaise.style.VisibilityHint;
      * @param canvas graphics canvas
      */
     public void draw(Graphics2D canvas);
- 
-    /** 
+
+    /**
      * Return visibility state of the entry
      * @return the visibility status of the entry
      */
     public Set<VisibilityHint> getVisibilityHints();
-    /** 
-     * Sets the visibility status of the shape 
+    /**
+     * Sets the visibility status of the shape
      * @param vis hints
      */
     public void setVisibilityHints(Set<VisibilityHint> vis);
@@ -83,24 +84,24 @@ import org.blaise.style.VisibilityHint;
      * @param status new status
      */
     public void setVisibilityHint(VisibilityHint hint, boolean status);
-    
-    
+
+
     //
     // LOCATOR API
     //
-    
+
     /**
      * Method used to determine whether the graphic receives {@link MouseEvent}s
      * and will be asked to provide a tooltip at the given point.
      * The graphic's {@link MouseListener}s and {@link MouseMotionListener}s will
      * have the opportunity to receive events if the graphic is the topmost element
      * containing the event's point.
-     * 
+     *
      * @param point the window point
      * @return true if the entry contains the point, else false
      */
     public boolean contains(Point point);
-    
+
     /**
      * Checks to see if the graphic intersects the area within specified rectangle.
      * @param box rectangle to check against
@@ -108,11 +109,11 @@ import org.blaise.style.VisibilityHint;
      */
     public boolean intersects(Rectangle box);
 
-    
+
     //
     // SELECTION API
     //
-    
+
     /**
      * Return true if graphic can be selected. If this flag is set to true,
      * the locator API will be used to map selection gestures (e.g. click to
@@ -120,18 +121,18 @@ import org.blaise.style.VisibilityHint;
      * @return selection flag
      */
     public boolean isSelectionEnabled();
-    
-    
+
+
     //
     // TOOLTIP API
     //
-    
+
     /**
      * Return true if tips are enabled/supported
      * @return true if yes
      */
     public boolean isTooltipEnabled();
-    
+
     /**
      * Return tooltip for the specified point
      * @param point the point
@@ -139,30 +140,30 @@ import org.blaise.style.VisibilityHint;
      */
     public String getTooltip(Point point);
 
-    
+
     //
     // CONTEXT MENU API
     //
-    
+
     /**
      * Whether graphic supports context menu building
      * @return true if yes
      */
     public boolean isContextMenuEnabled();
-    
+
     /**
      * Add context menu initializer
      * @param init initializer
      */
     public void addContextMenuInitializer(ContextMenuInitializer init);
-    
+
     /**
      * Remove context menu initializer
      * @param init initializer
      */
     public void removeContextMenuInitializer(ContextMenuInitializer init);
-    
-    
+
+
     //
     // MOUSE HANDLING API
     //
@@ -178,13 +179,13 @@ import org.blaise.style.VisibilityHint;
      * @param handler listener
      */
     public void addMouseListener(MouseListener handler);
-    
+
     /**
      * Removes a mouse listener from the graphic
      * @param handler listener
      */
     public void removeMouseListener(MouseListener handler);
-    
+
     /**
      * Return list of mouse listeners registered with the graphic
      * @return listeners
@@ -196,17 +197,17 @@ import org.blaise.style.VisibilityHint;
      * @param handler listener
      */
     public void addMouseMotionListener(MouseMotionListener handler);
-    
+
     /**
      * Removes a mouse motion listener from the graphic
      * @param handler listener
      */
     public void removeMouseMotionListener(MouseMotionListener handler);
-    
+
     /**
      * Return list of mouse motion listeners registered with the graphic
      * @return listeners
      */
     public MouseMotionListener[] getMouseMotionListeners();
-    
+
 }
