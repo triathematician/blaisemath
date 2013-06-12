@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphBuilder;
 import org.blaise.graph.GraphBuilders;
+import static org.blaise.graph.GraphBuilders.intList;
 import org.blaise.graph.SparseGraph;
 
 /**
@@ -72,7 +73,7 @@ public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
             }
         }
 
-        return new SparseGraph(false, GraphBuilders.intSet(nodes), edges);
+        return new SparseGraph(false, GraphBuilders.intList(nodes), edges);
     }
 
     /**

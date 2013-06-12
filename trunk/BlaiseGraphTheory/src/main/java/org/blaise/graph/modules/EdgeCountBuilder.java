@@ -10,18 +10,19 @@ import java.util.TreeSet;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphBuilder;
 import org.blaise.graph.GraphBuilders;
+import static org.blaise.graph.GraphBuilders.intList;
 import org.blaise.graph.SparseGraph;
 
 /**
- * Generate random graph with specified edge count. 
+ * Generate random graph with specified edge count.
  */
 public class EdgeCountBuilder extends GraphBuilder.Support<Integer> {
-    
+
     int edges;
-    
+
     public EdgeCountBuilder() {
     }
-    
+
     public EdgeCountBuilder(boolean directed, int nodes, int edges) {
         super(directed, nodes);
         if (nodes < 0 || edges < 0) {
@@ -29,18 +30,18 @@ public class EdgeCountBuilder extends GraphBuilder.Support<Integer> {
         }
         if ((!directed && edges > nodes * (nodes - 1) / 2) || (directed && edges > nodes * nodes)) {
             throw new IllegalArgumentException("Too many edges! (n,e)=(" + nodes + "," + edges + ")");
-        }         
+        }
         this.edges = edges;
     }
-    
+
     public int getEdges() {
         return edges;
     }
-    
+
     public void setEdges(int edges) {
         this.edges = edges;
     }
-    
+
     public Graph<Integer> createGraph() {
         TreeSet<Integer[]> edgeSet = new TreeSet<Integer[]>(directed ? PAIR_COMPARE : PAIR_COMPARE_UNDIRECTED);
         Integer[] potential;
@@ -50,7 +51,7 @@ public class EdgeCountBuilder extends GraphBuilder.Support<Integer> {
             } while ((!directed && potential[0] == potential[1]) || edgeSet.contains(potential));
             edgeSet.add(potential);
         }
-        return new SparseGraph(directed, GraphBuilders.intSet(nodes), edgeSet);
+        return new SparseGraph(directed, GraphBuilders.intList(nodes), edgeSet);
     }
 
     /**
@@ -64,7 +65,7 @@ public class EdgeCountBuilder extends GraphBuilder.Support<Integer> {
             return o1[0] == o2[0] ? o1[1] - o2[1] : o1[0] - o2[0];
         }
     };
-    
+
     /**
      * Used to sort pairs of integers when order of the two does not matter.
      */

@@ -87,9 +87,9 @@ public class GraphUtilsTest {
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
         Graph<String> result3 = new SparseGraph(false, vv, Arrays.asList(edges));
         Graph<String> result4 = new SparseGraph(true, vv, Arrays.asList(edges));
-        assertEquals("[[false, true, false, true, false], [true, false, true, false, false], [false, true, false, true, false], [true, false, true, false, false], [false, false, false, false, true]]", 
+        assertEquals("[[false, true, false, true, false], [true, false, true, false, false], [false, true, false, true, false], [true, false, true, false, false], [false, false, false, false, true]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrix(result3, vv)));
-        assertEquals("[[false, true, false, false, false], [false, false, true, false, false], [false, false, false, true, false], [true, false, false, false, false], [false, false, false, false, true]]", 
+        assertEquals("[[false, true, false, false, false], [false, false, true, false, false], [false, false, false, true, false], [true, false, false, false, false], [false, false, false, false, true]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrix(result4, vv)));
     }
 
@@ -100,13 +100,13 @@ public class GraphUtilsTest {
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
         Graph<String> result1 = new SparseGraph(false, vv, Arrays.asList(edges));
         Graph<String> result2 = new SparseGraph(true, vv, Arrays.asList(edges));
-        assertEquals("[[0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 0, 0, 0, 1]]", 
+        assertEquals("[[0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 0, 0, 0, 1]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrixPowers(result1,vv,12)[0]));
-        assertEquals("[[2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [0, 0, 0, 0, 1]]", 
+        assertEquals("[[2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [0, 0, 0, 0, 1]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrixPowers(result1,vv,12)[1]));
-        assertEquals("[[0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 1]]", 
+        assertEquals("[[0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 1]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrixPowers(result2,vv,12)[1]));
-        assertEquals("[[0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 1]]", 
+        assertEquals("[[0, 0, 0, 1, 0], [1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 1]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrixPowers(result2,vv,12)[2]));
     }
 
@@ -190,8 +190,8 @@ public class GraphUtilsTest {
         System.out.println("components");
         List<Set<Integer>> result1 = new ArrayList<Set<Integer>>(GraphUtils.components(UNDIRECTED_INSTANCE));
         assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), result1.get(0));
-        assertCollectionContentsSame(Arrays.asList(20,21), result1.get(1));
-        assertCollectionContentsSame(Arrays.asList(15), result1.get(2));
+        assertCollectionContentsSame(Arrays.asList(15), result1.get(1));
+        assertCollectionContentsSame(Arrays.asList(20,21), result1.get(2));
 //        try { GraphUtils.components(DIRECTED_INSTANCE); assertFalse(true); } catch (IllegalArgumentException ex) { assertTrue(true); }
     }
 

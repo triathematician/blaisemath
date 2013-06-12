@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.blaise.util.Edge;
 
@@ -39,7 +40,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
      * @param directed if graph is directed
      */
     public GraphSupport(Collection<V> nodes, boolean directed) {
-        this.nodes = new HashSet<V>(nodes);
+        this.nodes = new LinkedHashSet<V>(nodes);
         this.directed = directed;
     }
 

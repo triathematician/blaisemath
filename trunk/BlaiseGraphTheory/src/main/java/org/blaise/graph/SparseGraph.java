@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.util.Edge;
@@ -28,9 +30,10 @@ import org.blaise.util.Edge;
 public class SparseGraph<V> extends GraphSupport<V> {
 
     /** The adjacencies in components of the graph */
-    protected final Map<V,Map<V,Set<Edge<V>>>> adjacencies = new HashMap<V, Map<V,Set<Edge<V>>>>();
+//    protected final Table<V, V, LinkedHashSet<Edge<V>>> adjacencies = HashBasedTable.create()
+    protected final Map<V,Map<V,Set<Edge<V>>>> adjacencies = new LinkedHashMap<V, Map<V,Set<Edge<V>>>>();
     /** Edges in graph (replicated for speed) */
-    protected final Set<Edge<V>> edges = new HashSet<Edge<V>>();
+    protected final Set<Edge<V>> edges = new LinkedHashSet<Edge<V>>();
     /** Information about the graph's components (replicated for speed) */
     protected final GraphComponents<V> components;
 

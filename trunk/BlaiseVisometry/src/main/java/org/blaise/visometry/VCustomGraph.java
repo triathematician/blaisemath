@@ -5,7 +5,7 @@
 package org.blaise.visometry;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.graphics.DelegatingNodeLinkGraphic;
@@ -76,7 +76,7 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
 
     public void setEdges(Set<? extends EdgeType> edges) {
         // make a copy to prevent errors in updating edges
-        gwindow.setEdges(new HashSet<EdgeType>(edges));
+        gwindow.setEdges(new LinkedHashSet<EdgeType>(edges));
     }
 
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
