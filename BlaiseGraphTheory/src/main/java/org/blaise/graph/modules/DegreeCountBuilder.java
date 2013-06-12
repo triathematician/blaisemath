@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphBuilder;
 import org.blaise.graph.GraphBuilders;
+import static org.blaise.graph.GraphBuilders.intList;
 import org.blaise.graph.SparseGraph;
 
 /**
@@ -23,13 +24,13 @@ import org.blaise.graph.SparseGraph;
  * @author elisha
  */
 public class DegreeCountBuilder implements GraphBuilder<Integer> {
-    
+
     boolean directed = false;
     int[] degs;
 
     public DegreeCountBuilder() {
     }
-    
+
     /**
      * Returns graph with random number of connections between vertices. If the
      * graph is directed, the degree sequence is for the outdegrees. If the
@@ -61,8 +62,8 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
     public void setDegrees(int[] degs) {
         this.degs = degs;
     }
-    
-    
+
+
 
     public Graph<Integer> createGraph() {
         return directed ? getDirectedInstance(degs) : getUndirectedInstance(degs);
@@ -91,7 +92,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
                 i++;
             }
         }
-        return new SparseGraph(true, GraphBuilders.intSet(n), edges);
+        return new SparseGraph(true, GraphBuilders.intList(n), edges);
     }
 
     /**
@@ -183,7 +184,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
         if (vxLeft.size() > 0) {
             System.out.println("Unable to find edges for all vertices. Remaining list=" + vxLeft);
         }
-        return new SparseGraph(false, GraphBuilders.intSet(n), edges);
+        return new SparseGraph(false, GraphBuilders.intList(n), edges);
     }
 
     /**

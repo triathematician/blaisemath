@@ -5,13 +5,9 @@
 
 package org.blaise.graph.view;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.geom.Point2D;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.graphics.ContextMenuInitializer;

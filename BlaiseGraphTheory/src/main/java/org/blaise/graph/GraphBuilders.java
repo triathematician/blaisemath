@@ -5,13 +5,12 @@
 
 package org.blaise.graph;
 
+import com.google.common.collect.Lists;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -20,10 +19,10 @@ import java.util.Set;
  * @author elisha
  */
 public class GraphBuilders {
-    
+
     /** A completely empty graph */
     public static final Graph EMPTY_GRAPH = new SparseGraph(false, Collections.EMPTY_SET, Collections.EMPTY_SET);
-    
+
     /** Constructs graph with n vertices */
     public static class EmptyGraphBuilder extends GraphBuilder.Support<Integer> {
         public EmptyGraphBuilder() {}
@@ -32,7 +31,7 @@ public class GraphBuilders {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
-            return new SparseGraph(directed, intSet(nodes), (Collection) Collections.emptyList());
+            return new SparseGraph(directed, intList(nodes), (Collection) Collections.emptyList());
         }
     }
 
@@ -53,7 +52,7 @@ public class GraphBuilders {
                     }
                 }
             }
-            return new SparseGraph(directed, intSet(nodes), edges);
+            return new SparseGraph(directed, intList(nodes), edges);
         }
     }
 
@@ -65,7 +64,7 @@ public class GraphBuilders {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
-            return new SparseGraph(directed, intSet(nodes),
+            return new SparseGraph(directed, intList(nodes),
                     new AbstractList<Integer[]>() {
                         @Override
                         public Integer[] get(int index) {
@@ -80,7 +79,7 @@ public class GraphBuilders {
         }
     }
 
-    /** Constructs star graph with n vertices. 
+    /** Constructs star graph with n vertices.
      * All vertices are connected to a central hub. */
     public static class StarGraphBuilder extends GraphBuilder.Support<Integer> {
         public StarGraphBuilder() {}
@@ -89,7 +88,7 @@ public class GraphBuilders {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
-            return new SparseGraph(directed, intSet(nodes),
+            return new SparseGraph(directed, intList(nodes),
                     new AbstractList<Integer[]>() {
                         @Override
                         public Integer[] get(int index) {
@@ -104,10 +103,10 @@ public class GraphBuilders {
         }
     }
 
-    /** 
-     * Constructs wheel graph with n vertices. 
+    /**
+     * Constructs wheel graph with n vertices.
      * All vertices are connected to a central hub, and all non-central
-     * vertices connected in a cyclic fashion. 
+     * vertices connected in a cyclic fashion.
      */
     public static class WheelGraphBuilder extends GraphBuilder.Support<Integer> {
         public WheelGraphBuilder() {}
@@ -130,19 +129,19 @@ public class GraphBuilders {
             if (directed) {
                 edges.add(new Integer[]{1, nodes - 1});
             }
-            return new SparseGraph(directed, intSet(nodes), edges);
+            return new SparseGraph(directed, intList(nodes), edges);
         }
     }
 
     //
     // UTILITY METHODS
     //
-    
+
     /**
      * Returns abstract list of integers 0,...,n-1
      */
-    public static Set<Integer> intSet(final int n) {
-        Set<Integer> res = new HashSet<Integer>();
+    public static List<Integer> intList(final int n) {
+        List<Integer> res = Lists.newArrayList();
         for (int i = 0; i < n; i++) {
             res.add(i);
         }

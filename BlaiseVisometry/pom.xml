@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-visometry</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>BlaiseVisometry</name>
@@ -37,13 +37,13 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-graphics</artifactId>
-      <version>${project.version}</version>
+      <artifactId>blaise-math</artifactId>
+      <version>0.6.0</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>blaise-math</artifactId>
-      <version>0.6.0</version>
+      <artifactId>blaise-graphics</artifactId>
+      <version>1.0.1</version>
     </dependency>
   </dependencies>
 </project>
