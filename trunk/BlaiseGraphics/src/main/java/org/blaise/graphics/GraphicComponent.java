@@ -208,8 +208,8 @@ public class GraphicComponent extends javax.swing.JComponent {
      * @param g graphics object
      */
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintChildren(Graphics g) {
+        super.paintChildren(g);
         renderTo((Graphics2D) g);
     }
 
@@ -220,8 +220,10 @@ public class GraphicComponent extends javax.swing.JComponent {
     public void renderTo(Graphics2D canvas) {
         canvas.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 antialias ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF );
-        canvas.setColor(getBackground());
-        canvas.fillRect(0, 0, getWidth(), getHeight());
+        if (isOpaque()) {
+            canvas.setColor(getBackground());
+            canvas.fillRect(0, 0, getWidth(), getHeight());
+        }
         renderUnderlay(canvas);
         root.draw(canvas);
         renderOverlay(canvas);
