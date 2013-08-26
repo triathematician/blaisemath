@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-visometry</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>BlaiseVisometry</name>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>org.blaise</groupId>
       <artifactId>Firestarter</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.2</version>
       <scope>test</scope>
       <type>jar</type>
     </dependency>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>blaise-graphics</artifactId>
-      <version>${project.version}</version>
+      <version>1.0.2</version>
     </dependency>
   </dependencies>
 </project>
