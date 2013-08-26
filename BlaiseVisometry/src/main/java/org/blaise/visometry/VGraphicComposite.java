@@ -139,7 +139,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
             }
             entries.clear();
             for (VGraphic<C> en : add) {
-                change = change || addHelp(en);
+                change = addHelp(en) || change;
             }
         }
         if (change) {

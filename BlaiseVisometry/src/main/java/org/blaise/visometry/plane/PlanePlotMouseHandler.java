@@ -70,9 +70,15 @@ public class PlanePlotMouseHandler
     transient protected Point2D.Double oldMin = null;
     /** Old bounds for the window. */
     transient protected Point2D.Double oldMax = null;
+    
+    protected boolean interestedIn(MouseEvent e) {
+        return !e.isConsumed() 
+        // XXX - need to expand architecture so shift-down still applies
+                && !e.isShiftDown();
+    }
 
     public void mousePressed(MouseEvent e) {
-        if (e.isConsumed()) {
+        if (!interestedIn(e)) {
             return;
         }
         pressedAt = e.getPoint();
@@ -86,7 +92,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed()) {
+        if (!interestedIn(e)) {
             return;
         }
         if (pressedAt != null) {
@@ -152,7 +158,7 @@ public class PlanePlotMouseHandler
         }
     }
     public void mouseReleased(MouseEvent e) {
-        if (!e.isConsumed()) {
+        if (interestedIn(e)) {
             mouseDragged(e);
             if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
                 zoomBoxAnimated(vis, zoomBox);
@@ -170,7 +176,7 @@ public class PlanePlotMouseHandler
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isConsumed()) {
+        if (!interestedIn(e)) {
             return;
         }
         Point2D.Double mouseLoc = new Point2D.Double(e.getPoint().x, e.getPoint().y);
