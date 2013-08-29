@@ -4,7 +4,7 @@
 
   <groupId>org.blaise</groupId>
   <artifactId>blaise-graph</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>BlaiseGraphTheory</name>
@@ -19,13 +19,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
-      <scope>test</scope>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.blaise</groupId>
-      <artifactId>Firestarter</artifactId>
-      <version>1.0.0</version>
       <scope>test</scope>
       <type>jar</type>
     </dependency>
@@ -45,6 +38,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>blaise-visometry</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>Firestarter</artifactId>
+      <version>1.0.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
