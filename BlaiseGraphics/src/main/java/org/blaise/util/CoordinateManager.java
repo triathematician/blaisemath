@@ -153,6 +153,31 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
         checkCache();
         fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, cached.keySet()));
     }
+    
+    /**
+     * Get copy of all cached locations.
+     * @return map of locations
+     */
+    public synchronized Map<Src,Coord> getCachedLocations() {
+        Map<Src,Coord> res = new HashMap<Src,Coord>();
+        res.putAll(cache);
+        return res;
+    }
+    
+    /**
+     * Retrieve location of given set of cached objects.
+     * @param set objects to retrieve
+     * @return map of locations
+     */
+    public synchronized Map<Src,Coord> getCachedLocations(Set<? extends Src> obj) {
+        Map<Src,Coord> res = new HashMap<Src,Coord>();
+        for (Src s : obj) {
+            if (cache.containsKey(s)) {
+                res.put(s, cache.get(s));
+            }
+        }
+        return res;
+    }
 
     /**
      * Call to restore locations from the cache.
