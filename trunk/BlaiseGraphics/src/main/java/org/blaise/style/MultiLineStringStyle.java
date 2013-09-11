@@ -52,7 +52,7 @@ public class MultiLineStringStyle extends BasicStringStyle {
 
         drawInRectangle(string, canvas, clip.getBounds2D());
 
-        //canvas.setClip(curClip);
+        canvas.setClip(curClip);
     }
 
 //    private void drawInEllipse(Point2D point, String string, Graphics2D canvas, Ellipse2D clip) {
