@@ -93,10 +93,8 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
                     primitive = rs2;
                 }
                 parent.draw(primitive, canvas, hints);
-                // must set the clip for the label style to draw properly
                 if (labelStyle != null) {
-                    labelStyle.setClip(primitive instanceof RectangularShape ? (RectangularShape) primitive : primitive.getBounds2D());
-                    labelGraphic.setPoint(new Point2D.Double(primitive.getBounds2D().getMinX()+2, primitive.getBounds2D().getMinY()+2));
+                    labelGraphic.setPoint(new Point2D.Double(primitive.getBounds2D().getMinX()+2, primitive.getBounds2D().getMaxY()-2));
                     labelGraphic.draw(canvas);
                 }
             }
