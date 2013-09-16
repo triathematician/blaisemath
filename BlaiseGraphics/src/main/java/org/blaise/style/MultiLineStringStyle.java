@@ -5,10 +5,12 @@
 
 package org.blaise.style;
 
+import com.google.common.collect.Lists;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -37,7 +39,7 @@ public class MultiLineStringStyle extends BasicStringStyle {
                 y0 = point.getY();
                 break;
         }
-        for (String s : lns) {
+        for (String s : Lists.reverse(Arrays.asList(lns))) {
             double wid = canvas.getFontMetrics().getStringBounds(s, canvas).getWidth();
             switch (anchor) {
                 default:
