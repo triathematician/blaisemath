@@ -209,8 +209,8 @@ public class GraphicComponent extends javax.swing.JComponent {
      */
     @Override
     protected void paintChildren(Graphics g) {
-        super.paintChildren(g);
         renderTo((Graphics2D) g);
+        super.paintChildren(g);
     }
 
     /**
