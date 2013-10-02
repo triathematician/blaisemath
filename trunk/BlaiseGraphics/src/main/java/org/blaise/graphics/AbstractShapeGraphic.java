@@ -105,10 +105,9 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
 
     public boolean contains(Point point) {
         ShapeStyle style = drawStyle();
-        if (!paintingAsStroke() && primitive.contains(point)) {
-            return true;
-        }
-        if (style == null || !(style instanceof PathStyle)) {
+        if (!paintingAsStroke()) {
+            return primitive.contains(point);
+        } else if (!(style instanceof PathStyle)) {
             return new BasicStroke(1f).createStrokedShape(primitive).contains(point);
         } else {
             Shape shape = ((PathStyle)style).getPathShape(primitive);
