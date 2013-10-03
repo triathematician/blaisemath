@@ -32,6 +32,8 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
     private final BasicStringGraphic labelGraphic = new BasicStringGraphic(new Point2D.Double(), "");
     /** Special style for label */
     private WrappingStringStyle labelStyle;
+    /** Whether variable inset on "highlight" visibility tag is active */
+    private boolean variableInset = true;
 
     /**
      * Initialize with source object.
@@ -44,6 +46,12 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
         setSourceObject(src);
         setPrimitive(rect);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
 
     @Override
     public void setSourceObject(E src) {
@@ -63,12 +71,20 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
             labelGraphic.setStyle(labelStyle);
         }
     }
-
-    @Override
-    public void setPrimitive(Shape primitive) {
-        super.setPrimitive(primitive);
+    
+    public boolean isVariableInset() {
+        return variableInset;
+    }
+    
+    public void setVariableInset(boolean variableInset) {
+        if (this.variableInset != variableInset) {
+            this.variableInset = variableInset;
+            fireGraphicChanged();
+        }
     }
 
+    //</editor-fold>
+    
     @Override
     public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
         super.initialize(menu, point, getSourceObject(), selection);
@@ -82,7 +98,7 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
                 boolean highlight = hints.contains(VisibilityHint.Highlight);
                 if (primitive instanceof RectangularShape) {
                     RectangularShape rs = (RectangularShape) primitive;
-                    int inset = highlight?1:3;
+                    int inset = !variableInset?0:highlight?1:3;
                     RectangularShape rs2 = (RectangularShape) rs.clone();
                     rs2.setFrameFromCenter(rs.getCenterX(), rs.getCenterY(), rs.getMaxX()-inset, rs.getMaxY()-inset);
                     primitive = rs2;
