@@ -84,7 +84,7 @@ public class WrappingStringStyle extends BasicStringStyle {
             canvas.setFont(f.deriveFont(f.getSize2D() - 2));
         }
         float sz = canvas.getFont().getSize2D();
-        List<String> lines = wrappedString(string, canvas, rClip.getWidth(), rClip.getHeight());
+        List<String> lines = computeLineBreaks(string, canvas, rClip.getWidth(), rClip.getHeight());
         double y0;
         switch (anchor) {
             case North: case Northwest: case Northeast:
@@ -114,7 +114,7 @@ public class WrappingStringStyle extends BasicStringStyle {
 
     /**
      * Create set of lines representing the word-wrapped version of the string. Words are
-     * wrapped at spaces if possible. Lines are constrained to be within given width and height.
+     * wrapped at spaces if possible, and always wrapped at line breaks. Lines are constrained to be within given width and height.
      * If the string is too long to fit in the given space, it is truncated and "..." appended.
      * Assumes lines are separated by current font size + 2.
      * @param string initial string
@@ -123,7 +123,7 @@ public class WrappingStringStyle extends BasicStringStyle {
      * @param height height of bounding box
      * @return lines
      */
-    private static List<String> wrappedString(String string, Graphics2D canvas, double width, double height) {
+    public static List<String> computeLineBreaks(String string, Graphics2D canvas, double width, double height) {
         float sz = canvas.getFont().getSize2D();
         Rectangle2D sBounds = canvas.getFontMetrics().getStringBounds(string, canvas);
 
@@ -131,8 +131,10 @@ public class WrappingStringStyle extends BasicStringStyle {
         if (string.length() == 0) {
             // do nothing
         } else if (width < 3*sz) {
+            // if really small, show only first character
             lines.add(string.substring(0,1)+"...");
-        } else if (sBounds.getWidth() <= width - 4) {
+        } else if (sBounds.getWidth() <= width-4 && !string.contains(("\n"))) {
+            // enough to fit the entire string
             lines.add(string);
         } else {
             // need to wrap string
@@ -140,16 +142,19 @@ public class WrappingStringStyle extends BasicStringStyle {
             int pos0 = 0;
             int pos1 = 1;
             while (pos1 < string.length()) {
-                while (pos1 <= string.length() && canvas.getFontMetrics().getStringBounds(string.substring(pos0,pos1), canvas).getWidth() < width-4) {
+                while (pos1 <= string.length() && string.charAt(pos1-1) != '\n' && canvas.getFontMetrics().getStringBounds(string.substring(pos0,pos1), canvas).getWidth() < width-4) {
                     pos1++;
                 }
-                if (pos1 < string.length()) {
+                if (pos1 >= string.length()) {
+                    pos1 = string.length()+1;
+                } else if (string.charAt(pos1-1)=='\n') {
+                    // wrap at the line break
+                } else {
+                    // wrap at the previous space
                     int idx = string.lastIndexOf(' ', pos1 - 1);
                     if (idx > pos0) {
                         pos1 = idx + 2;
                     }
-                } else {
-                    pos1 = string.length()+1;
                 }
                 String s = string.substring(pos0, pos1 - 1);
                 totHt += sz+2;
@@ -168,6 +173,9 @@ public class WrappingStringStyle extends BasicStringStyle {
                     lines.add(s);
                 }
                 pos0 = pos1 - 1;
+                if (pos0 < string.length() && string.charAt(pos0)=='\n') {
+                    pos0++;
+                }
                 pos1 = pos0 + 1;
             }
         }
