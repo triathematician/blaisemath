@@ -4,17 +4,21 @@
  */
 package org.blaise.graphics;
 
-import java.awt.Point;
+import static com.google.common.base.Preconditions.*;
+import org.blaise.util.ContextMenuInitializer;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.blaise.style.VisibilityHint;
+import org.blaise.style.VisibilityHintSet;
 
 /**
  * <p>
@@ -30,7 +34,7 @@ public abstract class GraphicSupport implements Graphic {
     /** Stores the parent of this entry */
     protected GraphicComposite parent;
     /** Stores visibility status */
-    protected final Set<VisibilityHint> visibility = new HashSet<VisibilityHint>();
+    protected final VisibilityHintSet visibility = new VisibilityHintSet();
 
     /** Flag indicating whether tips are enabled */
     protected boolean tipEnabled = false;
@@ -42,15 +46,24 @@ public abstract class GraphicSupport implements Graphic {
     protected boolean selectEnabled = true;
 
     /** Default text of tooltip */
-    protected String tipText = null;
+    protected String defaultTooltip = null;
+    
     /** Highlighter */
-    protected final GraphicHighlighter highlighter = new GraphicHighlighter();
+    protected final GraphicHighlightHandler highlighter = new GraphicHighlightHandler();
+
+    /** Context initializers */
+    protected final List<ContextMenuInitializer> contextMenuInitializers = new ArrayList<ContextMenuInitializer>();
 
     /**
      * Initialize graphic
      */
     public GraphicSupport() {
         addMouseListener(highlighter);
+        visibility.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent ce) {
+                fireGraphicChanged();
+            }
+        });
     }
 
 
@@ -70,32 +83,26 @@ public abstract class GraphicSupport implements Graphic {
     // STYLE & DRAWING
     //
 
-    public Set<VisibilityHint> getVisibilityHints() {
+    public VisibilityHintSet getVisibilityHints() {
         return visibility;
     }
 
-    public void setVisibilityHints(Set<VisibilityHint> visibility) {
-        if (this.visibility != visibility) {
-            this.visibility.clear();
-            this.visibility.addAll(visibility);
-            fireGraphicChanged();
-        }
-    }
-
+    /**
+     * Set status of a particular visibility hint.
+     * @param hint hint
+     * @param status status of hint
+     */
     public void setVisibilityHint(VisibilityHint hint, boolean status) {
-        if (status && visibility.add(hint)) {
-            fireGraphicChanged();
-        } else if (!status && visibility.remove(hint)) {
-            fireGraphicChanged();
+        if (status) {
+            visibility.add(hint);
+        } else {
+            visibility.remove(hint);
         }
     }
 
     //
     // CONTEXT MENU
     //
-
-    /** Context initializers */
-    protected final List<ContextMenuInitializer> cInits = new ArrayList<ContextMenuInitializer>();
 
     public boolean isContextMenuEnabled() {
         return popupEnabled;
@@ -105,23 +112,23 @@ public abstract class GraphicSupport implements Graphic {
         popupEnabled = val;
     }
 
-    public void addContextMenuInitializer(ContextMenuInitializer init) {
-        if (!cInits.contains(init)) {
-            cInits.add(init);
+    public void addContextMenuInitializer(ContextMenuInitializer<Graphic> init) {
+        if (!contextMenuInitializers.contains(init)) {
+            contextMenuInitializers.add(init);
             setContextMenuEnabled(true);
         }
     }
 
-    public void removeContextMenuInitializer(ContextMenuInitializer init) {
-        cInits.remove(init);
-        if (cInits.isEmpty()) {
+    public void removeContextMenuInitializer(ContextMenuInitializer<Graphic> init) {
+        contextMenuInitializers.remove(init);
+        if (contextMenuInitializers.isEmpty()) {
             setContextMenuEnabled(false);
         }
     }
 
-    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
-        for (ContextMenuInitializer cmi : cInits) {
-            cmi.initialize(menu, point, focus, selection);
+    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+        for (ContextMenuInitializer<Graphic> cmi : contextMenuInitializers) {
+            cmi.initContextMenu(menu, src, point, focus, selection);
         }
     }
 
@@ -164,8 +171,8 @@ public abstract class GraphicSupport implements Graphic {
         tipEnabled = val;
     }
 
-    public String getTooltip(Point p) {
-        return tipEnabled ? tipText : null;
+    public String getTooltip(Point2D p) {
+        return tipEnabled ? defaultTooltip : null;
     }
 
     /**
@@ -173,7 +180,7 @@ public abstract class GraphicSupport implements Graphic {
      * @return tip
      */
     public String getDefaultTooltip() {
-        return tipText;
+        return defaultTooltip;
     }
 
     /**
@@ -182,7 +189,7 @@ public abstract class GraphicSupport implements Graphic {
      */
     public void setDefaultTooltip(String tooltip) {
         setTooltipEnabled(true);
-        this.tipText = tooltip;
+        this.defaultTooltip = tooltip;
     }
 
     //
@@ -226,9 +233,7 @@ public abstract class GraphicSupport implements Graphic {
     }
 
     public final void addMouseListener(MouseListener handler) {
-        if (handler == null) {
-            throw new IllegalArgumentException();
-        }
+        checkNotNull(handler);
         handlers.add(MouseListener.class, handler);
     }
 
@@ -241,9 +246,7 @@ public abstract class GraphicSupport implements Graphic {
     }
 
     public void addMouseMotionListener(MouseMotionListener handler) {
-        if (handler == null) {
-            throw new IllegalArgumentException();
-        }
+        checkNotNull(handler);
         handlers.add(MouseMotionListener.class, handler);
     }
 

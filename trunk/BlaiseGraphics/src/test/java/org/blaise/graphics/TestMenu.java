@@ -4,9 +4,11 @@
  */
 package org.blaise.graphics;
 
+import org.blaise.util.ContextMenuInitializer;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Set;
 import javax.swing.AbstractAction;
@@ -24,8 +26,8 @@ public class TestMenu extends javax.swing.JFrame {
     public TestMenu() {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
-        g1.addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        g1.addContextMenuInitializer(new ContextMenuInitializer<Graphic>(){
+            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 menu.add(""+point);
                 menu.add(new AbstractAction("press me"){
                     public void actionPerformed(ActionEvent e) { System.out.println("pressed"); }
@@ -38,8 +40,8 @@ public class TestMenu extends javax.swing.JFrame {
         gc.addGraphic(g2);
         
         gc.setSelectionEnabled(true);
-        gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer<Graphic>(){
+            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 menu.setLabel("root label");
                 menu.add((selection == null ? 0 : selection.size()) + " graphics selected");
                 if (menu.getComponentCount() > 0)

@@ -6,6 +6,7 @@ package org.blaise.graphics;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -25,7 +26,7 @@ public class TestTooltips extends javax.swing.JFrame {
         
         BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100)) {
             @Override
-            public String getTooltip(Point p) {
+            public String getTooltip(Point2D p) {
                 return ""+p;
             }
         };

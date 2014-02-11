@@ -22,7 +22,11 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.*;
 
-public class TextStroke implements Stroke {
+/**
+ * @author Jerry Huxtable
+ * @author Elisha Peterson
+ */
+class TextStroke implements Stroke {
 
     private String text;
     private Font font;
@@ -48,12 +52,11 @@ public class TextStroke implements Stroke {
 
         GeneralPath result = new GeneralPath();
         PathIterator it = new FlatteningPathIterator(shape.getPathIterator(null), FLATNESS);
-        float points[] = new float[6];
+        float[] points = new float[6];
         float moveX = 0, moveY = 0;
         float lastX = 0, lastY = 0;
         float thisX = 0, thisY = 0;
         int type = 0;
-        boolean first = false;
         float next = 0;
         int currentChar = 0;
         int length = glyphVector.getNumGlyphs();
@@ -72,7 +75,6 @@ public class TextStroke implements Stroke {
                     moveX = lastX = points[0];
                     moveY = lastY = points[1];
                     result.moveTo(moveX, moveY);
-                    first = true;
                     nextAdvance = glyphVector.getGlyphMetrics(currentChar).getAdvance() * 0.5f;
                     next = nextAdvance;
                     break;
@@ -112,10 +114,12 @@ public class TextStroke implements Stroke {
                         }
                     }
                     next -= distance;
-                    first = false;
                     lastX = thisX;
                     lastY = thisY;
                     break;
+                    
+                default:
+                    // ignore
             }
             it.next();
         }
@@ -125,7 +129,7 @@ public class TextStroke implements Stroke {
 
     public float measurePathLength(Shape shape) {
         PathIterator it = new FlatteningPathIterator(shape.getPathIterator(null), FLATNESS);
-        float points[] = new float[6];
+        float[] points = new float[6];
         float moveX = 0, moveY = 0;
         float lastX = 0, lastY = 0;
         float thisX = 0, thisY = 0;
@@ -154,6 +158,9 @@ public class TextStroke implements Stroke {
                     lastX = thisX;
                     lastY = thisY;
                     break;
+                    
+                default:
+                    // ignore
             }
             it.next();
         }

@@ -12,14 +12,14 @@ package org.blaise.style;
  * @author Elisha
  */
 public enum VisibilityHint {
-    /** Highlighted setting */
-    Highlight,
-    /** Selected item */
-    Selected,
-    /** De-highlight/de-emphasis */
-    Obscure,
+    /** HIGHLIGHTed setting */
+    HIGHLIGHT,
+    /** SELECTED item */
+    SELECTED,
+    /** FADED, used to de-emphasize */
+    FADED,
     /** Draw outline only */
-    Outline,
+    OUTLINE,
     /** This hint means the graphic is not drawn and receives no events from its parent. */
-    Hidden;
+    HIDDEN;
 }

@@ -8,10 +8,9 @@ package org.blaise.util;
 /**
  * Receives updates regarding the locations of a collection of objects.
  *
- * @param <Coord> coordinate type
  * @author petereb1
  */
-public interface CoordinateListener<Coord> {
+public interface CoordinateListener {
 
     /**
      * Called when coordinates/points are added.

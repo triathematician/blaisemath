@@ -17,81 +17,102 @@ import org.blaise.util.CoordinateManager;
  * A graph with fully-customizable points, edges, and tooltips. The styles and
  * point values are computed at runtime. Edges are maintained as a set of {@link Edge}s.
  *
- * @see PointStyle
- *
+ * @param <S> source object type
+ * @param <E> edge type
+ * 
  * @author Elisha Peterson
  */
-public class DelegatingNodeLinkGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite {
+public class DelegatingNodeLinkGraphic<S,E extends Edge<S>> extends GraphicComposite {
 
-    /** Point set */
-    private final DelegatingPointSetGraphic<Src> points;
-    /** Edges */
-    private final DelegatingEdgeSetGraphic<Src,EdgeType> edges;
+    /** Point graphics */
+    private final DelegatingPointSetGraphic<S> pointGraphics;
+    /** Edge graphics */
+    private final DelegatingEdgeSetGraphic<S,E> edgeGraphics;
 
     /**
      * Construct with no points
      */
     public DelegatingNodeLinkGraphic() {
-        addGraphic(edges = new DelegatingEdgeSetGraphic<Src,EdgeType>());
-        addGraphic(points = new DelegatingPointSetGraphic<Src>());
-        edges.setPointManager(points.getCoordinateManager());
+        pointGraphics = new DelegatingPointSetGraphic<S>();
+        edgeGraphics = new DelegatingEdgeSetGraphic<S,E>(pointGraphics.getCoordinateManager());
+        addGraphic(edgeGraphics);
+        addGraphic(pointGraphics);
+    }
+    
+    /**
+     * Construct with specified coordinate manager
+     * @param crdManager in charge of node locations
+     */
+    public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager) {
+        pointGraphics = new DelegatingPointSetGraphic<S>(crdManager);
+        edgeGraphics = new DelegatingEdgeSetGraphic<S,E>(crdManager);
+        addGraphic(edgeGraphics);
+        addGraphic(pointGraphics);
+    }
+    
+    //
+    // ACCESSORS
+    //
+
+    public DelegatingPointSetGraphic<S> getPointGraphic() {
+        return pointGraphics;
     }
 
-    @Override
-    public String toString() {
-        return "Graph";
+    public DelegatingEdgeSetGraphic<S, E> getEdgeGraphic() {
+        return edgeGraphics;
     }
 
-    public DelegatingPointSetGraphic<Src> getPointGraphic() {
-        return points;
+    public CoordinateManager<S, Point2D> getCoordinateManager() {
+        return pointGraphics.getCoordinateManager();
     }
 
-    public DelegatingEdgeSetGraphic<Src, EdgeType> getEdgeGraphic() {
-        return edges;
+    public void setCoordinateManager(CoordinateManager ptMgr) {
+        pointGraphics.setCoordinateManager(ptMgr);
+        edgeGraphics.setCoordinateManager(ptMgr);
     }
 
     //
     // POINTS
     //
 
-    public CoordinateManager<Src, Point2D> getPointManager() {
-        return points.getCoordinateManager();
+    public Set<? extends S> getNodeSet() {
+        return pointGraphics.getObjects();
+    }
+    
+    public Map<S, Point2D> getNodeLocations() {
+        return pointGraphics.getCoordinateManager().getCoordinates();
     }
 
-    public Set<? extends Src> getObjects() {
-        return points.getObjects();
+    public void setNodeLocations(Map<S, Point2D> pts) {
+        pointGraphics.getCoordinateManager().putAll(pts);
     }
 
-    public void setPoints(Map<Src, Point2D> pts) {
-        points.getCoordinateManager().putAll(pts);
+    public ObjectStyler<S, PointStyle> getNodeStyler() {
+        return pointGraphics.getStyler();
     }
 
-    public ObjectStyler<Src, PointStyle> getStyler() {
-        return points.getStyler();
-    }
-
-    public void setStyler(ObjectStyler<Src, PointStyle> styler) {
-        points.setStyler(styler);
+    public void setNodeStyler(ObjectStyler<S, PointStyle> styler) {
+        pointGraphics.setStyler(styler);
     }
 
     //
     // EDGES
     //
 
-    public Set<EdgeType> getEdges() {
-        return edges.getEdges();
+    public Set<? extends E> getEdgeSet() {
+        return edgeGraphics.getEdges();
     }
 
-    public void setEdges(Set<? extends EdgeType> edges) {
-        this.edges.setEdges(edges);
+    public void setEdgeSet(Set<? extends E> edges) {
+        this.edgeGraphics.setEdges(edges);
     }
 
-    public ObjectStyler<EdgeType, PathStyle> getEdgeStyler() {
-        return edges.getEdgeStyler();
+    public ObjectStyler<E, PathStyle> getEdgeStyler() {
+        return edgeGraphics.getEdgeStyler();
     }
 
-    public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
-        edges.setEdgeStyler(styler);
+    public void setEdgeStyler(ObjectStyler<E, PathStyle> styler) {
+        edgeGraphics.setEdgeStyler(styler);
     }
 
 }

@@ -4,68 +4,85 @@
  */
 package org.blaise.graphics;
 
+import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
+import javax.annotation.Nonnull;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PointStyle;
-import org.blaise.style.StringStyle;
+import org.blaise.style.TextStyle;
 
 /**
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
  *
+ * @param <S> source object type
  * @author Elisha
  */
-public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
+public class DelegatingPointGraphic<S> extends AbstractPointGraphic {
 
     /** Source object */
-    protected Src src;
+    protected S src;
     /** Manages delegators */
-    protected ObjectStyler<Src, PointStyle> styler = new ObjectStyler<Src, PointStyle>();
+    @Nonnull protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
 
     public DelegatingPointGraphic() {
         this(null, new Point2D.Double());
     }
 
-    public DelegatingPointGraphic(Src src, Point2D pt) {
+    public DelegatingPointGraphic(S src, Point2D pt) {
         super(pt);
         setSourceObject(src);
     }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
-    public Src getSourceObject() {
+    public S getSourceObject() {
         return src;
     }
 
-    public void setSourceObject(Src src) {
-        this.src = src;
-        setDefaultTooltip(styler.getTipDelegate().apply(src));
-        fireGraphicChanged();
+    public final void setSourceObject(S src) {
+        if (this.src != src) {
+            this.src = src;
+            setDefaultTooltip(styler.getTipDelegate().apply(src));
+            fireGraphicChanged();
+        }
     }
 
-    public ObjectStyler<Src, PointStyle> getStyler() {
+    public ObjectStyler<S, PointStyle> getStyler() {
         return styler;
     }
 
-    public void setStyler(ObjectStyler<Src, PointStyle> styler) {
-        this.styler = styler;
-        fireGraphicChanged();
+    public void setStyler(ObjectStyler<S, PointStyle> styler) {
+        if (this.styler != checkNotNull(styler)) {
+            this.styler = styler;
+            fireGraphicChanged();
+        }
     }
+    
+    //</editor-fold>
 
+    
     @Override
-    public String getTooltip(Point p) {
+    public String getTooltip(Point2D p) {
         if (tipEnabled) {
-            String txt = styler.getTipDelegate().apply(src);
-            return txt == null ? tipText : txt;
+            String txt = styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(src);
+            return txt == null ? defaultTooltip : txt;
         } else {
             return null;
         }
     }
 
     @Override
+    @Nonnull 
     public PointStyle drawStyle() {
         PointStyle style = null;
-        if (styler != null && styler.getStyleDelegate() != null) {
+        if (styler.getStyleDelegate() != null) {
             style = styler.getStyleDelegate().apply(src);
         }
         if (style == null) {
@@ -80,10 +97,13 @@ public class DelegatingPointGraphic<Src> extends AbstractPointGraphic {
 
         if (styler.getLabelDelegate() != null) {
             String label = styler.getLabelDelegate().apply(src);
-            if (label != null && label.length() > 0) {
-                Function<? super Src,StringStyle> lStyler = styler.getLabelStyleDelegate();
+            if (!Strings.isNullOrEmpty(label)) {
+                Function<? super S,TextStyle> lStyler = styler.getLabelStyleDelegate();
                 if (lStyler != null) {
-                    lStyler.apply(src).draw(point, label, canvas, visibility);
+                    TextStyle style = lStyler.apply(src);
+                    if (style != null) {
+                        style.draw(point, label, canvas, visibility);
+                    }
                 }
             }
         }

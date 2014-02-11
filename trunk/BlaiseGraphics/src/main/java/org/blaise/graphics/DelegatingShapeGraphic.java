@@ -5,23 +5,26 @@
 
 package org.blaise.graphics;
 
+import static com.google.common.base.Preconditions.*;
 import java.awt.Shape;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
 
 /**
- * <p>
- *  Delegates style and some other properties of a {@link Graphic} to an {@link ObjectStyler}.
- * </p>
- * @param <Src> type of source object
+ * Delegates style and some other properties of a {@link Graphic} to an {@link ObjectStyler}.
+ * 
+ * @param <S> type of source object
+ * 
  * @author elisha
  */
-public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
+public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
 
     /** Source object */
-    protected Src source;
+    @Nullable protected S source;
     /** Styler managing delgators */
-    protected ObjectStyler<Src,? extends ShapeStyle> styler = new ObjectStyler<Src,ShapeStyle>();
+    @Nonnull protected ObjectStyler<S,? extends ShapeStyle> styler = ObjectStyler.create();
 
     /** Initialize without arguments */
     public DelegatingShapeGraphic() {
@@ -34,7 +37,7 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
      * @param shape the shape to use
      * @param strokeOnly whether object should be stroked only
      */
-    public DelegatingShapeGraphic(Src obj, Shape shape, boolean strokeOnly) {
+    public DelegatingShapeGraphic(S obj, Shape shape, boolean strokeOnly) {
         super(shape, strokeOnly);
         setSourceObject(obj);
     }
@@ -43,36 +46,50 @@ public class DelegatingShapeGraphic<Src> extends AbstractShapeGraphic {
      * Initialize with source (source object) and graphic
      * @param obj the source object
      * @param shape the shape to use
-     * @param strokeOnly whether object should be stroked only
+     * @param styler object styler
      */
-    public DelegatingShapeGraphic(Src obj, Shape shape, ObjectStyler<Src,? extends ShapeStyle> styler) {
+    public DelegatingShapeGraphic(S obj, Shape shape, ObjectStyler<S,? extends ShapeStyle> styler) {
         super(shape, false);
         setSourceObject(obj);
         setStyler(styler);
     }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
-    public Src getSourceObject() {
+    public S getSourceObject() {
         return source;
     }
 
-    public void setSourceObject(Src edge) {
-        this.source = edge;
-        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(edge));
-        fireGraphicChanged();
+    public void setSourceObject(S edge) {
+        if (this.source != edge) {
+            this.source = edge;
+            setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(edge));
+            fireGraphicChanged();
+        }
     }
 
-    public ObjectStyler<Src,? extends ShapeStyle> getStyler() {
+    public ObjectStyler<S,? extends ShapeStyle> getStyler() {
         return styler;
     }
 
-    public void setStyler(ObjectStyler<Src,? extends ShapeStyle> styler) {
-        this.styler = styler;
-        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(source));
-        fireGraphicChanged();
+    public final void setStyler(ObjectStyler<S,? extends ShapeStyle> styler) {
+        if (this.styler != checkNotNull(styler)) {
+            this.styler = styler;
+            setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(source));
+            fireGraphicChanged();
+        }
     }
+    
+    //</editor-fold>
 
+    
     @Override
-    public ShapeStyle drawStyle() {
+    @Nonnull
+    protected ShapeStyle drawStyle() {
         ShapeStyle style = styler.getStyleDelegate() == null ? null : styler.getStyleDelegate().apply(source);
         if (style != null) {
             return style;

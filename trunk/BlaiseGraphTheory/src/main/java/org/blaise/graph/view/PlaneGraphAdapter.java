@@ -6,18 +6,16 @@ package org.blaise.graph.view;
 
 import com.google.common.base.Functions;
 import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
-import org.blaise.style.BasicPathStyle;
+import org.blaise.graphics.DelegatingNodeLinkGraphic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
+import org.blaise.style.Styles;
 import org.blaise.util.Edge;
-import org.blaise.visometry.VCustomGraph;
-import org.blaise.visometry.plane.PlanePlotComponent;
 
 
 /**
@@ -29,12 +27,12 @@ import org.blaise.visometry.plane.PlanePlotComponent;
  *
  * @author Elisha Peterson
  */
-public class PlaneGraphAdapter implements PropertyChangeListener {
+public class PlaneGraphAdapter {
 
     /** Manages graph and node locations */
     private GraphLayoutManager layoutManager;
     /** Stores the visible graph */
-    private VCustomGraph viewGraph;
+    private DelegatingNodeLinkGraphic viewGraph;
 
     /**
      * Initialize adapter with an empty graph.
@@ -69,36 +67,35 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
             if (viewGraph == null) {
                 // initialize the view graph with the same coordinate manager as the layout manager
                 //   this ensures that layout changes will propagate to the view
-                viewGraph = new VCustomGraph<Point2D.Double,Object,Edge<Object>>(layoutManager.getCoordinateManager());
+                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>>(layoutManager.getCoordinateManager());
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
-            viewGraph.setEdges(layoutManager.getGraph().edges());
+            viewGraph.setEdgeSet(layoutManager.getGraph().edges());
         }
-        if (viewGraph.getStyler().getLabelDelegate() == null) {
-            viewGraph.getStyler().setLabelDelegate(Functions.toStringFunction());
+        if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
+            viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
         }
-        if (viewGraph.getStyler().getTipDelegate() == null) {
-            viewGraph.getStyler().setTipDelegate(Functions.toStringFunction());
+        if (viewGraph.getNodeStyler().getTipDelegate() == null) {
+            viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
         }
         if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-            viewGraph.getEdgeStyler().setStyleDelegate(Functions.constant(new BasicPathStyle(new Color(0, 128, 0, 128), .5f)));
+            viewGraph.getEdgeStyler().setStyleDelegate(Functions.constant(Styles.strokeWidth(new Color(0, 128, 0, 128), .5f)));
         }
     }
 
     //
     // EVENT HANDLERS
     //
-
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() == layoutManager) {
-//            System.out.println("pga.pc/manager");
-            if ("graph".equals(evt.getPropertyName())) {
-                initViewGraph();
-            }
+    
+    public final PropertyChangeListener LAYOUT_LISTENER = new PropertyChangeListener(){
+        public void propertyChange(PropertyChangeEvent evt) {
+            initViewGraph();
         }
-    }
+    };
 
+
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
@@ -115,11 +112,11 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
     public final void setGraphManager(GraphLayoutManager manager) {
         if (this.layoutManager != manager) {
             if (this.layoutManager != null) {
-                this.layoutManager.removePropertyChangeListener("graph", this);
+                this.layoutManager.removePropertyChangeListener("graph", LAYOUT_LISTENER);
             }
             this.layoutManager = manager;
             initViewGraph();
-            this.layoutManager.addPropertyChangeListener("graph", this);
+            this.layoutManager.addPropertyChangeListener("graph", LAYOUT_LISTENER);
         }
     }
 
@@ -127,7 +124,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * Return the VPointGraph for display
      * @return the VPointGraph
      */
-    public VCustomGraph getViewGraph() {
+    public DelegatingNodeLinkGraphic getViewGraph() {
         return viewGraph;
     }
 
@@ -136,7 +133,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * @return styler
      */
     public ObjectStyler<Object, PointStyle> getNodeStyler() {
-        return viewGraph.getStyler();
+        return viewGraph.getNodeStyler();
     }
 
     /**
@@ -144,7 +141,7 @@ public class PlaneGraphAdapter implements PropertyChangeListener {
      * @param styler
      */
     public void setNodeStyler(ObjectStyler<Object, PointStyle> styler) {
-        viewGraph.setStyler(styler);
+        viewGraph.setNodeStyler(styler);
     }
 
     /**

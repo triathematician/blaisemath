@@ -5,6 +5,7 @@
 
 package org.blaise.graph.layout;
 
+import com.google.common.collect.Maps;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -29,22 +30,25 @@ import org.blaise.graph.GraphUtils;
 public class SpringLayout implements IterativeGraphLayout {
 
     // CONSTANTS
+    
+    /** Distance scale */
+    public static final double DIST_SCALE = 100;
 
     /** Distance outside which global force acts */
-    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = 1;
+    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = DIST_SCALE;
     /** Maximum force that can be applied between nodes */
-    private static final double MAX_FORCE = 100.0;
+    private static final double MAX_FORCE = 100*DIST_SCALE*DIST_SCALE;
     /** Min distance to assume between nodes */
-    private static final double MIN_DIST = .01;
+    private static final double MIN_DIST = DIST_SCALE/100;
     /** Max distance to apply repulsive force */
-    private static final double MAX_REPEL_DIST = 2;
+    private static final double MAX_REPEL_DIST = 2*DIST_SCALE;
 
     // STATE VARIABLES
 
     /** Current locations */
-    private final Map<Object, Point2D.Double> loc = new HashMap<Object, Point2D.Double>();
+    private final Map<Object, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities */
-    private final Map<Object, Point2D.Double> vel = new HashMap<Object, Point2D.Double>();
+    private final Map<Object, Point2D.Double> vel = Maps.newHashMap();
 
     /** Iteration number */
     int iteration = 0;
@@ -64,20 +68,20 @@ public class SpringLayout implements IterativeGraphLayout {
     //<editor-fold defaultstate="collapsed" desc="Parameters CLASS DEFN">
     public static class Parameters {
         /** Global attractive constant (keeps vertices closer to origin) */
-        double globalC = .5;
+        double globalC = .1*DIST_SCALE;
         /** Attractive constant */
-        double springC = 10;
+        double springC = 1;
         /** Natural spring length */
-        double springL = .5;
+        double springL = .5*DIST_SCALE;
         /** Repelling constant */
-        double repulsiveC = 1;
+        double repulsiveC = 10*DIST_SCALE*DIST_SCALE;
 
         /** Damping constant (the "cooling" parameter */
-        double dampingC = 0.5;
+        double dampingC = 0.7;
         /** Time step per iteration */
-        double stepT = 0.1;
+        double stepT = 0.3;
         /** The maximum speed (movement per unit time) */
-        double maxSpeed = 2;
+        double maxSpeed = 0.5*DIST_SCALE;
 
         public double getDampingConstant() {
             return dampingC;
@@ -379,9 +383,9 @@ public class SpringLayout implements IterativeGraphLayout {
             sum.x += parameters.repulsiveC * Math.cos(angle);
             sum.y += parameters.repulsiveC * Math.sin(angle);
         } else {
-            double multiplier = Math.min(parameters.repulsiveC / (dist*dist), MAX_FORCE);
-            sum.x += multiplier * (iLoc.x - jLoc.x) / dist;
-            sum.y += multiplier * (iLoc.y - jLoc.y) / dist;
+            double multiplier = Math.min(parameters.repulsiveC/(dist*dist), MAX_FORCE) / dist;
+            sum.x += multiplier * (iLoc.x - jLoc.x);
+            sum.y += multiplier * (iLoc.y - jLoc.y);
         }
     }
 

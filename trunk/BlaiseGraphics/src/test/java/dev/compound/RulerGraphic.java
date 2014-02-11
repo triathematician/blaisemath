@@ -9,10 +9,10 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.BasicStringGraphic;
+import org.blaise.graphics.BasicTextGraphic;
 import org.blaise.graphics.GraphicComposite;
-import org.blaise.style.BasicPointStyle;
-import org.blaise.style.ShapeLibrary;
+import org.blaise.style.PointStyleBasic;
+import org.blaise.style.MarkerLibrary;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.VisibilityHint;
 
@@ -73,15 +73,15 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
         addGraphic(ticksEntry = new BasicShapeGraphic(null, true));
         addGraphic(labelEntry = new GraphicComposite());
         
-        BasicPointStyle style = new BasicPointStyle()
-                .shape(ShapeLibrary.CIRCLE)
+        PointStyleBasic style = new PointStyleBasic()
+                .marker(MarkerLibrary.CIRCLE)
                 .stroke(null)
-                .radius(2)
+                .markerRadius(2)
                 .fill(Color.black);
         start.setStyle(style);
         end.setStyle(style);
-        start.setVisibilityHint(VisibilityHint.Hidden, true);
-        end.setVisibilityHint(VisibilityHint.Hidden, true);
+        start.setVisibilityHint(VisibilityHint.HIDDEN, true);
+        end.setVisibilityHint(VisibilityHint.HIDDEN, true);
     }
 
     /** Updates the angles of the tick marks */
@@ -115,7 +115,7 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
                 if (labelsVisible) {
                     String s = labels == null ? null : labels.length > i ? labels[i] : null;
                     if (s != null)
-                        labelEntry.addGraphic(new BasicStringGraphic(
+                        labelEntry.addGraphic(new BasicTextGraphic(
                             new Point2D.Double(x + pLabel*dl.x, y + pLabel*dl.y),
                             s));
                 }

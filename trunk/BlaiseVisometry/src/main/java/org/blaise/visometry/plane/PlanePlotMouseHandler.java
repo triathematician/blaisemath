@@ -6,16 +6,16 @@
 package org.blaise.visometry.plane;
 
 import java.awt.Color;
-import java.awt.Cursor;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import javax.swing.JComponent;
-import org.blaise.graphics.CanvasPainter;
-import org.blaise.style.BasicShapeStyle;
+import org.blaise.util.CanvasPainter;
+import org.blaise.style.ShapeStyleBasic;
+import org.blaise.style.Styles;
 import org.blaise.visometry.VGraphicComponent;
 
 /**
@@ -51,9 +51,9 @@ public class PlanePlotMouseHandler
     /** Hint box for zooming */
     transient Rectangle2D.Double zoomBox;
     /** Renderer for zoom box */
-    final static BasicShapeStyle rend = new BasicShapeStyle(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
+    final static ShapeStyleBasic rend = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
 
-    public void paint(JComponent component, Graphics2D canvas) {
+    public void paint(Component component, Graphics2D canvas) {
         if (zoomBox != null)
             rend.draw(zoomBox, canvas, null);
     }

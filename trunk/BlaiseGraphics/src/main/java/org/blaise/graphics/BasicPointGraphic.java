@@ -6,6 +6,8 @@ package org.blaise.graphics;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.blaise.style.PointStyle;
 
 /**
@@ -19,9 +21,9 @@ import org.blaise.style.PointStyle;
 public class BasicPointGraphic extends AbstractPointGraphic {
 
     /** Angle specifying point orientation */
-    private double angle = 0;
+    protected double angle = 0;
     /** The associated style (may be null). */
-    PointStyle style;
+    protected @Nullable PointStyle style;
 
     //
     // CONSTRUCTORS
@@ -47,16 +49,24 @@ public class BasicPointGraphic extends AbstractPointGraphic {
      * @param p initial point
      * @param style the style
      */
-    public BasicPointGraphic(Point2D p, PointStyle style) {
+    public BasicPointGraphic(Point2D p, @Nullable PointStyle style) {
         super(p);
         setStyle(style);
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
     /**
      * Return orientation/angle of the point
      * @return angle
      */
-    public double getAngle() { return angle; }
+    public double getAngle() {
+        return angle; 
+    }
+    
     /**
      * Set orientation/angle of the point
      * @param d angle
@@ -72,7 +82,7 @@ public class BasicPointGraphic extends AbstractPointGraphic {
      * Return the style for the point
      * @return style, or null if there is none
      */
-    public PointStyle getStyle() { 
+    public @Nullable PointStyle getStyle() { 
         return style; 
     }
     
@@ -80,15 +90,18 @@ public class BasicPointGraphic extends AbstractPointGraphic {
      * Set the style for the point
      * @param style the style; may be null
      */
-    public void setStyle(PointStyle style) {
+    public final void setStyle(@Nullable PointStyle style) {
         if (this.style != style) {
             this.style = style;
             fireGraphicChanged();
         }
     }
+    
+    //</editor-fold>
+    
         
     /** Return the actual style used for drawing */
-    public PointStyle drawStyle() {
+    public @Nonnull PointStyle drawStyle() {
         return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 

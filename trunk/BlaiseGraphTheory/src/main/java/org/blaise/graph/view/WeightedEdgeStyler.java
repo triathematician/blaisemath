@@ -8,7 +8,7 @@ import com.google.common.base.Function;
 import java.awt.Color;
 import java.util.Map;
 import org.blaise.util.Edge;
-import org.blaise.style.DecoratorPathStyle;
+import org.blaise.style.PathStyleDecorated;
 import org.blaise.style.PathStyle;
 
 /**
@@ -62,9 +62,9 @@ public class WeightedEdgeStyler implements Function<Edge, PathStyle> {
             double relativeWeight = Math.abs(n) / maxWeight;
             Color c = positive ? positiveColor(parent.getStroke(), relativeWeight)
                     : negativeColor(parent.getStroke(), relativeWeight);
-            return new DecoratorPathStyle(parent, (float) (2 * relativeWeight), c);
+            return new PathStyleDecorated().baseStyle(parent).stroke(c).strokeWidth((float) (2 * relativeWeight));
         } else if (wt instanceof Color) {
-            return new DecoratorPathStyle(parent, (Color) wt);
+            return new PathStyleDecorated().baseStyle(parent).stroke((Color) wt);
         } else {
             return parent;
         }

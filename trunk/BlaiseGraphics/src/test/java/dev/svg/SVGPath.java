@@ -7,7 +7,6 @@ package dev.svg;
 
 import com.google.common.collect.Lists;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.List;

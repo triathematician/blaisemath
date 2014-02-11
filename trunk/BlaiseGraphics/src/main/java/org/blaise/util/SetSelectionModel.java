@@ -8,8 +8,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import javax.swing.ListSelectionModel;
 

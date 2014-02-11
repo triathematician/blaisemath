@@ -64,7 +64,7 @@ public class SimultaneousLayout {
         times = tg.getTimes();
         Map<Object,Point2D.Double> ip = null;
         try {
-            ip = StaticGraphLayout.RANDOM.layout(tg.slice(tg.getMaximumTime(), true), 4.0);
+            ip = StaticGraphLayout.RANDOM.layout(tg.slice(tg.getMaximumTime(), true), 100);
         } catch (InterruptedException ex) {
             Logger.getLogger(SimultaneousLayout.class.getName()).log(Level.SEVERE, null, ex);
         }

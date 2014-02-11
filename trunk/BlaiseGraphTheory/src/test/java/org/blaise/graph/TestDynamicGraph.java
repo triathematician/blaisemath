@@ -40,7 +40,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
         // PANELS
 
-        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
+//        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
                 plot.getGraphManager().getLocations()
                 )));
@@ -253,14 +253,14 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
-        plot.getAdapter().getViewGraph().setEdges(graph.edges());
+        plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
     }//GEN-LAST:event_addEdgesBActionPerformed
 
     private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
         synchronized (graph) {
             graph.rewire(50, 5);
             plot.getGraphManager().graphUpdated();
-            plot.getAdapter().getViewGraph().setEdges(graph.edges());
+            plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
         }
     }//GEN-LAST:event_rewireBActionPerformed
 
@@ -278,7 +278,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
                     graph.addVertices(1);
                     graph.addEdges(2);
                     plot.getGraphManager().graphUpdated();
-                    plot.getAdapter().getViewGraph().setEdges(graph.edges());
+                    plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
                 }
             }
         };

@@ -7,9 +7,9 @@ package org.blaise.graph;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.swing.JPopupMenu;
 import org.blaise.firestarter.PropertySheet;
@@ -19,9 +19,11 @@ import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.modules.EdgeProbabilityBuilder;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
-import org.blaise.graphics.ContextMenuInitializer;
+import org.blaise.graph.view.PointUtils;
+import org.blaise.graphics.PanAndZoomHandler;
+import org.blaise.util.ContextMenuInitializer;
 import org.blaise.graphics.Graphic;
-import org.blaise.style.BasicPointStyle;
+import org.blaise.style.PointStyleBasic;
 import org.blaise.style.PointStyle;
 import org.blaise.util.gui.RollupPanel;
 
@@ -43,20 +45,21 @@ public class TestGraph extends javax.swing.JFrame {
 
         // BASIC ELEMENTS
 
-//        MyTestGraph png = new MyTestGraph();
-        final Graph<Integer> graph = new EdgeProbabilityBuilder(false, 200, .1f).createGraph();
+        final Graph<Integer> graph = new EdgeProbabilityBuilder(false, 50, .05f).createGraph();
         plot.setGraph(graph);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
+        PanAndZoomHandler.zoomBoxAnimated(plot, PointUtils.boundingBox(plot.getGraphManager().getLocations().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, PointStyle>(){
             public PointStyle apply(Object o) {
                 Integer i = (Integer) o;
-                return new BasicPointStyle().radius((int) (4+Math.sqrt(i)));
+                return new PointStyleBasic().markerRadius((int) (4+Math.sqrt(i)));
             }
         });
 
         plot.getAdapter().getNodeStyler().setLabelDelegate(Functions.toStringFunction());
         
-        plot.addContextMenuInitializer("Graph", new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        plot.addContextMenuInitializer("Graph", new ContextMenuInitializer<Graphic>(){
+            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 if (menu.getComponentCount() > 0) {
                     menu.addSeparator();
                 }
@@ -66,8 +69,8 @@ public class TestGraph extends javax.swing.JFrame {
                 menu.add("Selection: " + (selection == null ? 0 : selection.size()) + " selected items");
             }
         });
-        plot.addContextMenuInitializer("Node", new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        plot.addContextMenuInitializer("Node", new ContextMenuInitializer<Graphic>(){
+            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 if (menu.getComponentCount() > 0) {
                     menu.addSeparator();
                 }
@@ -76,8 +79,8 @@ public class TestGraph extends javax.swing.JFrame {
                 }
             }
         });
-        plot.addContextMenuInitializer("Link", new ContextMenuInitializer(){
-            public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+        plot.addContextMenuInitializer("Link", new ContextMenuInitializer<Graphic>(){
+            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 if (menu.getComponentCount() > 0) {
                     menu.addSeparator();
                 }
@@ -90,7 +93,7 @@ public class TestGraph extends javax.swing.JFrame {
 
         // PANELS
 
-        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
+//        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
                 plot.getGraphManager().getLocations()
                 )));
@@ -203,12 +206,12 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 5.0);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed

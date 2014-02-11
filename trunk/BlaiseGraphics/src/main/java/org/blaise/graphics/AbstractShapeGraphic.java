@@ -7,12 +7,14 @@ package org.blaise.graphics;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Shape;
-import org.blaise.style.BasicShapeStyle;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import javax.annotation.Nonnull;
+import org.blaise.style.ShapeStyleBasic;
 import org.blaise.style.PathStyle;
 import org.blaise.style.ShapeStyle;
+import org.blaise.style.Styles;
 
 /**
  * A shape or path with an associated style.
@@ -27,15 +29,15 @@ import org.blaise.style.ShapeStyle;
 public abstract class AbstractShapeGraphic extends GraphicSupport {
 
     /** The object that will be drawn. */
-    private Shape primitive;
+    protected Shape primitive;
     /** Whether to use stroke or fill style (if not specified) */
-    private boolean strokeOnly;
+    protected boolean strokeOnly;
 
     /**
      * Construct with no style (will use the default)
      * @param primitive the shape to draw
      */
-    public AbstractShapeGraphic(Shape primitive) {
+    protected AbstractShapeGraphic(Shape primitive) {
         this(primitive, false);
     }
 
@@ -44,15 +46,21 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
      * @param primitive the shape to draw
      * @param strokeOnly determines whether to use the solid style or the path/edge style
      */
-    public AbstractShapeGraphic(Shape primitive, boolean strokeOnly) {
+    protected AbstractShapeGraphic(Shape primitive, boolean strokeOnly) {
         this.primitive = primitive;
         this.strokeOnly = strokeOnly;
     }
 
     @Override
     public String toString() {
-        return "Shape"+primitive;
+        return "ShapeGraphic:"+primitive;
     }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
     /**
      * Return the shape for the graphic.
@@ -70,31 +78,43 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         this.primitive = primitive;
         fireGraphicChanged();
     }
-
+    
+    /**
+     * Return flag indicating whether only stroke of shape is drawn.
+     * @return stroke only flag
+     */
     public boolean isStrokeOnly() {
         return strokeOnly;
     }
 
+    /**
+     * Set flag indicating whether only stroke of shape is drawn.
+     * @param strokeOnly stroke only flag
+     */
     public void setStrokeOnly(boolean strokeOnly) {
         if (this.strokeOnly != strokeOnly) {
             this.strokeOnly = strokeOnly;
             fireGraphicChanged();
         }
     }
+    
+    //</editor-fold>
 
+    
     /**
-     * Return style used to draw the shape.
+     * Subclasses should override to return their draw style for the graphic.
      * @return style
      */
-    public abstract ShapeStyle drawStyle();
+    protected abstract @Nonnull ShapeStyle drawStyle();
+    
 
     /** Return true if painting as a stroke. */
     protected boolean paintingAsStroke() {
         ShapeStyle style = drawStyle();
-        if (style == null && strokeOnly) {
+        if (strokeOnly) {
             return true;
-        } else if (style instanceof BasicShapeStyle) {
-            BasicShapeStyle bss = (BasicShapeStyle) style;
+        } else if (style instanceof ShapeStyleBasic) {
+            ShapeStyleBasic bss = (ShapeStyleBasic) style;
             return bss.getFill() == null;
         } else if (style instanceof PathStyle) {
             return true;
@@ -103,25 +123,24 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         }
     }
 
-    public boolean contains(Point point) {
+    public boolean contains(Point2D point) {
         ShapeStyle style = drawStyle();
         if (!paintingAsStroke()) {
             return primitive.contains(point);
         } else if (!(style instanceof PathStyle)) {
-            return new BasicStroke(1f).createStrokedShape(primitive).contains(point);
+            return Styles.DEFAULT_STROKE.createStrokedShape(primitive).contains(point);
         } else {
-            Shape shape = ((PathStyle)style).getPathShape(primitive);
+            Shape shape = ((PathStyle)style).shapeOfPath(primitive);
             return shape != null && shape.contains(point);
         }
     }
 
-    public boolean intersects(Rectangle box) {
+    public boolean intersects(Rectangle2D box) {
         ShapeStyle style = drawStyle();
         if (!paintingAsStroke() && primitive.intersects(box)) {
             return true;
         }
-        float thickness = style == null || !(style instanceof PathStyle) ? 1f
-                : ((PathStyle)style).getThickness();
+        float thickness = !(style instanceof PathStyle) ? 1f : ((PathStyle)style).getStrokeWidth();
         return new BasicStroke(thickness).createStrokedShape(primitive).intersects(box);
     }
 

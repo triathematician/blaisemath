@@ -23,6 +23,6 @@ public interface DraggablePointBean<C> extends PointBean<C> {
      * @param dragStart start of drag
      * @param dragFinish end of drag
      */
-    public void setPoint(C initial, C dragStart, C dragFinish);
+    void setPoint(C initial, C dragStart, C dragFinish);
     
 }

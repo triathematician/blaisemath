@@ -9,8 +9,8 @@ import java.awt.event.WindowEvent;
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.dynamic.TimeGraph;
-import org.blaise.graph.dynamic.view.MultiGraphComponent;
-import org.blaise.graph.dynamic.view.TimeGraphComponent;
+import org.blaise.graph.view.MultiGraphComponent;
+import org.blaise.graph.view.TimeGraphComponent;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.modules.EdgeCountBuilder;
@@ -47,7 +47,7 @@ public class TestTimeGraph extends javax.swing.JFrame {
         
         // PANELS
 
-        rollupPanel1.add("Visometry", new PropertySheet(plot.getGraphComponent().getVisometry()));
+//        rollupPanel1.add("Visometry", new PropertySheet(plot.getGraphComponent().getVisometry()));
         rollupPanel1.add("Nodes", new PropertySheet(plot.getGraphComponent().getAdapter().getNodeStyler()));
         rollupPanel1.add("Edges", new PropertySheet(plot.getGraphComponent().getAdapter().getEdgeStyler()));
         

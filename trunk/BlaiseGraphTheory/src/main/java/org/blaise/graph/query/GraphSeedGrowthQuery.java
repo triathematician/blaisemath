@@ -4,7 +4,7 @@
  */
 package org.blaise.graph.query;
 
-import org.blaise.graph.GraphNodeFilter;
+import com.google.common.base.Function;
 import java.util.Set;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
@@ -14,7 +14,7 @@ import org.blaise.graph.Graph;
  *
  * @author Elisha Peterson
  */
-public class GraphSeedGrowthQuery implements GraphNodeFilter {
+public class GraphSeedGrowthQuery implements Function<Graph,Set> {
 
     private final GraphSeedRule seedRule;
     private final GraphGrowthRule growRule;
@@ -31,19 +31,20 @@ public class GraphSeedGrowthQuery implements GraphNodeFilter {
 
     private static final String EXEC_ALGO_NAME = GraphSeedGrowthQuery.class.getName()+"#execute";
 
-    public Set execute(Graph graph, SeedCallback callback) {
+    public Set apply(Graph graph, SeedCallback callback) {
         int id = GAInstrument.start(EXEC_ALGO_NAME);
-        Set seedNodes = seedRule.execute(graph);
+        Set seedNodes = seedRule.apply(graph);
         GAInstrument.middle(id, "seeded");
-        if (callback != null)
+        if (callback != null) {
             callback.seedSubset(seedNodes);
+        }
         Set result = growRule.grow(graph, seedNodes);
         GAInstrument.end(id);
         return result;
     }
 
-    public Set execute(Graph graph) {
-        return execute(graph, null);
+    public Set apply(Graph graph) {
+        return apply(graph, null);
     }
 
 
