@@ -5,13 +5,17 @@
 
 package org.blaise.graphics;
 
+import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.Lists;
+import org.blaise.util.CanvasPainter;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.util.List;
 import org.blaise.style.StyleContext;
 import org.blaise.util.SetSelectionModel;
@@ -30,13 +34,19 @@ import org.blaise.util.SetSelectionModel;
 public class GraphicComponent extends javax.swing.JComponent {
 
     /** The visible shapes. */
-    protected final GraphicRoot root = new GraphicRoot();
-    /** Used for selecting graphics */
-    protected final GraphicSelector selector = new GraphicSelector(this);
+    protected final GraphicRoot root;
+    /** Affine transform applied to graphics canvas before drawing (enables pan & zoom). */
+    protected AffineTransform transform = null;
+    /** Store inverse transform */
+    protected AffineTransform inverseTransform = null;
+    
     /** Underlay painters */
-    protected final List<CanvasPainter> underlays = new ArrayList<CanvasPainter>();
+    protected final List<CanvasPainter> underlays = Lists.newArrayList();
     /** Overlay painters */
-    protected final List<CanvasPainter> overlays = new ArrayList<CanvasPainter>();
+    protected final List<CanvasPainter> overlays = Lists.newArrayList();
+    
+    /** Used for selecting graphics */
+    protected final GraphicSelectionHandler selector = new GraphicSelectionHandler(this);
 
     /** Whether antialias is enabled */
     protected boolean antialias = true;
@@ -47,7 +57,7 @@ public class GraphicComponent extends javax.swing.JComponent {
      * Construction of a generic graphics view component.
      */
     public GraphicComponent() {
-        root.initComponent(this);
+        root = new GraphicRoot(this);
         selector.setSelectionEnabled(false);
         addMouseListener(selector);
         addMouseMotionListener(selector);
@@ -69,7 +79,7 @@ public class GraphicComponent extends javax.swing.JComponent {
      */
     @Override
     public String getToolTipText(MouseEvent event) {
-        String ct = root.getTooltip(event.getPoint());
+        String ct = root.getTooltip(inverseTransform == null ? event.getPoint() : inverseTransform.transform(event.getPoint(),null));
         return ct != null ? ct : "".equals(super.getToolTipText()) ? null : super.getToolTipText();
     }
 
@@ -114,6 +124,25 @@ public class GraphicComponent extends javax.swing.JComponent {
 
     public SetSelectionModel<Graphic> getSelectionModel() {
         return selector.getSelectionModel();
+    }
+    
+    public AffineTransform getTransform() {
+        return transform;
+    }
+    
+    public AffineTransform getInverseTransform() {
+        return inverseTransform;
+    }
+    
+    public void setTransform(AffineTransform at) {
+        checkArgument(at != null && at.getDeterminant() != 0);
+        transform = at;
+        try {
+            inverseTransform = at.createInverse();
+        } catch (NoninvertibleTransformException ex) {
+            throw new IllegalStateException("Already checked that the argument is invertible...", ex);
+        }
+        repaint();
     }
 
     /**
@@ -225,7 +254,13 @@ public class GraphicComponent extends javax.swing.JComponent {
             canvas.fillRect(0, 0, getWidth(), getHeight());
         }
         renderUnderlay(canvas);
+        if (transform != null) {
+            canvas.transform(transform);
+        }
         root.draw(canvas);
+        if (transform != null) {
+            canvas.transform(inverseTransform);
+        }
         renderOverlay(canvas);
     }
 

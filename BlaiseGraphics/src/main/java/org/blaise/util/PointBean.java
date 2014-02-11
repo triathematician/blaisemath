@@ -17,12 +17,12 @@ public interface PointBean<C> {
      * Return the point.
      * @return the point
      */
-    public C getPoint();
+    C getPoint();
 
     /**
      * Set the point.
      * @param p the new point
      */
-    public void setPoint(C p);
+    void setPoint(C p);
     
 }

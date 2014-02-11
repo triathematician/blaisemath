@@ -7,6 +7,7 @@ package org.blaise.graphics;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 /**
  * A mouse event that captures both the point of the event and the source
@@ -14,44 +15,66 @@ import java.awt.event.MouseEvent;
  *
  * @author Elisha
  */
-public class GraphicMouseEvent extends MouseEvent {
+public final class GraphicMouseEvent extends MouseEvent {
     
     /** Source event */
-    protected final MouseEvent source;
+    protected final MouseEvent baseEvent;
     /** The graphic associated with the event. */
-    protected final Graphic graphic;
+    protected Graphic graphic;
+    /** Location of event, in graphic coordinates. */
+    protected final Point2D loc;
 
     /**
      * Construct with specified graphic and point.
      * @param gfc the graphic
      * @param point the location of the event
      */
-    public GraphicMouseEvent(MouseEvent evt, Graphic gfc) {
-        super((Component) evt.getSource(), evt.getID(), evt.getWhen(), evt.getModifiers(), evt.getX(), evt.getY(), evt.getClickCount(), evt.isPopupTrigger(), evt.getButton());
-        this.source = evt;
+    public GraphicMouseEvent(MouseEvent evt, Point2D loc, Graphic gfc) {
+        super((Component) evt.getSource(), 
+                evt.getID(), evt.getWhen(), evt.getModifiers(),
+                evt.getX(), evt.getY(),
+                evt.getClickCount(), evt.isPopupTrigger(), evt.getButton());
+        this.baseEvent = evt;
         if (evt.isConsumed()) {
             consume();
         }
         this.graphic = gfc;
+        this.loc = loc;
     }
-
+    
     /**
      * Return the graphic source of the event.
      * @return graphic associated with the event
      */
-    public Graphic getEntry() { 
+    public Graphic getGraphicSource() { 
         return graphic; 
+    }
+    
+    /**
+     * Change graphic source of event.
+     * @param graphic new source
+     */
+    void setGraphicSource(Graphic gr) {
+        this.graphic = gr;
+    }
+
+    /**
+     * Return graphic coordinate location of event
+     * @return lcoation
+     */
+    public Point2D getGraphicLocation() {
+        return loc;
     }
 
     @Override
     public boolean isConsumed() {
-        return super.isConsumed() || source.isConsumed();
+        return super.isConsumed() || baseEvent.isConsumed();
     }
 
     @Override
     public void consume() {
         super.consume();
-        source.consume();
+        baseEvent.consume();
     }
 
 
@@ -68,11 +91,12 @@ public class GraphicMouseEvent extends MouseEvent {
         /**
          * Create and return an event associated with the specified entry and point.
          * @param event base event
+         * @param loc location to use
          * @param gfc associated graphic
          * @return generic event
          */
-        public GraphicMouseEvent createEvent(MouseEvent event, Graphic gfc) {
-            return new GraphicMouseEvent(event, gfc);
+        public GraphicMouseEvent createEvent(MouseEvent event, Point2D loc, Graphic gfc) {
+            return new GraphicMouseEvent(event, loc, gfc);
         }
 
     } // INNER CLASS GraphicMouseEvent.Factory

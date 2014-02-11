@@ -17,7 +17,7 @@ import javax.swing.JSlider;
  *
  * @author Elisha Peterson
  */
-public class ListSlider extends JSlider {
+public final class ListSlider extends JSlider {
 
     /** Stores peg points for the slider */
     List<Double> pegs;

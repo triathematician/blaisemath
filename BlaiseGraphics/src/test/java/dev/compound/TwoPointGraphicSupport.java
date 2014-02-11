@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import org.blaise.graphics.BasicPointGraphic;
 import org.blaise.graphics.Graphic;
 import org.blaise.graphics.GraphicComposite;
-import org.blaise.style.BasicPointStyle;
+import org.blaise.style.PointStyleBasic;
 import org.blaise.style.PointStyle;
 
 /**
@@ -97,7 +97,7 @@ public class TwoPointGraphicSupport extends GraphicComposite {
         pointsUpdated();
     }
 
-    public void setEndPointStyle(BasicPointStyle r) {
+    public void setEndPointStyle(PointStyleBasic r) {
         end.setStyle(r);
     }
 
@@ -106,7 +106,7 @@ public class TwoPointGraphicSupport extends GraphicComposite {
         pointsUpdated();
     }
 
-    public void setStartPointStyle(BasicPointStyle r) {
+    public void setStartPointStyle(PointStyleBasic r) {
         start.setStyle(r);
     }
 

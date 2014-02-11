@@ -6,7 +6,7 @@ package org.blaise.visometry;
 
 import java.awt.geom.GeneralPath;
 import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.style.BasicPathStyle;
+import org.blaise.style.PathStyleBasic;
 
 /**
  * An entry for a polygonal path, drawn using a stroke renderer.
@@ -21,7 +21,7 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
     private BasicShapeGraphic window = new BasicShapeGraphic(null, null);
 
     /** Default renderer used to draw the points (may be null) */
-    private BasicPathStyle rend;
+    private PathStyleBasic rend;
 
     /** Construct with specified bean to handle dragging (may be null) */
     public VBasicPolygonalPath(C[] local) {
@@ -52,11 +52,11 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
         return window;
     }
 
-    public BasicPathStyle getStyle() {
+    public PathStyleBasic getStyle() {
         return rend;
     }
 
-    public void setStyle(BasicPathStyle rend) {
+    public void setStyle(PathStyleBasic rend) {
         if (this.rend != rend) {
             this.rend = rend;
             window.setStyle(rend);

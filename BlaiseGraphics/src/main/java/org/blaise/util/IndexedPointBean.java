@@ -14,34 +14,33 @@ import java.awt.geom.Point2D;
  * @author Elisha Peterson
  */
 public interface IndexedPointBean<C> {
+    
+    /**
+     * Return number of points
+     * @return number of points
+     */
+    int getPointCount();
 
     /**
      * Return the point.
      * @param i the index
      * @return the point
      */
-    public C getPoint(int i);
+    C getPoint(int i);
 
     /**
      * Set the point.
      * @param i the index
      * @param p the new point
      */
-    public void setPoint(int i, C p);
+    void setPoint(int i, C p);
 
-    
-    /**
-     * Return number of points
-     * @return number of points
-     */
-    public int getPointCount();
-    
     /**
      * Return the index of the specified point
      * @param point window location
-     * @param dragPoint point in alternate coordinates
+     * @param testPoint point to look up
      * @return index at the specified location, or -1 if there is no point at that location
      */
-    public int indexOf(Point2D point, C dragPoint);
+    int indexOf(Point2D point, C testPoint);
     
 }

@@ -5,14 +5,15 @@
 package org.blaise.graphics;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.blaise.style.PointStyle;
 import org.blaise.util.IndexedPointBean;
 import org.blaise.util.PointFormatters;
@@ -30,11 +31,11 @@ import org.blaise.util.PointFormatters;
 public class BasicPointSetGraphic extends GraphicSupport implements IndexedPointBean<Point2D> {
 
     /** The points that will be drawn. */
-    protected Point2D[] points;
+    protected Point2D[] points = new Point2D[0];
     /** The associated style (may be null). */
-    protected PointStyle style;
+    protected @Nullable PointStyle style = null;
     /** Optional delegate for tooltips */
-    protected Function<Point2D, String> pointTipper;
+    protected @Nullable Function<Point2D, String> pointTipper = null;
 
     //
     // CONSTRUCTORS
@@ -44,7 +45,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      * Construct with no point (defaults to origin)
      */
     public BasicPointSetGraphic() {
-        this(new Point2D[]{}, null);
+        this(new Point2D[0], null);
     }
 
     /**
@@ -61,7 +62,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      * @param style the style
      */
     public BasicPointSetGraphic(Point2D[] p, PointStyle style) {
-        this.points = p;
+        this.points = p.clone();
         this.style = style;
         IndexedPointBeanDragger dragger = new IndexedPointBeanDragger(this);
         addMouseListener(dragger);
@@ -79,18 +80,23 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     // PROPERTIES
     //
 
-    public Point2D[] getPoint() { return points; }
+    public Point2D[] getPoint() { 
+        return points; 
+    }
+    
     public void setPoint(Point2D[] p) {
-        if (points != p) {
+        if (!Arrays.equals(points, p)) {
             Object old = points;
-            points = p;
+            points = p.clone();
             fireGraphicChanged();
             pcs.firePropertyChange("point", old, points);
         }
     }
+    
     public Point2D getPoint(int i) {
         return points[i];
     }
+    
     public void setPoint(int i, Point2D pt) {
         if (points[i] != pt) {
             Point2D old = points[i];
@@ -108,7 +114,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         PointStyle rend = drawStyle();
         synchronized(points) {
             for (int i = points.length-1; i >= 0; i--) {
-                if (rend.shape(points[i]).contains(nearby)) {
+                if (rend.markerShape(points[i]).contains(nearby)) {
                     return i;
                 }
             }
@@ -150,15 +156,15 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     // GRAPHIC METHODS
     //
 
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
         return indexOf(p, p) != -1;
     }
 
-    public boolean intersects(Rectangle box) {
+    public boolean intersects(Rectangle2D box) {
         PointStyle drawer = drawStyle();
         synchronized (points) {
             for (Point2D p : points) {
-                if (drawer.shape(p).intersects(box)) {
+                if (drawer.markerShape(p).intersects(box)) {
                     return true;
                 }
             }
@@ -167,7 +173,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     }
 
     @Override
-    public String getTooltip(Point p) {
+    public String getTooltip(Point2D p) {
         int i = indexOf(p, p);
         return i == -1 ? null : getPointTooltip(points[i]);
     }
@@ -190,7 +196,8 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     //
 
     /** Return the actual style used for drawing */
-    private PointStyle drawStyle() {
+    @Nonnull 
+    protected PointStyle drawStyle() {
         return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 

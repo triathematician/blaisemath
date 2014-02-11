@@ -26,10 +26,10 @@ import org.blaise.util.CoordinateManager;
  *   listeners when the positions change.
  * </p>
  *
- * @param <C> type of node in graph
+ * @param <N> type of node in graph
  * @author elisha
  */
-public final class GraphLayoutManager<C> implements CoordinateListener {
+public final class GraphLayoutManager<N> implements CoordinateListener {
 
     //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
     /** Default time between layout iterations. */
@@ -42,15 +42,15 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
     /** The layout scheme for adding vertices */
     private static final StaticGraphLayout ADDING_LAYOUT = StaticGraphLayout.ORIGIN;
     /** The initial layout parameters */
-    private static final double[] LAYOUT_PARAMETERS = new double[] { 3 };
+    private static final double[] LAYOUT_PARAMETERS = new double[] { 100 };
     //</editor-fold>
 
     /** Graph */
-    private Graph<C> graph;
+    private Graph<N> graph;
     /** Used for iterative graph layouts */
     private transient IterativeGraphLayout iLayout;
     /** Maintains locations of nodes in the graph (in local coordinates) */
-    private final CoordinateManager<C, Point2D.Double> coordManager = new CoordinateManager<C, Point2D.Double>();
+    private final CoordinateManager<N, Point2D.Double> coordManager = CoordinateManager.create();
 
     /** Timer that performs iterative layout */
     private transient java.util.Timer layoutTimer;
@@ -67,7 +67,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Constructs manager for the specified graph.
      * @param graph the graph
      */
-    public GraphLayoutManager(Graph<C> graph) {
+    public GraphLayoutManager(Graph<N> graph) {
         setGraph(graph);
         coordManager.addCoordinateListener(this);
     }
@@ -90,7 +90,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Return the graph
      * @return the adapter's graph
      */
-    public Graph<C> getGraph() {
+    public Graph<N> getGraph() {
         return graph;
     }
 
@@ -101,7 +101,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      *
      * @param g the graph
      */
-    public void setGraph(Graph<C> g) {
+    public void setGraph(Graph<N> g) {
         synchronized (coordManager) {
             if (this.graph != g) {
                 Graph old = this.graph;
@@ -110,7 +110,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
                     coordManager.cacheObjects(coordManager.getObjects());
                 } else if (this.graph != g) {
                     this.graph = g;
-                    Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
+                    Set<N> oldNodes = new HashSet<N>(coordManager.getObjects());
                     oldNodes.removeAll(g.nodes());
                     coordManager.cacheObjects(oldNodes);
                     // defer to existing locations if possible
@@ -119,7 +119,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
                     } else {
                         try {
                             // lays out new graph entirely
-                            Map<C,Point2D.Double> newLoc = old == null
+                            Map<N,Point2D.Double> newLoc = old == null
                                     ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS)
                                     : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
                             // remove objects that are already in coordinate manager
@@ -147,11 +147,11 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
     public void graphUpdated() {
         synchronized (coordManager) {
             try {
-                Set<C> oldNodes = new HashSet<C>(coordManager.getObjects());
+                Set<N> oldNodes = new HashSet<N>(coordManager.getObjects());
                 oldNodes.removeAll(graph.nodes());
                 coordManager.cacheObjects(oldNodes);
-                Map<C,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
-                for (C c : coordManager.getObjects()) {
+                Map<N,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+                for (N c : coordManager.getObjects()) {
                     newLoc.remove(c);
                 }
                 coordManager.putAll(newLoc);
@@ -165,7 +165,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Object used to map locations of points.
      * @return point manager
      */
-    public CoordinateManager<C, Point2D.Double> getCoordinateManager() {
+    public CoordinateManager<N, Point2D.Double> getCoordinateManager() {
         return coordManager;
     }
 
@@ -173,7 +173,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      * Returns the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
-    public Map<C, Point2D.Double> getLocations() {
+    public Map<N, Point2D.Double> getLocations() {
         return coordManager.getCoordinates();
     }
 
@@ -185,7 +185,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
      *
      * @param nodePositions new locations for objects
      */
-    public void requestLocations(Map<C, Point2D.Double> nodePositions) {
+    public void requestLocations(Map<N, Point2D.Double> nodePositions) {
 //        System.out.println("glm.reqloc");
         synchronized (coordManager) {
             if (nodePositions != null) {
@@ -207,7 +207,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
     public void applyLayout(StaticGraphLayout layout, double... parameters){
         synchronized (coordManager) {
             try {
-                Map<C, Point2D.Double> pos = layout.layout(graph, parameters);
+                Map<N, Point2D.Double> pos = layout.layout(graph, parameters);
                 if (isLayoutAnimating()) {
                     iLayout.requestPositions(pos, false);
                 } else {
@@ -315,7 +315,7 @@ public final class GraphLayoutManager<C> implements CoordinateListener {
             if (iLayout != null) {
                 int id = GAInstrument.start("GraphManager.iterateLayout");
                 try {
-                    Map<C, Point2D.Double> locs = iLayout.iterate(graph);
+                    Map<N, Point2D.Double> locs = iLayout.iterate(graph);
                     GAInstrument.middle(id, "iLayout.iterate completed");
                     coordManager.setCoordinateMap(locs);
                 } catch (ConcurrentModificationException ex) {

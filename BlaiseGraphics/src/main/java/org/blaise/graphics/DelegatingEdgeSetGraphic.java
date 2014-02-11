@@ -5,7 +5,8 @@
 
 package org.blaise.graphics;
 
-import java.awt.Point;
+import static com.google.common.base.Preconditions.*;
+import com.google.common.collect.Maps;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -18,32 +19,52 @@ import org.blaise.util.CoordinateManager;
 import org.blaise.util.Edge;
 
 /**
- * <p>
- *  Groups together a collection of edges backed by a common set of points.
- * </p>
+ * A collection of edges backed by a common set of points.
+ * 
+ * @param <S> source object type
+ * @param <E> edge type
+ * 
  * @author elisha
  */
-public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends GraphicComposite implements CoordinateListener {
+public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicComposite {
 
     /** The edges in the graphic. */
-    protected final Map<EdgeType,DelegatingShapeGraphic<EdgeType>> edges = new LinkedHashMap<EdgeType,DelegatingShapeGraphic<EdgeType>>();
+    protected final Map<E,DelegatingShapeGraphic<E>> edges = Maps.newHashMap();
     /** Styler for edges */
-    protected ObjectStyler<EdgeType,PathStyle> edgeStyler = new ObjectStyler<EdgeType,PathStyle>();
+    protected ObjectStyler<E,PathStyle> edgeStyler = ObjectStyler.create();
 
     /** Point manager. Maintains objects and their locations, and enables mouse dragging. */
-    protected CoordinateManager<Src, Point2D> pointManager;
-
-    /** Initialize without arguments */
-    public DelegatingEdgeSetGraphic() {}
-
-    public void coordinatesChanged(CoordinateChangeEvent evt) {
-        update(pointManager.getCoordinates(), new ArrayList<Graphic>());
+    protected CoordinateManager<S, Point2D> pointManager;
+    /** Listener for changes to coordinates */
+    private final CoordinateListener coordListener;
+    
+    /**
+     * Initialize with default coordinate manager.
+     */
+    public DelegatingEdgeSetGraphic() {
+        this(new CoordinateManager<S,Point2D>());
     }
+    
+    /** 
+     * Initialize with given coordinate manager.
+     * @param mgr manages source object locations
+     */
+    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr) {
+        setCoordinateManager(mgr);
+        coordListener = new CoordinateListener(){
+            public void coordinatesChanged(CoordinateChangeEvent evt) {
+                updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic>());
+            }
+        };
+    }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="coordinate updates">
 
-    private void update(Map<Src,Point2D> locs, List<Graphic> removeMe) {
+    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic> removeMe) {
         List<Graphic> addMe = new ArrayList<Graphic>();
-        for (EdgeType edge : edges.keySet()) {
-            DelegatingShapeGraphic<EdgeType> dsg = edges.get(edge);
+        for (E edge : edges.keySet()) {
+            DelegatingShapeGraphic<E> dsg = edges.get(edge);
             Point2D p1 = locs.get(edge.getNode1());
             Point2D p2 = locs.get(edge.getNode2());
             if (p1 == null || p2 == null) {
@@ -54,7 +75,7 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
             } else {
                 Line2D.Double line = new Line2D.Double(p1, p2);
                 if (dsg == null) {
-                    edges.put(edge, dsg = new DelegatingShapeGraphic<EdgeType>(edge, line, true));
+                    edges.put(edge, dsg = new DelegatingShapeGraphic<E>(edge, line, true));
                     dsg.setStyler(edgeStyler);
                     addMe.add(dsg);
                 } else {
@@ -65,15 +86,33 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
         replaceGraphics(removeMe, addMe);
     }
 
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
-    // PROPERTIES
+    // PROPERTY PATTERNS
     //
+    public CoordinateManager<S, Point2D> getCoordinateManager() {
+        return pointManager;
+    }
+
+    public final void setCoordinateManager(CoordinateManager<S, Point2D> pointManager) {
+        if (this.pointManager != checkNotNull(pointManager)) {
+            if (this.pointManager != null) {
+                this.pointManager.removeCoordinateListener(coordListener);
+            }
+            this.pointManager = pointManager;
+            this.pointManager.addCoordinateListener(coordListener);
+            updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic>());
+        }
+    }
 
     /**
      * Return map describing graph's edges
      * @return edges
      */
-    public Set<EdgeType> getEdges() {
+    public Set<E> getEdges() {
         return edges.keySet();
     }
 
@@ -82,28 +121,28 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
      * Also updates the set of objects to be the nodes within the edges
      * @param ee new edges to put
      */
-    public final void setEdges(Set<? extends EdgeType> ee) {
-        Set<EdgeType> addMe = new LinkedHashSet<EdgeType>();
-        Set<EdgeType> removeMe = new HashSet<EdgeType>();
-        for (EdgeType e : ee) {
+    public final void setEdges(Set<? extends E> ee) {
+        Set<E> addMe = new LinkedHashSet<E>();
+        Set<E> removeMe = new HashSet<E>();
+        for (E e : ee) {
             if (!edges.containsKey(e)) {
                 addMe.add(e);
             }
         }
-        for (EdgeType e : edges.keySet()) {
+        for (E e : edges.keySet()) {
             if (!ee.contains(e)) {
                 removeMe.add(e);
             }
         }
         if (removeMe.size() > 0 || addMe.size() > 0) {
             List<Graphic> remove = new ArrayList<Graphic>();
-            for (EdgeType e : removeMe) {
+            for (E e : removeMe) {
                 remove.add(edges.remove(e));
             }
-            for (EdgeType e : addMe) {
+            for (E e : addMe) {
                 edges.put(e, null);
             }
-            update(pointManager.getCoordinates(), remove);
+            updateEdgeGraphics(pointManager.getCoordinates(), remove);
         }
     }
 
@@ -111,7 +150,7 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
      * Returns the current style styler
      * @return style styler
      */
-    public ObjectStyler<EdgeType, PathStyle> getEdgeStyler() {
+    public ObjectStyler<E, PathStyle> getEdgeStyler() {
         return edgeStyler;
     }
 
@@ -120,10 +159,10 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
      * provided by the parent.
      * @param styler used for custom edge styles
      */
-    public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {
+    public void setEdgeStyler(ObjectStyler<E, PathStyle> styler) {
         if (this.edgeStyler != styler) {
             this.edgeStyler = styler;
-            for (DelegatingShapeGraphic<EdgeType> dsg : edges.values()) {
+            for (DelegatingShapeGraphic<E> dsg : edges.values()) {
                 if (dsg != null) {
                     dsg.setStyler(styler);
                 }
@@ -131,29 +170,15 @@ public class DelegatingEdgeSetGraphic<Src,EdgeType extends Edge<Src>> extends Gr
             fireGraphicChanged();
         }
     }
-
-    public CoordinateManager<Src, Point2D> getPointManager() {
-        return pointManager;
-    }
-
-    public void setPointManager(CoordinateManager<Src, Point2D> pointManager) {
-        if (this.pointManager != pointManager) {
-            if (this.pointManager != null) {
-                this.pointManager.removeCoordinateListener(this);
-            }
-            this.pointManager = pointManager;
-            update(pointManager.getCoordinates(), new ArrayList<Graphic>());
-            if (this.pointManager != null) {
-                this.pointManager.addCoordinateListener(this);
-            }
-        }
-    }
+    
+    //</editor-fold>
+    
 
     @Override
-    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
-        // provide additional info for context menu
+    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+        // use delegate's source object for focus instead of the graphic
         Graphic gfc = graphicAt(point);
-        super.initialize(menu, point, gfc instanceof DelegatingShapeGraphic
+        super.initContextMenu(menu, src, point, gfc instanceof DelegatingShapeGraphic
                 ? ((DelegatingShapeGraphic)gfc).getSourceObject() : focus, selection);
     }
 

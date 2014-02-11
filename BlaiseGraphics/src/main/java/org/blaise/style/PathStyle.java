@@ -7,6 +7,7 @@ package org.blaise.style;
 
 import java.awt.Color;
 import java.awt.Shape;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -21,19 +22,20 @@ public interface PathStyle extends ShapeStyle {
      * Return path color
      * @return color
      */
-    public Color getStroke();
+    Color getStroke();
 
     /**
      * Return path thickness
      * @return thickness of path
      */
-    public float getThickness();
+    float getStrokeWidth();
 
     /**
-     * Return shape of path drawn (may be null)
+     * Return shape of path drawn, useful for testing
+     * when the mouse has moved over the path.
      * @param primitive shape primitive
      * @return path shape
      */
-    public Shape getPathShape(Shape primitive);
+    @Nullable Shape shapeOfPath(Shape primitive);
 
 }

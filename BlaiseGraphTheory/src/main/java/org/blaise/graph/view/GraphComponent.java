@@ -7,18 +7,16 @@ package org.blaise.graph.view;
 
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.awt.geom.Point2D;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
-import org.blaise.graphics.ContextMenuInitializer;
+import org.blaise.util.ContextMenuInitializer;
 import org.blaise.graphics.DelegatingNodeLinkGraphic;
+import org.blaise.graphics.PanAndZoomHandler;
+import org.blaise.graphics.GraphicComponent;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
 import org.blaise.util.Edge;
-import org.blaise.visometry.VGraphicComponent;
-import org.blaise.visometry.plane.PlanePlotMouseHandler;
-import org.blaise.visometry.plane.PlaneVisometry;
 
 
 /**
@@ -27,10 +25,12 @@ import org.blaise.visometry.plane.PlaneVisometry;
  *
  * @author elisha
  */
-public class GraphComponent extends VGraphicComponent<Point2D.Double> {
+public class GraphComponent extends GraphicComponent {
 
     /** Manages the visual elements of the underlying graph */
     protected final PlaneGraphAdapter adapter;
+    /** Pan and zoom control */
+    protected final PanAndZoomHandler zoomControl;
 
 
     //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
@@ -58,19 +58,15 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
      * @param gm graph manager to initialize with
      */
     public GraphComponent(GraphLayoutManager gm) {
-        super(new PlaneVisometry());
         adapter = new PlaneGraphAdapter(gm);
-        getVisometryGraphicRoot().addGraphic(adapter.getViewGraph());
-        ((PlaneVisometry) getVisometry()).setDesiredRange(-5.0, -5.0, 5.0, 5.0);
+        addGraphic(adapter.getViewGraph());
         setPreferredSize(new java.awt.Dimension(400, 400));
+        // TODO - graph bounding box
         // enable selection
         setSelectionEnabled(true);
         // enable zoom and drag
-        PlanePlotMouseHandler ppmh = new PlanePlotMouseHandler(((PlaneVisometry) getVisometry()), this);
-        addMouseListener(ppmh);
-        addMouseMotionListener(ppmh);
-        addMouseWheelListener(ppmh);
-        overlays.add(ppmh);
+        zoomControl = new PanAndZoomHandler(this);
+        // trun off animation if component hierarchy changes
         addHierarchyListener(new HierarchyListener(){
             public void hierarchyChanged(HierarchyEvent e) {
                 if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
@@ -149,7 +145,7 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
      * @param init used to initialize the context menu
      */
     public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
-        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph().getWindowEntry();
+        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
         if ("graph".equalsIgnoreCase(key)) {
             getGraphicRoot().addContextMenuInitializer(init);
         } else if ("node".equalsIgnoreCase(key)) {
@@ -165,7 +161,7 @@ public class GraphComponent extends VGraphicComponent<Point2D.Double> {
      * @param init used to initialize the context menu
      */
     public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {
-        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph().getWindowEntry();
+        DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
         if ("graph".equals(key)) {
             getGraphicRoot().removeContextMenuInitializer(init);
         } else if ("node".equals(key)) {

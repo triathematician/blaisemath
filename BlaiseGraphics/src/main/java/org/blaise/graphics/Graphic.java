@@ -5,16 +5,16 @@
 
 package org.blaise.graphics;
 
+import org.blaise.util.ContextMenuInitializer;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.util.Set;
-import javax.swing.JPopupMenu;
+import java.awt.geom.Rectangle2D;
 import org.blaise.style.VisibilityHint;
+import org.blaise.style.VisibilityHintSet;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ import org.blaise.style.VisibilityHint;
  *
  * @author Elisha Peterson
  */
- public interface Graphic extends ContextMenuInitializer {
+ public interface Graphic extends ContextMenuInitializer<Graphic> {
 
      //
      // COMPOSITION API
@@ -50,12 +50,12 @@ import org.blaise.style.VisibilityHint;
       * Return parent of the entry
       * @return parent, possibly null
       */
-    public GraphicComposite getParent();
+    GraphicComposite getParent();
     /**
      * Sets parent of the entry
      * @param parent the parent
      */
-    public void setParent(GraphicComposite parent);
+    void setParent(GraphicComposite parent);
 
 
     //
@@ -66,24 +66,13 @@ import org.blaise.style.VisibilityHint;
      * Draws the primitive on the specified graphics canvas, using current style.
      * @param canvas graphics canvas
      */
-    public void draw(Graphics2D canvas);
+    void draw(Graphics2D canvas);
 
     /**
-     * Return visibility state of the entry
-     * @return the visibility status of the entry
+     * Return set of visibility hints for the graphic.
+     * @return visibility hints
      */
-    public Set<VisibilityHint> getVisibilityHints();
-    /**
-     * Sets the visibility status of the shape
-     * @param vis hints
-     */
-    public void setVisibilityHints(Set<VisibilityHint> vis);
-    /**
-     * Sets the status of a single visibility hint
-     * @param hint a visibility hint
-     * @param status new status
-     */
-    public void setVisibilityHint(VisibilityHint hint, boolean status);
+    VisibilityHintSet getVisibilityHints();
 
 
     //
@@ -100,14 +89,14 @@ import org.blaise.style.VisibilityHint;
      * @param point the window point
      * @return true if the entry contains the point, else false
      */
-    public boolean contains(Point point);
+    boolean contains(Point2D point);
 
     /**
      * Checks to see if the graphic intersects the area within specified rectangle.
      * @param box rectangle to check against
      * @return true if it intersects, false otherwise
      */
-    public boolean intersects(Rectangle box);
+    boolean intersects(Rectangle2D box);
 
 
     //
@@ -120,7 +109,7 @@ import org.blaise.style.VisibilityHint;
      * select, or select graphics in box).
      * @return selection flag
      */
-    public boolean isSelectionEnabled();
+    boolean isSelectionEnabled();
 
 
     //
@@ -131,14 +120,14 @@ import org.blaise.style.VisibilityHint;
      * Return true if tips are enabled/supported
      * @return true if yes
      */
-    public boolean isTooltipEnabled();
+    boolean isTooltipEnabled();
 
     /**
      * Return tooltip for the specified point
      * @param point the point
      * @return the tooltip at the specified location (may be null)
      */
-    public String getTooltip(Point point);
+    String getTooltip(Point2D point);
 
 
     //
@@ -149,21 +138,9 @@ import org.blaise.style.VisibilityHint;
      * Whether graphic supports context menu building
      * @return true if yes
      */
-    public boolean isContextMenuEnabled();
+    boolean isContextMenuEnabled();
 
-    /**
-     * Add context menu initializer
-     * @param init initializer
-     */
-    public void addContextMenuInitializer(ContextMenuInitializer init);
-
-    /**
-     * Remove context menu initializer
-     * @param init initializer
-     */
-    public void removeContextMenuInitializer(ContextMenuInitializer init);
-
-
+    
     //
     // MOUSE HANDLING API
     //
@@ -172,42 +149,42 @@ import org.blaise.style.VisibilityHint;
      * Whether the object should receive mouse events.
      * @return true if yes, false otherwise
      */
-    public boolean isMouseEnabled();
+    boolean isMouseEnabled();
 
     /**
      * Adds a mouse listener to the graphic
      * @param handler listener
      */
-    public void addMouseListener(MouseListener handler);
+    void addMouseListener(MouseListener handler);
 
     /**
      * Removes a mouse listener from the graphic
      * @param handler listener
      */
-    public void removeMouseListener(MouseListener handler);
+    void removeMouseListener(MouseListener handler);
 
     /**
      * Return list of mouse listeners registered with the graphic
      * @return listeners
      */
-    public MouseListener[] getMouseListeners();
+    MouseListener[] getMouseListeners();
 
     /**
      * Adds a mouse motion listener to the graphic
      * @param handler listener
      */
-    public void addMouseMotionListener(MouseMotionListener handler);
+    void addMouseMotionListener(MouseMotionListener handler);
 
     /**
      * Removes a mouse motion listener from the graphic
      * @param handler listener
      */
-    public void removeMouseMotionListener(MouseMotionListener handler);
+    void removeMouseMotionListener(MouseMotionListener handler);
 
     /**
      * Return list of mouse motion listeners registered with the graphic
      * @return listeners
      */
-    public MouseMotionListener[] getMouseMotionListeners();
+    MouseMotionListener[] getMouseMotionListeners();
 
 }

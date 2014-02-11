@@ -6,6 +6,8 @@
 package org.blaise.graphics;
 
 import java.awt.Shape;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.blaise.style.PathStyle;
 import org.blaise.style.ShapeStyle;
 
@@ -21,8 +23,8 @@ import org.blaise.style.ShapeStyle;
  */
 public class BasicShapeGraphic extends AbstractShapeGraphic {
 
-    /** The associated style (may be null). */
-    private ShapeStyle style;
+    /** The associated style */
+    protected @Nullable ShapeStyle style;
 
     /**
      * Construct with no style (will use the default)
@@ -51,11 +53,16 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
         setStyle(style);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
     /**
      * Return the style for the graphic.
      * @return style
      */
-    public ShapeStyle getStyle() {
+    public @Nullable ShapeStyle getStyle() {
         return style;
     }
 
@@ -63,15 +70,17 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
      * Sets the style for the graphic
      * @param style the style
      */
-    public void setStyle(ShapeStyle style) {
+    public final void setStyle(@Nullable ShapeStyle style) {
         if (this.style != style) {
             this.style = style;
             fireGraphicChanged();
         }
     }
+    
+    //</editor-fold>
 
     /** Return the actual style used for drawing */
-    public ShapeStyle drawStyle() {
+    protected @Nonnull ShapeStyle drawStyle() {
         if (style != null) {
             return style;
         }

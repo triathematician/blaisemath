@@ -15,12 +15,12 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.blaise.firestarter.editor.ColorEditor;
-import org.blaise.style.BasicPointStyle;
-import org.blaise.style.ShapeFactory;
-import org.blaise.style.ShapeLibrary;
+import org.blaise.style.PointStyleBasic;
+import org.blaise.style.Marker;
+import org.blaise.style.MarkerLibrary;
 
 /**
- * GUI form for editing a {@link BasicPointStyle}.
+ * GUI form for editing a {@link PointStyleBasic}.
  *
  * @author elisha
  */
@@ -28,7 +28,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         ActionListener, ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private BasicPointStyle rend = new BasicPointStyle();
+    private PointStyleBasic rend = new PointStyleBasic();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;
@@ -47,7 +47,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
     }
 
     /** Initialize with defaults and a style */
-    public BasicPointStyleEditor(BasicPointStyle bean) {
+    public BasicPointStyleEditor(PointStyleBasic bean) {
         initComponents();
         setObject(bean);
     }
@@ -92,7 +92,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         gbc.gridheight = 2;
         gbc.weightx = 0; gbc.weighty = 0.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(shapeCombo = new JComboBox(ShapeLibrary.getAvailableShapers().toArray()), gbc);
+        add(shapeCombo = new JComboBox(MarkerLibrary.getAvailableMarkers().toArray()), gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(this);
 
@@ -100,22 +100,22 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         validate();
     }
 
-    public BasicPointStyle getObject() {
+    public PointStyleBasic getObject() {
         return rend;
     }
 
     public void setObject(Object bean) {
-        if (!(bean instanceof BasicPointStyle)) {
+        if (!(bean instanceof PointStyleBasic)) {
             throw new IllegalArgumentException();
         }
 
-        this.rend = (BasicPointStyle) bean;
-        radiusSp.setValue(rend.getRadius());
-        strokeSp.setValue(rend.getThickness());
+        this.rend = (PointStyleBasic) bean;
+        radiusSp.setValue(rend.getMarkerRadius());
+        strokeSp.setValue(rend.getStrokeWidth());
         fillEd.setValue(rend.getFill());
         strokeEd.setValue(rend.getStroke());
         for (int i = 0; i < shapeCombo.getItemCount(); i++) {
-            if (shapeCombo.getItemAt(i).getClass() == rend.getShape().getClass()) {
+            if (shapeCombo.getItemAt(i).getClass() == rend.getMarker().getClass()) {
                 shapeCombo.setSelectedIndex(i);
             }
         }
@@ -128,16 +128,16 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == shapeCombo) {
-            rend.setShape((ShapeFactory) shapeCombo.getSelectedItem());
+            rend.setMarker((Marker) shapeCombo.getSelectedItem());
             firePropertyChange("style", null, rend);
         }
     }
 
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == radiusSp) {
-            rend.setRadius(((Number)radiusSp.getValue()).floatValue());
+            rend.setMarkerRadius(((Number)radiusSp.getValue()).floatValue());
         } else if (e.getSource() == strokeSp) {
-            rend.setThickness(((Number)strokeSp.getValue()).floatValue());
+            rend.setStrokeWidth(((Number)strokeSp.getValue()).floatValue());
         } else {
             return;
         }
@@ -169,25 +169,25 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             JLabel result = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             result.setToolTipText(value.toString());
             result.setText(null);
-            result.setIcon(new ShapeIcon((ShapeFactory)value));
+            result.setIcon(new ShapeIcon((Marker)value));
             return result;
         }
     }
 
     /** Icon for drawing stylized point on a component */
     private class ShapeIcon implements Icon {
-        private final ShapeFactory shape;
-        private ShapeIcon(ShapeFactory shape) {
+        private final Marker shape;
+        private ShapeIcon(Marker shape) {
             this.shape = shape;
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
-            ShapeFactory shape1 = rend.getShape();
-            rend.setShape(shape);
+            Marker shape1 = rend.getMarker();
+            rend.setMarker(shape);
             rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, null);
-            rend.setShape(shape1);
+            rend.setMarker(shape1);
         }
 
         public int getIconWidth() { return 50; }

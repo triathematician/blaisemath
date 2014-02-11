@@ -70,13 +70,13 @@ public class VCustomGraph<C,Src,EdgeType extends Edge<Src>> extends VCustomPoint
         return gwindow;
     }
 
-    public Set<EdgeType> getEdges() {
-        return gwindow.getEdges();
+    public Set<? extends EdgeType> getEdges() {
+        return gwindow.getEdgeSet();
     }
 
     public void setEdges(Set<? extends EdgeType> edges) {
         // make a copy to prevent errors in updating edges
-        gwindow.setEdges(new LinkedHashSet<EdgeType>(edges));
+        gwindow.setEdgeSet(new LinkedHashSet<EdgeType>(edges));
     }
 
     public void setEdgeStyler(ObjectStyler<EdgeType, PathStyle> styler) {

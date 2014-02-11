@@ -5,15 +5,17 @@
 
 package org.blaise.graphics;
 
-import java.awt.Point;
+import static com.google.common.base.Preconditions.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import org.blaise.style.DefaultStyleContext;
+import org.blaise.style.StyleContextDefault;
 import org.blaise.style.StyleContext;
 import org.blaise.style.VisibilityHint;
 
@@ -32,24 +34,35 @@ import org.blaise.style.VisibilityHint;
  *
  * @author Elisha
  */
-public class GraphicRoot extends GraphicComposite implements MouseListener, MouseMotionListener {
+public final class GraphicRoot extends GraphicComposite implements MouseListener, MouseMotionListener {
 
     /** Parent component upon which the graphics are drawn. */
-    protected GraphicComponent owner;
+    protected final GraphicComponent owner;
     /** Context menu for actions on the graphics */
-    protected JPopupMenu popup = new JPopupMenu();
+    protected final JPopupMenu popup = new JPopupMenu();
     /** Provides a pluggable way to generate mouse events */
-    protected GraphicMouseEvent.Factory mouseFactory = new GraphicMouseEvent.Factory();
+    @Nonnull protected GraphicMouseEvent.Factory mouseFactory = new GraphicMouseEvent.Factory();
+
+    /** Current owner of mouse events. Gets first priority for mouse events that occur. */
+    private transient Graphic mouseGraphic = null;
+    /** Tracks current mouse location */
+    private transient Point2D mouseLoc = null;
 
     /** Construct a default instance */
-    public GraphicRoot() {
-        setStyleContext(DefaultStyleContext.getInstance());
+    public GraphicRoot(GraphicComponent component) {
+        this.owner = checkNotNull(component);
+        this.owner.addMouseListener(this);
+        this.owner.addMouseMotionListener(this);
+        this.owner.setComponentPopupMenu(popup);
+        
+        setStyleContext(StyleContextDefault.getInstance());
+        
         popup.addPopupMenuListener(new PopupMenuListener(){
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
                     popup.removeAll();
                     Set<Graphic> selected = owner.isSelectionEnabled() ? owner.getSelectionModel().getSelection() : null;
-                    initialize(popup, mouseLoc, null, selected);
+                    initContextMenu(popup, null, mouseLoc, null, selected);
                     if (popup.getComponentCount() == 0) {
                         // cancel popup
                     }
@@ -63,44 +76,42 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
             }
         });
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
     @Override
-    public String toString() {
-        return "GraphicRoot";
+    public void setParent(GraphicComposite p) {
+        checkArgument(p == null, "GraphicRoot cannot be added to another GraphicComposite");
     }
-
-    /**
-     * Sets the component associated with the graphic tree.
-     * Sets up mouse handling, and allows repainting to occur when the graphics change.
-     * @param c the component
-     */
-    void initComponent(GraphicComponent c) {
-        if (this.owner != c) {
-            if (this.owner != null) {
-                this.owner.removeMouseListener(this);
-                this.owner.removeMouseMotionListener(this);
-                this.owner.setComponentPopupMenu(null);
-            }
-            this.owner = c;
-            if (this.owner != null) {
-                this.owner.addMouseListener(this);
-                this.owner.addMouseMotionListener(this);
-                this.owner.setComponentPopupMenu(popup);
-            }
-        }
-    }
-
-    //
-    // PROPERTIES
-    //
 
     @Override
     public final void setStyleContext(StyleContext rend) {
-        if (rend == null) {
-            throw new IllegalArgumentException("GraphicRoot must have a non-null StyleProvider!");
-        }
+        checkArgument(rend != null, "GraphicRoot must have a non-null StyleProvider!");
         super.setStyleContext(rend);
     }
+
+    /**
+     * Return current object used to generate mouse events.
+     * @return mouse event factory
+     */
+    public GraphicMouseEvent.Factory getMouseEventFactory() {
+        return mouseFactory;
+    }
+
+    /**
+     * Modifies how mouse events are created.
+     * @param factory responsible for generating mouse events
+     */
+    public void setMouseEventFactory(GraphicMouseEvent.Factory factory) {
+        if (this.mouseFactory != factory) {
+            this.mouseFactory = checkNotNull(factory);
+        }
+    }
+    
+    //</editor-fold>
 
 
     //
@@ -128,34 +139,33 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     //
 
     /**
-     * Return current object used to generate mouse events.
-     * @return mouse event factory
+     * Create GraphicMouseEvent from given event.
+     * @param mouseEvent mouse event
+     * @return associated graphic mouse event
      */
-    public GraphicMouseEvent.Factory getMouseEventFactory() {
-        return mouseFactory;
+    private GraphicMouseEvent graphicMouseEvent(MouseEvent e) {
+        Point2D localPoint = e.getPoint();
+        if (owner.getInverseTransform() != null) {
+            localPoint = owner.getInverseTransform().transform(localPoint, null);
+        }
+        return mouseFactory.createEvent(e, localPoint, this);
     }
-
+    
     /**
-     * Modifies how mouse events are created.
-     * @param factory responsible for generating mouse events
+     * Change current owner of mouse events.
+     * @param gme graphic mouse event
+     * @param keepCurrent whether to maintain current selection even if it's behind another graphic
      */
-    public void setMouseEventFactory(GraphicMouseEvent.Factory factory) {
-        this.mouseFactory = factory;
-    }
-
-    /** Current owner of mouse events. Gets first priority for mouse events that occur. */
-    private transient Graphic mouseGraphic;
-
-    private void updateMouseGraphic(MouseEvent e, boolean keepCurrent) {
+    private void updateMouseGraphic(GraphicMouseEvent gme, boolean keepCurrent) {
         if (keepCurrent && mouseGraphic != null
-                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.Hidden)
-                && mouseGraphic.contains(e.getPoint())) {
+                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.HIDDEN)
+                && mouseGraphic.contains(gme.getGraphicLocation())) {
             return;
         }
-        Graphic nue = mouseGraphicAt(e.getPoint());
+        Graphic nue = mouseGraphicAt(gme.getGraphicLocation());
         if (mouseGraphic != nue) {
             if (mouseGraphic != null) {
-                GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+                gme.setGraphicSource(mouseGraphic);
                 for (MouseListener l : mouseGraphic.getMouseListeners()) {
                     l.mouseExited(gme);
                     if (gme.isConsumed()) {
@@ -165,7 +175,7 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
             }
             mouseGraphic = nue;
             if (mouseGraphic != null) {
-                GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+                gme.setGraphicSource(mouseGraphic);
                 for (MouseListener l : mouseGraphic.getMouseListeners()) {
                     l.mouseEntered(gme);
                     if (gme.isConsumed()) {
@@ -177,9 +187,9 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     }
 
     public void mouseClicked(MouseEvent e) {
-        updateMouseGraphic(e, false);
+        GraphicMouseEvent gme = graphicMouseEvent(e);
+        updateMouseGraphic(gme, false);
         if (mouseGraphic != null) {
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
             for (MouseListener l : mouseGraphic.getMouseListeners()) {
                 l.mouseClicked(gme);
                 if (gme.isConsumed()) {
@@ -189,15 +199,13 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
         }
     }
 
-    /** Tracks current mouse location */
-    Point mouseLoc;
-
     public void mouseMoved(MouseEvent e) {
-        mouseLoc = e.getPoint();
-        updateMouseGraphic(e, false);
+        GraphicMouseEvent gme = graphicMouseEvent(e);
+        mouseLoc = gme.getGraphicLocation();
+        updateMouseGraphic(gme, false);
         if (mouseGraphic != null) {
 //            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+            gme.setGraphicSource(mouseGraphic);
             for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
                 l.mouseMoved(gme);
                 if (gme.isConsumed()) {
@@ -210,9 +218,10 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     }
 
     public void mousePressed(MouseEvent e) {
-        updateMouseGraphic(e, false);
+        GraphicMouseEvent gme = graphicMouseEvent(e);
+        updateMouseGraphic(gme, false);
         if (mouseGraphic != null) {
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+            gme.setGraphicSource(mouseGraphic);
             for (MouseListener l : mouseGraphic.getMouseListeners()) {
                 l.mousePressed(gme);
                 if (gme.isConsumed()) {
@@ -224,7 +233,8 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
 
     public void mouseDragged(MouseEvent e) {
         if (mouseGraphic != null) {
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+            GraphicMouseEvent gme = graphicMouseEvent(e);
+            gme.setGraphicSource(mouseGraphic);
             for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
                 l.mouseDragged(gme);
                 if (gme.isConsumed()) {
@@ -236,7 +246,8 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
 
     public void mouseReleased(MouseEvent e) {
         if (mouseGraphic != null) {
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+            GraphicMouseEvent gme = graphicMouseEvent(e);
+            gme.setGraphicSource(mouseGraphic);
             for (MouseListener l : mouseGraphic.getMouseListeners()) {
                 l.mouseReleased(gme);
                 if (gme.isConsumed()) {
@@ -247,11 +258,13 @@ public class GraphicRoot extends GraphicComposite implements MouseListener, Mous
     }
 
     public void mouseEntered(MouseEvent e) {
+        // no behavior desired
     }
 
     public void mouseExited(MouseEvent e) {
         if (mouseGraphic != null) {
-            GraphicMouseEvent gme = mouseFactory.createEvent(e, mouseGraphic);
+            GraphicMouseEvent gme = graphicMouseEvent(e);
+            gme.setGraphicSource(mouseGraphic);
             for (MouseListener l : mouseGraphic.getMouseListeners()) {
                 l.mouseExited(gme);
                 if (gme.isConsumed()) {

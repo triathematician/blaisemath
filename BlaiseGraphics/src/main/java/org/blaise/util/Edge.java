@@ -6,8 +6,7 @@
 package org.blaise.util;
 
 /**
- * An edge in a graph.
- * 
+ * Simple data structure representing an "edge" between two non-null vertices.
  * @param <V> type of node
  * 
  * @author elisha

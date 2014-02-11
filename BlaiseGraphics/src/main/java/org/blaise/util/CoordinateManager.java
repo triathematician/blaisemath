@@ -5,11 +5,12 @@
 package org.blaise.util;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Maps;
 import java.util.*;
 
 /**
  * <p>
- * Used to track the locations of a collection of objects in a thread-safe manner.
+ * Tracks locations of a collection of objects in a thread-safe manner.
  * Maintains a cacheObjects of prior locations, so that if some of the objects are removed,
  * this class "remembers" their prior locations. Listeners may register to be notified
  * when any of the coordinates within the manager change, or when any objects are
@@ -24,19 +25,33 @@ import java.util.*;
  * by multiple threads.
  * </p>
  *
- * @param <Src> type of source object
- * @param <Coord> type of point
+ * @param <S> type of source object
+ * @param <C> type of point
  *
  * @author Elisha Peterson
  */
-public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
+public class CoordinateManager<S, C> implements Function<S, C> {
+    
+    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
+    
+    /**
+     * Create and return new instance of coordinate manager.
+     */
+    public static <Src,Coord> CoordinateManager<Src,Coord> create() {
+        return new CoordinateManager<Src,Coord>();
+    }
+    
+    //</editor-fold>
+    
+    
 
     /** Map with current objects and locations (stores the data) */
-    private final Map<Src, Coord> map = new HashMap<Src, Coord>();
+    private final Map<S, C> map = Maps.newHashMap();
     /** Cached locations */
-    private final Map<Src, Coord> cache = new HashMap<Src, Coord>();
+    private final Map<S, C> cache = Maps.newHashMap();
+    
 
-    public synchronized Coord apply(Src src) {
+    public synchronized C apply(S src) {
         return map.get(src);
     }
 
@@ -48,7 +63,7 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Return objects currently tracked by the manager
      * @return objects
      */
-    public synchronized Set<Src> getObjects() {
+    public synchronized Set<S> getObjects() {
         return map.keySet();
     }
 
@@ -56,7 +71,7 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Returns cached objects
      * @return cached objects
      */
-    public synchronized Set<Src> getCachedObjects() {
+    public synchronized Set<S> getCachedObjects() {
         return cache.keySet();
     }
 
@@ -66,8 +81,8 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * @param obj objects to test
      * @return true if all are tracked, false otherwise
      */
-    public synchronized boolean locatesAll(Collection<? extends Src> obj) {
-        for (Src s : obj) {
+    public synchronized boolean locatesAll(Collection<? extends S> obj) {
+        for (S s : obj) {
             if (!map.containsKey(s) && !cache.containsKey(s)) {
                 return false;
             }
@@ -79,8 +94,8 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Returns copy of map with object locations
      * @return object locations
      */
-    public synchronized Map<Src, Coord> getCoordinates() {
-        return new HashMap<Src, Coord>(map);
+    public synchronized Map<S, C> getCoordinates() {
+        return new HashMap<S, C>(map);
     }
 
     //
@@ -92,7 +107,7 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * @param s source object
      * @param c coordinate
      */
-    public synchronized void put(Src s, Coord c) {
+    public void put(S s, C c) {
         putAll(Collections.singletonMap(s, c));
     }
 
@@ -101,7 +116,7 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * to notify listeners if there are updates.
      * @param coords new coordinates
      */
-    public synchronized void putAll(Map<Src, ? extends Coord> coords) {
+    public synchronized void putAll(Map<S, ? extends C> coords) {
         map.putAll(coords);
         fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coords));
     }
@@ -110,9 +125,9 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Replaces the current set of objects with specified objects, and caches the rest.
      * @param coords new coordinates
      */
-    public synchronized void setCoordinateMap(Map<Src, ? extends Coord> coords) {
-        Map<Src, Coord> cached = new HashMap<Src, Coord>();
-        for (Src s : map.keySet()) {
+    public synchronized void setCoordinateMap(Map<S, ? extends C> coords) {
+        Map<S, C> cached = new HashMap<S, C>();
+        for (S s : map.keySet()) {
             if (!coords.containsKey(s)) {
                 cached.put(s, map.get(s));
             }
@@ -128,9 +143,9 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Removes objects from the manager without caching their locations
      * @param obj objects to remove
      */
-    public synchronized void removeObjects(Set<? extends Src> obj) {
-        Set<Src> removed = new HashSet<Src>();
-        for (Src k : obj) {
+    public synchronized void removeObjects(Set<? extends S> obj) {
+        Set<S> removed = new HashSet<S>();
+        for (S k : obj) {
             if (map.remove(k) != null) {
                 removed.add(k);
             }
@@ -142,9 +157,9 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Removes specified objects to cacheObjects
      * @param obj objects to removeObjects
      */
-    public synchronized void cacheObjects(Set<? extends Src> obj) {
-        Map<Src,Coord> cached = new HashMap<Src,Coord>();
-        for (Src k : obj) {
+    public synchronized void cacheObjects(Set<? extends S> obj) {
+        Map<S,C> cached = new HashMap<S,C>();
+        for (S k : obj) {
             if (map.containsKey(k)) {
                 cached.put(k, map.remove(k));
             }
@@ -158,8 +173,8 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Get copy of all cached locations.
      * @return map of locations
      */
-    public synchronized Map<Src,Coord> getCachedLocations() {
-        Map<Src,Coord> res = new HashMap<Src,Coord>();
+    public synchronized Map<S,C> getCachedLocations() {
+        Map<S,C> res = new HashMap<S,C>();
         res.putAll(cache);
         return res;
     }
@@ -169,9 +184,9 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * @param set objects to retrieve
      * @return map of locations
      */
-    public synchronized Map<Src,Coord> getCachedLocations(Set<? extends Src> obj) {
-        Map<Src,Coord> res = new HashMap<Src,Coord>();
-        for (Src s : obj) {
+    public synchronized Map<S,C> getCachedLocations(Set<? extends S> obj) {
+        Map<S,C> res = new HashMap<S,C>();
+        for (S s : obj) {
             if (cache.containsKey(s)) {
                 res.put(s, cache.get(s));
             }
@@ -183,10 +198,10 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
      * Call to restore locations from the cache.
      * @param obj objects to restore
      */
-    public synchronized void restoreCached(Set<? extends Src> obj) {
-        Map<Src,Coord> restored = new HashMap<Src,Coord>();
-        for (Src k : obj) {
-            Coord c = cache.remove(k);
+    public synchronized void restoreCached(Set<? extends S> obj) {
+        Map<S,C> restored = new HashMap<S,C>();
+        for (S k : obj) {
+            C c = cache.remove(k);
             if (c != null && !map.containsKey(k)) {
                 restored.put(k, c);
             }
@@ -196,7 +211,7 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
 
     /** Call to ensure appropriate size of cache */
     private void checkCache() {
-        for (Src m : map.keySet()) {
+        for (S m : map.keySet()) {
             cache.remove(m);
         }
     }
@@ -207,19 +222,21 @@ public class CoordinateManager<Src, Coord> implements Function<Src, Coord> {
     // EVENT HANDLING
     //
 
-    private final List<CoordinateListener> listeners = new ArrayList<CoordinateListener>();
+    private final List<CoordinateListener> listeners = Collections.synchronizedList(new ArrayList<CoordinateListener>());
 
     protected final void fireCoordinatesChanged(CoordinateChangeEvent evt) {
-        for (CoordinateListener cl : listeners) {
-            cl.coordinatesChanged(evt);
+        synchronized(listeners) {
+            for (CoordinateListener cl : listeners) {
+                cl.coordinatesChanged(evt);
+            }
         }
     }
 
-    public final synchronized void addCoordinateListener(CoordinateListener cl) {
+    public final void addCoordinateListener(CoordinateListener cl) {
         listeners.add(cl);
     }
 
-    public final synchronized void removeCoordinateListener(CoordinateListener cl) {
+    public final void removeCoordinateListener(CoordinateListener cl) {
         listeners.remove(cl);
     }
 

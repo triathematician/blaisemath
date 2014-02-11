@@ -22,27 +22,27 @@ public interface StyleContext<Src> {
      * @param src object to be styled
      * @return a solid shape style
      */
-    public ShapeStyle getShapeStyle(Src src);
+    ShapeStyle getShapeStyle(Src src);
     
     /** 
      * Return style used for paths (stroke only)
      * @param src object to be styled
      * @return a path style 
      */
-    public PathStyle getPathStyle(Src src);
+    PathStyle getPathStyle(Src src);
     
     /** 
      * Return style used for points
      * @param src object to be styled
      * @return a point style 
      */
-    public PointStyle getPointStyle(Src src);
+    PointStyle getPointStyle(Src src);
     
     /**
      * Return style used for strings
      * @param src object to be styled
      * @return a string style 
      */
-    public StringStyle getStringStyle(Src src);
+    TextStyle getStringStyle(Src src);
 
 }

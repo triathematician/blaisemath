@@ -9,7 +9,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import org.blaise.style.BasicShapeStyle;
+import org.blaise.style.ShapeStyleBasic;
 
 /**
  *
@@ -23,7 +23,7 @@ public class TestSelection extends javax.swing.JFrame {
     public TestSelection() {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
-        g1.setStyle(new BasicShapeStyle(Color.blue, Color.red));
+        g1.setStyle(new ShapeStyleBasic().fill(Color.blue).stroke(Color.red));
         g1.setSelectionEnabled(true);
         gc.addGraphic(g1);
         

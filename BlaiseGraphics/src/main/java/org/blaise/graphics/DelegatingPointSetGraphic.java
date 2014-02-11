@@ -4,17 +4,18 @@
  */
 package org.blaise.graphics;
 
+import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Functions;
-import java.awt.Point;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -28,70 +29,79 @@ import org.blaise.util.CoordinateManager;
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
  * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager}.
  *
- * @param <Src> the type of object being displayed
+ * @param <S> the type of object being displayed
  *
  * @see PointStyle
  * @see BasicPointSetGraphic
  *
  * @author Elisha Peterson
  */
-public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements ChangeListener, CoordinateListener {
+public class DelegatingPointSetGraphic<S> extends GraphicComposite {
 
+    /** Graphic objects for individual points */
+    protected final Map<S, DelegatingPointGraphic<S>> points = Maps.newHashMap();
+    
     /** Manages locations of points */
-    protected final CoordinateManager<Src,Point2D> manager = new CoordinateManager<Src,Point2D>();
-    /** Objects for individual points */
-    protected final Map<Src, DelegatingPointGraphic<Src>> points = new HashMap<Src, DelegatingPointGraphic<Src>>();
+    protected CoordinateManager<S,Point2D> manager;
     /** Generates styles for graphics */
-    protected ObjectStyler<Src, PointStyle> styler = new ObjectStyler<Src, PointStyle>();
+    @Nonnull protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
 
+    /** Indicates points are being updated */
+    protected boolean updatingPoint = false;
+    /** Responds to point change events */
+    private final ChangeListener pointListener;
+    /** Responds to coordinate update events */
+    private final CoordinateListener coordListener;
+    
+    
     /**
      * Construct with no points
      */
     public DelegatingPointSetGraphic() {
-        this(Collections.EMPTY_MAP);
+        this(new CoordinateManager<S, Point2D>());
     }
 
     /**
      * Construct with source objects and locations as a map
-     * @param map locations
+     * @param crdManager manages point locations
      */
-    public DelegatingPointSetGraphic(Map<Src, Point2D> map) {
+    public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager) {
         styler.setTipDelegate(Functions.toStringFunction());
-        manager.addCoordinateListener(this);
-        addObjects(map);
+        setCoordinateManager(crdManager);
+        
+        pointListener = new ChangeListener(){
+            public void stateChanged(ChangeEvent e) {
+                if (!updatingPoint && e.getSource() instanceof DelegatingPointGraphic) {
+                    synchronized(DelegatingPointSetGraphic.this) {
+                        DelegatingPointGraphic<S> dpg = (DelegatingPointGraphic<S>) e.getSource();
+                        manager.put(dpg.getSourceObject(), dpg.getPoint());
+                    }
+                }
+            }
+        };
+        coordListener = new CoordinateListener(){
+            public void coordinatesChanged(CoordinateChangeEvent evt) {
+                updatePointGraphics(evt.getAdded(), evt.getRemoved());
+            }
+        };
     }
-
-    @Override
-    public String toString() {
-        return "DelegatingPointSet";
-    }
+    
 
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     //
     // EVENT HANDLERS
     //
-
-    boolean updatingPoint = false;
     
-    public synchronized void stateChanged(ChangeEvent e) {
-        if (!updatingPoint && e.getSource() instanceof DelegatingPointGraphic) {
-            DelegatingPointGraphic<Src> dpg = (DelegatingPointGraphic<Src>) e.getSource();
-            manager.put(dpg.getSourceObject(), dpg.getPoint());
-        }
-    }
-
-    public synchronized void coordinatesChanged(CoordinateChangeEvent evt) {
-        // when coordinate manager changes
-        Map added = evt.getAdded();
-        List<Graphic> addMe = new ArrayList<Graphic>();
+    private synchronized void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+        List<Graphic> addMe = Lists.newArrayList();
         if (added != null) {
-            for (Entry<Src, Point2D> en : ((Map<Src,Point2D>)added).entrySet()) {
-                Src src = en.getKey();
-                DelegatingPointGraphic<Src> dpg = points.get(src);
+            for (Entry<S, Point2D> en : added.entrySet()) {
+                S src = en.getKey();
+                DelegatingPointGraphic<S> dpg = points.get(src);
                 if (dpg == null) {
-                    points.put(src, dpg = new DelegatingPointGraphic<Src>(en.getKey(), en.getValue()));
+                    points.put(src, dpg = new DelegatingPointGraphic<S>(en.getKey(), en.getValue()));
                     dpg.setStyler(styler);
-                    dpg.addChangeListener(this);
+                    dpg.addChangeListener(pointListener);
                     addMe.add(dpg);
                 } else {
                     // this should not result in manager changing
@@ -101,10 +111,9 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
                 }
             }
         }
-        Set removed = evt.getRemoved();
-        Set<DelegatingPointGraphic<Src>> removeMe = new HashSet<DelegatingPointGraphic<Src>>();
+        Set<DelegatingPointGraphic<S>> removeMe = Sets.newHashSet();
         if (removed != null) {
-            for (Src s : (Set<Src>) removed) {
+            for (S s : removed) {
                 removeMe.add(points.get(s));
                 points.remove(s);
             }
@@ -114,52 +123,86 @@ public class DelegatingPointSetGraphic<Src> extends GraphicComposite implements 
 
     //</editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
     /**
      * Manager responsible for tracking point locations
      * @return manager
      */
-    public CoordinateManager<Src, Point2D> getCoordinateManager() {
+    public CoordinateManager<S, Point2D> getCoordinateManager() {
         return manager;
+    }
+    
+    /**
+     * Set manager responsible for tracking point locations
+     * @param mgr manager
+     */
+    public final void setCoordinateManager(CoordinateManager<S, Point2D> mgr) {
+        if (this.manager != checkNotNull(mgr)) {
+            if (this.manager != null) {
+                this.manager.removeCoordinateListener(coordListener);
+            }
+            this.manager = mgr;
+            this.manager.addCoordinateListener(coordListener);
+            updatePointGraphics(mgr.getCoordinates(), Collections.EMPTY_SET);
+        }
     }
 
     /**
      * Return source objects
      * @return source objects
      */
-    public synchronized Set<? extends Src> getObjects() {
+    public synchronized Set<? extends S> getObjects() {
         return manager.getObjects();
-    }
-
-    /**
-     * Adds objects to the graphic
-     * @param obj objects to put
-     */
-    public synchronized void addObjects(Map<Src, Point2D> obj) {
-        manager.putAll(obj);
     }
 
     /**
      * Returns object used to style points
      * @return styler object styler
      */
-    public synchronized ObjectStyler<Src, PointStyle> getStyler() {
+    public synchronized ObjectStyler<S, PointStyle> getStyler() {
         return styler;
     }
-
+    
     /**
      * Sets object used to style points
      * @param styler object styler
      */
-    public synchronized void setStyler(ObjectStyler<Src, PointStyle> styler) {
-        this.styler = styler;
-        fireGraphicChanged();
+    public synchronized void setStyler(ObjectStyler<S, PointStyle> styler) {
+        if (this.styler != checkNotNull(styler)) {
+            this.styler = styler;
+            fireGraphicChanged();
+        }
     }
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="MUTATORS">
+
+    /**
+     * Adds objects to the graphic
+     * @param obj objects to put
+     */
+    public final synchronized void addObjects(Map<S, Point2D> obj) {
+        manager.putAll(obj);
+    }
+    
+    //</editor-fold>
+    
+
 
     @Override
-    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
+    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
         // provide additional info for context menu
         Graphic gfc = graphicAt(point);
-        super.initialize(menu, point, gfc instanceof DelegatingPointGraphic ? ((DelegatingPointGraphic)gfc).getSourceObject() : focus, selection);
+        super.initContextMenu(menu, this, point, 
+                gfc instanceof DelegatingPointGraphic ? ((DelegatingPointGraphic)gfc).getSourceObject() : focus, 
+                selection);
     }
     
 }

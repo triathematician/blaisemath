@@ -5,18 +5,19 @@
 
 package dev.compound;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import org.blaise.graphics.BasicPointGraphic;
-import org.blaise.graphics.BasicStringGraphic;
+import org.blaise.graphics.BasicTextGraphic;
 import org.blaise.graphics.Graphic;
 import org.blaise.graphics.GraphicComposite;
 import org.blaise.style.PointStyle;
-import org.blaise.style.StringStyle;
+import org.blaise.style.TextStyle;
 import org.blaise.util.PointBean;
 
 /**
  * Displays a point together with a label.
+ * 
+ * TODO - align movement of string to movement of point
  *
  * @author Elisha
  */
@@ -26,7 +27,7 @@ public class LabeledPointGraphic extends GraphicComposite
     /** Stores the point */
     private final BasicPointGraphic point;
     /** Stores the string */
-    private final BasicStringGraphic string;
+    private final BasicTextGraphic string;
 
     //
     // CONSTRUCTORS
@@ -40,7 +41,7 @@ public class LabeledPointGraphic extends GraphicComposite
     /** Construct with given primitive and style. */
     public LabeledPointGraphic(Point2D p, String s, PointStyle style) {
         addGraphic(point = new BasicPointGraphic(p, style));
-        addGraphic(string = new BasicStringGraphic(p, s));
+        addGraphic(string = new BasicTextGraphic(p, s));
     }
 
     
@@ -58,8 +59,8 @@ public class LabeledPointGraphic extends GraphicComposite
     public String getString() { return string.getString(); }
     public void setString(String s) { string.setString(s); fireGraphicChanged(); }
 
-    public StringStyle getStringStyle() { return string.getStyle(); }
-    public void setStringStyle(StringStyle style) { string.setStyle(style); }
+    public TextStyle getStringStyle() { return string.getStyle(); }
+    public void setStringStyle(TextStyle style) { string.setStyle(style); }
 
     
     //
@@ -77,7 +78,7 @@ public class LabeledPointGraphic extends GraphicComposite
     
     
     @Override
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
         // override to prevent dragging and tips on the string
         return this.point.contains(p);
    }    

@@ -5,8 +5,6 @@
 
 package org.blaise.style;
 
-import java.util.Set;
-
 /**
  * <p>
  *   Used to draw a shape (or several shapes) on a {@code java.awt.Graphics2D} object.
@@ -23,6 +21,6 @@ public interface ShapeStyle {
      * @param canvas the canvas on which to paint
      * @param hints whether drawn result should be "highlighted" or otherwise emphasized
      */
-    public void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas, Set<VisibilityHint> hints);
+    void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas, VisibilityHintSet hints);
 
 }

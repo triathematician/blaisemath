@@ -8,7 +8,7 @@ import javax.swing.JMenu;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 import org.blaise.graphics.GraphicComponent;
-import org.blaise.graphics.GraphicSelector;
+import org.blaise.graphics.GraphicSelectionHandler;
 import org.blaise.visometry.plane.PlanePlotComponent;
 import org.jdesktop.application.Application;
 

@@ -5,24 +5,50 @@
 
 package org.blaise.style;
 
+import java.awt.geom.Point2D;
+
 /**
- * Anchor point constants.
+ * Anchor points for a string. Provides 8 compass directions, as well as a
+ * central anchor point.
  */
 public enum Anchor {
-    Center(0), 
-    West(0),
-    Northwest(0.25 * Math.PI),
-    North(0.5 * Math.PI),
-    Northeast(0.75 * Math.PI),
-    East(Math.PI),
-    Southeast(1.25 * Math.PI),
-    South(1.5 * Math.PI),
-    Southwest(1.75 * Math.PI);
+    
+    CENTER(0) {
+        @Override
+        public Point2D getOffset(double r) {
+            return new Point2D.Double();
+        }
+    }, 
+    WEST(0),
+    NORTHWEST(0.25 * Math.PI),
+    NORTH(0.5 * Math.PI),
+    NORTHEAST(0.75 * Math.PI),
+    EAST(Math.PI),
+    SOUTHEAST(1.25 * Math.PI),
+    SOUTH(1.5 * Math.PI),
+    SOUTHWEST(1.75 * Math.PI);
 
-    private double angle;
-    Anchor(double angle) { this.angle = angle; }
+    private final double angle;
+    
+    Anchor(double angle) {
+        this.angle = angle; 
+    }
 
-    /** Represents the relative offset angle for the specified anchor.
-     * @return angle of anchor */
-    public double getAngle() { return angle; }
+    /** 
+     * Represents the relative angle for the specified anchor.
+     * @return angle of anchor 
+     */
+    public double getAngle() { 
+        return angle; 
+    }
+    
+    /**
+     * Returns an offset anchor point for a circle of given radius.
+     * @param r radius
+     * @return offset of anchor point
+     */
+    public Point2D getOffset(double r) {
+        return new Point2D.Double(r*Math.cos(angle), r*Math.sin(angle));
+    }
+    
 }

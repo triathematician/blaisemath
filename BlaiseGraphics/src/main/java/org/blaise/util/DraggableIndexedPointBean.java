@@ -22,6 +22,6 @@ public interface DraggableIndexedPointBean<C> extends IndexedPointBean<C> {
      * @param dragStart start of drag
      * @param dragFinish end of drag
      */
-    public void setPoint(int i, C initial, C dragStart, C dragFinish);
+    void setPoint(int i, C initial, C dragStart, C dragFinish);
     
 }

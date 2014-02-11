@@ -6,17 +6,18 @@
 package org.blaise.graphics;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
-import org.blaise.style.BasicStringStyle;
+import org.blaise.style.TextStyleBasic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.VisibilityHint;
-import org.blaise.style.WrappingStringStyle;
+import org.blaise.style.VisibilityHintSet;
+import org.blaise.style.TextStyleWrapped;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -29,9 +30,9 @@ import org.blaise.style.WrappingStringStyle;
 public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
 
     /** Draws label */
-    private final BasicStringGraphic labelGraphic = new BasicStringGraphic(new Point2D.Double(), "");
+    private final BasicTextGraphic labelGraphic = new BasicTextGraphic(new Point2D.Double(), "");
     /** Special style for label */
-    private WrappingStringStyle labelStyle;
+    private TextStyleWrapped labelStyle;
     /** Whether variable inset on "highlight" visibility tag is active */
     private boolean variableInset = true;
 
@@ -59,12 +60,12 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
         if (labelGraphic != null) {
             labelGraphic.setString(src == null ? "" : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+src
                     : getStyler().getLabelDelegate().apply(src));
-            BasicStringStyle ss = (BasicStringStyle) (getStyler() == null || getStyler().getLabelStyleDelegate() == null ? null
+            TextStyleBasic ss = (TextStyleBasic) (getStyler() == null || getStyler().getLabelStyleDelegate() == null ? null
                                         : getStyler().getLabelStyleDelegate().apply(src));
-            labelStyle = (WrappingStringStyle) (ss == null ? null
-                    : new WrappingStringStyle()
-                        .anchor(ss.getAnchor())
-                        .color(ss.getColor())
+            labelStyle = (TextStyleWrapped) (ss == null ? null
+                    : new TextStyleWrapped()
+                        .textAnchor(ss.getTextAnchor())
+                        .fill(ss.getFill())
                         .font(ss.getFont())
                         .fontSize(ss.getFontSize())
                         .offset(ss.getOffset()));
@@ -86,16 +87,17 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
     //</editor-fold>
     
     @Override
-    public void initialize(JPopupMenu menu, Point point, Object focus, Set<Graphic> selection) {
-        super.initialize(menu, point, getSourceObject(), selection);
+    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+        super.initContextMenu(menu, src, point, getSourceObject(), selection);
     }
 
     @Override
-    public ShapeStyle drawStyle() {
-        final ShapeStyle parent = super.drawStyle();
+    @Nonnull 
+    protected ShapeStyle drawStyle() {
+        final ShapeStyle parentStyle = super.drawStyle();
         return new ShapeStyle() {
-            public void draw(Shape primitive, Graphics2D canvas, Set<VisibilityHint> hints) {
-                boolean highlight = hints.contains(VisibilityHint.Highlight);
+            public void draw(Shape primitive, Graphics2D canvas, VisibilityHintSet hints) {
+                boolean highlight = hints.contains(VisibilityHint.HIGHLIGHT);
                 if (primitive instanceof RectangularShape) {
                     RectangularShape rs = (RectangularShape) primitive;
                     int inset = !variableInset?0:highlight?1:3;
@@ -103,10 +105,10 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
                     rs2.setFrameFromCenter(rs.getCenterX(), rs.getCenterY(), rs.getMaxX()-inset, rs.getMaxY()-inset);
                     primitive = rs2;
                 }
-                parent.draw(primitive, canvas, hints);
+                parentStyle.draw(primitive, canvas, hints);
                 // must set the clip for the label style to draw properly
                 if (labelStyle != null) {
-                    labelStyle.setClip(primitive instanceof RectangularShape ? (RectangularShape) primitive : primitive.getBounds2D());
+                    labelStyle.setClipPath(primitive instanceof RectangularShape ? (RectangularShape) primitive : primitive.getBounds2D());
                     labelGraphic.setPoint(new Point2D.Double(primitive.getBounds2D().getMinX()+2, primitive.getBounds2D().getMinY()+2));
                     labelGraphic.draw(canvas);
                 }

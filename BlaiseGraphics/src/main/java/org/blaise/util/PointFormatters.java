@@ -8,9 +8,9 @@ package org.blaise.util;
 import java.awt.geom.Point2D;
 
 /**
- * Provides various utilities.
+ * Utilities for formatting Euclidean points as strings.
  * 
- * @author elisha
+ * @author Elisha Peterson
  */
 public final class PointFormatters { 
     private PointFormatters() {}

@@ -4,10 +4,10 @@
  */
 package org.blaise.graphics;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import javax.annotation.Nonnull;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
@@ -18,7 +18,7 @@ import org.blaise.util.PointFormatters;
 /**
  * A point with position, orientation, and an associated style.
  * Implements {@code PointBean}, allowing the point to be dragged around.
- * ChangeEvents are generated when the graphic's point changes.
+ * {@link ChangeEvent}s are generated when the graphic's point changes.
  * 
  * @see PointStyle
  * 
@@ -27,14 +27,21 @@ import org.blaise.util.PointFormatters;
 public abstract class AbstractPointGraphic extends GraphicSupport implements PointBean<Point2D> {
 
     /** The object that will be drawn. */
-    Point2D point;
+    protected Point2D point;
+
+    /**
+     * Construct with default point
+     */
+    protected AbstractPointGraphic() {
+        this(new Point2D.Double());
+    }
 
     /** 
      * Construct with given primitive and style.
      * @param p initial point
      */
-    public AbstractPointGraphic(Point2D p) {
-        this.point = p;
+    protected AbstractPointGraphic(Point2D p) {
+        setPoint(p);
         PointBeanDragger dragger = new PointBeanDragger(this);
         addMouseListener(dragger);
         addMouseMotionListener(dragger);
@@ -42,28 +49,36 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
 
     @Override
     public String toString() {
-        return "Point"+PointFormatters.formatPoint(point, 2);
+        return "PointGraphic:"+PointFormatters.formatPoint(point, 2);
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
     public Point2D getPoint() { 
         return point;
     }
-    public void setPoint(Point2D p) {
+    public final void setPoint(Point2D p) {
         if (point != p) {
             point = new Point2D.Double(p.getX(), p.getY());
             fireGraphicChanged();
             fireStateChanged();
         }
     }
+    
+    //</editor-fold>
+    
 
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
         PointStyle style = drawStyle();
-        return p.distance(point) <= style.getRadius();
+        return p.distance(point) <= style.getMarkerRadius();
     }
 
-    public boolean intersects(Rectangle box) {
+    public boolean intersects(Rectangle2D box) {
         PointStyle style = drawStyle();
-        double r = (double) style.getRadius();
+        double r = (double) style.getMarkerRadius();
         return new Ellipse2D.Double(point.getX()-r,point.getY()-r,2*r,2*r).intersects(box);
     }
     
@@ -71,7 +86,7 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
      * Return draw style for this object.
      * @return draw style
      */
-    public abstract PointStyle drawStyle();
+    public abstract @Nonnull PointStyle drawStyle();
     
     
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
@@ -82,16 +97,16 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
     protected ChangeEvent changeEvent = new ChangeEvent(this);
     protected EventListenerList listenerList = new EventListenerList();
 
-    public synchronized void addChangeListener(ChangeListener l) { 
+    public void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);
     }
     
-    public synchronized void removeChangeListener(ChangeListener l) { 
+    public void removeChangeListener(ChangeListener l) { 
         listenerList.remove(ChangeListener.class, l); 
     }
 
     /** Notify interested listeners of an (unspecified) change in the plottable. */
-    public synchronized void fireStateChanged() {
+    public void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ChangeListener.class) {
