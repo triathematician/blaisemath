@@ -4,10 +4,15 @@
 
     <groupId>org.blaise</groupId>
     <artifactId>blaise-graphics</artifactId>
-    <name>BlaiseGraphics</name>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
+    <name>BlaiseGraphics</name>
+    <url>http://blaisemath.googlecode.com</url>
+    <inceptionYear>2008</inceptionYear>
+    <organization>
+        <name>Elisha Peterson</name>
+    </organization>
     <licenses>
         <license>
             <name>Apache License 2.0</name>
@@ -15,11 +20,32 @@
         </license>
     </licenses>
     
+    <scm>
+        <connection></connection>
+        <url></url>
+    </scm>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Firestarter</artifactId>
+            <version>1.0.4</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
@@ -40,22 +66,6 @@
             <version>4.10</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>14.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Firestarter</artifactId>
-            <version>1.0.4</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

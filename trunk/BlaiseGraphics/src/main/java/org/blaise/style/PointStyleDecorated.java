@@ -66,7 +66,8 @@ public class PointStyleDecorated extends PointStyleSupport {
         this.base = checkNotNull(r);
     }
 
-    public @Nullable Color getFill() {
+    @Nullable 
+    public Color getFill() {
         return fill;
     }
     

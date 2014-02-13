@@ -22,9 +22,9 @@ import org.blaise.style.VisibilityHintSet;
 
 /**
  * <p>
- *      Provides much of the functionality required in a {@link Graphic}, including tooltips, default mouse handlers,
- *      a parent object, and a visibility property.
- *      Adds {@link GraphicSupport#fireGraphicChanged()} to notify the parent when it changes.
+ *      Provides much of the functionality required in a {@link Graphic}, including tooltips, default mouse eventHandlers,
+      a parent object, and a visibility property.
+      Adds {@link GraphicSupport#fireGraphicChanged()} to notify the parent when it changes.
  * </p>
  *
  * @author Elisha
@@ -53,6 +53,9 @@ public abstract class GraphicSupport implements Graphic {
 
     /** Context initializers */
     protected final List<ContextMenuInitializer> contextMenuInitializers = new ArrayList<ContextMenuInitializer>();
+
+    /** Stores event eventHandlers for the entry */
+    protected EventListenerList eventHandlers = new EventListenerList();
 
     /**
      * Initialize graphic
@@ -146,7 +149,7 @@ public abstract class GraphicSupport implements Graphic {
     }
 
     public boolean isHighlightEnabled() {
-        return Arrays.asList(handlers.getListenerList()).contains(highlighter);
+        return Arrays.asList(eventHandlers.getListenerList()).contains(highlighter);
     }
 
     public void setHighlightEnabled(boolean val) {
@@ -196,9 +199,6 @@ public abstract class GraphicSupport implements Graphic {
     // GENERAL EVENT HANDLING
     //
 
-    /** Stores event handlers for the entry */
-    protected EventListenerList handlers = new EventListenerList();
-
     /** Notify interested listeners of a change in the plottable. */
     protected void fireGraphicChanged() {
         if (parent != null) {
@@ -222,40 +222,40 @@ public abstract class GraphicSupport implements Graphic {
 
     public void removeMouseListeners() {
         for (MouseListener m : getMouseListeners()) {
-            handlers.remove(MouseListener.class, m);
+            eventHandlers.remove(MouseListener.class, m);
         }
     }
 
     public void removeMouseMotionListeners() {
         for (MouseMotionListener m : getMouseMotionListeners()) {
-            handlers.remove(MouseMotionListener.class, m);
+            eventHandlers.remove(MouseMotionListener.class, m);
         }
     }
 
     public final void addMouseListener(MouseListener handler) {
         checkNotNull(handler);
-        handlers.add(MouseListener.class, handler);
+        eventHandlers.add(MouseListener.class, handler);
     }
 
     public void removeMouseListener(MouseListener handler) {
-        handlers.remove(MouseListener.class, handler);
+        eventHandlers.remove(MouseListener.class, handler);
     }
 
     public MouseListener[] getMouseListeners() {
-        return handlers.getListeners(MouseListener.class);
+        return eventHandlers.getListeners(MouseListener.class);
     }
 
     public void addMouseMotionListener(MouseMotionListener handler) {
         checkNotNull(handler);
-        handlers.add(MouseMotionListener.class, handler);
+        eventHandlers.add(MouseMotionListener.class, handler);
     }
 
     public void removeMouseMotionListener(MouseMotionListener handler) {
-        handlers.remove(MouseMotionListener.class, handler);
+        eventHandlers.remove(MouseMotionListener.class, handler);
     }
 
     public MouseMotionListener[] getMouseMotionListeners() {
-        return handlers.getListeners(MouseMotionListener.class);
+        return eventHandlers.getListeners(MouseMotionListener.class);
     }
 
     //</editor-fold>

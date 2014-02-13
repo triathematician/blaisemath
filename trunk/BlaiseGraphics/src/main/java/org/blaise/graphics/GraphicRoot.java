@@ -5,6 +5,7 @@
 
 package org.blaise.graphics;
 
+import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -163,24 +164,32 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
             return;
         }
         Graphic nue = mouseGraphicAt(gme.getGraphicLocation());
-        if (mouseGraphic != nue) {
-            if (mouseGraphic != null) {
-                gme.setGraphicSource(mouseGraphic);
-                for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                    l.mouseExited(gme);
-                    if (gme.isConsumed()) {
-                        return;
-                    }
+        if (!Objects.equal(mouseGraphic, nue)) {
+            mouseExit(mouseGraphic, gme);
+            mouseGraphic = nue;
+            mouseEnter(mouseGraphic, gme);
+        }
+    }
+    
+    private void mouseEnter(Graphic mouseGraphic, GraphicMouseEvent event) {
+        if (mouseGraphic != null) {
+            event.setGraphicSource(mouseGraphic);
+            for (MouseListener l : mouseGraphic.getMouseListeners()) {
+                l.mouseEntered(event);
+                if (event.isConsumed()) {
+                    return;
                 }
             }
-            mouseGraphic = nue;
-            if (mouseGraphic != null) {
-                gme.setGraphicSource(mouseGraphic);
-                for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                    l.mouseEntered(gme);
-                    if (gme.isConsumed()) {
-                        return;
-                    }
+        }
+    }
+    
+    private void mouseExit(Graphic mouseGraphic, GraphicMouseEvent event) {
+        if (mouseGraphic != null) {
+            event.setGraphicSource(mouseGraphic);
+            for (MouseListener l : mouseGraphic.getMouseListeners()) {
+                l.mouseExited(event);
+                if (event.isConsumed()) {
+                    return;
                 }
             }
         }
@@ -204,7 +213,6 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
         mouseLoc = gme.getGraphicLocation();
         updateMouseGraphic(gme, false);
         if (mouseGraphic != null) {
-//            owner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             gme.setGraphicSource(mouseGraphic);
             for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
                 l.mouseMoved(gme);
@@ -212,8 +220,6 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
                     return;
                 }
             }
-        } else {
-//            owner.setCursor(Cursor.getDefaultCursor());
         }
     }
 
@@ -264,13 +270,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
     public void mouseExited(MouseEvent e) {
         if (mouseGraphic != null) {
             GraphicMouseEvent gme = graphicMouseEvent(e);
-            gme.setGraphicSource(mouseGraphic);
-            for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                l.mouseExited(gme);
-                if (gme.isConsumed()) {
-                    return;
-                }
-            }
+            mouseExit(mouseGraphic, gme);
         }
     }
 

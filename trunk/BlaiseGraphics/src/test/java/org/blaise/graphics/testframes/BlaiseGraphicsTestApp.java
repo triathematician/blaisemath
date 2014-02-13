@@ -1,8 +1,8 @@
 /*
- * BlaiseGraphicsTest.java
+ * BlaiseGraphicsTestApp.java
  */
 
-package org.blaise.graphics;
+package org.blaise.graphics.testframes;
 
 import org.blaise.util.ContextMenuInitializer;
 import com.google.common.base.Function;
@@ -26,6 +26,16 @@ import dev.compound.LabeledPointGraphic;
 import dev.compound.RulerGraphic;
 import dev.compound.SegmentGraphic;
 import dev.compound.TwoPointGraphicSupport;
+import org.blaise.graphics.BasicPointGraphic;
+import org.blaise.graphics.BasicPointSetGraphic;
+import org.blaise.graphics.BasicShapeGraphic;
+import org.blaise.graphics.BasicTextGraphic;
+import org.blaise.graphics.DelegatingNodeLinkGraphic;
+import org.blaise.graphics.DelegatingPointSetGraphic;
+import org.blaise.graphics.Graphic;
+import org.blaise.graphics.GraphicComponent;
+import org.blaise.graphics.GraphicHighlightHandler;
+import org.blaise.graphics.GraphicRoot;
 import org.blaise.style.Anchor;
 import org.blaise.style.PathStyleArrow;
 import org.blaise.style.PointStyleBasic;
@@ -35,7 +45,7 @@ import org.blaise.style.PointStyleInfinite;
 import org.blaise.style.PointStyleLabeled;
 import org.blaise.style.PathStyle;
 import org.blaise.style.PointStyle;
-import org.blaise.style.MarkerLibrary;
+import org.blaise.style.Markers;
 import org.blaise.style.TextStyle;
 import org.blaise.util.Edge;
 import org.blaise.util.PointFormatters;
@@ -46,7 +56,7 @@ import org.jdesktop.application.SingleFrameApplication;
 /**
  * The main class of the application.
  */
-public class BlaiseGraphicsTest extends SingleFrameApplication {
+public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     GraphicRoot root1;
     GraphicComponent canvas1;
@@ -149,7 +159,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             public PointStyle apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.setMarkerRadius(i1+5);
-                r.setMarker(MarkerLibrary.getAvailableMarkers().get(i2+3));
+                r.setMarker(Markers.getAvailableMarkers().get(i2+3));
                 r.setStrokeWidth(2+i3/3f);
                 r.setFill(new Color((i4*10+10) % 255, (i4*20+25) % 255, (i4*30+50) % 255));
                 ((TextStyleBasic)lps.getLabelStyle()).fill(r.getFill());
@@ -334,7 +344,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        BlaiseGraphicsTestView view = new BlaiseGraphicsTestView(this);
+        BlaiseGraphicsTestFrameView view = new BlaiseGraphicsTestFrameView(this);
         canvas1 = view.canvas1;
         root1 = view.canvas1.getGraphicRoot();
         show(view);
@@ -350,17 +360,17 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
 
     /**
      * A convenient static getter for the application instance.
-     * @return the instance of BlaiseGraphicsTest
+     * @return the instance of BlaiseGraphicsTestApp
      */
-    public static BlaiseGraphicsTest getApplication() {
-        return Application.getInstance(BlaiseGraphicsTest.class);
+    public static BlaiseGraphicsTestApp getApplication() {
+        return Application.getInstance(BlaiseGraphicsTestApp.class);
     }
 
     /**
      * Main method launching the application.
      */
     public static void main(String[] args) {
-        launch(BlaiseGraphicsTest.class, args);
+        launch(BlaiseGraphicsTestApp.class, args);
     }
     
     //</editor-fold>

@@ -75,7 +75,8 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicCompos
             } else {
                 Line2D.Double line = new Line2D.Double(p1, p2);
                 if (dsg == null) {
-                    edges.put(edge, dsg = new DelegatingShapeGraphic<E>(edge, line, true));
+                    dsg = new DelegatingShapeGraphic<E>(edge, line, true);
+                    edges.put(edge, dsg);
                     dsg.setStyler(edgeStyler);
                     addMe.add(dsg);
                 } else {
@@ -134,7 +135,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicCompos
                 removeMe.add(e);
             }
         }
-        if (removeMe.size() > 0 || addMe.size() > 0) {
+        if (!removeMe.isEmpty() || !addMe.isEmpty()) {
             List<Graphic> remove = new ArrayList<Graphic>();
             for (E e : removeMe) {
                 remove.add(edges.remove(e));

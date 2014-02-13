@@ -16,9 +16,11 @@ import javax.swing.JPopupMenu;
  * an optional <i>focus</i> object describing a more specific target for the menu,
  * and an optional <i>selection</i> of objects.
  *
+ * @param <S> focus object type for menu
+ * 
  * @author Elisha
  */
-public interface ContextMenuInitializer<Src> {
+public interface ContextMenuInitializer<S> {
 
     /**
      * Initialize the context menu by adding any actions appropriate for the given parameters.
@@ -28,6 +30,6 @@ public interface ContextMenuInitializer<Src> {
      * @param focus object of focus
      * @param selection current selection (null's okay)
      */
-    void initContextMenu(JPopupMenu popup, Src src, Point2D point, @Nullable Object focus, @Nullable Set selection);
+    void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus, @Nullable Set selection);
 
 }

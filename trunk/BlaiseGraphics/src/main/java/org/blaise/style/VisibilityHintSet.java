@@ -20,6 +20,9 @@ public final class VisibilityHintSet {
     
     private final Set<VisibilityHint> hints = Sets.newHashSet();
     
+    private final ChangeEvent changeEvent = new ChangeEvent(this);
+    private final EventListenerList listenerList = new EventListenerList();
+    
     @Override
     public String toString() {
         return hints.toString();
@@ -59,17 +62,11 @@ public final class VisibilityHintSet {
     public boolean contains(VisibilityHint hint) {
         return hints.contains(hint);
     }
-
-    
-    
     
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
     // EVENT HANDLING
     //
-    
-    protected ChangeEvent changeEvent = new ChangeEvent(this);
-    protected EventListenerList listenerList = new EventListenerList();
 
     public void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);

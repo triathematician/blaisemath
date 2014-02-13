@@ -14,6 +14,10 @@ import java.awt.Color;
  */
 public class ColorUtils {
     
+    // utility class
+    private ColorUtils() {
+    }
+    
     //
     // GENERAL UTILITIES
     //
@@ -54,9 +58,14 @@ public class ColorUtils {
      * @return modified color
      */
     public static Color applyHints(Color color, VisibilityHintSet hints) {
-        return hints == null ? color
-                : hints.contains(VisibilityHint.HIGHLIGHT) || hints.contains(VisibilityHint.SELECTED) ? lighterThan(color)
-                : hints.contains(VisibilityHint.FADED) ? blanderThan(color)
-                : color;
+        if (hints == null) {
+            return color;
+        } else if (hints.contains(VisibilityHint.HIGHLIGHT) || hints.contains(VisibilityHint.SELECTED)) {
+            return lighterThan(color);
+        } else if (hints.contains(VisibilityHint.FADED)) {
+            return blanderThan(color);
+        } else {
+            return color;
+        }
     }
 }

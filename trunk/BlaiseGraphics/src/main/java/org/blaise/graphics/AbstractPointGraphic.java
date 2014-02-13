@@ -4,6 +4,7 @@
  */
 package org.blaise.graphics;
 
+import com.google.common.base.Objects;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -28,6 +29,9 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
 
     /** The object that will be drawn. */
     protected Point2D point;
+    
+    protected final ChangeEvent changeEvent = new ChangeEvent(this);
+    protected final EventListenerList listenerList = new EventListenerList();
 
     /**
      * Construct with default point
@@ -61,7 +65,7 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
         return point;
     }
     public final void setPoint(Point2D p) {
-        if (point != p) {
+        if (!Objects.equal(point, p)) {
             point = new Point2D.Double(p.getX(), p.getY());
             fireGraphicChanged();
             fireStateChanged();
@@ -86,27 +90,25 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
      * Return draw style for this object.
      * @return draw style
      */
-    public abstract @Nonnull PointStyle drawStyle();
+    @Nonnull 
+    public abstract PointStyle drawStyle();
     
     
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
     // EVENT HANDLING
     //
-    
-    protected ChangeEvent changeEvent = new ChangeEvent(this);
-    protected EventListenerList listenerList = new EventListenerList();
 
-    public void addChangeListener(ChangeListener l) { 
+    public final void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);
     }
     
-    public void removeChangeListener(ChangeListener l) { 
+    public final void removeChangeListener(ChangeListener l) { 
         listenerList.remove(ChangeListener.class, l); 
     }
 
     /** Notify interested listeners of an (unspecified) change in the plottable. */
-    public void fireStateChanged() {
+    public final void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ChangeListener.class) {

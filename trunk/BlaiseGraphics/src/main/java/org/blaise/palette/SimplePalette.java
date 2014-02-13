@@ -10,8 +10,8 @@ import com.google.common.collect.Maps;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
@@ -38,12 +38,13 @@ public final class SimplePalette {
     //
     
     /** Contains colors associated with specific keys */
-    private final LinkedHashMap<String,Color> keyColors = Maps.newLinkedHashMap();
+    private final Map<String,Color> keyColors = Maps.newLinkedHashMap();
     /** Contains a gradient palette */
     @Nullable private GradientPalette gradientPalette = null;
     /** Contains a categorical palette */
     @Nullable private CategoricalPalette categoryPalette = null;
 
+    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     public SimplePalette() {
         setForeground(Color.black);
@@ -155,7 +156,6 @@ public final class SimplePalette {
     //
     // PROPERTY CHANGE LISTENING
     //
-    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     public final void addPropertyChangeListener(PropertyChangeListener pl) {
         pcs.addPropertyChangeListener(pl);

@@ -12,7 +12,7 @@ import org.blaise.graphics.BasicShapeGraphic;
 import org.blaise.graphics.BasicTextGraphic;
 import org.blaise.graphics.GraphicComposite;
 import org.blaise.style.PointStyleBasic;
-import org.blaise.style.MarkerLibrary;
+import org.blaise.style.Markers;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.VisibilityHint;
 
@@ -74,7 +74,7 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
         addGraphic(labelEntry = new GraphicComposite());
         
         PointStyleBasic style = new PointStyleBasic()
-                .marker(MarkerLibrary.CIRCLE)
+                .marker(Markers.CIRCLE)
                 .stroke(null)
                 .markerRadius(2)
                 .fill(Color.black);

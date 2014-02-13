@@ -22,6 +22,9 @@ public final class Styles {
     /** Default composite */
     public static final Composite DEFAULT_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     
+    // utility class
+    private Styles() {
+    }
    
     /**
      * Create a basic shape style with given fill & stroke

@@ -32,23 +32,26 @@ import java.util.*;
  */
 public class CoordinateManager<S, C> implements Function<S, C> {
     
-    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
-    
-    /**
-     * Create and return new instance of coordinate manager.
-     */
-    public static <Src,Coord> CoordinateManager<Src,Coord> create() {
-        return new CoordinateManager<Src,Coord>();
-    }
-    
-    //</editor-fold>
-    
-    
 
     /** Map with current objects and locations (stores the data) */
     private final Map<S, C> map = Maps.newHashMap();
     /** Cached locations */
     private final Map<S, C> cache = Maps.newHashMap();
+
+    /** Listeners that will receive updates */
+    private final List<CoordinateListener> listeners = Collections.synchronizedList(new ArrayList<CoordinateListener>());
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
+    
+    /**
+     * Create and return new instance of coordinate manager.
+     */
+    public static <S,C> CoordinateManager<S,C> create() {
+        return new CoordinateManager<S,C>();
+    }
+    
+    //</editor-fold>
     
 
     public synchronized C apply(S src) {
@@ -221,8 +224,6 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     //
     // EVENT HANDLING
     //
-
-    private final List<CoordinateListener> listeners = Collections.synchronizedList(new ArrayList<CoordinateListener>());
 
     protected final void fireCoordinatesChanged(CoordinateChangeEvent evt) {
         synchronized(listeners) {
