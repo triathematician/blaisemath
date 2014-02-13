@@ -105,7 +105,8 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
      * Subclasses should override to return their draw style for the graphic.
      * @return style
      */
-    protected abstract @Nonnull ShapeStyle drawStyle();
+    @Nonnull 
+    protected abstract ShapeStyle drawStyle();
     
 
     /** Return true if painting as a stroke. */

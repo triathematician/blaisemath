@@ -51,8 +51,8 @@ public class ObjectStyler<S, T> {
     /**
      * Create new default styler instance.
      */
-    public static <Src,Style> ObjectStyler<Src,Style> create() {
-        return new ObjectStyler<Src,Style>();
+    public static <S,T> ObjectStyler<S,T> create() {
+        return new ObjectStyler<S,T>();
     }
     
     //</editor-fold>

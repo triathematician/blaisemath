@@ -24,7 +24,8 @@ import org.blaise.style.ShapeStyle;
 public class BasicShapeGraphic extends AbstractShapeGraphic {
 
     /** The associated style */
-    protected @Nullable ShapeStyle style;
+    @Nullable 
+    protected ShapeStyle style;
 
     /**
      * Construct with no style (will use the default)
@@ -53,6 +54,7 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
         setStyle(style);
     }
 
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
     // PROPERTY PATTERNS
@@ -62,7 +64,8 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
      * Return the style for the graphic.
      * @return style
      */
-    public @Nullable ShapeStyle getStyle() {
+    @Nullable 
+    public ShapeStyle getStyle() {
         return style;
     }
 
@@ -79,8 +82,10 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
     
     //</editor-fold>
 
+    
     /** Return the actual style used for drawing */
-    protected @Nonnull ShapeStyle drawStyle() {
+    @Nonnull 
+    protected ShapeStyle drawStyle() {
         if (style != null) {
             return style;
         }

@@ -2,44 +2,37 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.blaise.graphics;
+package org.blaise.graphics.testframes;
 
-import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import org.blaise.style.ShapeStyleBasic;
+import org.blaise.graphics.BasicShapeGraphic;
 
 /**
  *
  * @author Elisha
  */
-public class TestPAZ extends javax.swing.JFrame {
+public class TooltipTestFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TestTooltips
      */
-    public TestPAZ() {
+    public TooltipTestFrame() {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
-        g1.setStyle(new ShapeStyleBasic().fill(Color.blue).stroke(Color.red));
-        g1.setSelectionEnabled(true);
+        g1.setDefaultTooltip("Ellipse");
         gc.addGraphic(g1);
         
-        BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100));
-        gc.addGraphic(g2);
-        
-        // all it takes to add selection capability!
-        gc.setSelectionEnabled(true);
-        gc.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
+        BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100)) {
+            @Override
+            public String getTooltip(Point2D p) {
+                return ""+p;
             }
-        });
-
-        // init pan and zoom
-        new PanAndZoomHandler(gc);
+        };
+        g2.setTooltipEnabled(true);
+        gc.addGraphic(g2);
     }
 
     /**
@@ -88,20 +81,20 @@ public class TestPAZ extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TestPAZ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TestPAZ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TestPAZ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TestPAZ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TooltipTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestPAZ().setVisible(true);
+                new TooltipTestFrame().setVisible(true);
             }
         });
     }

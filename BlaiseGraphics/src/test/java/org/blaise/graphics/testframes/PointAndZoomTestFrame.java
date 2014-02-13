@@ -2,25 +2,27 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.blaise.graphics;
+package org.blaise.graphics.testframes;
 
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.blaise.graphics.BasicShapeGraphic;
+import org.blaise.graphics.PanAndZoomHandler;
 import org.blaise.style.ShapeStyleBasic;
 
 /**
  *
  * @author Elisha
  */
-public class TestSelection extends javax.swing.JFrame {
+public class PointAndZoomTestFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TestTooltips
      */
-    public TestSelection() {
+    public PointAndZoomTestFrame() {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
         g1.setStyle(new ShapeStyleBasic().fill(Color.blue).stroke(Color.red));
@@ -37,6 +39,9 @@ public class TestSelection extends javax.swing.JFrame {
                 System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
             }
         });
+
+        // init pan and zoom
+        new PanAndZoomHandler(gc);
     }
 
     /**
@@ -85,20 +90,20 @@ public class TestSelection extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TestSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TestSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TestSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TestSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestSelection().setVisible(true);
+                new PointAndZoomTestFrame().setVisible(true);
             }
         });
     }

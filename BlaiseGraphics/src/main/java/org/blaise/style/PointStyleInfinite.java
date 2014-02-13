@@ -26,12 +26,6 @@ public class PointStyleInfinite extends PointStyleBasic {
     public PointStyleInfinite() {
     }
 
-    @Override
-    public String toString() {
-        return String.format("InfinitePointStyle[fill=%s, stroke=%s, stroke_width=%.1f, radius=%.1f, shape=%s, rayStyle=%s, extendBoth=%s]", 
-                shapeStyle.fill, shapeStyle.stroke, shapeStyle.strokeWidth, markerRadius, marker, rayStyle, extendBothDirections);
-    }
-
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
@@ -48,6 +42,12 @@ public class PointStyleInfinite extends PointStyleBasic {
     }
 
     // </editor-fold>
+
+    @Override
+    public String toString() {
+        return String.format("InfinitePointStyle[fill=%s, stroke=%s, stroke_width=%.1f, radius=%.1f, shape=%s, rayStyle=%s, extendBoth=%s]", 
+                shapeStyle.fill, shapeStyle.stroke, shapeStyle.strokeWidth, markerRadius, marker, rayStyle, extendBothDirections);
+    }
     
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -103,28 +103,38 @@ public class PointStyleInfinite extends PointStyleBasic {
     protected static Point2D.Double boundaryHit(Point2D p1p, Point2D p2p, Rectangle2D bounds) {
         Point2D.Double p1 = new Point2D.Double(p1p.getX(), p1p.getY());
         Point2D.Double p2 = new Point2D.Double(p2p.getX(), p2p.getY());
-        if (p2.x > p1.x && p1.x <= bounds.getMaxX()) { // line goes to the right
+        if (p2.x > p1.x && p1.x <= bounds.getMaxX()) {
+            // line goes to the right
             double slope = (p2.y - p1.y) / (p2.x - p1.x);
             double yRight = slope * (bounds.getMaxX() - p1.x) + p1.y;
-            if (yRight <= bounds.getMaxY() && yRight >= bounds.getMinY()) { // point is on the right
+            if (yRight <= bounds.getMaxY() && yRight >= bounds.getMinY()) {
+                // point is on the right
                 return new Point2D.Double(bounds.getMaxX(), yRight);
-            } else if (p2.y > p1.y && p1.y <= bounds.getMaxY()) { // line goes up
+            } else if (p2.y > p1.y && p1.y <= bounds.getMaxY()) {
+                // line goes up
                 return new Point2D.Double((bounds.getMaxY() - p1.y) / slope + p1.x, bounds.getMaxY());
-            } else if (p1.y > p2.y && p1.y >= bounds.getMinY()) { // line goes down
+            } else if (p1.y > p2.y && p1.y >= bounds.getMinY()) {
+                // line goes down
                 return new Point2D.Double((bounds.getMinY() - p1.y) / slope + p1.x, bounds.getMinY());
             }
-        } else if (p2.x < p1.x && p1.x >= bounds.getMinX()) { // line goes to the left
+        } else if (p2.x < p1.x && p1.x >= bounds.getMinX()) {
+            // line goes to the left
             double slope = (p2.y - p1.y) / (p2.x - p1.x);
             double yLeft = slope * (bounds.getMinX() - p1.x) + p1.y;
-            if (yLeft <= bounds.getMaxY() && yLeft >= bounds.getMinY()) { // point is on the right
+            if (yLeft <= bounds.getMaxY() && yLeft >= bounds.getMinY()) {
+                // point is on the right
                 return new Point2D.Double(bounds.getMinX(), yLeft);
-            } else if (p2.y > p1.y && p1.y <= bounds.getMaxY()) { // line goes up
+            } else if (p2.y > p1.y && p1.y <= bounds.getMaxY()) {
+                // line goes up
                 return new Point2D.Double((bounds.getMaxY() - p1.y) / slope + p1.x, bounds.getMaxY());
-            } else if (p1.y > p2.y && p1.y >= bounds.getMinY()) { // line goes down
+            } else if (p1.y > p2.y && p1.y >= bounds.getMinY()) {
+                // line goes down
                 return new Point2D.Double((bounds.getMinY() - p1.y) / slope + p1.x, bounds.getMinY());
             }
-        } else if (p1.x == p2.x) { // line is vertical
-            if (p2.y < p1.y && p1.y >= bounds.getMinY()) { // line goes up
+        } else if (p1.x == p2.x) {
+            // line is vertical
+            if (p2.y < p1.y && p1.y >= bounds.getMinY()) {
+                // line goes up
                 return new Point2D.Double(p1.x, bounds.getMinY());
             } else if (p1.y <= bounds.getMaxY()) {
                 return new Point2D.Double(p1.x, bounds.getMaxY());

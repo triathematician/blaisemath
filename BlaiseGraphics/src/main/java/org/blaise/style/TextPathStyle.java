@@ -23,7 +23,8 @@ public class TextPathStyle implements ShapeStyle {
     protected boolean stretch = false;
     
     /** Default constructor. */
-    public TextPathStyle() { }
+    public TextPathStyle() {
+    }
     
     @Override
     public String toString() {

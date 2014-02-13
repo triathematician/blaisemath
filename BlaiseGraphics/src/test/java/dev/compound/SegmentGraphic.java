@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import org.blaise.graphics.BasicShapeGraphic;
 import org.blaise.style.PointStyleBasic;
-import org.blaise.style.MarkerLibrary;
+import org.blaise.style.Markers;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.VisibilityHint;
 
@@ -37,14 +37,14 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
         super.initGraphics();
         
         start.setStyle(new PointStyleBasic()
-                .marker(MarkerLibrary.CIRCLE)
+                .marker(Markers.CIRCLE)
                 .stroke(null)
                 .markerRadius(2)
                 .fill(Color.black));
         start.setVisibilityHint(VisibilityHint.HIDDEN, true);
         
         end.setStyle(new PointStyleBasic()
-                .marker(MarkerLibrary.ARROWHEAD));
+                .marker(Markers.ARROWHEAD));
     }
 
     @Override

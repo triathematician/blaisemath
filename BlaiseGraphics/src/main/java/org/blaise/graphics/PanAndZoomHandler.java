@@ -38,14 +38,14 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /** Mode for restricted movement */
     private static final String RESTRICTED_MOVEMENT_MODE = "Shift+Button1";
     private static final String RESTRICTED_MOVEMENT_MODE_ALT = "Shift";
+    
+    /** Renderer for zoom box */
+    private static final ShapeStyleBasic ZOOM_BOX_STYLE = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
+    
     /** The component for the mouse handling */
     private final GraphicComponent component;
-
     /** Hint box for zooming */
     private transient Rectangle2D.Double zoomBox;
-    /** Renderer for zoom box */
-    private static final ShapeStyleBasic zoomBoxStyle = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
-
     /** Location mouse was first pressed at. */
     private transient Point pressedAt = null;
     /** Stores keyboard modifiers for mouse. */
@@ -67,7 +67,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     public void paint(Component component, Graphics2D canvas) {
         if (zoomBox != null) {
-            zoomBoxStyle.draw(zoomBox, canvas, null);
+            ZOOM_BOX_STYLE.draw(zoomBox, canvas, null);
         }
     }
     
@@ -92,49 +92,47 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed()) {
+        if (e.isConsumed() || pressedAt == null) {
             return;
         }
-        if (pressedAt != null) {
-            Point winPt = e.getPoint();
-            if (RECTANGLE_RESIZE_MODE.equals(mode)) {
-                // rectangle resize mode (ensure positive values)
-                if (winPt.x < pressedAt.x) {
-                    zoomBox.x = winPt.x;
-                    zoomBox.width = -winPt.x + pressedAt.x;
+        Point winPt = e.getPoint();
+        if (RECTANGLE_RESIZE_MODE.equals(mode)) {
+            // rectangle resize mode (ensure positive values)
+            if (winPt.x < pressedAt.x) {
+                zoomBox.x = winPt.x;
+                zoomBox.width = -winPt.x + pressedAt.x;
+            } else {
+                zoomBox.x = pressedAt.x;
+                zoomBox.width = winPt.x - pressedAt.x;
+            }
+            if (winPt.y < pressedAt.y) {
+                zoomBox.y = winPt.y;
+                zoomBox.height = -winPt.y + pressedAt.y;
+            } else {
+                zoomBox.y = pressedAt.y;
+                zoomBox.height = winPt.y - pressedAt.y;
+            }
+            component.repaint();
+        } else { 
+            // pan mode
+            String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
+            if (RESTRICTED_MOVEMENT_MODE.equals(curMode) || RESTRICTED_MOVEMENT_MODE_ALT.equals(curMode)) {
+                if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
+                    winPt.y = pressedAt.y;
                 } else {
-                    zoomBox.x = pressedAt.x;
-                    zoomBox.width = winPt.x - pressedAt.x;
+                    winPt.x = pressedAt.x;
                 }
-                if (winPt.y < pressedAt.y) {
-                    zoomBox.y = winPt.y;
-                    zoomBox.height = -winPt.y + pressedAt.y;
-                } else {
-                    zoomBox.y = pressedAt.y;
-                    zoomBox.height = winPt.y - pressedAt.y;
-                }
-                component.repaint();
-            } else { 
-                // pan mode
-                String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
-                if (RESTRICTED_MOVEMENT_MODE.equals(curMode) || RESTRICTED_MOVEMENT_MODE_ALT.equals(curMode)) {
-                    if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
-                        winPt.y = pressedAt.y;
-                    } else {
-                        winPt.x = pressedAt.x;
-                    }
-                }
-                double dx = (winPt.x - pressedAt.x) * component.getInverseTransform().getScaleX();
-                double dy = (winPt.y - pressedAt.y) * component.getInverseTransform().getScaleY();
+            }
+            double dx = (winPt.x - pressedAt.x) * component.getInverseTransform().getScaleX();
+            double dy = (winPt.y - pressedAt.y) * component.getInverseTransform().getScaleY();
 
-                try {
-                    setDesiredLocalBounds(component,
-                            new Rectangle2D.Double(
-                                    oldLocalBounds.getX() - dx, oldLocalBounds.getY() - dy, 
-                                    oldLocalBounds.getWidth(), oldLocalBounds.getHeight()));
-                } catch (Exception ex) {
-                    Logger.getLogger(PanAndZoomHandler.class.getName()).log(Level.WARNING, "Unable to set desired local bounds", ex);
-                }
+            try {
+                setDesiredLocalBounds(component,
+                        new Rectangle2D.Double(
+                                oldLocalBounds.getX() - dx, oldLocalBounds.getY() - dy, 
+                                oldLocalBounds.getWidth(), oldLocalBounds.getHeight()));
+            } catch (Exception ex) {
+                Logger.getLogger(PanAndZoomHandler.class.getName()).log(Level.WARNING, "Unable to set desired local bounds", ex);
             }
         }
     }
@@ -185,8 +183,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         if (gc.getInverseTransform() == null) {
             gc.setTransform(new AffineTransform());
         }
-        Point2D res = gc.getInverseTransform().transform(pt, null);
-        return res;
+        return gc.getInverseTransform().transform(pt, null);
     }
 
     /**
@@ -201,8 +198,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         Point2D.Double max = new Point2D.Double(gc.getBounds().getMaxX(), gc.getBounds().getMaxY());
         Point2D cmin = gc.getInverseTransform().transform(min, null);
         Point2D cmax = gc.getInverseTransform().transform(max, null);
-        Rectangle2D.Double res = new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
-        return res;
+        return new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
     }
 
     /**

@@ -23,7 +23,8 @@ public class BasicPointGraphic extends AbstractPointGraphic {
     /** Angle specifying point orientation */
     protected double angle = 0;
     /** The associated style (may be null). */
-    protected @Nullable PointStyle style;
+    @Nullable 
+    protected PointStyle style;
 
     //
     // CONSTRUCTORS
@@ -54,6 +55,7 @@ public class BasicPointGraphic extends AbstractPointGraphic {
         setStyle(style);
     }
     
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
     // PROPERTY PATTERNS
@@ -82,7 +84,8 @@ public class BasicPointGraphic extends AbstractPointGraphic {
      * Return the style for the point
      * @return style, or null if there is none
      */
-    public @Nullable PointStyle getStyle() { 
+    @Nullable 
+    public PointStyle getStyle() { 
         return style; 
     }
     
@@ -101,7 +104,8 @@ public class BasicPointGraphic extends AbstractPointGraphic {
     
         
     /** Return the actual style used for drawing */
-    public @Nonnull PointStyle drawStyle() {
+    @Nonnull 
+    public PointStyle drawStyle() {
         return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 

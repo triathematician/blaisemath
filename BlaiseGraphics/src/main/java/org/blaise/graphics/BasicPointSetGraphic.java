@@ -33,9 +33,11 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     /** The points that will be drawn. */
     protected Point2D[] points = new Point2D[0];
     /** The associated style (may be null). */
-    protected @Nullable PointStyle style = null;
+    @Nullable 
+    protected PointStyle style = null;
     /** Optional delegate for tooltips */
-    protected @Nullable Function<Point2D, String> pointTipper = null;
+    @Nullable 
+    protected Function<Point2D, String> pointTipper = null;
 
     //
     // CONSTRUCTORS

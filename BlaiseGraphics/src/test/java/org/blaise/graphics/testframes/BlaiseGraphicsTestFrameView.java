@@ -1,20 +1,22 @@
 /*
- * BlaiseGraphicsTestView.java
+ * BlaiseGraphicsTestFrameView.java
  */
 
-package org.blaise.graphics;
+package org.blaise.graphics.testframes;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import org.blaise.graphics.GraphicComponent;
+import org.blaise.graphics.PanAndZoomHandler;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 
 /**
  * The application's main frame.
  */
-public class BlaiseGraphicsTestView extends FrameView {
+public class BlaiseGraphicsTestFrameView extends FrameView {
 
-    public BlaiseGraphicsTestView(SingleFrameApplication app) {
+    public BlaiseGraphicsTestFrameView(SingleFrameApplication app) {
         super(app);
 
         initComponents();
@@ -33,8 +35,8 @@ public class BlaiseGraphicsTestView extends FrameView {
         mainPanel.setName("mainPanel"); // NOI18N
         mainPanel.setLayout(new java.awt.GridLayout(1, 2));
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(BlaiseGraphicsTest.class).getContext().getResourceMap(BlaiseGraphicsTestView.class);
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(BlaiseGraphicsTest.class).getContext().getActionMap(BlaiseGraphicsTestView.class, this);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(BlaiseGraphicsTestApp.class).getContext().getResourceMap(BlaiseGraphicsTestFrameView.class);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(BlaiseGraphicsTestApp.class).getContext().getActionMap(BlaiseGraphicsTestFrameView.class, this);
         
         canvas1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("canvas1.border.title"))); // NOI18N
         canvas1.setName("canvas1"); // NOI18N

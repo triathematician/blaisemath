@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dev.svg;
+package org.blaise.style;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -21,18 +21,23 @@ import java.util.regex.Pattern;
  * Convert styles to/from SVG.
  * @author Elisha
  */
-public class ToSVG {
+public class StyleUtilsSVG {
+    
+    // utility class
 
-    /** Convert style class to string. */
-    public static String toSVG(Object style) throws IntrospectionException {
+    private StyleUtilsSVG() {
+    }
+
+    /** Convert style class to string. */    
+    public static String convertStyleToSVG(Object style) throws IntrospectionException {
         BeanInfo info = Introspector.getBeanInfo(style.getClass());
         Map<String,String> props = Maps.newLinkedHashMap();
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             if (pd.getReadMethod() != null && pd.getWriteMethod() != null) {
                 try {
-                    props.put(toSVGKey(pd.getName()), toSVGValue(pd.getReadMethod().invoke(style)));
+                    props.put(convertKeyToSVG(pd.getName()), convertValueToSVG(pd.getReadMethod().invoke(style)));
                 } catch (Exception ex) {
-                    Logger.getLogger(ToSVG.class.getName()).log(Level.SEVERE, "Failed to write property "+pd.getName(), ex);
+                    Logger.getLogger(StyleUtilsSVG.class.getName()).log(Level.SEVERE, "Failed to write property "+pd.getName(), ex);
                 }
             }
         }
@@ -40,7 +45,7 @@ public class ToSVG {
     }
     
     /** Convert property keys via camelcase, like "fontSize", to SVG-like keys like "font-size" */
-    public static String toSVGKey(String key) {
+    public static String convertKeyToSVG(String key) {
         Pattern p = Pattern.compile("([a-z]+)([A-Z])");
         Matcher m = p.matcher(key);
         StringBuilder res = new StringBuilder();
@@ -54,7 +59,7 @@ public class ToSVG {
     }
     
     /** Convert values to SVG value strings */
-    public static String toSVGValue(Object val) throws UnsupportedOperationException {
+    public static String convertValueToSVG(Object val) throws UnsupportedOperationException {
         if (val instanceof Color) {
             Color c = (Color) val;
             String col = String.format("%8h", c.getRGB());
@@ -71,5 +76,6 @@ public class ToSVG {
             throw new UnsupportedOperationException("Unsupported value: " + val);
         }
     }
+
     
 }

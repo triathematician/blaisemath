@@ -18,6 +18,20 @@ import javax.annotation.Nullable;
  * @author elisha
  */
 public final class CoordinateChangeEvent extends EventObject {
+
+    /** Added coords */
+    private Map added = null;
+    /** Removed coords */
+    private Set removed = null;
+
+    /** 
+     * Initialize with given source object
+     * @param src source of event
+     */
+    public CoordinateChangeEvent(Object src) {
+        super(src);
+    }
+    
     
     //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
     //
@@ -62,19 +76,6 @@ public final class CoordinateChangeEvent extends EventObject {
     //</editor-fold>
     
 
-    /** Added coords */
-    private Map added = null;
-    /** Removed coords */
-    private Set removed = null;
-
-    /** 
-     * Initialize with given source object
-     * @param src source of event
-     */
-    public CoordinateChangeEvent(Object src) {
-        super(src);
-    }
-
     @Override
     public String toString() {
         return String.format("CoordinateChangeEvent[%d added,%d removed,source=%s]",
@@ -101,7 +102,8 @@ public final class CoordinateChangeEvent extends EventObject {
      * Get the collection of coordinate that were added
      * @return map whose keys are the objects and values are their coordinates
      */
-    public @Nullable Map getAdded() {
+    @Nullable 
+    public Map getAdded() {
         return added;
     }
 
@@ -109,7 +111,8 @@ public final class CoordinateChangeEvent extends EventObject {
      * Get the collection of objects whose coordinates were removed
      * @return set of objects removed
      */
-    public @Nullable Set getRemoved() {
+    @Nullable
+    public Set getRemoved() {
         return removed;
     }
 

@@ -21,7 +21,8 @@ import org.blaise.util.PointFormatters;
 public class PointStyleLabeled implements PointStyle {
 
     /** Base style */
-    protected @Nullable PointStyle base = new PointStyleBasic();
+    @Nullable 
+    protected PointStyle base = new PointStyleBasic();
     /** Label style */
     protected TextStyle labelStyle = new TextStyleBasic();
     /** Whether labels are visible */

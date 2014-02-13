@@ -44,7 +44,8 @@ public class DelegatingPointSetGraphic<S> extends GraphicComposite {
     /** Manages locations of points */
     protected CoordinateManager<S,Point2D> manager;
     /** Generates styles for graphics */
-    @Nonnull protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
+    @Nonnull 
+    protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
 
     /** Indicates points are being updated */
     protected boolean updatingPoint = false;
@@ -99,7 +100,8 @@ public class DelegatingPointSetGraphic<S> extends GraphicComposite {
                 S src = en.getKey();
                 DelegatingPointGraphic<S> dpg = points.get(src);
                 if (dpg == null) {
-                    points.put(src, dpg = new DelegatingPointGraphic<S>(en.getKey(), en.getValue()));
+                    dpg = new DelegatingPointGraphic<S>(en.getKey(), en.getValue());
+                    points.put(src, dpg);
                     dpg.setStyler(styler);
                     dpg.addChangeListener(pointListener);
                     addMe.add(dpg);

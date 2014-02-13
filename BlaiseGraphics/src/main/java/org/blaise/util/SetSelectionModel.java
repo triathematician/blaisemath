@@ -20,8 +20,12 @@ import javax.swing.ListSelectionModel;
  * @author elisha
  */
 public class SetSelectionModel<G> {
+    
+    public static final String SELECTION_PROPERTY = "selection";
 
     private final Set<G> selected = Sets.newHashSet();
+
+    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     /** Initialize without arguments */
     public SetSelectionModel() {
@@ -42,7 +46,7 @@ public class SetSelectionModel<G> {
             Set<G> old = getSelection();
             selected.clear();
             selected.addAll(selection);
-            pcs.firePropertyChange("selection", old, getSelection());
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
 
@@ -50,14 +54,14 @@ public class SetSelectionModel<G> {
         if (g != null && !selected.contains(g)) {
             Set<G> old = getSelection();
             selected.add(g);
-            pcs.firePropertyChange("selection", old, getSelection());
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
 
     public synchronized void removeSelection(G g) {
         if (g != null && selected.remove(g)) {
             Set<G> old = getSelection();
-            pcs.firePropertyChange("selection", old, getSelection());
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
 
@@ -73,7 +77,7 @@ public class SetSelectionModel<G> {
             } else {
                 selected.add(g);
             }
-            pcs.firePropertyChange("selection", old, getSelection());
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
 
@@ -84,8 +88,6 @@ public class SetSelectionModel<G> {
     //
     // EVENT HANDLING
     //
-
-    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);

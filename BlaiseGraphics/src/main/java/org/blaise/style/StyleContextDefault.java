@@ -13,19 +13,7 @@ import java.awt.Color;
  */
 public final class StyleContextDefault implements StyleContext<Object> {
     
-    //
-    // SINGLETON INSTANCE
-    //
-    
     private static final StyleContextDefault INST = new StyleContextDefault();
-    
-    public static StyleContextDefault getInstance() {
-        return INST;
-    }
-    
-    //
-    // STYLE OBJECTS
-    //    
     
     protected static final ShapeStyle SOLID = new ShapeStyleBasic().fill(Color.white).stroke(Color.black);
     protected static final PathStyle PATH = new PathStyleBasic().stroke(Color.black);
@@ -33,6 +21,10 @@ public final class StyleContextDefault implements StyleContext<Object> {
     protected static final TextStyle STRING = new TextStyleBasic();
 
     private StyleContextDefault() {
+    }
+    
+    public static StyleContextDefault getInstance() {
+        return INST;
     }
         
     public ShapeStyle getShapeStyle(Object o) {

@@ -5,20 +5,21 @@
 
 package org.blaise.style;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Color;
 import javax.annotation.Nullable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Draws a point on the graphics canvas, using a {@link Marker} object and a {@link ShapeStyle}.
  * See also the <a href="http://www.w3.org/TR/SVG/painting.html#Markers">related SVG documentation</a> on markers.
  * 
- * @author Elisha
+ * @author Elisha Peterson
  */
 public class PointStyleBasic extends PointStyleSupport {
 
     /** Style of the point */
-    protected Marker marker = new MarkerLibrary.CircleShape();
+    protected Marker marker = new Markers.CircleShape();
     /** Radius of the displayed point */
     protected float markerRadius = 4;
     /** Delegate style used to draw the point */
@@ -26,7 +27,8 @@ public class PointStyleBasic extends PointStyleSupport {
 
 
     /** Construct instance with default settings */
-    public PointStyleBasic() { }
+    public PointStyleBasic() { 
+    }
 
     @Override
     public String toString() {
@@ -90,7 +92,8 @@ public class PointStyleBasic extends PointStyleSupport {
         markerRadius = Math.max(r, 1);
     }
 
-    public @Nullable Color getFill() {
+    @Nullable 
+    public Color getFill() {
         return shapeStyle.getFill();
     }
     
@@ -98,7 +101,8 @@ public class PointStyleBasic extends PointStyleSupport {
         shapeStyle.setFill(fill);
     }
 
-    public @Nullable Color getStroke() {
+    @Nullable 
+    public Color getStroke() {
         return shapeStyle.getStroke();
     }
 

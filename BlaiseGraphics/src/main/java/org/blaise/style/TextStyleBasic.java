@@ -28,7 +28,8 @@ public class TextStyleBasic implements TextStyle {
     /** Color of the text. */
     protected Color fill = Color.BLACK;
     /** Font of the text. */
-    protected @Nullable Font font = new Font("Dialog", Font.PLAIN, 12);
+    @Nullable 
+    protected Font font = new Font("Dialog", Font.PLAIN, 12);
     /** Font size (may apply if font is null) */
     protected float fontSize = font.getSize2D();
 
@@ -38,13 +39,15 @@ public class TextStyleBasic implements TextStyle {
     protected Anchor textAnchor = Anchor.SOUTHWEST;
 
     /** Default constructor. */
-    public TextStyleBasic() { }
+    public TextStyleBasic() { 
+    }
     
     @Override
     public String toString() {
         return String.format("BasicStringStyle[fill=%s, font=%s, fontSize=%.1f, offset=(%.1f,%.1f), textAnchor=%s]", 
                 fill, font, fontSize, offset.getX(), offset.getY(), textAnchor);
     }
+    
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
@@ -124,7 +127,8 @@ public class TextStyleBasic implements TextStyle {
      * Get font.
      * @return current font 
      */
-    public @Nullable Font getFont() { 
+    @Nullable 
+    public Font getFont() { 
         return font;
     }
     

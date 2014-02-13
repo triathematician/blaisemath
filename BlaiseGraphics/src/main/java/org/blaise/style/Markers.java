@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Elisha Peterson
  */
-public final class MarkerLibrary {
+public final class Markers {
 
     public static final NoShape NONE = new NoShape();
     public static final CircleShape CIRCLE = new CircleShape();
@@ -42,6 +42,14 @@ public final class MarkerLibrary {
     public static final TriangleFlagShape ARROWHEAD = new TriangleFlagShape();
     public static final TeardropShape TEARDROP = new TeardropShape();
     public static final CarShape CAR = new CarShape();
+
+    static final GeneralPath EMPTY_PATH = new GeneralPath();
+
+    /**
+     * Utility class
+     */
+    private Markers() {
+    }
 
     /**
      * Retrieve list of available shapes.
@@ -83,7 +91,11 @@ public final class MarkerLibrary {
     public static class SquareShape implements Marker {
 
         public Shape create(Point2D p, double angle, float radius) {
-            return new Rectangle2D.Double(p.getX() - radius / Math.sqrt(2), p.getY() - radius / Math.sqrt(2), 2 * radius / Math.sqrt(2), 2 * radius / Math.sqrt(2));
+            return new Rectangle2D.Double(
+                    p.getX() - radius / Math.sqrt(2),
+                    p.getY() - radius / Math.sqrt(2), 
+                    2 * radius / Math.sqrt(2), 
+                    2 * radius / Math.sqrt(2));
         }
     }
 
@@ -113,8 +125,10 @@ public final class MarkerLibrary {
             double x = p.getX(), y = p.getY();
             GeneralPath gp2 = new GeneralPath();
             gp2.moveTo((float) x, (float) (y - radius));
-            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.16667)), (float) (y - radius * Math.sin(Math.PI * 1.16667)));
-            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.83333)), (float) (y - radius * Math.sin(Math.PI * 1.83333)));
+            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.16667)), 
+                    (float) (y - radius * Math.sin(Math.PI * 1.16667)));
+            gp2.lineTo((float) (x + radius * Math.cos(Math.PI * 1.83333)), 
+                    (float) (y - radius * Math.sin(Math.PI * 1.83333)));
             gp2.closePath();
             return gp2;
         }
@@ -131,9 +145,11 @@ public final class MarkerLibrary {
             gp5.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 5; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 5;
-                gp5.lineTo((float) (x + radius * Math.cos(theta)), (float) (y - radius * Math.sin(theta)));
+                gp5.lineTo((float) (x + radius * Math.cos(theta)), 
+                        (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 5;
-                gp5.lineTo((float) (x + radius / Math.sqrt(8) * Math.cos(theta)), (float) (y - radius / Math.sqrt(8) * Math.sin(theta)));
+                gp5.lineTo((float) (x + radius / Math.sqrt(8) * Math.cos(theta)), 
+                        (float) (y - radius / Math.sqrt(8) * Math.sin(theta)));
             }
             gp5.closePath();
             return gp5;
@@ -151,9 +167,11 @@ public final class MarkerLibrary {
             gp6.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 7; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 7;
-                gp6.lineTo((float) (x + radius * Math.cos(theta)), (float) (y - radius * Math.sin(theta)));
+                gp6.lineTo((float) (x + radius * Math.cos(theta)), 
+                        (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 7;
-                gp6.lineTo((float) (x + radius / 2 * Math.cos(theta)), (float) (y - radius / 2 * Math.sin(theta)));
+                gp6.lineTo((float) (x + radius / 2 * Math.cos(theta)), 
+                        (float) (y - radius / 2 * Math.sin(theta)));
             }
             gp6.closePath();
             return gp6;
@@ -171,9 +189,11 @@ public final class MarkerLibrary {
             gp7.moveTo((float) x, (float) (y - radius));
             for (int i = 0; i < 11; i++) {
                 double theta = Math.PI / 2 + 2 * Math.PI * i / 11;
-                gp7.lineTo((float) (x + radius * Math.cos(theta)), (float) (y - radius * Math.sin(theta)));
+                gp7.lineTo((float) (x + radius * Math.cos(theta)), 
+                        (float) (y - radius * Math.sin(theta)));
                 theta += Math.PI / 11;
-                gp7.lineTo((float) (x + radius / 1.5 * Math.cos(theta)), (float) (y - radius / 1.5 * Math.sin(theta)));
+                gp7.lineTo((float) (x + radius / 1.5 * Math.cos(theta)), 
+                        (float) (y - radius / 1.5 * Math.sin(theta)));
             }
             gp7.closePath();
             return gp7;
@@ -279,10 +299,12 @@ public final class MarkerLibrary {
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp = new GeneralPath();
-            gp.moveTo((float) (x + radius * Math.cos(Math.PI * 0.667)), (float) (y - radius * Math.sin(Math.PI * 0.6667)));
+            gp.moveTo((float) (x + radius * Math.cos(Math.PI * 0.667)), 
+                    (float) (y - radius * Math.sin(Math.PI * 0.6667)));
             gp.lineTo((float) x, (float) y);
             gp.moveTo((float) x, (float) y);
-            gp.lineTo((float) (x + radius * Math.cos(Math.PI * 0.667)), (float) (y + radius * Math.sin(Math.PI * 0.6667)));
+            gp.lineTo((float) (x + radius * Math.cos(Math.PI * 0.667)),
+                    (float) (y + radius * Math.sin(Math.PI * 0.6667)));
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp);
         }
     }
@@ -296,8 +318,10 @@ public final class MarkerLibrary {
             double x = p.getX(), y = p.getY();
             GeneralPath gp9 = new GeneralPath();
             gp9.moveTo((float) (x + radius), (float) y);
-            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 0.6667)), (float) (y - radius * Math.sin(Math.PI * 0.6667)));
-            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 1.3333)), (float) (y - radius * Math.sin(Math.PI * 1.3333)));
+            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 0.6667)), 
+                    (float) (y - radius * Math.sin(Math.PI * 0.6667)));
+            gp9.lineTo((float) (x + radius * Math.cos(Math.PI * 1.3333)), 
+                    (float) (y - radius * Math.sin(Math.PI * 1.3333)));
             gp9.closePath();
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(gp9);
         }
@@ -348,32 +372,31 @@ public final class MarkerLibrary {
             GeneralPath gp12 = new GeneralPath();
             gp12.moveTo(1f, 0);
             gp12.lineTo(.67f, 0);
-            gp12.append(new Arc2D.Double(-.33f, -.5f, 1f, 1f, 0, 180, Arc2D.OPEN), true); // top
-            gp12.append(new Arc2D.Double(-.83f, 0f, 1f, .67f, 90, 90, Arc2D.OPEN), true); // hood
-            gp12.append(new Arc2D.Double(-1f, .33f, .33f, .33f, 90, 90, Arc2D.OPEN), true); // bumper
+            // top
+            gp12.append(new Arc2D.Double(-.33f, -.5f, 1f, 1f, 0, 180, Arc2D.OPEN), true);
+            // hood
+            gp12.append(new Arc2D.Double(-.83f, 0f, 1f, .67f, 90, 90, Arc2D.OPEN), true); 
+            // bumper
+            gp12.append(new Arc2D.Double(-1f, .33f, .33f, .33f, 90, 90, Arc2D.OPEN), true); 
             gp12.lineTo(-.7f, .5f);
-            gp12.append(new Arc2D.Double(-.7f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); // wheel well
+            // wheel well
+            gp12.append(new Arc2D.Double(-.7f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); 
             gp12.lineTo(.3f, .5f);
-            gp12.append(new Arc2D.Double(.3f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); // wheel well
+            // wheel well
+            gp12.append(new Arc2D.Double(.3f, .3f, .4f, .4f, 180, -180, Arc2D.OPEN), true); 
             gp12.lineTo(1f, .5f);
             gp12.closePath();
             Area a = new Area(gp12);
 
-            a.subtract(new Area(new Arc2D.Double(-.2f, -.4f, .7f, .6f, 90, 90, Arc2D.PIE))); // windows
-            a.subtract(new Area(new Arc2D.Double(-.05f, -.4f, .6f, .6f, 0, 90, Arc2D.PIE))); // windows
+            // windows
+            a.subtract(new Area(new Arc2D.Double(-.2f, -.4f, .7f, .6f, 90, 90, Arc2D.PIE))); 
+            a.subtract(new Area(new Arc2D.Double(-.05f, -.4f, .6f, .6f, 0, 90, Arc2D.PIE))); 
 
-            a.add(new Area(new Ellipse2D.Double(-.67f, .33f, .33f, .33f))); // wheels
+            // wheels
+            a.add(new Area(new Ellipse2D.Double(-.67f, .33f, .33f, .33f))); 
             a.add(new Area(new Ellipse2D.Double(.33f, .33f, .33f, .33f)));
             a.transform(new AffineTransform(-radius, 0, 0, radius, x, y));
             return AffineTransform.getRotateInstance(angle, x, y).createTransformedShape(a);
         }
-    }
-
-    static final GeneralPath EMPTY_PATH = new GeneralPath();
-
-    /**
-     * Utility class
-     */
-    private MarkerLibrary() {
     }
 }

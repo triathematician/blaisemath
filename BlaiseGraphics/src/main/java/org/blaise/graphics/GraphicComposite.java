@@ -100,7 +100,7 @@ public class GraphicComposite extends GraphicSupport {
      * Explicitly set list of entries. The draw order will correspond to the iteration order.
      * @param graphics graphics in the composite
      */
-    public synchronized void setGraphics(Iterable<Graphic> graphics) {
+    public synchronized void setGraphics(Iterable<? extends Graphic> graphics) {
         clearGraphics();
         addGraphics(graphics);
     }
@@ -226,7 +226,7 @@ public class GraphicComposite extends GraphicSupport {
      * Removes all entries, clearing their parents
      */
     public synchronized void clearGraphics() {
-        boolean change = entries.size() > 0;
+        boolean change = !entries.isEmpty();
         for (Graphic en : entries) {
             if (en.getParent() == this) {
                 en.setParent(null);
@@ -313,10 +313,12 @@ public class GraphicComposite extends GraphicSupport {
     @Override
     public synchronized String getTooltip(Point2D p) {
         // return the first non-null tooltip, in draw order
-        String l = null;
         for (Graphic en : visibleEntriesInReverse()) {
-            if (en.isTooltipEnabled() && en.contains(p) && (l = en.getTooltip(p)) != null) {
-                return l;
+            if (en.isTooltipEnabled() && en.contains(p)) {
+                String l = en.getTooltip(p);
+                if (l != null) {
+                    return l;
+                }
             }
         }
         return defaultTooltip;
