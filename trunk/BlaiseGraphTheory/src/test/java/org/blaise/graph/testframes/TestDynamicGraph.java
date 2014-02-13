@@ -3,93 +3,41 @@
  *
  * Created on Jul 30, 2009, 3:15:03 PM
  */
-package org.blaise.graph;
+package org.blaise.graph.testframes;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Point2D;
-import java.util.Set;
-import javax.swing.JPopupMenu;
 import org.blaise.firestarter.PropertySheet;
 import org.blaise.firestarter.editor.EditorRegistration;
+import org.blaise.graph.GAInstrument;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
-import org.blaise.graph.modules.EdgeProbabilityBuilder;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
-import org.blaise.graph.view.PointUtils;
-import org.blaise.graphics.PanAndZoomHandler;
-import org.blaise.util.ContextMenuInitializer;
 import org.blaise.graphics.Graphic;
-import org.blaise.style.PointStyleBasic;
-import org.blaise.style.PointStyle;
 import org.blaise.util.gui.RollupPanel;
+
 
 /**
  *
  * @author ae3263
  */
-public class TestGraph extends javax.swing.JFrame {
+public class TestDynamicGraph extends javax.swing.JFrame {
 
     PlaneGraphAdapter pga;
     /** Flag for when el needs points updated */
     boolean updateEL = true;
     SpringLayout energyLayout;
 
+    MyTestGraph graph = new MyTestGraph();
+
+
     /** Creates new form TestPlaneVisometry */
-    public TestGraph() {
+    public TestDynamicGraph() {
         EditorRegistration.registerEditors();
         initComponents();
 
-        // BASIC ELEMENTS
-
-        final Graph<Integer> graph = new EdgeProbabilityBuilder(false, 50, .05f).createGraph();
         plot.setGraph(graph);
-        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
-        PanAndZoomHandler.zoomBoxAnimated(plot, PointUtils.boundingBox(plot.getGraphManager().getLocations().values(), 5));
-        plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, PointStyle>(){
-            public PointStyle apply(Object o) {
-                Integer i = (Integer) o;
-                return new PointStyleBasic().markerRadius((int) (4+Math.sqrt(i)));
-            }
-        });
-
-        plot.getAdapter().getNodeStyler().setLabelDelegate(Functions.toStringFunction());
-        
-        plot.addContextMenuInitializer("Graph", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Graph Focus: " + focus);
-                }
-                menu.add("Selection: " + (selection == null ? 0 : selection.size()) + " selected items");
-            }
-        });
-        plot.addContextMenuInitializer("Node", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Node: " + focus);
-                }
-            }
-        });
-        plot.addContextMenuInitializer("Link", new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-                if (menu.getComponentCount() > 0) {
-                    menu.addSeparator();
-                }
-                if (focus != null) {
-                    menu.add("Link: " + focus);
-                }
-            }
-        });
-
 
         // PANELS
 
@@ -126,6 +74,13 @@ public class TestGraph extends javax.swing.JFrame {
         energyIB = new javax.swing.JButton();
         energyAB = new javax.swing.JButton();
         energySB = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        jLabel2 = new javax.swing.JLabel();
+        addVerticesB = new javax.swing.JButton();
+        addEdgesB = new javax.swing.JButton();
+        rewireB = new javax.swing.JButton();
+        addThreadedB = new javax.swing.JButton();
+        threadStopB = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new RollupPanel();
         plot = new GraphComponent();
@@ -193,6 +148,65 @@ public class TestGraph extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(energySB);
+        jToolBar1.add(jSeparator2);
+
+        jLabel2.setText("ADD:");
+        jToolBar1.add(jLabel2);
+
+        addVerticesB.setText("vertices");
+        addVerticesB.setFocusable(false);
+        addVerticesB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addVerticesB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addVerticesB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addVerticesBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(addVerticesB);
+
+        addEdgesB.setText("edges");
+        addEdgesB.setFocusable(false);
+        addEdgesB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addEdgesB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addEdgesB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addEdgesBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(addEdgesB);
+
+        rewireB.setText("rewire");
+        rewireB.setFocusable(false);
+        rewireB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        rewireB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        rewireB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rewireBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(rewireB);
+
+        addThreadedB.setText("threaded");
+        addThreadedB.setFocusable(false);
+        addThreadedB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addThreadedB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        addThreadedB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addThreadedBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(addThreadedB);
+
+        threadStopB.setText("stop");
+        threadStopB.setFocusable(false);
+        threadStopB.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        threadStopB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        threadStopB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                threadStopBActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(threadStopB);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
@@ -206,12 +220,12 @@ public class TestGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, SpringLayout.DIST_SCALE*2);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.RANDOM, 5.0);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, SpringLayout.DIST_SCALE*2);
+        plot.getGraphManager().applyLayout(StaticGraphLayout.CIRCLE, 5.0);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
@@ -226,12 +240,57 @@ public class TestGraph extends javax.swing.JFrame {
         if (energyLayout == null)
             energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
-        plot.getGraphManager().startLayoutTask(10, 2);
+        plot.getGraphManager().startLayoutTask(50, 2);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
         plot.getGraphManager().stopLayoutTask();
     }//GEN-LAST:event_energySBActionPerformed
+
+    private void addVerticesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticesBActionPerformed
+        graph.addVertices(5);
+        plot.getGraphManager().graphUpdated();
+    }//GEN-LAST:event_addVerticesBActionPerformed
+
+    private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
+        graph.addEdges(5);
+        plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
+    }//GEN-LAST:event_addEdgesBActionPerformed
+
+    private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
+        synchronized (graph) {
+            graph.rewire(50, 5);
+            plot.getGraphManager().graphUpdated();
+            plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
+        }
+    }//GEN-LAST:event_rewireBActionPerformed
+
+    java.util.Timer t = new java.util.Timer();
+    java.util.TimerTask tt;
+
+    private void addThreadedBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addThreadedBActionPerformed
+        if (tt != null)
+            tt.cancel();
+        tt = new java.util.TimerTask(){
+            @Override public void run() {
+                synchronized (graph) {
+                    graph.removeVertices(1);
+                    graph.removeEdges(10);
+                    graph.addVertices(1);
+                    graph.addEdges(2);
+                    plot.getGraphManager().graphUpdated();
+                    plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
+                }
+            }
+        };
+        t.schedule(tt, 100, 500);
+    }//GEN-LAST:event_addThreadedBActionPerformed
+
+    private void threadStopBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threadStopBActionPerformed
+        if (tt != null)
+            tt.cancel();
+    }//GEN-LAST:event_threadStopBActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -240,22 +299,29 @@ public class TestGraph extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new TestGraph().setVisible(true);
+                new TestDynamicGraph().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addEdgesB;
+    private javax.swing.JButton addThreadedB;
+    private javax.swing.JButton addVerticesB;
     private javax.swing.JButton circleLB;
     private javax.swing.JButton energyAB;
     private javax.swing.JButton energyIB;
     private javax.swing.JButton energySB;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     private GraphComponent plot;
     private javax.swing.JButton randomLB;
+    private javax.swing.JButton rewireB;
     private RollupPanel rollupPanel1;
+    private javax.swing.JButton threadStopB;
     // End of variables declaration//GEN-END:variables
 }

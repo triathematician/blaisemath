@@ -6,9 +6,11 @@
 package org.blaise.graph;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import static org.junit.Assert.*;
+import static org.blaise.graph.AssertUtils.assertCollectionContentsSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,13 +19,6 @@ import org.junit.Test;
  * @author elisha
  */
 public class ContractedGraphTest {
-
-    /** Tests to see if all elements of one collection are contained in the other, and vice versa */
-    static void assertCollectionContentsSame(Collection expected, Collection found) {
-        assertEquals(expected.size(), found.size());
-        assertTrue(expected.containsAll(found));
-        assertTrue(found.containsAll(expected));
-    }
 
     static Integer CVX;
     static Integer[] VV;

@@ -1,19 +1,16 @@
 /*
- * PreferentialAttachment.java
+ * PreferentialAttachmentGraphSupplier.java
  * Created May 27, 2010
  */
 package org.blaise.graph.modules;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilder;
-import org.blaise.graph.SparseGraph;
-import org.blaise.graph.dynamic.IntervalTimeGraph;
-import org.blaise.graph.dynamic.TimeGraph;
-import org.blaise.graph.dynamic.TimeGraphBuilder;
+import org.blaise.graph.longitudinal.IntervalLongitudinalGraph;
+import org.blaise.graph.longitudinal.LongitudinalGraph;
+import org.blaise.graph.longitudinal.LongitudinalGraphSupplierSupport;
 
 /**
  * Provides static utility methods for generating graphs using preferential
@@ -21,23 +18,23 @@ import org.blaise.graph.dynamic.TimeGraphBuilder;
  *
  * @author Elisha Peterson
  */
-public final class PreferentialAttachment extends GraphBuilder.Support<Integer> implements TimeGraphBuilder<Integer> {
+public final class PreferentialAttachmentLongitudinalGraphSupplier extends LongitudinalGraphSupplierSupport<Integer> {
 
-    Graph<Integer> seed;
-    int edgesPerStep = 1;
-    float[] connectProbs = null;
+    private Graph<Integer> seed;
+    private int edgesPerStep = 1;
+    private float[] connectProbs = null;
 
-    public PreferentialAttachment(Graph<Integer> seed) {
+    public PreferentialAttachmentLongitudinalGraphSupplier(Graph<Integer> seed) {
         this.seed = seed;
     }
 
-    public PreferentialAttachment(Graph<Integer> seed, int nodes, int edgesPerStep) {
+    public PreferentialAttachmentLongitudinalGraphSupplier(Graph<Integer> seed, int nodes, int edgesPerStep) {
         super(seed.isDirected(), nodes);
         setSeed(seed);
         setEdgesPerStep(edgesPerStep);
     }
 
-    public PreferentialAttachment(Graph<Integer> seed, int nodes, float[] probs) {
+    public PreferentialAttachmentLongitudinalGraphSupplier(Graph<Integer> seed, int nodes, float[] probs) {
         super(seed.isDirected(), nodes);
         setSeed(seed);
         this.connectProbs = probs;
@@ -81,82 +78,20 @@ public final class PreferentialAttachment extends GraphBuilder.Support<Integer> 
         this.connectProbs = connectProbs;
     }
 
-    public Graph<Integer> createGraph() {
-        return connectProbs == null ? generate(seed, nodes, edgesPerStep)
-                : generate(seed, nodes, connectProbs);
-    }
-
-    public TimeGraph<Integer> createTimeGraph() {
+    public LongitudinalGraph<Integer> get() {
         return connectProbs == null ? generateLongitudinal(seed, nodes, edgesPerStep)
                 : generateLongitudinal(seed, nodes, connectProbs);
-    }
-
-    /**
-     * Common method for preferential attachment algorithm
-     */
-    private static Graph<Integer> generate(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
-        // prepare parameters for graph to be created
-        ArrayList<Integer> nodes = new ArrayList<Integer>(seedGraph.nodes());
-        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
-        int[] degrees = new int[nVertices];
-        Arrays.fill(degrees, 0);
-        int degreeSum = 0;
-
-        // initialize with values from seed graph
-        for (Integer i1 : nodes) {
-            for (Integer i2 : nodes) {
-                if (seedGraph.adjacent(i1, i2)) {
-                    degreeSum += addEdge(edges, degrees, i1, i2);
-                }
-            }
-        }
-
-        int cur = 0;
-        boolean variableEdgeNumber = edgesPerStep instanceof float[];
-        int numberEdgesToAdd = variableEdgeNumber ? 0 : (Integer) edgesPerStep;
-        float[] connectionProbs = variableEdgeNumber ? (float[]) edgesPerStep : new float[]{};
-
-        while (nodes.size() < nVertices) {
-            while (nodes.contains(cur)) {
-                cur++;
-            }
-            nodes.add(cur);
-            if (variableEdgeNumber) {
-                numberEdgesToAdd = sampleRandom(connectionProbs);
-            }
-            degreeSum += addEdge(edges, degrees, cur, weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
-        }
-        return new SparseGraph(false, nodes, edges);
-    }
-
-    /**
-     * Utility to add specified vertices to the edge set and increment the
-     * corresponding degrees.
-     *
-     * @param edges current list of edges
-     * @param degrees current list of degrees
-     * @param v1 first vertex of edge to add
-     * @param attachments second vertex (vertices) of edges to add
-     * @return number of new degrees added
-     */
-    private static int addEdge(ArrayList<Integer[]> edges, int[] degrees, int v1, int... attachments) {
-        for (int v : attachments) {
-            edges.add(new Integer[]{v1, v});
-            degrees[v]++;
-        }
-        degrees[v1] += attachments.length;
-        return attachments.length * 2;
     }
 
     /**
      * Common method to return longitudinal version of the randomly generated
      * graph.
      */
-    private static TimeGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
+    private static LongitudinalGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
         // prepare parameters for graph to be created
         int nSeed = seedGraph.nodeCount();
-        TreeMap<Integer, double[]> nodeTimes = new TreeMap<Integer, double[]>();
-        TreeMap<Integer, Map<Integer, double[]>> edgeTimes = new TreeMap<Integer, Map<Integer, double[]>>();
+        Map<Integer, double[]> nodeTimes = new TreeMap<Integer, double[]>();
+        Map<Integer, Map<Integer, double[]>> edgeTimes = new TreeMap<Integer, Map<Integer, double[]>>();
         int[] degrees = new int[nVertices];
         Arrays.fill(degrees, 0);
         int degreeSum = 0;
@@ -195,10 +130,7 @@ public final class PreferentialAttachment extends GraphBuilder.Support<Integer> 
                     weightedRandomVertex(degrees, degreeSum, numberEdgesToAdd));
         }
 
-        return IntervalTimeGraph.getInstance(false, (int) (timeMax), nodeTimes, edgeTimes);
-//        return new InterpolationTimeGraph(
-//                IntervalTimeGraph.getInstance(false, (int)(timeMax), nodeTimes, edgeTimes),
-//                3);
+        return IntervalLongitudinalGraph.getInstance(false, (int) (timeMax), nodeTimes, edgeTimes);
     }
 
     /**

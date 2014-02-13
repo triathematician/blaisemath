@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilder;
+import org.blaise.graph.GraphSuppliers.GraphSupplierSupport;
 import org.blaise.graph.SparseGraph;
 
 /**
@@ -20,15 +20,15 @@ import org.blaise.graph.SparseGraph;
  * </p>
  * @author elisha
  */
-public class ProximityGraphBuilder extends GraphBuilder.Support<Point2D.Double>{
+public final class ProximityGraphSupplier extends GraphSupplierSupport<Point2D.Double>{
 
-    Rectangle2D.Double bounds = new Rectangle2D.Double();
-    double connectDistance = 1;
+    private Rectangle2D.Double bounds = new Rectangle2D.Double();
+    private double connectDistance = 1;
     
     /** Initialize without arguments */
-    public ProximityGraphBuilder() {}
+    public ProximityGraphSupplier() {}
 
-    public ProximityGraphBuilder(boolean directed, int nodes, Rectangle2D.Double bounds, double dst) {
+    public ProximityGraphSupplier(boolean directed, int nodes, Rectangle2D.Double bounds, double dst) {
         super(directed, nodes);
         this.bounds = bounds;
         this.connectDistance = dst;
@@ -50,7 +50,7 @@ public class ProximityGraphBuilder extends GraphBuilder.Support<Point2D.Double>{
         this.connectDistance = connectDistance;
     }
     
-    public Graph<Point2D.Double> createGraph() {
+    public Graph<Point2D.Double> get() {
         double x0 = bounds.x, y0 = bounds.y, x1 = bounds.getMaxX(), y1 = bounds.getMaxY();
         List<Point2D.Double> pts = new ArrayList<Point2D.Double>();
         for (int i = 0; i < nodes; i++) {
@@ -65,7 +65,7 @@ public class ProximityGraphBuilder extends GraphBuilder.Support<Point2D.Double>{
                 edges.add(new Point2D.Double[]{pts.get(i0), pts.get(i1)});
             }
         }
-        return new SparseGraph(false, pts, edges);
+        return new SparseGraph<Point2D.Double>(false, pts, edges);
     }
 
 }

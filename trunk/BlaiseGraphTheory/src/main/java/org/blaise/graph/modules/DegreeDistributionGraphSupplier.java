@@ -1,18 +1,21 @@
 /*
- * DegreeCountBuilder.java
+ * DegreeDistributionGraphSupplier.java
  * Created Aug 6, 2010
  */
 package org.blaise.graph.modules;
 
+import com.google.common.base.Supplier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilder;
-import org.blaise.graph.GraphBuilders;
-import static org.blaise.graph.GraphBuilders.intList;
+import org.blaise.graph.GraphSuppliers;
 import org.blaise.graph.SparseGraph;
 
 /**
@@ -23,12 +26,12 @@ import org.blaise.graph.SparseGraph;
  *
  * @author elisha
  */
-public class DegreeCountBuilder implements GraphBuilder<Integer> {
+public class DegreeDistributionGraphSupplier implements Supplier<Graph<Integer>> {
 
-    boolean directed = false;
-    int[] degs;
+    private boolean directed = false;
+    private int[] degs;
 
-    public DegreeCountBuilder() {
+    public DegreeDistributionGraphSupplier() {
     }
 
     /**
@@ -42,7 +45,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
      * @throws IllegalArgumentException if the provided degree sequence is
      * impossible to obtain
      */
-    public DegreeCountBuilder(boolean directed, int[] degs) {
+    public DegreeDistributionGraphSupplier(boolean directed, int[] degs) {
         this.directed = directed;
         this.degs = degs;
     }
@@ -65,7 +68,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
 
 
 
-    public Graph<Integer> createGraph() {
+    public Graph<Integer> get() {
         return directed ? getDirectedInstance(degs) : getUndirectedInstance(degs);
     }
 
@@ -79,7 +82,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
         if (deg.length > n) {
             throw new IllegalArgumentException("Maximum degree of sequence " + Arrays.toString(deg) + " is too large!");
         }
-        TreeSet<Integer[]> edges = new TreeSet<Integer[]>(EdgeCountBuilder.PAIR_COMPARE);
+        Set<Integer[]> edges = new TreeSet<Integer[]>(EdgeCountGraphSupplier.PAIR_COMPARE);
         int i = 0;
         for (int iDeg = 0; iDeg < deg.length; iDeg++) {
             for (int nDegI = 0; nDegI < deg[iDeg]; nDegI++) {
@@ -92,7 +95,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
                 i++;
             }
         }
-        return new SparseGraph(true, GraphBuilders.intList(n), edges);
+        return new SparseGraph<Integer>(true, GraphSuppliers.intList(n), edges);
     }
 
     /**
@@ -116,7 +119,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
         }
 
         // stores the mapping of nodes to desired degrees
-        TreeMap<Integer, Integer> vxLeft = new TreeMap<Integer, Integer>();
+        Map<Integer, Integer> vxLeft = new TreeMap<Integer, Integer>();
         int i = 0;
         for (int iDeg = 1; iDeg < deg.length; iDeg++) // ignore the degree 0 vertices
         {
@@ -126,7 +129,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
         }
 
         // stores the edges in the resulting graph
-        TreeSet<Integer[]> edges = new TreeSet<Integer[]>(EdgeCountBuilder.PAIR_COMPARE_UNDIRECTED);
+        Set<Integer[]> edges = new TreeSet<Integer[]>(EdgeCountGraphSupplier.PAIR_COMPARE_UNDIRECTED);
 
         while (vxLeft.size() > 1) {
             Set<Integer> vv = vxLeft.keySet();
@@ -145,7 +148,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
 
             // if it takes too long, brute-force check to ensure edges are not there
             if (edges.contains(edge) || edge[0] == edge[1]) {
-                TreeSet<Integer[]> edgesLeft = new TreeSet<Integer[]>(EdgeCountBuilder.PAIR_COMPARE_UNDIRECTED);
+                Set<Integer[]> edgesLeft = new TreeSet<Integer[]>(EdgeCountGraphSupplier.PAIR_COMPARE_UNDIRECTED);
                 for (Integer i1 : vv) {
                     for (Integer i2 : vv) {
                         if (i1 != i2) {
@@ -156,7 +159,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
                         }
                     }
                 }
-                if (edgesLeft.size() == 0) {
+                if (edgesLeft.isEmpty()) {
                     break;
                 } else {
                     edge = random(edgesLeft);
@@ -164,10 +167,8 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
             }
 
             if (edges.contains(edge)) {
-                throw new IllegalStateException("ERROR: should never get here!");
+                throw new IllegalStateException();
             } else {
-//                System.out.println("Adding edge: " + Arrays.toString(edge));
-//                System.out.println("  vertex left: " + vxLeft);
                 edges.add(edge);
                 if (vxLeft.get(edge[0]) == 1) {
                     vxLeft.remove(edge[0]);
@@ -182,16 +183,17 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
             }
         }
         if (vxLeft.size() > 0) {
-            System.out.println("Unable to find edges for all vertices. Remaining list=" + vxLeft);
+            Logger.getLogger(DegreeDistributionGraphSupplier.class.getName()).log(Level.WARNING, 
+                    "Unable to find edges for all vertices. Remaining list=" + vxLeft);
         }
-        return new SparseGraph(false, GraphBuilders.intList(n), edges);
+        return new SparseGraph<Integer>(false, GraphSuppliers.intList(n), edges);
     }
 
     /**
      * @return random value in given set
      */
     private static <V> V random(Set<V> set) {
-        ArrayList<V> list = new ArrayList<V>(set);
+        List<V> list = new ArrayList<V>(set);
         int n = list.size();
         int i = (int) Math.floor(n * Math.random());
         return list.get(i);
@@ -215,7 +217,7 @@ public class DegreeCountBuilder implements GraphBuilder<Integer> {
             throw new IllegalArgumentException("Cannot construct subset of size " + k + " from " + n + " values omitting " + omit);
         }
         int[] result = new int[k];
-        TreeSet<Integer> left = new TreeSet<Integer>();
+        Set<Integer> left = new TreeSet<Integer>();
         for (int i = 0; i < n; i++) {
             left.add(i);
         }

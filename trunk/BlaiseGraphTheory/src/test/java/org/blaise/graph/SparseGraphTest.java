@@ -6,10 +6,13 @@
 package org.blaise.graph;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import org.blaise.graph.modules.EdgeProbabilityBuilder;
-import static org.junit.Assert.*;
+import static org.blaise.graph.AssertUtils.assertCollectionContentsSame;
+import org.blaise.graph.modules.EdgeProbabilityGraphSupplier;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,13 +21,6 @@ import org.junit.Test;
  * @author elisha
  */
 public class SparseGraphTest {
-
-    /** Tests to see if all elements of one collection are contained in the other, and vice versa */
-    static void assertCollectionContentsSame(Collection expected, Collection found) {
-        assertEquals(expected.size(), found.size());
-        assertTrue(expected.containsAll(found));
-        assertTrue(found.containsAll(expected));
-    }
 
     static Integer[] VV;
     static Integer[][] EE;
@@ -125,7 +121,7 @@ public class SparseGraphTest {
             assertCollectionContentsSame(Arrays.asList(nbrs1[i]), DIR.neighbors(VV[i]));
         }
         
-        Graph<Integer> graph = new EdgeProbabilityBuilder(false, 200, .1f).createGraph();
+        Graph<Integer> graph = new EdgeProbabilityGraphSupplier(false, 200, .1f).get();
         for (Integer v : graph.nodes()) {
             if (graph.neighbors(v).contains(null)) {
                 fail("Neighbors of " + v + " contains null value");

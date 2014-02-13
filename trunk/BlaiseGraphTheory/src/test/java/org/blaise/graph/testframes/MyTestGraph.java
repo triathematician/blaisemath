@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.blaise.graph;
+package org.blaise.graph.testframes;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.blaise.graph.SparseGraph;
 import org.blaise.util.Edge;
 
 /**

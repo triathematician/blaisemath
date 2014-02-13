@@ -2,13 +2,13 @@
  * GraphModules.java
  * Created Oct 29, 2011
  */
-package org.blaise.graph.modules;
+package org.blaise.graph;
 
+import com.google.common.base.Supplier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-import org.blaise.graph.GraphBuilder;
 import org.blaise.graph.metrics.GraphMetric;
 import org.blaise.graph.metrics.GraphNodeMetric;
 
@@ -29,11 +29,11 @@ public class GraphModules {
      * implementations via the {@link ServiceLoader} class.
      * @return list of {@code GraphNodeMetric}s
      */
-    public static List<GraphBuilder> graphBuilders() {
+    public static List<Supplier> graphBuilders() {
         if (builders == null) {
-            builders = ServiceLoader.load(GraphBuilder.class);
+            builders = ServiceLoader.load(Supplier.class);
         }
-        return list(builders, GraphBuilder.class);
+        return list(builders, Supplier.class);
     }
      
     /**

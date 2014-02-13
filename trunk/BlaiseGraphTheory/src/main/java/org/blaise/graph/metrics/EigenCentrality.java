@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphUtils;
@@ -36,10 +38,17 @@ public class EigenCentrality implements GraphNodeMetric<Double> {
         boolean[][] adj0 = GraphUtils.adjacencyMatrix(graph, nodes);
         int n = nodes.size();
         int[][] mx = new int[adj0.length][adj0.length];
-        for (int i = 0; i < mx.length; i++)
-            for (int j = 0; j < mx.length; j++)
+        for (int i = 0; i < mx.length; i++) {
+            for (int j = 0; j < mx.length; j++) {
                 mx[i][j] = adj0[i][j] ? 1 : 0;
-        double[][] mx2 = new double[n][n]; for(int i=0;i<n;i++)for(int j=0;j<n;j++) mx2[i][j]=mx[i][j];
+            }
+        }
+        double[][] mx2 = new double[n][n]; 
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<n;j++) {
+                mx2[i][j]=mx[i][j];
+            }
+        }
         double[][] dmx = Matrices.matrixProduct(mx2, mx2);
         for (int i = 0; i < 10; i++) {
           dmx = Matrices.matrixProduct(dmx, dmx);
@@ -53,16 +62,20 @@ public class EigenCentrality implements GraphNodeMetric<Double> {
 
         // estimate eigenvalue for testing purposes
         double[] div = new double[n];
-        for (int i = 0; i < div.length; i++) div[i] = vecf2[i] / vecf1[i];
+        for (int i = 0; i < div.length; i++) {
+            div[i] = vecf2[i] / vecf1[i];
+        }
         GAInstrument.middle(id, "EigenCentrality.allValues", "eigenvalues="+Arrays.toString(div));
 
         Matrices.normalize(vecf2);
-        for (int i = 0; i < n-1; i++)
+        for (int i = 0; i < n-1; i++) {
             if (!(vecf2[i]*vecf2[i]>0)) {
                 // should not happen
-                System.out.println("WARNING -- eigenvector has inconsistent signs");
+                Logger.getLogger(EigenCentrality.class.getName()).log(Level.SEVERE, 
+                        "WARNING -- eigenvector has inconsistent signs");
                 break;
             }
+        }
         double sign = Math.signum(vecf2[0]);
 
         Map<V,Double> result = new HashMap<V,Double>(n);
@@ -76,11 +89,15 @@ public class EigenCentrality implements GraphNodeMetric<Double> {
     /** Normalize a matrix by dividing by max value */
     private static void normalize(double[][] mx) {
         double max = -Double.MAX_VALUE;
-        for (int i = 0; i < mx.length; i++)
-            for (int j = 0; j < mx.length; j++)
-                max = Math.max(max, mx[i][j]);
-        for (int i = 0; i < mx.length; i++)
-            for (int j = 0; j < mx.length; j++)
-                mx[i][j] /= max;
+        for (double[] mx1 : mx) {
+            for (int j = 0; j < mx.length; j++) {
+                max = Math.max(max, mx1[j]);
+            }
+        }
+        for (double[] mx1 : mx) {
+            for (int j = 0; j < mx.length; j++) {
+                mx1[j] /= max;
+            }
+        }
     }
 }

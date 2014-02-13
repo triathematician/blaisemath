@@ -1,15 +1,18 @@
 /*
- * WattsStrogatzBuilder.java
+ * WattsStrogatzGraphSupplier.java
  * Created Aug 6, 2010
  */
 package org.blaise.graph.modules;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilder;
-import org.blaise.graph.GraphBuilders;
-import static org.blaise.graph.GraphBuilders.intList;
+import org.blaise.graph.GraphSuppliers;
+import org.blaise.graph.GraphSuppliers.GraphSupplierSupport;
 import org.blaise.graph.SparseGraph;
 
 /**
@@ -17,15 +20,15 @@ import org.blaise.graph.SparseGraph;
  *
  * @author Elisha Peterson
  */
-public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
+public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integer> {
 
-    int deg = 4;
-    float rewire = .5f;
+    private int deg = 4;
+    private float rewire = .5f;
 
-    public WattsStrogatzBuilder() {
+    public WattsStrogatzGraphSupplier() {
     }
 
-    public WattsStrogatzBuilder(boolean directed, int nodes, int deg, float rewiring) {
+    public WattsStrogatzGraphSupplier(boolean directed, int nodes, int deg, float rewiring) {
         super(directed, nodes);
         if (deg < 0 || deg > nodes - 1) {
             throw new IllegalArgumentException("Degree outside of range [0, " + (nodes - 1) + "]");
@@ -34,10 +37,12 @@ public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
             throw new IllegalArgumentException("Invalid rewiring parameter = " + rewiring + " (should be between 0 and 1)");
         }
         if (deg % 2 != 0) {
-            System.err.println("Degree must be an even integer: changing from " + deg + " to " + (deg - 1));
-            deg = deg - 1;
+            Logger.getLogger(WattsStrogatzGraphSupplier.class.getName()).log(Level.WARNING, 
+                    "Degree must be an even integer: changing from {0} to {1}", new Object[]{deg, deg - 1});
+            this.deg = deg-1;
+        } else {
+            this.deg = deg;
         }
-        this.deg = deg;
         this.rewire = rewiring;
     }
 
@@ -57,8 +62,8 @@ public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
         this.rewire = rewire;
     }
 
-    public Graph<Integer> createGraph() {
-        ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
+    public Graph<Integer> get() {
+        List<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < nodes; i++) {
             for (int off = 1; off <= (deg / 2); off++) {
                 edges.add(new Integer[]{i, (i + off) % nodes});
@@ -73,7 +78,7 @@ public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
             }
         }
 
-        return new SparseGraph(false, GraphBuilders.intList(nodes), edges);
+        return new SparseGraph<Integer>(false, GraphSuppliers.intList(nodes), edges);
     }
 
     /**
@@ -85,9 +90,9 @@ public class WattsStrogatzBuilder extends GraphBuilder.Support<Integer> {
      * @param n total # of vertices
      * @return new edge.
      */
-    private static void randomlyRewire(ArrayList<Integer[]> edges, Integer[] e, int n) {
+    private static void randomlyRewire(List<Integer[]> edges, Integer[] e, int n) {
         Integer[] potential = new Integer[]{e[0], e[1]};
-        TreeSet<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountBuilder.PAIR_COMPARE_UNDIRECTED);
+        Set<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountGraphSupplier.PAIR_COMPARE_UNDIRECTED);
         edgeTree.addAll(edges);
         while (edgeTree.contains(potential)) {
             if (Math.random() < .5) {
