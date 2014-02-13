@@ -8,20 +8,20 @@ package org.blaise.graph.modules;
 import java.util.ArrayList;
 import java.util.List;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilder;
-import org.blaise.graph.GraphBuilders;
+import org.blaise.graph.GraphSuppliers;
+import org.blaise.graph.GraphSuppliers.GraphSupplierSupport;
 import org.blaise.graph.SparseGraph;
 
 /**
  * Generate random graph with specified edge probability.
  */
-public class EdgeProbabilityBuilder extends GraphBuilder.Support<Integer> {
+public class EdgeProbabilityGraphSupplier extends GraphSupplierSupport<Integer> {
 
-    float probability;
+    private float probability;
 
-    public EdgeProbabilityBuilder() {}
+    public EdgeProbabilityGraphSupplier() {}
 
-    public EdgeProbabilityBuilder(boolean directed, int nodes, float probability) {
+    public EdgeProbabilityGraphSupplier(boolean directed, int nodes, float probability) {
         super(directed, nodes);
         checkProbability(probability);
         this.probability = probability;
@@ -35,9 +35,9 @@ public class EdgeProbabilityBuilder extends GraphBuilder.Support<Integer> {
         this.probability = probability;
     }
 
-    public Graph<Integer> createGraph() {
+    public Graph<Integer> get() {
         // integer pointers must be unique
-        List<Integer> nn = GraphBuilders.intList(nodes);
+        List<Integer> nn = GraphSuppliers.intList(nodes);
         // create edges
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < nodes; i++) {
@@ -47,7 +47,7 @@ public class EdgeProbabilityBuilder extends GraphBuilder.Support<Integer> {
                 }
             }
         }
-        return new SparseGraph(directed, nn, edges);
+        return new SparseGraph<Integer>(directed, nn, edges);
     }
 
     /**

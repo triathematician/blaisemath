@@ -3,10 +3,14 @@ package org.blaise.graph.dynamic;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import static org.blaise.graph.AssertUtils.*;
+import static org.blaise.graph.AssertUtils.assertCollectionContentsSame;
 import org.blaise.graph.Graph;
 import org.blaise.graph.SparseGraph;
-import static org.junit.Assert.*;
+import org.blaise.graph.longitudinal.SliceLongitudinalGraph;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -14,11 +18,11 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class ListTimeGraphTest {
+public class SliceLongitudinalGraphTest {
 
     static Integer[] VV;
     static Integer[][][] EE;
-    static ListTimeGraph<Integer> UNDIR, DIR, EMPTY;
+    static SliceLongitudinalGraph<Integer> UNDIR, DIR, EMPTY;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -29,24 +33,24 @@ public class ListTimeGraphTest {
             {{1,3},{3,5},{5,1},{2,4},{4,6},{6,2}},
             {{1,4},{2,5},{3,6}},
             {} };
-        UNDIR = new ListTimeGraph<Integer>();
+        UNDIR = new SliceLongitudinalGraph<Integer>();
           UNDIR.addGraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE[0])), 0.0);
           UNDIR.addGraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE[1])), 1.0);
           UNDIR.addGraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE[2])), 2.0);
           UNDIR.addGraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE[3])), 3.0);
           UNDIR.addGraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE[0])), 4.0);
-        DIR = new ListTimeGraph<Integer>();
+        DIR = new SliceLongitudinalGraph<Integer>();
           DIR.addGraph(new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE[0])), 5.0);
           DIR.addGraph(new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE[1])), -10.0);
           DIR.addGraph(new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE[2])), 20.0);
           DIR.addGraph(new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE[3])), 0.0);
-        EMPTY = new ListTimeGraph<Integer>();
+        EMPTY = new SliceLongitudinalGraph<Integer>();
     }
 
     @Test
     public void testToString() {
         System.out.println("toString: not tested");
-        assertEquals("LongitudinalGraph {}", EMPTY.toString());
+        assertEquals("SliceLongitudinalGraph {}", EMPTY.toString());
     }
 
     @Test

@@ -2,7 +2,8 @@ package org.blaise.graph;
 
 
 import java.util.Collection;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AssertUtils {
     /** Tests to see if all elements of one collection are contained in the other, and vice versa */

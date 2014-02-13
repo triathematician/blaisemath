@@ -17,7 +17,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.blaise.graph.Graph;
-import org.blaise.graph.dynamic.TimeGraph;
+import org.blaise.graph.longitudinal.LongitudinalGraph;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.layout.GraphLayoutManager;
 import org.blaise.graph.view.PlaneGraphAdapter;
@@ -100,7 +100,7 @@ public final class TimeGraphComponent extends JPanel
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
     /** Sets the underlying graph */
-    public void setTimeGraph(TimeGraph g) {
+    public void setTimeGraph(LongitudinalGraph g) {
         setManager(new TimeGraphManager(g));
     }
 

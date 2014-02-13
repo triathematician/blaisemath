@@ -28,18 +28,19 @@ public class GraphComponents<V> {
 
     /**
      * Construct components for specified graph.
-     * @param source graph
+     * @param graph graph
      * @param components the graph's components
      */
     public GraphComponents(Graph<V> graph, Collection<Set<V>> components) {
         this.graph = graph;
         this.components = components;
-        if (components.size() == 1)
+        if (components.size() == 1) {
             componentGraphs = Collections.singleton(graph);
-        else {
+        } else {
             this.componentGraphs = new HashSet<Graph<V>>();
-            for (Set<V> compt : components)
+            for (Set<V> compt : components) {
                 componentGraphs.add(GraphUtils.subgraph(graph, compt));
+            }
         }
     }
 
@@ -82,9 +83,11 @@ public class GraphComponents<V> {
      * @return the component of a node
      */
     public Set<V> getComponentOf(V x) {
-        for (Set<V> compt : components)
-            if (compt.contains(x))
+        for (Set<V> compt : components) {
+            if (compt.contains(x)) {
                 return compt;
+            }
+        }
         return null;
     }
 

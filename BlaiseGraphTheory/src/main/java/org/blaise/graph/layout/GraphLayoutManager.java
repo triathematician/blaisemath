@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
-import org.blaise.graph.GraphBuilders;
+import org.blaise.graph.GraphSuppliers;
 import org.blaise.util.CoordinateChangeEvent;
 import org.blaise.util.CoordinateListener;
 import org.blaise.util.CoordinateManager;
@@ -60,7 +60,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
 
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
-        this(GraphBuilders.EMPTY_GRAPH);
+        this(GraphSuppliers.EMPTY_GRAPH);
     }
 
     /**

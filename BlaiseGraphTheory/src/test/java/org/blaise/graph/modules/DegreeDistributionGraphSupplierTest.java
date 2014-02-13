@@ -16,7 +16,7 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class DegreeCountBuilderTest {
+public class DegreeDistributionGraphSupplierTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -28,7 +28,7 @@ public class DegreeCountBuilderTest {
         System.out.println("getDirectedInstance");
         int sum = 1+7+3+2+1;
         int[] expected = new int[]{1,7,3,2,1};
-        Graph<Integer> result = DegreeCountBuilder.getDirectedInstance(expected);
+        Graph<Integer> result = DegreeDistributionGraphSupplier.getDirectedInstance(expected);
         System.out.println("graph: " + GraphUtils.printGraph(result));
         assertEquals(sum, result.nodeCount());
         int[] foundDegrees = new int[5];
@@ -44,10 +44,10 @@ public class DegreeCountBuilderTest {
     @Test
     public void testGetUndirectedInstance() {
         System.out.println("getUndirectedInstance");
-        try { DegreeCountBuilder.getUndirectedInstance(new int[]{1,7,3,2,1}); fail("Shouldn't be able to use odd degree sum."); } catch (IllegalArgumentException ex) {}
+        try { DegreeDistributionGraphSupplier.getUndirectedInstance(new int[]{1,7,3,2,1}); fail("Shouldn't be able to use odd degree sum."); } catch (IllegalArgumentException ex) {}
         int[] expected = new int[]{1,7,3,3,1};
         int sum = 1+7+3+3+1;
-        Graph<Integer> result = DegreeCountBuilder.getUndirectedInstance(expected);
+        Graph<Integer> result = DegreeDistributionGraphSupplier.getUndirectedInstance(expected);
         assertEquals(sum, result.nodeCount());
         int[] left = new int[5];
         System.arraycopy(expected, 0, left, 0, 5);

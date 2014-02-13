@@ -5,10 +5,11 @@
 
 package org.blaise.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Lists;
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,28 +19,71 @@ import java.util.List;
  * </p>
  * @author elisha
  */
-public class GraphBuilders {
+public class GraphSuppliers {
 
     /** A completely empty graph */
     public static final Graph EMPTY_GRAPH = new SparseGraph(false, Collections.EMPTY_SET, Collections.EMPTY_SET);
 
+    // utility class
+    private GraphSuppliers() {
+    }
+    
+    /** Helper class with fields for directed/undirected and number of nodes */
+    public abstract static class GraphSupplierSupport<V> implements Supplier<Graph<V>> {
+        protected boolean directed = false;
+        protected int nodes = 1;
+
+        public GraphSupplierSupport() {
+        }
+        
+        public GraphSupplierSupport(boolean directed, int nodes) {
+            if (nodes < 0) {
+                throw new IllegalArgumentException("Graphs must have a non-negative number of nodes: " + nodes);
+            }
+            this.directed = directed;
+            this.nodes = nodes;
+        }        
+
+        public boolean isDirected() {
+            return directed;
+        }
+
+        public void setDirected(boolean directed) {
+            this.directed = directed;
+        }
+
+        public int getNodes() {
+            return nodes;
+        }
+
+        public void setNodes(int nodes) {
+            this.nodes = nodes;
+        }
+    }
+
     /** Constructs graph with n vertices */
-    public static class EmptyGraphBuilder extends GraphBuilder.Support<Integer> {
-        public EmptyGraphBuilder() {}
-        public EmptyGraphBuilder(boolean directed, int nodes) { super(directed, nodes); }
-        public Graph<Integer> createGraph() {
+    public static class EmptyGraphBuilder extends GraphSupplierSupport<Integer> {
+        public EmptyGraphBuilder() {
+        }
+        public EmptyGraphBuilder(boolean directed, int nodes) { 
+            super(directed, nodes); 
+        }
+        public Graph<Integer> get() {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
-            return new SparseGraph(directed, intList(nodes), (Collection) Collections.emptyList());
+            return new SparseGraph<Integer>(directed, intList(nodes), Collections.<Integer[]>emptyList());
         }
     }
 
     /** Constructs complete graph with n vertices */
-    public static class CompleteGraphBuilder extends GraphBuilder.Support<Integer> {
-        public CompleteGraphBuilder() {}
-        public CompleteGraphBuilder(boolean directed, int nodes) { super(directed, nodes); }
-        public Graph<Integer> createGraph() {
+    public static class CompleteGraphBuilder extends GraphSupplierSupport<Integer> {
+        public CompleteGraphBuilder() {
+        }
+        public CompleteGraphBuilder(boolean directed, int nodes) { 
+            super(directed, nodes); 
+        }
+        public Graph<Integer> get() {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
@@ -52,19 +96,22 @@ public class GraphBuilders {
                     }
                 }
             }
-            return new SparseGraph(directed, intList(nodes), edges);
+            return new SparseGraph<Integer>(directed, intList(nodes), edges);
         }
     }
 
     /** Constructs cycle graph with n vertices */
-    public static class CycleGraphBuilder extends GraphBuilder.Support<Integer> {
-        public CycleGraphBuilder() {}
-        public CycleGraphBuilder(boolean directed, int nodes) { super(directed, nodes); }
-        public Graph<Integer> createGraph() {
+    public static class CycleGraphBuilder extends GraphSupplierSupport<Integer> {
+        public CycleGraphBuilder() {
+        }
+        public CycleGraphBuilder(boolean directed, int nodes) { 
+            super(directed, nodes); 
+        }
+        public Graph<Integer> get() {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
-            return new SparseGraph(directed, intList(nodes),
+            return new SparseGraph<Integer>(directed, intList(nodes),
                     new AbstractList<Integer[]>() {
                         @Override
                         public Integer[] get(int index) {
@@ -81,14 +128,15 @@ public class GraphBuilders {
 
     /** Constructs star graph with n vertices.
      * All vertices are connected to a central hub. */
-    public static class StarGraphBuilder extends GraphBuilder.Support<Integer> {
-        public StarGraphBuilder() {}
-        public StarGraphBuilder(boolean directed, int nodes) { super(directed, nodes); }
-        public Graph<Integer> createGraph() {
-            if (nodes < 0) {
-                throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
-            }
-            return new SparseGraph(directed, intList(nodes),
+    public static class StarGraphBuilder extends GraphSupplierSupport<Integer> {
+        public StarGraphBuilder() {
+        }
+        public StarGraphBuilder(boolean directed, int nodes) { 
+            super(directed, nodes); 
+            checkArgument(nodes >= 0, "Positive number of nodes required.");
+        }
+        public Graph<Integer> get() {
+            return new SparseGraph<Integer>(directed, intList(nodes),
                     new AbstractList<Integer[]>() {
                         @Override
                         public Integer[] get(int index) {
@@ -108,10 +156,13 @@ public class GraphBuilders {
      * All vertices are connected to a central hub, and all non-central
      * vertices connected in a cyclic fashion.
      */
-    public static class WheelGraphBuilder extends GraphBuilder.Support<Integer> {
-        public WheelGraphBuilder() {}
-        public WheelGraphBuilder(boolean directed, int nodes) { super(directed, nodes); }
-        public Graph<Integer> createGraph() {
+    public static class WheelGraphBuilder extends GraphSupplierSupport<Integer> {
+        public WheelGraphBuilder() {
+        }
+        public WheelGraphBuilder(boolean directed, int nodes) { 
+            super(directed, nodes); 
+        }
+        public Graph<Integer> get() {
             if (nodes < 0) {
                 throw new IllegalArgumentException("Numbers must be nonnegative! n=" + nodes);
             }
@@ -129,7 +180,7 @@ public class GraphBuilders {
             if (directed) {
                 edges.add(new Integer[]{1, nodes - 1});
             }
-            return new SparseGraph(directed, intList(nodes), edges);
+            return new SparseGraph<Integer>(directed, intList(nodes), edges);
         }
     }
 

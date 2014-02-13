@@ -12,8 +12,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Map;
 import java.util.TimerTask;
 import org.blaise.graph.Graph;
-import org.blaise.graph.dynamic.SimultaneousLayout;
-import org.blaise.graph.dynamic.TimeGraph;
+import org.blaise.graph.longitudinal.SimultaneousLayout;
+import org.blaise.graph.longitudinal.LongitudinalGraph;
 import org.blaise.graph.layout.StaticGraphLayout;
 
 /**
@@ -26,7 +26,7 @@ import org.blaise.graph.layout.StaticGraphLayout;
 public class TimeGraphManager {
     
     /** The time graph */
-    private final TimeGraph tGraph;
+    private final LongitudinalGraph tGraph;
     /** The active time */
     private double time;
     /** The active slice */
@@ -35,7 +35,7 @@ public class TimeGraphManager {
     
     // <editor-fold defaultstate="collapsed" desc="Constructor">
     /** Constructs manager for the specified graph */
-    public TimeGraphManager(TimeGraph graph) {
+    public TimeGraphManager(LongitudinalGraph graph) {
         if (graph == null)
             throw new IllegalArgumentException("Graph cannot be null.");
         this.tGraph = graph;
@@ -50,7 +50,7 @@ public class TimeGraphManager {
     //
 
     /** @return the manager's graph (immutable) */
-    public TimeGraph getTimeGraph() { return tGraph; }
+    public LongitudinalGraph getTimeGraph() { return tGraph; }
 
     /** @return time of the current slice */
     public double getTime() { return time; }
