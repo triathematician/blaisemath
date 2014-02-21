@@ -5,7 +5,12 @@
 
 package org.blaise.graph;
 
-import java.util.*;
+import com.google.common.collect.Multimap;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -69,7 +74,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
      */
-    public OptimizedGraph(boolean directed, Map<V, Set<V>> adjacencies) {
+    public OptimizedGraph(boolean directed, Multimap<V,V> adjacencies) {
         super(directed, adjacencies);
         initCachedElements();
     }
@@ -79,10 +84,18 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
             int deg = super.degree(v);
             degrees.put(v, deg);
             switch (deg) {
-                case 0: isolates.add(v); break;
-                case 1: leafNodes.add(v); break;
-                case 2: connectorNodes.add(v); break;
-                default: coreNodes.add(v); break;
+                case 0: 
+                    isolates.add(v);
+                    break;
+                case 1:
+                    leafNodes.add(v); 
+                    break;
+                case 2: 
+                    connectorNodes.add(v); 
+                    break;
+                default: 
+                    coreNodes.add(v);
+                    break;
             }
             neighbors.put(v, super.neighbors(v));
             adjLeaves.put(v, new HashSet<V>());

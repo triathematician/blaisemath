@@ -5,12 +5,16 @@
 
 package org.blaise.graphics;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.*;
-import javax.swing.JPopupMenu;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.PathStyle;
 import org.blaise.util.CoordinateChangeEvent;
@@ -173,14 +177,5 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicCompos
     }
     
     //</editor-fold>
-    
-
-    @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-        // use delegate's source object for focus instead of the graphic
-        Graphic gfc = graphicAt(point);
-        super.initContextMenu(menu, src, point, gfc instanceof DelegatingShapeGraphic
-                ? ((DelegatingShapeGraphic)gfc).getSourceObject() : focus, selection);
-    }
 
 }

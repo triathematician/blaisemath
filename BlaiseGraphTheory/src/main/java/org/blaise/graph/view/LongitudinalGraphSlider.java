@@ -18,21 +18,21 @@ import org.blaise.util.gui.ListSlider;
  * A slider component that manages a longitudinal graph.
  * @author elisha
  */
-public final class TimeGraphSlider extends JComponent
+public final class LongitudinalGraphSlider extends JComponent
         implements PropertyChangeListener, ChangeListener {
 
     /** The manager of the time graph */
-    private TimeGraphManager manager;
+    private LongitudinalGraphManager manager;
     /** The list slider */
     private final ListSlider slider;
 
     /** Create a slider for the graph without a manager */
-    public TimeGraphSlider() {
+    public LongitudinalGraphSlider() {
         this(null);
     }
 
     /** Create a slider for the graph of the specified manager */
-    public TimeGraphSlider(TimeGraphManager manager) {
+    public LongitudinalGraphSlider(LongitudinalGraphManager manager) {
         setManager(manager);
         slider = new ListSlider();
         slider.addChangeListener(this);
@@ -41,9 +41,9 @@ public final class TimeGraphSlider extends JComponent
     }
 
     /** @return manager for the slider */
-    public TimeGraphManager getManager() { return manager; }
+    public LongitudinalGraphManager getManager() { return manager; }
     /** Sets manager for the slider */
-    public void setManager(TimeGraphManager m) {
+    public void setManager(LongitudinalGraphManager m) {
         if (this.manager != m) {
             if (this.manager != null)
                 this.manager.removePropertyChangeListener(this);

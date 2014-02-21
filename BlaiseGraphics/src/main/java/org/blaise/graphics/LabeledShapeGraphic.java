@@ -9,15 +9,13 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.swing.JPopupMenu;
-import org.blaise.style.TextStyleBasic;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
+import org.blaise.style.TextStyleBasic;
+import org.blaise.style.TextStyleWrapped;
 import org.blaise.style.VisibilityHint;
 import org.blaise.style.VisibilityHintSet;
-import org.blaise.style.TextStyleWrapped;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -43,25 +41,16 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
      * @param styler styler for source object
      */
     public LabeledShapeGraphic(E src, RectangularShape rect, ObjectStyler<E,ShapeStyle> styler) {
-        setStyler(styler);
-        setSourceObject(src);
-        setPrimitive(rect);
+        super(src, rect, styler);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
-    //
-    // PROPERTY PATTERNS
-    //
-    
-
     @Override
-    public void setSourceObject(E src) {
-        super.setSourceObject(src);
+    protected void sourceGraphicUpdated() {
         if (labelGraphic != null) {
-            labelGraphic.setString(src == null ? "" : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+src
-                    : getStyler().getLabelDelegate().apply(src));
+            labelGraphic.setString(source == null ? "" : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+source
+                    : getStyler().getLabelDelegate().apply(source));
             TextStyleBasic ss = (TextStyleBasic) (getStyler() == null || getStyler().getLabelStyleDelegate() == null ? null
-                                        : getStyler().getLabelStyleDelegate().apply(src));
+                                        : getStyler().getLabelStyleDelegate().apply(source));
             labelStyle = (TextStyleWrapped) (ss == null ? null
                     : new TextStyleWrapped()
                         .textAnchor(ss.getTextAnchor())
@@ -72,6 +61,12 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
             labelGraphic.setStyle(labelStyle);
         }
     }
+
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
     
     public boolean isVariableInset() {
         return variableInset;
@@ -85,12 +80,8 @@ public class LabeledShapeGraphic<E> extends DelegatingShapeGraphic<E> {
     }
 
     //</editor-fold>
-    
-    @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-        super.initContextMenu(menu, src, point, getSourceObject(), selection);
-    }
 
+    
     @Override
     @Nonnull 
     protected ShapeStyle drawStyle() {

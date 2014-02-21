@@ -4,12 +4,11 @@
  */
 package org.blaise.graphics;
 
-import static com.google.common.base.Preconditions.*;
-import org.blaise.util.ContextMenuInitializer;
+import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Lists;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +18,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.blaise.style.VisibilityHint;
 import org.blaise.style.VisibilityHintSet;
+import org.blaise.util.ContextMenuInitializer;
 
 /**
  * <p>
@@ -52,7 +52,7 @@ public abstract class GraphicSupport implements Graphic {
     protected final GraphicHighlightHandler highlighter = new GraphicHighlightHandler();
 
     /** Context initializers */
-    protected final List<ContextMenuInitializer> contextMenuInitializers = new ArrayList<ContextMenuInitializer>();
+    protected final List<ContextMenuInitializer<Graphic>> contextMenuInitializers = Lists.newArrayList();
 
     /** Stores event eventHandlers for the entry */
     protected EventListenerList eventHandlers = new EventListenerList();

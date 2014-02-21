@@ -6,7 +6,8 @@
 package org.blaise.graphics;
 
 import com.google.common.base.Objects;
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,8 +17,8 @@ import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import org.blaise.style.StyleContextDefault;
 import org.blaise.style.StyleContext;
+import org.blaise.style.StyleContextDefault;
 import org.blaise.style.VisibilityHint;
 
 /**
@@ -42,7 +43,8 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
     /** Context menu for actions on the graphics */
     protected final JPopupMenu popup = new JPopupMenu();
     /** Provides a pluggable way to generate mouse events */
-    @Nonnull protected GraphicMouseEvent.Factory mouseFactory = new GraphicMouseEvent.Factory();
+    @Nonnull 
+    protected GraphicMouseEvent.Factory mouseFactory = new GraphicMouseEvent.Factory();
 
     /** Current owner of mouse events. Gets first priority for mouse events that occur. */
     private transient Graphic mouseGraphic = null;
@@ -89,7 +91,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
     }
 
     @Override
-    public final void setStyleContext(StyleContext rend) {
+    public void setStyleContext(StyleContext rend) {
         checkArgument(rend != null, "GraphicRoot must have a non-null StyleProvider!");
         super.setStyleContext(rend);
     }

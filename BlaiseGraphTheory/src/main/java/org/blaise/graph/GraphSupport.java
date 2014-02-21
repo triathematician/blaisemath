@@ -4,7 +4,6 @@
  */
 package org.blaise.graph;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +13,7 @@ import org.blaise.util.Edge;
 
 /**
  * Implements the methods of {@link Graph} that can be inferred from other methods.
+ * The nodes are maintained as a {@link LinkedHashSet}.
  *
  * @author Elisha Peterson
  */
@@ -25,17 +25,8 @@ public abstract class GraphSupport<V> implements Graph<V> {
     protected final Set<V> nodes;
 
     /**
-     * Constructs with the set of nodes.
-     * @param nodes graph's nodes
-     * @param directed if graph is directed
-     */
-    public GraphSupport(V[] nodes, boolean directed) {
-        this.nodes = new HashSet<V>(Arrays.asList(nodes));
-        this.directed = directed;
-    }
-
-    /**
-     * Constructs with the set of nodes.
+     * Constructs with the set of nodes. The nodes are copied from the supplied
+     * collection into a new data structure.
      * @param nodes graph's nodes
      * @param directed if graph is directed
      */

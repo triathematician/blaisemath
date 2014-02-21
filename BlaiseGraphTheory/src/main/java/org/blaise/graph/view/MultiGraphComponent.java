@@ -27,7 +27,7 @@ import org.blaise.graph.layout.GraphLayoutManager;
 public class MultiGraphComponent extends JList implements PropertyChangeListener {
 
     /** Time graph manager */
-    private TimeGraphManager manager;
+    private LongitudinalGraphManager manager;
 
     /** Constructs a longitudinal graph panel without an actual graph. */
     public MultiGraphComponent() {
@@ -35,7 +35,7 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     }
 
     /** Construct instance with specified graph manager */
-    public MultiGraphComponent(TimeGraphManager m) {
+    public MultiGraphComponent(LongitudinalGraphManager m) {
         setCellRenderer(new GraphCellRenderer());
         setListData(new Object[]{});
         setManager(m);
@@ -46,12 +46,12 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
     /** @return manager for the longitudinal graph */
-    public TimeGraphManager getManager() {
+    public LongitudinalGraphManager getManager() {
         return manager;
     }
 
     /** Changes the manager for the longitudinal graph */
-    public void setManager(TimeGraphManager m) {
+    public void setManager(LongitudinalGraphManager m) {
         if (this.manager != m) {
             if (this.manager != null)
                 this.manager.removePropertyChangeListener(this);

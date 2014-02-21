@@ -1,5 +1,5 @@
 /*
- * TimeGraphComponent.java
+ * LongitudinalGraphComponent.java
  * Created July 7, 2010
  */
 
@@ -31,13 +31,13 @@ import org.jdesktop.layout.GroupLayout;
  *
  * @author Elisha Peterson
  */
-public final class TimeGraphComponent extends JPanel
+public final class LongitudinalGraphComponent extends JPanel
         implements PropertyChangeListener {
 
     /** Time graph manager */
-    private TimeGraphManager manager;
+    private LongitudinalGraphManager manager;
     /** Time slider */
-    private final TimeGraphSlider slider;
+    private final LongitudinalGraphSlider slider;
     /** Currently active graph component */
     private final GraphComponent plot;
     /** Flag telling component whether to update its own graph upon receiving a property time change */
@@ -50,20 +50,20 @@ public final class TimeGraphComponent extends JPanel
     // <editor-fold defaultstate="collapsed" desc="Constructors & Initializers">
 
     /** Constructs a longitudinal graph panel without an actual graph. */
-    public TimeGraphComponent() {
+    public LongitudinalGraphComponent() {
         this(null, null);
     }
 
     /** Construct instance with specified graph manager */
-    public TimeGraphComponent(TimeGraphManager m) {
+    public LongitudinalGraphComponent(LongitudinalGraphManager m) {
         this(m, null);
     }
 
     /** Construct instance with specified graph manager */
-    public TimeGraphComponent(TimeGraphManager m, GraphLayoutManager gm) {
+    public LongitudinalGraphComponent(LongitudinalGraphManager m, GraphLayoutManager gm) {
         super(new java.awt.BorderLayout());
         plot = new GraphComponent();
-        slider = new TimeGraphSlider();
+        slider = new LongitudinalGraphSlider();
         timeLabel = new JLabel("Slice t=??");
         initComponents();
         setManager(m, gm);
@@ -101,7 +101,7 @@ public final class TimeGraphComponent extends JPanel
 
     /** Sets the underlying graph */
     public void setTimeGraph(LongitudinalGraph g) {
-        setManager(new TimeGraphManager(g));
+        setManager(new LongitudinalGraphManager(g));
     }
 
     /** @return plot on which graph is displayed */
@@ -111,16 +111,16 @@ public final class TimeGraphComponent extends JPanel
     public PlaneGraphAdapter getGraphAdapter() { return plot.getAdapter(); }
 
     /** @return manager for the longitudinal graph */
-    public TimeGraphManager getManager() { return manager; }
+    public LongitudinalGraphManager getManager() { return manager; }
 
     /** @return manager for graph */
     public GraphLayoutManager getGraphManager() { return plot.getGraphManager(); }
 
     /** Changes the manager for the longitudinal graph */
-    public void setManager(TimeGraphManager m) { setManager(m, null); }
+    public void setManager(LongitudinalGraphManager m) { setManager(m, null); }
 
     /** Changes the manager for the longitudinal graph */
-    private void setManager(TimeGraphManager m, GraphLayoutManager gm) {
+    private void setManager(LongitudinalGraphManager m, GraphLayoutManager gm) {
         if (this.manager != m) {
             if (this.manager != null)
                 this.manager.removePropertyChangeListener(this);

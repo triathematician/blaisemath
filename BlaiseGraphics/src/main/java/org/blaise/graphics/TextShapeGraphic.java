@@ -9,12 +9,10 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
-import java.util.Set;
-import javax.swing.JPopupMenu;
-import org.blaise.style.TextStyleBasic;
-import org.blaise.style.TextStyleMultiline;
 import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
+import org.blaise.style.TextStyleBasic;
+import org.blaise.style.TextStyleMultiline;
 import org.blaise.style.VisibilityHint;
 import org.blaise.style.VisibilityHintSet;
 
@@ -30,7 +28,6 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
 
     /** Draws label */
     private final BasicTextGraphic labelGraphic = new BasicTextGraphic(new Point2D.Double(), "");
-    
     /** Special style for Text */
     private TextStyleMultiline labelStyle;
 
@@ -41,19 +38,17 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
      * @param styler styler for source object
      */
     public TextShapeGraphic(E src, RectangularShape rect, ObjectStyler<E,ShapeStyle> styler) {
-        setStyler(styler);
-        setSourceObject(src);
-        setPrimitive(rect);
+        super(src, rect, styler);
     }
 
     @Override
-    public void setSourceObject(E src) {
-        super.setSourceObject(src);
+    protected void sourceGraphicUpdated() {
         if (labelGraphic != null) {
-            labelGraphic.setString(src == null ? "" : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+src
-                    : getStyler().getLabelDelegate().apply(src));
+            labelGraphic.setString(source == null ? "" 
+                    : getStyler() == null || getStyler().getLabelDelegate() == null ? ""+source
+                    : getStyler().getLabelDelegate().apply(source));
             TextStyleBasic ss = (TextStyleBasic) (getStyler() == null || getStyler().getLabelStyleDelegate() == null ? null
-                                        : getStyler().getLabelStyleDelegate().apply(src));
+                                        : getStyler().getLabelStyleDelegate().apply(source));
             labelStyle = (TextStyleMultiline) (ss == null ? null
                     : new TextStyleMultiline()
                         .textAnchor(ss.getTextAnchor())
@@ -66,18 +61,8 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
     }
 
     @Override
-    public void setPrimitive(Shape primitive) {
-        super.setPrimitive(primitive);
-    }
-
-    @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
-        super.initContextMenu(menu, src, point, getSourceObject(), selection);
-    }
-
-    @Override
     public ShapeStyle drawStyle() {
-        final ShapeStyle parent = super.drawStyle();
+        final ShapeStyle parentStyle = super.drawStyle();
         return new ShapeStyle() {
             public void draw(Shape primitive, Graphics2D canvas, VisibilityHintSet hints) {
                 boolean highlight = hints.contains(VisibilityHint.HIGHLIGHT);
@@ -88,7 +73,7 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
                     rs2.setFrameFromCenter(rs.getCenterX(), rs.getCenterY(), rs.getMaxX()-inset, rs.getMaxY()-inset);
                     primitive = rs2;
                 }
-                parent.draw(primitive, canvas, hints);
+                parentStyle.draw(primitive, canvas, hints);
                 if (labelStyle != null) {
                     labelGraphic.setPoint(new Point2D.Double(primitive.getBounds2D().getMinX()+2, primitive.getBounds2D().getMaxY()-2));
                     labelGraphic.draw(canvas);

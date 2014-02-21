@@ -3,6 +3,12 @@
  */
 package org.blaise.graph;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Sets;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,10 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.TreeMap;
 import java.util.TreeSet;
-import org.blaise.util.Edge;
 import org.blaise.math.linear.Matrices;
+import org.blaise.util.Edge;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.
@@ -27,8 +32,18 @@ import org.blaise.math.linear.Matrices;
  * @author Elisha Peterson
  */
 public class GraphUtils {
+    
+    /** Used to sort graphs in descending order by size */
+    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
+        @Override
+        public int compare(Graph o1, Graph o2) {
+            return -(o1.nodeCount() == o2.nodeCount() && o1.edgeCount() == o2.edgeCount() ? o1.nodes().toString().compareTo(o2.nodes().toString())
+                    : o1.nodeCount() == o2.nodeCount() ? o1.edgeCount() - o2.edgeCount()
+                    : o1.nodeCount() - o2.nodeCount());
+        }
+    };
 
-    // Ensure non-instantiability
+    // utility class
     private GraphUtils() {
     }
 
@@ -99,14 +114,14 @@ public class GraphUtils {
      * @return an instance of the graph with the same vertices and edges, but a new copy of it
      */
     public static <V> Graph<V> copy(Graph<V> graph) {
-        ArrayList<V[]> edges = new ArrayList<V[]>();
+        List<V[]> edges = Lists.newArrayList();
         for (Edge<V> e : graph.edges()) {
             V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
             arr[0] = e.getNode1();
             arr[1] = e.getNode2();
             edges.add(arr);
         }
-        return new SparseGraph(graph.isDirected(), new HashSet<V>(graph.nodes()), edges);
+        return new SparseGraph(graph.isDirected(), graph.nodes(), edges);
     }
 
     /**
@@ -115,14 +130,14 @@ public class GraphUtils {
      * @return undirected copy with the same collection of edges
      */
     public static <V> Graph<V> copyUndirected(Graph<V> graph) {
-        ArrayList<V[]> edges = new ArrayList<V[]>();
+        List<V[]> edges = Lists.newArrayList();
         for (Edge<V> e : graph.edges()) {
             V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
             arr[0] = e.getNode1();
             arr[1] = e.getNode2();
             edges.add(arr);
         }
-        return new SparseGraph(false, new HashSet<V>(graph.nodes()), edges);
+        return new SparseGraph(false, graph.nodes(), edges);
     }
 
     //</editor-fold>
@@ -141,7 +156,7 @@ public class GraphUtils {
      * @return new graph
      */
     public static <V> Graph<V> subgraph(Graph<V> parent, Set<V> nodes) {
-        ArrayList<V[]> edges = new ArrayList<V[]>();
+        List<V[]> edges = Lists.newArrayList();
         for (Edge<V> e : parent.edges()) {
             if (nodes.contains(e.getNode1()) && nodes.contains(e.getNode2())) {
                 V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
@@ -161,7 +176,7 @@ public class GraphUtils {
      */
     public static <V> Graph<V> core(Graph<V> parent) {
         boolean directed = parent.isDirected();
-        Set<V> cNodes = new HashSet<V>();
+        Set<V> cNodes = Sets.newLinkedHashSet();
         if (parent instanceof OptimizedGraph) {
             OptimizedGraph<V> og = (OptimizedGraph<V>) parent;
             cNodes.addAll(og.getCoreNodes());
@@ -173,7 +188,7 @@ public class GraphUtils {
                 }
             }
         }
-        ArrayList<V[]> edges = new ArrayList<V[]>();
+        List<V[]> edges = Lists.newArrayList();
         for (Edge<V> e : parent.edges()) {
             V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
             arr[0] = e.getNode1();
@@ -255,46 +270,18 @@ public class GraphUtils {
     //
     // DEGREE METHODS
     //
-    /**
-     * Computes and returns degree distribution.
-     *
-     * @param graph the graph
-     * @return int array in which the ith entry is the number of vertices with
-     * degree i; the size is the maximum degree of any vertex in the graph
-     */
-    public static <V> int[] degreeDistribution(Graph<V> graph) {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        int degree;
-        for (V v : graph.nodes()) {
-            degree = graph.degree(v);
-            while (result.size() < degree + 1) {
-                result.add(0);
-            }
-            result.set(degree, result.get(degree) + 1);
-        }
-        int[] result2 = new int[result.size()];
-        for (int i = 0; i < result2.length; i++) {
-            result2[i] = result.get(i);
-        }
-        return result2;
-    }
 
     /**
      * Computes and returns degree distribution.
      * @param graph the graph
      * @return map associating degree #s with counts, sorted by degree
      */
-    public static <V> Map<Integer, Integer> degreeDistributionMap(Graph<V> graph) {
-        Map<Integer, Integer> result = new TreeMap<Integer, Integer>();
+    public static <V> Multiset<Integer> degreeDistribution(Graph<V> graph) {
+        Multiset<Integer> res = HashMultiset.create();
         for (V v : graph.nodes()) {
-            int degree = graph.degree(v);
-            if (result.containsKey(degree)) {
-                result.put(degree, result.get(degree) + 1);
-            } else {
-                result.put(degree, 1);
-            }
+            res.add(graph.degree(v));
         }
-        return result;
+        return res;
     }
 
     //</editor-fold>
@@ -332,9 +319,9 @@ public class GraphUtils {
      */
     public static <V> Map<V, Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
         // vertices left to add
-        HashSet<V> remaining = new HashSet<V>(graph.nodes());
+        HashSet<V> remaining = Sets.newHashSet(graph.nodes());
         // vertices added already, by distance
-        ArrayList<HashSet<V>> added = new ArrayList<HashSet<V>>();
+        ArrayList<Set<V>> added = Lists.newArrayList();
         // stores size of remaining vertices
         int sRemaining = -1;
 
@@ -344,7 +331,7 @@ public class GraphUtils {
             sRemaining = remaining.size();
             added.add(new HashSet<V>());
             for (V v1 : added.get(added.size() - 2)) {
-                HashSet<V> toRemove = new HashSet<V>();
+                HashSet<V> toRemove = Sets.newHashSet();
                 for (V v2 : remaining) {
                     if (graph.adjacent(v1, v2)) {
                         toRemove.add(v2);
@@ -385,14 +372,14 @@ public class GraphUtils {
         }
 
         // vertices left to add
-        ArrayList<V> remaining = new ArrayList<V>(graph.nodes());
+        ArrayList<V> remaining = Lists.newArrayList(graph.nodes());
         // vertices added already, by distance
-        ArrayList<HashSet<V>> added = new ArrayList<HashSet<V>>();
+        ArrayList<HashSet<V>> added = Lists.newArrayList();
         // stores size of remaining vertices
         int sRemaining;
 
         remaining.remove(start);
-        added.add(new HashSet<V>(Arrays.asList(start)));
+        added.add(Sets.newHashSet(start));
         do {
             sRemaining = remaining.size();
             added.add(new HashSet<V>());
@@ -421,18 +408,16 @@ public class GraphUtils {
     //
     // NEIGHBORHOOD & COMPONENT METHODS
     //
+    
     /**
      * Generates list of nodes from an adjacency map
-     *
      * @param adj an adjacency map
      * @return list of nodes
      */
-    public static <V> List<V> nodes(Map<V, Set<V>> adj) {
-        Set<V> result = new HashSet<V>();
-        for (V node : adj.keySet()) {
-            result.add(node);
-            result.addAll(adj.get(node));
-        }
+    public static <V> List<V> nodes(Multimap<V,V> adj) {
+        Set<V> result = Sets.newLinkedHashSet();
+        result.addAll(adj.keySet());
+        result.addAll(adj.values());
         return new ArrayList<V>(result);
     }
 
@@ -453,11 +438,11 @@ public class GraphUtils {
      * @param adj an adjacency map
      * @return set of components, as a set of sets
      */
-    public static <V> Collection<Set<V>> components(Map<V, Set<V>> adj) {
-        List<Set<V>> result = new ArrayList<Set<V>>();
+    public static <V> Collection<Set<V>> components(Multimap<V,V> adj) {
+        List<Set<V>> result = Lists.newArrayList();
         for (V node : adj.keySet()) {
-            Set<V> nbhd = adj.get(node);
-            Set<Set<V>> joins = new HashSet<Set<V>>();
+            Collection<V> nbhd = adj.get(node);
+            Set<Set<V>> joins = Sets.newHashSet();
 
             // look for components with common elements
             for (Set<V> component : result) {
@@ -472,12 +457,12 @@ public class GraphUtils {
                 joins.iterator().next().add(node);
             } else {
                 // otherwise create a new set from all the joined elements, and remove the old ones
-                HashSet<V> nue = new HashSet<V>(nbhd);
+                HashSet<V> nue = Sets.newHashSet(nbhd);
                 nue.add(node);
                 for (Set<V> j : joins) {
                     nue.addAll(j);
                     if (!result.remove(j)) {
-                        System.err.println("Failed to remove component: " + j);
+                        throw new IllegalStateException("Failed to remove component "+j);
                     }
                 }
                 result.add(nue);
@@ -492,10 +477,10 @@ public class GraphUtils {
      * @return set of components, as a set of sets
      */
     public static <V,W> Collection<Set<V>> componentsEdgeMap(Map<V,Map<V,W>> adj) {
-        List<Set<V>> result = new ArrayList<Set<V>>();
+        List<Set<V>> result = Lists.newArrayList();
         for (V node : adj.keySet()) {
             Set<V> nbhd = adj.get(node).keySet();
-            Set<Set<V>> joins = new HashSet<Set<V>>();
+            Set<Set<V>> joins = Sets.newHashSet();
 
             // look for components with common elements
             for (Set<V> component : result) {
@@ -510,12 +495,12 @@ public class GraphUtils {
                 joins.iterator().next().add(node);
             } else {
                 // otherwise create a new set from all the joined elements, and remove the old ones
-                HashSet<V> nue = new HashSet<V>(nbhd);
+                HashSet<V> nue = Sets.newHashSet(nbhd);
                 nue.add(node);
                 for (Set<V> j : joins) {
                     nue.addAll(j);
                     if (!result.remove(j)) {
-                        System.err.println("Failed to remove component: " + j);
+                        throw new IllegalStateException("Failed to remove component "+j);
                     }
                 }
                 result.add(nue);
@@ -546,14 +531,14 @@ public class GraphUtils {
      * @param nodes subset of nodes
      * @return adjacency map restricted to the given subset
      */
-    public static <V> Map<V, Set<V>> adjacencies(Graph<V> graph, Collection<V> nodes) {
-        Map<V, Set<V>> result = new HashMap<V, Set<V>>();
+    public static <V> Multimap<V,V> adjacencies(Graph<V> graph, Collection<V> nodes) {
+        Multimap<V,V> res = LinkedHashMultimap.create();
         for (V v : nodes) {
-            HashSet<V> nbhd = new HashSet<V>(graph.neighbors(v));
+            HashSet<V> nbhd = Sets.newHashSet(graph.neighbors(v));
             nbhd.retainAll(nodes);
-            result.put(v, nbhd);
+            res.putAll(v, nbhd);
         }
-        return result;
+        return res;
     }
 
     /**
@@ -633,12 +618,7 @@ public class GraphUtils {
                 }
             }
         }
-//        System.out.println("      lengths: " + lengths);
-//        System.out.println("      #paths:  " + numShortest);
-//        System.out.println("  stack: " + stack);
-//        System.out.println("  preds: " + pred);
-
-    } // METHOD breadthFirstSearch
+    }
 
     //</editor-fold>
     
@@ -657,7 +637,7 @@ public class GraphUtils {
      * @return graph where the specified nodes have been contracted
      */
     public static <V> Graph<V> contractedGraph(Graph<V> graph, Collection<V> contract, V replace) {
-        ArrayList<V[]> edges = new ArrayList<V[]>();
+        ArrayList<V[]> edges = Lists.newArrayList();
         for (Edge<V> e : graph.edges()) {
             V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
             arr[0] = contract.contains(e.getNode1()) ? replace : e.getNode1();
@@ -675,7 +655,7 @@ public class GraphUtils {
      * @return node set
      */
     public static <V> Set<V> contractedNodeSet(Collection<V> nodes, Collection<V> contract, V replace) {
-        Set<V> result = new HashSet<V>(nodes);
+        Set<V> result = Sets.newHashSet(nodes);
         result.removeAll(contract);
         result.add(replace);
         return result;
@@ -686,13 +666,13 @@ public class GraphUtils {
      * Contracts list of components, combining all components with vertices in subset.
      */
     public static <V> Set<Set<V>> contractedComponents(Collection<Set<V>> components, Collection<V> subset, V vertex) {
-        HashSet<Set<V>> result = new HashSet<Set<V>>();
-        Set<V> contracted = new HashSet<V>();
+        HashSet<Set<V>> result =Sets.newHashSet();
+        Set<V> contracted = Sets.newHashSet();
         contracted.add(vertex);
         result.add(contracted);
         for (Set<V> c : components) {
             if (Collections.disjoint(c, subset)) {
-                result.add(new HashSet<V>(c));
+                result.add(Sets.newHashSet(c));
             } else {
                 contracted.addAll(c);
             }
@@ -700,24 +680,6 @@ public class GraphUtils {
         return result;
     }
     
-    //</editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="SORTING">
-    //
-    // SORTING
-    //
-    /**
-     * Used to sort graphs in descending order by size
-     */
-    public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
-        @Override
-        public int compare(Graph o1, Graph o2) {
-            return -(o1.nodeCount() == o2.nodeCount() && o1.edgeCount() == o2.edgeCount() ? o1.nodes().toString().compareTo(o2.nodes().toString())
-                    : o1.nodeCount() == o2.nodeCount() ? o1.edgeCount() - o2.edgeCount()
-                    : o1.nodeCount() - o2.nodeCount());
-        }
-    };
     //</editor-fold>
     
 }

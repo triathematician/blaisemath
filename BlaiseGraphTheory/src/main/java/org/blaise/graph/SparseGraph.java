@@ -5,6 +5,7 @@
 
 package org.blaise.graph;
 
+import com.google.common.collect.Multimap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,7 +67,7 @@ public class SparseGraph<V> extends GraphSupport<V> {
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
      */
-    public SparseGraph(boolean directed, Map<V, Set<V>> adjacencies) {
+    public SparseGraph(boolean directed, Multimap<V,V> adjacencies) {
         super(GraphUtils.nodes(adjacencies), directed);
         for (V x : adjacencies.keySet()) {
             for (V y : adjacencies.get(x)) {

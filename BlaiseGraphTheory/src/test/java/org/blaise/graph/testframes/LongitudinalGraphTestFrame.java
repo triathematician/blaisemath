@@ -16,7 +16,7 @@ import org.blaise.graph.modules.EdgeCountGraphSupplier;
 import org.blaise.graph.modules.PreferentialAttachmentLongitudinalGraphSupplier;
 import org.blaise.graph.view.MultiGraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
-import org.blaise.graph.view.TimeGraphComponent;
+import org.blaise.graph.view.LongitudinalGraphComponent;
 import org.blaise.util.gui.RollupPanel;
 
 /**
@@ -87,7 +87,7 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         rollupPanel1 = new RollupPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        plot = new TimeGraphComponent();
+        plot = new LongitudinalGraphComponent();
         jScrollPane2 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -275,7 +275,7 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private TimeGraphComponent plot;
+    private LongitudinalGraphComponent plot;
     private javax.swing.JButton randomLB;
     private RollupPanel rollupPanel1;
     private javax.swing.JButton timeEnergyAB;

@@ -4,7 +4,7 @@
  */
 package org.blaise.graph.testframes;
 
-import java.util.Collections;
+import com.google.common.collect.HashMultimap;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.graph.SparseGraph;
@@ -18,7 +18,7 @@ import org.blaise.util.Edge;
 public final class MyTestGraph extends SparseGraph<String> {
 
     public MyTestGraph() {
-        super(false, Collections.EMPTY_MAP);
+        super(false, HashMultimap.<String,String>create());
         for (int i = 1; i < 100; i++) {
             nodes.add(Integer.toString(i));
         }

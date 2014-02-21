@@ -77,7 +77,8 @@ public class PathStyleArrow extends PathStyleBasic {
      * @param y1 first y-coord
      * @param x2 second x-coord
      * @param y2 second y-coord
-     * @param strokeWidth width of resulting line (determines size of arrowhead)
+     * @param thickness width of resulting line (determines size of arrowhead)
+     * @return created path
      */
     public static GeneralPath createArrowhead(float x1, float y1, float x2, float y2, float thickness) {
         float dx = x2-x1, dy = y2-y1;

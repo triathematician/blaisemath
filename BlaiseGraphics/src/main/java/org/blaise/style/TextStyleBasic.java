@@ -4,7 +4,7 @@
  */
 package org.blaise.style;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Strings;
 import java.awt.Color;
 import java.awt.Font;
@@ -199,7 +199,7 @@ public class TextStyleBasic implements TextStyle {
             return;
         }
         if (font == null) {
-            font = canvas.getFont().deriveFont((float) fontSize);
+            font = canvas.getFont().deriveFont(fontSize);
             canvas.setFont(font);
         } else if (font != null) {
             canvas.setFont(font);
@@ -234,6 +234,9 @@ public class TextStyleBasic implements TextStyle {
             case SOUTH:
                 shift.x = -width / 2;
                 break;
+            default:
+                // all other cases don't need shift
+                break;
         }
 
         switch (textAnchor) {
@@ -246,6 +249,9 @@ public class TextStyleBasic implements TextStyle {
             case CENTER:
             case EAST:
                 shift.y = height / 2;
+                break;
+            default:
+                // all other cases don't need shift
                 break;
         }
 

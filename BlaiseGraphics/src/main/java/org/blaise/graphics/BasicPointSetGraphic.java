@@ -30,6 +30,8 @@ import org.blaise.util.PointFormatters;
  */
 public class BasicPointSetGraphic extends GraphicSupport implements IndexedPointBean<Point2D> {
 
+    public static final String POINT_PROP = "point";
+    
     /** The points that will be drawn. */
     protected Point2D[] points = new Point2D[0];
     /** The associated style (may be null). */
@@ -38,6 +40,8 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     /** Optional delegate for tooltips */
     @Nullable 
     protected Function<Point2D, String> pointTipper = null;
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     //
     // CONSTRUCTORS
@@ -91,7 +95,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
             Object old = points;
             points = p.clone();
             fireGraphicChanged();
-            pcs.firePropertyChange("point", old, points);
+            pcs.firePropertyChange(POINT_PROP, old, points);
         }
     }
     
@@ -104,7 +108,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
             Point2D old = points[i];
             points[i] = pt;
             fireGraphicChanged();
-            pcs.fireIndexedPropertyChange("point", i, old, points[i]);
+            pcs.fireIndexedPropertyChange(POINT_PROP, i, old, points[i]);
         }
     }
 
@@ -200,7 +204,9 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     /** Return the actual style used for drawing */
     @Nonnull 
     protected PointStyle drawStyle() {
-        return style == null ? parent.getStyleContext().getPointStyle(this) : style;
+        return style == null 
+                ? parent.getStyleContext().getPointStyle(this) 
+                : style;
     }
 
     public void draw(Graphics2D canvas) {
@@ -214,21 +220,20 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
 
     
     //<editor-fold defaultstate="collapsed" desc="PropertyChangeSupport METHODS">
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public final void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
     
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
     
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
     
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public final void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
     //</editor-fold>

@@ -28,19 +28,19 @@ public interface LongitudinalGraph<V> {
      * Returns <i>all</i> nodes contained in the longitudinal graph, for any time.
      * @return view of all nodes
      */
-    public Collection<V> getAllNodes();
+    Collection<V> getAllNodes();
 
     /**
-     * @return whether longituinal graph's edges are directed
+     * Get whether longituinal graph's edges are directed
      */
-    public boolean isDirected();
+    boolean isDirected();
 
     /**
      * Returns the time intervals corresponding to the given node.
      * @param v a node in the graph
      * @return time intervals of corresponding node, or null if the node is not in the graph
      */
-    public List<double[]> getNodeIntervals(V v);
+    List<double[]> getNodeIntervals(V v);
 
     /**
      * Returns the time intervals corresponding to the given edge.
@@ -48,7 +48,7 @@ public interface LongitudinalGraph<V> {
      * @param v2 second node of the edge
      * @return time intervals of the corresponding edge, or null if the edge is never in the graph
      */
-    public List<double[]> getEdgeIntervals(V v1, V v2);
+    List<double[]> getEdgeIntervals(V v1, V v2);
 
     /**
      * Returns a view of the graph at the specified time. Depending upon the
@@ -67,25 +67,25 @@ public interface LongitudinalGraph<V> {
      * @return a copy of the graph at the specified time, or null if no graph
      *   exists at that time
      */
-    public Graph<V> slice(double time, boolean exact);
+    Graph<V> slice(double time, boolean exact);
 
     /**
      * Returns the minimum time encoded by elements in this graph.
      * @return minimum time
      */
-    public double getMinimumTime();
+    double getMinimumTime();
 
     /**
      * Returns the maximum time encoded by elements in this graph
      * @return maximum time
      */
-    public double getMaximumTime();
+    double getMaximumTime();
 
     /**
      * Returns a list of times encoded by elements in this graph.
      * An empty list might be interpreted as a continuous spectrum.
      * @return a list of all times in this graph
      */
-    public List<Double> getTimes();
+    List<Double> getTimes();
 
 }

@@ -177,7 +177,7 @@ public class TextStyleWrapped extends TextStyleBasic {
         } else if (width < 3*sz) {
             // if really small, show only first character
             lines.add(string.substring(0,1)+"...");
-        } else if (sBounds.getWidth() <= width-4 && !string.contains(("\n"))) {
+        } else if (sBounds.getWidth() <= width-4 && !string.contains("\n")) {
             // enough to fit the entire string
             lines.add(string);
         } else {
@@ -205,7 +205,7 @@ public class TextStyleWrapped extends TextStyleBasic {
                 if (totHt >= height-2) {
                     // will be the last line, may need to truncate
                     if (pos1-1 < string.length()) {
-                        s = s + "...";
+                        s += "...";
                     }
                     while (s.length() >= 4
                             && canvas.getFontMetrics().getStringBounds(s, canvas).getWidth() > width-4) {
