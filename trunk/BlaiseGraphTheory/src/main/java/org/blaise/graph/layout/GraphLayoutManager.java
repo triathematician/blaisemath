@@ -5,10 +5,15 @@
 
 package org.blaise.graph.layout;
 
+import com.google.common.collect.Sets;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ConcurrentModificationException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
@@ -56,6 +61,9 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     private transient java.util.Timer layoutTimer;
     /** Timer task */
     private transient java.util.TimerTask layoutTask;
+    
+    /** Handles property change events */
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 
     /** Initializes with an empty graph */
@@ -134,7 +142,9 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                 }
                 boolean check = coordManager.getObjects().size() == g.nodeCount();
                 if (!check) {
-                    System.err.println("Object sizes don't match: "+coordManager.getObjects().size()+" locations, but " + g.nodeCount()+ " nodes!");
+                    Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, 
+                            "Object sizes don''t match: {0} locations, but {1} nodes!", 
+                            new Object[]{coordManager.getObjects().size(), g.nodeCount()});
                 }
                 pcs.firePropertyChange("graph", old, g);
             }
@@ -147,7 +157,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     public void graphUpdated() {
         synchronized (coordManager) {
             try {
-                Set<N> oldNodes = new HashSet<N>(coordManager.getObjects());
+                Set<N> oldNodes = Sets.newHashSet(coordManager.getObjects());
                 oldNodes.removeAll(graph.nodes());
                 coordManager.cacheObjects(oldNodes);
                 Map<N,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
@@ -156,7 +166,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                 }
                 coordManager.putAll(newLoc);
             } catch (InterruptedException ex) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, "Layout was interrupted", ex);
             }
         }
     }
@@ -186,7 +196,6 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
      * @param nodePositions new locations for objects
      */
     public void requestLocations(Map<N, Point2D.Double> nodePositions) {
-//        System.out.println("glm.reqloc");
         synchronized (coordManager) {
             if (nodePositions != null) {
                 if (isLayoutAnimating()) {
@@ -214,7 +223,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                     coordManager.setCoordinateMap(pos);
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, "Layout was interrupted", ex);
             }
         }
     }
@@ -319,7 +328,8 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                     GAInstrument.middle(id, "iLayout.iterate completed");
                     coordManager.setCoordinateMap(locs);
                 } catch (ConcurrentModificationException ex) {
-                    Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, "Failed Layout Iteration: ConcurrentModificationException");
+                    Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, 
+                            "Failed Layout Iteration", ex);
                 }
                 GAInstrument.end(id);
             }
@@ -334,13 +344,21 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     // EVENT HANDLING
     //
 
-    /** Handles property change events */
-    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
 
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) { pcs.removePropertyChangeListener(propertyName, listener); }
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) { pcs.removePropertyChangeListener(listener); }
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) { pcs.addPropertyChangeListener(propertyName, listener); }
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) { pcs.addPropertyChangeListener(listener); }
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) { 
+        pcs.addPropertyChangeListener(listener); 
+    }
 
     // </editor-fold>
 

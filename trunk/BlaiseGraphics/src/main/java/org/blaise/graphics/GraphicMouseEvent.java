@@ -18,16 +18,17 @@ import java.awt.geom.Point2D;
 public final class GraphicMouseEvent extends MouseEvent {
     
     /** Source event */
-    protected final MouseEvent baseEvent;
+    private final MouseEvent baseEvent;
     /** The graphic associated with the event. */
-    protected Graphic graphic;
+    private Graphic graphic;
     /** Location of event, in graphic coordinates. */
-    protected final Point2D loc;
+    private final Point2D loc;
 
     /**
      * Construct with specified graphic and point.
+     * @param evt the associated awt event
+     * @param loc the location of the event
      * @param gfc the graphic
-     * @param point the location of the event
      */
     public GraphicMouseEvent(MouseEvent evt, Point2D loc, Graphic gfc) {
         super((Component) evt.getSource(), 
@@ -60,7 +61,7 @@ public final class GraphicMouseEvent extends MouseEvent {
 
     /**
      * Return graphic coordinate location of event
-     * @return lcoation
+     * @return location
      */
     public Point2D getGraphicLocation() {
         return loc;
@@ -87,7 +88,6 @@ public final class GraphicMouseEvent extends MouseEvent {
      * for creating the {@code Graphic}.
      */
     public static class Factory {
-
         /**
          * Create and return an event associated with the specified entry and point.
          * @param event base event
@@ -98,6 +98,5 @@ public final class GraphicMouseEvent extends MouseEvent {
         public GraphicMouseEvent createEvent(MouseEvent event, Point2D loc, Graphic gfc) {
             return new GraphicMouseEvent(event, loc, gfc);
         }
-
-    } // INNER CLASS GraphicMouseEvent.Factory
+    }
 }

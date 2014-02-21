@@ -5,6 +5,7 @@
 
 package org.blaise.graph.layout;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -49,6 +50,8 @@ public class SpringLayout implements IterativeGraphLayout {
     private final Map<Object, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities */
     private final Map<Object, Point2D.Double> vel = Maps.newHashMap();
+    /** Regions used for localizing computation */
+    private List<List<Region>> regions;
 
     /** Iteration number */
     int iteration = 0;
@@ -63,90 +66,8 @@ public class SpringLayout implements IterativeGraphLayout {
     /** Whether tempLoc should contain all the nodes or not */
     private boolean resetNodes = false;
 
-    // ALGORITHM PARAMETERS
-
-    //<editor-fold defaultstate="collapsed" desc="Parameters CLASS DEFN">
-    public static class Parameters {
-        /** Global attractive constant (keeps vertices closer to origin) */
-        double globalC = .1*DIST_SCALE;
-        /** Attractive constant */
-        double springC = 1;
-        /** Natural spring length */
-        double springL = .5*DIST_SCALE;
-        /** Repelling constant */
-        double repulsiveC = 10*DIST_SCALE*DIST_SCALE;
-
-        /** Damping constant (the "cooling" parameter */
-        double dampingC = 0.7;
-        /** Time step per iteration */
-        double stepT = 0.3;
-        /** The maximum speed (movement per unit time) */
-        double maxSpeed = 0.5*DIST_SCALE;
-
-        public double getDampingConstant() {
-            return dampingC;
-        }
-
-        public void setDampingConstant(double dampingC) {
-            this.dampingC = dampingC;
-        }
-
-        public double getGlobalForce() {
-            return globalC;
-        }
-
-        public void setGlobalForce(double globalC) {
-            this.globalC = globalC;
-        }
-
-        public double getMaxSpeed() {
-            return maxSpeed;
-        }
-
-        public void setMaxSpeed(double maxSpeed) {
-            this.maxSpeed = maxSpeed;
-        }
-
-        public double getRepulsiveForce() {
-            return repulsiveC;
-        }
-
-        public void setRepulsiveForce(double repulsiveC) {
-            this.repulsiveC = repulsiveC;
-        }
-
-        public double getSpringForce() {
-            return springC;
-        }
-
-        public void setSpringForce(double springC) {
-            this.springC = springC;
-        }
-
-        public double getSpringLength() {
-            return springL;
-        }
-
-        public void setSpringLength(double springL) {
-            this.springL = springL;
-        }
-
-        public double getStepTime() {
-            return stepT;
-        }
-
-        public void setStepTime(double stepT) {
-            this.stepT = stepT;
-        }
-
-
-    }
-    //</editor-fold>
-
+    /** Algorithm parameters object */
     protected Parameters parameters = new Parameters();
-
-
-    // <editor-fold defaultstate="collapsed" desc="Constructors">
 
     /**
      * Construct for specified graph, using specified default layout
@@ -158,7 +79,7 @@ public class SpringLayout implements IterativeGraphLayout {
         try {
             reset(initialLayout.layout(g, initialParameters));
         } catch (InterruptedException ex) {
-            Logger.getLogger(SpringLayout.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SpringLayout.class.getName()).log(Level.SEVERE, "Initial layout interrupted", ex);
         }
     }
 
@@ -166,23 +87,44 @@ public class SpringLayout implements IterativeGraphLayout {
     public SpringLayout(Map<Object, Point2D.Double> positions) {
         reset(positions);
     }
-    // </editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
 
-    public Parameters getParameters() { return parameters; }
-    public void setParameters(Parameters p) { this.parameters = p; }
-
-    // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
-
-    public double getCoolingParameter() { return parameters.dampingC; }
-    public double getEnergyStatus() { return energy; }
-    public int getIteration() { return iteration; }
+    public Parameters getParameters() { 
+        return parameters; 
+    }
+    
+    public void setParameters(Parameters p) { 
+        this.parameters = p; 
+    }
+    
+    public double getCoolingParameter() { 
+        return parameters.dampingC;
+    }
+    
+    public double getEnergyStatus() { 
+        return energy; 
+    }
+    
+    public int getIteration() { 
+        return iteration;
+    }
 
     public synchronized Map<Object,Point2D.Double> getPositions() {
         return new HashMap<Object,Point2D.Double>(loc);
     }
+    
+    //</editor-fold>
+    
 
-    public final void reset(Map<?, Point2D.Double> positions) {
+    // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
+
+    public void reset(Map<?, Point2D.Double> positions) {
         loc.clear();
         vel.clear();
         for (Object v : positions.keySet()) {
@@ -294,10 +236,8 @@ public class SpringLayout implements IterativeGraphLayout {
         }
 
         iteration ++;
-//        if (iteration % 100 == 0)
-//            System.err.println("Iteration " + iteration + ", " + (System.currentTimeMillis()-t0) + "ms");
 
-        HashMap<V,Point2D.Double> res = new HashMap<V,Point2D.Double>();
+        Map<V,Point2D.Double> res = new HashMap<V,Point2D.Double>();
         for (V v : nodes) {
             res.put(v, loc.get(v));
         }
@@ -376,8 +316,9 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param dist distance between vertices
      */
     protected void addRepulsiveForce(Point2D.Double sum, Object io, Point2D.Double iLoc, Object jo, Point2D.Double jLoc, double dist) {
-        if (iLoc == jLoc)
+        if (iLoc == jLoc) {
             return;
+        }
         if (dist == 0) {
             double angle = Math.random()*2*Math.PI;
             sum.x += parameters.repulsiveC * Math.cos(angle);
@@ -422,30 +363,15 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param dist distance between vertices
      */
     protected void addSpringForce(Graph g, Point2D.Double sum, Object io, Point2D.Double iLoc, Object jo, Point2D.Double jLoc, double dist) {
-//        double wt = 1;
-//        if (g instanceof WeightedGraph) {
-//            Object w = ((WeightedGraph)g).getWeight(io, jo);
-//            if (w instanceof Number) {
-//                wt = Math.abs(((Number)w).doubleValue());
-//                maxWeight = Math.max(wt, maxWeight);
-//                wt /= maxWeight;
-//            }
-//        }
-//        if (wt == 0)
-//            return;
         if (dist == 0) {
-            System.err.println("Distance 0 between " + io + " and " + jo + ": " + iLoc + ", " + jLoc);
+            Logger.getLogger(SpringLayout.class.getName()).log(Level.WARNING,
+                    "Distance 0 between {0} and {1}: {2}, {3}", new Object[]{io, jo, iLoc, jLoc});
             sum.x += parameters.springC / (MIN_DIST * MIN_DIST);
             sum.y += 0;
         } else {
             double displacement = dist - parameters.springL;
             sum.x += parameters.springC * displacement * (jLoc.x - iLoc.x) / dist;
             sum.y += parameters.springC * displacement * (jLoc.y - iLoc.y) / dist;
-//            sum.x += wt*wt * parameters.springC * displacement * (jLoc.x - iLoc.x) / dist;
-//            sum.y += wt*wt * parameters.springC * displacement * (jLoc.y - iLoc.y) / dist;
-//            double displacement = dist - (springL / wt);
-//            sum.x += springC * Math.min(displacement, springL*2) * (jLoc.x - iLoc.x) / dist;
-//            sum.y += springC * Math.min(displacement, springL*2) * (jLoc.y - iLoc.y) / dist;
         }
     }
 
@@ -457,6 +383,7 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param iLoc position of node of interest
      */
     protected void addAdditionalForces(Graph g, Point2D.Double sum, Object io, Point2D.Double iLoc) {
+        // do nothing, provide hook for overriding classes
     }
 
     /**
@@ -483,8 +410,8 @@ public class SpringLayout implements IterativeGraphLayout {
     /**
      * Adjusts a node's position using specified initial position and velocity.
      * SpringLayout uses iLoc += stepT*iVel
+     * @param iLoc position to change
      * @param iVel velocity to adjust
-     * @param netForce force vector to use
      */
     protected void adjustPosition(Point2D.Double iLoc, Point2D.Double iVel) {
         iLoc.x += parameters.stepT * iVel.x;
@@ -495,8 +422,6 @@ public class SpringLayout implements IterativeGraphLayout {
 
 
     // <editor-fold defaultstate="collapsed" desc="Code to Handle Regions (reduces iteration time for repulsive forces from n^2 to n log n)">
-
-    transient List<List<Region>> regions;
 
     /** Return region for specified point */
     private Region getRegion(Point2D.Double p) {
@@ -514,32 +439,120 @@ public class SpringLayout implements IterativeGraphLayout {
             List<Region> r;
             for (int ix = -10; ix <= 10; ix++) {
                 regions.add(r = new ArrayList<Region>());
-                for (int iy = -10; iy <= 10; iy++)
+                for (int iy = -10; iy <= 10; iy++) {
                     r.add(new Region(new Rectangle2D.Double(ix*MAX_REPEL_DIST,iy*MAX_REPEL_DIST,MAX_REPEL_DIST,MAX_REPEL_DIST)));
+                }
             }
             for (int ix = -10; ix <= 10; ix++) {
                 r = new ArrayList<Region>();
                 for (int iy = -10; iy <= 10; iy++) {
-                    for (int ix2 = Math.max(ix-1,-10); ix2 <= Math.min(ix+1, 10); ix2++)
-                        for (int iy2 = Math.max(iy-1,-10); iy2 <= Math.min(iy+1, 10); iy2++)
+                    for (int ix2 = Math.max(ix-1,-10); ix2 <= Math.min(ix+1, 10); ix2++) {
+                        for (int iy2 = Math.max(iy-1,-10); iy2 <= Math.min(iy+1, 10); iy2++) {
                             regions.get(ix+10).get(iy+10).adj.add(regions.get(ix2+10).get(iy2+10));
+                        }
+                    }
                 }
             }
         }
         for (List<Region> l : regions) for (Region r : l) r.pts.clear();
         for (Entry<Object,Point2D.Double> en : loc.entrySet()) {
             Region r = getRegion(en.getValue());
-            if (r != null)
+            if (r != null) {
                 r.pts.put(en.getKey(), en.getValue());
+            }
         }
     }
-
-    private class Region {
-        Rectangle2D.Double bounds;
-        HashMap<Object,Point2D.Double> pts = new HashMap<Object,Point2D.Double>();
-        List<Region> adj = new ArrayList<Region>();
-        public Region(Rectangle2D.Double bounds) { this.bounds = bounds; }
-    }
+    
     // </editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="Parameters INNER CLASS">
+    
+    /** Parameters of the SpringLayout algorithm */
+    public static class Parameters {
+        /** Global attractive constant (keeps vertices closer to origin) */
+        double globalC = .1*DIST_SCALE;
+        /** Attractive constant */
+        double springC = 1;
+        /** Natural spring length */
+        double springL = .5*DIST_SCALE;
+        /** Repelling constant */
+        double repulsiveC = 10*DIST_SCALE*DIST_SCALE;
+
+        /** Damping constant (the "cooling" parameter */
+        double dampingC = 0.7;
+        /** Time step per iteration */
+        double stepT = 0.3;
+        /** The maximum speed (movement per unit time) */
+        double maxSpeed = 0.5*DIST_SCALE;
+
+        public double getDampingConstant() {
+            return dampingC;
+        }
+
+        public void setDampingConstant(double dampingC) {
+            this.dampingC = dampingC;
+        }
+
+        public double getGlobalForce() {
+            return globalC;
+        }
+
+        public void setGlobalForce(double globalC) {
+            this.globalC = globalC;
+        }
+
+        public double getMaxSpeed() {
+            return maxSpeed;
+        }
+
+        public void setMaxSpeed(double maxSpeed) {
+            this.maxSpeed = maxSpeed;
+        }
+
+        public double getRepulsiveForce() {
+            return repulsiveC;
+        }
+
+        public void setRepulsiveForce(double repulsiveC) {
+            this.repulsiveC = repulsiveC;
+        }
+
+        public double getSpringForce() {
+            return springC;
+        }
+
+        public void setSpringForce(double springC) {
+            this.springC = springC;
+        }
+
+        public double getSpringLength() {
+            return springL;
+        }
+
+        public void setSpringLength(double springL) {
+            this.springL = springL;
+        }
+
+        public double getStepTime() {
+            return stepT;
+        }
+
+        public void setStepTime(double stepT) {
+            this.stepT = stepT;
+        }
+    }
+    
+    /** Describes a region with a subset of the graph's nodes */
+    private static class Region {
+        Rectangle2D.Double bounds;
+        HashMap<Object,Point2D.Double> pts = Maps.newHashMap();
+        List<Region> adj = Lists.newArrayList();
+        public Region(Rectangle2D.Double bounds) { 
+            this.bounds = bounds; 
+        }
+    }
+    
+    //</editor-fold>
+    
 }

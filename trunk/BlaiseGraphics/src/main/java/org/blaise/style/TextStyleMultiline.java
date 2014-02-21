@@ -1,5 +1,5 @@
 /*
- * WrappingStringStyle.java
+ * TextStyleMultiline.java
  * Created on Jan 2, 2013
  */
 
@@ -30,7 +30,7 @@ public class TextStyleMultiline extends TextStyleBasic {
         FontMetrics fm = canvas.getFontMetrics();
         canvas.setColor(ColorUtils.applyHints(getFill(), visibility));
         
-        String lns[] = string.split("\n|\r\n");
+        String[] lns = string.split("\n|\r\n");
         double y0 = point.getY();
         for (String s : Lists.reverse(Arrays.asList(lns))) {
             canvas.drawString(s, (float)point.getX(), (float) y0);

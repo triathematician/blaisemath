@@ -5,7 +5,7 @@
 
 package org.blaise.style;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

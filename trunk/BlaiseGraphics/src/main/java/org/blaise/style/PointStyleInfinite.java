@@ -4,7 +4,7 @@
  */
 package org.blaise.style;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -18,7 +18,7 @@ import java.awt.geom.Rectangle2D;
 public class PointStyleInfinite extends PointStyleBasic {
 
     /** Line style for drawing the ray */
-    protected PathStyle rayStyle = StyleContextDefault.getInstance().PATH;
+    protected PathStyle rayStyle = StyleContextDefault.PATH;
     /** Whether to extend in both directions, or just forward */
     protected boolean extendBothDirections = false;
 
@@ -29,13 +29,20 @@ public class PointStyleInfinite extends PointStyleBasic {
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets ray style and returns pointer to this object. */
+    /** 
+     * Sets ray style and returns pointer to this object. 
+     * @param rayStyle the style for rays
+     * @return this
+     */
     public PointStyleInfinite rayStyle(PathStyle rayStyle) {
         setRayStyle(rayStyle);
         return this;
     }
 
-    /** Sets extension rule and returns pointer to this object. */
+    /** 
+     * Sets extension rule and returns pointer to this object.
+     * @return this
+     */
     public PointStyleInfinite extendBothDirections(boolean extendBoth) {
         setExtendBothDirections(extendBoth);
         return this;

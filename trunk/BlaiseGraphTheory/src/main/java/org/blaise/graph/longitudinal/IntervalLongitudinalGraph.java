@@ -31,6 +31,25 @@ import org.blaise.util.Edge;
  */
 public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
+    /** Whether graph is directed. */
+    boolean directed;
+    /** Stores the start/stop times for each node; also stores the vertices. */
+    private Map<V, List<double[]>> nodeTimes;
+    /** Stores the edges with associated start/stop times. */
+    private Set<IntervalTimeEdge<V>> edges;
+    /** Stores the time domain via the minimum time and maximum time. */
+    double minTime, maxTime;
+
+    /** # of time steps to use (impacts how time slices are done) */
+    int timeSteps = 100;
+
+    /** Do not permit instantiation */
+    private IntervalLongitudinalGraph(boolean directed) {
+        this.directed = directed;
+        nodeTimes = new HashMap<V, List<double[]>>();
+        edges = new HashSet<IntervalTimeEdge<V>>();
+    }
+
     
     //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS">
     //
@@ -129,25 +148,6 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     //</editor-fold>
     
 
-    /** Whether graph is directed. */
-    boolean directed;
-    /** Stores the start/stop times for each node; also stores the vertices. */
-    private Map<V, List<double[]>> nodeTimes;
-    /** Stores the edges with associated start/stop times. */
-    private Set<IntervalTimeEdge<V>> edges;
-    /** Stores the time domain via the minimum time and maximum time. */
-    double minTime, maxTime;
-
-    /** # of time steps to use (impacts how time slices are done) */
-    int timeSteps = 100;
-
-    /** Do not permit instantiation */
-    private IntervalLongitudinalGraph(boolean directed) {
-        this.directed = directed;
-        nodeTimes = new HashMap<V, List<double[]>>();
-        edges = new HashSet<IntervalTimeEdge<V>>();
-    }
-
     @Override public String toString() {
         return "NODES: " + nodeTimes.keySet() + "; EDGES: " + edges;
     }
@@ -172,9 +172,11 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
      * @return edge if it exists, null otherwise
      */
     public IntervalTimeEdge<V> getEdge(V v1, V v2) {
-        for (IntervalTimeEdge<V> e : edges)
-            if (e.getNode1() == v1 && e.getNode2() == v2)
+        for (IntervalTimeEdge<V> e : edges) {
+            if (e.getNode1() == v1 && e.getNode2() == v2) {
                 return e;
+            }
+        }
         return null;
     }
 
@@ -205,8 +207,12 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     public List<Double> getTimes() {
         return new AbstractList<Double>() {
-            public Double get(int index) { return minTime + index*(maxTime-minTime)/(double)size(); }
-            public int size() { return timeSteps; }
+            public Double get(int index) { 
+                return minTime + index*(maxTime-minTime)/(double)size(); 
+            }
+            public int size() {
+                return timeSteps; 
+            }
         };
     }
 
@@ -232,30 +238,6 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         }
         return edges;
     }
-
-
-    
-    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
-    //
-    // INNER CLASSES
-    //
-    
-    /** Class annotation an edge with a collection of time intervals. */
-    public static class IntervalTimeEdge<V> extends Edge<V> {
-        private final List<double[]> times;
-        public IntervalTimeEdge(V v1, V v2, double[] interval) {
-            this(v1, v2, Arrays.asList(interval));
-        }
-        public IntervalTimeEdge(V v1, V v2, List<double[]> times) {
-            super(v1, v2);
-            this.times = times;
-        }
-        public List<double[]> getTimes() {
-            return times;
-        }
-    } // INNER CLASS IntervalTimeEdge
-    
-    //</editor-fold>
 
 
     //<editor-fold defaultstate="collapsed" desc="UTILITIES">
@@ -315,10 +297,35 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
      */
     private static boolean in(double time, List<double[]> ivs) {
         if (ivs == null) return false;
-        for (double[] iv : ivs)
-            if (iv[0] <= time && iv[1] >= time)
+        for (double[] iv : ivs) {
+            if (iv[0] <= time && iv[1] >= time) {
                 return true;
+            }
+        }
         return false;
+    }
+    
+    //</editor-fold>
+
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //
+    // INNER CLASSES
+    //
+    
+    /** Class annotation an edge with a collection of time intervals. */
+    public static class IntervalTimeEdge<V> extends Edge<V> {
+        private final List<double[]> times;
+        public IntervalTimeEdge(V v1, V v2, double[] interval) {
+            this(v1, v2, Arrays.asList(interval));
+        }
+        public IntervalTimeEdge(V v1, V v2, List<double[]> times) {
+            super(v1, v2);
+            this.times = times;
+        }
+        public List<double[]> getTimes() {
+            return times;
+        }
     }
     
     //</editor-fold>

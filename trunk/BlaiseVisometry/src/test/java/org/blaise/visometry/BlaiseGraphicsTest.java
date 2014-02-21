@@ -143,7 +143,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             public PointStyle apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.setMarkerRadius(i1+5);
-                r.setMarker(MarkerLibrary.getAvailableMarkers().get(i2+3));
+                r.setMarker(Markers.getAvailableMarkers().get(i2+3));
                 r.setStrokeWidth(2+i3/3f);
                 r.setFill(new Color((i4*10+10) % 255, (i4*20+25) % 255, (i4*30+50) % 255));
                 ((TextStyleBasic)lps.getLabelStyle()).fill(r.getFill());

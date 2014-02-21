@@ -20,9 +20,15 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.FlatteningPathIterator;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 
 /**
+ * Stroke that renders text along a path.
+ * 
  * @author Jerry Huxtable
  * @author Elisha Peterson
  */

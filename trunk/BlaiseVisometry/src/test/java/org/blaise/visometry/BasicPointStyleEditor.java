@@ -17,7 +17,7 @@ import javax.swing.event.ChangeListener;
 import org.blaise.firestarter.editor.ColorEditor;
 import org.blaise.style.PointStyleBasic;
 import org.blaise.style.Marker;
-import org.blaise.style.MarkerLibrary;
+import org.blaise.style.Markers;
 
 /**
  * GUI form for editing a {@link PointStyleBasic}.
@@ -92,7 +92,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         gbc.gridheight = 2;
         gbc.weightx = 0; gbc.weighty = 0.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(shapeCombo = new JComboBox(MarkerLibrary.getAvailableMarkers().toArray()), gbc);
+        add(shapeCombo = new JComboBox(Markers.getAvailableMarkers().toArray()), gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(this);
 

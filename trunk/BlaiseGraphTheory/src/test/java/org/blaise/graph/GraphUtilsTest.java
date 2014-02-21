@@ -5,6 +5,7 @@
 
 package org.blaise.graph;
 
+import com.google.common.collect.Multiset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import static org.blaise.graph.AssertUtils.assertCollectionContentsSame;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
@@ -108,12 +108,10 @@ public class GraphUtilsTest {
     @Test
     public void testDegreeDistribution() {
         System.out.println("degreeDistribution");
-        int[] expected1 = new int[]{0, 5, 3, 1, 2};
-        int[] expected2 = new int[]{0, 5, 3, 0, 2, 1};
-        int[] result1 = GraphUtils.degreeDistribution(UNDIRECTED_INSTANCE);
-        int[] result2 = GraphUtils.degreeDistribution(DIRECTED_INSTANCE);
-        assertArrayEquals(expected1, result1);
-        assertArrayEquals(expected2, result2);
+        Multiset<Integer> result1 = GraphUtils.degreeDistribution(UNDIRECTED_INSTANCE);
+        Multiset<Integer> result2 = GraphUtils.degreeDistribution(DIRECTED_INSTANCE);
+        assertEquals("[1 x 5, 2 x 3, 3, 4 x 2]", result1.toString());
+        assertEquals("[1 x 5, 2 x 3, 4 x 2, 5]", result2.toString());
     }
 
     @Test

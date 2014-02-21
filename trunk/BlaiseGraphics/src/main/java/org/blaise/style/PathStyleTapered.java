@@ -72,14 +72,16 @@ public class PathStyleTapered extends PathStyleBasic {
      * @param y1 first y-coord
      * @param x2 second x-coord
      * @param y2 second y-coord
-     * @param strokeWidth width of resulting line (determines size of arrowhead)
+     * @param pathWidth width of resulting line (determines size of arrowhead)
+     * @return created shape
      */
     public static GeneralPath createBezierShape(float x1, float y1, float x2, float y2, float pathWidth) {
         float dx = x2-x1, dy = y2-y1;
         float dsq = (float) Math.sqrt(dx*dx+dy*dy);
         float adx = -dy*pathWidth/dsq, ady = dx*pathWidth/dsq;
         GeneralPath gp = new GeneralPath();
-        gp.moveTo(x1-adx, y1-ady); gp.lineTo(x1+adx, y1+ady);
+        gp.moveTo(x1-adx, y1-ady); 
+        gp.lineTo(x1+adx, y1+ady);
         gp.curveTo(x1+.25f*dx+.25f*adx, y1+.25f*dy+.25f*ady,
                 x1+.75f*dx+.25f*adx, y1+.75f*dy+.25f*ady,
                 x2+.5f*adx, y2+.5f*ady); gp.lineTo(x2-.5f*adx, y2-.5f*ady);
