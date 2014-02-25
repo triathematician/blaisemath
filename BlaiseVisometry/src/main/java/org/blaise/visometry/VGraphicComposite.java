@@ -4,6 +4,7 @@
  */
 package org.blaise.visometry;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,12 +26,16 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
 
     /** Stores the local entries */
     protected final List<VGraphic<C>> entries = Collections.synchronizedList(new ArrayList<VGraphic<C>>());
-
     /** Stores the window entry */
     protected final GraphicComposite windowEntry = new GraphicComposite();
 
+    /** Flag to prevent events from firing while updating convert */
+    private boolean settingConvertFlag = false;
+
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
-    // PROPERTIES (DELEGATES)
+    // PROPERTY PATTERNS
     //
 
     /**
@@ -49,7 +54,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
         return Collections.unmodifiableList(entries);
     }
 
-    public GraphicComposite getWindowEntry() {
+    public GraphicComposite getWindowGraphic() {
         return windowEntry;
     }
 
@@ -66,9 +71,12 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Sets default renderer factory for all child entries (may be null)
      * @param rend the renderer provider (may be null)
      */
-    public void setRenderFactory(StyleContext rend) {
+    public void setStyleContext(StyleContext rend) {
         windowEntry.setStyleContext(rend);
     }
+    
+    //</editor-fold>
+    
 
     //
     // COMPOSITE METHODS
@@ -78,7 +86,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Add an entry to the composite.
      * @param gfc the entry
      */
-    public final void addGraphic(VGraphic gfc) {
+    public final void addGraphic(VGraphic<C> gfc) {
         if (addHelp(gfc)) {
             fireConversionNeeded();
         }
@@ -88,7 +96,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Remove an entry from the composite
      * @param gfc the entry to remove
      */
-    public void removeGraphic(VGraphic gfc) {
+    public void removeGraphic(VGraphic<C> gfc) {
         if (removeHelp(gfc)) {
             fireConversionNeeded();
         }
@@ -98,9 +106,9 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Adds several entries to the composite
      * @param add the entries to add
      */
-    public void addGraphics(Iterable<? extends VGraphic> add) {
+    public void addGraphics(Iterable<? extends VGraphic<C>> add) {
         boolean change = false;
-        for (VGraphic en : add) {
+        for (VGraphic<C> en : add) {
             change = addHelp(en) || change;
         }
         if (change) {
@@ -112,9 +120,9 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Removes several entries from the composite
      * @param remove the entries to remove
      */
-    public final void removeGraphics(Iterable<? extends VGraphic> remove) {
+    public final void removeGraphics(Iterable<? extends VGraphic<C>> remove) {
         boolean change = false;
-        for (VGraphic en : remove) {
+        for (VGraphic<C> en : remove) {
             change = removeHelp(en) || change;
         }
         if (change) {
@@ -126,15 +134,15 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Removes all entries from the composite and replaces them
      * @param add the entries to add
      */
-    public void replaceGraphics(Iterable<? extends VGraphic> add) {
+    public void replaceGraphics(Iterable<? extends VGraphic<C>> add) {
         boolean change = false;
         synchronized(entries) {
-            if (entries.size() > 0) {
+            if (!entries.isEmpty()) {
                 change = true;
             }
             for (VGraphic<C> en : entries) {
-                if (en.getParent() == this) {
-                    en.setParent(null);
+                if (en.getParentGraphic() == this) {
+                    en.setParentGraphic(null);
                 }
             }
             entries.clear();
@@ -151,10 +159,10 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      * Removes all entries, clearing their parents
      */
     public void clearGraphics() {
-        boolean change = entries.size() > 0;
-        for (VGraphic en : entries) {
-            if (en.getParent() == this) {
-                en.setParent(null);
+        boolean change = !entries.isEmpty();
+        for (VGraphic<C> en : entries) {
+            if (en.getParentGraphic() == this) {
+                en.setParentGraphic(null);
             }
         }
         entries.clear();
@@ -182,18 +190,11 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
         return false;
     }
 
-    /** Flag to prevent events from firing while updating convert */
-    transient boolean settingConvertFlag = false;
-
     @Override
     public void setUnconverted(boolean flag) {
         settingConvertFlag = true;
-        try {
-            for (VGraphic<C> en : entries) {
-                en.setUnconverted(flag);
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
+        for (VGraphic<C> en : entries) {
+            en.setUnconverted(flag);
         }
         settingConvertFlag = false;
         if (flag) {
@@ -213,15 +214,12 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
     }
 
     protected void updateEntries() {
-        ArrayList<Graphic> oldWindowEntries = new ArrayList<Graphic>();
-        for (Graphic e : windowEntry.getGraphics()) {
-            oldWindowEntries.add(e);
-        }
-        ArrayList<Graphic> toAdd = new ArrayList<Graphic>(),
-                toRemove = new ArrayList<Graphic>(oldWindowEntries);
+        List<Graphic> oldWindowEntries = Lists.newArrayList(windowEntry.getGraphics());
+        List<Graphic> toAdd = Lists.newArrayList();
+        List<Graphic> toRemove = Lists.newArrayList(oldWindowEntries);
 
         for (VGraphic<C> e : entries) {
-            Graphic en = e.getWindowEntry();
+            Graphic en = e.getWindowGraphic();
             if (oldWindowEntries.contains(en)) {
                 toRemove.remove(en);
             } else {
@@ -244,7 +242,7 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
      *
      * @param en the graphic making the request
      */
-    public void conversionNeeded(VGraphic en) {
+    public void conversionNeeded(VGraphic<C> en) {
         if (!settingConvertFlag) {
             fireConversionNeeded();
         }
@@ -259,19 +257,19 @@ public class VGraphicComposite<C> extends VGraphicSupport<C> {
     //
 
     /** Add w/o events */
-    private boolean addHelp(VGraphic en) {
+    private boolean addHelp(VGraphic<C> en) {
         if (entries.add(en)) {
-            en.setParent(this);
+            en.setParentGraphic(this);
             return true;
         }
         return false;
     }
 
     /** Remove w/o events */
-    private boolean removeHelp(VGraphic en) {
+    private boolean removeHelp(VGraphic<C> en) {
         if (entries.remove(en)) {
-            if (en.getParent() == this) {
-                en.setParent(null);
+            if (en.getParentGraphic() == this) {
+                en.setParentGraphic(null);
             }
             return true;
         }

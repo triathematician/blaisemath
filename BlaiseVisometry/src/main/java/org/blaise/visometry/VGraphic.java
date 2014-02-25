@@ -23,41 +23,43 @@ import org.blaise.graphics.Graphic;
  * @see Graphic
  */
 public interface VGraphic<C> {
+
+    /**
+     * Returns the graphic entry. Should never be called unless {@link #isUnconverted()} returns true.
+     * The return value should never be null.
+     * @return the regular (window coordinates) graphic entry computed after conversion
+     */
+    Graphic getWindowGraphic();
      
     /** 
       * Return parent of the graphic
       * @return parent, possibly null 
       */
-    public VGraphicComposite getParent();
+    VGraphicComposite<C> getParentGraphic();
+    
     /** 
      * Sets parent of the graphic 
      * @param parent the parent
      */
-    public void setParent(VGraphicComposite parent);
+    void setParentGraphic(VGraphicComposite<C> parent);
     
     /** 
      * Return true if graphic needs conversion to local coords
      * @return true if graphic needs to be converted to window coordinates 
      */
-    public boolean isUnconverted();
+    boolean isUnconverted();
+    
     /** 
      * Used to set the converted flag, determining whether the entry to be reconverted before drawing again 
      * @param flag if true, graphic needs conversion before display
      */
-    public void setUnconverted(boolean flag);
+    void setUnconverted(boolean flag);
 
     /**
      * Performs the conversion from local coordinates to window coordinates
      * @param vis the underlying visometry
      * @param processor provides some basic translation utilities
      */
-    public void convert(Visometry<C> vis, VisometryProcessor<C> processor);
-
-    /**
-     * Returns the graphic entry. Should never be called unless <code>isNeedsConversion()</code> returns true.
-     * The return value should never be null.
-     * @return the regular (window coordinates) graphic entry computed after conversion
-     */
-    public Graphic getWindowEntry();
+    void convert(Visometry<C> vis, VisometryProcessor<C> processor);
 
 }

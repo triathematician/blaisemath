@@ -4,10 +4,12 @@
  */
 package org.blaise.visometry;
 
-import javax.swing.event.AncestorEvent;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import org.blaise.graphics.GraphicComponent;
 
@@ -22,6 +24,13 @@ import org.blaise.graphics.GraphicComponent;
  * @author Elisha Peterson
  */
 public class VGraphicComponent<C> extends GraphicComponent {
+
+    /** Logging global - minimum time in ms for alert */
+    private static final int MS_TO_REPORT = 100;
+    /** Logging global - counters */
+    private static int N_REC = 0, N_CONV = 0, N_DRAW = 0;
+    
+    
 
     /** Stores the tree of graphics primitives in local & window coords */
     protected final VGraphicRoot<C> vRoot;
@@ -38,17 +47,26 @@ public class VGraphicComponent<C> extends GraphicComponent {
         vRoot = new VGraphicRoot<C>(vis);
         vRoot.initComponent(this);
 
-//        root.setMouseEventFactory(new VGMouseEvent.Factory<C>(vis));
         root.addGraphic(vRoot.windowEntry);
 
         addComponentListener(new ComponentAdapter(){
-            @Override public void componentResized(ComponentEvent e) { getVisometry().setWindowBounds(getVisibleRect()); }
-            @Override public void componentShown(ComponentEvent e) { getVisometry().setWindowBounds(getVisibleRect()); }
+            @Override public void componentResized(ComponentEvent e) { 
+                getVisometry().setWindowBounds(getVisibleRect()); 
+            }
+            @Override public void componentShown(ComponentEvent e) {
+                getVisometry().setWindowBounds(getVisibleRect()); 
+            }
         });
         addAncestorListener(new AncestorListener(){
-            public void ancestorAdded(AncestorEvent e) { getVisometry().setWindowBounds(getVisibleRect()); }
-            public void ancestorRemoved(AncestorEvent e) {}
-            public void ancestorMoved(AncestorEvent e) {}
+            public void ancestorAdded(AncestorEvent e) { 
+                getVisometry().setWindowBounds(getVisibleRect());
+            }
+            public void ancestorRemoved(AncestorEvent e) {
+                // do nothing
+            }
+            public void ancestorMoved(AncestorEvent e) {
+                // do nothing
+            }
         });
 
         repaint();
@@ -105,6 +123,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
      * Hook for recomputation. Called first within the renderTo method.
      */
     protected void recompute() {
+        // do nothing
     }
 
     /**
@@ -139,20 +158,23 @@ public class VGraphicComponent<C> extends GraphicComponent {
     //
     // INSTRUMENTATION UTILS
     //
-
-    /** Minimum time in ms for alert */
-    private static final int THRESH = 100;
-    /** Counters */
-    private static int _rec = 0, _conv = 0, _draw = 0;
+    
     /** Prints warning messages if any of the render steps takes too long */
     private void instrument(long t0, long t1, long t2, long t3) {
-//        if (t1-t0 > THRESH)
-//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables recompute {0}: {1}", new Object[]{++_rec, t1-t0});
-//        if (t2-t1 > THRESH)
-//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long plottables conversion {0}: {1}", new Object[]{++_conv, t2-t1});
-//        if (t3-t2 > THRESH)
-//            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.WARNING, "Long redraw {0}: {1}", new Object[]{++_draw, t3-t2});
+        if (t1-t0 > MS_TO_REPORT) {
+            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.FINE, 
+                    "Long plottables recompute {0}: {1}", new Object[]{++N_REC, t1-t0});
+        }
+        if (t2-t1 > MS_TO_REPORT) {
+            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.FINE, 
+                    "Long plottables conversion {0}: {1}", new Object[]{++N_CONV, t2-t1});
+        }
+        if (t3-t2 > MS_TO_REPORT) {
+            Logger.getLogger(VGraphicComponent.class.getName()).log(Level.FINE, 
+                    "Long redraw {0}: {1}", new Object[]{++N_DRAW, t3-t2});
+        }
     }
+    
     //</editor-fold>
 
 }

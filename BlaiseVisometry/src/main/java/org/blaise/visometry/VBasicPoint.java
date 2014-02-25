@@ -4,6 +4,7 @@
  */
 package org.blaise.visometry;
 
+import com.google.common.base.Objects;
 import java.awt.geom.Point2D;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -17,12 +18,12 @@ import org.blaise.util.PointFormatters;
  * @param <C> local coordinate type
  * @author Elisha
  */
-public class VBasicPoint<C> extends VGraphicSupport<C> implements ChangeListener {
+public class VBasicPoint<C> extends VGraphicSupport<C> {
 
     /** The point */
     protected C point;
-    /** The window entry */
-    protected final BasicPointGraphic window = new BasicPointGraphic();
+    /** The windowGraphic entry */
+    protected final BasicPointGraphic windowGraphic = new BasicPointGraphic();
 
     /**
      * Initialize point
@@ -30,52 +31,51 @@ public class VBasicPoint<C> extends VGraphicSupport<C> implements ChangeListener
      */
     public VBasicPoint(final C initialPoint) {
         this.point = initialPoint;
-        window.addChangeListener(this);
+        windowGraphic.addChangeListener(new ChangeListener(){
+            public synchronized void stateChanged(ChangeEvent e) {
+                setPoint(parent.getVisometry().toLocal(windowGraphic.getPoint()));
+                windowGraphic.setDefaultTooltip(
+                        point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
+                        : point + "");
+            }
+        });
     }
 
     //
     // PROPERTIES
     //
 
-    public synchronized BasicPointGraphic getWindowEntry() {
-        return window;
+    public final synchronized BasicPointGraphic getWindowGraphic() {
+        return windowGraphic;
     }
 
-    public synchronized C getPoint() {
+    public final synchronized C getPoint() {
         return point;
     }
 
-    public synchronized void setPoint(C point) {
-        if (!((this.point == null && point == null) || (this.point != null && this.point.equals(point)))) {
+    public final synchronized void setPoint(C point) {
+        if (!Objects.equal(this.point, point)) {
             this.point = point;
             setUnconverted(true);
         }
     }
 
-    public PointStyle getStyle() {
-        return window.getStyle();
+    public final PointStyle getStyle() {
+        return windowGraphic.getStyle();
     }
 
-    public void setStyle(PointStyle rend) {
-        window.setStyle(rend);
+    public final void setStyle(PointStyle rend) {
+        windowGraphic.setStyle(rend);
     }
 
     //
     // CONVERSION
     //
 
-    public synchronized void stateChanged(ChangeEvent e) {
-        if (e.getSource() == window) {
-            this.point = (C) parent.getVisometry().toLocal(window.getPoint());
-            window.setDefaultTooltip(
-                    point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
-                    : point + "");
-        }
-    }
 
     public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
-        window.setPoint(processor.convert(point, vis));
-        window.setDefaultTooltip(
+        windowGraphic.setPoint(processor.convert(point, vis));
+        windowGraphic.setDefaultTooltip(
                 point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
                 : point + "");
         setUnconverted(false);
