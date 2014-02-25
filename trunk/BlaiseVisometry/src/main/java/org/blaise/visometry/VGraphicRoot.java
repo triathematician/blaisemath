@@ -4,6 +4,7 @@
  */
 package org.blaise.visometry;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,7 +33,7 @@ import org.blaise.graphics.GraphicRoot;
  *          (see {@link Plottable#recompute()} and {@link Plottable#getGraphicEntry()}).
  *      The {@code VGraphic} maintains a graphics primitive in local coordinates.
  *      Passing from the {@code VGraphic} to the {@code Graphic} requires <em>reconversion</em>
- *          (see {@link VGraphic#setUnconverted(boolean)} and {@link VGraphic#getWindowEntry()}).
+ *          (see {@link VGraphic#setUnconverted(boolean)} and {@link VGraphic#getWindowGraphic()}).
  *      The conversion step is completed with the help of the {@code Visometry} and the {@code VisometryProcessor}.
  *      Both the computation and conversion steps are currently completed within
  *      the {@link VGraphicComponent#renderTo(java.awt.Graphics2D)} method.
@@ -73,8 +74,7 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
 
     /** Construct with visometry */
     public VGraphicRoot(Visometry<C> vis) {
-        if (vis == null)
-            throw new IllegalArgumentException("Visometry cannot be null!");
+        checkNotNull(vis);
         visometry = vis;
         visometry.addChangeListener(this);
         setUnconverted(true);
@@ -107,14 +107,16 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
      */
     @Override
     public void conversionNeeded(VGraphic en) {
-        if (component != null)
+        if (component != null) {
             component.repaint();
+        }
     }
 
     @Override
     protected void fireConversionNeeded() {
-        if (component != null)
+        if (component != null) {
             component.repaint();
+        }
     }
 
     /**

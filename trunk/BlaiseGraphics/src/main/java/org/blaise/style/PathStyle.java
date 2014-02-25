@@ -36,6 +36,7 @@ public interface PathStyle extends ShapeStyle {
      * @param primitive shape primitive
      * @return path shape
      */
-    @Nullable Shape shapeOfPath(Shape primitive);
+    @Nullable 
+    Shape shapeOfPath(Shape primitive);
 
 }

@@ -4,21 +4,22 @@
  */
 package org.blaise.visometry.plane;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import org.blaise.math.coordinate.DomainHint;
-import org.blaise.math.line.RealIntervalSamplerProvider;
-import org.blaise.math.line.RealIntervalStepSampler;
 import org.blaise.math.coordinate.SampleSet;
 import org.blaise.math.coordinate.ScreenSampleDomainProvider;
+import org.blaise.math.line.RealIntervalSamplerProvider;
+import org.blaise.math.line.RealIntervalStepSampler;
 import org.blaise.math.plane.SquareDomainBroadcaster;
 import org.blaise.math.plane.SquareDomainStepSampler;
 import org.blaise.visometry.Visometry;
@@ -33,27 +34,38 @@ import org.blaise.visometry.Visometry;
  *
  * @author Elisha Peterson
  */
-public class PlaneVisometry implements Visometry<Point2D.Double>,
-        ChangeListener {
+public final class PlaneVisometry implements Visometry<Point2D.Double> {
 
     /** Stores the boundary of the display window, in window coordinates. */
-    RectangularShape windowBounds;
+    private RectangularShape windowBounds;
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
-    Point2D.Double desiredMin = new Point2D.Double(-5, -5);
+    private Point2D.Double desiredMin = new Point2D.Double(-5, -5);
     /** Stores the desired range of values. The class should ensure that this entire range is displayed. */
-    Point2D.Double desiredMax = new Point2D.Double(5, 5);
+    private Point2D.Double desiredMax = new Point2D.Double(5, 5);
     /** Stores the window's AspectRatio. */
-    double aspectRatio = 1.0;
+    private double aspectRatio = 1.0;
+    
     /** Stores the affine transformation that converts the actual range to the window bounds. */
-    transient AffineTransform at = new AffineTransform();
+    private transient AffineTransform at = new AffineTransform();
     /** Stores the actual range of values that is displayed, in local coordiantes. */
-    transient Rectangle2D.Double displayRange = new Rectangle2D.Double();
+    private transient Rectangle2D.Double displayRange = new Rectangle2D.Double();
 
+    private RealIntervalSamplerProvider xDomain;
+    private RealIntervalSamplerProvider yDomain;
+    private PlaneDomain planeDomain;
+
+    private final ChangeEvent changeEvent = new ChangeEvent(this);
+    private final EventListenerList listenerList = new EventListenerList();
+
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
-    // BEAN PROPERTIES
+    // PROPERTY PATTERNS
     //
 
-    /** @return bounding rectangle provided by the window. */
+    /** 
+     * Get bounding rectangle provided by the window. 
+     */
     public RectangularShape getWindowBounds() {
         return windowBounds;
     }
@@ -63,16 +75,10 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
      * Recomputes transformation after setting.
      */
     public void setWindowBounds(RectangularShape newBounds) {
-        if (newBounds == null) {
-            throw new NullPointerException();
-        }
+        checkNotNull(newBounds);
         if (!newBounds.equals(windowBounds)) {
             this.windowBounds = newBounds;
-            try {
-                computeTransformation();
-            } catch (IllegalStateException e) {
-                Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Unable to calculate new transformation for PlaneVisometry; attempted to set window bounds to {0}", newBounds);
-            }
+            computeTransformation();
         }
     }
 
@@ -85,22 +91,23 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
      * Sets aspect ratio of the plot. Must be positive. This is guaranteed to be obeyed.
      * Recomputes transformation after setting.
      * @param aspectRatio new aspect ratio
-     * @throws IllegalArgumentException if the argument is zero or negative
      */
     public void setAspectRatio(double aspectRatio) {
-        if (aspectRatio <= 0)
-            throw new IllegalArgumentException("Aspect ratio must be positive!");
+        checkArgument(aspectRatio > 0, "Aspect ratio must be positive!");
         this.aspectRatio = aspectRatio;
-        // TODO - operate better here!
-        try {
-            computeTransformation();
-        } catch (IllegalStateException e) {
-            Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Unable to calculate new PlaneVisometry transformation; attempted to set aspectRatio = {0}", aspectRatio);
-        }
+        computeTransformation();
     }
 
+    public Point2D.Double getDesiredMin() {
+        return desiredMin;
+    }
+
+    public Point2D.Double getDesiredMax() {
+        return desiredMax;
+    }
+    
     /**
-     * @return desired range as a rectanlge
+     * Get desired range as a rectanlge
      */
     public Rectangle2D.Double getDesiredRange() {
         return new Rectangle2D.Double(desiredMin.x, desiredMin.y, desiredMax.x - desiredMin.x, desiredMax.y - desiredMin.y);
@@ -122,46 +129,29 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
      * @param maxY second coordinate max
      */
     public void setDesiredRange(double minX, double minY, double maxX, double maxY) {
-        if (minX == maxX || minY == maxY) {
-            throw new IllegalArgumentException("Range must be nonempty");
-        }
-        // ensure proper order
-        if (minX > maxX) {
-            double swap = minX;
-            minX = maxX;
-            maxX = swap;
-        }
-        if (minY > maxY) {
-            double swap = minY;
-            minY = maxY;
-            maxY = swap;
-        }
-        desiredMin = new Point2D.Double(minX, minY);
-        desiredMax = new Point2D.Double(maxX, maxY);
-        try {
-            computeTransformation();
-        } catch (IllegalStateException e) {
-//            Logger.getLogger(PlaneVisometry.class.getName()).log(Level.INFO, "Error setting plane visometry transformation: {0}", e);
-        }
+        checkArgument(minX != maxX && minY != maxY, "Range must be nonempty");
+        desiredMin = new Point2D.Double(Math.min(minX, maxX), Math.min(minY, maxY));
+        desiredMax = new Point2D.Double(Math.max(minX, maxX), Math.max(minY, maxY));
+        computeTransformation();
     }
 
-    /** @return visible range (in coordinates) */
+    /** Get visible range (in coordinates) */
     public Rectangle2D.Double getVisibleRange() {
         return displayRange;
     }
 
-    /** @return minimum visible coordinate */
+    /** Get minimum visible coordinate */
     public Point2D.Double getMinPointVisible() {
         return new Point2D.Double(displayRange.x, displayRange.y);
     }
 
-    /** @return maximum visible coordinate */
+    /** Get maximum visible coordinate */
     public Point2D.Double getMaxPointVisible() {
         return new Point2D.Double(displayRange.x + displayRange.width, displayRange.y + displayRange.height);
     }
 
     /**
-     * Returns the number of pixels/unit in the x direction
+     * Get the number of pixels/unit in the x direction
      * @return x scaling to transform local to window coordinates
      */
     public double getHorizontalScale() {
@@ -169,40 +159,90 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     }
 
     /**
-     * Returns the number of pixels/unit in the y direction
+     * Get the number of pixels/unit in the y direction
      * @return y scaling to transform local to window coordinates
      */
     public double getVerticalScale() {
         return at.getScaleY();
     }
 
-    public void computeTransformation() throws IllegalStateException {
-        // ensure proper parameters
-        if (windowBounds == null || windowBounds.getWidth() == 0 || windowBounds.getHeight() == 0 || desiredMin == null || desiredMax == null || aspectRatio == 0.0 || aspectRatio == Double.NaN) {
-            throw new IllegalStateException();
+    /** 
+     * Get domain associated with the horizontal axis 
+     */
+    public RealIntervalSamplerProvider getHorizontalDomain() {
+        if (xDomain == null) {
+            xDomain = new RealIntervalSamplerProvider() {
+                public double getNewMinimum() { 
+                    return PlaneVisometry.this.displayRange.x;
+                }
+                public double getNewMaximum() {
+                    return PlaneVisometry.this.displayRange.x + PlaneVisometry.this.displayRange.width;
+                }
+                public double getScale(float pixSpacing) { 
+                    return Math.abs(pixSpacing / PlaneVisometry.this.getHorizontalScale());
+                }
+            };
+            addChangeListener(xDomain);
         }
-        //System.out.println("recompute transformation");
-        //System.out.println("bounds: "+windowBounds);
-        //System.out.println("desired: "+desiredMin+"   "+desiredMax);
+        return xDomain;
+    }
+
+    /** 
+     * Get domain associated with the vertical axis 
+     */
+    public RealIntervalSamplerProvider getVerticalDomain() {
+        if (yDomain == null) {
+            yDomain = new RealIntervalSamplerProvider() {
+                public double getNewMinimum() {
+                    return PlaneVisometry.this.displayRange.y;
+                }
+                public double getNewMaximum() {
+                    return PlaneVisometry.this.displayRange.y + PlaneVisometry.this.displayRange.height;
+                }
+                public double getScale(float pixSpacing) { 
+                    return Math.abs(pixSpacing / PlaneVisometry.this.getVerticalScale()); 
+                }
+            };
+            addChangeListener(yDomain);
+        }
+        return yDomain;
+    }
+
+    /** 
+     * Get domain associated with both axes. 
+     */
+    public SquareDomainBroadcaster getPlaneDomain() {
+        if (planeDomain == null) {
+            planeDomain = new PlaneDomain();
+        }
+        return planeDomain;
+    }
+    
+    //</editor-fold>
+    
+
+    public void computeTransformation() {
+        checkState(windowBounds != null && windowBounds.getWidth() > 0 && windowBounds.getHeight() > 0
+                && desiredMin != null && desiredMax != null && aspectRatio > 0 && aspectRatio != Double.NaN);
 
         // compute displayed range of values
+        double windowAspect = windowBounds.getWidth() / windowBounds.getHeight();
+        double actualDisplayedAspect = windowAspect / aspectRatio;
+        double desiredAspect = (desiredMax.x - desiredMin.x) / (desiredMax.y - desiredMin.y);
 
-        double winAspect = windowBounds.getWidth() / windowBounds.getHeight();                  // aspect ratio of the window
-        double displayAspect = winAspect / aspectRatio;                                         // aspect ratio that will be used
-        double desiredAspect = (desiredMax.x - desiredMin.x) / (desiredMax.y - desiredMin.y);   // desired aspect ratio according to bounds; will not be used
-
-        if (displayAspect >= desiredAspect) {       // will show more horizontally
+        if (actualDisplayedAspect >= desiredAspect) {       
+            // will show more horizontally
             displayRange.y = desiredMin.y;
             displayRange.height = desiredMax.y - desiredMin.y;
-            displayRange.width = displayAspect * displayRange.height;
+            displayRange.width = actualDisplayedAspect * displayRange.height;
             displayRange.x = 0.5 * (desiredMin.x + desiredMax.x) - 0.5 * displayRange.width;
-        } else {                                    // will show more vertically
+        } else {                                   
+            // will show more vertically
             displayRange.x = desiredMin.x;
             displayRange.width = desiredMax.x - desiredMin.x;
-            displayRange.height = displayRange.width / displayAspect;
+            displayRange.height = displayRange.width / actualDisplayedAspect;
             displayRange.y = 0.5 * (desiredMin.y + desiredMax.y) - 0.5 * displayRange.height;
         }
-        //System.out.println("display: "+displayRange);
 
         // Compute the transformation. This converts a regular coordinate to the window coordinate.
         // Note that composition of transforms works backwards, so the process by which a point is
@@ -218,10 +258,10 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     }
 
     public Point2D.Double toWindow(Point2D.Double coordinate) {
-        if (at == null)
-            throw new IllegalStateException();
-        if (Double.isInfinite(coordinate.x))
+        checkState(at != null);
+        if (Double.isInfinite(coordinate.x)) {
             return getWindowPointOfInfiniteAngle(coordinate.y);
+        }
         return (Point2D.Double) at.transform(coordinate, null);
     }
 
@@ -241,18 +281,17 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
 
 
     public Point2D.Double toLocal(Point2D point) {
-        if (at == null)
-            throw new IllegalStateException();
+        checkState(at != null);
         try {
             Point2D result = at.inverseTransform(point, null);
-            if (result instanceof Point2D.Double)
+            if (result instanceof Point2D.Double) {
                 return (Point2D.Double) result;
-            else
+            } else {
                 return new Point2D.Double(result.getX(), result.getY());
+            }
         } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(PlaneVisometry.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalStateException("Transform was not invertible", ex);
         }
-        throw new IllegalStateException();
     }
 
 
@@ -268,13 +307,10 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
      * @param e the change event
      */
     public void stateChanged(ChangeEvent e) {
-        if (!e.getSource().equals(this))
+        if (!e.getSource().equals(this)) {
             fireStateChanged();
+        }
     }
-
-    
-    protected ChangeEvent changeEvent = new ChangeEvent(this);
-    protected EventListenerList listenerList = new EventListenerList();
 
     public synchronized void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);
@@ -287,64 +323,30 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
     /** Notify interested listeners of an (unspecified) change in the plottable. */
     public synchronized void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
-        for (int i = listeners.length - 2; i >= 0; i -= 2)
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ChangeListener.class) {
-                if (changeEvent == null)
+                if (changeEvent == null) {
                     return;
+                }
                 ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
             }
+        }
     }
     
     //</editor-fold>
 
 
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
     //
-    // DOMAIN METHODS
+    // INNER CLASSES
     //
-
-    RealIntervalSamplerProvider xDomain;
-    RealIntervalSamplerProvider yDomain;
-    PlaneDomain planeDomain;
-
-    /** @return domain associated with the horizontal axis */
-    public RealIntervalSamplerProvider getHorizontalDomain() {
-        if (xDomain == null) {
-            xDomain = new RealIntervalSamplerProvider() {
-                public double getNewMinimum() { return PlaneVisometry.this.displayRange.x; }
-                public double getNewMaximum() { return PlaneVisometry.this.displayRange.x + PlaneVisometry.this.displayRange.width; }
-                public double getScale(float pixSpacing) { return Math.abs(pixSpacing / PlaneVisometry.this.getHorizontalScale()); }
-            };
-            addChangeListener(xDomain);
-        }
-        return xDomain;
-    }
-
-    /** @return domain associated with the vertical axis */
-    public RealIntervalSamplerProvider getVerticalDomain() {
-        if (yDomain == null) {
-            yDomain = new RealIntervalSamplerProvider() {
-                public double getNewMinimum() { return PlaneVisometry.this.displayRange.y; }
-                public double getNewMaximum() { return PlaneVisometry.this.displayRange.y + PlaneVisometry.this.displayRange.height; }
-                public double getScale(float pixSpacing) { return Math.abs(pixSpacing / PlaneVisometry.this.getVerticalScale()); }
-            };
-            addChangeListener(yDomain);
-        }
-        return yDomain;
-    }
-
-    /** @return domain associated with both axes. */
-    public SquareDomainBroadcaster getPlaneDomain() {
-        if (planeDomain == null)
-            planeDomain = new PlaneDomain();
-        return planeDomain;
-    }
 
     /** Domain that combines x and y domains; uses embedded x and y domains. */
-    class PlaneDomain extends SquareDomainBroadcaster
-            implements ScreenSampleDomainProvider<Point2D.Double>, ChangeListener {
+    public final class PlaneDomain extends SquareDomainBroadcaster implements ScreenSampleDomainProvider<Point2D.Double> {
         public PlaneDomain() {
             super(getHorizontalDomain(), getVerticalDomain());
         }
+        
         public SampleSet<Point2D.Double> samplerWithPixelSpacing(final float pixSpacing, DomainHint hint) {
             final SquareDomainStepSampler result = new SquareDomainStepSampler(
                     (RealIntervalStepSampler) getHorizontalDomain().samplerWithPixelSpacing(pixSpacing, hint),
@@ -358,5 +360,7 @@ public class PlaneVisometry implements Visometry<Point2D.Double>,
             return result;
         }
     }
+    
+    //</editor-fold>
 
 }

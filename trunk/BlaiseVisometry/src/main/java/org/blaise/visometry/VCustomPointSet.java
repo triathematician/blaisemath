@@ -22,17 +22,20 @@ import org.blaise.util.CoordinateManager;
  * when the user drags the points in the window.
  *
  * @param <C> the local coordinate
- * @param <Src> the type of object being displayed
+ * @param <S> the type of object being displayed
  *
  * @author elisha
  */
-public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements CoordinateListener {
+public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
 
-    /** Local coordinates of the points */
-    private CoordinateManager<Src,C> coordManager;
     /** The window entry */
-    protected DelegatingPointSetGraphic<Src> window = new DelegatingPointSetGraphic<Src>();
-
+    protected DelegatingPointSetGraphic<S> window = new DelegatingPointSetGraphic<S>();
+    
+    /** Local coordinates of the points */
+    protected CoordinateManager<S,C> coordManager;
+    /** Listens for updates to both window & local coordinate managers */
+    protected final CoordinateListener coordinateListener;
+    
     /**
      * Initialize with no points
      */
@@ -44,28 +47,27 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * Initialize with specified coordinate manager.
      * @param mgr coordinate manager
      */
-    public VCustomPointSet(CoordinateManager<Src,C> mgr) {
+    public VCustomPointSet(CoordinateManager<S,C> mgr) {
+        coordinateListener = new CoordinateListener(){
+            public void coordinatesChanged(CoordinateChangeEvent evt) {
+                handleCoordinatesChanged(evt);
+            }
+        };
+        
         setCoordinateManager(mgr);
-        window.getCoordinateManager().addCoordinateListener(this);
+        window.getCoordinateManager().addCoordinateListener(coordinateListener);
     }
 
     /**
      * Initialize set
      * @param loc initial locations of points
      */
-    public VCustomPointSet(Map<Src, ? extends C> loc) {
-        this(new CoordinateManager<Src,C>());
+    public VCustomPointSet(Map<S, ? extends C> loc) {
+        this(new CoordinateManager<S,C>());
         coordManager.putAll(loc);
     }
 
-    public void coordinatesChanged(CoordinateChangeEvent evt) {
-//        if (evt.getSource() == coordManager) {
-//            System.err.println((converting?"VCPS: CM-CONV: ":"VCPS: CM-UNCO: ") + evt);
-//        } else if (evt.getSource() == window.getCoordinateManager()) {
-//            System.err.println((converting?"VCPS:WCM-CONV: ":"VCPS:WCM-UNCO: ") + evt);
-//        } else {
-//            System.err.println("VCPS-UNEXPECTED EVENT SOURCE");
-//        }
+    private void handleCoordinatesChanged(CoordinateChangeEvent evt) {
         if (converting) {
             return;
         }
@@ -77,10 +79,10 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
             synchronized (coordManager) {
                 if (evt.isAddEvent()) {
                     Visometry<C> vis = parent.getVisometry();
-                    Map<Src,Point2D> add = (Map<Src,Point2D>) evt.getAdded();
+                    Map<S,Point2D> add = (Map<S,Point2D>) evt.getAdded();
                     if (add != null) {
-                        Map<Src,C> local = new HashMap<Src,C>();
-                        for (Src s : add.keySet()) {
+                        Map<S,C> local = new HashMap<S,C>();
+                        for (S s : add.keySet()) {
                             local.put(s, vis.toLocal(add.get(s)));
                         }
                         coordManager.putAll(local);
@@ -97,11 +99,11 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     // PROPERTIES
     //
 
-    public Graphic getWindowEntry() {
+    public Graphic getWindowGraphic() {
         return window;
     }
 
-    public CoordinateManager<Src, C> getCoordinateManager() {
+    public CoordinateManager<S, C> getCoordinateManager() {
         return coordManager;
     }
 
@@ -112,17 +114,17 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
     public void setCoordinateManager(CoordinateManager mgr) {
         if (this.coordManager != mgr) {
             if (this.coordManager != null) {
-                coordManager.removeCoordinateListener(this);
+                coordManager.removeCoordinateListener(coordinateListener);
             }
             coordManager = mgr;
             if (coordManager != null) {
-                coordManager.addCoordinateListener(this);
+                coordManager.addCoordinateListener(coordinateListener);
             }
             setUnconverted(true);
         }
     }
 
-    public Set<? extends Src> getObjects() {
+    public Set<? extends S> getObjects() {
         return window.getObjects();
     }
 
@@ -130,7 +132,7 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * Add a collection of objects to the view
      * @param loc objects to put
      */
-    public void addObjects(Map<Src, ? extends C> loc) {
+    public void addObjects(Map<S, ? extends C> loc) {
         coordManager.putAll(loc);
         setUnconverted(true);
     }
@@ -139,23 +141,23 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
      * Replaces the current objects in the set with a new set
      * @param loc new objects
      */
-    public void setObjects(Map<Src, ? extends C> loc) {
+    public void setObjects(Map<S, ? extends C> loc) {
         coordManager.setCoordinateMap(loc);
         setUnconverted(true);
     }
 
-    public void removeObjects(Set<Src> obj) {
-        if (obj.size() > 0) {
+    public void removeObjects(Set<S> obj) {
+        if (!obj.isEmpty()) {
             coordManager.removeObjects(obj);
             setUnconverted(true);
         }
     }
 
-    public ObjectStyler<Src, PointStyle> getStyler() {
+    public ObjectStyler<S, PointStyle> getStyler() {
         return window.getStyler();
     }
 
-    public void setStyler(ObjectStyler<Src, PointStyle> styler) {
+    public void setStyler(ObjectStyler<S, PointStyle> styler) {
         window.setStyler(styler);
     }
 
@@ -170,9 +172,9 @@ public class VCustomPointSet<C, Src> extends VGraphicSupport<C> implements Coord
         // conversion should never occur while points are changing
         synchronized (coordManager) {
             converting = true;
-            Map<Src,Point2D> winmap = new HashMap<Src,Point2D>();
+            Map<S,Point2D> winmap = new HashMap<S,Point2D>();
             int n = coordManager.getObjects().size();
-            for (Src s : coordManager.getObjects()) {
+            for (S s : coordManager.getObjects()) {
                 winmap.put(s, processor.convert(coordManager.apply(s), vis));
             }
             window.getCoordinateManager().setCoordinateMap(winmap);

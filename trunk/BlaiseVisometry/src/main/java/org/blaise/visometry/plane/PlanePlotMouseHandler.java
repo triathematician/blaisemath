@@ -9,14 +9,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import org.blaise.util.CanvasPainter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.blaise.style.ShapeStyleBasic;
 import org.blaise.style.Styles;
-import org.blaise.visometry.VGraphicComponent;
+import org.blaise.util.CanvasPainter;
 
 /**
  * <p>
@@ -34,135 +37,156 @@ import org.blaise.visometry.VGraphicComponent;
  *
  * @author Elisha Peterson
  */
-public class PlanePlotMouseHandler
-        implements MouseListener, MouseMotionListener, MouseWheelListener, CanvasPainter {
+public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasPainter {
 
-    VGraphicComponent<Point2D.Double> plot;
-    PlaneVisometry vis;
-
+    /** Renderer for zoom box */
+    private static final ShapeStyleBasic BOX_STYLE = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
+    /** Mouse mode for rectangle resize */
+    private static final String RESIZE_MODE = "Alt+Button1";
+    /** Mouse mode for rectangle resize */
+    private static final String RESTRICT_MODE = "Shift+Button1";
+    /** Mouse mode for rectangle resize */
+    private static final String RESTRICT_MODE_2 = "Shift";
+    /** Number of steps in zoom animation */
+    private static final int ANIM_STEPS = 25;
+    /** Number of pixels required to be in "snap range" for restricted resize mdoe */
+    private static final int SNAP_RANGE = 30;
+    
+    //
+    // STATE VARIABLES
+    //
+    
+    /** The visometry of the component */
+    private final PlaneVisometry vis;
     /** Determines whether to snap to the coordinate axes. */
-    boolean SNAP_ENABLED = true;
+    boolean snapEnabled = true;
+    /** Hint box for zooming */
+    private Rectangle2D.Double zoomBox;
 
-    public PlanePlotMouseHandler(PlaneVisometry vis, VGraphicComponent<Point2D.Double> plot) {
+    /** Location mouse was first pressed at. */
+    private Point pressedAt = null;
+    /** Stores keyboard modifiers for mouse. */
+    private String mode = null;
+    /** Old bounds for the window. */
+    private Point2D.Double oldMin = null;
+    /** Old bounds for the window. */
+    private Point2D.Double oldMax = null;
+
+    /**
+     * Initialize handler for the provided visometry.
+     * @param vis the visometry
+     */
+    public PlanePlotMouseHandler(PlaneVisometry vis) {
         this.vis = vis;
-        this.plot = plot;
     }
 
-    /** Hint box for zooming */
-    transient Rectangle2D.Double zoomBox;
-    /** Renderer for zoom box */
-    final static ShapeStyleBasic rend = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
-
     public void paint(Component component, Graphics2D canvas) {
-        if (zoomBox != null)
-            rend.draw(zoomBox, canvas, null);
+        if (zoomBox != null) {
+            BOX_STYLE.draw(zoomBox, canvas, null);
+        }
     }
 
     //
     // MOUSE OPERATIONS
     //
-
-    /** Location mouse was first pressed at. */
-    transient protected Point pressedAt = null;
-    /** Stores keyboard modifiers for mouse. */
-    transient protected String mode = null;
-    /** Old bounds for the window. */
-    transient protected Point2D.Double oldMin = null;
-    /** Old bounds for the window. */
-    transient protected Point2D.Double oldMax = null;
     
-    protected boolean interestedIn(MouseEvent e) {
-        return !e.isConsumed() 
-        // XXX - need to expand architecture so shift-down still applies
-                && !e.isShiftDown();
+    private boolean interestedIn(MouseEvent e) {
+        return !e.isConsumed() && !e.isShiftDown();
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if (!interestedIn(e)) {
             return;
         }
         pressedAt = e.getPoint();
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
-        if (mode.equals("Alt+Button1")) { // rectangle resize mode
+        if (mode.equals(RESIZE_MODE)) { 
             zoomBox = new Rectangle2D.Double(pressedAt.x, pressedAt.y, 0, 0);
-        } else { // pan mode
-            oldMin = (Point2D.Double) vis.desiredMin.clone();
-            oldMax = (Point2D.Double) vis.desiredMax.clone();
+        } else { 
+            // pan mode
+            oldMin = (Point2D.Double) vis.getDesiredMin().clone();
+            oldMax = (Point2D.Double) vis.getDesiredMax().clone();
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
-        if (!interestedIn(e)) {
+        if (!interestedIn(e) || pressedAt == null) {
             return;
         }
-        if (pressedAt != null) {
-            try {
-            Point winPt = e.getPoint();
-            if (mode.equals("Alt+Button1")) { // rectangle resize mode (ensure positive values)
-                if (winPt.x < pressedAt.x) {
-                    zoomBox.x = winPt.x;
-                    zoomBox.width = - winPt.x + pressedAt.x;
+        Point winPt = e.getPoint();
+        if (mode.equals(RESIZE_MODE)) {
+            if (winPt.x < pressedAt.x) {
+                zoomBox.x = winPt.x;
+                zoomBox.width = - winPt.x + pressedAt.x;
+            } else {
+                zoomBox.x = pressedAt.x;
+                zoomBox.width = winPt.x - pressedAt.x;
+            }
+            if (winPt.y < pressedAt.y) {
+                zoomBox.y = winPt.y;
+                zoomBox.height = -winPt.y + pressedAt.y;
+            } else {
+                zoomBox.y = pressedAt.y;
+                zoomBox.height = winPt.y - pressedAt.y;
+            }
+            vis.fireStateChanged();
+        } else { 
+            // pan mode
+            String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
+            if (curMode.equals(RESTRICT_MODE) || curMode.equals(RESTRICT_MODE_2)) {
+                if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
+                    winPt.y = pressedAt.y;
                 } else {
-                    zoomBox.x = pressedAt.x;
-                    zoomBox.width = winPt.x - pressedAt.x;
-                }
-                if (winPt.y < pressedAt.y) {
-                    zoomBox.y = winPt.y;
-                    zoomBox.height = -winPt.y + pressedAt.y;
-                } else {
-                    zoomBox.y = pressedAt.y;
-                    zoomBox.height = winPt.y - pressedAt.y;
-                }
-                plot.repaint();
-            } else { // pan mode
-                String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
-                if (curMode.equals("Shift+Button1") || curMode.equals("Shift")) { // restricted movement mode
-                    if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x))
-                        winPt.y = pressedAt.y;
-                    else
-                        winPt.x = pressedAt.x;
-                }
-                Point2D.Double newC = vis.toLocal(winPt); // new coordinate in current visometry
-                Point2D.Double oldC = vis.toLocal(pressedAt); // original coordinate in current visometry
-
-                vis.setDesiredRange(
-                        oldMin.x - newC.x + oldC.x, oldMin.y - newC.y + oldC.y,
-                        oldMax.x - newC.x + oldC.x, oldMax.y - newC.y + oldC.y);
-
-                // second pass to snap to boundaries of window
-                if (SNAP_ENABLED) {
-                    final int SNAP_RANGE = 30;
-                    Point2D.Double winOrigin = vis.toWindow(new Point2D.Double(0, 0)); // current location of origin
-                    RectangularShape win = vis.getWindowBounds();
-                    double shiftX = 0, shiftY = 0;
-                    if (winOrigin.x >= win.getMinX() && winOrigin.x <= win.getMinX() + SNAP_RANGE)
-                        shiftX = -(win.getMinX() + SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
-                    else if (winOrigin.x >= win.getMaxX() - SNAP_RANGE && winOrigin.x <= win.getMaxX())
-                        shiftX = -(win.getMaxX() - SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
-                    if (winOrigin.y >= win.getMinY() && winOrigin.y <= win.getMinY() + SNAP_RANGE)
-                        shiftY = -(win.getMinY() + SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
-                    else if (winOrigin.y >= win.getMaxY() - SNAP_RANGE && winOrigin.y <= win.getMaxY())
-                        shiftY = -(win.getMaxY() - SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
-
-                    if (shiftX != 0 || shiftY != 0) {
-                        vis.setDesiredRange(
-                            oldMin.x - newC.x + oldC.x + shiftX, oldMin.y - newC.y + oldC.y + shiftY,
-                            oldMax.x - newC.x + oldC.x + shiftX, oldMax.y - newC.y + oldC.y + shiftY);
-
-                    }
+                    winPt.x = pressedAt.x;
                 }
             }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            // original coordinate in current visometry
+            Point2D.Double oldC = vis.toLocal(pressedAt); 
+            // new coordinate in current visometry
+            Point2D.Double newC = vis.toLocal(winPt); 
+
+            vis.setDesiredRange(
+                    oldMin.x - newC.x + oldC.x, oldMin.y - newC.y + oldC.y,
+                    oldMax.x - newC.x + oldC.x, oldMax.y - newC.y + oldC.y);
+
+            // second pass to snap to boundaries of window
+            if (snapEnabled) {
+                // current location of origin
+                Point2D.Double winOrigin = vis.toWindow(new Point2D.Double(0, 0)); 
+                RectangularShape win = vis.getWindowBounds();
+                double shiftX = 0, shiftY = 0;
+                if (winOrigin.x >= win.getMinX() && winOrigin.x <= win.getMinX() + SNAP_RANGE) {
+                    shiftX = -(win.getMinX() + SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
+                } else if (winOrigin.x >= win.getMaxX() - SNAP_RANGE && winOrigin.x <= win.getMaxX()) {
+                    shiftX = -(win.getMaxX() - SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
+                }
+                if (winOrigin.y >= win.getMinY() && winOrigin.y <= win.getMinY() + SNAP_RANGE) {
+                    shiftY = -(win.getMinY() + SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
+                } else if (winOrigin.y >= win.getMaxY() - SNAP_RANGE && winOrigin.y <= win.getMaxY()) {
+                    shiftY = -(win.getMaxY() - SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
+                }
+
+                if (shiftX != 0 || shiftY != 0) {
+                    vis.setDesiredRange(
+                        oldMin.x - newC.x + oldC.x + shiftX, oldMin.y - newC.y + oldC.y + shiftY,
+                        oldMax.x - newC.x + oldC.x + shiftX, oldMax.y - newC.y + oldC.y + shiftY);
+
+                }
             }
         }
     }
+    
+    @Override
     public void mouseReleased(MouseEvent e) {
         if (interestedIn(e)) {
             mouseDragged(e);
-            if (pressedAt != null && mode.equals("Alt+Button1")) // rectangle resize mode
+            if (pressedAt != null && mode.equals(RESIZE_MODE)) { 
+                // rectangle resize mode
                 zoomBoxAnimated(vis, zoomBox);
-            else { // pan mode
+            } else { 
+                // pan mode
             }
         }
         zoomBox = null;
@@ -172,9 +196,7 @@ public class PlanePlotMouseHandler
         mode = null;
     }
 
-    public void mouseMoved(MouseEvent e) {
-    }
-
+    @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (!interestedIn(e)) {
             return;
@@ -191,10 +213,6 @@ public class PlanePlotMouseHandler
         zoomPoint(vis, vis.toLocal(mouseLoc),
                 (e.getWheelRotation() > 0) ? 1.05 : 0.95);
     }
-
-    public void mouseClicked(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
 
 
     //
@@ -227,8 +245,6 @@ public class PlanePlotMouseHandler
         zoomPointAnimated(vis, center, factor);
     }
 
-    private static final int ANIM_STEPS = 25;
-
     /**
      * Creates an animating zoom using a particular timer.
      * @param p the coordinate of the point to center zoom about, in local coordiantes
@@ -244,7 +260,11 @@ public class PlanePlotMouseHandler
             public void run() {
                 double zoomValue = 0.0;
                 for (int i = 0; i <= ANIM_STEPS; i++) {
-                    try { Thread.sleep(5); } catch (Exception e) { } // wait a bit
+                    try { 
+                        Thread.sleep(5); 
+                    } catch (InterruptedException e) {
+                        Logger.getLogger(PlanePlotMouseHandler.class.getName()).log(Level.INFO, "Thread interrupted", e);
+                    }
                     zoomValue = 1.0 + (factor - 1.0) * i / (double) ANIM_STEPS;
                     vis.setDesiredRange(
                             cx - zoomValue * xMultiplier, cy - zoomValue * yMultiplier,
@@ -278,7 +298,11 @@ public class PlanePlotMouseHandler
         Thread runner = new Thread(new Runnable() {
             public void run() {
                 for (double factor = 0; factor < 1.0; factor += 1.0 / ANIM_STEPS) {
-                    try { Thread.sleep(5); } catch (Exception e) { } // wait a bit
+                    try { 
+                        Thread.sleep(5); 
+                    } catch (InterruptedException e) {
+                        Logger.getLogger(PlanePlotMouseHandler.class.getName()).log(Level.INFO, "Thread interrupted", e);
+                    }
                     vis.setDesiredRange(
                             min.x + (newMin.x - min.x) * factor,
                             min.y + (newMin.y - min.y) * factor,
@@ -296,14 +320,19 @@ public class PlanePlotMouseHandler
      * @param aspect the new aspect ratio.
      */
     public static void aspectAnimated(final PlaneVisometry vis, final double aspect) {
-        if (aspect <= 0)
+        if (aspect <= 0) {
             throw new IllegalArgumentException("Aspect <= 0: " + aspect);
-        final double oldAspect = vis.aspectRatio;
+        }
+        final double oldAspect = vis.getAspectRatio();
 
         Thread runner = new Thread(new Runnable() {
             public void run() {
                 for (double factor = 0; factor < 1.0; factor += 1.0 / ANIM_STEPS) {
-                    try { Thread.sleep(5); } catch (Exception e) { } // wait a bit
+                    try { 
+                        Thread.sleep(5); 
+                    } catch (InterruptedException e) {
+                        Logger.getLogger(PlanePlotMouseHandler.class.getName()).log(Level.INFO, "Thread interrupted", e);
+                    }
                     vis.setAspectRatio(oldAspect + factor * (aspect - oldAspect));
                 }
             }

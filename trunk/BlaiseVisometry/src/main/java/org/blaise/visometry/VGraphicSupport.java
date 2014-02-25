@@ -17,17 +17,17 @@ package org.blaise.visometry;
 public abstract class VGraphicSupport<C> implements VGraphic<C> {
 
     /** Stores the parent of this entry */
-    protected VGraphicComposite parent;
+    protected VGraphicComposite<C> parent;
     
     /** Flag indicating whether needs conversion */
     private boolean notConverted = true;
 
     
-    public VGraphicComposite getParent() { 
+    public VGraphicComposite<C> getParentGraphic() { 
         return parent; 
     }
     
-    public void setParent(VGraphicComposite parent) {
+    public void setParentGraphic(VGraphicComposite<C> parent) {
         this.parent = parent;
     }
 

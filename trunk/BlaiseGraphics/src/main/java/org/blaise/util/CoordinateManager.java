@@ -5,8 +5,16 @@
 package org.blaise.util;
 
 import com.google.common.base.Function;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -184,7 +192,7 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     
     /**
      * Retrieve location of given set of cached objects.
-     * @param set objects to retrieve
+     * @param obj objects to retrieve
      * @return map of locations
      */
     public synchronized Map<S,C> getCachedLocations(Set<? extends S> obj) {
@@ -234,10 +242,12 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     }
 
     public final void addCoordinateListener(CoordinateListener cl) {
+        checkNotNull(cl);
         listeners.add(cl);
     }
 
     public final void removeCoordinateListener(CoordinateListener cl) {
+        checkNotNull(cl);
         listeners.remove(cl);
     }
 

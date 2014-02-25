@@ -327,7 +327,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     @Action
     public void addPlanePoint() {
         VBasicPoint<Point2D.Double> bp = new VBasicPoint<Point2D.Double>(new Point2D.Double(1+Math.random(), 1+Math.random()));
-        bp.getWindowEntry().addMouseListener(new GraphicHighlightHandler());
+        bp.getWindowGraphic().addMouseListener(new GraphicHighlightHandler());
         root2.addGraphic(bp);
     }
 
@@ -338,7 +338,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             arr[i] = new Point2D.Double(-Math.random(), -Math.random());
         VBasicPointSet<Point2D.Double> vps = new VBasicPointSet<Point2D.Double>(arr);
         vps.setStyle(new PointStyleBasic().fill(Color.blue).markerRadius(3f));
-        vps.getWindowEntry().addMouseListener(new GraphicHighlightHandler());
+        vps.getWindowGraphic().addMouseListener(new GraphicHighlightHandler());
         root2.addGraphic(vps);
     }
 
@@ -353,7 +353,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             if (Math.random() < .1) arr3[i] = null;
         }
         VBasicPolygonalPath<Double> vps = new VBasicPolygonalPath<Point2D.Double>(arr3);
-        vps.getWindowEntry().addMouseListener(new GraphicHighlightHandler());
+        vps.getWindowGraphic().addMouseListener(new GraphicHighlightHandler());
         root2.addGraphic(vps);
     }
 
@@ -380,7 +380,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                 return new PointStyleBasic().fill(new Color(255-src*2,0,src*2)).stroke(null); 
             }
         });
-        vps.getWindowEntry().addMouseListener(new GraphicHighlightHandler());
+        vps.getWindowGraphic().addMouseListener(new GraphicHighlightHandler());
         root2.addGraphic(vps);
     }
 
@@ -424,7 +424,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                         .strokeWidth((float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
-        gr.getWindowEntry().addMouseListener(new GraphicHighlightHandler());
+        gr.getWindowGraphic().addMouseListener(new GraphicHighlightHandler());
         root2.addGraphic(gr);
     }
 
