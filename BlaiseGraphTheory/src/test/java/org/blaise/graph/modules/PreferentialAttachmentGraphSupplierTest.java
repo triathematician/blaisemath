@@ -5,6 +5,26 @@
 
 package org.blaise.graph.modules;
 
+/*
+ * #%L
+ * BlaiseGraphTheory
+ * --
+ * Copyright (C) 2009 - 2014 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphSuppliers;
 import org.blaise.graph.GraphUtils;
@@ -53,6 +73,9 @@ public class PreferentialAttachmentGraphSupplierTest {
         System.out.println("getSeededInstance (variable # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
 
         Graph<Integer> seed = new EdgeProbabilityGraphSupplier(false, 4, .5f).get();
+        while (seed.edgeCount() == 0) {
+            seed = new EdgeProbabilityGraphSupplier(false, 4, .5f).get();
+        }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         float[] probs1 = {.5f, .5f};
         Graph<Integer> pref = new PreferentialAttachmentGraphSupplier(seed, 10, probs1).get();

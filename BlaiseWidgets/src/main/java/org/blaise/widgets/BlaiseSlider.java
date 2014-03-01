@@ -4,6 +4,26 @@
  */
 package org.blaise.widgets;
 
+/*
+ * #%L
+ * BlaiseWidgets
+ * --
+ * Copyright (C) 2009 - 2014 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,18 +33,17 @@ import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
-import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.blaise.graphics.AbstractGraphicDragger;
 import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.BasicStringGraphic;
+import org.blaise.graphics.BasicTextGraphic;
 import org.blaise.graphics.GraphicComponent;
 import org.blaise.graphics.GraphicMouseEvent;
 import org.blaise.style.Anchor;
-import org.blaise.style.BasicStringStyle;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.Styles;
+import org.blaise.style.TextStyleBasic;
 
 /**
  * <p>
@@ -47,7 +66,7 @@ public class BlaiseSlider extends GraphicComponent {
     /** Component for the position on track */
     private final BasicShapeGraphic posGr;
     /** Label for current value */
-    private final BasicStringGraphic strGr;
+    private final BasicTextGraphic strGr;
     
     /** Style for track */
     private ShapeStyle tStyle;
@@ -75,8 +94,8 @@ public class BlaiseSlider extends GraphicComponent {
         hStyle = Styles.fillStroke(new Color(192,192,192,192), new Color(64,64,64,192));
         addGraphic(trackGr = new BasicShapeGraphic(null, tStyle));
         addGraphic(posGr = new BasicShapeGraphic(null, hStyle));
-        addGraphic(strGr = new BasicStringGraphic(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+""));
-        strGr.setStyle(new BasicStringStyle().fill(Color.white).fontSize(hRnd/2f).textAnchor(Anchor.South));
+        addGraphic(strGr = new BasicTextGraphic(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+""));
+        strGr.setStyle(new TextStyleBasic().fill(Color.white).fontSize(hRnd/2f).textAnchor(Anchor.SOUTH));
         trackGr.setMouseEnabled(false);
         strGr.setMouseEnabled(false);
         updateGraphics();
@@ -166,7 +185,7 @@ public class BlaiseSlider extends GraphicComponent {
             posGr.setPrimitive(new RoundRectangle2D.Double(xc-rad, y0-hExt, 2*rad, yht+2*hExt, hRnd, hRnd));
         } else
             posGr.setPrimitive(new RoundRectangle2D.Double(xc, y0-hExt, xc2-xc, yht+2*hExt, hRnd, hRnd));
-        strGr.setPoint(new Point2D.Double(xc, getHeight()/2+((BasicStringStyle)strGr.getStyle()).getFontSize()/2));
+        strGr.setPoint(new Point2D.Double(xc, getHeight()/2+((TextStyleBasic)strGr.getStyle()).getFontSize()/2));
         strGr.setString(model.getValue()+"");
     }
     

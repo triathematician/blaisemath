@@ -4,6 +4,27 @@
  */
 package org.blaise.pr;
 
+/*
+ * #%L
+ * BlaiseWidgets
+ * --
+ * Copyright (C) 2009 - 2014 Elisha Peterson
+ * --
+ * Licensed under the Apache License, Version 2.0.
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import java.awt.Color;
@@ -17,18 +38,17 @@ import java.util.Date;
 import java.util.List;
 import org.blaise.graphics.BasicPointGraphic;
 import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.BasicStringGraphic;
+import org.blaise.graphics.BasicTextGraphic;
 import org.blaise.graphics.GraphicComponent;
 import org.blaise.graphics.GraphicComposite;
 import org.blaise.pr.PrModel.PrEntry;
 import org.blaise.pr.Units.Distance;
 import org.blaise.pr.Units.Speed;
 import org.blaise.style.Anchor;
-import org.blaise.style.BasicPointStyle;
-import org.blaise.style.BasicShapeStyle;
-import org.blaise.style.BasicStringStyle;
-import org.blaise.style.MarkerLibrary;
+import org.blaise.style.Markers;
+import org.blaise.style.PointStyleBasic;
 import org.blaise.style.Styles;
+import org.blaise.style.TextStyleBasic;
 
 /**
  *
@@ -155,12 +175,12 @@ public class PrVis extends GraphicComponent {
         for (double d = xmin; d <= xmax; d += 100) {
             double y = x0+xwid*(d-xmin)/(xmax-xmin);
             addGraphic(new BasicShapeGraphic(new Line2D.Double(43, y, 50, y)));
-            addGraphic(new BasicStringGraphic(new Point2D.Double(42, y), ((int)d)+"yd", new BasicStringStyle().textAnchor(Anchor.East)));
+            addGraphic(new BasicTextGraphic(new Point2D.Double(42, y), ((int)d)+"yd", new TextStyleBasic().textAnchor(Anchor.EAST)));
         }
         for (double s = ymin; s >= ymax; s--) {
             double x = y0+yht*(s-ymin)/(ymax-ymin);
             addGraphic(new BasicShapeGraphic(new Line2D.Double(x, 43, x, 50)));
-            addGraphic(new BasicStringGraphic(new Point2D.Double(x, 42), ((int)s)+"s", new BasicStringStyle().textAnchor(Anchor.South)));
+            addGraphic(new BasicTextGraphic(new Point2D.Double(x, 42), ((int)s)+"s", new TextStyleBasic().textAnchor(Anchor.SOUTH)));
         }
         
         // shape gfx
@@ -177,7 +197,7 @@ public class PrVis extends GraphicComponent {
                 GraphicComposite prGr = new GraphicComposite();
                 Color c = cMap.apply(en.getDate());
                 prGr.addGraphic(new BasicShapeGraphic(a, Styles.fillStroke(alpha(c,192), c.brighter())));
-                prGr.addGraphic(new BasicPointGraphic(pt, new BasicPointStyle().fill(c).stroke(c.darker())));                
+                prGr.addGraphic(new BasicPointGraphic(pt, new PointStyleBasic().fill(c).stroke(c.darker())));                
                 prGr.setDefaultTooltip(en+"");
                 addGraphic(prGr);
             } else if (formerPrs.contains(en)) {
@@ -188,11 +208,11 @@ public class PrVis extends GraphicComponent {
                 GraphicComposite prGr = new GraphicComposite();
                 Color c = cMap2.apply(en.getDate());
                 prGr.addGraphic(new BasicShapeGraphic(a, Styles.fillStroke(alpha(c,192), c.brighter())));
-                prGr.addGraphic(new BasicPointGraphic(pt, new BasicPointStyle().fill(c).stroke(c.darker())));                
+                prGr.addGraphic(new BasicPointGraphic(pt, new PointStyleBasic().fill(c).stroke(c.darker())));                
                 prGr.setDefaultTooltip(en+"");
                 addGraphic(prGr);
             } else {
-                BasicPointGraphic bpg = new BasicPointGraphic(pt, new BasicPointStyle().stroke(cMap.apply(en.getDate()).darker()).marker(MarkerLibrary.CROSS));
+                BasicPointGraphic bpg = new BasicPointGraphic(pt, new PointStyleBasic().stroke(cMap.apply(en.getDate()).darker()).marker(Markers.CROSS));
                 bpg.setDefaultTooltip(en+"");
                 addGraphic(bpg);
             }         

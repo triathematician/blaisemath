@@ -1,44 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>org.blaise</groupId>
+        <artifactId>BlaisePom</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <groupId>org.blaise</groupId>
     <artifactId>blaise-graphics</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseGraphics</name>
-    <url>http://blaisemath.googlecode.com</url>
-    <inceptionYear>2008</inceptionYear>
-    <organization>
-        <name>Elisha Peterson</name>
-    </organization>
-    <licenses>
-        <license>
-            <name>Apache License 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-    
-    <scm>
-        <connection></connection>
-        <url></url>
-    </scm>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <description>Scene graph and style library using Java2D graphics.</description>
+    <url>https://code.google.com/p/blaisemath/</url>
 
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>14.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -51,21 +33,21 @@
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
             <scope>test</scope>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>appframework</artifactId>
             <version>1.0.3</version>
             <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
