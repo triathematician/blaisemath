@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+  
+    <groupId>org.blaise</groupId>
+    <artifactId>BlaisePom</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    
+    <name>BlaisePom</name>
+    <description>Aggregation of Blaise graphics and computation libraries.</description>
+    <url>https://code.google.com/p/blaisemath/</url>
+    <inceptionYear>2009</inceptionYear>
+  
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/</developerConnection>
+        <url>https://code.google.com/p/blaisemath/source/browse/</url>
+    </scm>
+    
+    <issueManagement>
+        <system>Google code</system>
+        <url>https://code.google.com/p/blaisemath/issues/list</url>
+    </issueManagement>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <license.organizationName>Elisha Peterson</license.organizationName>
+        <license.licenseName>apache-v2</license.licenseName>
+        <license.licenseResolver>${project.baseUri}/src/license</license.licenseResolver>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- specify JDK version -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                
+                <!-- Adding header to file -->
+                <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>license-maven-plugin</artifactId>
+                  <version>1.6</version>
+                  <configuration>
+                      <roots>
+                        <root>src/main/java</root>
+                        <root>src/test</root>
+                      </roots>
+                      <canUpdateCopyright>true</canUpdateCopyright>
+                      <sectionDelimiter>--</sectionDelimiter>
+                      <excludes>
+                          <exclude>**/com/google/**</exclude>
+                      </excludes>
+                  </configuration>
+                  <executions>
+                      <execution>
+                          <phase>process-sources</phase>
+                          <goals>
+                              <goal>update-file-header</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <modules>
+        <module>../BlaiseGraphics</module>
+        <module>../BlaiseGraphTheory</module>
+        <module>../BlaiseMath</module>
+        <module>../BlaiseParser</module>
+        <module>../BlaiseVisometry</module>
+        <module>../BlaiseWidgets</module>
+    </modules>
+    
+</project>
