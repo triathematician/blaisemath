@@ -41,6 +41,7 @@ public interface Marker {
      * @param point the center of the resulting shape
      * @param orientation specifies orientation of the resulting shape
      * @param markerRadius specifies the radius of the resulting shape
+     * @return marker shape
      */
     Shape create(Point2D point, double orientation, float markerRadius);
 

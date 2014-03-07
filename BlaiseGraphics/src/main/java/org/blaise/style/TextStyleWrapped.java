@@ -28,6 +28,7 @@ package org.blaise.style;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -90,7 +91,10 @@ public class TextStyleWrapped extends TextStyleBasic {
         canvas.setFont(getFont() == null ? canvas.getFont().deriveFont(getFontSize()) : getFont());
         canvas.setColor(ColorUtils.applyHints(getFill(), visibility));
         Shape curClip = canvas.getClip();
-        canvas.setClip(clipPath);
+        Area newClip = new Area();
+        newClip.add(new Area(curClip));
+        newClip.intersect(new Area(clipPath));
+        canvas.setClip(newClip);
         if (clipPath instanceof Ellipse2D) {
             drawInEllipse(point, string, canvas, (Ellipse2D) clipPath);
         } else {

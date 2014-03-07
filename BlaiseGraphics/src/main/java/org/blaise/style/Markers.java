@@ -73,6 +73,7 @@ public final class Markers {
 
     /**
      * Retrieve list of available shapes.
+     * @return list of marker constants
      */
     public static List<Marker> getAvailableMarkers() {
         return Arrays.asList(
@@ -90,6 +91,7 @@ public final class Markers {
      */
     public static class NoShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             return EMPTY_PATH;
         }
@@ -100,6 +102,7 @@ public final class Markers {
      */
     public static class CircleShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             return new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
         }
@@ -110,6 +113,7 @@ public final class Markers {
      */
     public static class SquareShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             return new Rectangle2D.Double(
                     p.getX() - radius / Math.sqrt(2),
@@ -124,6 +128,7 @@ public final class Markers {
      */
     public static class DiamondShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp = new GeneralPath();
@@ -141,6 +146,7 @@ public final class Markers {
      */
     public static class TriangleShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp2 = new GeneralPath();
@@ -159,6 +165,7 @@ public final class Markers {
      */
     public static class StarShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp5 = new GeneralPath();
@@ -181,6 +188,7 @@ public final class Markers {
      */
     public static class Star7Shape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp6 = new GeneralPath();
@@ -203,6 +211,7 @@ public final class Markers {
      */
     public static class Star11Shape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp7 = new GeneralPath();
@@ -225,6 +234,7 @@ public final class Markers {
      */
     public static class PlusShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp3 = new GeneralPath();
@@ -241,6 +251,7 @@ public final class Markers {
      */
     public static class CrossShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp4 = new GeneralPath();
@@ -258,6 +269,7 @@ public final class Markers {
      */
     public static class CrosshairsShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp3 = new GeneralPath();
@@ -275,6 +287,7 @@ public final class Markers {
      */
     public static class HappyFaceShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             Area a = new Area(new Ellipse2D.Double(x - radius, y - radius, 2 * radius, 2 * radius));
@@ -290,6 +303,7 @@ public final class Markers {
      */
     public static class HouseShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp13 = new GeneralPath();
@@ -316,6 +330,7 @@ public final class Markers {
      */
     public static class SimpleArrowShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp = new GeneralPath();
@@ -334,6 +349,7 @@ public final class Markers {
      */
     public static class TrianglePointerShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp9 = new GeneralPath();
@@ -352,6 +368,7 @@ public final class Markers {
      */
     public static class TriangleFlagShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp10 = new GeneralPath();
@@ -369,6 +386,7 @@ public final class Markers {
      */
     public static class TeardropShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp11 = new GeneralPath();
@@ -387,6 +405,7 @@ public final class Markers {
      */
     public static class CarShape implements Marker {
 
+        @Override
         public Shape create(Point2D p, double angle, float radius) {
             double x = p.getX(), y = p.getY();
             GeneralPath gp12 = new GeneralPath();

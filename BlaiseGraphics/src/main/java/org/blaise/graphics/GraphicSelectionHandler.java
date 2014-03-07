@@ -25,7 +25,6 @@ package org.blaise.graphics;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import org.blaise.util.CanvasPainter;
 import com.google.common.collect.Sets;
 import java.awt.Color;
 import java.awt.Component;
@@ -43,6 +42,7 @@ import java.util.Set;
 import org.blaise.style.ShapeStyleBasic;
 import org.blaise.style.VisibilityHint;
 import org.blaise.style.VisibilityHintSet;
+import org.blaise.util.CanvasPainter;
 import org.blaise.util.SetSelectionModel;
 
 /**
@@ -66,7 +66,6 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     private transient Point pressPt;
     private transient Point dragPt;
     private transient Rectangle box = null;
-    private transient Point releasePt;
 
     /** Initialize for specified component */
     public GraphicSelectionHandler(GraphicComponent domain) {
@@ -74,6 +73,7 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
 
         // highlight updates
         selection.addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
                 Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
@@ -120,6 +120,7 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     //</editor-fold>
 
 
+    @Override
     public void paint(Component component, Graphics2D canvas) {
         if (enabled) {
             synchronized(selection) {
@@ -190,7 +191,7 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
         if (!enabled || e.isConsumed() || box == null || pressPt == null) {
             return;
         }
-        releasePt = e.getPoint();
+        Point releasePt = e.getPoint();
         if (component.getInverseTransform() == null) {
             box.setFrameFromDiagonal(pressPt, releasePt);
         } else {

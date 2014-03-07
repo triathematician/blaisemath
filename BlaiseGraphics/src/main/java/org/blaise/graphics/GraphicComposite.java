@@ -29,11 +29,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
@@ -53,19 +53,19 @@ import org.blaise.style.VisibilityHint;
  * @author Elisha
  */
 public class GraphicComposite extends GraphicSupport {
-
-    /** Stores the shapes and their styles */
-    private final List<Graphic> entries = Lists.newArrayList();
-    /** The associated style provider; overrides the default style for the components in the composite (may be null). */
-    private StyleContext styleContext;
-
     
     private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
+        @Override
         public boolean apply(Graphic input) { 
             return !input.getVisibilityHints().contains(VisibilityHint.HIDDEN); 
         }
     };
     
+
+    /** Stores the shapes and their styles */
+    private final Set<Graphic> entries = Sets.newLinkedHashSet();
+    /** The associated style provider; overrides the default style for the components in the composite (may be null). */
+    private StyleContext styleContext;
     
     //
     // CONSTRUCTOR
@@ -177,34 +177,43 @@ public class GraphicComposite extends GraphicSupport {
     /** 
      * Add an entry to the composite. 
      * @param gfc the entry
+     * @return whether composite was changed by add
      */
-    public final synchronized void addGraphic(Graphic gfc) {
+    public final synchronized boolean addGraphic(Graphic gfc) {
         if (addHelp(gfc)) {
             fireGraphicChanged();
+            return true;
         }
+        return false;
     }
 
     /** 
      * Remove an entry from the composite 
      * @param gfc the entry to remove
      */
-    public synchronized void removeGraphic(Graphic gfc) {
+    public synchronized boolean removeGraphic(Graphic gfc) {
         if (removeHelp(gfc)) {
             fireGraphicChanged();
+            return true;
         }
+        return false;
     }
     
     /** 
      * Adds several entries to the composite 
      * @param add the entries to add
+     * @return true if composite was changed
      */
-    public final synchronized void addGraphics(Iterable<? extends Graphic> add) {
+    public final synchronized boolean addGraphics(Iterable<? extends Graphic> add) {
         boolean change = false;
         for (Graphic en : add) {
             change = addHelp(en) || change;
         }
         if (change) {
             fireGraphicChanged();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -212,13 +221,16 @@ public class GraphicComposite extends GraphicSupport {
      * Removes several entries from the composite 
      * @param remove the entries to remove
      */
-    public final synchronized void removeGraphics(Iterable<? extends Graphic> remove) {
+    public final synchronized boolean removeGraphics(Iterable<? extends Graphic> remove) {
         boolean change = false;
         for (Graphic en : remove) {
             change = removeHelp(en) || change;
         }
         if (change) {
             fireGraphicChanged();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -226,8 +238,9 @@ public class GraphicComposite extends GraphicSupport {
      * Replaces entries
      * @param remove entries to remove
      * @param add entries to add
+     * @return true if composite changed
      */
-    public synchronized void replaceGraphics(Iterable<? extends Graphic> remove, Iterable<? extends Graphic> add) {
+    public synchronized boolean replaceGraphics(Iterable<? extends Graphic> remove, Iterable<? extends Graphic> add) {
         boolean change = false;
         synchronized (entries) {
             for (Graphic en : remove) {
@@ -240,12 +253,14 @@ public class GraphicComposite extends GraphicSupport {
         if (change) {
             fireGraphicChanged();
         }
+        return change;
     }
 
     /**
      * Removes all entries, clearing their parents
+     * @return 
      */
-    public synchronized void clearGraphics() {
+    public synchronized boolean clearGraphics() {
         boolean change = !entries.isEmpty();
         for (Graphic en : entries) {
             if (en.getParent() == this) {
@@ -255,7 +270,9 @@ public class GraphicComposite extends GraphicSupport {
         entries.clear();
         if (change) {
             fireGraphicChanged();
+            return true;
         }
+        return false;
     }
     
     //</editor-fold>
@@ -266,10 +283,12 @@ public class GraphicComposite extends GraphicSupport {
     // Graphic METHODS
     //
 
+    @Override
     public synchronized boolean contains(Point2D point) {
         return graphicAt(point) != null;
     }
 
+    @Override
     public synchronized boolean intersects(Rectangle2D box) {
         for (Graphic en : entries) {
             if (en.intersects(box)) {
@@ -279,6 +298,7 @@ public class GraphicComposite extends GraphicSupport {
         return false;
     }
     
+    @Override
     public synchronized void draw(Graphics2D canvas) {
         for (Graphic en : entries) {
             if (!en.getVisibilityHints().contains(VisibilityHint.HIDDEN)) {
@@ -308,7 +328,7 @@ public class GraphicComposite extends GraphicSupport {
      * @return iterable
      */
     public Iterable<Graphic> visibleEntriesInReverse() {
-        return Iterables.filter(Lists.reverse(entries), VISIBLE_FILTER);
+        return Lists.reverse(Lists.newArrayList(visibleEntries()));
     }
     
     /** 
@@ -397,7 +417,7 @@ public class GraphicComposite extends GraphicSupport {
                 result.addAll(((GraphicComposite)g).selectableGraphicsIn(box));
             }
             // no else belongs here
-            if (g.intersects(box)) {
+            if (g.intersects(box) && g.isSelectionEnabled()) {
                 result.add(g);
             }
         }
