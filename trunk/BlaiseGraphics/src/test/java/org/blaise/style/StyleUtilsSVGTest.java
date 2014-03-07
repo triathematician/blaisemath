@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.blaise.graphics;
+package org.blaise.style;
 
 /*
  * #%L
@@ -25,11 +25,9 @@ package org.blaise.graphics;
  */
 
 
-import org.blaise.style.StyleUtilsSVG;
 import java.awt.Color;
-import org.blaise.style.Styles;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

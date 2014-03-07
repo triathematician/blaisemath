@@ -26,9 +26,7 @@ package org.blaise.graphics;
  */
 
 
-import org.blaise.util.ContextMenuInitializer;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -36,6 +34,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import org.blaise.style.VisibilityHint;
 import org.blaise.style.VisibilityHintSet;
+import org.blaise.util.ContextMenuInitializer;
 
 /**
  * <p>
@@ -72,6 +71,7 @@ import org.blaise.style.VisibilityHintSet;
       * @return parent, possibly null
       */
     GraphicComposite getParent();
+    
     /**
      * Sets parent of the entry
      * @param parent the parent

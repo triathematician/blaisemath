@@ -24,8 +24,8 @@ package org.blaise.graphics;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Functions;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -88,9 +88,9 @@ public class DelegatingPointSetGraphic<S> extends GraphicComposite {
      */
     public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager) {
         styler.setTipDelegate(Functions.toStringFunction());
-        setCoordinateManager(crdManager);
         
         pointListener = new ChangeListener(){
+            @Override
             public void stateChanged(ChangeEvent e) {
                 if (!updatingPoint && e.getSource() instanceof DelegatingPointGraphic) {
                     synchronized(DelegatingPointSetGraphic.this) {
@@ -101,10 +101,13 @@ public class DelegatingPointSetGraphic<S> extends GraphicComposite {
             }
         };
         coordListener = new CoordinateListener(){
+            @Override
             public void coordinatesChanged(CoordinateChangeEvent evt) {
                 updatePointGraphics(evt.getAdded(), evt.getRemoved());
             }
         };
+        
+        setCoordinateManager(crdManager);
     }
     
 

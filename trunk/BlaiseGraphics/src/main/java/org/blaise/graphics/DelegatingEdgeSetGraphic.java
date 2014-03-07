@@ -75,12 +75,14 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicCompos
      * @param mgr manages source object locations
      */
     public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr) {
-        setCoordinateManager(mgr);
         coordListener = new CoordinateListener(){
+            @Override
             public void coordinatesChanged(CoordinateChangeEvent evt) {
                 updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic>());
             }
         };
+        
+        setCoordinateManager(mgr);
     }
     
     

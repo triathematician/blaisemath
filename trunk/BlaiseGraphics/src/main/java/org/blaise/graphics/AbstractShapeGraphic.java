@@ -32,9 +32,9 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nonnull;
-import org.blaise.style.ShapeStyleBasic;
 import org.blaise.style.PathStyle;
 import org.blaise.style.ShapeStyle;
+import org.blaise.style.ShapeStyleBasic;
 import org.blaise.style.Styles;
 
 /**
@@ -138,13 +138,12 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         } else if (style instanceof ShapeStyleBasic) {
             ShapeStyleBasic bss = (ShapeStyleBasic) style;
             return bss.getFill() == null;
-        } else if (style instanceof PathStyle) {
-            return true;
         } else {
-            return false;
+            return style instanceof PathStyle;
         }
     }
 
+    @Override
     public boolean contains(Point2D point) {
         ShapeStyle style = drawStyle();
         if (!paintingAsStroke()) {
@@ -157,6 +156,7 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         }
     }
 
+    @Override
     public boolean intersects(Rectangle2D box) {
         ShapeStyle style = drawStyle();
         if (!paintingAsStroke() && primitive.intersects(box)) {
@@ -166,6 +166,7 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         return new BasicStroke(thickness).createStrokedShape(primitive).intersects(box);
     }
 
+    @Override
     public void draw(Graphics2D canvas) {
         drawStyle().draw(primitive, canvas, visibility);
     }
