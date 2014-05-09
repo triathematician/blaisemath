@@ -19,11 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-graphics</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>blaise-math</artifactId>
             <version>0.6.0</version>
         </dependency>
@@ -38,6 +33,11 @@
             <artifactId>Firestarter</artifactId>
             <version>1.0.4</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-graph</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     
