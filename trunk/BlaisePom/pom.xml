@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     
     <name>BlaisePom</name>
-    <description>Aggregation of Blaise graphics and computation libraries.</description>
+    <description>Parent project for Blaise libraries</description>
     <url>https://code.google.com/p/blaisemath/</url>
     <inceptionYear>2009</inceptionYear>
   
@@ -94,14 +94,5 @@
             </plugins>
         </pluginManagement>
     </build>
-    
-    <modules>
-        <module>../BlaiseGraphics</module>
-        <module>../BlaiseGraphTheory</module>
-        <module>../BlaiseMath</module>
-        <module>../BlaiseParser</module>
-        <module>../BlaiseVisometry</module>
-        <module>../BlaiseWidgets</module>
-    </modules>
     
 </project>
