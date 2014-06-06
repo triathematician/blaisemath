@@ -3,25 +3,28 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.blaise</groupId>
-        <artifactId>BlaisePom</artifactId>
-        <version>1.0</version>
+        <groupId>com.googlecode.blaisemath</groupId>
+        <artifactId>blaise-meta</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>blaise-graphics</artifactId>
-    <version>2.0-rc2-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseGraphics</name>
     <description>Scene graph and style library using Java2D graphics.</description>
-    <url>https://code.google.com/p/blaisemath/</url>
+    
+    <build>
+        <plugins>
+            <!-- update header blocks in code with license info -->
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>14.0.1</version>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Firestarter</artifactId>
@@ -41,13 +44,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>license-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
