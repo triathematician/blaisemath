@@ -33,7 +33,7 @@ package org.blaise.style;
  *
  * @author Elisha Peterson
  */
-public interface ShapeStyle {
+public interface ShapeStyle extends Style {
 
     /**
      * Draws a shape on the provided canvas.
@@ -41,6 +41,6 @@ public interface ShapeStyle {
      * @param canvas the canvas on which to paint
      * @param hints whether drawn result should be "highlighted" or otherwise emphasized
      */
-    void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas, VisibilityHintSet hints);
+    void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas, StyleHintSet hints);
 
 }

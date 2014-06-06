@@ -34,8 +34,8 @@ import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.TextStyleBasic;
 import org.blaise.style.TextStyleMultiline;
-import org.blaise.style.VisibilityHint;
-import org.blaise.style.VisibilityHintSet;
+import org.blaise.style.StyleHintSet;
+import org.blaise.style.StyleHints;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -85,8 +85,9 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
     public ShapeStyle drawStyle() {
         final ShapeStyle parentStyle = super.drawStyle();
         return new ShapeStyle() {
-            public void draw(Shape primitive, Graphics2D canvas, VisibilityHintSet hints) {
-                boolean highlight = hints.contains(VisibilityHint.HIGHLIGHT);
+            @Override
+            public void draw(Shape primitive, Graphics2D canvas, StyleHintSet hints) {
+                boolean highlight = hints.contains(StyleHints.HIGHLIGHT_HINT);
                 if (primitive instanceof RectangularShape) {
                     RectangularShape rs = (RectangularShape) primitive;
                     int inset = highlight?1:3;

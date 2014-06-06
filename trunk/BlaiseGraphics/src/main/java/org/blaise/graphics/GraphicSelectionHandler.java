@@ -40,8 +40,8 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Set;
 import org.blaise.style.ShapeStyleBasic;
-import org.blaise.style.VisibilityHint;
-import org.blaise.style.VisibilityHintSet;
+import org.blaise.style.StyleHintSet;
+import org.blaise.style.StyleHints;
 import org.blaise.util.CanvasPainter;
 import org.blaise.util.SetSelectionModel;
 
@@ -67,7 +67,10 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     private transient Point dragPt;
     private transient Rectangle box = null;
 
-    /** Initialize for specified component */
+    /** 
+     * Initialize for specified component
+     * @param domain 
+     */
     public GraphicSelectionHandler(GraphicComponent domain) {
         this.component = domain;
 
@@ -78,10 +81,10 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
                 Set<Graphic> old = (Set<Graphic>) evt.getOldValue();
                 Set<Graphic> nue = (Set<Graphic>) evt.getNewValue();
                 for (Graphic g : Sets.difference(old, nue)) {
-                    g.getVisibilityHints().remove(VisibilityHint.SELECTED);
+                    g.getStyleHints().remove(StyleHints.SELECTED_HINT);
                 }
                 for (Graphic g : Sets.difference(nue, old)) {
-                    g.getVisibilityHints().add(VisibilityHint.SELECTED);
+                    g.getStyleHints().add(StyleHints.SELECTED_HINT);
                 }
             }
         });
@@ -129,7 +132,7 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
                 }
             }
             if (box != null && box.width > 0 && box.height > 0) {
-                style.draw(box, canvas, new VisibilityHintSet());
+                style.draw(box, canvas, new StyleHintSet());
             }
         }
     }

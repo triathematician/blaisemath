@@ -34,7 +34,7 @@ import java.awt.geom.Point2D;
  * 
  * @author Elisha Peterson
  */
-public interface PointStyle {
+public interface PointStyle extends Style {
     
     /**
      * Returns the (approximate) window radius of the associated point
@@ -63,7 +63,7 @@ public interface PointStyle {
      * @param canvas graphics element to draw on
      * @param hints visibility visibility & highlight settings
      */
-    void draw(Point2D point, Graphics2D canvas, VisibilityHintSet hints);
+    void draw(Point2D point, Graphics2D canvas, StyleHintSet hints);
 
     /**
      * Draws a (rotated) point on the graphics canvas with visibility options
@@ -72,6 +72,6 @@ public interface PointStyle {
      * @param canvas graphics element to draw on
      * @param hints visibility & highlight settings
      */
-    void draw(Point2D point, double angle, Graphics2D canvas, VisibilityHintSet hints);
+    void draw(Point2D point, double angle, Graphics2D canvas, StyleHintSet hints);
     
 }

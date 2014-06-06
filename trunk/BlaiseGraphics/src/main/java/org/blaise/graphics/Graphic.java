@@ -32,8 +32,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.blaise.style.VisibilityHint;
-import org.blaise.style.VisibilityHintSet;
+import org.blaise.style.StyleHintSet;
 import org.blaise.util.ContextMenuInitializer;
 
 /**
@@ -93,7 +92,7 @@ import org.blaise.util.ContextMenuInitializer;
      * Return set of visibility hints for the graphic.
      * @return visibility hints
      */
-    VisibilityHintSet getVisibilityHints();
+    StyleHintSet getStyleHints();
 
 
     //

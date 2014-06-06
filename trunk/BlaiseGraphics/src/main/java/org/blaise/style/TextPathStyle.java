@@ -60,7 +60,7 @@ public class TextPathStyle implements ShapeStyle {
     
     /**
      * Set text style & return pointer to object
-     * @param textStyle the style
+     * @param style the style
      * @return this
      */
     public TextPathStyle textStyle(TextStyleBasic style) {
@@ -147,7 +147,8 @@ public class TextPathStyle implements ShapeStyle {
     //</editor-fold>
     
 
-    public void draw(Shape primitive, Graphics2D canvas, VisibilityHintSet hints) {
+    @Override
+    public void draw(Shape primitive, Graphics2D canvas, StyleHintSet hints) {
         canvas.setFont(textStyle.getFont());
         canvas.setStroke(new TextStroke(pathText, textStyle.getFont(), stretch, false));
         canvas.setColor(textStyle.getFill());

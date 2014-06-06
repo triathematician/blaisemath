@@ -233,7 +233,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
         PointStyle drawer = drawStyle();
         synchronized (points) {
             for (Point2D p : points) {
-                drawer.draw(p, canvas, visibility);
+                drawer.draw(p, canvas, styleHints);
             }
         }
     }

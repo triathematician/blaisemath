@@ -52,19 +52,31 @@ public class PointStyleDecorated extends PointStyleSupport {
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets fillColor color & returns pointer to object */
+    /** 
+     * Sets fillColor color & returns pointer to object
+     * @param c
+     * @return 
+     */
     public PointStyleDecorated fill(@Nullable Color c) {
         setFill(c);
         return this;
     }
 
-    /** Sets radius & returns pointer to object */
+    /** 
+     * Sets radius & returns pointer to object
+     * @param radius
+     * @return
+     */
     public PointStyleDecorated relativeMarkerRadius(float radius) {
         setRelativeMarkerRadius(radius);
         return this;
     }
 
-    /** Sets base style and returns this */
+    /** 
+     * Sets base style and returns this
+     * @param base
+     * @return
+     */
     public PointStyleDecorated baseStyle(PointStyleSupport base) {
         setBaseStyle(base);
         return this;
@@ -111,6 +123,7 @@ public class PointStyleDecorated extends PointStyleSupport {
         return base.getMarker();
     }
         
+    @Override
     public float getMarkerRadius() { 
         return relativeRadius * base.getMarkerRadius();
     }

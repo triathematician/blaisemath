@@ -28,7 +28,6 @@ import static com.google.common.base.Preconditions.*;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
-import java.util.Set;
 import javax.annotation.Nullable;
 import org.blaise.util.PointFormatters;
 
@@ -64,26 +63,38 @@ public class PointStyleLabeled implements PointStyle {
 
     @Override
     public String toString() {
-        return String.format("LabeledPointStyle[baseStyle=%s, labelStyle=%s, showLabel=%s]", 
+        return String.format("PointStyleLabeled[baseStyle=%s, labelStyle=%s, showLabel=%s]", 
                 base, labelStyle, showLabel);
     }
     
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets base style & returns point to this object */
+    /** 
+     * Sets base style & returns point to this object
+     * @param base
+     * @return 
+     */
     public PointStyleLabeled baseStyle(PointStyle base) {
         setBaseStyle(base);
         return this;
     }
 
-    /** Sets label style & returns pointer to object */
+    /** 
+     * Sets label style & returns pointer to object
+     * @param labelStyle
+     * @return 
+     */
     public PointStyleLabeled labelStyle(TextStyle labelStyle) {
         setLabelStyle(labelStyle);
         return this;
     }
 
-    /** Sets whether label is shown & returns pointer to object */
+    /** 
+     * Sets whether label is shown & returns pointer to object
+     * @param showLabel
+     * @return 
+     */
     public PointStyleLabeled showLabel(boolean showLabel) {
         setShowLabel(showLabel);
         return this;
@@ -129,14 +140,17 @@ public class PointStyleLabeled implements PointStyle {
     // PointStyle METHODS
     //
 
+    @Override
     public float getMarkerRadius() {
         return base.getMarkerRadius();
     }
 
+    @Override
     public Shape markerShape(Point2D point) {
         return base.markerShape(point);
     }
 
+    @Override
     public Shape markerShape(Point2D p, double angle) {
         return base.markerShape(p, angle);
     }
@@ -148,7 +162,7 @@ public class PointStyleLabeled implements PointStyle {
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D p, String label, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Point2D p, String label, Graphics2D canvas, StyleHintSet visibility) {
         base.draw(p, canvas, visibility);
         if (showLabel) {
             ((TextStyleBasic)labelStyle).offset(base.getMarkerRadius());
@@ -164,18 +178,20 @@ public class PointStyleLabeled implements PointStyle {
      * @param canvas graphics element to draw on
      * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D p, double angle, String label, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Point2D p, double angle, String label, Graphics2D canvas, StyleHintSet visibility) {
         base.draw(p, angle, canvas, visibility);
         if (showLabel) {
             labelStyle.draw(p, label, canvas, visibility);
         }
     }
 
-    public void draw(Point2D p, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Point2D p, Graphics2D canvas, StyleHintSet visibility) {
         draw(p, PointFormatters.formatPoint(p, 2), canvas, visibility);
     }
 
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
         draw(p, angle, PointFormatters.formatPoint(p, 2), canvas, visibility);
     }
 }

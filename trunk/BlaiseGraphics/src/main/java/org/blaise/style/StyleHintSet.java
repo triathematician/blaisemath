@@ -1,5 +1,5 @@
 /*
- * VisibilityHints.java
+ * StyleHintSet.java
  * Created May 31, 2013
  */
 package org.blaise.style;
@@ -26,6 +26,7 @@ package org.blaise.style;
 
 
 import com.google.common.collect.Sets;
+import java.util.Collections;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,9 +38,9 @@ import javax.swing.event.EventListenerList;
  * 
  * @author Elisha
  */
-public final class VisibilityHintSet {
+public final class StyleHintSet {
     
-    private final Set<VisibilityHint> hints = Sets.newHashSet();
+    private final Set<String> hints = Sets.newHashSet();
     
     private final ChangeEvent changeEvent = new ChangeEvent(this);
     private final EventListenerList listenerList = new EventListenerList();
@@ -50,11 +51,41 @@ public final class VisibilityHintSet {
     }
     
     /**
+     * Gets the hint set
+     * @return immutable reference to hint set
+     */
+    public Set<String> getHints() {
+        return Collections.unmodifiableSet(hints);
+    }
+    
+    /**
+     * Replaces the hint set with given hints.
+     * @param hints new hints
+     */
+    public void setHints(Set<String> hints) {
+        if (!this.hints.equals(hints)) {
+            this.hints.clear();
+            this.hints.addAll(hints);
+            fireStateChanged();
+        }
+    }
+    
+    /**
+     * Clears the hint set.
+     */
+    public void clearHints() {
+        if (!hints.isEmpty()) {
+            hints.clear();
+            fireStateChanged();
+        }
+    }
+    
+    /**
      * Adds a hint to the set
      * @param hint hint to add
      * @return true if add changed set
      */
-    public boolean add(VisibilityHint hint) {
+    public boolean add(String hint) {
         if (hints.add(hint)) {
             fireStateChanged();
             return true;
@@ -67,7 +98,7 @@ public final class VisibilityHintSet {
      * @param hint hint to remove
      * @return true if remove changed set
      */
-    public boolean remove(VisibilityHint hint) {
+    public boolean remove(String hint) {
         if (hints.remove(hint)) {
             fireStateChanged();
             return true;
@@ -80,9 +111,10 @@ public final class VisibilityHintSet {
      * @param hint a hint to test
      * @return true if contained in the set of hints of this class, false otherwise 
      */
-    public boolean contains(VisibilityHint hint) {
+    public boolean contains(String hint) {
         return hints.contains(hint);
     }
+    
     
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //

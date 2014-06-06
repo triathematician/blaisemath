@@ -30,6 +30,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.blaise.style.StyleModifiers;
 import org.blaise.style.TextStyle;
 import org.blaise.util.PointBean;
 
@@ -44,19 +45,26 @@ public class BasicTextGraphic extends GraphicSupport
     /** Basepoint for the string */
     protected Point2D point;
     /** The object that will be drawn. */
-    @Nullable protected String text;
+    @Nullable 
+    protected String text;
 
     /** The associated style. */
-    @Nullable protected TextStyle style = null;
+    @Nullable 
+    protected TextStyle style = null;
 
     /** Keeps track of last draw boundary of string. */
-    @Nullable private transient Rectangle2D lastBounds = null;
+    @Nullable 
+    private transient Rectangle2D lastBounds = null;
 
     //
     // CONSTRUCTORS
     //
 
-    /** Construct with no style (will use the default) */
+    /** 
+     * Construct with no style (will use the default)
+     * @param point
+     * @param s 
+     */
     public BasicTextGraphic(Point2D point, String s) {
         this(point, s, null);
     }
@@ -78,7 +86,7 @@ public class BasicTextGraphic extends GraphicSupport
 
     @Override
     public String toString() {
-        return "BasicStringGraphic:"+text;
+        return "BasicTextGraphic: "+text;
     }
 
 
@@ -87,10 +95,12 @@ public class BasicTextGraphic extends GraphicSupport
     // PROPERTIES
     //
 
+    @Override
     public Point2D getPoint() {
         return point;
     }
 
+    @Override
     public void setPoint(Point2D p) {
         if (!point.equals(p)) {
             point = new Point2D.Double(p.getX(), p.getY());
@@ -145,10 +155,12 @@ public class BasicTextGraphic extends GraphicSupport
     // GRAPHIC METHODS
     //
 
+    @Override
     public boolean contains(Point2D p) {
         return lastBounds != null && lastBounds.contains(p);
     }
 
+    @Override
     public boolean intersects(Rectangle2D box) {
         return lastBounds != null && lastBounds.intersects(box);
     }
@@ -158,18 +170,26 @@ public class BasicTextGraphic extends GraphicSupport
     // DRAW METHODS
     //
 
-    /** Return the actual style used for drawing */
+    /** 
+     * Return the actual style used for drawing
+     * @return style for drawing
+     */
     @Nonnull 
     protected TextStyle drawStyle() {
-        return style == null ? parent.getStyleContext().getStringStyle(this) : style;
+        if (style == null) {
+            return parent.getStyleContext().getTextStyle(text, styleHints);
+        } else {
+            return StyleModifiers.apply(style, styleHints);
+        }
     }
 
+    @Override
     public void draw(Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text)) {
             return;
         }
         TextStyle sty = drawStyle();
-        sty.draw(point, text, canvas, visibility);
+        sty.draw(point, text, canvas);
         lastBounds = sty.bounds(point, text, canvas);
     }
 }

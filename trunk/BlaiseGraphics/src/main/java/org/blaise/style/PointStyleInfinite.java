@@ -38,7 +38,7 @@ import java.awt.geom.Rectangle2D;
 public class PointStyleInfinite extends PointStyleBasic {
 
     /** Line style for drawing the ray */
-    protected PathStyle rayStyle = StyleContextDefault.PATH;
+    protected PathStyle rayStyle = StyleContextBasic.DEFAULT_PATH_STYLE;
     /** Whether to extend in both directions, or just forward */
     protected boolean extendBothDirections = false;
 
@@ -61,6 +61,7 @@ public class PointStyleInfinite extends PointStyleBasic {
 
     /** 
      * Sets extension rule and returns pointer to this object.
+     * @param extendBoth
      * @return this
      */
     public PointStyleInfinite extendBothDirections(boolean extendBoth) {
@@ -72,7 +73,7 @@ public class PointStyleInfinite extends PointStyleBasic {
 
     @Override
     public String toString() {
-        return String.format("InfinitePointStyle[fill=%s, stroke=%s, stroke_width=%.1f, radius=%.1f, shape=%s, rayStyle=%s, extendBoth=%s]", 
+        return String.format("PointStyleInfinite[fill=%s, stroke=%s, stroke_width=%.1f, radius=%.1f, shape=%s, rayStyle=%s, extendBoth=%s]", 
                 shapeStyle.fill, shapeStyle.stroke, shapeStyle.strokeWidth, markerRadius, marker, rayStyle, extendBothDirections);
     }
     
@@ -102,7 +103,7 @@ public class PointStyleInfinite extends PointStyleBasic {
     
     
     @Override
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
         Point2D p2 = new Point2D.Double(p.getX() + Math.cos(angle), p.getY() + Math.sin(angle));
         Point2D endpt = boundaryHit(p, p2, canvas.getClipBounds());
         if (extendBothDirections) {
@@ -126,6 +127,7 @@ public class PointStyleInfinite extends PointStyleBasic {
      * @param p1p first point
      * @param p2p second point
      * @param bounds the window boundaries
+     * @return 
      */
     protected static Point2D.Double boundaryHit(Point2D p1p, Point2D p2p, Rectangle2D bounds) {
         Point2D.Double p1 = new Point2D.Double(p1p.getX(), p1p.getY());

@@ -32,7 +32,7 @@ import org.blaise.graphics.BasicShapeGraphic;
 import org.blaise.style.PointStyleBasic;
 import org.blaise.style.Markers;
 import org.blaise.style.ShapeStyle;
-import org.blaise.style.VisibilityHint;
+import org.blaise.style.StyleHints;
 
 /**
  * Displays a segment between two points.
@@ -61,7 +61,7 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
                 .stroke(null)
                 .markerRadius(2)
                 .fill(Color.black));
-        start.setVisibilityHint(VisibilityHint.HIDDEN, true);
+        start.setStyleHint(StyleHints.HIDDEN_HINT, true);
         
         end.setStyle(new PointStyleBasic()
                 .marker(Markers.ARROWHEAD));

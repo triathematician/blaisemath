@@ -38,7 +38,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
 import org.blaise.style.StyleContext;
-import org.blaise.style.VisibilityHint;
+import org.blaise.style.StyleHints;
 
 /**
  * <p>
@@ -57,7 +57,7 @@ public class GraphicComposite extends GraphicSupport {
     private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
         @Override
         public boolean apply(Graphic input) { 
-            return !input.getVisibilityHints().contains(VisibilityHint.HIDDEN); 
+            return !input.getStyleHints().contains(StyleHints.HIDDEN_HINT); 
         }
     };
     
@@ -301,7 +301,7 @@ public class GraphicComposite extends GraphicSupport {
     @Override
     public synchronized void draw(Graphics2D canvas) {
         for (Graphic en : entries) {
-            if (!en.getVisibilityHints().contains(VisibilityHint.HIDDEN)) {
+            if (!en.getStyleHints().contains(StyleHints.HIDDEN_HINT)) {
                 en.draw(canvas);
             }
         }

@@ -46,8 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.JPopupMenu;
-import org.blaise.style.StyleContextDefault;
-import org.blaise.style.VisibilityHint;
+import org.blaise.style.StyleContextBasic;
+import org.blaise.style.StyleHints;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -67,7 +67,7 @@ public class GraphicCompositeTest {
 
     public GraphicCompositeTest() {
         gc = new GraphicComposite();
-        gc.setStyleContext(StyleContextDefault.getInstance());
+        gc.setStyleContext(StyleContextBasic.getInstance());
         p = new BasicPointGraphic();
     }
 
@@ -198,7 +198,7 @@ public class GraphicCompositeTest {
     @Test
     public void testSetStyleContext() {
         System.out.println("setStyleContext");
-        gc.setStyleContext(StyleContextDefault.getInstance());
+        gc.setStyleContext(StyleContextBasic.getInstance());
     }
 
     @Test
@@ -220,7 +220,7 @@ public class GraphicCompositeTest {
         System.out.println("visibleEntries");
         gc.addGraphic(p);
         assertTrue(Iterables.elementsEqual(Lists.newArrayList(p), gc.visibleEntries()));
-        p.setVisibilityHint(VisibilityHint.HIDDEN, true);
+        p.setStyleHint(StyleHints.HIDDEN_HINT, true);
         assertTrue(Iterables.isEmpty(gc.visibleEntries()));
     }
 

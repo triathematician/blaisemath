@@ -50,7 +50,7 @@ public class PathStyleTapered extends PathStyleBasic {
     }
 
     @Override
-    public void draw(Shape s, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Shape s, Graphics2D canvas, StyleHintSet visibility) {
         if(strokeWidth <= 0f && stroke != null) {
             return;
         }
