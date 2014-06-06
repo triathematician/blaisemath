@@ -40,9 +40,15 @@ import java.util.Arrays;
  * @author cornidc1
  */
 public class TextStyleMultiline extends TextStyleBasic {
+    
+    @Override
+    public String toString() {
+        return String.format("TextStyleMultiline[fill=%s, font=%s, fontSize=%.1f, offset=(%.1f,%.1f), textAnchor=%s]", 
+                fill, font, fontSize, offset.getX(), offset.getY(), textAnchor);
+    }
 
     @Override
-    public void draw(Point2D point, String string, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Point2D point, String string, Graphics2D canvas, StyleHintSet visibility) {
         if (string == null || string.length() == 0) {
             return;
         }

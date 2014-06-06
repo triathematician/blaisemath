@@ -95,11 +95,13 @@ public abstract class AbstractPointGraphic extends GraphicSupport implements Poi
     //</editor-fold>
     
 
+    @Override
     public boolean contains(Point2D p) {
         PointStyle style = drawStyle();
         return p.distance(point) <= style.getMarkerRadius();
     }
 
+    @Override
     public boolean intersects(Rectangle2D box) {
         PointStyle style = drawStyle();
         double r = (double) style.getMarkerRadius();

@@ -38,8 +38,10 @@ import javax.annotation.Nullable;
  */
 public class ShapeStyleBasic implements PathStyle, ShapeStyle {
 
-    @Nullable protected Color fill;
-    @Nullable protected Color stroke;
+    @Nullable 
+    protected Color fill;
+    @Nullable
+    protected Color stroke;
     protected float strokeWidth = 1f;
 
     public ShapeStyleBasic() {
@@ -47,26 +49,38 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
     
     @Override
     public String toString() {
-        return String.format("BasicShapeStyle[fill=%s, stroke=%s, stroke_width=%.1f]", 
+        return String.format("ShapeStyleBasic[fill=%s, stroke=%s, stroke_width=%.1f]", 
                 fill, stroke, strokeWidth);
     }
     
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets fill color & returns pointer to object */
+    /** 
+     * Sets fill color & returns pointer to object
+     * @param c
+     * @return 
+     */
     public ShapeStyleBasic fill(@Nullable Color c) {
         fill = c;
         return this;
     }
 
-    /** Sets stroke color & returns pointer to object */
+    /** 
+     * Sets stroke color & returns pointer to object
+     * @param c
+     * @return
+     */
     public ShapeStyleBasic stroke(@Nullable Color c) {
         stroke = c;
         return this;
     }
 
-    /** Sets strokeWidth & returns pointer to object */
+    /** 
+     * Sets strokeWidth & returns pointer to object
+     * @param thick
+     * @return 
+     */
     public ShapeStyleBasic strokeWidth(float thick) {
         strokeWidth = thick;
         return this;
@@ -89,6 +103,7 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
         this.fill = fill;
     }
 
+    @Override
     @Nullable 
     public Color getStroke() {
         return stroke;
@@ -98,6 +113,7 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
         this.stroke = stroke;
     }
 
+    @Override
     public float getStrokeWidth() {
         return strokeWidth;
     }
@@ -109,11 +125,13 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
     //</editor-fold>
 
     
+    @Override
     public Shape shapeOfPath(Shape primitive) {
         return primitive;
     }
 
-    public void draw(Shape s, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Shape s, Graphics2D canvas, StyleHintSet visibility) {
         if (fill != null) {
             canvas.setColor(ColorUtils.applyHints(fill, visibility));
             canvas.fill(s);
@@ -121,7 +139,7 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
         if (stroke != null && strokeWidth >= 0) {
             canvas.setColor(ColorUtils.applyHints(stroke, visibility));
             canvas.setStroke(visibility != null
-                    && (visibility.contains(VisibilityHint.HIGHLIGHT) || visibility.contains(VisibilityHint.SELECTED))
+                    && (visibility.contains(StyleHints.HIGHLIGHT_HINT) || visibility.contains(StyleHints.SELECTED_HINT))
                     ? new BasicStroke(strokeWidth+1f) : new BasicStroke(strokeWidth));
             canvas.draw(s);
         }

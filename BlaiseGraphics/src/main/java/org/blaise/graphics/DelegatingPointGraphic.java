@@ -113,7 +113,7 @@ public class DelegatingPointGraphic<S> extends AbstractPointGraphic {
 
     public void draw(Graphics2D canvas) {
         PointStyle ps = drawStyle();
-        ps.draw(point, canvas, visibility);
+        ps.draw(point, canvas, styleHints);
 
         if (styler.getLabelDelegate() != null) {
             String label = styler.getLabelDelegate().apply(src);
@@ -122,7 +122,7 @@ public class DelegatingPointGraphic<S> extends AbstractPointGraphic {
                 if (lStyler != null) {
                     TextStyle style = lStyler.apply(src);
                     if (style != null) {
-                        style.draw(point, label, canvas, visibility);
+                        style.draw(point, label, canvas, styleHints);
                     }
                 }
             }

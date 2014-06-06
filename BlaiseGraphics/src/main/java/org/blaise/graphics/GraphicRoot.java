@@ -38,8 +38,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.blaise.style.StyleContext;
-import org.blaise.style.StyleContextDefault;
-import org.blaise.style.VisibilityHint;
+import org.blaise.style.StyleContextBasic;
+import org.blaise.style.StyleHints;
 
 /**
  * <p>
@@ -78,7 +78,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
         this.owner.addMouseMotionListener(this);
         this.owner.setComponentPopupMenu(popup);
         
-        setStyleContext(StyleContextDefault.getInstance());
+        setStyleContext(StyleContextBasic.getInstance());
         
         popup.addPopupMenuListener(new PopupMenuListener(){
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -181,7 +181,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
      */
     private void updateMouseGraphic(GraphicMouseEvent gme, boolean keepCurrent) {
         if (keepCurrent && mouseGraphic != null
-                && !mouseGraphic.getVisibilityHints().contains(VisibilityHint.HIDDEN)
+                && !mouseGraphic.getStyleHints().contains(StyleHints.HIDDEN_HINT)
                 && mouseGraphic.contains(gme.getGraphicLocation())) {
             return;
         }

@@ -123,14 +123,19 @@ public class BasicPointGraphic extends AbstractPointGraphic {
     //</editor-fold>
     
         
-    /** Return the actual style used for drawing */
+    /** 
+     * Return the actual style used for drawing
+     * @return style used for drawing
+     */
+    @Override
     @Nonnull 
     public PointStyle drawStyle() {
         return style == null ? parent.getStyleContext().getPointStyle(this) : style;
     }
 
+    @Override
     public void draw(Graphics2D canvas) {
-        drawStyle().draw(point, angle, canvas, visibility);
+        drawStyle().draw(point, angle, canvas, styleHints);
     }
     
 }

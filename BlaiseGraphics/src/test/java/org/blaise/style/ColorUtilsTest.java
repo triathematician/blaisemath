@@ -69,21 +69,21 @@ public class ColorUtilsTest {
     @Test
     public void testApplyHints() {
         System.out.println("applyHints");
-        VisibilityHintSet set = new VisibilityHintSet();
+        StyleHintSet set = new StyleHintSet();
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.add(VisibilityHint.FADED);
+        set.add(StyleHints.FADED_HINT);
         assertEquals(new Color(50,25,25,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(VisibilityHint.FADED);
-        set.add(VisibilityHint.HIDDEN);
+        set.remove(StyleHints.FADED_HINT);
+        set.add(StyleHints.HIDDEN_HINT);
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(VisibilityHint.HIDDEN);
-        set.add(VisibilityHint.HIGHLIGHT);
+        set.remove(StyleHints.HIDDEN_HINT);
+        set.add(StyleHints.HIGHLIGHT_HINT);
         assertEquals(new Color(114,64,64,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(VisibilityHint.HIGHLIGHT);
-        set.add(VisibilityHint.OUTLINE);
+        set.remove(StyleHints.HIGHLIGHT_HINT);
+        set.add(StyleHints.OUTLINE_HINT);
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(VisibilityHint.OUTLINE);
-        set.add(VisibilityHint.SELECTED);
+        set.remove(StyleHints.OUTLINE_HINT);
+        set.add(StyleHints.SELECTED_HINT);
         assertEquals(new Color(114,64,64,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
     }
     

@@ -70,6 +70,7 @@ public class PathStyleBasic implements PathStyle {
     // PROPERTY PATTERNS
     //
 
+    @Override
     public Color getStroke() {
         return stroke;
     }
@@ -78,6 +79,7 @@ public class PathStyleBasic implements PathStyle {
         this.stroke = checkNotNull(stroke);
     }
 
+    @Override
     public float getStrokeWidth() {
         return strokeWidth;
     }
@@ -89,11 +91,13 @@ public class PathStyleBasic implements PathStyle {
     //</editor-fold>
 
     
+    @Override
     public Shape shapeOfPath(Shape primitive) {
         return new BasicStroke(strokeWidth).createStrokedShape(primitive);
     }
 
-    public void draw(Shape s, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Shape s, Graphics2D canvas, StyleHintSet visibility) {
         if(getStrokeWidth() <= 0f || getStroke() == null) {
             return;
         }

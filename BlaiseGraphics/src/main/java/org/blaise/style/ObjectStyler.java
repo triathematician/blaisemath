@@ -45,15 +45,20 @@ import javax.annotation.Nullable;
 public class ObjectStyler<S, T> {
 
     /** Delegate for point rendering */
-    @Nullable protected Function<? super S, T> styles = null;
+    @Nullable
+    protected Function<? super S, T> styles = null;
 
     /** Delegate for point labels (only used if the styler returns a label style) */
-    @Nullable protected Function<? super S, String> labels = null;
+    @Nullable
+    protected Function<? super S, String> labels = null;
     /** Delegate for point label styles */
-    @Nullable protected Function<? super S, TextStyle> labelStyles = null;
+    @Nullable
+    protected Function<? super S, TextStyle> labelStyles = null;
 
     /** Delegate for tooltips (with default) */
-    @Nullable protected Function<? super S, String> tips = new Function<S, String>() {
+    @Nullable 
+    protected Function<? super S, String> tips = new Function<S, String>() {
+        @Override
         public String apply(S src) { 
             return src == null ? "null" : src.toString(); 
         }
@@ -71,6 +76,9 @@ public class ObjectStyler<S, T> {
     
     /**
      * Create new default styler instance.
+     * @param <S> the type of source object
+     * @param <T> the primary style type used to draw
+     * @return new styler instance
      */
     public static <S,T> ObjectStyler<S,T> create() {
         return new ObjectStyler<S,T>();
@@ -173,18 +181,18 @@ public class ObjectStyler<S, T> {
     //
 
     /**
-     * Sets the style directly.
+     * Sets a single style for all objects.
      * @param style style to use for all objects
      */
-    public void setStyle(T style) {
+    public void setStyleConstant(T style) {
         setStyleDelegate(Functions.constant(checkNotNull(style)));
     }
 
     /**
-     * Sets the label style directly.
+     * Sets a single label style for all objects.
      * @param style style to use for all objects
      */
-    public void setLabelStyle(TextStyle style) {
+    public void setLabelStyleConstant(TextStyle style) {
         setLabelStyleDelegate(Functions.constant(checkNotNull(style)));
     }
 

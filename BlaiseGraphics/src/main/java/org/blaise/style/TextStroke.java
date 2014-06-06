@@ -58,7 +58,7 @@ class TextStroke implements Stroke {
     private Font font;
     private boolean stretchToFit = false;
     private boolean repeat = false;
-    private AffineTransform t = new AffineTransform();
+    private final AffineTransform transform = new AffineTransform();
     private static final float FLATNESS = 1;
 
     public TextStroke(String text, Font font) {
@@ -72,6 +72,7 @@ class TextStroke implements Stroke {
         this.repeat = repeat;
     }
 
+    @Override
     public Shape createStrokedShape(Shape shape) {
         FontRenderContext frc = new FontRenderContext(null, true, true);
         GlyphVector glyphVector = font.createGlyphVector(frc, text);
@@ -128,10 +129,10 @@ class TextStroke implements Stroke {
                             float y = lastY + next * dy * r;
                             float advance = nextAdvance;
                             nextAdvance = currentChar < length - 1 ? glyphVector.getGlyphMetrics(currentChar + 1).getAdvance() * 0.5f : 0;
-                            t.setToTranslation(x, y);
-                            t.rotate(angle);
-                            t.translate(-px - advance, -py);
-                            result.append(t.createTransformedShape(glyph), false);
+                            transform.setToTranslation(x, y);
+                            transform.rotate(angle);
+                            transform.translate(-px - advance, -py);
+                            result.append(transform.createTransformedShape(glyph), false);
                             next += (advance + nextAdvance) * factor;
                             currentChar++;
                             if (repeat) {

@@ -36,8 +36,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import org.blaise.style.VisibilityHint;
-import org.blaise.style.VisibilityHintSet;
+import org.blaise.style.StyleHintSet;
 import org.blaise.util.ContextMenuInitializer;
 
 /**
@@ -53,8 +52,10 @@ public abstract class GraphicSupport implements Graphic {
 
     /** Stores the parent of this entry */
     protected GraphicComposite parent;
-    /** Stores visibility status */
-    protected final VisibilityHintSet visibility = new VisibilityHintSet();
+    /** Modifiers that are applied to the style before drawing. */
+    protected final StyleHintSet styleHints = new StyleHintSet();
+    /** Default text of tooltip */
+    protected String defaultTooltip = null;
 
     /** Flag indicating whether tips are enabled */
     protected boolean tipEnabled = false;
@@ -64,25 +65,21 @@ public abstract class GraphicSupport implements Graphic {
     protected boolean mouseEnabled = true;
     /** Flag indicating whether the object can be selected */
     protected boolean selectEnabled = true;
-
-    /** Default text of tooltip */
-    protected String defaultTooltip = null;
     
-    /** Highlighter */
+    /** Adds highlights to the graphic on mouseover. */
     protected final GraphicHighlightHandler highlighter = new GraphicHighlightHandler();
-
     /** Context initializers */
     protected final List<ContextMenuInitializer<Graphic>> contextMenuInitializers = Lists.newArrayList();
-
     /** Stores event eventHandlers for the entry */
-    protected EventListenerList eventHandlers = new EventListenerList();
+    protected final EventListenerList eventHandlers = new EventListenerList();
 
     /**
      * Initialize graphic
      */
     public GraphicSupport() {
         addMouseListener(highlighter);
-        visibility.addChangeListener(new ChangeListener(){
+        styleHints.addChangeListener(new ChangeListener(){
+            @Override
             public void stateChanged(ChangeEvent ce) {
                 fireGraphicChanged();
             }
@@ -94,10 +91,12 @@ public abstract class GraphicSupport implements Graphic {
     // COMPOSITION
     //
 
+    @Override
     public GraphicComposite getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(GraphicComposite p) {
         this.parent = p;
     }
@@ -106,8 +105,9 @@ public abstract class GraphicSupport implements Graphic {
     // STYLE & DRAWING
     //
 
-    public VisibilityHintSet getVisibilityHints() {
-        return visibility;
+    @Override
+    public StyleHintSet getStyleHints() {
+        return styleHints;
     }
 
     /**
@@ -115,11 +115,11 @@ public abstract class GraphicSupport implements Graphic {
      * @param hint hint
      * @param status status of hint
      */
-    public void setVisibilityHint(VisibilityHint hint, boolean status) {
+    public void setStyleHint(String hint, boolean status) {
         if (status) {
-            visibility.add(hint);
+            styleHints.add(hint);
         } else {
-            visibility.remove(hint);
+            styleHints.remove(hint);
         }
     }
 
@@ -127,6 +127,7 @@ public abstract class GraphicSupport implements Graphic {
     // CONTEXT MENU
     //
 
+    @Override
     public boolean isContextMenuEnabled() {
         return popupEnabled;
     }
@@ -149,6 +150,7 @@ public abstract class GraphicSupport implements Graphic {
         }
     }
 
+    @Override
     public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
         for (ContextMenuInitializer<Graphic> cmi : contextMenuInitializers) {
             cmi.initContextMenu(menu, src, point, focus, selection);
@@ -160,6 +162,7 @@ public abstract class GraphicSupport implements Graphic {
     // SELECTION
     //
 
+    @Override
     public boolean isSelectionEnabled() {
         return selectEnabled;
     }
@@ -186,6 +189,7 @@ public abstract class GraphicSupport implements Graphic {
     // TOOLTIPS
     //
 
+    @Override
     public boolean isTooltipEnabled() {
         return tipEnabled;
     }
@@ -194,6 +198,7 @@ public abstract class GraphicSupport implements Graphic {
         tipEnabled = val;
     }
 
+    @Override
     public String getTooltip(Point2D p) {
         return tipEnabled ? defaultTooltip : null;
     }
@@ -232,6 +237,7 @@ public abstract class GraphicSupport implements Graphic {
     // MOUSE HANDLING
     //
 
+    @Override
     public boolean isMouseEnabled() {
         return mouseEnabled;
     }
@@ -252,28 +258,34 @@ public abstract class GraphicSupport implements Graphic {
         }
     }
 
+    @Override
     public final void addMouseListener(MouseListener handler) {
         checkNotNull(handler);
         eventHandlers.add(MouseListener.class, handler);
     }
 
+    @Override
     public void removeMouseListener(MouseListener handler) {
         eventHandlers.remove(MouseListener.class, handler);
     }
 
+    @Override
     public MouseListener[] getMouseListeners() {
         return eventHandlers.getListeners(MouseListener.class);
     }
 
+    @Override
     public void addMouseMotionListener(MouseMotionListener handler) {
         checkNotNull(handler);
         eventHandlers.add(MouseMotionListener.class, handler);
     }
 
+    @Override
     public void removeMouseMotionListener(MouseMotionListener handler) {
         eventHandlers.remove(MouseMotionListener.class, handler);
     }
 
+    @Override
     public MouseMotionListener[] getMouseMotionListeners() {
         return eventHandlers.getListeners(MouseMotionListener.class);
     }

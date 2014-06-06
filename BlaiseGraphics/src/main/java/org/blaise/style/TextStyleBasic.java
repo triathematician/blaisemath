@@ -64,38 +64,59 @@ public class TextStyleBasic implements TextStyle {
     
     @Override
     public String toString() {
-        return String.format("BasicStringStyle[fill=%s, font=%s, fontSize=%.1f, offset=(%.1f,%.1f), textAnchor=%s]", 
+        return String.format("TextStyleBasic[fill=%s, font=%s, fontSize=%.1f, offset=(%.1f,%.1f), textAnchor=%s]", 
                 fill, font, fontSize, offset.getX(), offset.getY(), textAnchor);
     }
     
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets color & returns pointer to object */
+    /**
+     * Sets color & returns pointer to object
+     * @param color
+     * @return 
+     */
     public TextStyleBasic fill(Color color) {
         setFill(color);
         return this; 
     }
     
-    /** Sets font & returns pointer to object */
+    /** 
+     * Sets font & returns pointer to object
+     * @param font
+     * @return 
+     */
     public TextStyleBasic font(@Nullable Font font) {
         setFont(font);
         return this;
     }
     
-    /** Sets font size & returns pointer to object */
+    /**
+     * Sets font size & returns pointer to object
+     * @param size
+     * @return
+     */
     public TextStyleBasic fontSize(float size) { 
         setFontSize(size);
         return this;
     }
     
-    /** Sets offset & returns pointer to object */
+    /**
+     * Sets offset & returns pointer to object
+     * @param off
+     * @return 
+     */
     public TextStyleBasic offset(Point2D off) { 
         setOffset(off);
         return this; 
     }
     
-    /** Sets offset & returns pointer to object */
+    /**
+     * Sets offset & returns pointer to object
+     * @param x
+     * @param y 
+     * @return  
+     */
     public TextStyleBasic offset(double x, double y) { 
         setOffset(new Point2D.Double(x,y));
         return this;
@@ -104,6 +125,7 @@ public class TextStyleBasic implements TextStyle {
     /**
      * Sets offset & returns pointer to object
      * @param r how far from center to offset (angle is generated from anchor)
+     * @return 
      */
     public TextStyleBasic offset(double r) {
         setOffset(textAnchor.getOffset(r));
@@ -113,6 +135,7 @@ public class TextStyleBasic implements TextStyle {
     /** 
      * Sets anchor & returns pointer to object.
      * @param anchor the anchor
+     * @return 
      */
     public TextStyleBasic textAnchor(Anchor anchor) { 
         setTextAnchor(anchor);
@@ -214,7 +237,8 @@ public class TextStyleBasic implements TextStyle {
     // </editor-fold>
 
 
-    public void draw(Point2D point, @Nullable String string, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Point2D point, @Nullable String string, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(string)) {
             return;
         }
@@ -225,10 +249,10 @@ public class TextStyleBasic implements TextStyle {
             canvas.setFont(font);
         }
         Rectangle2D bounds = bounds(point, string, canvas);
-        canvas.setColor(ColorUtils.applyHints(fill, visibility));
         canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 
+    @Override
     public Rectangle2D bounds(Point2D point, @Nullable String string, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(string)) {
             return null;
@@ -275,6 +299,9 @@ public class TextStyleBasic implements TextStyle {
                 break;
         }
 
-        return new Rectangle2D.Double(point.getX() + offset.getX() + shift.x, point.getY() + offset.getY() + shift.y-height, width, height);
+        return new Rectangle2D.Double(
+                point.getX() + offset.getX() + shift.x, 
+                point.getY() + offset.getY() + shift.y-height, 
+                width, height);
     }
 }

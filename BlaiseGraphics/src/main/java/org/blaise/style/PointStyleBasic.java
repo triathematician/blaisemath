@@ -28,7 +28,6 @@ package org.blaise.style;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Color;
 import javax.annotation.Nullable;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Draws a point on the graphics canvas, using a {@link Marker} object and a {@link ShapeStyle}.
@@ -52,37 +51,55 @@ public class PointStyleBasic extends PointStyleSupport {
 
     @Override
     public String toString() {
-        return String.format("BasicPointStyle[marker=%s, markerRadius=%.1f, fill=%s, stroke=%s, strokeWidth=%.1f]", 
+        return String.format("PointStyleBasic[marker=%s, markerRadius=%.1f, fill=%s, stroke=%s, strokeWidth=%.1f]", 
                 marker, markerRadius, shapeStyle.fill, shapeStyle.stroke, shapeStyle.strokeWidth);
     }
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets shape & returns pointer to object */
+    /** 
+     * Sets shape & returns pointer to object
+     * @param s
+     * @return  
+     */
     public PointStyleBasic marker(Marker s) {
         setMarker(s);
         return this;
     }
 
-    /** Sets radius & returns pointer to object */
+    /** Sets radius & returns pointer to object
+     * @param radius
+     * @return  */
     public PointStyleBasic markerRadius(float radius) {
         setMarkerRadius(radius);
         return this;
     }
 
-    /** Sets fill color & returns pointer to object */
+    /** 
+     * Sets fill color & returns pointer to object
+     * @param c
+     * @return 
+     */
     public PointStyleBasic fill(Color c) {
         setFill(c);
         return this;
     }
 
-    /** Sets stroke color & returns pointer to object */
+    /** 
+     * Sets stroke color & returns pointer to object
+     * @param c
+     * @return  
+     */
     public PointStyleBasic stroke(Color c) {
         setStroke(c);
         return this;
     }
 
-    /** Sets strokeWidth & returns pointer to object */
+    /** 
+     * Sets strokeWidth & returns pointer to object
+     * @param thick
+     * @return 
+     */
     public PointStyleBasic strokeWidth(float thick) {
         setStrokeWidth(thick);
         return this;
@@ -96,6 +113,7 @@ public class PointStyleBasic extends PointStyleSupport {
     // PROPERTY PATTERNS
     //
 
+    @Override
     public Marker getMarker() {
         return marker;
     }
@@ -104,6 +122,7 @@ public class PointStyleBasic extends PointStyleSupport {
         this.marker = checkNotNull(marker);
     }
 
+    @Override
     public float getMarkerRadius() {
         return markerRadius;
     }
@@ -138,6 +157,7 @@ public class PointStyleBasic extends PointStyleSupport {
         shapeStyle.setStrokeWidth(thickness);
     }
     
+    @Override
     protected ShapeStyleBasic getShapeStyle() {
         return shapeStyle;
     }

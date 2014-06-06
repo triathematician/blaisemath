@@ -78,15 +78,7 @@ public class ColorUtils {
      * @param hints hints to apply
      * @return modified color
      */
-    public static Color applyHints(Color color, VisibilityHintSet hints) {
-        if (hints == null) {
-            return color;
-        } else if (hints.contains(VisibilityHint.HIGHLIGHT) || hints.contains(VisibilityHint.SELECTED)) {
-            return lighterThan(color);
-        } else if (hints.contains(VisibilityHint.FADED)) {
-            return blanderThan(color);
-        } else {
-            return color;
-        }
+    public static Color applyHints(Color color, StyleHintSet hints) {
+        return new StyleModifiers.BasicColorModifier().apply(color, hints);
     }
 }

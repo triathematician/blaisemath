@@ -36,6 +36,7 @@ package org.blaise.style;
  * #L%
  */
 
+import org.blaise.style.svg.StyleUtilsSVG;
 import java.awt.Color;
 import java.beans.IntrospectionException;
 import static org.junit.Assert.assertEquals;

@@ -51,19 +51,23 @@ public abstract class PointStyleSupport implements PointStyle {
     protected abstract ShapeStyle getShapeStyle();
 
 
+    @Override
     public Shape markerShape(Point2D p) {
         return getMarker().create(p, 0, getMarkerRadius());
     }
 
+    @Override
     public Shape markerShape(Point2D p, double angle) {
         return getMarker().create(p, angle, getMarkerRadius());
     }
 
-    public void draw(Point2D p, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Point2D p, Graphics2D canvas, StyleHintSet visibility) {
         getShapeStyle().draw(markerShape(p), canvas, visibility);
     }
 
-    public void draw(Point2D p, double angle, Graphics2D canvas, VisibilityHintSet visibility) {
+    @Override
+    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
         getShapeStyle().draw(markerShape(p, angle), canvas, visibility);
     }
 

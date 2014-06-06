@@ -52,7 +52,7 @@ public class TextStyleWrapped extends TextStyleBasic {
     
     @Override
     public String toString() {
-        return String.format("WrappingStringStyle[clip=%s, color=%s, font=%s, offset=(%.1f,%.1f), anchor=%s]", 
+        return String.format("TextStyleWrapped[clip=%s, color=%s, font=%s, offset=(%.1f,%.1f), anchor=%s]", 
                 clipPath, fill, font, offset.getX(), offset.getY(), textAnchor);
     }
     
@@ -84,7 +84,7 @@ public class TextStyleWrapped extends TextStyleBasic {
     
     
     @Override
-    public void draw(Point2D point, String string, Graphics2D canvas, VisibilityHintSet visibility) {
+    public void draw(Point2D point, String string, Graphics2D canvas, StyleHintSet visibility) {
         if (string == null || string.length() == 0) {
             return;
         }

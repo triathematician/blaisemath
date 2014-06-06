@@ -4,6 +4,8 @@
  */
 package org.blaise.style;
 
+import com.google.common.base.Objects;
+
 /*
  * #%L
  * BlaiseGraphics
@@ -32,15 +34,15 @@ package org.blaise.style;
  * 
  * @author elisha
  */
-public abstract class StyleContextDelegating<S> implements StyleContext<S> {
+public abstract class StyleContextDecorated<S> implements StyleContext<S> {
     
     protected final StyleContext<S> parent;
 
-    public StyleContextDelegating() {
-        this(StyleContextDefault.getInstance());
+    public StyleContextDecorated() {
+        this(StyleContextBasic.getInstance());
     }
 
-    public StyleContextDelegating(StyleContext parent) {
+    public StyleContextDecorated(StyleContext parent) {
         this.parent = parent;
     }
 
@@ -52,18 +54,22 @@ public abstract class StyleContextDelegating<S> implements StyleContext<S> {
         return parent;
     }
 
+    @Override
     public ShapeStyle getShapeStyle(S src) {
         return parent == null ? null : parent.getShapeStyle(src);
     }
 
+    @Override
     public PathStyle getPathStyle(S src) {
         return parent == null ? null : parent.getPathStyle(src);
     }
 
+    @Override
     public PointStyle getPointStyle(S src) {
         return parent == null ? null : parent.getPointStyle(src);
     }
 
+    @Override
     public TextStyle getStringStyle(S src) {
         return parent == null ? null : parent.getStringStyle(src);
     }

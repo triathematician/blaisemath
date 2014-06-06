@@ -34,7 +34,7 @@ import org.blaise.graphics.GraphicComposite;
 import org.blaise.style.PointStyleBasic;
 import org.blaise.style.Markers;
 import org.blaise.style.ShapeStyle;
-import org.blaise.style.VisibilityHint;
+import org.blaise.style.StyleHints;
 
 /**
  * This primitive is designed for objects such as a plot's axes, which display a line
@@ -100,8 +100,8 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
                 .fill(Color.black);
         start.setStyle(style);
         end.setStyle(style);
-        start.setVisibilityHint(VisibilityHint.HIDDEN, true);
-        end.setVisibilityHint(VisibilityHint.HIDDEN, true);
+        start.setStyleHint(StyleHints.HIDDEN_HINT, true);
+        end.setStyleHint(StyleHints.HIDDEN_HINT, true);
     }
 
     /** Updates the angles of the tick marks */
