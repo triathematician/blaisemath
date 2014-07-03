@@ -84,12 +84,12 @@ public class TextStyleWrapped extends TextStyleBasic {
     
     
     @Override
-    public void draw(Point2D point, String string, Graphics2D canvas, StyleHintSet visibility) {
+    public void draw(Point2D point, String string, Graphics2D canvas) {
         if (string == null || string.length() == 0) {
             return;
         }
         canvas.setFont(getFont() == null ? canvas.getFont().deriveFont(getFontSize()) : getFont());
-        canvas.setColor(ColorUtils.applyHints(getFill(), visibility));
+        canvas.setColor(getFill());
         Shape curClip = canvas.getClip();
         Area newClip = new Area();
         newClip.add(new Area(curClip));

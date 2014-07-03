@@ -48,14 +48,14 @@ public class TextStyleMultiline extends TextStyleBasic {
     }
 
     @Override
-    public void draw(Point2D point, String string, Graphics2D canvas, StyleHintSet visibility) {
+    public void draw(Point2D point, String string, Graphics2D canvas) {
         if (string == null || string.length() == 0) {
             return;
         }
         Font f = getFont() == null ? canvas.getFont().deriveFont(getFontSize()) : getFont();
         canvas.setFont(f);
         FontMetrics fm = canvas.getFontMetrics();
-        canvas.setColor(ColorUtils.applyHints(getFill(), visibility));
+        canvas.setColor(getFill());
         
         String[] lns = string.split("\n|\r\n");
         double y0 = point.getY();

@@ -62,13 +62,13 @@ public abstract class PointStyleSupport implements PointStyle {
     }
 
     @Override
-    public void draw(Point2D p, Graphics2D canvas, StyleHintSet visibility) {
-        getShapeStyle().draw(markerShape(p), canvas, visibility);
+    public void draw(Point2D p, Graphics2D canvas) {
+        getShapeStyle().draw(markerShape(p), canvas);
     }
 
     @Override
-    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
-        getShapeStyle().draw(markerShape(p, angle), canvas, visibility);
+    public void draw(Point2D p, double angle, Graphics2D canvas) {
+        getShapeStyle().draw(markerShape(p, angle), canvas);
     }
 
 }

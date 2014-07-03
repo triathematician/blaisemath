@@ -2,7 +2,7 @@
  * StyleHintSet.java
  * Created May 31, 2013
  */
-package org.blaise.style;
+package org.blaise.style.context;
 
 /*
  * #%L
@@ -33,8 +33,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 /**
- * Maintains a collection of visibility hints that can be used by renderers to change
- * how an object is drawn.
+ * Maintains a collection of visibility hints that can be used to change how an
+ * object is drawn. The {@link StyleContext} is responsible for switching out the
+ * default style for an alternate style, as appropriate for these hints.
  * 
  * @author Elisha
  */

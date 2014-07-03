@@ -61,17 +61,15 @@ public interface PointStyle extends Style {
      * Draws specified point on the graphics canvas with visibility options
      * @param point the point to draw
      * @param canvas graphics element to draw on
-     * @param hints visibility visibility & highlight settings
      */
-    void draw(Point2D point, Graphics2D canvas, StyleHintSet hints);
+    void draw(Point2D point, Graphics2D canvas);
 
     /**
      * Draws a (rotated) point on the graphics canvas with visibility options
      * @param point the point to draw
      * @param angle angle of rotation
      * @param canvas graphics element to draw on
-     * @param hints visibility & highlight settings
      */
-    void draw(Point2D point, double angle, Graphics2D canvas, StyleHintSet hints);
+    void draw(Point2D point, double angle, Graphics2D canvas);
     
 }

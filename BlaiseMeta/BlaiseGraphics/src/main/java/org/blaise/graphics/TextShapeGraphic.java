@@ -34,8 +34,8 @@ import org.blaise.style.ObjectStyler;
 import org.blaise.style.ShapeStyle;
 import org.blaise.style.TextStyleBasic;
 import org.blaise.style.TextStyleMultiline;
-import org.blaise.style.StyleHintSet;
-import org.blaise.style.StyleHints;
+import org.blaise.style.context.StyleHintSet;
+import org.blaise.style.context.StyleModifiers;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -86,18 +86,19 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
         final ShapeStyle parentStyle = super.drawStyle();
         return new ShapeStyle() {
             @Override
-            public void draw(Shape primitive, Graphics2D canvas, StyleHintSet hints) {
-                boolean highlight = hints.contains(StyleHints.HIGHLIGHT_HINT);
+            public void draw(Shape primitive, Graphics2D canvas) {
                 if (primitive instanceof RectangularShape) {
                     RectangularShape rs = (RectangularShape) primitive;
-                    int inset = highlight?1:3;
+                    int inset = 3;
                     RectangularShape rs2 = (RectangularShape) rs.clone();
                     rs2.setFrameFromCenter(rs.getCenterX(), rs.getCenterY(), rs.getMaxX()-inset, rs.getMaxY()-inset);
                     primitive = rs2;
                 }
-                parentStyle.draw(primitive, canvas, hints);
+                parentStyle.draw(primitive, canvas);
                 if (labelStyle != null) {
-                    labelGraphic.setPoint(new Point2D.Double(primitive.getBounds2D().getMinX()+2, primitive.getBounds2D().getMaxY()-2));
+                    labelGraphic.setPoint(new Point2D.Double(
+                            primitive.getBounds2D().getMinX()+2, 
+                            primitive.getBounds2D().getMaxY()-2));
                     labelGraphic.draw(canvas);
                 }
             }

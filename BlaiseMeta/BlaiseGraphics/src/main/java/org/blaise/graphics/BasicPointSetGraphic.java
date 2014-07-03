@@ -221,19 +221,23 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
     // DRAW METHODS
     //
 
-    /** Return the actual style used for drawing */
+    /** 
+     * Return the actual style used for drawing.
+     * @return style for drawing
+     */
     @Nonnull 
     protected PointStyle drawStyle() {
         return style == null 
-                ? parent.getStyleContext().getPointStyle(this) 
+                ? parent.getStyleContext().getPointStyle(this, styleHints) 
                 : style;
     }
 
+    @Override
     public void draw(Graphics2D canvas) {
         PointStyle drawer = drawStyle();
         synchronized (points) {
             for (Point2D p : points) {
-                drawer.draw(p, canvas, styleHints);
+                drawer.draw(p, canvas);
             }
         }
     }

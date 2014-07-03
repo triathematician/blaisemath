@@ -26,7 +26,7 @@ package org.blaise.graphics;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import org.blaise.style.StyleHints;
+import org.blaise.style.context.StyleModifiers;
 
 /**
  * <p>
@@ -34,20 +34,20 @@ import org.blaise.style.StyleHints;
  * </p>
  * @author elisha
  */
-public class GraphicHighlightHandler extends MouseAdapter {
-
+public final class GraphicHighlighter extends MouseAdapter {
+    
     @Override
     public void mouseEntered(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).getGraphicSource();
         if (!(g instanceof GraphicSupport) || ((GraphicSupport)g).isHighlightEnabled()) {
-            g.getStyleHints().add(StyleHints.HIGHLIGHT_HINT);
+            g.getStyleHints().add(StyleModifiers.HILITE_HINT);
         }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         Graphic g = ((GraphicMouseEvent)e).getGraphicSource();
-        g.getStyleHints().remove(StyleHints.HIGHLIGHT_HINT);
+        g.getStyleHints().remove(StyleModifiers.HILITE_HINT);
     }
 
 }

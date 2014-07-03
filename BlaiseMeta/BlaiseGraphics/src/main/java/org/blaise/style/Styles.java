@@ -43,6 +43,11 @@ public final class Styles {
     /** Default composite */
     public static final Composite DEFAULT_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
     
+    public static final ShapeStyle DEFAULT_SHAPE_STYLE = fillStroke(Color.white, Color.black);
+    public static final PathStyle DEFAULT_PATH_STYLE = strokeWidth(Color.black, 1f);
+    public static final PointStyle DEFAULT_POINT_STYLE = new PointStyleBasic();
+    public static final TextStyle DEFAULT_TEXT_STYLE = new TextStyleBasic();
+    
     // utility class
     private Styles() {
     }

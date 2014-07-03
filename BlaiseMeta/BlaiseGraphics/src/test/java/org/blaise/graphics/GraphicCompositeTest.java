@@ -46,8 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.JPopupMenu;
-import org.blaise.style.StyleContextBasic;
-import org.blaise.style.StyleHints;
+import org.blaise.style.context.StyleContextBasic;
+import org.blaise.style.context.StyleModifiers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -220,7 +220,7 @@ public class GraphicCompositeTest {
         System.out.println("visibleEntries");
         gc.addGraphic(p);
         assertTrue(Iterables.elementsEqual(Lists.newArrayList(p), gc.visibleEntries()));
-        p.setStyleHint(StyleHints.HIDDEN_HINT, true);
+        p.setStyleHint(StyleModifiers.HIDDEN_HINT, true);
         assertTrue(Iterables.isEmpty(gc.visibleEntries()));
     }
 

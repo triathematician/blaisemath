@@ -25,6 +25,8 @@ package org.blaise.style;
  * #L%
  */
 
+import org.blaise.style.context.StyleHintSet;
+import org.blaise.util.ColorUtils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -131,16 +133,14 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
     }
 
     @Override
-    public void draw(Shape s, Graphics2D canvas, StyleHintSet visibility) {
+    public void draw(Shape s, Graphics2D canvas) {
         if (fill != null) {
-            canvas.setColor(ColorUtils.applyHints(fill, visibility));
+            canvas.setColor(fill);
             canvas.fill(s);
         }
         if (stroke != null && strokeWidth >= 0) {
-            canvas.setColor(ColorUtils.applyHints(stroke, visibility));
-            canvas.setStroke(visibility != null
-                    && (visibility.contains(StyleHints.HIGHLIGHT_HINT) || visibility.contains(StyleHints.SELECTED_HINT))
-                    ? new BasicStroke(strokeWidth+1f) : new BasicStroke(strokeWidth));
+            canvas.setColor(stroke);
+            canvas.setStroke(new BasicStroke(strokeWidth));
             canvas.draw(s);
         }
 

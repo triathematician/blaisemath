@@ -30,7 +30,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.blaise.style.StyleModifiers;
+import org.blaise.style.context.StyleModifiers;
 import org.blaise.style.TextStyle;
 import org.blaise.util.PointBean;
 

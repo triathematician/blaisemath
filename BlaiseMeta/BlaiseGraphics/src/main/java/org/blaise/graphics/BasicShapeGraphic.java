@@ -103,14 +103,18 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
     //</editor-fold>
 
     
-    /** Return the actual style used for drawing */
+    /** 
+     * Return the actual style used for drawing
+     * @return style for drawing
+     */
     @Nonnull 
+    @Override
     protected ShapeStyle drawStyle() {
         if (style != null) {
             return style;
         }
-        return isStrokeOnly() ? parent.getStyleContext().getPathStyle(this)
-                : parent.getStyleContext().getShapeStyle(this);
+        return isStrokeOnly() ? parent.getStyleContext().getPathStyle(this, styleHints)
+                : parent.getStyleContext().getShapeStyle(this, styleHints);
     }
     
 }

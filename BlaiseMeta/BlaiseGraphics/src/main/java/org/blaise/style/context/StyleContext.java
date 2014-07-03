@@ -2,7 +2,13 @@
  * StyleContext.java
  * Created Jan 22, 2011
  */
-package org.blaise.style;
+package org.blaise.style.context;
+
+import org.blaise.style.PathStyle;
+import org.blaise.style.PointStyle;
+import org.blaise.style.ShapeStyle;
+import org.blaise.style.Style;
+import org.blaise.style.TextStyle;
 
 /*
  * #%L

@@ -25,7 +25,7 @@ package org.blaise.graphics;
  */
 
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -86,9 +86,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         cpt.getOverlays().add(this);
     }
 
+    @Override
     public void paint(Component component, Graphics2D canvas) {
         if (zoomBox != null) {
-            ZOOM_BOX_STYLE.draw(zoomBox, canvas, null);
+            ZOOM_BOX_STYLE.draw(zoomBox, canvas);
         }
     }
     

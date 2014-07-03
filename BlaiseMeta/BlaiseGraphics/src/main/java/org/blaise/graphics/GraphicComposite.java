@@ -37,8 +37,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
-import org.blaise.style.StyleContext;
-import org.blaise.style.StyleHints;
+import org.blaise.style.context.StyleContext;
+import org.blaise.style.context.StyleModifiers;
 
 /**
  * <p>
@@ -53,14 +53,6 @@ import org.blaise.style.StyleHints;
  * @author Elisha
  */
 public class GraphicComposite extends GraphicSupport {
-    
-    private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
-        @Override
-        public boolean apply(Graphic input) { 
-            return !input.getStyleHints().contains(StyleHints.HIDDEN_HINT); 
-        }
-    };
-    
 
     /** Stores the shapes and their styles */
     private final Set<Graphic> entries = Sets.newLinkedHashSet();
@@ -301,7 +293,7 @@ public class GraphicComposite extends GraphicSupport {
     @Override
     public synchronized void draw(Graphics2D canvas) {
         for (Graphic en : entries) {
-            if (!en.getStyleHints().contains(StyleHints.HIDDEN_HINT)) {
+            if (!en.getStyleHints().contains(StyleModifiers.HIDDEN_HINT)) {
                 en.draw(canvas);
             }
         }
@@ -320,7 +312,7 @@ public class GraphicComposite extends GraphicSupport {
      * @return iterable
      */
     public Iterable<Graphic> visibleEntries() {
-        return Iterables.filter(entries, VISIBLE_FILTER);
+        return Iterables.filter(entries, StyleModifiers.VISIBLE_FILTER);
     }
     
     /**

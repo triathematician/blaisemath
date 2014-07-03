@@ -47,7 +47,6 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.blaise.firestarter.editor.ColorEditor;
 import org.blaise.style.PointStyleBasic;
 import org.blaise.style.Markers;
 import org.blaise.style.Marker;
@@ -216,7 +215,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
             Marker shape1 = rend.getMarker();
             rend.setMarker(shape);
-            rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g, null);
+            rend.draw(new Point2D.Double(xc, yc), (Graphics2D) g);
             rend.setMarker(shape1);
         }
 

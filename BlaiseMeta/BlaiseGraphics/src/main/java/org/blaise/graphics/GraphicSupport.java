@@ -36,7 +36,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import org.blaise.style.StyleHintSet;
+import org.blaise.style.context.StyleHintSet;
 import org.blaise.util.ContextMenuInitializer;
 
 /**
@@ -67,7 +67,7 @@ public abstract class GraphicSupport implements Graphic {
     protected boolean selectEnabled = true;
     
     /** Adds highlights to the graphic on mouseover. */
-    protected final GraphicHighlightHandler highlighter = new GraphicHighlightHandler();
+    protected final GraphicHighlighter highlighter = new GraphicHighlighter();
     /** Context initializers */
     protected final List<ContextMenuInitializer<Graphic>> contextMenuInitializers = Lists.newArrayList();
     /** Stores event eventHandlers for the entry */
