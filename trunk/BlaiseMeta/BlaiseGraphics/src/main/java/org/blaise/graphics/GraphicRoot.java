@@ -37,9 +37,9 @@ import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import org.blaise.style.StyleContext;
-import org.blaise.style.StyleContextBasic;
-import org.blaise.style.StyleHints;
+import org.blaise.style.context.StyleContext;
+import org.blaise.style.context.StyleContextBasic;
+import org.blaise.style.context.StyleModifiers;
 
 /**
  * <p>
@@ -181,7 +181,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
      */
     private void updateMouseGraphic(GraphicMouseEvent gme, boolean keepCurrent) {
         if (keepCurrent && mouseGraphic != null
-                && !mouseGraphic.getStyleHints().contains(StyleHints.HIDDEN_HINT)
+                && !mouseGraphic.getStyleHints().contains(StyleModifiers.HIDDEN_HINT)
                 && mouseGraphic.contains(gme.getGraphicLocation())) {
             return;
         }

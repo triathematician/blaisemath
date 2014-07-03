@@ -24,6 +24,7 @@ package org.blaise.style;
  * #L%
  */
 
+import org.blaise.style.context.StyleHintSet;
 import static com.google.common.base.Preconditions.*;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -160,13 +161,12 @@ public class PointStyleLabeled implements PointStyle {
      * @param p the point to draw
      * @param label the point's label
      * @param canvas graphics element to draw on
-     * @param visibility visibility & highlight settings
      */
-    public void draw(Point2D p, String label, Graphics2D canvas, StyleHintSet visibility) {
-        base.draw(p, canvas, visibility);
+    public void draw(Point2D p, String label, Graphics2D canvas) {
+        base.draw(p, canvas);
         if (showLabel) {
             ((TextStyleBasic)labelStyle).offset(base.getMarkerRadius());
-            labelStyle.draw(p, label, canvas, visibility);
+            labelStyle.draw(p, label, canvas);
         }
     }
 
@@ -176,22 +176,22 @@ public class PointStyleLabeled implements PointStyle {
      * @param angle orientation of the point
      * @param label the point's label
      * @param canvas graphics element to draw on
-     * @param visibility visibility & highlight settings
+     * @param hints visibility & highlight settings
      */
-    public void draw(Point2D p, double angle, String label, Graphics2D canvas, StyleHintSet visibility) {
-        base.draw(p, angle, canvas, visibility);
+    public void draw(Point2D p, double angle, String label, Graphics2D canvas) {
+        base.draw(p, angle, canvas);
         if (showLabel) {
-            labelStyle.draw(p, label, canvas, visibility);
+            labelStyle.draw(p, label, canvas);
         }
     }
 
     @Override
-    public void draw(Point2D p, Graphics2D canvas, StyleHintSet visibility) {
-        draw(p, PointFormatters.formatPoint(p, 2), canvas, visibility);
+    public void draw(Point2D p, Graphics2D canvas) {
+        draw(p, PointFormatters.formatPoint(p, 2), canvas);
     }
 
     @Override
-    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
-        draw(p, angle, PointFormatters.formatPoint(p, 2), canvas, visibility);
+    public void draw(Point2D p, double angle, Graphics2D canvas) {
+        draw(p, angle, PointFormatters.formatPoint(p, 2), canvas);
     }
 }

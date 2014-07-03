@@ -3,7 +3,7 @@
  * Created Dec 8, 2012
  */
 
-package org.blaise.style;
+package org.blaise.style.context;
 
 /*
  * #%L
@@ -25,7 +25,12 @@ package org.blaise.style;
  * #L%
  */
 
-import java.awt.Color;
+import org.blaise.style.PathStyle;
+import org.blaise.style.PointStyle;
+import org.blaise.style.ShapeStyle;
+import org.blaise.style.Style;
+import org.blaise.style.Styles;
+import org.blaise.style.TextStyle;
 
 /** 
  * Default instance of the style provider. This is an immutable class that
@@ -34,11 +39,6 @@ import java.awt.Color;
 public final class StyleContextBasic implements StyleContext<Object> {
     
     private static final StyleContextBasic INST = new StyleContextBasic();
-    
-    protected static final ShapeStyle DEFAULT_SHAPE_STYLE = new ShapeStyleBasic().fill(Color.white).stroke(Color.black);
-    protected static final PathStyle DEFAULT_PATH_STYLE = new PathStyleBasic().stroke(Color.black);
-    protected static final PointStyle DEFAULT_POINT_STYLE = new PointStyleBasic();
-    protected static final TextStyle DEFAULT_STRING_STYLE = new TextStyleBasic();
 
     // this class is only intended for use as a static singleton
     private StyleContextBasic() {
@@ -51,25 +51,30 @@ public final class StyleContextBasic implements StyleContext<Object> {
     public static StyleContextBasic getInstance() {
         return INST;
     }
+
+    @Override
+    public <T extends Style> T getStyle(Class<T> cls, Object src, StyleHintSet hints) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
         
     @Override
     public ShapeStyle getShapeStyle(Object o, StyleHintSet hints) {
-        return StyleModifiers.apply(DEFAULT_SHAPE_STYLE, hints);
+        return StyleModifiers.apply(Styles.DEFAULT_SHAPE_STYLE, hints);
     }
 
     @Override
     public PathStyle getPathStyle(Object o, StyleHintSet hints) {
-        return DEFAULT_PATH_STYLE;
+        return StyleModifiers.apply(Styles.DEFAULT_PATH_STYLE, hints);
     }
 
     @Override
     public PointStyle getPointStyle(Object o, StyleHintSet hints) {
-        return DEFAULT_POINT_STYLE;
+        return StyleModifiers.apply(Styles.DEFAULT_POINT_STYLE, hints);
     }
 
     @Override
     public TextStyle getTextStyle(Object o, StyleHintSet hints) {
-        return DEFAULT_STRING_STYLE;
+        return StyleModifiers.apply(Styles.DEFAULT_TEXT_STYLE, hints);
     }
 
 }

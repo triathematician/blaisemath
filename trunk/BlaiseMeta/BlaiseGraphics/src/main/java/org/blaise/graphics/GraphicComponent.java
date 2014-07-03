@@ -37,7 +37,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.util.List;
-import org.blaise.style.StyleContext;
+import org.blaise.style.context.StyleContext;
 import org.blaise.util.SetSelectionModel;
 
 /**

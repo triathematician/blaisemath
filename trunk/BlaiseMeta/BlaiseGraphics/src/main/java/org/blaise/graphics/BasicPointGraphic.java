@@ -130,12 +130,14 @@ public class BasicPointGraphic extends AbstractPointGraphic {
     @Override
     @Nonnull 
     public PointStyle drawStyle() {
-        return style == null ? parent.getStyleContext().getPointStyle(this) : style;
+        return style == null 
+                ? parent.getStyleContext().getPointStyle(this, styleHints) 
+                : style;
     }
 
     @Override
     public void draw(Graphics2D canvas) {
-        drawStyle().draw(point, angle, canvas, styleHints);
+        drawStyle().draw(point, angle, canvas);
     }
     
 }

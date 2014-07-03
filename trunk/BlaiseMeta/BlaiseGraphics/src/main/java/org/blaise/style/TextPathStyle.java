@@ -148,7 +148,7 @@ public class TextPathStyle implements ShapeStyle {
     
 
     @Override
-    public void draw(Shape primitive, Graphics2D canvas, StyleHintSet hints) {
+    public void draw(Shape primitive, Graphics2D canvas) {
         canvas.setFont(textStyle.getFont());
         canvas.setStroke(new TextStroke(pathText, textStyle.getFont(), stretch, false));
         canvas.setColor(textStyle.getFill());

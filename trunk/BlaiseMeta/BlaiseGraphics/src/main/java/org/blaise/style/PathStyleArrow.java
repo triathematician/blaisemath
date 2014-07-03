@@ -49,8 +49,8 @@ public class PathStyleArrow extends PathStyleBasic {
     }
     
     @Override
-    public void draw(Shape s, Graphics2D canvas, StyleHintSet visibility) {
-        super.draw(s, canvas, visibility);
+    public void draw(Shape s, Graphics2D canvas) {
+        super.draw(s, canvas);
         if (strokeWidth <= 0f && stroke != null) {
             return;
         }

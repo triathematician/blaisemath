@@ -2,7 +2,7 @@
  * ColorUtils.java
  * Created Aug 24, 2013
  */
-package org.blaise.style;
+package org.blaise.util;
 
 /*
  * #%L
@@ -26,6 +26,8 @@ package org.blaise.style;
 
 
 import java.awt.Color;
+import org.blaise.style.context.StyleHintSet;
+import org.blaise.style.context.StyleModifiers;
 
 /**
  * Provides a number of utilities for working with colors, e.g. creating lighter/darker colors,
@@ -68,17 +70,4 @@ public class ColorUtils {
         return i + Math.min(64, (255-i)/2);
     }
     
-    //
-    // BLAISE-SPECIFIC UTILITIES
-    //
-
-    /**
-     * Changes specified color based on visibility hints
-     * @param color color to change
-     * @param hints hints to apply
-     * @return modified color
-     */
-    public static Color applyHints(Color color, StyleHintSet hints) {
-        return new StyleModifiers.BasicColorModifier().apply(color, hints);
-    }
 }

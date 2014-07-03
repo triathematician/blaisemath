@@ -24,6 +24,8 @@ package org.blaise.style;
  * #L%
  */
 
+import org.blaise.style.context.StyleContextBasic;
+import org.blaise.style.context.StyleHintSet;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
@@ -38,7 +40,7 @@ import java.awt.geom.Rectangle2D;
 public class PointStyleInfinite extends PointStyleBasic {
 
     /** Line style for drawing the ray */
-    protected PathStyle rayStyle = StyleContextBasic.DEFAULT_PATH_STYLE;
+    protected PathStyle rayStyle = Styles.DEFAULT_PATH_STYLE;
     /** Whether to extend in both directions, or just forward */
     protected boolean extendBothDirections = false;
 
@@ -103,16 +105,16 @@ public class PointStyleInfinite extends PointStyleBasic {
     
     
     @Override
-    public void draw(Point2D p, double angle, Graphics2D canvas, StyleHintSet visibility) {
+    public void draw(Point2D p, double angle, Graphics2D canvas) {
         Point2D p2 = new Point2D.Double(p.getX() + Math.cos(angle), p.getY() + Math.sin(angle));
         Point2D endpt = boundaryHit(p, p2, canvas.getClipBounds());
         if (extendBothDirections) {
             Point2D endpt1 = boundaryHit(p2, p, canvas.getClipBounds());
-            rayStyle.draw(new Line2D.Double(endpt1, endpt), canvas, visibility);
+            rayStyle.draw(new Line2D.Double(endpt1, endpt), canvas);
         } else {
-            rayStyle.draw(new Line2D.Double(p, endpt), canvas, visibility);
+            rayStyle.draw(new Line2D.Double(p, endpt), canvas);
         }
-        super.draw(p, angle, canvas, visibility);
+        super.draw(p, angle, canvas);
     }
 
 

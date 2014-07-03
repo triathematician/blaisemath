@@ -32,7 +32,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.blaise.style.StyleHintSet;
+import org.blaise.style.context.StyleHintSet;
 import org.blaise.util.ContextMenuInitializer;
 
 /**

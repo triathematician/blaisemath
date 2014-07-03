@@ -2,9 +2,13 @@
  * StyleContext.java
  * Created Jan 22, 2011
  */
-package org.blaise.style;
+package org.blaise.style.context;
 
-import com.google.common.base.Objects;
+import org.blaise.style.PathStyle;
+import org.blaise.style.PointStyle;
+import org.blaise.style.ShapeStyle;
+import org.blaise.style.Style;
+import org.blaise.style.TextStyle;
 
 /*
  * #%L
@@ -55,23 +59,28 @@ public abstract class StyleContextDecorated<S> implements StyleContext<S> {
     }
 
     @Override
-    public ShapeStyle getShapeStyle(S src) {
-        return parent == null ? null : parent.getShapeStyle(src);
+    public <T extends Style> T getStyle(Class<T> cls, S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getStyle(cls, src, hints);
     }
 
     @Override
-    public PathStyle getPathStyle(S src) {
-        return parent == null ? null : parent.getPathStyle(src);
+    public ShapeStyle getShapeStyle(S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getShapeStyle(src, hints);
     }
 
     @Override
-    public PointStyle getPointStyle(S src) {
-        return parent == null ? null : parent.getPointStyle(src);
+    public PathStyle getPathStyle(S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getPathStyle(src, hints);
     }
 
     @Override
-    public TextStyle getStringStyle(S src) {
-        return parent == null ? null : parent.getStringStyle(src);
+    public PointStyle getPointStyle(S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getPointStyle(src, hints);
+    }
+
+    @Override
+    public TextStyle getTextStyle(S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getTextStyle(src, hints);
     }
     
 }

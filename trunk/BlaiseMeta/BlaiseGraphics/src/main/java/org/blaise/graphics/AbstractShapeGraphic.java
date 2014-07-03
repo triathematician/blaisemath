@@ -168,7 +168,7 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
 
     @Override
     public void draw(Graphics2D canvas) {
-        drawStyle().draw(primitive, canvas, styleHints);
+        drawStyle().draw(primitive, canvas);
     }
 
 }

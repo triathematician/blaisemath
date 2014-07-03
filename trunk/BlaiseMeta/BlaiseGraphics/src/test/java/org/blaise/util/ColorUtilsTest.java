@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.blaise.style;
+package org.blaise.util;
 
 /*
  * #%L
@@ -38,6 +38,8 @@ package org.blaise.style;
 
 
 import java.awt.Color;
+import org.blaise.style.context.StyleHintSet;
+import org.blaise.style.context.StyleModifiers;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -71,19 +73,19 @@ public class ColorUtilsTest {
         System.out.println("applyHints");
         StyleHintSet set = new StyleHintSet();
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.add(StyleHints.FADED_HINT);
+        set.add(StyleModifiers.FADED_HINT);
         assertEquals(new Color(50,25,25,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(StyleHints.FADED_HINT);
-        set.add(StyleHints.HIDDEN_HINT);
+        set.remove(StyleModifiers.FADED_HINT);
+        set.add(StyleModifiers.HIDDEN_HINT);
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(StyleHints.HIDDEN_HINT);
-        set.add(StyleHints.HIGHLIGHT_HINT);
+        set.remove(StyleModifiers.HIDDEN_HINT);
+        set.add(StyleModifiers.HIGHLIGHT_HINT);
         assertEquals(new Color(114,64,64,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(StyleHints.HIGHLIGHT_HINT);
-        set.add(StyleHints.OUTLINE_HINT);
+        set.remove(StyleModifiers.HIGHLIGHT_HINT);
+        set.add(StyleModifiers.OUTLINE_HINT);
         assertEquals(new Color(50,0,0,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
-        set.remove(StyleHints.OUTLINE_HINT);
-        set.add(StyleHints.SELECTED_HINT);
+        set.remove(StyleModifiers.OUTLINE_HINT);
+        set.add(StyleModifiers.SELECTED_HINT);
         assertEquals(new Color(114,64,64,128), ColorUtils.applyHints(new Color(50,0,0,128), set));
     }
     
