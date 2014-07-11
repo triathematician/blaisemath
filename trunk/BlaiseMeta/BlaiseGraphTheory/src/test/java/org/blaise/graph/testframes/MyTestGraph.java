@@ -28,7 +28,7 @@ import com.google.common.collect.HashMultimap;
 import java.util.Map;
 import java.util.Set;
 import org.blaise.graph.SparseGraph;
-import org.blaise.util.Edge;
+import com.googlecode.blaisemath.util.Edge;
 
 /**
  * Test graph that supports mutating edges and nodes.

@@ -31,20 +31,20 @@
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-math</artifactId>
-            <version>0.6.0</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Firestarter</artifactId>
-            <version>1.0.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>appframework</artifactId>
             <version>1.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-math</artifactId>
+            <version>0.7.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>firestarter</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

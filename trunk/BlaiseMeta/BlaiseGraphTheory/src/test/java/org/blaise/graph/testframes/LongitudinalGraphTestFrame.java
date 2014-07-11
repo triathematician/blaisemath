@@ -24,10 +24,11 @@ package org.blaise.graph.testframes;
  * #L%
  */
 
+import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.util.gui.RollupPanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import org.blaise.firestarter.PropertySheet;
-import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
@@ -37,7 +38,6 @@ import org.blaise.graph.modules.PreferentialAttachmentLongitudinalGraphSupplier;
 import org.blaise.graph.view.MultiGraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
 import org.blaise.graph.view.LongitudinalGraphComponent;
-import org.blaise.util.gui.RollupPanel;
 
 /**
  *

@@ -36,19 +36,19 @@
             <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-math</artifactId>
-            <version>0.6.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Firestarter</artifactId>
-            <version>1.0.4</version>
+            <artifactId>blaise-math</artifactId>
+            <version>0.7.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>firestarter</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

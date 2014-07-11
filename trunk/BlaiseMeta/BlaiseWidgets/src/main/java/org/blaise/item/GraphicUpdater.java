@@ -26,7 +26,7 @@ package org.blaise.item;
 
 
 import java.awt.geom.Rectangle2D;
-import org.blaise.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.Graphic;
 
 /**
  * Creates and/or modifies a graphic based on an item.

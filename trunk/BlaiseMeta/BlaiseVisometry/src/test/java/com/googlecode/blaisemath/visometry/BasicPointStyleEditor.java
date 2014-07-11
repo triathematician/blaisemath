@@ -2,11 +2,11 @@
  * BasicPointStyleEditor.java
  * Created Aug 28, 2011
  */
-package com.googlecode.blaisemath.testframes;
+package com.googlecode.blaisemath.visometry;
 
 /*
  * #%L
- * BlaiseGraphics
+ * BlaiseVisometry
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
@@ -25,44 +25,31 @@ package com.googlecode.blaisemath.testframes;
  */
 
 import com.googlecode.blaisemath.firestarter.editor.ColorEditor;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.beans.Customizer;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import com.googlecode.blaisemath.style.PointStyleBasic;
-import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Marker;
+import com.googlecode.blaisemath.style.Markers;
 
 /**
  * GUI form for editing a {@link PointStyleBasic}.
- * 
+ *
  * @author elisha
  */
-public class BasicPointStyleEditor extends JPanel implements Customizer, 
+public class BasicPointStyleEditor extends JPanel implements Customizer,
         ActionListener, ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
     private PointStyleBasic rend = new PointStyleBasic();
-    
+
     /** Spinner for radius */
     private JSpinner radiusSp = null;
     /** Spinner for stroke */
@@ -73,22 +60,22 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
     private ColorEditor strokeEd = null;
     /** Combo box for shapes */
     private JComboBox shapeCombo = null;
-    
+
     /** Initialize with defaults */
     public BasicPointStyleEditor() {
         initComponents();
     }
-    
+
     /** Initialize with defaults and a style */
     public BasicPointStyleEditor(PointStyleBasic bean) {
         initComponents();
         setObject(bean);
     }
-    
+
     /** Sets up the panel */
     private void initComponents() {
         setLayout(new GridBagLayout());
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = GridBagConstraints.RELATIVE;
         gbc.gridy = 0;
@@ -102,7 +89,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         add(radiusSp = new JSpinner(m1), gbc);
         radiusSp.setToolTipText("Radius of point");
         radiusSp.addChangeListener(this);
-        
+
         gbc.fill = GridBagConstraints.NONE;
         add(new JLabel(" Fill:"), gbc);
         add((fillEd = new ColorEditor()).getCustomEditor(), gbc);
@@ -115,12 +102,12 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         add(strokeSp = new JSpinner(m2), gbc);
         strokeSp.setToolTipText("Width of stroke");
         strokeSp.addChangeListener(this);
-        
+
         gbc.fill = GridBagConstraints.NONE;
         add(new JLabel(" Stroke:"), gbc);
         add((strokeEd = new ColorEditor()).getCustomEditor(), gbc);
         strokeEd.addPropertyChangeListener(this);
-        
+
         gbc.gridy = 0;
         gbc.gridheight = 2;
         gbc.weightx = 0; gbc.weighty = 0.0;
@@ -128,19 +115,20 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         add(shapeCombo = new JComboBox(Markers.getAvailableMarkers().toArray()), gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(this);
-        
+
         setObject(rend);
         validate();
     }
-    
+
     public PointStyleBasic getObject() {
         return rend;
     }
-    
+
     public void setObject(Object bean) {
-        if (!(bean instanceof PointStyleBasic))
+        if (!(bean instanceof PointStyleBasic)) {
             throw new IllegalArgumentException();
-        
+        }
+
         this.rend = (PointStyleBasic) bean;
         radiusSp.setValue(rend.getMarkerRadius());
         strokeSp.setValue(rend.getStrokeWidth());
@@ -152,8 +140,8 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             }
         }
     }
-    
-    
+
+
     //
     // EVENT HANDLING
     //
@@ -166,32 +154,34 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
     }
 
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == radiusSp)
+        if (e.getSource() == radiusSp) {
             rend.setMarkerRadius(((Number)radiusSp.getValue()).floatValue());
-        else if (e.getSource() == strokeSp)
+        } else if (e.getSource() == strokeSp) {
             rend.setStrokeWidth(((Number)strokeSp.getValue()).floatValue());
-        else
+        } else {
             return;
+        }
         shapeCombo.repaint();
         firePropertyChange("style", null, rend);
     }
 
     public void propertyChange(PropertyChangeEvent e) {
-        if (e.getSource() == fillEd)
+        if (e.getSource() == fillEd) {
             rend.setFill((Color) (fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue()));
-        else if (e.getSource() == strokeEd)
+        } else if (e.getSource() == strokeEd) {
             rend.setStroke((Color) (strokeEd.getNewValue() == null ? strokeEd.getValue() : strokeEd.getNewValue()));
-        else
+        } else {
             return;
+        }
         shapeCombo.repaint();
         firePropertyChange("style", null, rend);
     }
-    
-    
+
+
     //
     // INNER CLASSES
     //
-    
+
     /** Draws elements of the list using the settings elsewhere. */
     private class ShapeListCellRenderer extends DefaultListCellRenderer {
         @Override
@@ -199,11 +189,11 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             JLabel result = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             result.setToolTipText(value.toString());
             result.setText(null);
-            result.setIcon(new ShapeIcon((Marker)value));            
+            result.setIcon(new ShapeIcon((Marker)value));
             return result;
         }
     }
-    
+
     /** Icon for drawing stylized point on a component */
     private class ShapeIcon implements Icon {
         private final Marker shape;
@@ -222,6 +212,6 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
 
         public int getIconWidth() { return 50; }
         public int getIconHeight() { return 50; }
-    }    
-    
+    }
+
 }

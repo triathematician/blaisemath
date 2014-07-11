@@ -36,19 +36,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import org.blaise.graphics.BasicPointGraphic;
-import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.BasicTextGraphic;
-import org.blaise.graphics.GraphicComponent;
-import org.blaise.graphics.GraphicComposite;
+import com.googlecode.blaisemath.graphics.BasicPointGraphic;
+import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
+import com.googlecode.blaisemath.graphics.BasicTextGraphic;
+import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
 import org.blaise.pr.PrModel.PrEntry;
 import org.blaise.pr.Units.Distance;
 import org.blaise.pr.Units.Speed;
-import org.blaise.style.Anchor;
-import org.blaise.style.Markers;
-import org.blaise.style.PointStyleBasic;
-import org.blaise.style.Styles;
-import org.blaise.style.TextStyleBasic;
+import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.TextStyleBasic;
 
 /**
  *

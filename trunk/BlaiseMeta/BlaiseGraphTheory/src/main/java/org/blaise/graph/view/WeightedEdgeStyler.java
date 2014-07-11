@@ -27,9 +27,9 @@ package org.blaise.graph.view;
 import com.google.common.base.Function;
 import java.awt.Color;
 import java.util.Map;
-import org.blaise.util.Edge;
-import org.blaise.style.PathStyleDecorated;
-import org.blaise.style.PathStyle;
+import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.style.PathStyleDecorated;
+import com.googlecode.blaisemath.style.PathStyle;
 
 /**
  * Provides a default node customizer suitable for a weighted-edge graph.

@@ -35,15 +35,15 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.blaise.graphics.AbstractGraphicDragger;
-import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.BasicTextGraphic;
-import org.blaise.graphics.GraphicComponent;
-import org.blaise.graphics.GraphicMouseEvent;
-import org.blaise.style.Anchor;
-import org.blaise.style.ShapeStyle;
-import org.blaise.style.Styles;
-import org.blaise.style.TextStyleBasic;
+import com.googlecode.blaisemath.graphics.AbstractGraphicDragger;
+import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
+import com.googlecode.blaisemath.graphics.BasicTextGraphic;
+import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.graphics.GraphicMouseEvent;
+import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.style.TextStyleBasic;
 
 /**
  * <p>

@@ -67,7 +67,7 @@ public abstract class GraphicSupport implements Graphic {
     protected boolean selectEnabled = true;
     
     /** Adds highlights to the graphic on mouseover. */
-    protected final GraphicHighlighter highlighter = new GraphicHighlighter();
+    protected final GraphicHighlightHandler highlighter = new GraphicHighlightHandler();
     /** Context initializers */
     protected final List<ContextMenuInitializer<Graphic>> contextMenuInitializers = Lists.newArrayList();
     /** Stores event eventHandlers for the entry */
