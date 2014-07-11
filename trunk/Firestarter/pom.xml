@@ -1,14 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.googlecode.javafirestorm</groupId>
+    <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>firestarter</artifactId>
     <version>1.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>Firestarter</name>
-    <description>Provides a property sheet and associated editors for handling general Java bean objects.</description>
-    <url>http://javafirestorm.googlecode.com</url>
+    <description>
+        Provides a property sheet and associated editors for handling general Java bean objects.
+    </description>
+    <url>http://blaisemath.googlecode.com</url>
     <inceptionYear>2009</inceptionYear>
     
     <licenses>
@@ -27,14 +29,14 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://javafirestorm.googlecode.com/svn/trunk/Firestarter/</connection>
-        <developerConnection>scm:svn:https://javafirestorm.googlecode.com/svn/trunk/Firestarter/</developerConnection>
-        <url>https://code.google.com/p/javafirestorm/source/browse/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</developerConnection>
+        <url>https://code.google.com/p/blaisemath/source/browse/</url>
     </scm>
     
     <issueManagement>
         <system>Google code</system>
-        <url>https://code.google.com/p/javafirestorm/issues/list</url>
+        <url>https://code.google.com/p/blaisemath/issues/list</url>
     </issueManagement>
     
     <properties>
