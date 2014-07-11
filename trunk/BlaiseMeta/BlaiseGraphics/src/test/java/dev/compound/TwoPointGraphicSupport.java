@@ -25,11 +25,11 @@ package dev.compound;
  */
 
 import java.awt.geom.Point2D;
-import org.blaise.graphics.BasicPointGraphic;
-import org.blaise.graphics.Graphic;
-import org.blaise.graphics.GraphicComposite;
-import org.blaise.style.PointStyleBasic;
-import org.blaise.style.PointStyle;
+import com.googlecode.blaisemath.graphics.BasicPointGraphic;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
+import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.style.PointStyle;
 
 /**
  * Provides methods for managing a graphic that depends on two underlying points,

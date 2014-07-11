@@ -1,13 +1,8 @@
-/**
- * SVGCanvas.java
- * Created Dec 9, 2012
- */
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * PointBean.java
+ * Created Jan 2011
  */
-
-package dev.svg;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -29,41 +24,25 @@ package dev.svg;
  * #L%
  */
 
-import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-
 /**
- * <p>
- * </p>
- * @author elisha
+ * An object that can get and set a point (used to simplify point dragging).
+ *
+ * @param <C> the type of point
+ * 
+ * @author Elisha Peterson
  */
-public class SVGCanvas extends GraphicComponent {
+public interface PointBean<C> {
 
-    //
-    // ATTRIBUTES
-    //
+    /**
+     * Return the point.
+     * @return the point
+     */
+    C getPoint();
 
-
-    //
-    // CONSTRUCTORS
-    //
-
-    /** Initialize without arguments */
-    public SVGCanvas() {
-        setBackground(Color.gray);
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    //</editor-fold>
-
-
-    //
-    // METHODS
-    //
-
+    /**
+     * Set the point.
+     * @param p the new point
+     */
+    void setPoint(C p);
+    
 }

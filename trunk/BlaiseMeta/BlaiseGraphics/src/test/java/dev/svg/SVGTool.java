@@ -26,7 +26,7 @@ package dev.svg;
 
 import java.awt.Dimension;
 import java.awt.geom.GeneralPath;
-import org.blaise.graphics.BasicShapeGraphic;
+import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
 
 /**
  *

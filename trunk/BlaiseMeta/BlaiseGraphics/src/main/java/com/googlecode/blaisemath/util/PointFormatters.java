@@ -1,13 +1,9 @@
-/**
- * SVGCanvas.java
- * Created Dec 9, 2012
- */
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * PointFormatters.java
+ * Created Jan 30, 2011
  */
 
-package dev.svg;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -29,41 +25,27 @@ package dev.svg;
  * #L%
  */
 
-import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
+import java.awt.geom.Point2D;
 
 /**
- * <p>
- * </p>
- * @author elisha
+ * Utilities for formatting Euclidean points as strings.
+ * 
+ * @author Elisha Peterson
  */
-public class SVGCanvas extends GraphicComponent {
-
-    //
-    // ATTRIBUTES
-    //
-
-
-    //
-    // CONSTRUCTORS
-    //
-
-    /** Initialize without arguments */
-    public SVGCanvas() {
-        setBackground(Color.gray);
+public final class PointFormatters { 
+    
+    // utility class - no instantiation
+    private PointFormatters() {
     }
 
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    //</editor-fold>
-
-
-    //
-    // METHODS
-    //
+    /**
+     * Formats a point with n decimal places
+     * @param p the point to format
+     * @param n number of decimal places
+     * @return formatted point, e.g. (2.1,-3.0)
+     */
+    public static String formatPoint(Point2D p, int n) {
+        return String.format("(%."+n+"f, %."+n+"f)", p.getX(), p.getY());
+    }
 
 }
