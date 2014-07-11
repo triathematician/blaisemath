@@ -30,14 +30,14 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
-import org.blaise.util.ContextMenuInitializer;
-import org.blaise.graphics.DelegatingNodeLinkGraphic;
-import org.blaise.graphics.PanAndZoomHandler;
-import org.blaise.graphics.GraphicComponent;
-import org.blaise.style.ObjectStyler;
-import org.blaise.style.PathStyle;
-import org.blaise.style.PointStyle;
-import org.blaise.util.Edge;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.PanAndZoomHandler;
+import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.util.Edge;
 
 
 /**

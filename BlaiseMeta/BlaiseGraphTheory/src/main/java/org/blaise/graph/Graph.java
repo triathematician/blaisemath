@@ -26,7 +26,7 @@ package org.blaise.graph;
  */
 
 import java.util.Set;
-import org.blaise.util.Edge;
+import com.googlecode.blaisemath.util.Edge;
 
 /**
  * <p>

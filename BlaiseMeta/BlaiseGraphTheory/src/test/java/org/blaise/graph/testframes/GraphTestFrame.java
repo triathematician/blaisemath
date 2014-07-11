@@ -27,13 +27,13 @@ package org.blaise.graph.testframes;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.swing.JPopupMenu;
-import org.blaise.firestarter.PropertySheet;
-import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.SpringLayout;
@@ -42,12 +42,12 @@ import org.blaise.graph.modules.EdgeProbabilityGraphSupplier;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
 import org.blaise.graph.view.PointUtils;
-import org.blaise.graphics.Graphic;
-import org.blaise.graphics.PanAndZoomHandler;
-import org.blaise.style.PointStyle;
-import org.blaise.style.PointStyleBasic;
-import org.blaise.util.ContextMenuInitializer;
-import org.blaise.util.gui.RollupPanel;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.gui.RollupPanel;
 
 /**
  *

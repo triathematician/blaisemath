@@ -25,17 +25,17 @@ package org.blaise.graph.testframes;
  * #L%
  */
 
+import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import org.blaise.firestarter.PropertySheet;
-import org.blaise.firestarter.editor.EditorRegistration;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.layout.SpringLayout;
 import org.blaise.graph.layout.StaticGraphLayout;
 import org.blaise.graph.view.GraphComponent;
 import org.blaise.graph.view.PlaneGraphAdapter;
-import org.blaise.graphics.Graphic;
-import org.blaise.util.gui.RollupPanel;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.util.gui.RollupPanel;
 
 
 /**

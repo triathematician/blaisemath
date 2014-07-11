@@ -30,12 +30,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.blaise.graph.Graph;
 import org.blaise.graph.layout.GraphLayoutManager;
-import org.blaise.graphics.DelegatingNodeLinkGraphic;
-import org.blaise.style.ObjectStyler;
-import org.blaise.style.PathStyle;
-import org.blaise.style.PointStyle;
-import org.blaise.style.Styles;
-import org.blaise.util.Edge;
+import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Edge;
 
 
 /**

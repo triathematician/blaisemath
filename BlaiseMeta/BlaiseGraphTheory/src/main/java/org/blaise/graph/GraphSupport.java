@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.blaise.util.Edge;
+import com.googlecode.blaisemath.util.Edge;
 
 /**
  * Implements the methods of {@link Graph} that can be inferred from other methods.

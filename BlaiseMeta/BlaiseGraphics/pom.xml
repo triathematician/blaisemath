@@ -38,9 +38,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.javafirestorm</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>firestarter</artifactId>
             <version>1.0.6-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

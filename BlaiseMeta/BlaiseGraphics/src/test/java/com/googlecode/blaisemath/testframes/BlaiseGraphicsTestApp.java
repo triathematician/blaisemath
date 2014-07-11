@@ -54,7 +54,7 @@ import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComponent;
-import com.googlecode.blaisemath.graphics.GraphicHighlighter;
+import com.googlecode.blaisemath.graphics.GraphicHighlightHandler;
 import com.googlecode.blaisemath.graphics.GraphicRoot;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.PathStyleArrow;
@@ -112,7 +112,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Line2D.Double line = new Line2D.Double(randomPoint(), randomPoint());
         BasicShapeGraphic bs = new BasicShapeGraphic(line, RandomStyles.path());
         bs.setDefaultTooltip("<html><b>Segment</b>: <i>" + line + "</i>");
-        bs.addMouseListener(new GraphicHighlighter());
+        bs.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(bs);
     }
     
@@ -120,7 +120,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void addRectangle() {        
         Rectangle2D.Double rect = new Rectangle2D.Double(Math.random()*canvas1.getWidth(), Math.random()*canvas1.getHeight(), 100*Math.random(), 100*Math.random());
         BasicShapeGraphic bs = new BasicShapeGraphic(rect, RandomStyles.shape());
-        bs.addMouseListener(new GraphicHighlighter());
+        bs.addMouseListener(new GraphicHighlightHandler());
         bs.setDefaultTooltip("<html><b>Rectangle</b>: <i>" + rect + "</i>");
         root1.addGraphic(bs);
     }
@@ -130,7 +130,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Point2D pt = randomPoint();
         BasicTextGraphic gs = new BasicTextGraphic(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         gs.setStyle(RandomStyles.string());
-        gs.addMouseListener(new GraphicHighlighter());
+        gs.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(gs);
     }
     
@@ -186,7 +186,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 return lps;
             }
         });
-        bp.addMouseListener(new GraphicHighlighter());
+        bp.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(bp);        
     }
     
@@ -212,7 +212,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 return lps;
             }
         });
-        bp.addMouseListener(new GraphicHighlighter());
+        bp.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(bp);        
     }
     
@@ -263,7 +263,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                         .strokeWidth((float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
-        gr.addMouseListener(new GraphicHighlighter());
+        gr.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(gr);
     }
     
@@ -277,7 +277,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Point2D p1 = randomPoint(), p2 = randomPoint();
         SegmentGraphic ag = new SegmentGraphic(p1, p2);
         ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
+        ag.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(ag);
     }
     
@@ -290,7 +290,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 RandomStyles.point()
                 );
         lpg.setDefaultTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
-        lpg.addMouseListener(new GraphicHighlighter());
+        lpg.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(lpg);        
     }
     
@@ -304,7 +304,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         lg.setRuleLeft((int)(10*Math.random()));
         lg.setRuleRight((int)(-10*Math.random()));
         
-        lg.addMouseListener(new GraphicHighlighter());
+        lg.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(lg);        
     }
     
@@ -313,7 +313,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
       Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
         ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
+        ag.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(ag);        
     }
     
@@ -326,7 +326,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void addLabeledPointSet() {   
         BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint(), randomPoint()});
         bp.setStyle(new PointStyleLabeled());
-        bp.addMouseListener(new GraphicHighlighter());
+        bp.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(bp);
     }
     
@@ -338,7 +338,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         ips.setRayStyle(new PathStyleArrow());
         ag.setEndPointStyle(ips);
         ag.setDefaultTooltip("<html><b>Ray</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
+        ag.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(ag);        
     }
     
@@ -351,7 +351,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         ips.setExtendBothDirections(true);
         ag.setEndPointStyle(ips);
         ag.setDefaultTooltip("<html><b>Line</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new GraphicHighlighter());
+        ag.addMouseListener(new GraphicHighlightHandler());
         root1.addGraphic(ag);        
     }
     

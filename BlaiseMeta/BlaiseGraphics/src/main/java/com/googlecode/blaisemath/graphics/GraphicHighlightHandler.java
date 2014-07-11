@@ -27,7 +27,6 @@ package com.googlecode.blaisemath.graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
 
 /**
  * <p>
@@ -35,7 +34,7 @@ import com.googlecode.blaisemath.style.context.StyleModifiers;
  * </p>
  * @author elisha
  */
-public final class GraphicHighlighter extends MouseAdapter {
+public final class GraphicHighlightHandler extends MouseAdapter {
     
     @Override
     public void mouseEntered(MouseEvent e) {

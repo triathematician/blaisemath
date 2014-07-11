@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.util.Edge;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 import org.blaise.math.linear.Matrices;
-import org.blaise.util.Edge;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.

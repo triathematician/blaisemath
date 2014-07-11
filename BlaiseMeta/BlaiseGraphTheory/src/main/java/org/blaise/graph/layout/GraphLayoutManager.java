@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 import org.blaise.graph.GAInstrument;
 import org.blaise.graph.Graph;
 import org.blaise.graph.GraphSuppliers;
-import org.blaise.util.CoordinateChangeEvent;
-import org.blaise.util.CoordinateListener;
-import org.blaise.util.CoordinateManager;
+import com.googlecode.blaisemath.util.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.CoordinateListener;
+import com.googlecode.blaisemath.util.CoordinateManager;
 
 /**
  * <p>

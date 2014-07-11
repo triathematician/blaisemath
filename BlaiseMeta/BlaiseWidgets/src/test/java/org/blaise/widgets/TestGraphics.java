@@ -29,9 +29,9 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.graphics.GraphicComponent;
-import org.blaise.style.Styles;
+import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
+import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.style.Styles;
 
 /**
  *
