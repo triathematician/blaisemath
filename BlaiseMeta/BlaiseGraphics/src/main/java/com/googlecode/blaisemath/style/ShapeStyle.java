@@ -1,13 +1,9 @@
 /**
- * SVGCanvas.java
- * Created Dec 9, 2012
- */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * ShapeStyle.java
+ * Created on Aug 4, 2009
  */
 
-package dev.svg;
+package com.googlecode.blaisemath.style;
 
 /*
  * #%L
@@ -29,41 +25,21 @@ package dev.svg;
  * #L%
  */
 
-import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-
 /**
  * <p>
+ *   Used to draw a shape (or several shapes) on a {@code java.awt.Graphics2D} object.
+ *   This class will provide visual effects that do not determine the shape of the object.
  * </p>
- * @author elisha
+ *
+ * @author Elisha Peterson
  */
-public class SVGCanvas extends GraphicComponent {
+public interface ShapeStyle extends Style {
 
-    //
-    // ATTRIBUTES
-    //
-
-
-    //
-    // CONSTRUCTORS
-    //
-
-    /** Initialize without arguments */
-    public SVGCanvas() {
-        setBackground(Color.gray);
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    //</editor-fold>
-
-
-    //
-    // METHODS
-    //
+    /**
+     * Draws a shape on the provided canvas.
+     * @param primitive the shape to draw
+     * @param canvas the canvas on which to paint
+     */
+    void draw(java.awt.Shape primitive, java.awt.Graphics2D canvas);
 
 }

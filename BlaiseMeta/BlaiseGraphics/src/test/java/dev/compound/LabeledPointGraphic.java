@@ -26,13 +26,13 @@ package dev.compound;
  */
 
 import java.awt.geom.Point2D;
-import org.blaise.graphics.BasicPointGraphic;
-import org.blaise.graphics.BasicTextGraphic;
-import org.blaise.graphics.Graphic;
-import org.blaise.graphics.GraphicComposite;
-import org.blaise.style.PointStyle;
-import org.blaise.style.TextStyle;
-import org.blaise.util.PointBean;
+import com.googlecode.blaisemath.graphics.BasicPointGraphic;
+import com.googlecode.blaisemath.graphics.BasicTextGraphic;
+import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.GraphicComposite;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.style.TextStyle;
+import com.googlecode.blaisemath.util.PointBean;
 
 /**
  * Displays a point together with a label.

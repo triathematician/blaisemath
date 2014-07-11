@@ -1,13 +1,9 @@
-/**
- * SVGCanvas.java
- * Created Dec 9, 2012
- */
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * CoordinateListener.java
+ * Created on Aug 30, 2012
  */
 
-package dev.svg;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -29,41 +25,17 @@ package dev.svg;
  * #L%
  */
 
-import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-
 /**
- * <p>
- * </p>
- * @author elisha
+ * Receives updates regarding the locations of a collection of objects.
+ *
+ * @author petereb1
  */
-public class SVGCanvas extends GraphicComponent {
+public interface CoordinateListener {
 
-    //
-    // ATTRIBUTES
-    //
-
-
-    //
-    // CONSTRUCTORS
-    //
-
-    /** Initialize without arguments */
-    public SVGCanvas() {
-        setBackground(Color.gray);
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    //</editor-fold>
-
-
-    //
-    // METHODS
-    //
+    /**
+     * Called when coordinates/points are added.
+     * @param evt description of what coordinates were added/removed/changed
+     */
+    void coordinatesChanged(CoordinateChangeEvent evt);
 
 }

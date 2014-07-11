@@ -1,13 +1,8 @@
 /**
- * SVGCanvas.java
- * Created Dec 9, 2012
+ * CanvasPainter.java
+ * Created Aug 1, 2012
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package dev.svg;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -29,41 +24,22 @@ package dev.svg;
  * #L%
  */
 
-import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
+import java.awt.Component;
+import java.awt.Graphics2D;
 
 /**
  * <p>
+ *  An object that paints on a graphics canvas.
  * </p>
  * @author elisha
  */
-public class SVGCanvas extends GraphicComponent {
+public interface CanvasPainter {
 
-    //
-    // ATTRIBUTES
-    //
-
-
-    //
-    // CONSTRUCTORS
-    //
-
-    /** Initialize without arguments */
-    public SVGCanvas() {
-        setBackground(Color.gray);
-    }
-
-
-    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-    //
-    // PROPERTIES
-    //
-
-    //</editor-fold>
-
-
-    //
-    // METHODS
-    //
+    /**
+     * Paint on canvas of given component.
+     * @param component component owning the canvas
+     * @param canvas the canvas
+     */
+    void paint(Component component, Graphics2D canvas);
 
 }

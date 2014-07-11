@@ -28,11 +28,12 @@ import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import org.blaise.graphics.BasicShapeGraphic;
-import org.blaise.style.PointStyleBasic;
-import org.blaise.style.Markers;
-import org.blaise.style.ShapeStyle;
-import org.blaise.style.context.StyleModifiers;
+import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
+import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.context.StyleHintSet;
+import com.googlecode.blaisemath.style.context.StyleModifiers;
 
 /**
  * Displays a segment between two points.
@@ -61,7 +62,7 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
                 .stroke(null)
                 .markerRadius(2)
                 .fill(Color.black));
-        start.setStyleHint(StyleModifiers.HIDDEN_HINT, true);
+        start.setStyleHint(StyleHintSet.HIDDEN_HINT, true);
         
         end.setStyle(new PointStyleBasic()
                 .marker(Markers.ARROWHEAD));
