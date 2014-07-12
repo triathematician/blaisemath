@@ -25,16 +25,15 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.TextStyleBasic;
+import com.googlecode.blaisemath.style.TextStyleWrapped;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import javax.annotation.Nonnull;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.ShapeStyle;
-import com.googlecode.blaisemath.style.TextStyleBasic;
-import com.googlecode.blaisemath.style.TextStyleWrapped;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
 
 /**
  * Customizable graphic that represents a labeled item.

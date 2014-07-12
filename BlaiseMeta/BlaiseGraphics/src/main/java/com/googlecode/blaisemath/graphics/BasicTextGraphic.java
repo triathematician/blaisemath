@@ -25,14 +25,13 @@ package com.googlecode.blaisemath.graphics;
  */
 
 import com.google.common.base.Strings;
+import com.googlecode.blaisemath.style.TextStyle;
+import com.googlecode.blaisemath.util.PointBean;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
-import com.googlecode.blaisemath.style.TextStyle;
-import com.googlecode.blaisemath.util.PointBean;
 
 /**
  * Draws a string at a point.
@@ -176,11 +175,7 @@ public class BasicTextGraphic extends GraphicSupport
      */
     @Nonnull 
     protected TextStyle drawStyle() {
-        if (style == null) {
-            return parent.getStyleContext().getTextStyle(text, styleHints);
-        } else {
-            return StyleModifiers.textStyleModifier().apply(style, styleHints);
-        }
+        return parent.getTextStyle(style, this, styleHints);
     }
 
     @Override

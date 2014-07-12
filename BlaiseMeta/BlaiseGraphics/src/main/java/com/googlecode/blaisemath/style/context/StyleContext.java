@@ -4,11 +4,8 @@
  */
 package com.googlecode.blaisemath.style.context;
 
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
 import com.googlecode.blaisemath.style.Style;
-import com.googlecode.blaisemath.style.TextStyle;
+import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -47,42 +44,11 @@ public interface StyleContext<S> {
      * Return style of given type for given source object.
      * @param <T> type of style
      * @param cls class of style to return
+     * @param preferred style to use if non-null
      * @param src object to be styled
      * @param hints style hints to apply
      * @return the style
      */
-    <T extends Style> T getStyle(Class<T> cls, S src, StyleHintSet hints);
-
-    /** 
-     * Return style used for solid shapes (fill and stroke)
-     * @param src object to be styled
-     * @param hints style hints to apply
-     * @return a solid shape style
-     */
-    ShapeStyle getShapeStyle(S src, StyleHintSet hints);
-    
-    /** 
-     * Return style used for paths (stroke only)
-     * @param src object to be styled
-     * @param hints style hints to apply
-     * @return a path style 
-     */
-    PathStyle getPathStyle(S src, StyleHintSet hints);
-    
-    /** 
-     * Return style used for points
-     * @param src object to be styled
-     * @param hints style hints to apply
-     * @return a point style 
-     */
-    PointStyle getPointStyle(S src, StyleHintSet hints);
-    
-    /**
-     * Return style used for strings
-     * @param src object to be styled
-     * @param hints style hints to apply
-     * @return a string style 
-     */
-    TextStyle getTextStyle(S src, StyleHintSet hints);
+    <T extends Style> T getStyle(Class<T> cls, @Nullable T preferred, S src, StyleHintSet hints);
 
 }

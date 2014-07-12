@@ -24,13 +24,12 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.util.PointFormatters;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import javax.annotation.Nullable;
-import com.googlecode.blaisemath.util.PointFormatters;
 
 /**
  * Adds a label to a point style. The points' style and labels' style can

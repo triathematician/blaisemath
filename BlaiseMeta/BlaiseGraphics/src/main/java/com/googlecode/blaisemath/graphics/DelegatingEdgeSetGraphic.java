@@ -28,6 +28,12 @@ package com.googlecode.blaisemath.graphics;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.util.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.CoordinateListener;
+import com.googlecode.blaisemath.util.CoordinateManager;
+import com.googlecode.blaisemath.util.Edge;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -36,12 +42,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.util.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.CoordinateListener;
-import com.googlecode.blaisemath.util.CoordinateManager;
-import com.googlecode.blaisemath.util.Edge;
 
 /**
  * A collection of edges backed by a common set of points.
@@ -102,7 +102,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>> extends GraphicCompos
             } else {
                 Line2D.Double line = new Line2D.Double(p1, p2);
                 if (dsg == null) {
-                    dsg = new DelegatingShapeGraphic<E>(edge, line, true);
+                    dsg = new DelegatingShapeGraphic<E>(edge, line);
                     edges.put(edge, dsg);
                     dsg.setStyler(edgeStyler);
                     addMe.add(dsg);

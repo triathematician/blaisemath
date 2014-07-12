@@ -25,12 +25,18 @@ package com.googlecode.blaisemath.style.context;
  * #L%
  */
 
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.ImmutableClassToInstanceMap;
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.style.PathStyle;
 import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.style.ShapeStyle;
 import com.googlecode.blaisemath.style.Style;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.TextStyle;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** 
  * Default instance of the style provider. This is an immutable class that
@@ -39,9 +45,23 @@ import com.googlecode.blaisemath.style.TextStyle;
 public final class StyleContextBasic implements StyleContext<Object> {
     
     private static final StyleContextBasic INST = new StyleContextBasic();
+    
+    private final ClassToInstanceMap<Style> defaultStyleMap;
+    private final Map<Class,StyleModifier> modifierMap;
 
     // this class is only intended for use as a static singleton
     private StyleContextBasic() {
+        defaultStyleMap = ImmutableClassToInstanceMap.<Style>builder()
+                .put(PathStyle.class, Styles.defaultPathStyle())
+                .put(ShapeStyle.class, Styles.defaultShapeStyle())
+                .put(PointStyle.class, Styles.defaultPointStyle())
+                .put(TextStyle.class, Styles.defaultTextStyle())
+                .build();
+        modifierMap = Maps.newHashMap();
+        modifierMap.put(PathStyle.class, StyleModifiers.pathStyleModifier());
+        modifierMap.put(ShapeStyle.class, StyleModifiers.shapeStyleModifier());
+        modifierMap.put(PointStyle.class, StyleModifiers.pointStyleModifier());
+        modifierMap.put(TextStyle.class, StyleModifiers.textStyleModifier());
     }
     
     /**
@@ -53,28 +73,16 @@ public final class StyleContextBasic implements StyleContext<Object> {
     }
 
     @Override
-    public <T extends Style> T getStyle(Class<T> cls, Object src, StyleHintSet hints) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-        
-    @Override
-    public ShapeStyle getShapeStyle(Object o, StyleHintSet hints) {
-        return StyleModifiers.shapeStyleModifier().apply(Styles.defaultShapeStyle(), hints);
-    }
-
-    @Override
-    public PathStyle getPathStyle(Object o, StyleHintSet hints) {
-        return StyleModifiers.pathStyleModifier().apply(Styles.defaultPathStyle(), hints);
-    }
-
-    @Override
-    public PointStyle getPointStyle(Object o, StyleHintSet hints) {
-        return StyleModifiers.pointStyleModifier().apply(Styles.defaultPointStyle(), hints);
-    }
-
-    @Override
-    public TextStyle getTextStyle(Object o, StyleHintSet hints) {
-        return StyleModifiers.textStyleModifier().apply(Styles.defaultTextStyle(), hints);
+    public <T extends Style> T getStyle(Class<T> cls, T style, Object src, StyleHintSet hints) {
+        for (Class c : defaultStyleMap.keySet()) {
+            if (c.isAssignableFrom(cls)) {
+                Style sty = style == null ? defaultStyleMap.get(c) : style;
+                return (T) modifierMap.get(c).apply(sty, hints);
+            }
+        }
+        Logger.getLogger(StyleContextBasic.class.getName()).log(Level.WARNING, 
+                "Styles of type {0} are not supported in this context.", cls);
+        return null;
     }
 
 }

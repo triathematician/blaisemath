@@ -24,8 +24,6 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.context.StyleContextBasic;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;

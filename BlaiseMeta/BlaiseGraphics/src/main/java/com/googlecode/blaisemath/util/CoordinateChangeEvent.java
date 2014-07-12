@@ -35,14 +35,16 @@ import javax.annotation.Nullable;
  *  Event describing a change to a collection of coordinates (specifically to
  *  a {@link CoordinateManager} instance).
  * </p>
+ * @param <S> type of object owning the coordinates
+ * @param <C> coordinate type
  * @author elisha
  */
-public final class CoordinateChangeEvent extends EventObject {
+public final class CoordinateChangeEvent<S,C> extends EventObject {
 
     /** Added coords */
-    private Map added = null;
+    private Map<S,? extends C> added = null;
     /** Removed coords */
-    private Set removed = null;
+    private Set<S> removed = null;
 
     /** 
      * Initialize with given source object
@@ -60,34 +62,40 @@ public final class CoordinateChangeEvent extends EventObject {
 
     /** 
      * Creates add event 
+     * @param <S> type of object owning the coordinates
+     * @param <C> coordinate type
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
      */
-    public static CoordinateChangeEvent createAddEvent(Object src, Map added) {
-        CoordinateChangeEvent evt = new CoordinateChangeEvent(src);
+    public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,? extends C> added) {
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
         evt.added = added;
         return evt;
     }
 
     /** 
      * Creates remove event 
+     * @param <S> type of object owning the coordinates
+     * @param <C> coordinate type
      * @param src source of event
      * @param removed set of removed objects
      */
-    public static CoordinateChangeEvent createRemoveEvent(Object src, Set removed) {
-        CoordinateChangeEvent evt = new CoordinateChangeEvent(src);
+    public static <S,C> CoordinateChangeEvent createRemoveEvent(Object src, Set<S> removed) {
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
         evt.removed = removed;
         return evt;
     }
 
     /** 
      * Creates add/remove event
+     * @param <S> type of object owning the coordinates
+     * @param <C> coordinate type
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
      * @param removed set of removed objects
      */
-    public static CoordinateChangeEvent createAddRemoveEvent(Object src, Map added, Set removed) {
-        CoordinateChangeEvent evt = new CoordinateChangeEvent(src);
+    public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,? extends C> added, Set<S> removed) {
+        CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C> (src);
         evt.added = added;
         evt.removed = removed;
         return evt;
@@ -123,7 +131,7 @@ public final class CoordinateChangeEvent extends EventObject {
      * @return map whose keys are the objects and values are their coordinates
      */
     @Nullable 
-    public Map getAdded() {
+    public Map<S,? extends C> getAdded() {
         return added;
     }
 
@@ -132,7 +140,7 @@ public final class CoordinateChangeEvent extends EventObject {
      * @return set of objects removed
      */
     @Nullable
-    public Set getRemoved() {
+    public Set<S> getRemoved() {
         return removed;
     }
 

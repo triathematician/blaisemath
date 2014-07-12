@@ -27,15 +27,17 @@ package com.googlecode.blaisemath.util;
 
 /**
  * Receives updates regarding the locations of a collection of objects.
- *
+ * @param <S> type of object being located
+ * @param <C> type of coordinate
+ * 
  * @author petereb1
  */
-public interface CoordinateListener {
+public interface CoordinateListener<S,C> {
 
     /**
      * Called when coordinates/points are added.
      * @param evt description of what coordinates were added/removed/changed
      */
-    void coordinatesChanged(CoordinateChangeEvent evt);
+    void coordinatesChanged(CoordinateChangeEvent<S,C> evt);
 
 }

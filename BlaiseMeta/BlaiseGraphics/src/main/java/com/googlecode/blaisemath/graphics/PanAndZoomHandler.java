@@ -26,6 +26,10 @@ package com.googlecode.blaisemath.graphics;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.style.ShapeStyleBasic;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnimationStep;
+import com.googlecode.blaisemath.util.CanvasPainter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -38,11 +42,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
-import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.CanvasPainter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Mouse handler that allows pan and zoom of a graphics canvas. Works by
@@ -54,6 +54,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     /** Default number of steps to use in animating pan/zoom */
     private static final int ANIM_STEPS = 25;
+    /** How long between animation steps */
+    private static final int ANIM_DELAY_MILLIS = 5;
+    
     /** Mouse mode for rectangle resize */
     private static final String RECTANGLE_RESIZE_MODE = "Alt+Button1";
     /** Mode for restricted movement */
@@ -117,46 +120,49 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         if (e.isConsumed() || pressedAt == null) {
             return;
         }
-        Point winPt = e.getPoint();
         if (RECTANGLE_RESIZE_MODE.equals(mode)) {
-            // rectangle resize mode (ensure positive values)
-            if (winPt.x < pressedAt.x) {
-                zoomBox.x = winPt.x;
-                zoomBox.width = -winPt.x + pressedAt.x;
+            mouseDraggedResizeMode(e.getPoint());
+        } else {
+            String mouseMods = MouseEvent.getModifiersExText(e.getModifiersEx());
+            boolean restrictedMovementMode = RESTRICTED_MOVEMENT_MODE.equals(mouseMods) 
+                    || RESTRICTED_MOVEMENT_MODE_ALT.equals(mouseMods);
+            mouseDraggedPanMode(e.getPoint(), restrictedMovementMode);
+        }
+    }
+    
+    private void mouseDraggedResizeMode(Point winPt) {
+        if (winPt.x < pressedAt.x) {
+            zoomBox.x = winPt.x;
+            zoomBox.width = -winPt.x + pressedAt.x;
+        } else {
+            zoomBox.x = pressedAt.x;
+            zoomBox.width = winPt.x - pressedAt.x;
+        }
+        if (winPt.y < pressedAt.y) {
+            zoomBox.y = winPt.y;
+            zoomBox.height = -winPt.y + pressedAt.y;
+        } else {
+            zoomBox.y = pressedAt.y;
+            zoomBox.height = winPt.y - pressedAt.y;
+        }
+        component.repaint();
+    }
+    
+    private void mouseDraggedPanMode(Point winPt, boolean restrictedMovementMode) {
+        if (restrictedMovementMode) {
+            if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
+                winPt.y = pressedAt.y;
             } else {
-                zoomBox.x = pressedAt.x;
-                zoomBox.width = winPt.x - pressedAt.x;
-            }
-            if (winPt.y < pressedAt.y) {
-                zoomBox.y = winPt.y;
-                zoomBox.height = -winPt.y + pressedAt.y;
-            } else {
-                zoomBox.y = pressedAt.y;
-                zoomBox.height = winPt.y - pressedAt.y;
-            }
-            component.repaint();
-        } else { 
-            // pan mode
-            String curMode = MouseEvent.getModifiersExText(e.getModifiersEx());
-            if (RESTRICTED_MOVEMENT_MODE.equals(curMode) || RESTRICTED_MOVEMENT_MODE_ALT.equals(curMode)) {
-                if (Math.abs(winPt.y - pressedAt.y) < Math.abs(winPt.x - pressedAt.x)) {
-                    winPt.y = pressedAt.y;
-                } else {
-                    winPt.x = pressedAt.x;
-                }
-            }
-            double dx = (winPt.x - pressedAt.x) * component.getInverseTransform().getScaleX();
-            double dy = (winPt.y - pressedAt.y) * component.getInverseTransform().getScaleY();
-
-            try {
-                setDesiredLocalBounds(component,
-                        new Rectangle2D.Double(
-                                oldLocalBounds.getX() - dx, oldLocalBounds.getY() - dy, 
-                                oldLocalBounds.getWidth(), oldLocalBounds.getHeight()));
-            } catch (Exception ex) {
-                Logger.getLogger(PanAndZoomHandler.class.getName()).log(Level.WARNING, "Unable to set desired local bounds", ex);
+                winPt.x = pressedAt.x;
             }
         }
+        double dx = (winPt.x - pressedAt.x) * component.getInverseTransform().getScaleX();
+        double dy = (winPt.y - pressedAt.y) * component.getInverseTransform().getScaleY();
+
+        setDesiredLocalBounds(component,
+                new Rectangle2D.Double(
+                        oldLocalBounds.getX() - dx, oldLocalBounds.getY() - dy, 
+                        oldLocalBounds.getWidth(), oldLocalBounds.getHeight()));
     }
 
     @Override
@@ -189,7 +195,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         mouseLoc.y = Math.max(mouseLoc.y, bounds.getMinY());
         mouseLoc.y = Math.min(mouseLoc.y, bounds.getMaxY());
 
-        zoomPoint(component, toLocal(component, mouseLoc),
+        zoomPoint(component, component.toGraphicCoordinate(mouseLoc),
                 (e.getWheelRotation() > 0) ? 1.05 : 0.95);
     }
 
@@ -197,19 +203,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     //
     // DELEGATE TRANSFORM OPERATIONS
     //
-    
-    /**
-     * Convert to local bounds
-     */
-    private static Point2D toLocal(GraphicComponent gc, Point2D pt) {
-        if (gc.getInverseTransform() == null) {
-            gc.setTransform(new AffineTransform());
-        }
-        return gc.getInverseTransform().transform(pt, null);
-    }
 
     /**
      * Get current range of values displayed in component.
+     * @param gc associated component
      */
     private static Rectangle2D.Double getLocalBounds(GraphicComponent gc) {
         if (gc.getInverseTransform() == null) {
@@ -225,6 +222,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     /**
      * Updates component transform so given rectangle is included within
+     * @param gc associated component
      */
     private static void setDesiredLocalBounds(GraphicComponent gc, Rectangle2D rect) {
         Rectangle bds = gc.getBounds();
@@ -243,6 +241,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * The effective zoom point is between current center and mouse position...
      * close to center => 100% at the given point, close to edge => 10% at
      * the given point.
+     * @param gc associated component
+     * @param localZoomPoint
+     * @param factor
      */
     public static void zoomPoint(GraphicComponent gc, Point2D localZoomPoint, double factor) {
         Rectangle2D.Double localBounds = getLocalBounds(gc);
@@ -255,8 +256,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     /**
      * Creates an animating zoom using a particular timer, about the center of
-     * the screen
-     *
+     * the screen.
+     * @param gc associated component
      * @param factor how far to zoom, representing the new scale
      */
     public static void zoomCenterAnimated(GraphicComponent gc, double factor) {
@@ -267,9 +268,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
     /**
      * Creates an animating zoom using a particular timer.
-     *
+     * @param gc associated component
      * @param p the coordinate of the point to center zoom about, in local
-     * coordiantes
+     * coordinates
      * @param factor how far to zoom, representing the new scale
      */
     public static void zoomPointAnimated(final GraphicComponent gc, Point2D.Double p, final double factor) {
@@ -279,37 +280,32 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double wx = rect.getWidth();
         final double wy = rect.getHeight();
 
-        Thread runner = new Thread(new Runnable() {
-            public void run() {
-                double zoomValue = 0.0;
-                for (int i = 0; i <= ANIM_STEPS; i++) {
-                    if (i > 0) {
-                        pause(5);
-                    }
-                    zoomValue = 1.0 + (factor - 1.0) * i / (double) ANIM_STEPS;
-                    setDesiredLocalBounds(gc, new Rectangle2D.Double(cx - .5 * zoomValue * wx, cy - .5 * zoomValue * wy, wx + zoomValue * wx, wy + zoomValue * wy));
-                }
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
+            @Override
+            public void run(int idx, double pct) {
+                double zoomValue = 1.0 + (factor - 1.0) * pct;
+                setDesiredLocalBounds(gc, new Rectangle2D.Double(
+                        cx - .5 * zoomValue * wx, cy - .5 * zoomValue * wy, 
+                        wx + zoomValue * wx, wy + zoomValue * wy));
             }
         });
-        runner.start();
     }
 
     /**
      * Zooms to the boundaries of a particular box.
-     *
+     * @param gc associated component
      * @param zoomBoxWinCoords the boundary of the zoom box (in window
      * coordinates)
      */
-    public static void zoomBoxAnimated(GraphicComponent vis, Rectangle2D zoomBoxWinCoords) {
-        zoomCoordBoxAnimated(vis,
-                toLocal(vis, new Point2D.Double(zoomBoxWinCoords.getMinX(), zoomBoxWinCoords.getMinY())),
-                toLocal(vis, new Point2D.Double(zoomBoxWinCoords.getMaxX(), zoomBoxWinCoords.getMaxY())));
+    public static void zoomBoxAnimated(GraphicComponent gc, Rectangle2D zoomBoxWinCoords) {
+        zoomCoordBoxAnimated(gc,
+                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMinX(), zoomBoxWinCoords.getMinY())),
+                gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMaxX(), zoomBoxWinCoords.getMaxY())));
     }
 
     /**
      * Zooms to the boundaries of a particular box.
-     *
-     * @param gc associated visometry
+     * @param gc associated component
      * @param newMin min of zoom box
      * @param newMax max of zoom box
      */
@@ -324,29 +320,17 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double nxMax = newMax.getX();
         final double nyMax = newMax.getY();
 
-        Thread runner = new Thread(new Runnable() {
-            public void run() {
-                for (double factor = 0; factor < 1.0; factor += 1.0 / ANIM_STEPS) {
-                    if (factor > 0) {
-                        pause(5);
-                    }
-                    double x1 = xMin + (nxMin - xMin) * factor;
-                    double y1 = yMin + (nyMin - yMin) * factor;
-                    double x2 = xMax + (nxMax - xMax) * factor;
-                    double y2 = yMax + (nyMax - yMax) * factor;
-                    setDesiredLocalBounds(gc, new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1));
-                }
+
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
+            @Override
+            public void run(int idx, double pct) {
+                double x1 = xMin + (nxMin - xMin) * pct;
+                double y1 = yMin + (nyMin - yMin) * pct;
+                double x2 = xMax + (nxMax - xMax) * pct;
+                double y2 = yMax + (nyMax - yMax) * pct;
+                setDesiredLocalBounds(gc, new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1));
             }
         });
-        runner.start();
-    }
-    
-    private static void pause(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Logger.getLogger(PanAndZoomHandler.class.getName()).log(Level.WARNING, "Interrupted", e);
-        }
     }
     
     //</editor-fold> 

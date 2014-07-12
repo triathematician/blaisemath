@@ -4,11 +4,8 @@
  */
 package com.googlecode.blaisemath.style.context;
 
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
 import com.googlecode.blaisemath.style.Style;
-import com.googlecode.blaisemath.style.TextStyle;
+import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -40,13 +37,14 @@ import com.googlecode.blaisemath.style.TextStyle;
  */
 public abstract class StyleContextDecorated<S> implements StyleContext<S> {
     
-    protected final StyleContext<S> parent;
+    @Nullable
+    protected final StyleContext<? super S> parent;
 
     public StyleContextDecorated() {
         this(StyleContextBasic.getInstance());
     }
 
-    public StyleContextDecorated(StyleContext parent) {
+    public StyleContextDecorated(@Nullable StyleContext<? super S> parent) {
         this.parent = parent;
     }
 
@@ -54,33 +52,13 @@ public abstract class StyleContextDecorated<S> implements StyleContext<S> {
      * Return the parent factory used for delegation
      * @return parent
      */
-    public StyleContext getParentContext() {
+    @Nullable
+    public StyleContext<? super S> getParentContext() {
         return parent;
     }
 
-    @Override
-    public <T extends Style> T getStyle(Class<T> cls, S src, StyleHintSet hints) {
-        return parent == null ? null : parent.getStyle(cls, src, hints);
-    }
-
-    @Override
-    public ShapeStyle getShapeStyle(S src, StyleHintSet hints) {
-        return parent == null ? null : parent.getShapeStyle(src, hints);
-    }
-
-    @Override
-    public PathStyle getPathStyle(S src, StyleHintSet hints) {
-        return parent == null ? null : parent.getPathStyle(src, hints);
-    }
-
-    @Override
-    public PointStyle getPointStyle(S src, StyleHintSet hints) {
-        return parent == null ? null : parent.getPointStyle(src, hints);
-    }
-
-    @Override
-    public TextStyle getTextStyle(S src, StyleHintSet hints) {
-        return parent == null ? null : parent.getTextStyle(src, hints);
+    public <T extends Style> T getStyle(Class<T> cls, T pref, S src, StyleHintSet hints) {
+        return parent == null ? null : parent.getStyle(cls, pref, src, hints);
     }
     
 }

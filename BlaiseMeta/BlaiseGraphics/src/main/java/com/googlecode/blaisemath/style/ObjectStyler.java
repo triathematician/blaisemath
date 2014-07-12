@@ -25,9 +25,9 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.annotation.Nullable;
@@ -171,6 +171,51 @@ public class ObjectStyler<S, T> {
             this.tips = tipper;
             pcs.firePropertyChange("tipDelegate", null, tips);
         }
+    }
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="DELEGATE METHODS">
+    
+    /**
+     * Get style for given object.
+     * @param src object
+     * @return style
+     */
+    @Nullable
+    public T getStyle(S src) {
+        return styles == null ? null : styles.apply(src);
+    }
+    
+    /**
+     * Get label for given object.
+     * @param src object
+     * @return label
+     */
+    @Nullable
+    public String getLabel(S src) {
+        return labels == null ? null : labels.apply(src);
+    }
+    
+    /**
+     * Get tip for given object.
+     * @param src object
+     * @return label
+     */
+    @Nullable
+    public TextStyle getLabelStyle(S src) {
+        return labelStyles == null ? null : labelStyles.apply(src);
+    }
+    
+    /**
+     * Get tip for given object.
+     * @param src object
+     * @return label
+     */
+    @Nullable
+    public String getTip(S src) {
+        return tips == null ? null : tips.apply(src);
     }
     
     //</editor-fold>

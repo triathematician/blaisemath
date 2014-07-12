@@ -26,6 +26,10 @@ package com.googlecode.blaisemath.graphics;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.style.ShapeStyleBasic;
+import com.googlecode.blaisemath.style.context.StyleHintSet;
+import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -34,16 +38,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Set;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
-import com.googlecode.blaisemath.util.CanvasPainter;
-import com.googlecode.blaisemath.util.SetSelectionModel;
 
 /**
  * <p>
@@ -60,13 +58,14 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     private final GraphicComponent component;
     /** Model of selected items */
     private final SetSelectionModel<Graphic> selection = new SetSelectionModel<Graphic>();
-    /** Style for drawing */
-    private ShapeStyleBasic style = new ShapeStyleBasic()
+    
+    /** Style for drawing selection box */
+    private ShapeStyleBasic selectionBoxStyle = new ShapeStyleBasic()
             .fill(new Color(128,128,255,32)).stroke(new Color(0,0,128,64));
 
     private transient Point pressPt;
     private transient Point dragPt;
-    private transient Rectangle box = null;
+    private transient Rectangle selectionBox = null;
 
     /** 
      * Initialize for specified component
@@ -104,13 +103,13 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
         if (this.enabled != enabled) {
             this.enabled = enabled;
             if (!enabled) {
-                selection.setSelection(Collections.EMPTY_SET);
+                selection.setSelection(Collections.<Graphic>emptySet());
             }
         }
     }
 
     public ShapeStyleBasic getStyle() {
-        return style;
+        return selectionBoxStyle;
     }
 
     public SetSelectionModel<Graphic> getSelectionModel() {
@@ -118,7 +117,7 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     }
 
     public void setStyle(ShapeStyleBasic style) {
-        this.style = checkNotNull(style);
+        this.selectionBoxStyle = checkNotNull(style);
     }
 
     //</editor-fold>
@@ -126,15 +125,8 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
 
     @Override
     public void paint(Component component, Graphics2D canvas) {
-        if (enabled) {
-            synchronized(selection) {
-                for (Graphic g : selection.getSelection()) {
-                    // TODO - add bounding box to selection to show the user
-                }
-            }
-            if (box != null && box.width > 0 && box.height > 0) {
-                style.draw(box, canvas);
-            }
+        if (enabled && selectionBox != null && selectionBox.width > 0 && selectionBox.height > 0) {
+            selectionBoxStyle.draw(selectionBox, canvas);
         }
     }
     
@@ -142,19 +134,27 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
     //<editor-fold defaultstate="collapsed" desc="MOUSE GESTURE HANDLERS">
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        if (e.isConsumed()) {
+            return;
+        }
+        Graphic g = component.selectableGraphicAt(e.getPoint());
+        component.setCursor(g == null ? Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+                : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (!enabled || !(e.getButton()==MouseEvent.BUTTON1) || e.isConsumed()) {
             return;
         }
         if (!e.isControlDown()) {
-            selection.setSelection(Collections.EMPTY_SET);
+            selection.setSelection(Collections.<Graphic>emptySet());
             return;
         }
-        Point2D loc = component.getInverseTransform() == null ? e.getPoint()
-                : component.getInverseTransform().transform(e.getPoint(), null);
-        Graphic g = component.getGraphicRoot().selectableGraphicAt(loc);
+        Graphic g = component.selectableGraphicAt(e.getPoint());
         if (g == null) {
-            selection.setSelection(Collections.EMPTY_SET);
+            selection.setSelection(Collections.<Graphic>emptySet());
         } else if (e.isShiftDown()) {
             selection.removeSelection(g);
         } else if (e.isAltDown()) {
@@ -170,20 +170,20 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
             return;
         }
         pressPt = e.getPoint();
-        if (box == null) {
-            box = new Rectangle();
+        if (selectionBox == null) {
+            selectionBox = new Rectangle();
         }
-        box.setFrameFromDiagonal(pressPt, pressPt);
+        selectionBox.setFrameFromDiagonal(pressPt, pressPt);
         e.consume();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!enabled || e.isConsumed() || box == null || pressPt == null) {
+        if (!enabled || e.isConsumed() || selectionBox == null || pressPt == null) {
             return;
         }
         dragPt = e.getPoint();
-        box.setFrameFromDiagonal(pressPt, dragPt);
+        selectionBox.setFrameFromDiagonal(pressPt, dragPt);
         if (e.getSource() instanceof Component) {
             ((Component)e.getSource()).repaint();
         }
@@ -192,18 +192,19 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!enabled || e.isConsumed() || box == null || pressPt == null) {
+        if (!enabled || e.isConsumed() || selectionBox == null || pressPt == null) {
             return;
         }
         Point releasePt = e.getPoint();
         if (component.getInverseTransform() == null) {
-            box.setFrameFromDiagonal(pressPt, releasePt);
+            selectionBox.setFrameFromDiagonal(pressPt, releasePt);
         } else {
-            box.setFrameFromDiagonal(component.getInverseTransform().transform(pressPt, null),
-                    component.getInverseTransform().transform(releasePt, null));
+            selectionBox.setFrameFromDiagonal(
+                    component.toGraphicCoordinate(pressPt),
+                    component.toGraphicCoordinate(releasePt));
         }
-        if (box.getWidth() > 0 && box.getHeight() > 0) {
-            Set<Graphic> gg = component.getGraphicRoot().selectableGraphicsIn(box);
+        if (selectionBox.getWidth() > 0 && selectionBox.getHeight() > 0) {
+            Set<Graphic> gg = component.getGraphicRoot().selectableGraphicsIn(selectionBox);
             if (e.isShiftDown()) {
                 Set<Graphic> res = Sets.newHashSet(selection.getSelection());
                 res.removeAll(gg);
@@ -213,23 +214,11 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
             }
             selection.setSelection(gg);
         }
-        box = null;
+        selectionBox = null;
         pressPt = null;
         dragPt = null;
         releasePt = null;
         e.consume();
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        if (e.isConsumed()) {
-            return;
-        }
-        Point2D loc = component.getInverseTransform() == null ? e.getPoint()
-                : component.getInverseTransform().transform(e.getPoint(), null);
-        Graphic g = component.getGraphicRoot().selectableGraphicAt(loc);
-        component.setCursor(g == null ? Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
-                : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
     
     //</editor-fold>

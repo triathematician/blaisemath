@@ -25,19 +25,24 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkState;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.TextStyle;
+import com.googlecode.blaisemath.style.context.StyleContext;
+import com.googlecode.blaisemath.style.context.StyleHintSet;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.style.context.StyleContext;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
 
 /**
  * <p>
@@ -56,6 +61,7 @@ public class GraphicComposite extends GraphicSupport {
     /** Stores the shapes and their styles */
     private final Set<Graphic> entries = Sets.newLinkedHashSet();
     /** The associated style provider; overrides the default style for the components in the composite (may be null). */
+    @Nullable 
     private StyleContext styleContext;
     
     //
@@ -121,20 +127,84 @@ public class GraphicComposite extends GraphicSupport {
      * @return style provider with default styles
      * @throws IllegalStateException if the object returned would be null
      */
+    @Nonnull
     public StyleContext getStyleContext() {
-        Preconditions.checkState(styleContext != null || (parent != null && parent.getStyleContext() != null));
-        return styleContext == null ? parent.getStyleContext() : styleContext;
+        if (styleContext != null) {
+            return styleContext;
+        } else {
+            checkState(parent != null);
+            StyleContext res = parent.getStyleContext();
+            checkState(res != null);
+            return res;
+        }
     }
     
     /** 
      * Sets default style provider for all child entries (may be null) 
      * @param styler the style provider (may be null)
+     * @throws IllegalArgumentException if the styler is null, and the composite cannot
+     *    get a non-null context from its parent
      */
     public void setStyleContext(@Nullable StyleContext styler) { 
+        if (styler == null) {
+            checkState(parent != null && parent.getStyleContext() != null);
+        }
         if (styleContext != styler) { 
             styleContext = styler; 
             fireGraphicChanged(); 
         } 
+    }
+    
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="StyleContext DELEGATE METHODS">
+    //
+    // StyleContext DELEGATE METHODS
+    //
+    
+    /**
+     * Get path style in this composite's context.
+     * @param pref the preferred style to use
+     * @param src object being styled
+     * @param hints hints for styles
+     * @return path style
+     */
+    public PathStyle getPathStyle(@Nullable PathStyle pref, Object src, StyleHintSet hints) {
+        return (PathStyle) getStyleContext().getStyle(PathStyle.class, pref, src, hints);
+    }
+    
+    /**
+     * Get shape style in this composite's context.
+     * @param pref the preferred style to use
+     * @param src object being styled
+     * @param hints hints for styles
+     * @return path style
+     */
+    public ShapeStyle getShapeStyle(@Nullable ShapeStyle pref, Object src, StyleHintSet hints) {
+        return (ShapeStyle) getStyleContext().getStyle(ShapeStyle.class, pref, src, hints);
+    }
+    
+    /**
+     * Get point style in this composite's context.
+     * @param pref the preferred style to use
+     * @param src object being styled
+     * @param hints hints for styles
+     * @return path style
+     */
+    public PointStyle getPointStyle(@Nullable PointStyle pref, Object src, StyleHintSet hints) {
+        return (PointStyle) getStyleContext().getStyle(PointStyle.class, pref, src, hints);
+    }
+    
+    /**
+     * Get text style in this composite's context.
+     * @param pref the preferred style to use
+     * @param src object being styled
+     * @param hints hints for styles
+     * @return path style
+     */
+    public TextStyle getTextStyle(@Nullable TextStyle pref, Object src, StyleHintSet hints) {
+        return (TextStyle) getStyleContext().getStyle(TextStyle.class, pref, src, hints);
     }
     
     //</editor-fold>

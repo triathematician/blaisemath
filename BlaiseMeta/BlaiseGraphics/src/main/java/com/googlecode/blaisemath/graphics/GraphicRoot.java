@@ -28,6 +28,8 @@ package com.googlecode.blaisemath.graphics;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.style.context.StyleContext;
+import com.googlecode.blaisemath.style.context.StyleContextBasic;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -37,9 +39,6 @@ import javax.annotation.Nonnull;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import com.googlecode.blaisemath.style.context.StyleContext;
-import com.googlecode.blaisemath.style.context.StyleContextBasic;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
 
 /**
  * <p>

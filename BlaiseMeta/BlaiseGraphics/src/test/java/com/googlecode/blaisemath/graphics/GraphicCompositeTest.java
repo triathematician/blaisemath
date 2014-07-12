@@ -50,7 +50,6 @@ import java.util.Collections;
 import javax.swing.JPopupMenu;
 import com.googlecode.blaisemath.style.context.StyleContextBasic;
 import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -189,9 +188,8 @@ public class GraphicCompositeTest {
     public void testGetStyleContext() {
         System.out.println("getStyleContext");
         assertNotNull(gc.getStyleContext());
-        gc.setStyleContext(null);
         try {
-            gc.getStyleContext();
+            gc.setStyleContext(null);
             fail("Composites must have style contexts.");
         } catch (IllegalStateException x) {
             // expected

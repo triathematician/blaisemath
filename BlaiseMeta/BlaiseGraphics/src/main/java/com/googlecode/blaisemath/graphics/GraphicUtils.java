@@ -42,6 +42,10 @@ public class GraphicUtils {
         }
     };
     
+    // utility class
+    private GraphicUtils() {
+    }
+    
     /**
      * Return visibility filter for graphics.
      * @return visible filter
