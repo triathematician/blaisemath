@@ -253,7 +253,7 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     // EVENT HANDLING
     //
 
-    protected final void fireCoordinatesChanged(CoordinateChangeEvent evt) {
+    protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
         synchronized(listeners) {
             for (CoordinateListener cl : listeners) {
                 cl.coordinatesChanged(evt);

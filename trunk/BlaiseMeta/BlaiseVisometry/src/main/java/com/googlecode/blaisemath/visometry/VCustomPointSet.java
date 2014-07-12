@@ -24,11 +24,6 @@ package com.googlecode.blaisemath.visometry;
  * #L%
  */
 
-import java.awt.geom.Point2D;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import com.googlecode.blaisemath.graphics.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -36,6 +31,11 @@ import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.util.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.CoordinateListener;
 import com.googlecode.blaisemath.util.CoordinateManager;
+import java.awt.geom.Point2D;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A set of draggable points defined in local coordinates. The local coordinates are updated
@@ -55,6 +55,9 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
     protected CoordinateManager<S,C> coordManager;
     /** Listens for updates to both window & local coordinate managers */
     protected final CoordinateListener coordinateListener;
+
+    /** Ignore changes while converting */
+    boolean converting = false;
     
     /**
      * Initialize with no points
@@ -68,9 +71,9 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
      * @param mgr coordinate manager
      */
     public VCustomPointSet(CoordinateManager<S,C> mgr) {
-        coordinateListener = new CoordinateListener(){
+        coordinateListener = new CoordinateListener<S,C>(){
             @Override
-            public void coordinatesChanged(CoordinateChangeEvent evt) {
+            public void coordinatesChanged(CoordinateChangeEvent<S,C> evt) {
                 handleCoordinatesChanged(evt);
             }
         };
@@ -88,7 +91,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
         coordManager.putAll(loc);
     }
 
-    private void handleCoordinatesChanged(CoordinateChangeEvent evt) {
+    private void handleCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
         if (converting) {
             return;
         }
@@ -96,19 +99,19 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
             // local coords changed
             setUnconverted(true);
         } else if (evt.getSource() == window.getCoordinateManager()) {
+            CoordinateChangeEvent<S,Point2D> winEvt = (CoordinateChangeEvent<S,Point2D>) evt;
             // window coords changed (from dragging)
             synchronized (coordManager) {
                 if (evt.isAddEvent()) {
                     Visometry<C> vis = parent.getVisometry();
-                    Map<S,Point2D> add = (Map<S,Point2D>) evt.getAdded();
-                    if (add != null) {
-                        Map<S,C> local = new HashMap<S,C>();
-                        for (S s : add.keySet()) {
-                            local.put(s, vis.toLocal(add.get(s)));
-                        }
-                        coordManager.putAll(local);
+                    Map<S, ? extends Point2D> add = winEvt.getAdded();
+                    Map<S,C> local = new HashMap<S,C>();
+                    for (S s : add.keySet()) {
+                        local.put(s, vis.toLocal(add.get(s)));
                     }
+                    coordManager.putAll(local);
                 }
+                // possible for both add and remove, so this shouldn't be an else statement
                 if (evt.isRemoveEvent()) {
                     coordManager.removeObjects(evt.getRemoved());
                 }
@@ -125,7 +128,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
         return window;
     }
 
-    public CoordinateManager<S, C> getCoordinateManager() {
+    public CoordinateManager<S,C> getCoordinateManager() {
         return coordManager;
     }
 
@@ -133,7 +136,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
      * Initialize coordinate manager for this set.
      * @param mgr manager
      */
-    public final void setCoordinateManager(CoordinateManager mgr) {
+    public final void setCoordinateManager(CoordinateManager<S,C> mgr) {
         if (this.coordManager != mgr) {
             if (this.coordManager != null) {
                 coordManager.removeCoordinateListener(coordinateListener);
@@ -186,9 +189,6 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
     //
     // CONVERSION
     //
-
-    /** Ignore changes while converting */
-    boolean converting = false;
 
     @Override
     public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {

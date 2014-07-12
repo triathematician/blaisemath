@@ -25,8 +25,6 @@ package com.googlecode.blaisemath.style;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.util.ColorUtils;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.BasicStroke;
 import java.awt.Color;

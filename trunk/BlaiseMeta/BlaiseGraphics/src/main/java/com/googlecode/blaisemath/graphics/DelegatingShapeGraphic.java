@@ -27,14 +27,15 @@ package com.googlecode.blaisemath.graphics;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.ShapeStyle;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.ShapeStyle;
 
 /**
  * Delegates style and some other properties of a {@link Graphic} to an {@link ObjectStyler}.
@@ -50,22 +51,20 @@ public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
     protected S source;
     /** Styler managing delgators */
     @Nonnull 
-    protected ObjectStyler<S,? extends ShapeStyle> styler = ObjectStyler.create();
+    protected ObjectStyler<S,? extends ShapeStyle> styler;
 
     /** Initialize without arguments */
     public DelegatingShapeGraphic() {
-        this(null, null, false);
+        this(null, null, ObjectStyler.<S,ShapeStyle>create());
     }
 
     /**
      * Initialize with source (source object) and graphic
      * @param obj the source object
      * @param shape the shape to use
-     * @param strokeOnly whether object should be stroked only
      */
-    public DelegatingShapeGraphic(S obj, Shape shape, boolean strokeOnly) {
-        super(shape, strokeOnly);
-        setSourceObject(obj);
+    public DelegatingShapeGraphic(S obj, Shape shape) {
+        this(obj, shape, ObjectStyler.<S,ShapeStyle>create());
     }
 
     /**
@@ -75,9 +74,10 @@ public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
      * @param styler object styler
      */
     public DelegatingShapeGraphic(S obj, Shape shape, ObjectStyler<S,? extends ShapeStyle> styler) {
-        super(shape, false);
-        setSourceObject(obj);
-        setStyler(styler);
+        super(shape);
+        this.source = obj;
+        this.styler = checkNotNull(styler);
+        setDefaultTooltip(styler.getTipDelegate() == null ? null : styler.getTipDelegate().apply(source));
     }
     
     
@@ -124,7 +124,7 @@ public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
      * the graphic has changed.
      * @param src the new source object
      */
-    public final void setSourceObject(S src) {
+    public void setSourceObject(S src) {
         if (this.source != src) {
             this.source = src;
             sourceGraphicUpdated();
@@ -143,7 +143,7 @@ public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
      * Set the style object used for the graphic's style.
      * @param styler a new style object
      */
-    public final void setStyler(ObjectStyler<S,? extends ShapeStyle> styler) {
+    public void setStyler(ObjectStyler<S,? extends ShapeStyle> styler) {
         if (this.styler != checkNotNull(styler)) {
             this.styler = styler;
             sourceGraphicUpdated();
@@ -156,14 +156,12 @@ public class DelegatingShapeGraphic<S> extends AbstractShapeGraphic {
     @Override
     @Nonnull
     protected ShapeStyle drawStyle() {
-        ShapeStyle style = styler.getStyleDelegate() == null ? null 
-                : styler.getStyleDelegate().apply(source);
-        if (style != null) {
-            return style;
+        ShapeStyle style = styler.getStyle(source);
+        if (style instanceof PathStyle) {
+            return parent.getPathStyle((PathStyle) style, this, styleHints);
+        } else {
+            return parent.getShapeStyle(style, this, styleHints);
         }
-        return isStrokeOnly() 
-                ? parent.getStyleContext().getPathStyle(this, styleHints)
-                : parent.getStyleContext().getShapeStyle(this, styleHints);
     }
 
 }

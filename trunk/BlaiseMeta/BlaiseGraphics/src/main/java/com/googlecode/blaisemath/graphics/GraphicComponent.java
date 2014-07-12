@@ -25,20 +25,23 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.style.context.StyleContext;
 import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.util.List;
-import com.googlecode.blaisemath.style.context.StyleContext;
-import com.googlecode.blaisemath.util.SetSelectionModel;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -56,8 +59,10 @@ public class GraphicComponent extends javax.swing.JComponent {
     /** The visible shapes. */
     protected final GraphicRoot root;
     /** Affine transform applied to graphics canvas before drawing (enables pan & zoom). */
+    @Nullable
     protected AffineTransform transform = null;
     /** Store inverse transform */
+    @Nullable
     protected AffineTransform inverseTransform = null;
     
     /** Underlay painters */
@@ -145,25 +150,6 @@ public class GraphicComponent extends javax.swing.JComponent {
     public SetSelectionModel<Graphic> getSelectionModel() {
         return selector.getSelectionModel();
     }
-    
-    public AffineTransform getTransform() {
-        return transform;
-    }
-    
-    public AffineTransform getInverseTransform() {
-        return inverseTransform;
-    }
-    
-    public void setTransform(AffineTransform at) {
-        checkArgument(at != null && at.getDeterminant() != 0);
-        transform = at;
-        try {
-            inverseTransform = at.createInverse();
-        } catch (NoninvertibleTransformException ex) {
-            throw new IllegalStateException("Already checked that the argument is invertible...", ex);
-        }
-        repaint();
-    }
 
     /**
      * Return true if antialias is enabled
@@ -189,6 +175,8 @@ public class GraphicComponent extends javax.swing.JComponent {
     //
     // DELEGATES
     //
+    
+    
 
     /**
      * Add graphics to the component
@@ -231,6 +219,69 @@ public class GraphicComponent extends javax.swing.JComponent {
 
     //</editor-fold>
 
+    
+    //<editor-fold defaultstate="collapsed" desc="CANVAS TRANSFORM">
+    
+    @Nullable
+    public AffineTransform getTransform() {
+        return transform;
+    }
+    
+    @Nullable
+    public AffineTransform getInverseTransform() {
+        return inverseTransform;
+    }
+    
+    /**
+     * Set thee transform used for drawing objects on the canvas.
+     * @param at the transform
+     * @throws IllegalArgumentException if the transform is non-null but not invertible
+     */
+    public void setTransform(@Nullable AffineTransform at) {
+        if (at == null) {
+            transform = null;
+            inverseTransform = null;
+        } else {
+            checkArgument(at.getDeterminant() != 0);
+            transform = at;
+            try {
+                inverseTransform = at.createInverse();
+            } catch (NoninvertibleTransformException ex) {
+                throw new IllegalStateException("Already checked that the argument is invertible...", ex);
+            }
+        }
+        repaint();
+    }
+    
+    /**
+     * Convert window point location to graphic root location
+     * @param winLoc window location
+     * @return graphic coordinate system location
+     */
+    public Point2D toGraphicCoordinate(Point2D winLoc) {
+        return inverseTransform == null ? winLoc : inverseTransform.transform(winLoc, null);
+    }
+    
+    /**
+     * Return the graphic at the given window location
+     * @param winLoc window location
+     * @return graphic
+     */
+    public Graphic graphicAt(Point winLoc) {
+        return root.graphicAt(toGraphicCoordinate(winLoc));
+    }
+    
+    /**
+     * Return the selectable graphic at the given window location
+     * @param winLoc window location
+     * @return graphic
+     */
+    public Graphic selectableGraphicAt(Point winLoc) {
+        return root.selectableGraphicAt(toGraphicCoordinate(winLoc));
+    }
+    
+    //</editor-fold>
+    
 
     //
     // PAINT METHODS
@@ -274,11 +325,11 @@ public class GraphicComponent extends javax.swing.JComponent {
             canvas.fillRect(0, 0, getWidth(), getHeight());
         }
         renderUnderlay(canvas);
-        if (transform != null) {
+        if (transform == null) {
+            root.draw(canvas);
+        } else {
             canvas.transform(transform);
-        }
-        root.draw(canvas);
-        if (transform != null) {
+            root.draw(canvas);
             canvas.transform(inverseTransform);
         }
         renderOverlay(canvas);

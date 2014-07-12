@@ -26,16 +26,16 @@ package com.googlecode.blaisemath.graphics;
  */
 
 
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.ShapeStyleBasic;
+import com.googlecode.blaisemath.style.Styles;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nonnull;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
-import com.googlecode.blaisemath.style.Styles;
 
 /**
  * A shape or path with an associated style.
@@ -51,25 +51,13 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
 
     /** The object that will be drawn. */
     protected Shape primitive;
-    /** Whether to use stroke or fill style (if not specified) */
-    protected boolean strokeOnly;
 
     /**
      * Construct with no style (will use the default)
      * @param primitive the shape to draw
      */
     protected AbstractShapeGraphic(Shape primitive) {
-        this(primitive, false);
-    }
-
-    /**
-     * Construct with no style (will use the default)
-     * @param primitive the shape to draw
-     * @param strokeOnly determines whether to use the solid style or the path/edge style
-     */
-    protected AbstractShapeGraphic(Shape primitive, boolean strokeOnly) {
         this.primitive = primitive;
-        this.strokeOnly = strokeOnly;
     }
 
     @Override
@@ -100,25 +88,6 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
         fireGraphicChanged();
     }
     
-    /**
-     * Return flag indicating whether only stroke of shape is drawn.
-     * @return stroke only flag
-     */
-    public boolean isStrokeOnly() {
-        return strokeOnly;
-    }
-
-    /**
-     * Set flag indicating whether only stroke of shape is drawn.
-     * @param strokeOnly stroke only flag
-     */
-    public void setStrokeOnly(boolean strokeOnly) {
-        if (this.strokeOnly != strokeOnly) {
-            this.strokeOnly = strokeOnly;
-            fireGraphicChanged();
-        }
-    }
-    
     //</editor-fold>
 
     
@@ -130,12 +99,13 @@ public abstract class AbstractShapeGraphic extends GraphicSupport {
     protected abstract ShapeStyle drawStyle();
     
 
-    /** Return true if painting as a stroke. */
+    /** 
+     * Return true if painting as a stroke.
+     * @return 
+     */
     protected boolean paintingAsStroke() {
         ShapeStyle style = drawStyle();
-        if (strokeOnly) {
-            return true;
-        } else if (style instanceof ShapeStyleBasic) {
+        if (style instanceof ShapeStyleBasic) {
             ShapeStyleBasic bss = (ShapeStyleBasic) style;
             return bss.getFill() == null;
         } else {

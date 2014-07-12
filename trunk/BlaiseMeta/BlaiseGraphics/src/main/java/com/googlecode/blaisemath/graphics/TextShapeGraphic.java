@@ -26,16 +26,14 @@ package com.googlecode.blaisemath.graphics;
  */
 
 
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Point2D;
-import java.awt.geom.RectangularShape;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.ShapeStyle;
 import com.googlecode.blaisemath.style.TextStyleBasic;
 import com.googlecode.blaisemath.style.TextStyleMultiline;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+import java.awt.geom.RectangularShape;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -87,18 +85,19 @@ public class TextShapeGraphic<E> extends DelegatingShapeGraphic<E> {
         return new ShapeStyle() {
             @Override
             public void draw(Shape primitive, Graphics2D canvas) {
+                Shape drawPrim = primitive;
                 if (primitive instanceof RectangularShape) {
                     RectangularShape rs = (RectangularShape) primitive;
                     int inset = 3;
                     RectangularShape rs2 = (RectangularShape) rs.clone();
                     rs2.setFrameFromCenter(rs.getCenterX(), rs.getCenterY(), rs.getMaxX()-inset, rs.getMaxY()-inset);
-                    primitive = rs2;
+                    drawPrim = rs2;
                 }
-                parentStyle.draw(primitive, canvas);
+                parentStyle.draw(drawPrim, canvas);
                 if (labelStyle != null) {
                     labelGraphic.setPoint(new Point2D.Double(
-                            primitive.getBounds2D().getMinX()+2, 
-                            primitive.getBounds2D().getMaxY()-2));
+                            drawPrim.getBounds2D().getMinX()+2, 
+                            drawPrim.getBounds2D().getMaxY()-2));
                     labelGraphic.draw(canvas);
                 }
             }

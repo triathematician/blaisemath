@@ -26,6 +26,9 @@ package com.googlecode.blaisemath.graphics;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.util.IndexedPointBean;
+import com.googlecode.blaisemath.util.PointFormatters;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -34,9 +37,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.util.IndexedPointBean;
-import com.googlecode.blaisemath.util.PointFormatters;
 
 /**
  * A collection of points that are treated as a single graphic.
@@ -227,9 +227,7 @@ public class BasicPointSetGraphic extends GraphicSupport implements IndexedPoint
      */
     @Nonnull 
     protected PointStyle drawStyle() {
-        return style == null 
-                ? parent.getStyleContext().getPointStyle(this, styleHints) 
-                : style;
+        return parent.getPointStyle(style, this, styleHints);
     }
 
     @Override

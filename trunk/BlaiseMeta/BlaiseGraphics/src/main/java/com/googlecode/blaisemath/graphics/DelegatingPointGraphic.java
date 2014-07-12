@@ -24,15 +24,15 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Function;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Strings;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import javax.annotation.Nonnull;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.style.TextStyle;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import javax.annotation.Nonnull;
 
 /**
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
@@ -45,7 +45,8 @@ public class DelegatingPointGraphic<S> extends AbstractPointGraphic {
     /** Source object */
     protected S src;
     /** Manages delegators */
-    @Nonnull protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
+    @Nonnull 
+    protected ObjectStyler<S, PointStyle> styler = ObjectStyler.create();
 
     public DelegatingPointGraphic() {
         this(null, new Point2D.Double());
@@ -101,14 +102,8 @@ public class DelegatingPointGraphic<S> extends AbstractPointGraphic {
     @Override
     @Nonnull 
     public PointStyle drawStyle() {
-        PointStyle style = null;
-        if (styler.getStyleDelegate() != null) {
-            style = styler.getStyleDelegate().apply(src);
-        }
-        if (style == null) {
-            style = parent.getStyleContext().getPointStyle(this, styleHints);
-        }
-        return style;
+        PointStyle style = styler.getStyle(src);
+        return parent.getPointStyle(style, this, styleHints);
     }
 
     @Override

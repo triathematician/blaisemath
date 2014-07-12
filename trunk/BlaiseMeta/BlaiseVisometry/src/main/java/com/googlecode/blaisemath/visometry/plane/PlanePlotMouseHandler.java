@@ -25,6 +25,10 @@ package com.googlecode.blaisemath.visometry.plane;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.ShapeStyleBasic;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnimationStep;
+import com.googlecode.blaisemath.util.CanvasPainter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -35,12 +39,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
-import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnimationStep;
-import com.googlecode.blaisemath.util.CanvasPainter;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -186,27 +184,43 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
 
         // second pass to snap to boundaries of window
         if (snapEnabled) {
-            // current location of origin
-            Point2D.Double winOrigin = vis.toWindow(new Point2D.Double(0, 0)); 
-            RectangularShape win = vis.getWindowBounds();
-            double shiftX = 0, shiftY = 0;
-            if (winOrigin.x >= win.getMinX() && winOrigin.x <= win.getMinX() + SNAP_RANGE) {
-                shiftX = -(win.getMinX() + SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
-            } else if (winOrigin.x >= win.getMaxX() - SNAP_RANGE && winOrigin.x <= win.getMaxX()) {
-                shiftX = -(win.getMaxX() - SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
-            }
-            if (winOrigin.y >= win.getMinY() && winOrigin.y <= win.getMinY() + SNAP_RANGE) {
-                shiftY = -(win.getMinY() + SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
-            } else if (winOrigin.y >= win.getMaxY() - SNAP_RANGE && winOrigin.y <= win.getMaxY()) {
-                shiftY = -(win.getMaxY() - SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
-            }
+            snapToCoordinates(oldC, newC);
+        }
+    }
+    
+    private void snapToCoordinates(Point2D.Double oldC, Point2D.Double newC) {
+        // current location of origin
+        Point2D.Double winOrigin = vis.toWindow(new Point2D.Double(0, 0)); 
+        double shiftX = horizontalSnap(winOrigin);
+        double shiftY = verticalSnap(winOrigin);
 
-            if (shiftX != 0 || shiftY != 0) {
-                vis.setDesiredRange(
-                    oldMin.x - newC.x + oldC.x + shiftX, oldMin.y - newC.y + oldC.y + shiftY,
-                    oldMax.x - newC.x + oldC.x + shiftX, oldMax.y - newC.y + oldC.y + shiftY);
+        if (shiftX != 0 || shiftY != 0) {
+            vis.setDesiredRange(
+                oldMin.x - newC.x + oldC.x + shiftX, oldMin.y - newC.y + oldC.y + shiftY,
+                oldMax.x - newC.x + oldC.x + shiftX, oldMax.y - newC.y + oldC.y + shiftY);
 
-            }
+        }
+    }
+    
+    private double horizontalSnap(Point2D.Double winOrigin) {        
+        RectangularShape winBounds = vis.getWindowBounds();
+        if (winOrigin.x >= winBounds.getMinX() && winOrigin.x <= winBounds.getMinX() + SNAP_RANGE) {
+            return -(winBounds.getMinX() + SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
+        } else if (winOrigin.x >= winBounds.getMaxX() - SNAP_RANGE && winOrigin.x <= winBounds.getMaxX()) {
+            return -(winBounds.getMaxX() - SNAP_RANGE/2 - winOrigin.x) / vis.getHorizontalScale();
+        } else {
+            return 0;
+        }
+    }
+    
+    private double verticalSnap(Point2D.Double winOrigin) {     
+        RectangularShape winBounds = vis.getWindowBounds();
+        if (winOrigin.y >= winBounds.getMinY() && winOrigin.y <= winBounds.getMinY() + SNAP_RANGE) {
+            return -(winBounds.getMinY() + SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
+        } else if (winOrigin.y >= winBounds.getMaxY() - SNAP_RANGE && winOrigin.y <= winBounds.getMaxY()) {
+            return -(winBounds.getMaxY() - SNAP_RANGE/2 - winOrigin.y) / vis.getVerticalScale();
+        } else {
+            return 0;
         }
     }
     

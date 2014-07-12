@@ -24,11 +24,11 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.PointStyle;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.googlecode.blaisemath.style.PointStyle;
 
 /**
  * A point with position, orientation, and an associated style.
@@ -130,9 +130,7 @@ public class BasicPointGraphic extends AbstractPointGraphic {
     @Override
     @Nonnull 
     public PointStyle drawStyle() {
-        return style == null 
-                ? parent.getStyleContext().getPointStyle(this, styleHints) 
-                : style;
+        return parent.getPointStyle(style, this, styleHints);
     }
 
     @Override

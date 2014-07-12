@@ -26,6 +26,8 @@ package com.googlecode.blaisemath.graphics;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.style.context.StyleHintSet;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
@@ -36,8 +38,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
 
 /**
  * <p>
@@ -194,7 +194,7 @@ public abstract class GraphicSupport implements Graphic {
         return tipEnabled;
     }
 
-    public void setTooltipEnabled(boolean val) {
+    public final void setTooltipEnabled(boolean val) {
         tipEnabled = val;
     }
 
@@ -215,7 +215,7 @@ public abstract class GraphicSupport implements Graphic {
      * Sets the tooltip for this entry. Also updates the enabled tip flag to true.
      * @param tooltip the tooltip
      */
-    public void setDefaultTooltip(String tooltip) {
+    public final void setDefaultTooltip(String tooltip) {
         setTooltipEnabled(true);
         this.defaultTooltip = tooltip;
     }

@@ -25,11 +25,11 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.ShapeStyle;
 import java.awt.Shape;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
 
 /**
  * A shape or path with an associated style.
@@ -52,16 +52,7 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
      * @param primitive the shape to draw
      */
     public BasicShapeGraphic(Shape primitive) {
-        this(primitive, false);
-    }
-
-    /**
-     * Construct with no style (will use the default)
-     * @param primitive the shape to draw
-     * @param strokeOnly determines whether to use the solid style or the path/edge style
-     */
-    public BasicShapeGraphic(Shape primitive, boolean strokeOnly) {
-        super(primitive, strokeOnly);
+        this(primitive, null);
     }
 
     /**
@@ -70,7 +61,7 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
      * @param style style used to draw
      */
     public BasicShapeGraphic(Shape primitive, ShapeStyle style) {
-        super(primitive, style instanceof PathStyle);
+        super(primitive);
         setStyle(style);
     }
 
@@ -110,11 +101,11 @@ public class BasicShapeGraphic extends AbstractShapeGraphic {
     @Nonnull 
     @Override
     protected ShapeStyle drawStyle() {
-        if (style != null) {
-            return style;
+        if (style instanceof PathStyle) {
+            return parent.getPathStyle((PathStyle) style, this, styleHints);
+        } else {
+            return parent.getShapeStyle(style, this, styleHints);
         }
-        return isStrokeOnly() ? parent.getStyleContext().getPathStyle(this, styleHints)
-                : parent.getStyleContext().getShapeStyle(this, styleHints);
     }
     
 }

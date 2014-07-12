@@ -35,13 +35,13 @@ import java.awt.geom.RectangularShape;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
-import org.blaise.math.coordinate.DomainHint;
-import org.blaise.math.coordinate.SampleSet;
-import org.blaise.math.coordinate.ScreenSampleDomainProvider;
-import org.blaise.math.line.RealIntervalSamplerProvider;
-import org.blaise.math.line.RealIntervalStepSampler;
-import org.blaise.math.plane.SquareDomainBroadcaster;
-import org.blaise.math.plane.SquareDomainStepSampler;
+import com.googlecode.blaisemath.coordinate.DomainHint;
+import com.googlecode.blaisemath.coordinate.SampleSet;
+import com.googlecode.blaisemath.coordinate.ScreenSampleDomainProvider;
+import com.googlecode.blaisemath.line.RealIntervalSamplerProvider;
+import com.googlecode.blaisemath.line.RealIntervalStepSampler;
+import com.googlecode.blaisemath.plane.SquareDomainBroadcaster;
+import com.googlecode.blaisemath.plane.SquareDomainStepSampler;
 import com.googlecode.blaisemath.visometry.Visometry;
 
 /**
