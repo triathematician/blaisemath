@@ -38,16 +38,13 @@ import com.googlecode.blaisemath.visometry.VGraphicComponent;
  */
 public class PlanePlotComponent extends VGraphicComponent<Point2D.Double> {
 
-    /** Handles mouse gestures on the component, e.g. drag and zoom */
-    private final PlanePlotMouseHandler mouseListener;
-
     /** Construct */
     public PlanePlotComponent() {
         super(new PlaneVisometry());
 
         PlaneVisometry pv = (PlaneVisometry) getVisometry();
 
-        mouseListener = new PlanePlotMouseHandler(pv);
+        PlanePlotMouseHandler mouseListener = new PlanePlotMouseHandler(pv);
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
         addMouseWheelListener(mouseListener);

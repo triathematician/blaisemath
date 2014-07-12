@@ -69,6 +69,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
      */
     public VCustomPointSet(CoordinateManager<S,C> mgr) {
         coordinateListener = new CoordinateListener(){
+            @Override
             public void coordinatesChanged(CoordinateChangeEvent evt) {
                 handleCoordinatesChanged(evt);
             }
@@ -119,6 +120,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
     // PROPERTIES
     //
 
+    @Override
     public Graphic getWindowGraphic() {
         return window;
     }
@@ -131,7 +133,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
      * Initialize coordinate manager for this set.
      * @param mgr manager
      */
-    public void setCoordinateManager(CoordinateManager mgr) {
+    public final void setCoordinateManager(CoordinateManager mgr) {
         if (this.coordManager != mgr) {
             if (this.coordManager != null) {
                 coordManager.removeCoordinateListener(coordinateListener);
@@ -188,6 +190,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
     /** Ignore changes while converting */
     boolean converting = false;
 
+    @Override
     public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
         // conversion should never occur while points are changing
         synchronized (coordManager) {
