@@ -241,9 +241,11 @@ public final class PlaneVisometry implements Visometry<Point2D.Double> {
     //</editor-fold>
     
 
+    @Override
     public void computeTransformation() {
-        checkState(windowBounds != null && windowBounds.getWidth() > 0 && windowBounds.getHeight() > 0
-                && desiredMin != null && desiredMax != null && aspectRatio > 0 && aspectRatio != Double.NaN);
+        checkState(windowBounds != null && windowBounds.getWidth() > 0 && windowBounds.getHeight() > 0);
+        checkState(desiredMin != null && desiredMax != null);
+        checkState(aspectRatio > 0 && aspectRatio != Double.NaN);
 
         // compute displayed range of values
         double windowAspect = windowBounds.getWidth() / windowBounds.getHeight();
