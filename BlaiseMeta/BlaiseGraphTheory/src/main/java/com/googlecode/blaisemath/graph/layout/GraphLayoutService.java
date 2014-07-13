@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph.layout;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import com.googlecode.blaisemath.graph.Graph;

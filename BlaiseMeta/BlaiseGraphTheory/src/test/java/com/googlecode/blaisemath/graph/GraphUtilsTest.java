@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,10 +25,8 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.Graph;
 import com.google.common.collect.Multiset;
+import com.google.common.collect.Ordering;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import static com.googlecode.blaisemath.graph.AssertUtils.assertCollectionContentsSame;
+import java.util.Collection;
+import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
@@ -59,15 +59,15 @@ public class GraphUtilsTest {
         EE = new Integer[][] {
             {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
         };
-        UNDIRECTED_INSTANCE = new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE));
-        DIRECTED_INSTANCE = new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE));
+        UNDIRECTED_INSTANCE = SparseGraph.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE));
+        DIRECTED_INSTANCE = SparseGraph.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE));
     }
 
     @Test
     public void testPrintGraph() {
         System.out.println("printGraph");
-        Graph<Integer> test1 = GraphUtils.subgraph(UNDIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
-        Graph<Integer> test2 = GraphUtils.subgraph(DIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
+        Graph<Integer> test1 = GraphUtils.copySubgraph(UNDIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
+        Graph<Integer> test2 = GraphUtils.copySubgraph(DIRECTED_INSTANCE, new HashSet(Arrays.asList(1,2,3,6,10)));
         assertEquals("NODES: [1, 2, 3, 6, 10]  EDGES: 1: [2, 6] 2: [1, 3] 3: [2] 6: [1, 6, 10] 10: [6]", GraphUtils.printGraph(test1));
         assertEquals("NODES: [1, 2, 3, 6, 10]", GraphUtils.printGraph(test1, true, false));
         assertEquals("EDGES: 1: [2, 6] 2: [1, 3] 3: [2] 6: [1, 6, 10] 10: [6]", GraphUtils.printGraph(test1, false, true));
@@ -81,8 +81,8 @@ public class GraphUtilsTest {
     @Test
     public void testCopyGraph() {
         System.out.println("copyGraph");
-        Graph<Integer> copy1 = GraphUtils.copy(UNDIRECTED_INSTANCE);
-        Graph<Integer> copy2 = GraphUtils.copy(DIRECTED_INSTANCE);
+        Graph<Integer> copy1 = GraphUtils.copyAsSparseGraph(UNDIRECTED_INSTANCE);
+        Graph<Integer> copy2 = GraphUtils.copyAsSparseGraph(DIRECTED_INSTANCE);
         assertEquals(UNDIRECTED_INSTANCE.nodeCount(), copy1.nodeCount());
         assertEquals(DIRECTED_INSTANCE.nodeCount(), copy2.nodeCount());
         assertEquals(UNDIRECTED_INSTANCE.edgeCount(), copy1.edgeCount());
@@ -103,8 +103,8 @@ public class GraphUtilsTest {
 
         List<String> vv = Arrays.asList("A","B","C","D","E");
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
-        Graph<String> result3 = new SparseGraph(false, vv, Arrays.asList(edges));
-        Graph<String> result4 = new SparseGraph(true, vv, Arrays.asList(edges));
+        Graph<String> result3 = SparseGraph.createFromArrayEdges(false, vv, Arrays.asList(edges));
+        Graph<String> result4 = SparseGraph.createFromArrayEdges(true, vv, Arrays.asList(edges));
         assertEquals("[[false, true, false, true, false], [true, false, true, false, false], [false, true, false, true, false], [true, false, true, false, false], [false, false, false, false, true]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrix(result3, vv)));
         assertEquals("[[false, true, false, false, false], [false, false, true, false, false], [false, false, false, true, false], [true, false, false, false, false], [false, false, false, false, true]]",
@@ -116,8 +116,8 @@ public class GraphUtilsTest {
         System.out.println("adjacencyMatrixPowers");
         List<String> vv = Arrays.asList("A","B","C","D","E");
         String[][] edges = {{"A","B"},{"B","C"},{"C","D"},{"D","A"},{"E","E"}};
-        Graph<String> result1 = new SparseGraph(false, vv, Arrays.asList(edges));
-        Graph<String> result2 = new SparseGraph(true, vv, Arrays.asList(edges));
+        Graph<String> result1 = SparseGraph.createFromArrayEdges(false, vv, Arrays.asList(edges));
+        Graph<String> result2 = SparseGraph.createFromArrayEdges(true, vv, Arrays.asList(edges));
         assertEquals("[[0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [1, 0, 1, 0, 0], [0, 0, 0, 0, 1]]",
                 Arrays.deepToString(GraphUtils.adjacencyMatrixPowers(result1,vv,12)[0]));
         assertEquals("[[2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [2, 0, 2, 0, 0], [0, 2, 0, 2, 0], [0, 0, 0, 0, 1]]",
@@ -204,26 +204,34 @@ public class GraphUtilsTest {
     @Test
     public void testComponents() {
         System.out.println("components");
-        List<Set<Integer>> result1 = new ArrayList<Set<Integer>>(GraphUtils.components(UNDIRECTED_INSTANCE));
-        assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), result1.get(0));
-        assertCollectionContentsSame(Arrays.asList(15), result1.get(1));
-        assertCollectionContentsSame(Arrays.asList(20,21), result1.get(2));
-//        try { GraphUtils.components(DIRECTED_INSTANCE); assertFalse(true); } catch (IllegalArgumentException ex) { assertTrue(true); }
+        for (Graph g : new Graph[]{UNDIRECTED_INSTANCE, DIRECTED_INSTANCE}) {
+            List<Set<Integer>> result1 = new ArrayList<Set<Integer>>(GraphUtils.components(g));
+            Collections.sort(result1, new Ordering<Collection>(){
+                @Override
+                public int compare(Collection left, Collection right) {
+                    return left.size() - right.size();
+                }
+            }.reverse());
+            assertCollectionContentsSame(Arrays.asList(1,2,3,4,5,6,10,11), result1.get(0));
+            assertCollectionContentsSame(Arrays.asList(20,21), result1.get(1));
+            assertCollectionContentsSame(Arrays.asList(15), result1.get(2));
+        }
     }
 
     @Test
     public void testComponentGraphs() {
         System.out.println("componentGraphs");
-        Set<Graph<Integer>> result1 = new TreeSet<Graph<Integer>>(GraphUtils.GRAPH_SIZE_DESCENDING);
-        result1.addAll(GraphUtils.getComponentGraphs(UNDIRECTED_INSTANCE));
-        Graph[] graphs = result1.toArray(new Graph[0]);
-        assertCollectionContentsSame(Arrays.asList(1, 2, 3, 4, 5, 6, 10, 11), graphs[0].nodes());
-        assertEquals(9, graphs[0].edgeCount());
-        assertCollectionContentsSame(Arrays.asList(20, 21), graphs[1].nodes());
-        assertEquals(1, graphs[1].edgeCount());
-        assertCollectionContentsSame(Arrays.asList(15), graphs[2].nodes());
-        assertEquals(1, graphs[2].edgeCount());
-//        try { GraphUtils.getComponentGraphs(DIRECTED_INSTANCE); assertFalse(true); } catch (IllegalArgumentException ex) { assertTrue(true); }
+        for (Graph g : new Graph[]{UNDIRECTED_INSTANCE, DIRECTED_INSTANCE}) {
+            Set<Graph<Integer>> result1 = new TreeSet<Graph<Integer>>(GraphUtils.GRAPH_SIZE_DESCENDING);
+            result1.addAll(GraphUtils.componentGraphs(g));
+            Graph[] graphs = result1.toArray(new Graph[0]);
+            assertCollectionContentsSame(Arrays.asList(1, 2, 3, 4, 5, 6, 10, 11), graphs[0].nodes());
+            assertEquals(g.isDirected() ? 10 : 9, graphs[0].edgeCount());
+            assertCollectionContentsSame(Arrays.asList(20, 21), graphs[1].nodes());
+            assertEquals(1, graphs[1].edgeCount());
+            assertCollectionContentsSame(Arrays.asList(15), graphs[2].nodes());
+            assertEquals(1, graphs[2].edgeCount());
+        }
     }
 
 }

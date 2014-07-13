@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.style;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  *
  * @author Elisha
  */
-public class ShapeStyleBasic implements PathStyle, ShapeStyle {
+public class ShapeStyleBasic implements ShapeStyle {
 
     @Nullable 
     protected Color fill;
@@ -103,7 +103,6 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
         this.fill = fill;
     }
 
-    @Override
     @Nullable 
     public Color getStroke() {
         return stroke;
@@ -113,7 +112,6 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
         this.stroke = stroke;
     }
 
-    @Override
     public float getStrokeWidth() {
         return strokeWidth;
     }
@@ -124,11 +122,6 @@ public class ShapeStyleBasic implements PathStyle, ShapeStyle {
     
     //</editor-fold>
 
-    
-    @Override
-    public Shape shapeOfPath(Shape primitive) {
-        return primitive;
-    }
 
     @Override
     public void draw(Shape s, Graphics2D canvas) {

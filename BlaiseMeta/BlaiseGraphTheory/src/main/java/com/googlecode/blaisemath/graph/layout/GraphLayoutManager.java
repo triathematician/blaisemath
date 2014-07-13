@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph.layout;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.google.common.collect.Sets;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
@@ -38,10 +40,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.googlecode.blaisemath.graph.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphSuppliers;
-import com.googlecode.blaisemath.util.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.CoordinateListener;
-import com.googlecode.blaisemath.util.CoordinateManager;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 
 /**
  * <p>
@@ -56,7 +58,9 @@ import com.googlecode.blaisemath.util.CoordinateManager;
  */
 public final class GraphLayoutManager<N> implements CoordinateListener {
 
-    //<editor-fold defaultstate="collapsed" desc="CONSTANTS">
+    /** Graph property */
+    public static final String PROP_GRAPH = "graph";
+    
     /** Default time between layout iterations. */
     private static final int DEFAULT_DELAY = 10;
     /** Default # iterations per layout step */
@@ -68,7 +72,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     private static final StaticGraphLayout ADDING_LAYOUT = StaticGraphLayout.ORIGIN;
     /** The initial layout parameters */
     private static final double[] LAYOUT_PARAMETERS = new double[] { 100 };
-    //</editor-fold>
+    
 
     /** Graph */
     private Graph<N> graph;
@@ -116,7 +120,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
 
     /**
      * Return the graph
-     * @return the adapter's graph
+     * @return the layout manager's graph
      */
     public Graph<N> getGraph() {
         return graph;
@@ -166,7 +170,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                             "Object sizes don''t match: {0} locations, but {1} nodes!", 
                             new Object[]{coordManager.getObjects().size(), g.nodeCount()});
                 }
-                pcs.firePropertyChange("graph", old, g);
+                pcs.firePropertyChange(PROP_GRAPH, old, g);
             }
         }
     }

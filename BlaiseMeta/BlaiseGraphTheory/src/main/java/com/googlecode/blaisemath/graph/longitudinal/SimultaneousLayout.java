@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph.longitudinal;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.longitudinal;
  * #L%
  */
 
+import com.google.common.collect.Lists;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +36,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.SpringLayout;
-import com.googlecode.blaisemath.graph.layout.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 
 /**
  *
@@ -74,7 +75,7 @@ public class SimultaneousLayout {
     // STATE VARIABLES
 
     /** Stores locations of all vertices at all times, after each iteration */
-    final List<Map<Object,Point2D.Double>> masterPos = new ArrayList<Map<Object,Point2D.Double>>();
+    final List<Map<Object,Point2D.Double>> masterPos = Lists.newArrayList();
 
     // CONSTRUCTORS
 
@@ -164,7 +165,8 @@ public class SimultaneousLayout {
             try {
                 iLoc = masterPos.get(tIndex).get(io);
             } catch (Exception ex) {
-                System.err.println("Exception getting pos: " + ex);
+                Logger.getLogger(LayoutSlice.class.getName()).log(Level.SEVERE,
+                        "Exception getting pos", ex);
                 return;
             }
             if (iLoc == null) {
@@ -173,7 +175,6 @@ public class SimultaneousLayout {
 
             double iter = 1;
 
-            double m0 = sum.distance(0, 0);
             for (int i = Math.max(tIndex-2, 0); i <= Math.min(tIndex+2,masterPos.size()-1); i++) {
                 if (i == tIndex) {
                     continue;
@@ -187,11 +188,6 @@ public class SimultaneousLayout {
                         sum.y += wt * SimultaneousLayout.this.parameters.springC * (adj1.y - iLoc.y) * dist * iter;
                     }
                 }
-            }
-            double m1 = sum.distance(0, 0);
-            if (iter % 300 == 0) {
-                System.err.println("m0: " + m0);
-                System.err.println("m1: " + m1);
             }
         }
 

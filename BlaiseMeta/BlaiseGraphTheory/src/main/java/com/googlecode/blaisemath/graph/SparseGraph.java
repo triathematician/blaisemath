@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,17 +25,20 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.Edge.UndirectedEdge;
+import java.util.HashSet;
+import java.util.Map.Entry;
 
 /**
  * <p>
@@ -50,22 +53,64 @@ import com.googlecode.blaisemath.util.Edge;
  */
 public class SparseGraph<V> extends GraphSupport<V> {
 
-    /** The adjacencies in components of the graph */
-//    protected final Table<V, V, LinkedHashSet<Edge<V>>> adjacencies = HashBasedTable.create()
-    protected final Map<V,Map<V,Set<Edge<V>>>> adjacencies = new LinkedHashMap<V, Map<V,Set<Edge<V>>>>();
     /** Edges in graph (replicated for speed) */
     protected final Set<Edge<V>> edges = new LinkedHashSet<Edge<V>>();
+    
+    /**
+     * Edges in graph, by vertex. Each vertex contains all edges adjacent to the
+     * vertex, regardless of direction.
+     */
+    protected final SetMultimap<V,Edge<V>> edgeIndex = HashMultimap.create();   
+    /**
+     * The adjacencies in components of the graph. If directed, rows are sources
+     * and columns are destinations. Each pair of vertices may have multiple edges.
+     * If undirected, the set of edges is the same for both directions.
+     */
+    protected final Table<V, V, Set<Edge<V>>> edgeTable = HashBasedTable.create();    
     /** Information about the graph's components (replicated for speed) */
-    protected final GraphComponents<V> components;
+    protected GraphComponents<V> components;
 
+    /**
+     * Helper constructor for factory methods
+     * @param directed whether graph is directed
+     * @param nodes nodes in the graph
+     */
+    private SparseGraph(boolean directed, Iterable<V> nodes) {
+        super(directed, nodes);
+    }
+    
     /**
      * Construct graph with specific nodes and edges
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
      */
-    public SparseGraph(boolean directed, V[] nodes, Iterable<V[]> edges) {
-        this(directed, Arrays.asList(nodes), edges);
+    public SparseGraph(boolean directed, Iterable<V> nodes, Iterable<Edge<V>> edges) {
+        this(directed, nodes);
+        for (Edge<V> e : edges) {
+            addEdge(e.getNode1(), e.getNode2());
+        }
+        this.components = new GraphComponents(this, GraphUtils.components(edgeTable));
+    }
+    
+    //
+    // FACTORY METHODS
+    //
+
+    /**
+     * Construct graph with specific nodes and edges
+     * @param directed whether graph is directed
+     * @param nodes nodes in the graph
+     * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
+     * @return graph
+     */
+    public static <V> SparseGraph<V> createFromArrayEdges(boolean directed, V[] nodes, Iterable<V[]> edges) {
+        SparseGraph<V> res = new SparseGraph<V>(directed, Arrays.asList(nodes));
+        for (V[] e : edges) {
+            res.addEdge(e[0], e[1]);
+        }
+        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
+        return res;
     }
 
     /**
@@ -73,74 +118,72 @@ public class SparseGraph<V> extends GraphSupport<V> {
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
+     * @return graph
      */
-    public SparseGraph(boolean directed, Collection<V> nodes, Iterable<V[]> edges) {
-        super(nodes, directed);
+    public static <V> SparseGraph<V> createFromArrayEdges(boolean directed, Iterable<V> nodes, Iterable<V[]> edges) {
+        SparseGraph<V> res = new SparseGraph<V>(directed, nodes);
         for (V[] e : edges) {
-            addEdge(e[0], e[1]);
+            res.addEdge(e[0], e[1]);
         }
-        this.components = new GraphComponents(this, GraphUtils.componentsEdgeMap(adjacencies));
+        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
+        return res;
     }
 
     /**
      * Construct graph with a sparse adjacency representation.
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
+     * @return graph
      */
-    public SparseGraph(boolean directed, Multimap<V,V> adjacencies) {
-        super(GraphUtils.nodes(adjacencies), directed);
-        for (V x : adjacencies.keySet()) {
-            for (V y : adjacencies.get(x)) {
-                addEdge(x, y);
-            }
+    public static <V> SparseGraph<V> createFromAdjacencies(boolean directed, Multimap<V,V> adjacencies) {
+        SparseGraph<V> res = new SparseGraph<V>(directed, GraphUtils.nodes(adjacencies));
+        for (Entry<V,V> en : adjacencies.entries()) {
+            res.addEdge(en.getKey(), en.getValue());
         }
-        this.components = new GraphComponents(this, GraphUtils.components(adjacencies));
+        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
+        return res;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="add/remove Edge helpers">
 
-    protected synchronized void addEdge(V x, V y) {
-        Map<V, Set<Edge<V>>> getx = adjacencies.get(x);
-        Map<V, Set<Edge<V>>> gety = adjacencies.get(y);
-
-        // make sure it doesn't already exist
-        if (directed && getx != null && getx.containsKey(y)) {
-            Edge[] getxy = getx.get(y).toArray(new Edge[0]);
-            if (getxy.length > 0 && getxy[0].getNode1() == x) {
-                return;
-            }
-            if (getxy.length > 1 && getxy[1].getNode1() == x) {
-                return;
-            }
-        } else if (!directed && ( (getx != null && getx.containsKey(y)) || (gety != null && gety.containsKey(x)) ) ) {
-            return;
-        }
-
-        // once checks have been made, create the edge and add it
-        Edge<V> edge = new Edge<V>(x,y);
-        if (getx == null) {
-            adjacencies.put(x, getx = new HashMap<V,Set<Edge<V>>>());
-        }
-        if (getx.get(y) == null) {
-            getx.put(y, new HashSet<Edge<V>>());
-        }
-        getx.get(y).add(edge);
-        if (gety == null) {
-            adjacencies.put(y, gety = new HashMap<V,Set<Edge<V>>>());
-        }
-        if (gety.get(x) == null) {
-            gety.put(x, new HashSet<Edge<V>>());
-        }
-        gety.get(x).add(edge);
+    protected final synchronized void addEdge(V x, V y) {
+        Edge<V> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);
+        edgeIndex.put(x, edge);
+        edgeIndex.put(y, edge);
+    }
+    
+    protected Edge<V> addDirectedEdge(V x, V y) {
+        if (!edgeTable.contains(x, y)) {
+            edgeTable.put(x, y, new HashSet<Edge<V>>());
+        }
+        Edge<V> edge = new Edge<V>(x, y);
+        edgeTable.get(x, y).add(edge);
+        return edge;
+    }
+    
+    protected Edge<V> addUndirectedEdge(V x, V y) {
+        if (!edgeTable.contains(x, y)) {
+            edgeTable.put(x, y, new HashSet<Edge<V>>());
+        }
+        if (!edgeTable.contains(y, x)) {
+            edgeTable.put(y, x, new HashSet<Edge<V>>());
+        }
+        UndirectedEdge<V> edge = new UndirectedEdge<V>(x, y);
+        edgeTable.get(x, y).add(edge);
+        edgeTable.get(y, x).add(edge);
+        return edge;
     }
 
     @Override
     public boolean adjacent(V x, V y) {
-        Map<V, Set<Edge<V>>> map = adjacencies.get(x);
-        if (map == null) {
-            return false;
+        if (edgeTable.contains(x, y) && !edgeTable.get(x, y).isEmpty()) {
+            return true;
         }
-        Set<Edge<V>> set = map.get(y);
-        return set != null && !set.isEmpty();
+        if (directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -150,41 +193,29 @@ public class SparseGraph<V> extends GraphSupport<V> {
      * @return true if edge was found and removed
      */
     protected synchronized boolean removeEdge(V v1, V v2) {
-        Map<V, Set<Edge<V>>> map = adjacencies.get(v1);
-        Set<Edge<V>> remove = new HashSet<Edge<V>>();
-        boolean found = false;
-        if (map != null) {
-            Set<Edge<V>> set = map.get(v2);
-            if (set != null && !set.isEmpty()) {
-                remove.addAll(set);
-                map.remove(v2);
-                found = true;
-            } else if (set != null) {
-                map.remove(v2);
-            }
+        Edge<V> edge = directed ? new Edge<V>(v1, v2) : new UndirectedEdge<V>(v1, v2);
+        if (edgeTable.contains(v1, v2)) {
+            edgeTable.get(v1, v2).remove(edge);
         }
-        map = adjacencies.get(v2);
-        if (map != null) {
-            Set<Edge<V>> set = map.get(v1);
-            if (set != null && !set.isEmpty()) {
-                remove.addAll(set);
-                map.remove(v1);
-                found = true;
-            } else if (set != null) {
-                map.remove(v1);
-            }
+        if (!directed && edgeTable.contains(v2, v1)) {
+            edgeTable.get(v2, v1).remove(edge);
         }
-        edges.removeAll(remove);
-        return found;
+        edgeIndex.remove(v1, edge);
+        edgeIndex.remove(v2, edge);
+        return edges.remove(edge);
     }
-
-    public GraphComponents<V> getComponentInfo() {
-        return components;
-    }
+    
+    //</editor-fold>
 
     @Override
     public String toString() {
-        return String.format("SparseGraph[%s,%d nodes,%d edges]", directed?"directed":"undirected", nodeCount(), edgeCount());
+        return String.format("SparseGraph[%s,%d nodes,%d edges]", 
+                directed?"directed":"undirected", nodeCount(), edgeCount());
+    }
+    
+
+    public GraphComponents<V> getComponentInfo() {
+        return components;
     }
 
     public Set<Edge<V>> edges() {
@@ -192,15 +223,7 @@ public class SparseGraph<V> extends GraphSupport<V> {
     }
 
     public Collection<? extends Edge<V>> edgesAdjacentTo(V x) {
-        Map<V, Set<Edge<V>>> getx = adjacencies.get(x);
-        if (getx == null) {
-            return Collections.EMPTY_SET;
-        }
-        Set<Edge<V>> res = new HashSet<Edge<V>>();
-        for (Set<Edge<V>> se : getx.values()) {
-            res.addAll(se);
-        }
-        return res;
+        return edgeIndex.get(x);
     }
 
 

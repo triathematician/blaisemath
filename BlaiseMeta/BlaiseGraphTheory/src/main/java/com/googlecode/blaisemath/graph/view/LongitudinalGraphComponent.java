@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph.view;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -40,7 +40,7 @@ import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
-import com.googlecode.blaisemath.graph.view.PlaneGraphAdapter;
+import com.googlecode.blaisemath.graph.view.VisualGraph;
 import org.jdesktop.layout.GroupLayout;
 
 /**
@@ -128,13 +128,13 @@ public final class LongitudinalGraphComponent extends JPanel
     public GraphComponent getGraphComponent() { return plot; }
 
     /** @return graph adapter */
-    public PlaneGraphAdapter getGraphAdapter() { return plot.getAdapter(); }
+    public VisualGraph getGraphAdapter() { return plot.getAdapter(); }
 
     /** @return manager for the longitudinal graph */
     public LongitudinalGraphManager getManager() { return manager; }
 
     /** @return manager for graph */
-    public GraphLayoutManager getGraphManager() { return plot.getGraphManager(); }
+    public GraphLayoutManager getGraphManager() { return plot.getLayoutManager(); }
 
     /** Changes the manager for the longitudinal graph */
     public void setManager(LongitudinalGraphManager m) { setManager(m, null); }
@@ -150,9 +150,9 @@ public final class LongitudinalGraphComponent extends JPanel
                 m.addPropertyChangeListener(this);
             if (gm == null) {
                 Graph g = m == null ? null : m.getSlice();
-                plot.setGraphManager(g == null ? null : new GraphLayoutManager(g));
+                plot.setLayoutManager(g == null ? null : new GraphLayoutManager(g));
             } else {
-                plot.setGraphManager(gm);
+                plot.setLayoutManager(gm);
             }
         }
     }
@@ -177,13 +177,13 @@ public final class LongitudinalGraphComponent extends JPanel
                 Map<Object,Point2D.Double> pos = (Map<Object, Point2D.Double>) arr[1];
                 if (updateWithTime) {
                     Graph gr = manager.getSlice();
-                    plot.getGraphManager().setGraph(gr);
+                    plot.getLayoutManager().setGraph(gr);
                 }
                 if (pos != null)
-                    plot.getGraphManager().requestLocations(pos);
+                    plot.getLayoutManager().requestLocations(pos);
                 timeLabel.setText("Slice t="+time);
             } else if (evt.getPropertyName().equals("nodePositions")) {
-                plot.getGraphManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
+                plot.getLayoutManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
             }
         }
     }

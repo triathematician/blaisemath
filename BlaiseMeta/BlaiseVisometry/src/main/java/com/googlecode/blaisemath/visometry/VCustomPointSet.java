@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.visometry;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -28,9 +28,9 @@ import com.googlecode.blaisemath.graphics.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.util.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.CoordinateListener;
-import com.googlecode.blaisemath.util.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
      * Initialize with no points
      */
     public VCustomPointSet() {
-        this(Collections.EMPTY_MAP);
+        this(new CoordinateManager<S,C>());
     }
 
     /**
@@ -80,15 +80,6 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
         
         setCoordinateManager(mgr);
         window.getCoordinateManager().addCoordinateListener(coordinateListener);
-    }
-
-    /**
-     * Initialize set
-     * @param loc initial locations of points
-     */
-    public VCustomPointSet(Map<S, ? extends C> loc) {
-        this(new CoordinateManager<S,C>());
-        coordManager.putAll(loc);
     }
 
     private void handleCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {

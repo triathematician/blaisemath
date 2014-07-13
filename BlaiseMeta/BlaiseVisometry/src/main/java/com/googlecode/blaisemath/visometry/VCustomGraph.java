@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.visometry;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -33,7 +33,7 @@ import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.util.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.Edge;
 
 /**
@@ -55,7 +55,7 @@ public class VCustomGraph<C,S,E extends Edge<S>> extends VCustomPointSet<C, S> {
      * Initialize without any points or edges
      */
     public VCustomGraph() {
-        this(Collections.EMPTY_MAP);
+        this(new CoordinateManager<S,C>());
     }
 
     /**
@@ -64,26 +64,10 @@ public class VCustomGraph<C,S,E extends Edge<S>> extends VCustomPointSet<C, S> {
      */
     public VCustomGraph(CoordinateManager<S, C> mgr) {
         super(mgr);
-        window = null;
-        gwindow = new DelegatingNodeLinkGraphic<S,E>();
         
         // change the window graphic from default specified by parent class
         window.getCoordinateManager().removeCoordinateListener(coordinateListener);
-        window = gwindow.getPointGraphic();
-        window.getCoordinateManager().addCoordinateListener(coordinateListener);
-    }
-
-    /**
-     * Construct point set with specified objects.
-     * @param loc initial locations of points
-     */
-    public VCustomGraph(Map<S,? extends C> loc) {
-        super(loc);
-        window = null;
         gwindow = new DelegatingNodeLinkGraphic<S,E>();
-        
-        // change the window graphic from default specified by parent class
-        window.getCoordinateManager().removeCoordinateListener(coordinateListener);
         window = gwindow.getPointGraphic();
         window.getCoordinateManager().addCoordinateListener(coordinateListener);
     }

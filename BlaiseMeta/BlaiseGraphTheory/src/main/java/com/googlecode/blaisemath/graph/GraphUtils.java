@@ -9,8 +9,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -23,12 +23,19 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
+import com.googlecode.blaisemath.linear.Matrices;
 import com.googlecode.blaisemath.util.Edge;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -41,10 +48,10 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
-import com.googlecode.blaisemath.linear.Matrices;
 
 /**
  * Contains several utility methods for creating and analyzing graphs.
@@ -57,8 +64,10 @@ public class GraphUtils {
     public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
         @Override
         public int compare(Graph o1, Graph o2) {
-            return -(o1.nodeCount() == o2.nodeCount() && o1.edgeCount() == o2.edgeCount() ? o1.nodes().toString().compareTo(o2.nodes().toString())
-                    : o1.nodeCount() == o2.nodeCount() ? o1.edgeCount() - o2.edgeCount()
+            return -(o1.nodeCount() == o2.nodeCount() && o1.edgeCount() == o2.edgeCount() 
+                        ? o1.nodes().toString().compareTo(o2.nodes().toString())
+                    : o1.nodeCount() == o2.nodeCount() 
+                        ? o1.edgeCount() - o2.edgeCount()
                     : o1.nodeCount() - o2.nodeCount());
         }
     };
@@ -111,7 +120,8 @@ public class GraphUtils {
         }
         result.append("EDGES:");
         for (V v : nodes) {
-            result.append(" ").append(v).append(": ").append(sortable ? new TreeSet(graph.outNeighbors(v)) : graph.outNeighbors(v));
+            result.append(" ").append(v).append(": ")
+                    .append(sortable ? new TreeSet(graph.outNeighbors(v)) : graph.outNeighbors(v));
         }
         return result.toString();
     }
@@ -125,6 +135,19 @@ public class GraphUtils {
     //
     
     /**
+     * Creates a copy of a set of edges.
+     * @param edges source edges
+     * @return copy of edges
+     */
+    public static <V> Iterable<Edge<V>> copyEdges(Iterable<? extends Edge<V>> edges) {
+        List<Edge<V>> res = Lists.newArrayList();
+        for (Edge<V> e : edges) {
+            res.add(new Edge<V>(e));
+        }
+        return res;
+    }
+    
+    /**
      * Creates a copy of the specified graph by iterating through all possible
      * adjacencies. Also optimizes the underlying representation by choosing
      * either a sparse graph or a matrix graph representation. If the input
@@ -133,15 +156,8 @@ public class GraphUtils {
      * @param graph a graph
      * @return an instance of the graph with the same vertices and edges, but a new copy of it
      */
-    public static <V> Graph<V> copy(Graph<V> graph) {
-        List<V[]> edges = Lists.newArrayList();
-        for (Edge<V> e : graph.edges()) {
-            V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-            arr[0] = e.getNode1();
-            arr[1] = e.getNode2();
-            edges.add(arr);
-        }
-        return new SparseGraph(graph.isDirected(), graph.nodes(), edges);
+    public static <V> Graph<V> copyAsSparseGraph(Graph<V> graph) {
+        return new SparseGraph<V>(graph.isDirected(), graph.nodes(), copyEdges(graph.edges()));
     }
 
     /**
@@ -149,15 +165,8 @@ public class GraphUtils {
      * @param graph a graph
      * @return undirected copy with the same collection of edges
      */
-    public static <V> Graph<V> copyUndirected(Graph<V> graph) {
-        List<V[]> edges = Lists.newArrayList();
-        for (Edge<V> e : graph.edges()) {
-            V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-            arr[0] = e.getNode1();
-            arr[1] = e.getNode2();
-            edges.add(arr);
-        }
-        return new SparseGraph(false, graph.nodes(), edges);
+    public static <V> Graph<V> copyAsUndirectedSparseGraph(Graph<V> graph) {
+        return new SparseGraph<V>(false, graph.nodes(), copyEdges(graph.edges()));
     }
 
     //</editor-fold>
@@ -175,17 +184,15 @@ public class GraphUtils {
      * @param nodes nodes of parent to keep
      * @return new graph
      */
-    public static <V> Graph<V> subgraph(Graph<V> parent, Set<V> nodes) {
-        List<V[]> edges = Lists.newArrayList();
-        for (Edge<V> e : parent.edges()) {
-            if (nodes.contains(e.getNode1()) && nodes.contains(e.getNode2())) {
-                V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-                arr[0] = e.getNode1();
-                arr[1] = e.getNode2();
-                edges.add(arr);
-            }
-        }
-        return new SparseGraph(parent.isDirected(), nodes, edges);
+    public static <V> Graph<V> copySubgraph(Graph<V> parent, final Set<V> nodes) {
+        Iterable<Edge<V>> filteredEdges = Iterables.filter(parent.edges(),
+            new Predicate<Edge<V>>(){
+                public boolean apply(Edge<V> input) {
+                    return nodes.contains(input.getNode1())
+                            && nodes.contains(input.getNode2());
+                }
+            });
+        return new SparseGraph<V>(parent.isDirected(), nodes, filteredEdges);
     }
     
     /**
@@ -195,7 +202,6 @@ public class GraphUtils {
      * @return graph with isolates and leaves pruned
      */
     public static <V> Graph<V> core(Graph<V> parent) {
-        boolean directed = parent.isDirected();
         Set<V> cNodes = Sets.newLinkedHashSet();
         if (parent instanceof OptimizedGraph) {
             OptimizedGraph<V> og = (OptimizedGraph<V>) parent;
@@ -208,14 +214,7 @@ public class GraphUtils {
                 }
             }
         }
-        List<V[]> edges = Lists.newArrayList();
-        for (Edge<V> e : parent.edges()) {
-            V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-            arr[0] = e.getNode1();
-            arr[1] = e.getNode2();
-            edges.add(arr);
-        }
-        return new SparseGraph(directed, cNodes, edges);
+        return copySubgraph(parent, cNodes);
     }
     
     //</editor-fold>
@@ -290,6 +289,19 @@ public class GraphUtils {
     //
     // DEGREE METHODS
     //
+    
+    /**
+     * Return function calculating degree of elements in the given graph.
+     * @param graph graph
+     * @return function providing degree of vertices
+     */
+    public static <V> Function<V,Integer> degreeFunction(final Graph<V> graph) {
+        return new Function<V,Integer>() {
+            public Integer apply(V input) {
+                return graph.degree(input);
+            }
+        };
+    }
 
     /**
      * Computes and returns degree distribution.
@@ -297,11 +309,7 @@ public class GraphUtils {
      * @return map associating degree #s with counts, sorted by degree
      */
     public static <V> Multiset<Integer> degreeDistribution(Graph<V> graph) {
-        Multiset<Integer> res = HashMultiset.create();
-        for (V v : graph.nodes()) {
-            res.add(graph.degree(v));
-        }
-        return res;
+        return HashMultiset.create(Iterables.transform(graph.nodes(), degreeFunction(graph)));
     }
 
     //</editor-fold>
@@ -339,9 +347,9 @@ public class GraphUtils {
      */
     public static <V> Map<V, Integer> geodesicTree(Graph<V> graph, V vertex, int max) {
         // vertices left to add
-        HashSet<V> remaining = Sets.newHashSet(graph.nodes());
+        Set<V> remaining = Sets.newHashSet(graph.nodes());
         // vertices added already, by distance
-        ArrayList<Set<V>> added = Lists.newArrayList();
+        List<Set<V>> added = Lists.newArrayList();
         // stores size of remaining vertices
         int sRemaining = -1;
 
@@ -351,7 +359,7 @@ public class GraphUtils {
             sRemaining = remaining.size();
             added.add(new HashSet<V>());
             for (V v1 : added.get(added.size() - 2)) {
-                HashSet<V> toRemove = Sets.newHashSet();
+                Set<V> toRemove = Sets.newHashSet();
                 for (V v2 : remaining) {
                     if (graph.adjacent(v1, v2)) {
                         toRemove.add(v2);
@@ -430,15 +438,15 @@ public class GraphUtils {
     //
     
     /**
-     * Generates list of nodes from an adjacency map
+     * Generates ordered set of nodes from an adjacency map
      * @param adj an adjacency map
      * @return list of nodes
      */
-    public static <V> List<V> nodes(Multimap<V,V> adj) {
+    public static <V> Set<V> nodes(Multimap<V,V> adj) {
         Set<V> result = Sets.newLinkedHashSet();
         result.addAll(adj.keySet());
         result.addAll(adj.values());
-        return new ArrayList<V>(result);
+        return result;
     }
 
     /**
@@ -459,36 +467,39 @@ public class GraphUtils {
      * @return set of components, as a set of sets
      */
     public static <V> Collection<Set<V>> components(Multimap<V,V> adj) {
-        List<Set<V>> result = Lists.newArrayList();
-        for (V node : adj.keySet()) {
-            Collection<V> nbhd = adj.get(node);
-            Set<Set<V>> joins = Sets.newHashSet();
-
-            // look for components with common elements
-            for (Set<V> component : result) {
-                if (component.contains(node) || !Collections.disjoint(component, nbhd)) {
-                    joins.add(component);
-                }
-            }
-
-            if (joins.size() == 1) {
-                // if just one common element found, add stuff to it
-                joins.iterator().next().addAll(nbhd);
-                joins.iterator().next().add(node);
-            } else {
-                // otherwise create a new set from all the joined elements, and remove the old ones
-                HashSet<V> nue = Sets.newHashSet(nbhd);
-                nue.add(node);
-                for (Set<V> j : joins) {
-                    nue.addAll(j);
-                    if (!result.remove(j)) {
-                        throw new IllegalStateException("Failed to remove component "+j);
+        Map<V,Set<V>> setMap = Maps.newLinkedHashMap();
+        for (Entry<V,V> en : adj.entries()) {
+            V v1 = en.getKey();
+            V v2 = en.getValue();
+            boolean v1InSet = setMap.containsKey(v1);
+            boolean v2InSet = setMap.containsKey(v2);
+            
+            if (v1InSet && v2InSet) {
+                // check if components need to be merged
+                if (setMap.get(v1) != setMap.get(v2)) {
+                    Set<V> nue = Sets.newHashSet(Iterables.concat(setMap.get(v1), setMap.get(v2)));
+                    for (V v : nue) {
+                        setMap.put(v, nue);
                     }
                 }
-                result.add(nue);
+            } else if (v1InSet) {
+                // v2 hasn't been seen before
+                Set<V> set = setMap.get(v1);
+                set.add(v2);
+                setMap.put(v2, set);
+            } else if (v2InSet) {
+                // v1 hasn't been seen before
+                Set<V> set = setMap.get(v2);
+                set.add(v1);
+                setMap.put(v1, set);
+            } else {
+                // create new set with v1 and v2
+                Set<V> set = Sets.newHashSet(v1, v2);
+                setMap.put(v1, set);
+                setMap.put(v2, set);
             }
         }
-        return result;
+        return Sets.newLinkedHashSet(setMap.values());
     }
 
     /**
@@ -496,48 +507,46 @@ public class GraphUtils {
      * @param adj an adjacency map
      * @return set of components, as a set of sets
      */
-    public static <V,W> Collection<Set<V>> componentsEdgeMap(Map<V,Map<V,W>> adj) {
-        List<Set<V>> result = Lists.newArrayList();
-        for (V node : adj.keySet()) {
-            Set<V> nbhd = adj.get(node).keySet();
-            Set<Set<V>> joins = Sets.newHashSet();
-
-            // look for components with common elements
-            for (Set<V> component : result) {
-                if (component.contains(node) || !Collections.disjoint(component, nbhd)) {
-                    joins.add(component);
-                }
-            }
-
-            if (joins.size() == 1) {
-                // if just one common element found, add stuff to it
-                joins.iterator().next().addAll(nbhd);
-                joins.iterator().next().add(node);
-            } else {
-                // otherwise create a new set from all the joined elements, and remove the old ones
-                HashSet<V> nue = Sets.newHashSet(nbhd);
-                nue.add(node);
-                for (Set<V> j : joins) {
-                    nue.addAll(j);
-                    if (!result.remove(j)) {
-                        throw new IllegalStateException("Failed to remove component "+j);
-                    }
-                }
-                result.add(nue);
-            }
+    public static <V> Collection<Set<V>> components(Table<V,V,?> adj) {
+        Multimap<V,V> multimap = LinkedHashMultimap.create();
+        for (Cell<V,V,?> cell : adj.cellSet()) {
+            multimap.put(cell.getRowKey(), cell.getColumnKey());
         }
-        return result;
+        return components(multimap);
+    }
+
+    /**
+     * Generates connected components from a graph.
+     * @param graph the graph
+     * @return set of connected components
+     */
+    public static <V> Collection<Set<V>> components(Graph<V> graph) {
+        if (graph instanceof SparseGraph) {
+            return ((SparseGraph<V>) graph).getComponentInfo().getComponents();
+        } else {
+            return components(adjacencies(graph, graph.nodes()));
+        }
+    }
+
+    /**
+     * Generates connected components from a subset of vertices in a graph.
+     * @param graph the graph
+     * @param nodes subset of nodes
+     * @return set of connected components
+     */
+    public static <V> Collection<Set<V>> components(Graph<V> graph, Set<V> nodes) {
+        return components(adjacencies(graph, nodes));
     }
 
     /**
      * Generates connected components as a list of subgraphs.
-     *
      * @param graph the graph of interest
      * @return set of connected component subgraphs
      */
-    public static <V> Set<Graph<V>> getComponentGraphs(Graph<V> graph) {
+    public static <V> Set<Graph<V>> componentGraphs(Graph<V> graph) {
         int id = GAInstrument.start("componentGraphs", "" + graph.nodeCount());
-        Set<Graph<V>> result = graph instanceof SparseGraph ? ((SparseGraph) graph).getComponentInfo().getComponentGraphs()
+        Set<Graph<V>> result = graph instanceof SparseGraph 
+                ? ((SparseGraph<V>) graph).getComponentInfo().getComponentGraphs()
                 : new GraphComponents<V>(graph, components(graph)).getComponentGraphs();
         GAInstrument.end(id);
         return result;
@@ -546,50 +555,21 @@ public class GraphUtils {
 
     /**
      * Generates adjacency map from a subgraph.
-     *
      * @param graph the graph
      * @param nodes subset of nodes
      * @return adjacency map restricted to the given subset
      */
-    public static <V> Multimap<V,V> adjacencies(Graph<V> graph, Collection<V> nodes) {
+    public static <V> Multimap<V,V> adjacencies(Graph<V> graph, Set<V> nodes) {
         Multimap<V,V> res = LinkedHashMultimap.create();
         for (V v : nodes) {
-            HashSet<V> nbhd = Sets.newHashSet(graph.neighbors(v));
-            nbhd.retainAll(nodes);
-            res.putAll(v, nbhd);
+            res.putAll(v, Sets.intersection(graph.neighbors(v), nodes));
         }
         return res;
     }
 
     /**
-     * Generates connected components from a graph.
-     *
-     * @param graph the graph
-     * @return set of connected components
-     */
-    public static <V> Collection<Set<V>> components(Graph<V> graph) {
-        if (graph instanceof SparseGraph) {
-            return ((SparseGraph) graph).getComponentInfo().getComponents();
-        } else {
-            return components(adjacencies(graph, graph.nodes()));
-        }
-    }
-
-    /**
-     * Generates connected components from a subset of vertices in a graph.
-     *
-     * @param graph the graph
-     * @param nodes subset of nodes
-     * @return set of connected components
-     */
-    public static <V> Collection<Set<V>> components(Graph<V> graph, Collection<V> nodes) {
-        return components(adjacencies(graph, nodes));
-    }
-
-    /**
      * Performs breadth-first search algorithm to enumerate the nodes in a
      * graph, starting from the specified start node.
-     *
      * @param graph the graph under consideration
      * @param start the starting node.
      * @param numShortest a map that will be filled with info on the # of
@@ -657,12 +637,12 @@ public class GraphUtils {
      * @return graph where the specified nodes have been contracted
      */
     public static <V> Graph<V> contractedGraph(Graph<V> graph, Collection<V> contract, V replace) {
-        ArrayList<V[]> edges = Lists.newArrayList();
+        List<Edge<V>> edges = Lists.newArrayList();
         for (Edge<V> e : graph.edges()) {
-            V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-            arr[0] = contract.contains(e.getNode1()) ? replace : e.getNode1();
-            arr[1] = contract.contains(e.getNode2()) ? replace : e.getNode2();
-            edges.add(arr);
+            Edge<V> edge = new Edge<V>(
+                    contract.contains(e.getNode1()) ? replace : e.getNode1(),
+                    contract.contains(e.getNode2()) ? replace : e.getNode2());
+            edges.add(edge);
         }
         return new SparseGraph(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
     }

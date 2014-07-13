@@ -5,14 +5,16 @@
 
 package com.googlecode.blaisemath.util;
 
+import com.google.common.base.Objects;
+
 /*
  * #%L
  * BlaiseGraphics
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -33,8 +35,16 @@ package com.googlecode.blaisemath.util;
  */
 public class Edge<V> {
     
-    private final V v1;
-    private final V v2;
+    protected final V v1;
+    protected final V v2;
+    
+    /**
+     * Initialize edge, using provided edge's vertices.
+     * @param edge the edge whose vertices to use
+     */
+    public Edge(Edge<? extends V> edge) {
+        this(edge.getNode1(), edge.getNode2());
+    }
 
     /**
      * Initialize edge
@@ -53,6 +63,38 @@ public class Edge<V> {
     public String toString() {
         return String.format("%s:%s",v1,v2);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Edge<?> other = (Edge<?>) obj;
+        if (this.v1 != other.v1 && (this.v1 == null || !this.v1.equals(other.v1))) {
+            return false;
+        }
+        if (this.v2 != other.v2 && (this.v2 == null || !this.v2.equals(other.v2))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.v1 != null ? this.v1.hashCode() : 0);
+        hash = 97 * hash + (this.v2 != null ? this.v2.hashCode() : 0);
+        return hash;
+    }
+
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
     
     /**
      * Edge's first node
@@ -70,6 +112,8 @@ public class Edge<V> {
         return v2;
     }
     
+    //</editor-fold>
+    
     /**
      * Checks if either vertex equals provided vertex
      * @param v test vertex
@@ -82,10 +126,53 @@ public class Edge<V> {
     /**
      * Return vertex opposite provided vertex
      * @param v test vertex
-     * @return opposite vertex, or null if vertex is not part of this edge
+     * @return opposite vertex
+     * @throws IllegalArgumentException if argument is not one of the vertices
      */
     public V opposite(V v) {
-        return v1.equals(v) ? v2 : v2.equals(v) ? v1 : null;
+        if (v1.equals(v)) {
+            return v2;
+        } else if (v2.equals(v)) {
+            return v1;
+        } else {
+            throw new IllegalArgumentException(v+" is not a vertex of this edge.");
+        }
+    }
+    
+    
+    /** Undirected version of an edge */
+    public static class UndirectedEdge<V> extends Edge<V> {
+
+        public UndirectedEdge(V v1, V v2) {
+            super(v1, v2);
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 97 * hash + (this.v1 != null ? this.v1.hashCode() : 0)
+                            + (this.v2 != null ? this.v2.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final UndirectedEdge<?> other = (UndirectedEdge<?>) obj;
+            if (Objects.equal(this.v1, other.v1) && Objects.equal(this.v2, other.v2)) {
+                return true;                
+            }
+            if (Objects.equal(this.v1, other.v2) && Objects.equal(this.v2, other.v1)) {
+                return true;                
+            }
+            return false;
+        }
+        
     }
 
 }

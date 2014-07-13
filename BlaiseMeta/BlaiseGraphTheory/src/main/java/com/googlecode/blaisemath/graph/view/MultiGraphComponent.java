@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph.view;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph.view;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -35,7 +34,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 
 /**
@@ -104,16 +102,15 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Double time = (Double) value;
             Graph gr = MultiGraphComponent.this.manager.getTimeGraph().slice(time, false);
-            GraphLayoutManager gm = getAdapter() == null ? null : getGraphManager();
+            GraphLayoutManager gm = getAdapter() == null ? null : getLayoutManager();
             Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionMap(time);
             if (gm == null && gr != null) {
-                setGraphManager(gm = new GraphLayoutManager(gr));
+                setLayoutManager(gm = new GraphLayoutManager(gr));
                 gm.requestLocations(positionMap);
             } else if (gm != null) {
                 gm.setGraph(gr);
                 gm.requestLocations(positionMap);
             }
-//            getVisometry().setWindowBounds(new Rectangle(0, 0, 200, 200));
             setBorder(BorderFactory.createTitledBorder("Time = " + time));
             return this;
         }

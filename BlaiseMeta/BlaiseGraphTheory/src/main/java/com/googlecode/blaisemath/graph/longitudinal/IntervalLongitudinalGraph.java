@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph.longitudinal;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.graph.longitudinal;
  * #L%
  */
 
-import java.lang.reflect.Array;
+import com.google.common.collect.Sets;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -207,14 +207,11 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     public Graph<V> slice(double time, boolean exact) {
         Set<V> nodes = nodeSlice(time);
-        Set<V[]> edgeArr = new HashSet<V[]>();
+        Set<Edge<V>> edges = Sets.newHashSet();
         for (IntervalTimeEdge<V> e : edgeSlice(time)) {
-            V[] arr = (V[]) Array.newInstance(e.getNode1().getClass(), 2);
-            arr[0] = e.getNode1();
-            arr[1] = e.getNode2();
-            edgeArr.add(arr);
+            edges.add(new Edge<V>(e));
         }
-        return new SparseGraph(directed, nodes, edgeArr);
+        return new SparseGraph(directed, nodes, edges);
     }
 
     public double getMinimumTime() {

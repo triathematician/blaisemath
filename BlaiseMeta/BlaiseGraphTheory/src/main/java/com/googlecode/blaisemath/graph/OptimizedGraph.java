@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,10 +25,13 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.util.Edge;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,22 +48,22 @@ import java.util.Set;
 public class OptimizedGraph<V> extends SparseGraph<V> {
 
     /** Degree cache */
-    private final Map<V, Integer> degrees = new HashMap<V, Integer>();
+    private final Map<V, Integer> degrees = Maps.newHashMap();
     /** Isolate nodes (deg = 0) */
-    private final Set<V> isolates = new HashSet<V>();
+    private final Set<V> isolates = Sets.newHashSet();
     /** Leaf nodes (deg = 1) */
-    private final Set<V> leafNodes = new HashSet<V>();
+    private final Set<V> leafNodes = Sets.newHashSet();
     /** Connector nodes (deg = 2) */
-    private final Set<V> connectorNodes = new HashSet<V>();
+    private final Set<V> connectorNodes = Sets.newHashSet();
     /** Non-leaf nodes (deg >= 3) */
-    private final Set<V> coreNodes = new HashSet<V>();
+    private final Set<V> coreNodes = Sets.newHashSet();
     /** General objects adjacent to each node */
-    private final Map<V, Set<V>> neighbors = new HashMap<V, Set<V>>();
+    private final SetMultimap<V, V> neighbors = HashMultimap.create();
     /**
      * Leaf objects adjacent to each node. Values consist of objects that
      * have degree 1 ONLY.
      */
-    private final Map<V, Set<V>> adjLeaves = new HashMap<V, Set<V>>();
+    private final SetMultimap<V, V> adjLeaves = HashMultimap.create();
 
 
     //
@@ -73,29 +76,8 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
      */
-    public OptimizedGraph(boolean directed, V[] nodes, Iterable<V[]> edges) {
+    public OptimizedGraph(boolean directed, Collection<V> nodes, Iterable<Edge<V>> edges) {
         super(directed, nodes, edges);
-        initCachedElements();
-    }
-
-    /**
-     * Construct graph with specific nodes and edges
-     * @param directed whether graph is directed
-     * @param nodes nodes in the graph
-     * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
-     */
-    public OptimizedGraph(boolean directed, Collection<V> nodes, Iterable<V[]> edges) {
-        super(directed, nodes, edges);
-        initCachedElements();
-    }
-
-    /**
-     * Construct graph with a sparse adjacency representation.
-     * @param directed if graph is directed
-     * @param adjacencies map with adjacency info
-     */
-    public OptimizedGraph(boolean directed, Multimap<V,V> adjacencies) {
-        super(directed, adjacencies);
         initCachedElements();
     }
 
@@ -117,8 +99,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
                     coreNodes.add(v);
                     break;
             }
-            neighbors.put(v, super.neighbors(v));
-            adjLeaves.put(v, new HashSet<V>());
+            neighbors.putAll(v, super.neighbors(v));
         }
         for (V v : nodes) {
             for (V y : neighbors.get(v)) {
@@ -174,7 +155,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * Collection of neighbors
      * @return neighbors
      */
-    public Map<V, Set<V>> getNeighbors() {
+    public Multimap<V, V> getNeighbors() {
         return neighbors;
     }
 

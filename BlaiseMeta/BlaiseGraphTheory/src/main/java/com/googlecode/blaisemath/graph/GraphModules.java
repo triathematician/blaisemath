@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -25,12 +25,9 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.base.Supplier;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.ServiceLoader;
-import com.googlecode.blaisemath.graph.metrics.GraphMetric;
-import com.googlecode.blaisemath.graph.metrics.GraphNodeMetric;
 
 /**
  * Provides access to various graph algorithms/metrics.
@@ -39,10 +36,11 @@ import com.googlecode.blaisemath.graph.metrics.GraphNodeMetric;
  */
 public class GraphModules {
     
-    private static ServiceLoader builders;
-    private static ServiceLoader node;
-    private static ServiceLoader global;
-    
+    private static ServiceLoader<Supplier> builders;
+    private static ServiceLoader<GraphMetric> global;
+    private static ServiceLoader<GraphNodeMetric> node;
+    private static ServiceLoader<StaticGraphLayout> staticLayout;
+    private static ServiceLoader<IterativeGraphLayout> iterativeLayout;
     
     /**
      * Locate, initialize, and return the list of registered {@link GraphNodeMetric}
@@ -53,7 +51,7 @@ public class GraphModules {
         if (builders == null) {
             builders = ServiceLoader.load(Supplier.class);
         }
-        return list(builders, Supplier.class);
+        return Lists.newArrayList(builders);
     }
      
     /**
@@ -65,7 +63,7 @@ public class GraphModules {
         if (node == null) {
             node = ServiceLoader.load(GraphNodeMetric.class);
         }
-        return list(node, GraphNodeMetric.class);
+        return Lists.newArrayList(node);
     }
     
     /**
@@ -77,19 +75,31 @@ public class GraphModules {
         if (global == null) {
             global = ServiceLoader.load(GraphMetric.class);
         }
-        return list(global, GraphMetric.class);
+        return Lists.newArrayList(global);
     }
     
-    
-    //
-    // UTILITIES
-    //    
-    private static <V> List<V> list(ServiceLoader sl, Class<V> cls) {
-        List<V> list = new ArrayList<V>();
-        Iterator<V> it = sl.iterator();
-        while (it.hasNext()) {
-            list.add(it.next());
+    /**
+     * Locate, initialize, and return the list of registered {@link StaticGraphLayout}
+     * implementations via the {@link ServiceLoader} class.
+     * @return list of {@code StaticGraphLayout}s
+     */
+    public static List<StaticGraphLayout> staticLayouts() {
+        if (staticLayout == null) {
+            staticLayout = ServiceLoader.load(StaticGraphLayout.class);
         }
-        return list;        
+        return Lists.newArrayList(staticLayout);
     }
+    
+    /**
+     * Locate, initialize, and return the list of registered {@link IterativeGraphLayout}
+     * implementations via the {@link ServiceLoader} class.
+     * @return list of {@code IterativeGraphLayout}s
+     */
+    public static List<IterativeGraphLayout> iterativeLayouts() {
+        if (iterativeLayout == null) {
+            iterativeLayout = ServiceLoader.load(IterativeGraphLayout.class);
+        }
+        return Lists.newArrayList(iterativeLayout);
+    }
+    
 }

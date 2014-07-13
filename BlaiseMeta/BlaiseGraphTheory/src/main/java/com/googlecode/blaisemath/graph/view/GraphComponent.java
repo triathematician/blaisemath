@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph.view;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -38,26 +38,27 @@ import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.PathStyle;
 import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.util.Edge;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
- * and a {@link PlaneGraphAdapter} for appearance.
+ * and a {@link VisualGraph} for appearance.
  *
  * @author elisha
  */
 public class GraphComponent extends GraphicComponent {
+    
+    public static final String MENU_KEY_GRAPH = "graph";
+    public static final String MENU_KEY_LINK = "link";
+    public static final String MENU_KEY_NODE = "node";
+    
 
     /** Manages the visual elements of the underlying graph */
-    protected final PlaneGraphAdapter adapter;
+    protected final VisualGraph adapter;
     /** Pan and zoom control */
     protected final PanAndZoomHandler zoomControl;
-
-
-    //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
-    //
-    // INITIALIZATION
-    //
 
     /**
      * Construct without a graph
@@ -79,15 +80,14 @@ public class GraphComponent extends GraphicComponent {
      * @param gm graph manager to initialize with
      */
     public GraphComponent(GraphLayoutManager gm) {
-        adapter = new PlaneGraphAdapter(gm);
+        adapter = new VisualGraph(gm);
         addGraphic(adapter.getViewGraph());
         setPreferredSize(new java.awt.Dimension(400, 400));
-        // TODO - graph bounding box
         // enable selection
         setSelectionEnabled(true);
         // enable zoom and drag
         zoomControl = new PanAndZoomHandler(this);
-        // trun off animation if component hierarchy changes
+        // turn off animation if component hierarchy changes
         addHierarchyListener(new HierarchyListener(){
             public void hierarchyChanged(HierarchyEvent e) {
                 if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
@@ -96,8 +96,6 @@ public class GraphComponent extends GraphicComponent {
             }
         });
     }
-
-    //</editor-fold>
 
 
     //<editor-fold defaultstate="collapsed" desc="DELEGATING PROPERTIES">
@@ -109,7 +107,7 @@ public class GraphComponent extends GraphicComponent {
      * Return the adapter that contains the graph manager and the graph, responsible for handling the visual appearance.
      * @return the adapter
      */
-    public PlaneGraphAdapter getAdapter() {
+    public VisualGraph getAdapter() {
         return adapter;
     }
 
@@ -133,28 +131,28 @@ public class GraphComponent extends GraphicComponent {
      * Return the graph manager underlying the component, responsible for handling the graph and node locations.
      * @return the manager
      */
-    public GraphLayoutManager getGraphManager() {
-        return adapter.getGraphManager();
+    public GraphLayoutManager getLayoutManager() {
+        return adapter.getLayoutManager();
     }
 
-    public void setGraphManager(GraphLayoutManager gm) {
-        adapter.setGraphManager(gm);
+    public void setLayoutManager(GraphLayoutManager gm) {
+        adapter.setLayoutManager(gm);
     }
 
     public synchronized Graph getGraph() {
-        return adapter.getGraphManager().getGraph();
+        return adapter.getGraph();
     }
 
     public synchronized void setGraph(Graph graph) {
-        adapter.getGraphManager().setGraph(graph);
+        adapter.setGraph(graph);
     }
 
     public boolean isLayoutAnimating() {
-        return getGraphManager().isLayoutAnimating();
+        return getLayoutManager().isLayoutAnimating();
     }
 
     public void setLayoutAnimating(boolean val) {
-        getGraphManager().setLayoutAnimating(val);
+        getLayoutManager().setLayoutAnimating(val);
     }
 
     //</editor-fold>
@@ -167,12 +165,15 @@ public class GraphComponent extends GraphicComponent {
      */
     public void addContextMenuInitializer(String key, ContextMenuInitializer init) {
         DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
-        if ("graph".equalsIgnoreCase(key)) {
+        if (MENU_KEY_GRAPH.equalsIgnoreCase(key)) {
             getGraphicRoot().addContextMenuInitializer(init);
-        } else if ("node".equalsIgnoreCase(key)) {
+        } else if (MENU_KEY_NODE.equalsIgnoreCase(key)) {
             win.getPointGraphic().addContextMenuInitializer(init);
-        } else if ("link".equalsIgnoreCase(key)) {
+        } else if (MENU_KEY_LINK.equalsIgnoreCase(key)) {
             win.getEdgeGraphic().addContextMenuInitializer(init);
+        } else {
+            Logger.getLogger(GraphComponent.class.getName()).log(Level.WARNING,
+                    "Unsupported context menu key: {0}", key);
         }
     }
 
@@ -183,16 +184,17 @@ public class GraphComponent extends GraphicComponent {
      */
     public void removeContextMenuInitializer(String key, ContextMenuInitializer init) {
         DelegatingNodeLinkGraphic win = (DelegatingNodeLinkGraphic) adapter.getViewGraph();
-        if ("graph".equals(key)) {
+        if (MENU_KEY_GRAPH.equals(key)) {
             getGraphicRoot().removeContextMenuInitializer(init);
-        } else if ("node".equals(key)) {
+        } else if (MENU_KEY_NODE.equals(key)) {
             win.getPointGraphic().removeContextMenuInitializer(init);
-        } else if ("link".equals(key)) {
+        } else if (MENU_KEY_LINK.equals(key)) {
             win.getEdgeGraphic().removeContextMenuInitializer(init);
+        } else {
+            Logger.getLogger(GraphComponent.class.getName()).log(Level.WARNING,
+                    "Unsupported context menu key: {0}", key);
         }
     }
-
-
 
 
 }

@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graphics;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -33,8 +33,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.util.PointBean;
-import com.googlecode.blaisemath.util.PointFormatters;
+import com.googlecode.blaisemath.coordinate.PointBean;
+import com.googlecode.blaisemath.coordinate.PointFormatters;
 
 /**
  * A point with position, orientation, and an associated style.

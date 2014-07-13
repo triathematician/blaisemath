@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -106,7 +106,7 @@ public interface Graph<N> {
      * Returns an (unordered) view of edges in the graph
      * @return edges in graph, may be empty
      */
-    Set<? extends Edge<N>> edges();
+    Set<Edge<N>> edges();
     
     
     //
@@ -124,7 +124,8 @@ public interface Graph<N> {
 
     /**
      * The total degree of a node, equal to the sum of {@link #outDegree(java.lang.Object)}
-     * and {@link #inDegree(java.lang.Object)}
+     * and {@link #inDegree(java.lang.Object)}. If the argument is not a node in
+     * the graph, the result should be 0.
      * @param x a node
      * @return total degree
      */
