@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -24,9 +24,9 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -57,9 +57,9 @@ public class GraphComponents<V> {
         if (components.size() == 1) {
             componentGraphs = Collections.singleton(graph);
         } else {
-            this.componentGraphs = new HashSet<Graph<V>>();
+            this.componentGraphs = Sets.newHashSet();
             for (Set<V> compt : components) {
-                componentGraphs.add(GraphUtils.subgraph(graph, compt));
+                componentGraphs.add(GraphUtils.copySubgraph(graph, compt));
             }
         }
     }

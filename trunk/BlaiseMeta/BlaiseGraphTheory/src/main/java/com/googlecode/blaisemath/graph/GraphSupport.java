@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -24,7 +24,7 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import java.util.Collection;
+import com.google.common.collect.Sets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -47,12 +47,12 @@ public abstract class GraphSupport<V> implements Graph<V> {
     /**
      * Constructs with the set of nodes. The nodes are copied from the supplied
      * collection into a new data structure.
-     * @param nodes graph's nodes
      * @param directed if graph is directed
+     * @param nodes graph's nodes
      */
-    public GraphSupport(Collection<V> nodes, boolean directed) {
-        this.nodes = new LinkedHashSet<V>(nodes);
+    public GraphSupport(boolean directed, Iterable<V> nodes) {
         this.directed = directed;
+        this.nodes = Collections.unmodifiableSet(Sets.newLinkedHashSet(nodes));
     }
 
     @Override
@@ -169,6 +169,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
     public int degree(V x) {
         int result = 0;
         for (Edge<V> e : edgesAdjacentTo(x)) {
+            // permit double counting if both vertices of edge are x
             if (x.equals(e.getNode1())) {
                 result++;
             }

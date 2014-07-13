@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graphics;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -41,9 +41,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.util.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.CoordinateListener;
-import com.googlecode.blaisemath.util.CoordinateManager;
+import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.coordinate.CoordinateManager;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,

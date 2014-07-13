@@ -41,8 +41,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.organizationName>Elisha Peterson</license.organizationName>
-        <license.licenseName>apache-v2</license.licenseName>
-        <license.licenseResolver>${project.baseUri}/src/license</license.licenseResolver>
+        <license.licenseName>apache_v2</license.licenseName>
     </properties>
 
     <modules>
@@ -86,6 +85,7 @@
                       <execution>
                           <phase>process-sources</phase>
                           <goals>
+                              <goal>update-project-license</goal>
                               <goal>update-file-header</goal>
                           </goals>
                       </execution>

@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -27,11 +27,11 @@ package com.googlecode.blaisemath.graph;
 
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphSuppliers.CompleteGraphBuilder;
-import com.googlecode.blaisemath.graph.GraphSuppliers.CycleGraphBuilder;
-import com.googlecode.blaisemath.graph.GraphSuppliers.EmptyGraphBuilder;
-import com.googlecode.blaisemath.graph.GraphSuppliers.StarGraphBuilder;
-import com.googlecode.blaisemath.graph.GraphSuppliers.WheelGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CompleteGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CycleGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.EmptyGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.StarGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.WheelGraphBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;

@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.style.context;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -74,15 +74,21 @@ public final class StyleContextBasic implements StyleContext<Object> {
 
     @Override
     public <T extends Style> T getStyle(Class<T> cls, T style, Object src, StyleHintSet hints) {
-        for (Class c : defaultStyleMap.keySet()) {
-            if (c.isAssignableFrom(cls)) {
-                Style sty = style == null ? defaultStyleMap.get(c) : style;
-                return (T) modifierMap.get(c).apply(sty, hints);
+        if (style != null) {
+            return modifierMap.containsKey(style.getClass())
+                    ? (T) modifierMap.get(style.getClass()).apply(style, hints)
+                    : style;
+        } else {
+            for (Class c : defaultStyleMap.keySet()) {
+                if (c == cls) {
+                    Style sty = style == null ? defaultStyleMap.get(c) : style;
+                    return (T) modifierMap.get(c).apply(sty, hints);
+                }
             }
+            Logger.getLogger(StyleContextBasic.class.getName()).log(Level.WARNING, 
+                    "Styles of type {0} are not supported in this context.", cls);
+            return null;
         }
-        Logger.getLogger(StyleContextBasic.class.getName()).log(Level.WARNING, 
-                "Styles of type {0} are not supported in this context.", cls);
-        return null;
     }
 
 }

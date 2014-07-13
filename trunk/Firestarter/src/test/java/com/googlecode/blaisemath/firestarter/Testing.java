@@ -6,8 +6,8 @@ package com.googlecode.blaisemath.firestarter;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -36,11 +36,10 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import com.googlecode.blaisemath.firestarter.IndexedBean.TestEnum;
-import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
-import com.googlecode.blaisemath.firestarter.editor.EnumEditor;
-import com.googlecode.blaisemath.firestarter.editor.EnumObjectEditor;
-import com.googlecode.blaisemath.util.gui.MPanel;
-import com.googlecode.blaisemath.util.gui.RollupPanel;
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.editor.EnumEditor;
+import com.googlecode.blaisemath.util.MPanel;
+import com.googlecode.blaisemath.util.RollupPanel;
 
 /**
  *

@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.style;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -249,6 +249,7 @@ public class TextStyleBasic implements TextStyle {
             canvas.setFont(font);
         }
         Rectangle2D bounds = bounds(point, string, canvas);
+        canvas.setColor(fill);
         canvas.drawString(string, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 

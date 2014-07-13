@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graphics;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -27,8 +27,8 @@ package com.googlecode.blaisemath.graphics;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.util.IndexedPointBean;
-import com.googlecode.blaisemath.util.PointFormatters;
+import com.googlecode.blaisemath.coordinate.IndexedPointBean;
+import com.googlecode.blaisemath.coordinate.PointFormatters;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;

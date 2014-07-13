@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.graphics.Graphic;
 import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.style.TextStyle;
-import com.googlecode.blaisemath.util.PointBean;
+import com.googlecode.blaisemath.coordinate.PointBean;
 
 /**
  * Displays a point together with a label.

@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -60,8 +60,8 @@ public class SubgraphTest {
         EE = new Integer[][] {
             {1,2}, {2,1}, {2,3}, {2,4}, {2,5}, {1,6}, {6,6}, {6,10}, {10,11}, {11,1}, {15, 15}, {20, 21}
         };
-        UNDIRECTED_INSTANCE = GraphUtils.subgraph(new SparseGraph(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
-        DIRECTED_INSTANCE = GraphUtils.subgraph(new SparseGraph(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        UNDIRECTED_INSTANCE = GraphUtils.copySubgraph(SparseGraph.createFromArrayEdges(false, Arrays.asList(VV), Arrays.asList(EE)), SUB);
+        DIRECTED_INSTANCE = GraphUtils.copySubgraph(SparseGraph.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE)), SUB);
     }
 
     @Test

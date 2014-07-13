@@ -6,8 +6,8 @@ package com.googlecode.blaisemath.style.context;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -21,14 +21,7 @@ package com.googlecode.blaisemath.style.context;
  */
 
 
-import com.googlecode.blaisemath.style.context.StyleHintSet;
-import com.googlecode.blaisemath.style.context.StyleModifiers;
 import java.awt.Color;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
-import com.googlecode.blaisemath.style.TextStyle;
-import com.googlecode.blaisemath.util.ColorUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

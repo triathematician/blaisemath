@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.style;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -31,6 +31,8 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Draws a stroke on the screen, with an arrow at the endpoint.
@@ -38,15 +40,42 @@ import java.awt.geom.PathIterator;
  * @author Elisha
  */
 public class PathStyleArrow extends PathStyleBasic {
+    
+    protected ArrowLocation arrowLoc = ArrowLocation.END;
 
     public PathStyleArrow() {
     }
     
+    public PathStyleArrow(ArrowLocation dir) {
+        this.arrowLoc = dir;
+    }
+    
     @Override
     public String toString() {
-        return String.format("PathStyleArrow[stroke=%s, strokeWidth=%.1f]", 
-                stroke, strokeWidth);
+        return String.format("PathStyleArrow[arrowLoc=%s, stroke=%s, strokeWidth=%.1f]", 
+                arrowLoc, stroke, strokeWidth);
     }
+    
+    public PathStyleArrow arrowLocation(ArrowLocation loc) {
+        setArrowLocation(loc);
+        return this;
+    }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    public ArrowLocation getArrowLocation() {
+        return arrowLoc;
+    }
+    
+    public void setArrowLocation(ArrowLocation loc) {
+        
+    }
+    
+    //</editor-fold>
     
     @Override
     public void draw(Shape s, Graphics2D canvas) {
@@ -61,10 +90,19 @@ public class PathStyleArrow extends PathStyleBasic {
         }
 
         // create arrowhead shape(s) at end of path
-        GeneralPath shape = new GeneralPath();
-        if (s instanceof Line2D.Double) {
-            Line2D.Double line = (Line2D.Double) s;
-            shape = createArrowhead((float) line.x1, (float) line.y1, (float) line.x2, (float) line.y2, strokeWidth);
+        GeneralPath arrowShapes = new GeneralPath();
+        if (s instanceof Line2D) {
+            Line2D line = (Line2D) s;
+            if (arrowLoc == ArrowLocation.END || arrowLoc == ArrowLocation.BOTH) {
+                arrowShapes.append(createArrowhead(
+                        (float) line.getX1(), (float) line.getY1(),
+                        (float) line.getX2(), (float) line.getY2(), strokeWidth), false);
+            }
+            if (arrowLoc == ArrowLocation.START || arrowLoc == ArrowLocation.BOTH) {
+                arrowShapes.append(createArrowhead(
+                        (float) line.getX2(), (float) line.getY2(), 
+                        (float) line.getX1(), (float) line.getY1(), strokeWidth), false);
+            }
         } else if (s instanceof GeneralPath) {
             GeneralPath gp = (GeneralPath) s;
             PathIterator pi = gp.getPathIterator(null);
@@ -72,18 +110,26 @@ public class PathStyleArrow extends PathStyleBasic {
             while (!pi.isDone()) {
                 int type = pi.currentSegment(cur);
                 if (type == PathIterator.SEG_LINETO) {
-                    shape.append(createArrowhead(last[0], last[1], cur[0], cur[1], strokeWidth), false);
+                    if (arrowLoc == ArrowLocation.END || arrowLoc == ArrowLocation.BOTH) {
+                        arrowShapes.append(createArrowhead(last[0], last[1], cur[0], cur[1], strokeWidth), false);
+                    }
+                    if (arrowLoc == ArrowLocation.START || arrowLoc == ArrowLocation.BOTH) {
+                        arrowShapes.append(createArrowhead(cur[0], cur[1], last[0], last[1], strokeWidth), false);
+                    }
                 }
                 System.arraycopy(cur, 0, last, 0, 6);
                 pi.next();
             }
+        } else {
+            Logger.getLogger(PathStyleArrow.class.getName()).log(Level.WARNING, 
+                    "Unable to draw arrowheads on this shape: {0}", s);
         }
         
         // draw filled arrowhead on top of path
         canvas.setColor(stroke);
-        canvas.fill(shape);
+        canvas.fill(arrowShapes);
         canvas.setStroke(new BasicStroke(strokeWidth));
-        canvas.draw(shape);
+        canvas.draw(arrowShapes);
     }
 
     
@@ -115,5 +161,20 @@ public class PathStyleArrow extends PathStyleBasic {
         gp.closePath();
         return gp;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //
+    // INNER CLASSES
+    //
+    
+    /** Defines directions for arrowheads */
+    public static enum ArrowLocation {
+        NONE,
+        START,
+        END,
+        BOTH;
+    }
+    
+    //</editor-fold>
     
 }

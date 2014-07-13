@@ -10,8 +10,8 @@ package com.googlecode.blaisemath.graph;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -43,20 +43,19 @@ import java.util.Set;
  */
 public class GAInstrument {
 
-    private GAInstrument() {
-    }
-
     private static int id = 0;
-
     private static final String START = "start";
     private static final String END = "end";
 
     /** Max number to keep in log */
     private static int maxEvents = 10000;
     /** All log events */
-    private static final Map<Integer,LogEvent> all = Maps.newLinkedHashMap();
+    private static final Map<Integer,LogEvent> ALL = Maps.newLinkedHashMap();
     /** Log events split by algorithm */
-    private static final Multimap<String,LogEvent> log = LinkedHashMultimap.create();
+    private static final Multimap<String,LogEvent> LOG = LinkedHashMultimap.create();
+
+    private GAInstrument() {
+    }
     
     private static synchronized int nextId() {
         return id++; 
@@ -91,9 +90,9 @@ public class GAInstrument {
     }
 
     private static synchronized void log(int id, String event, String... info) {
-        LogEvent le = all.get(id);
+        LogEvent le = ALL.get(id);
         if (le != null) {
-            if (event == END) {
+            if (END.equals(event)) {
                 le.end();
             } else {
                 String[] logged = new String[info.length+1];
@@ -109,22 +108,22 @@ public class GAInstrument {
         logged[0] = event;
         System.arraycopy(info, 0, logged, 1, info.length);
         LogEvent e = new LogEvent(logged);
-        log.put(algorithm,e);
-        all.put(e.id,e);
-        if (all.size() > 1.5*maxEvents) {
+        LOG.put(algorithm,e);
+        ALL.put(e.id,e);
+        if (ALL.size() > 1.5*maxEvents) {
             Set<Integer> rid = new HashSet<Integer>();
             Set<LogEvent> rem = new HashSet<LogEvent>();
             int n = 0;
-            for (Entry<Integer,LogEvent> i : all.entrySet()) {
+            for (Entry<Integer,LogEvent> i : ALL.entrySet()) {
                 rid.add(i.getKey());
                 rem.add(i.getValue());
                 if (n++ > .75*maxEvents) {
                     break;
                 }
             }
-            all.keySet().removeAll(rid);
-            for (String l : log.keySet()) {
-                log.get(l).removeAll(rem);
+            ALL.keySet().removeAll(rid);
+            for (String l : LOG.keySet()) {
+                LOG.get(l).removeAll(rem);
             }
         }
         return e.id;
@@ -132,9 +131,9 @@ public class GAInstrument {
 
     public static void print(PrintStream out, long minT) {
         out.println("Graph Algorithm Log");
-        for (String a : log.keySet()) {
+        for (String a : LOG.keySet()) {
             out.println(" -- Algorithm " + a + " --");
-            for (LogEvent l : log.get(a)) {
+            for (LogEvent l : LOG.get(a)) {
                 if (l.dur >= minT) {
                     out.println(l);
                 }

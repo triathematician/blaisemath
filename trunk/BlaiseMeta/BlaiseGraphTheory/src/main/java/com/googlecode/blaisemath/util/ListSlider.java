@@ -2,7 +2,6 @@
  * ListSlider.java
  * Created Jul 8, 2010
  */
-
 package com.googlecode.blaisemath.util;
 
 /*
@@ -11,8 +10,8 @@ package com.googlecode.blaisemath.util;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -24,11 +23,12 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
-
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
@@ -39,27 +39,37 @@ import javax.swing.JSlider;
  */
 public final class ListSlider extends JSlider {
 
-    /** Stores peg points for the slider */
+    /**
+     * Stores peg points for the slider
+     */
     List<Double> pegs;
 
-    /** Constructs with default values */
+    /**
+     * Constructs with default values
+     */
     public ListSlider() {
-        this(Arrays.asList(0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0));
+        this(Arrays.asList(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0));
     }
 
-    /** Constructs instance with specified min, max, and peg points */
+    /**
+     * Constructs instance with specified min, max, and peg points
+     */
     public ListSlider(List<Double> pegs) {
-        super(0, pegs.size()-1, 0);
+        super(0, pegs.size() - 1, 0);
         setList(pegs);
     }
 
-    /** @return current value as specified by the peg positions */
+    /**
+     * @return current value as specified by the peg positions
+     */
     public synchronized double getListValue() {
         int i = getValue();
-        return i <= 0 ? pegs.get(0) : i >= pegs.size() ? pegs.get(pegs.size()-1) : pegs.get(i);
+        return i <= 0 ? pegs.get(0) : i >= pegs.size() ? pegs.get(pegs.size() - 1) : pegs.get(i);
     }
 
-    /** Sets up constraints */
+    /**
+     * Sets up constraints
+     */
     public synchronized void setList(List<Double> values) {
         this.pegs = values;
         setMaximum(pegs.size() - 1);
@@ -67,24 +77,21 @@ public final class ListSlider extends JSlider {
         initCustomLabels();
     }
 
-    /** Sets up label table with associated peg marks */
+    /**
+     * Sets up label table with associated peg marks
+     */
     private void initCustomLabels() {
         int size = pegs.size();
         setMajorTickSpacing(size < 20 ? 1 : size < 50 ? 2
-                : size < 100 ? 5 : size < 250 ? 10 : size < 500 ? 25 : size/20);
+                : size < 100 ? 5 : size < 250 ? 10 : size < 500 ? 25 : size / 20);
         setSnapToTicks(size < 20);
 
         setPaintTicks(true);
         setPaintLabels(true);
         Hashtable result = new Hashtable();
-        try{
-            NumberFormat nf = NumberFormat.getNumberInstance();
-            for(int i = 0; i < pegs.size(); i += getMajorTickSpacing())
-                result.put(i, new JLabel("t="+nf.format(pegs.get(i))));
-        } catch (NullPointerException e) {
-            result.put(0, new JLabel("low"));
-            result.put(50, new JLabel("mid"));
-            result.put(100, new JLabel("high"));
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        for (int i = 0; i < pegs.size(); i += getMajorTickSpacing()) {
+            result.put(i, new JLabel("t=" + nf.format(pegs.get(i))));
         }
         setLabelTable(result);
     }

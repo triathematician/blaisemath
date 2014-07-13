@@ -11,8 +11,8 @@ package com.googlecode.blaisemath.firestarter;
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTable;
-import com.googlecode.blaisemath.firestarter.editor.EditorRegistration;
+import com.googlecode.blaisemath.editor.EditorRegistration;
 
 /**
  * <p>
