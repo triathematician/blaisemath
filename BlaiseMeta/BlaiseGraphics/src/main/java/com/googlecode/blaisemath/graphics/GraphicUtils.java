@@ -38,7 +38,15 @@ public class GraphicUtils {
     private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
         @Override
         public boolean apply(Graphic input) { 
-            return !StyleHintSet.isHidden(input.getStyleHints());
+            return !StyleHintSet.isInvisible(input.getStyleHints());
+        }
+    };
+    
+    /** Filter that can be applied to pass only visible graphics */
+    private static final Predicate<Graphic> FUNCTIONAL_FILTER = new Predicate<Graphic>(){
+        @Override
+        public boolean apply(Graphic input) { 
+            return StyleHintSet.isFunctional(input.getStyleHints());
         }
     };
     
@@ -53,14 +61,31 @@ public class GraphicUtils {
     public static Predicate<Graphic> visibleFilter() {
         return VISIBLE_FILTER;
     }
+    
+    /**
+     * Return functional filter for graphics.
+     * @return functional filter
+     */
+    public static Predicate<Graphic> functionalFilter() {
+        return FUNCTIONAL_FILTER;
+    }
 
     /**
-     * Return true if graphic is currently hidden/no-visible
+     * Return true if graphic is currently invisible
      * @param gr the graphic
      * @return true if hidden
      */
-    public static boolean isHidden(Graphic gr) {
+    public static boolean isInvisible(Graphic gr) {
         return !visibleFilter().apply(gr);
+    }
+
+    /**
+     * Return true if graphic is currently functional
+     * @param gr the graphic
+     * @return true if invisible
+     */
+    public static boolean isFunctional(Graphic gr) {
+        return functionalFilter().apply(gr);
     }
     
 }

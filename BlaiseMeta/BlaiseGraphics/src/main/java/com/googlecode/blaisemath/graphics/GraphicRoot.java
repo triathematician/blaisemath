@@ -180,7 +180,7 @@ public final class GraphicRoot extends GraphicComposite implements MouseListener
      */
     private void updateMouseGraphic(GraphicMouseEvent gme, boolean keepCurrent) {
         if (keepCurrent && mouseGraphic != null
-                && !GraphicUtils.isHidden(mouseGraphic)
+                && GraphicUtils.isFunctional(mouseGraphic)
                 && mouseGraphic.contains(gme.getGraphicLocation())) {
             return;
         }

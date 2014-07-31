@@ -41,8 +41,10 @@ import javax.swing.event.EventListenerList;
  */
 public final class StyleHintSet {
     
-    /** Style hint indicating a hidden element. */
+    /** Style hint indicating an invisible, non-functional element. */
     public static final String HIDDEN_HINT = "hidden";
+    /** Style hint indicating an invisible but still functional element (receives mouse events) */
+    public static final String HIDDEN_FUNCTIONAL_HINT = "hidden_functional";
     /** Style hint indicating a selected element. */
     public static final String SELECTED_HINT = "selected";
     /** Style hint indicating a highlighted element. */
@@ -162,7 +164,18 @@ public final class StyleHintSet {
      * @param hints hints object
      * @return true if hints contains the hidden hint
      */
-    public static boolean isHidden(StyleHintSet hints) {
-        return hints.contains(HIDDEN_HINT);
+    public static boolean isInvisible(StyleHintSet hints) {
+        return hints.contains(HIDDEN_HINT)
+                || hints.contains(HIDDEN_FUNCTIONAL_HINT);
     }
+    
+    /**
+     * Test whether given hints object is hidden
+     * @param hints hints object
+     * @return true if hints contains the hidden hint
+     */
+    public static boolean isFunctional(StyleHintSet hints) {
+        return !hints.contains(HIDDEN_HINT);
+    }
+    
 }

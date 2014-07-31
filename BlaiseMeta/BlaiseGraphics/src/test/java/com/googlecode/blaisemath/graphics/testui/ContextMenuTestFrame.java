@@ -83,9 +83,13 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         gc = new com.googlecode.blaisemath.graphics.GraphicComponent();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gc, java.awt.BorderLayout.CENTER);
+
+        jLabel1.setText("<html>Should be up to 3 parts of the context menu: one for each shape, and one for the root graphics.");
+        getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -126,5 +130,6 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.googlecode.blaisemath.graphics.GraphicComponent gc;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

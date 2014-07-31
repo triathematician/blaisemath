@@ -37,12 +37,12 @@ import com.googlecode.blaisemath.style.ShapeStyleBasic;
  *
  * @author Elisha
  */
-public class PointAndZoomTestFrame extends javax.swing.JFrame {
+public class PanAndZoomTestFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TestTooltips
      */
-    public PointAndZoomTestFrame() {
+    public PanAndZoomTestFrame() {
         initComponents();
         BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
         g1.setStyle(new ShapeStyleBasic().fill(Color.blue).stroke(Color.red));
@@ -74,9 +74,13 @@ public class PointAndZoomTestFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         gc = new com.googlecode.blaisemath.graphics.GraphicComponent();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gc, java.awt.BorderLayout.CENTER);
+
+        jLabel1.setText("<html>Test the mouse wheel, drag to pan, and alt+drag to create a zoom box. Should be restricted to mouse button 1. Shift+drag should restrict movement to x or y direction.");
+        getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -98,24 +102,25 @@ public class PointAndZoomTestFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PointAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanAndZoomTestFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PointAndZoomTestFrame().setVisible(true);
+                new PanAndZoomTestFrame().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.googlecode.blaisemath.graphics.GraphicComponent gc;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

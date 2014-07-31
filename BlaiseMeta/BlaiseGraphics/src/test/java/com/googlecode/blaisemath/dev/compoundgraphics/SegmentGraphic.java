@@ -61,7 +61,7 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
                 .stroke(null)
                 .markerRadius(2)
                 .fill(Color.black));
-        start.setStyleHint(StyleHintSet.HIDDEN_HINT, true);
+        start.setStyleHint(StyleHintSet.HIDDEN_FUNCTIONAL_HINT, true);
         
         end.setStyle(new PointStyleBasic()
                 .marker(Markers.ARROWHEAD));

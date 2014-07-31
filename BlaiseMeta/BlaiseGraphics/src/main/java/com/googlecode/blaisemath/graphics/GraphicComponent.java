@@ -274,6 +274,15 @@ public class GraphicComponent extends javax.swing.JComponent {
     }
     
     /**
+     * Return the functional graphic at the given window location
+     * @param winLoc window location
+     * @return graphic
+     */
+    public Graphic functionalGraphicAt(Point winLoc) {
+        return root.mouseGraphicAt(toGraphicCoordinate(winLoc));
+    }
+    
+    /**
      * Return the selectable graphic at the given window location
      * @param winLoc window location
      * @return graphic

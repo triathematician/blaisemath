@@ -38,15 +38,21 @@ public class StyleModifiersTest {
     public void testApplyHints() {
         System.out.println("applyHints");
         StyleHintSet set = new StyleHintSet();
+        
         assertEquals(new Color(50,0,0,128), StyleModifiers.applyHints(new Color(50,0,0,128), set));
+        
         set.add(StyleHintSet.HIDDEN_HINT);
         assertEquals(new Color(50,0,0,0), StyleModifiers.applyHints(new Color(50,0,0,128), set));
         set.remove(StyleHintSet.HIDDEN_HINT);
+        
         set.add(StyleHintSet.HILITE_HINT);
         assertEquals(new Color(114,64,64,128), StyleModifiers.applyHints(new Color(50,0,0,128), set));
         set.remove(StyleHintSet.HILITE_HINT);
+        
         set.add(StyleHintSet.SELECTED_HINT);
         assertEquals(new Color(114,64,64,128), StyleModifiers.applyHints(new Color(50,0,0,128), set));
+        
+        assertNull(StyleModifiers.applyHints(null, set));
     }
     
 }

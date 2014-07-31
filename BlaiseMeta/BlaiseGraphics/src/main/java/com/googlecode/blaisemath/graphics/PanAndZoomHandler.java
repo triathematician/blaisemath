@@ -57,10 +57,13 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /** How long between animation steps */
     private static final int ANIM_DELAY_MILLIS = 5;
     
+    /** Basic pan mode */
+    private static final String PAN_MODE = "Button1";
     /** Mouse mode for rectangle resize */
     private static final String RECTANGLE_RESIZE_MODE = "Alt+Button1";
     /** Mode for restricted movement */
     private static final String RESTRICTED_MOVEMENT_MODE = "Shift+Button1";
+    /** Allow user to release mouse button and still do movement */
     private static final String RESTRICTED_MOVEMENT_MODE_ALT = "Shift";
     
     /** Renderer for zoom box */
@@ -105,13 +108,17 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         if (e.isConsumed()) {
             return;
         }
-        pressedAt = e.getPoint();
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
+        if (RECTANGLE_RESIZE_MODE.equals(mode) || PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) {
+            pressedAt = e.getPoint();
+        }
         if (RECTANGLE_RESIZE_MODE.equals(mode)) {
             zoomBox = new Rectangle2D.Double(pressedAt.x, pressedAt.y, 0, 0);
-        } else {
+        } else if (PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) {
             // pan mode
             oldLocalBounds = getLocalBounds(component);
+        } else {
+            // ignore
         }
     }
 
@@ -120,13 +127,15 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         if (e.isConsumed() || pressedAt == null) {
             return;
         }
+        String mouseMods = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (RECTANGLE_RESIZE_MODE.equals(mode)) {
             mouseDraggedResizeMode(e.getPoint());
-        } else {
-            String mouseMods = MouseEvent.getModifiersExText(e.getModifiersEx());
+        } else if (PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) { 
             boolean restrictedMovementMode = RESTRICTED_MOVEMENT_MODE.equals(mouseMods) 
                     || RESTRICTED_MOVEMENT_MODE_ALT.equals(mouseMods);
             mouseDraggedPanMode(e.getPoint(), restrictedMovementMode);
+        } else {
+            // ignore
         }
     }
     
