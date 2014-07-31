@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import com.googlecode.blaisemath.coordinate.DraggablePointBean;
 import com.googlecode.blaisemath.coordinate.PointBean;

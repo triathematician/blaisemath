@@ -100,8 +100,8 @@ public final class RulerGraphic extends TwoPointGraphicSupport {
                 .fill(Color.black);
         start.setStyle(style);
         end.setStyle(style);
-        start.setStyleHint(StyleHintSet.HIDDEN_HINT, true);
-        end.setStyleHint(StyleHintSet.HIDDEN_HINT, true);
+        start.setStyleHint(StyleHintSet.HIDDEN_FUNCTIONAL_HINT, true);
+        end.setStyleHint(StyleHintSet.HIDDEN_FUNCTIONAL_HINT, true);
     }
 
     /** Updates the angles of the tick marks */

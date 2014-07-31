@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graphics;
  * #L%
  */
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -63,10 +64,16 @@ public abstract class AbstractGraphicDragger extends MouseAdapter {
     }
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+    
+    @Override
     public final void mousePressed(MouseEvent e) {
         GraphicMouseEvent gme = (GraphicMouseEvent) e;
         start = gme.getGraphicLocation();
         mouseDragInitiated(gme, start);
+        e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         e.consume();
     }
 
@@ -83,6 +90,7 @@ public abstract class AbstractGraphicDragger extends MouseAdapter {
     public final void mouseReleased(MouseEvent e) {
         if (start != null) {
             mouseDragCompleted((GraphicMouseEvent) e, start);
+            e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             start = null;
         }
     }
@@ -92,10 +100,6 @@ public abstract class AbstractGraphicDragger extends MouseAdapter {
         if (start != null) {
             mouseReleased(e);
         }
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
     }
     
 }

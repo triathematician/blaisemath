@@ -83,7 +83,9 @@ public class StyleModifiers {
      * @return transformed color
      */
     public static Color applyHints(Color color, StyleHintSet hints) {
-        if (hints.contains(StyleHintSet.HIDDEN_HINT)) {
+        if (color == null) {
+            return null;
+        } else if (hints.contains(StyleHintSet.HIDDEN_HINT)) {
             return ColorUtils.alpha(color, 0);
         } else if (hints.contains(StyleHintSet.HILITE_HINT)) {
             return ColorUtils.lighterThan(color);
@@ -104,7 +106,7 @@ public class StyleModifiers {
         if (hints.contains(StyleHintSet.HIDDEN_HINT)) {
             return 0f;
         } else if (hints.contains(StyleHintSet.HILITE_HINT)) {
-            return width;
+            return Math.max(width-1f, width/2f);
         } else if (hints.contains(StyleHintSet.SELECTED_HINT)) {
             return width+1f;
         } else {

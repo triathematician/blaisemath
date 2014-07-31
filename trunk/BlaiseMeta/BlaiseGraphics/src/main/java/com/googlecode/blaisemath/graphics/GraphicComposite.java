@@ -362,7 +362,7 @@ public class GraphicComposite extends GraphicSupport {
     @Override
     public synchronized void draw(Graphics2D canvas) {
         for (Graphic en : entries) {
-            if (!StyleHintSet.isHidden(en.getStyleHints())) {
+            if (!StyleHintSet.isInvisible(en.getStyleHints())) {
                 en.draw(canvas);
             }
         }
@@ -390,6 +390,22 @@ public class GraphicComposite extends GraphicSupport {
      */
     public Iterable<Graphic> visibleEntriesInReverse() {
         return Lists.reverse(Lists.newArrayList(visibleEntries()));
+    }
+    
+    /**
+     * Iterable over functional entries
+     * @return iterable
+     */
+    public Iterable<Graphic> functionalEntries() {
+        return Iterables.filter(entries, GraphicUtils.functionalFilter());
+    }
+    
+    /**
+     * Iterable over functional entries, in reverse order
+     * @return iterable
+     */
+    public Iterable<Graphic> functionalEntriesInReverse() {
+        return Lists.reverse(Lists.newArrayList(functionalEntries()));
     }
     
     /** 
@@ -432,7 +448,7 @@ public class GraphicComposite extends GraphicSupport {
      */
     protected synchronized Graphic mouseGraphicAt(Point2D point) {
         // return the first graphic containing the point, in draw order
-        for (Graphic en : visibleEntriesInReverse()) {
+        for (Graphic en : functionalEntriesInReverse()) {
             if (en.isMouseEnabled()) {
                 if (en instanceof GraphicComposite) {
                     Graphic s = ((GraphicComposite)en).mouseGraphicAt(point);

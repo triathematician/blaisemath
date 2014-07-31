@@ -29,11 +29,15 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.style.PathStyle;
+import com.googlecode.blaisemath.style.PathStyleBasic;
 import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.style.PointStyleBasic;
 import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.ShapeStyleBasic;
 import com.googlecode.blaisemath.style.Style;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.TextStyle;
+import com.googlecode.blaisemath.style.TextStyleBasic;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,9 +63,13 @@ public final class StyleContextBasic implements StyleContext<Object> {
                 .build();
         modifierMap = Maps.newHashMap();
         modifierMap.put(PathStyle.class, StyleModifiers.pathStyleModifier());
+        modifierMap.put(PathStyleBasic.class, StyleModifiers.pathStyleModifier());
         modifierMap.put(ShapeStyle.class, StyleModifiers.shapeStyleModifier());
+        modifierMap.put(ShapeStyleBasic.class, StyleModifiers.shapeStyleModifier());
         modifierMap.put(PointStyle.class, StyleModifiers.pointStyleModifier());
+        modifierMap.put(PointStyleBasic.class, StyleModifiers.pointStyleModifier());
         modifierMap.put(TextStyle.class, StyleModifiers.textStyleModifier());
+        modifierMap.put(TextStyleBasic.class, StyleModifiers.textStyleModifier());
     }
     
     /**

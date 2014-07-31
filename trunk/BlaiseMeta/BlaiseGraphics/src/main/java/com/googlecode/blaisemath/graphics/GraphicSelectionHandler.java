@@ -139,8 +139,14 @@ public final class GraphicSelectionHandler extends MouseAdapter implements Canva
             return;
         }
         Graphic g = component.selectableGraphicAt(e.getPoint());
-        component.setCursor(g == null ? Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
-                : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        Graphic gAll = component.getGraphicRoot().mouseGraphicAt(e.getPoint());
+        if (gAll == null) {
+            // reset to default if there is no active mouse graphic
+            component.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        } else if (g != null) {
+            // identify selectable graphics when you mouse over them
+            component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 
     @Override
