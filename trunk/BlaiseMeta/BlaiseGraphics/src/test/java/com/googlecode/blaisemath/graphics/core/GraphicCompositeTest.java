@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.googlecode.blaisemath.graphics;
+package com.googlecode.blaisemath.graphics.core;
 
 /*
  * #%L
@@ -37,10 +37,10 @@ package com.googlecode.blaisemath.graphics;
  */
 
 
-import com.googlecode.blaisemath.graphics.BasicPointGraphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.style.StyleContext;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -48,8 +48,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.style.context.StyleContextBasic;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
+import com.googlecode.blaisemath.style.StyleHints;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -64,37 +65,37 @@ import org.junit.Test;
  */
 public class GraphicCompositeTest {
 
-    BasicPointGraphic p;
+    PrimitiveGraphic<Point2D,Graphics2D> pt;
     GraphicComposite gc;
 
     public GraphicCompositeTest() {
         gc = new GraphicComposite();
-        gc.setStyleContext(StyleContextBasic.getInstance());
-        p = new BasicPointGraphic();
+        gc.setStyleContext(new StyleContext());
+        pt = JGraphics.point(new Point2D.Double());
     }
 
     @Test
     public void testAddGraphic() {
         System.out.println("addGraphic");
-        gc.addGraphic(p);
+        gc.addGraphic(pt);
         assertEquals(1, Iterables.size(gc.getGraphics()));
-        assertFalse(gc.addGraphic(p));
+        assertFalse(gc.addGraphic(pt));
         assertEquals(1, Iterables.size(gc.getGraphics()));
     }
 
     @Test
     public void testRemoveGraphic() {
         System.out.println("removeGraphic");
-        assertTrue(gc.addGraphic(p));
-        assertTrue(gc.removeGraphic(p));
+        assertTrue(gc.addGraphic(pt));
+        assertTrue(gc.removeGraphic(pt));
         assertEquals(0, Iterables.size(gc.getGraphics()));
-        assertFalse(gc.removeGraphic(p));
+        assertFalse(gc.removeGraphic(pt));
     }
 
     @Test
     public void testAddGraphics() {
         System.out.println("addGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         assertTrue(gc.addGraphics(gfx));
         assertEquals(1, Iterables.size(gc.getGraphics()));
         assertFalse(gc.addGraphics(gfx));
@@ -103,7 +104,7 @@ public class GraphicCompositeTest {
     @Test
     public void testRemoveGraphics() {
         System.out.println("removeGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         assertTrue(gc.addGraphics(gfx));
         assertTrue(gc.removeGraphics(gfx));
         assertFalse(gc.removeGraphics(gfx));
@@ -113,19 +114,19 @@ public class GraphicCompositeTest {
     @Test
     public void testReplaceGraphics() {
         System.out.println("replaceGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         assertFalse(gc.replaceGraphics(gfx, Collections.EMPTY_LIST));
         gc.addGraphics(gfx);
-        assertTrue(gc.replaceGraphics(gfx, Arrays.asList(p)));
-        assertTrue(gc.replaceGraphics(gfx, Arrays.asList(new BasicPointGraphic())));
+        assertTrue(gc.replaceGraphics(gfx, Arrays.asList(pt)));
+        assertTrue(gc.replaceGraphics(gfx, Arrays.asList(JGraphics.point(new Point2D.Double()))));
         assertEquals(1, Iterables.size(gc.getGraphics()));
-        assertFalse(Iterables.contains(gc.getGraphics(), p));
+        assertFalse(Iterables.contains(gc.getGraphics(), pt));
     }
 
     @Test
     public void testGetGraphics() {
         System.out.println("getGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         gc.setGraphics(gfx);
         assertTrue(Iterables.elementsEqual(gfx, gc.getGraphics()));
     }
@@ -133,17 +134,17 @@ public class GraphicCompositeTest {
     @Test
     public void testSetGraphics() {
         System.out.println("setGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         gc.addGraphics(gfx);
-        gc.setGraphics(Lists.newArrayList(new BasicPointGraphic()));
+        gc.setGraphics(Lists.newArrayList(JGraphics.point(new Point2D.Double())));
         assertEquals(1, Iterables.size(gc.getGraphics()));
-        assertFalse(Iterables.contains(gc.getGraphics(), p));
+        assertFalse(Iterables.contains(gc.getGraphics(), pt));
     }
 
     @Test
     public void testClearGraphics() {
         System.out.println("clearGraphics");
-        ArrayList<BasicPointGraphic> gfx = Lists.newArrayList(p);
+        ArrayList<PrimitiveGraphic<Point2D, Graphics2D>> gfx = Lists.newArrayList(pt);
         gc.addGraphics(gfx);
         assertTrue(gc.clearGraphics());
         assertEquals(0, Iterables.size(gc.getGraphics()));
@@ -153,16 +154,16 @@ public class GraphicCompositeTest {
     @Test
     public void testGraphicAt() {
         System.out.println("graphicAt");
-        gc.addGraphic(p);
-        assertEquals(p, gc.graphicAt(new Point()));
-        assertEquals(p, gc.graphicAt(new Point(1,0)));
+        gc.addGraphic(pt);
+        assertEquals(pt, gc.graphicAt(new Point()));
+        assertEquals(pt, gc.graphicAt(new Point(1,0)));
         assertEquals(null, gc.graphicAt(new Point(10,10)));
     }
 
     @Test
     public void testContains() {
         System.out.println("contains");
-        gc.addGraphic(p);
+        gc.addGraphic(pt);
         assertTrue(gc.contains(new Point()));
         assertTrue(gc.contains(new Point(1,0)));
         assertFalse(gc.contains(new Point(10,10)));
@@ -181,7 +182,7 @@ public class GraphicCompositeTest {
     public void testGraphicChanged() {
         System.out.println("graphicChanged");
         GraphicComposite instance = new GraphicComposite();
-        instance.graphicChanged(p);
+        instance.graphicChanged(pt);
     }
 
     @Test
@@ -199,13 +200,13 @@ public class GraphicCompositeTest {
     @Test
     public void testSetStyleContext() {
         System.out.println("setStyleContext");
-        gc.setStyleContext(StyleContextBasic.getInstance());
+        gc.setStyleContext(new StyleContext());
     }
 
     @Test
     public void testIntersects() {
         System.out.println("intersects");
-        gc.addGraphic(p);
+        gc.addGraphic(pt);
         assertTrue(gc.intersects(new Rectangle(0,0,10,10)));
         assertFalse(gc.intersects(new Rectangle(5,5,10,10)));
     }
@@ -219,58 +220,61 @@ public class GraphicCompositeTest {
     @Test
     public void testVisibleEntries() {
         System.out.println("visibleEntries");
-        gc.addGraphic(p);
-        assertTrue(Iterables.elementsEqual(Lists.newArrayList(p), gc.visibleEntries()));
-        p.setStyleHint(StyleHintSet.HIDDEN_HINT, true);
+        gc.addGraphic(pt);
+        assertTrue(Iterables.elementsEqual(Lists.newArrayList(pt), gc.visibleEntries()));
+        pt.setStyleHint(StyleHints.HIDDEN_HINT, true);
         assertTrue(Iterables.isEmpty(gc.visibleEntries()));
     }
 
     @Test
     public void testVisibleEntriesInReverse() {
         System.out.println("visibleEntriesInReverse");
-        gc.addGraphic(p);
-        BasicPointGraphic p2 = new BasicPointGraphic();
+        gc.addGraphic(pt);
+        PrimitiveGraphic p2 = JGraphics.point(new Point());
         gc.addGraphic(p2);
-        assertTrue(Iterables.elementsEqual(Lists.newArrayList(p, p2), gc.visibleEntries()));
-        assertTrue(Iterables.elementsEqual(Lists.newArrayList(p2, p), gc.visibleEntriesInReverse()));
+        assertTrue(Iterables.elementsEqual(Lists.newArrayList(pt, p2), gc.visibleEntries()));
+        assertTrue(Iterables.elementsEqual(Lists.newArrayList(p2, pt), gc.visibleEntriesInReverse()));
     }
 
     @Test
     public void testGetTooltip() {
         System.out.println("getTooltip");
-        gc.addGraphic(p);
+        gc.addGraphic(pt);
         assertNull(gc.getTooltip(new Point()));
-        p.setTooltipEnabled(true);
+        pt.setTooltipEnabled(true);
         assertNull(gc.getTooltip(new Point()));
-        p.setDefaultTooltip("test");
+        pt.setDefaultTooltip("test");
         assertEquals("test",gc.getTooltip(new Point()));
     }
 
     @Test
     public void testMouseGraphicAt() {
         System.out.println("mouseGraphicAt");
-        gc.addGraphic(p);
-        assertEquals(p, gc.mouseGraphicAt(new Point()));
-        p.setMouseEnabled(false);
+        gc.addGraphic(pt);
+        assertEquals(pt, gc.mouseGraphicAt(new Point()));
+        pt.setMouseEnabled(false);
         assertNull(gc.mouseGraphicAt(new Point()));
     }
 
     @Test
     public void testSelectableGraphicAt() {
         System.out.println("selectableGraphicAt");
-        gc.addGraphic(p);
-        assertEquals(p, gc.selectableGraphicAt(new Point()));
-        p.setSelectionEnabled(false);
-        assertEquals(gc, gc.selectableGraphicAt(new Point()));
+        gc.addGraphic(pt);
+        assertEquals(null, gc.selectableGraphicAt(new Point()));
+        pt.setSelectionEnabled(true);
+        assertEquals(pt, gc.selectableGraphicAt(new Point()));
+        pt.setSelectionEnabled(false);
+        assertEquals(null, gc.selectableGraphicAt(new Point()));
     }
 
     @Test
     public void testSelectableGraphicsIn() {
         System.out.println("selectableGraphicsIn");
         Rectangle2D box = new Rectangle(0,0,5,5);
-        gc.addGraphic(p);
-        assertTrue(Iterables.elementsEqual(Arrays.asList(p), gc.selectableGraphicsIn(box)));
-        p.setSelectionEnabled(false);
+        gc.addGraphic(pt);
+        pt.setSelectionEnabled(true);
+        assertTrue(Iterables.elementsEqual(Arrays.asList(pt), gc.selectableGraphicsIn(box)));
+        pt.setSelectionEnabled(false);
         assertTrue(Iterables.isEmpty(gc.selectableGraphicsIn(box)));
     }
     

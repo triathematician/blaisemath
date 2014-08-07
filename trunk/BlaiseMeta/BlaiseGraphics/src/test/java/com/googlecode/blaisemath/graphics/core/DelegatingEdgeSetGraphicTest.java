@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.googlecode.blaisemath.graphics;
+package com.googlecode.blaisemath.graphics.core;
 
 /*
  * #%L
@@ -37,8 +37,8 @@ package com.googlecode.blaisemath.graphics;
  */
 
 
-import com.googlecode.blaisemath.graphics.DelegatingEdgeSetGraphic;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.graphics.core.DelegatingEdgeSetGraphic;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import org.junit.Test;
 
 /**
