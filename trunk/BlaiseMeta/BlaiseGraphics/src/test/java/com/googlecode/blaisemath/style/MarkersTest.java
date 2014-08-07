@@ -37,8 +37,6 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.googlecode.blaisemath.style.Marker;
-import com.googlecode.blaisemath.style.Markers;
 import java.awt.Point;
 import java.awt.Shape;
 import java.util.List;
