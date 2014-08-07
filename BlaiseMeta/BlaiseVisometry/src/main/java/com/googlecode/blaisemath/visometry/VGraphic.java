@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.visometry;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 
 /**
  * <p>
@@ -42,26 +42,26 @@ import com.googlecode.blaisemath.graphics.Graphic;
  *
  * @see Graphic
  */
-public interface VGraphic<C> {
+public interface VGraphic<C,G> {
 
     /**
      * Returns the graphic entry. Should never be called unless {@link #isUnconverted()} returns true.
      * The return value should never be null.
      * @return the regular (window coordinates) graphic entry computed after conversion
      */
-    Graphic getWindowGraphic();
+    Graphic<G> getWindowGraphic();
      
     /** 
       * Return parent of the graphic
       * @return parent, possibly null 
       */
-    VGraphicComposite<C> getParentGraphic();
+    VGraphicComposite<C,G> getParentGraphic();
     
     /** 
      * Sets parent of the graphic 
      * @param parent the parent
      */
-    void setParentGraphic(VGraphicComposite<C> parent);
+    void setParentGraphic(VGraphicComposite<C,G> parent);
     
     /** 
      * Return true if graphic needs conversion to local coords

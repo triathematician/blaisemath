@@ -41,11 +41,12 @@ import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.modules.suppliers.EdgeProbabilityGraphSupplier;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
-import com.googlecode.blaisemath.coordinate.PointUtils;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.PanAndZoomHandler;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.RollupPanel;
 
@@ -71,10 +72,10 @@ public class GraphTestFrame extends javax.swing.JFrame {
         plot.setGraph(graph);
         plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
         PanAndZoomHandler.zoomBoxAnimated(plot, PointUtils.boundingBox(plot.getLayoutManager().getLocations().values(), 5));
-        plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, PointStyle>(){
-            public PointStyle apply(Object o) {
+        plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
+            public AttributeSet apply(Object o) {
                 Integer i = (Integer) o;
-                return new PointStyleBasic().markerRadius((int) (4+Math.sqrt(i)));
+                return AttributeSet.with(Styles.MARKER_RADIUS, 4+Math.sqrt(i));
             }
         });
 

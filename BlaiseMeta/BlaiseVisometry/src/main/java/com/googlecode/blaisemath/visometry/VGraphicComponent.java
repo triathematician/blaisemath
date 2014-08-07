@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ import com.googlecode.blaisemath.graphics.GraphicComponent;
  *
  * @author Elisha Peterson
  */
-public class VGraphicComponent<C> extends GraphicComponent {
+public class VGraphicComponent<C> extends JGraphicComponent {
 
     /** Logging global - minimum time in ms for alert */
     private static final int MS_TO_REPORT = 100;
@@ -53,7 +53,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
     
 
     /** Stores the tree of graphics primitives in local & window coords */
-    protected final VGraphicRoot<C> vRoot;
+    protected final VGraphicRoot<C,Graphics2D> vRoot;
 
     //
     // CONSTRUCTOR
@@ -64,7 +64,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
      * @param vis the visometry for the component
      */
     public VGraphicComponent(Visometry<C> vis) {
-        vRoot = new VGraphicRoot<C>(vis);
+        vRoot = new VGraphicRoot<C,Graphics2D>(vis);
         vRoot.initComponent(this);
 
         root.addGraphic(vRoot.windowEntry);
@@ -109,7 +109,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
      * Return root object containing local graphics.
      * @return local graphics object
      */
-    public VGraphicRoot<C> getVisometryGraphicRoot() {
+    public VGraphicRoot<C,Graphics2D> getVisometryGraphicRoot() {
         return vRoot;
     }
 
@@ -122,7 +122,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
      * Adds a graphic object to the VGraphic tree.
      * @param gfc the graphic to add
      */
-    public void addGraphic(VGraphic<C> gfc) {
+    public void addGraphic(VGraphic<C,Graphics2D> gfc) {
         vRoot.addGraphic(gfc);
     }
 
@@ -130,7 +130,7 @@ public class VGraphicComponent<C> extends GraphicComponent {
      * Removes a graphic object to the VGraphic tree.
      * @param gfc the graphic to remove
      */
-    public void removeGraphic(VGraphic<C> gfc) {
+    public void removeGraphic(VGraphic<C,Graphics2D> gfc) {
         vRoot.removeGraphic(gfc);
     }
 

@@ -36,25 +36,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import com.googlecode.blaisemath.graphics.BasicPointGraphic;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.graphics.BasicTextGraphic;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.prvis.PrModel.PrEntry;
 import com.googlecode.blaisemath.prvis.Units.Distance;
 import com.googlecode.blaisemath.prvis.Units.Speed;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.style.TextStyleBasic;
+import com.googlecode.blaisemath.util.geom.PointText;
 
 /**
  *
  * @author Elisha
  */
-public class PrVis extends GraphicComponent {
+public class PrVis extends JGraphicComponent {
     
     private PrModel model = new PrModel();
     
@@ -171,16 +170,18 @@ public class PrVis extends GraphicComponent {
         
         // supporting gfx
         clearGraphics();
-        addGraphic(new BasicShapeGraphic(bounds, Styles.fillStroke(Color.black, null)));
+        addGraphic(JGraphics.shape(bounds, Styles.fillStroke(Color.black, null)));
         for (double d = xmin; d <= xmax; d += 100) {
             double y = x0+xwid*(d-xmin)/(xmax-xmin);
-            addGraphic(new BasicShapeGraphic(new Line2D.Double(43, y, 50, y)));
-            addGraphic(new BasicTextGraphic(new Point2D.Double(42, y), ((int)d)+"yd", new TextStyleBasic().textAnchor(Anchor.EAST)));
+            addGraphic(JGraphics.shape(new Line2D.Double(43, y, 50, y)));
+            addGraphic(JGraphics.text(new PointText(new Point2D.Double(42, y), ((int)d)+"yd"),
+                    AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.EAST)));
         }
         for (double s = ymin; s >= ymax; s--) {
             double x = y0+yht*(s-ymin)/(ymax-ymin);
-            addGraphic(new BasicShapeGraphic(new Line2D.Double(x, 43, x, 50)));
-            addGraphic(new BasicTextGraphic(new Point2D.Double(x, 42), ((int)s)+"s", new TextStyleBasic().textAnchor(Anchor.SOUTH)));
+            addGraphic(JGraphics.shape(new Line2D.Double(x, 43, x, 50)));
+            addGraphic(JGraphics.text(new PointText(new Point2D.Double(x, 42), ((int)s)+"s"),
+                    AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.SOUTH)));
         }
         
         // shape gfx
@@ -196,8 +197,8 @@ public class PrVis extends GraphicComponent {
                 filled.add(new Area(shape));
                 GraphicComposite prGr = new GraphicComposite();
                 Color c = cMap.apply(en.getDate());
-                prGr.addGraphic(new BasicShapeGraphic(a, Styles.fillStroke(alpha(c,192), c.brighter())));
-                prGr.addGraphic(new BasicPointGraphic(pt, new PointStyleBasic().fill(c).stroke(c.darker())));                
+                prGr.addGraphic(JGraphics.shape(a, Styles.fillStroke(alpha(c,192), c.brighter())));
+                prGr.addGraphic(JGraphics.point(pt, Styles.fillStroke(c, c.darker())));
                 prGr.setDefaultTooltip(en+"");
                 addGraphic(prGr);
             } else if (formerPrs.contains(en)) {
@@ -207,12 +208,14 @@ public class PrVis extends GraphicComponent {
                 filled.add(new Area(shape));
                 GraphicComposite prGr = new GraphicComposite();
                 Color c = cMap2.apply(en.getDate());
-                prGr.addGraphic(new BasicShapeGraphic(a, Styles.fillStroke(alpha(c,192), c.brighter())));
-                prGr.addGraphic(new BasicPointGraphic(pt, new PointStyleBasic().fill(c).stroke(c.darker())));                
+                prGr.addGraphic(JGraphics.shape(a, Styles.fillStroke(alpha(c,192), c.brighter())));
+                prGr.addGraphic(JGraphics.point(pt, Styles.fillStroke(c, c.darker())));
                 prGr.setDefaultTooltip(en+"");
                 addGraphic(prGr);
             } else {
-                BasicPointGraphic bpg = new BasicPointGraphic(pt, new PointStyleBasic().stroke(cMap.apply(en.getDate()).darker()).marker(Markers.CROSS));
+                PrimitiveGraphic bpg = JGraphics.point(pt,
+                        AttributeSet.with(Styles.STROKE, cMap.apply(en.getDate()).darker())
+                                .and(Styles.MARKER, Markers.CROSS));
                 bpg.setDefaultTooltip(en+"");
                 addGraphic(bpg);
             }         

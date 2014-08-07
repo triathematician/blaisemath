@@ -31,13 +31,14 @@ import java.awt.event.HierarchyListener;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
-import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.PanAndZoomHandler;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.util.Edge;
+import java.awt.Graphics2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,7 +49,7 @@ import java.util.logging.Logger;
  *
  * @author elisha
  */
-public class GraphComponent extends GraphicComponent {
+public class GraphComponent extends JGraphicComponent {
     
     public static final String MENU_KEY_GRAPH = "graph";
     public static final String MENU_KEY_LINK = "link";
@@ -56,7 +57,7 @@ public class GraphComponent extends GraphicComponent {
     
 
     /** Manages the visual elements of the underlying graph */
-    protected final VisualGraph adapter;
+    protected final VisualGraph<Graphics2D> adapter;
     /** Pan and zoom control */
     protected final PanAndZoomHandler zoomControl;
 
@@ -111,19 +112,19 @@ public class GraphComponent extends GraphicComponent {
         return adapter;
     }
 
-    public ObjectStyler<Edge<Object>, PathStyle> getEdgeStyler() {
+    public ObjectStyler<Edge<Object>> getEdgeStyler() {
         return adapter.getEdgeStyler();
     }
 
-    public void setEdgeStyler(ObjectStyler<Edge<Object>, PathStyle> edgeStyler) {
+    public void setEdgeStyler(ObjectStyler<Edge<Object>> edgeStyler) {
         adapter.setEdgeStyler(edgeStyler);
     }
 
-    public ObjectStyler<Object, PointStyle> getNodeStyler() {
+    public ObjectStyler<Object> getNodeStyler() {
         return adapter.getNodeStyler();
     }
 
-    public void setNodeStyler(ObjectStyler<Object, PointStyle> nodeStyler) {
+    public void setNodeStyler(ObjectStyler<Object> nodeStyler) {
         adapter.setNodeStyler(nodeStyler);
     }
 

@@ -25,21 +25,21 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Function;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.util.Map;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.style.PathStyleDecorated;
-import com.googlecode.blaisemath.style.PathStyle;
 
 /**
  * Provides a default node customizer suitable for a weighted-edge graph.
  *
  * @author elisha
  */
-public class WeightedEdgeStyler implements Function<Edge, PathStyle> {
+public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
 
     /** Parent style */
-    protected final PathStyle parent;
+    protected final AttributeSet parent;
     /** Edge weights */
     protected Map<? extends Edge, Float> weights;
     /** The maximum edge weight */
@@ -51,7 +51,7 @@ public class WeightedEdgeStyler implements Function<Edge, PathStyle> {
      * @param parent the parent style
      * @param weights weightings for edges in graph
      */
-    public <V> WeightedEdgeStyler(PathStyle parent, Map<Edge<V>, Float> weights) {
+    public <V> WeightedEdgeStyler(AttributeSet parent, Map<Edge<V>, Float> weights) {
         this.parent = parent;
         this.weights = weights;
         for (Float wt : weights.values()) {
@@ -72,18 +72,22 @@ public class WeightedEdgeStyler implements Function<Edge, PathStyle> {
         }
     }
 
-    public synchronized PathStyle apply(Edge o) {
+    public synchronized AttributeSet apply(Edge o) {
         Object wt = weights.get(o);
         if (wt instanceof Number) {
             float n = ((Number) wt).floatValue();
             maxWeight = Math.max(maxWeight, Math.abs(n));
             boolean positive = n >= 0;
             double relativeWeight = Math.abs(n) / maxWeight;
-            Color c = positive ? positiveColor(parent.getStroke(), relativeWeight)
-                    : negativeColor(parent.getStroke(), relativeWeight);
-            return new PathStyleDecorated().baseStyle(parent).stroke(c).strokeWidth((float) (2 * relativeWeight));
+            Color stroke = parent.getColor(Styles.STROKE);
+            Color c = positive ? positiveColor(stroke, relativeWeight)
+                    : negativeColor(stroke, relativeWeight);
+            return AttributeSet.withParent(parent)
+                    .and(Styles.STROKE, c)
+                    .and(Styles.STROKE_WIDTH, (float)(2 * relativeWeight));
         } else if (wt instanceof Color) {
-            return new PathStyleDecorated().baseStyle(parent).stroke((Color) wt);
+            return AttributeSet.withParent(parent)
+                    .and(Styles.STROKE, (Color) wt);
         } else {
             return parent;
         }

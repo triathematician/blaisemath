@@ -25,15 +25,12 @@ package com.googlecode.blaisemath.visometry;
  */
 
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
-import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.Edge;
 
 /**
@@ -46,10 +43,10 @@ import com.googlecode.blaisemath.util.Edge;
  *
  * @author elisha
  */
-public class VCustomGraph<C,S,E extends Edge<S>> extends VCustomPointSet<C, S> {
+public class VCustomGraph<C,S,E extends Edge<S>,G> extends VCustomPointSet<C,S,G> {
 
     /** Maintains collection of edges */
-    protected final DelegatingNodeLinkGraphic<S,E> gwindow;
+    protected final DelegatingNodeLinkGraphic<S,E,G> gwindow;
 
     /**
      * Initialize without any points or edges
@@ -67,7 +64,7 @@ public class VCustomGraph<C,S,E extends Edge<S>> extends VCustomPointSet<C, S> {
         
         // change the window graphic from default specified by parent class
         window.getCoordinateManager().removeCoordinateListener(coordinateListener);
-        gwindow = new DelegatingNodeLinkGraphic<S,E>();
+        gwindow = new DelegatingNodeLinkGraphic<S,E,G>();
         window = gwindow.getPointGraphic();
         window.getCoordinateManager().addCoordinateListener(coordinateListener);
     }
@@ -90,11 +87,11 @@ public class VCustomGraph<C,S,E extends Edge<S>> extends VCustomPointSet<C, S> {
         gwindow.setEdgeSet(new LinkedHashSet<E>(edges));
     }
 
-    public void setEdgeStyler(ObjectStyler<E, PathStyle> styler) {
+    public void setEdgeStyler(ObjectStyler<E> styler) {
         gwindow.setEdgeStyler(styler);
     }
 
-    public ObjectStyler<E, PathStyle> getEdgeStyler() {
+    public ObjectStyler<E> getEdgeStyler() {
         return gwindow.getEdgeStyler();
     }
 

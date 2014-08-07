@@ -32,7 +32,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 
 /**
  * <p>

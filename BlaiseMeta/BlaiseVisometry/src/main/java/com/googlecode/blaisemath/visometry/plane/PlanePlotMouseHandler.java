@@ -25,7 +25,14 @@ package com.googlecode.blaisemath.visometry.plane;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
+
+
+
+
+
+
+import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnimationStep;
 import com.googlecode.blaisemath.util.CanvasPainter;
@@ -57,10 +64,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Elisha Peterson
  */
-public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasPainter {
+public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasPainter<Graphics2D> {
 
     /** Renderer for zoom box */
-    private static final ShapeStyleBasic BOX_STYLE = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
+    private static final AttributeSet BOX_STYLE = Styles.fillStroke(new Color(255, 128, 128, 128), new Color(255, 196, 196, 128));
     /** Mouse mode for rectangle resize */
     private static final String RESIZE_MODE = "Alt+Button1";
     /** Mouse mode for rectangle resize */
@@ -105,7 +112,7 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
     @Override
     public void paint(Component component, Graphics2D canvas) {
         if (zoomBox != null) {
-            BOX_STYLE.draw(zoomBox, canvas);
+            ShapeRenderer.getInstance().render(zoomBox, BOX_STYLE, canvas);
         }
     }
 

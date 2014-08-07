@@ -25,22 +25,23 @@ package com.googlecode.blaisemath.visometry;
  */
 
 import com.google.common.base.Objects;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.style.AttributeSet;
+import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.util.Arrays;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.style.PathStyle;
 
 /**
  * An entry for a polygonal path, drawn using a stroke renderer.
  *
  * @author Elisha
  */
-public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
+public class VBasicPolygonalPath<C,G> extends VGraphicSupport<C,G> {
 
     /** Contains the local points */
     private C[] pathCoordinates;
     /** The drawn path */
-    private final BasicShapeGraphic window = new BasicShapeGraphic(null);
+    private final PrimitiveGraphic<Shape,G> window = new PrimitiveGraphic<Shape,G>();
 
     /** Construct with specified bean to handle dragging (may be null) */
     public VBasicPolygonalPath(C[] local) {
@@ -52,7 +53,7 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
     // PROPERTY PATTERNS
     //
 
-    public BasicShapeGraphic getWindowGraphic() {
+    public PrimitiveGraphic<Shape,G> getWindowGraphic() {
         return window;
     }
 
@@ -76,11 +77,11 @@ public class VBasicPolygonalPath<C> extends VGraphicSupport<C> {
         setUnconverted(true);
     }
 
-    public PathStyle getStyle() {
-        return (PathStyle) window.getStyle();
+    public AttributeSet getPathStyle() {
+        return (AttributeSet) window.getStyle();
     }
 
-    public void setStyle(PathStyle rend) {
+    public void setPathStyle(AttributeSet rend) {
         window.setStyle(rend);
     }
     

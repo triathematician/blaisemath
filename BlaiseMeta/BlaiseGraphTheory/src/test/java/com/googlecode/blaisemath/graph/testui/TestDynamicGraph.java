@@ -34,7 +34,7 @@ import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.util.RollupPanel;
 
 

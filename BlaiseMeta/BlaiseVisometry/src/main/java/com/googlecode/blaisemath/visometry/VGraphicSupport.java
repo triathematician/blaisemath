@@ -34,20 +34,20 @@ package com.googlecode.blaisemath.visometry;
  * 
  * @author Elisha Peterson
  */
-public abstract class VGraphicSupport<C> implements VGraphic<C> {
+public abstract class VGraphicSupport<C,G> implements VGraphic<C,G> {
 
     /** Stores the parent of this entry */
-    protected VGraphicComposite<C> parent;
+    protected VGraphicComposite<C,G> parent;
     
     /** Flag indicating whether needs conversion */
     private boolean notConverted = true;
 
     
-    public VGraphicComposite<C> getParentGraphic() { 
+    public VGraphicComposite<C,G> getParentGraphic() { 
         return parent; 
     }
     
-    public void setParentGraphic(VGraphicComposite<C> parent) {
+    public void setParentGraphic(VGraphicComposite<C,G> parent) {
         this.parent = parent;
     }
 

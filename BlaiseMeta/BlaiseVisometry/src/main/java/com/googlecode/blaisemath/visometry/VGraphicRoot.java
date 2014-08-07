@@ -28,12 +28,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.awt.Component;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicRoot;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 
 /**
  * <p>
- *      Adds additional {@link Visometry} (local coordinates) support to the parent {@link GraphicRoot}.
+ *      Adds additional {@link Visometry} (local coordinates) support to the parent {@link JGraphicRoot}.
  *      Functionally, this class behaves differently than {@code GraphicRoot}. It maintains the {@code Visometry},
  *      as well as the {@link VisometryProcessor} used to convert entries from local coordinates to view coordinates.
  *      It also maintains the {@link PlottableComposite}, which is another tree of plottable elements that can be
@@ -43,7 +43,7 @@ import com.googlecode.blaisemath.graphics.GraphicRoot;
  *      So in all, there are three trees maintained by this class:
  * </p>
  * <ul>
- *      <li>the {@link Graphic} tree maintained by the parent {@link GraphicRoot};</li>
+ *      <li>the {@link Graphic} tree maintained by the parent {@link JGraphicRoot};</li>
  *      <li>the {@link VGraphic} tree maintained within the {@link PlottableComposite};</li>
  *      <li>the {@link Plottable} tree maintained within the {@link PlottableComposite}.</li>
  * </ul>
@@ -77,7 +77,7 @@ import com.googlecode.blaisemath.graphics.GraphicRoot;
  *
  * @author Elisha Peterson
  */
-public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListener {
+public class VGraphicRoot<C,G> extends VGraphicComposite<C,G> implements ChangeListener {
 
     /** Parent component upon which the graphics are drawn. */
     protected Component component;
@@ -126,7 +126,7 @@ public class VGraphicRoot<C> extends VGraphicComposite<C> implements ChangeListe
      * @param en the requestor
      */
     @Override
-    public void conversionNeeded(VGraphic en) {
+    public void conversionNeeded(VGraphic<C,G> en) {
         if (component != null) {
             component.repaint();
         }
