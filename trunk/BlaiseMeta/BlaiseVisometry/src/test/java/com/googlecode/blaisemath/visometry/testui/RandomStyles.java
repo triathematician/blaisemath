@@ -6,7 +6,7 @@ package com.googlecode.blaisemath.visometry.testui;
 
 /*
  * #%L
- * BlaiseVisometry
+ * BlaiseGraphics
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
@@ -24,48 +24,57 @@ package com.googlecode.blaisemath.visometry.testui;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.AttributeSet;
+import static com.googlecode.blaisemath.style.Styles.*;
 import java.awt.Color;
-import com.googlecode.blaisemath.style.PathStyleBasic;
-import com.googlecode.blaisemath.style.PointStyleBasic;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
-import com.googlecode.blaisemath.style.TextStyleBasic;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.ShapeStyle;
-import com.googlecode.blaisemath.style.TextStyle;
-import com.googlecode.blaisemath.style.Styles;
 
 /**
  *
  * @author elisha
  */
-public class RandomStyles {
-
-    public static PointStyle point() {
-        return new PointStyleBasic()
-                    .fill(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                    .stroke(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                    .strokeWidth((float)(2*Math.random()))
-                    .markerRadius((int)(25*Math.random()));
+class RandomStyles {
+    
+    static Color color() {
+        return new Color((float)Math.random(),(float)Math.random(),(float)Math.random());
     }
     
-    public static PathStyle path() {
-        return new PathStyleBasic()
-                    .stroke(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                    .strokeWidth((float)(12*Math.random()));
+    static float strokeWidth() {
+        return (float) (2*Math.random());
     }
     
-    public static ShapeStyle shape() {
-        return new ShapeStyleBasic()
-                .fill(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                .stroke(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                .strokeWidth((float)Math.random());
+    static int markerRadius() {
+        return (int)(25*Math.random());
+    }
+    
+    static int fontSize() {
+        return (int)(5+10*Math.random());
     }
 
-    public static TextStyle string() {
-        return new TextStyleBasic()
-                .fill(new Color((float)Math.random(),(float)Math.random(),(float)Math.random()))
-                .fontSize((float)(5+10*Math.random()));
+    static AttributeSet point() {
+        return AttributeSet
+                .with(FILL, color())
+                .and(STROKE, color())
+                .and(STROKE_WIDTH, strokeWidth())
+                .and(MARKER_RADIUS, markerRadius());
+    }
+    
+    static AttributeSet path() {
+        return AttributeSet
+                .with(STROKE, color())
+                .and(STROKE_WIDTH, strokeWidth());
+    }
+    
+    static AttributeSet shape() {
+        return AttributeSet
+                .with(FILL, color())
+                .and(STROKE, color())
+                .and(STROKE_WIDTH, strokeWidth());
+    }
+
+    static AttributeSet string() {
+        return AttributeSet
+                .with(FILL, color())
+                .and(FONT_SIZE, fontSize());
     }
     
 }

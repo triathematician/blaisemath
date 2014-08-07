@@ -30,10 +30,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
-import com.googlecode.blaisemath.graphics.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.PathStyle;
-import com.googlecode.blaisemath.style.PointStyle;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Edge;
 
@@ -46,13 +45,13 @@ import com.googlecode.blaisemath.util.Edge;
  *
  * @author Elisha Peterson
  */
-public class VisualGraph {
+public class VisualGraph<G> {
 
     /** Default graph edge style */
-    public static final PathStyle DEFAULT_EDGE_STYLE = Styles.strokeWidth(new Color(0, 128, 0, 128), .5f);
+    public static final AttributeSet DEFAULT_EDGE_STYLE = Styles.strokeWidth(new Color(0, 128, 0, 128), .5f);
     
     /** Stores the visible graph */
-    private DelegatingNodeLinkGraphic<Object,Edge<Object>> viewGraph;
+    private DelegatingNodeLinkGraphic<Object,Edge<Object>,G> viewGraph;
     
     /** Manages graph and node locations */
     private GraphLayoutManager layoutManager;
@@ -97,7 +96,7 @@ public class VisualGraph {
             if (viewGraph == null) {
                 // initialize the view graph with the same coordinate manager as the layout manager
                 //   this ensures that layout changes will propagate to the view
-                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>>(layoutManager.getCoordinateManager());
+                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(layoutManager.getCoordinateManager());
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
@@ -172,7 +171,7 @@ public class VisualGraph {
      * Return node styler
      * @return styler
      */
-    public ObjectStyler<Object, PointStyle> getNodeStyler() {
+    public ObjectStyler<Object> getNodeStyler() {
         return viewGraph.getNodeStyler();
     }
 
@@ -180,7 +179,7 @@ public class VisualGraph {
      * Return node styler
      * @param styler
      */
-    public void setNodeStyler(ObjectStyler<Object, PointStyle> styler) {
+    public <N> void setNodeStyler(ObjectStyler<Object> styler) {
         viewGraph.setNodeStyler(styler);
     }
 
@@ -188,7 +187,7 @@ public class VisualGraph {
      * Return edge styler
      * @return edge styler
      */
-    public ObjectStyler<Edge<Object>, PathStyle> getEdgeStyler() {
+    public ObjectStyler<Edge<Object>> getEdgeStyler() {
         return viewGraph.getEdgeStyler();
     }
 
@@ -196,7 +195,7 @@ public class VisualGraph {
      * Sets edge styler
      * @param styler edge styler
      */
-    public void setEdgeStyler(ObjectStyler<Edge<Object>, PathStyle> styler) {
+    public void setEdgeStyler(ObjectStyler<Edge<Object>> styler) {
         viewGraph.setEdgeStyler(styler);
     }
 

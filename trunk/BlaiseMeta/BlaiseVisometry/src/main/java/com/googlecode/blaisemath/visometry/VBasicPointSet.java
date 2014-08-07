@@ -30,9 +30,9 @@ import java.awt.geom.Point2D;
 import java.beans.IndexedPropertyChangeEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import com.googlecode.blaisemath.graphics.BasicPointSetGraphic;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.coordinate.PointFormatters;
+import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.geom.PointUtils;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.
@@ -40,12 +40,12 @@ import com.googlecode.blaisemath.coordinate.PointFormatters;
  * @param <C> local coordinate type
  * @author Elisha
  */
-public class VBasicPointSet<C> extends VGraphicSupport<C> {
+public class VBasicPointSet<C,G> extends VGraphicSupport<C,G> {
 
     /** The points */
     protected C[] point;
     /** The window entry */
-    protected final BasicPointSetGraphic window = new BasicPointSetGraphic();
+    protected final BasicPointSetGraphic<G> window = new BasicPointSetGraphic<G>();
     
     /** Provides tooltips for each point */
     private final VisTipDelegate<C> tipper = new VisTipDelegate<C>();
@@ -85,15 +85,15 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> {
     // PROPERTIES
     //
 
-    public BasicPointSetGraphic getWindowGraphic() {
+    public BasicPointSetGraphic<G> getWindowGraphic() {
         return window;
     }
 
-    public PointStyle getStyle() {
+    public AttributeSet getPointStyle() {
         return window.getStyle();
     }
 
-    public void setStyle(PointStyle rend) {
+    public void setPointStyle(AttributeSet rend) {
         window.setStyle(rend);
     }
 
@@ -133,7 +133,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> {
             }
         } else {
             Point2D[] p = processor.convertToArray(point, vis);
-            window.setPoint(p);
+            window.setPrimitive(p);
         }
         newPointValue = null;
         newPointIndex = -1;
@@ -151,7 +151,7 @@ public class VBasicPointSet<C> extends VGraphicSupport<C> {
         public String apply(Point2D src) {
             C local = vis.toLocal(src);
             return local instanceof Point2D 
-                    ? PointFormatters.formatPoint((Point2D) local, 2)
+                    ? PointUtils.formatPoint((Point2D) local, 2)
                     : local + "";
         }
     }

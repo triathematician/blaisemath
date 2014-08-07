@@ -25,12 +25,12 @@ package com.googlecode.blaisemath.visometry;
  */
 
 import com.google.common.base.Objects;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.geom.PointUtils;
 import java.awt.geom.Point2D;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import com.googlecode.blaisemath.graphics.BasicPointGraphic;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.coordinate.PointFormatters;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.
@@ -38,12 +38,12 @@ import com.googlecode.blaisemath.coordinate.PointFormatters;
  * @param <C> local coordinate type
  * @author Elisha
  */
-public class VBasicPoint<C> extends VGraphicSupport<C> {
+public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
 
     /** The point */
     protected C point;
     /** The windowGraphic entry */
-    protected final BasicPointGraphic windowGraphic = new BasicPointGraphic();
+    protected final PrimitiveGraphic<Point2D,G> windowGraphic = new PrimitiveGraphic<Point2D,G>();
 
     /**
      * Initialize point
@@ -51,21 +51,23 @@ public class VBasicPoint<C> extends VGraphicSupport<C> {
      */
     public VBasicPoint(final C initialPoint) {
         this.point = initialPoint;
-        windowGraphic.addChangeListener(new ChangeListener(){
-            public synchronized void stateChanged(ChangeEvent e) {
-                setPoint(parent.getVisometry().toLocal(windowGraphic.getPoint()));
-                windowGraphic.setDefaultTooltip(
-                        point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
-                        : point + "");
+        windowGraphic.addPropertyChangeListener(PrimitiveGraphic.PRIMITIVE_PROP,
+            new PropertyChangeListener(){
+                public void propertyChange(PropertyChangeEvent evt) {
+                    setPoint(parent.getVisometry().toLocal(windowGraphic.getPrimitive()));
+                    windowGraphic.setDefaultTooltip(
+                            point instanceof Point2D ? PointUtils.formatPoint((Point2D) point, 2)
+                            : point + "");
+                }
             }
-        });
+        );
     }
 
     //
     // PROPERTIES
     //
 
-    public final synchronized BasicPointGraphic getWindowGraphic() {
+    public final synchronized PrimitiveGraphic getWindowGraphic() {
         return windowGraphic;
     }
 
@@ -80,12 +82,12 @@ public class VBasicPoint<C> extends VGraphicSupport<C> {
         }
     }
 
-    public final PointStyle getStyle() {
+    public final AttributeSet getStyle() {
         return windowGraphic.getStyle();
     }
 
-    public final void setStyle(PointStyle rend) {
-        windowGraphic.setStyle(rend);
+    public final void setStyle(AttributeSet sty) {
+        windowGraphic.setStyle(sty);
     }
 
     //
@@ -94,9 +96,9 @@ public class VBasicPoint<C> extends VGraphicSupport<C> {
 
 
     public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
-        windowGraphic.setPoint(processor.convert(point, vis));
+        windowGraphic.setPrimitive(processor.convert(point, vis));
         windowGraphic.setDefaultTooltip(
-                point instanceof Point2D ? PointFormatters.formatPoint((Point2D) point, 2)
+                point instanceof Point2D ? PointUtils.formatPoint((Point2D) point, 2)
                 : point + "");
         setUnconverted(false);
     }

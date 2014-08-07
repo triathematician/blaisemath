@@ -35,15 +35,15 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import com.googlecode.blaisemath.graphics.AbstractGraphicDragger;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.graphics.BasicTextGraphic;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-import com.googlecode.blaisemath.graphics.GraphicMouseEvent;
+import com.googlecode.blaisemath.graphics.core.GMouseDragHandler;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.core.GMouseEvent;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.Anchor;
-import com.googlecode.blaisemath.style.ShapeStyle;
+import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.style.TextStyleBasic;
+import com.googlecode.blaisemath.util.geom.PointText;
 
 /**
  * <p>
@@ -53,30 +53,26 @@ import com.googlecode.blaisemath.style.TextStyleBasic;
  * </p>
  * @author elisha
  */
-public class BlaiseSlider extends GraphicComponent {
-
-    //
-    // ATTRIBUTES
-    //
+public class BlaiseSlider extends JGraphicComponent {
     
     /** Tracks slider boundaries and location/extent within boundaries. */
     private BoundedRangeModel model = new DefaultBoundedRangeModel(50, 0, 0, 100);
     /** Component for the slider "track" */
-    private final BasicShapeGraphic trackGr;
+    private final PrimitiveGraphic trackGr;
     /** Component for the position on track */
-    private final BasicShapeGraphic posGr;
+    private final PrimitiveGraphic posGr;
     /** Label for current value */
-    private final BasicTextGraphic strGr;
+    private final PrimitiveGraphic strGr;
     
     /** Style for track */
-    private ShapeStyle tStyle;
+    private AttributeSet tStyle;
     /** Inserts for track */
     private Insets tIn = new Insets(6,4,6,4);
     /** Rounding for track */
     private int tRnd = 30;
     
     /** Handle style */
-    private ShapeStyle hStyle;
+    private AttributeSet hStyle;
     /** Minimum width of handle */
     private int hWid = 24;
     /** Extent of handle beyond track location. */
@@ -92,27 +88,29 @@ public class BlaiseSlider extends GraphicComponent {
     public BlaiseSlider() {
         tStyle = Styles.fillStroke(new Color(96,96,100,192), new Color(128,128,128,192));
         hStyle = Styles.fillStroke(new Color(192,192,192,192), new Color(64,64,64,192));
-        addGraphic(trackGr = new BasicShapeGraphic(null, tStyle));
-        addGraphic(posGr = new BasicShapeGraphic(null, hStyle));
-        addGraphic(strGr = new BasicTextGraphic(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+""));
-        strGr.setStyle(new TextStyleBasic().fill(Color.white).fontSize(hRnd/2f).textAnchor(Anchor.SOUTH));
+        addGraphic(trackGr = JGraphics.shape(null, tStyle));
+        addGraphic(posGr = JGraphics.shape(null, hStyle));
+        addGraphic(strGr = JGraphics.text(new PointText(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+"")));
+        strGr.setStyle(AttributeSet.with(Styles.FILL,Color.white)
+                .and(Styles.FONT_SIZE, hRnd/2)
+                .and(Styles.TEXT_ANCHOR, Anchor.SOUTH));
         trackGr.setMouseEnabled(false);
         strGr.setMouseEnabled(false);
         updateGraphics();
         
-        AbstractGraphicDragger dragger = new AbstractGraphicDragger() {
+        GMouseDragHandler dragger = new GMouseDragHandler() {
             Integer value0 = null;
             @Override 
-            public void mouseDragInitiated(GraphicMouseEvent e, Point2D start) {
+            public void mouseDragInitiated(GMouseEvent e, Point2D start) {
                 value0 = (int) ( model.getMinimum()+(model.getMaximum()-model.getMinimum())*(e.getX()-tIn.left-hWid/2)/(double)xwid() );
             }
             @Override
-            public void mouseDragInProgress(GraphicMouseEvent e, Point2D start) {
+            public void mouseDragInProgress(GMouseEvent e, Point2D start) {
                 int value = (int) ( model.getMinimum()+(model.getMaximum()-model.getMinimum())*(e.getX()-tIn.left-hWid/2)/(double)xwid() );
                 model.setValue(value);
             }
             @Override
-            public void mouseDragCompleted(GraphicMouseEvent e, Point2D start) {
+            public void mouseDragCompleted(GMouseEvent e, Point2D start) {
                 value0 = null;
             }
         };
@@ -185,8 +183,9 @@ public class BlaiseSlider extends GraphicComponent {
             posGr.setPrimitive(new RoundRectangle2D.Double(xc-rad, y0-hExt, 2*rad, yht+2*hExt, hRnd, hRnd));
         } else
             posGr.setPrimitive(new RoundRectangle2D.Double(xc, y0-hExt, xc2-xc, yht+2*hExt, hRnd, hRnd));
-        strGr.setPoint(new Point2D.Double(xc, getHeight()/2+((TextStyleBasic)strGr.getStyle()).getFontSize()/2));
-        strGr.setString(model.getValue()+"");
+        strGr.setPrimitive(new PointText(
+                new Point2D.Double(xc, getHeight()/2+((AttributeSet)strGr.getStyle()).getInteger(Styles.FONT_SIZE)/2),
+                model.getValue()+""));
     }
     
     

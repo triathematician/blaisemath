@@ -24,15 +24,14 @@ package com.googlecode.blaisemath.visometry;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.DelegatingPointSetGraphic;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,10 +45,10 @@ import java.util.Set;
  *
  * @author elisha
  */
-public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
+public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
 
     /** The window entry */
-    protected DelegatingPointSetGraphic<S> window = new DelegatingPointSetGraphic<S>();
+    protected DelegatingPointSetGraphic<S,G> window = new DelegatingPointSetGraphic<S,G>();
     
     /** Local coordinates of the points */
     protected CoordinateManager<S,C> coordManager;
@@ -169,11 +168,11 @@ public class VCustomPointSet<C, S> extends VGraphicSupport<C> {
         }
     }
 
-    public ObjectStyler<S, PointStyle> getStyler() {
+    public ObjectStyler<S> getPointStyler() {
         return window.getStyler();
     }
 
-    public void setStyler(ObjectStyler<S, PointStyle> styler) {
+    public void setPointStyler(ObjectStyler<S> styler) {
         window.setStyler(styler);
     }
 

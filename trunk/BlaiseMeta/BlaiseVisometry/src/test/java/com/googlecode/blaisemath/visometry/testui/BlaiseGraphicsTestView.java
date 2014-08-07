@@ -27,8 +27,7 @@ package com.googlecode.blaisemath.visometry.testui;
 import javax.swing.JMenu;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-import com.googlecode.blaisemath.graphics.GraphicSelectionHandler;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.visometry.plane.PlanePlotComponent;
 import org.jdesktop.application.Application;
 
@@ -44,7 +43,7 @@ public class BlaiseGraphicsTestView extends FrameView {
     
     private void initComponents(Application app) {
         mainPanel = new javax.swing.JPanel();
-        canvas1 = new GraphicComponent(); canvas1.setSelectionEnabled(true);
+        canvas1 = new JGraphicComponent(); canvas1.setSelectionEnabled(true);
         canvas2 = new PlanePlotComponent(); canvas2.setSelectionEnabled(true);
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu("File");
@@ -211,7 +210,7 @@ public class BlaiseGraphicsTestView extends FrameView {
         setToolBar(jToolBar1);
     }
 
-    GraphicComponent canvas1;
+    JGraphicComponent canvas1;
     PlanePlotComponent canvas2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

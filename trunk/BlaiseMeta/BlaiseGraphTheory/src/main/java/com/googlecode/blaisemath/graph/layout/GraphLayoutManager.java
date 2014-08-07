@@ -41,9 +41,9 @@ import java.util.logging.Logger;
 import com.googlecode.blaisemath.graph.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
-import com.googlecode.blaisemath.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 
 /**
  * <p>

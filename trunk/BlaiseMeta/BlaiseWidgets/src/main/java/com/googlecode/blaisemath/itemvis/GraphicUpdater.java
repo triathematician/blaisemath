@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.itemvis;
 
 
 import java.awt.geom.Rectangle2D;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 
 /**
  * Creates and/or modifies a graphic based on an item.

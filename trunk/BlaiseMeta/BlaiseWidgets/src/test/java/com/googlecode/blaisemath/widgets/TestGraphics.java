@@ -24,14 +24,13 @@ package com.googlecode.blaisemath.widgets;
  * #L%
  */
 
-import com.googlecode.blaisemath.widgets.BlaiseSlider;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
 import com.googlecode.blaisemath.style.Styles;
 
 /**
@@ -40,15 +39,15 @@ import com.googlecode.blaisemath.style.Styles;
  */
 public class TestGraphics extends javax.swing.JFrame {
 
-    BasicShapeGraphic gr = new BasicShapeGraphic(new Rectangle2D.Double(10,10,100,100), Styles.fillStroke(Color.black, Color.red));
+    PrimitiveGraphic gr = JGraphics.shape(new Rectangle2D.Double(10,10,100,100), Styles.fillStroke(Color.black, Color.red));
     
     /** Creates new form TestGraphics */
     public TestGraphics() {
         initComponents();
-        graphicComponent1.addGraphic(gr);
-        graphicComponent1.setSelectionEnabled(true);
-        blaiseSlider2.setModel(new DefaultBoundedRangeModel(200,0,50,300));
-        blaiseSlider2.getModel().addChangeListener(new ChangeListener(){
+        jGraphicComponent1.addGraphic(gr);
+        jGraphicComponent1.setSelectionEnabled(true);
+        blaiseSlider1.setModel(new DefaultBoundedRangeModel(200,0,50,300));
+        blaiseSlider1.getModel().addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e) {
                 updateShape();
             }
@@ -57,7 +56,7 @@ public class TestGraphics extends javax.swing.JFrame {
     }
     
     private void updateShape() {
-        int val = blaiseSlider2.getModel().getValue();
+        int val = blaiseSlider1.getModel().getValue();
         gr.setPrimitive(new Rectangle2D.Double(10,10,val,val));
         gr.setDefaultTooltip(val + "x" + val);
     }
@@ -71,36 +70,12 @@ public class TestGraphics extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        graphicComponent1 = new GraphicComponent();
-        blaiseSlider2 = new BlaiseSlider();
+        jGraphicComponent1 = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
+        blaiseSlider1 = new com.googlecode.blaisemath.widgets.BlaiseSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        org.jdesktop.layout.GroupLayout graphicComponent1Layout = new org.jdesktop.layout.GroupLayout(graphicComponent1);
-        graphicComponent1.setLayout(graphicComponent1Layout);
-        graphicComponent1Layout.setHorizontalGroup(
-            graphicComponent1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 623, Short.MAX_VALUE)
-        );
-        graphicComponent1Layout.setVerticalGroup(
-            graphicComponent1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 321, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(graphicComponent1, java.awt.BorderLayout.CENTER);
-
-        org.jdesktop.layout.GroupLayout blaiseSlider2Layout = new org.jdesktop.layout.GroupLayout(blaiseSlider2);
-        blaiseSlider2.setLayout(blaiseSlider2Layout);
-        blaiseSlider2Layout.setHorizontalGroup(
-            blaiseSlider2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 623, Short.MAX_VALUE)
-        );
-        blaiseSlider2Layout.setVerticalGroup(
-            blaiseSlider2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 40, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(blaiseSlider2, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(jGraphicComponent1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(blaiseSlider1, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -141,7 +116,7 @@ public class TestGraphics extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private BlaiseSlider blaiseSlider2;
-    private GraphicComponent graphicComponent1;
+    private com.googlecode.blaisemath.widgets.BlaiseSlider blaiseSlider1;
+    private com.googlecode.blaisemath.graphics.swing.JGraphicComponent jGraphicComponent1;
     // End of variables declaration//GEN-END:variables
 }
