@@ -19,39 +19,17 @@
   -->
 <html>
   <head>
-    <title>org.blaise.style package</title>
+    <title>com.googlecode.blaisemath.style</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
       <p>
-          This package contains the basic styles that draw points, shapes, etc on a
-          graphics canvas. These styles contain some basic style information, and
-          have the capability to render either a single shape or multiple shapes.
-          The four basic styles are {@link org.blaise.style.ShapeStyle} for {@code java.awt.Shape}s,
-          {@link org.blaise.style.PathStyle} for {@code java.awt.Shape}s representing paths,
-          {@link org.blaise.style.PointStyle} for {@code java.awt.geom.Point2D}s with/without orientations,
-          and {@link org.blaise.style.TextStyle} for drawing {@code String}s at a {@code java.awt.geom.Point2D}.
+          This package contains logic for maintaining sets of attributes that
+          represent styles for various graphic types.
       </p>
-      <h1>Code Conventions</h1>
       <p>
-          Style classes obey the following conventions:
-      </p>
-      <ul>
-          <li>classes are <i>not final</i></li>
-          <li>classes have a unique <i>toString() method</i></li>
-          <li>classes follow <i>Java Bean</i> conventions:
-              have a no-argument constructor, 
-              and getter-setter methods for all their properties.</li>
-          <li><i>property fields are {@code protected}</i></li>
-          <li>there is <i>builder pattern</i> for each property, which uses the corresponding {@code set} method</li>
-      </ul>
-      <p>
-          Style objects have properties that match SVG styling rules
-          (<a href="http://www.w3.org/TR/SVG/styling.html">http://www.w3.org/TR/SVG/styling.html</a>)
-          as much as possible, with styles like {@code font-size} represented by
-          <i>CamelCase</i> attributes/properties like {@code fontSize}.
-          Remarks are provided with styles that directly match SVG objects,
-          and a note is made when they do not.
+          All code in this package should be independent of the swing graphics
+          API.
       </p>
   </body>
 </html>

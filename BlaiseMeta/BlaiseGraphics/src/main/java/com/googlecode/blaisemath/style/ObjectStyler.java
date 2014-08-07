@@ -33,27 +33,25 @@ import java.beans.PropertyChangeSupport;
 import javax.annotation.Nullable;
 
 /**
- * Groups together a collection of delegators for a generic object that can be
- * used to customize its style, tooltip, label, and label style. Notifies listeners
- * when any of these styles change.
+ * Provides delegates for getting draw styles, labels, label styles, and tooltips
+ * for an object of a given type.
  *
  * @param <S> the type of source object
- * @param <T> the primary style type used to draw
  *
  * @author elisha
  */
-public class ObjectStyler<S, T> {
+public class ObjectStyler<S> {
 
     /** Delegate for point rendering */
     @Nullable
-    protected Function<? super S, T> styles = null;
+    protected Function<? super S, AttributeSet> styles = null;
 
     /** Delegate for point labels (only used if the styler returns a label style) */
     @Nullable
     protected Function<? super S, String> labels = null;
     /** Delegate for point label styles */
     @Nullable
-    protected Function<? super S, TextStyle> labelStyles = null;
+    protected Function<? super S, AttributeSet> labelStyles = null;
 
     /** Delegate for tooltips (with default) */
     @Nullable 
@@ -77,11 +75,10 @@ public class ObjectStyler<S, T> {
     /**
      * Create new default styler instance.
      * @param <S> the type of source object
-     * @param <T> the primary style type used to draw
      * @return new styler instance
      */
-    public static <S,T> ObjectStyler<S,T> create() {
-        return new ObjectStyler<S,T>();
+    public static <S> ObjectStyler<S> create() {
+        return new ObjectStyler<S>();
     }
     
     //</editor-fold>
@@ -97,7 +94,7 @@ public class ObjectStyler<S, T> {
      * @return style delegate
      */
     @Nullable 
-    public Function<? super S, T> getStyleDelegate() {
+    public Function<? super S, AttributeSet> getStyleDelegate() {
         return styles;
     }
 
@@ -106,7 +103,7 @@ public class ObjectStyler<S, T> {
      * provided by the parent.
      * @param styler used to style object
      */
-    public void setStyleDelegate(@Nullable Function<? super S, T> styler) {
+    public void setStyleDelegate(@Nullable Function<? super S, AttributeSet> styler) {
         if (this.styles != styler) {
             this.styles = styler;
             pcs.firePropertyChange("styleDelegate", null, styles);
@@ -138,7 +135,7 @@ public class ObjectStyler<S, T> {
      * @return  label style delegate
      */
     @Nullable 
-    public Function<? super S, TextStyle> getLabelStyleDelegate() {
+    public Function<? super S, AttributeSet> getLabelStyleDelegate() {
         return labelStyles;
     }
 
@@ -146,7 +143,7 @@ public class ObjectStyler<S, T> {
      * Sets the current label style delegate. If null, uses a default style.
      * @param labelStyler the new label styler
      */
-    public void setLabelStyleDelegate(@Nullable Function<? super S, TextStyle> labelStyler) {
+    public void setLabelStyleDelegate(@Nullable Function<? super S, AttributeSet> labelStyler) {
         if (this.labelStyles != labelStyler) {
             this.labelStyles = labelStyler;
             pcs.firePropertyChange("labelStyleDelegate", null, labelStyles);
@@ -184,7 +181,7 @@ public class ObjectStyler<S, T> {
      * @return style
      */
     @Nullable
-    public T getStyle(S src) {
+    public AttributeSet style(S src) {
         return styles == null ? null : styles.apply(src);
     }
     
@@ -194,7 +191,7 @@ public class ObjectStyler<S, T> {
      * @return label
      */
     @Nullable
-    public String getLabel(S src) {
+    public String label(S src) {
         return labels == null ? null : labels.apply(src);
     }
     
@@ -204,18 +201,19 @@ public class ObjectStyler<S, T> {
      * @return label
      */
     @Nullable
-    public TextStyle getLabelStyle(S src) {
+    public AttributeSet labelStyle(S src) {
         return labelStyles == null ? null : labelStyles.apply(src);
     }
     
     /**
      * Get tip for given object.
      * @param src object
+     * @param def default label to return
      * @return label
      */
     @Nullable
-    public String getTip(S src) {
-        return tips == null ? null : tips.apply(src);
+    public String tooltip(S src, @Nullable String def) {
+        return tips == null ? def : tips.apply(src);
     }
     
     //</editor-fold>
@@ -229,7 +227,7 @@ public class ObjectStyler<S, T> {
      * Sets a single style for all objects.
      * @param style style to use for all objects
      */
-    public void setStyleConstant(T style) {
+    public void setStyleConstant(AttributeSet style) {
         setStyleDelegate(Functions.constant(checkNotNull(style)));
     }
 
@@ -237,7 +235,7 @@ public class ObjectStyler<S, T> {
      * Sets a single label style for all objects.
      * @param style style to use for all objects
      */
-    public void setLabelStyleConstant(TextStyle style) {
+    public void setLabelStyleConstant(AttributeSet style) {
         setLabelStyleDelegate(Functions.constant(checkNotNull(style)));
     }
 
