@@ -26,8 +26,8 @@ package com.googlecode.blaisemath.graphics.testui;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
-import com.googlecode.blaisemath.graphics.PanAndZoomHandler;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.FrameView;
 
@@ -45,7 +45,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        canvas1 = new GraphicComponent();
+        canvas1 = new JGraphicComponent();
         new PanAndZoomHandler(canvas1);
         menuBar = new javax.swing.JMenuBar();
         jToolBar1 = new javax.swing.JToolBar();
@@ -114,7 +114,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         setToolBar(jToolBar1);
     }
 
-    GraphicComponent canvas1;
+    JGraphicComponent canvas1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JToolBar jToolBar1;

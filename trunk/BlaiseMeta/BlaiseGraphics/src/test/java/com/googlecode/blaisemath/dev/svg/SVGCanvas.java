@@ -30,14 +30,14 @@ package com.googlecode.blaisemath.dev.svg;
  */
 
 import java.awt.Color;
-import com.googlecode.blaisemath.graphics.GraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 
 /**
  * <p>
  * </p>
  * @author elisha
  */
-public class SVGCanvas extends GraphicComponent {
+public class SVGCanvas extends JGraphicComponent {
 
     //
     // ATTRIBUTES

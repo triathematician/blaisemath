@@ -24,12 +24,14 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import java.awt.geom.Point2D;
-import com.googlecode.blaisemath.graphics.BasicPointGraphic;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
-import com.googlecode.blaisemath.style.PointStyleBasic;
-import com.googlecode.blaisemath.style.PointStyle;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.style.Styles;
+import java.awt.Graphics2D;
 
 /**
  * Provides methods for managing a graphic that depends on two underlying points,
@@ -38,12 +40,12 @@ import com.googlecode.blaisemath.style.PointStyle;
  * 
  * @author elisha
  */
-public class TwoPointGraphicSupport extends GraphicComposite {
+public class TwoPointGraphicSupport extends GraphicComposite<Graphics2D> {
 
     /** Point at start of arrow */
-    protected final BasicPointGraphic start;
+    protected final PrimitiveGraphic<OrientedPoint2D,Graphics2D> start;
     /** Point at end of arrow */
-    protected final BasicPointGraphic end;
+    protected final PrimitiveGraphic<OrientedPoint2D,Graphics2D> end;
 
     /**
      * Construct graphic with specified base points
@@ -51,8 +53,10 @@ public class TwoPointGraphicSupport extends GraphicComposite {
      * @param end ending point
      */
     public TwoPointGraphicSupport(Point2D start, Point2D end) {
-        this.start = new BasicPointGraphic(start);
-        this.end = new BasicPointGraphic(end);
+        this.start = JGraphics.marker(new OrientedPoint2D(start).inDirectionOf(end),
+                Styles.defaultPointStyle());
+        this.end = JGraphics.marker(new OrientedPoint2D(end).inDirectionOf(start),
+                Styles.defaultPointStyle());
         
         initGraphics();
         pointsUpdated();
@@ -67,6 +71,14 @@ public class TwoPointGraphicSupport extends GraphicComposite {
         addGraphic(this.end);
     }
 
+    public PrimitiveGraphic<OrientedPoint2D, Graphics2D> getStartGraphic() {
+        return start;
+    }
+
+    public PrimitiveGraphic<OrientedPoint2D, Graphics2D> getEndGraphic() {
+        return end;
+    }
+
     //
     // UPDATING
     //
@@ -78,64 +90,9 @@ public class TwoPointGraphicSupport extends GraphicComposite {
      * {@link GraphicComposite#fireGraphicChanged()}.
      */
     protected void pointsUpdated() {
-        double angle = Math.atan2(end.getPoint().getY() - start.getPoint().getY(), end.getPoint().getX() - start.getPoint().getX());
-        start.setAngle(angle+Math.PI);
-        end.setAngle(angle);
+        start.getPrimitive().inDirectionOf(end.getPrimitive());
+        end.getPrimitive().inDirectionOf(start.getPrimitive());
         fireGraphicChanged();
-    }
-
-    //
-    // PROPERTIES
-    //
-    
-    public double getStartX() {
-        return start.getPoint().getX();
-    }
-    
-    public double getStartY() {
-        return start.getPoint().getY();
-    }
-    
-    public double getEndX() {
-        return end.getPoint().getX();
-    }
-    
-    public double getEndY() {
-        return end.getPoint().getY();
-    }
-    
-    public Point2D getStartPoint() {
-        return start.getPoint();
-    }
-
-    public PointStyle getStartPointStyle() {
-        return start.getStyle();
-    }
-
-    public void setEndPoint(Point2D p) {
-        end.setPoint(p);
-        pointsUpdated();
-    }
-
-    public void setEndPointStyle(PointStyleBasic r) {
-        end.setStyle(r);
-    }
-
-    public void setStartPoint(Point2D p) {
-        start.setPoint(p);
-        pointsUpdated();
-    }
-
-    public void setStartPointStyle(PointStyleBasic r) {
-        start.setStyle(r);
-    }
-
-    public Point2D getEndPoint() {
-        return end.getPoint();
-    }
-
-    public PointStyle getEndPointStyle() {
-        return end.getStyle();
     }
     
     //

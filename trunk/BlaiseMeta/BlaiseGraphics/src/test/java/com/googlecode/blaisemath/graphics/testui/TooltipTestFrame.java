@@ -24,11 +24,13 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
-import java.awt.Point;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
+import com.googlecode.blaisemath.style.Styles;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
 
 /**
  *
@@ -41,11 +43,12 @@ public class TooltipTestFrame extends javax.swing.JFrame {
      */
     public TooltipTestFrame() {
         initComponents();
-        BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
+        PrimitiveGraphic g1 = JGraphics.shape(new Ellipse2D.Double(50,50,100,100));
         g1.setDefaultTooltip("Ellipse");
         gc.addGraphic(g1);
         
-        BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100)) {
+        PrimitiveGraphic g2 = new PrimitiveGraphic(new Rectangle2D.Double(60,90,100,100), 
+                Styles.defaultShapeStyle(), ShapeRenderer.getInstance()) {
             @Override
             public String getTooltip(Point2D p) {
                 return ""+p;
@@ -64,7 +67,7 @@ public class TooltipTestFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gc = new com.googlecode.blaisemath.graphics.GraphicComponent();
+        gc = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -111,7 +114,7 @@ public class TooltipTestFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.googlecode.blaisemath.graphics.GraphicComponent gc;
+    private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
