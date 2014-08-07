@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.style.Anchor;
 import static com.googlecode.blaisemath.style.Anchor.*;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -88,7 +88,7 @@ public class WrappedTextRenderer extends TextRenderer {
     
     
     @Override
-    public void render(PointText text, AttributeSet style, Graphics2D canvas) {
+    public void render(LabeledPoint text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
@@ -121,7 +121,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         if (bounds.getWidth() < clip.getWidth() - 8 || clip.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
-            super.render(new PointText(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
+            super.render(new LabeledPoint(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
             canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
         } else {
             // need to wrap string

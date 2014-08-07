@@ -34,6 +34,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Draws a point on the graphics canvas, using a {@link Marker} object and a {@link ShapeStyle}.
@@ -43,41 +45,17 @@ import java.awt.geom.Rectangle2D;
  */
 public class PointRenderer implements Renderer<Point2D, Graphics2D> {
 
-    /** Shape of the point displayed */
-    protected Marker marker = new Markers.CircleShape();
     /** Delegate for rendering the shape of the marker */
     protected Renderer<Shape, Graphics2D> shapeRenderer = new ShapeRenderer();
 
     public static Renderer<Point2D, Graphics2D> getInstance() {
         return new PointRenderer();
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
-
-    /** 
-     * Sets shape & returns pointer to object
-     * @param s
-     * @return  
-     */
-    public PointRenderer marker(Marker s) {
-        setMarker(s);
-        return this;
-    }
-
-    // </editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
     // PROPERTY PATTERNS
     //
-
-    public Marker getMarker() {
-        return marker;
-    }
-
-    public void setMarker(Marker marker) {
-        this.marker = checkNotNull(marker);
-    }
 
     public Renderer<Shape, Graphics2D> getShapeRenderer() {
         return shapeRenderer;
@@ -91,7 +69,19 @@ public class PointRenderer implements Renderer<Point2D, Graphics2D> {
 
     public Shape getShape(Point2D primitive, AttributeSet style) {
         Float rad = style.getFloat(Styles.MARKER_RADIUS, 4f);
-        return marker.create(primitive, 0, rad);
+        Object mStyle = style.get(Styles.MARKER);
+        if (mStyle == null) {
+            return Markers.CIRCLE.create(primitive, 0, rad);
+        } else if (mStyle instanceof Marker) {
+            return ((Marker)mStyle).create(primitive, 0, rad);
+        } else if (mStyle instanceof String) {
+            Logger.getLogger(PointRenderer.class.getName()).log(Level.WARNING,
+                    "Invalid marker object string (not supported yet): {0}", mStyle);
+        } else {
+            Logger.getLogger(PointRenderer.class.getName()).log(Level.WARNING,
+                    "Invalid marker object: {0}", mStyle);
+        }
+        return null;
     }
     
     public void render(Point2D primitive, AttributeSet style, Graphics2D canvas) {

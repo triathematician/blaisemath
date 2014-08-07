@@ -4,8 +4,6 @@
  */
 package com.googlecode.blaisemath.util.coordinate;
 
-import java.awt.geom.Point2D;
-
 /*
  * #%L
  * BlaiseGraphics

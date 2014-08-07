@@ -32,7 +32,7 @@ import java.awt.geom.Point2D;
  * A point with an orientation.
  * @author Elisha
  */
-public class OrientedPoint2D extends PointDraggable {
+public class OrientedPoint2D extends DraggablePoint {
     
     /** The orientation of the point */
     public double angle = 0;

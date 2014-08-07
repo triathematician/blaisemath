@@ -120,7 +120,10 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     //
 
     public int indexOf(Point2D nearby) {
-        AttributeSet style = getStyle();
+        if (renderer == null) {
+            return -1;
+        }
+        AttributeSet style = renderStyle();
         synchronized(primitive) {
             for (int i = primitive.length-1; i >= 0; i--) {
                 if (renderer.contains(primitive[i], style, nearby)) {
@@ -132,7 +135,10 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     }
     
     public void renderTo(G canvas) {
-        AttributeSet style = getStyle();
+        if (renderer == null) {
+            return;
+        }
+        AttributeSet style = renderStyle();
         synchronized(primitive) {
             for (O o : primitive) {
                 renderer.render(o, style, canvas);
@@ -145,7 +151,10 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
     }
 
     public boolean intersects(Rectangle2D box) {
-        AttributeSet style = getStyle();
+        if (renderer == null) {
+            return false;
+        }
+        AttributeSet style = renderStyle();
         synchronized(primitive) {
             for (O o : primitive) {
                 if (renderer.intersects(o, style, box)) {

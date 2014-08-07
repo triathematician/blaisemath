@@ -33,7 +33,7 @@ import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Graphics2D;
 
 /**
@@ -49,7 +49,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     /** Stores the point */
     private final PrimitiveGraphic<Point2D,Graphics2D> point;
     /** Stores the string */
-    private final PrimitiveGraphic<PointText,Graphics2D> label;
+    private final PrimitiveGraphic<LabeledPoint,Graphics2D> label;
 
     //
     // CONSTRUCTORS
@@ -59,7 +59,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     public LabeledPointGraphic(Point2D p, String s) { 
         point = new PrimitiveGraphic<Point2D,Graphics2D>(p, null, 
                 PointRenderer.getInstance());
-        label = new PrimitiveGraphic<PointText,Graphics2D>(new PointText(p, s), 
+        label = new PrimitiveGraphic<LabeledPoint,Graphics2D>(new LabeledPoint(p, s), 
                 null, TextRenderer.getInstance());
         addGraphic(point);
         addGraphic(label);
@@ -91,7 +91,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     }
 
     public void setLabel(String s) {
-        label.setPrimitive(new PointText(getPoint(), s));
+        label.setPrimitive(new LabeledPoint(getPoint(), s));
         fireGraphicChanged();
     }
 
@@ -111,7 +111,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     @Override
     public void graphicChanged(Graphic source) {
         if (source == point) {
-            label.setPrimitive(new PointText(getPoint(), label.getPrimitive().getText()));
+            label.setPrimitive(new LabeledPoint(getPoint(), label.getPrimitive().getText()));
         }
         super.graphicChanged(source);
     }

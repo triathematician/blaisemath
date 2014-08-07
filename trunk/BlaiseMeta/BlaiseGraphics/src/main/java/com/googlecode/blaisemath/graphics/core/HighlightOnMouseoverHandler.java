@@ -24,9 +24,6 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.core.GMouseEvent;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.Graphic;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.googlecode.blaisemath.style.StyleHints;

@@ -32,13 +32,18 @@ import java.awt.geom.Point2D;
  * An instance of {@link Point2D} that is also a {@link DraggableCoordinate}.
  * @author Elisha
  */
-public class PointDraggable extends Point2D.Double implements DraggableCoordinate<Point2D> {
+public class DraggablePoint extends Point2D.Double implements DraggableCoordinate<Point2D> {
 
-    public PointDraggable() {
+    public DraggablePoint() {
     }
 
-    public PointDraggable(double x, double y) {
+    public DraggablePoint(double x, double y) {
         super(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "DraggablePoint{" + getX() + ',' + getY() + '}';
     }
     
     public Point2D getPoint() {

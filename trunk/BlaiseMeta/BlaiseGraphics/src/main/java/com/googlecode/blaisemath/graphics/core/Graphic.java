@@ -157,6 +157,9 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
      */
     public AttributeSet renderStyle() {
         AttributeSet rawStyle = getStyle();
+        if (rawStyle == null) {
+            rawStyle = new AttributeSet();
+        }
         AttributeSet rawHints = getStyleHints();
         if (parent != null) {
             rawStyle.setParent(parent.getStyle());

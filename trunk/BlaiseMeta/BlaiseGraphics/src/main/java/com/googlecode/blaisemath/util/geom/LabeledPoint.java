@@ -32,30 +32,30 @@ import java.awt.geom.Point2D;
  * A text string anchored at a particular point.
  * @author Elisha
  */
-public final class PointText extends PointDraggable {
+public final class LabeledPoint extends DraggablePoint {
     
     private String text;
 
-    public PointText() {
+    public LabeledPoint() {
     }
 
-    public PointText(String text) {
+    public LabeledPoint(String text) {
         this(0, 0, text);
     }
     
-    public PointText(Point2D pt, String text) {
+    public LabeledPoint(Point2D pt, String text) {
         setText(text);
         setLocation(pt);
     }
     
-    public PointText(double x, double y, String text) {
+    public LabeledPoint(double x, double y, String text) {
         setText(text);
         setLocation(x, y);
     }
 
     @Override
     public String toString() {
-        return "AnchoredText["+x+", "+y+"; "+text+"]";
+        return "LabeledPoint["+x+", "+y+"; "+text+"]";
     }
 
     @Override
@@ -65,10 +65,10 @@ public final class PointText extends PointDraggable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PointText)) {
+        if (!(obj instanceof LabeledPoint)) {
             return false;
         }
-        PointText at = (PointText) obj;
+        LabeledPoint at = (LabeledPoint) obj;
         return at.x == x && at.y == y && Objects.equal(at.text, text);
     }
 

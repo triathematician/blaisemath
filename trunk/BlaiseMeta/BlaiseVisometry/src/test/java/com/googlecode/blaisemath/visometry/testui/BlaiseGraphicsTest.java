@@ -54,7 +54,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.visometry.VBasicPoint;
 import com.googlecode.blaisemath.visometry.VBasicPointSet;
 import com.googlecode.blaisemath.visometry.VBasicPolygonalPath;
@@ -157,7 +157,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     @Action
     public void addString() {
         Point2D pt = randomPoint();
-        PointText txt = new PointText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
+        LabeledPoint txt = new LabeledPoint(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
         bg.setDragEnabled(true);
         root1.addGraphic(bg);
