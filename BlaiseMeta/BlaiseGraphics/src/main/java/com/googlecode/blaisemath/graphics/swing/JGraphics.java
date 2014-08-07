@@ -31,7 +31,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Composite;
@@ -105,16 +105,16 @@ public class JGraphics {
         return new DelegatingPrimitiveGraphic<S,OrientedPoint2D,Graphics2D>(source, primitive, styler, MarkerRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<PointText,Graphics2D> text(PointText primitive) {
-        return new PrimitiveGraphic<PointText,Graphics2D>(primitive, Styles.defaultTextStyle(), TextRenderer.getInstance());
+    public static PrimitiveGraphic<LabeledPoint,Graphics2D> text(LabeledPoint primitive) {
+        return new PrimitiveGraphic<LabeledPoint,Graphics2D>(primitive, Styles.defaultTextStyle(), TextRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<PointText,Graphics2D> text(PointText primitive, AttributeSet style) {
-        return new PrimitiveGraphic<PointText,Graphics2D>(primitive, style, TextRenderer.getInstance());
+    public static PrimitiveGraphic<LabeledPoint,Graphics2D> text(LabeledPoint primitive, AttributeSet style) {
+        return new PrimitiveGraphic<LabeledPoint,Graphics2D>(primitive, style, TextRenderer.getInstance());
     }
     
-    public static <S> DelegatingPrimitiveGraphic<S,PointText,Graphics2D> text(S source, PointText primitive, ObjectStyler<S> styler) {
-        return new DelegatingPrimitiveGraphic<S,PointText,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
+    public static <S> DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D> text(S source, LabeledPoint primitive, ObjectStyler<S> styler) {
+        return new DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
     }
     
 }

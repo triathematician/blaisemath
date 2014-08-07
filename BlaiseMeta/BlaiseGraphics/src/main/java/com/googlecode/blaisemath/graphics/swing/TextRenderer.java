@@ -25,7 +25,10 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 
-import com.googlecode.blaisemath.util.geom.PointText;
+
+
+
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Anchor;
@@ -47,15 +50,15 @@ import java.util.logging.Logger;
  * 
  * @author Elisha
  */
-public class TextRenderer implements Renderer<PointText, Graphics2D> {
+public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
 
     private static final TextRenderer INST = new TextRenderer();
     
-    public static Renderer<PointText, Graphics2D> getInstance() {
+    public static Renderer<LabeledPoint, Graphics2D> getInstance() {
         return INST;
     }
     
-    public void render(PointText primitive, AttributeSet style, Graphics2D canvas) {
+    public void render(LabeledPoint primitive, AttributeSet style, Graphics2D canvas) {
         String text = primitive.getText();
         if (Strings.isNullOrEmpty(text)) {
             return;
@@ -67,11 +70,11 @@ public class TextRenderer implements Renderer<PointText, Graphics2D> {
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
     }
 
-    public boolean contains(PointText primitive, AttributeSet style, Point2D point) {
+    public boolean contains(LabeledPoint primitive, AttributeSet style, Point2D point) {
         return bounds(primitive, style).contains(point);
     }
 
-    public boolean intersects(PointText primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(LabeledPoint primitive, AttributeSet style, Rectangle2D rect) {
         return bounds(primitive, style).intersects(rect);
     }
 
@@ -81,7 +84,7 @@ public class TextRenderer implements Renderer<PointText, Graphics2D> {
      * @param style style associated with the text
      * @return bounding box for the text
      */
-    public static Rectangle2D bounds(PointText primitive, AttributeSet style) {
+    public static Rectangle2D bounds(LabeledPoint primitive, AttributeSet style) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }

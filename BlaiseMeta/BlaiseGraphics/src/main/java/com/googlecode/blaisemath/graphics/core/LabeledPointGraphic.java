@@ -29,7 +29,7 @@ package com.googlecode.blaisemath.graphics.core;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -46,7 +46,7 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
     
     public static final String LABEL_RENDERER_PROP = "labelRenderer";
 
-    private Renderer<PointText,G> textRenderer;
+    private Renderer<LabeledPoint,G> textRenderer;
     
     public LabeledPointGraphic() {
         this(null, new Point(), new ObjectStyler<O>());
@@ -60,11 +60,11 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
     //
     // PROPERTY PATTERNS
     //
-    public Renderer<PointText, G> getLabelRenderer() {
+    public Renderer<LabeledPoint, G> getLabelRenderer() {
         return textRenderer;
     }
 
-    public void setLabelRenderer(Renderer<PointText, G> textRenderer) {
+    public void setLabelRenderer(Renderer<LabeledPoint, G> textRenderer) {
         if (this.textRenderer != textRenderer) {
             Object old = this.textRenderer;
             this.textRenderer = textRenderer;
@@ -84,7 +84,7 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
             if (!Strings.isNullOrEmpty(label)) {
                 AttributeSet style = styler.labelStyle(source);
                 if (style != null) {
-                    PointText alabel = new PointText(primitive, label);
+                    LabeledPoint alabel = new LabeledPoint(primitive, label);
                     getLabelRenderer().render(alabel, style, canvas);
                 }
             }

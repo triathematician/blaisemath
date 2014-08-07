@@ -28,7 +28,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
@@ -53,7 +53,7 @@ public class MultilineTextRenderer extends TextRenderer {
     }
 
     @Override
-    public void render(PointText text, AttributeSet style, Graphics2D canvas) {
+    public void render(LabeledPoint text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }

@@ -29,7 +29,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -67,7 +67,7 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
                 AttributeSet style = styler.labelStyle(source);
                 if (style != null) {
                     textRenderer.setClipPath(primitive.getBounds2D());
-                    textRenderer.render(new PointText(label), style, canvas);
+                    textRenderer.render(new LabeledPoint(label), style, canvas);
                 }
             }
         }

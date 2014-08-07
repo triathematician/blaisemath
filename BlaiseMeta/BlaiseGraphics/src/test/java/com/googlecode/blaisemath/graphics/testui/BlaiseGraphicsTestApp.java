@@ -59,7 +59,7 @@ import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.util.geom.PointText;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.util.geom.PointUtils;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
@@ -124,7 +124,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addString() {        
         Point2D pt = randomPoint();
-        PointText txt = new PointText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
+        LabeledPoint txt = new LabeledPoint(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
         bg.setDragEnabled(true);
         root1.addGraphic(bg);
