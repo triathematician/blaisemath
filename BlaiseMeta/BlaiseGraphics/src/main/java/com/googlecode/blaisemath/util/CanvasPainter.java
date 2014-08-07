@@ -25,21 +25,21 @@ package com.googlecode.blaisemath.util;
  */
 
 import java.awt.Component;
-import java.awt.Graphics2D;
 
 /**
  * <p>
  *  An object that paints on a graphics canvas.
  * </p>
+ * @param <G> type of component to draw on
  * @author elisha
  */
-public interface CanvasPainter {
+public interface CanvasPainter<G> {
 
     /**
      * Paint on canvas of given component.
      * @param component component owning the canvas
      * @param canvas the canvas
      */
-    void paint(Component component, Graphics2D canvas);
+    void paint(Component component, G canvas);
 
 }
