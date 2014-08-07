@@ -23,7 +23,7 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
-    <Container class="com.googlecode.blaisemath.graphics.GraphicComponent" name="gc">
+    <Container class="com.googlecode.blaisemath.graphics.swing.JGraphicComponent" name="gc">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
           <BorderConstraints direction="Center"/>
@@ -36,7 +36,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;Should be up to 3 parts of the context menu: one for each shape, and one for the root graphics."/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;Should be up to 3 parts of the context menu: one for the circle, one for the selection, and one for the root graphics."/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

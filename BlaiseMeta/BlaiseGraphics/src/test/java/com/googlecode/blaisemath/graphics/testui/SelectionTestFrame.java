@@ -24,13 +24,14 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.style.ShapeStyleBasic;
+import com.googlecode.blaisemath.style.Styles;
 
 /**
  *
@@ -43,19 +44,20 @@ public class SelectionTestFrame extends javax.swing.JFrame {
      */
     public SelectionTestFrame() {
         initComponents();
-        BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
-        g1.setStyle(new ShapeStyleBasic().fill(Color.blue).stroke(Color.red));
+        PrimitiveGraphic g1 = JGraphics.shape(new Ellipse2D.Double(50,50,100,100),
+                Styles.fillStroke(Color.blue, Color.red));
         g1.setSelectionEnabled(true);
         gc.addGraphic(g1);
         
-        BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100));
+        PrimitiveGraphic g2 = JGraphics.shape(new Rectangle2D.Double(60,90,100,100));
+        g2.setSelectionEnabled(true);
         gc.addGraphic(g2);
         
         // all it takes to add selection capability!
         gc.setSelectionEnabled(true);
         gc.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
             public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println(evt.getPropertyName()+" : "+evt.getNewValue());
+                resultL.setText(String.format("<html><b>Selection:</b> %s", evt.getNewValue()));
             }
         });
     }
@@ -69,14 +71,18 @@ public class SelectionTestFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gc = new com.googlecode.blaisemath.graphics.GraphicComponent();
+        gc = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
         jLabel1 = new javax.swing.JLabel();
+        resultL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gc, java.awt.BorderLayout.CENTER);
 
         jLabel1.setText("<html>Test that ctrl+drag creates a selection box, ctrl+click toggles selection, ctrl+shift+drag unselects from box. Test that selected items change appearance.");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        resultL.setText("Selection: ");
+        getContentPane().add(resultL, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -116,7 +122,8 @@ public class SelectionTestFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.googlecode.blaisemath.graphics.GraphicComponent gc;
+    private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel resultL;
     // End of variables declaration//GEN-END:variables
 }

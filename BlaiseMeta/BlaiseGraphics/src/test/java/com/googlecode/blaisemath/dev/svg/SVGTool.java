@@ -24,9 +24,10 @@ package com.googlecode.blaisemath.dev.svg;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Dimension;
 import java.awt.geom.GeneralPath;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
 
 /**
  *
@@ -124,8 +125,8 @@ public class SVGTool extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String svg = text.getText();
         GeneralPath gp = SVGPath.toPath(svg);
-        BasicShapeGraphic bsg = new BasicShapeGraphic(gp);
-        canvas.addGraphic(bsg);
+        PrimitiveGraphic g = JGraphics.shape(gp);
+        canvas.addGraphic(g);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

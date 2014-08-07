@@ -26,13 +26,15 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  */
 
 import java.awt.geom.Point2D;
-import com.googlecode.blaisemath.graphics.BasicPointGraphic;
-import com.googlecode.blaisemath.graphics.BasicTextGraphic;
-import com.googlecode.blaisemath.graphics.Graphic;
-import com.googlecode.blaisemath.graphics.GraphicComposite;
-import com.googlecode.blaisemath.style.PointStyle;
-import com.googlecode.blaisemath.style.TextStyle;
-import com.googlecode.blaisemath.coordinate.PointBean;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.TextRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
+import com.googlecode.blaisemath.util.geom.PointText;
+import java.awt.Graphics2D;
 
 /**
  * Displays a point together with a label.
@@ -41,13 +43,13 @@ import com.googlecode.blaisemath.coordinate.PointBean;
  *
  * @author Elisha
  */
-public class LabeledPointGraphic extends GraphicComposite
-        implements PointBean<Point2D> {
+public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
+        implements CoordinateBean<Point2D> {
 
     /** Stores the point */
-    private final BasicPointGraphic point;
+    private final PrimitiveGraphic<Point2D,Graphics2D> point;
     /** Stores the string */
-    private final BasicTextGraphic string;
+    private final PrimitiveGraphic<PointText,Graphics2D> label;
 
     //
     // CONSTRUCTORS
@@ -55,13 +57,12 @@ public class LabeledPointGraphic extends GraphicComposite
 
     /** Construct labeled point with given primitive and default style */
     public LabeledPointGraphic(Point2D p, String s) { 
-        this(p, s, null); 
-    }
-
-    /** Construct with given primitive and style. */
-    public LabeledPointGraphic(Point2D p, String s, PointStyle style) {
-        addGraphic(point = new BasicPointGraphic(p, style));
-        addGraphic(string = new BasicTextGraphic(p, s));
+        point = new PrimitiveGraphic<Point2D,Graphics2D>(p, null, 
+                PointRenderer.getInstance());
+        label = new PrimitiveGraphic<PointText,Graphics2D>(new PointText(p, s), 
+                null, TextRenderer.getInstance());
+        addGraphic(point);
+        addGraphic(label);
     }
 
     
@@ -69,18 +70,38 @@ public class LabeledPointGraphic extends GraphicComposite
     // PROPERTIES
     //
 
-    public Point2D getPoint() { return point.getPoint(); }
-    public void setPoint(Point2D p) { point.setPoint(p); fireGraphicChanged(); }
+    public Point2D getPoint() { 
+        return point.getPrimitive();
+    }
 
-    public PointStyle getPointStyle() { return point.getStyle(); }
-    public void setPointStyle(PointStyle style) { point.setStyle(style); }
+    public void setPoint(Point2D p) {
+        point.setPrimitive(p);
+    }
 
-    
-    public String getString() { return string.getString(); }
-    public void setString(String s) { string.setString(s); fireGraphicChanged(); }
+    public AttributeSet getPointStyle() {
+        return point.getStyle();
+    }
 
-    public TextStyle getStringStyle() { return string.getStyle(); }
-    public void setStringStyle(TextStyle style) { string.setStyle(style); }
+    public void setPointStyle(AttributeSet style) {
+        point.setStyle(style);
+    }
+
+    public String getLabel() {
+        return label.getPrimitive().getText();
+    }
+
+    public void setLabel(String s) {
+        label.setPrimitive(new PointText(getPoint(), s));
+        fireGraphicChanged();
+    }
+
+    public AttributeSet getLabelStyle() {
+        return label.getStyle();
+    }
+
+    public void setLabelStyle(AttributeSet style) {
+        label.setStyle(style);
+    }
 
     
     //
@@ -90,7 +111,7 @@ public class LabeledPointGraphic extends GraphicComposite
     @Override
     public void graphicChanged(Graphic source) {
         if (source == point) {
-            string.setPoint(getPoint());
+            label.setPrimitive(new PointText(getPoint(), label.getPrimitive().getText()));
         }
         super.graphicChanged(source);
     }

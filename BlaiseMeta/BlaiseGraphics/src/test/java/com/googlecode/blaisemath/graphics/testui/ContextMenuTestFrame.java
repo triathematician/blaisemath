@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graphics.testui;
  */
 
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -33,8 +32,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.graphics.Graphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -47,7 +48,7 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
      */
     public ContextMenuTestFrame() {
         initComponents();
-        BasicShapeGraphic g1 = new BasicShapeGraphic(new Ellipse2D.Double(50,50,100,100));
+        PrimitiveGraphic g1 = JGraphics.shape(new Ellipse2D.Double(50,50,100,100));
         g1.addContextMenuInitializer(new ContextMenuInitializer<Graphic>(){
             public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
                 menu.add(""+point);
@@ -56,14 +57,16 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
                 });
             }
         });
+        g1.setSelectionEnabled(true);
         gc.addGraphic(g1);
         
-        BasicShapeGraphic g2 = new BasicShapeGraphic(new Rectangle2D.Double(60,90,100,100));
+        PrimitiveGraphic g2 = JGraphics.shape(new Rectangle2D.Double(60,90,100,100));
+        g2.setSelectionEnabled(true);
         gc.addGraphic(g2);
         
         gc.setSelectionEnabled(true);
-        gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer<Graphic>(){
-            public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+        gc.getGraphicRoot().addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
+            public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
                 menu.setLabel("root label");
                 menu.add((selection == null ? 0 : selection.size()) + " graphics selected");
                 if (menu.getComponentCount() > 0)
@@ -82,13 +85,13 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        gc = new com.googlecode.blaisemath.graphics.GraphicComponent();
+        gc = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(gc, java.awt.BorderLayout.CENTER);
 
-        jLabel1.setText("<html>Should be up to 3 parts of the context menu: one for each shape, and one for the root graphics.");
+        jLabel1.setText("<html>Should be up to 3 parts of the context menu: one for the circle, one for the selection, and one for the root graphics.");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         pack();
@@ -129,7 +132,7 @@ public class ContextMenuTestFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.googlecode.blaisemath.graphics.GraphicComponent gc;
+    private com.googlecode.blaisemath.graphics.swing.JGraphicComponent gc;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

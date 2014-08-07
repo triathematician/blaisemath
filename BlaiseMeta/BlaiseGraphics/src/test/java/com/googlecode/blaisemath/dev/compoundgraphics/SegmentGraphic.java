@@ -24,15 +24,18 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import com.googlecode.blaisemath.graphics.BasicShapeGraphic;
-import com.googlecode.blaisemath.style.PointStyleBasic;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.style.ShapeStyle;
-import com.googlecode.blaisemath.style.context.StyleHintSet;
+import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.StyleHints;
+import com.googlecode.blaisemath.style.Styles;
 
 /**
  * Displays a segment between two points.
@@ -43,7 +46,7 @@ import com.googlecode.blaisemath.style.context.StyleHintSet;
 public class SegmentGraphic extends TwoPointGraphicSupport {
 
     /** Entry with the line */
-    protected BasicShapeGraphic lineEntry;
+    protected PrimitiveGraphic segmentGraphic;
 
     /** Construct segment between specified points */
     public SegmentGraphic(Point2D start, Point2D end) {
@@ -53,34 +56,34 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
     @Override
     protected void initGraphics() {
         // ensure line is added first
-        addGraphic(lineEntry = new BasicShapeGraphic(new GeneralPath()));        
+        addGraphic(segmentGraphic = JGraphics.path(new GeneralPath()));        
         super.initGraphics();
         
-        start.setStyle(new PointStyleBasic()
-                .marker(Markers.CIRCLE)
-                .stroke(null)
-                .markerRadius(2)
-                .fill(Color.black));
-        start.setStyleHint(StyleHintSet.HIDDEN_FUNCTIONAL_HINT, true);
+        start.setStyle(AttributeSet.with(Styles.MARKER, Markers.CIRCLE)
+                .and(Styles.MARKER_RADIUS, 2)
+                .and(Styles.FILL, Color.black));
+        start.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, true);
         
-        end.setStyle(new PointStyleBasic()
-                .marker(Markers.ARROWHEAD));
+        end.setStyle(Styles.defaultPointStyle()
+                .and(Styles.MARKER, Markers.ARROWHEAD));
     }
 
     @Override
     protected void pointsUpdated() {
-        double angle = Math.atan2(end.getPoint().getY() - start.getPoint().getY(), end.getPoint().getX() - start.getPoint().getX());
-        start.setAngle(angle+Math.PI);
-        end.setAngle(angle);
-        lineEntry.setPrimitive(new Line2D.Double(start.getPoint(), end.getPoint()));
+        double angle = Math.atan2(
+                end.getPrimitive().getY() - start.getPrimitive().getY(),
+                end.getPrimitive().getX() - start.getPrimitive().getX());
+        start.getPrimitive().setAngle(angle+Math.PI);
+        end.getPrimitive().setAngle(angle);
+        segmentGraphic.setPrimitive(new Line2D.Double(start.getPrimitive(), end.getPrimitive()));
     }
 
-    public ShapeStyle getLineStyle() { 
-        return lineEntry.getStyle();
+    public AttributeSet getLineStyle() { 
+        return segmentGraphic.getStyle();
     }
     
-    public void setLineStyle(ShapeStyle r) { 
-        lineEntry.setStyle(r); 
+    public void setLineStyle(AttributeSet s) { 
+        segmentGraphic.setStyle(s); 
     }
     
 }
