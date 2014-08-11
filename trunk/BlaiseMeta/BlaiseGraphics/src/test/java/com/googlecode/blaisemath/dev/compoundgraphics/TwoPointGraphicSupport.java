@@ -98,6 +98,15 @@ public class TwoPointGraphicSupport extends GraphicComposite<Graphics2D> {
     //
     // EVENT HANDLING
     //
+    
+    public boolean isDragEnabled() {
+        return start.isDragEnabled() && end.isDragEnabled();
+    }
+    
+    public void setDragEnabled(boolean val) {
+        start.setDragEnabled(val);
+        end.setDragEnabled(val);
+    }
 
     @Override
     public void graphicChanged(Graphic source) {

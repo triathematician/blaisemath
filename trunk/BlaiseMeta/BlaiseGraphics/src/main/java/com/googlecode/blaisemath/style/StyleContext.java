@@ -96,7 +96,7 @@ public final class StyleContext {
      * @return the modified style
      */
     @Nonnull
-    public AttributeSet applyHints(AttributeSet style, AttributeSet hints) {
+    public AttributeSet applyModifiers(AttributeSet style, AttributeSet hints) {
         checkNotNull(style);
         for (StyleModifier mod : getAllModifiers()) {
             style = mod.apply(style, hints);
