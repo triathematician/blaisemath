@@ -57,10 +57,12 @@ import javax.swing.JPopupMenu;
 public class GraphicComposite<G> extends Graphic<G> {
 
     /** Stores the shapes and their styles */
-    private final Set<Graphic> entries = Sets.newLinkedHashSet();
+    protected final Set<Graphic> entries = Sets.newLinkedHashSet();
+    /** The attributes associated with the composite */
+    protected final AttributeSet style = new AttributeSet();
     /** The associated style provider; overrides the default style for the components in the composite (may be null). */
     @Nullable 
-    private StyleContext styleContext;
+    protected StyleContext styleContext;
     
     //
     // CONSTRUCTOR
@@ -132,7 +134,6 @@ public class GraphicComposite<G> extends Graphic<G> {
         } else {
             checkState(parent != null);
             StyleContext res = parent.getStyleContext();
-            checkState(res != null);
             return res;
         }
     }
@@ -145,7 +146,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      */
     public void setStyleContext(@Nullable StyleContext styler) { 
         if (styler == null) {
-            checkState(parent != null && parent.getStyleContext() != null);
+            checkState(parent != null);
         }
         if (styleContext != styler) { 
             styleContext = styler; 
@@ -154,7 +155,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     }
 
     public AttributeSet getStyle() {
-        return AttributeSet.EMPTY;
+        return style;
     }
     
     //</editor-fold>

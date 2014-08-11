@@ -34,6 +34,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.style.Styles;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -58,8 +59,6 @@ import javax.swing.event.PopupMenuListener;
  *      (e.g. for projections from 3D to 2D).
  * </p>
  * 
- * @param <G> type of graphics canvas to render to
- *
  * @author Elisha
  */
 public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements MouseListener, MouseMotionListener {
@@ -77,15 +76,22 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
     /** Tracks current mouse location */
     private transient Point2D mouseLoc = null;
 
-    /** Construct a default instance */
+    /** 
+     * Construct a default instance
+     * @param component the graphic root's component
+     */
     public JGraphicRoot(JGraphicComponent component) {
         this.owner = checkNotNull(component);
         this.owner.addMouseListener(this);
         this.owner.addMouseMotionListener(this);
         this.owner.setComponentPopupMenu(popup);
         
+        // set up style
         setStyleContext(Styles.defaultStyleContext());
+        style.put(Styles.FILL, Color.lightGray);
+        style.put(Styles.STROKE, Color.black);
         
+        // set up popup menu
         popup.addPopupMenuListener(new PopupMenuListener(){
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {

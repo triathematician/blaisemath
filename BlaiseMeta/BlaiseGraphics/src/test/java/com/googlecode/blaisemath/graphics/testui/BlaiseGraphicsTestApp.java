@@ -24,13 +24,42 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.dev.compoundgraphics.LabeledPointGraphic;
+import com.googlecode.blaisemath.dev.compoundgraphics.SegmentGraphic;
+import com.googlecode.blaisemath.dev.compoundgraphics.TwoPointGraphicSupport;
+import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.HighlightOnMouseoverHandler;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
+import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.PointUtils;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -42,30 +71,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.dev.compoundgraphics.LabeledPointGraphic;
-import com.googlecode.blaisemath.dev.compoundgraphics.SegmentGraphic;
-import com.googlecode.blaisemath.dev.compoundgraphics.TwoPointGraphicSupport;
-import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
-import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.core.HighlightOnMouseoverHandler;
-import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
-import com.googlecode.blaisemath.style.Anchor;
-import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
-import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
-import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import com.googlecode.blaisemath.util.geom.PointUtils;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.style.Styles;
-import java.awt.Graphics2D;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -185,7 +190,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 return r;
             }
         });
-        bp.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(bp);        
     }
     
@@ -208,7 +212,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 return r;
             }
         });
-        bp.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(bp);        
     }
     
@@ -261,7 +264,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                         .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
-        gr.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(gr);
     }
     
@@ -275,18 +277,18 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         Point2D p1 = randomPoint(), p2 = randomPoint();
         SegmentGraphic ag = new SegmentGraphic(p1, p2);
         ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new HighlightOnMouseoverHandler());
+        ag.setDragEnabled(true);
         root1.addGraphic(ag);
     }
     
     @Action
     public void addLabeledPoint() {
-         Point2D p1 = randomPoint();
+        Point2D p1 = randomPoint();
         LabeledPointGraphic lpg = new LabeledPointGraphic(p1,
                 String.format("(%.2f,%.2f)", p1.getX(), p1.getY())
                 );
         lpg.setDefaultTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
-        lpg.addMouseListener(new HighlightOnMouseoverHandler());
+        lpg.setDragEnabled(true);
         root1.addGraphic(lpg);        
     }
     
@@ -295,7 +297,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
       Point2D p1 = randomPoint(), p2 = randomPoint();
         TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
         ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new HighlightOnMouseoverHandler());
+        ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
     
@@ -307,8 +309,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addLabeledPointSet() {   
         BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint(), randomPoint()});
-        // todo - set up style to be labeled
-        bp.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(bp);
     }
     
@@ -320,7 +320,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         rend.setRayRenderer(new ArrowPathRenderer());
         ag.getEndGraphic().setRenderer(rend);
         ag.setDefaultTooltip("<html><b>Ray</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new HighlightOnMouseoverHandler());
+        ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
     
@@ -333,7 +333,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         rend.setExtendBothDirections(true);
         ag.getStartGraphic().setRenderer(rend);
         ag.setDefaultTooltip("<html><b>Line</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.addMouseListener(new HighlightOnMouseoverHandler());
+        ag.setDragEnabled(true);
         root1.addGraphic(ag);        
     }
     
@@ -349,6 +349,29 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         BlaiseGraphicsTestFrameView view = new BlaiseGraphicsTestFrameView(this);
         canvas1 = view.canvas1;
         root1 = view.canvas1.getGraphicRoot();
+        canvas1.getUnderlays().add(new CanvasPainter<Graphics2D>(){
+            public void paint(Component component, Graphics2D canvas) {
+                canvas.setColor(new Color(200,200,255));
+                canvas.setStroke(new BasicStroke());
+//                canvas.drawRect(0, 0, 500, 500);
+//
+//                if (canvas1.getTransform() != null) {
+//                    canvas.setTransform(canvas1.getTransform());
+//                }
+//                Rectangle r = canvas.getClipBounds();
+//                
+//                int st = 0;
+//                for (int x = st; x <= r.getMaxX()+100; x+=100) {
+//                    canvas.draw(new Line2D.Double(x, r.y, x, r.getMaxY()));
+//                }
+//                
+//                int sty = 0;
+//                for (int y = sty; y <= r.getMaxY()+100; y+=100) {
+//                    canvas.draw(new Line2D.Double(r.x, y, (int) r.getMaxX(), y));
+//                }
+//                canvas.setTransform(new AffineTransform());
+            }
+        });
         show(view);
     }
 

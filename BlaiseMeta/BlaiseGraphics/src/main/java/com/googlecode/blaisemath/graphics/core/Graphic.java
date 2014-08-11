@@ -134,6 +134,11 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     @Nullable
     public void setParent(@Nullable GraphicComposite p) {
         this.parent = p;
+        AttributeSet sty = getStyle();
+        if (sty != null) {
+            sty.setParent(p == null ? null : p.getStyle());
+        }
+        fireGraphicChanged();
     }
 
     /** Notify interested listeners of a change in the plottable. */
@@ -164,7 +169,7 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
         if (parent != null) {
             rawStyle.setParent(parent.getStyle());
             rawHints.setParent(parent.getStyleHints());
-            rawStyle = parent.getStyleContext().applyHints(rawStyle, rawHints);
+            rawStyle = parent.getStyleContext().applyModifiers(rawStyle, rawHints);
         }
         return rawStyle;
     }

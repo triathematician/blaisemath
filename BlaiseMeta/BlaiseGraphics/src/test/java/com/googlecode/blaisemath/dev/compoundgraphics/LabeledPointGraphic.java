@@ -61,6 +61,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
                 PointRenderer.getInstance());
         label = new PrimitiveGraphic<LabeledPoint,Graphics2D>(new LabeledPoint(p, s), 
                 null, TextRenderer.getInstance());
+        label.setMouseEnabled(false);
         addGraphic(point);
         addGraphic(label);
     }
@@ -103,10 +104,17 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
         label.setStyle(style);
     }
 
-    
     //
     // EVENT HANDLING
     //
+    
+    public boolean isDragEnabled() {
+        return point.isDragEnabled();
+    }
+
+    public void setDragEnabled(boolean val) {
+        point.setDragEnabled(val);
+    }
 
     @Override
     public void graphicChanged(Graphic source) {
