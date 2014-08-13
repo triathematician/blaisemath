@@ -73,16 +73,71 @@ public final class Styles {
             .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
 
+
     
     // utility class
     private Styles() {
     }
+
+    /**
+     * Create a partial copy of the attribute set, with only those values matching
+     * the given keys.
+     * @param sty style to copy from
+     * @param keys keys to copy
+     * @return copied style
+     */
+    public static AttributeSet partialCopy(AttributeSet sty, String... keys) {
+        AttributeSet res = new AttributeSet();
+        for (String k : keys) {
+            if (sty.contains(k)) {
+                res.put(k, sty.get(k));
+            }
+        }
+        return res;
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="UTILITY STYLE/JAVA TRANSLATORS">
     
     public static Font getFont(AttributeSet style) {
         String fontFace = style.getString(Styles.FONT, "Dialog");
         Integer pointSize = style.getInteger(Styles.FONT_SIZE, 12);
         return new Font(fontFace, Font.PLAIN, pointSize);
     }
+    
+    public static void setFont(AttributeSet style, Font font) {
+        style.put(Styles.FONT, font.getFontName());
+        style.put(Styles.FONT_SIZE, font.getSize());
+    }
+    
+    /**
+     * Retrieve text anchor from style. Permits the anchor to be either a string
+     * or an instance of {@link Anchor}.
+     * @param style the style to get anchor from
+     * @param def default anchor if there is none set
+     * @return anchor
+     */
+    public static Anchor getAnchor(AttributeSet style, Anchor def) {
+        Object styleAnchor = style.get(Styles.TEXT_ANCHOR);
+        if (styleAnchor == null) {
+            return def;
+        } else if (styleAnchor instanceof String) {
+            String styleAnchorText = (String) styleAnchor;
+            try {
+                return Anchor.valueOf(styleAnchorText);
+            } catch (IllegalArgumentException x) {
+                throw new IllegalStateException("A text anchor string must match"
+                        + " a value of the Anchor enum, but was "+styleAnchorText, x);
+            }
+        } else if (styleAnchor instanceof Anchor) {
+            return (Anchor) styleAnchor;
+        } else {
+            throw new IllegalStateException("The style "+Styles.TEXT_ANCHOR
+                    +" should either be a string or an Anchor, but was "+styleAnchor);
+        }
+    }
+    
+    //</editor-fold>
+    
     
     //<editor-fold defaultstate="collapsed" desc="STYLE SET FACTORY METHODS">
     

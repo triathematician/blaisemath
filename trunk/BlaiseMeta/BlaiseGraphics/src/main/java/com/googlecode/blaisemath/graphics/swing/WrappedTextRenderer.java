@@ -26,11 +26,18 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.style.Anchor;
-import static com.googlecode.blaisemath.style.Anchor.*;
+import static com.googlecode.blaisemath.style.Anchor.EAST;
+import static com.googlecode.blaisemath.style.Anchor.NORTH;
+import static com.googlecode.blaisemath.style.Anchor.NORTHEAST;
+import static com.googlecode.blaisemath.style.Anchor.NORTHWEST;
+import static com.googlecode.blaisemath.style.Anchor.SOUTH;
+import static com.googlecode.blaisemath.style.Anchor.SOUTHEAST;
+import static com.googlecode.blaisemath.style.Anchor.SOUTHWEST;
+import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -92,7 +99,6 @@ public class WrappedTextRenderer extends TextRenderer {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
-        canvas.setColor(style.getColor(Styles.FILL));
         
         Shape curClip = canvas.getClip();
         Area newClip = new Area();
@@ -109,6 +115,7 @@ public class WrappedTextRenderer extends TextRenderer {
         }
         canvas.setFont(f);
         
+        canvas.setColor(style.getColor(Styles.FILL));
         if (clipPath instanceof Ellipse2D) {
             drawInEllipse(text.getText(), style, (Ellipse2D) clipPath, canvas);
         } else {
@@ -121,8 +128,9 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         if (bounds.getWidth() < clip.getWidth() - 8 || clip.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
-            super.render(new LabeledPoint(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
-            canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
+            double xText = clip.getCenterX()-bounds.getWidth()/2;
+            double yText = clip.getCenterY()+bounds.getHeight()/2;
+            super.render(new LabeledPoint(xText, yText, text), style, canvas);
         } else {
             // need to wrap string
             drawInRectangle(text, style,
@@ -146,8 +154,7 @@ public class WrappedTextRenderer extends TextRenderer {
         List<String> lines = computeLineBreaks(string, font, rect.getWidth(), rect.getHeight());
         double y0;
         
-        String anchor = style.getString(Styles.TEXT_ANCHOR);
-        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST : Anchor.valueOf(anchor);
+        Anchor textAnchor = Styles.getAnchor(style, Anchor.CENTER);
         switch (textAnchor) {
             case NORTH: 
                 // fall through

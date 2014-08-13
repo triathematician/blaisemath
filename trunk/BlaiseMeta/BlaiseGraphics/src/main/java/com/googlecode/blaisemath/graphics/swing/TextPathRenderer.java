@@ -24,8 +24,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.swing.PathRenderer;
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Font;
