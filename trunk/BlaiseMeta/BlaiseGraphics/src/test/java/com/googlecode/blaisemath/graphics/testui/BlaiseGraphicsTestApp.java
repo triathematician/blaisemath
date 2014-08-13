@@ -30,12 +30,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.dev.compoundgraphics.LabeledPointGraphic;
 import com.googlecode.blaisemath.dev.compoundgraphics.SegmentGraphic;
-import com.googlecode.blaisemath.dev.compoundgraphics.TwoPointGraphicSupport;
+import com.googlecode.blaisemath.dev.compoundgraphics.TwoPointGraphic;
 import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.HighlightOnMouseoverHandler;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
@@ -58,8 +57,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -273,15 +270,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     //<editor-fold defaultstate="collapsed" desc="COMPOSITES">
     
     @Action
-    public void addArrow() {      
-        Point2D p1 = randomPoint(), p2 = randomPoint();
-        SegmentGraphic ag = new SegmentGraphic(p1, p2);
-        ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
-        ag.setDragEnabled(true);
-        root1.addGraphic(ag);
-    }
-    
-    @Action
     public void addLabeledPoint() {
         Point2D p1 = randomPoint();
         LabeledPointGraphic lpg = new LabeledPointGraphic(p1,
@@ -295,10 +283,28 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void add2Point() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
         ag.setDefaultTooltip("<html><b>Two Points</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
+    }
+    
+    @Action
+    public void addDraggableSegment() {
+        Point2D p1 = randomPoint(), p2 = randomPoint();
+        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.NONE);
+        ag.setDefaultTooltip("<html><b>Segment</b>: <i>" + p1 + ", " + p2 + "</i>");
+        ag.setDragEnabled(true);
+        root1.addGraphic(ag);        
+    }
+    
+    @Action
+    public void addArrow() {      
+        Point2D p1 = randomPoint(), p2 = randomPoint();
+        SegmentGraphic ag = new SegmentGraphic(p1, p2, ArrowLocation.END);
+        ag.setDefaultTooltip("<html><b>Arrow</b>: <i>" + p1 + ", " + p2 + "</i>");
+        ag.setDragEnabled(true);
+        root1.addGraphic(ag);
     }
     
     //</editor-fold>
@@ -315,10 +321,10 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addRay() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
         MarkerRendererToClip rend = new MarkerRendererToClip();
-        rend.setRayRenderer(new ArrowPathRenderer());
-        ag.getEndGraphic().setRenderer(rend);
+        rend.setRayRenderer(new ArrowPathRenderer(ArrowLocation.END));
+        ag.getStartGraphic().setRenderer(rend);
         ag.setDefaultTooltip("<html><b>Ray</b>: <i>" + p1 + ", " + p2 + "</i>");
         ag.setDragEnabled(true);
         root1.addGraphic(ag);        
@@ -327,7 +333,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addLine() {
       Point2D p1 = randomPoint(), p2 = randomPoint();
-        TwoPointGraphicSupport ag = new TwoPointGraphicSupport(p1, p2);
+        TwoPointGraphic ag = new TwoPointGraphic(p1, p2);
         MarkerRendererToClip rend = new MarkerRendererToClip();
         rend.setRayRenderer(new ArrowPathRenderer(ArrowLocation.BOTH));
         rend.setExtendBothDirections(true);

@@ -40,7 +40,7 @@ import java.awt.Graphics2D;
  * 
  * @author elisha
  */
-public class TwoPointGraphicSupport extends GraphicComposite<Graphics2D> {
+public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
 
     /** Point at start of arrow */
     protected final PrimitiveGraphic<OrientedPoint2D,Graphics2D> start;
@@ -52,7 +52,7 @@ public class TwoPointGraphicSupport extends GraphicComposite<Graphics2D> {
      * @param start starting point
      * @param end ending point
      */
-    public TwoPointGraphicSupport(Point2D start, Point2D end) {
+    public TwoPointGraphic(Point2D start, Point2D end) {
         this.start = JGraphics.marker(new OrientedPoint2D(start).inDirectionOf(end),
                 Styles.defaultPointStyle());
         this.end = JGraphics.marker(new OrientedPoint2D(end).inDirectionOf(start),
