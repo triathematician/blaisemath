@@ -53,21 +53,25 @@ public final class Styles {
     public static final AttributeSet DEFAULT_SHAPE_STYLE = AttributeSet
             .with(FILL, Color.white)
             .and(STROKE, Color.black)
-            .and(STROKE_WIDTH, 1f);
+            .and(STROKE_WIDTH, 1f)
+            .immutable();
     public static final AttributeSet DEFAULT_PATH_STYLE = AttributeSet
             .with(STROKE, Color.black)
-            .and(STROKE_WIDTH, 1f);
+            .and(STROKE_WIDTH, 1f)
+            .immutable();
     public static final AttributeSet DEFAULT_POINT_STYLE = AttributeSet
             .with(FILL, Color.white)
             .and(STROKE, Color.black)
             .and(STROKE_WIDTH, 1f)
             .and(MARKER, Markers.CIRCLE)
-            .and(MARKER_RADIUS, 4);
+            .and(MARKER_RADIUS, 4)
+            .immutable();
     public static final AttributeSet DEFAULT_TEXT_STYLE = AttributeSet
             .with(FILL, Color.black)
             .and(FONT, "Dialog")
             .and(FONT_SIZE, 12f)
-            .and(TEXT_ANCHOR, Anchor.SOUTHWEST);
+            .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
+            .immutable();
 
     
     // utility class

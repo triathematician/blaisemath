@@ -45,26 +45,25 @@ import javax.swing.event.EventListenerList;
  * 
  * @author Elisha
  */
-public final class AttributeSet implements Cloneable {
+public class AttributeSet implements Cloneable {
     
     /** Constant representing the empty attribute set */
-    // TODO - make this immutable
-    public static final AttributeSet EMPTY = new AttributeSet();
+    public static final AttributeSet EMPTY = new ImmutableAttributeSet();
     
     /** The parent attribute set */
-    private Optional<AttributeSet> parent;
+    protected Optional<AttributeSet> parent;
     /** The map of style key/value pairs */
-    private final Map<String,Object> attributeMap = Maps.newHashMap();
+    protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
     private final ChangeEvent changeEvent = new ChangeEvent(this);
     private final EventListenerList listenerList = new EventListenerList();
 
     public AttributeSet() {
-        this(null);
+        this.parent = Optional.absent();
     }
     
     public AttributeSet(@Nullable AttributeSet parent) {
-        setParent(parent);
+        this.parent = Optional.fromNullable(parent);
     }
 
     @Override
@@ -112,6 +111,25 @@ public final class AttributeSet implements Cloneable {
         put(key, val);
         return this;
     }
+
+    /**
+     * Wraps the attribute set as an unmodifiable object, which will throw errors
+     * if any of its get/put methods are accessed.
+     * @return immutable set with all the attributes of this one
+     */
+    public AttributeSet immutable() {
+        return ImmutableAttributeSet.copyOf(this);
+    }
+
+    /**
+     * Creates a copy of the attribute set.
+     * @return copy
+     */
+    public AttributeSet copy() {
+        AttributeSet res = new AttributeSet(parent.orNull());
+        res.attributeMap.putAll(attributeMap);
+        return res;
+    }
     
     //</editor-fold>
     
@@ -124,10 +142,6 @@ public final class AttributeSet implements Cloneable {
     @Nullable
     public AttributeSet getParent() {
         return parent.orNull();
-    }
-    
-    public void setParent(@Nullable AttributeSet parent) {
-        this.parent = Optional.fromNullable(parent);
     }
     
     //</editor-fold>

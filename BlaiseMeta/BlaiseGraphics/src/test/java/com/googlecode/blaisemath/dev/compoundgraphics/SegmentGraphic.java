@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  */
 
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
@@ -41,14 +42,17 @@ import com.googlecode.blaisemath.style.Styles;
  *
  * @author Elisha
  */
-public class SegmentGraphic extends TwoPointGraphicSupport {
+public class SegmentGraphic extends TwoPointGraphic {
 
     /** Entry with the line */
     protected PrimitiveGraphic segmentGraphic;
+    /** Where arrows are displayed */
+    protected ArrowLocation arrowLoc;
 
     /** Construct segment between specified points */
-    public SegmentGraphic(Point2D start, Point2D end) {
+    public SegmentGraphic(Point2D start, Point2D end, ArrowLocation loc) {
         super(start, end);
+        setArrowLocation(loc);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
                 .and(Styles.FILL, Color.black));
         start.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, true);
         
-        end.setStyle(Styles.defaultPointStyle()
+        end.setStyle(Styles.defaultPointStyle().copy()
                 .and(Styles.MARKER, Markers.ARROWHEAD));
     }
 
@@ -82,6 +86,21 @@ public class SegmentGraphic extends TwoPointGraphicSupport {
     
     public void setLineStyle(AttributeSet s) { 
         segmentGraphic.setStyle(s); 
+    }
+
+    public ArrowLocation getArrowLocation() {
+        return arrowLoc;
+    }
+    
+    private static void setArrow(PrimitiveGraphic gr, boolean val) {
+        gr.getStyle().put(Styles.MARKER, val ? Markers.ARROWHEAD : null);
+        gr.setStyleHint(StyleHints.HIDDEN_FUNCTIONAL_HINT, !val);
+    }
+    
+    public void setArrowLocation(ArrowLocation arrowLoc) {
+        this.arrowLoc = arrowLoc;
+        setArrow(start, arrowLoc == ArrowLocation.BOTH || arrowLoc == ArrowLocation.START);
+        setArrow(end, arrowLoc == ArrowLocation.BOTH || arrowLoc == ArrowLocation.END);
     }
     
 }

@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graphics.core;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -134,10 +135,6 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     @Nullable
     public void setParent(@Nullable GraphicComposite p) {
         this.parent = p;
-        AttributeSet sty = getStyle();
-        if (sty != null) {
-            sty.setParent(p == null ? null : p.getStyle());
-        }
         fireGraphicChanged();
     }
 
@@ -157,21 +154,30 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
 
     /**
      * Return style attributes of the graphic to be used for rendering.
-     * The result will have all style hints automatically applied.
+     * The result will have all style hints automatically applied. Any attributes
+     * of the parent style are inherited.
+     * 
      * @return style
      */
-    public AttributeSet renderStyle() {
-        AttributeSet rawStyle = getStyle();
-        if (rawStyle == null) {
-            rawStyle = new AttributeSet();
+    public final AttributeSet renderStyle() {
+        AttributeSet renderStyle = getStyle();
+        if (renderStyle == null) {
+            renderStyle = new AttributeSet();
         }
-        AttributeSet rawHints = getStyleHints();
+        AttributeSet renderHints = getStyleHints();
+        
         if (parent != null) {
-            rawStyle.setParent(parent.getStyle());
-            rawHints.setParent(parent.getStyleHints());
-            rawStyle = parent.getStyleContext().applyModifiers(rawStyle, rawHints);
+            AttributeSet parStyle = parent.getStyle();
+            if (parStyle != null && parStyle != renderStyle.getParent()) {
+                renderStyle = ImmutableAttributeSet.copyOfWithAlternateParent(renderStyle, parStyle);
+            }
+            AttributeSet parStyleHints = parent.getStyleHints();
+            if (parStyleHints != null && renderHints.getParent() != parStyleHints) {
+                renderHints = ImmutableAttributeSet.copyOfWithAlternateParent(renderHints, parStyleHints);
+            }
+            renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
         }
-        return rawStyle;
+        return renderStyle;
     }
     
     /**
