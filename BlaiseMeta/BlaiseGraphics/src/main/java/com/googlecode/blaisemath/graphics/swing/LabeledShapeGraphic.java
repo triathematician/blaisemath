@@ -27,15 +27,16 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 
-import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.RectangularShape;
 
 /**
  * Customizable graphic that represents a labeled item.
@@ -53,7 +54,8 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
         this(null, new Rectangle(), new ObjectStyler<O>(), ShapeRenderer.getInstance());
     }
 
-    public LabeledShapeGraphic(O source, Shape primitive, ObjectStyler<O> styler, Renderer<Shape, Graphics2D> renderer) {
+    public LabeledShapeGraphic(O source, Shape primitive, ObjectStyler<O> styler, 
+            Renderer<Shape, Graphics2D> renderer) {
         super(source, primitive, styler, renderer);
     }
     
@@ -66,7 +68,9 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
             if (!Strings.isNullOrEmpty(label)) {
                 AttributeSet style = styler.labelStyle(source);
                 if (style != null) {
-                    textRenderer.setClipPath(primitive.getBounds2D());
+                    textRenderer.setClipPath(primitive instanceof RectangularShape
+                            ? (RectangularShape) primitive
+                            : primitive.getBounds2D());
                     textRenderer.render(new LabeledPoint(label), style, canvas);
                 }
             }
