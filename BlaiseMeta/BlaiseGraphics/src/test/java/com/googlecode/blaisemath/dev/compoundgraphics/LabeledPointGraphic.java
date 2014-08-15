@@ -29,8 +29,7 @@ import java.awt.geom.Point2D;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
@@ -38,8 +37,6 @@ import java.awt.Graphics2D;
 
 /**
  * Displays a point together with a label.
- * 
- * TODO - align movement of string to movement of point
  *
  * @author Elisha
  */
@@ -57,10 +54,8 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
 
     /** Construct labeled point with given primitive and default style */
     public LabeledPointGraphic(Point2D p, String s) { 
-        point = new PrimitiveGraphic<Point2D,Graphics2D>(p, null, 
-                PointRenderer.getInstance());
-        label = new PrimitiveGraphic<LabeledPoint,Graphics2D>(new LabeledPoint(p, s), 
-                null, TextRenderer.getInstance());
+        point = JGraphics.point(p);
+        label = JGraphics.text(new LabeledPoint(p, s));
         label.setMouseEnabled(false);
         addGraphic(point);
         addGraphic(label);

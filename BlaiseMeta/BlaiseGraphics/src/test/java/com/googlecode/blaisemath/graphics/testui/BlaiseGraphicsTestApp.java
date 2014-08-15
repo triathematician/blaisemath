@@ -43,6 +43,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
@@ -79,7 +80,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     JGraphicRoot root1;
     JGraphicComponent canvas1;
-    AttributeSet pointsetStyle = (AttributeSet) RandomStyles.point();
+    final AttributeSet pointsetStyle = RandomStyles.point();
     
     //<editor-fold defaultstate="collapsed" desc="GENERAL">
     
@@ -150,8 +151,10 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void editPointSetStyle() {        
         BasicPointStyleEditor ed = new BasicPointStyleEditor(pointsetStyle);
-        ed.addPropertyChangeListener("style", new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) { canvas1.repaint(); }
+        ed.addPropertyChangeListener("style", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                canvas1.repaint();
+            }
         });
         JOptionPane.showMessageDialog(getMainFrame(), ed);
     }
@@ -163,19 +166,17 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         
     @Action
     public void addDelegatingPointSet() {
-        Set<String> list = new HashSet<String>(Arrays.asList("Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
+        Set<String> list = new HashSet<String>(Arrays.asList(
+                "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
+                "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
         Map<String,Point2D> crds = Maps.newLinkedHashMap();
         for (String s : list) {
             crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
         }
-        final DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>();
-        // TODO - these should be labeled
+        DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(crds);
-        bp.getStyler().setLabelDelegate(new Function<String, String>() {
-            public String apply(String src) {
-                return src;
-            }
-        });
+        bp.getStyler().setLabelDelegate(Functions.toStringFunction());
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
@@ -196,7 +197,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         for (int i = 1; i <= 10; i++) {
             points2.put(i, randomPoint());
         }
-        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>();
+        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(points2);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
         bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
@@ -227,7 +229,8 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D>();
+        DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance());
         ImmutableMap<Point2D, Point2D> idx = Maps.uniqueIndex(Arrays.asList(pts), Functions.<Point2D>identity());
         gr.setNodeLocations(idx);
         gr.getNodeStyler().setStyleDelegate(new Function<Point2D,AttributeSet>(){

@@ -26,11 +26,9 @@ package com.googlecode.blaisemath.graphics.core;
 
 
 
-import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.Point;
@@ -85,7 +83,10 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
                 AttributeSet style = styler.labelStyle(source);
                 if (style != null) {
                     LabeledPoint alabel = new LabeledPoint(primitive, label);
-                    getLabelRenderer().render(alabel, style, canvas);
+                    Renderer<LabeledPoint, G> labRend = getLabelRenderer();
+                    if (labRend != null) {
+                        labRend.render(alabel, style, canvas);
+                    }
                 }
             }
         }
