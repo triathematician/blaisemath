@@ -151,34 +151,6 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     //
     // STYLE & DRAWING
     //
-
-    /**
-     * Return style attributes of the graphic to be used for rendering.
-     * The result will have all style hints automatically applied. Any attributes
-     * of the parent style are inherited.
-     * 
-     * @return style
-     */
-    public final AttributeSet renderStyle() {
-        AttributeSet renderStyle = getStyle();
-        if (renderStyle == null) {
-            renderStyle = new AttributeSet();
-        }
-        AttributeSet renderHints = getStyleHints();
-        
-        if (parent != null) {
-            AttributeSet parStyle = parent.getStyle();
-            if (parStyle != null && parStyle != renderStyle.getParent()) {
-                renderStyle = ImmutableAttributeSet.copyOfWithAlternateParent(renderStyle, parStyle);
-            }
-            AttributeSet parStyleHints = parent.getStyleHints();
-            if (parStyleHints != null && renderHints.getParent() != parStyleHints) {
-                renderHints = ImmutableAttributeSet.copyOfWithAlternateParent(renderHints, parStyleHints);
-            }
-            renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
-        }
-        return renderStyle;
-    }
     
     /**
      * Return style set of this graphic
@@ -218,6 +190,34 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     //
     // RENDER API
     //
+
+    /**
+     * Return style attributes of the graphic to be used for rendering.
+     * The result will have all style hints automatically applied. Any attributes
+     * of the parent style are inherited.
+     * 
+     * @return style
+     */
+    public final AttributeSet renderStyle() {
+        AttributeSet renderStyle = getStyle();
+        if (renderStyle == null) {
+            renderStyle = new AttributeSet();
+        }
+        AttributeSet renderHints = getStyleHints();
+        
+        if (parent != null) {
+            AttributeSet parStyle = parent.getStyle();
+            if (parStyle != null && parStyle != renderStyle.getParent()) {
+                renderStyle = ImmutableAttributeSet.copyOfWithAlternateParent(renderStyle, parStyle);
+            }
+            AttributeSet parStyleHints = parent.getStyleHints();
+            if (parStyleHints != null && renderHints.getParent() != parStyleHints) {
+                renderHints = ImmutableAttributeSet.copyOfWithAlternateParent(renderHints, parStyleHints);
+            }
+            renderStyle = parent.getStyleContext().applyModifiers(renderStyle, renderHints);
+        }
+        return renderStyle;
+    }
     
     /**
      * Draws the primitive on the specified graphics canvas, using current

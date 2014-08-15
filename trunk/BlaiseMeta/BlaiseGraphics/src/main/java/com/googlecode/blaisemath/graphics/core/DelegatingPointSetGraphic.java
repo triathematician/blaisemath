@@ -29,6 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
@@ -43,8 +44,10 @@ import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.annotation.Nullable;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
@@ -69,6 +72,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected ObjectStyler<S> styler = ObjectStyler.create();
     /** Selects renderer for points */
     protected Renderer<Point2D,G> renderer;
+    /** Renderer for point labels */
+    protected Renderer<LabeledPoint,G> textRenderer;
 
     /** Indicates points are being updated */
     protected boolean updatingPoint = false;
@@ -82,14 +87,28 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Construct with no points
      */
     public DelegatingPointSetGraphic() {
-        this(new CoordinateManager<S, Point2D>());
+        this(new CoordinateManager<S, Point2D>(), null, null);
+    }
+    
+    /**
+     * Construct with no points
+     */
+    public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
+            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+        this(new CoordinateManager<S, Point2D>(), renderer, labelRenderer);
     }
 
     /**
      * Construct with source objects and locations as a map
      * @param crdManager manages point locations
+     * @param renderer used for drawing the points
      */
-    public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager) {
+    public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager, 
+            @Nullable Renderer<Point2D, G> renderer,
+            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+        setRenderer(renderer);
+        setLabelRenderer(labelRenderer);
+        
         styler.setTipDelegate(Functions.toStringFunction());
         
         pointListener = new PropertyChangeListener(){
@@ -119,19 +138,19 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     // EVENT HANDLERS
     //
     
-    private synchronized void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
         List<Graphic> addMe = Lists.newArrayList();
         if (added != null) {
             for (Entry<S, Point2D> en : added.entrySet()) {
                 S src = en.getKey();
                 DelegatingPrimitiveGraphic<S,Point2D,G> dpg = points.get(src);
                 if (dpg == null) {
-                    dpg = new DelegatingPrimitiveGraphic<S,Point2D,G>(en.getKey(), 
-                            en.getValue(), styler, renderer);
-                    points.put(src, dpg);
-                    dpg.setObjectStyler(styler);
-                    dpg.addPropertyChangeListener(PrimitiveGraphicSupport.PRIMITIVE_PROP, pointListener);
-                    addMe.add(dpg);
+                    LabeledPointGraphic<S,G> lpg = new LabeledPointGraphic<S,G>(en.getKey(), en.getValue(), styler);
+                    lpg.setRenderer(renderer);
+                    lpg.setLabelRenderer(textRenderer);
+                    points.put(src, lpg);
+                    lpg.addPropertyChangeListener(PrimitiveGraphicSupport.PRIMITIVE_PROP, pointListener);
+                    addMe.add(lpg);
                 } else {
                     // this should not result in manager changing
                     updatingPoint = true;
@@ -182,18 +201,10 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
 
     /**
-     * Return source objects
-     * @return source objects
-     */
-    public synchronized Set<? extends S> getObjects() {
-        return manager.getObjects();
-    }
-
-    /**
      * Returns object used to style points
      * @return styler object styler
      */
-    public synchronized ObjectStyler<S> getStyler() {
+    public ObjectStyler<S> getStyler() {
         return styler;
     }
     
@@ -201,11 +212,47 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Sets object used to style points
      * @param styler object styler
      */
-    public synchronized void setStyler(ObjectStyler<S> styler) {
+    public void setStyler(ObjectStyler<S> styler) {
         if (this.styler != checkNotNull(styler)) {
             this.styler = styler;
             fireGraphicChanged();
         }
+    }
+
+    @Nullable 
+    public Renderer<Point2D, G> getRenderer() {
+        return renderer;
+    }
+
+    public final void setRenderer(@Nullable Renderer<Point2D, G> renderer) {
+        if (this.renderer != renderer) {
+            Object old = this.renderer;
+            this.renderer = renderer;
+            fireGraphicChanged();
+            pcs.firePropertyChange(RENDERER_PROP, old, renderer);
+        }
+    }
+
+    @Nullable 
+    public Renderer<LabeledPoint, G> getLabelRenderer() {
+        return textRenderer;
+    }
+
+    public final void setLabelRenderer(@Nullable Renderer<LabeledPoint, G> renderer) {
+        if (this.textRenderer != renderer) {
+            Object old = this.renderer;
+            this.textRenderer = renderer;
+            fireGraphicChanged();
+            pcs.firePropertyChange(RENDERER_PROP, old, renderer);
+        }
+    }
+
+    /**
+     * Return source objects
+     * @return source objects
+     */
+    public Set<? extends S> getObjects() {
+        return manager.getObjects();
     }
     
     //</editor-fold>
@@ -217,7 +264,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Adds objects to the graphic
      * @param obj objects to put
      */
-    public final synchronized void addObjects(Map<S, Point2D> obj) {
+    public final void addObjects(Map<S, Point2D> obj) {
         manager.putAll(obj);
     }
     

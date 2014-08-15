@@ -24,13 +24,15 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import javax.annotation.Nullable;
 
 /**
  * A graph with fully-customizable points, edges, and tooltips. The styles and
@@ -52,18 +54,26 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      * Construct with no points
      */
     public DelegatingNodeLinkGraphic() {
-        pointGraphics = new DelegatingPointSetGraphic<S,G>();
-        edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(pointGraphics.getCoordinateManager());
-        addGraphic(edgeGraphics);
-        addGraphic(pointGraphics);
+        this(new CoordinateManager<S, Point2D>(), null, null);
+    }
+    
+    /**
+     * Construct with no points
+     */
+    public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
+            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+        this(new CoordinateManager<S, Point2D>(), nodeRenderer, labelRenderer);
     }
     
     /**
      * Construct with specified coordinate manager
      * @param crdManager in charge of node locations
+     * @param nodeRenderer draws the nodes
      */
-    public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager) {
-        pointGraphics = new DelegatingPointSetGraphic<S,G>(crdManager);
+    public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager,
+            @Nullable Renderer<Point2D,G> nodeRenderer,
+            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+        pointGraphics = new DelegatingPointSetGraphic<S,G>(crdManager, nodeRenderer, labelRenderer);
         edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(crdManager);
         addGraphic(edgeGraphics);
         addGraphic(pointGraphics);

@@ -63,7 +63,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         ActionListener, ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private AttributeSet style = Styles.defaultPointStyle();
+    private AttributeSet style = Styles.defaultPointStyle().copy();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;

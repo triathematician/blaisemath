@@ -56,7 +56,8 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     /** What is being drawn */
     protected O primitive;
     /** Draws the primitive on the graphics canvas */
-    protected Renderer<O,G> renderer;
+    @Nullable
+    protected Renderer<O,G> renderer = null;
     
     /** Whether graphic can be dragged */
     protected boolean dragEnabled = false;

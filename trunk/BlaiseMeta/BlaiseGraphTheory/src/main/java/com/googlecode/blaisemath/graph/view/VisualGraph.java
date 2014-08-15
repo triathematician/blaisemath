@@ -96,7 +96,9 @@ public class VisualGraph<G> {
             if (viewGraph == null) {
                 // initialize the view graph with the same coordinate manager as the layout manager
                 //   this ensures that layout changes will propagate to the view
-                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(layoutManager.getCoordinateManager());
+                // TODO - may wish to change this initialization
+                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
+                        layoutManager.getCoordinateManager(), null, null);
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
