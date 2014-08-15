@@ -55,10 +55,12 @@ public final class Styles {
             .and(STROKE, Color.black)
             .and(STROKE_WIDTH, 1f)
             .immutable();
+    
     public static final AttributeSet DEFAULT_PATH_STYLE = AttributeSet
             .with(STROKE, Color.black)
             .and(STROKE_WIDTH, 1f)
             .immutable();
+    
     public static final AttributeSet DEFAULT_POINT_STYLE = AttributeSet
             .with(FILL, Color.white)
             .and(STROKE, Color.black)
@@ -66,14 +68,13 @@ public final class Styles {
             .and(MARKER, Markers.CIRCLE)
             .and(MARKER_RADIUS, 4)
             .immutable();
+    
     public static final AttributeSet DEFAULT_TEXT_STYLE = AttributeSet
             .with(FILL, Color.black)
             .and(FONT, "Dialog")
             .and(FONT_SIZE, 12f)
             .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
-
-
     
     // utility class
     private Styles() {
@@ -138,7 +139,6 @@ public final class Styles {
     
     //</editor-fold>
     
-    
     //<editor-fold defaultstate="collapsed" desc="STYLE SET FACTORY METHODS">
     
     public static AttributeSet defaultShapeStyle() {
@@ -176,6 +176,19 @@ public final class Styles {
     public static AttributeSet strokeWidth(Color stroke, float width) {
         return AttributeSet.with(STROKE, stroke).and(STROKE_WIDTH, width);
     }
+
+    /**
+     * Create a style with given fill, size, and anchor
+     * @param col fill color of text
+     * @param sz font size
+     * @param anchor anchor of text
+     * @return text style
+     */
+    public static AttributeSet text(Color col, float sz, Anchor anchor) {
+        return AttributeSet.with(FILL, col)
+                .and(FONT_SIZE, sz)
+                .and(TEXT_ANCHOR, anchor);
+    }
     
     //</editor-fold>
     
@@ -210,7 +223,71 @@ public final class Styles {
         return res;
     }
     
+    
     //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+
+    /** Modifier that adjusts fill/stroke attributes to preset colors. */
+    public static class PresetColorModifier implements StyleModifier {
+        private Color highlightFill = null;
+        private Color highlightStroke = null;
+        private Color selectFill = null;
+        private Color selectStroke = null;
+                
+        public AttributeSet apply(AttributeSet style, AttributeSet hints) {
+            AttributeSet res = style;
+            if (hints.contains(StyleHints.HILITE_HINT)) {
+                res = new AttributeSet(res);
+                res.put(Styles.FILL, highlightFill);
+                res.put(Styles.STROKE, highlightStroke);
+            }
+            if (hints.contains(StyleHints.SELECTED_HINT)) {
+                res = new AttributeSet(res);
+                res.put(Styles.FILL, selectFill);
+                res.put(Styles.STROKE, selectStroke);
+            }
+            return res;
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+        //
+        // PROPERTY PATTERNS
+        //
+
+        public Color getHighlightFill() {
+            return highlightFill;
+        }
+
+        public void setHighlightFill(Color highlightFill) {
+            this.highlightFill = highlightFill;
+        }
+
+        public Color getHighlightStroke() {
+            return highlightStroke;
+        }
+
+        public void setHighlightStroke(Color highlightStroke) {
+            this.highlightStroke = highlightStroke;
+        }
+
+        public Color getSelectFill() {
+            return selectFill;
+        }
+
+        public void setSelectFill(Color selectFill) {
+            this.selectFill = selectFill;
+        }
+
+        public Color getSelectStroke() {
+            return selectStroke;
+        }
+
+        public void setSelectStroke(Color selectStroke) {
+            this.selectStroke = selectStroke;
+        }
+
+        //</editor-fold>
+
+    }
 
     /** Modifier that overrides all colors in the source style using the supplied hints. */
     public static class ColorModifier implements StyleModifier {
