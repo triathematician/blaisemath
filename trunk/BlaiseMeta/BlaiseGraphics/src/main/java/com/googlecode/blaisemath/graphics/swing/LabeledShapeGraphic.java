@@ -31,7 +31,6 @@ import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -51,12 +50,11 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
     private final WrappedTextRenderer textRenderer = new WrappedTextRenderer();
     
     public LabeledShapeGraphic() {
-        this(null, new Rectangle(), new ObjectStyler<O>(), ShapeRenderer.getInstance());
+        this(null, new Rectangle(), new ObjectStyler<O>());
     }
 
-    public LabeledShapeGraphic(O source, Shape primitive, ObjectStyler<O> styler, 
-            Renderer<Shape, Graphics2D> renderer) {
-        super(source, primitive, styler, renderer);
+    public LabeledShapeGraphic(O source, Shape primitive, ObjectStyler<O> styler) {
+        super(source, primitive, styler, ShapeRenderer.getInstance());
     }
     
     @Override
