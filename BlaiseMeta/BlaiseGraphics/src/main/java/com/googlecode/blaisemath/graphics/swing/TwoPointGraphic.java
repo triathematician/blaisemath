@@ -2,7 +2,7 @@
  * TwoPointGraphicSupport.java
  * Created Oct 1, 2011
  */
-package com.googlecode.blaisemath.dev.compoundgraphics;
+package com.googlecode.blaisemath.graphics.swing;
 
 /*
  * #%L
