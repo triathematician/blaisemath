@@ -2,7 +2,7 @@
  * SegmentGraphic.java
  * Created Jan 23, 2011
  */
-package com.googlecode.blaisemath.dev.compoundgraphics;
+package com.googlecode.blaisemath.graphics.swing;
 
 /*
  * #%L
@@ -26,15 +26,14 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
 
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.StyleHints;
+import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.StyleHints;
-import com.googlecode.blaisemath.style.Styles;
 
 /**
  * Displays a segment between two points.
@@ -58,7 +57,8 @@ public class SegmentGraphic extends TwoPointGraphic {
     @Override
     protected void initGraphics() {
         // ensure line is added first
-        addGraphic(segmentGraphic = JGraphics.path(new GeneralPath()));        
+        segmentGraphic = JGraphics.path(new GeneralPath());
+        addGraphic(segmentGraphic);        
         super.initGraphics();
         
         start.setStyle(AttributeSet.with(Styles.MARKER, Markers.CIRCLE)
