@@ -29,25 +29,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import static com.googlecode.blaisemath.graphics.core.LabeledPointGraphic.LABEL_RENDERER_PROP;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
+import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.annotation.Nullable;
+import javax.swing.JPopupMenu;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
@@ -64,6 +65,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
 
     /** Graphic objects for individual points */
     protected final Map<S, DelegatingPrimitiveGraphic<S,Point2D,G>> points = Maps.newHashMap();
+    /** Whether points can be dragged */
+    protected boolean dragEnabled = false;
     
     /** Manages locations of points */
     protected CoordinateManager<S,Point2D> manager;
@@ -77,8 +80,6 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
 
     /** Indicates points are being updated */
     protected boolean updatingPoint = false;
-    /** Responds to point change events */
-    private final PropertyChangeListener pointListener;
     /** Responds to coordinate update events */
     private final CoordinateListener coordListener;
     
@@ -92,6 +93,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     
     /**
      * Construct with no points
+     * @param renderer
+     * @param labelRenderer
      */
     public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
             @Nullable Renderer<LabeledPoint, G> labelRenderer) {
@@ -102,6 +105,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Construct with source objects and locations as a map
      * @param crdManager manages point locations
      * @param renderer used for drawing the points
+     * @param labelRenderer
      */
     public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager, 
             @Nullable Renderer<Point2D, G> renderer,
@@ -111,17 +115,6 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         
         styler.setTipDelegate(Functions.toStringFunction());
         
-        pointListener = new PropertyChangeListener(){
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                if (!updatingPoint && e.getSource() instanceof LabeledPointGraphic) {
-                    synchronized(DelegatingPointSetGraphic.this) {
-                        LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) e.getSource();
-                        manager.put(dpg.getSourceObject(), dpg.getPrimitive());
-                    }
-                }
-            }
-        };
         coordListener = new CoordinateListener(){
             @Override
             public void coordinatesChanged(CoordinateChangeEvent evt) {
@@ -148,8 +141,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
                     LabeledPointGraphic<S,G> lpg = new LabeledPointGraphic<S,G>(en.getKey(), en.getValue(), styler);
                     lpg.setRenderer(renderer);
                     lpg.setLabelRenderer(textRenderer);
+                    lpg.setDragEnabled(dragEnabled);
                     points.put(src, lpg);
-                    lpg.addPropertyChangeListener(PrimitiveGraphicSupport.PRIMITIVE_PROP, pointListener);
                     addMe.add(lpg);
                 } else {
                     // this should not result in manager changing
@@ -167,6 +160,17 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             }
         }
         replaceGraphics(removeMe, addMe);
+    }
+
+    @Override
+    public void graphicChanged(Graphic source) {
+        if (!updatingPoint && source instanceof LabeledPointGraphic) {
+            synchronized(DelegatingPointSetGraphic.this) {
+                LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
+                manager.put(dpg.getSourceObject(), dpg.getPrimitive());
+            }
+        }
+        super.graphicChanged(source);
     }
 
     //</editor-fold>
@@ -243,7 +247,20 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             Object old = this.renderer;
             this.textRenderer = renderer;
             fireGraphicChanged();
-            pcs.firePropertyChange(RENDERER_PROP, old, renderer);
+            pcs.firePropertyChange(LABEL_RENDERER_PROP, old, renderer);
+        }
+    }
+    
+    public boolean isDragEnabled() {
+        return dragEnabled;
+    }
+    
+    public void setDragEnabled(boolean val) {
+        if (this.dragEnabled != val) {
+            this.dragEnabled = val;
+            for (DelegatingPrimitiveGraphic<S,Point2D,G> dpg : points.values()) {
+                dpg.setDragEnabled(val);
+            }
         }
     }
 

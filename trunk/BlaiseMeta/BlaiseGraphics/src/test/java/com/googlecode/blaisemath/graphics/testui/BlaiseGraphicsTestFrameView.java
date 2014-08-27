@@ -79,7 +79,6 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
         setsMenu.add(new JMenuItem(actionMap.get("editPointSetStyle")));
         setsMenu.add(new JMenuItem(actionMap.get("addDelegatingPointSet")));
         setsMenu.add(new JMenuItem(actionMap.get("addDelegatingPointSet2")));
-        setsMenu.add(new JMenuItem(actionMap.get("addLabeledPointSet")));
         setsMenu.add(new JMenuItem(actionMap.get("addDelegatingGraph")));
         menuBar.add(setsMenu);
         

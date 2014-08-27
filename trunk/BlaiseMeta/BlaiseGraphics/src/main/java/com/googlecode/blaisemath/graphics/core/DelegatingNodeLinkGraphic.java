@@ -32,6 +32,7 @@ import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import java.awt.Shape;
 import javax.annotation.Nullable;
 
 /**
@@ -54,33 +55,42 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      * Construct with no points
      */
     public DelegatingNodeLinkGraphic() {
-        this(new CoordinateManager<S, Point2D>(), null, null);
+        this(new CoordinateManager<S, Point2D>(), null, null, null);
     }
     
     /**
      * Construct with no points
+     * @param nodeRenderer
+     * @param labelRenderer
+     * @param edgeRenderer
      */
     public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
-        this(new CoordinateManager<S, Point2D>(), nodeRenderer, labelRenderer);
+            @Nullable Renderer<LabeledPoint, G> labelRenderer,
+            @Nullable Renderer<Shape, G> edgeRenderer) {
+        this(new CoordinateManager<S, Point2D>(), nodeRenderer, labelRenderer, edgeRenderer);
     }
     
     /**
      * Construct with specified coordinate manager
      * @param crdManager in charge of node locations
      * @param nodeRenderer draws the nodes
+     * @param labelRenderer
+     * @param edgeRenderer
      */
     public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager,
             @Nullable Renderer<Point2D,G> nodeRenderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+            @Nullable Renderer<LabeledPoint, G> labelRenderer,
+            @Nullable Renderer<Shape, G> edgeRenderer) {
         pointGraphics = new DelegatingPointSetGraphic<S,G>(crdManager, nodeRenderer, labelRenderer);
-        edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(crdManager);
+        edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(crdManager, edgeRenderer);
         addGraphic(edgeGraphics);
         addGraphic(pointGraphics);
     }
     
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
-    // ACCESSORS
+    // PROPERTY PATTERNS
     //
 
     public DelegatingPointSetGraphic<S,G> getPointGraphic() {
@@ -99,10 +109,6 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         pointGraphics.setCoordinateManager(ptMgr);
         edgeGraphics.setCoordinateManager(ptMgr);
     }
-
-    //
-    // POINTS
-    //
 
     public Set<? extends S> getNodeSet() {
         return pointGraphics.getObjects();
@@ -124,10 +130,6 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         pointGraphics.setStyler(styler);
     }
 
-    //
-    // EDGES
-    //
-
     public Set<? extends E> getEdgeSet() {
         return edgeGraphics.getEdges();
     }
@@ -143,5 +145,15 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     public void setEdgeStyler(ObjectStyler<E> styler) {
         edgeGraphics.setEdgeStyler(styler);
     }
+
+    public boolean isDragEnabled() {
+        return pointGraphics.isDragEnabled();
+    }
+
+    public void setDragEnabled(boolean val) {
+        pointGraphics.setDragEnabled(val);
+    }
+    
+    //</editor-fold>
 
 }
