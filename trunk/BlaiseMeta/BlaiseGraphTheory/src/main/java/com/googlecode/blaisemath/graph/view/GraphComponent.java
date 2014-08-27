@@ -26,19 +26,17 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import java.awt.Graphics2D;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

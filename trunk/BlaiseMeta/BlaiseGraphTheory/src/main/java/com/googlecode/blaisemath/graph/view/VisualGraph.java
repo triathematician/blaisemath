@@ -25,9 +25,6 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Functions;
-import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
@@ -35,6 +32,9 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Edge;
+import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
 /**
@@ -77,7 +77,7 @@ public class VisualGraph<G> {
      * Construct adapter with the specified manager.
      * @param manager a GraphLayoutManager with the graph to display
      */
-    public VisualGraph(final GraphLayoutManager manager) {
+    public VisualGraph(GraphLayoutManager manager) {
         layoutListener = new PropertyChangeListener(){
             public void propertyChange(PropertyChangeEvent evt) {
                 initViewGraph();
@@ -94,11 +94,8 @@ public class VisualGraph<G> {
     protected final void initViewGraph() {
         synchronized(layoutManager) {
             if (viewGraph == null) {
-                // initialize the view graph with the same coordinate manager as the layout manager
-                //   this ensures that layout changes will propagate to the view
-                // TODO - may wish to change this initialization
                 viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
-                        layoutManager.getCoordinateManager(), null, null);
+                        layoutManager.getCoordinateManager(), null, null, null);
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
@@ -114,11 +111,6 @@ public class VisualGraph<G> {
             viewGraph.getEdgeStyler().setStyleDelegate(Functions.constant(DEFAULT_EDGE_STYLE));
         }
     }
-
-    //
-    // EVENT HANDLERS
-    //
-
 
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
