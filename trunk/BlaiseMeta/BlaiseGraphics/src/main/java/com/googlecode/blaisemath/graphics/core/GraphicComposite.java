@@ -154,7 +154,7 @@ public class GraphicComposite<G> extends Graphic<G> {
         } 
     }
 
-    public AttributeSet getStyle() {
+    public final AttributeSet getStyle() {
         return style;
     }
     
@@ -202,6 +202,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Remove an entry from the composite 
      * @param gfc the entry to remove
+     * @return 
      */
     public synchronized boolean removeGraphic(Graphic gfc) {
         if (removeHelp(gfc)) {
@@ -232,6 +233,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Removes several entries from the composite 
      * @param remove the entries to remove
+     * @return 
      */
     public final synchronized boolean removeGraphics(Iterable<? extends Graphic> remove) {
         boolean change = false;

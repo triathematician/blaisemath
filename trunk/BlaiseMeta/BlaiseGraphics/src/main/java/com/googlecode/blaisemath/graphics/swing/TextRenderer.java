@@ -28,18 +28,26 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.google.common.base.Strings;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Anchor;
-import static com.googlecode.blaisemath.style.Anchor.*;
+import static com.googlecode.blaisemath.style.Anchor.CENTER;
+import static com.googlecode.blaisemath.style.Anchor.EAST;
+import static com.googlecode.blaisemath.style.Anchor.NORTH;
+import static com.googlecode.blaisemath.style.Anchor.NORTHEAST;
+import static com.googlecode.blaisemath.style.Anchor.NORTHWEST;
+import static com.googlecode.blaisemath.style.Anchor.SOUTH;
+import static com.googlecode.blaisemath.style.Anchor.SOUTHEAST;
+import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Level;
@@ -67,7 +75,7 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
         canvas.setColor(style.getColor(Styles.FILL, Color.black));
         canvas.setFont(Styles.getFont(style));
         Rectangle2D bounds = bounds(primitive, style);
-        canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getY()+bounds.getHeight()));
+        canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
     }
 
     public boolean contains(LabeledPoint primitive, AttributeSet style, Point2D point) {
@@ -102,9 +110,9 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
         
         Font font = Styles.getFont(style);
         FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
-        Rectangle2D bounds = font.getStringBounds(primitive.getText(), frc);
-        double width = bounds.getWidth();
-        double height = bounds.getHeight();        
+        TextLayout tl = new TextLayout(primitive.getText(), font, frc);
+        double width = font.getStringBounds(primitive.getText(), frc).getWidth();
+        double height = tl.getBounds().getHeight();
         
         if (textAnchor == Anchor.SOUTHWEST) {
             return new Rectangle2D.Double(
@@ -114,7 +122,7 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
         }
 
         Point2D.Double shift = new Point2D.Double();
-
+        
         switch (textAnchor) {
             case NORTHEAST:
             case EAST:

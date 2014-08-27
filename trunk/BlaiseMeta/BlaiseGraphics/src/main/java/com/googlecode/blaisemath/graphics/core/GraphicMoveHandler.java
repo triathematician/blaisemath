@@ -26,11 +26,9 @@ package com.googlecode.blaisemath.graphics.core;
 
 
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import java.awt.geom.Point2D;
-import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
-import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
+import java.awt.geom.Point2D;
 
 /**
  * Implementation of an object dragger using a point property pattern. Maintains

@@ -58,7 +58,7 @@ public class StyleHints {
      * @return transformed color
      */
     @Nullable 
-    public static Color applyHints(@Nullable Color color, AttributeSet hints) {
+    public static Color modifyColorsDefault(@Nullable Color color, AttributeSet hints) {
         if (color == null) {
             return null;
         } else if (hints.getBoolean(HIDDEN_HINT, false)) {
@@ -78,7 +78,7 @@ public class StyleHints {
      * @param hints the hints to apply
      * @return transformed width
      */
-    public static float applyStrokeHints(@Nullable Float width, AttributeSet hints) {
+    public static float modifyStrokeWidthDefault(@Nullable Float width, AttributeSet hints) {
         if (width == null || width.isNaN() || width.isInfinite()) {
             width = 1f;
         }
