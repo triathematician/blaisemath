@@ -29,17 +29,15 @@ package com.googlecode.blaisemath.graphics.core;
 
 
 
-import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.core.Graphic;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.style.Renderer;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.Edge;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -49,23 +47,27 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * A collection of edges backed by a common set of points.
  * 
  * @param <S> source object type
  * @param <E> edge type
+ * @param <G>
  * 
  * @author elisha
  */
 public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComposite<G> {
+    
+    public static final String EDGE_RENDERER_PROP = "edgeRenderer";
 
     /** The edges in the graphic. */
     protected final Map<E,DelegatingPrimitiveGraphic<E,Shape,G>> edges = Maps.newHashMap();
     /** Styler for edges */
     protected ObjectStyler<E> edgeStyler = ObjectStyler.create();
     /** Renderer for edges */
-    protected Renderer<Shape,G> edgeRenderer = null;
+    protected Renderer<Shape,G> edgeRenderer;
     
     /** Point manager. Maintains objects and their locations, and enables mouse dragging. */
     protected CoordinateManager<S, Point2D> pointManager;
@@ -76,14 +78,16 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
      * Initialize with default coordinate manager.
      */
     public DelegatingEdgeSetGraphic() {
-        this(new CoordinateManager<S,Point2D>());
+        this(new CoordinateManager<S,Point2D>(), null);
     }
     
     /** 
      * Initialize with given coordinate manager.
-     * @param mgr manages source object locations
+     * @param mgr manages source object loc
+     * @param edgeRenderer
      */
-    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr) {
+    public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr,
+            Renderer<Shape,G> edgeRenderer) {
         coordListener = new CoordinateListener(){
             @Override
             public void coordinatesChanged(CoordinateChangeEvent evt) {
@@ -92,6 +96,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
         };
         
         setCoordinateManager(mgr);
+        setEdgeRenderer(edgeRenderer);
     }
     
     
@@ -131,6 +136,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     //
     // PROPERTY PATTERNS
     //
+    
     public CoordinateManager<S, Point2D> getCoordinateManager() {
         return pointManager;
     }
@@ -206,6 +212,20 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
                 }
             }
             fireGraphicChanged();
+        }
+    }
+
+    @Nullable 
+    public Renderer<Shape, G> getEdgeRenderer() {
+        return edgeRenderer;
+    }
+
+    public final void setEdgeRenderer(@Nullable Renderer<Shape, G> renderer) {
+        if (this.edgeRenderer != renderer) {
+            Object old = this.edgeRenderer;
+            this.edgeRenderer = renderer;
+            fireGraphicChanged();
+            pcs.firePropertyChange(EDGE_RENDERER_PROP, old, renderer);
         }
     }
     

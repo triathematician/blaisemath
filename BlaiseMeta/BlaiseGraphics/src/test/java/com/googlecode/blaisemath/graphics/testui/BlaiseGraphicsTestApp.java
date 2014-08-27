@@ -43,12 +43,14 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.TaperedPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.ColorUtils;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
@@ -176,13 +178,16 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
                 PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(crds);
+        bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
+        bp.getStyler().setLabelStyleConstant(Styles.defaultTextStyle());
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.put(Styles.MARKER_RADIUS, i1+5);
                 r.put(Styles.MARKER, Markers.getAvailableMarkers().get(i2+3));
+                r.put(Styles.STROKE, Color.BLACK);
                 r.put(Styles.STROKE_WIDTH, 2+i3/3f);
                 r.put(Styles.FILL, new Color((i4*10+10) % 255, (i4*20+25) % 255, (i4*30+50) % 255));
                 return r;
@@ -200,14 +205,22 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>(
                 PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(points2);
+        bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
-        bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+        bp.getStyler().setLabelStyleDelegate(new Function<Integer,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(Integer src) {
                 r.put(Styles.TEXT_ANCHOR, Anchor.CENTER);
+                r.put(Styles.FONT_SIZE, 5+src.floatValue());
+                return r;
+            }
+        });
+        bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+            AttributeSet r = new AttributeSet();
+            public AttributeSet apply(Integer src) {
                 r.put(Styles.MARKER_RADIUS, src+2);
                 r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
-                r.put(Styles.FONT_SIZE, 5+src.floatValue());
+                r.put(Styles.STROKE, ColorUtils.lighterThan(r.getColor(Styles.FILL)));
                 return r;
             }
         });
@@ -230,8 +243,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         }
         // create graphic
         DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D>(
-                PointRenderer.getInstance(), TextRenderer.getInstance());
+                PointRenderer.getInstance(), TextRenderer.getInstance(), TaperedPathRenderer.getInstance());
         ImmutableMap<Point2D, Point2D> idx = Maps.uniqueIndex(Arrays.asList(pts), Functions.<Point2D>identity());
+        gr.setDragEnabled(true);
         gr.setNodeLocations(idx);
         gr.getNodeStyler().setStyleDelegate(new Function<Point2D,AttributeSet>(){
             public AttributeSet apply(Point2D src) {
@@ -314,12 +328,6 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     
     
     //<editor-fold defaultstate="collapsed" desc="COOL STUFF USING SPECIAL STYLES">
-    
-    @Action
-    public void addLabeledPointSet() {   
-        BasicPointSetGraphic bp = new BasicPointSetGraphic(new Point2D[]{randomPoint(), randomPoint(), randomPoint(), randomPoint()});
-        root1.addGraphic(bp);
-    }
     
     @Action
     public void addRay() {

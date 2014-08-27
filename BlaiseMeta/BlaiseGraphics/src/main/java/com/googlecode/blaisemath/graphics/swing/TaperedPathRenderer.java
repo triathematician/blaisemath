@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.googlecode.blaisemath.graphics.swing.PathRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -42,6 +43,12 @@ import java.awt.geom.PathIterator;
  * @author Elisha
  */
 public class TaperedPathRenderer extends PathRenderer {
+
+    private static final TaperedPathRenderer INST = new TaperedPathRenderer();
+    
+    public static Renderer<Shape, Graphics2D> getInstance() {
+        return INST;
+    }
 
     public TaperedPathRenderer() {
     }
