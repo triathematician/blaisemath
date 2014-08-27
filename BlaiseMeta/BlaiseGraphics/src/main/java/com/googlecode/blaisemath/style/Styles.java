@@ -166,6 +166,17 @@ public final class Styles {
     public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke) {
         return AttributeSet.with(FILL, fill).and(STROKE, stroke);
     }
+   
+    /**
+     * Create a basic shape style with given fill & stroke
+     * @param fill fill color
+     * @param stroke stroke color
+     * @param width stroke width
+     * @return shape style
+     */
+    public static AttributeSet fillStroke(@Nullable Color fill, @Nullable Color stroke, float width) {
+        return AttributeSet.with(FILL, fill).and(STROKE, stroke).and(STROKE_WIDTH, width);
+    }
     
     /**
      * Create a path style with a stroke color and width
@@ -192,7 +203,7 @@ public final class Styles {
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="MODIFIER FACTORY METHODS">
+    //<editor-fold defaultstate="collapsed" desc="MODIFIER & CONTEXT FACTORY METHODS">
     
     /**
      * Modifies colors in a style set.
@@ -210,8 +221,6 @@ public final class Styles {
         return new StrokeWidthModifier();
     }
     
-    //</editor-fold>
-    
     /**
      * Create default style context.
      * @return a default style context w/ no parent, but with a standard set of styles
@@ -222,6 +231,22 @@ public final class Styles {
         res.addModifier(defaultStrokeModifier());
         return res;
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="MODIFIER UTILITIES">
+    
+    /**
+     * Return highlight-modified version of the style set.
+     * @param style style to modify
+     * @return default modified style for highlighting
+     */
+    public static AttributeSet withHighlight(AttributeSet style) {
+        return defaultStyleContext().applyModifiers(style,
+                AttributeSet.with(StyleHints.HILITE_HINT, true));
+    }
+    
+    //</editor-fold>
     
     
     //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
@@ -294,7 +319,7 @@ public final class Styles {
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             AttributeSet res = new AttributeSet(style);
             for (String key : style.getAllAttributes(Color.class)) {
-                res.put(key, StyleHints.applyHints(style.getColor(key), hints));
+                res.put(key, StyleHints.modifyColorsDefault(style.getColor(key), hints));
             }
             return res;
         }
@@ -304,7 +329,7 @@ public final class Styles {
     public static class StrokeWidthModifier implements StyleModifier {
         public AttributeSet apply(AttributeSet style, AttributeSet hints) {
             return new AttributeSet(style)
-                    .and(STROKE_WIDTH, StyleHints.applyStrokeHints(style.getFloat(STROKE_WIDTH), hints));
+                    .and(STROKE_WIDTH, StyleHints.modifyStrokeWidthDefault(style.getFloat(STROKE_WIDTH), hints));
         }
     }
     

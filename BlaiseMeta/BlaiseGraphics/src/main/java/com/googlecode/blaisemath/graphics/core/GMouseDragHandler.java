@@ -56,12 +56,11 @@ public abstract class GMouseDragHandler extends MouseAdapter {
     public abstract void mouseDragInProgress(GMouseEvent e, Point2D start);
 
     /**
-     * Called when the mouse is released, finishing the drag. Does nothing by default.
+     * Called when the mouse is released, finishing the drag.
      * @param e the source event (stores the point and graphic for the event)
      * @param start the initial drag point
      */
-    public void mouseDragCompleted(GMouseEvent e, Point2D start) {
-    }
+    public abstract void mouseDragCompleted(GMouseEvent e, Point2D start);
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -99,6 +98,24 @@ public abstract class GMouseDragHandler extends MouseAdapter {
     public final void mouseExited(MouseEvent e) {
         if (start != null) {
             mouseReleased(e);
+        }
+    }
+
+    /**
+     * Blank implementation of {@link GMouseDragHandler}, so implementations
+     * can only overrride select functions that need to change.
+     */
+    public static class Adapter extends GMouseDragHandler {
+        @Override
+        public void mouseDragInitiated(GMouseEvent e, Point2D start) {
+        }
+
+        @Override
+        public void mouseDragInProgress(GMouseEvent e, Point2D start) {
+        }
+
+        @Override
+        public void mouseDragCompleted(GMouseEvent e, Point2D start) {
         }
     }
     

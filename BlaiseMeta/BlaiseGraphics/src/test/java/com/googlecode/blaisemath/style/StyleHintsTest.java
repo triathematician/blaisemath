@@ -44,20 +44,20 @@ public class StyleHintsTest {
         System.out.println("applyHints");
         AttributeSet hints = new AttributeSet();
         
-        assertEquals(new Color(50,0,0,128), StyleHints.applyHints(new Color(50,0,0,128), hints));
+        assertEquals(new Color(50,0,0,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
         
         hints.put(StyleHints.HIDDEN_HINT, true);
-        assertEquals(new Color(50,0,0,0), StyleHints.applyHints(new Color(50,0,0,128), hints));
+        assertEquals(new Color(50,0,0,0), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
         hints.put(StyleHints.HIDDEN_HINT, false);
         
         hints.put(StyleHints.HILITE_HINT, true);
-        assertEquals(new Color(114,64,64,128), StyleHints.applyHints(new Color(50,0,0,128), hints));
+        assertEquals(new Color(114,64,64,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
         hints.put(StyleHints.HILITE_HINT, false);
         
         hints.put(StyleHints.SELECTED_HINT, true);
-        assertEquals(new Color(50,0,0,128), StyleHints.applyHints(new Color(50,0,0,128), hints));
+        assertEquals(new Color(50,0,0,128), StyleHints.modifyColorsDefault(new Color(50,0,0,128), hints));
         
-        assertNull(StyleHints.applyHints(null, hints));
+        assertNull(StyleHints.modifyColorsDefault(null, hints));
     }
     
 }
