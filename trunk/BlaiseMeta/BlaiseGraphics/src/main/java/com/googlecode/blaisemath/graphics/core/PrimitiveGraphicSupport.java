@@ -152,7 +152,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
                 DraggableCoordinate bean = primitive instanceof DraggableCoordinate 
                         ? (DraggableCoordinate) primitive
                     : primitive instanceof Point2D
-                        ? PointUtils.asPointBean((Point2D) primitive)
+                        ? new ProxyDraggable()
                     : null;
                 assert bean != null;
                 dragger = new GraphicMoveHandler(bean);
@@ -167,5 +167,33 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             }
         }
     }
+    
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
+    //
+    // INNER CLASSES
+    //
+    
+    /** A draggable point generating events when it's position changes. */
+    public class ProxyDraggable implements DraggableCoordinate<Point2D> {
+        public Point2D getPoint() {
+            return (Point2D) primitive; 
+        }
+
+        public void setPoint(Point2D p) {
+            ((Point2D)primitive).setLocation(p);
+        }
+
+        public void setPoint(Point2D initial, Point2D dragStart, Point2D dragFinish) {
+            ((Point2D)primitive).setLocation(
+                    initial.getX()+dragFinish.getX()-dragStart.getX(),
+                    initial.getY()+dragFinish.getY()-dragStart.getY());
+            fireGraphicChanged();
+        }
+    }
+    
+    //</editor-fold>
+    
 
 }

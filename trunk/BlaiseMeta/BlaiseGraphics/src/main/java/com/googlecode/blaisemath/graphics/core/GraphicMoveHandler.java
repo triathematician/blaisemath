@@ -24,11 +24,10 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-
-
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
 import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
 import java.awt.geom.Point2D;
+
 
 /**
  * Implementation of an object dragger using a point property pattern. Maintains
@@ -63,13 +62,11 @@ public final class GraphicMoveHandler extends GMouseDragHandler {
     @Override
     public void mouseDragInProgress(GMouseEvent e, Point2D start) {
         bean.setPoint(beanStart, start, e.getGraphicLocation());
-        e.getGraphicSource().fireGraphicChanged();
     }
 
     @Override
     public void mouseDragCompleted(GMouseEvent e, Point2D start) {
         beanStart = null;
-        e.getGraphicSource().fireGraphicChanged();
     }
 
 }

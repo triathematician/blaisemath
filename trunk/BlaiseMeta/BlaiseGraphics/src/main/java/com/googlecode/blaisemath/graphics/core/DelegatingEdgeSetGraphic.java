@@ -104,7 +104,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
 
     private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic> removeMe) {
         List<Graphic> addMe = new ArrayList<Graphic>();
-        for (E edge : edges.keySet()) {
+        for (E edge : Sets.newLinkedHashSet(edges.keySet())) {
             DelegatingPrimitiveGraphic<E,Shape,G> dsg = edges.get(edge);
             Point2D p1 = locs.get(edge.getNode1());
             Point2D p2 = locs.get(edge.getNode2());
