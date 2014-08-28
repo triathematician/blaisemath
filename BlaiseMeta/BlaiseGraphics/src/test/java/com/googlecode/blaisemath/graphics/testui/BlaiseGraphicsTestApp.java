@@ -230,45 +230,46 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addDelegatingGraph() {
         // initialize graph object
-        Point2D[] pts = new Point2D[15];
-        for (int i = 0; i < pts.length; i++) {
-            pts[i] = randomPoint();
+        final Map<Integer,Point2D> pts = Maps.newLinkedHashMap();
+        for (int i = 0; i < 15; i++) {
+            pts.put(i, randomPoint());
         }         
-        Set<Edge<Point2D>> edges = new HashSet<Edge<Point2D>>();
-        for (int i = 0; i < pts.length; i++) {
+        Set<Edge<Integer>> edges = new HashSet<Edge<Integer>>();
+        for (int i = 0; i < pts.size(); i++) {
             int n = (int) (Math.random()*6);
             for (int j = 0; j < n; j++) {
-                edges.add(new Edge<Point2D>(pts[i], pts[(int)(Math.random()*pts.length)]));
+                edges.add(new Edge<Integer>(i, (int)(Math.random()*pts.size())));
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D>(
+        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D>(
                 PointRenderer.getInstance(), TextRenderer.getInstance(), TaperedPathRenderer.getInstance());
-        ImmutableMap<Point2D, Point2D> idx = Maps.uniqueIndex(Arrays.asList(pts), Functions.<Point2D>identity());
         gr.setDragEnabled(true);
-        gr.setNodeLocations(idx);
-        gr.getNodeStyler().setStyleDelegate(new Function<Point2D,AttributeSet>(){
-            public AttributeSet apply(Point2D src) {
-                int yy = (int) Math.min(src.getX()/3, 255);
+        gr.setNodeLocations(pts);
+        gr.getNodeStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+            public AttributeSet apply(Integer src) {
+                Point2D pt = pts.get(src);
+                int yy = (int) Math.min(pt.getX()/3, 255);
                 return AttributeSet.with(Styles.FILL, new Color(yy, 0, 255-yy))
-                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(src.getY()));
+                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
             }
         });
-        gr.getNodeStyler().setLabelDelegate(new Function<Point2D, String>() {
-            public String apply(Point2D src) {
-                return String.format("(%.1f,%.1f)", src.getX(), src.getY());
+        gr.getNodeStyler().setLabelDelegate(new Function<Integer, String>() {
+            public String apply(Integer src) {
+                Point2D pt = pts.get(src);
+                return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
             }
         });
-        gr.getNodeStyler().setLabelStyleDelegate(new Function<Point2D, AttributeSet>(){
+        gr.getNodeStyler().setLabelStyleDelegate(new Function<Integer, AttributeSet>(){
             AttributeSet bss = Styles.defaultTextStyle();
-            public AttributeSet apply(Point2D src) {
+            public AttributeSet apply(Integer src) {
                 return bss;                
             }
         });
         gr.setEdgeSet(edges);
-        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Point2D>,AttributeSet>(){
-            public AttributeSet apply(Edge<Point2D> src) {
-                Point2D src0 = src.getNode1(), src1 = src.getNode2();
+        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Integer>,AttributeSet>(){
+            public AttributeSet apply(Edge<Integer> src) {
+                Point2D src0 = pts.get(src.getNode1()), src1 = pts.get(src.getNode2());
                 int dx = (int) (src0.getX() - src1.getX());
                 dx = Math.min(Math.abs(dx/2), 255);
                 int dy = (int) (src0.getY() - src1.getY());

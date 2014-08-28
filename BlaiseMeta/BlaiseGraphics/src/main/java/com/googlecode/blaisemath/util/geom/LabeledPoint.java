@@ -32,7 +32,7 @@ import java.awt.geom.Point2D;
  * A text string anchored at a particular point.
  * @author Elisha
  */
-public final class LabeledPoint extends DraggablePoint {
+public final class LabeledPoint extends Point2DBean {
     
     private String text;
 

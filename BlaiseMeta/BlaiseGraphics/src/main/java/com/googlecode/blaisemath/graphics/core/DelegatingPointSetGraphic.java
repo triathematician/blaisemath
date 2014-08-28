@@ -39,8 +39,6 @@ import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

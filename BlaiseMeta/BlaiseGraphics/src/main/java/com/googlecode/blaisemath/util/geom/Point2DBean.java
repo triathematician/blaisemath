@@ -25,19 +25,19 @@ package com.googlecode.blaisemath.util.geom;
  */
 
 
-import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
+import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
 import java.awt.geom.Point2D;
 
 /**
- * An instance of {@link Point2D} that is also a {@link DraggableCoordinate}.
+ * An instance of {@link Point2D} that is also a {@link CoordinateBean}.
  * @author Elisha
  */
-public class DraggablePoint extends Point2D.Double implements DraggableCoordinate<Point2D> {
+public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2D> {
 
-    public DraggablePoint() {
+    public Point2DBean() {
     }
 
-    public DraggablePoint(double x, double y) {
+    public Point2DBean(double x, double y) {
         super(x, y);
     }
 
@@ -52,11 +52,6 @@ public class DraggablePoint extends Point2D.Double implements DraggableCoordinat
     
     public void setPoint(Point2D p) {
         setLocation(p);
-    }
-    
-    public void setPoint(Point2D initial, Point2D dragStart, Point2D dragFinish) {
-        setLocation(initial.getX()+dragFinish.getX()-dragStart.getX(),
-                initial.getY()+dragFinish.getY()-dragStart.getY());
     }
     
 }
