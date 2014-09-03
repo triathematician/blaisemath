@@ -200,6 +200,17 @@ public final class Styles {
                 .and(FONT_SIZE, sz)
                 .and(TEXT_ANCHOR, anchor);
     }
+
+    /**
+     * Create style for a marker with given radius
+     * @param marker the marker shape
+     * @param rad the radius
+     * @return style
+     */
+    public static AttributeSet marker(Marker marker, float rad) {
+        return AttributeSet.with(MARKER, marker)
+                .and(MARKER_RADIUS, rad);
+    }
     
     //</editor-fold>
     

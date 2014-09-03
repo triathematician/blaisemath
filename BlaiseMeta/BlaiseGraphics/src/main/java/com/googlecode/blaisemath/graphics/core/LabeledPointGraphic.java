@@ -27,10 +27,10 @@ package com.googlecode.blaisemath.graphics.core;
 
 
 import com.google.common.base.Strings;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -38,6 +38,7 @@ import java.awt.geom.Point2D;
  * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
  *
  * @param <O> source object type
+ * @param <G>
  * @author Elisha
  */
 public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point2D,G> {

@@ -32,6 +32,7 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -135,6 +136,10 @@ public class VisualGraph<G> {
             initViewGraph();
             this.layoutManager.addPropertyChangeListener(GraphLayoutManager.PROP_GRAPH, layoutListener);
         }
+    }
+
+    public CoordinateManager getCoordinateManager() {
+        return layoutManager.getCoordinateManager();
     }
 
     /**
