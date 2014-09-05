@@ -1,130 +1,95 @@
-#summary Architecture & coding conventions for BlaiseGraphics
+#summary Architecture & coding conventions for BlaiseGraphics 2.0.0+
 
-= Dependencies =
-BlaiseGraphics uses JDK 1.6+, and depends on the [https://code.google.com/p/guava-libraries/ guava library] and jsr305 for building.
+= Module Dependencies =
+BlaiseGraphics uses JDK 1.6+, and uses the [https://code.google.com/p/guava-libraries/ guava library] and jsr305 for building. It is a maven project with `groupId=com.googlecode.blaisemath` and `artifactId=blaise-graphics`. It is not yet available from the central maven repository.
 
 = Packages =
- * `org.blaise.graphics` - graphics object and scene tree, depends on style and utility packages
- * `org.blaise.style` - self-contained style classes, uses the utility library
- * `org.blaise.util` - self-contained utility library
+|| *Package* || *Description* || *Notes* || *Dependencies* ||
+|| `com.googlecode.blaisemath.graphics.core` || core `Graphic` API, generic and specific implementations of `Graphic`, event handlers || uses generics rather than a specific graphics canvas || style and utility packages ||
+|| `com.googlecode.blaisemath.graphics.swing` || renderers, handlers, utilities, and graphic objects || uses swing's `Graphics2D` canvas || depends on style, utility, and core packages ||
+|| `com.googlecode.blaisemath.style` || definitions of the main style classes, `AttributeSet`, `Renderer`, and `StyleModifier`, with supporting utilities || || depends on utility packages only ||
+|| `com.googlecode.blaisemath.util` || miscellaneous utility classes and functionality || || external dependencies only ||
+|| `com.googlecode.blaisemath.util.coordinate` || utilities for handling generic coordinates || || external dependencies only ||
+|| `com.googlecode.blaisemath.util.geom` || utilities for working with 2D points; extensions of java's `Point2D` || || uses `com.googlecode.blaisemath.util.coordinate` only ||
 
-= Style Library =
-== Style Classes ==
-The primary classes in the style library are the style classes:
- * `ShapeStyle` (I)
-  * `BasicShapeStyle`
- * `PathStyle` (I) (extends `ShapeStyle`)
-  * `BasicPathStyle`
-   * `ArrowPathStyle`
-   * `BezierPathStyle`
-   * `DecoratorPathStyle`
- * `StringStyle` (I)
-  * `BasicStringStyle`
-   * `WrappingStringStyle`
- * `PointStyle` (I)
-  * `PointStyleSupport`
-   * `BasicPointStyle`
-    * `InfinitePointStyle`
-   * `DecoratorPointStyle`
-  * `LabeledPointStyle`
+= Style Package =
+The mains style classes are:
+|| *Class* || *Description* ||
+|| `AttributeSet` || Collection of style attributes ||
+|| `ImmutableAttributeSet` || An attribute set that cannot be changed ||
+|| `Renderer` interface || Renders a generic primitive on a generic canvas using an `AttributeSet` ||
+|| `StyleHints` || A collection of hints that are used by a `StyleModifier` to modify an `AttributeSet` ||
+|| `StyleModifier` interface || Modifies an `AttributeSet` based on a `StyleHints` object, returning a new `AttributeSet` || 
+|| `StyleContext` || Handles a collection of style modifiers ||
+|| `ObjectStyler ` || Provides several _delegate_ functions used to generate styles for an object of arbitrary type, specifically for _labels_, _label style_, _object style_, and _tooltip_ ||
+|| `Styles` || Utilities including factory methods, default styles, and style modifiers; also contains keys for common style attributes such as _fill_ and _stroke_ ||
+|| `Marker` interface || Creates shapes centered at a given point, with a given radius and orientation ||
+|| `Markers` || Contains several instances of `Marker` ||
+|| `StyleUtilsSVG` || Provides a mechanism for converting an `AttributeSet` to an appropriate CSS attribute string ||
 
-These classes obey the following conventions:
- * _bean pattern_ (no-argument constructor, with get/set property methods)
- * property names are aligned where possible with SVG attribute names
- * toString() method implemented
- * clone() method implemented
- * _builder pattern_ for quickly setting properties
- * `@Nullable` annotations indicating whether null properties are permitted
+The package is built around the combination of a `Renderer`, responsible for drawing the actual graphics elements, and the `AttributeSet`, which provides information to the renderer about how the drawing should be done. For instance, if you're drawing a square on the screen, the location of the square is the _primitive_, the `AttributeSet` describes its color, stroke width, etc., and the `Renderer` draws the square at the appropriate location using the appropriate style. This decomposition allows for rendering of the same basic objects onto multiple types of graphics targets.
 
-Additionally, the names follow the conventions:
- * "Basic" style classes are simple objects with necessary style attributes.
- * "Decorator" style classes defer some of their style attributes to an underlying class, possibly in an indirect way (e.g. some attributes may be multiplicative).
- * "Support" style classes are generally abstract, partial implementations of style classes.
+`StyleHints`, `StyleModifier`, and `StyleContext` exist to provide a mechanism for quickly changing the appearance of many different objects. For instance, they can be used to change the color of an object when the user mouses over it. The mouse event handler would alter the `StyleHints` associated with the object. The modifiers in the `StyleContext` are then responsible for changing the appearance.
 
-== Context Classes ==
-Context classes are:
- * `StyleContext` (I)
-  * `DefaultStyleContext`
-  * `DelegatingStyleContext`
-These are essentially factory classes providing instances of the four main style types.
+Both `AttributeSet` and `StyleContext` are "cascading", in that they support parent objects of the same type, and use information from the parent objects if not available in the object.
 
-== `ObjectStyler` ==
-The `ObjectStyler` class provides several _delegate_ functions used to generate styles for an object of arbitrary type, specifically for _labels_, _label style_, _object style_, and _tooltip_.
-
-== Markers ==
-Markers are objects used to draw a shape at a given location and orientation.
- * `Marker` - generates shapes at a given point
- * `MarkerLibrary` - contains several instances of `Marker`
-
-== `VisibilityHint` ==
-`VisibilityHint` is a render hint that is disjoint from styles and is universal, similar to a _CSS class_. It may be used, e.g. to highlight a collection of shapes. Styles are responsible for how they handle different hints. The class `VisibilityHintSet` aggregates a collection of hints into a single object, with event handling support.
-
-== Factory and utility methods ==
-The `Styles` class is a factory class providing simple methods for creating basic style objects. The `StyleUtils` provides some basic color manipulation capability, as well as support for modifying colors based on `VisibilityHint`s.
-
-
-
-
------
-= Graphics Library =
+= Graphics Package =
 In general, `Graphic` objects combine the state information (e.g. location, shape, etc.) with the style information used to draw them. All graphics provide support for:
- * drawing on a {@link Graphics2D} canvas
- * "visibility hints", e.g. highlight
+ * style
+ * rendering on a generic canvas
  * location testing (bounding box & rectangle intersect)
- * selection
  * tooltips
+ * style hints
  * context menu
+ * highlighting on mouseover
+ * selection
  * mouse handling
 
-Graphics are put together in a "scene graph" using composite classes, and are added to a `GraphicRoot` object that is owned by a `GraphicComponent`.
+Graphics are combined in a "scene graph" using `GraphicComposite` classes. In the swing package, they are added to a `JGraphicComponent`, which has a special graphic composite `JGraphicRoot` for delegating events from the component to the graphics.
 
-== General `Graphic` Objects ==
+== Generic `Graphic` Objects ==
 The general graphics classes are:
- * `Graphic` (I)
-  * `GraphicSupport`
-   * `GraphicComposite`
-    * `GraphicRoot`
- * `GraphicComponent`
+ * `Graphic` - abstract class, requiring implementations of `contains`, `intersects`, `getStyle`, and `renderTo`
+  * `PrimitiveGraphicSupport` - adds a _primitive_, an associated _renderer_, and support for _mouse dragging_ (if it makes sense for the primitive)
+   * `PrimitiveGraphic` - adds a _style_
+   * `DelegatingPrimitiveGraphic` - adds an _object styler_ and a _source_ object
+  * `PrimmitiveArrayGraphicSupport` - adds a list of _primitives_, a _renderer_, and functionality for choosing a _primitive_ based on a mouse location
+   * `PrimitiveArrayGraphic` - adds a _style_ common to all primitives
+   * `DelegatingPrimitiveArrayGraphic` - adds an _object styler_ and a _source_ object
+ * `GraphicComposite` -
 
 `GraphicSupport` implements all functionality on `Graphic`, with the exception of the _draw_, _contains_, and _intersects_ methods. It also adds support for multiple `ContextMenuInitializer`s, _highlighting_ on mouseover events, a _default tooltip_, and an _event trigger_ notifying the parent graphic when its state/style has changed. It provides flags for enabling/disabling _tooltips_, _menus_, _mouse listening_, and _selection_.
 
 `GraphicComposite` maintains a list of graphics and a `StyleContext`. Its primary responsibility is to defer supported functionality to its children. It also listens to changes from its children.
 
-`GraphicRoot` hooks up a tree of graphic objects to a `GraphicComponent`. It maintains a root `StyleContext`, the component's popup menu, and the conversion and delegation of `MouseEvent`s to `GraphicMouseEvent`s. It cannot be added to another `GraphicComposite`. It also asks the component to repaint whenever a graphic in its tree has changed.
+`JGraphicRoot` hooks up a tree of graphic objects to a swing component, `JGraphicComponent`. It maintains a root `StyleContext`, the component's popup menu, and the conversion and delegation of `MouseEvent`s to `GMouseEvent`s. It cannot be added to another `GraphicComposite`. It also asks the component to repaint whenever a graphic in its tree has changed.
 
-`GraphicComponent` maintains a `GraphicRoot`, a set of _underlays_ and _overlays_ (`CanvasPainter` objects), and a `SetSelectionModel` with a set of selected graphics.
+`JGraphicComponent` maintains a `JGraphicRoot`, a set of _underlays_ and _overlays_ (`CanvasPainter` objects), and a `SetSelectionModel` with a set of selected graphics.
 
 == `Graphic` Implementations ==
-The following implementations of `Graphic` are all derived from the `GraphicSupport` base class:
- * `AbstractPointGraphic`
-  * `BasicPointGraphic`
-  * `DelegatingPointGraphic`
- * `AbstractShapeGraphic`
-  * `BasicShapeGraphic`
-  * `DelegatingShapeGraphic`
-   * `LabeledShapeGraphic`
+The following are additional generic implementations of `Graphic`:
+ * `LabeledPointGraphic`
  * `BasicPointSetGraphic`
- * `BasicStringGraphic`
 In addition, the following composite graphics are derived from `GraphicComposite`:
  * `DelegatingEdgeSetGraphic`
  * `DelegatingNodeLinkGraphic`
  * `DelegatingPointSetGraphic`
 
 The naming convention followed above:
- * `Abstract` classes provide partial support, primarily the state of the graphic object to be represented.
- * `Basic` classes contain one of the main style classes directly as a property.
- * `Delegating` classes defer style, labels, and tooltips to an `ObjectStyler` class.
+ * `_Support` classes provide partial support, primarily the state of the graphic object to be represented.
+ * `Basic_` classes contain one of the main style classes directly as a property.
+ * `Delegating_` classes defer style, labels, and tooltips to an `ObjectStyler` class.
 
 == Mouse Handling ==
-The `GraphicRoot` class is responsible for delegating mouse events to graphic objects beneath the mouse. Rather than regular `MouseEvent`s, it passes `GraphicMouseEvent`s that indicate the source `Graphic` of the event. Classes supporting mouse handling are:
- * `GraphicMouseEvent` - wraps a `MouseEvent` to include a `Graphic`
- * `GraphicMouseEvent.Factory` - creates a `GraphicMouseEvent` from a source `Graphic` and `MouseEvent` (intended to be overridden to customize the event beyond what is supported by the default `GraphicMouseEvent`)
+The `JGraphicRoot` class is responsible for delegating mouse events to graphic objects beneath the mouse. Rather than regular `MouseEvent`s, it passes `GMouseEvent`s that indicate the source `Graphic` of the event. Classes supporting mouse handling are:
+ * `GMouseEvent` - wraps a `MouseEvent` to include a `Graphic`
+ * `GMouseEvent.Factory` - creates a `GMouseEvent` from a source `Graphic` and `MouseEvent` (intended to be overridden to customize the event beyond what is supported by the default `GMouseEvent`)
 
 === Dragging ===
 Additional classes are provided to simplify drag gestures:
- * `AbstractGraphicDragger` - provides supporting functionality for dragging graphics, translating general mouse handling methods to drag methods _mouseDragInitiated_, _mouseDragInProgress_, and _mouseDragCompleted_ that take as arguments `GraphicMouseEvent`s and the starting `Point` of the drag gesture
-  * `PointBeanDragger` - constructed with a `PointBean` or `DraggablePointBean` to provide drag support (e.g. used in `AbstractPointGraphic` to provide default draggability of points)
-  * `IndexedPointBeanDragger` - constructed with a `IndexedPointBean` or `IndexedDraggablePointBean` to provide drag support
+ * `GMouseDragHandler` - provides supporting functionality for dragging graphics, translating general mouse handling methods to drag methods _mouseDragInitiated_, _mouseDragInProgress_, and _mouseDragCompleted_ that take as arguments `GMouseEvent`s and the starting `Point` of the drag gesture
+  * `GraphicMoveHandler` - constructed with a `DraggableCoordinate` to provide move support
+  * `IndexedPointMover` - provides move support for an array primitive
 
 === Selection ===
 Selection of graphics is built into `GraphicComponent`, but is enabled by default. The following class provides the mouse handling supporting selection of graphic objects:
