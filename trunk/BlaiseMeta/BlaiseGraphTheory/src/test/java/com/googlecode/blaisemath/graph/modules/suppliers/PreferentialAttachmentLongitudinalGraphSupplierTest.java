@@ -25,9 +25,6 @@ package com.googlecode.blaisemath.graph.modules.suppliers;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.modules.suppliers.EdgeProbabilityGraphSupplier;
-import com.googlecode.blaisemath.graph.modules.suppliers.PreferentialAttachmentGraphSupplier;
-import com.googlecode.blaisemath.graph.modules.suppliers.PreferentialAttachmentLongitudinalGraphSupplier;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
@@ -52,6 +49,9 @@ public class PreferentialAttachmentLongitudinalGraphSupplierTest {
         System.out.println("getLongitudinalSeededInstance (fixed # edges/step): MANUALLY CHECK FOR DESIRED OUTPUT");
 
         Graph<Integer> seed = new EdgeProbabilityGraphSupplier(false, 4, .5f).get();
+        while (seed.edgeCount() == 0) {
+            seed = new EdgeProbabilityGraphSupplier(false, 4, .5f).get();
+        }
         System.out.println("  SEEDED with 4 vertex random graph: " + GraphUtils.printGraph(seed));
         LongitudinalGraph<Integer> pref = new PreferentialAttachmentLongitudinalGraphSupplier(seed, 10, 1).get();
         Graph<Integer> slice = pref.slice(0.0, true);
