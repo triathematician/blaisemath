@@ -128,9 +128,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         if (bounds.getWidth() < clip.getWidth() - 8 || clip.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
-            double xText = clip.getCenterX()-bounds.getWidth()/2;
-            double yText = clip.getCenterY()+bounds.getHeight()/2;
-            super.render(new LabeledPoint(xText, yText, text), style, canvas);
+            super.render(new LabeledPoint(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
         } else {
             // need to wrap string
             drawInRectangle(text, style,
