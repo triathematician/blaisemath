@@ -35,7 +35,7 @@ import com.googlecode.blaisemath.graph.modules.suppliers.WattsStrogatzGraphSuppl
  *
  * @author petereb1
  */
-public class SpringLayoutTest {
+public class SpringLayoutTestMain {
 
     public static void main(String[] args) {
         StaticSpringLayout sl = StaticSpringLayout.getInstance();

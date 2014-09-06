@@ -26,10 +26,12 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 
+import com.google.common.base.Supplier;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
@@ -53,6 +55,13 @@ public class GraphComponent extends JGraphicComponent {
     public static final String MENU_KEY_LINK = "link";
     public static final String MENU_KEY_NODE = "node";
     
+    /** This mechanism is used to create the initial view graph for swing components, by setting up appropriate renderers. */
+    private static final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>> SWING_GRAPH_SUPPLIER
+            = new Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>>() {
+        public DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> get() {
+            return JGraphics.nodeLink();
+        }
+    };
 
     /** Manages the visual elements of the underlying graph */
     protected final VisualGraph<Graphics2D> adapter;
@@ -79,7 +88,7 @@ public class GraphComponent extends JGraphicComponent {
      * @param gm graph manager to initialize with
      */
     public GraphComponent(GraphLayoutManager gm) {
-        adapter = new VisualGraph(gm);
+        adapter = new VisualGraph<Graphics2D>(gm, SWING_GRAPH_SUPPLIER);
         addGraphic(adapter.getViewGraph());
         setPreferredSize(new java.awt.Dimension(400, 400));
         // enable selection

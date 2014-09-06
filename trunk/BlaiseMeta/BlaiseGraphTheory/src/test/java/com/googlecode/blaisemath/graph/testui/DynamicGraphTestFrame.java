@@ -42,7 +42,7 @@ import com.googlecode.blaisemath.util.RollupPanel;
  *
  * @author ae3263
  */
-public class TestDynamicGraph extends javax.swing.JFrame {
+public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     VisualGraph pga;
     /** Flag for when el needs points updated */
@@ -53,7 +53,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
 
     /** Creates new form TestPlaneVisometry */
-    public TestDynamicGraph() {
+    public DynamicGraphTestFrame() {
         EditorRegistration.registerEditors();
         initComponents();
 
@@ -240,12 +240,12 @@ public class TestDynamicGraph extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, 5.0);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, 500.0);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 5.0);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 500.0);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
@@ -319,7 +319,7 @@ public class TestDynamicGraph extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new TestDynamicGraph().setVisible(true);
+                new DynamicGraphTestFrame().setVisible(true);
             }
         });
     }
