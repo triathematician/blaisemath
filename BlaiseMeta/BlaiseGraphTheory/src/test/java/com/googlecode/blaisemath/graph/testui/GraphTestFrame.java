@@ -29,26 +29,29 @@ import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
+import com.googlecode.blaisemath.graph.modules.suppliers.EdgeProbabilityGraphSupplier;
+import com.googlecode.blaisemath.graph.view.GraphComponent;
+import com.googlecode.blaisemath.graph.view.VisualGraph;
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.blaisemath.util.geom.PointUtils;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graph.modules.suppliers.EdgeProbabilityGraphSupplier;
-import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graph.view.VisualGraph;
-import com.googlecode.blaisemath.util.geom.PointUtils;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
-import com.googlecode.blaisemath.util.RollupPanel;
 
 /**
  *
@@ -75,7 +78,11 @@ public class GraphTestFrame extends javax.swing.JFrame {
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
                 Integer i = (Integer) o;
-                return AttributeSet.with(Styles.MARKER_RADIUS, 4+Math.sqrt(i));
+                return Styles.DEFAULT_POINT_STYLE.copy()
+                        .and(Styles.FILL, Color.lightGray)
+                        .and(Styles.STROKE, Color.gray)
+                        .and(Styles.STROKE_WIDTH, .5f)
+                        .and(Styles.MARKER_RADIUS, 2+Math.sqrt(i));
             }
         });
 
@@ -116,7 +123,6 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         // PANELS
 
-//        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
                 plot.getLayoutManager().getLocations()
                 )));
@@ -128,6 +134,17 @@ public class GraphTestFrame extends javax.swing.JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 GAInstrument.print(System.out, 50);
+            }
+        });
+        
+        // OVERLAY
+        
+        plot.getOverlays().add(new CanvasPainter<Graphics2D>(){
+            public void paint(Component component, Graphics2D canvas) {
+                canvas.setColor(Color.black);
+                canvas.drawLine(50, 50, 150, 50);
+                canvas.drawLine(50, 40, 50, 60);
+                canvas.drawLine(150, 40, 150, 60);
             }
         });
     }

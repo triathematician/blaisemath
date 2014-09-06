@@ -129,7 +129,7 @@ public class GAInstrument {
         return e.id;
     }
 
-    public static void print(PrintStream out, long minT) {
+    public static synchronized void print(PrintStream out, long minT) {
         out.println("Graph Algorithm Log");
         for (String a : LOG.keySet()) {
             out.println(" -- Algorithm " + a + " --");

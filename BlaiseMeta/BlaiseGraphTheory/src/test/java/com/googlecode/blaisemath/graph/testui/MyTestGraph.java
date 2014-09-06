@@ -24,20 +24,35 @@ package com.googlecode.blaisemath.graph.testui;
  * #L%
  */
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import java.util.Collections;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.util.Edge;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Test graph that supports mutating edges and nodes.
  *
  * @author elisha
  */
-public final class MyTestGraph extends SparseGraph<String> {
+public final class MyTestGraph implements Graph<String> {
 
+    private boolean directed = false;
+    private final LinkedHashSet<String> nodes = Sets.newLinkedHashSet();
+    protected final Set<Edge<String>> edges = new LinkedHashSet<Edge<String>>();
+    protected final SetMultimap<String,Edge<String>> edgeIndex = HashMultimap.create();  
+    protected final Table<String, String, Set<Edge<String>>> edgeTable = HashBasedTable.create();  
+    
     public MyTestGraph() {
-        super(false, intList(1, 100), Collections.EMPTY_SET);
+        nodes.addAll(intList(1, 100));
         for (int i = 0; i < 100; i++) {
             connect(randV(), randV());
         }
@@ -123,5 +138,180 @@ public final class MyTestGraph extends SparseGraph<String> {
         if (!nodes.containsAll(edgeTable.columnKeySet())) {
             System.err.println(String.format("Adjacency table has column nodes not in the node set."));
         }
+    }
+
+    public boolean isDirected() {
+        return false;
+    }
+
+    public int nodeCount() {
+        return nodes.size();
+    }
+
+    public Set<String> nodes() {
+        return nodes;
+    }
+
+    public boolean contains(String x) {
+        return nodes.contains(x);
+    }
+
+    public int edgeCount() {
+        return edges.size();
+    }
+
+    public Set<Edge<String>> edges() {
+        return edges;
+    }
+    
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="add/remove Edge helpers">
+
+    protected final synchronized void addEdge(String x, String y) {
+        Edge<String> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
+        edges.add(edge);
+        edgeIndex.put(x, edge);
+        edgeIndex.put(y, edge);
+    }
+    
+    protected Edge<String> addDirectedEdge(String x, String y) {
+        if (!edgeTable.contains(x, y)) {
+            edgeTable.put(x, y, new HashSet<Edge<String>>());
+        }
+        Edge<String> edge = new Edge<String>(x, y);
+        edgeTable.get(x, y).add(edge);
+        return edge;
+    }
+    
+    protected Edge<String> addUndirectedEdge(String x, String y) {
+        if (!edgeTable.contains(x, y)) {
+            edgeTable.put(x, y, new HashSet<Edge<String>>());
+        }
+        if (!edgeTable.contains(y, x)) {
+            edgeTable.put(y, x, new HashSet<Edge<String>>());
+        }
+        Edge.UndirectedEdge<String> edge = new Edge.UndirectedEdge<String>(x, y);
+        edgeTable.get(x, y).add(edge);
+        edgeTable.get(y, x).add(edge);
+        return edge;
+    }
+
+    @Override
+    public boolean adjacent(String x, String y) {
+        if (edgeTable.contains(x, y) && !edgeTable.get(x, y).isEmpty()) {
+            return true;
+        }
+        if (directed && edgeTable.contains(y, x) && !edgeTable.get(y, x).isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove edge between two vertices, if it exists
+     * @param v1 first vertex
+     * @param v2 second vertex
+     * @return true if edge was found and removed
+     */
+    protected synchronized boolean removeEdge(String v1, String v2) {
+        Edge<String> edge = directed ? new Edge<String>(v1, v2) : new Edge.UndirectedEdge<String>(v1, v2);
+        if (edgeTable.contains(v1, v2)) {
+            edgeTable.get(v1, v2).remove(edge);
+        }
+        if (!directed && edgeTable.contains(v2, v1)) {
+            edgeTable.get(v2, v1).remove(edge);
+        }
+        edgeIndex.remove(v1, edge);
+        edgeIndex.remove(v2, edge);
+        return edges.remove(edge);
+    }
+    
+    //</editor-fold>
+    
+    //
+    // ADJACENCY
+    //
+
+    public Collection<? extends Edge<String>> edgesAdjacentTo(String x) {
+        return edgeIndex.get(x);
+    }
+
+    public Set<String> outNeighbors(String x) {
+        if (!directed) {
+            return neighbors(x);
+        } else {
+            Set<String> result = new HashSet<String>();
+            for (Edge<String> e : edgesAdjacentTo(x)) {
+                if (x.equals(e.getNode1())) {
+                    result.add(e.getNode2());
+                }
+            }
+            return result;
+        }
+    }
+
+    public Set<String> inNeighbors(String x) {
+        if (!directed) {
+            return neighbors(x);
+        } else {
+            Set<String> result = new HashSet<String>();
+            for (Edge<String> e : edgesAdjacentTo(x)) {
+                if (x.equals(e.getNode2())) {
+                    result.add(e.getNode1());
+                }
+            }
+            return result;
+        }
+    }
+
+    public Set<String> neighbors(String x) {
+        Set<String> result = new HashSet<String>();
+        for (Edge<String> e : edgesAdjacentTo(x)) {
+            result.add(e.opposite(x));
+        }
+        return result;
+    }
+
+    public int outDegree(String x) {
+        if (!directed) {
+            return degree(x);
+        } else {
+            int result = 0;
+            for (Edge<String> e : edgesAdjacentTo(x)) {
+                if (x.equals(e.getNode1())) {
+                    result++;
+                }
+            }
+            return result;
+        }
+    }
+
+    public int inDegree(String x) {
+        if (!directed) {
+            return degree(x);
+        } else {
+            int result = 0;
+            for (Edge<String> e : edgesAdjacentTo(x)) {
+                if (x.equals(e.getNode2())) {
+                    result++;
+                }
+            }
+            return result;
+        }
+    }
+
+    public int degree(String x) {
+        int result = 0;
+        for (Edge<String> e : edgesAdjacentTo(x)) {
+            // permit double counting if both vertices of edge are x
+            if (x.equals(e.getNode1())) {
+                result++;
+            }
+            if (x.equals(e.getNode2())) {
+                result++;
+            }
+        }
+        return result;
     }
 }

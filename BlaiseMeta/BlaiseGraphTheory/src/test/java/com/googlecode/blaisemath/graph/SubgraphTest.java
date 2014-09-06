@@ -25,9 +25,6 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.Graph;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

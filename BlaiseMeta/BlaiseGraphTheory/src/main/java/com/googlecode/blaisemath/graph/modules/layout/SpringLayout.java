@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #L%
  */
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.awt.geom.Point2D;
@@ -54,8 +55,8 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // CONSTANTS
     
-    /** Distance scale */
-    public static final double DIST_SCALE = 100;
+    /** Distance scale. This is the approximate length of an edge in the graph. */
+    public static final double DIST_SCALE = 50;
 
     /** Distance outside which global force acts */
     private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = DIST_SCALE;
@@ -234,7 +235,7 @@ public class SpringLayout implements IterativeGraphLayout {
             Point2D.Double netForce = new Point2D.Double();
 
             addGlobalForce(netForce, io, iLoc);
-            addRepulsiveForces(nodes, netForce, io, iLoc);
+            addRepulsiveForces(g, netForce, io, iLoc);
             addSpringForces(g, netForce, io, iLoc);
             addAdditionalForces(g, netForce, io, iLoc);
             forces.put(io, netForce);
@@ -297,30 +298,32 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param io the node of interest
      * @param iLoc location of first vertex
      */
-    protected void addRepulsiveForces(Set nodes, Point2D.Double sum, Object io, Point2D.Double iLoc) {
+    protected void addRepulsiveForces(Graph g, Point2D.Double sum, Object io, Point2D.Double iLoc) {
         Point2D.Double jLoc;
         double dist;
         Region ireg = getRegion(iLoc);
         if (ireg == null) {
-            for (Object jo : nodes) {
-                if (io != jo) {
+            for (Object jo : g.nodes()) {
+                if (!g.adjacent(io, jo)) {
                     jLoc = loc.get(jo);
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
-                    if (dist < MAX_REPEL_DIST)
+                    if (dist < MAX_REPEL_DIST) {
                         addRepulsiveForce(sum, io, iLoc, jo, jLoc, dist);
+                    }
                 }
             }
         } else {
             for (Region r : getRegion(iLoc).adj) {
                 for (Entry<Object, Point2D.Double> jEntry : r.pts.entrySet()) {
                     Object jo = jEntry.getKey();
-                    if (io != jo) {
+                    if (!g.adjacent(io, jo)) {
                         jLoc = jEntry.getValue();
                         dist = iLoc.distance(jLoc);
                         // repulsive force from other nodes
-                        if (dist < MAX_REPEL_DIST)
+                        if (dist < MAX_REPEL_DIST) {
                             addRepulsiveForce(sum, io, iLoc, jo, jLoc, dist);
+                        }
                     }
                 }
             }
@@ -329,7 +332,6 @@ public class SpringLayout implements IterativeGraphLayout {
 
     /**
      * Adds repulsive force at vertex i1 pointing away from vertex i2.
-     * @param g the graph
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
      * @param iLoc location of first vertex
@@ -363,7 +365,7 @@ public class SpringLayout implements IterativeGraphLayout {
         Point2D.Double jLoc;
         double dist;
         for (Object o : g.neighbors(io)) {
-            if (o != io) {
+            if (!Objects.equal(o, io)) {
                 jLoc = loc.get(o);
                 if (jLoc == null) {
                     jLoc = new Point2D.Double();
@@ -493,20 +495,23 @@ public class SpringLayout implements IterativeGraphLayout {
     /** Parameters of the SpringLayout algorithm */
     public static class Parameters {
         /** Global attractive constant (keeps vertices closer to origin) */
-        double globalC = .1*DIST_SCALE;
+        double globalC = 1;
         /** Attractive constant */
-        double springC = 1;
+        double springC = .1;
         /** Natural spring length */
-        double springL = .5*DIST_SCALE;
+        double springL = .1*DIST_SCALE;
         /** Repelling constant */
-        double repulsiveC = 10*DIST_SCALE*DIST_SCALE;
+        double repulsiveC = DIST_SCALE*DIST_SCALE;
 
-        /** Damping constant (the "cooling" parameter */
+        /** 
+         * Damping constant (the "cooling" parameter. Smaller values will make
+         * movements less "jumpy".
+         */
         double dampingC = 0.7;
         /** Time step per iteration */
-        double stepT = 0.3;
+        double stepT = 1;
         /** The maximum speed (movement per unit time) */
-        double maxSpeed = 0.5*DIST_SCALE;
+        double maxSpeed = 10*DIST_SCALE;
 
         public double getDampingConstant() {
             return dampingC;

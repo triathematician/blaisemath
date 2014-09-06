@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.googlecode.blaisemath.graph;
+package com.googlecode.blaisemath.graph.modules.suppliers;
 
 /*
  * #%L
@@ -27,6 +27,8 @@ package com.googlecode.blaisemath.graph;
 
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CompleteGraphBuilder;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CycleGraphBuilder;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.EmptyGraphBuilder;

@@ -25,23 +25,30 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.google.common.base.Functions;
+import com.google.common.base.Supplier;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.annotation.Nullable;
 
 
 /**
  * <p>
  *  Combines a {@link GraphLayoutManager} and a {@link DelegatingNodeLinkGraphic}
- *  to manage a graph and its node locations.
+ *  to manage a graph and its node locations. The graph is maintained by the manager,
+ *  and the visual elements by the graphic.
  * </p>
  *
  * @author Elisha Peterson
@@ -51,7 +58,11 @@ public class VisualGraph<G> {
     /** Default graph edge style */
     public static final AttributeSet DEFAULT_EDGE_STYLE = Styles.strokeWidth(new Color(0, 128, 0, 128), .5f);
     
+    /** Responsible for instantiating the view graph */
+    @Nullable
+    private final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,G>> viewGraphSupplier;
     /** Stores the visible graph */
+    @Nullable
     private DelegatingNodeLinkGraphic<Object,Edge<Object>,G> viewGraph;
     
     /** Manages graph and node locations */
@@ -60,25 +71,21 @@ public class VisualGraph<G> {
     public final PropertyChangeListener layoutListener;
 
     /**
-     * Initialize adapter with an empty graph.
-     */
-    public VisualGraph() {
-        this(new GraphLayoutManager());
-    }
-
-    /**
      * Construct adapter with the specified graph.
      * @param graph the graph to display
      */
     public VisualGraph(Graph graph) {
-        this(new GraphLayoutManager(graph));
+        this(new GraphLayoutManager(graph), null);
     }
 
     /**
      * Construct adapter with the specified manager.
      * @param manager a GraphLayoutManager with the graph to display
+     * @param graphicSupplier optional, provides a way to override default creation of the view graph
      */
-    public VisualGraph(GraphLayoutManager manager) {
+    public VisualGraph(GraphLayoutManager manager,
+            @Nullable Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,G>> graphicSupplier) {
+        this.viewGraphSupplier = graphicSupplier;
         layoutListener = new PropertyChangeListener(){
             public void propertyChange(PropertyChangeEvent evt) {
                 initViewGraph();
@@ -95,12 +102,21 @@ public class VisualGraph<G> {
     protected final void initViewGraph() {
         synchronized(layoutManager) {
             if (viewGraph == null) {
-                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
-                        layoutManager.getCoordinateManager(), null, null, null);
+                if (viewGraphSupplier != null) {
+                    viewGraph = viewGraphSupplier.get();
+                } else {
+                    viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
+                            layoutManager.getCoordinateManager(), null, null, null);
+                }
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
             viewGraph.setEdgeSet(layoutManager.getGraph().edges());
+        }
+        
+        // set up default styles, in case the graph isn't visible by default
+        if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
+            viewGraph.getNodeStyler().setStyleConstant(Styles.DEFAULT_POINT_STYLE);
         }
         if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
             viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
@@ -109,7 +125,7 @@ public class VisualGraph<G> {
             viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
         }
         if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-            viewGraph.getEdgeStyler().setStyleDelegate(Functions.constant(DEFAULT_EDGE_STYLE));
+            viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
         }
     }
 
@@ -178,10 +194,22 @@ public class VisualGraph<G> {
      * Return node styler
      * @param styler
      */
-    public <N> void setNodeStyler(ObjectStyler<Object> styler) {
+    public void setNodeStyler(ObjectStyler<Object> styler) {
         viewGraph.setNodeStyler(styler);
     }
 
+    public Renderer<Point2D, G> getNodeRenderer() {
+        return viewGraph.getNodeRenderer();
+    }
+
+    public void setNodeRenderer(Renderer<Point2D, G> renderer) {
+        viewGraph.setNodeRenderer(renderer);
+    }
+
+    public Renderer<LabeledPoint, G> getLabelRenderer() {
+        return viewGraph.getLabelRenderer();
+    }
+    
     /**
      * Return edge styler
      * @return edge styler
@@ -196,6 +224,14 @@ public class VisualGraph<G> {
      */
     public void setEdgeStyler(ObjectStyler<Edge<Object>> styler) {
         viewGraph.setEdgeStyler(styler);
+    }
+
+    public Renderer<Shape, G> getEdgeRenderer() {
+        return viewGraph.getEdgeRenderer();
+    }
+
+    public final void setEdgeRenderer(Renderer<Shape, G> renderer) {
+        viewGraph.setEdgeRenderer(renderer);
     }
 
     //</editor-fold>
