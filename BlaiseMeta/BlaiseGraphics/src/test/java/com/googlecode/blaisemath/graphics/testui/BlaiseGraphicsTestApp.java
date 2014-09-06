@@ -242,8 +242,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D>(
-                PointRenderer.getInstance(), TextRenderer.getInstance(), TaperedPathRenderer.getInstance());
+        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = JGraphics.nodeLink();
         gr.setDragEnabled(true);
         gr.setNodeLocations(pts);
         gr.getNodeStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){

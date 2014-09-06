@@ -25,11 +25,13 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.AlphaComposite;
@@ -56,6 +58,8 @@ public class JGraphics {
     // utilitiy class
     private JGraphics() {
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="FACTORY METHODS FOR SWING GRAPHICS">
     
     public static PrimitiveGraphic<Shape,Graphics2D> path(Shape primitive) {
         return new PrimitiveGraphic<Shape,Graphics2D>(primitive, Styles.defaultPathStyle(), PathRenderer.getInstance());
@@ -116,5 +120,12 @@ public class JGraphics {
     public static <S> DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D> text(S source, LabeledPoint primitive, ObjectStyler<S> styler) {
         return new DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
     }
+
+    public static <S> DelegatingNodeLinkGraphic<S, Edge<S>, Graphics2D> nodeLink() {
+        return new DelegatingNodeLinkGraphic<S,Edge<S>,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance(), PathRenderer.getInstance());
+    }
+    
+    //</editor-fold>
     
 }
