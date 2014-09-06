@@ -60,9 +60,9 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     
     /**
      * Construct with no points
-     * @param nodeRenderer
-     * @param labelRenderer
-     * @param edgeRenderer
+     * @param nodeRenderer how nodes will be rendered
+     * @param labelRenderer how node labels will be rendered
+     * @param edgeRenderer how edges will be rendered
      */
     public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
             @Nullable Renderer<LabeledPoint, G> labelRenderer,
@@ -130,6 +130,30 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         pointGraphics.setStyler(styler);
     }
 
+    public Renderer<Point2D, G> getNodeRenderer() {
+        return pointGraphics.getRenderer();
+    }
+
+    public void setNodeRenderer(Renderer<Point2D, G> renderer) {
+        pointGraphics.setRenderer(renderer);
+    }
+
+    public Renderer<LabeledPoint, G> getLabelRenderer() {
+        return pointGraphics.getLabelRenderer();
+    }
+
+    public void setLabelRenderer(Renderer<LabeledPoint, G> renderer) {
+        pointGraphics.setLabelRenderer(renderer);
+    }
+
+    public boolean isDragEnabled() {
+        return pointGraphics.isDragEnabled();
+    }
+
+    public void setDragEnabled(boolean val) {
+        pointGraphics.setDragEnabled(val);
+    }
+
     public Set<? extends E> getEdgeSet() {
         return edgeGraphics.getEdges();
     }
@@ -146,12 +170,12 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         edgeGraphics.setEdgeStyler(styler);
     }
 
-    public boolean isDragEnabled() {
-        return pointGraphics.isDragEnabled();
+    public Renderer<Shape, G> getEdgeRenderer() {
+        return edgeGraphics.getEdgeRenderer();
     }
 
-    public void setDragEnabled(boolean val) {
-        pointGraphics.setDragEnabled(val);
+    public final void setEdgeRenderer(Renderer<Shape, G> renderer) {
+        edgeGraphics.setEdgeRenderer(renderer);
     }
     
     //</editor-fold>

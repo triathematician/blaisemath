@@ -34,6 +34,7 @@ import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RE
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
@@ -111,6 +112,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         setRenderer(renderer);
         setLabelRenderer(labelRenderer);
         
+        styler.setStyleConstant(Styles.DEFAULT_POINT_STYLE);
         styler.setTipDelegate(Functions.toStringFunction());
         
         coordListener = new CoordinateListener(){
@@ -129,7 +131,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     // EVENT HANDLERS
     //
     
-    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+    private synchronized void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
         List<Graphic> addMe = Lists.newArrayList();
         if (added != null) {
             for (Entry<S, Point2D> en : added.entrySet()) {
@@ -163,10 +165,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     @Override
     public void graphicChanged(Graphic source) {
         if (!updatingPoint && source instanceof LabeledPointGraphic) {
-            synchronized(DelegatingPointSetGraphic.this) {
-                LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
-                manager.put(dpg.getSourceObject(), dpg.getPrimitive());
-            }
+            LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
+            manager.put(dpg.getSourceObject(), dpg.getPrimitive());
         }
         super.graphicChanged(source);
     }
