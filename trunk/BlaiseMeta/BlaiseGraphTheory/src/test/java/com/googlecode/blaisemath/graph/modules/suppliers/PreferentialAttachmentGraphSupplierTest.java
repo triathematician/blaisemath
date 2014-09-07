@@ -52,19 +52,19 @@ public class PreferentialAttachmentGraphSupplierTest {
         System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         assertEquals(seed.edgeCount()+(pref.nodeCount()-seed.nodeCount()), pref.edgeCount());
 
-        seed = new GraphSuppliers.CycleGraphBuilder(false, 4).get();
+        seed = new GraphSuppliers.CycleGraphSupplier(false, 4).get();
         pref = new PreferentialAttachmentGraphSupplier(seed, 10, 2).get();
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         System.out.println("    result: " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount()+2*(pref.nodeCount()-seed.nodeCount())) + " edges or less");
 
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphBuilder(false, 5).get(), 20, -1);
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphSupplier(false, 5).get(), 20, -1);
             fail("Should not be able to construct preferential attachment with negative connection numbers.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphBuilder(true, 5).get(), 20, 1);
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphSupplier(true, 5).get(), 20, 1);
             fail("Should not be able to construct preferential attachment from directed graph.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, 1);
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, 1);
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {}        
     }
@@ -83,20 +83,20 @@ public class PreferentialAttachmentGraphSupplierTest {
         System.out.println("    result (probs .5, .5): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount()+probs1[1]*(pref.nodeCount()-seed.nodeCount())) + " edges");
 
-        seed = new GraphSuppliers.CycleGraphBuilder(false, 4).get();
+        seed = new GraphSuppliers.CycleGraphSupplier(false, 4).get();
         System.out.println("  SEEDED with 4 vertex cycle graph: " + GraphUtils.printGraph(seed));
         float[] probs2 = {0f, .5f, .25f, .25f};
         pref = new PreferentialAttachmentGraphSupplier(seed, 10, probs2).get();
         System.out.println("    result (probs 0, .5, .25, .25): " + pref.edgeCount() + " edges, " + GraphUtils.printGraph(pref));
         System.out.println("    expected " + (seed.edgeCount()+(probs2[1]+2*probs2[2]+3*probs2[3])*(pref.nodeCount()-seed.nodeCount())) + " edges");
 
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, new float[]{.25f,0f,-1f});
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, new float[]{.25f,0f,-1f});
             fail("Should not be able to construct preferential attachment with bad probability vector.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphBuilder(true, 5).get(), 20, new float[]{.5f,.5f});
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphSupplier(true, 5).get(), 20, new float[]{.5f,.5f});
             fail("Should not be able to construct preferential attachment from undirected graph.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, new float[]{.5f,.5f});
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, new float[]{.5f,.5f});
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {}        
     }

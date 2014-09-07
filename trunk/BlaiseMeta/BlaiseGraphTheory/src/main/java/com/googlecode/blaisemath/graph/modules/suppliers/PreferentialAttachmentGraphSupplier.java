@@ -59,6 +59,12 @@ public final class PreferentialAttachmentGraphSupplier extends GraphSupplierSupp
         setConnectProbabilities(probs);
     }
 
+    @Override
+    public String toString() {
+        return "PreferentialAttachmentGraphSupplier{" + "edgesPerStep=" + edgesPerStep 
+                + ", connectProbs=" + Arrays.toString(connectProbs) + '}';
+    }
+
     public Graph<Integer> getSeed() {
         return seed;
     }

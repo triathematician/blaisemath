@@ -42,23 +42,28 @@ import com.googlecode.blaisemath.graph.SparseGraph;
  */
 public final class ProximityGraphSupplier extends GraphSupplierSupport<Point2D.Double>{
 
-    private Rectangle2D.Double bounds = new Rectangle2D.Double();
+    private Rectangle2D bounds = new Rectangle2D.Double();
     private double connectDistance = 1;
     
     /** Initialize without arguments */
     public ProximityGraphSupplier() {}
 
-    public ProximityGraphSupplier(boolean directed, int nodes, Rectangle2D.Double bounds, double dst) {
+    public ProximityGraphSupplier(boolean directed, int nodes, Rectangle2D bounds, double dst) {
         super(directed, nodes);
         this.bounds = bounds;
         this.connectDistance = dst;
     }
 
-    public Rectangle2D.Double getBounds() {
+    @Override
+    public String toString() {
+        return "ProximityGraphSupplier{" + "bounds=" + bounds + ", connectDistance=" + connectDistance + '}';
+    }
+
+    public Rectangle2D getBounds() {
         return bounds;
     }
 
-    public void setBounds(Rectangle2D.Double bounds) {
+    public void setBounds(Rectangle2D bounds) {
         this.bounds = bounds;
     }
 
@@ -71,7 +76,7 @@ public final class ProximityGraphSupplier extends GraphSupplierSupport<Point2D.D
     }
     
     public Graph<Point2D.Double> get() {
-        double x0 = bounds.x, y0 = bounds.y, x1 = bounds.getMaxX(), y1 = bounds.getMaxY();
+        double x0 = bounds.getX(), y0 = bounds.getY(), x1 = bounds.getMaxX(), y1 = bounds.getMaxY();
         List<Point2D.Double> pts = new ArrayList<Point2D.Double>();
         for (int i = 0; i < nodes; i++) {
             pts.add(new Point2D.Double(x0 + (x1 - x0) * Math.random(), y0 + (y1 - y0) * Math.random()));

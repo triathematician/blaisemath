@@ -30,20 +30,34 @@ import java.util.List;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.GraphSupplierSupport;
 import com.googlecode.blaisemath.graph.SparseGraph;
+import java.util.Random;
 
 /**
  * Generate random graph with specified edge probability.
  */
 public class EdgeProbabilityGraphSupplier extends GraphSupplierSupport<Integer> {
 
-    private float probability;
+    private Random random = new Random();
+            
+    private float probability = .1f;
 
-    public EdgeProbabilityGraphSupplier() {}
+    public EdgeProbabilityGraphSupplier() {
+    }
 
     public EdgeProbabilityGraphSupplier(boolean directed, int nodes, float probability) {
         super(directed, nodes);
         checkProbability(probability);
         this.probability = probability;
+    }
+
+    @Override
+    public String toString() {
+        return "EdgeProbabilityGraphSupplier{" + "probability=" + probability + '}';
+    }
+
+    public EdgeProbabilityGraphSupplier randomGenerator(Random random) {
+        this.random = random;
+        return this;
     }
 
     public float getProbability() {
@@ -61,7 +75,7 @@ public class EdgeProbabilityGraphSupplier extends GraphSupplierSupport<Integer> 
         ArrayList<Integer[]> edges = new ArrayList<Integer[]>();
         for (int i = 0; i < nodes; i++) {
             for (int j = directed ? 0 : i + 1; j < nodes; j++) {
-                if (Math.random() < probability) {
+                if (random.nextDouble() < probability) {
                     edges.add(new Integer[]{nn.get(i), nn.get(j)});
                 }
             }

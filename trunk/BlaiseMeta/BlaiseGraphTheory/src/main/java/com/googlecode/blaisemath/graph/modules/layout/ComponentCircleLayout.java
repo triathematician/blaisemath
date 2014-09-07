@@ -56,6 +56,11 @@ public class ComponentCircleLayout implements StaticGraphLayout {
                     : o1.nodeCount() - o2.nodeCount());
         }
     };
+    
+    @Override
+    public String toString() {
+        return "ComponentCircleLayout";
+    }
 
     public Map<Object, Point2D.Double> layout(Graph graph, double... doubles) {
         if (graph.isDirected()) {

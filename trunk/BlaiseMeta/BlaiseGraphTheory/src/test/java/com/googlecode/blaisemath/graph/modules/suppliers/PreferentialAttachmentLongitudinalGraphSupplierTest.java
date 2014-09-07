@@ -60,13 +60,13 @@ public class PreferentialAttachmentLongitudinalGraphSupplierTest {
         System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
         assertEquals(seed.edgeCount()+(slice.nodeCount()-seed.nodeCount()), slice.edgeCount());
 
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, -1).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, -1).get();
             fail("Should not be able to construct preferential attachment with negative connection numbers.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphBuilder(true, 5).get(), 20, 1).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphSupplier(true, 5).get(), 20, 1).get();
             fail("Should not be able to construct preferential attachment from undirected graph.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, 1).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, 1).get();
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {}
 
@@ -86,13 +86,13 @@ public class PreferentialAttachmentLongitudinalGraphSupplierTest {
         System.out.println("    result (t=6): " + (slice=pref.slice(6.0, true)).edgeCount() + " edges, " + GraphUtils.printGraph(slice));
         System.out.println("    expected " + (seed.edgeCount()+probs1[1]*(slice.nodeCount()-seed.nodeCount())) + " edges");
 
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, new float[]{.25f,0f,-1f}).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, new float[]{.25f,0f,-1f}).get();
             fail("Should not be able to construct preferential attachment with bad probability vector.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphBuilder(true, 5).get(), 20, new float[]{.5f,.5f}).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.CycleGraphSupplier(true, 5).get(), 20, new float[]{.5f,.5f}).get();
             fail("Should not be able to construct preferential attachment from undirected graph.");
         } catch (Exception ex) {}
-        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphBuilder(false, 5).get(), 20, new float[]{.5f,.5f}).get();
+        try { new PreferentialAttachmentGraphSupplier(new GraphSuppliers.EmptyGraphSupplier(false, 5).get(), 20, new float[]{.5f,.5f}).get();
             fail("Should not be able to construct preferential attachment with empty graph.");
         } catch (Exception ex) {}
     }

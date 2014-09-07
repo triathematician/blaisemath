@@ -25,7 +25,10 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
@@ -104,9 +107,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
         for (V v : nodes) {
             for (V y : neighbors.get(v)) {
                 Integer get = degrees.get(y);
-                if (get == null) {
-                    throw new IllegalStateException("Node " + y + " (neighbor of " + v + ") was not found in provided node set");
-                }
+                checkState(get != null, "Node " + y + " (neighbor of " + v + ") was not found in provided node set");
                 if (degrees.get(y) == 1) {
                     adjLeaves.get(v).add(y);
                 }
@@ -162,11 +163,24 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
     //</editor-fold>
 
     /**
+     * Return the node adjacent to a leaf
+     * @param leaf leaf to check
+     * @return adjacent node
+     * @throws IllegalArgumentException if node is not a leaf
+     */
+    public V getNeighborOfLeaf(V leaf) {
+        checkArgument(leafNodes.contains(leaf));
+        V res = Iterables.getFirst(neighbors.get(leaf), null);
+        checkState(res != null);
+        return res;
+    }
+    
+    /**
      * Return leaf nodes adjacent to specified node
      * @param v node to check
-     * @return leaf ndoes
+     * @return leaf nodes
      */
-    public Set<V> getAdjacentLeafNodes(V v) {
+    public Set<V> getLeavesAdjacentTo(V v) {
         return adjLeaves.get(v);
     }
 
@@ -177,7 +191,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
 
     @Override
     public boolean adjacent(V x, V y) {
-        return neighbors.get(x).contains(y);
+        return neighbors.containsEntry(x, y);
     }
 
     @Override

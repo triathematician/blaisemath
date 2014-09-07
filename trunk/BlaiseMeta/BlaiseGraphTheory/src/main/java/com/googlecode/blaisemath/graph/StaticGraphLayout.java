@@ -49,6 +49,10 @@ public interface StaticGraphLayout {
      * Lays out vertices all at the origin.
      */
     public static StaticGraphLayout ORIGIN = new StaticGraphLayout() {
+        @Override
+        public String toString() {
+            return "Position nodes at origin";
+        }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
             for (C v : g.nodes()) {
@@ -61,6 +65,10 @@ public interface StaticGraphLayout {
 
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
     public static StaticGraphLayout CIRCLE = new StaticGraphLayout() {
+        @Override
+        public String toString() {
+            return "Position nodes in a circle";
+        }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
             int size = g.nodeCount();
@@ -78,6 +86,10 @@ public interface StaticGraphLayout {
      * to first parameter).
      */
     public static StaticGraphLayout RANDOM = new StaticGraphLayout() {
+        @Override
+        public String toString() {
+            return "Position nodes randomly in a rectangle";
+        }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
             double multiplier = parameters.length > 0 ? parameters[0] : 1;
