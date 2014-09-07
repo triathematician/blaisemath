@@ -55,8 +55,13 @@ import javax.annotation.Nullable;
  */
 public class VisualGraph<G> {
 
+    /** Default graph node style */
+    public static final AttributeSet DEFAULT_NODE_STYLE = Styles.fillStroke(
+            new Color(0, 0, 128, 128), new Color(0, 0, 128, 192), .5f)
+            .and(Styles.MARKER_RADIUS, 3f);
     /** Default graph edge style */
-    public static final AttributeSet DEFAULT_EDGE_STYLE = Styles.strokeWidth(new Color(0, 128, 0, 128), .5f);
+    public static final AttributeSet DEFAULT_EDGE_STYLE = Styles.strokeWidth(
+            new Color(0, 128, 0, 128), 1f);
     
     /** Responsible for instantiating the view graph */
     @Nullable
@@ -107,25 +112,26 @@ public class VisualGraph<G> {
                 } else {
                     viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
                             layoutManager.getCoordinateManager(), null, null, null);
+                    viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
+                }
+
+                // set up default styles, in case the graph isn't visible by default
+                if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
+                    viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
+                }
+                if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
+                    viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
+                }
+                if (viewGraph.getNodeStyler().getTipDelegate() == null) {
+                    viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
+                }
+                if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
+                    viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
                 }
             } else {
                 viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
             }
             viewGraph.setEdgeSet(layoutManager.getGraph().edges());
-        }
-        
-        // set up default styles, in case the graph isn't visible by default
-        if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
-            viewGraph.getNodeStyler().setStyleConstant(Styles.DEFAULT_POINT_STYLE);
-        }
-        if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
-            viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
-        }
-        if (viewGraph.getNodeStyler().getTipDelegate() == null) {
-            viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
-        }
-        if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-            viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
         }
     }
 

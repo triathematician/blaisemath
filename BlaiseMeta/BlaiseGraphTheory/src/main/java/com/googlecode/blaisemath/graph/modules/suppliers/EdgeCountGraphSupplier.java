@@ -87,6 +87,11 @@ public class EdgeCountGraphSupplier extends GraphSupplierSupport<Integer> {
         this.edges = edges;
     }
 
+    @Override
+    public String toString() {
+        return "EdgeCountGraphSupplier{" + "edges=" + edges + '}';
+    }
+
     public int getEdges() {
         return edges;
     }

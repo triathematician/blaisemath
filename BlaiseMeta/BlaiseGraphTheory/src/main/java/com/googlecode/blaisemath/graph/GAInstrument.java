@@ -48,7 +48,7 @@ public class GAInstrument {
     private static final String END = "end";
 
     /** Max number to keep in log */
-    private static int maxEvents = 10000;
+    private static int maxEvents = 50000;
     /** All log events */
     private static final Map<Integer,LogEvent> ALL = Maps.newLinkedHashMap();
     /** Log events split by algorithm */
@@ -108,8 +108,8 @@ public class GAInstrument {
         logged[0] = event;
         System.arraycopy(info, 0, logged, 1, info.length);
         LogEvent e = new LogEvent(logged);
-        LOG.put(algorithm,e);
-        ALL.put(e.id,e);
+        LOG.put(algorithm, e);
+        ALL.put(e.id, e);
         if (ALL.size() > 1.5*maxEvents) {
             Set<Integer> rid = new HashSet<Integer>();
             Set<LogEvent> rem = new HashSet<LogEvent>();

@@ -87,11 +87,15 @@ public class GraphSuppliers {
     }
 
     /** Constructs graph with n vertices */
-    public static class EmptyGraphBuilder extends GraphSupplierSupport<Integer> {
-        public EmptyGraphBuilder() {
+    public static class EmptyGraphSupplier extends GraphSupplierSupport<Integer> {
+        public EmptyGraphSupplier() {
         }
-        public EmptyGraphBuilder(boolean directed, int nodes) { 
+        public EmptyGraphSupplier(boolean directed, int nodes) { 
             super(directed, nodes); 
+        }
+        @Override
+        public String toString() {
+            return "Empty graph supplier";
         }
         public Graph<Integer> get() {
             if (nodes < 0) {
@@ -102,11 +106,15 @@ public class GraphSuppliers {
     }
 
     /** Constructs complete graph with n vertices */
-    public static class CompleteGraphBuilder extends GraphSupplierSupport<Integer> {
-        public CompleteGraphBuilder() {
+    public static class CompleteGraphSupplier extends GraphSupplierSupport<Integer> {
+        public CompleteGraphSupplier() {
         }
-        public CompleteGraphBuilder(boolean directed, int nodes) { 
+        public CompleteGraphSupplier(boolean directed, int nodes) { 
             super(directed, nodes); 
+        }
+        @Override
+        public String toString() {
+            return "Complete graph supplier";
         }
         public Graph<Integer> get() {
             if (nodes < 0) {
@@ -126,11 +134,15 @@ public class GraphSuppliers {
     }
 
     /** Constructs cycle graph with n vertices */
-    public static class CycleGraphBuilder extends GraphSupplierSupport<Integer> {
-        public CycleGraphBuilder() {
+    public static class CycleGraphSupplier extends GraphSupplierSupport<Integer> {
+        public CycleGraphSupplier() {
         }
-        public CycleGraphBuilder(boolean directed, int nodes) { 
+        public CycleGraphSupplier(boolean directed, int nodes) { 
             super(directed, nodes); 
+        }
+        @Override
+        public String toString() {
+            return "Cycle graph supplier";
         }
         public Graph<Integer> get() {
             if (nodes < 0) {
@@ -154,12 +166,16 @@ public class GraphSuppliers {
     /** 
      * Constructs star graph with n vertices; all vertices are connected to a central hub. 
      */
-    public static class StarGraphBuilder extends GraphSupplierSupport<Integer> {
-        public StarGraphBuilder() {
+    public static class StarGraphSupplier extends GraphSupplierSupport<Integer> {
+        public StarGraphSupplier() {
         }
-        public StarGraphBuilder(boolean directed, int nodes) { 
+        public StarGraphSupplier(boolean directed, int nodes) { 
             super(directed, nodes); 
             checkArgument(nodes >= 0, "Positive number of nodes required.");
+        }
+        @Override
+        public String toString() {
+            return "Star graph supplier";
         }
         public Graph<Integer> get() {
             return SparseGraph.createFromArrayEdges(directed, intList(nodes),
@@ -182,11 +198,15 @@ public class GraphSuppliers {
      * All vertices are connected to a central hub, and all non-central
      * vertices connected in a cyclic fashion.
      */
-    public static class WheelGraphBuilder extends GraphSupplierSupport<Integer> {
-        public WheelGraphBuilder() {
+    public static class WheelGraphSupplier extends GraphSupplierSupport<Integer> {
+        public WheelGraphSupplier() {
         }
-        public WheelGraphBuilder(boolean directed, int nodes) { 
+        public WheelGraphSupplier(boolean directed, int nodes) { 
             super(directed, nodes); 
+        }
+        @Override
+        public String toString() {
+            return "Wheel graph supplier";
         }
         public Graph<Integer> get() {
             if (nodes < 0) {

@@ -25,12 +25,19 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #L%
  */
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,11 +47,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
 
 /**
  * Simple energy-layout engine
@@ -52,8 +54,6 @@ import com.googlecode.blaisemath.graph.StaticGraphLayout;
  * @author Elisha Peterson
  */
 public class SpringLayout implements IterativeGraphLayout {
-
-    // CONSTANTS
     
     /** Distance scale. This is the approximate length of an edge in the graph. */
     public static final double DIST_SCALE = 50;
@@ -66,6 +66,8 @@ public class SpringLayout implements IterativeGraphLayout {
     private static final double MIN_DIST = DIST_SCALE/100;
     /** Max distance to apply repulsive force */
     private static final double MAX_REPEL_DIST = 2*DIST_SCALE;
+    /** # of regions away from origin in x and y directions. Region size is determined by the maximum repel distance. */
+    private static final int REGION_N = 5;
 
     // STATE VARIABLES
 
@@ -74,7 +76,7 @@ public class SpringLayout implements IterativeGraphLayout {
     /** Current velocities */
     private final Map<Object, Point2D.Double> vel = Maps.newHashMap();
     /** Regions used for localizing computation */
-    private List<List<Region>> regions;
+    private Region[][] regions;
 
     /** Iteration number */
     int iteration = 0;
@@ -203,7 +205,6 @@ public class SpringLayout implements IterativeGraphLayout {
     }
 
     public final <V> Map<V,Point2D.Double> iterate(Graph<V> g) throws ConcurrentModificationException {
-        int id = GAInstrument.start("SpringLayout.iterate", ""+g.nodeCount(), ""+g.edgeCount());
         Set<V> nodes = g.nodes();
 
         if (g.isDirected()) {
@@ -219,7 +220,7 @@ public class SpringLayout implements IterativeGraphLayout {
         // helper variables
         Point2D.Double iLoc, iVel;
 
-        // compute forces
+        // compute basic forces
         Map<V, Point2D.Double> forces = new HashMap<V,Point2D.Double>();
         for (V io : nodes) {
             iLoc = loc.get(io);
@@ -235,18 +236,29 @@ public class SpringLayout implements IterativeGraphLayout {
             Point2D.Double netForce = new Point2D.Double();
 
             addGlobalForce(netForce, io, iLoc);
-            addRepulsiveForces(g, netForce, io, iLoc);
             addSpringForces(g, netForce, io, iLoc);
             addAdditionalForces(g, netForce, io, iLoc);
             forces.put(io, netForce);
-
-            boolean test = !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
-            assert test;
-            if (!test) {
-                System.err.println("Computed infinite force: " + netForce + " for " + io);
+        }
+        
+        // compute repulsive forces
+        for (Region[] rr : regions) {
+            for (Region r : rr) {
+                for (Object io : r.pts.keySet()) {
+                    addRepulsiveForces(g, r, forces.get(io), io, r.pts.get(io));
+                }
             }
         }
-        GAInstrument.middle(id, "forces computed");
+            
+        // check for infinite forces
+        for (V io : nodes) {
+            Point2D.Double netForce = forces.get(io);
+            boolean test = !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
+            if (!test) {
+                Logger.getLogger(SpringLayout.class.getName()).log(Level.SEVERE, 
+                        "Computed infinite force: {0} for {1}", new Object[]{netForce, io});
+            }
+        }
 
         // adjusts velocity with damping;
         for (V io : nodes) {
@@ -265,7 +277,16 @@ public class SpringLayout implements IterativeGraphLayout {
             res.put(v, loc.get(v));
         }
 
-        GAInstrument.end(id);
+//        if ((iteration <= 500 && iteration % 50 == 0) || (iteration % 500 == 0)) {
+//            for (Region[] rr : regions) {
+//                System.out.println(Joiner.on(" - ").join(Iterables.transform(Arrays.asList(rr), new Function<Region,String>(){
+//                    public String apply(Region input) {
+//                        return input.pts.size()+"";
+//                    }
+//                })));
+//            }
+//        }
+
         return res;
     }
     // </editor-fold>
@@ -294,14 +315,14 @@ public class SpringLayout implements IterativeGraphLayout {
     /**
      * Adds all repulsive forces for a particular vertex.
      * @param g the graph
+     * @param ireg the region for the node
      * @param sum vector representing the sum of forces (will be adjusted)
      * @param io the node of interest
      * @param iLoc location of first vertex
      */
-    protected void addRepulsiveForces(Graph g, Point2D.Double sum, Object io, Point2D.Double iLoc) {
+    protected void addRepulsiveForces(Graph g, Region ireg, Point2D.Double sum, Object io, Point2D.Double iLoc) {
         Point2D.Double jLoc;
         double dist;
-        Region ireg = getRegion(iLoc);
         if (ireg == null) {
             for (Object jo : g.nodes()) {
                 if (!g.adjacent(io, jo)) {
@@ -314,7 +335,7 @@ public class SpringLayout implements IterativeGraphLayout {
                 }
             }
         } else {
-            for (Region r : getRegion(iLoc).adj) {
+            for (Region r : ireg.adj) {
                 for (Entry<Object, Point2D.Double> jEntry : r.pts.entrySet()) {
                     Object jo = jEntry.getKey();
                     if (!g.adjacent(io, jo)) {
@@ -449,36 +470,39 @@ public class SpringLayout implements IterativeGraphLayout {
 
     /** Return region for specified point */
     private Region getRegion(Point2D.Double p) {
-        int ix = (int) ((p.x + 10 * MAX_REPEL_DIST) / MAX_REPEL_DIST);
-        int iy = (int) ((p.y + 10 * MAX_REPEL_DIST) / MAX_REPEL_DIST);
-        if (ix < 0 || ix > 20 || iy < 0 || iy > 20)
+        int ix = (int) ((p.x + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
+        int iy = (int) ((p.y + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
+        if (ix < 0 || ix > 2*REGION_N || iy < 0 || iy > 2*REGION_N) {
             return null;
-        return regions.get(ix).get(iy);
+        }
+        return regions[ix][iy];
     }
 
     /** Generates the regions */
     private void updateRegions() {
         if (regions == null) {
-            regions = new ArrayList<List<Region>>();
-            List<Region> r;
-            for (int ix = -10; ix <= 10; ix++) {
-                regions.add(r = new ArrayList<Region>());
-                for (int iy = -10; iy <= 10; iy++) {
-                    r.add(new Region(new Rectangle2D.Double(ix*MAX_REPEL_DIST,iy*MAX_REPEL_DIST,MAX_REPEL_DIST,MAX_REPEL_DIST)));
+            regions = new Region[2*REGION_N+1][2*REGION_N+1];
+            for (int ix = -REGION_N; ix <= REGION_N; ix++) {
+                for (int iy = -REGION_N; iy <= REGION_N; iy++) {
+                    regions[ix+REGION_N][iy+REGION_N] = new Region(new Rectangle2D.Double(
+                            ix*MAX_REPEL_DIST,iy*MAX_REPEL_DIST,MAX_REPEL_DIST,MAX_REPEL_DIST));
                 }
             }
-            for (int ix = -10; ix <= 10; ix++) {
-                r = new ArrayList<Region>();
-                for (int iy = -10; iy <= 10; iy++) {
-                    for (int ix2 = Math.max(ix-1,-10); ix2 <= Math.min(ix+1, 10); ix2++) {
-                        for (int iy2 = Math.max(iy-1,-10); iy2 <= Math.min(iy+1, 10); iy2++) {
-                            regions.get(ix+10).get(iy+10).adj.add(regions.get(ix2+10).get(iy2+10));
+            for (int ix = -REGION_N; ix <= REGION_N; ix++) {
+                for (int iy = -REGION_N; iy <= REGION_N; iy++) {
+                    for (int ix2 = Math.max(ix-1,-REGION_N); ix2 <= Math.min(ix+1, REGION_N); ix2++) {
+                        for (int iy2 = Math.max(iy-1,-REGION_N); iy2 <= Math.min(iy+1, REGION_N); iy2++) {
+                            regions[ix+REGION_N][iy+REGION_N].adj.add(regions[ix2+REGION_N][iy2+REGION_N]);
                         }
                     }
                 }
             }
         }
-        for (List<Region> l : regions) for (Region r : l) r.pts.clear();
+        for (int ix = -REGION_N; ix <= REGION_N; ix++) {
+            for (int iy = -REGION_N; iy <= REGION_N; iy++) {
+                regions[ix+REGION_N][iy+REGION_N].pts.clear();
+            }
+        }
         for (Entry<Object,Point2D.Double> en : loc.entrySet()) {
             Region r = getRegion(en.getValue());
             if (r != null) {
@@ -499,7 +523,7 @@ public class SpringLayout implements IterativeGraphLayout {
         /** Attractive constant */
         double springC = .1;
         /** Natural spring length */
-        double springL = .1*DIST_SCALE;
+        double springL = .5*DIST_SCALE;
         /** Repelling constant */
         double repulsiveC = DIST_SCALE*DIST_SCALE;
 

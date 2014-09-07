@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.GraphSupplierSupport;
 import com.googlecode.blaisemath.graph.SparseGraph;
+import java.util.Random;
 
 /**
  * Provides methods for generating a Watts-Strogatz Random Graph
@@ -41,6 +42,8 @@ import com.googlecode.blaisemath.graph.SparseGraph;
  */
 public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integer> {
 
+    private static Random RANDOM = new Random();
+    
     private int deg = 4;
     private float rewire = .5f;
 
@@ -63,6 +66,16 @@ public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integ
             this.deg = deg;
         }
         this.rewire = rewiring;
+    }
+
+    @Override
+    public String toString() {
+        return "WattsStrogatzGraphSupplier{" + "deg=" + deg + ", rewire=" + rewire + '}';
+    }
+
+    public WattsStrogatzGraphSupplier randomGenerator(Random random) {
+        this.RANDOM = random;
+        return this;
     }
 
     public int getInitialDegree() {
@@ -92,7 +105,7 @@ public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integ
 
         // generate list of edges to rewire
         for (Integer[] e : edges) {
-            if (Math.random() < rewire) {
+            if (RANDOM.nextDouble() < rewire) {
                 randomlyRewire(edges, e, nodes);
             }
         }
@@ -114,7 +127,7 @@ public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integ
         Set<Integer[]> edgeTree = new TreeSet<Integer[]>(EdgeCountGraphSupplier.PAIR_COMPARE_UNDIRECTED);
         edgeTree.addAll(edges);
         while (edgeTree.contains(potential)) {
-            if (Math.random() < .5) {
+            if (RANDOM.nextBoolean()) {
                 potential = new Integer[]{e[0], randomNot(e[0], n)};
             } else {
                 potential = new Integer[]{randomNot(e[1], n), e[1]};
@@ -128,10 +141,10 @@ public final class WattsStrogatzGraphSupplier extends GraphSupplierSupport<Integ
      * @returns a random value between 0 and n-1, not including exclude
      */
     private static int randomNot(int exclude, int n) {
-        int result = exclude;
-        while (result == exclude || result == n) {
-            result = (int) Math.floor(n * Math.random());
-        }
+        int result;
+        do {
+            result = RANDOM.nextInt(n);
+        } while (result == exclude);
         return result;
     }
 }

@@ -29,11 +29,11 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CompleteGraphBuilder;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CycleGraphBuilder;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.EmptyGraphBuilder;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.StarGraphBuilder;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.WheelGraphBuilder;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CompleteGraphSupplier;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.CycleGraphSupplier;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.EmptyGraphSupplier;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.StarGraphSupplier;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.WheelGraphSupplier;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
@@ -53,9 +53,9 @@ public class GraphSuppliersTest {
     @Test
     public void testGetEmptyGraphInstance() {
         System.out.println("getEmptyGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [] 1: [] 2: [] 3: []", GraphUtils.printGraph(new EmptyGraphBuilder(false,4).get()));
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [] 1: [] 2: [] 3: []", GraphUtils.printGraph(new EmptyGraphBuilder(true,4).get()));
-        Graph result = new EmptyGraphBuilder(true,10).get();
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [] 1: [] 2: [] 3: []", GraphUtils.printGraph(new EmptyGraphSupplier(false,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [] 1: [] 2: [] 3: []", GraphUtils.printGraph(new EmptyGraphSupplier(true,4).get()));
+        Graph result = new EmptyGraphSupplier(true,10).get();
         assertEquals(10, result.nodeCount());
         assertEquals(0, result.edgeCount());
         for (int i = 0; i < 10; i++)
@@ -65,10 +65,10 @@ public class GraphSuppliersTest {
     @Test
     public void testGetCompleteGraphInstance() {
         System.out.println("getCompleteGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]", GraphUtils.printGraph(new CompleteGraphBuilder(false,4).get()));
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]", GraphUtils.printGraph(new CompleteGraphBuilder(true,4).get()));
-        Graph result = new CompleteGraphBuilder(false,6).get();
-        Graph result2 = new CompleteGraphBuilder(true,6).get();
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]", GraphUtils.printGraph(new CompleteGraphSupplier(false,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0, 2, 3] 2: [0, 1, 3] 3: [0, 1, 2]", GraphUtils.printGraph(new CompleteGraphSupplier(true,4).get()));
+        Graph result = new CompleteGraphSupplier(false,6).get();
+        Graph result2 = new CompleteGraphSupplier(true,6).get();
         assertEquals(6, result.nodeCount());
         assertEquals(6, result2.nodeCount());
         assertEquals(15, result.edgeCount());
@@ -82,21 +82,21 @@ public class GraphSuppliersTest {
     @Test
     public void testGetCycleGraphInstance() {
         System.out.println("getCycleGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 3] 1: [0, 2] 2: [1, 3] 3: [0, 2]", GraphUtils.printGraph(new CycleGraphBuilder(false,4).get()));
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1] 1: [2] 2: [3] 3: [0]", GraphUtils.printGraph(new CycleGraphBuilder(true,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 3] 1: [0, 2] 2: [1, 3] 3: [0, 2]", GraphUtils.printGraph(new CycleGraphSupplier(false,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1] 1: [2] 2: [3] 3: [0]", GraphUtils.printGraph(new CycleGraphSupplier(true,4).get()));
     }
 
     @Test
     public void testGetStarGraphInstance() {
         System.out.println("getStarGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0] 2: [0] 3: [0]", GraphUtils.printGraph(new StarGraphBuilder(false,4).get()));
-        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [] 2: [] 3: []", GraphUtils.printGraph(new StarGraphBuilder(true,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [0] 2: [0] 3: [0]", GraphUtils.printGraph(new StarGraphSupplier(false,4).get()));
+        assertEquals("NODES: [0, 1, 2, 3]  EDGES: 0: [1, 2, 3] 1: [] 2: [] 3: []", GraphUtils.printGraph(new StarGraphSupplier(true,4).get()));
     }
 
     @Test
     public void testGetWheelGraphInstance() {
         System.out.println("getWheelGraphInstance");
-        assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [0, 2, 4] 2: [0, 1, 3] 3: [0, 2, 4] 4: [0, 1, 3]", GraphUtils.printGraph(new WheelGraphBuilder(false,5).get()));
-        assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [2, 4] 2: [1, 3] 3: [2, 4] 4: [1, 3]", GraphUtils.printGraph(new WheelGraphBuilder(true,5).get()));
+        assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [0, 2, 4] 2: [0, 1, 3] 3: [0, 2, 4] 4: [0, 1, 3]", GraphUtils.printGraph(new WheelGraphSupplier(false,5).get()));
+        assertEquals("NODES: [0, 1, 2, 3, 4]  EDGES: 0: [1, 2, 3, 4] 1: [2, 4] 2: [1, 3] 3: [2, 4] 4: [1, 3]", GraphUtils.printGraph(new WheelGraphSupplier(true,5).get()));
     }
 }

@@ -59,7 +59,9 @@ public class GraphComponent extends JGraphicComponent {
     private static final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>> SWING_GRAPH_SUPPLIER
             = new Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>>() {
         public DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> get() {
-            return JGraphics.nodeLink();
+            DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> res = JGraphics.nodeLink();
+            res.getNodeStyler().setStyleConstant(VisualGraph.DEFAULT_NODE_STYLE);
+            return res;
         }
     };
 
