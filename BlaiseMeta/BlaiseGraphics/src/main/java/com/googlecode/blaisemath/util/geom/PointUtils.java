@@ -85,9 +85,9 @@ public class PointUtils {
         int count = 0;
         for (Point2D p : pts) {
             minx = Math.min(minx, p.getX());
-            miny = Math.min(minx, p.getY());
+            miny = Math.min(miny, p.getY());
             maxx = Math.max(maxx, p.getX());
-            maxy = Math.max(maxx, p.getY());
+            maxy = Math.max(maxy, p.getY());
             count++;
         }
         if (count == 0) {
@@ -96,7 +96,8 @@ public class PointUtils {
             double m = margin == 0 ? .5 : margin;
             return new Rectangle2D.Double(minx-m, miny-m, 2*m, 2*m);
         } else {
-            return new Rectangle2D.Double(minx-margin, miny-margin, maxx-minx+2*margin, maxy-miny+2*margin);
+            return new Rectangle2D.Double(minx-margin, miny-margin, 
+                    maxx-minx+2*margin, maxy-miny+2*margin);
         }
     }
     
