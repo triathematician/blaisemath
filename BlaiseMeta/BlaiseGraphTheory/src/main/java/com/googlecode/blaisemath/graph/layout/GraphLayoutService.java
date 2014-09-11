@@ -24,11 +24,11 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.util.Map;
-import com.googlecode.blaisemath.graph.Graph;
 
 /**
  * Performs a graph layout service, starting with a graph, a set of initial positions,
@@ -68,7 +68,8 @@ public interface GraphLayoutService {
         public StaticLayoutService(StaticGraphLayout layout) {
             this.layout = layout;
         }
-        public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) throws InterruptedException {
+        public void layout(Graph graph, Map<Object, Point2D.Double> ic, 
+                GraphLayoutCallback callback) throws InterruptedException {
             callback.layoutCompleted(graph, ic, layout.layout(graph));
         }
         public IterativeGraphLayout getLayoutAlgorithm(Graph g) {

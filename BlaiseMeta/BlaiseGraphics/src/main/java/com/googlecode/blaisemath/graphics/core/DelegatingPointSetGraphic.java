@@ -66,7 +66,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     protected final Map<S, DelegatingPrimitiveGraphic<S,Point2D,G>> points = Maps.newHashMap();
     /** Whether points can be dragged */
     protected boolean dragEnabled = false;
-    
+
     /** Manages locations of points */
     protected CoordinateManager<S,Point2D> manager;
     /** Selects styles for graphics */

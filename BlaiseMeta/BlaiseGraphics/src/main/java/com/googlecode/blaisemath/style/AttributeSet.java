@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.style;
 
 
 import com.google.common.base.Optional;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -219,9 +218,8 @@ public class AttributeSet implements Cloneable {
      * @return the old value
      * @throws NullPointerException if value is null
      */
-    public Object put(String key, Object value) {
-        Object res = value == null ? attributeMap.remove(key)
-                : attributeMap.put(key, value);
+    public Object put(String key, @Nullable Object value) {
+        Object res = attributeMap.put(key, value);
         fireStateChanged();
         return res;
     }
@@ -307,8 +305,9 @@ public class AttributeSet implements Cloneable {
     public Float getFloat(String key, Float def) {
         if (contains(key)) {
             Number n = (Number) get(key);
-            return n instanceof Float ? (Float) n
-                    : ((Number) n).floatValue();
+            return n == null ? null
+                    : n instanceof Float ? (Float) n
+                    : n.floatValue();
         } else {
             return def;
         }
@@ -321,8 +320,9 @@ public class AttributeSet implements Cloneable {
     public Integer getInteger(String key, Integer def) {
         if (contains(key)) {
             Number n = (Number) get(key);
-            return n instanceof Integer ? (Integer) n
-                    : ((Number) n).intValue();
+            return n == null ? null
+                    : n instanceof Integer ? (Integer) n
+                    : n.intValue();
         } else {
             return def;
         }

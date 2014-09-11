@@ -218,10 +218,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     //
 
     /**
-     * Get current range of values displayed in component.
+     * Get current boundaries displayed in component.
      * @param gc associated component
      */
-    private static Rectangle2D.Double getLocalBounds(JGraphicComponent gc) {
+    public static Rectangle2D.Double getLocalBounds(JGraphicComponent gc) {
         if (gc.getInverseTransform() == null) {
             gc.setTransform(new AffineTransform());
         }
@@ -237,7 +237,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * Updates component transform so given rectangle is included within
      * @param gc associated component
      */
-    private static void setDesiredLocalBounds(JGraphicComponent gc, Rectangle2D rect) {
+    public static void setDesiredLocalBounds(JGraphicComponent gc, Rectangle2D rect) {
+        // TODO - this isn't quite right... needs to incorporate gc's minx and miny ???
         Rectangle bds = gc.getBounds();
         double scalex = rect.getWidth() / bds.getWidth();
         double scaley = rect.getHeight() / bds.getHeight();

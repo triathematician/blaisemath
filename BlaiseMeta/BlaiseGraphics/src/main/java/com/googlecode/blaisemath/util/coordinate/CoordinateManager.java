@@ -254,6 +254,10 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     //
 
     protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
+        if ((evt.getAdded() == null || evt.getAdded().isEmpty()) 
+                && (evt.getRemoved() == null || evt.getRemoved().isEmpty())) {
+            return;
+        }
         synchronized(listeners) {
             for (CoordinateListener cl : listeners) {
                 cl.coordinatesChanged(evt);

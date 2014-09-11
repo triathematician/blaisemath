@@ -25,10 +25,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #L%
  */
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
@@ -37,7 +34,6 @@ import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
