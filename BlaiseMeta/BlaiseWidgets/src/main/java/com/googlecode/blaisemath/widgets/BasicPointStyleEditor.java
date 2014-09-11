@@ -63,7 +63,7 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         ActionListener, ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
-    private AttributeSet rend = Styles.defaultPointStyle();
+    private AttributeSet style = Styles.defaultPointStyle().copy();
 
     /** Spinner for radius */
     private JSpinner radiusSp = null;
@@ -131,12 +131,12 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         shapeCombo.setRenderer(new ShapeListCellRenderer());
         shapeCombo.addActionListener(this);
 
-        setObject(rend);
+        setObject(style);
         validate();
     }
 
     public AttributeSet getObject() {
-        return rend;
+        return style;
     }
 
     public void setObject(Object bean) {
@@ -144,14 +144,19 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             throw new IllegalArgumentException();
         }
 
-        this.rend = (AttributeSet) bean;
-        radiusSp.setValue(rend.getFloat(Styles.MARKER_RADIUS));
-        strokeSp.setValue(rend.getFloat(Styles.STROKE_WIDTH));
-        fillEd.setValue(rend.getColor(Styles.FILL));
-        strokeEd.setValue(rend.getColor(Styles.STROKE));
-        for (int i = 0; i < shapeCombo.getItemCount(); i++) {
-            if (shapeCombo.getItemAt(i).getClass() == rend.get(Styles.MARKER).getClass()) {
-                shapeCombo.setSelectedIndex(i);
+        this.style = (AttributeSet) bean;
+        radiusSp.setValue(style.getFloat(Styles.MARKER_RADIUS));
+        strokeSp.setValue(style.getFloat(Styles.STROKE_WIDTH));
+        fillEd.setValue(style.getColor(Styles.FILL));
+        strokeEd.setValue(style.getColor(Styles.STROKE));
+        if (style.get(Styles.MARKER) == null) {
+            shapeCombo.setSelectedItem(Markers.CIRCLE);
+        } else {
+            for (int i = 0; i < shapeCombo.getItemCount(); i++) {
+                if (shapeCombo.getItemAt(i).getClass() == style.get(Styles.MARKER).getClass()) {
+                    shapeCombo.setSelectedIndex(i);
+                    break;
+                }
             }
         }
     }
@@ -163,33 +168,33 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == shapeCombo) {
-            rend.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
-            firePropertyChange("style", null, rend);
+            style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
+            firePropertyChange("style", null, style);
         }
     }
 
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == radiusSp) {
-            rend.put(Styles.MARKER_RADIUS, ((Number)radiusSp.getValue()).floatValue());
+            style.put(Styles.MARKER_RADIUS, ((Number)radiusSp.getValue()).floatValue());
         } else if (e.getSource() == strokeSp) {
-            rend.put(Styles.STROKE_WIDTH, ((Number)strokeSp.getValue()).floatValue());
+            style.put(Styles.STROKE_WIDTH, ((Number)strokeSp.getValue()).floatValue());
         } else {
             return;
         }
         shapeCombo.repaint();
-        firePropertyChange("style", null, rend);
+        firePropertyChange("style", null, style);
     }
 
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getSource() == fillEd) {
-            rend.put(Styles.FILL, (Color) (fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue()));
+            style.put(Styles.FILL, (Color) (fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue()));
         } else if (e.getSource() == strokeEd) {
-            rend.put(Styles.STROKE, (Color) (strokeEd.getNewValue() == null ? strokeEd.getValue() : strokeEd.getNewValue()));
+            style.put(Styles.STROKE, (Color) (strokeEd.getNewValue() == null ? strokeEd.getValue() : strokeEd.getNewValue()));
         } else {
             return;
         }
         shapeCombo.repaint();
-        firePropertyChange("style", null, rend);
+        firePropertyChange("style", null, style);
     }
 
 
@@ -219,10 +224,10 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         public void paintIcon(Component c, Graphics g, int x, int y) {
             ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
-            Marker shape1 = (Marker) rend.get(Styles.MARKER);
-            rend.put(Styles.MARKER, shape);
-            PointRenderer.getInstance().render(new Point2D.Double(xc, yc), rend, (Graphics2D) g);
-            rend.put(Styles.MARKER, shape1);
+            Marker shape1 = (Marker) style.get(Styles.MARKER);
+            style.put(Styles.MARKER, shape);
+            PointRenderer.getInstance().render(new Point2D.Double(xc, yc), style, (Graphics2D) g);
+            style.put(Styles.MARKER, shape1);
         }
 
         public int getIconWidth() { return 50; }

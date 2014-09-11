@@ -74,7 +74,7 @@ public class VCustomGraph<C,S,E extends Edge<S>,G> extends VCustomPointSet<C,S,G
     //
 
     @Override
-    public Graphic getWindowGraphic() {
+    public DelegatingNodeLinkGraphic<S,E,G> getWindowGraphic() {
         return gwindow;
     }
 

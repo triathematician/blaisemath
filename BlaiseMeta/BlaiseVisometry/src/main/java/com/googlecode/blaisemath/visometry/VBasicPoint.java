@@ -97,6 +97,7 @@ public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
 
     public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
         windowGraphic.setPrimitive(processor.convert(point, vis));
+        windowGraphic.setDragEnabled(true);
         windowGraphic.setDefaultTooltip(
                 point instanceof Point2D ? PointUtils.formatPoint((Point2D) point, 2)
                 : point + "");

@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.visometry.testui;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
@@ -37,22 +36,15 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.PathRenderer;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.graphics.swing.TaperedPathRenderer;
+import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.ColorUtils;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.visometry.VBasicPoint;
@@ -62,12 +54,21 @@ import com.googlecode.blaisemath.visometry.VCustomGraph;
 import com.googlecode.blaisemath.visometry.VCustomPointSet;
 import com.googlecode.blaisemath.visometry.VGraphicRoot;
 import com.googlecode.blaisemath.visometry.plane.PlanePlotComponent;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
@@ -165,37 +166,37 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     }
 
     //</editor-fold>
-
+    
     
     //<editor-fold defaultstate="collapsed" desc="GRAPHICS WITH DELEGATORS">
         
     @Action
     public void addDelegatingPointSet() {
-        Set<String> list = new HashSet<String>(Arrays.asList("Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
+        Set<String> list = new HashSet<String>(Arrays.asList(
+                "Africa", "Indiana Jones", "Micah Andrew Peterson", "Chrysanthemum", 
+                "Sequoia", "Asher Matthew Peterson", "Elisha", "Bob the Builder"));
         Map<String,Point2D> crds = Maps.newLinkedHashMap();
         for (String s : list) {
             crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
         }
-        final DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>();
-        // TODO - these should be labeled
+        DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(crds);
-        bp.getStyler().setLabelDelegate(new Function<String, String>() {
-            public String apply(String src) {
-                return src;
-            }
-        });
+        bp.setDragEnabled(true);
+        bp.getStyler().setLabelDelegate(Functions.toStringFunction());
+        bp.getStyler().setLabelStyleConstant(Styles.defaultTextStyle());
         bp.getStyler().setStyleDelegate(new Function<String,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(String src) {
                 int i1 = src.indexOf("a"), i2 = src.indexOf("e"), i3 = src.indexOf("i"), i4 = src.indexOf("o");
                 r.put(Styles.MARKER_RADIUS, i1+5);
                 r.put(Styles.MARKER, Markers.getAvailableMarkers().get(i2+3));
+                r.put(Styles.STROKE, Color.BLACK);
                 r.put(Styles.STROKE_WIDTH, 2+i3/3f);
                 r.put(Styles.FILL, new Color((i4*10+10) % 255, (i4*20+25) % 255, (i4*30+50) % 255));
                 return r;
             }
         });
-        bp.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(bp);        
     }
     
@@ -205,63 +206,73 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         for (int i = 1; i <= 10; i++) {
             points2.put(i, randomPoint());
         }
-        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>();
+        final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>(
+                PointRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(points2);
+        bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
-        bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+        bp.getStyler().setLabelStyleDelegate(new Function<Integer,AttributeSet>(){
             AttributeSet r = new AttributeSet();
             public AttributeSet apply(Integer src) {
                 r.put(Styles.TEXT_ANCHOR, Anchor.CENTER);
-                r.put(Styles.MARKER_RADIUS, src+2);
-                r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
                 r.put(Styles.FONT_SIZE, 5+src.floatValue());
                 return r;
             }
         });
-        bp.addMouseListener(new HighlightOnMouseoverHandler());
+        bp.getStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+            AttributeSet r = new AttributeSet();
+            public AttributeSet apply(Integer src) {
+                r.put(Styles.MARKER_RADIUS, src+2);
+                r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
+                r.put(Styles.STROKE, ColorUtils.lighterThan(r.getColor(Styles.FILL)));
+                return r;
+            }
+        });
         root1.addGraphic(bp);        
     }
     
     @Action
     public void addDelegatingGraph() {
         // initialize graph object
-        Point2D[] pts = new Point2D[15];
-        for (int i = 0; i < pts.length; i++) {
-            pts[i] = randomPoint();
+        final Map<Integer,Point2D> pts = Maps.newLinkedHashMap();
+        for (int i = 0; i < 15; i++) {
+            pts.put(i, randomPoint());
         }         
-        Set<Edge<Point2D>> edges = new HashSet<Edge<Point2D>>();
-        for (int i = 0; i < pts.length; i++) {
+        Set<Edge<Integer>> edges = new HashSet<Edge<Integer>>();
+        for (int i = 0; i < pts.size(); i++) {
             int n = (int) (Math.random()*6);
             for (int j = 0; j < n; j++) {
-                edges.add(new Edge<Point2D>(pts[i], pts[(int)(Math.random()*pts.length)]));
+                edges.add(new Edge<Integer>(i, (int)(Math.random()*pts.size())));
             }
         }
         // create graphic
-        DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D> gr = new DelegatingNodeLinkGraphic<Point2D,Edge<Point2D>,Graphics2D>();
-        ImmutableMap<Point2D, Point2D> idx = Maps.uniqueIndex(Arrays.asList(pts), Functions.<Point2D>identity());
-        gr.setNodeLocations(idx);
-        gr.getNodeStyler().setStyleDelegate(new Function<Point2D,AttributeSet>(){
-            public AttributeSet apply(Point2D src) {
-                int yy = (int) Math.min(src.getX()/3, 255);
+        DelegatingNodeLinkGraphic<Integer,Edge<Integer>,Graphics2D> gr = JGraphics.nodeLink();
+        gr.setDragEnabled(true);
+        gr.setNodeLocations(pts);
+        gr.getNodeStyler().setStyleDelegate(new Function<Integer,AttributeSet>(){
+            public AttributeSet apply(Integer src) {
+                Point2D pt = pts.get(src);
+                int yy = (int) Math.min(pt.getX()/3, 255);
                 return AttributeSet.with(Styles.FILL, new Color(yy, 0, 255-yy))
-                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(src.getY()));
+                        .and(Styles.MARKER_RADIUS, (float) Math.sqrt(pt.getY()));
             }
         });
-        gr.getNodeStyler().setLabelDelegate(new Function<Point2D, String>() {
-            public String apply(Point2D src) {
-                return String.format("(%.1f,%.1f)", src.getX(), src.getY());
+        gr.getNodeStyler().setLabelDelegate(new Function<Integer, String>() {
+            public String apply(Integer src) {
+                Point2D pt = pts.get(src);
+                return String.format("(%.1f,%.1f)", pt.getX(), pt.getY());
             }
         });
-        gr.getNodeStyler().setLabelStyleDelegate(new Function<Point2D, AttributeSet>(){
+        gr.getNodeStyler().setLabelStyleDelegate(new Function<Integer, AttributeSet>(){
             AttributeSet bss = Styles.defaultTextStyle();
-            public AttributeSet apply(Point2D src) {
+            public AttributeSet apply(Integer src) {
                 return bss;                
             }
         });
         gr.setEdgeSet(edges);
-        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Point2D>,AttributeSet>(){
-            public AttributeSet apply(Edge<Point2D> src) {
-                Point2D src0 = src.getNode1(), src1 = src.getNode2();
+        gr.getEdgeStyler().setStyleDelegate(new Function<Edge<Integer>,AttributeSet>(){
+            public AttributeSet apply(Edge<Integer> src) {
+                Point2D src0 = pts.get(src.getNode1()), src1 = pts.get(src.getNode2());
                 int dx = (int) (src0.getX() - src1.getX());
                 dx = Math.min(Math.abs(dx/2), 255);
                 int dy = (int) (src0.getY() - src1.getY());
@@ -271,7 +282,6 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                         .and(Styles.STROKE_WIDTH, (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
-        gr.addMouseListener(new HighlightOnMouseoverHandler());
         root1.addGraphic(gr);
     }
     
@@ -284,7 +294,8 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     public void addPlanePoint() {
         VBasicPoint<Point2D.Double,Graphics2D> bp = new VBasicPoint<Point2D.Double,Graphics2D>(
                 new Point2D.Double(1+Math.random(), 1+Math.random()));
-        bp.getWindowGraphic().addMouseListener(new HighlightOnMouseoverHandler());
+        bp.getWindowGraphic().setRenderer(PointRenderer.getInstance());
+        bp.setStyle(Styles.defaultPointStyle());
         root2.addGraphic(bp);
     }
 
@@ -294,8 +305,8 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         for (int i = 0; i < arr.length; i++)
             arr[i] = new Point2D.Double(-Math.random(), -Math.random());
         VBasicPointSet<Point2D.Double,Graphics2D> vps = new VBasicPointSet<Point2D.Double,Graphics2D>(arr);
+        vps.getWindowGraphic().setRenderer(PointRenderer.getInstance());
         vps.setPointStyle(AttributeSet.with(Styles.FILL,Color.blue).and(Styles.MARKER_RADIUS,3f));
-        vps.getWindowGraphic().addMouseListener(new HighlightOnMouseoverHandler());
         root2.addGraphic(vps);
     }
 
@@ -310,7 +321,8 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             if (Math.random() < .1) arr3[i] = null;
         }
         VBasicPolygonalPath<Point2D.Double,Graphics2D> vps = new VBasicPolygonalPath<Point2D.Double,Graphics2D>(arr3);
-        vps.getWindowGraphic().addMouseListener(new HighlightOnMouseoverHandler());
+        vps.getWindowGraphic().setRenderer(PathRenderer.getInstance());
+        vps.setPathStyle(Styles.strokeWidth(Color.gray, 1.5f));
         root2.addGraphic(vps);
     }
 
@@ -333,12 +345,12 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
         }
         VCustomPointSet<Point2D.Double, Integer, Graphics2D> vps = new VCustomPointSet<Point2D.Double, Integer, Graphics2D>();
         vps.addObjects(pts);
+        ((DelegatingPointSetGraphic)vps.getWindowGraphic()).setRenderer(PointRenderer.getInstance());
         vps.getPointStyler().setStyleDelegate(new Function<Integer, AttributeSet>(){
             public AttributeSet apply(Integer src) { 
                 return Styles.fillStroke(new Color(255-src*2,0,src*2), null); 
             }
         });
-        vps.getWindowGraphic().addMouseListener(new HighlightOnMouseoverHandler());
         root2.addGraphic(vps);
     }
 
@@ -363,6 +375,8 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             }
         }
         gr.setEdges(edges);
+        gr.getWindowGraphic().setNodeRenderer(PointRenderer.getInstance());
+        gr.getWindowGraphic().setEdgeRenderer(PathRenderer.getInstance());
         gr.getPointStyler().setStyleDelegate(new Function<Point2D, AttributeSet>(){
             public AttributeSet apply(Point2D src) { 
                 int yy = (int) Math.min(src.getX()/3, 255);
@@ -382,8 +396,6 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
                         (float) Math.sqrt(dx*dx+dy*dy)/50);
             }
         });
-        // TODO set graph renderer to TaperedPath
-        gr.getWindowGraphic().addMouseListener(new HighlightOnMouseoverHandler());
         root2.addGraphic(gr);
     }
 
