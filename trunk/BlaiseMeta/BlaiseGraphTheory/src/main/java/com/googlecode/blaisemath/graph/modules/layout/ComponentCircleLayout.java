@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -34,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
  * This layout places components of a graph in a spiral pattern, with the
@@ -48,6 +48,8 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  */
 public class ComponentCircleLayout implements StaticGraphLayout {
 
+    public static final int DIST_SCALE = 50;
+    
     public static final Comparator<Graph> GRAPH_SIZE_DESCENDING = new Comparator<Graph>() {
         @Override
         public int compare(Graph o1, Graph o2) {
@@ -122,7 +124,7 @@ public class ComponentCircleLayout implements StaticGraphLayout {
      * Generates position in a sequence of circles.
      */
     private static Rectangle2D.Double nextBounds(int sz, List<Rectangle2D.Double> priors, List<Integer> layers) {
-        double nueRad = Math.sqrt(sz) / Math.PI;
+        double nueRad = DIST_SCALE * Math.sqrt(sz) / Math.PI;
         if (priors.isEmpty()) {
             Rectangle2D.Double r = new Rectangle2D.Double(-nueRad, -nueRad, 2 * nueRad, 2 * nueRad);
             priors.add(r);
