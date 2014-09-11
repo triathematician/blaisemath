@@ -48,6 +48,8 @@ import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 
 /**
  *
@@ -170,7 +172,9 @@ public class PrVis extends JGraphicComponent {
         
         // supporting gfx
         clearGraphics();
-        addGraphic(JGraphics.shape(bounds, Styles.fillStroke(Color.black, null)));
+        PrimitiveGraphic<Shape, Graphics2D> bg = JGraphics.shape(bounds, Styles.fillStroke(Color.black, null));
+        bg.setHighlightEnabled(false);
+        addGraphic(bg);
         for (double d = xmin; d <= xmax; d += 100) {
             double y = x0+xwid*(d-xmin)/(xmax-xmin);
             addGraphic(JGraphics.shape(new Line2D.Double(43, y, 50, y)));
