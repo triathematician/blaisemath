@@ -67,7 +67,7 @@ public class AttributeSet implements Cloneable {
 
     @Override
     protected AttributeSet clone() {
-        AttributeSet res = new AttributeSet(parent.get());
+        AttributeSet res = new AttributeSet(parent.orNull());
         res.attributeMap.putAll(attributeMap);
         return res;
     }
@@ -201,6 +201,7 @@ public class AttributeSet implements Cloneable {
      * @return value of the found attribute, either contained in this set or its parent,
      *      or null if there is none
      */
+    @Nullable
     public Object get(String key) {
         if (attributeMap.containsKey(key)) {
             return attributeMap.get(key);
@@ -214,10 +215,10 @@ public class AttributeSet implements Cloneable {
     /**
      * Get the given attribute.
      * @param key the key
-     * @param value the attribute value (may not be null)
+     * @param value the attribute value (may be null)
      * @return the old value
-     * @throws NullPointerException if value is null
      */
+    @Nullable
     public Object put(String key, @Nullable Object value) {
         Object res = attributeMap.put(key, value);
         fireStateChanged();
@@ -239,13 +240,18 @@ public class AttributeSet implements Cloneable {
     
     
     //<editor-fold defaultstate="collapsed" desc="TYPED ACCESSORS">
+    
+    @Nullable
+    private <C> C getTyped(String key, Class<C> cls, @Nullable C def) {
+        return cls.cast(contains(key) ? (C) get(key) : def);
+    }
 
     public String getString(String key) {
-        return (String) get(key);
+        return getTyped(key, String.class, null);
     }
 
     public String getString(String key, String def) {
-        return contains(key) ? (String) get(key) : def;
+        return getTyped(key, String.class, def);
     }
     
     /**
@@ -254,20 +260,24 @@ public class AttributeSet implements Cloneable {
      * @return color, or null if not present
      * @throws ClassCastException if attribute is present but not a color
      */
+    @Nullable
     public Color getColor(String key) {
-        return (Color) get(key);
+        return getTyped(key, Color.class, null);
     }
     
-    public Color getColor(String key, Color def) {
-        return contains(key) ? (Color) get(key) : def;
+    @Nullable
+    public Color getColor(String key, @Nullable Color def) {
+        return getTyped(key, Color.class, def);
     }
     
+    @Nullable
     public Point2D getPoint(String key) {
-        return (Point2D) get(key);
+        return getTyped(key, Point2D.class, null);
     }
     
-    public Point2D getPoint(String key, Point2D def) {
-        return contains(key) ? (Point2D) get(key) : def;
+    @Nullable
+    public Point2D getPoint(String key, @Nullable Point2D def) {
+        return getTyped(key, Point2D.class, def);
     }
 
     /**
@@ -277,7 +287,7 @@ public class AttributeSet implements Cloneable {
      */
     @Nullable
     public Boolean getBoolean(String key) {
-        return getBoolean(key, null);
+        return getTyped(key, Boolean.class, null);
     }
 
 
@@ -288,8 +298,8 @@ public class AttributeSet implements Cloneable {
      * @return boolean value, or def if there is none
      */
     @Nullable
-    public Boolean getBoolean(String key, Boolean def) {
-        return contains(key) ? (Boolean) get(key) : def;
+    public Boolean getBoolean(String key, @Nullable Boolean def) {
+        return getTyped(key, Boolean.class, def);
     }
 
     /**
@@ -298,11 +308,13 @@ public class AttributeSet implements Cloneable {
      * @return float, or null if not present
      * @throws ClassCastException if attribute is present but not a float
      */
+    @Nullable
     public Float getFloat(String key) {
         return getFloat(key, null);
     }
 
-    public Float getFloat(String key, Float def) {
+    @Nullable
+    public Float getFloat(String key, @Nullable Float def) {
         if (contains(key)) {
             Number n = (Number) get(key);
             return n == null ? null
@@ -313,11 +325,13 @@ public class AttributeSet implements Cloneable {
         }
     }
     
+    @Nullable
     public Integer getInteger(String key) {
         return getInteger(key, null);
     }
 
-    public Integer getInteger(String key, Integer def) {
+    @Nullable
+    public Integer getInteger(String key, @Nullable Integer def) {
         if (contains(key)) {
             Number n = (Number) get(key);
             return n == null ? null
