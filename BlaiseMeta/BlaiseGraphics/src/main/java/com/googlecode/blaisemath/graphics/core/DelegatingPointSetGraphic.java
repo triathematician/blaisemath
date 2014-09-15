@@ -230,6 +230,9 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         if (this.renderer != renderer) {
             Object old = this.renderer;
             this.renderer = renderer;
+            for (DelegatingPrimitiveGraphic<S,Point2D,G> dpg : points.values()) {
+                dpg.setRenderer(renderer);
+            }
             fireGraphicChanged();
             pcs.firePropertyChange(RENDERER_PROP, old, renderer);
         }

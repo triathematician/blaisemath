@@ -224,6 +224,9 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
         if (this.edgeRenderer != renderer) {
             Object old = this.edgeRenderer;
             this.edgeRenderer = renderer;
+            for (DelegatingPrimitiveGraphic<E,Shape,G> edge : edges.values()) {
+                edge.setRenderer(renderer);
+            }
             fireGraphicChanged();
             pcs.firePropertyChange(EDGE_RENDERER_PROP, old, renderer);
         }

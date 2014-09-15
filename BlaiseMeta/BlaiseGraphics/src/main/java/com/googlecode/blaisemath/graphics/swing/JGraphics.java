@@ -26,18 +26,20 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
@@ -119,6 +121,14 @@ public class JGraphics {
     
     public static <S> DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D> text(S source, LabeledPoint primitive, ObjectStyler<S> styler) {
         return new DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
+    }
+    
+    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(AnchoredImage primitive) {
+        return new PrimitiveGraphic<AnchoredImage,Graphics2D>(primitive, AttributeSet.EMPTY, ImageRenderer.getInstance());
+    }
+    
+    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(Image image, String refc, double x, double y) {
+        return new PrimitiveGraphic<AnchoredImage,Graphics2D>(new AnchoredImage(image, refc, x, y), AttributeSet.EMPTY, ImageRenderer.getInstance());
     }
 
     public static <S> DelegatingNodeLinkGraphic<S, Edge<S>, Graphics2D> nodeLink() {
