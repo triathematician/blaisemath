@@ -26,11 +26,8 @@ package com.googlecode.blaisemath.graphics.testui;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.dev.compoundgraphics.LabeledPointGraphic;
-import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
-import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
 import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
@@ -43,21 +40,19 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.graphics.swing.TaperedPathRenderer;
+import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
+import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.ColorUtils;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import com.googlecode.blaisemath.util.geom.PointUtils;
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
@@ -193,6 +188,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
                 return r;
             }
         });
+        bp.setPointSelectionEnabled(true);
         root1.addGraphic(bp);        
     }
     
@@ -366,29 +362,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         BlaiseGraphicsTestFrameView view = new BlaiseGraphicsTestFrameView(this);
         canvas1 = view.canvas1;
         root1 = view.canvas1.getGraphicRoot();
-        canvas1.getUnderlays().add(new CanvasPainter<Graphics2D>(){
-            public void paint(Component component, Graphics2D canvas) {
-                canvas.setColor(new Color(200,200,255));
-                canvas.setStroke(new BasicStroke());
-//                canvas.drawRect(0, 0, 500, 500);
-//
-//                if (canvas1.getTransform() != null) {
-//                    canvas.setTransform(canvas1.getTransform());
-//                }
-//                Rectangle r = canvas.getClipBounds();
-//                
-//                int st = 0;
-//                for (int x = st; x <= r.getMaxX()+100; x+=100) {
-//                    canvas.draw(new Line2D.Double(x, r.y, x, r.getMaxY()));
-//                }
-//                
-//                int sty = 0;
-//                for (int y = sty; y <= r.getMaxY()+100; y+=100) {
-//                    canvas.draw(new Line2D.Double(r.x, y, (int) r.getMaxX(), y));
-//                }
-//                canvas.setTransform(new AffineTransform());
-            }
-        });
+        canvas1.setSelectionEnabled(true);
         show(view);
     }
 

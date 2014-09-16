@@ -142,10 +142,19 @@ public class JGraphicComponent extends javax.swing.JComponent {
         root.setStyleContext(factory);
     }
 
+
+    /**
+     * If the mouse control allowing for selection of graphic objects is currently active
+     * @return true if enabled, false if not
+     */
     public boolean isSelectionEnabled() {
         return selector.isSelectionEnabled();
     }
 
+    /**
+     * Enable/disable the mouse control allowing for selection of graphic objects.
+     * @param b true to enable, false to disable
+     */
     public void setSelectionEnabled(boolean b) {
         selector.setSelectionEnabled(b);
     }
