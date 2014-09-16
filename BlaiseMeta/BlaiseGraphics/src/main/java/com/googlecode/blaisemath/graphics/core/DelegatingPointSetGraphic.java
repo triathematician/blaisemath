@@ -61,6 +61,9 @@ import javax.swing.JPopupMenu;
  * @author Elisha Peterson
  */
 public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
+    
+    /** Key for flag allowing individual points to be selected */
+    public static final String POINT_SELECTION_ENABLED = "point-selection-enabled";
 
     /** Graphic objects for individual points */
     protected final Map<S, DelegatingPrimitiveGraphic<S,Point2D,G>> points = Maps.newHashMap();
@@ -142,6 +145,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
                     lpg.setRenderer(renderer);
                     lpg.setLabelRenderer(textRenderer);
                     lpg.setDragEnabled(dragEnabled);
+                    lpg.setSelectionEnabled(isPointSelectionEnabled());
                     points.put(src, lpg);
                     addMe.add(lpg);
                 } else {
@@ -178,6 +182,23 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     //
     // PROPERTY PATTERNS
     //
+    
+    /**
+     * Returns true if individual points can be selected.
+     * @return true if points can be selected
+     */
+    public boolean isPointSelectionEnabled() {
+        return styleHints.getBoolean(POINT_SELECTION_ENABLED, false);
+    }
+
+    public void setPointSelectionEnabled(boolean val) {
+        if (isPointSelectionEnabled() != val) {
+            styleHints.put(POINT_SELECTION_ENABLED, val);
+            for (DelegatingPrimitiveGraphic<S,Point2D,G> dpg : points.values()) {
+                dpg.setSelectionEnabled(val);
+            }
+        }
+    }
     
     /**
      * Manager responsible for tracking point locations
