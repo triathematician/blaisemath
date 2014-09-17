@@ -25,9 +25,16 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.IterativeGraphLayout;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.modules.layout.PositionalAddingLayout;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
+import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
+import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -38,12 +45,6 @@ import java.util.Set;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
-import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
-import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 
 /**
  * <p>
@@ -65,15 +66,16 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     private static final int DEFAULT_DELAY = 10;
     /** Default # iterations per layout step */
     private static final int DEFAULT_ITER = 2;
-
-    /** The initial layout scheme */
-    private static final StaticGraphLayout INITIAL_LAYOUT = StaticGraphLayout.CIRCLE;
-    /** The layout scheme for adding vertices */
-    private static final StaticGraphLayout ADDING_LAYOUT = StaticGraphLayout.ORIGIN;
-    /** The initial layout parameters */
-    private static final double[] LAYOUT_PARAMETERS = new double[] { 100 };
     
-
+    /** The initial layout scheme */
+    private StaticGraphLayout initialLayout = StaticGraphLayout.CIRCLE;
+    /** The initial layout parameters */
+    private double[] initialLayoutParameters = { 10.0 };
+    /** The layout scheme for adding vertices */
+    private StaticGraphLayout addingLayout = new PositionalAddingLayout();
+    /** The initial layout parameters */
+    private double[] addingLayoutParameters = { 25.0 };
+    
     /** Graph */
     private Graph<N> graph;
     /** Used for iterative graph layouts */
@@ -151,9 +153,16 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                     } else {
                         try {
                             // lays out new graph entirely
-                            Map<N,Point2D.Double> newLoc = old == null
-                                    ? INITIAL_LAYOUT.layout(g, LAYOUT_PARAMETERS)
-                                    : ADDING_LAYOUT.layout(g, LAYOUT_PARAMETERS);
+                            Map<N,Point2D.Double> newLoc;
+                            if (old == null) {
+                                newLoc = initialLayout.layout(g, initialLayoutParameters);
+                            } else {
+                                if (addingLayout instanceof PositionalAddingLayout) {
+                                    Map<Object, Point2D.Double> curLocs = (Map<Object, Point2D.Double>) coordManager.getCoordinates();
+                                    ((PositionalAddingLayout)addingLayout).setCurLocations(curLocs);
+                                }
+                                newLoc = addingLayout.layout(g, addingLayoutParameters);
+                            }
                             // remove objects that are already in coordinate manager
                             newLoc.keySet().removeAll(coordManager.getObjects());
                             newLoc.keySet().removeAll(coordManager.getCachedObjects());
@@ -184,13 +193,14 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                 Set<N> oldNodes = Sets.newHashSet(coordManager.getObjects());
                 oldNodes.removeAll(graph.nodes());
                 coordManager.cacheObjects(oldNodes);
-                Map<N,Point2D.Double> newLoc = ADDING_LAYOUT.layout(graph, LAYOUT_PARAMETERS);
+                Map<N,Point2D.Double> newLoc = addingLayout.layout(graph, addingLayoutParameters);
                 for (N c : coordManager.getObjects()) {
                     newLoc.remove(c);
                 }
                 coordManager.putAll(newLoc);
             } catch (InterruptedException ex) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, "Layout was interrupted", ex);
+                Logger.getLogger(GraphLayoutManager.class.getName())
+                        .log(Level.SEVERE, "Layout was interrupted", ex);
             }
         }
     }
