@@ -28,13 +28,16 @@ package com.googlecode.blaisemath.graph.modules.layout;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.layout.Pinnable;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ConcurrentModificationException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +52,7 @@ import java.util.logging.Logger;
  *
  * @author Elisha Peterson
  */
-public class SpringLayout implements IterativeGraphLayout {
+public class SpringLayout implements IterativeGraphLayout, Pinnable {
     
     /** Distance scale. This is the approximate length of an edge in the graph. */
     public static final double DIST_SCALE = 50;
@@ -67,6 +70,8 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // STATE VARIABLES
 
+    /** Nodes whose locations are fixed */
+    private final Set<Object> pinnedNodes = Sets.newHashSet();
     /** Current locations */
     private final Map<Object, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities */
@@ -137,9 +142,45 @@ public class SpringLayout implements IterativeGraphLayout {
     }
 
     public synchronized Map<Object,Point2D.Double> getPositions() {
-        return new HashMap<Object,Point2D.Double>(loc);
+        return Maps.newHashMap(loc);
     }
     
+    //</editor-fold>
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="Pinnable METHODS">
+    //
+    // Pinnable METHODS
+    //
+    
+    @Override
+    public synchronized Set getPinnedNodes() {
+        return Collections.unmodifiableSet(pinnedNodes);
+    }
+
+    @Override
+    public synchronized void setPinnedNodes(Collection nodes) {
+        synchronized (pinnedNodes) {
+            pinnedNodes.clear();
+            pinnedNodes.addAll(nodes);
+        }
+    }
+
+    @Override
+    public synchronized void clearPinnedNodes() {
+        pinnedNodes.clear();
+    }
+
+    @Override
+    public synchronized void pinNodes(Collection nodes) {
+        pinnedNodes.addAll(nodes);
+    }
+
+    @Override
+    public synchronized void unpinNodes(Collection nodes) {
+        pinnedNodes.removeAll(nodes);
+    }
+
     //</editor-fold>
     
 
@@ -169,7 +210,38 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (main iteration)">
 
-    private void checkForNodeUpdate(Set nodes) throws ConcurrentModificationException {
+    /**
+     * This method returns a position for a node that doesn't currently have a position.
+     * @param node the node to get new location of
+     */
+    private Point2D.Double newNodeLocation(Graph g, Object node) {
+        double len = parameters.springL;
+        double sx = 0;
+        double sy = 0;
+        int n = 0;
+        for (Object o : g.neighbors(node)) {
+            Point2D.Double p = loc.get(o);
+            if (p != null) {
+                sx += p.x;
+                sy += p.y;
+                n++;
+            }
+        }
+        if (n == 0) {
+            return new Point2D.Double(sx+2*len*Math.random(), sy+2*len*Math.random());
+        } else if (n == 1) {
+            return new Point2D.Double(sx+len*Math.random(), sy+len*Math.random());
+        } else {
+            return new Point2D.Double(sx/n, sy/n);
+        }
+    }
+    
+    /** 
+     * This method is called before each iteration to see if node locations have
+     * been updated by a mechanism other than this layout class.
+     * @param nodes the nodes to check for updates
+     */
+    private void checkForNodeUpdate(Set nodes) {
         if (tempLoc != null) {
             for (Entry<?, Point2D.Double> en : tempLoc.entrySet()) {
                 Object n = en.getKey();
@@ -200,8 +272,10 @@ public class SpringLayout implements IterativeGraphLayout {
         }
     }
 
-    public final <V> Map<V,Point2D.Double> iterate(Graph<V> g) throws ConcurrentModificationException {
+    public final <V> Map<V,Point2D.Double> iterate(Graph<V> g) {
         Set<V> nodes = g.nodes();
+        Set<V> unpinnedNodes = Sets.newHashSet(g.nodes());
+        unpinnedNodes.removeAll(pinnedNodes);
 
         if (g.isDirected()) {
             g = GraphUtils.copyAsUndirectedSparseGraph(g);
@@ -216,12 +290,12 @@ public class SpringLayout implements IterativeGraphLayout {
         // helper variables
         Point2D.Double iLoc, iVel;
 
-        // compute basic forces
-        Map<V, Point2D.Double> forces = new HashMap<V,Point2D.Double>();
+        // compute basic (non-repulsive) forces
+        Map<V, Point2D.Double> forces = Maps.newHashMap();
         for (V io : nodes) {
             iLoc = loc.get(io);
             if (iLoc == null) {
-                iLoc = new Point2D.Double();
+                iLoc = newNodeLocation(g, io);
                 loc.put(io, iLoc);
             }
             iVel = vel.get(io);
@@ -229,25 +303,29 @@ public class SpringLayout implements IterativeGraphLayout {
                 iVel = new Point2D.Double();
                 vel.put(io, iVel);
             }
-            Point2D.Double netForce = new Point2D.Double();
-
-            addGlobalForce(netForce, io, iLoc);
-            addSpringForces(g, netForce, io, iLoc);
-            addAdditionalForces(g, netForce, io, iLoc);
-            forces.put(io, netForce);
+            
+            if (!pinnedNodes.contains(io)) {
+                Point2D.Double netForce = new Point2D.Double();
+                addGlobalForce(netForce, io, iLoc);
+                addSpringForces(g, netForce, io, iLoc);
+                addAdditionalForces(g, netForce, io, iLoc);
+                forces.put(io, netForce);
+            }
         }
         
         // compute repulsive forces
         for (Region[] rr : regions) {
             for (Region r : rr) {
                 for (Object io : r.pts.keySet()) {
-                    addRepulsiveForces(g, r, forces.get(io), io, r.pts.get(io));
+                    if (!pinnedNodes.contains(io)) {
+                        addRepulsiveForces(g, r, forces.get(io), io, r.pts.get(io));
+                    }
                 }
             }
         }
             
         // check for infinite forces
-        for (V io : nodes) {
+        for (V io : unpinnedNodes) {
             Point2D.Double netForce = forces.get(io);
             boolean test = !Double.isNaN(netForce.x) && !Double.isNaN(netForce.y) && !Double.isInfinite(netForce.x) && !Double.isInfinite(netForce.y);
             if (!test) {
@@ -257,13 +335,13 @@ public class SpringLayout implements IterativeGraphLayout {
         }
 
         // adjusts velocity with damping;
-        for (V io : nodes) {
+        for (V io : unpinnedNodes) {
             adjustVelocity(vel.get(io), forces.get(io));
         }
 
         // move nodes
-        for (V o : nodes) {
-            adjustPosition(loc.get(o), vel.get(o));
+        for (V io : unpinnedNodes) {
+            adjustPosition(loc.get(io), vel.get(io));
         }
 
         iteration ++;
@@ -272,16 +350,6 @@ public class SpringLayout implements IterativeGraphLayout {
         for (V v : nodes) {
             res.put(v, loc.get(v));
         }
-
-//        if ((iteration <= 500 && iteration % 50 == 0) || (iteration % 500 == 0)) {
-//            for (Region[] rr : regions) {
-//                System.out.println(Joiner.on(" - ").join(Iterables.transform(Arrays.asList(rr), new Function<Region,String>(){
-//                    public String apply(Region input) {
-//                        return input.pts.size()+"";
-//                    }
-//                })));
-//            }
-//        }
 
         return res;
     }
