@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
+import javax.swing.JPopupMenu;
 
 /**
  * A collection of edges backed by a common set of points.
@@ -234,4 +235,13 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     
     //</editor-fold>
 
+
+    @Override
+    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+        // provide additional info for context menu
+        Graphic gfc = graphicAt(point);
+        super.initContextMenu(menu, this, point, 
+                gfc instanceof DelegatingPrimitiveGraphic ? ((DelegatingPrimitiveGraphic)gfc).getSourceObject() : focus, 
+                selection);
+    }
 }
