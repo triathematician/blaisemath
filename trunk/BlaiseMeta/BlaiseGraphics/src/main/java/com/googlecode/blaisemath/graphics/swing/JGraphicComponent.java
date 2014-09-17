@@ -349,9 +349,10 @@ public class JGraphicComponent extends javax.swing.JComponent {
         if (transform == null) {
             root.renderTo(canvas);
         } else {
+            AffineTransform priorTransform = canvas.getTransform();
             canvas.transform(transform);
             root.renderTo(canvas);
-            canvas.transform(inverseTransform);
+            canvas.setTransform(priorTransform);
         }
         renderOverlay(canvas);
     }

@@ -315,7 +315,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         // provide additional info for context menu
         Graphic gfc = graphicAt(point);
         super.initContextMenu(menu, this, point, 
-                gfc instanceof LabeledPointGraphic ? ((LabeledPointGraphic)gfc).getSourceObject() : focus, 
+                gfc instanceof DelegatingPrimitiveGraphic ? ((DelegatingPrimitiveGraphic)gfc).getSourceObject() : focus, 
                 selection);
     }
     
