@@ -52,16 +52,16 @@ import javax.swing.JPanel;
  *
  * @author Elisha Peterson
  */
-public class EnumObjectEditor extends MPanelEditorSupport implements ActionListener, ItemListener {
+public final class EnumObjectEditor extends MPanelEditorSupport {
 
     /** Method used to retrieve new instances. */
-    Method instanceMethod;
+    private Method instanceMethod;
     /** Options for selecting different object types */
-    JComboBox combo;
+    private JComboBox combo;
     /** String representing the custom object selected in the combo box model */
-    String custom;
+    private String custom;
     /** Button for custom editing */
-    JButton button;
+    private JButton button;
 
     public EnumObjectEditor () {
         initCustomizer();
@@ -75,12 +75,23 @@ public class EnumObjectEditor extends MPanelEditorSupport implements ActionListe
         combo = new JComboBox();
         combo.setEditable(false);
         combo.setBackground(panel.getBackground());
-        combo.addItemListener(this);
+        combo.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                handleSelectionChange(e);
+            }
+        });
         panel.add(combo, BorderLayout.CENTER);
 
         button = new JButton("...");
         button.setMargin(new Insets(3, 3, 3, 2));
-        button.addActionListener(this);
+        button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dialog = new PropertySheetDialog(null, false, newValue);
+                dialog.setVisible(true);
+            }
+        });
         panel.add(button, BorderLayout.EAST);
     }
 
@@ -123,12 +134,12 @@ public class EnumObjectEditor extends MPanelEditorSupport implements ActionListe
         Object[] vals = getEnumClass().getEnumConstants();
         String[] result = new String[vals.length];
         for (int i = 0; i < result.length; i++) {
-            result[i] = vals.toString();
+            result[i] = vals[i].toString();
         }
         return result;
     }
 
-    public void itemStateChanged(ItemEvent e) {
+    private void handleSelectionChange(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             if (e.getItem() == custom) {
                 setNewValue( super.getValue() );
@@ -144,9 +155,5 @@ public class EnumObjectEditor extends MPanelEditorSupport implements ActionListe
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        JDialog dialog = new PropertySheetDialog(null, false, newValue);
-        dialog.setVisible(true);
-    }
 }
 

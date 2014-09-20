@@ -27,8 +27,6 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 
-import com.googlecode.blaisemath.firestarter.IndexedPropertySheet;
-import com.googlecode.blaisemath.firestarter.PropertySheet;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.beans.PropertyEditorManager;
@@ -47,7 +45,7 @@ import com.googlecode.blaisemath.util.RollupPanel;
  */
 public class Testing extends javax.swing.JFrame {
 
-    PropertySheet p1;
+    MPanel selectedBeanPanel;
 
     /** Creates new form T */
     public Testing() {
@@ -55,25 +53,26 @@ public class Testing extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         PropertyEditorManager.registerEditor(TestEnum.class, EnumEditor.class);
         PropertyEditorManager.registerEditor(IndexedBean.class, EnumObjectEditor.class);
-        PropertySheet.toolsVisibleByDefault = true;
+        PropertySheet.TOOLBAR_VISIBLE_DEFAULT = true;
 
         initComponents();
 
-        rollupPanel2.add(new MPanel(new JLabel("<html><font size=\"+1\"><b>Selected</b> Bean"), p1 = new PropertySheet()));
-        rollupPanel2.add("Indexed", new PropertySheet(new IndexedBean()));
-        rollupPanel2.add("Indexed B", new PropertySheet(new IndexedBean.Indexed2()));
+        selectedBeanPanel = new MPanel(new JLabel("<html><font size=\"+1\"><b>Selected</b> Bean"), new PropertySheet());
+        rollupPanel2.add(selectedBeanPanel);
+        rollupPanel2.add("Indexed", PropertySheet.createWithBean(new IndexedBean()));
+        rollupPanel2.add("Indexed B", PropertySheet.createWithBean(new IndexedBean.Indexed2()));
         rollupPanel2.add("Indexed Strings", new IndexedPropertySheet(new IndexedBean(), "strings"));
-        PropertySheet ps = new PropertySheet(new CustomBean());
+        PropertySheet ps = PropertySheet.createWithBean(new CustomBean());
         rollupPanel2.add("Other", ps);
-        rollupPanel2.add("Shapes", new PropertySheet(new ShapeBean()));
+        rollupPanel2.add("Shapes", PropertySheet.createWithBean(new ShapeBean()));
         // working -
-        rollupPanel2.add("Numbers", new PropertySheet(new NumberBean()));
+        rollupPanel2.add("Numbers", PropertySheet.createWithBean(new NumberBean()));
         // working -
-        rollupPanel2.add("Points", new PropertySheet(new PointBean()));
-        rollupPanel2.add("a Point2D.Double", new PropertySheet(new Point2D.Double(3,4)));
+        rollupPanel2.add("Points", PropertySheet.createWithBean(new PointBean()));
+        rollupPanel2.add("a Point2D.Double", PropertySheet.createWithBean(new Point2D.Double(3,4)));
         // working -
-        rollupPanel2.add("a Point", new PropertySheet(new Point(3,4)));
-        rollupPanel2.add("a text area", new JScrollPane(new PropertySheet(jTextArea1)));
+        rollupPanel2.add("a Point", PropertySheet.createWithBean(new Point(3,4)));
+        rollupPanel2.add("a text area", new JScrollPane(PropertySheet.createWithBean(jTextArea1)));
 
         pack();
     }
@@ -132,11 +131,12 @@ public class Testing extends javax.swing.JFrame {
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
-    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-        p1.setBean(((BeanTreeNode)evt.getPath().getLastPathComponent()).getUserObject());
-    }//GEN-LAST:event_jTree1ValueChanged
+    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {
+        Object obj = ((BeanTreeNode)evt.getPath().getLastPathComponent()).getUserObject();
+        selectedBeanPanel.setPrimaryComponent(PropertySheet.createWithBean(obj));
+    }
 
     /**
      * @param args the command line arguments

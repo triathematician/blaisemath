@@ -33,7 +33,10 @@ import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -179,14 +182,11 @@ public abstract class EditorRegistration {
         Object value = null;
         Method getter = descriptor.getReadMethod();
         if (getter != null) {
-            Class[] paramTypes = getter.getParameterTypes();
-            Object[] args = new Object[paramTypes.length];
             try {
                 value = getter.invoke(bean);
             } catch (Exception e) {
-                System.out.println("NoSuchMethodError for method invocation\nBean: " + bean.toString() + "\nGetter: " + getter.getName() + "\nGetter args: ");
-                for (int i = 0; i < args.length; i++) System.out.println("\t" + "type: " + paramTypes[i] + " value: " + args[i]);
-                e.printStackTrace();
+                Logger.getLogger(EditorRegistration.class.getName())
+                        .log(Level.WARNING, "Get bean value failed: "+descriptor, e);
             }
         }
         editor.setValue(value);
@@ -196,22 +196,32 @@ public abstract class EditorRegistration {
     static void addChangeListening(final Object bean, final PropertyDescriptor descriptor, final PropertyEditor result) {
         final Method setter = descriptor.getWriteMethod();
         // set up listening for changes to properties... update the underlying bean
-        result.addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                try {
-                    Object source = evt.getSource();
-                    if (source instanceof MPropertyEditorSupport) {
-                        setter.invoke(bean, ((MPropertyEditorSupport) source).getNewValue());
-                    } else if (source instanceof PropertyEditor) {
-                        setter.invoke(bean, ((PropertyEditor) source).getValue());
-                    } else {
-                        setter.invoke(bean, source);
+        if (setter != null) {
+            result.addPropertyChangeListener(new PropertyChangeListener(){
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    try {
+                        Object source = evt.getSource();
+                        if (source instanceof MPropertyEditorSupport) {
+                            setter.invoke(bean, ((MPropertyEditorSupport) source).getNewValue());
+                        } else if (source instanceof PropertyEditor) {
+                            setter.invoke(bean, ((PropertyEditor) source).getValue());
+                        } else {
+                            setter.invoke(bean, source);
+                        }
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
+                                "Attempt to update bean value failed", ex);
+                    } catch (IllegalArgumentException ex) {
+                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
+                                "Attempt to update bean value failed", ex);
+                    } catch (InvocationTargetException ex) {
+                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
+                                "Attempt to update bean value failed", ex);
                     }
-                } catch (Exception ex) {
-                    System.out.println("Unable to change underlying bean value: " + ex);
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

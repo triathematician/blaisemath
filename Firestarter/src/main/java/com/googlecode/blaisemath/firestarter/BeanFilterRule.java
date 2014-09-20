@@ -19,7 +19,6 @@ package com.googlecode.blaisemath.firestarter;
  * limitations under the License.
  * #L%
  */
-
 import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
 
@@ -28,86 +27,145 @@ import java.beans.PropertyDescriptor;
  */
 public enum BeanFilterRule implements Predicate<PropertyDescriptor> {
 
-    /** Matches non-expert, non-hidden patterns with read and write methods */
+    /**
+     * Matches non-expert, non-hidden patterns with read and write methods
+     */
     STANDARD {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.getWriteMethod() != null && pd.getReadMethod() != null && !pd.isExpert() && !pd.isHidden();
         }
-        @Override public String toString() { return "standard properties (read and write)"; }
+
+        @Override
+        public String toString() {
+            return "standard properties (read and write)";
+        }
     },
-    
-    /** Matches non-expert, non-hidden patterns with read or write methods */
+    /**
+     * Matches non-expert, non-hidden patterns with read or write methods
+     */
     STANDARD_READ_OR_WRITE {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return (pd.getWriteMethod() != null || pd.getReadMethod() != null) && !pd.isExpert() && !pd.isHidden();
         }
-        @Override public String toString() { return "standard properties (read or write)"; }
+
+        @Override
+        public String toString() {
+            return "standard properties (read or write)";
+        }
     },
-    
-    /** Matches preferred patterns */
+    /**
+     * Matches preferred patterns
+     */
     PREFERRED {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.isPreferred();
         }
-        @Override public String toString() { return "preferred properties"; }
+
+        @Override
+        public String toString() {
+            return "preferred properties";
+        }
     },
-    
-    /** Matches expert patterns */
+    /**
+     * Matches expert patterns
+     */
     EXPERT {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.isExpert();
         }
-        @Override public String toString() { return "expert properties"; }
+
+        @Override
+        public String toString() {
+            return "expert properties";
+        }
     },
-    
-    /** Matches all patterns. */
+    /**
+     * Matches all patterns.
+     */
     ALL {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return true;
         }
-        @Override public String toString() { return "all properties"; }
+
+        @Override
+        public String toString() {
+            return "all properties";
+        }
     },
-    
-    /** Matches all patterns without a write method */
+    /**
+     * Matches all patterns without a write method
+     */
     READ_ONLY {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.getWriteMethod() == null;
         }
-        @Override public String toString() { return "read-only properties"; }
+
+        @Override
+        public String toString() {
+            return "read-only properties";
+        }
     },
-    
-    /** Matches bound patterns with a write method */
+    /**
+     * Matches bound patterns with a write method
+     */
     BOUND {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.isBound() && pd.getWriteMethod() != null;
         }
-        @Override public String toString() { return "bound properties"; }
+
+        @Override
+        public String toString() {
+            return "bound properties";
+        }
     },
-    
-    /** Matches constrained patterns with a write method */
+    /**
+     * Matches constrained patterns with a write method
+     */
     CONSTRAINED {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.isConstrained() && pd.getWriteMethod() != null;
         }
-        @Override public String toString() { return "constrained properties"; }
+
+        @Override
+        public String toString() {
+            return "constrained properties";
+        }
     },
-    
-    /** Matches hidden patterns */
+    /**
+     * Matches hidden patterns
+     */
     HIDDEN {
+        @Override
         public boolean apply(PropertyDescriptor pd) {
             return pd.isHidden();
         }
-        @Override public String toString() { return "hidden properties"; }
+
+        @Override
+        public String toString() {
+            return "hidden properties";
+        }
     };
 
-
-    /** Converts string filter to a property filter, using the property name. */
+    /**
+     * Converts string filter to a property filter, using the property name.
+     * @param propertyFilter
+     * @return 
+     */
     public static Predicate<PropertyDescriptor> byName(final Predicate<String> propertyFilter) {
-        return new Predicate<PropertyDescriptor>(){
+        return new Predicate<PropertyDescriptor>() {
+            @Override
             public boolean apply(PropertyDescriptor input) {
                 return propertyFilter == null || propertyFilter.apply(input.getName());
             }
         };
     }
-    
+
 }

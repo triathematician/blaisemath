@@ -90,18 +90,4 @@ public class IndexedBean {
         }
 
     }
-    
-    
-
-    public static void main(String[] args) {
-        TestEnum te = TestEnum.YO;
-
-        System.out.println(Arrays.toString(TestEnum.class.getEnumConstants()));
-
-        String s = "    3444  ,    2000202 ,    0020   ";
-        String[] spl = s.split("\\s*,\\s*");
-        for (int i = 0; i < spl.length; i++) {
-            System.out.println("["+spl[i].replaceAll("\\s*", "")+"]");
-        }
-    }
 }

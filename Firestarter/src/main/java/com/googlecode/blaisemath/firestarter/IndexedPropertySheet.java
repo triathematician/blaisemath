@@ -29,15 +29,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.beans.BeanInfo;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
+import javax.swing.AbstractAction;
+import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -56,58 +60,83 @@ public class IndexedPropertySheet extends PropertySheet {
     /** Stores the property descriptors for eached indexed element. */
     IndexedPropertyDescriptor ipd;
 
-    /** Construct for provided bean and provided property descriptor (which must be indexed) */
+    /** 
+     * Construct for provided bean and provided property descriptor (which must be indexed)
+     * @param bean 
+     * @param ipd 
+     */
     public IndexedPropertySheet(Object bean, IndexedPropertyDescriptor ipd) {
         this.ipd = ipd;
-        setBean(bean);
+        beanModel = new IndexedBeanEditorModel(bean, ipd);
+        headers = new String[] {"Index", "Value"};
+        defaultNameColWidth = 35;
         initComponents();
     }
 
     public IndexedPropertySheet(Object bean, String propName) {
-        BeanInfo info = BeanEditorSupport.getBeanInfo(bean.getClass());
+        this(bean, indexedPropertyDescriptor(bean, propName));
+    }
+    
+    private static IndexedPropertyDescriptor indexedPropertyDescriptor(Object bean, String propName) {
+        BeanInfo info = DefaultBeanEditorModel.getBeanInfo(bean.getClass());
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             if (pd.getName().equals(propName) && pd instanceof IndexedPropertyDescriptor) {
-                this.ipd = (IndexedPropertyDescriptor) pd;
-                setBean(bean);
-                initComponents();
-                break;
+                return (IndexedPropertyDescriptor) pd;
             }
         }
-        if (ipd == null)
-            throw new IllegalArgumentException("Unable to find property " + propName + " in the class " + bean.getClass());
+        throw new IllegalArgumentException("Unable to find property " + propName + " in the class " + bean.getClass());
     }
 
     @Override
-    public void initComponents() {
-        if (ipd == null)
+    protected final void initComponents() {
+        if (ipd == null) {
             return;
+        }
         
         // set up table model
         table = new JTable();
         table.setGridColor(new Color(192, 192, 192));
         model = new PropertySheetModel();
-        model.addTableModelListener(this);
+        model.addTableModelListener(new TableModelListener(){
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                handleTableChange(e);
+            }
+        });
         table.setModel(model);
-        HEADERS = new String[] {"Index", "Value"};
         table.getTableHeader().setReorderingAllowed(false);
         updateRowHeights();
 
         // set up first column
-        DEFAULT_NAME_COL_WIDTH = 35;
         TableColumn column = table.getColumnModel().getColumn(0);
         column.setCellRenderer(new IndexColRenderer());
-        column.setPreferredWidth(DEFAULT_NAME_COL_WIDTH);
+        column.setPreferredWidth(defaultNameColWidth);
 
         // set up second column
         column = table.getColumnModel().getColumn(1);
-        column.setPreferredWidth(MIN_WIDTH - DEFAULT_NAME_COL_WIDTH);
+        column.setPreferredWidth(MIN_WIDTH - defaultNameColWidth);
         column.setCellRenderer(new ValueColEditor());
         column.setCellEditor(new ValueColEditor());
         
         // set up tool panel
-        JButton addB = new JButton(((IndexedBeanEditorSupport)beanSupport).addAction);
+        AbstractAction aa = new AbstractAction("+") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((IndexedBeanEditorModel)beanModel).addNewValue();
+            }
+        };
+        aa.putValue(SHORT_DESCRIPTION, "Add a new element to the end of the list.");
+        JButton addB = new JButton(aa);
         addB.setMargin(new Insets(2,4,2,4));
-        JButton delB = new JButton(((IndexedBeanEditorSupport)beanSupport).createRemoveAction(table));
+        
+        AbstractAction remove = new AbstractAction("-") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((IndexedBeanEditorModel)beanModel).removeValues(table.getSelectedRows());
+            }
+        };
+        remove.putValue(SHORT_DESCRIPTION, "Remove the selected element from the end of the list.");
+        JButton delB = new JButton(remove);
         delB.setMargin(new Insets(2,4,2,4));
         Font font = addB.getFont().deriveFont( (float) addB.getFont().getSize() - 2);
         addB.setFont(font);
@@ -126,33 +155,12 @@ public class IndexedPropertySheet extends PropertySheet {
         add(toolPanel, BorderLayout.NORTH);
     }
 
-    /** Set the value of bean
-     * @param bean new value of bean
-     */
     @Override
-    public void setBean(Object bean) {
-        if (ipd != null) {
-            beanSupport = new IndexedBeanEditorSupport(bean, ipd);
-            if (model != null)
-                model.fireTableDataChanged();
-        }
-    }
-
-    /** Updates the bean. */
-    public void updateBean() {
-        setBean(getBean());
-    }
-
-    @Override
-    public void tableChanged(TableModelEvent e) {
+    protected void handleTableChange(TableModelEvent e) {
         updateRowHeights();
         firePropertyChange("size", null, null);
+        repaint();
     }
-
-
-    // *********************************************** //
-    //                  INNER CLASSES                  //
-    // *********************************************** //
 
     /** Renders name columns. Currently only changed by adding a tooltip. */
     class IndexColRenderer extends DefaultTableCellRenderer {
@@ -162,6 +170,6 @@ public class IndexedPropertySheet extends PropertySheet {
             super.setText(""+row);
             return this;
         }
-    } // INNER CLASS NameColumnRenderer
+    }
 }
 

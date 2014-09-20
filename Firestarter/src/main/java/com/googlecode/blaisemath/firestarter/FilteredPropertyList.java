@@ -26,7 +26,8 @@ package com.googlecode.blaisemath.firestarter;
 
 import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractListModel;
 
 /**
@@ -39,31 +40,33 @@ import javax.swing.AbstractListModel;
  */
 abstract class FilteredPropertyList extends AbstractListModel {
 
-    PropertyDescriptor[] items;
-    Vector<PropertyDescriptor> filterItems;
+    protected PropertyDescriptor[] unfilteredProperties = new PropertyDescriptor[0];
+    private List<PropertyDescriptor> filterItems;
     
     /** Stores the present filter value. */
     protected Predicate<PropertyDescriptor> filter = BeanFilterRule.STANDARD;
 
-    /** Construct with nothing. */
-    public FilteredPropertyList(){
-    }
-
     /**
-     * Constructs with specified backing 
-     * @param items the items to be filtered. */
-    public FilteredPropertyList(PropertyDescriptor[] items, Predicate<PropertyDescriptor> filter) {
-        this.filter = filter;
-        this.items = items;
+     * Set the properties
+     * @param props properties
+     */
+    protected void setProperties(PropertyDescriptor[] props) {
+        this.unfilteredProperties = props;
         refilter();
     }
-
-    /** @return current filter value. */
+    
+    /** 
+     * Get current filter.
+     * @return current filter value. 
+     */
     public Predicate<PropertyDescriptor> getFilter() {
         return filter;
     }
 
-    /** @param filter the new filter value. */
+    /** 
+     * Set current filter
+     * @param filter the new filter value. 
+     */
     public void setFilter(Predicate<PropertyDescriptor> filter) {
         if (this.filter != filter) {
             this.filter = filter;
@@ -71,36 +74,37 @@ abstract class FilteredPropertyList extends AbstractListModel {
         }
     }
 
+    @Override
     public int getSize() {
         return filterItems.size();
     }
 
+    @Override
     public PropertyDescriptor getElementAt(int index) {
         return index < filterItems.size() ? filterItems.get(index) : null;
     }
 
     /** Refilters the list of properties based on the current criteria. */
-    public void refilter() {
-        filterItems = new Vector<PropertyDescriptor>();
+    protected final void refilter() {
+        filterItems = new ArrayList<PropertyDescriptor>();
         // add preferred items first
-        for (int i = 0; i < items.length; i++)
-            if (items[i].isPreferred() && filter.apply(items[i]))
-                filterItems.add(items[i]);
+        for (PropertyDescriptor item : unfilteredProperties) {
+            if (item.isPreferred() && filter.apply(item)) {
+                filterItems.add(item);
+            }
+        }
         // now add standard items
-        for (int i = 0; i < items.length; i++)
-            if (!items[i].isPreferred() && !items[i].isExpert() && filter.apply(items[i]))
-                filterItems.add(items[i]);
-        // now add expert items
-        for (int i = 0; i < items.length; i++)
-            if (items[i].isExpert() && !items[i].isPreferred() && filter.apply(items[i]))
-                filterItems.add(items[i]);
+        for (PropertyDescriptor item : unfilteredProperties) {
+            if (!item.isPreferred() && !item.isExpert() && filter.apply(item)) {
+                filterItems.add(item);
+            }
+        }
+        // finish with expert items
+        for (PropertyDescriptor item : unfilteredProperties) {
+            if (item.isExpert() && !item.isPreferred() && filter.apply(item)) {
+                filterItems.add(item);
+            }
+        }
         fireContentsChanged(this, 0, getSize()+1);
-    }
-
-    /** Sorts the list of properties by their names. */
-    public void sort() {
-        // TODO - write this code
-        System.out.println("Need to sort items here.");
-        refilter();
     }
 }

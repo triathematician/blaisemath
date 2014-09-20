@@ -20,11 +20,11 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -39,73 +39,74 @@ import javax.swing.JDialog;
 final class DefaultPropertyComponent extends JButton {
 
     /** The property's parent object. */
-    Object parent;
-    /** The property descriptor. */
-    PropertyDescriptor pd;
+    private final Object parent;
     /** Index (when the descriptor is an indexed property) */
-    int index = -1;
-    /** Recognize when the update is coming from the underlying property and do not forward document events. */
-    boolean propertyUpdate = false;
+    private final int index;
+    /** The property descriptor. */
+    private final PropertyDescriptor pd;
 
-    public DefaultPropertyComponent(Object parent, PropertyDescriptor pd) {
+    DefaultPropertyComponent(Object parent, PropertyDescriptor pd) {
         super(pd.getDisplayName());
         this.parent = parent;
+        this.index = -1;
         this.pd = pd;
-        // set up listener to track for customization... this happens when the button is pressed
-        addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e) { updateProperty(); } });
-        try {
-            Object value = pd.getReadMethod().invoke(parent);
-            if (value != null) {
-                if (value.getClass().isArray()) {
-                    setText(Arrays.deepToString((Object[])value));
-                } else {
-                    setText(value.toString());
-                }
-            } else
-                setEnabled(false);
-        } catch (Exception ex) {}
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateProperty();
+            }
+        });
+        setEnabled(false);
+        Object value = ReflectionUtils.tryInvokeRead(parent, pd);
+        if (value != null) {
+            if (value.getClass().isArray()) {
+                setText(Arrays.deepToString((Object[])value));
+            } else {
+                setText(value.toString());
+            }
+            setEnabled(true);
+        }
     }
 
-    public DefaultPropertyComponent(Object parent, IndexedPropertyDescriptor pd, int index) {
+    DefaultPropertyComponent(Object parent, IndexedPropertyDescriptor pd, int index) {
         super(pd.getDisplayName());
         this.parent = parent;
         this.pd = pd;
         this.index = index;
-        // set up listener to track for customization... this happens when the button is pressed
-        addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e) { updateProperty(); } });
-        try {
-            Object value = pd.getIndexedReadMethod().invoke(parent, index);
-            if (value != null) {
-                if (value.getClass().isArray()) {
-                    setText(Arrays.deepToString((Object[])value));
-                } else {
-                    setText(value.toString());
-                }
-            } else
-                setEnabled(false);
-        } catch (Exception ex) {}
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateProperty();
+            }
+        });
+        Object value = ReflectionUtils.tryInvokeIndexedRead(parent, pd, index);
+        if (value != null) {
+            if (value.getClass().isArray()) {
+                setText(Arrays.deepToString((Object[])value));
+            } else {
+                setText(value.toString());
+            }
+        } else {
+            setEnabled(false);
+        }
     }
 
     /** Called whenever the button is pressed. Calls up a dialog box with the new bean's properties. */
-    public void updateProperty() {
+    void updateProperty() {
         JDialog dialog = null;
-        try {
-            if (pd instanceof IndexedPropertyDescriptor && index == -1) {
-                dialog = new PropertySheetDialog(null, false, parent, (IndexedPropertyDescriptor) pd);
-            } else if (pd instanceof IndexedPropertyDescriptor) {
-                Object value = ((IndexedPropertyDescriptor)pd).getIndexedReadMethod().invoke(parent, index);
-                if (value != null)
-                    dialog = new PropertySheetDialog(null, false, value);
-            } else {
-                Object value = pd.getReadMethod().invoke(parent);
-                if (value != null)
-                    dialog = new PropertySheetDialog(null, false, value);
-            }
-            if (dialog != null)
-                dialog.setVisible(true);
-        } catch (IllegalAccessException ex) {
-        } catch (IllegalArgumentException ex) {
-        } catch (InvocationTargetException ex) {
+        Object value = null;
+        if (pd instanceof IndexedPropertyDescriptor && index == -1) {
+            dialog = new PropertySheetDialog(null, false, parent, (IndexedPropertyDescriptor) pd);
+        } else if (pd instanceof IndexedPropertyDescriptor) {
+            value = ReflectionUtils.tryInvokeIndexedRead(parent, (IndexedPropertyDescriptor) pd, index);
+        } else {
+            value = ReflectionUtils.tryInvokeRead(parent, pd);
+        }
+        if (value != null) {
+            dialog = new PropertySheetDialog(null, false, value);
+        }
+        if (dialog != null) {
+            dialog.setVisible(true);
         }
     }
 }
