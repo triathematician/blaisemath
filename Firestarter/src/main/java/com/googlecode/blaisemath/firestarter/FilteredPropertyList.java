@@ -27,6 +27,8 @@ package com.googlecode.blaisemath.firestarter;
 import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import javax.swing.AbstractListModel;
 
@@ -41,7 +43,7 @@ import javax.swing.AbstractListModel;
 abstract class FilteredPropertyList extends AbstractListModel {
 
     protected PropertyDescriptor[] unfilteredProperties = new PropertyDescriptor[0];
-    private List<PropertyDescriptor> filterItems;
+    private final List<PropertyDescriptor> filterItems = new ArrayList<PropertyDescriptor>();
     
     /** Stores the present filter value. */
     protected Predicate<PropertyDescriptor> filter = BeanFilterRule.STANDARD;
@@ -51,7 +53,7 @@ abstract class FilteredPropertyList extends AbstractListModel {
      * @param props properties
      */
     protected void setProperties(PropertyDescriptor[] props) {
-        this.unfilteredProperties = props;
+        this.unfilteredProperties = Arrays.copyOf(props, props.length);
         refilter();
     }
     
@@ -86,25 +88,31 @@ abstract class FilteredPropertyList extends AbstractListModel {
 
     /** Refilters the list of properties based on the current criteria. */
     protected final void refilter() {
-        filterItems = new ArrayList<PropertyDescriptor>();
-        // add preferred items first
-        for (PropertyDescriptor item : unfilteredProperties) {
-            if (item.isPreferred() && filter.apply(item)) {
-                filterItems.add(item);
-            }
-        }
-        // now add standard items
-        for (PropertyDescriptor item : unfilteredProperties) {
-            if (!item.isPreferred() && !item.isExpert() && filter.apply(item)) {
-                filterItems.add(item);
-            }
-        }
-        // finish with expert items
-        for (PropertyDescriptor item : unfilteredProperties) {
-            if (item.isExpert() && !item.isPreferred() && filter.apply(item)) {
-                filterItems.add(item);
-            }
-        }
+        LinkedHashSet<PropertyDescriptor> unsorted = filter(unfilteredProperties, filter);
+        filterItems.clear();
+        filterItems.addAll(filter(unsorted, BeanFilterRule.PREFERRED));
+        filterItems.addAll(filter(unsorted, BeanFilterRule.STANDARD));
+        filterItems.addAll(filter(unsorted, BeanFilterRule.EXPERT));
         fireContentsChanged(this, 0, getSize()+1);
+    }
+    
+    private static <T> LinkedHashSet<T> filter(T[] src, Predicate<? super T> filter) {
+        LinkedHashSet<T> res = new LinkedHashSet<T>();
+        for (T t : src) {
+            if (filter.apply(t) && !res.contains(t)) {
+                res.add(t);
+            }
+        }
+        return res;
+    }
+    
+    private static <T> LinkedHashSet<T> filter(Iterable<T> src, Predicate<? super T> filter) {
+        LinkedHashSet<T> res = new LinkedHashSet<T>();
+        for (T t : src) {
+            if (filter.apply(t) && !res.contains(t)) {
+                res.add(t);
+            }
+        }
+        return res;
     }
 }

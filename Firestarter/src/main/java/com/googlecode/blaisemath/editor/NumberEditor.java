@@ -32,19 +32,19 @@ import javax.swing.event.ChangeListener;
 
 /**
  * <p>
- *   <code>NumberEditor</code> contains property editors for the standard number types.
- *   The default editor component is a spinner.
+ *   Components for editing numbers, using spinners.
  * </p>
  *
  * @author Elisha Peterson
  */
 public abstract class NumberEditor extends MPropertyEditorSupport {
 
-    JSpinner spinner;
+    protected final JSpinner spinner;
 
     public NumberEditor() {
         spinner = new JSpinner();
         spinner.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 setNewValue(spinner.getValue());
             }
@@ -66,15 +66,11 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         Object value = getValue();
         return (value != null) ? value.toString() : "null";
     }
-
-    //
-    //  INSTANCES
-    //
-    //
-    public static class ByteEditor extends NumberEditor {
+    
+    public static final class ByteEditor extends NumberEditor {
 
         public ByteEditor() {
-            newValue = (byte) 0;
+            newValue = 0;
             initEditorValue();
         }
 
@@ -85,7 +81,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Byte.decode(text));
         }
 
@@ -95,10 +91,10 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
     }
 
-    public static class ShortEditor extends NumberEditor {
+    public static final class ShortEditor extends NumberEditor {
 
         public ShortEditor() {
-            newValue = (short) 0;
+            newValue = 0;
             initEditorValue();
         }
 
@@ -109,7 +105,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Short.decode(text));
         }
 
@@ -119,7 +115,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
     }
 
-    public static class IntegerEditor extends NumberEditor {
+    public static final class IntegerEditor extends NumberEditor {
 
         public IntegerEditor() {
             newValue = 0;
@@ -127,7 +123,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Integer.decode(text));
         }
 
@@ -137,10 +133,10 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
     }
 
-    public static class LongEditor extends NumberEditor {
+    public static final class LongEditor extends NumberEditor {
 
         public LongEditor() {
-            newValue = 0l;
+            newValue = 0L;
             initEditorValue();
         }
 
@@ -151,7 +147,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Long.decode(text));
         }
 
@@ -161,7 +157,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
     }
 
-    public static class FloatEditor extends NumberEditor {
+    public static final class FloatEditor extends NumberEditor {
 
         public FloatEditor() {
             newValue = 0f;
@@ -175,7 +171,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Float.valueOf(text));
         }
 
@@ -185,7 +181,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
     }
 
-    public static class DoubleEditor extends NumberEditor {
+    public static final class DoubleEditor extends NumberEditor {
 
         public DoubleEditor() {
             newValue = 0.0;
@@ -193,7 +189,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
         }
 
         @Override
-        public void setAsText(String text) throws IllegalArgumentException {
+        public void setAsText(String text) {
             setValue((text == null) ? null : Double.valueOf(text));
         }
 

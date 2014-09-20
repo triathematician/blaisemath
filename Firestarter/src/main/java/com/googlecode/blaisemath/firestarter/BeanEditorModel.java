@@ -47,7 +47,7 @@ public interface BeanEditorModel extends ListModel {
      * @param row the row
      * @return property type
      */
-    Class getValueType(int row);
+    Class<?> getValueType(int row);
 
     /**
      * Returns value at given position.

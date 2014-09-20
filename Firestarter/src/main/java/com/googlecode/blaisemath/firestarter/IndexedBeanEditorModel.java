@@ -25,23 +25,19 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Component;
 import java.beans.IndexedPropertyDescriptor;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import com.googlecode.blaisemath.editor.EditorRegistration;
-import com.googlecode.blaisemath.util.ReflectionUtils;
-import java.awt.geom.Point2D;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.AbstractListModel;
+import javax.swing.JComponent;
 
 /**
  * <p>
@@ -57,8 +53,6 @@ public final class IndexedBeanEditorModel extends AbstractListModel implements B
     private final Object parent;
     /** Descriptor */
     private final IndexedPropertyDescriptor ipd;
-    /** The type of class for indiviudal entries in the array. */
-    private final Class type;
     /** Size of the indexed bean */
     private int size;
     
@@ -87,7 +81,6 @@ public final class IndexedBeanEditorModel extends AbstractListModel implements B
             arr = new Object[0];
         }
         size = arr.length;
-        type = ipd.getIndexedPropertyType();
         initEditors();
     }
 
@@ -128,8 +121,8 @@ public final class IndexedBeanEditorModel extends AbstractListModel implements B
     }
 
     @Override
-    public Class getValueType(int row) {
-        return ipd.getPropertyType();
+    public Class<?> getValueType(int row) {
+        return ipd.getIndexedPropertyType();
     }
 
     @Override
@@ -147,49 +140,44 @@ public final class IndexedBeanEditorModel extends AbstractListModel implements B
      * @return newly created value, null if unable to create one
      */
     Object addNewValue() {
-        Object newObject = null;
-        try {
-            newObject = ipd.getIndexedPropertyType().getDeclaredConstructor().newInstance();
-        } catch (Exception ex) {
-            Logger.getLogger(IndexedBeanEditorModel.class.getName())
-                    .log(Level.WARNING, "Error adding a new item", ex);
+        Object newObject = ReflectionUtils.tryInvokeNew(ipd.getIndexedPropertyType());
+        if (newObject == null) {
             return null;
         }
 
-        try {
-            Object[] objs = (Object[]) ipd.getReadMethod().invoke(parent);
-            Object[] arr = (Object[]) Array.newInstance(ipd.getIndexedPropertyType(), objs.length + 1);
-            System.arraycopy(objs, 0, arr, 0, objs.length);
-            arr[objs.length] = newObject;
-            ipd.getWriteMethod().invoke(parent, (Object) arr);
-            size = arr.length;
+        Object[] objs = (Object[]) ReflectionUtils.tryInvokeRead(parent, ipd);
+        if (objs == null) {
+            return null;
+        }
+        Object[] newArr = Arrays.copyOf(objs, objs.length+1);
+        newArr[objs.length] = newObject;
+        if (ReflectionUtils.tryInvokeWrite(parent, ipd, newArr)) {
+            size = newArr.length;
+            initEditors();
             fireContentsChanged(this, 0, size-1);
             return newObject;
-        } catch (Exception ex) {
-                Logger.getLogger(IndexedBeanEditorModel.class.getName())
-                        .log(Level.WARNING, "Error adding a new item", ex);
-                return null;
+        } else {
+            return null;
         }
     }
     
     void removeValues(int[] rows) {
-        try {
-            if (rows.length == 0) {
-                return;
-            }
-            Object[] objs = (Object[]) ipd.getReadMethod().invoke(parent);
-            List lObjs = new ArrayList();
-            lObjs.addAll(Arrays.asList(objs));
-            for (int i = rows.length-1; i>=0; i--) {
-                lObjs.remove(rows[i]);
-            }
-            Object[] arr = lObjs.toArray((Object[]) Array.newInstance(ipd.getIndexedPropertyType(), 0));
-            ipd.getWriteMethod().invoke(parent, (Object) arr);
-            size = arr.length;
+        if (rows.length == 0) {
+            return;
+        }
+        Object[] objs = (Object[]) ReflectionUtils.tryInvokeRead(parent, ipd);
+        if (objs == null) {
+            return;
+        }
+        List listObjs = new ArrayList(Arrays.asList(objs));
+        for (int i = rows.length-1; i>=0; i--) {
+            listObjs.remove(rows[i]);
+        }
+        Object[] newArr = listObjs.toArray((Object[])Array.newInstance(ipd.getIndexedPropertyType(), 0));
+        if (ReflectionUtils.tryInvokeWrite(parent, ipd, newArr)) {
+            size = newArr.length;
+            initEditors();
             fireContentsChanged(this, 0, size-1);
-        } catch (Exception ex) {
-            Logger.getLogger(IndexedBeanEditorModel.class.getName())
-                    .log(Level.WARNING, "Error removing rows", ex);
         }
     }
     
