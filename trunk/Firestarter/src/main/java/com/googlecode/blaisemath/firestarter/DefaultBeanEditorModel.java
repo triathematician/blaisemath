@@ -36,11 +36,15 @@ import java.lang.reflect.Method;
 import javax.swing.JComponent;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
  *   <code>BeanEditorSupport</code> works as a liason between an underlying bean object
- *   and the bean's component editors. Using with a different bean requires a new instance. Once
+ *   and the bean's component editors. Using with a different bean requires a new instance.
  * </p>
  * <p>
  *   Contains a filtered list model, which allows for <code>ListDataEvent</code>s to be fired.
@@ -49,73 +53,74 @@ import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
  *
  * @author Elisha Peterson
  */
-public class BeanEditorSupport extends FilteredPropertyList
-        implements PropertyChangeListener {
+public final class DefaultBeanEditorModel extends FilteredPropertyList implements BeanEditorModel {
 
     /** Object of this class. */
     protected Object bean;    
     /** The info of the bean. */
-    protected BeanInfo info;
+    protected final BeanInfo info;
     /** List of property editors. */
     protected PropertyEditor[] editors;
     /** List of component editors. */
     protected Component[] components;
-
-    //
-    // CONSTRUCTORS
-    //
-
-    public BeanEditorSupport(){}
+    
+    /** Listens for changes to editors */
+    private final PropertyChangeListener editorListener;
+    
+    /** Handles listeners for changes to editors. */
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     /**
      * Constructs for specified bean.
      * @param bean the underlying object.
      */
-    public BeanEditorSupport(Object bean) {
-        if (bean == null) {
-            throw new IllegalArgumentException("BeanEditorSupport cannot be constructed with a null object!");
-        }
+    public DefaultBeanEditorModel(Object bean) {
+        editorListener = new PropertyChangeListener(){
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                handleEditorChange(evt);
+            }
+        };
         
-        // add each property of the bean
         this.bean = bean;
         info = getBeanInfo(bean.getClass());
-        items = info.getPropertyDescriptors();
-        refilter();
+        setProperties(getBeanInfo(bean.getClass()).getPropertyDescriptors());
     }
 
-    /** Retrieves the BeanInfo for a Class */
+    /** 
+     * Retrieves the BeanInfo for a Class
+     * @param cls
+     * @return 
+     */
     public static BeanInfo getBeanInfo(Class cls)  {
         BeanInfo beanInfo = null;
 	try {
 	    beanInfo = Introspector.getBeanInfo(cls);
-	} catch (Exception ex) {
-            System.out.println("Error in bean introspection for class " + cls);
-	    ex.printStackTrace();
+	} catch (IntrospectionException ex) {
+            Logger.getLogger(DefaultBeanEditorModel.class.getName())
+                    .log(Level.WARNING, "Error in bean introspection for class "+cls, ex);
 	}
 	return beanInfo;
     }
-
-    //
-    // INITIALIZERS
-    //
 
     /**
      * Constructs the visual components that are used for editing. This should be
      * called immediately after any refilter command.
      */
-    public void initEditors() {
+    private void initEditors() {
         editors = new PropertyEditor[getSize()];
         components = new Component[getSize()];
         for (int i = 0; i < getSize(); i++) {
             editors[i] = EditorRegistration.getEditor(bean, getElementAt(i));
-            editors[i].addPropertyChangeListener(this);
+            editors[i].addPropertyChangeListener(editorListener);
             if (editors[i].supportsCustomEditor()) {
                 components[i] = editors[i].getCustomEditor();
             } else {
                 components[i] = new DefaultPropertyComponent(bean, getElementAt(i));
             }
             if (getElementAt(i).getWriteMethod() == null || getElementAt(i).getReadMethod() == null) {
-                components[i].setEnabled(false); // if no read or write method make sure it is disabled
+                // if no read or write method make sure it is disabled
+                components[i].setEnabled(false); 
             }
             try {
                 ((JComponent) components[i]).setBorder(null); // do not show any borders
@@ -125,71 +130,76 @@ public class BeanEditorSupport extends FilteredPropertyList
         }
     }
 
-    //
-    // PATTERNS
-    //
-
-    /** @return the underlying object. */
+    /** 
+     * Get the bean object represented by this class.
+     * @return the underlying object.
+     */
     public Object getBean() {
         return bean;
     }
 
     /**
      * Returns the Java type info for the property at the given row.
+     * @param i the row
+     * @return property type
      */
-    public Class getPropertyType(int i) {
+    @Override
+    public Class getValueType(int i) {
         return getElementAt(i).getPropertyType();
     }
 
     /**
      * Returns value at given position.
+     * @param row the row
+     * @return value at the row, null if there is none
      */
-    public Object getValue(int pos) {
+    @Override
+    public Object getValue(int row) {
         Object value = null;
-        Method getter = getElementAt(pos).getReadMethod();
+        Method getter = getElementAt(row).getReadMethod();
         if (getter != null) {
-            Class[] paramTypes = getter.getParameterTypes();
-            Object[] args = new Object[paramTypes.length];
             try {
                 value = getter.invoke(bean);
-            } catch (Exception e) {
-                System.out.println("Error in method invocation");
-                System.out.println("  bean: " + bean.toString());
-                System.out.println("  getter: " + getter.getName());
-                System.out.println("  getter args: ");
-                for (int i = 0; i < args.length; i++)
-                    System.out.println("\t" + "type: " + paramTypes[i] + " value: " + args[i]);
-                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalStateException(e);
+            } catch (InvocationTargetException e) {
+                throw new IllegalStateException(e);
             }
         }
         return value;
     }
 
-    /** Sets property in given row. */
-    public void setValue(int pos, Object value) {
-        Method setter = getElementAt(pos).getWriteMethod();
+    /**
+     * Sets property in given row.
+     * @param row
+     * @param value
+     */
+    @Override
+    public void setValue(int row, Object value) {
+        Method setter = getElementAt(row).getWriteMethod();
         if (setter != null) {
             try {
-                if (value.getClass().isArray()) {
-                    System.out.print("setting underlying value [");
-                    Object[] array = (Object[]) value;
-                    for (int i = 0; i < array.length; i++) {
-                        System.out.print((i == 0 ? "" : ", ") + array[i].toString());
-                    }
-                    System.out.println("]");
-                } else {
-//                    System.out.println("setting underlying value " + value.toString());
-                }
                 setter.invoke(bean, value);
-            } catch (Exception ex) {
-                System.err.println("Unable to invoke Setter: " + setter);
+            } catch (IllegalAccessException ex) {
+                throw new IllegalStateException(ex);
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalStateException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new IllegalStateException(ex);
             }
         }
     }
 
-    /** @return editor component at specified position. */
-    public Component getComponent(int pos) {
-        return components[pos];
+    /**
+     * Get the editor component at the given row
+     * @param row row of editor
+     * @return editor component at specified position. 
+     */
+    @Override
+    public Component getEditor(int row) {
+        return components[row];
     }
 
     //
@@ -197,8 +207,7 @@ public class BeanEditorSupport extends FilteredPropertyList
     //
 
     /** Individual editors will fire property changes that are handled by this class. */
-    public void propertyChange(PropertyChangeEvent evt) {
-//        System.err.println("BES prop change: " + evt.getSource() + ", " + evt.getPropertyName() + ", " + evt.getNewValue());
+    private void handleEditorChange(PropertyChangeEvent evt) {
         Object source = evt.getSource();
         for (int i = 0; i < getSize(); i++) {
             if (editors[i] instanceof PropertyEditorSupport && source == ((PropertyEditorSupport) editors[i]).getSource()) {
@@ -211,15 +220,16 @@ public class BeanEditorSupport extends FilteredPropertyList
                 Object oldValue = getValue(i);
                 Object newValue = editors[i].getValue();
                 setValue(i, newValue);
-                pcs.firePropertyChange(getElementAt(i).getDisplayName(), evt.getOldValue(), evt.getNewValue());
+                pcs.firePropertyChange(getElementAt(i).getDisplayName(), oldValue, evt.getNewValue());
             }
         }
     }
 
     @Override
     protected void fireContentsChanged(Object source, int index0, int index1) {
-        if (index0 != index1)
+        if (index0 != index1) {
             initEditors();
+        }
         super.fireContentsChanged(source, index0, index1);
     }
 
@@ -239,16 +249,19 @@ public class BeanEditorSupport extends FilteredPropertyList
     // PROPERTY CHANGE
     //
 
-    PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    @Override
     public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
+    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
+    @Override
     public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
+    @Override
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }

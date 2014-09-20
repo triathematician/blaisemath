@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import com.google.common.base.Predicate;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -60,70 +59,65 @@ import javax.swing.table.TableColumn;
  *
  * @author Elisha Peterson
  */
-public class PropertySheet extends JPanel
-        implements TableModelListener {
+public class PropertySheet extends JPanel {
 
     /** This static variable determines whether the filter panel is on or off by default. */
-    public static boolean toolsVisibleByDefault = false;
-    
-    //
-    // APPEARANCE/STYLE CONSTANTS
-    //
+    public static boolean TOOLBAR_VISIBLE_DEFAULT = false;
 
     /** Column containing property names */
-    protected int NAME_COL = 0;
+    public static final int NAME_COL = 0;
     /** Column containing property values */
-    protected int VALUE_COL = 1;
+    public static final int VALUE_COL = 1;
     /** Minimum width of the table */
-    protected int MIN_WIDTH = 200;
+    public static final int MIN_WIDTH = 200;
     /** Determines minimum height of cells in the table. */
-    protected int MIN_CELL_HEIGHT = 20;
+    public static final int MIN_CELL_HEIGHT = 20;
 
     /** Names of header columns */
-    protected String[] HEADERS = {"Name", "Value"};
+    protected String[] headers = {"Name", "Value"};
     /** Default width of first column */
-    protected int DEFAULT_NAME_COL_WIDTH = 70;
-
-    //
-    // PROPERTIES
-    //
+    protected int defaultNameColWidth = 70;
 
     /** The table displayed. */
     protected JTable table;
     /** Flag for showing/hiding extra panels */
-    protected boolean toolsVisible = toolsVisibleByDefault;
+    protected boolean toolsVisible = TOOLBAR_VISIBLE_DEFAULT;
     /** The panel with the filter box. */
     protected JPanel toolPanel;
     /** The combo box for filtering. */
     protected JComboBox filterCombo;
-    /** The underlying model. */
-    PropertySheetModel model;
     /** Information on the underlying object. */
-    protected BeanEditorSupport beanSupport;
+    protected BeanEditorModel beanModel;
+    /** The underlying model. */
+    protected PropertySheetModel model;
 
-    //
-    // CONSTRUCTORS
-    //
-
-    public PropertySheet() {
-        this(new Object());
+    protected PropertySheet() {
     }
 
-    public PropertySheet(Object bean) {
-        setBean(bean);
-        initComponents();
+    public static PropertySheet create(BeanEditorModel supp) {
+        PropertySheet res = new PropertySheet();
+        res.beanModel = supp;
+        res.initComponents();
+        return res;
+    }
+    
+    public static PropertySheet createWithBean(Object bean) {
+        PropertySheet res = new PropertySheet();
+        res.beanModel = new DefaultBeanEditorModel(bean);
+        res.initComponents();
+        return res;
     }
 
-    //
-    // INITIALIZERS
-    //
-
-    public void initComponents() {
-        // set up table model
+    protected void initComponents() {
         table = new JTable();
         table.setGridColor(new Color(192, 192, 192));
         model = new PropertySheetModel();
-        model.addTableModelListener(this);
+        model.addTableModelListener(new TableModelListener(){
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                handleTableChange(e);
+            }
+        });
         table.setModel(model);
         table.getTableHeader().setReorderingAllowed(false);
         updateRowHeights();
@@ -131,11 +125,11 @@ public class PropertySheet extends JPanel
         // set up first column
         TableColumn column = table.getColumnModel().getColumn(0);
         column.setCellRenderer(new NameColRenderer());
-        column.setPreferredWidth(DEFAULT_NAME_COL_WIDTH);
+        column.setPreferredWidth(defaultNameColWidth);
 
         // set up second column
         column = table.getColumnModel().getColumn(1);
-        column.setPreferredWidth(MIN_WIDTH - DEFAULT_NAME_COL_WIDTH);
+        column.setPreferredWidth(MIN_WIDTH - defaultNameColWidth);
         column.setCellRenderer(new ValueColEditor());
         column.setCellEditor(new ValueColEditor());
 
@@ -145,8 +139,12 @@ public class PropertySheet extends JPanel
         filterCombo.setFont(font);
         filterCombo.setSelectedItem(BeanFilterRule.STANDARD);
         filterCombo.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
-                beanSupport.setFilter((BeanFilterRule) filterCombo.getSelectedItem());
+                if (beanModel instanceof DefaultBeanEditorModel) {
+                    ((DefaultBeanEditorModel)beanModel)
+                            .setFilter((BeanFilterRule) filterCombo.getSelectedItem());
+                }
             }
         });
 
@@ -164,9 +162,10 @@ public class PropertySheet extends JPanel
         // Set up final components
         setLayout(new BorderLayout());
         add(table, BorderLayout.CENTER);
-        if (toolsVisible)
+        if (toolsVisible) {
             add(toolPanel, BorderLayout.NORTH);
-    } // initComponents
+        }
+    }
 
     //
     // GETTERS & SETTERS
@@ -174,18 +173,8 @@ public class PropertySheet extends JPanel
 
     /** @return the value of bean
      */
-    public Object getBean() {
-        return beanSupport.getBean();
-    }
-
-    /** Set the value of bean
-     * @param bean new value of bean
-     */
-    public void setBean(Object bean) {
-        if (beanSupport == null || getBean() != bean)
-            beanSupport = new BeanEditorSupport(bean);
-        if (model != null)
-            model.fireTableDataChanged();
+    public BeanEditorModel getBeanEditorModel() {
+        return beanModel;
     }
 
     /** @return true if toolbar is visible */
@@ -193,7 +182,8 @@ public class PropertySheet extends JPanel
         return toolsVisible;
     }
     
-    /** Sets toolbar visibility */
+    /** Sets toolbar visibility
+     * @param val */
     public void setToolbarVisible(boolean val) {
         if (val != toolsVisible) {
             if (val == true) {
@@ -208,16 +198,6 @@ public class PropertySheet extends JPanel
         }
     }
 
-    /** @return current filter restricting displayed properties */
-    public Predicate<PropertyDescriptor> getFilter() {
-        return beanSupport.getFilter();
-    }
-
-    /** Sets the filter that chooses which properties to display */
-    public void setFilter(Predicate<PropertyDescriptor> filter) {
-        beanSupport.setFilter(filter);
-    }
-
     
     //
     // EVENT HANDLING
@@ -226,8 +206,8 @@ public class PropertySheet extends JPanel
     /** Updates the size of the table. */
     void updateRowHeights() {
         Component comp;
-        for (int i = 0; i < beanSupport.getSize(); i++) {
-            comp = beanSupport.getComponent(i);
+        for (int i = 0; i < beanModel.getSize(); i++) {
+            comp = beanModel.getEditor(i);
             if (comp != null)
                 table.setRowHeight(i, Math.max(comp.getPreferredSize().height, MIN_CELL_HEIGHT));
         }
@@ -236,8 +216,11 @@ public class PropertySheet extends JPanel
                 getPreferredSize().height + (table.getTableHeader() != null ? table.getTableHeader().getHeight() : 0)));
     }
 
-    /** Update row heights when the underlying data changes. */
-    public void tableChanged(TableModelEvent e) {
+    /** 
+     * Update row heights when the underlying data changes.
+     * @param e 
+     */
+    protected void handleTableChange(TableModelEvent e) {
         table.getSelectionModel().clearSelection();
         table.setEditingRow(-1);
         table.setEditingColumn(-1);
@@ -247,19 +230,19 @@ public class PropertySheet extends JPanel
     }
 
     public synchronized void removeBeanChangeListener(PropertyChangeListener listener) {
-        beanSupport.removePropertyChangeListener(listener);
+        beanModel.removePropertyChangeListener(listener);
     }
 
     public synchronized void removeBeanChangeListener(String propertyName, PropertyChangeListener listener) {
-        beanSupport.removePropertyChangeListener(propertyName, listener);
+        beanModel.removePropertyChangeListener(propertyName, listener);
     }
 
     public synchronized void addBeanChangeListener(PropertyChangeListener listener) {
-        beanSupport.addPropertyChangeListener(listener);
+        beanModel.addPropertyChangeListener(listener);
     }
 
     public synchronized void addBeanChangeListener(String propertyName, PropertyChangeListener listener) {
-        beanSupport.addPropertyChangeListener(propertyName, listener);
+        beanModel.addPropertyChangeListener(propertyName, listener);
     }
 
     
@@ -271,13 +254,14 @@ public class PropertySheet extends JPanel
     /** Model for the property sheet class. */
     class PropertySheetModel extends AbstractTableModel {
         public PropertySheetModel() {
-            beanSupport.addListDataListener(new ListDataListener(){
+            beanModel.addListDataListener(new ListDataListener(){
                 public void intervalAdded(ListDataEvent e) { fireTableDataChanged(); }
                 public void intervalRemoved(ListDataEvent e) { fireTableDataChanged(); }
                 public void contentsChanged(ListDataEvent e) { fireTableDataChanged(); }
             });
         }
 
+        @Override
         public int getColumnCount() {
             return 2;
         }
@@ -289,25 +273,49 @@ public class PropertySheet extends JPanel
 
         @Override
         public String getColumnName(int col) {
-            return HEADERS[col];
+            return headers[col];
         }
 
+        @Override
         public int getRowCount() {
-            return beanSupport.getSize();
+            return beanModel.getSize();
         }
 
         @Override
         public boolean isCellEditable(int row, int col) {
-            return col == VALUE_COL 
-                    && beanSupport.getElementAt(row).getWriteMethod() != null
-                    && beanSupport.getElementAt(row).getReadMethod() != null;
+            switch (col) {
+                case NAME_COL:
+                    return false;
+                case VALUE_COL:
+                    Object element = beanModel.getElementAt(row);
+                    if (element instanceof PropertyDescriptor) {
+                        PropertyDescriptor pd = (PropertyDescriptor) element;
+                        return pd.getReadMethod() != null && pd.getWriteMethod() != null;
+                    }
+                    return false;
+                default:
+                    throw new IllegalStateException("Invalid column");
+            }
         }
 
+        @Override
         public Object getValueAt(int row, int col) {
-            return col == NAME_COL ? beanSupport.getElementAt(row).getDisplayName() : beanSupport.getValue(row);
+            switch (col) {
+                case NAME_COL:
+                    Object element = beanModel.getElementAt(row);
+                    if (element instanceof PropertyDescriptor) {
+                        PropertyDescriptor pd = (PropertyDescriptor) element;
+                        return pd.getDisplayName();
+                    }
+                    return false;
+                case VALUE_COL:
+                    return beanModel.getValue(row);
+                default:
+                    throw new IllegalStateException("Invalid column");
+            }
         }
 
-    } // INNER CLASS PropertySheetModel
+    }
 
 
 
@@ -316,19 +324,22 @@ public class PropertySheet extends JPanel
         /** Current row being edited. */
         int row = -1;
 
+        @Override
         public Object getCellEditorValue() {
-            return row == -1 ? null : beanSupport.getValue(row);
+            return row == -1 ? null : beanModel.getValue(row);
         }
 
+        @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             this.row = row;
-            return beanSupport.getComponent(row);
+            return beanModel.getEditor(row);
         }
 
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            return beanSupport.getComponent(row);
+            return beanModel.getEditor(row);
         }
-    } // INNER CLASS ValueColumnEditor
+    }
 
 
 
@@ -337,12 +348,15 @@ public class PropertySheet extends JPanel
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            String descrip = beanSupport.getElementAt(row).getShortDescription();
-            Class type = beanSupport.getPropertyType(row);
+            String descrip = "";
+            if (beanModel.getElementAt(row) instanceof PropertyDescriptor) {
+                descrip = ((PropertyDescriptor)beanModel.getElementAt(row)).getShortDescription();
+            }
+            Class type = beanModel.getValueType(row);
             setToolTipText(String.format("%s (%s)", descrip, type));
             return this;
         }
-    } // INNER CLASS NameColumnRenderer
+    }
     
     // </editor-fold>
     

@@ -26,12 +26,11 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import com.google.common.base.Predicate;
-import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.IndexedPropertyDescriptor;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
 
 /**
  * <p>
@@ -39,17 +38,7 @@ import javax.swing.WindowConstants;
  * </p>
  * @author ae3263
  */
-public class PropertySheetDialog extends javax.swing.JDialog
-        implements ActionListener {
-
-    /** Stores the property sheet; may be a regular sheet or an indexed sheet. */
-    private PropertySheet propertySheet;
-
-    /** Stores the button for the "OK" action. */
-    private JButton okButton;
-    /** Stores the button for the "Cancel" action. */
-    // TODO - implement cancel button on property sheet dialog
-    // private JButton cancelButton;
+public class PropertySheetDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form PropertySheetDialog
@@ -71,19 +60,11 @@ public class PropertySheetDialog extends javax.swing.JDialog
     public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
         super(parent, bean.toString(), modal);
 
-        propertySheet = new PropertySheet(bean);
-        propertySheet.setFilter(propertyFilter == null ? BeanFilterRule.STANDARD : BeanFilterRule.byName(propertyFilter));
-        add(new JScrollPane(propertySheet,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-                ), java.awt.BorderLayout.CENTER);
-
-        okButton = new javax.swing.JButton("OK");
-        okButton.addActionListener(this);
-        add(okButton, java.awt.BorderLayout.SOUTH);
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        pack();
+        PropertySheet propertySheet = PropertySheet.createWithBean(bean);
+        if (propertyFilter != null) {
+            ((DefaultBeanEditorModel)propertySheet.getBeanEditorModel()).setFilter(BeanFilterRule.byName(propertyFilter));
+        }
+        initComponents(propertySheet);
     }
 
     /**
@@ -95,30 +76,28 @@ public class PropertySheetDialog extends javax.swing.JDialog
      */
     public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd) {
         super(parent, "Indexed property [" + ipd.getDisplayName() + "] of " + bean.toString(), modal);
+        
+        initComponents(new IndexedPropertySheet(bean, ipd));
+    }
+    
+    private void initComponents(PropertySheet propertySheet) {
+        add(new JScrollPane(propertySheet,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+                ), java.awt.BorderLayout.CENTER);
 
-        propertySheet = new IndexedPropertySheet(bean, ipd);
-        add(new JScrollPane(propertySheet), BorderLayout.CENTER);
+        JButton okButton = new JButton("Close");
+        okButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                dispose();
+            }
+        });
+        add(okButton, java.awt.BorderLayout.SOUTH);
 
-        okButton = new JButton("OK");
-        okButton.addActionListener(this);
-        add(okButton, BorderLayout.SOUTH);
-
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         pack();
     }
 
-    public Object getBean() {
-        return propertySheet.getBean();
-    }
-
-    public void setBean(Object bean) {
-        propertySheet.setBean(bean);
-    }
-
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-        if (evt.getSource() == okButton) {
-            setVisible(false);
-            dispose();
-        }
-    }
 }
