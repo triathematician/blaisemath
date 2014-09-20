@@ -55,10 +55,14 @@ import javax.swing.table.TableColumn;
  *
  * @author Elisha Peterson
  */
-public class IndexedPropertySheet extends PropertySheet {
+public final class IndexedPropertySheet extends PropertySheet {
 
     /** Stores the property descriptors for eached indexed element. */
-    IndexedPropertyDescriptor ipd;
+    private final IndexedPropertyDescriptor ipd;
+
+    public IndexedPropertySheet(Object bean, String propName) {
+        this(bean, indexedPropertyDescriptor(bean, propName));
+    }
 
     /** 
      * Construct for provided bean and provided property descriptor (which must be indexed)
@@ -72,10 +76,6 @@ public class IndexedPropertySheet extends PropertySheet {
         defaultNameColWidth = 35;
         initComponents();
     }
-
-    public IndexedPropertySheet(Object bean, String propName) {
-        this(bean, indexedPropertyDescriptor(bean, propName));
-    }
     
     private static IndexedPropertyDescriptor indexedPropertyDescriptor(Object bean, String propName) {
         BeanInfo info = DefaultBeanEditorModel.getBeanInfo(bean.getClass());
@@ -88,7 +88,7 @@ public class IndexedPropertySheet extends PropertySheet {
     }
 
     @Override
-    protected final void initComponents() {
+    protected void initComponents() {
         if (ipd == null) {
             return;
         }

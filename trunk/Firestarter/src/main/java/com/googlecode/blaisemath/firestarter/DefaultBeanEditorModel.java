@@ -24,22 +24,23 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
+import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Component;
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
-import java.lang.reflect.Method;
-import javax.swing.JComponent;
-import com.googlecode.blaisemath.editor.EditorRegistration;
-import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
-import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 
 /**
  * <p>
@@ -178,18 +179,7 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
      */
     @Override
     public void setValue(int row, Object value) {
-        Method setter = getElementAt(row).getWriteMethod();
-        if (setter != null) {
-            try {
-                setter.invoke(bean, value);
-            } catch (IllegalAccessException ex) {
-                throw new IllegalStateException(ex);
-            } catch (IllegalArgumentException ex) {
-                throw new IllegalStateException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalStateException(ex);
-            }
-        }
+        ReflectionUtils.tryInvokeWrite(bean, getElementAt(row), value);
     }
 
     /**
@@ -211,7 +201,7 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
         Object source = evt.getSource();
         for (int i = 0; i < getSize(); i++) {
             if (editors[i] instanceof PropertyEditorSupport && source == ((PropertyEditorSupport) editors[i]).getSource()) {
-                Object oldValue = ((MPropertyEditorSupport) source).getValue();
+                Object oldValue = ((PropertyEditor) source).getValue();
                 Object newValue = ((MPropertyEditorSupport) source).getNewValue();
                 setValue(i, newValue);
                 editors[i].setValue(newValue);
