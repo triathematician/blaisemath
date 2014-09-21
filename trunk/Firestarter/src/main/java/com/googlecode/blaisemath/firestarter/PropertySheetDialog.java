@@ -60,7 +60,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
     public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
         super(parent, bean.toString(), modal);
 
-        PropertySheet propertySheet = PropertySheet.createWithBean(bean);
+        PropertySheet propertySheet = PropertySheet.forBean(bean);
         if (propertyFilter != null) {
             ((DefaultBeanEditorModel)propertySheet.getBeanEditorModel()).setFilter(BeanFilterRule.byName(propertyFilter));
         }

@@ -95,14 +95,24 @@ public class PropertySheet extends JPanel {
     protected PropertySheet() {
     }
 
-    public static PropertySheet create(BeanEditorModel supp) {
+    /**
+     * Create a property sheet that uses the supplied model for editing components.
+     * @param supp model
+     * @return newly created property sheet
+     */
+    public static PropertySheet forModel(BeanEditorModel supp) {
         PropertySheet res = new PropertySheet();
         res.beanModel = supp;
         res.initComponents();
         return res;
     }
     
-    public static PropertySheet createWithBean(Object bean) {
+    /**
+     * Create a property sheet that uses the supplied bean object for editing components.
+     * @param bean a bean object
+     * @return newly created property sheet for editing the bean's properties
+     */
+    public static PropertySheet forBean(Object bean) {
         PropertySheet res = new PropertySheet();
         res.beanModel = new DefaultBeanEditorModel(bean);
         res.initComponents();

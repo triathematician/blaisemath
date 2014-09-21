@@ -59,20 +59,20 @@ public class Testing extends javax.swing.JFrame {
 
         selectedBeanPanel = new MPanel(new JLabel("<html><font size=\"+1\"><b>Selected</b> Bean"), new PropertySheet());
         rollupPanel2.add(selectedBeanPanel);
-        rollupPanel2.add("Indexed", PropertySheet.createWithBean(new IndexedBean()));
-        rollupPanel2.add("Indexed B", PropertySheet.createWithBean(new IndexedBean.Indexed2()));
+        rollupPanel2.add("Indexed", PropertySheet.forBean(new IndexedBean()));
+        rollupPanel2.add("Indexed B", PropertySheet.forBean(new IndexedBean.Indexed2()));
         rollupPanel2.add("Indexed Strings", new IndexedPropertySheet(new IndexedBean(), "strings"));
-        PropertySheet ps = PropertySheet.createWithBean(new CustomBean());
+        PropertySheet ps = PropertySheet.forBean(new CustomBean());
         rollupPanel2.add("Other", ps);
-        rollupPanel2.add("Shapes", PropertySheet.createWithBean(new ShapeBean()));
+        rollupPanel2.add("Shapes", PropertySheet.forBean(new ShapeBean()));
         // working -
-        rollupPanel2.add("Numbers", PropertySheet.createWithBean(new NumberBean()));
+        rollupPanel2.add("Numbers", PropertySheet.forBean(new NumberBean()));
         // working -
-        rollupPanel2.add("Points", PropertySheet.createWithBean(new PointBean()));
-        rollupPanel2.add("a Point2D.Double", PropertySheet.createWithBean(new Point2D.Double(3,4)));
+        rollupPanel2.add("Points", PropertySheet.forBean(new PointBean()));
+        rollupPanel2.add("a Point2D.Double", PropertySheet.forBean(new Point2D.Double(3,4)));
         // working -
-        rollupPanel2.add("a Point", PropertySheet.createWithBean(new Point(3,4)));
-        rollupPanel2.add("a text area", new JScrollPane(PropertySheet.createWithBean(jTextArea1)));
+        rollupPanel2.add("a Point", PropertySheet.forBean(new Point(3,4)));
+        rollupPanel2.add("a text area", new JScrollPane(PropertySheet.forBean(jTextArea1)));
 
         pack();
     }
@@ -135,7 +135,7 @@ public class Testing extends javax.swing.JFrame {
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {
         Object obj = ((BeanTreeNode)evt.getPath().getLastPathComponent()).getUserObject();
-        selectedBeanPanel.setPrimaryComponent(PropertySheet.createWithBean(obj));
+        selectedBeanPanel.setPrimaryComponent(PropertySheet.forBean(obj));
     }
 
     /**
