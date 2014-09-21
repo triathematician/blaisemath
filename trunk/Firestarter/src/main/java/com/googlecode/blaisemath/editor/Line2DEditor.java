@@ -29,7 +29,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>PointEditor</code> edits a rectangle: x, y, width, height.
+ *   Edits a rectangle: x, y, width, height.
  * </p>
  *
  * @author Elisha Peterson
@@ -49,29 +49,17 @@ public class Line2DEditor extends MultiSpinnerSupport {
         spinners[2].setToolTipText("x2");
         spinners[3].setToolTipText("y2");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.geom.Line2D.Double(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.geom.Line2D.Double(" + getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            double x1 = Double.parseDouble(s[0]);
-            double y1 = Double.parseDouble(s[1]);
-            double x2 = Double.parseDouble(s[2]);
-            double y2 = Double.parseDouble(s[3]);
-            setValue(new Line2D.Double(x1, y1, x2, y2));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        double[] arr = Numbers.decodeAsDoubles(s);
+        setValue(new Line2D.Double(arr[0], arr[1], arr[2], arr[3]));
     }
 
     @Override
@@ -84,13 +72,7 @@ public class Line2DEditor extends MultiSpinnerSupport {
             spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
         }
     }
-
-
-    //
-    //
-    // ADDITIONAL METHODS
-    //
-    //
+    
     @Override
     public Object getValue(Object bean, int i) {
         switch (i) {
@@ -102,8 +84,9 @@ public class Line2DEditor extends MultiSpinnerSupport {
                 return ((Line2D.Double) bean).x2;
             case 3:
                 return ((Line2D.Double) bean).y2;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

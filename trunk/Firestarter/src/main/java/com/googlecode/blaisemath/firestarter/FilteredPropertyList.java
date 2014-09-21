@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.AbstractListModel;
 
 /**
@@ -61,7 +62,7 @@ abstract class FilteredPropertyList extends AbstractListModel {
      * Get current filter.
      * @return current filter value. 
      */
-    public Predicate<PropertyDescriptor> getFilter() {
+    Predicate<PropertyDescriptor> getFilter() {
         return filter;
     }
 
@@ -88,7 +89,7 @@ abstract class FilteredPropertyList extends AbstractListModel {
 
     /** Refilters the list of properties based on the current criteria. */
     protected final void refilter() {
-        LinkedHashSet<PropertyDescriptor> unsorted = filter(unfilteredProperties, filter);
+        Set<PropertyDescriptor> unsorted = filter(unfilteredProperties, filter);
         filterItems.clear();
         filterItems.addAll(filter(unsorted, BeanFilterRule.PREFERRED));
         filterItems.addAll(filter(unsorted, BeanFilterRule.STANDARD));
@@ -96,8 +97,8 @@ abstract class FilteredPropertyList extends AbstractListModel {
         fireContentsChanged(this, 0, getSize()+1);
     }
     
-    private static <T> LinkedHashSet<T> filter(T[] src, Predicate<? super T> filter) {
-        LinkedHashSet<T> res = new LinkedHashSet<T>();
+    private static <T> Set<T> filter(T[] src, Predicate<? super T> filter) {
+        Set<T> res = new LinkedHashSet<T>();
         for (T t : src) {
             if (filter.apply(t) && !res.contains(t)) {
                 res.add(t);
@@ -106,8 +107,8 @@ abstract class FilteredPropertyList extends AbstractListModel {
         return res;
     }
     
-    private static <T> LinkedHashSet<T> filter(Iterable<T> src, Predicate<? super T> filter) {
-        LinkedHashSet<T> res = new LinkedHashSet<T>();
+    private static <T> Set<T> filter(Iterable<T> src, Predicate<? super T> filter) {
+        Set<T> res = new LinkedHashSet<T>();
         for (T t : src) {
             if (filter.apply(t) && !res.contains(t)) {
                 res.add(t);

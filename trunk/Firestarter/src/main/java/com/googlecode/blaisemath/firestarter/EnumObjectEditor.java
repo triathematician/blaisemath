@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.firestarter;
 
 import com.googlecode.blaisemath.editor.MPanelEditorSupport;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,8 +59,6 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
     private JComboBox combo;
     /** String representing the custom object selected in the combo box model */
     private String custom;
-    /** Button for custom editing */
-    private JButton button;
 
     public EnumObjectEditor () {
         initCustomizer();
@@ -83,7 +80,7 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
         });
         panel.add(combo, BorderLayout.CENTER);
 
-        button = new JButton("...");
+        JButton button = new JButton("...");
         button.setMargin(new Insets(3, 3, 3, 2));
         button.addActionListener(new ActionListener(){
             @Override
@@ -100,8 +97,8 @@ public final class EnumObjectEditor extends MPanelEditorSupport {
     }
 
     public static boolean validMethod(Method m, Class type) {
-        return m.getName().equals("getInstance") && m.getReturnType().isAssignableFrom(type)
-                && m.getParameterTypes().length==1 && m.getParameterTypes()[0].isEnum();
+        return "getInstance".equals(m.getName()) && m.getReturnType().isAssignableFrom(type)
+                && m.getParameterTypes().length == 1 && m.getParameterTypes()[0].isEnum();
     }
 
     @Override

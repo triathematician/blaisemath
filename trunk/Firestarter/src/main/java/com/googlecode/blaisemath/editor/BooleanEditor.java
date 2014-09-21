@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
@@ -36,21 +35,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * <p>
- *   <code>BooleanEditor</code> ...
- * </p>
+ * Edits boolean values using a checkbox.
  *
  * @author Elisha Peterson
  */
-public class BooleanEditor extends MPanelEditorSupport {
-    JCheckBox checkbox;
-    JLabel label;
+public final class BooleanEditor extends MPanelEditorSupport {
+    private JCheckBox checkbox;
+    private JLabel label;
 
     public BooleanEditor() {
         setValue(false);
         newValue = false;
     }
 
+    @Override
     public void initCustomizer() {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -69,6 +67,7 @@ public class BooleanEditor extends MPanelEditorSupport {
 
         // initialize listening
         checkbox.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
                     setNewValue(Boolean.TRUE);
@@ -80,10 +79,7 @@ public class BooleanEditor extends MPanelEditorSupport {
             }
         });
     }
-
-    //
-    //  OVERRIDING METHODS
-    //
+    
     @Override
     protected void initEditorValue() {
         if (panel != null) {
@@ -106,7 +102,7 @@ public class BooleanEditor extends MPanelEditorSupport {
     }
 
     @Override
-    public void setAsText(String text) throws IllegalArgumentException {
+    public void setAsText(String text) {
         if (text == null) {
             setValue(null);
         } else if (isValidName(true, text)) {

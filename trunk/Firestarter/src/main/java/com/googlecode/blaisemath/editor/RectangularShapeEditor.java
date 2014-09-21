@@ -24,13 +24,12 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import java.awt.Rectangle;
 import java.awt.geom.RectangularShape;
 import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>PointEditor</code> edits a rectangle: x, y, width, height.
+ *   Edits a rectangle: x, y, width, height.
  * </p>
  *
  * @author Elisha Peterson
@@ -39,7 +38,7 @@ public class RectangularShapeEditor extends MultiSpinnerSupport {
 
     public RectangularShapeEditor() {
         super(4);
-        newValue = new Rectangle();
+        setNewValue(0,0,0,0);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class RectangularShapeEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
+    public void setAsText(String... s) {
         try {
             double x = Double.parseDouble(s[0]);
             double y = Double.parseDouble(s[1]);
@@ -60,7 +59,7 @@ public class RectangularShapeEditor extends MultiSpinnerSupport {
             double h = Double.parseDouble(s[3]);
             setNewValue(x, y, w, h);
         } catch (NumberFormatException ex) {
-            System.out.println("Unable to parse digits!");
+            throw new IllegalArgumentException(ex);
         }
     }
 
@@ -69,9 +68,8 @@ public class RectangularShapeEditor extends MultiSpinnerSupport {
         if (panel != null) {
             spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
             spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-            // permit negative width/height rectangles
-            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
+            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), 0.0, Double.MAX_VALUE, .1));
+            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), 0.0, Double.MAX_VALUE, .1));
         }
     }
 
@@ -86,8 +84,9 @@ public class RectangularShapeEditor extends MultiSpinnerSupport {
                 return ((RectangularShape) bean).getWidth();
             case 3:
                 return ((RectangularShape) bean).getHeight();
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

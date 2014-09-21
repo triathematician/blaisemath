@@ -57,10 +57,10 @@ import java.beans.PropertyEditorSupport;
  */
 public abstract class MPropertyEditorSupport extends PropertyEditorSupport {
 
-    /** 
-     * Maintains the updated value of the object.
-     */
+    /** Maintains the updated value of the object. */
     protected Object newValue;
+    /** Flag to prevent extraneous events */
+    private boolean updating = false;
 
     /**
      * Contains revised/new value of the property. This may be called by
@@ -99,18 +99,20 @@ public abstract class MPropertyEditorSupport extends PropertyEditorSupport {
      */
     @Override
     public void setValue(Object value) {
-        if (getNewValue() != value)
+        if (getNewValue() != value) {
             setNewValue(value);
-        if (getValue() != value)
+        }
+        if (getValue() != value) {
             super.setValue(value);
+        }
         initEditorValue();
     }
-    
-    private boolean updating = false;
 
     @Override
     public void firePropertyChange() {
-        if (updating) return;
+        if (updating) {
+            return;
+        }
         updating = true;
         super.firePropertyChange();
         updating = false;

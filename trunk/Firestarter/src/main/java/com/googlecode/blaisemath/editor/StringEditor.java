@@ -24,44 +24,58 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import java.awt.Color;
 import java.awt.Component;
+import java.util.Arrays;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * <p>
- *   <code>StringEditor</code> ...
- * </p>
+ * Editor for strings.
  *
  * @author Elisha Peterson
  */
 public class StringEditor extends MPropertyEditorSupport {
+    
+    private static final Character[] SPECIAL_CHARS 
+            = { '\b', '\t', '\n', '\f', '\r', '\"', '\\' };
+    private static final String[] SPECIAL_CHARS_REPLACE
+            = { "\\b", "\\t", "\\n", "\\f", "\\r", "\\\"", "\\\\" };
 
-    JTextField field;
+    private JTextField field;
 
-    public StringEditor() { }
+    private boolean updating = false;
 
     @Override
-    public boolean supportsCustomEditor() { return true; }
+    public boolean supportsCustomEditor() {
+        return true;
+    }
 
     @Override
     public Component getCustomEditor() {
         if (field == null) {
             field = new JTextField();
             initEditorValue();
-            field.getDocument().addDocumentListener(new DocumentListener(){
-                public void insertUpdate(DocumentEvent e) { setNewAsText(field.getText()); }
-                public void removeUpdate(DocumentEvent e) { setNewAsText(field.getText()); }
-                public void changedUpdate(DocumentEvent e) { setNewAsText(field.getText()); }
+            field.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    setNewAsText(field.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    setNewAsText(field.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    setNewAsText(field.getText());
+                }
             });
         }
 
         return field;
     }
-
-    private boolean updating = false;
 
     @Override
     protected void initEditorValue() {
@@ -83,40 +97,18 @@ public class StringEditor extends MPropertyEditorSupport {
         sb.append('"');
         for (int i = 0; i < length; i++) {
             char ch = str.charAt(i);
-            switch (ch) {
-                case '\b':
-                    sb.append("\\b");
-                    break;
-                case '\t':
-                    sb.append("\\t");
-                    break;
-                case '\n':
-                    sb.append("\\n");
-                    break;
-                case '\f':
-                    sb.append("\\f");
-                    break;
-                case '\r':
-                    sb.append("\\r");
-                    break;
-                case '\"':
-                    sb.append("\\\"");
-                    break;
-                case '\\':
-                    sb.append("\\\\");
-                    break;
-                default:
-                    if ((ch < ' ') || (ch > '~')) {
-                        sb.append("\\u");
-                        String hex = Integer.toHexString((int) ch);
-                        for (int len = hex.length(); len < 4; len++) {
-                            sb.append('0');
-                        }
-                        sb.append(hex);
-                    } else {
-                        sb.append(ch);
-                    }
-                    break;
+            int iSpecial = Arrays.asList(SPECIAL_CHARS).indexOf(ch);
+            if (iSpecial != -1) {
+                sb.append(SPECIAL_CHARS_REPLACE[iSpecial]);
+            } else if ((ch < ' ') || (ch > '~')) {
+                sb.append("\\u");
+                String hex = Integer.toHexString(ch);
+                for (int len = hex.length(); len < 4; len++) {
+                    sb.append('0');
+                }
+                sb.append(hex);
+            } else {
+                sb.append(ch);
             }
         }
         sb.append('"');

@@ -29,7 +29,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>InsetsEditor</code> edits insets, with 4 spinners.
+ *   Edits insets, with 4 spinners.
  * </p>
  *
  * @author Elisha Peterson
@@ -49,29 +49,17 @@ public class InsetsEditor extends MultiSpinnerSupport {
         spinners[2].setToolTipText("bottom");
         spinners[3].setToolTipText("right");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.Insets(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.Insets(" + getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            int t = Integer.decode(s[0]);
-            int l = Integer.decode(s[1]);
-            int b = Integer.decode(s[2]);
-            int r = Integer.decode(s[3]);
-            setValue(new Insets(t, l, b, r));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        int[] arr = Numbers.decodeAsIntegers(s);
+        setValue(new Insets(arr[0], arr[1], arr[2], arr[3]));
     }
 
     @Override
@@ -79,7 +67,6 @@ public class InsetsEditor extends MultiSpinnerSupport {
         if (panel != null) {
             spinners[0].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(0)), 0, Integer.MAX_VALUE, 1));
             spinners[1].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(1)), 0, Integer.MAX_VALUE, 1));
-            // permit negative width/height rectangles
             spinners[2].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(2)), 0, Integer.MAX_VALUE, 1));
             spinners[3].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(3)), 0, Integer.MAX_VALUE, 1));
         }
@@ -102,8 +89,9 @@ public class InsetsEditor extends MultiSpinnerSupport {
                 return ((Insets) bean).bottom;
             case 3:
                 return ((Insets) bean).right;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

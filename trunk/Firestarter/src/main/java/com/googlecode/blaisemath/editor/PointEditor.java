@@ -29,13 +29,12 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>PointEditor</code> displays two spinners that change the value
- *   of an underlying point.
+ *   Displays two spinners that change the value of an underlying point.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class PointEditor extends MultiSpinnerSupport {
+public final class PointEditor extends MultiSpinnerSupport {
 
     public PointEditor() {
         super(2);
@@ -48,27 +47,17 @@ public class PointEditor extends MultiSpinnerSupport {
         spinners[0].setToolTipText("x coordinate");
         spinners[1].setToolTipText("y coordinate");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.Point(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.Point(" + getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            int x = Integer.decode(s[0]);
-            int y = Integer.decode(s[1]);
-            setValue(new Point(x, y));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        int[] arr = Numbers.decodeAsIntegers(s);
+        setValue(new Point(arr[0], arr[1]));
     }
 
     @Override
@@ -78,12 +67,7 @@ public class PointEditor extends MultiSpinnerSupport {
             spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
         }
     }
-
-    //
-    //
-    // ADDITIONAL METHODS
-    //
-    //
+    
     @Override
     public Object getValue(Object bean, int i) {
         switch (i) {
@@ -91,8 +75,9 @@ public class PointEditor extends MultiSpinnerSupport {
                 return ((Point) bean).x;
             case 1:
                 return ((Point) bean).y;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

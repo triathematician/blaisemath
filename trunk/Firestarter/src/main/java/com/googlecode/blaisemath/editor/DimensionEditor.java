@@ -29,8 +29,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>DimensionEditor</code> handles editing of a dimension, using
- *   2 spinners.
+ *   Edits a {@link Dimension} using 2 spinners.
  * </p>
  *
  * @author Elisha Peterson
@@ -48,27 +47,17 @@ public class DimensionEditor extends MultiSpinnerSupport {
         spinners[0].setToolTipText("width");
         spinners[1].setToolTipText("height");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.Dimension(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.Dimension(" + getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            int x = Integer.decode(s[0]);
-            int y = Integer.decode(s[1]);
-            setValue(new Dimension(x, y));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        int[] arr = Numbers.decodeAsIntegers(s);
+        setValue(new Dimension(arr[0], arr[1]));
     }
 
     @Override
@@ -78,20 +67,17 @@ public class DimensionEditor extends MultiSpinnerSupport {
             spinners[1].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(1)), 0, Integer.MAX_VALUE, 1));
         }
     }
-
-    //
-    //
-    // ADDITIONAL METHODS
-    //
-    //
+    
+    @Override
     public Object getValue(Object bean, int i) {
         switch (i) {
             case 0:
                 return ((Dimension) bean).width;
             case 1:
                 return ((Dimension) bean).height;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

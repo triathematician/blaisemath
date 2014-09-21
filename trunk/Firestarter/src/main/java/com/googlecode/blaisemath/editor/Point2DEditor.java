@@ -29,13 +29,12 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>Point2DEditor</code> class represents a single point
- *   with event handling support.
+ *   Edits a single Point2D with event handling support.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class Point2DEditor extends MultiSpinnerSupport {
+public final class Point2DEditor extends MultiSpinnerSupport {
 
     public Point2DEditor() {
         super(2);
@@ -47,27 +46,18 @@ public class Point2DEditor extends MultiSpinnerSupport {
         spinners[0].setToolTipText("x coordinate");
         spinners[1].setToolTipText("y coordinate");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.geom.Point2D.Double(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.geom.Point2D.Double(" + 
+                getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            double x = Double.parseDouble(s[0]);
-            double y = Double.parseDouble(s[1]);
-            setValue(new Point2D.Double(x, y));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        double[] arr = Numbers.decodeAsDoubles(s);
+        setValue(new Point2D.Double(arr[0], arr[1]));
     }
 
     @Override
@@ -77,23 +67,20 @@ public class Point2DEditor extends MultiSpinnerSupport {
             spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .01));
         }
     }
-
-
-    //
-    // ADDITIONAL METHODS
-    //
     
     @Override
     public Object getValue(Object bean, int i) {
-        if (bean == null)
+        if (bean == null) {
             return 0.0;
+        }
         switch (i) {
             case 0:
                 return ((Point2D.Double) bean).x;
             case 1:
                 return ((Point2D.Double) bean).y;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

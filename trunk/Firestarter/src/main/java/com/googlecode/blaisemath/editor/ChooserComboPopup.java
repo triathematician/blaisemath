@@ -35,7 +35,7 @@ import javax.swing.JPopupMenu;
 
 public class ChooserComboPopup extends JPopupMenu {
 
-    ColorEditor ce;
+    private final ColorEditor ce;
 
     public ChooserComboPopup(ColorEditor c) {
         super();
@@ -47,6 +47,7 @@ public class ChooserComboPopup extends JPopupMenu {
         p.add(s, BorderLayout.NORTH);
         JButton b = new JButton("Other ...");
         b.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Color color = null;
                 color = JColorChooser.showDialog(getParent(), "Color Chooser", color);
@@ -58,9 +59,11 @@ public class ChooserComboPopup extends JPopupMenu {
         p.add(b, BorderLayout.SOUTH);
         add(p);
         s.addMouseListener(new MouseAdapter() {
-            @Override public void mouseReleased(MouseEvent e) { setVisible(false); }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                setVisible(false);
+            }
         });
-
     }
 
     public ColorEditor getCE() {
