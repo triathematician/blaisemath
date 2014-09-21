@@ -29,26 +29,22 @@ import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Component;
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.event.ListDataEvent;
 
 /**
  * <p>
- *   <code>BeanEditorSupport</code> works as a liason between an underlying bean object
- *   and the bean's component editors. Using with a different bean requires a new instance.
+ *   Uses bean information about an object, gathered by introspection, to provide
+ *   editable attributes of that object.
  * </p>
  * <p>
- *   Contains a filtered list model, which allows for <code>ListDataEvent</code>s to be fired.
+ *   Contains a filtered list model, which allows for {@link ListDataEvent}s to be fired.
  *   This is typically done when the filter properties change.
  * </p>
  *
@@ -57,13 +53,11 @@ import javax.swing.JComponent;
 public final class DefaultBeanEditorModel extends FilteredPropertyList implements BeanEditorModel {
 
     /** Object of this class. */
-    protected Object bean;    
-    /** The info of the bean. */
-    protected final BeanInfo info;
+    private Object bean;    
     /** List of property editors. */
-    protected PropertyEditor[] editors;
+    private PropertyEditor[] editors;
     /** List of component editors. */
-    protected Component[] components;
+    private Component[] components;
     
     /** Listens for changes to editors */
     private final PropertyChangeListener editorListener;
@@ -84,24 +78,8 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
         };
         
         this.bean = bean;
-        info = getBeanInfo(bean.getClass());
-        setProperties(getBeanInfo(bean.getClass()).getPropertyDescriptors());
-    }
-
-    /** 
-     * Retrieves the BeanInfo for a Class
-     * @param cls
-     * @return 
-     */
-    public static BeanInfo getBeanInfo(Class cls)  {
-        BeanInfo beanInfo = null;
-	try {
-	    beanInfo = Introspector.getBeanInfo(cls);
-	} catch (IntrospectionException ex) {
-            Logger.getLogger(DefaultBeanEditorModel.class.getName())
-                    .log(Level.WARNING, "Error in bean introspection for class "+cls, ex);
-	}
-	return beanInfo;
+        BeanInfo info = ReflectionUtils.getBeanInfo(bean.getClass());
+        setProperties(info.getPropertyDescriptors());
     }
 
     /**
@@ -112,21 +90,15 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
         editors = new PropertyEditor[getSize()];
         components = new Component[getSize()];
         for (int i = 0; i < getSize(); i++) {
-            editors[i] = EditorRegistration.getEditor(bean, getElementAt(i));
+            PropertyDescriptor pd = getElementAt(i);
+            editors[i] = EditorRegistration.getEditor(bean, pd);
             editors[i].addPropertyChangeListener(editorListener);
-            if (editors[i].supportsCustomEditor()) {
-                components[i] = editors[i].getCustomEditor();
-            } else {
-                components[i] = new DefaultPropertyComponent(bean, getElementAt(i));
-            }
-            if (getElementAt(i).getWriteMethod() == null || getElementAt(i).getReadMethod() == null) {
-                // if no read or write method make sure it is disabled
-                components[i].setEnabled(false); 
-            }
-            try {
-                ((JComponent) components[i]).setBorder(null); // do not show any borders
-            } catch (Exception e) {
-                System.out.println("Editor is not a JComponent!");
+            components[i] = editors[i].supportsCustomEditor() ? editors[i].getCustomEditor()
+                    : new DefaultPropertyComponent(bean, pd);
+            components[i].setEnabled(pd.getWriteMethod() != null 
+                    && pd.getReadMethod() != null);
+            if (components[i] instanceof JComponent) {
+                ((JComponent) components[i]).setBorder(null);
             }
         }
     }
@@ -145,7 +117,7 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
      * @return property type
      */
     @Override
-    public Class getValueType(int i) {
+    public Class<?> getValueType(int i) {
         return getElementAt(i).getPropertyType();
     }
 
@@ -156,20 +128,7 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
      */
     @Override
     public Object getValue(int row) {
-        Object value = null;
-        Method getter = getElementAt(row).getReadMethod();
-        if (getter != null) {
-            try {
-                value = getter.invoke(bean);
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(e);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalStateException(e);
-            } catch (InvocationTargetException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return value;
+        return ReflectionUtils.tryInvokeRead(bean, getElementAt(row));
     }
 
     /**
@@ -200,7 +159,8 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
     private void handleEditorChange(PropertyChangeEvent evt) {
         Object source = evt.getSource();
         for (int i = 0; i < getSize(); i++) {
-            if (editors[i] instanceof PropertyEditorSupport && source == ((PropertyEditorSupport) editors[i]).getSource()) {
+            if (editors[i] instanceof PropertyEditorSupport 
+                    && source == ((PropertyEditorSupport) editors[i]).getSource()) {
                 Object oldValue = ((PropertyEditor) source).getValue();
                 Object newValue = ((MPropertyEditorSupport) source).getNewValue();
                 setValue(i, newValue);
@@ -240,19 +200,19 @@ public final class DefaultBeanEditorModel extends FilteredPropertyList implement
     //
 
     @Override
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
     @Override
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
     @Override
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
     @Override
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 

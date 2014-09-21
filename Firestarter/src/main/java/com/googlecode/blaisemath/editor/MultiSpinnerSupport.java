@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -33,20 +32,20 @@ import javax.swing.event.ChangeListener;
 
 /**
  * <p>
- *   <code>MultiSpinnerSupport</code> serves as a base class for editors that work
- *   with multiple coordinates.
+ *   Base class for editors that use multiple coordinates.
  * </p>
  *
  * @author Elisha Peterson
  */
 public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
 
-    JSpinner[] spinners;
+    protected final JSpinner[] spinners;
 
     public MultiSpinnerSupport(final int n) {
         spinners = new JSpinner[n];
     }
 
+    @Override
     public void initCustomizer() {
         final int n = spinners.length;
         
@@ -60,6 +59,7 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
         }
 
         ChangeListener cl = new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 Object[] values = new Object[n];
                 for (int i = 0; i < n; i++) {
@@ -86,9 +86,12 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
         return result;
     }
 
-    /** Use a comma-delimited technique for setting as text. */
+    /** 
+     * Use a comma-delimited technique for setting as text.
+     * @param s 
+     */
     @Override
-    public void setAsText(String s) throws IllegalArgumentException {
+    public void setAsText(String s) {
         String[] splits = s.split(",");
         if (splits.length != spinners.length) {
             throw new IllegalArgumentException();
@@ -96,7 +99,7 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
         setAsText(splits);
     }
 
-    public abstract void setAsText(String... strings) throws IllegalArgumentException;
+    public abstract void setAsText(String... strings);
 
     public Object getValue(int i) {
         return getValue(getValue(), i);

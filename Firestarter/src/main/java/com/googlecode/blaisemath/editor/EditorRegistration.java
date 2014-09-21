@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Color;
 import java.awt.Font;
 import java.beans.IndexedPropertyDescriptor;
@@ -33,24 +34,22 @@ import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>
- *   <code>EditorRegistration</code> contains static code for finding and using registered
- *   property editors.
+ *   Static code for registering and accessing registered property editors.
  * </p>
  *
  * @author Elisha Peterson
  */
-public abstract class EditorRegistration {
+public class EditorRegistration {
 
-    /** Registers all of the editors specified within this backage. */
+    // utility class
+    private EditorRegistration() {
+    }
+
+    /** Registers all of the editors specified within this package. */
     public static void registerEditors() {
-
         // basic editors
 
         PropertyEditorManager.registerEditor(boolean.class, BooleanEditor.class);
@@ -100,42 +99,26 @@ public abstract class EditorRegistration {
 
         PropertyEditorManager.registerEditor(Color.class, ColorEditor.class);
         PropertyEditorManager.registerEditor(Font.class, FontEditor.class);
-
     }
-
-
     
     /**
      * Returns editor type for a given class, as registered by the property manager.
-     *
      * @param cls the class type
-     * @return a property editor for the provided class, or <code>null</code> if there is no available editor
+     * @return a property editor for the provided class, or {@code null} if there is no available editor
      */
-    public static PropertyEditor getRegisteredEditor(Class cls) {
-        try {
-            // look for an editor for the specific class
-            PropertyEditor result = PropertyEditorManager.findEditor(cls);
-            if (result != null) {
-                return result;
-            }
-            // look for an enum editor for enum classes
-            if (cls != null && cls.isEnum()) {
-                result = PropertyEditorManager.findEditor(Enum.class);
-                if (result != null) {
-                    return result;
-                }
-            }
-            // default to return the registered object editor
-            result = PropertyEditorManager.findEditor(Object.class);
-            if (result != null) {
-                return result;
-            }
-        } catch (Exception ex) {
-            System.out.println("Unable to find editor for property of type " + cls);
-            ex.printStackTrace();
+    public static PropertyEditor getRegisteredEditor(Class<?> cls) {
+        PropertyEditor result = PropertyEditorManager.findEditor(cls);
+        if (result != null) {
+            return result;
         }
-        // if everything else fails, return a null value
-        return null;
+        // look for an enum editor for enum classes
+        if (cls != null && cls.isEnum()) {
+            result = PropertyEditorManager.findEditor(Enum.class);
+            if (result != null) {
+                return result;
+            }
+        }
+        return PropertyEditorManager.findEditor(Object.class);
     }
 
     /**
@@ -146,31 +129,34 @@ public abstract class EditorRegistration {
      * @return an appropriate editor for the property (not initialized)
      */
     public static PropertyEditor getEditor(final Object bean, final PropertyDescriptor descriptor) {
-        if (descriptor == null)
+        if (descriptor == null) {
             throw new IllegalArgumentException("Null property descriptor!");
+        }
         
         // set to type specified by the propertyeditor, if possible
         PropertyEditor result = null;
-        Class cls = descriptor.getPropertyEditorClass();
+        Class<?> cls = descriptor.getPropertyEditorClass();
         if (cls != null) {
-            try {
-                result = (PropertyEditor) cls.newInstance();
-            } catch (Exception ex) {}
+            result = (PropertyEditor) ReflectionUtils.tryInvokeNew(cls);
         }
         
         // if no luck, set to editor registered for actual type
-        if (result == null)
-            try {
-                result = getRegisteredEditor(descriptor.getReadMethod().invoke(bean).getClass());
-            } catch (Exception ex) {}
+        if (result == null) {
+            Object sampleRead = ReflectionUtils.tryInvokeRead(bean, descriptor);
+            if (sampleRead != null) {
+                result = getRegisteredEditor(sampleRead.getClass());
+            }
+        }
         
         // if no luck, set to editor registered for descriptor type
-        if (result == null && descriptor.getPropertyType() != null)
+        if (result == null && descriptor.getPropertyType() != null) {
             result = getRegisteredEditor(descriptor.getPropertyType());
+        }
         
         // if no luck, use the default editor
-        if (result == null)
+        if (result == null) {
             result = new PropertyEditorSupport();
+        }
         
         updateEditorValue(bean, descriptor, result);
         addChangeListening(bean, descriptor, result);
@@ -179,46 +165,22 @@ public abstract class EditorRegistration {
     
     /** Updates the value of an editor. */
     static void updateEditorValue(Object bean, PropertyDescriptor descriptor, PropertyEditor editor) {
-        Object value = null;
-        Method getter = descriptor.getReadMethod();
-        if (getter != null) {
-            try {
-                value = getter.invoke(bean);
-            } catch (Exception e) {
-                Logger.getLogger(EditorRegistration.class.getName())
-                        .log(Level.WARNING, "Get bean value failed: "+descriptor, e);
-            }
-        }
+        Object value = ReflectionUtils.tryInvokeRead(bean, descriptor);
         editor.setValue(value);
     }
 
     /** Sets up change listening to update the bean when the value changes. */
     static void addChangeListening(final Object bean, final PropertyDescriptor descriptor, final PropertyEditor result) {
-        final Method setter = descriptor.getWriteMethod();
-        // set up listening for changes to properties... update the underlying bean
-        if (setter != null) {
+        if (descriptor.getWriteMethod() != null) {
             result.addPropertyChangeListener(new PropertyChangeListener(){
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    try {
-                        Object source = evt.getSource();
-                        if (source instanceof MPropertyEditorSupport) {
-                            setter.invoke(bean, ((MPropertyEditorSupport) source).getNewValue());
-                        } else if (source instanceof PropertyEditor) {
-                            setter.invoke(bean, ((PropertyEditor) source).getValue());
-                        } else {
-                            setter.invoke(bean, source);
-                        }
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
-                                "Attempt to update bean value failed", ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
-                                "Attempt to update bean value failed", ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(EditorRegistration.class.getName()).log(Level.WARNING, 
-                                "Attempt to update bean value failed", ex);
-                    }
+                    Object source = evt.getSource();
+                    Object newValue = source instanceof MPropertyEditorSupport
+                            ? ((MPropertyEditorSupport) source).getNewValue()
+                            : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
+                            : source;
+                    ReflectionUtils.tryInvokeWrite(bean, descriptor, newValue);
                 }
             });
         }
@@ -246,41 +208,24 @@ public abstract class EditorRegistration {
     
     /** Updates the value of an editor for an indexed property. */
     static void updateEditorValue(Object bean, IndexedPropertyDescriptor descriptor, int n, PropertyEditor editor) {
-        Object value = null;
-        Method getter = descriptor.getIndexedReadMethod();
-        if (getter != null) {
-            Class[] paramTypes = getter.getParameterTypes();
-            Object[] args = new Object[paramTypes.length];
-            try {
-                value = getter.invoke(bean, n);
-            } catch (Exception e) {
-                System.out.println("NoSuchMethodError for method invocation\nBean: " + bean.toString() + "\nGetter: " + getter.getName() + "\nGetter args: ");
-                for (int i = 0; i < args.length; i++) System.out.println("\t" + "type: " + paramTypes[i] + " value: " + args[i]);
-                e.printStackTrace();
-            }
-        }
+        Object value = ReflectionUtils.tryInvokeIndexedRead(bean, descriptor, n);
         editor.setValue(value);
     }
 
     /** Sets up change listening to update the bean when the value changes (indexed properties). */
     static void addChangeListening(final Object bean, final IndexedPropertyDescriptor descriptor, final int n, final PropertyEditor result) {
-        final Method setter = descriptor.getIndexedWriteMethod();
-        // set up listening for changes to properties... update the underlying bean
-        result.addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                try {
+        if (descriptor.getIndexedWriteMethod() != null) {
+            result.addPropertyChangeListener(new PropertyChangeListener(){
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
                     Object source = evt.getSource();
-                    if (source instanceof MPropertyEditorSupport) {
-                        setter.invoke(bean, n, ((MPropertyEditorSupport) source).getNewValue());
-                    } else if (source instanceof PropertyEditor) {
-                        setter.invoke(bean, n, ((PropertyEditor) source).getValue());
-                    } else {
-                        setter.invoke(bean, n, source);
-                    }
-                } catch (Exception ex) {
-                    System.out.println("Unable to change underlying bean value: " + ex);
+                    Object newValue = source instanceof MPropertyEditorSupport
+                            ? ((MPropertyEditorSupport) source).getNewValue()
+                            : source instanceof PropertyEditor ? ((PropertyEditor) source).getValue()
+                            : source;
+                    ReflectionUtils.tryInvokeIndexedWrite(bean, descriptor, n, newValue);
                 }
-            }
-        });
+            });
+        }
     }
 }

@@ -24,8 +24,7 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Insets;
@@ -41,9 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 
 /**
  * <p>
@@ -70,6 +67,9 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @param ipd 
      */
     public IndexedPropertySheet(Object bean, IndexedPropertyDescriptor ipd) {
+        if (ipd == null) {
+            throw new IllegalArgumentException("Null argumnet: "+ipd);
+        }
         this.ipd = ipd;
         beanModel = new IndexedBeanEditorModel(bean, ipd);
         headers = new String[] {"Index", "Value"};
@@ -78,7 +78,7 @@ public final class IndexedPropertySheet extends PropertySheet {
     }
     
     private static IndexedPropertyDescriptor indexedPropertyDescriptor(Object bean, String propName) {
-        BeanInfo info = DefaultBeanEditorModel.getBeanInfo(bean.getClass());
+        BeanInfo info = ReflectionUtils.getBeanInfo(bean.getClass());
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
             if (pd.getName().equals(propName) && pd instanceof IndexedPropertyDescriptor) {
                 return (IndexedPropertyDescriptor) pd;
@@ -92,32 +92,17 @@ public final class IndexedPropertySheet extends PropertySheet {
         if (ipd == null) {
             return;
         }
-        
-        // set up table model
-        table = new JTable();
-        table.setGridColor(new Color(192, 192, 192));
-        model = new PropertySheetModel();
-        model.addTableModelListener(new TableModelListener(){
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                handleTableChange(e);
-            }
-        });
-        table.setModel(model);
-        table.getTableHeader().setReorderingAllowed(false);
-        updateRowHeights();
-
-        // set up first column
-        TableColumn column = table.getColumnModel().getColumn(0);
-        column.setCellRenderer(new IndexColRenderer());
-        column.setPreferredWidth(defaultNameColWidth);
-
-        // set up second column
-        column = table.getColumnModel().getColumn(1);
-        column.setPreferredWidth(MIN_WIDTH - defaultNameColWidth);
-        column.setCellRenderer(new ValueColEditor());
-        column.setCellEditor(new ValueColEditor());
-        
+        super.initComponents();
+    }
+    
+    @Override
+    protected void initTable() {
+        super.initTable();
+        table.getColumnModel().getColumn(0).setCellRenderer(new IndexColRenderer());
+    }
+    
+    @Override
+    protected void initToolbar() {
         // set up tool panel
         AbstractAction aa = new AbstractAction("+") {
             @Override
@@ -148,11 +133,6 @@ public final class IndexedPropertySheet extends PropertySheet {
         toolPanel.add(Box.createGlue());
         toolPanel.add(addB);
         toolPanel.add(delB);
-
-        // Set up final components
-        setLayout(new BorderLayout());
-        add(table, BorderLayout.CENTER);
-        add(toolPanel, BorderLayout.NORTH);
     }
 
     @Override

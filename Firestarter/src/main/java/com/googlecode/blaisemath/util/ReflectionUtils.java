@@ -1,6 +1,5 @@
 /**
- * ReflectionUtils.java
- * Created Sep 20, 2014
+ * ReflectionUtils.java Created Sep 20, 2014
  */
 package com.googlecode.blaisemath.util;
 
@@ -23,9 +22,10 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
-
-
+import java.beans.BeanInfo;
 import java.beans.IndexedPropertyDescriptor;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -33,9 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Utility functions for working with reflection API, e.g. for catching potential
- * exceptions when invoking methods.
- * 
+ * Utility functions for working with reflection API, e.g. for catching
+ * potential exceptions when invoking methods.
+ *
  * @author Elisha
  */
 public class ReflectionUtils {
@@ -45,12 +45,25 @@ public class ReflectionUtils {
     private static final String NO_READ_MSG = "No read method available";
     private static final String NO_WRITE_MSG = "No writemethod available";
 
-    public static Object tryInvokeNewIndexed(IndexedPropertyDescriptor ipd) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     // utility class
     private ReflectionUtils() {
+    }
+
+    /**
+     * Retrieves the BeanInfo for a Class
+     *
+     * @param cls
+     * @return
+     */
+    public static BeanInfo getBeanInfo(Class<?> cls) {
+        BeanInfo beanInfo = null;
+        try {
+            beanInfo = Introspector.getBeanInfo(cls);
+        } catch (IntrospectionException ex) {
+            Logger.getLogger(ReflectionUtils.class.getName())
+                    .log(Level.WARNING, "Error in bean introspection for class " + cls, ex);
+        }
+        return beanInfo;
     }
 
     public static <T> T tryInvokeNew(Class<T> cls) {
@@ -58,11 +71,11 @@ public class ReflectionUtils {
         try {
             con = cls.getDeclaredConstructor();
         } catch (NoSuchMethodException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE, 
-                    "There is no no-arg constructor for "+cls, ex);
+            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
+                    "There is no no-arg constructor for " + cls, ex);
         } catch (SecurityException ex) {
-            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE, 
-                    "Unable to get no-arg constructor for "+cls, ex);
+            Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
+                    "Unable to get no-arg constructor for " + cls, ex);
         }
         if (con != null) {
             try {
@@ -83,7 +96,7 @@ public class ReflectionUtils {
         }
         return null;
     }
-    
+
     public static Object tryInvokeRead(Object parent, PropertyDescriptor pd) {
         if (pd.getReadMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
@@ -104,7 +117,7 @@ public class ReflectionUtils {
         }
         return null;
     }
-    
+
     public static boolean tryInvokeWrite(Object parent, PropertyDescriptor pd, Object val) {
         if (pd.getWriteMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
@@ -125,7 +138,7 @@ public class ReflectionUtils {
         }
         return false;
     }
-    
+
     public static Object tryInvokeIndexedRead(Object parent, IndexedPropertyDescriptor pd, int index) {
         if (pd.getIndexedReadMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
@@ -146,7 +159,7 @@ public class ReflectionUtils {
         }
         return null;
     }
-    
+
     public static boolean tryInvokeIndexedWrite(Object parent, IndexedPropertyDescriptor pd, int index, Object value) {
         if (pd.getIndexedWriteMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,

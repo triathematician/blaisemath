@@ -64,7 +64,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.Serializable;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -80,18 +79,18 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 /**
  * Modified from the standard color swatch chooser.
  * 
- * @author Steve Wilson
- * @author Elisha Peterson
+ * @author Steve Wilson (original)
+ * @author Elisha Peterson (updated)
  */
-public class SwatchChooserPanel extends AbstractColorChooserPanel {
+public final class SwatchChooserPanel extends AbstractColorChooserPanel {
 
-    SwatchPanel swatchPanel;
-    RecentSwatchPanel recentSwatchPanel;
-    MouseListener mainSwatchListener;
-    MouseListener recentSwatchListener;
-    ColorEditor chooser;
-    ChooserComboPopup popup;
-    private static String recentStr = UIManager.getString("ColorChooser.swatchesRecentText");
+    private static final String RECENT_STR = UIManager.getString("ColorChooser.swatchesRecentText");
+    
+    private SwatchPanel swatchPanel;
+    private RecentSwatchPanel recentSwatchPanel;
+    private MouseListener mainSwatchListener;
+    private ColorEditor chooser;
+    private ChooserComboPopup popup;
 
     public SwatchChooserPanel(ColorEditor c, ChooserComboPopup p) {
         super();
@@ -99,72 +98,67 @@ public class SwatchChooserPanel extends AbstractColorChooserPanel {
         this.popup = p;
     }
 
+    @Override
     public String getDisplayName() {
         return UIManager.getString("ColorChooser.swatchesNameText");
     }
 
+    @Override
     public Icon getSmallDisplayIcon() {
         return null;
     }
 
+    @Override
     public Icon getLargeDisplayIcon() {
         return null;
     }
 
-    /**
-     * The background color, foreground color, and font are already set to the
-     * defaults from the defaults table before this method is called.
-     */
-    public void installChooserPanel(JColorChooser enclosingChooser) {
-        super.installChooserPanel(enclosingChooser);
-    }
-
+    @Override
     protected void buildChooser() {
-
         JPanel superHolder = new JPanel();
-        superHolder.setLayout(new BoxLayout(superHolder, BoxLayout.Y_AXIS)); // new BorderLayout());
+        superHolder.setLayout(new BoxLayout(superHolder, BoxLayout.Y_AXIS));
         swatchPanel = new MainSwatchPanel();
         swatchPanel.getAccessibleContext().setAccessibleName(getDisplayName());
 
         recentSwatchPanel = new RecentSwatchPanel();
-        recentSwatchPanel.getAccessibleContext().setAccessibleName(recentStr);
+        recentSwatchPanel.getAccessibleContext().setAccessibleName(RECENT_STR);
 
-        mainSwatchListener = new MainSwatchListener();
+        mainSwatchListener = new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());
+                chooser.setNewValue(color);
+                chooser.initEditorValue();
+                recentSwatchPanel.setMostRecentColor(color);
+                popup.setVisible(false);
+            }
+        };
         swatchPanel.addMouseListener(mainSwatchListener);
-        recentSwatchListener = new RecentSwatchListener();
-        recentSwatchPanel.addMouseListener(recentSwatchListener);
-
+        recentSwatchPanel.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Color color = recentSwatchPanel.getColorForLocation(e.getX(), e.getY());
+                chooser.setNewValue(color);
+                chooser.initEditorValue();
+                popup.setVisible(false);
+            }
+        });
 
         JPanel mainHolder = new JPanel(new BorderLayout());
         Border border = new CompoundBorder(new LineBorder(Color.black),
                 new LineBorder(Color.white));
         mainHolder.setBorder(border);
         mainHolder.add(swatchPanel, BorderLayout.CENTER);
-        //	mainHolder.add(recentSwatchPanel, BorderLayout.NORTH);
 
         JPanel recentHolder = new JPanel(new BorderLayout());
         recentHolder.setBorder(border);
         recentHolder.add(recentSwatchPanel, BorderLayout.CENTER);
 
-        superHolder.add(recentHolder); // , BorderLayout.NORTH);
+        superHolder.add(recentHolder);
         superHolder.add(Box.createRigidArea(new Dimension(0, 3)));
-        superHolder.add(mainHolder); // , BorderLayout.CENTER );
-
-
-
-        //	JPanel recentLabelHolder = new JPanel(new BorderLayout());
-        //	recentLabelHolder.add(recentHolder, BorderLayout.CENTER);
-        //	JLabel l = new JLabel(recentStr);
-        //	l.setLabelFor(recentSwatchPanel);
-        //	recentLabelHolder.add(l, BorderLayout.NORTH);
-        //	JPanel recentHolderHolder = new JPanel(new BorderLayout()); // was centerlayout
-        //	recentHolderHolder.setBorder(new EmptyBorder(2,10,2,2));
-        //	recentHolderHolder.add(recentLabelHolder);
-
-        //        superHolder.add( recentHolderHolder, BorderLayout.NORTH );
+        superHolder.add(mainHolder);
 
         add(superHolder);
-
     }
 
     @Override
@@ -173,170 +167,147 @@ public class SwatchChooserPanel extends AbstractColorChooserPanel {
         swatchPanel.removeMouseListener(mainSwatchListener);
         swatchPanel = null;
         mainSwatchListener = null;
-        removeAll();  // strip out all the sub-components
-    }
-
-    public void updateChooser() {
-    }
-
-    class RecentSwatchListener extends MouseAdapter implements Serializable {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            Color color = recentSwatchPanel.getColorForLocation(e.getX(), e.getY());
-            chooser.setNewValue(color);
-            chooser.initEditorValue();
-            popup.setVisible(false);
-        }
-    }
-
-    class MainSwatchListener extends MouseAdapter implements Serializable {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());
-            chooser.setNewValue(color);
-            chooser.initEditorValue();
-            recentSwatchPanel.setMostRecentColor(color);
-            popup.setVisible(false);
-        }
-    }
-}
-
-/** This panel actually displays the colors */
-class SwatchPanel extends JPanel {
-
-    protected Color[] colors;
-    protected Dimension swatchSize = new Dimension(12, 12);
-    protected Dimension numSwatches;
-    protected Dimension gap;
-
-    /** Sets up the panel */
-    public SwatchPanel() {
-        initValues();
-        initColors();
-        setToolTipText(""); // register for events
-        setOpaque(true);
-        setFocusable(false);
-    }
-
-    public boolean isFocusAble() {
-        return false;
-    }
-
-    protected void initValues() {
+        removeAll();
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        for (int row = 0; row < numSwatches.height; row++) {
-            for (int column = 0; column < numSwatches.width; column++) {
-                g.setColor(getColorForCell(column, row));
-                int x = column * (swatchSize.width + gap.width);
-                int y = row * (swatchSize.height + gap.height);
-                g.fillRect(x, y, swatchSize.width, swatchSize.height);
-                g.setColor(Color.black);
-                g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
-                g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.width - 1);
+    public void updateChooser() {
+        // no need to do anything here
+    }
+
+    /** This panel actually displays the colors */
+    private static class SwatchPanel extends JPanel {
+        protected Color[] colors;
+        protected Dimension swatchSize = new Dimension(12, 12);
+        protected Dimension numSwatches;
+        protected Dimension gap;
+
+        /** Sets up the panel */
+        SwatchPanel() {
+            initValues();
+            initColors();
+            setToolTipText("");
+            setOpaque(true);
+            setFocusable(false);
+        }
+
+        public boolean isFocusAble() {
+            return false;
+        }
+
+        protected void initValues() {
+            // hook method for sub-classes
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+            for (int row = 0; row < numSwatches.height; row++) {
+                for (int column = 0; column < numSwatches.width; column++) {
+                    g.setColor(getColorForCell(column, row));
+                    int x = column * (swatchSize.width + gap.width);
+                    int y = row * (swatchSize.height + gap.height);
+                    g.fillRect(x, y, swatchSize.width, swatchSize.height);
+                    g.setColor(Color.black);
+                    g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
+                    g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.width - 1);
+                }
             }
         }
+
+        @Override
+        public Dimension getPreferredSize() {
+            int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
+            int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
+            return new Dimension(x, y);
+        }
+
+        protected void initColors() {
+            // hook method for sub-classes
+        }
+
+        @Override
+        public String getToolTipText(MouseEvent e) {
+            Color color = getColorForLocation(e.getX(), e.getY());
+            return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+        }
+
+        public Color getColorForLocation(int x, int y) {
+            int column = x / (swatchSize.width + gap.width);
+            int row = y / (swatchSize.height + gap.height);
+            return getColorForCell(column, row);
+        }
+
+        private Color getColorForCell(int column, int row) {
+            return colors[(row * numSwatches.width) + column];
+        }
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
-        int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
-        return new Dimension(x, y);
+    private static final class RecentSwatchPanel extends SwatchPanel {
+        @Override
+        protected void initValues() {
+            numSwatches = new Dimension(16, 1);
+            gap = new Dimension(1, 1);
+        }
+
+        @Override
+        protected void initColors() {
+            Color defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");
+            int numColors = numSwatches.width * numSwatches.height;
+
+            colors = new Color[numColors];
+            for (int i = 0; i < numColors; i++) {
+                colors[i] = defaultRecentColor;
+            }
+        }
+
+        public void setMostRecentColor(Color c) {
+            System.arraycopy(colors, 0, colors, 1, colors.length - 1);
+            colors[0] = c;
+            repaint();
+        }
     }
 
-    protected void initColors() {
+    private static final class MainSwatchPanel extends SwatchPanel {
+        @Override
+        protected void initValues() {
+            numSwatches = new Dimension(16, 7);
+            gap = new Dimension(1, 1);
+        }
+
+        @Override
+        protected void initColors() {
+            colors = new Color[numSwatches.width * numSwatches.height];
+            int i = 0;
+            for (int j = 0; j < 16; j++) {
+                colors[i++] = color(255,255,255,j,16);
+            }
+            i = addColorSequence(colors, 255, 0, 0, i);
+            i = addColorSequence(colors, 0, 255, 0, i);
+            i = addColorSequence(colors, 0, 0, 255, i);
+            i = addColorSequence(colors, 255, 0, 255, i);
+            i = addColorSequence(colors, 0, 255, 255, i);
+            addColorSequence(colors, 255, 255, 0, i);
+        }
+    }
+    
+    private static int addColorSequence(Color[] arr, int r, int g, int b, int i0) {
+        int i = i0;
+        for (int j = 0; j < 8; j++) {
+            arr[i++] = color(r, g, b, j, 8);
+        }
+        for (int j = 7; j >= 0; j--) {
+            arr[i++] = color2(255 - r, 255 - g, 255 - b, j, 8);
+        }
+        return i;
     }
 
-    @Override
-    public String getToolTipText(MouseEvent e) {
-        Color color = getColorForLocation(e.getX(), e.getY());
-        return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
-    }
-
-    public Color getColorForLocation(int x, int y) {
-        int column = x / (swatchSize.width + gap.width);
-        int row = y / (swatchSize.height + gap.height);
-        return getColorForCell(column, row);
-    }
-
-    private Color getColorForCell(int column, int row) {
-        return colors[(row * numSwatches.width) + column];
-    }
-}
-
-class RecentSwatchPanel extends SwatchPanel {
-
-    @Override
-    protected void initValues() {
-        numSwatches = new Dimension(16, 1);
-        gap = new Dimension(1, 1);
-    }
-
-    @Override
-    protected void initColors() {
-        Color defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");
-        int numColors = numSwatches.width * numSwatches.height;
-
-        colors = new Color[numColors];
-        for (int i = 0; i < numColors; i++)
-            colors[i] = defaultRecentColor;
-    }
-
-    public void setMostRecentColor(Color c) {
-        System.arraycopy(colors, 0, colors, 1, colors.length - 1);
-        colors[0] = c;
-        repaint();
-    }
-}
-
-class MainSwatchPanel extends SwatchPanel {
-    @Override
-    protected void initValues() {
-        numSwatches = new Dimension(16, 7);
-        gap = new Dimension(1, 1);
-    }
-
-    @Override
-    protected void initColors() {
-        colors = new Color[numSwatches.width * numSwatches.height];
-        int i = 0;
-        for (int j = 0; j < 16; j++)
-            colors[i++] = color(255,255,255,j,16);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(255,0,0,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(0,255,255,j,8);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(0,255,0,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(255,0,255,j,8);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(0,0,255,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(255,255,0,j,8);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(255,0,255,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(0,255,0,j,8);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(0,255,255,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(255,0,0,j,8);
-        for (int j = 0; j < 8; j++)
-            colors[i++] = color(255,255,0,j,8);
-        for (int j = 7; j >= 0; j--)
-            colors[i++] = color2(0,0,255,j,8);
-    }
-
-    static Color color(int r, int g, int b, int i, int n) {
+    private static Color color(int r, int g, int b, int i, int n) {
         return new Color((int)(r*i/(n-1.0)), (int)(g*i/(n-1.0)), (int)(b*i/(n-1.0)));
     }
-    static Color color2(int r, int g, int b, int i, int n) {
+    
+    private static Color color2(int r, int g, int b, int i, int n) {
         return new Color(255-(int)(r*i/(n-1.0)), 255-(int)(g*i/(n-1.0)), 255-(int)(b*i/(n-1.0)));
     }
 }

@@ -44,7 +44,7 @@ import javax.swing.JPanel;
 
 /**
  * <p>
- *   <code>MPanel</code> encapsulates another Component with a title bar.
+ *   Adds a title bar onto another component, with text and a show/hide options.
  *   The component may be minimized or maximized depending upon the user's actions.
  *   The title bar defaults to a simple label, but the user may also alter that
  *   component directly for custom displays.
@@ -52,20 +52,20 @@ import javax.swing.JPanel;
  *
  * @author Elisha Peterson
  */
-public class MPanel extends JPanel {
+public final class MPanel extends JPanel {
 
     /** The title bar */
-    JPanel titleBar;
-    /** The button for maximizing/minimizing */
-    JButton rollupButton;
+    private final JPanel titleBar;
     /** The label displaying the title */
-    JLabel titleLabel;
+    private final JLabel titleLabel;
 
     /** Component within the panel */
-    protected Component component;
+    private Component component;
+    /** Listen for changes to component size */
+    private final PropertyChangeListener componentSizeListener;
 
     /** Whether panel is currently minimized */
-    boolean minimized;
+    private boolean minimized;
 
     //
     // CONSTRUCTORS
@@ -99,43 +99,43 @@ public class MPanel extends JPanel {
         titleLabel = label;
         this.component = component;
         this.minimized = minimized;
-        initComponents();
-    }
+        
+        int titleHt = titleLabel.getPreferredSize().height;
 
-    //
-    // INITIALIZERS
-    //
-
-    private void initComponents() {
-        int TITLEHT = titleLabel.getPreferredSize().height;
-
-        rollupButton = new JButton(new MinimizeAction());
-          rollupButton.setMargin(new Insets(0, 0, 0, 0));
-          Dimension square = new Dimension(TITLEHT, TITLEHT);
-          rollupButton.setMinimumSize(square);
-          rollupButton.setMaximumSize(square);
-          rollupButton.setPreferredSize(square);
-          rollupButton.setOpaque(false);
+        JButton rollupButton = new JButton(new ToggleHideAction());
+        rollupButton.setMargin(new Insets(0, 0, 0, 0));
+        Dimension square = new Dimension(titleHt, titleHt);
+        rollupButton.setMinimumSize(square);
+        rollupButton.setMaximumSize(square);
+        rollupButton.setPreferredSize(square);
+        rollupButton.setOpaque(false);
 
         titleBar = new JPanel();
-        titleBar.setMinimumSize(new Dimension(component.getMinimumSize().width + 2, TITLEHT));
-        titleBar.setMaximumSize(new Dimension(component.getMaximumSize().width + 2, TITLEHT));
-        titleBar.setPreferredSize(new Dimension(component.getPreferredSize().width + 2, TITLEHT));
-//        titleLabel.setOpaque(false);
+        titleBar.setMinimumSize(new Dimension(component.getMinimumSize().width + 2, titleHt));
+        titleBar.setMaximumSize(new Dimension(component.getMaximumSize().width + 2, titleHt));
+        titleBar.setPreferredSize(new Dimension(component.getPreferredSize().width + 2, titleHt));
         titleBar.setBackground(new Color(192, 192, 216));
 
         titleBar.setLayout(new BorderLayout());
-          titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
-          titleBar.add(rollupButton, BorderLayout.WEST);
-          //titleLabel.setForeground(Color.WHITE);
-          titleBar.add(titleLabel, BorderLayout.CENTER);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+        titleBar.add(rollupButton, BorderLayout.WEST);
+        titleBar.add(titleLabel, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createLineBorder(titleBar.getBackground(), 2));
         setLayout(new BorderLayout());
         add(titleBar, BorderLayout.NORTH);
+        
+        componentSizeListener = new PropertyChangeListener(){
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                String prop = evt.getPropertyName();
+                if ("size".equals(prop) || "minimumSize".equals(prop)
+                        || "preferredSize".equals(prop) || "maximumSize".equals(prop)) {
+                    updateSize();
+                }
+            }
+        };
         setPrimaryComponent(component);
-
-        updateSize();
 
         addComponentListener(new ComponentAdapter(){
             @Override
@@ -143,6 +143,7 @@ public class MPanel extends JPanel {
                 updateSize();
             }
         });
+        updateSize();
     }
 
     private void updateSize() {
@@ -175,58 +176,57 @@ public class MPanel extends JPanel {
     // BEAN PATTERNS
     //
 
-    /** @return title */
+    /** 
+     * Get title string
+     * @return title 
+     */
     public String getTitle() {
         return titleLabel.getText();
     }
 
-    /** Sets title */
+    /** 
+     * Sets title string
+     * @param title
+     */
     public void setTitle(String title) {
         titleLabel.setText(title);
     }
 
-    /** @return the component active in this panel */
+    /** 
+     * Get component in this panel
+     * @return the component active in this panel 
+     */
     public Component getPrimaryComponent() {
         return component;
     }
 
-    /** Sets main component */
+    /** 
+     * Sets main component
+     * @param c 
+     */
     public void setPrimaryComponent(Component c) {
         if (component != null) {
-            component.removePropertyChangeListener(COMPONENT_SIZE_LISTENER);
+            component.removePropertyChangeListener(componentSizeListener);
             remove(component);
         }
         component = c;
         if (component instanceof JComponent) {
             ((JComponent) component).setBorder(null);
         }
-        component.addPropertyChangeListener(COMPONENT_SIZE_LISTENER);
+        component.addPropertyChangeListener(componentSizeListener);
 
         add(component, BorderLayout.CENTER);
         updateSize();
     }
 
-    //
-    // EVENT HANDLING
-    //
-
-    private final PropertyChangeListener COMPONENT_SIZE_LISTENER = new PropertyChangeListener(){
-        public void propertyChange(PropertyChangeEvent evt) {
-            String prop = evt.getPropertyName();
-            if ("size".equals(prop) || "minimumSize".equals(prop)
-                    || "preferredSize".equals(prop) || "maximumSize".equals(prop)) {
-                updateSize();
-            }
-        }
-    };
-
 
     /** Action to minimize or maximize the window. */
-    public class MinimizeAction extends AbstractAction {
-        public MinimizeAction() {
+    public class ToggleHideAction extends AbstractAction {
+        public ToggleHideAction() {
             super(minimized ? " + " : " - ");
             putValue(SHORT_DESCRIPTION, "Minimize/maximize panel");
         }
+        @Override
         public void actionPerformed(ActionEvent e) {
             minimized = !minimized;
             putValue(NAME, minimized ? " + " : " - ");

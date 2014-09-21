@@ -29,7 +29,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  * <p>
- *   The <code>PointEditor</code> edits a rectangle: x, y, width, height.
+ *   Edits a rectangle: x, y, width, height.
  * </p>
  *
  * @author Elisha Peterson
@@ -49,29 +49,17 @@ public class RectangleEditor extends MultiSpinnerSupport {
         spinners[2].setToolTipText("width");
         spinners[3].setToolTipText("height");
     }
-
-    //
-    //
-    // PROPERTYEDITOR METHODS
-    //
-    //
+    
     @Override
     public String getJavaInitializationString() {
         Object value = getValue();
-        return (value != null) ? ("new java.awt.Rectangle(" + getAsText() + ")") : "null";
+        return value != null ? "new java.awt.Rectangle(" + getAsText() + ")" : "null";
     }
 
     @Override
-    public void setAsText(String... s) throws IllegalArgumentException {
-        try {
-            int x = Integer.decode(s[0]);
-            int y = Integer.decode(s[1]);
-            int w = Integer.decode(s[2]);
-            int h = Integer.decode(s[3]);
-            setValue(new Rectangle(x, y, w, h));
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(s.toString());
-        }
+    public void setAsText(String... s) {
+        int[] arr = Numbers.decodeAsIntegers(s);
+        setValue(new Rectangle(arr[0], arr[1], arr[2], arr[3]));
     }
 
     @Override
@@ -79,18 +67,11 @@ public class RectangleEditor extends MultiSpinnerSupport {
         if (panel != null) {
             spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
             spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-            // permit negative width/height rectangles
-            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), 0, Integer.MAX_VALUE, 1));
+            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), 0, Integer.MAX_VALUE, 1));
         }
     }
-
-
-    //
-    //
-    // ADDITIONAL METHODS
-    //
-    //
+    
     @Override
     public Object getValue(Object bean, int i) {
         switch (i) {
@@ -102,8 +83,9 @@ public class RectangleEditor extends MultiSpinnerSupport {
                 return ((Rectangle) bean).width;
             case 3:
                 return ((Rectangle) bean).height;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override

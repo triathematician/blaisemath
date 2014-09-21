@@ -30,13 +30,14 @@ import javax.swing.Box;
  * Controls layout vertically. The width of components is fixed by the parent's
  * size, but the height is determined by the internal components.
  */
-public class VerticalLayout extends GridBagLayout {
+public final class VerticalLayout extends GridBagLayout {
 
-    int xMargin = 4;
-    int yMargin = 4;
-    int ySpacing = 4;
-    GridBagConstraints dc;
-    Component vSpacer;    
+    private static final int X_MARGIN = 4;
+    private static final int Y_MARGIN = 4;
+    private static final int Y_SPACING = 4;
+    
+    private final GridBagConstraints dc;
+    private final Component vSpacer;    
 
     public VerticalLayout() {
         dc = new GridBagConstraints();
@@ -46,22 +47,21 @@ public class VerticalLayout extends GridBagLayout {
         dc.gridy = 0;
         dc.ipadx = 0;
         dc.ipady = 0;
-
         vSpacer = Box.createVerticalGlue();
     }
 
     @Override
     public void addLayoutComponent(Component comp, Object constraints) {
-        constraints = dc;
-        super.addLayoutComponent(comp, constraints);
-        if (dc.gridy == 0) {
-            dc.insets = new Insets(yMargin, xMargin, 0, xMargin);
-        } else {
-            dc.insets = new Insets(ySpacing, xMargin, 0, xMargin);
-        }
+        super.addLayoutComponent(comp, dc);
+        dc.insets = new Insets(dc.gridy == 0 ? Y_MARGIN : Y_SPACING,
+                X_MARGIN, 0, X_MARGIN);
         dc.gridy ++;
         dc.weighty = 1.0;
         super.setConstraints(vSpacer, dc);
         dc.weighty = 0.0;
+    }
+
+    public Component getVerticalSpacer() {
+        return vSpacer;
     }
 }

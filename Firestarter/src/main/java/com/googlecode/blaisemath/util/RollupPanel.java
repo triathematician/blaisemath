@@ -28,64 +28,68 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import javax.swing.JPanel;
+import javax.swing.Scrollable;
 
 /**
  * <p>
- *   <code>RollupPanel</code> maintains several collapsing
- *   components along with their titles.
+ *   Combines several collapsible components into a single panel. Each component
+ *   is wrapped by an {@link MPanel} so that it has a displayed title bar and
+ *   expand/collapse buttons.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class RollupPanel extends JPanel
-        implements javax.swing.Scrollable {
+public final class RollupPanel extends JPanel implements Scrollable {
 
     public RollupPanel() {
-        setLayout(new VerticalLayout());
-        super.addImpl(((VerticalLayout) getLayout()).vSpacer, null, -1);
+        VerticalLayout layout = new VerticalLayout();
+        setLayout(layout);
+        super.addImpl(layout.getVerticalSpacer(), null, -1);
     }
 
     @Override
     protected void addImpl(Component comp, Object constraints, int index) {
-        if (comp instanceof MPanel)
+        if (comp instanceof MPanel) {
             super.addImpl(comp, constraints, index);
-        else if (comp != null && constraints instanceof String)
+        } else if (comp != null && constraints instanceof String) {
             super.addImpl(new MPanel((String) constraints, comp), constraints, index);
-        else
+        } else {
             super.addImpl(new MPanel(comp), constraints, index);
+        }
     }
 
     @Override
     public void remove(Component comp) {
-//        synchronized (getTreeLock()) {
-//            if (comp.getParent() == this) {
-//                /* Search backwards, expect that more recent additions
-//                 * are more likely to be removed.
-//                 */
         Component[] component = this.getComponents();
-        for (int i = component.length; --i >= 0;)
-            if (component[i] == comp || (component[i] instanceof MPanel && ((MPanel) component[i]).component == comp))
+        for (int i = component.length; --i >= 0;) {
+            if (component[i] == comp || (component[i] instanceof MPanel 
+                    && ((MPanel) component[i]).getPrimaryComponent() == comp)) {
                 super.remove(i);
-//            }
-//        }
+            }
+        }
     }
 
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         return getPreferredSize();
     }
 
+    @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
         return 20;
     }
 
+    @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return 100;
     }
 
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }

@@ -110,6 +110,17 @@ public class PropertySheet extends JPanel {
     }
 
     protected void initComponents() {
+        initTable();
+        initToolbar();
+
+        setLayout(new BorderLayout());
+        add(table, BorderLayout.CENTER);
+        if (toolsVisible) {
+            add(toolPanel, BorderLayout.NORTH);
+        }
+    }
+    
+    protected void initTable() {
         table = new JTable();
         table.setGridColor(new Color(192, 192, 192));
         model = new PropertySheetModel();
@@ -133,7 +144,9 @@ public class PropertySheet extends JPanel {
         column.setPreferredWidth(MIN_WIDTH - defaultNameColWidth);
         column.setCellRenderer(new ValueColEditor());
         column.setCellEditor(new ValueColEditor());
-
+    }
+    
+    protected void initToolbar() {
         // set up filter
         filterCombo = new JComboBox(new DefaultComboBoxModel(BeanFilterRule.values()));
         Font font = filterCombo.getFont().deriveFont( (float) filterCombo.getFont().getSize() - 2);
@@ -159,13 +172,6 @@ public class PropertySheet extends JPanel {
         toolPanel.add(Box.createGlue());
         toolPanel.add(filterLabel);
         toolPanel.add(filterCombo);
-
-        // Set up final components
-        setLayout(new BorderLayout());
-        add(table, BorderLayout.CENTER);
-        if (toolsVisible) {
-            add(toolPanel, BorderLayout.NORTH);
-        }
     }
 
     //
@@ -303,7 +309,7 @@ public class PropertySheet extends JPanel {
                             && ((PropertyDescriptor) element).getReadMethod() != null
                             && ((PropertyDescriptor) element).getWriteMethod() != null;
                 default:
-                    throw new IllegalStateException("Invalid column");
+                    throw new IllegalStateException();
             }
         }
 
@@ -318,7 +324,7 @@ public class PropertySheet extends JPanel {
                 case VALUE_COL:
                     return beanModel.getValue(row);
                 default:
-                    throw new IllegalStateException("Invalid column");
+                    throw new IllegalStateException();
             }
         }
 

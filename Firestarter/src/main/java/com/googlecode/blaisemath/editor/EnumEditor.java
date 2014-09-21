@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -35,17 +34,14 @@ import javax.swing.JPanel;
 
 /**
  * <p>
- *   <code>EnumEditor</code> provides an editor for enum styles.
+ *   Uses a combo box for editing enum's.
  * </p>
  *
  * @author Elisha Peterson
  */
-public class EnumEditor extends MPanelEditorSupport {
+public final class EnumEditor extends MPanelEditorSupport {
 
-    JComboBox combo;
-
-    public EnumEditor () {
-    }
+    private JComboBox combo;
 
     @Override
     protected void initCustomizer() {
@@ -59,6 +55,7 @@ public class EnumEditor extends MPanelEditorSupport {
         panel.add(combo);
 
         combo.addItemListener(new ItemListener(){
+            @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
                     setNewValue(evt.getItem());
@@ -67,10 +64,11 @@ public class EnumEditor extends MPanelEditorSupport {
         });
     }
 
-    public Class getEnumClass() {
+    public Class<?> getEnumClass() {
         return ((Enum) getValue()).getDeclaringClass();
     }
 
+    @Override
     protected void initEditorValue () {
         if (panel != null) {
             combo.setModel(new DefaultComboBoxModel(getEnumClass().getEnumConstants()));

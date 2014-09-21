@@ -29,9 +29,9 @@ import java.lang.reflect.Array;
 
 /**
  * <p>
- *   <code>IndexedPropertyEditor</code> allows for string-based editing of indexed
- *   properties. This requires that the underlying data type supports the
- *   <code>getAsText()</code> and <code>setAsText()</code> methods, <i>without using commas</i>.
+ *   Provides string-based editing of indexed properties, as long as the
+ *   underlying data type supports the {@link #getAsText()} and {@link #setAsText(java.lang.String)}
+ *   methods. Commas are used for splitting, so the strings must not use commas.
  * </p>
  *
  * @author Elisha Peterson
@@ -39,16 +39,14 @@ import java.lang.reflect.Array;
 public class IndexedPropertyEditor extends MPropertyEditorSupport {
 
     /** The editor that handles individual components of the array. */
-    PropertyEditor baseEditor;
-    /** For use by the class setting and getting text. */
-    String[] splits;
+    private PropertyEditor baseEditor;
 
     public IndexedPropertyEditor() {
         setValue(new Object[0]);
     }
 
     /** @return component type of the underlying array. */
-    public Class getComponentType() {
+    public Class<?> getComponentType() {
         Object[] array = (Object[]) getValue();
         return array.getClass().getComponentType();
     }
@@ -74,12 +72,8 @@ public class IndexedPropertyEditor extends MPropertyEditorSupport {
     }
 
     @Override
-    public void setAsText(String text) throws IllegalArgumentException {
-        splits = text.split(",");
-        if (splits.length != splits.length) {
-            throw new IllegalArgumentException();
-        }
-        setAsText(splits);
+    public void setAsText(String text) {
+        setAsText(text.split(","));
     }
 
     private void setAsText(String... splits) {

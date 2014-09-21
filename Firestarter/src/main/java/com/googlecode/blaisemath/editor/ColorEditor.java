@@ -38,12 +38,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -53,12 +54,15 @@ import javax.swing.UIManager;
 
 /**
  * <p>
- *   <code>ColorEditor</code> ...
+ *   Provides multiple controls for editing a color.
  * </p>
  *
  * @author Elisha Peterson
  */
 public class ColorEditor extends MPanelEditorSupport {
+    
+    private static final String COLOR_ICON = "beaninfo.ColorIcon";
+    private static final String COLOR_PRESSED_ICON = "beaninfo.ColorPressedIcon";
 
     public static final Dimension SQ_DIM = new Dimension(15, 15);
     public static final Dimension RGB_DIM = new Dimension(100, 15);
@@ -97,10 +101,10 @@ public class ColorEditor extends MPanelEditorSupport {
         panel.add(Box.createRigidArea(new Dimension(5, 0)));
 
         UIDefaults table = UIManager.getDefaults();
-        table.put("beaninfo.ColorIcon", LookAndFeel.makeIcon(getClass(), "resources/ColorIcon.gif"));
-        table.put("beaninfo.ColorPressedIcon", LookAndFeel.makeIcon(getClass(), "resources/ColorPressedIcon.gif"));
-        Icon colorIcon = UIManager.getIcon("beaninfo.ColorIcon");
-        Icon colorPressedIcon = UIManager.getIcon("beaninfo.ColorPressedIcon");
+        table.put(COLOR_ICON, LookAndFeel.makeIcon(getClass(), "resources/ColorIcon.gif"));
+        table.put(COLOR_PRESSED_ICON, LookAndFeel.makeIcon(getClass(), "resources/ColorPressedIcon.gif"));
+        Icon colorIcon = UIManager.getIcon(COLOR_ICON);
+        Icon colorPressedIcon = UIManager.getIcon(COLOR_PRESSED_ICON);
         colorChooserButton = new JButton(colorIcon);
         colorChooserButton.setPressedIcon(colorPressedIcon);
         colorChooserButton.setToolTipText("press to bring up color chooser");
@@ -112,17 +116,21 @@ public class ColorEditor extends MPanelEditorSupport {
         panel.add(colorChooserButton);
 
         rgbaValue.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     setNewValue(getColor(rgbaValue.getText()));
                     initEditorValue();
                 } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(ColorEditor.class.getName()).log(Level.FINE, 
+                            "Not a color: "+rgbaValue.getText(), ex);
                     JOptionPane.showMessageDialog(panel.getParent(), ex.toString());
                 }
             }
         });
 
         colorChooserButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 color = JColorChooser.showDialog(panel.getParent(), "Color Chooser", color);
                 if (color != null) {
@@ -180,29 +188,29 @@ public class ColorEditor extends MPanelEditorSupport {
     }
 
     @Override
-    public void setAsText(String s) throws java.lang.IllegalArgumentException {
+    public void setAsText(String s) {
         setValue(getColor(s));
     }
 
-    public Color getColor(String s) throws java.lang.IllegalArgumentException {
-        int c1 = s.indexOf(',');
-        int c2 = s.indexOf(',', c1 + 1);
-        int c3 = s.indexOf(',', c2 + 1); // four values indicates alpha
-        if (c1 < 0 || c2 < 0) {
-            throw new IllegalArgumentException(s);
+    public static Color getColor(String s) {
+        String[] spl = s.split(",");
+        if (spl.length < 3 || spl.length > 4) {
+            Logger.getLogger(ColorEditor.class.getName()).log(Level.WARNING, 
+                    "Invalid color {0}", s);
+            return null;
         }
-
-        int r = Integer.parseInt(s.substring(0, c1));
-        int g = Integer.parseInt(s.substring(c1 + 1, c2));
-        int b = -1;
-        if (c3 < 0) { // no alpha provided
-            b = Integer.parseInt(s.substring(c2 + 1));
-            return new Color(r, g, b);
+        
+        try {
+            int r = Math.max(0, Math.min(255, Integer.parseInt(spl[0])));
+            int g = Math.max(0, Math.min(255, Integer.parseInt(spl[1])));
+            int b = Math.max(0, Math.min(255, Integer.parseInt(spl[2])));
+            int a = spl.length == 4 ? Math.max(0, Math.min(255, Integer.parseInt(spl[3]))) : 255;
+            return new Color(r, g, b, a);
+        } catch (NumberFormatException x) {
+            Logger.getLogger(ColorEditor.class.getName()).log(Level.WARNING,
+                    "Invalid color "+s, x);
+            return null;
         }
-
-        b = Integer.parseInt(s.substring(c2 + 1, c3));
-        int a = Integer.parseInt(s.substring(c3+1));
-        return new Color(r, g, b, a);
     }
 
     @Override
@@ -222,17 +230,17 @@ public class ColorEditor extends MPanelEditorSupport {
         }
     }
 
-    // custom combolike rect button
-    class ChooserComboButton extends JButton {
+    /** combo-like rect button */
+    private class ChooserComboButton extends JButton {
         ChooserComboPopup popup;
 
-        public ChooserComboButton() {
+        ChooserComboButton() {
             super("");
             popup = new ChooserComboPopup(ColorEditor.this);
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    popup.show((JComponent) e.getComponent(), 0, 0);
+                    popup.show(e.getComponent(), 0, 0);
                 }
             });
             popup.addMouseListener(new MouseAdapter() {
