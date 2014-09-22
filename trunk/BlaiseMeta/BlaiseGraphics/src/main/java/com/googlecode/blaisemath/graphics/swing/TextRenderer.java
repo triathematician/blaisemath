@@ -102,11 +102,6 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
             Logger.getLogger(TextRenderer.class.getName()).log(Level.WARNING,
                     "Invalid text anchor: {0}", anchor);
         }
-        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
-                : anchor instanceof Anchor ? (Anchor) anchor
-                : anchor instanceof String ? Anchor.valueOf((String) anchor)
-                : null;
-        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         
         Font font = Styles.getFont(style);
         FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
@@ -114,6 +109,11 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
         double width = font.getStringBounds(primitive.getText(), frc).getWidth();
         double height = tl.getBounds().getHeight();
         
+        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
+                : anchor instanceof Anchor ? (Anchor) anchor
+                : anchor instanceof String ? Anchor.valueOf((String) anchor)
+                : null;
+        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
         if (textAnchor == Anchor.SOUTHWEST) {
             return new Rectangle2D.Double(
                     primitive.getX() + offset.getX(), 
@@ -121,8 +121,25 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
                     width, height);
         }
 
+        Point2D.Double shift = anchorShift(textAnchor, width, height);
+
+        return new Rectangle2D.Double(
+                primitive.getX() + offset.getX() + shift.x, 
+                primitive.getY() + offset.getY() + shift.y-height, 
+                width, height);
+    }
+    
+
+    /** 
+     * Generates a shift coordinate based on a given width and height, relative to the
+     * provided anchor location.
+     * @param textAnchor
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static Point2D.Double anchorShift(Anchor textAnchor, double width, double height) {
         Point2D.Double shift = new Point2D.Double();
-        
         switch (textAnchor) {
             case NORTHEAST:
             case EAST:
@@ -154,12 +171,8 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
                 // all other cases don't need shift
                 break;
         }
-
-        return new Rectangle2D.Double(
-                primitive.getX() + offset.getX() + shift.x, 
-                primitive.getY() + offset.getY() + shift.y-height, 
-                width, height);
+        
+        return shift;
     }
-    
     
 }
