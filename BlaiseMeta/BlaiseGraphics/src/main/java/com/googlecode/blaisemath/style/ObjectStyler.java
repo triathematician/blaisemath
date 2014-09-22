@@ -224,6 +224,14 @@ public class ObjectStyler<S> {
     //
 
     /**
+     * Sets a single label for all objects
+     * @param text label text
+     */
+    public void setLabelConstant(@Nullable String text) {
+        setLabelDelegate(Functions.constant(text));
+    }
+
+    /**
      * Sets a single style for all objects.
      * @param style style to use for all objects
      */

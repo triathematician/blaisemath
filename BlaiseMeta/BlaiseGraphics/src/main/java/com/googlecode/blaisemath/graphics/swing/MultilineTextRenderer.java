@@ -28,14 +28,22 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
-import com.googlecode.blaisemath.graphics.swing.TextRenderer;
+import static com.googlecode.blaisemath.graphics.swing.TextRenderer.anchorShift;
+import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Draws text with line breaks, respecting the location of the line breaks.
@@ -45,11 +53,19 @@ import java.util.Arrays;
  * 
  * @author petereb1
  */
-public class MultilineTextRenderer extends TextRenderer {
+public class MultilineTextRenderer implements Renderer<LabeledPoint, Graphics2D> {
     
     @Override
     public String toString() {
         return "MultilineTextRenderer";
+    }
+
+    public boolean contains(LabeledPoint primitive, AttributeSet style, Point2D point) {
+        return multilineBounds(primitive, style).contains(point);
+    }
+
+    public boolean intersects(LabeledPoint primitive, AttributeSet style, Rectangle2D rect) {
+        return multilineBounds(primitive, style).intersects(rect);
     }
 
     @Override
@@ -68,6 +84,48 @@ public class MultilineTextRenderer extends TextRenderer {
             canvas.drawString(s, (float)text.getX(), (float) y0);
             y0 -= lineHeight;
         }
+    }
+
+    public static Rectangle2D multilineBounds(LabeledPoint text, AttributeSet style) {
+        if (Strings.isNullOrEmpty(text.getText())) {
+            return null;
+        }
+        
+        Object anchor = style.get(Styles.TEXT_ANCHOR);
+        if (!(anchor == null || anchor instanceof String || anchor instanceof Anchor)) {
+            Logger.getLogger(TextRenderer.class.getName()).log(Level.WARNING,
+                    "Invalid text anchor: {0}", anchor);
+        }
+
+        Font font = Styles.getFont(style);
+        FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
+        
+        double width = 0;
+        double height = 0;
+        for (String l : text.getText().split("\n|\r\n")) {
+            TextLayout tl = new TextLayout(text.getText(), font, frc);
+            width = Math.max(width, font.getStringBounds(l, frc).getWidth());
+            height += tl.getBounds().getHeight();
+        }
+        
+        Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
+                : anchor instanceof Anchor ? (Anchor) anchor
+                : anchor instanceof String ? Anchor.valueOf((String) anchor)
+                : null;
+        Point2D offset = style.getPoint(Styles.OFFSET, new Point());
+        if (textAnchor == Anchor.SOUTHWEST) {
+            return new Rectangle2D.Double(
+                    text.getX() + offset.getX(), 
+                    text.getY() + offset.getY()-height, 
+                    width, height);
+        }
+
+        Point2D.Double shift = anchorShift(textAnchor, width, height);
+
+        return new Rectangle2D.Double(
+                text.getX() + offset.getX() + shift.x, 
+                text.getY() + offset.getY() + shift.y-height, 
+                width, height);
     }
     
 }
