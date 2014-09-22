@@ -123,11 +123,11 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         // PANELS
 
-        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
                 plot.getLayoutManager().getLocations()
                 )));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
-            rollupPanel1.add(p.toString(), new PropertySheet(p));
+            rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
         
         addWindowListener(new WindowAdapter(){

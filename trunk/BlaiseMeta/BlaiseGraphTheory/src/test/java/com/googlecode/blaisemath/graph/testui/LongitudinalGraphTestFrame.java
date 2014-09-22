@@ -26,18 +26,18 @@ package com.googlecode.blaisemath.graph.testui;
 
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.modules.suppliers.EdgeCountGraphSupplier;
 import com.googlecode.blaisemath.graph.modules.suppliers.PreferentialAttachmentLongitudinalGraphSupplier;
+import com.googlecode.blaisemath.graph.view.LongitudinalGraphComponent;
 import com.googlecode.blaisemath.graph.view.MultiGraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
-import com.googlecode.blaisemath.graph.view.LongitudinalGraphComponent;
 import com.googlecode.blaisemath.util.RollupPanel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -69,10 +69,10 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
         // PANELS
 
 //        rollupPanel1.add("Visometry", new PropertySheet(plot.getGraphComponent().getVisometry()));
-        rollupPanel1.add("Nodes", new PropertySheet(plot.getGraphComponent().getAdapter().getNodeStyler()));
-        rollupPanel1.add("Edges", new PropertySheet(plot.getGraphComponent().getAdapter().getEdgeStyler()));
+        rollupPanel1.add("Nodes", PropertySheet.forBean(plot.getGraphComponent().getAdapter().getNodeStyler()));
+        rollupPanel1.add("Edges", PropertySheet.forBean(plot.getGraphComponent().getAdapter().getEdgeStyler()));
         
-        rollupPanel1.add("Simultaneous Layout", new PropertySheet(plot.getManager().getLayoutAlgorithm().getParameters()));
+        rollupPanel1.add("Simultaneous Layout", PropertySheet.forBean(plot.getManager().getLayoutAlgorithm().getParameters()));
         
         addWindowListener(new WindowAdapter(){
             @Override

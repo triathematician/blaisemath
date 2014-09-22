@@ -27,15 +27,15 @@ package com.googlecode.blaisemath.graph.testui;
 
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
 import com.googlecode.blaisemath.graph.view.VisualGraph;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.util.RollupPanel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 /**
@@ -62,11 +62,11 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         // PANELS
 
 //        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
-        rollupPanel1.add("Energy Layout", new PropertySheet(energyLayout = new SpringLayout(
+        rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
                 plot.getLayoutManager().getLocations()
                 )));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
-            rollupPanel1.add(p.toString(), new PropertySheet(p));
+            rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
         }
         
         addWindowListener(new WindowAdapter(){
