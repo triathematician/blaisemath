@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.geom.Line2D;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,20 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public class Line2DEditor extends MultiSpinnerSupport {
+public class Line2DEditor extends MultiSpinnerSupport<Double> {
 
     public Line2DEditor() {
-        super(4);
-        setNewValue(0.0,0.0,0.0,0.0);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("x1");
-        spinners[1].setToolTipText("y1");
-        spinners[2].setToolTipText("x2");
-        spinners[3].setToolTipText("y2");
+        super(new Line2D.Double(), "x1", "y1", "x2", "y2");
     }
     
     @Override
@@ -63,34 +54,32 @@ public class Line2DEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-            spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-            // permit negative width/height rectangles
-            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
+        spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
+        // permit negative width/height rectangles
+        spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
+        spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), -Double.MAX_VALUE, Double.MAX_VALUE, .1));
     }
     
     @Override
-    public Object getValue(Object bean, int i) {
+    public Double getValue(Object bean, int i) {
         switch (i) {
             case 0:
-                return ((Line2D.Double) bean).x1;
+                return ((Line2D) bean).getX1();
             case 1:
-                return ((Line2D.Double) bean).y1;
+                return ((Line2D) bean).getY1();
             case 2:
-                return ((Line2D.Double) bean).x2;
+                return ((Line2D) bean).getX2();
             case 3:
-                return ((Line2D.Double) bean).y2;
+                return ((Line2D) bean).getY2();
             default:
                 throw new ArrayIndexOutOfBoundsException();
         }
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Line2D.Double((Double) values[0], (Double) values[1], (Double) values[2], (Double) values[3]));
+    void setNewValueList(List<Double> values) {
+        setNewValue(new Line2D.Double(values.get(0), values.get(1), values.get(2), values.get(3)));
     }
 }

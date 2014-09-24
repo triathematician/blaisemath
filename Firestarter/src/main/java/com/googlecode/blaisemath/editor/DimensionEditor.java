@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,18 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public class DimensionEditor extends MultiSpinnerSupport {
+public class DimensionEditor extends MultiSpinnerSupport<Integer> {
 
     public DimensionEditor() {
-        super(2);
-        setNewValue(0,0);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("width");
-        spinners[1].setToolTipText("height");
+        super(new Dimension(), "width", "height");
     }
     
     @Override
@@ -61,15 +54,13 @@ public class DimensionEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(0)), 0, Integer.MAX_VALUE, 1));
-            spinners[1].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(1)), 0, Integer.MAX_VALUE, 1));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(0)), 0, Integer.MAX_VALUE, 1));
+        spinners[1].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(1)), 0, Integer.MAX_VALUE, 1));
     }
     
     @Override
-    public Object getValue(Object bean, int i) {
+    public Integer getValue(Object bean, int i) {
         switch (i) {
             case 0:
                 return ((Dimension) bean).width;
@@ -81,7 +72,7 @@ public class DimensionEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Dimension((Integer) values[0], (Integer) values[1]));
+    void setNewValueList(List<Integer> values) {
+        setNewValue(new Dimension(values.get(0), values.get(1)));
     }
 }

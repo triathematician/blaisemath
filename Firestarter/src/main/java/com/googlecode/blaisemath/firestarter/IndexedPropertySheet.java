@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.firestarter;
  * #L%
  */
 
+import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Font;
 import java.awt.Insets;
@@ -59,9 +60,7 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, String propName) {
-        if (bean == null) {
-            throw new IllegalArgumentException("Null argumnet: "+bean);
-        }
+        checkNotNull(bean);
         return forIndexedProperty(bean, ReflectionUtils.indexedPropertyDescriptor(bean.getClass(), propName));
     }
 
@@ -72,12 +71,8 @@ public final class IndexedPropertySheet extends PropertySheet {
      * @return newly forBeand property sheet
      */
     public static PropertySheet forIndexedProperty(Object bean, IndexedPropertyDescriptor ipd) {
-        if (bean == null) {
-            throw new IllegalArgumentException("Null argumnet: "+bean);
-        }
-        if (ipd == null) {
-            throw new IllegalArgumentException("Null argumnet: "+ipd);
-        }
+        checkNotNull(bean);
+        checkNotNull(ipd);
         
         IndexedPropertySheet res = new IndexedPropertySheet();
         res.beanModel = new BeanIndexedPropertyModel(bean, ipd);

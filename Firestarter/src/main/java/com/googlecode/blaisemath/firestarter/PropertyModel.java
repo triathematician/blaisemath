@@ -83,35 +83,35 @@ public interface PropertyModel extends ListModel<String> {
 
     
     /** Blank instance of a property model */
-    public static class Empty implements PropertyModel {
+    public class Empty implements PropertyModel {
         @Override
         public int getSize() {
             return 0;
         }
-
+        
         @Override
         public String getElementAt(int index) {
-            throw new UnsupportedOperationException("Not supported.");
+            throw new UnsupportedOperationException();
         }
         
         @Override
         public Class<?> getPropertyType(int row) {
-            throw new UnsupportedOperationException("Not supported.");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean isWritable(int row) {
-            throw new UnsupportedOperationException("Not supported.");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public Object getPropertyValue(int row) {
-            throw new UnsupportedOperationException("Not supported.");
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public void setPropertyValue(int row, Object value) {
-            throw new UnsupportedOperationException("Not supported.");
+            throw new UnsupportedOperationException();
         }
 
         @Override

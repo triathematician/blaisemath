@@ -55,7 +55,8 @@ final class DefaultPropertyComponent extends JButton {
         Object value = parent.getPropertyValue(row);
         if (value != null) {
             if (value.getClass().isArray()) {
-                setText(Arrays.deepToString((Object[])value));
+                String txt = Arrays.deepToString(new Object[]{value});
+                setText(txt.substring(1, txt.length()-1));
             } else {
                 setText(value.toString());
             }
@@ -68,8 +69,10 @@ final class DefaultPropertyComponent extends JButton {
         Object value = parent.getPropertyValue(row);
         if (value != null) {
             JDialog dialog;
-            if (parent instanceof BeanPropertyModel && ((BeanPropertyModel)parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
-                dialog = new PropertySheetDialog(null, false, ((BeanPropertyModel)parent).getBean(), 
+            if (parent instanceof BeanPropertyModel 
+                    && ((BeanPropertyModel)parent).getPropertyDescriptor(row) instanceof IndexedPropertyDescriptor) {
+                dialog = new PropertySheetDialog(null, false, 
+                        ((BeanPropertyModel)parent).getBean(), 
                         (IndexedPropertyDescriptor) ((BeanPropertyModel)parent).getPropertyDescriptor(row));
             } else {
                 dialog = new PropertySheetDialog(null, false, value);

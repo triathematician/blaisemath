@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Rectangle;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,20 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public class RectangleEditor extends MultiSpinnerSupport {
+public class RectangleEditor extends MultiSpinnerSupport<Integer> {
 
     public RectangleEditor() {
-        super(4);
-        setNewValue(0,0,0,0);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("x coordinate");
-        spinners[1].setToolTipText("y coordinate");
-        spinners[2].setToolTipText("width");
-        spinners[3].setToolTipText("height");
+        super(new Rectangle(), "x0", "y0", "width", "height");
     }
     
     @Override
@@ -63,17 +54,15 @@ public class RectangleEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-            spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-            spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), 0, Integer.MAX_VALUE, 1));
-            spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), 0, Integer.MAX_VALUE, 1));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+        spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+        spinners[2].setModel(new SpinnerNumberModel((Number) getNewValue(2), 0, Integer.MAX_VALUE, 1));
+        spinners[3].setModel(new SpinnerNumberModel((Number) getNewValue(3), 0, Integer.MAX_VALUE, 1));
     }
     
     @Override
-    public Object getValue(Object bean, int i) {
+    public Integer getValue(Object bean, int i) {
         switch (i) {
             case 0:
                 return ((Rectangle) bean).x;
@@ -89,7 +78,7 @@ public class RectangleEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Rectangle((Integer) values[0], (Integer) values[1], (Integer) values[2], (Integer) values[3]));
+    void setNewValueList(List<Integer> values) {
+        setNewValue(new Rectangle(values.get(0), values.get(1), values.get(2), values.get(3)));
     }
 }

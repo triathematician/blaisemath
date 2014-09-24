@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.firestarter;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.editor.MPropertyEditorSupport;
 import com.googlecode.blaisemath.util.FilteredListModel;
+import static com.googlecode.blaisemath.util.Preconditions.checkState;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -110,7 +111,10 @@ public final class PropertyEditorModel implements ListModel<Component> {
         editors = new PropertyEditor[size];
         List<Component> comps = new ArrayList<Component>();
         for (int i = 0; i < size; i++) {
-            editors[i] = EditorRegistration.getRegisteredEditor(model.getPropertyType(i));
+            Class<?> type = model.getPropertyType(i);
+            checkState(type != null, model.getElementAt(i)+" has null type for model "+model);
+            Object val = model.getPropertyValue(i);
+            editors[i] = EditorRegistration.getRegisteredEditor(val, model.getPropertyType(i));
             if (editors[i] != null) {
                 editors[i].setValue(model.getPropertyValue(i));
                 editors[i].addPropertyChangeListener(editorListener);
@@ -118,7 +122,7 @@ public final class PropertyEditorModel implements ListModel<Component> {
             Component ci = editors[i] != null && editors[i].supportsCustomEditor() 
                     ? editors[i].getCustomEditor()
                     : new DefaultPropertyComponent(model, i);
-            ci.setEnabled(model.isWritable(i));
+            ci.setEnabled(ci instanceof DefaultPropertyComponent || model.isWritable(i));
             if (ci instanceof JComponent) {
                 ((JComponent) ci).setBorder(null);
             }

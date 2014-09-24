@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.editor;
  * #L%
  */
 
+import static com.googlecode.blaisemath.util.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.awt.Color;
 import java.awt.Font;
@@ -94,6 +95,7 @@ public class EditorRegistration {
         PropertyEditorManager.registerEditor(java.awt.geom.Line2D.Double.class, Line2DEditor.class);
         PropertyEditorManager.registerEditor(java.awt.geom.Ellipse2D.Double.class, RectangularShapeEditor.class);
         PropertyEditorManager.registerEditor(java.awt.geom.Rectangle2D.Double.class, RectangularShapeEditor.class);
+        PropertyEditorManager.registerEditor(java.awt.geom.RectangularShape.class, RectangularShapeEditor.class);
 
         // complex editors
 
@@ -107,6 +109,17 @@ public class EditorRegistration {
      * @return a property editor for the provided class, or {@code null} if there is no available editor
      */
     public static PropertyEditor getRegisteredEditor(Class<?> cls) {
+        return getRegisteredEditor(null, cls);
+    }
+    
+    /**
+     * Returns editor type for a given object/class, as registered by the property manager.
+     * @param obj the object type
+     * @param cls the class type
+     * @return a property editor for the provided class, or {@code null} if there is no available editor
+     */
+    public static <T> PropertyEditor getRegisteredEditor(T obj, Class<?> cls) {
+        checkNotNull(cls);
         PropertyEditor result = PropertyEditorManager.findEditor(cls);
         if (result != null) {
             return result;
@@ -114,6 +127,14 @@ public class EditorRegistration {
         // look for an enum editor for enum classes
         if (cls != null && cls.isEnum()) {
             result = PropertyEditorManager.findEditor(Enum.class);
+            if (result != null) {
+                return result;
+            }
+        }
+        // look for the object instance type
+        if (obj != null) {
+            assert cls.isInstance(obj);
+            result = PropertyEditorManager.findEditor(obj.getClass());
             if (result != null) {
                 return result;
             }

@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
@@ -35,14 +37,19 @@ import javax.swing.event.ChangeListener;
  *   Base class for editors that use multiple coordinates.
  * </p>
  *
+ * @param <N> numeric type for the spinners
+ * 
  * @author Elisha Peterson
  */
-public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
+public abstract class MultiSpinnerSupport<N extends Number> extends MPanelEditorSupport {
 
     protected final JSpinner[] spinners;
-
-    public MultiSpinnerSupport(final int n) {
-        spinners = new JSpinner[n];
+    private final String[] tips;
+    
+    public MultiSpinnerSupport(Object iVal, String... tips) {
+        newValue = iVal;
+        spinners = new JSpinner[tips.length];
+        this.tips = tips;
     }
 
     @Override
@@ -54,6 +61,7 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
 
         for (int i = 0; i < n; i++) {
             spinners[i] = new JSpinner();
+            spinners[i].setToolTipText(tips[i]);
             spinners[i].setBorder(null);
             panel.add(spinners[i]);
         }
@@ -61,11 +69,11 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
         ChangeListener cl = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                Object[] values = new Object[n];
+                List<N> vals = new ArrayList<N>();
                 for (int i = 0; i < n; i++) {
-                    values[i] = spinners[i].getValue();
+                    vals.add((N) spinners[i].getValue());
                 }
-                setNewValue(values);
+                setNewValueList(vals);
             }
         };
 
@@ -77,6 +85,16 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
         panel.repaint();
     }
 
+    @Override
+    protected void initEditorValue() {
+        if (panel != null) {
+            initSpinnerModels();
+        }
+    }
+    
+    /** Used by subclass to initialize its spinner models */
+    protected abstract void initSpinnerModels();
+    
     @Override
     public String getAsText() {
         String result = getValue(0).toString();
@@ -101,19 +119,24 @@ public abstract class MultiSpinnerSupport extends MPanelEditorSupport {
 
     public abstract void setAsText(String... strings);
 
-    public Object getValue(int i) {
+    public N getValue(int i) {
         return getValue(getValue(), i);
     }
     
-    public Object getNewValue(int i) {
+    public N getNewValue(int i) {
         return getValue(newValue, i);
     }
 
     /**
+     * Retrieve the indexed value for the given object.
      * @param bean the bean under consideration
      * @param i the position of the desired property
      * @return property at the given position of the bean. */
-    protected abstract Object getValue(Object bean, int i);
+    protected abstract N getValue(Object bean, int i);
 
-    abstract void setNewValue(Object... values);
+    /**
+     * Set the object with a list of values.
+     * @param values the values
+     */
+    abstract void setNewValueList(List<N> values);
 }
