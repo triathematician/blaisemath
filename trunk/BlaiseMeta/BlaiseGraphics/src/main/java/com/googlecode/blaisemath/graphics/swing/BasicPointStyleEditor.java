@@ -2,7 +2,7 @@
  * BasicPointStyleEditor.java
  * Created Aug 28, 2011
  */
-package com.googlecode.blaisemath.graphics.testui;
+package com.googlecode.blaisemath.graphics.swing;
 
 /*
  * #%L

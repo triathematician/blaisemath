@@ -25,11 +25,13 @@ package com.googlecode.blaisemath.style;
  */
 
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.firestarter.PropertyModelSupport;
-import com.googlecode.blaisemath.firestarter.BeanEditorSupport;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import java.awt.Component;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,26 +42,53 @@ import java.util.Map;
  * 
  * @author Elisha
  */
-public class AttributeSetEditInfo extends PropertyModelSupport {
+public class AttributeSetPropertyModel extends PropertyModelSupport {
     
-    /** Mapping of attribute names to types */
+    /** List of expected attribute names */
+    private final List<String> attributes = Lists.newArrayList();
+    /** Mapping of expected attribute names and types */
     private final Map<String,Class> typeMap = Maps.newLinkedHashMap();
+    /** The attribute set for editing */
+    private final AttributeSet aSet;
+
+    public AttributeSetPropertyModel(AttributeSet aSet, Map<String,Class> typeMap) {
+        this.aSet = checkNotNull(aSet);
+        this.typeMap.putAll(typeMap);
+        this.attributes.addAll(typeMap.keySet());
+    }
     
     /**
      * Create and return panel for editing an attribute set, using the specified
      * collection of editable attributes.
-     * @param set the set to edit
-     * @param editInfo which parameters to edit
+     * @param model describes edit object & parameters
      * @return property component for editing the attribute set
      */
-    public static Component editPane(AttributeSet set, AttributeSetEditInfo editInfo) {
-        return PropertySheet.create(new AttributeSetBeanEditorSupport(set, editInfo));
+    public static Component editPane(AttributeSetPropertyModel model) {
+        return new PropertySheet(model);
     }
 
-    private static class AttributeSetBeanEditorSupport extends BeanEditorSupport {
-        public AttributeSetBeanEditorSupport(AttributeSet set, AttributeSetEditInfo editInfo) {
-        }
+    public int getSize() {
+        return attributes.size();
     }
-    
-    
+
+    public String getElementAt(int index) {
+        return attributes.get(index);
+    }
+
+    public Class<?> getPropertyType(int i) {
+        return typeMap.get(attributes.get(i));
+    }
+
+    public boolean isWritable(int i) {
+        return true;
+    }
+
+    public Object getPropertyValue(int i) {
+        return aSet.get(attributes.get(i));
+    }
+
+    public void setPropertyValue(int i, Object o) {
+        aSet.put(attributes.get(i), o);
+    }
+
 }
