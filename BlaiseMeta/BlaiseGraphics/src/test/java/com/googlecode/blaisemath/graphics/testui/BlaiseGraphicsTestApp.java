@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.swing.BasicPointStyleEditor;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
