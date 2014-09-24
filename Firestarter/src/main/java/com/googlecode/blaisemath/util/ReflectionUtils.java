@@ -65,6 +65,24 @@ public class ReflectionUtils {
         }
         return beanInfo;
     }
+    
+    /**
+     * Return an {@link IndexedPropertyDescriptor} for the specified object property.
+     * @param cls the object class
+     * @param propName the object's property
+     * @return the indexed descriptor
+     * @throws IllegalArgumentException if there is no indexed property with that name in the bean's class
+     */
+    public static IndexedPropertyDescriptor indexedPropertyDescriptor(Class<?> cls, String propName) {
+        BeanInfo info = ReflectionUtils.getBeanInfo(cls);
+        for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+            if (pd.getName().equals(propName) && pd instanceof IndexedPropertyDescriptor) {
+                return (IndexedPropertyDescriptor) pd;
+            }
+        }
+        throw new IllegalArgumentException("Unable to find property " + propName 
+                + " in the class " + cls);
+    }
 
     public static <T> T tryInvokeNew(Class<T> cls) {
         Constructor<T> con = null;
@@ -98,6 +116,9 @@ public class ReflectionUtils {
     }
 
     public static Object tryInvokeRead(Object parent, PropertyDescriptor pd) {
+        if (parent == null) {
+            throw new IllegalArgumentException();
+        }
         if (pd.getReadMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     NO_READ_MSG);
@@ -119,9 +140,13 @@ public class ReflectionUtils {
     }
 
     public static boolean tryInvokeWrite(Object parent, PropertyDescriptor pd, Object val) {
+        if (parent == null) {
+            throw new IllegalArgumentException();
+        }
         if (pd.getWriteMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     NO_WRITE_MSG);
+            return false;
         }
         try {
             pd.getWriteMethod().invoke(parent, val);
@@ -140,6 +165,9 @@ public class ReflectionUtils {
     }
 
     public static Object tryInvokeIndexedRead(Object parent, IndexedPropertyDescriptor pd, int index) {
+        if (parent == null) {
+            throw new IllegalArgumentException();
+        }
         if (pd.getIndexedReadMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     NO_READ_MSG);
@@ -161,9 +189,13 @@ public class ReflectionUtils {
     }
 
     public static boolean tryInvokeIndexedWrite(Object parent, IndexedPropertyDescriptor pd, int index, Object value) {
+        if (parent == null) {
+            throw new IllegalArgumentException();
+        }
         if (pd.getIndexedWriteMethod() == null) {
             Logger.getLogger(ReflectionUtils.class.getName()).log(Level.FINE,
                     NO_WRITE_MSG);
+            return false;
         }
         try {
             pd.getIndexedWriteMethod().invoke(parent, index, value);

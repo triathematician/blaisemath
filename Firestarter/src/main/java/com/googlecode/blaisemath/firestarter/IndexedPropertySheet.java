@@ -25,22 +25,17 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 import com.googlecode.blaisemath.util.ReflectionUtils;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.beans.BeanInfo;
 import java.beans.IndexedPropertyDescriptor;
-import java.beans.PropertyDescriptor;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * <p>
@@ -54,51 +49,42 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public final class IndexedPropertySheet extends PropertySheet {
 
-    /** Stores the property descriptors for eached indexed element. */
-    private final IndexedPropertyDescriptor ipd;
+    /** The model for the indexed property */
+    private BeanIndexedPropertyModel beanModel;
 
-    public IndexedPropertySheet(Object bean, String propName) {
-        this(bean, indexedPropertyDescriptor(bean, propName));
+    /**
+     * Create a property sheet that uses the supplied model for editing components.
+     * @param bean the object
+     * @param propName name of an indexed property
+     * @return newly forBeand property sheet
+     */
+    public static PropertySheet forIndexedProperty(Object bean, String propName) {
+        if (bean == null) {
+            throw new IllegalArgumentException("Null argumnet: "+bean);
+        }
+        return forIndexedProperty(bean, ReflectionUtils.indexedPropertyDescriptor(bean.getClass(), propName));
     }
 
-    /** 
-     * Construct for provided bean and provided property descriptor (which must be indexed)
-     * @param bean 
-     * @param ipd 
+    /**
+     * Create a property sheet that uses the supplied model for editing components.
+     * @param bean the object
+     * @param ipd indexed property
+     * @return newly forBeand property sheet
      */
-    public IndexedPropertySheet(Object bean, IndexedPropertyDescriptor ipd) {
+    public static PropertySheet forIndexedProperty(Object bean, IndexedPropertyDescriptor ipd) {
+        if (bean == null) {
+            throw new IllegalArgumentException("Null argumnet: "+bean);
+        }
         if (ipd == null) {
             throw new IllegalArgumentException("Null argumnet: "+ipd);
         }
-        this.ipd = ipd;
-        beanModel = new IndexedBeanEditorModel(bean, ipd);
-        headers = new String[] {"Index", "Value"};
-        defaultNameColWidth = 35;
-        initComponents();
-    }
-    
-    private static IndexedPropertyDescriptor indexedPropertyDescriptor(Object bean, String propName) {
-        BeanInfo info = ReflectionUtils.getBeanInfo(bean.getClass());
-        for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
-            if (pd.getName().equals(propName) && pd instanceof IndexedPropertyDescriptor) {
-                return (IndexedPropertyDescriptor) pd;
-            }
-        }
-        throw new IllegalArgumentException("Unable to find property " + propName + " in the class " + bean.getClass());
-    }
-
-    @Override
-    protected void initComponents() {
-        if (ipd == null) {
-            return;
-        }
-        super.initComponents();
-    }
-    
-    @Override
-    protected void initTable() {
-        super.initTable();
-        table.getColumnModel().getColumn(0).setCellRenderer(new IndexColRenderer());
+        
+        IndexedPropertySheet res = new IndexedPropertySheet();
+        res.beanModel = new BeanIndexedPropertyModel(bean, ipd);
+        res.model.headers = new String[] {"Index", "Value"};
+        res.defaultNameColWidth = 35;
+        res.initComponents(res.beanModel);
+        return res;
     }
     
     @Override
@@ -107,7 +93,7 @@ public final class IndexedPropertySheet extends PropertySheet {
         AbstractAction aa = new AbstractAction("+") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((IndexedBeanEditorModel)beanModel).addNewValue();
+                beanModel.addNewValue();
             }
         };
         aa.putValue(SHORT_DESCRIPTION, "Add a new element to the end of the list.");
@@ -117,7 +103,7 @@ public final class IndexedPropertySheet extends PropertySheet {
         AbstractAction remove = new AbstractAction("-") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((IndexedBeanEditorModel)beanModel).removeValues(table.getSelectedRows());
+                beanModel.removeValues(table.getSelectedRows());
             }
         };
         remove.putValue(SHORT_DESCRIPTION, "Remove the selected element from the end of the list.");
@@ -141,15 +127,6 @@ public final class IndexedPropertySheet extends PropertySheet {
         firePropertyChange("size", null, null);
         repaint();
     }
-
-    /** Renders name columns. Currently only changed by adding a tooltip. */
-    class IndexColRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            super.setText(""+row);
-            return this;
-        }
-    }
+    
 }
 

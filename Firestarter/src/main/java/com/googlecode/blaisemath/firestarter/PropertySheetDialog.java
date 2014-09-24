@@ -55,14 +55,15 @@ public class PropertySheetDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param modal whether the dialog box is modal
      * @param bean object to populate the box
-     * @param propertyFilter filter used to 
+     * @param propertyFilter filters properties by name
      */
     public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, Predicate<String> propertyFilter) {
         super(parent, bean.toString(), modal);
 
         PropertySheet propertySheet = PropertySheet.forBean(bean);
         if (propertyFilter != null) {
-            ((DefaultBeanEditorModel)propertySheet.getBeanEditorModel()).setFilter(BeanFilterRule.byName(propertyFilter));
+            PropertyModel pm = propertySheet.getPropertyModel();
+            ((BeanPropertyModel)pm).setFilter(BeanPropertyFilter.byName(propertyFilter));
         }
         initComponents(propertySheet);
     }
@@ -77,7 +78,7 @@ public class PropertySheetDialog extends javax.swing.JDialog {
     public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, IndexedPropertyDescriptor ipd) {
         super(parent, "Indexed property [" + ipd.getDisplayName() + "] of " + bean.toString(), modal);
         
-        initComponents(new IndexedPropertySheet(bean, ipd));
+        initComponents(IndexedPropertySheet.forIndexedProperty(bean, ipd));
     }
     
     private void initComponents(PropertySheet propertySheet) {

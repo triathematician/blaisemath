@@ -68,7 +68,7 @@ public class BeanTreeNode extends DefaultMutableTreeNode {
     /** Creates and adds subnodes, which are the "non-terminal" properties of the bean. */
     void addSubNodes() {
         for (int i = 0; i < descriptors.length; i++) {
-            if (!BeanFilterRule.STANDARD.apply(descriptors[i])) {
+            if (!BeanPropertyFilter.STANDARD.apply(descriptors[i])) {
                 // required to prevent infinite loop!
                 continue;
             } else if (descriptors[i] instanceof IndexedPropertyDescriptor) {

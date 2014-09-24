@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.style;
 
 
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.firestarter.PropertyModelSupport;
 import com.googlecode.blaisemath.firestarter.BeanEditorSupport;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import java.awt.Component;
@@ -39,7 +40,7 @@ import java.util.Map;
  * 
  * @author Elisha
  */
-public class AttributeSetEditInfo {
+public class AttributeSetEditInfo extends PropertyModelSupport {
     
     /** Mapping of attribute names to types */
     private final Map<String,Class> typeMap = Maps.newLinkedHashMap();
@@ -59,5 +60,6 @@ public class AttributeSetEditInfo {
         public AttributeSetBeanEditorSupport(AttributeSet set, AttributeSetEditInfo editInfo) {
         }
     }
+    
     
 }

@@ -27,17 +27,17 @@ package com.googlecode.blaisemath.firestarter;
  */
 
 
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.editor.EnumEditor;
+import com.googlecode.blaisemath.firestarter.IndexedBean.TestEnum;
+import com.googlecode.blaisemath.util.MPanel;
+import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.beans.PropertyEditorManager;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
-import com.googlecode.blaisemath.firestarter.IndexedBean.TestEnum;
-import com.googlecode.blaisemath.editor.EditorRegistration;
-import com.googlecode.blaisemath.editor.EnumEditor;
-import com.googlecode.blaisemath.util.MPanel;
-import com.googlecode.blaisemath.util.RollupPanel;
 
 /**
  *
@@ -61,7 +61,7 @@ public class Testing extends javax.swing.JFrame {
         rollupPanel2.add(selectedBeanPanel);
         rollupPanel2.add("Indexed", PropertySheet.forBean(new IndexedBean()));
         rollupPanel2.add("Indexed B", PropertySheet.forBean(new IndexedBean.Indexed2()));
-        rollupPanel2.add("Indexed Strings", new IndexedPropertySheet(new IndexedBean(), "strings"));
+        rollupPanel2.add("Indexed Strings", IndexedPropertySheet.forIndexedProperty(new IndexedBean(), "strings"));
         PropertySheet ps = PropertySheet.forBean(new CustomBean());
         rollupPanel2.add("Other", ps);
         rollupPanel2.add("Shapes", PropertySheet.forBean(new ShapeBean()));
