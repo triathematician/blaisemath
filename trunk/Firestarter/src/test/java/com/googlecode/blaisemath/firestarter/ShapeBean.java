@@ -29,6 +29,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 
 /**
  * <p>
@@ -39,9 +40,13 @@ import java.awt.geom.Rectangle2D;
  */
 public class ShapeBean {
 
-    protected Shape rect2d = new Rectangle2D.Double(0.0, 0.0, 10.0, 10.0);
-    public Shape getRect2d() { return rect2d; }
-    public void setRect2d(Shape rect2d) { this.rect2d = rect2d; }
+    protected RectangularShape rect2d = new Rectangle2D.Double(0.0, 0.0, 10.0, 10.0);
+    public RectangularShape getRectShape() { return rect2d; }
+    public void setRectShape(RectangularShape rect2d) { this.rect2d = rect2d; }
+
+    protected Shape rectSh = new Rectangle2D.Double(0.0, 0.0, 10.0, 10.0);
+    public Shape getShape() { return rectSh; }
+    public void setShape(Shape rect2d) { this.rectSh = rect2d; }
 
     protected Ellipse2D.Double ellipse2d = new Ellipse2D.Double(0.0, 0.0, 10.0, 10.0);
     public Ellipse2D.Double getEllipse2d() { return ellipse2d; }

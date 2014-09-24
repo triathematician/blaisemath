@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.geom.Point2D;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,17 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public final class Point2DEditor extends MultiSpinnerSupport {
+public final class Point2DEditor extends MultiSpinnerSupport<Double> {
 
     public Point2DEditor() {
-        super(2);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("x coordinate");
-        spinners[1].setToolTipText("y coordinate");
+        super(new Point2D.Double(), "x", "y");
     }
     
     @Override
@@ -61,30 +55,28 @@ public final class Point2DEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), -Double.MAX_VALUE, Double.MAX_VALUE, .01));
-            spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .01));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), -Double.MAX_VALUE, Double.MAX_VALUE, .01));
+        spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), -Double.MAX_VALUE, Double.MAX_VALUE, .01));
     }
     
     @Override
-    public Object getValue(Object bean, int i) {
+    public Double getValue(Object bean, int i) {
         if (bean == null) {
             return 0.0;
         }
         switch (i) {
             case 0:
-                return ((Point2D.Double) bean).x;
+                return ((Point2D) bean).getX();
             case 1:
-                return ((Point2D.Double) bean).y;
+                return ((Point2D) bean).getY();
             default:
                 throw new ArrayIndexOutOfBoundsException();
         }
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Point2D.Double((Double) values[0], (Double) values[1]));
+    void setNewValueList(List<Double> values) {
+        setNewValue(new Point2D.Double(values.get(0), values.get(1)));
     }
 }

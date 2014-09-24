@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Point;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,18 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public final class PointEditor extends MultiSpinnerSupport {
+public final class PointEditor extends MultiSpinnerSupport<Integer> {
 
     public PointEditor() {
-        super(2);
-        setNewValue(0,0);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("x coordinate");
-        spinners[1].setToolTipText("y coordinate");
+        super(new Point(), "x", "y");
     }
     
     @Override
@@ -61,15 +54,13 @@ public final class PointEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-            spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel((Number) getNewValue(0), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+        spinners[1].setModel(new SpinnerNumberModel((Number) getNewValue(1), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
     }
     
     @Override
-    public Object getValue(Object bean, int i) {
+    public Integer getValue(Object bean, int i) {
         switch (i) {
             case 0:
                 return ((Point) bean).x;
@@ -81,7 +72,7 @@ public final class PointEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Point((Integer) values[0], (Integer) values[1]));
+    void setNewValueList(List<Integer> values) {
+        setNewValue(new Point(values.get(0), values.get(1)));
     }
 }

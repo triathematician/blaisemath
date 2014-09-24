@@ -110,7 +110,7 @@ class PropertySheetModel extends AbstractTableModel {
             case NAME_COL:
                 return false;
             case VALUE_COL:
-                return propModel.isWritable(row);
+                return editorModel.getElementAt(row).isEnabled();
             default:
                 throw new IllegalStateException();
         }

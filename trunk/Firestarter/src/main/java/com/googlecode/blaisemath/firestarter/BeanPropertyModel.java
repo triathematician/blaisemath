@@ -28,6 +28,7 @@ import com.google.common.base.Predicate;
 import com.googlecode.blaisemath.util.FilteredListModel;
 import com.googlecode.blaisemath.util.ReflectionUtils;
 import java.beans.BeanInfo;
+import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import javax.swing.event.ListDataEvent;
@@ -120,7 +121,9 @@ public final class BeanPropertyModel extends PropertyModelSupport {
 
     @Override
     public Class<?> getPropertyType(int row) {
-        return getPropertyDescriptor(row).getPropertyType();
+        PropertyDescriptor pd = getPropertyDescriptor(row);
+        return pd instanceof IndexedPropertyDescriptor
+                ? Object[].class : pd.getPropertyType();
     }
 
     @Override

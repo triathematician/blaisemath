@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.editor;
  */
 
 import java.awt.Insets;
+import java.util.List;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -34,20 +35,10 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author Elisha Peterson
  */
-public class InsetsEditor extends MultiSpinnerSupport {
+public class InsetsEditor extends MultiSpinnerSupport<Integer> {
 
     public InsetsEditor() {
-        super(4);
-        setNewValue(0,0,0,0);
-    }
-
-    @Override
-    public void initCustomizer() {
-        super.initCustomizer();
-        spinners[0].setToolTipText("top");
-        spinners[1].setToolTipText("left");
-        spinners[2].setToolTipText("bottom");
-        spinners[3].setToolTipText("right");
+        super(new Insets(0,0,0,0), "top", "left", "bottom", "right");
     }
     
     @Override
@@ -63,23 +54,15 @@ public class InsetsEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    protected void initEditorValue() {
-        if (panel != null) {
-            spinners[0].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(0)), 0, Integer.MAX_VALUE, 1));
-            spinners[1].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(1)), 0, Integer.MAX_VALUE, 1));
-            spinners[2].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(2)), 0, Integer.MAX_VALUE, 1));
-            spinners[3].setModel(new SpinnerNumberModel(Math.max(0, (Integer) getNewValue(3)), 0, Integer.MAX_VALUE, 1));
-        }
+    protected void initSpinnerModels() {
+        spinners[0].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(0)), 0, Integer.MAX_VALUE, 1));
+        spinners[1].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(1)), 0, Integer.MAX_VALUE, 1));
+        spinners[2].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(2)), 0, Integer.MAX_VALUE, 1));
+        spinners[3].setModel(new SpinnerNumberModel(Math.max(0, getNewValue(3)), 0, Integer.MAX_VALUE, 1));
     }
-
-
-    //
-    //
-    // ADDITIONAL METHODS
-    //
-    //
+    
     @Override
-    public Object getValue(Object bean, int i) {
+    public Integer getValue(Object bean, int i) {
         switch (i) {
             case 0:
                 return ((Insets) bean).top;
@@ -95,7 +78,7 @@ public class InsetsEditor extends MultiSpinnerSupport {
     }
 
     @Override
-    void setNewValue(Object... values) {
-        setNewValue(new Insets((Integer) values[0], (Integer) values[1], (Integer) values[2], (Integer) values[3]));
+    void setNewValueList(List<Integer> values) {
+        setNewValue(new Insets(values.get(0), values.get(1), values.get(2), values.get(3)));
     }
 }
