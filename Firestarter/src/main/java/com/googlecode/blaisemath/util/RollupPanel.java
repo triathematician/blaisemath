@@ -39,7 +39,7 @@ import javax.swing.Scrollable;
  *
  * @author Elisha Peterson
  */
-public final class RollupPanel extends JPanel implements Scrollable {
+public class RollupPanel extends JPanel implements Scrollable {
 
     public RollupPanel() {
         VerticalLayout layout = new VerticalLayout();
