@@ -2,7 +2,7 @@
  * FilteredPropertyList.java
  * Created on Jul 3, 2009
  */
-package com.googlecode.blaisemath.firestarter;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.firestarter;
 import com.google.common.base.Predicate;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,26 +35,36 @@ import javax.swing.AbstractListModel;
 
 /**
  * <p>
- *   {@code FilteredPropertyList} maintains an array of {@link PropertyDescriptor}s, as well
+ *   {@code FilteredListModel} maintains an array of {@link PropertyDescriptor}s, as well
  *   as a vector representing a filtered version of this array.
  * </p>
+ * @param <O> the type of the elements of this model
  *
  * @author Elisha Peterson
  */
-abstract class FilteredPropertyList extends AbstractListModel {
+public class FilteredListModel<O> extends AbstractListModel<O> {
 
-    protected PropertyDescriptor[] unfilteredProperties = new PropertyDescriptor[0];
-    private final List<PropertyDescriptor> filterItems = new ArrayList<PropertyDescriptor>();
+    protected List<O> unfilteredItems = new ArrayList<O>();
+    private final List<O> filterItems = new ArrayList<O>();
     
     /** Stores the present filter value. */
-    protected Predicate<PropertyDescriptor> filter = BeanFilterRule.STANDARD;
+    protected Predicate<O> filter = null;
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
 
+    public List<O> getUnfilteredItems() {
+        return Collections.unmodifiableList(unfilteredItems);
+    }
+    
     /**
-     * Set the properties
-     * @param props properties
+     * Set the unfiltered items
+     * @param items properties
      */
-    protected void setProperties(PropertyDescriptor[] props) {
-        this.unfilteredProperties = Arrays.copyOf(props, props.length);
+    public void setUnfilteredItems(List<O> items) {
+        this.unfilteredItems = new ArrayList<O>(items);
         refilter();
     }
     
@@ -62,7 +72,7 @@ abstract class FilteredPropertyList extends AbstractListModel {
      * Get current filter.
      * @return current filter value. 
      */
-    Predicate<PropertyDescriptor> getFilter() {
+    public Predicate<O> getFilter() {
         return filter;
     }
 
@@ -70,12 +80,14 @@ abstract class FilteredPropertyList extends AbstractListModel {
      * Set current filter
      * @param filter the new filter value. 
      */
-    public void setFilter(Predicate<PropertyDescriptor> filter) {
+    public void setFilter(Predicate<O> filter) {
         if (this.filter != filter) {
             this.filter = filter;
             refilter();
         }
     }
+    
+    //</editor-fold>
 
     @Override
     public int getSize() {
@@ -83,28 +95,21 @@ abstract class FilteredPropertyList extends AbstractListModel {
     }
 
     @Override
-    public PropertyDescriptor getElementAt(int index) {
+    public O getElementAt(int index) {
         return index < filterItems.size() ? filterItems.get(index) : null;
     }
 
     /** Refilters the list of properties based on the current criteria. */
     protected final void refilter() {
-        Set<PropertyDescriptor> unsorted = filter(unfilteredProperties, filter);
-        filterItems.clear();
-        filterItems.addAll(filter(unsorted, BeanFilterRule.PREFERRED));
-        filterItems.addAll(filter(unsorted, BeanFilterRule.STANDARD));
-        filterItems.addAll(filter(unsorted, BeanFilterRule.EXPERT));
-        fireContentsChanged(this, 0, getSize()+1);
-    }
-    
-    private static <T> Set<T> filter(T[] src, Predicate<? super T> filter) {
-        Set<T> res = new LinkedHashSet<T>();
-        for (T t : src) {
-            if (filter.apply(t) && !res.contains(t)) {
-                res.add(t);
-            }
+        if (filter != null) {
+            Set<O> unsorted = filter(unfilteredItems, filter);
+            filterItems.clear();
+            filterItems.addAll(unsorted);
+        } else {
+            filterItems.clear();
+            filterItems.addAll(unfilteredItems);
         }
-        return res;
+        fireContentsChanged(this, 0, getSize()+1);
     }
     
     private static <T> Set<T> filter(Iterable<T> src, Predicate<? super T> filter) {

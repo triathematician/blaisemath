@@ -25,7 +25,7 @@ import java.beans.PropertyDescriptor;
 /**
  * Encodes possible filters for bean patterns.
  */
-public enum BeanFilterRule implements Predicate<PropertyDescriptor> {
+public enum BeanPropertyFilter implements Predicate<PropertyDescriptor> {
 
     /**
      * Matches non-expert, non-hidden patterns with read and write methods

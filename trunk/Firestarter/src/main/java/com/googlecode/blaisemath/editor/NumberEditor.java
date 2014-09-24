@@ -70,7 +70,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
     public static final class ByteEditor extends NumberEditor {
 
         public ByteEditor() {
-            newValue = 0;
+            newValue = (byte) 0;
             initEditorValue();
         }
 
@@ -94,7 +94,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
     public static final class ShortEditor extends NumberEditor {
 
         public ShortEditor() {
-            newValue = 0;
+            newValue = (short) 0;
             initEditorValue();
         }
 
