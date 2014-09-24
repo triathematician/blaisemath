@@ -78,10 +78,12 @@ public class MultilineTextRenderer implements Renderer<LabeledPoint, Graphics2D>
         canvas.setColor(style.getColor(Styles.FILL));
         
         double lineHeight = canvas.getFontMetrics().getHeight();
+        Rectangle2D bounds = multilineBounds(text, style);
         String[] lns = text.getText().split("\n|\r\n");
-        double y0 = text.getY();
+        double y0 = bounds.getMaxY();
+        double x0 = bounds.getMinX();
         for (String s : Lists.reverse(Arrays.asList(lns))) {
-            canvas.drawString(s, (float)text.getX(), (float) y0);
+            canvas.drawString(s, (float)x0, (float) y0);
             y0 -= lineHeight;
         }
     }

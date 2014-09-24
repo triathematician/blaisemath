@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.geom.LabeledPoint;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -47,7 +48,7 @@ import java.awt.geom.RectangularShape;
  */
 public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,Graphics2D> {
 
-    private final WrappedTextRenderer textRenderer = new WrappedTextRenderer();
+    private Renderer<LabeledPoint, Graphics2D> textRenderer = new WrappedTextRenderer();
     
     public LabeledShapeGraphic() {
         this(null, new Rectangle(), new ObjectStyler<O>());
@@ -57,20 +58,39 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
         super(source, primitive, styler, ShapeRenderer.getInstance());
     }
     
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
+    
+    public Renderer<LabeledPoint, Graphics2D> getTextRenderer() {
+        return textRenderer;
+    }
+
+    public void setTextRenderer(Renderer<LabeledPoint, Graphics2D> textRenderer) {
+        if (this.textRenderer != textRenderer) {
+            this.textRenderer = textRenderer;
+            fireGraphicChanged();
+        }
+    }
+    
+    //</editor-fold>
+    
     @Override
     public void renderTo(Graphics2D canvas) {
         super.renderTo(canvas);
 
         if (styler.getLabelDelegate() != null) {
             String label = styler.label(source);
-            if (!Strings.isNullOrEmpty(label)) {
-                AttributeSet style = styler.labelStyle(source);
-                if (style != null) {
-                    textRenderer.setClipPath(primitive instanceof RectangularShape
+            AttributeSet style = styler.labelStyle(source);
+            if (!Strings.isNullOrEmpty(label) && style != null) {
+                if (textRenderer instanceof WrappedTextRenderer) {
+                    WrappedTextRenderer wtr = (WrappedTextRenderer) textRenderer;
+                    wtr.setClipPath(primitive instanceof RectangularShape
                             ? (RectangularShape) primitive
                             : primitive.getBounds2D());
-                    textRenderer.render(new LabeledPoint(label), style, canvas);
                 }
+                textRenderer.render(new LabeledPoint(label), style, canvas);
             }
         }
     }
