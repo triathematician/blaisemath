@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graphics.core.GMouseEvent;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.CanvasPainter;
@@ -272,6 +273,16 @@ public class JGraphicComponent extends javax.swing.JComponent {
      */
     public Point2D toGraphicCoordinate(Point2D winLoc) {
         return inverseTransform == null ? winLoc : inverseTransform.transform(winLoc, null);
+    }
+    
+    /**
+     * Convert mouse event to local coordinate space
+     * @param winEvent event in windows coordinate space
+     * @return event w/ location in local coordinate space
+     */
+    public GMouseEvent toGraphicCoordinateSpace(MouseEvent winEvent) {
+        Point2D loc = toGraphicCoordinate(winEvent.getPoint());
+        return new GMouseEvent(winEvent, loc, null);
     }
     
     /**
