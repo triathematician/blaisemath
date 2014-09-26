@@ -32,23 +32,23 @@ import java.awt.geom.Point2D;
  * A text string anchored at a particular point.
  * @author Elisha
  */
-public final class LabeledPoint extends Point2DBean {
+public final class AnchoredText extends Point2DBean {
     
     private String text;
 
-    public LabeledPoint() {
+    public AnchoredText() {
     }
 
-    public LabeledPoint(String text) {
+    public AnchoredText(String text) {
         this(0, 0, text);
     }
     
-    public LabeledPoint(Point2D pt, String text) {
+    public AnchoredText(Point2D pt, String text) {
         setText(text);
         setLocation(pt);
     }
     
-    public LabeledPoint(double x, double y, String text) {
+    public AnchoredText(double x, double y, String text) {
         setText(text);
         setLocation(x, y);
     }
@@ -65,10 +65,10 @@ public final class LabeledPoint extends Point2DBean {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof LabeledPoint)) {
+        if (!(obj instanceof AnchoredText)) {
             return false;
         }
-        LabeledPoint at = (LabeledPoint) obj;
+        AnchoredText at = (AnchoredText) obj;
         return at.x == x && at.y == y && Objects.equal(at.text, text);
     }
 

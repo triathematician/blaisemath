@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -48,7 +48,7 @@ import java.awt.geom.RectangularShape;
  */
 public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,Graphics2D> {
 
-    private Renderer<LabeledPoint, Graphics2D> textRenderer = new WrappedTextRenderer();
+    private Renderer<AnchoredText, Graphics2D> textRenderer = new WrappedTextRenderer();
     
     public LabeledShapeGraphic() {
         this(null, new Rectangle(), new ObjectStyler<O>());
@@ -63,11 +63,11 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
     // PROPERTIES
     //
     
-    public Renderer<LabeledPoint, Graphics2D> getTextRenderer() {
+    public Renderer<AnchoredText, Graphics2D> getTextRenderer() {
         return textRenderer;
     }
 
-    public void setTextRenderer(Renderer<LabeledPoint, Graphics2D> textRenderer) {
+    public void setTextRenderer(Renderer<AnchoredText, Graphics2D> textRenderer) {
         if (this.textRenderer != textRenderer) {
             this.textRenderer = textRenderer;
             fireGraphicChanged();
@@ -90,7 +90,7 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
                             ? (RectangularShape) primitive
                             : primitive.getBounds2D());
                 }
-                textRenderer.render(new LabeledPoint(label), style, canvas);
+                textRenderer.render(new AnchoredText(label), style, canvas);
             }
         }
     }

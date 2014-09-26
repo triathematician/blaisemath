@@ -41,7 +41,7 @@ import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -58,15 +58,15 @@ import java.util.logging.Logger;
  * 
  * @author Elisha
  */
-public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
+public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
 
     private static final TextRenderer INST = new TextRenderer();
     
-    public static Renderer<LabeledPoint, Graphics2D> getInstance() {
+    public static Renderer<AnchoredText, Graphics2D> getInstance() {
         return INST;
     }
     
-    public void render(LabeledPoint primitive, AttributeSet style, Graphics2D canvas) {
+    public void render(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
         String text = primitive.getText();
         if (Strings.isNullOrEmpty(text)) {
             return;
@@ -78,11 +78,11 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
     }
 
-    public boolean contains(LabeledPoint primitive, AttributeSet style, Point2D point) {
+    public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
         return bounds(primitive, style).contains(point);
     }
 
-    public boolean intersects(LabeledPoint primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
         return bounds(primitive, style).intersects(rect);
     }
 
@@ -92,7 +92,7 @@ public class TextRenderer implements Renderer<LabeledPoint, Graphics2D> {
      * @param style style associated with the text
      * @return bounding box for the text
      */
-    public static Rectangle2D bounds(LabeledPoint primitive, AttributeSet style) {
+    public static Rectangle2D bounds(AnchoredText primitive, AttributeSet style) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }

@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.swing.BasicPointStyleEditor;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
@@ -36,6 +35,7 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
+import com.googlecode.blaisemath.graphics.swing.BasicPointStyleEditor;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -51,7 +51,7 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.ColorUtils;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import com.googlecode.blaisemath.util.geom.PointUtils;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -125,7 +125,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addString() {        
         Point2D pt = randomPoint();
-        LabeledPoint txt = new LabeledPoint(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
+        AnchoredText txt = new AnchoredText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
         bg.setDragEnabled(true);
         root1.addGraphic(bg);

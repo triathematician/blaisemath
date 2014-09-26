@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.googlecode.blaisemath.style;
+package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
@@ -25,9 +25,9 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.googlecode.blaisemath.style.StyleUtilsSVG;
-import java.awt.Color;
+import com.googlecode.blaisemath.svg.AttributeSetAdapter;
 import com.googlecode.blaisemath.style.Styles;
+import java.awt.Color;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -35,24 +35,16 @@ import org.junit.Test;
  *
  * @author Elisha
  */
-public class StyleUtilsSVGTest {
+public class AttributeSetAdapterTest {
 
     /**
-     * Test of convertStyleStyleUtilsSVG method, of class StyleUtilsSVG.
+     * Test of convertStyleAttributeSetAdapter method, of class AttributeSetAdapter.
      */
     @Test
     public void testToSVG() throws Exception {
         System.out.println("toSVG");
         assertEquals("fill:#ff0000; stroke:#00ff00", 
-                StyleUtilsSVG.convertStyleToSVG(Styles.fillStroke(Color.red, Color.green)));
+                AttributeSetAdapter.INST.marshal(Styles.fillStroke(Color.red, Color.green)));
     }
-
-    /**
-     * Test of convertKeyStyleUtilsSVG method, of class StyleUtilsSVG.
-     */
-    @Test
-    public void testToSVGKey() {
-        System.out.println("toSVGKey");
-        assertEquals("font-size", StyleUtilsSVG.convertKeyToSVG("fontSize"));
-    }
+    
 }

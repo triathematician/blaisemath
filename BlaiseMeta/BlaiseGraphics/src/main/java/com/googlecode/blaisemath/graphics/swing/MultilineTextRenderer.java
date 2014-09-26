@@ -33,7 +33,7 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -53,23 +53,23 @@ import java.util.logging.Logger;
  * 
  * @author petereb1
  */
-public class MultilineTextRenderer implements Renderer<LabeledPoint, Graphics2D> {
+public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {
     
     @Override
     public String toString() {
         return "MultilineTextRenderer";
     }
 
-    public boolean contains(LabeledPoint primitive, AttributeSet style, Point2D point) {
+    public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
         return multilineBounds(primitive, style).contains(point);
     }
 
-    public boolean intersects(LabeledPoint primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
         return multilineBounds(primitive, style).intersects(rect);
     }
 
     @Override
-    public void render(LabeledPoint text, AttributeSet style, Graphics2D canvas) {
+    public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
@@ -88,7 +88,7 @@ public class MultilineTextRenderer implements Renderer<LabeledPoint, Graphics2D>
         }
     }
 
-    public static Rectangle2D multilineBounds(LabeledPoint text, AttributeSet style) {
+    public static Rectangle2D multilineBounds(AnchoredText text, AttributeSet style) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
         }

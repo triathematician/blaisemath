@@ -32,6 +32,8 @@ import javax.annotation.Nullable;
 /**
  * An image anchored at a given location.
  * @author petereb1
+ * 
+ * @todo - how to handle conflicting width/height of image vs width/height here?
  */
 public class AnchoredImage {
     
@@ -39,22 +41,22 @@ public class AnchoredImage {
     private final String ref;
     private final double x;
     private final double y;
+    private final double width;
+    private final double height;
 
-    public AnchoredImage(Image image, @Nullable String ref, double x, double y) {
-        this.image = image;
-        this.ref = ref;
+    public AnchoredImage(double x, double y, double width, double height, Image image, @Nullable String ref) {
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
+        this.image = image;
+        this.ref = ref;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
     //
-    
-    public Image getImage() {
-        return image;
-    }
 
     public String getReference() {
         return ref;
@@ -67,9 +69,21 @@ public class AnchoredImage {
     public double getY() {
         return y;
     }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
     
     public Rectangle2D getBounds(ImageObserver io) {
-        return new Rectangle2D.Double(x, y, image.getWidth(io), image.getHeight(io));
+        return new Rectangle2D.Double(x, y, width, height);
+    }
+    
+    public Image getImage() {
+        return image;
     }
     
     //</editor-fold>

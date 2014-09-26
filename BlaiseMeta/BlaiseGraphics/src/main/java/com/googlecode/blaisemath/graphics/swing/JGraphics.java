@@ -33,7 +33,7 @@ import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -111,24 +111,24 @@ public class JGraphics {
         return new DelegatingPrimitiveGraphic<S,OrientedPoint2D,Graphics2D>(source, primitive, styler, MarkerRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<LabeledPoint,Graphics2D> text(LabeledPoint primitive) {
-        return new PrimitiveGraphic<LabeledPoint,Graphics2D>(primitive, Styles.defaultTextStyle(), TextRenderer.getInstance());
+    public static PrimitiveGraphic<AnchoredText,Graphics2D> text(AnchoredText primitive) {
+        return new PrimitiveGraphic<AnchoredText,Graphics2D>(primitive, Styles.defaultTextStyle(), TextRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<LabeledPoint,Graphics2D> text(LabeledPoint primitive, AttributeSet style) {
-        return new PrimitiveGraphic<LabeledPoint,Graphics2D>(primitive, style, TextRenderer.getInstance());
+    public static PrimitiveGraphic<AnchoredText,Graphics2D> text(AnchoredText primitive, AttributeSet style) {
+        return new PrimitiveGraphic<AnchoredText,Graphics2D>(primitive, style, TextRenderer.getInstance());
     }
     
-    public static <S> DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D> text(S source, LabeledPoint primitive, ObjectStyler<S> styler) {
-        return new DelegatingPrimitiveGraphic<S,LabeledPoint,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
+    public static <S> DelegatingPrimitiveGraphic<S,AnchoredText,Graphics2D> text(S source, AnchoredText primitive, ObjectStyler<S> styler) {
+        return new DelegatingPrimitiveGraphic<S,AnchoredText,Graphics2D>(source, primitive, styler, TextRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(AnchoredImage primitive) {
         return new PrimitiveGraphic<AnchoredImage,Graphics2D>(primitive, AttributeSet.EMPTY, ImageRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(Image image, String refc, double x, double y) {
-        return new PrimitiveGraphic<AnchoredImage,Graphics2D>(new AnchoredImage(image, refc, x, y), AttributeSet.EMPTY, ImageRenderer.getInstance());
+    public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(double x, double y, double wid, double ht, Image image, String refc) {
+        return new PrimitiveGraphic<AnchoredImage,Graphics2D>(new AnchoredImage(x, y, wid, ht, image, refc), AttributeSet.EMPTY, ImageRenderer.getInstance());
     }
 
     public static <S> DelegatingNodeLinkGraphic<S, Edge<S>, Graphics2D> nodeLink() {

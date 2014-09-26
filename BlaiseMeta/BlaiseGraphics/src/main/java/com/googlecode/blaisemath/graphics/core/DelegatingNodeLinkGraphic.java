@@ -31,7 +31,7 @@ import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Shape;
 import javax.annotation.Nullable;
 
@@ -65,7 +65,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      * @param edgeRenderer how edges will be rendered
      */
     public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer,
+            @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
         this(new CoordinateManager<S, Point2D>(), nodeRenderer, labelRenderer, edgeRenderer);
     }
@@ -79,7 +79,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      */
     public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager,
             @Nullable Renderer<Point2D,G> nodeRenderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer,
+            @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
         pointGraphics = new DelegatingPointSetGraphic<S,G>(crdManager, nodeRenderer, labelRenderer);
         edgeGraphics = new DelegatingEdgeSetGraphic<S,E,G>(crdManager, edgeRenderer);
@@ -138,11 +138,11 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         pointGraphics.setRenderer(renderer);
     }
 
-    public Renderer<LabeledPoint, G> getLabelRenderer() {
+    public Renderer<AnchoredText, G> getLabelRenderer() {
         return pointGraphics.getLabelRenderer();
     }
 
-    public void setLabelRenderer(Renderer<LabeledPoint, G> renderer) {
+    public void setLabelRenderer(Renderer<AnchoredText, G> renderer) {
         pointGraphics.setLabelRenderer(renderer);
     }
 

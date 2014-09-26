@@ -38,7 +38,7 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +78,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     /** Selects renderer for points */
     protected Renderer<Point2D,G> renderer;
     /** Renderer for point labels */
-    protected Renderer<LabeledPoint,G> textRenderer;
+    protected Renderer<AnchoredText,G> textRenderer;
 
     /** Indicates points are being updated */
     protected boolean updatingPoint = false;
@@ -99,7 +99,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * @param labelRenderer
      */
     public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+            @Nullable Renderer<AnchoredText, G> labelRenderer) {
         this(new CoordinateManager<S, Point2D>(), renderer, labelRenderer);
     }
 
@@ -111,7 +111,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      */
     public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager, 
             @Nullable Renderer<Point2D, G> renderer,
-            @Nullable Renderer<LabeledPoint, G> labelRenderer) {
+            @Nullable Renderer<AnchoredText, G> labelRenderer) {
         setRenderer(renderer);
         setLabelRenderer(labelRenderer);
         
@@ -260,11 +260,11 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
 
     @Nullable 
-    public Renderer<LabeledPoint, G> getLabelRenderer() {
+    public Renderer<AnchoredText, G> getLabelRenderer() {
         return textRenderer;
     }
 
-    public final void setLabelRenderer(@Nullable Renderer<LabeledPoint, G> renderer) {
+    public final void setLabelRenderer(@Nullable Renderer<AnchoredText, G> renderer) {
         if (this.textRenderer != renderer) {
             Object old = this.renderer;
             this.textRenderer = renderer;
