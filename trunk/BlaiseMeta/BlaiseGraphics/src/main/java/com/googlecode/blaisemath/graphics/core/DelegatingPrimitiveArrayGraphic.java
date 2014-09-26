@@ -26,9 +26,9 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.swing.JPopupMenu;

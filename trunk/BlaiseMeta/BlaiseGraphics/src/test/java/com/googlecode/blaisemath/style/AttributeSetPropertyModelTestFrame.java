@@ -25,9 +25,6 @@ import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.AttributeSetPropertyModel;
-import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Map;
@@ -63,7 +60,7 @@ public class AttributeSetPropertyModelTestFrame extends javax.swing.JFrame {
         
         EditorRegistration.registerEditors();
         AttributeSet as = Styles.fillStroke(Color.white, Color.red);
-        Map<String,Class> asTypes = Maps.newLinkedHashMap();
+        Map<String,Class<?>> asTypes = Maps.newLinkedHashMap();
         asTypes.put(Styles.FILL, Color.class);
         asTypes.put(Styles.STROKE, Color.class);
         AttributeSetPropertyModel m = new AttributeSetPropertyModel(as, asTypes);

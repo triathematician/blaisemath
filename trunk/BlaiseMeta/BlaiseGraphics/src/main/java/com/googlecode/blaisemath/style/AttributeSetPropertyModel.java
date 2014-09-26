@@ -47,11 +47,11 @@ public class AttributeSetPropertyModel extends PropertyModelSupport {
     /** List of expected attribute names */
     private final List<String> attributes = Lists.newArrayList();
     /** Mapping of expected attribute names and types */
-    private final Map<String,Class> typeMap = Maps.newLinkedHashMap();
+    private final Map<String,Class<?>> typeMap = Maps.newLinkedHashMap();
     /** The attribute set for editing */
     private final AttributeSet aSet;
 
-    public AttributeSetPropertyModel(AttributeSet aSet, Map<String,Class> typeMap) {
+    public AttributeSetPropertyModel(AttributeSet aSet, Map<String,Class<?>> typeMap) {
         this.aSet = checkNotNull(aSet);
         this.typeMap.putAll(typeMap);
         this.attributes.addAll(typeMap.keySet());

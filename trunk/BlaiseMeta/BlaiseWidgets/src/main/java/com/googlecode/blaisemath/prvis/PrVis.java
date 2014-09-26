@@ -47,7 +47,7 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 
@@ -178,13 +178,13 @@ public class PrVis extends JGraphicComponent {
         for (double d = xmin; d <= xmax; d += 100) {
             double y = x0+xwid*(d-xmin)/(xmax-xmin);
             addGraphic(JGraphics.shape(new Line2D.Double(43, y, 50, y)));
-            addGraphic(JGraphics.text(new LabeledPoint(new Point2D.Double(42, y), ((int)d)+"yd"),
+            addGraphic(JGraphics.text(new AnchoredText(new Point2D.Double(42, y), ((int)d)+"yd"),
                     AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.EAST)));
         }
         for (double s = ymin; s >= ymax; s--) {
             double x = y0+yht*(s-ymin)/(ymax-ymin);
             addGraphic(JGraphics.shape(new Line2D.Double(x, 43, x, 50)));
-            addGraphic(JGraphics.text(new LabeledPoint(new Point2D.Double(x, 42), ((int)s)+"s"),
+            addGraphic(JGraphics.text(new AnchoredText(new Point2D.Double(x, 42), ((int)s)+"s"),
                     AttributeSet.with(Styles.TEXT_ANCHOR, Anchor.SOUTH)));
         }
         

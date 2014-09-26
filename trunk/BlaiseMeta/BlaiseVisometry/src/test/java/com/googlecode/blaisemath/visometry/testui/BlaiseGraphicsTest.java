@@ -46,7 +46,7 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.ColorUtils;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import com.googlecode.blaisemath.visometry.VBasicPoint;
 import com.googlecode.blaisemath.visometry.VBasicPointSet;
 import com.googlecode.blaisemath.visometry.VBasicPolygonalPath;
@@ -158,7 +158,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
     @Action
     public void addString() {
         Point2D pt = randomPoint();
-        LabeledPoint txt = new LabeledPoint(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
+        AnchoredText txt = new AnchoredText(pt, String.format("[%.4f, %.4f]", pt.getX(), pt.getY()));
         PrimitiveGraphic bg = JGraphics.text(txt, RandomStyles.string());
         bg.setDragEnabled(true);
         root1.addGraphic(bg);

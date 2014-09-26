@@ -24,7 +24,11 @@ package com.googlecode.blaisemath.graphics.testui;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -32,10 +36,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import java.awt.Graphics2D;
 
 /**
  *

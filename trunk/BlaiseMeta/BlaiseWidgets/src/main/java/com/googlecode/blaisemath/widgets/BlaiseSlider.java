@@ -43,7 +43,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 
 /**
  * <p>
@@ -90,7 +90,7 @@ public class BlaiseSlider extends JGraphicComponent {
         hStyle = Styles.fillStroke(new Color(192,192,192,192), new Color(64,64,64,192));
         addGraphic(trackGr = JGraphics.shape(null, tStyle));
         addGraphic(posGr = JGraphics.shape(null, hStyle));
-        addGraphic(strGr = JGraphics.text(new LabeledPoint(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+"")));
+        addGraphic(strGr = JGraphics.text(new AnchoredText(new Point(tIn.left+2,40-tIn.bottom-2), model.getValue()+"")));
         strGr.setStyle(AttributeSet.with(Styles.FILL,Color.white)
                 .and(Styles.FONT_SIZE, hRnd/2)
                 .and(Styles.TEXT_ANCHOR, Anchor.SOUTH));
@@ -183,7 +183,7 @@ public class BlaiseSlider extends JGraphicComponent {
             posGr.setPrimitive(new RoundRectangle2D.Double(xc-rad, y0-hExt, 2*rad, yht+2*hExt, hRnd, hRnd));
         } else
             posGr.setPrimitive(new RoundRectangle2D.Double(xc, y0-hExt, xc2-xc, yht+2*hExt, hRnd, hRnd));
-        strGr.setPrimitive(new LabeledPoint(
+        strGr.setPrimitive(new AnchoredText(
                 new Point2D.Double(xc, getHeight()/2+((AttributeSet)strGr.getStyle()).getInteger(Styles.FONT_SIZE)/2),
                 model.getValue()+""));
     }

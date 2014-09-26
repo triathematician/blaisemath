@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Graphics2D;
 
 /**
@@ -46,7 +46,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     /** Stores the point */
     private final PrimitiveGraphic<Point2D,Graphics2D> point;
     /** Stores the string */
-    private final PrimitiveGraphic<LabeledPoint,Graphics2D> label;
+    private final PrimitiveGraphic<AnchoredText,Graphics2D> label;
 
     //
     // CONSTRUCTORS
@@ -55,7 +55,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     /** Construct labeled point with given primitive and default style */
     public LabeledPointGraphic(Point2D p, String s) { 
         point = JGraphics.point(p);
-        label = JGraphics.text(new LabeledPoint(p, s));
+        label = JGraphics.text(new AnchoredText(p, s));
         label.setMouseEnabled(false);
         addGraphic(point);
         addGraphic(label);
@@ -87,7 +87,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     }
 
     public void setLabel(String s) {
-        label.setPrimitive(new LabeledPoint(getPoint(), s));
+        label.setPrimitive(new AnchoredText(getPoint(), s));
         fireGraphicChanged();
     }
 
@@ -114,7 +114,7 @@ public class LabeledPointGraphic extends GraphicComposite<Graphics2D>
     @Override
     public void graphicChanged(Graphic source) {
         if (source == point) {
-            label.setPrimitive(new LabeledPoint(getPoint(), label.getPrimitive().getText()));
+            label.setPrimitive(new AnchoredText(getPoint(), label.getPrimitive().getText()));
         }
         super.graphicChanged(source);
     }

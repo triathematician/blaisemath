@@ -36,7 +36,7 @@ import javax.swing.JPopupMenu;
  * Initializes a context menu using specified keys in an {@link ActionMap}.
  * @author petereb1
  */
-public final class ActionMapContextMenuInitializer implements ContextMenuInitializer {
+public final class ActionMapContextMenuInitializer<S> implements ContextMenuInitializer<S> {
 
     private final ActionMap am;
     private final String[] actions;
@@ -46,7 +46,7 @@ public final class ActionMapContextMenuInitializer implements ContextMenuInitial
         this.actions = actions;
     }
     
-    public void initContextMenu(JPopupMenu popup, Object src, Point2D point,
+    public void initContextMenu(JPopupMenu popup, S src, Point2D point,
             Object focus, Set selection) {
         for (String a : actions) {
             Action action = am.get(a);

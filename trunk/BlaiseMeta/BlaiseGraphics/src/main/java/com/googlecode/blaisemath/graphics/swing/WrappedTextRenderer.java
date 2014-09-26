@@ -37,7 +37,7 @@ import static com.googlecode.blaisemath.style.Anchor.SOUTHWEST;
 import static com.googlecode.blaisemath.style.Anchor.WEST;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -95,7 +95,7 @@ public class WrappedTextRenderer extends TextRenderer {
     
     
     @Override
-    public void render(LabeledPoint text, AttributeSet style, Graphics2D canvas) {
+    public void render(AnchoredText text, AttributeSet style, Graphics2D canvas) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return;
         }
@@ -128,7 +128,7 @@ public class WrappedTextRenderer extends TextRenderer {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
         if (bounds.getWidth() < clip.getWidth() - 8 || clip.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
-            super.render(new LabeledPoint(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
+            super.render(new AnchoredText(clip.getCenterX(), clip.getCenterY(), text), style, canvas);
         } else {
             // need to wrap string
             drawInRectangle(text, style,

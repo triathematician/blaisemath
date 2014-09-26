@@ -35,7 +35,7 @@ import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.LabeledPoint;
+import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
@@ -212,7 +212,7 @@ public class VisualGraph<G> {
         viewGraph.setNodeRenderer(renderer);
     }
 
-    public Renderer<LabeledPoint, G> getLabelRenderer() {
+    public Renderer<AnchoredText, G> getLabelRenderer() {
         return viewGraph.getLabelRenderer();
     }
     
