@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.style;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Predicate;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.annotation.Nullable;
@@ -40,31 +41,30 @@ import javax.annotation.Nullable;
  *
  * @author elisha
  */
-public class ObjectStyler<S> {
+public final class ObjectStyler<S> {
 
     /** Delegate for point rendering */
     @Nullable
-    protected Function<? super S, AttributeSet> styles = null;
+    private Function<? super S, AttributeSet> styler = null;
 
+    /** Show/hide label setting */
+    @Nullable
+    private Predicate<S> labelFilter = null;
     /** Delegate for point labels (only used if the styler returns a label style) */
     @Nullable
-    protected Function<? super S, String> labels = null;
+    private Function<? super S, String> labeler = null;
     /** Delegate for point label styles */
     @Nullable
-    protected Function<? super S, AttributeSet> labelStyles = null;
+    private Function<? super S, AttributeSet> labelStyler = null;
 
     /** Delegate for tooltips (with default) */
     @Nullable 
-    protected Function<? super S, String> tips = new Function<S, String>() {
+    private Function<? super S, String> tipper = new Function<S, String>() {
         @Override
         public String apply(S src) { 
             return src == null ? "null" : src.toString(); 
         }
     };
-
-    /** Constructs the delegator */
-    public ObjectStyler() {
-    }
     
     
     //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHODS">
@@ -95,7 +95,7 @@ public class ObjectStyler<S> {
      */
     @Nullable 
     public Function<? super S, AttributeSet> getStyleDelegate() {
-        return styles;
+        return styler;
     }
 
     /**
@@ -104,9 +104,21 @@ public class ObjectStyler<S> {
      * @param styler used to style object
      */
     public void setStyleDelegate(@Nullable Function<? super S, AttributeSet> styler) {
-        if (this.styles != styler) {
-            this.styles = styler;
-            pcs.firePropertyChange("styleDelegate", null, styles);
+        if (this.styler != styler) {
+            this.styler = styler;
+            pcs.firePropertyChange("styleDelegate", null, this.styler);
+        }
+    }
+    
+    public Predicate<S> getLabelFilter() {
+        return labelFilter;
+    }
+    
+    public void setLabelFilter(Predicate<S> labelFilter) {
+        if (this.labelFilter != labelFilter) {
+            Object old = this.labelFilter;
+            this.labelFilter = labelFilter;
+            pcs.firePropertyChange("labelFilter", old, labelFilter);
         }
     }
 
@@ -116,7 +128,7 @@ public class ObjectStyler<S> {
      */
     @Nullable 
     public Function<? super S, String> getLabelDelegate() {
-        return labels;
+        return labeler;
     }
 
     /**
@@ -124,9 +136,9 @@ public class ObjectStyler<S> {
      * @param labeler the new labeler
      */
     public void setLabelDelegate(@Nullable Function<? super S, String> labeler) {
-        if (this.labels != labeler) {
-            this.labels = labeler;
-            pcs.firePropertyChange("labelDelegate", null, styles);
+        if (this.labeler != labeler) {
+            this.labeler = labeler;
+            pcs.firePropertyChange("labelDelegate", null, styler);
         }
     }
 
@@ -136,7 +148,7 @@ public class ObjectStyler<S> {
      */
     @Nullable 
     public Function<? super S, AttributeSet> getLabelStyleDelegate() {
-        return labelStyles;
+        return labelStyler;
     }
 
     /**
@@ -144,9 +156,9 @@ public class ObjectStyler<S> {
      * @param labelStyler the new label styler
      */
     public void setLabelStyleDelegate(@Nullable Function<? super S, AttributeSet> labelStyler) {
-        if (this.labelStyles != labelStyler) {
-            this.labelStyles = labelStyler;
-            pcs.firePropertyChange("labelStyleDelegate", null, labelStyles);
+        if (this.labelStyler != labelStyler) {
+            this.labelStyler = labelStyler;
+            pcs.firePropertyChange("labelStyleDelegate", null, this.labelStyler);
         }
     }
 
@@ -156,7 +168,7 @@ public class ObjectStyler<S> {
      */
     @Nullable 
     public Function<? super S, String> getTipDelegate() {
-        return tips;
+        return tipper;
     }
 
     /**
@@ -164,9 +176,9 @@ public class ObjectStyler<S> {
      * @param tipper generates tips for the object
      */
     public void setTipDelegate(@Nullable Function<? super S, String> tipper) {
-        if (this.tips != tipper) {
-            this.tips = tipper;
-            pcs.firePropertyChange("tipDelegate", null, tips);
+        if (this.tipper != tipper) {
+            this.tipper = tipper;
+            pcs.firePropertyChange("tipDelegate", null, this.tipper);
         }
     }
     
@@ -182,7 +194,7 @@ public class ObjectStyler<S> {
      */
     @Nullable
     public AttributeSet style(S src) {
-        return styles == null ? null : styles.apply(src);
+        return styler == null ? null : styler.apply(src);
     }
     
     /**
@@ -192,7 +204,9 @@ public class ObjectStyler<S> {
      */
     @Nullable
     public String label(S src) {
-        return labels == null ? null : labels.apply(src);
+        return labeler == null ? null 
+                : labelFilter == null || labelFilter.apply(src) ? labeler.apply(src)
+                : null;
     }
     
     /**
@@ -202,7 +216,7 @@ public class ObjectStyler<S> {
      */
     @Nullable
     public AttributeSet labelStyle(S src) {
-        return labelStyles == null ? null : labelStyles.apply(src);
+        return labelStyler == null ? null : labelStyler.apply(src);
     }
     
     /**
@@ -213,7 +227,7 @@ public class ObjectStyler<S> {
      */
     @Nullable
     public String tooltip(S src, @Nullable String def) {
-        return tips == null ? def : tips.apply(src);
+        return tipper == null ? def : tipper.apply(src);
     }
     
     //</editor-fold>
