@@ -26,7 +26,9 @@ package com.googlecode.blaisemath.svg;
  */
 
 import java.awt.geom.Ellipse2D;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -35,7 +37,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author elisha
  */
 @XmlRootElement(name="ellipse")
-public final class SVGEllipse extends SVGObject {
+public final class SVGEllipse extends SVGElement {
+    
+    public static final Adapter ADAPTER = new Adapter();
     
     private double cx;
     private double cy;
@@ -59,6 +63,7 @@ public final class SVGEllipse extends SVGObject {
     // PROPERTY PATTERNS
     //
 
+    @XmlAttribute
     public double getCx() {
         return cx;
     }
@@ -67,6 +72,7 @@ public final class SVGEllipse extends SVGObject {
         this.cx = cx;
     }
 
+    @XmlAttribute
     public double getCy() {
         return cy;
     }
@@ -75,6 +81,7 @@ public final class SVGEllipse extends SVGObject {
         this.cy = cy;
     }
 
+    @XmlAttribute
     public double getRx() {
         return rx;
     }
@@ -83,6 +90,7 @@ public final class SVGEllipse extends SVGObject {
         this.rx = rx;
     }
 
+    @XmlAttribute
     public double getRy() {
         return ry;
     }
@@ -94,12 +102,12 @@ public final class SVGEllipse extends SVGObject {
     //</editor-fold>
 
     
-    public static class Adapter implements SVGAdapter<SVGEllipse, Ellipse2D> {
-        public SVGEllipse toSVG(Ellipse2D r) {
+    public static class Adapter extends XmlAdapter<SVGEllipse, Ellipse2D> {
+        public SVGEllipse marshal(Ellipse2D r) {
             return new SVGEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
         }
 
-        public Ellipse2D toGraphics(SVGEllipse r) {
+        public Ellipse2D unmarshal(SVGEllipse r) {
             return new Ellipse2D.Double(r.cx-r.rx, r.cy-r.ry, 2*r.rx, 2*r.ry);
         }
     }

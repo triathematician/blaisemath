@@ -27,8 +27,15 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.util.AnchoredImage;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -37,24 +44,33 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author elisha
  */
 @XmlRootElement(name="image")
-public final class SVGImage extends SVGObject {
+public final class SVGImage extends SVGElement {
+    
+    public static final Adapter ADAPTER = new Adapter();
     
     private double x;
     private double y;
-    private double width;
-    private double height;
+    private Double width;
+    private Double height;
     private String imageRef = null;
+    
+    private Image image;
 
     public SVGImage() {
-        this(0, 0, 0, 0, "");
+        this(0, 0, null, null, "");
+    }
+    
+    public SVGImage(double x, double y, String ref) {
+        this(x, y, null, null, ref);
     }
 
-    public SVGImage(double x, double y, double width, double height, String tag) {
+    public SVGImage(double x, double y, Double width, Double height, String ref) {
         super("image");
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.imageRef = ref;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -81,20 +97,20 @@ public final class SVGImage extends SVGObject {
     }
 
     @XmlAttribute
-    public double getWidth() {
+    public Double getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(Double width) {
         this.width = width;
     }
 
     @XmlAttribute
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(Double height) {
         this.height = height;
     }
     
@@ -107,17 +123,50 @@ public final class SVGImage extends SVGObject {
         this.imageRef = imageRef;
     }
     
+    /**
+     * Load (if necessary) and return the image corresponding to the image reference.
+     * @return loaded image, or null if it couldn't be loaded
+     */
+    public Image getImage() {
+        if (image == null) {
+            URL f;
+            try {
+                f = new URL(imageRef);
+                BufferedImage img = ImageIO.read(f);
+                if (width == null || height == null) {
+                    image = img;
+                    width = (double) img.getWidth();
+                    height = (double) img.getHeight();
+                } else if (width == img.getWidth() && height == img.getHeight()) {
+                    image = img;
+                } else {
+                    int iw = width == null ? img.getWidth() : width.intValue();
+                    int ih = height == null ? img.getHeight() : height.intValue();
+                    image = img.getScaledInstance(iw, ih, Image.SCALE_DEFAULT);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(SVGImage.class.getName()).log(Level.SEVERE, 
+                        "Could not create image.", ex);
+            }
+        }
+        return image;
+    }
+    
     //</editor-fold>
 
     
-    public static class Adapter implements SVGAdapter<SVGImage, AnchoredImage> {
-        public SVGImage toSVG(AnchoredImage r) {
+    public static class Adapter extends XmlAdapter<SVGImage, AnchoredImage> {
+        public SVGImage marshal(AnchoredImage r) {
             return new SVGImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
         }
 
-        public AnchoredImage toGraphics(SVGImage r) {
-            Image img = null; // todo - construct image
-            return new AnchoredImage(r.x, r.y, r.width, r.height, img, r.imageRef);
+        public AnchoredImage unmarshal(SVGImage r) {
+            if (r.width == null || r.height == null) {
+                BufferedImage bi = (BufferedImage) r.getImage();
+                return new AnchoredImage(r.x, r.y, (double) bi.getWidth(), (double) bi.getHeight(), bi, r.imageRef);
+            } else {
+                return new AnchoredImage(r.x, r.y, r.width, r.height, r.getImage(), r.imageRef);
+            }
         }
     }
 }

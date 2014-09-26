@@ -37,7 +37,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
  * </p>
  * @author elisha
  */
-public class SVGCanvas extends JGraphicComponent {
+public class JGraphicComponentSVG extends JGraphicComponent {
 
     //
     // ATTRIBUTES
@@ -49,7 +49,7 @@ public class SVGCanvas extends JGraphicComponent {
     //
 
     /** Initialize without arguments */
-    public SVGCanvas() {
+    public JGraphicComponentSVG() {
         setBackground(Color.gray);
     }
 

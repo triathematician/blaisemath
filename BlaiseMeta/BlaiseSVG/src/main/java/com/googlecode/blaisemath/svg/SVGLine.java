@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.svg;
 import java.awt.geom.Line2D;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -36,8 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author elisha
  */
 @XmlRootElement(name="line")
-public final class SVGLine extends SVGObject {
+public final class SVGLine extends SVGElement {
     
+    public static final Adapter ADAPTER = new Adapter();
+     
     private double x1;
     private double y1;
     private double x2;
@@ -99,12 +102,12 @@ public final class SVGLine extends SVGObject {
     //</editor-fold>
 
     
-    public static class Adapter implements SVGAdapter<SVGLine, Line2D> {
-        public SVGLine toSVG(Line2D r) {
+    public static class Adapter extends XmlAdapter<SVGLine, Line2D> {
+        public SVGLine marshal(Line2D r) {
             return new SVGLine(r.getX1(), r.getY1(), r.getX2(), r.getY2());
         }
 
-        public Line2D toGraphics(SVGLine r) {
+        public Line2D unmarshal(SVGLine r) {
             return new Line2D.Double(r.x1, r.y1, r.x2, r.y2);
         }
     }

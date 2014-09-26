@@ -27,8 +27,9 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.util.geom.AnchoredText;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -37,11 +38,13 @@ import javax.xml.bind.annotation.XmlValue;
  * @author elisha
  */
 @XmlRootElement(name="text")
-public final class SVGText extends SVGObject {
+public final class SVGText extends SVGElement {
+    
+    public static final Adapter ADAPTER = new Adapter();
     
     private double x;
     private double y;
-    private String content;
+    protected String content;
 
     public SVGText() {
         this(0, 0, "");
@@ -77,7 +80,7 @@ public final class SVGText extends SVGObject {
         this.y = y;
     }
 
-    @XmlValue
+    @XmlElement
     public String getContent() {
         return content;
     }
@@ -89,12 +92,12 @@ public final class SVGText extends SVGObject {
     //</editor-fold>
     
     
-    public static class Adapter implements SVGAdapter<SVGText, AnchoredText> {
-        public SVGText toSVG(AnchoredText r) {
+    public static class Adapter extends XmlAdapter<SVGText, AnchoredText> {
+        public SVGText marshal(AnchoredText r) {
             return new SVGText(r.getX(), r.getY(), r.getText());
         }
 
-        public AnchoredText toGraphics(SVGText r) {
+        public AnchoredText unmarshal(SVGText r) {
             return new AnchoredText(r.x, r.y, r.content);
         }
     }

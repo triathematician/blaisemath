@@ -63,7 +63,7 @@ public class SVGTool extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         text = new javax.swing.JTextArea();
-        canvas = new com.googlecode.blaisemath.svg.SVGCanvas();
+        canvas = new com.googlecode.blaisemath.svg.JGraphicComponentSVG();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -165,7 +165,7 @@ public class SVGTool extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.googlecode.blaisemath.svg.SVGCanvas canvas;
+    private com.googlecode.blaisemath.svg.JGraphicComponentSVG canvas;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

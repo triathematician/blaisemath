@@ -36,14 +36,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * </p>
  * @author elisha
  */
-public abstract class SVGObject {
+public abstract class SVGElement {
     
     public static final String ID_ATTR = "id";
 
     private final String tag;
+    protected String id;
     private AttributeSet style = new AttributeSet();
 
-    public SVGObject(String tag) {
+    public SVGElement(String tag) {
         this.tag = tag;
     }
 
@@ -68,7 +69,7 @@ public abstract class SVGObject {
      */
     @XmlAttribute
     public String getId() {
-        return style.getString(ID_ATTR);
+        return id;
     }
     
     /**
@@ -76,7 +77,7 @@ public abstract class SVGObject {
      * @param id new id
      */
     public void setId(String id) {
-        style.put(ID_ATTR, id);
+        this.id = id;
     }
 
     @XmlAttribute

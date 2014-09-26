@@ -25,10 +25,12 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * <p>
@@ -37,12 +39,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author elisha
  */
 @XmlRootElement(name="g")
-public final class SVGGroup extends SVGObject {
+@XmlSeeAlso({
+    SVGCircle.class, SVGEllipse.class, SVGImage.class, SVGLine.class, SVGPath.class,
+    SVGPolygon.class, SVGPolyline.class, SVGRectangle.class, SVGText.class
+})
+public class SVGGroup extends SVGElement {
     
-    private List<SVGObject> obj = Lists.newArrayList();
+    private List<SVGElement> obj = Lists.newArrayList();
 
-    public SVGGroup(String tag) {
-        super(tag);
+    public SVGGroup() {
+        super("g");
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -51,14 +57,27 @@ public final class SVGGroup extends SVGObject {
     //
     
     @XmlElementRef
-    public List<SVGObject> getObj() {
+    public List<SVGElement> getElements() {
         return obj;
     }
 
-    public void setObj(List<SVGObject> obj) {
+    public void setElements(List<SVGElement> obj) {
         this.obj = obj;
     }
     
+    public void addElement(SVGElement obj) {
+        this.obj.add(obj);
+    }
+    
     //</editor-fold>
+
+    public SVGElement getObjectById(String id) {
+        for (SVGElement ms : obj) {
+            if (Objects.equal(ms.getId(), id)) {
+                return ms;
+            }
+        }
+        return null;
+    }
     
 }

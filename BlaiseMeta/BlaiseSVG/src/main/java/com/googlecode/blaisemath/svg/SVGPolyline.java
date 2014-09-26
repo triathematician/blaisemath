@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @todo implement functionality
  */
 @XmlRootElement(name="polyline")
-public final class SVGPolyline extends SVGObject {
+public final class SVGPolyline extends SVGElement {
 
     public SVGPolyline() {
         super("polyline");

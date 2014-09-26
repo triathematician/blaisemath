@@ -1,13 +1,12 @@
 /**
- * SVGAdapter.java
- * Created Sep 26, 2014
+ * SVGRoot.java
+ * Created on Sep 26, 2014
  */
-
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseGraphics
+ * BlaiseSVG
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
@@ -25,28 +24,13 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-/**
- * <p>
- *   Converts an SVG object to/from a Java graphics object.
- * </p>
- * @param <A> type of SVG object
- * @param <B> type of Java graphics object
- * @author elisha
- */
-public interface SVGAdapter<A extends SVGObject, B> {
+import javax.xml.bind.annotation.XmlRootElement;
 
-    /**
-     * Converts a Java graphics object to an SVG object.
-     * @param gr the Java graphics object
-     * @return the SVG object
-     */
-    A toSVG(B gr);
-    
-    /**
-     * Converts an SVG object to a Java graphics object
-     * @param svg the SVG object
-     * @return the Java object
-     */
-    B toGraphics(A svg);
+/**
+ * Root element for SVG object tree.
+ * @author petereb1
+ */
+@XmlRootElement(name="svg")
+public final class SVGRoot extends SVGGroup {
     
 }

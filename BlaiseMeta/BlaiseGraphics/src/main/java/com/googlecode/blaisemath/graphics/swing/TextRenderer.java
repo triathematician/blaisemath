@@ -79,11 +79,13 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     }
 
     public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
-        return bounds(primitive, style).contains(point);
+        Rectangle2D bounds = bounds(primitive, style);
+        return bounds != null && bounds.contains(point);
     }
 
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
-        return bounds(primitive, style).intersects(rect);
+        Rectangle2D bounds = bounds(primitive, style);
+        return bounds != null && bounds.intersects(rect);
     }
 
     /**
