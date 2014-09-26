@@ -67,7 +67,8 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     private final Map<S, C> cache = Maps.newHashMap();
 
     /** Listeners that will receive updates */
-    private final List<CoordinateListener> listeners = Collections.synchronizedList(new ArrayList<CoordinateListener>());
+    private final List<CoordinateListener> listeners 
+            = Collections.synchronizedList(new ArrayList<CoordinateListener>());
     
     
     //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
@@ -147,7 +148,7 @@ public class CoordinateManager<S, C> implements Function<S, C> {
      * to notify listeners if there are updates.
      * @param coords new coordinates
      */
-    public synchronized void putAll(Map<S, ? extends C> coords) {
+    public synchronized void putAll(Map<S,? extends C> coords) {
         map.putAll(coords);
         fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coords));
     }
@@ -156,7 +157,7 @@ public class CoordinateManager<S, C> implements Function<S, C> {
      * Replaces the current set of objects with specified objects, and caches the rest.
      * @param coords new coordinates
      */
-    public synchronized void setCoordinateMap(Map<S, ? extends C> coords) {
+    public synchronized void setCoordinateMap(Map<S,? extends C> coords) {
         Map<S, C> cached = new HashMap<S, C>();
         for (S s : map.keySet()) {
             if (!coords.containsKey(s)) {
