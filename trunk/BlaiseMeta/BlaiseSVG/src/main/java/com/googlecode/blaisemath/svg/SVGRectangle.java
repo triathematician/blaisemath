@@ -31,6 +31,7 @@ import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -39,7 +40,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author elisha
  */
 @XmlRootElement(name="rect")
-public final class SVGRectangle extends SVGObject {
+public final class SVGRectangle extends SVGElement {
+    
+    public static final Adapter ADAPTER = new Adapter();
     
     private double x;
     private double y;
@@ -128,8 +131,8 @@ public final class SVGRectangle extends SVGObject {
     //</editor-fold>
 
     
-    public static class Adapter implements SVGAdapter<SVGRectangle, RectangularShape> {
-        public SVGRectangle toSVG(RectangularShape r) {
+    public static class Adapter extends XmlAdapter<SVGRectangle, RectangularShape> {
+        public SVGRectangle marshal(RectangularShape r) {
             checkArgument(r instanceof RoundRectangle2D || r instanceof Rectangle2D,
                     "Invalid shape: "+r);
             if (r instanceof RoundRectangle2D) {
@@ -142,7 +145,7 @@ public final class SVGRectangle extends SVGObject {
             }
         }
 
-        public RectangularShape toGraphics(SVGRectangle r) {
+        public RectangularShape unmarshal(SVGRectangle r) {
             if (r.rx == 0 && r.ry == 0) {
                 return new Rectangle2D.Double(r.x, r.y, r.width, r.height);
             } else {

@@ -1,13 +1,16 @@
-/**
- * SVGPolygon.java
- * Created Sep 26, 2014
- */
-
+@XmlSchema(
+    namespace = "http://www.w3.org/2000/svg",
+    xmlns = {
+        @XmlNs(prefix="svg", namespaceURI="http://www.w3.org/2000/svg"),
+        @XmlNs(prefix="xlink", namespaceURI="http://www.w3.org/1999/xlink")
+    },
+    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
+)
 package com.googlecode.blaisemath.svg;
 
 /*
  * #%L
- * BlaiseGraphics
+ * BlaiseSVG
  * --
  * Copyright (C) 2009 - 2014 Elisha Peterson
  * --
@@ -25,20 +28,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlSchema;
 
-/**
- * <p>
- *   SVG Polygon object.
- * </p>
- * @author elisha
- * @todo implement functionality
- */
-@XmlRootElement(name="polygon")
-public final class SVGPolygon extends SVGElement {
-
-    public SVGPolygon() {
-        super("polygon");
-    }
-
-}

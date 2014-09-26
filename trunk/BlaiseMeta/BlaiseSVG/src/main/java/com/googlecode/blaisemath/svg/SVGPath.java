@@ -38,7 +38,7 @@ import java.util.List;
  * @author elisha
  * @todo implement functionality
  */
-public final class SVGPath extends SVGObject {
+public final class SVGPath extends SVGElement {
 
     public SVGPath() {
         super("path");

@@ -41,10 +41,14 @@ public class AnchoredImage {
     private final String ref;
     private final double x;
     private final double y;
-    private final double width;
-    private final double height;
+    private final Double width;
+    private final Double height;
 
-    public AnchoredImage(double x, double y, double width, double height, Image image, @Nullable String ref) {
+    public AnchoredImage(double x, double y, Image image, @Nullable String ref) {
+        this(x, y, null, null, image, ref);
+    }
+
+    public AnchoredImage(double x, double y, Double width, Double height, Image image, @Nullable String ref) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -79,7 +83,9 @@ public class AnchoredImage {
     }
     
     public Rectangle2D getBounds(ImageObserver io) {
-        return new Rectangle2D.Double(x, y, width, height);
+        double iw = width == null ? image.getWidth(io) : width;
+        double ih = height == null ? image.getHeight(io) : height;
+        return new Rectangle2D.Double(x, y, iw, ih);
     }
     
     public Image getImage() {
