@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -35,7 +36,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 @XmlRootElement(name="image")
 public final class SVGImage extends SVGElement {
     
-    public static final Adapter ADAPTER = new Adapter();
+    private static final ImageConverter CONVERTER_INST = new ImageConverter();
     
     private double x;
     private double y;
@@ -154,13 +154,17 @@ public final class SVGImage extends SVGElement {
     
     //</editor-fold>
 
+    public static Converter<SVGImage, AnchoredImage> imageConverter() {
+        return CONVERTER_INST;
+    }
     
-    public static class Adapter extends XmlAdapter<SVGImage, AnchoredImage> {
-        public SVGImage marshal(AnchoredImage r) {
+    
+    private static final class ImageConverter extends Converter<SVGImage, AnchoredImage> {
+        protected SVGImage doBackward(AnchoredImage r) {
             return new SVGImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
         }
 
-        public AnchoredImage unmarshal(SVGImage r) {
+        protected AnchoredImage doForward(SVGImage r) {
             if (r.width == null || r.height == null) {
                 BufferedImage bi = (BufferedImage) r.getImage();
                 return new AnchoredImage(r.x, r.y, (double) bi.getWidth(), (double) bi.getHeight(), bi, r.imageRef);

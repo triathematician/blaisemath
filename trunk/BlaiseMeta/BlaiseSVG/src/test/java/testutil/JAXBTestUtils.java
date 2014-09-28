@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.googlecode.blaisemath.svg;
+package testutil;
 
 /*
  * #%L
@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 
+import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.annotation.Nullable;
@@ -46,13 +47,18 @@ public class JAXBTestUtils {
      * @param testEquals whether to use a .equals test on the recycled object
      * @return recycled object
      */
-    public static Object testRecycleObject(Object o, @Nullable JAXBContext jc, boolean testEquals, boolean testStringEquals) throws JAXBException {
+    public static Object testRecycleObject(Object o, @Nullable JAXBContext jc, 
+            boolean testEquals, boolean testStringEquals, PrintStream w) throws JAXBException {
         if (jc == null) {
             jc = JAXBContext.newInstance(o.getClass());
         }
         Marshaller marshaller = jc.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         StringWriter sw = new StringWriter();
         marshaller.marshal(o, sw);
+        if (w != null) {
+            marshaller.marshal(o, w);
+        }
 
         Unmarshaller unmarshaller = jc.createUnmarshaller();
         Object m2 = unmarshaller.unmarshal(new StringReader(sw.toString()));

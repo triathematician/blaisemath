@@ -1,4 +1,4 @@
-package com.googlecode.blaisemath.style;
+package com.googlecode.blaisemath.style.editor;
 
 /*
  * #%L
@@ -21,10 +21,13 @@ package com.googlecode.blaisemath.style;
  */
 
 
+import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Map;

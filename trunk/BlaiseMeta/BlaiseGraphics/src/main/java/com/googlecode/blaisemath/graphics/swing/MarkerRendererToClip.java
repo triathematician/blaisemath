@@ -25,8 +25,8 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;

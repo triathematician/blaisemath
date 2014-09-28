@@ -195,7 +195,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
      * Add graphics to the component
      * @param add graphics to add
      */
-    public final void addGraphics(Iterable<? extends Graphic> add) {
+    public final void addGraphics(Iterable<? extends Graphic<Graphics2D>> add) {
         root.addGraphics(add);
     }
 
@@ -203,7 +203,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
      * Add a single graphic to the component
      * @param gfc graphic to add
      */
-    public final void addGraphic(Graphic gfc) {
+    public final void addGraphic(Graphic<Graphics2D> gfc) {
         root.addGraphic(gfc);
     }
 
@@ -211,7 +211,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
      * Remove graphics from the component
      * @param remove graphics to remove
      */
-    public final void removeGraphics(Iterable<? extends Graphic> remove) {
+    public final void removeGraphics(Iterable<? extends Graphic<Graphics2D>> remove) {
         root.removeGraphics(remove);
     }
 
@@ -219,7 +219,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
      * Remove a single graphic from the component
      * @param gfc graphic to remove
      */
-    public void removeGraphic(Graphic gfc) {
+    public void removeGraphic(Graphic<Graphics2D> gfc) {
         root.removeGraphic(gfc);
     }
 

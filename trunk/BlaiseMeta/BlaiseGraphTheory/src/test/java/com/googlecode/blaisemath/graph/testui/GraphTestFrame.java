@@ -42,8 +42,8 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.RollupPanel;
-import com.googlecode.blaisemath.util.geom.PointUtils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -74,7 +74,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         final Graph<Integer> graph = new EdgeProbabilityGraphSupplier(false, 50, .05f).get();
         plot.setGraph(graph);
         plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
-        PanAndZoomHandler.zoomBoxAnimated(plot, PointUtils.boundingBox(plot.getLayoutManager().getLocations().values(), 5));
+        PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getLocations().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
                 Integer i = (Integer) o;

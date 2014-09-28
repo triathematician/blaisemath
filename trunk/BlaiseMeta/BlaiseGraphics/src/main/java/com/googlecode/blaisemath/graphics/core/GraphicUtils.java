@@ -35,17 +35,17 @@ import com.googlecode.blaisemath.style.StyleHints;
 public class GraphicUtils {
     
     /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
+    private static final Predicate<Graphic<?>> VISIBLE_FILTER = new Predicate<Graphic<?>>(){
         @Override
-        public boolean apply(Graphic input) { 
+        public boolean apply(Graphic<?> input) { 
             return !StyleHints.isInvisible(input.getStyleHints());
         }
     };
     
     /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic> FUNCTIONAL_FILTER = new Predicate<Graphic>(){
+    private static final Predicate<Graphic<?>> FUNCTIONAL_FILTER = new Predicate<Graphic<?>>(){
         @Override
-        public boolean apply(Graphic input) { 
+        public boolean apply(Graphic<?> input) { 
             return StyleHints.isFunctional(input.getStyleHints());
         }
     };
@@ -58,7 +58,7 @@ public class GraphicUtils {
      * Return visibility filter for graphics.
      * @return visible filter
      */
-    public static Predicate<Graphic> visibleFilter() {
+    public static Predicate<Graphic<?>> visibleFilter() {
         return VISIBLE_FILTER;
     }
     
@@ -66,7 +66,7 @@ public class GraphicUtils {
      * Return functional filter for graphics.
      * @return functional filter
      */
-    public static Predicate<Graphic> functionalFilter() {
+    public static Predicate<Graphic<?>> functionalFilter() {
         return FUNCTIONAL_FILTER;
     }
 
@@ -75,7 +75,7 @@ public class GraphicUtils {
      * @param gr the graphic
      * @return true if hidden
      */
-    public static boolean isInvisible(Graphic gr) {
+    public static boolean isInvisible(Graphic<?> gr) {
         return !visibleFilter().apply(gr);
     }
 
@@ -84,7 +84,7 @@ public class GraphicUtils {
      * @param gr the graphic
      * @return true if invisible
      */
-    public static boolean isFunctional(Graphic gr) {
+    public static boolean isFunctional(Graphic<?> gr) {
         return functionalFilter().apply(gr);
     }
     

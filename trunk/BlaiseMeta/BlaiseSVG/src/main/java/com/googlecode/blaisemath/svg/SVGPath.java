@@ -25,11 +25,13 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import com.google.common.collect.Lists;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * <p>
@@ -40,70 +42,110 @@ import java.util.List;
  */
 public final class SVGPath extends SVGElement {
 
+    private static final PathConverter CONVERTER_INST = new PathConverter();
+    
+    private String pathStr;
+    
     public SVGPath() {
         super("path");
     }
     
-    public static GeneralPath toPath(String svg) {
-        GeneralPath gp = new GeneralPath();
-        // ensure spaces follow every letter
-        svg = svg.replaceAll("[A-Za-z]", " $0 ").trim();
-        String[] spl = svg.split("[\\s,]+");
-        float[] curveRes = null;
-        float[] quadCurveRes = null;
-        for (int pos = 0; pos < spl.length; pos++) {
-            String s = spl[pos].trim();
-            if (s.length() != 1) {
-                throw new IllegalArgumentException("invalid comand: " + s + "   svg:\n"+svg);
-            }
-            boolean rel = Character.isLowerCase(s.charAt(0));
-            float[] cur = gp.getCurrentPoint() == null ? null
-                    : new float[] { (float) gp.getCurrentPoint().getX(), (float) gp.getCurrentPoint().getY() };
-            float[] add = rel ? cur : new float[] { 0, 0 };
-            float[] coords = values(spl, pos+1);
-            pos += coords.length;
-            int ch = s.toLowerCase().charAt(0);
-            switch (ch) {
-                case 'm':
-                    move(gp, coords, add);
-                    curveRes = null;
-                    quadCurveRes = null;
-                    break;
-                case 'l':
-                case 'h':
-                case 'v':
-                    line(gp, coords, ch, cur, add);
-                    curveRes = null;
-                    quadCurveRes = null;
-                    break;
-                case 'c':
-                case 's':
-                    curveRes = curve(gp, coords, ch, add, cur, curveRes);
-                    quadCurveRes = null;
-                    break;
-                case 'q':
-                case 't':
-                    quadCurveRes = quadCurve(gp, coords, ch, add, cur, quadCurveRes);
-                    curveRes = null;
-                    break;
-                case 'a':
-                    arc(gp, coords, add);
-                    curveRes = null;
-                    quadCurveRes = null;
-                    break;
-                case 'z':
-                    gp.closePath();
-                    break;
-                default:
-                    throw new IllegalArgumentException(svg);
-                
-            }
-        }
-        return gp;
+    public SVGPath(String pathStr) {
+        super("path");
+        this.pathStr = pathStr;
     }
     
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlElement(name="???")
+    public String getPathStr() {
+        return pathStr;
+    }
+
+    public void setPathStr(String pathStr) {
+        this.pathStr = pathStr;
+    }
+    
+    //</editor-fold>
+    
+    public static Converter<SVGPath, GeneralPath> shapeConverter() {
+        return CONVERTER_INST;
+    }
+    
+    private static final class PathConverter extends Converter<SVGPath, GeneralPath> {
+        @Override
+        protected GeneralPath doForward(SVGPath path) {
+            String svg = path.pathStr;
+            GeneralPath gp = new GeneralPath();
+            // ensure spaces follow every letter
+            svg = svg.replaceAll("[A-Za-z]", " $0 ").trim();
+            String[] spl = svg.split("[\\s,]+");
+            float[] curveRes = null;
+            float[] quadCurveRes = null;
+            for (int pos = 0; pos < spl.length; pos++) {
+                String s = spl[pos].trim();
+                if (s.length() != 1) {
+                    throw new IllegalArgumentException("invalid comand: " + s + "   svg:\n"+svg);
+                }
+                boolean rel = Character.isLowerCase(s.charAt(0));
+                float[] cur = gp.getCurrentPoint() == null ? null
+                        : new float[] { (float) gp.getCurrentPoint().getX(), (float) gp.getCurrentPoint().getY() };
+                float[] add = rel ? cur : new float[] { 0, 0 };
+                float[] coords = values(spl, pos+1);
+                pos += coords.length;
+                int ch = s.toLowerCase().charAt(0);
+                switch (ch) {
+                    case 'm':
+                        move(gp, coords, add);
+                        curveRes = null;
+                        quadCurveRes = null;
+                        break;
+                    case 'l':
+                    case 'h':
+                    case 'v':
+                        line(gp, coords, ch, cur, add);
+                        curveRes = null;
+                        quadCurveRes = null;
+                        break;
+                    case 'c':
+                    case 's':
+                        curveRes = curve(gp, coords, ch, add, cur, curveRes);
+                        quadCurveRes = null;
+                        break;
+                    case 'q':
+                    case 't':
+                        quadCurveRes = quadCurve(gp, coords, ch, add, cur, quadCurveRes);
+                        curveRes = null;
+                        break;
+                    case 'a':
+                        arc(gp, coords, add);
+                        curveRes = null;
+                        quadCurveRes = null;
+                        break;
+                    case 'z':
+                        gp.closePath();
+                        break;
+                    default:
+                        throw new IllegalArgumentException(svg);
+
+                }
+            }
+            return gp;
+        }
+
+        @Override
+        protected SVGPath doBackward(GeneralPath b) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+    
     /** Move through list of coordinates */
-    static void move(GeneralPath gp, float[] coords, float[] add) {
+    private static void move(GeneralPath gp, float[] coords, float[] add) {
         for (int i = 0; i < coords.length-1; i++) {
             gp.moveTo(coords[i]+add[0], coords[i+1]+add[1]);
         }
@@ -112,7 +154,7 @@ public final class SVGPath extends SVGElement {
     /** 
      * Draw successive lines through list of coordinates 
      */
-    static void line(GeneralPath gp, float[] coords, int ch, float[] cur, float[] add) {
+    private static void line(GeneralPath gp, float[] coords, int ch, float[] cur, float[] add) {
         switch(ch) {
             case 'l':
                 for (int i = 0; i < coords.length-1; i++) {
@@ -144,7 +186,7 @@ public final class SVGPath extends SVGElement {
      * @param last coordinates of last control point
      * @return last control point used in this segment of draw
      */
-    static float[] quadCurve(GeneralPath gp, float[] coords, int ch, float[] add, float[] cur, float[] last) {
+    private static float[] quadCurve(GeneralPath gp, float[] coords, int ch, float[] add, float[] cur, float[] last) {
         switch(ch) {
             case 'q':
                 for (int i = 0; i < coords.length-3; i++) {
@@ -166,7 +208,7 @@ public final class SVGPath extends SVGElement {
         return last;
     }
     
-    static float[] curve(GeneralPath gp, float[] coords, int ch, float[] add, float[] cur, float[] last) {    
+    private static float[] curve(GeneralPath gp, float[] coords, int ch, float[] add, float[] cur, float[] last) {    
         switch(ch) {
             case 'c':
                 for (int i = 0; i < coords.length-5; i++) {
@@ -191,7 +233,7 @@ public final class SVGPath extends SVGElement {
         return last;
     }
     
-    static void arc(GeneralPath gp, float[] coords, float[] add) {
+    private static void arc(GeneralPath gp, float[] coords, float[] add) {
         for (int i = 0; i < coords.length-6; i+=6) {
             arcTo(gp, coords[i], coords[i+1], coords[i+2], coords[i+3]==1f, coords[i+4]==1f, coords[i+5]+add[0], coords[i+6]+add[1]);
         }
@@ -208,7 +250,7 @@ public final class SVGPath extends SVGElement {
      * @param x
      * @param y 
      */
-    public static final void arcTo(GeneralPath path, float rx, float ry, float theta, boolean largeArcFlag, boolean sweepFlag, float x, float y) {
+    private static final void arcTo(GeneralPath path, float rx, float ry, float theta, boolean largeArcFlag, boolean sweepFlag, float x, float y) {
             // Ensure radii are valid
             if (rx == 0 || ry == 0) {
                     path.lineTo(x, y);
@@ -327,5 +369,7 @@ public final class SVGPath extends SVGElement {
         }
         return res;
     }
+    
+    //</editor-fold>
 
 }

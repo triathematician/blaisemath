@@ -26,6 +26,8 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
+import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -42,7 +44,7 @@ public abstract class SVGElement {
 
     private final String tag;
     protected String id;
-    private AttributeSet style = new AttributeSet();
+    private AttributeSet style = null;
 
     public SVGElement(String tag) {
         this.tag = tag;
@@ -82,11 +84,12 @@ public abstract class SVGElement {
 
     @XmlAttribute
     @XmlJavaTypeAdapter(AttributeSetAdapter.class)
+    @Nullable
     public AttributeSet getStyle() {
         return style;
     }
 
-    public void setStyle(AttributeSet style) {
+    public void setStyle(@Nullable AttributeSet style) {
         this.style = style;
     }
     

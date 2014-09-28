@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.visometry;
 import com.google.common.base.Objects;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.util.Points;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -56,7 +56,7 @@ public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
                 public void propertyChange(PropertyChangeEvent evt) {
                     setPoint(parent.getVisometry().toLocal(windowGraphic.getPrimitive()));
                     windowGraphic.setDefaultTooltip(
-                            point instanceof Point2D ? PointUtils.formatPoint((Point2D) point, 2)
+                            point instanceof Point2D ? Points.formatPoint((Point2D) point, 2)
                             : point + "");
                 }
             }
@@ -99,7 +99,7 @@ public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
         windowGraphic.setPrimitive(processor.convert(point, vis));
         windowGraphic.setDragEnabled(true);
         windowGraphic.setDefaultTooltip(
-                point instanceof Point2D ? PointUtils.formatPoint((Point2D) point, 2)
+                point instanceof Point2D ? Points.formatPoint((Point2D) point, 2)
                 : point + "");
         setUnconverted(false);
     }

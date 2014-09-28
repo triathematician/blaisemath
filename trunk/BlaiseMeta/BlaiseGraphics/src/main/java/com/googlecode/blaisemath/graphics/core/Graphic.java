@@ -86,7 +86,7 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     public static final String POPUP_ENABLED = "popupmenu-enabled";
     
     /** Stores the parent of this entry */
-    protected GraphicComposite parent;
+    protected GraphicComposite<G> parent;
     /** Modifiers that are applied to the style before drawing. */
     protected AttributeSet styleHints = new AttributeSet();
     /** Default text of tooltip */

@@ -35,7 +35,6 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
-import com.googlecode.blaisemath.graphics.swing.BasicPointStyleEditor;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -48,11 +47,12 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.ColorUtils;
+import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
+import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
-import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.util.Points;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -139,7 +139,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
         bp.addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
             public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
                 Point2D pt = bp.getPoint(bp.indexOf(point));
-                menu.add(PointUtils.formatPoint(pt, 2));
+                menu.add(Points.formatPoint(pt, 2));
                 menu.add(getContext().getActionMap().get("editPointSetStyle"));
             }
         });
@@ -217,7 +217,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             public AttributeSet apply(Integer src) {
                 r.put(Styles.MARKER_RADIUS, src+2);
                 r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
-                r.put(Styles.STROKE, ColorUtils.lighterThan(r.getColor(Styles.FILL)));
+                r.put(Styles.STROKE, Colors.lighterThan(r.getColor(Styles.FILL)));
                 return r;
             }
         });

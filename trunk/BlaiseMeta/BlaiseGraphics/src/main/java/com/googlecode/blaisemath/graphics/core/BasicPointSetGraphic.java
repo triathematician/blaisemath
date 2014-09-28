@@ -27,9 +27,9 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.Points;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import javax.annotation.Nullable;
@@ -151,7 +151,7 @@ public class BasicPointSetGraphic<G> extends PrimitiveArrayGraphic<Point2D,G> {
     public String getPointTooltip(Point2D pt) {
         Preconditions.checkNotNull(pt);
         return pointTipper == null
-                ? PointUtils.formatPoint(pt, 1)
+                ? Points.formatPoint(pt, 1)
                 : pointTipper.apply(pt);
     }
     

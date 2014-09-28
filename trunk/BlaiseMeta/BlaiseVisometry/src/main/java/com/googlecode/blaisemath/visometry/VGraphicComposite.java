@@ -25,12 +25,12 @@ package com.googlecode.blaisemath.visometry;
  */
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.style.StyleContext;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Encapsulates a collection of {@link VGraphic}s.
@@ -234,12 +234,12 @@ public class VGraphicComposite<C,G> extends VGraphicSupport<C,G> {
     }
 
     protected void updateEntries() {
-        List<Graphic> oldWindowEntries = Lists.newArrayList(windowEntry.getGraphics());
-        List<Graphic> toAdd = Lists.newArrayList();
-        List<Graphic> toRemove = Lists.newArrayList(oldWindowEntries);
+        List<Graphic<G>> oldWindowEntries = Lists.newArrayList(windowEntry.getGraphics());
+        List<Graphic<G>> toAdd = Lists.newArrayList();
+        List<Graphic<G>> toRemove = Lists.newArrayList(oldWindowEntries);
 
         for (VGraphic<C,G> e : entries) {
-            Graphic en = e.getWindowGraphic();
+            Graphic<G> en = e.getWindowGraphic();
             if (oldWindowEntries.contains(en)) {
                 toRemove.remove(en);
             } else {

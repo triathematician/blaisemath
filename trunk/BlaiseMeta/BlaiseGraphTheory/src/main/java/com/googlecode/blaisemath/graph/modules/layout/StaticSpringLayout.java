@@ -31,20 +31,20 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.io.PrintStream;
-import java.util.Map;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.OptimizedGraph;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.PointUtils;
+import com.googlecode.blaisemath.util.Points;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.PrintStream;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -198,7 +198,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         Set leafs = og.getLeafNodes();
         int n = leafs.size();
         if (n > 0) {
-            Rectangle2D bounds = PointUtils.boundingBox(pos.values(), SpringLayout.DIST_SCALE);
+            Rectangle2D bounds = Points.boundingBox(pos.values(), SpringLayout.DIST_SCALE);
             if (bounds == null) {
                 // no points exist, so must be all pairs
                 double sqSide = nomSz * Math.sqrt(n);
@@ -269,7 +269,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         double nomSz = SpringLayout.DIST_SCALE/2;
         int n = isolates.size();
         if (n > 0) {
-            Rectangle2D bounds = PointUtils.boundingBox(pos.values(), nomSz);
+            Rectangle2D bounds = Points.boundingBox(pos.values(), nomSz);
             
             Rectangle2D isolateRegion;
             if (bounds == null) {

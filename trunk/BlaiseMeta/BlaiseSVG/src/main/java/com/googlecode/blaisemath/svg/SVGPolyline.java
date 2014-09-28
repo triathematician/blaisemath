@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
+import java.awt.geom.GeneralPath;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,9 +38,27 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name="polyline")
 public final class SVGPolyline extends SVGElement {
+    
+    private static final PolylineConverter CONVERTER_INST = new PolylineConverter();
 
     public SVGPolyline() {
         super("polyline");
+    }
+    
+    public static Converter<SVGPolyline, GeneralPath> shapeConverter() {
+        return CONVERTER_INST;
+    }
+    
+    private static final class PolylineConverter extends Converter<SVGPolyline, GeneralPath> {
+        @Override
+        protected GeneralPath doForward(SVGPolyline a) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected SVGPolyline doBackward(GeneralPath b) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
 }

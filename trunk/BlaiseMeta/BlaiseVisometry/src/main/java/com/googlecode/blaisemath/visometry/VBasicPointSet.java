@@ -26,13 +26,13 @@ package com.googlecode.blaisemath.visometry;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.Points;
 import java.awt.geom.Point2D;
 import java.beans.IndexedPropertyChangeEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.util.geom.PointUtils;
 
 /**
  * An entry for a draggable point at an arbitrary local coordinate.
@@ -151,7 +151,7 @@ public class VBasicPointSet<C,G> extends VGraphicSupport<C,G> {
         public String apply(Point2D src) {
             C local = vis.toLocal(src);
             return local instanceof Point2D 
-                    ? PointUtils.formatPoint((Point2D) local, 2)
+                    ? Points.formatPoint((Point2D) local, 2)
                     : local + "";
         }
     }

@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.ColorUtils;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -56,7 +56,7 @@ public class GradientShapeRenderer extends ShapeRenderer {
             Color fill = style.getColor(Styles.FILL);
             canvas.setPaint(new GradientPaint(
                     (float) bds.getMinX(), (float) bds.getMinY(), fill,
-                    (float) bds.getMaxX(), (float) bds.getMaxY(), ColorUtils.blanderThan(fill)));
+                    (float) bds.getMaxX(), (float) bds.getMaxY(), Colors.blanderThan(fill)));
             canvas.fill(primitive);
         }
         

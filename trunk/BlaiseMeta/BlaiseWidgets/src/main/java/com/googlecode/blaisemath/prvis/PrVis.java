@@ -27,7 +27,21 @@ package com.googlecode.blaisemath.prvis;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.prvis.PrModel.PrEntry;
+import com.googlecode.blaisemath.prvis.Units.Distance;
+import com.googlecode.blaisemath.prvis.Units.Speed;
+import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -36,20 +50,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.prvis.PrModel.PrEntry;
-import com.googlecode.blaisemath.prvis.Units.Distance;
-import com.googlecode.blaisemath.prvis.Units.Speed;
-import com.googlecode.blaisemath.style.Anchor;
-import com.googlecode.blaisemath.style.Markers;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
-import java.awt.Graphics2D;
-import java.awt.Shape;
 
 /**
  *

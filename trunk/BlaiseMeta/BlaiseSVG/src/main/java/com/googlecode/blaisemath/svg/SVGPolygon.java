@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
+import java.awt.geom.GeneralPath;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,9 +38,27 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name="polygon")
 public final class SVGPolygon extends SVGElement {
+    
+    private static final PolygonConverter CONVERTER_INST = new PolygonConverter();
 
     public SVGPolygon() {
         super("polygon");
+    }
+    
+    public static Converter<SVGPolygon, GeneralPath> shapeConverter() {
+        return CONVERTER_INST;
+    }
+    
+    private static final class PolygonConverter extends Converter<SVGPolygon, GeneralPath> {
+        @Override
+        protected GeneralPath doForward(SVGPolygon a) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected SVGPolygon doBackward(GeneralPath b) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
 }

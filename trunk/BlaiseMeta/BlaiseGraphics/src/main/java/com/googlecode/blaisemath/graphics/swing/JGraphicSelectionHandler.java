@@ -24,9 +24,9 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.core.Graphic;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
@@ -60,7 +60,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     /** Determines which objects can be selected */
     private final JGraphicComponent component;
     /** Model of selected items */
-    private final SetSelectionModel<Graphic> selection = new SetSelectionModel<Graphic>();
+    private final SetSelectionModel<Graphic<Graphics2D>> selection = new SetSelectionModel<Graphic<Graphics2D>>();
     
     /** Style for drawing selection box */
     private AttributeSet selectionBoxStyle = Styles.fillStroke(
@@ -98,7 +98,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
     // PROPERTIES
     //
 
-    public SetSelectionModel<Graphic> getSelectionModel() {
+    public SetSelectionModel<Graphic<Graphics2D>> getSelectionModel() {
         return selection;
     }
 
@@ -110,7 +110,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         if (this.enabled != enabled) {
             this.enabled = enabled;
             if (!enabled) {
-                selection.setSelection(Collections.<Graphic>emptySet());
+                selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
             }
         }
     }
@@ -158,12 +158,12 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
             return;
         }
         if (!e.isControlDown()) {
-            selection.setSelection(Collections.<Graphic>emptySet());
+            selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
             return;
         }
-        Graphic g = component.selectableGraphicAt(e.getPoint());
+        Graphic<Graphics2D> g = component.selectableGraphicAt(e.getPoint());
         if (g == null) {
-            selection.setSelection(Collections.<Graphic>emptySet());
+            selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
         } else if (e.isShiftDown()) {
             selection.removeSelection(g);
         } else if (e.isAltDown()) {
@@ -213,9 +213,9 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
                     component.toGraphicCoordinate(releasePt));
         }
         if (selectionBox.getWidth() > 0 && selectionBox.getHeight() > 0) {
-            Set<Graphic> gg = component.getGraphicRoot().selectableGraphicsIn(selectionBox);
+            Set<Graphic<Graphics2D>> gg = component.getGraphicRoot().selectableGraphicsIn(selectionBox);
             if (e.isShiftDown()) {
-                Set<Graphic> res = Sets.newHashSet(selection.getSelection());
+                Set<Graphic<Graphics2D>> res = Sets.newHashSet(selection.getSelection());
                 res.removeAll(gg);
                 gg = res;
             } else if (e.isAltDown()) {

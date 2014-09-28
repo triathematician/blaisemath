@@ -32,7 +32,6 @@ import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.BasicPointStyleEditor;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
@@ -43,10 +42,11 @@ import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.ColorUtils;
+import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
+import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Colors;
 import com.googlecode.blaisemath.util.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
 import com.googlecode.blaisemath.visometry.VBasicPoint;
 import com.googlecode.blaisemath.visometry.VBasicPointSet;
 import com.googlecode.blaisemath.visometry.VBasicPolygonalPath;
@@ -224,7 +224,7 @@ public class BlaiseGraphicsTest extends SingleFrameApplication {
             public AttributeSet apply(Integer src) {
                 r.put(Styles.MARKER_RADIUS, src+2);
                 r.put(Styles.FILL, new Color((src*10+10) % 255, (src*20+25) % 255, (src*30+50) % 255));
-                r.put(Styles.STROKE, ColorUtils.lighterThan(r.getColor(Styles.FILL)));
+                r.put(Styles.STROKE, Colors.lighterThan(r.getColor(Styles.FILL)));
                 return r;
             }
         });

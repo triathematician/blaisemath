@@ -24,11 +24,11 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.googlecode.blaisemath.svg.SVGPath;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.Styles;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.geom.GeneralPath;
 
 /**
  *
@@ -36,6 +36,8 @@ import java.awt.geom.GeneralPath;
  */
 public class SVGTool extends javax.swing.JFrame {
 
+    private SVGGraphic gsvg;
+    
     /**
      * Creates new form SVGTool
      */
@@ -44,6 +46,10 @@ public class SVGTool extends javax.swing.JFrame {
         setMinimumSize(new Dimension(400,400));
         setPreferredSize(new Dimension(500,500));
         setMaximumSize(new Dimension(600,600));
+        gsvg = new SVGGraphic();
+        gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
+        canvas.addGraphic(gsvg);
+        new PanAndZoomHandler(canvas);
     }
 
     /**
@@ -63,7 +69,7 @@ public class SVGTool extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         text = new javax.swing.JTextArea();
-        canvas = new com.googlecode.blaisemath.svg.JGraphicComponentSVG();
+        canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,20 +108,6 @@ public class SVGTool extends javax.swing.JFrame {
         jScrollPane2.setViewportView(text);
 
         jSplitPane1.setRightComponent(jScrollPane2);
-
-        canvas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 255), 5));
-
-        javax.swing.GroupLayout canvasLayout = new javax.swing.GroupLayout(canvas);
-        canvas.setLayout(canvasLayout);
-        canvasLayout.setHorizontalGroup(
-            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 440, Short.MAX_VALUE)
-        );
-        canvasLayout.setVerticalGroup(
-            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 397, Short.MAX_VALUE)
-        );
-
         jSplitPane1.setLeftComponent(canvas);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
@@ -124,10 +116,7 @@ public class SVGTool extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String svg = text.getText();
-        GeneralPath gp = SVGPath.toPath(svg);
-        PrimitiveGraphic g = JGraphics.shape(gp);
-        canvas.addGraphic(g);
+        gsvg.setElement(new SVGPath(text.getText()));
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -165,7 +154,7 @@ public class SVGTool extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.googlecode.blaisemath.svg.JGraphicComponentSVG canvas;
+    private com.googlecode.blaisemath.graphics.swing.JGraphicComponent canvas;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
