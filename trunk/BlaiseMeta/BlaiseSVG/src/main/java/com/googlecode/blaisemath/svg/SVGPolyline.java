@@ -52,12 +52,12 @@ public final class SVGPolyline extends SVGElement {
     private static final class PolylineConverter extends Converter<SVGPolyline, GeneralPath> {
         @Override
         protected GeneralPath doForward(SVGPolyline a) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         protected SVGPolyline doBackward(GeneralPath b) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

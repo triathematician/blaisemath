@@ -52,12 +52,12 @@ public final class SVGPolygon extends SVGElement {
     private static final class PolygonConverter extends Converter<SVGPolygon, GeneralPath> {
         @Override
         protected GeneralPath doForward(SVGPolygon a) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         protected SVGPolygon doBackward(GeneralPath b) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 
