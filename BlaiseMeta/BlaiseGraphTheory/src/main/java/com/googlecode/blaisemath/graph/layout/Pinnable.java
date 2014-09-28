@@ -3,7 +3,7 @@
  * Created on Aug 27, 2012
  */
 
-package com.googlecode.blaisemath.graph.layout;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L

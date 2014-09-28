@@ -2,7 +2,7 @@
  * DefaultPinnable.java 
  * Created on Aug 27, 2014
  */
-package com.googlecode.blaisemath.graph.layout;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L

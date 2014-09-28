@@ -30,7 +30,6 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -59,8 +58,8 @@ import javax.swing.event.ChangeListener;
  *
  * @author elisha
  */
-public class BasicPointStyleEditor extends JPanel implements Customizer,
-        ActionListener, ChangeListener, PropertyChangeListener {
+public final class BasicPointStyleEditor extends JPanel implements Customizer,
+        ChangeListener, PropertyChangeListener {
 
     /** The style being edited */
     private AttributeSet style = Styles.defaultPointStyle().copy();
@@ -97,39 +96,51 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         gbc.weightx = 0;
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.EAST;
-        gbc.ipadx = 3; gbc.ipady = 1;
+        gbc.ipadx = 3; 
+        gbc.ipady = 1;
         add(new JLabel("Radius:"), gbc);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         SpinnerNumberModel m1 = new SpinnerNumberModel(5.0, 0.0, 1000.0, 1.0);
-        add(radiusSp = new JSpinner(m1), gbc);
+        radiusSp = new JSpinner(m1);
+        add(radiusSp, gbc);
         radiusSp.setToolTipText("Radius of point");
         radiusSp.addChangeListener(this);
 
         gbc.fill = GridBagConstraints.NONE;
         add(new JLabel(" Fill:"), gbc);
-        add((fillEd = new ColorEditor()).getCustomEditor(), gbc);
+        fillEd = new ColorEditor();
+        add(fillEd.getCustomEditor(), gbc);
         fillEd.addPropertyChangeListener(this);
 
         gbc.gridy = 1;
         add(new JLabel("Outline:"), gbc);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         SpinnerNumberModel m2 = new SpinnerNumberModel(1.0, 0.0, 50.0, 0.5);
-        add(strokeSp = new JSpinner(m2), gbc);
+        strokeSp = new JSpinner(m2);
+        add(strokeSp, gbc);
         strokeSp.setToolTipText("Width of stroke");
         strokeSp.addChangeListener(this);
 
         gbc.fill = GridBagConstraints.NONE;
         add(new JLabel(" Stroke:"), gbc);
-        add((strokeEd = new ColorEditor()).getCustomEditor(), gbc);
+        strokeEd = new ColorEditor();
+        add(strokeEd.getCustomEditor(), gbc);
         strokeEd.addPropertyChangeListener(this);
 
         gbc.gridy = 0;
         gbc.gridheight = 2;
-        gbc.weightx = 0; gbc.weighty = 0.0;
+        gbc.weightx = 0; 
+        gbc.weighty = 0.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(shapeCombo = new JComboBox(Markers.getAvailableMarkers().toArray()), gbc);
+        shapeCombo = new JComboBox(Markers.getAvailableMarkers().toArray());
+        add(shapeCombo, gbc);
         shapeCombo.setRenderer(new ShapeListCellRenderer());
-        shapeCombo.addActionListener(this);
+        shapeCombo.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
+                fireStyleChanged();
+            }
+        });
 
         setObject(style);
         validate();
@@ -165,12 +176,10 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
     //
     // EVENT HANDLING
     //
-
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == shapeCombo) {
-            style.put(Styles.MARKER, (Marker) shapeCombo.getSelectedItem());
-            firePropertyChange("style", null, style);
-        }
+    
+    private void fireStyleChanged() {
+        shapeCombo.repaint();
+        firePropertyChange("style", null, style);
     }
 
     public void stateChanged(ChangeEvent e) {
@@ -181,20 +190,18 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
         } else {
             return;
         }
-        shapeCombo.repaint();
-        firePropertyChange("style", null, style);
+        fireStyleChanged();
     }
 
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getSource() == fillEd) {
-            style.put(Styles.FILL, (Color) (fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue()));
+            style.put(Styles.FILL, fillEd.getNewValue() == null ? fillEd.getValue() : fillEd.getNewValue());
         } else if (e.getSource() == strokeEd) {
-            style.put(Styles.STROKE, (Color) (strokeEd.getNewValue() == null ? strokeEd.getValue() : strokeEd.getNewValue()));
+            style.put(Styles.STROKE, strokeEd.getNewValue() == null ? strokeEd.getValue() : strokeEd.getNewValue());
         } else {
             return;
         }
-        shapeCombo.repaint();
-        firePropertyChange("style", null, style);
+        fireStyleChanged();
     }
 
 
@@ -230,8 +237,13 @@ public class BasicPointStyleEditor extends JPanel implements Customizer,
             style.put(Styles.MARKER, shape1);
         }
 
-        public int getIconWidth() { return 50; }
-        public int getIconHeight() { return 50; }
+        public int getIconWidth() { 
+            return 50;
+        }
+
+        public int getIconHeight() {
+            return 50;
+        }
     }
 
 }
