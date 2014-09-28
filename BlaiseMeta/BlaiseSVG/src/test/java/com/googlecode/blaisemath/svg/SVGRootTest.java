@@ -42,6 +42,7 @@ package com.googlecode.blaisemath.svg;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import org.junit.Test;
+import testutil.JAXBTestUtils;
 
 /**
  * @author petereb1
@@ -49,10 +50,11 @@ import org.junit.Test;
 public class SVGRootTest {
     
     @Test
-    public void testSVG() throws JAXBException {
+    public void testSerialize() throws JAXBException {
         SVGRoot r = new SVGRoot();
+        r.addElement(new SVGRectangle());
         JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-        JAXBTestUtils.testRecycleObject(r, jc, false, false);
+        JAXBTestUtils.testRecycleObject(r, jc, false, false, System.out);
     }
 
 }

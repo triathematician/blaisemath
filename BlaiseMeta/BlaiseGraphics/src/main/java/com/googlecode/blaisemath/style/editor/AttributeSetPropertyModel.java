@@ -2,7 +2,7 @@
  * AttributeSetEditInfo.java
  * Created Sep 18, 2014
  */
-package com.googlecode.blaisemath.style;
+package com.googlecode.blaisemath.style.editor;
 
 /*
  * #%L
@@ -30,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.firestarter.PropertyModelSupport;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.Component;
 import java.util.List;
 import java.util.Map;

@@ -35,10 +35,10 @@ import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
@@ -135,7 +135,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     //
     
     private synchronized void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
-        List<Graphic> addMe = Lists.newArrayList();
+        List<Graphic<G>> addMe = Lists.newArrayList();
         if (added != null) {
             for (Entry<S, Point2D> en : added.entrySet()) {
                 S src = en.getKey();
@@ -167,7 +167,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
 
     @Override
-    public void graphicChanged(Graphic source) {
+    public void graphicChanged(Graphic<G> source) {
         if (!updatingPoint && source instanceof LabeledPointGraphic) {
             LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
             manager.put(dpg.getSourceObject(), dpg.getPrimitive());

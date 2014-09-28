@@ -25,10 +25,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import java.awt.geom.Line2D;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 @XmlRootElement(name="line")
 public final class SVGLine extends SVGElement {
     
-    public static final Adapter ADAPTER = new Adapter();
+    private static final LineConverter CONVERTER_INST = new LineConverter();
      
     private double x1;
     private double y1;
@@ -101,13 +101,16 @@ public final class SVGLine extends SVGElement {
     
     //</editor-fold>
 
+    public static Converter<SVGLine, Line2D> shapeConverter() {
+        return CONVERTER_INST;
+    }
     
-    public static class Adapter extends XmlAdapter<SVGLine, Line2D> {
-        public SVGLine marshal(Line2D r) {
+    private static final class LineConverter extends Converter<SVGLine, Line2D> {
+        protected SVGLine doBackward(Line2D r) {
             return new SVGLine(r.getX1(), r.getY1(), r.getX2(), r.getY2());
         }
 
-        public Line2D unmarshal(SVGLine r) {
+        protected Line2D doForward(SVGLine r) {
             return new Line2D.Double(r.x1, r.y1, r.x2, r.y2);
         }
     }

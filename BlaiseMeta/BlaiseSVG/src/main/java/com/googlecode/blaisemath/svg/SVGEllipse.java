@@ -25,10 +25,10 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import java.awt.geom.Ellipse2D;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 @XmlRootElement(name="ellipse")
 public final class SVGEllipse extends SVGElement {
     
-    public static final Adapter ADAPTER = new Adapter();
+    private static final EllipseConverter CONVERTER_INST = new EllipseConverter();
     
     private double cx;
     private double cy;
@@ -56,6 +56,10 @@ public final class SVGEllipse extends SVGElement {
         this.cy = cy;
         this.rx = rx;
         this.ry = ry;
+    }
+
+    public static Converter<SVGEllipse, Ellipse2D> shapeConverter() {
+        return CONVERTER_INST;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -102,12 +106,14 @@ public final class SVGEllipse extends SVGElement {
     //</editor-fold>
 
     
-    public static class Adapter extends XmlAdapter<SVGEllipse, Ellipse2D> {
-        public SVGEllipse marshal(Ellipse2D r) {
+    private static final class EllipseConverter extends Converter<SVGEllipse, Ellipse2D> {
+        @Override
+        protected SVGEllipse doBackward(Ellipse2D r) {
             return new SVGEllipse(r.getCenterX(), r.getCenterY(), r.getWidth()/2, r.getHeight()/2);
         }
 
-        public Ellipse2D unmarshal(SVGEllipse r) {
+        @Override
+        protected Ellipse2D doForward(SVGEllipse r) {
             return new Ellipse2D.Double(r.cx-r.rx, r.cy-r.ry, 2*r.rx, 2*r.ry);
         }
     }

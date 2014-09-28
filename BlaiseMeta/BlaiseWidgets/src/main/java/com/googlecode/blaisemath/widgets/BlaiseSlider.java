@@ -24,6 +24,15 @@ package com.googlecode.blaisemath.widgets;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.core.GMouseDragHandler;
+import com.googlecode.blaisemath.graphics.core.GMouseEvent;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.style.Anchor;
+import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -35,15 +44,6 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import com.googlecode.blaisemath.graphics.core.GMouseDragHandler;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.core.GMouseEvent;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.style.Anchor;
-import com.googlecode.blaisemath.style.AttributeSet;
-import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
 
 /**
  * <p>

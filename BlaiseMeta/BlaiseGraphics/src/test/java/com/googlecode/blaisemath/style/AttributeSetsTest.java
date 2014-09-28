@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.googlecode.blaisemath.svg;
+package com.googlecode.blaisemath.style;
 
 /*
  * #%L
@@ -25,8 +25,6 @@ package com.googlecode.blaisemath.svg;
  */
 
 
-import com.googlecode.blaisemath.svg.AttributeSetAdapter;
-import com.googlecode.blaisemath.style.Styles;
 import java.awt.Color;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -35,16 +33,22 @@ import org.junit.Test;
  *
  * @author Elisha
  */
-public class AttributeSetAdapterTest {
+public class AttributeSetsTest {
 
-    /**
-     * Test of convertStyleAttributeSetAdapter method, of class AttributeSetAdapter.
-     */
     @Test
-    public void testToSVG() throws Exception {
-        System.out.println("toSVG");
+    public void testConvertToText() throws Exception {
+        System.out.println("testConvertToText");
         assertEquals("fill:#ff0000; stroke:#00ff00", 
-                AttributeSetAdapter.INST.marshal(Styles.fillStroke(Color.red, Color.green)));
+                AttributeSets.stringConverter().convert(Styles.fillStroke(Color.red, Color.green)));
+    }
+
+    @Test
+    public void testConvertFromText() throws Exception {
+        System.out.println("testConvertFromText");
+        AttributeSet as = AttributeSets.stringConverter().reverse().convert("fill:  #ff0000 ; stroke :#00ff00;");
+        assertEquals(2, as.getAttributes().size());
+        assertEquals(Color.red, as.get(Styles.FILL));
+        assertEquals(Color.green, as.get(Styles.STROKE));
     }
     
 }

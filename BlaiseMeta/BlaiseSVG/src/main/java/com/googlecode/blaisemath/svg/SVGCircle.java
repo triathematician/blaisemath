@@ -25,11 +25,11 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.awt.geom.Ellipse2D;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 @XmlRootElement(name="circle")
 public final class SVGCircle extends SVGElement {
     
-    public static final Adapter ADAPTER = new Adapter();
+    private static final CircleConverter CONVERTER_INST = new CircleConverter();
     
     private double cx;
     private double cy;
@@ -55,6 +55,10 @@ public final class SVGCircle extends SVGElement {
         this.cx = cx;
         this.cy = cy;
         this.r = r;
+    }
+
+    public static Converter<SVGCircle, Ellipse2D> shapeConverter() {
+        return CONVERTER_INST;
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -92,13 +96,13 @@ public final class SVGCircle extends SVGElement {
     //</editor-fold>
 
     
-    public static class Adapter extends XmlAdapter <SVGCircle, Ellipse2D> {
-        public SVGCircle marshal(Ellipse2D r) {
+    private static final class CircleConverter extends Converter<SVGCircle, Ellipse2D> {
+        protected SVGCircle doBackward(Ellipse2D r) {
             checkArgument(r.getWidth() == r.getHeight(), "Ellipse must have width=height");
             return new SVGCircle(r.getCenterX(), r.getCenterY(), r.getWidth()/2);
         }
 
-        public Ellipse2D unmarshal(SVGCircle r) {
+        protected Ellipse2D doForward(SVGCircle r) {
             return new Ellipse2D.Double(r.cx-r.r, r.cy-r.r, 2*r.r, 2*r.r);
         }
     }

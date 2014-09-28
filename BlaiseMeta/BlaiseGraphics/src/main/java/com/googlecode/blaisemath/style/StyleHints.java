@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.style;
  */
 
 
-import com.googlecode.blaisemath.util.ColorUtils;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
 import javax.annotation.Nullable;
 
@@ -62,9 +62,9 @@ public class StyleHints {
         if (color == null) {
             return null;
         } else if (hints.getBoolean(HIDDEN_HINT, false)) {
-            return ColorUtils.alpha(color, 0);
+            return Colors.alpha(color, 0);
         } else if (hints.getBoolean(HILITE_HINT, false)) {
-            return ColorUtils.lighterThan(color);
+            return Colors.lighterThan(color);
         } else if (hints.getBoolean(SELECTED_HINT, false)) {
             return color;
         } else {

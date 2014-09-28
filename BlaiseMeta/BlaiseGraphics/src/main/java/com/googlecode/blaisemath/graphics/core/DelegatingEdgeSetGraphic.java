@@ -73,7 +73,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     /** Point manager. Maintains objects and their locations, and enables mouse dragging. */
     protected CoordinateManager<S, Point2D> pointManager;
     /** Listener for changes to coordinates */
-    private final CoordinateListener coordListener;
+    private final CoordinateListener<S, Point2D> coordListener;
     
     /**
      * Initialize with default coordinate manager.
@@ -89,10 +89,10 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
      */
     public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr,
             Renderer<Shape,G> edgeRenderer) {
-        coordListener = new CoordinateListener(){
+        coordListener = new CoordinateListener<S,Point2D>(){
             @Override
-            public void coordinatesChanged(CoordinateChangeEvent evt) {
-                updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic>());
+            public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
+                updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic<G>>());
             }
         };
         
@@ -103,8 +103,8 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     
     //<editor-fold defaultstate="collapsed" desc="coordinate updates">
 
-    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic> removeMe) {
-        List<Graphic> addMe = new ArrayList<Graphic>();
+    private void updateEdgeGraphics(Map<S,Point2D> locs, List<Graphic<G>> removeMe) {
+        List<Graphic<G>> addMe = new ArrayList<Graphic<G>>();
         for (E edge : Sets.newLinkedHashSet(edges.keySet())) {
             DelegatingPrimitiveGraphic<E,Shape,G> dsg = edges.get(edge);
             Point2D p1 = locs.get(edge.getNode1());
@@ -149,7 +149,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             }
             this.pointManager = pointManager;
             this.pointManager.addCoordinateListener(coordListener);
-            updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic>());
+            updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic<G>>());
         }
     }
 
@@ -180,7 +180,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             }
         }
         if (!removeMe.isEmpty() || !addMe.isEmpty()) {
-            List<Graphic> remove = new ArrayList<Graphic>();
+            List<Graphic<G>> remove = new ArrayList<Graphic<G>>();
             for (E e : removeMe) {
                 remove.add(edges.remove(e));
             }
@@ -237,9 +237,9 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
 
 
     @Override
-    public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
+    public void initContextMenu(JPopupMenu menu, Graphic<G> src, Point2D point, Object focus, Set selection) {
         // provide additional info for context menu
-        Graphic gfc = graphicAt(point);
+        Graphic<G> gfc = graphicAt(point);
         super.initContextMenu(menu, this, point, 
                 gfc instanceof DelegatingPrimitiveGraphic ? ((DelegatingPrimitiveGraphic)gfc).getSourceObject() : focus, 
                 selection);

@@ -32,7 +32,7 @@ import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
+import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;

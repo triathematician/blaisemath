@@ -24,15 +24,15 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.Edge;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
-import java.awt.Shape;
 import javax.annotation.Nullable;
 
 /**

@@ -2,7 +2,7 @@
  * BasicPointStyleEditor.java
  * Created Aug 28, 2011
  */
-package com.googlecode.blaisemath.graphics.swing;
+package com.googlecode.blaisemath.style.editor;
 
 /*
  * #%L
@@ -25,14 +25,6 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 import com.googlecode.blaisemath.editor.ColorEditor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.beans.Customizer;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
@@ -45,6 +37,12 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
+import java.beans.Customizer;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
@@ -53,6 +51,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * GUI form for editing a {@link PointRenderer}.

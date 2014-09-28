@@ -25,13 +25,13 @@ package com.googlecode.blaisemath.graphics.swing;
  */
 
 
-import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;

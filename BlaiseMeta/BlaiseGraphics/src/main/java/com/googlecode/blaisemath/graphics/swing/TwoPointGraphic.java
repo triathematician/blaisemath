@@ -24,14 +24,13 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.util.geom.OrientedPoint2D;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
-import java.awt.geom.Point2D;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 
 /**
  * Provides methods for managing a graphic that depends on two underlying points,

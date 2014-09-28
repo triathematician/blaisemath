@@ -25,15 +25,15 @@ package com.googlecode.blaisemath.dev.compoundgraphics;
  * #L%
  */
 
-import java.awt.geom.Point2D;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
-import com.googlecode.blaisemath.util.geom.AnchoredText;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 
 /**
  * Displays a point together with a label.
