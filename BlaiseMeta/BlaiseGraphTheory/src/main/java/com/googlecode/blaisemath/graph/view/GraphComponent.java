@@ -26,10 +26,16 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
+import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
@@ -39,6 +45,8 @@ import com.googlecode.blaisemath.util.Edge;
 import java.awt.Graphics2D;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -163,6 +171,50 @@ public class GraphComponent extends JGraphicComponent {
 
     public void setLayoutAnimating(boolean val) {
         getLayoutManager().setLayoutAnimating(val);
+    }
+
+    public Predicate<Object> getNodeLabelFilter() {
+        return getNodeStyler().getLabelFilter();
+    }
+
+    public void setNodeLabelFilter(Predicate<Object> nodeLabelFilter) {
+        Object old = getNodeStyler().getLabelFilter();
+        if (old != nodeLabelFilter) {
+            getNodeStyler().setLabelFilter(nodeLabelFilter);
+            repaint();
+        }
+    }
+
+    public Function<?, String> getNodeLabelDelegate() {
+        return adapter.getNodeStyler().getLabelDelegate();
+    }
+
+    public void setNodeLabelDelegate(Function<Object, String> labeler) {
+        Object old = getNodeStyler().getLabelDelegate();
+        if (old != labeler) {
+            getNodeStyler().setLabelDelegate(labeler);
+            repaint();
+        }
+    }
+
+    public Set<String> getSelectedNodes() {
+        Set<String> selectedNodes = Sets.newLinkedHashSet();
+        for (DelegatingPrimitiveGraphic dpg : Iterables.filter(getSelectionModel().getSelection(), DelegatingPrimitiveGraphic.class)) {
+            if (dpg.getSourceObject() instanceof String) {
+                selectedNodes.add((String) dpg.getSourceObject());
+            }
+        }
+        return selectedNodes;
+    }
+    
+    public void setSelectedNodes(Collection<String> nodes) {
+        Set<Graphic> newSelection = Sets.newHashSet();
+        for (Object g : adapter.getViewGraph().getPointGraphic().getGraphics()) {
+            if (nodes.contains((String) ((DelegatingPrimitiveGraphic)g).getSourceObject())) {
+                newSelection.add((Graphic) g);
+            }
+        }
+        selector.getSelectionModel().setSelection(newSelection);
     }
 
     //</editor-fold>
