@@ -3,9 +3,10 @@
 
   * [GettingStarted Getting Started]
   * [BlaiseGraphics]
-   * [PrimitiveStyle Primitives and Styles]
   * [Firestarter]
   * [BlaiseMath]
   * [BlaiseParser]
   * [BlaiseVisometry]
   * [BlaiseGraphTheory]
+  * [BlaiseSVG]
+  * [BlaiseWidgets]
