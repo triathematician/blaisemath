@@ -106,12 +106,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     //
     // MOUSE OPERATIONS
     //
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (e.isConsumed()) {
-            return;
-        }
+    
+    private void initMouseGesture(MouseEvent e) {
         mode = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (RECTANGLE_RESIZE_MODE.equals(mode) || PAN_MODE.equals(mode) || RESTRICTED_MOVEMENT_MODE.equals(mode)) {
             pressedAt = e.getPoint();
@@ -127,9 +123,19 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     }
 
     @Override
+    public void mousePressed(MouseEvent e) {
+        if (!e.isConsumed()) {
+            initMouseGesture(e);
+        }
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
-        if (e.isConsumed() || pressedAt == null) {
+        if (e.isConsumed()) {
             return;
+        }
+        if (pressedAt == null) {
+            initMouseGesture(e);
         }
         String mouseMods = MouseEvent.getModifiersExText(e.getModifiersEx());
         if (RECTANGLE_RESIZE_MODE.equals(mode)) {
