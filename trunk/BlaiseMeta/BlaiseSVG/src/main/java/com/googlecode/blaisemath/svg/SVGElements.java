@@ -127,5 +127,15 @@ public class SVGElements {
         res.setStyle(style);
         return res;
     }
+
+    /**
+     * Return true if element is a path type (i.e. no fill expected)
+     * @param el an element
+     * @return true if its a path
+     */
+    public static boolean isPath(SVGElement el) {
+        return el instanceof SVGLine || el instanceof SVGPolyline
+                || el instanceof SVGPath;
+    }
     
 }
