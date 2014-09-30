@@ -80,7 +80,7 @@ public final class SVGText extends SVGElement {
         this.y = y;
     }
 
-    @XmlElement
+    @XmlElement(name="tspan")
     public String getContent() {
         return content;
     }
