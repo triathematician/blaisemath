@@ -110,6 +110,9 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         } else if (sh instanceof SVGGroup || sh instanceof SVGRoot) {
             prim = new GraphicComposite<Graphics2D>();
             ((GraphicComposite)prim).setStyle(sh.getStyle());
+            for (SVGElement el : ((SVGGroup)sh).getElements()) {
+                ((GraphicComposite<Graphics2D>)prim).addGraphic(doForward(el));
+            }
         } else {
             throw new IllegalStateException("Unexpected SVG element: "+sh);
         }

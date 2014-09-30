@@ -24,6 +24,8 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
@@ -37,6 +39,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
+import java.util.List;
 
 /**
  * Factory methods for converting to/from SVG Objects.
@@ -134,8 +137,25 @@ public class SVGElements {
      * @return true if its a path
      */
     public static boolean isPath(SVGElement el) {
-        return el instanceof SVGLine || el instanceof SVGPolyline
-                || el instanceof SVGPath;
+        return el instanceof SVGLine || el instanceof SVGPolyline;
+    }
+    
+    /** 
+     * Return an iterator for an element. Will iterate over this element, and if
+     * a group, all nested children of this element. Groups are added before their
+     * children.
+     * @param element the element to start with
+     * @return iteration over this element, and all of its child elements
+     */
+    public static Iterable<SVGElement> shapeIterator(SVGElement element) {
+        List<SVGElement> res = Lists.newArrayList();
+        res.add(element);
+        if (element instanceof SVGGroup) {
+            for (SVGElement el : ((SVGGroup)element).getElements()) {
+                Iterables.addAll(res, shapeIterator(el));
+            }
+        }
+        return res;
     }
     
 }

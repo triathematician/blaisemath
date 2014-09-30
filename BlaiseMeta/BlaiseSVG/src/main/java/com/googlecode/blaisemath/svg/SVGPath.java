@@ -34,7 +34,8 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
@@ -43,6 +44,7 @@ import javax.xml.bind.annotation.XmlElement;
  * @author elisha
  * @todo implement functionality
  */
+@XmlRootElement(name="path")
 public final class SVGPath extends SVGElement {
 
     private static final PathConverter CONVERTER_INST = new PathConverter();
@@ -63,7 +65,7 @@ public final class SVGPath extends SVGElement {
     // PROPERTY PATTERNS
     //
     
-    @XmlElement(name="???")
+    @XmlAttribute(name="d")
     public String getPathStr() {
         return pathStr;
     }
@@ -94,7 +96,7 @@ public final class SVGPath extends SVGElement {
                     throw new IllegalArgumentException("invalid comand: " + s + "   svg:\n"+svg);
                 }
                 boolean rel = Character.isLowerCase(s.charAt(0));
-                float[] cur = gp.getCurrentPoint() == null ? null
+                float[] cur = gp.getCurrentPoint() == null ? new float[] { 0, 0 }
                         : new float[] { (float) gp.getCurrentPoint().getX(), (float) gp.getCurrentPoint().getY() };
                 float[] add = rel ? cur : new float[] { 0, 0 };
                 float[] coords = values(spl, pos+1);
