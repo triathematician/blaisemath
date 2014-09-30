@@ -1,5 +1,5 @@
 #summary Description of blaise's graphics and style architecture
-#labels Module-Blaise,Phase-Implementation
+#labels Deprecated
 #sidebar TableOfContents
 
 Most `Graphic`s in BlaiseGraphics separate the "basic object" represented by the graphic from its appearance (e.g. separation of the rectangle from fill and stroke).

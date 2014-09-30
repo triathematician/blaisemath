@@ -1,5 +1,5 @@
 #summary Describes features and functionality of the parser.
-#labels Featured,Module-Blaise,Phase-Implementation,Component-Parser
+#labels Featured
 #sidebar TableOfContents
 
 = Overview =

@@ -1,5 +1,6 @@
 #summary Architecture & coding conventions for BlaiseGraphics 2.0.0+
 #labels Featured
+#sidebar TableOfContents
 
 = Module Dependencies =
 BlaiseGraphics uses JDK 1.6+, and uses the [https://code.google.com/p/guava-libraries/ guava library] and jsr305 for building. It is a maven project with `groupId=com.googlecode.blaisemath` and `artifactId=blaise-graphics`. It is not yet available from the central maven repository.
