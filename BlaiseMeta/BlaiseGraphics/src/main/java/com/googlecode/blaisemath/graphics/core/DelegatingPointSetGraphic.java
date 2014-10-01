@@ -54,6 +54,7 @@ import javax.swing.JPopupMenu;
  * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager}.
  *
  * @param <S> the type of object being displayed
+ * @param <G> type of canvas to render to
  *
  * @see PointRenderer
  * @see BasicPointSetGraphic
@@ -308,6 +309,12 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
     
     //</editor-fold>
+    
+    
+    @Nullable
+    public DelegatingPrimitiveGraphic<S,Point2D,G> getPointGraphic(S source) {
+        return points.get(source);
+    }
 
 
     @Override

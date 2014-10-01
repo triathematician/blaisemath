@@ -104,11 +104,14 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         
         double width = 0;
         double height = 0;
+        double leading = 0;
         for (String l : text.getText().split("\n|\r\n")) {
             TextLayout tl = new TextLayout(text.getText(), font, frc);
             width = Math.max(width, font.getStringBounds(l, frc).getWidth());
-            height += tl.getBounds().getHeight();
+            height += tl.getAscent()+tl.getDescent()+tl.getLeading();
+            leading = tl.getLeading();
         }
+        height -= leading;
         
         Anchor textAnchor = anchor == null ? Anchor.SOUTHWEST 
                 : anchor instanceof Anchor ? (Anchor) anchor
