@@ -1,5 +1,5 @@
 /**
- * DelegatingPointGraphic.java
+ * LabeledPointGraphic.java
  * Created Aug 21, 2012
  */
 package com.googlecode.blaisemath.graphics.core;
@@ -35,10 +35,12 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
- * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a canvas.
+ * Uses an {@link ObjectStyler} and a source object to draw a labeled point on a
+ * canvas. The style of the point and label is managed by the styler, along with
+ * the tooltip.
  *
  * @param <O> source object type
- * @param <G>
+ * @param <G> graphics canvas type
  * @author Elisha
  */
 public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point2D,G> {
@@ -73,22 +75,29 @@ public class LabeledPointGraphic<O,G> extends DelegatingPrimitiveGraphic<O,Point
     
     //</editor-fold>
     
+    /**
+     * Return label, if its visible.
+     * @return label, or null if there is none visible
+     */
+    private String visibleLabel() {
+        if (styler.getLabelDelegate() == null || getLabelRenderer() == null
+                || (styler.getLabelFilter() != null && !styler.getLabelFilter().apply(source))) {
+            return null;
+        }
+        String label = styler.label(source);
+        return Strings.isNullOrEmpty(label) ? null : label;
+    }
     
     @Override
     public void renderTo(G canvas) {
         super.renderTo(canvas);
 
-        if (styler.getLabelDelegate() != null) {
-            String label = styler.label(source);
-            if (!Strings.isNullOrEmpty(label)) {
-                AttributeSet style = styler.labelStyle(source);
-                if (style != null) {
-                    AnchoredText alabel = new AnchoredText(primitive, label);
-                    Renderer<AnchoredText, G> labRend = getLabelRenderer();
-                    if (labRend != null) {
-                        labRend.render(alabel, style, canvas);
-                    }
-                }
+        String label = visibleLabel();
+        if (label != null) {
+            AttributeSet style = styler.labelStyle(source);
+            if (style != null) {
+                AnchoredText alabel = new AnchoredText(primitive, label);
+                getLabelRenderer().render(alabel, style, canvas);
             }
         }
     }

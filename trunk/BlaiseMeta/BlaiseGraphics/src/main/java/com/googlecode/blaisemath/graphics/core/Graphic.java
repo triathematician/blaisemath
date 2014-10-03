@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ImmutableAttributeSet;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;

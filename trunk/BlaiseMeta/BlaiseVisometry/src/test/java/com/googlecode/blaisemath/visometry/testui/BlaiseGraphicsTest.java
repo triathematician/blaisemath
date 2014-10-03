@@ -45,7 +45,7 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.visometry.VBasicPoint;
 import com.googlecode.blaisemath.visometry.VBasicPointSet;

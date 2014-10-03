@@ -34,9 +34,11 @@ import java.beans.PropertyChangeSupport;
 import javax.annotation.Nullable;
 
 /**
- * Provides delegates for getting draw styles, labels, label styles, and tooltips
- * for an object of a given type.
- *
+ * Provides delegates for draw style, label, label visibility, label style,
+ * and tooltip text. It is intended to be used with objects that combine display
+ * of a primitive/graphics object and an accompanying label. The same styler can
+ * be used for many different graphic objects.
+ * 
  * @param <S> the type of source object
  *
  * @author elisha
