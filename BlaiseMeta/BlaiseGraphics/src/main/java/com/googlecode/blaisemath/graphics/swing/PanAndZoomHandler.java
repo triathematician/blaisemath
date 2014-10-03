@@ -31,7 +31,7 @@ package com.googlecode.blaisemath.graphics.swing;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnimationStep;
+import com.googlecode.blaisemath.util.animation.AnimationStep;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import java.awt.Color;
 import java.awt.Component;

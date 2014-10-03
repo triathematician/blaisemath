@@ -24,6 +24,9 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
+import com.google.common.io.ByteSink;
+import com.google.common.io.CharSource;
+import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.Styles;
@@ -32,6 +35,7 @@ import java.awt.Dimension;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -67,15 +71,20 @@ public class SVGTool extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jToolBar1 = new javax.swing.JToolBar();
         loadB = new javax.swing.JButton();
         saveB = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButton3 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
+        canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         text = new javax.swing.JTextArea();
-        canvas = new com.googlecode.blaisemath.graphics.swing.JGraphicComponent();
+        jToolBar2 = new javax.swing.JToolBar();
+        pathTB = new javax.swing.JRadioButton();
+        xmlTB = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,13 +127,34 @@ public class SVGTool extends javax.swing.JFrame {
         getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setResizeWeight(0.7);
+        jSplitPane1.setLeftComponent(canvas);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         text.setColumns(20);
         text.setRows(5);
         jScrollPane2.setViewportView(text);
 
-        jSplitPane1.setRightComponent(jScrollPane2);
-        jSplitPane1.setLeftComponent(canvas);
+        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jToolBar2.setRollover(true);
+
+        buttonGroup1.add(pathTB);
+        pathTB.setSelected(true);
+        pathTB.setText("Path");
+        pathTB.setFocusable(false);
+        pathTB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(pathTB);
+
+        buttonGroup1.add(xmlTB);
+        xmlTB.setText("SVG XML");
+        xmlTB.setFocusable(false);
+        xmlTB.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(xmlTB);
+
+        jPanel1.add(jToolBar2, java.awt.BorderLayout.PAGE_START);
+
+        jSplitPane1.setRightComponent(jPanel1);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -132,13 +162,25 @@ public class SVGTool extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        gsvg.setElement(new SVGPath(text.getText()));
+        if (pathTB.isSelected()) {
+            gsvg.setElement(new SVGPath(text.getText()));
+        } else {
+            try {
+                String svg = text.getText();
+                CharSource cs = CharSource.wrap(svg);
+                SVGRoot root = SVGRoot.load(cs.openStream());
+                gsvg.setElement(root);
+            } catch (IOException ex) {
+                Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private final JFileChooser chooser = new JFileChooser();
     
     private void saveBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(this)) {
+            FileOutputStream out = null;
             try {
                 SVGElement el = gsvg.getElement();
                 if (!(el instanceof SVGRoot)) {
@@ -146,20 +188,41 @@ public class SVGTool extends javax.swing.JFrame {
                     rootEl.addElement(el);
                     el = rootEl;
                 }
-                SVGRoot.save((SVGRoot) el, new FileOutputStream(chooser.getSelectedFile()));
+                out = new FileOutputStream(chooser.getSelectedFile());
+                SVGRoot.save((SVGRoot) el, out);
             } catch (IOException x) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
     }//GEN-LAST:event_saveBActionPerformed
 
     private void loadBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBActionPerformed
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
+            FileInputStream fis = null;
             try {
-                SVGRoot r = SVGRoot.load(new FileInputStream(chooser.getSelectedFile()));
+                fis = new FileInputStream(chooser.getSelectedFile());
+                SVGRoot r = SVGRoot.load(fis);
                 gsvg.setElement(r);
+                String fs = Files.toString(chooser.getSelectedFile(), Charset.defaultCharset());
+                text.setText(fs);
             } catch (IOException x) {
                 Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, x);
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(SVGTool.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
     }//GEN-LAST:event_loadBActionPerformed
@@ -199,14 +262,19 @@ public class SVGTool extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private com.googlecode.blaisemath.graphics.swing.JGraphicComponent canvas;
     private javax.swing.JButton jButton3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JButton loadB;
+    private javax.swing.JRadioButton pathTB;
     private javax.swing.JButton saveB;
     private javax.swing.JTextArea text;
+    private javax.swing.JRadioButton xmlTB;
     // End of variables declaration//GEN-END:variables
 }

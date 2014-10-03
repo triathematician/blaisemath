@@ -34,7 +34,7 @@ package com.googlecode.blaisemath.visometry.plane;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.AnimationStep;
+import com.googlecode.blaisemath.util.animation.AnimationStep;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import java.awt.Color;
 import java.awt.Component;

@@ -27,11 +27,11 @@ package com.googlecode.blaisemath.graphics.testui;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.dev.compoundgraphics.LabeledPointGraphic;
 import com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.LabeledPointGraphic;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer;
 import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
@@ -46,11 +46,12 @@ import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
 import com.googlecode.blaisemath.style.Anchor;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
+import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.style.editor.BasicPointStyleEditor;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Colors;
-import com.googlecode.blaisemath.util.ContextMenuInitializer;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
 import java.awt.Color;
@@ -286,9 +287,9 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     @Action
     public void addLabeledPoint() {
         Point2D p1 = randomPoint();
-        LabeledPointGraphic lpg = new LabeledPointGraphic(p1,
-                String.format("(%.2f,%.2f)", p1.getX(), p1.getY())
-                );
+        LabeledPointGraphic lpg = new LabeledPointGraphic(
+                String.format("(%.2f,%.2f)", p1.getX(), p1.getY()), p1,
+                new ObjectStyler());
         lpg.setDefaultTooltip("<html><b>Labeled Point</b>: <i> " + p1 + "</i>");
         lpg.setDragEnabled(true);
         root1.addGraphic(lpg);        

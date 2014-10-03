@@ -27,6 +27,8 @@ package com.googlecode.blaisemath.svg;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,6 +54,22 @@ public final class SVGRoot extends SVGGroup {
             throw new IOException("Could not load SVGRoot from input", ex);
         }
     }
+
+    /**
+     * Attempt to load an SVG root object from the given source.
+     * @param reader source
+     * @return root object, if loaded properly
+     * @throws java.io.IOException if input fails
+     */
+    public static SVGRoot load(Reader reader) throws IOException {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
+            return (SVGRoot) jc.createUnmarshaller().unmarshal(reader);
+        } catch (JAXBException ex) {
+            throw new IOException("Could not load SVGRoot from input", ex);
+        }
+    }
+    
     /**
      * Attempt to save an SVG root object to the given source.
      * @param root object to save
@@ -62,6 +80,21 @@ public final class SVGRoot extends SVGGroup {
         try {
             JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
             jc.createMarshaller().marshal(root, output);
+        } catch (JAXBException ex) {
+            throw new IOException("Could not save SVGRoot to output", ex);
+        }
+    }
+    
+    /**
+     * Attempt to save an SVG root object to the given source.
+     * @param root object to save
+     * @param writer where to save it
+     * @throws java.io.IOException if save fails
+     */
+    public static void save(SVGRoot root, Writer writer) throws IOException {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
+            jc.createMarshaller().marshal(root, writer);
         } catch (JAXBException ex) {
             throw new IOException("Could not save SVGRoot to output", ex);
         }
