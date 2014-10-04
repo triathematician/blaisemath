@@ -25,8 +25,8 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -58,7 +58,7 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
         Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
         if (stroke != null && strokeWidth != null && strokeWidth > 0) {
             canvas.setColor(stroke);
-            canvas.setStroke(new BasicStroke(strokeWidth));
+            canvas.setStroke(Styles.getStroke(style));
             canvas.draw(primitive);
         }
     }

@@ -265,6 +265,11 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     public void setContextMenuEnabled(boolean val) {
         styleHints.put(POPUP_ENABLED, val);
     }
+    
+    public void clearContextMenuInitializers() {
+        contextMenuInitializers.clear();
+        setContextMenuEnabled(false);
+    }
 
     public void addContextMenuInitializer(ContextMenuInitializer<Graphic<G>> init) {
         if (!contextMenuInitializers.contains(init)) {

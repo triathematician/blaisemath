@@ -25,8 +25,16 @@ package com.googlecode.blaisemath.style;
  */
 
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.primitives.Floats;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Stroke;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /**
@@ -36,13 +44,24 @@ import javax.annotation.Nullable;
  */
 public final class Styles {
     
+    @SVGAttribute
     public static final String FILL = "fill";
+    
+    @SVGAttribute
     public static final String STROKE = "stroke";
+    @SVGAttribute
     public static final String STROKE_WIDTH = "stroke-width";
+    @SVGAttribute
+    public static final String STROKE_DASHES = "stroke-dasharray";
+    
     public static final String MARKER = "marker";
     public static final String MARKER_RADIUS = "marker-radius";
+    
     public static final String MARKER_ORIENT = "orient";
+    
+    @SVGAttribute
     public static final String FONT = "font-family";
+    @SVGAttribute
     public static final String FONT_SIZE = "font-size";
     
     /** Denotes anchor of text relative to a point */
@@ -75,6 +94,8 @@ public final class Styles {
             .and(FONT_SIZE, 12f)
             .and(TEXT_ANCHOR, Anchor.SOUTHWEST)
             .immutable();
+
+    
     
     // utility class
     private Styles() {
@@ -108,6 +129,29 @@ public final class Styles {
     public static void setFont(AttributeSet style, Font font) {
         style.put(Styles.FONT, font.getFontName());
         style.put(Styles.FONT_SIZE, font.getSize());
+    }
+    
+    public static Stroke getStroke(AttributeSet style) {
+        float strokeWidth = style.getFloat(Styles.STROKE_WIDTH, 1f);
+        String dashes = style.getString(Styles.STROKE_DASHES, null);
+        if (!Strings.isNullOrEmpty(dashes)) {
+            Iterable<String> sDashes = Splitter.on(",").trimResults().split(dashes);
+            try {
+                Iterable<Float> fDashes = Floats.stringConverter().convertAll(sDashes);
+                float[] fArr = new float[Iterables.size(fDashes)];
+                int i = 0;
+                for (Float f : fDashes) {
+                    fArr[i] = f == null ? 0f : f;
+                    i++;
+                }
+                return new BasicStroke(strokeWidth, BasicStroke.CAP_SQUARE, 
+                        BasicStroke.JOIN_MITER, 10.0f, fArr, 0.0f);
+            } catch (NumberFormatException x) {
+                Logger.getLogger(Styles.class.getName()).log(Level.WARNING,
+                        "Invalid dash pattern: "+dashes, x);
+            }
+        }
+        return new BasicStroke(strokeWidth);
     }
     
     /**
