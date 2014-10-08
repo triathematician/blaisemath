@@ -25,14 +25,19 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 
+import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
 import com.googlecode.blaisemath.style.StyleHints;
+import com.googlecode.blaisemath.style.Styles;
 
 /**
  * Utility class for working with {@link Graphic}s.
  * @author Elisha
  */
 public class GraphicUtils {
+    
+    //<editor-fold defaultstate="collapsed" desc="SINGLETONS">
     
     /** Filter that can be applied to pass only visible graphics */
     private static final Predicate<Graphic<?>> VISIBLE_FILTER = new Predicate<Graphic<?>>(){
@@ -50,9 +55,13 @@ public class GraphicUtils {
         }
     };
     
+    //</editor-fold>
+    
     // utility class
     private GraphicUtils() {
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="PREDICATES">
     
     /**
      * Return visibility filter for graphics.
@@ -87,5 +96,36 @@ public class GraphicUtils {
     public static boolean isFunctional(Graphic<?> gr) {
         return functionalFilter().apply(gr);
     }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="SELECTORS">
+    
+    /**
+     * Search for graphic with the given id in the composite, returning it.
+     * The id is stored in the {@link Styles#ID} attribute of the graphic's style.
+     * @param <G> graphics canvas type
+     * @param gr regular or composite graphic to search in
+     * @param id what to search for
+     * @return the found graphic, or null if none is found
+     */
+    public <G> Graphic<G> select(Graphic<G> gr, String id) {
+        checkNotNull(id);
+        if (Objects.equal(id, gr.getStyle().getString(Styles.ID, null))) {
+            return gr;
+        } else if (gr instanceof GraphicComposite) {
+            GraphicComposite<G> gc = (GraphicComposite<G>) gr;
+            for (Graphic<G> g : gc.getGraphics()) {
+                Graphic<G> r = select(g, id);
+                if (r != null) {
+                    return r;
+                }
+            }
+        }
+        return null;
+    }
+    
+    //</editor-fold>
+    
     
 }

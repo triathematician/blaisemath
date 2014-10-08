@@ -42,7 +42,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  *   SVG path object.
  * </p>
  * @author elisha
- * @todo implement functionality
  */
 @XmlRootElement(name="path")
 public final class SVGPath extends SVGElement {

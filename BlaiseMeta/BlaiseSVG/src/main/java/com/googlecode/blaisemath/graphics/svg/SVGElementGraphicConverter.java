@@ -32,6 +32,8 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ImmutableAttributeSet;
+import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.SVGCircle;
 import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGElements;
@@ -52,8 +54,11 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.namespace.QName;
 
 /** 
  * Adapter for converting SVG objects to/from Blaise {@code PrimitiveGraphic} objects.
@@ -104,9 +109,11 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
         } else if (sh instanceof SVGImage) {
             AnchoredImage img = SVGImage.imageConverter().convert((SVGImage) sh);
             prim = JGraphics.image(img);
+            prim.setMouseEnabled(false);
         } else if (sh instanceof SVGText) {
             AnchoredText text = SVGText.textConverter().convert((SVGText) sh);
             prim = JGraphics.text(text, sh.getStyle());
+            prim.setMouseEnabled(false);
         } else if (sh instanceof SVGGroup || sh instanceof SVGRoot) {
             prim = new GraphicComposite<Graphics2D>();
             ((GraphicComposite)prim).setStyle(sh.getStyle());
@@ -115,6 +122,25 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
             }
         } else {
             throw new IllegalStateException("Unexpected SVG element: "+sh);
+        }
+        if (sh.getOtherAttributes() != null || sh.getId() != null) {
+            if (prim.getStyle() instanceof ImmutableAttributeSet) {
+                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
+                        "Attempt to set id of graphic w/ immutable style: {0}", prim.getStyle());
+            } else if (prim.getStyle() == null) {
+                Logger.getLogger(SVGElementGraphicConverter.class.getName()).log(Level.WARNING, 
+                        "Attempt to set id of graphic w/ null style: {0}", prim.getStyle());
+            } else {
+                Map<QName, Object> attr = sh.getOtherAttributes();
+                if (attr != null) {
+                    for (Entry<QName, Object> en : attr.entrySet()) {
+                        prim.getStyle().put(en.getKey().toString(), en.getValue());
+                    }
+                }
+                if (sh.getId() != null) {
+                    prim.getStyle().put(Styles.ID, sh.getId());
+                }
+            }
         }
         prim.setDefaultTooltip(sh.getId());
         return prim;
@@ -149,6 +175,10 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
             res = grp;
         } else {
             throw new IllegalArgumentException("Graphic conversion not supported for "+v.getClass());
+        }
+        String id = v.getStyle().getString(Styles.ID, null);
+        if (id != null) {
+            res.setId(id);
         }
         return res;
     }
