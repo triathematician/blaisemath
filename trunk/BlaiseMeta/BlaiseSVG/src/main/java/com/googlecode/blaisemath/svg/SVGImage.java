@@ -142,7 +142,7 @@ public final class SVGImage extends SVGElement {
                 } else {
                     int iw = width == null ? img.getWidth() : width.intValue();
                     int ih = height == null ? img.getHeight() : height.intValue();
-                    image = img.getScaledInstance(iw, ih, Image.SCALE_DEFAULT);
+                    image = img.getScaledInstance(iw, ih, Image.SCALE_SMOOTH);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(SVGImage.class.getName()).log(Level.SEVERE, 

@@ -27,10 +27,13 @@ package com.googlecode.blaisemath.svg;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.xml.AttributeSetAdapter;
+import java.util.Map;
 import javax.annotation.Nullable;
+import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -45,6 +48,7 @@ public abstract class SVGElement {
     private final String tag;
     protected String id;
     private AttributeSet style = null;
+    private Map<QName,Object> otherAttr;
 
     public SVGElement(String tag) {
         this.tag = tag;
@@ -91,6 +95,15 @@ public abstract class SVGElement {
 
     public void setStyle(@Nullable AttributeSet style) {
         this.style = style;
+    }
+    
+    @XmlAnyAttribute
+    public Map<QName,Object> getOtherAttributes() {
+        return otherAttr;
+    }
+    
+    public void setOtherAttributes(Map<QName,Object> other) {
+        this.otherAttr = other;
     }
     
     //</editor-fold>

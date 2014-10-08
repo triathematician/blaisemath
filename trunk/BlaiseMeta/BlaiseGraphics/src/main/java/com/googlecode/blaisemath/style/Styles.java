@@ -44,6 +44,13 @@ import javax.annotation.Nullable;
  */
 public final class Styles {
     
+    //<editor-fold defaultstate="collapsed" desc="STYLE ATTRIBUTE CONSTANTS">
+    
+    public static final String ID = "id";
+    
+    @SVGAttribute
+    public static final String OPACITY = "opacity";
+    
     @SVGAttribute
     public static final String FILL = "fill";
     
@@ -68,6 +75,10 @@ public final class Styles {
     public static final String TEXT_ANCHOR = "text-anchor";
     /** Denotes offset from a point */
     public static final String OFFSET = "offset";
+    
+    //</editor-fold>
+    
+    
     
     public static final AttributeSet DEFAULT_SHAPE_STYLE = AttributeSet
             .with(FILL, Color.white)
@@ -144,7 +155,7 @@ public final class Styles {
                     fArr[i] = f == null ? 0f : f;
                     i++;
                 }
-                return new BasicStroke(strokeWidth, BasicStroke.CAP_SQUARE, 
+                return new BasicStroke(strokeWidth, BasicStroke.CAP_BUTT, 
                         BasicStroke.JOIN_MITER, 10.0f, fArr, 0.0f);
             } catch (NumberFormatException x) {
                 Logger.getLogger(Styles.class.getName()).log(Level.WARNING,
