@@ -1,23 +1,20 @@
 /**
- * CreateMarkerGesture.java Created Oct 3, 2014
+ * CreateRectangleGesture.java Created Oct 10, 2014
  */
 package com.googlecode.blaisemath.gesture;
 
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.graphics.swing.TransformedCanvasPainter;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
 /*
  * #%L
@@ -40,26 +37,28 @@ import java.awt.geom.Point2D;
  */
 
 /**
- * Gesture for adding a point to the canvas.
+ * Gesture for adding a rectangle to the canvas.
  * 
  * @author Elisha
  */
-public class CreateMarkerGesture extends SketchGesture<JGraphicComponent> {
+public class CreateRectangleGesture extends SketchGesture<JGraphicComponent> {
     
-    protected static final AttributeSet DRAW_STYLE = Styles.DEFAULT_POINT_STYLE;
-    private static final Renderer<Point2D, Graphics2D> REND = PointRenderer.getInstance();
+    protected static final AttributeSet DRAW_STYLE = Styles.DEFAULT_SHAPE_STYLE;
+    private static final Renderer<Shape, Graphics2D> REND = ShapeRenderer.getInstance();
     
-    public CreateMarkerGesture() {
-        super("Place point", "Click where you want to create a point.");
+    public CreateRectangleGesture() {
+            super("Draw rectangle", "Drag from one corner of the rectangle to the other.");
     }
 
     @Override
     public void finish(JGraphicComponent view) {
-        if (locPoint != null) {
-            PrimitiveGraphic<OrientedPoint2D, Graphics2D> gfc 
-                    = JGraphics.marker(new OrientedPoint2D(locPoint), DRAW_STYLE.copy());
+        if (pressPoint != null && locPoint != null) {
+            Rectangle2D.Double rect = new Rectangle2D.Double();
+            rect.setFrameFromDiagonal(pressPoint, locPoint);
+            PrimitiveGraphic<Shape, Graphics2D> gfc 
+                    = JGraphics.shape(rect, DRAW_STYLE.copy());
             gfc.setSelectionEnabled(true);
-            gfc.setDragEnabled(true);
+            gfc.setMouseEnabled(true);
             view.addGraphic(gfc);
         }
     }
@@ -72,12 +71,10 @@ public class CreateMarkerGesture extends SketchGesture<JGraphicComponent> {
     private final class Painter extends TransformedCanvasPainter {
         @Override
         public void paintTransformed(JGraphicComponent jgc, Graphics2D gd) {
-            if (locPoint != null) {
-                REND.render(locPoint, DRAW_STYLE, (Graphics2D) gd);
-            }
-            if (movePoint != null) {
-                AttributeSet hints = AttributeSet.with(StyleHints.HILITE_HINT, true);
-                REND.render(movePoint, Styles.defaultColorModifier().apply(DRAW_STYLE, hints), gd);
+            if (pressPoint != null && locPoint != null) {
+                Rectangle2D.Double rect = new Rectangle2D.Double();
+                rect.setFrameFromDiagonal(pressPoint, locPoint);
+                REND.render(rect, DRAW_STYLE, gd);
             }
         }
     }

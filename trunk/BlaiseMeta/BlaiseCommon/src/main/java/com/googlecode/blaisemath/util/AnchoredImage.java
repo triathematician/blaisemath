@@ -35,22 +35,19 @@ import javax.annotation.Nullable;
  * 
  * @todo - how to handle conflicting width/height of image vs width/height here?
  */
-public class AnchoredImage {
+public class AnchoredImage extends Point2DBean {
     
     private final Image image;
     private final String ref;
-    private final double x;
-    private final double y;
-    private final Double width;
-    private final Double height;
+    private final java.lang.Double width;
+    private final java.lang.Double height;
 
     public AnchoredImage(double x, double y, Image image, @Nullable String ref) {
         this(x, y, null, null, image, ref);
     }
 
-    public AnchoredImage(double x, double y, Double width, Double height, Image image, @Nullable String ref) {
-        this.x = x;
-        this.y = y;
+    public AnchoredImage(double x, double y, java.lang.Double width, java.lang.Double height, Image image, @Nullable String ref) {
+        super(x, y);
         this.width = width;
         this.height = height;
         this.image = image;
@@ -66,20 +63,12 @@ public class AnchoredImage {
         return ref;
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
     public double getWidth() {
-        return width;
+        return width == null ? image.getWidth(null) : width;
     }
 
     public double getHeight() {
-        return height;
+        return height == null ? image.getHeight(null) : height;
     }
     
     public Rectangle2D getBounds(ImageObserver io) {

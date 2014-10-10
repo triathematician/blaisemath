@@ -135,6 +135,10 @@ public final class AttributeSets {
                 return val.toString();
             } else if (val instanceof String) {
                 return (String) val;
+            } else if (val instanceof Marker) {
+                return val.getClass().getSimpleName();
+            } else if (val instanceof Anchor) {
+                return ((Anchor)val).toString();
             } else {
                 throw new IllegalArgumentException(val + " cannot be converted to string.");
             }

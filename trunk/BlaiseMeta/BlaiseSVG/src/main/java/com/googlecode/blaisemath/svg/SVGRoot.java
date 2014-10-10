@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.io.Writer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -79,7 +80,9 @@ public final class SVGRoot extends SVGGroup {
     public static void save(SVGRoot root, OutputStream output) throws IOException {
         try {
             JAXBContext jc = JAXBContext.newInstance(SVGRoot.class);
-            jc.createMarshaller().marshal(root, output);
+            Marshaller m = jc.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            m.marshal(root, output);
         } catch (JAXBException ex) {
             throw new IOException("Could not save SVGRoot to output", ex);
         }

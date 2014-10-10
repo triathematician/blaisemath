@@ -119,6 +119,7 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
                 mouseLoc = null;
                 l.repaint();
             }
+            e.consume();
         }
     }
 
@@ -130,6 +131,7 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
                 mouseLoc = e.getPoint();
                 l.repaint();
             }
+            e.consume();
         }
     }
     
