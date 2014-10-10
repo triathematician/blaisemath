@@ -25,27 +25,49 @@ package com.googlecode.blaisemath.sketch;
  */
 
 
+import com.google.common.base.Converter;
 import com.googlecode.blaisemath.gesture.SketchGesture;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.io.Files;
+import com.googlecode.blaisemath.editor.EditorRegistration;
+import com.googlecode.blaisemath.firestarter.PropertySheet;
+import com.googlecode.blaisemath.gesture.CreateCircleGesture;
+import com.googlecode.blaisemath.gesture.CreateEllipseGesture;
+import com.googlecode.blaisemath.gesture.CreateImageGesture;
+import com.googlecode.blaisemath.gesture.CreateLineGesture;
 import com.googlecode.blaisemath.gesture.CreateMarkerGesture;
+import com.googlecode.blaisemath.gesture.CreatePathGesture;
+import com.googlecode.blaisemath.gesture.CreateRectangleGesture;
+import com.googlecode.blaisemath.gesture.CreateTextGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateCircleGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateEllipseGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateImageGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateLineGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreatePathGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateRectangleGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture.CreateTextGesture;
+import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import static com.googlecode.blaisemath.style.Styles.text;
+import com.googlecode.blaisemath.svg.SVGElement;
+import com.googlecode.blaisemath.svg.SVGRoot;
+import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
+import java.awt.Graphics2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JMenuBar;
@@ -74,9 +96,16 @@ public class BlaiseSketchFrameView extends FrameView {
         "groupSelected", "ungroupSelected"
     };
     
+    private final JFileChooser chooser = new JFileChooser();
+    
     private final JGraphicGestureLayerUI activeCanvasLayerUI;
     private final JGraphicComponent activeCanvas;
+    
     private final RollupPanel detailsPanel;
+    private final MPanel selectionPanel;
+    private final JLabel noSelectionLabel = new JLabel("nothing selected");
+    private final MPanel overviewPanel;
+    
     private final JLabel statusLabel;
 
     public BlaiseSketchFrameView(BlaiseSketchApp app) {
@@ -85,13 +114,33 @@ public class BlaiseSketchFrameView extends FrameView {
         activeCanvas = new JGraphicComponent();
         activeCanvas.setSelectionEnabled(true);
         new PanAndZoomHandler(activeCanvas);
+        activeCanvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                boolean selEmpty = isSelectionEmpty();
+                boolean moreThanOne = isMoreThanOneSelected();
+                boolean gpSelected = isGroupSelected();
+                firePropertyChange("selectionEmpty", !selEmpty, selEmpty);
+                firePropertyChange("groupSelected", !gpSelected, gpSelected);
+                firePropertyChange("moreThanOneSelected", !moreThanOne, moreThanOne);
+                if (selEmpty) {
+                    selectionPanel.setPrimaryComponent(noSelectionLabel);
+                } else {
+                    Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
+                    PropertySheet ps = PropertySheet.forBean(sel.size() == 1
+                            ? Iterables.get(sel, 0) : sel);
+                    selectionPanel.setPrimaryComponent(ps);
+                }
+            }
+        });
         
         activeCanvasLayerUI = new JGraphicGestureLayerUI();
         JLayer<JGraphicComponent> canvasWithLayer = new JLayer<JGraphicComponent>(activeCanvas, activeCanvasLayerUI);
         
         detailsPanel = new RollupPanel();
-        detailsPanel.add("Selection", new JLabel("nothing selected"));
-        detailsPanel.add("Overview", new JLabel("overview of what's on the canvas..."));
+        selectionPanel = new MPanel("Selection", noSelectionLabel);
+        overviewPanel = new MPanel("Overview", new JLabel("overview of what's on the canvas..."));
+        detailsPanel.add(selectionPanel);
+        detailsPanel.add(overviewPanel);
         
         JSplitPane mainPanel = new JSplitPane();
         mainPanel.setResizeWeight(.9);
@@ -114,6 +163,8 @@ public class BlaiseSketchFrameView extends FrameView {
         statusBar.add(Box.createHorizontalStrut(5));
         statusBar.add(statusLabel);
         setStatusBar(statusBar);
+        
+        EditorRegistration.registerEditors();
     }
     
     //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
@@ -146,9 +197,14 @@ public class BlaiseSketchFrameView extends FrameView {
         return activeCanvas.getSelectionModel().isEmpty();
     }
     
+    public boolean isMoreThanOneSelected() {
+        Set<Graphic> gfx = activeCanvas.getSelectionModel().getSelection();
+        return gfx.size() > 1;
+    }
+    
     public boolean isGroupSelected() {
         Set<Graphic> gfx = activeCanvas.getSelectionModel().getSelection();
-        return gfx.size() == 1 && Iterables.get(gfx, 1) instanceof GraphicComposite;
+        return gfx.size() == 1 && Iterables.get(gfx, 0) instanceof GraphicComposite;
     }
     
     public void setStatusMessage(String msg, int timeout) {
@@ -160,17 +216,79 @@ public class BlaiseSketchFrameView extends FrameView {
 
     //<editor-fold defaultstate="collapsed" desc="I/O ACTIONS">
     
-    @Action
-    public void load() {
+    private SVGRoot toSVG() {
+        Converter<Graphic<Graphics2D>, SVGElement> conv = SVGElementGraphicConverter.getInstance().reverse();
+        JGraphicRoot gr = activeCanvas.getGraphicRoot();
+        SVGRoot r = new SVGRoot();
+        for (Graphic<Graphics2D> g : gr.getGraphics()) {
+            r.addElement(conv.convert(g));
+        }
+        return r;
+    }
+    
+    private Iterable<Graphic<Graphics2D>> fromSVG(SVGRoot r) {
+        Converter<SVGElement, Graphic<Graphics2D>> conv = SVGElementGraphicConverter.getInstance();
+        List<Graphic<Graphics2D>> res = Lists.newArrayList();
+        for (SVGElement el : r.getElements()) {
+            res.add(conv.convert(el));
+        }
+        return res;
     }
     
     @Action
-    public void save() {
+    public void load() {        
+        if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(getFrame())) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(chooser.getSelectedFile());
+                SVGRoot r = SVGRoot.load(fis);
+                activeCanvas.clearGraphics();
+                activeCanvas.addGraphics(fromSVG(r));
+            } catch (IOException x) {
+                Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, x);
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }
+    
+    @Action
+    public void save() {        
+        if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(getFrame())) {
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(chooser.getSelectedFile());
+                SVGRoot r = toSVG();
+                SVGRoot.save(r, out);
+            } catch (IOException ex) {
+                Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
     }
     
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="TOOL ACTIONS">
+    
+    @Action
+    public void finishGesture() {
+        activeCanvasLayerUI.finishGesture();
+        setStatusMessage(null, -1);
+    }
     
     @Action
     public void createMarker() {
@@ -212,16 +330,11 @@ public class BlaiseSketchFrameView extends FrameView {
         enableGesture(CreateImageGesture.class);
     }
     
-    @Action
-    public void finishGesture() {
-        activeCanvasLayerUI.finishGesture();
-    }
-    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="SELECTION ACTIONS">
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty="moreThanOneSelected")
     public void groupSelected() {
     }
     

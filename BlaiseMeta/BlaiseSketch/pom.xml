@@ -44,5 +44,10 @@
             <artifactId>blaise-graphics</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-svg</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,23 +1,22 @@
 /**
- * CreateMarkerGesture.java Created Oct 3, 2014
+ * CreateTextGesture.java Created Oct 3, 2014
  */
 package com.googlecode.blaisemath.gesture;
 
+import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.TransformedCanvasPainter;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.OrientedPoint2D;
+import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
+import javax.swing.JOptionPane;
 
 /*
  * #%L
@@ -40,27 +39,29 @@ import java.awt.geom.Point2D;
  */
 
 /**
- * Gesture for adding a point to the canvas.
+ * Gesture for adding text to the canvas.
  * 
  * @author Elisha
  */
-public class CreateMarkerGesture extends SketchGesture<JGraphicComponent> {
+public class CreateTextGesture extends SketchGesture<JGraphicComponent> {
     
-    protected static final AttributeSet DRAW_STYLE = Styles.DEFAULT_POINT_STYLE;
-    private static final Renderer<Point2D, Graphics2D> REND = PointRenderer.getInstance();
+    protected static final AttributeSet DRAW_STYLE = Styles.DEFAULT_TEXT_STYLE;
+    private static final Renderer<AnchoredText, Graphics2D> REND = TextRenderer.getInstance();
     
-    public CreateMarkerGesture() {
-        super("Place point", "Click where you want to create a point.");
+    public CreateTextGesture() {
+        super("Place text", "Click where you want to place text.");
     }
 
     @Override
     public void finish(JGraphicComponent view) {
         if (locPoint != null) {
-            PrimitiveGraphic<OrientedPoint2D, Graphics2D> gfc 
-                    = JGraphics.marker(new OrientedPoint2D(locPoint), DRAW_STYLE.copy());
-            gfc.setSelectionEnabled(true);
-            gfc.setDragEnabled(true);
-            view.addGraphic(gfc);
+            String s = JOptionPane.showInputDialog("Enter text:");
+            if (!Strings.isNullOrEmpty(s)) {
+                PrimitiveGraphic<AnchoredText, Graphics2D> gfc = JGraphics.text(new AnchoredText(locPoint, s), DRAW_STYLE);
+                gfc.setSelectionEnabled(true);
+                gfc.setDragEnabled(true);
+                view.addGraphic(gfc);
+            }
         }
     }
 
@@ -73,11 +74,7 @@ public class CreateMarkerGesture extends SketchGesture<JGraphicComponent> {
         @Override
         public void paintTransformed(JGraphicComponent jgc, Graphics2D gd) {
             if (locPoint != null) {
-                REND.render(locPoint, DRAW_STYLE, (Graphics2D) gd);
-            }
-            if (movePoint != null) {
-                AttributeSet hints = AttributeSet.with(StyleHints.HILITE_HINT, true);
-                REND.render(movePoint, Styles.defaultColorModifier().apply(DRAW_STYLE, hints), gd);
+                REND.render(new AnchoredText(locPoint, "text here"), DRAW_STYLE, (Graphics2D) gd);
             }
         }
     }

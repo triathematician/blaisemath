@@ -28,6 +28,8 @@ package com.googlecode.blaisemath.gesture;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 /**
  * Handler for mouse gestures, tuned to creating objects.
@@ -36,8 +38,12 @@ import java.awt.event.MouseAdapter;
  */
 public abstract class SketchGesture<C> extends MouseAdapter {
     
-    private final String name;
-    private final String description;
+    protected final String name;
+    protected final String description;
+
+    protected Point2D movePoint = null;
+    protected Point2D pressPoint = null;
+    protected Point2D locPoint = null;
 
     public SketchGesture(String name, String description) {
         this.name = name;
@@ -51,6 +57,44 @@ public abstract class SketchGesture<C> extends MouseAdapter {
     public String getDesription() {
         return description;
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="DEFAULT MOUSE HANDLING">
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        JGraphicComponent gc = (JGraphicComponent) e.getSource();
+        movePoint = gc.toGraphicCoordinate(e.getPoint());
+        gc.repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        movePoint = null;
+        JGraphicComponent gc = (JGraphicComponent) e.getSource();
+        gc.repaint();
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+        JGraphicComponent gc = (JGraphicComponent) e.getSource();
+        pressPoint = gc.toGraphicCoordinate(e.getPoint());
+        locPoint = gc.toGraphicCoordinate(e.getPoint());
+        gc.repaint();
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        JGraphicComponent gc = (JGraphicComponent) e.getSource();
+        locPoint = gc.toGraphicCoordinate(e.getPoint());
+        gc.repaint();
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mouseDragged(e);
+    }
+    
+    //</editor-fold>
 
     /** Enable the gesture, preparing it to be used. */
     public void initiate() {
@@ -77,48 +121,6 @@ public abstract class SketchGesture<C> extends MouseAdapter {
      */
     public void paint(Graphics g, C view) {
         // do nothing by default
-    }
-    
-    public static class CreateLineGesture extends SketchGesture {
-        public CreateLineGesture() {
-            super("Draw line", "Click on the canvas and drag to create a line.");
-        }
-    }
-    
-    public static class CreatePathGesture extends SketchGesture {
-        public CreatePathGesture() {
-            super("Draw path", "Click on the canvas and drag to sketch a path.");
-        }
-    }
-    
-    public static class CreateRectangleGesture extends SketchGesture {
-        public CreateRectangleGesture() {
-            super("Draw rectangle", "Click on the canvas and drag to create a rectangle.");
-        }
-    }
-    
-    public static class CreateCircleGesture extends SketchGesture {
-        public CreateCircleGesture() {
-            super("Draw circle", "Click on the canvas and drag to create a circle.");
-        }
-    }
-    
-    public static class CreateEllipseGesture extends SketchGesture {
-        public CreateEllipseGesture() {
-            super("Draw ellipse", "Click on the canvas and drag to create an ellipse.");
-        }
-    }
-    
-    public static class CreateTextGesture extends SketchGesture {
-        public CreateTextGesture() {
-            super("Place text", "Click on the canvas where you want to add text.");
-        }
-    }
-    
-    public static class CreateImageGesture extends SketchGesture {
-        public CreateImageGesture() {
-            super("Place image", "Click on the canvas where you want to place an image.");
-        }
     }
     
 }
