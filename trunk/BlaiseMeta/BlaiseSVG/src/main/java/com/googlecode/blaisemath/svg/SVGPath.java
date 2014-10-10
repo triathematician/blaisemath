@@ -142,7 +142,9 @@ public final class SVGPath extends SVGElement {
 
         @Override
         protected SVGPath doBackward(GeneralPath b) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            Logger.getLogger(PathConverter.class.getName()).log(Level.WARNING,
+                    "Conversion of GeneralPath to SVGPath not yet supported.");
+            return new SVGPath();
         }
     }
     

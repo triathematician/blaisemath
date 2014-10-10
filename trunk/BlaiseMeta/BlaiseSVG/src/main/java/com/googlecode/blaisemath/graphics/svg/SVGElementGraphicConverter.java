@@ -85,38 +85,40 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     @Override
     public Graphic<Graphics2D> doForward(SVGElement sh) {
         Graphic<Graphics2D> prim = null;
+        AttributeSet style = sh.getStyle() == null ? Styles.DEFAULT_SHAPE_STYLE.copy()
+                : sh.getStyle();
         if (sh instanceof SVGRectangle) {
             RectangularShape rsh = SVGRectangle.shapeConverter().convert((SVGRectangle) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGEllipse) {
             Shape rsh = SVGEllipse.shapeConverter().convert((SVGEllipse) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGCircle) {
             Shape rsh = SVGCircle.shapeConverter().convert((SVGCircle) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGPolygon) {
             Shape rsh = SVGPolygon.shapeConverter().convert((SVGPolygon) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGLine) {
             Line2D line = SVGLine.shapeConverter().convert((SVGLine) sh);
-            prim = JGraphics.path(line, sh.getStyle());
+            prim = JGraphics.path(line, style);
         } else if (sh instanceof SVGPolyline) {
             Shape rsh = SVGPolyline.shapeConverter().convert((SVGPolyline) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGPath) {
             Shape rsh = SVGPath.shapeConverter().convert((SVGPath) sh);
-            prim = JGraphics.shape(rsh, sh.getStyle());
+            prim = JGraphics.shape(rsh, style);
         } else if (sh instanceof SVGImage) {
             AnchoredImage img = SVGImage.imageConverter().convert((SVGImage) sh);
             prim = JGraphics.image(img);
             prim.setMouseEnabled(false);
         } else if (sh instanceof SVGText) {
             AnchoredText text = SVGText.textConverter().convert((SVGText) sh);
-            prim = JGraphics.text(text, sh.getStyle());
+            prim = JGraphics.text(text, style);
             prim.setMouseEnabled(false);
         } else if (sh instanceof SVGGroup || sh instanceof SVGRoot) {
             prim = new GraphicComposite<Graphics2D>();
-            ((GraphicComposite)prim).setStyle(sh.getStyle());
+            ((GraphicComposite)prim).setStyle(style);
             for (SVGElement el : ((SVGGroup)sh).getElements()) {
                 ((GraphicComposite<Graphics2D>)prim).addGraphic(doForward(el));
             }
