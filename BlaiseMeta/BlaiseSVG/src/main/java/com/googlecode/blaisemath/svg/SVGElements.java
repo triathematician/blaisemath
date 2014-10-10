@@ -34,6 +34,7 @@ import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -77,6 +78,8 @@ public class SVGElements {
             }
         } else if (shape instanceof Line2D) {
             res = SVGLine.shapeConverter().reverse().convert((Line2D) shape);
+        } else if (shape instanceof GeneralPath) {
+            res = SVGPath.shapeConverter().reverse().convert((GeneralPath) shape);
         } else {
             throw new UnsupportedOperationException("Shapes of type "+shape.getClass()+" are not yet supported.");
         }
