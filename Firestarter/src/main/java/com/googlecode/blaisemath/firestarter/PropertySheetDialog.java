@@ -80,6 +80,18 @@ public class PropertySheetDialog extends javax.swing.JDialog {
         
         initComponents(IndexedPropertySheet.forIndexedProperty(bean, ipd));
     }
+
+    /**
+     * Creates new form PropertySheetDialog with an indexed property.
+     * @param parent the parent frame
+     * @param modal whether the dialog box is modal
+     * @param bean object to populate the box
+     * @param model model for the property sheet
+     */
+    public PropertySheetDialog(java.awt.Frame parent, boolean modal, Object bean, PropertyModel model) {
+        super(parent, "Editing "+bean.toString(), modal);
+        initComponents(new PropertySheet(model));
+    }
     
     private void initComponents(PropertySheet propertySheet) {
         add(new JScrollPane(propertySheet,
