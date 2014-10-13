@@ -27,7 +27,6 @@ package com.googlecode.blaisemath.graph;
 
 import java.awt.geom.Point2D;
 import java.util.Map;
-import com.googlecode.blaisemath.graph.Graph;
 
 /**
  * Provides methods for a layout scheme that has several iterations. The layout
@@ -45,7 +44,7 @@ public interface IterativeGraphLayout {
      * <code>iterate()</code> method.
      * @param positions a map describing the positions for all nodes in the layout
      */
-    public void reset(Map<?, Point2D.Double> positions);
+    void reset(Map<?, Point2D.Double> positions);
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
@@ -53,7 +52,7 @@ public interface IterativeGraphLayout {
      *   during the next call to iterate()
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
      */
-    public void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes);
+    void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes);
 
     /**
      * <p>
@@ -71,28 +70,35 @@ public interface IterativeGraphLayout {
      * @param g the graph to layout
      * @return map with current associating of nodes to points
      */
-    public <V> Map<V,Point2D.Double> iterate(Graph<V> g);
+    <V> Map<V,Point2D.Double> iterate(Graph<V> g);
 
     /**
      * @return index of current iteration (should reset to 0 whenever the reset method is called)
      */
-    public int getIteration();
+    int getIteration();
 
     /**
+     * Retrieve current value of cooling parameter.
      * @return current value of a "cooling parameter"
      */
-    public double getCoolingParameter();
+    double getCoolingParameter();
+
+    /**
+     * Update current value of cooling parameter.
+     * @param val new value
+     */
+    void setCoolingParameter(double val);
 
     /**
      * @return current "energy" or some double representing the convergence status
      *   of the layout
      */
-    public double getEnergyStatus();
+    double getEnergyStatus();
 
     /**
      * Returns the current list of point locations.
      * @return current list of positions
      */
-    public Map<?,Point2D.Double> getPositions();
+    Map<?,Point2D.Double> getPositions();
 
 }

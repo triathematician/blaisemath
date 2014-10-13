@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.layout;
  * #L%
  */
 
+import com.google.common.base.Function;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.GAInstrument;
 import com.googlecode.blaisemath.graph.Graph;
@@ -75,6 +76,15 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     private StaticGraphLayout addingLayout = new PositionalAddingLayout();
     /** The initial layout parameters */
     private double[] addingLayoutParameters = { 25.0 };
+    
+    /** The cooling parameter at step 0, defined by the iterative layout */
+    private double coolingParameter0 = 1.0;
+    /** Cooling curve. Determines the cooling parameter at each step, as a product of initial cooling parameter. */
+    private Function<Integer,Double> coolingCurve = new Function<Integer,Double>(){
+        public Double apply(Integer x) {
+            return .1 + .9/Math.log10(x+10);
+        }
+    };
     
     /** Graph */
     private Graph<N> graph;
@@ -288,6 +298,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
             stopLayoutTask();
             IterativeGraphLayout old = iLayout;
             iLayout = layout;
+            coolingParameter0 = iLayout.getCoolingParameter();
             iLayout.requestPositions(coordManager.getCoordinates(), true);
             pcs.firePropertyChange("layoutAlgorithm", old, layout);
         }
@@ -330,11 +341,17 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
             layoutTimer = new java.util.Timer();
         }
         stopLayoutTask();
+        iLayout.setCoolingParameter(coolingParameter0);
         layoutTask = new TimerTask() {
-            @Override public void run() {
-                for(int i=0;i<iter;i++) {
+            int iterTot = 0;
+            @Override 
+            public void run() {
+                for (int i = 0; i < iter; i++) {
                     iterateLayout();
                 }
+                iterTot += iter;
+                int proxyIter = Math.max(0, iterTot-100);
+                iLayout.setCoolingParameter(coolingParameter0*coolingCurve.apply(proxyIter));
             }
         };
         layoutTimer.schedule(layoutTask, delay, delay);
@@ -347,6 +364,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
         if (layoutTask != null) {
             layoutTask.cancel();
             layoutTask = null;
+            layoutTimer.purge();
         }
     }
 
