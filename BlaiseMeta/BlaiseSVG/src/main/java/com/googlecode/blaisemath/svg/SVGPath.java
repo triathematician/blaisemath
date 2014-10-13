@@ -30,6 +30,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.logging.Level;
@@ -75,13 +77,13 @@ public final class SVGPath extends SVGElement {
     
     //</editor-fold>
     
-    public static Converter<SVGPath, GeneralPath> shapeConverter() {
+    public static Converter<SVGPath, Path2D> shapeConverter() {
         return CONVERTER_INST;
     }
     
-    private static final class PathConverter extends Converter<SVGPath, GeneralPath> {
+    private static final class PathConverter extends Converter<SVGPath, Path2D> {
         @Override
-        protected GeneralPath doForward(SVGPath path) {
+        protected Path2D doForward(SVGPath path) {
             String svg = path.pathStr;
             GeneralPath gp = new GeneralPath();
             // ensure spaces follow every letter
@@ -141,10 +143,35 @@ public final class SVGPath extends SVGElement {
         }
 
         @Override
-        protected SVGPath doBackward(GeneralPath b) {
-            Logger.getLogger(PathConverter.class.getName()).log(Level.WARNING,
-                    "Conversion of GeneralPath to SVGPath not yet supported.");
-            return new SVGPath();
+        protected SVGPath doBackward(Path2D b) {
+            PathIterator pi = b.getPathIterator(null);
+            float[] cur = new float[6];
+            int curSegmentType = -1;
+            StringBuilder pathString = new StringBuilder();
+            while (!pi.isDone()) {
+                curSegmentType = pi.currentSegment(cur);
+                switch (curSegmentType) {
+                    case PathIterator.SEG_MOVETO:
+                        pathString.append(String.format("M %.6f %.6f ", cur[0], cur[1]));
+                        break;
+                    case PathIterator.SEG_LINETO:
+                        pathString.append(String.format("L %.6f %.6f ", cur[0], cur[1]));
+                        break;
+                    case PathIterator.SEG_QUADTO:
+                        pathString.append(String.format("Q %.6f %.6f %.6f %.6f ", cur[0], cur[1], cur[2], cur[3]));
+                        break;
+                    case PathIterator.SEG_CUBICTO:
+                        pathString.append(String.format("C %.6f %.6f %.6f %.6f %.6f %.6f ", cur[0], cur[1], cur[2], cur[3], cur[4], cur[5]));
+                        break;
+                    case PathIterator.SEG_CLOSE:
+                        pathString.append("Z");
+                        break;
+                    default:
+                        break;
+                }
+                pi.next();
+            }
+            return new SVGPath(pathString.toString());
         }
     }
     

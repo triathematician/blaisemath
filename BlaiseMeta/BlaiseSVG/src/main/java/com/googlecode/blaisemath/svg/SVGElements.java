@@ -32,15 +32,19 @@ import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Factory methods for converting to/from SVG Objects.
@@ -78,10 +82,11 @@ public class SVGElements {
             }
         } else if (shape instanceof Line2D) {
             res = SVGLine.shapeConverter().reverse().convert((Line2D) shape);
-        } else if (shape instanceof GeneralPath) {
-            res = SVGPath.shapeConverter().reverse().convert((GeneralPath) shape);
+        } else if (shape instanceof Path2D) {
+            res = SVGPath.shapeConverter().reverse().convert((Path2D) shape);
         } else {
-            throw new UnsupportedOperationException("Shapes of type "+shape.getClass()+" are not yet supported.");
+            Logger.getLogger(SVGElements.class.getName()).log(Level.WARNING, "Shapes of type {0} are not yet supported.", shape.getClass());
+            return null;
         }
         res.setId(id);
         res.setStyle(style);
@@ -100,7 +105,7 @@ public class SVGElements {
         if (m == null) {
             m = Markers.CIRCLE;
         }
-        Float ort = style.getFloat(Styles.MARKER_ORIENT, 0f);
+        Float ort = style.getFloat(Styles.MARKER_ORIENT, point instanceof OrientedPoint2D ? (float) ((OrientedPoint2D)point).getAngle() : 0f);
         Float rad = style.getFloat(Styles.MARKER_RADIUS, 4f);
         Shape shape = m.create(point, ort, rad);
         return create(id, shape, style);

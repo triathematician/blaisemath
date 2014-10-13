@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.svg;
  */
 
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import org.junit.Test;
 
 /**
@@ -35,7 +36,7 @@ import org.junit.Test;
  */
 public class SVGPathTest {
     
-    private static GeneralPath toPath(String p) {
+    private static Path2D toPath(String p) {
         return SVGPath.shapeConverter().convert(new SVGPath(p));
     }
     

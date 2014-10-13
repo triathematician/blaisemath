@@ -49,5 +49,10 @@
             <artifactId>blaise-svg</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.blaisemath</groupId>
+            <artifactId>firestarter</artifactId>
+            <version>1.2.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
