@@ -227,6 +227,12 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     //
     
     /**
+     * Method that provides the bounding box enclosing the graphic.
+     * @return bounding box
+     */
+    public abstract Rectangle2D boundingBox();
+    
+    /**
      * Method used to determine whether the graphic receives {@link MouseEvent}s
      * and will be asked to provide a tooltip at the given point. The graphic's
      * {@link MouseListener}s and {@link MouseMotionListener}s will have the

@@ -24,11 +24,12 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import static com.google.common.base.Preconditions.checkState;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Draws on a {@link JGraphicComponent} using the component's transform.
@@ -39,16 +40,20 @@ public abstract class TransformedCanvasPainter implements CanvasPainter<Graphics
 
     @Override
     public void paint(Component component, Graphics2D canvas) {
-        checkState(component instanceof JGraphicComponent,
-                "Attempted to paint on a non-JGraphicComponent");
-        AffineTransform oldTransform = canvas.getTransform();
-        JGraphicComponent gc = (JGraphicComponent) component;
-        AffineTransform tr = gc.getTransform();
-        if (tr != null) {
-            canvas.transform(tr);
+        if (!(component instanceof TransformedCoordinateSpace)) {
+            Logger.getLogger(TransformedCanvasPainter.class.getName()).log(Level.FINE,
+                    "Painting on a component that is not a TransformedCoordinateSpace");
+            paintTransformed(component, canvas);
+        } else {
+            AffineTransform oldTransform = canvas.getTransform();
+            TransformedCoordinateSpace gc = (TransformedCoordinateSpace) component;
+            AffineTransform tr = gc.getTransform();
+            if (tr != null) {
+                canvas.transform(tr);
+            }
+            paintTransformed(component, canvas);
+            canvas.setTransform(oldTransform);
         }
-        paintTransformed(gc, canvas);
-        canvas.setTransform(oldTransform);
     }
     
     /**
@@ -56,6 +61,6 @@ public abstract class TransformedCanvasPainter implements CanvasPainter<Graphics
      * @param comp the component
      * @param canvas the canvas
      */
-    public abstract void paintTransformed(JGraphicComponent comp, Graphics2D canvas);
+    public abstract void paintTransformed(Component comp, Graphics2D canvas);
 
 }

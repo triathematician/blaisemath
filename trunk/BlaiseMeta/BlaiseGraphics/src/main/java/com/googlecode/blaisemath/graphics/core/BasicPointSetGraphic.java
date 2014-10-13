@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graphics.core;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.Points;
@@ -39,7 +38,6 @@ import javax.annotation.Nullable;
  * Customization is provided for tooltips and for dragging individual points,
  * but to customize any other attribute of graphics for individual points,
  * use {@link CustomPointSetGraphic} instead.
- * @see PointRenderer
  * @see CustomPointSetGraphic
  *
  * @author Elisha Peterson

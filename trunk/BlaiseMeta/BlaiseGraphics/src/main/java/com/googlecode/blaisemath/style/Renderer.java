@@ -4,9 +4,9 @@
  */
 package com.googlecode.blaisemath.style;
 
-import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -44,6 +44,15 @@ public interface Renderer<S,G> {
      * @param canvas where to render it
      */
     void render(S primitive, AttributeSet style, G canvas);
+    
+    /**
+     * Get the bounding box for the drawn object
+     * @param primitive the object to render
+     * @param style the style used for rendering
+     * @return bounding box around the object
+     */
+    @Nullable
+    Rectangle2D boundingBox(S primitive, AttributeSet style);
     
     /**
      * Test whether rendered primitive contains the given point.

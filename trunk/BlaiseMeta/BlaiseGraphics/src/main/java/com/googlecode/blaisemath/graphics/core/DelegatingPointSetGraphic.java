@@ -31,7 +31,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import static com.googlecode.blaisemath.graphics.core.LabeledPointGraphic.LABEL_RENDERER_PROP;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
@@ -56,7 +55,6 @@ import javax.swing.JPopupMenu;
  * @param <S> the type of object being displayed
  * @param <G> type of canvas to render to
  *
- * @see PointRenderer
  * @see BasicPointSetGraphic
  *
  * @author Elisha Peterson

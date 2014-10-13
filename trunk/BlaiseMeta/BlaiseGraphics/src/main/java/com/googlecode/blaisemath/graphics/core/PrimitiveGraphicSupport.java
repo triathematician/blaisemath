@@ -27,8 +27,12 @@ package com.googlecode.blaisemath.graphics.core;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 import javax.annotation.Nullable;
 
 /**
@@ -61,7 +65,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     /** Whether graphic can be dragged */
     protected boolean dragEnabled = false;
     /** Handles the drag movement */
-    protected GraphicMoveHandler dragger = null;
+    protected GMouseDragHandler dragger = null;
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
@@ -121,6 +125,11 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
         }
     }
 
+    @Override
+    public Rectangle2D boundingBox() {
+        return renderer == null ? null : renderer.boundingBox(primitive, renderStyle());
+    }
+
     public boolean contains(Point2D point) {
         return renderer != null && renderer.contains(primitive, renderStyle(), point);
     }
@@ -133,8 +142,9 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     // DRAGGING
     //
 
-    private boolean isDragCapable() {
+    public boolean isDragCapable() {
         return primitive instanceof Point2D
+            || primitive instanceof Shape
             || (primitive instanceof DraggableCoordinate 
                 && ((DraggableCoordinate)primitive).getPoint() instanceof Point2D);
     }
@@ -148,13 +158,17 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
             checkArgument(!val || isDragCapable());
             this.dragEnabled = val;
             if (dragEnabled) {
-                DraggableCoordinate bean = primitive instanceof DraggableCoordinate 
-                        ? (DraggableCoordinate) primitive
-                    : primitive instanceof Point2D
-                        ? new ProxyDraggable()
-                    : null;
-                assert bean != null;
-                dragger = new GraphicMoveHandler(bean);
+                if (primitive instanceof Shape) {
+                    dragger = new ShapeDragHandler();
+                } else {
+                    DraggableCoordinate bean = primitive instanceof DraggableCoordinate 
+                            ? (DraggableCoordinate) primitive
+                        : primitive instanceof Point2D
+                            ? new ProxyPointDraggable()
+                        : null;
+                    assert bean != null;
+                    dragger = new GraphicMoveHandler(bean);
+                }
                 addMouseListener(dragger);
                 addMouseMotionListener(dragger);
             } else {
@@ -175,7 +189,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     //
     
     /** A draggable point generating events when it's position changes. */
-    public class ProxyDraggable implements DraggableCoordinate<Point2D> {
+    private class ProxyPointDraggable implements DraggableCoordinate<Point2D> {
         public Point2D getPoint() {
             return (Point2D) primitive; 
         }
@@ -189,6 +203,52 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
                     initial.getX()+dragFinish.getX()-dragStart.getX(),
                     initial.getY()+dragFinish.getY()-dragStart.getY());
             fireGraphicChanged();
+        }
+    }
+    
+    /** A draggable shape generating events when it's position changes. */
+    private class ShapeDragHandler extends GMouseDragHandler {
+        private Shape initialShape = null;
+        private double x0 = 0;
+        private double y0 = 0;
+
+        @Override
+        public void mouseDragInitiated(GMouseEvent e, Point2D start) {
+            initialShape = (Shape) primitive;
+            if (initialShape instanceof RectangularShape) {
+                x0 = ((RectangularShape) initialShape).getX();
+                y0 = ((RectangularShape) initialShape).getY();
+            } else if (initialShape instanceof Line2D) {
+                x0 = ((Line2D) initialShape).getX1();
+                y0 = ((Line2D) initialShape).getY1();
+            }
+        }
+
+        @Override
+        public void mouseDragInProgress(GMouseEvent e, Point2D start) {
+            double dx = e.getGraphicLocation().getX()-start.getX();
+            double dy = e.getGraphicLocation().getY()-start.getY();
+            if (dx == 0 && dy == 0) {
+                return;
+            }
+            if (initialShape instanceof RectangularShape) {
+                RectangularShape rsh = (RectangularShape) initialShape;
+                rsh.setFrame(x0+dx, y0+dy, rsh.getWidth(), rsh.getHeight());
+            } else if (initialShape instanceof Line2D) {
+                Line2D line = (Line2D) initialShape;
+                setPrimitive((O) new Line2D.Double(x0+dx, y0+dy, 
+                        line.getX2()+dx, line.getY2()+dy));
+            } else {
+                AffineTransform at = new AffineTransform();
+                at.translate(dx, dy);
+                setPrimitive((O) at.createTransformedShape(initialShape));
+            }    
+            fireGraphicChanged();
+        }
+
+        @Override
+        public void mouseDragCompleted(GMouseEvent e, Point2D start) {
+            mouseDragInProgress(e, start);
         }
     }
     

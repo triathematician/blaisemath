@@ -42,9 +42,9 @@ import java.awt.geom.Point2D;
 public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
 
     /** Point at start of arrow */
-    protected final PrimitiveGraphic<OrientedPoint2D,Graphics2D> start;
+    protected final PrimitiveGraphic<Point2D,Graphics2D> start;
     /** Point at end of arrow */
-    protected final PrimitiveGraphic<OrientedPoint2D,Graphics2D> end;
+    protected final PrimitiveGraphic<Point2D,Graphics2D> end;
 
     /**
      * Construct graphic with specified base points
@@ -52,10 +52,8 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
      * @param end ending point
      */
     public TwoPointGraphic(Point2D start, Point2D end) {
-        this.start = JGraphics.marker(new OrientedPoint2D(start).inDirectionOf(end),
-                Styles.defaultPointStyle());
-        this.end = JGraphics.marker(new OrientedPoint2D(end).inDirectionOf(start),
-                Styles.defaultPointStyle());
+        this.start = JGraphics.marker(new OrientedPoint2D(start), Styles.defaultPointStyle());
+        this.end = JGraphics.marker(new OrientedPoint2D(end), Styles.defaultPointStyle());
         
         initGraphics();
         pointsUpdated();
@@ -70,11 +68,11 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
         addGraphic(this.end);
     }
 
-    public PrimitiveGraphic<OrientedPoint2D, Graphics2D> getStartGraphic() {
+    public PrimitiveGraphic<Point2D, Graphics2D> getStartGraphic() {
         return start;
     }
 
-    public PrimitiveGraphic<OrientedPoint2D, Graphics2D> getEndGraphic() {
+    public PrimitiveGraphic<Point2D, Graphics2D> getEndGraphic() {
         return end;
     }
 
@@ -89,8 +87,15 @@ public class TwoPointGraphic extends GraphicComposite<Graphics2D> {
      * {@link GraphicComposite#fireGraphicChanged()}.
      */
     protected void pointsUpdated() {
-        start.getPrimitive().inDirectionOf(end.getPrimitive());
-        end.getPrimitive().inDirectionOf(start.getPrimitive());
+        if (!(start.getPrimitive() instanceof OrientedPoint2D)) {
+            start.setPrimitive(new OrientedPoint2D(start.getPrimitive()));
+        }
+        if (!(end.getPrimitive() instanceof OrientedPoint2D)) {
+            end.setPrimitive(new OrientedPoint2D(end.getPrimitive()));
+        }
+        
+        ((OrientedPoint2D)start.getPrimitive()).inOppositeDirectionOf(end.getPrimitive());
+        ((OrientedPoint2D)end.getPrimitive()).inOppositeDirectionOf(start.getPrimitive());
         fireGraphicChanged();
     }
     

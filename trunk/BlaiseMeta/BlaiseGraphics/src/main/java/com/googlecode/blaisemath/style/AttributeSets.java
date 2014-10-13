@@ -95,7 +95,10 @@ public final class AttributeSets {
             for (String s : style.getAttributes()) {
                 Object styleValue = style.get(s);
                 try {
-                    props.put(s, VALUE_CONVERTER_INST.convert(styleValue));
+                    String value = VALUE_CONVERTER_INST.convert(styleValue);
+                    if (value != null) {
+                        props.put(s, value);
+                    }
                 } catch (UnsupportedOperationException x) {
                     // keep trying to convert, but log a warning
                     Logger.getLogger(AttributeSets.class.getName()).log(Level.WARNING,

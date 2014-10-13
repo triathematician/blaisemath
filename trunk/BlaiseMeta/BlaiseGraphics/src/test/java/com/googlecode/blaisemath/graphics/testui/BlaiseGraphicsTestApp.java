@@ -38,8 +38,8 @@ import com.googlecode.blaisemath.graphics.swing.ArrowPathRenderer.ArrowLocation;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
+import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
 import com.googlecode.blaisemath.graphics.swing.MarkerRendererToClip;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.graphics.swing.SegmentGraphic;
 import com.googlecode.blaisemath.graphics.swing.TextRenderer;
 import com.googlecode.blaisemath.graphics.swing.TwoPointGraphic;
@@ -136,7 +136,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
     public void addPointSet() {      
         final BasicPointSetGraphic bp = new BasicPointSetGraphic(
                 new Point2D[]{randomPoint(), randomPoint(), randomPoint()},
-                this.pointsetStyle, PointRenderer.getInstance());
+                this.pointsetStyle, MarkerRenderer.getInstance());
         bp.addContextMenuInitializer(new ContextMenuInitializer<Graphic<Graphics2D>>(){
             public void initContextMenu(JPopupMenu menu, Graphic<Graphics2D> src, Point2D point, Object focus, Set selection) {
                 Point2D pt = bp.getPoint(bp.indexOf(point));
@@ -173,7 +173,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             crds.put(s, new Point(10*s.length(), 50 + 10*s.indexOf(" ")));
         }
         DelegatingPointSetGraphic<String,Graphics2D> bp = new DelegatingPointSetGraphic<String,Graphics2D>(
-                PointRenderer.getInstance(), TextRenderer.getInstance());
+                MarkerRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(crds);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());
@@ -201,7 +201,7 @@ public class BlaiseGraphicsTestApp extends SingleFrameApplication {
             points2.put(i, randomPoint());
         }
         final DelegatingPointSetGraphic<Integer,Graphics2D> bp = new DelegatingPointSetGraphic<Integer,Graphics2D>(
-                PointRenderer.getInstance(), TextRenderer.getInstance());
+                MarkerRenderer.getInstance(), TextRenderer.getInstance());
         bp.addObjects(points2);
         bp.setDragEnabled(true);
         bp.getStyler().setLabelDelegate(Functions.toStringFunction());

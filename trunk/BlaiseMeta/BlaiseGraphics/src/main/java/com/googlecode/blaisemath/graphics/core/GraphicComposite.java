@@ -31,8 +31,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphic.STYLE_PROP;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.style.StyleHints;
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
@@ -43,12 +45,10 @@ import javax.swing.JPopupMenu;
 
 /**
  * <p>
- * An ordered collection of {@link Graphic}s, where the ordering indicates draw order.
- * May also have a {@link StyleContext} that graphics can reference when rendering.
- * </p>
- * <p>
- * It is intended that this class be thread-safe, so that graphics can be added to or
- * removed from the composite from any thread.
+ *   An ordered collection of {@link Graphic}s, where the ordering indicates draw order.
+ *   May also have a {@link StyleContext} that graphics can reference when rendering.
+ *   The composite is thread-safe, so graphics can be added or removed to the composite from
+ *   any thread.
  * </p>
  * 
  * @param <G> type of graphics canvas to render to
@@ -56,18 +56,25 @@ import javax.swing.JPopupMenu;
  * @author Elisha
  */
 public class GraphicComposite<G> extends Graphic<G> {
+    
+    public static final String BOUNDING_BOX_VISIBLE_PROP = "boundingBoxVisible";
+    public static final String BOUNDING_BOX_STYLE_PROP = "boundingBoxStyle";
 
     /** Stores the shapes and their styles (in order) */
     protected final Set<Graphic<G>> entries = Sets.newLinkedHashSet();
-    /** The attributes associated with the composite */
+    /** The attributes associated with the composite. These will be inherited by child graphics. */
     protected AttributeSet style = new AttributeSet();
     /** The associated style provider; overrides the default style for the components in the composite (may be null). */
     @Nullable 
     protected StyleContext styleContext;
     
+    /** Delegate graphic used for drawing the bounding box */
+    private final PrimitiveGraphic<Shape,G> boundingBoxGraphic = new PrimitiveGraphic<Shape,G>();
+    
     /** Constructs with default settings */
     public GraphicComposite() {
         setTooltipEnabled(true);
+        setBoundingBoxVisible(false);
     }
 
     @Override
@@ -164,6 +171,40 @@ public class GraphicComposite<G> extends Graphic<G> {
             pcs.firePropertyChange(STYLE_PROP, old, style);
         }
     }
+
+    public boolean isBoundingBoxVisible() {
+        return !GraphicUtils.isInvisible(boundingBoxGraphic);
+    }
+
+    public void setBoundingBoxVisible(boolean show) {
+        if (isBoundingBoxVisible() != show) {
+            boundingBoxGraphic.setStyleHint(StyleHints.HIDDEN_HINT, !show);
+            fireGraphicChanged();
+            pcs.firePropertyChange(BOUNDING_BOX_VISIBLE_PROP, !show, show);
+        }
+    }
+
+    public AttributeSet getBoundingBoxStyle() {
+        return boundingBoxGraphic.getStyle();
+    }
+
+    public void setBoundingBoxStyle(AttributeSet style) {
+        Object old = getBoundingBoxStyle();
+        if (old != style) {
+            boundingBoxGraphic.setStyle(style);
+            fireGraphicChanged();
+            pcs.firePropertyChange(BOUNDING_BOX_STYLE_PROP, old, style);
+        }
+    }
+
+    public Renderer<Shape, G> getBoundingBoxRenderer() {
+        return boundingBoxGraphic.getRenderer();
+    }
+
+    public void setBoundingBoxRenderer(Renderer<Shape, G> renderer) {
+        boundingBoxGraphic.setRenderer(renderer);
+        fireGraphicChanged();
+    }
     
     //</editor-fold>
     
@@ -176,6 +217,9 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** Add w/o events */
     private boolean addHelp(Graphic<G> en) {
         if (entries.add(en)) {
+            if (en.getParent() != null) {
+                en.getParent().removeGraphic(en);
+            }
             en.setParent(this);
             return true;
         }
@@ -307,6 +351,18 @@ public class GraphicComposite<G> extends Graphic<G> {
     //
 
     @Override
+    public Rectangle2D boundingBox() {
+        Rectangle2D res = null;
+        for (Graphic<G> en : entries) {
+            Rectangle2D enBox = en.boundingBox();
+            if (enBox != null) {
+                res = res == null ? enBox : res.createUnion(enBox);
+            }
+        }
+        return res;
+    }
+
+    @Override
     public synchronized boolean contains(Point2D point) {
         return graphicAt(point) != null;
     }
@@ -327,6 +383,14 @@ public class GraphicComposite<G> extends Graphic<G> {
             if (!StyleHints.isInvisible(en.getStyleHints())) {
                 en.renderTo(canvas);
             }
+        }
+        if (!GraphicUtils.isInvisible(boundingBoxGraphic)) {
+            AttributeSet baseStyle = boundingBoxGraphic.getStyle();
+            AttributeSet modStyle = getStyleContext().applyModifiers(baseStyle, styleHints);
+            boundingBoxGraphic.setStyle(modStyle);
+            boundingBoxGraphic.setPrimitive(boundingBox());
+            boundingBoxGraphic.renderTo(canvas);
+            boundingBoxGraphic.setStyle(baseStyle);
         }
     }
     
@@ -386,6 +450,9 @@ public class GraphicComposite<G> extends Graphic<G> {
                 return en;
             }
         }
+        if (GraphicUtils.isFunctional(boundingBoxGraphic) && boundingBox().contains(point)) {
+            return this;
+        }
         return null;
     }
 
@@ -421,6 +488,9 @@ public class GraphicComposite<G> extends Graphic<G> {
                     return en;
                 }
             }
+        }
+        if (GraphicUtils.isFunctional(boundingBoxGraphic) && boundingBox().contains(point)) {
+            return this;
         }
         return null;
     }

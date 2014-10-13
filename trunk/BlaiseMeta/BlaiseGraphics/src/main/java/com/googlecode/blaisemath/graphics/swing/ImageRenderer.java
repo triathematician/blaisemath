@@ -48,6 +48,10 @@ public class ImageRenderer implements Renderer<AnchoredImage, Graphics2D> {
         canvas.drawImage(primitive.getImage(), (int) primitive.getX(), (int) primitive.getY(), null);
     }
 
+    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style) {
+        return primitive.getBounds(null);
+    }
+
     public boolean contains(AnchoredImage primitive, AttributeSet style, Point2D point) {
         return primitive.getBounds(null).contains(point);
     }
