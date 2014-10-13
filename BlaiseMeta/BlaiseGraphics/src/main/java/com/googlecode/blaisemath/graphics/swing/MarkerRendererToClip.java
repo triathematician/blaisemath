@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
 
 /**
  * Draws a point along with a ray from the point to the outer edge of the graphics canvas.
@@ -119,8 +119,6 @@ public class MarkerRendererToClip extends MarkerRenderer {
     }
 
 
-
-
     //
     // UTILITY
     //
@@ -132,7 +130,7 @@ public class MarkerRendererToClip extends MarkerRenderer {
      * @param bounds the window boundaries
      * @return 
      */
-    protected static Point2D.Double boundaryHit(Point2D p1p, Point2D p2p, Rectangle2D bounds) {
+    public static Point2D.Double boundaryHit(Point2D p1p, Point2D p2p, RectangularShape bounds) {
         Point2D.Double p1 = new Point2D.Double(p1p.getX(), p1p.getY());
         Point2D.Double p2 = new Point2D.Double(p2p.getX(), p2p.getY());
         if (p2.x > p1.x && p1.x <= bounds.getMaxX()) {
