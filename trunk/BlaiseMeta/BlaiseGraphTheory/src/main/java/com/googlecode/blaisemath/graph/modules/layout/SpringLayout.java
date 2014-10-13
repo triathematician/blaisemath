@@ -59,7 +59,7 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
     /** Distance outside which global force acts */
     private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = DIST_SCALE;
     /** Maximum force that can be applied between nodes */
-    private static final double MAX_FORCE = 100*DIST_SCALE*DIST_SCALE;
+    private static final double MAX_FORCE = DIST_SCALE*DIST_SCALE/100;
     /** Min distance to assume between nodes */
     private static final double MIN_DIST = DIST_SCALE/100;
     /** Max distance to apply repulsive force */
@@ -134,6 +134,10 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
     public double getCoolingParameter() { 
         return parameters.dampingC;
     }
+
+    public void setCoolingParameter(double val) {
+        parameters.dampingC = val;
+    }    
     
     public double getEnergyStatus() { 
         return energy; 
@@ -343,7 +347,9 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
 
         // adjusts velocity with damping;
         for (V io : unpinnedNodes) {
-            adjustVelocity(vel.get(io), forces.get(io));
+            int deg = g.degree(io);
+            double maxForce = deg <= 15 ? MAX_FORCE : MAX_FORCE * (.2 + .8/(deg-15));
+            adjustVelocity(vel.get(io), forces.get(io), maxForce);
         }
 
         // move nodes
@@ -495,8 +501,14 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
      *  and caps maximum speed.
      * @param iVel velocity to adjust
      * @param netForce force vector to use
+     * @param maxForce maximum permissible force
      */
-    protected void adjustVelocity(Point2D.Double iVel, Point2D.Double netForce) {
+    protected void adjustVelocity(Point2D.Double iVel, Point2D.Double netForce, double maxForce) {
+        double fm = netForce.distance(0, 0);
+        if (fm > maxForce) {
+            netForce.x *= maxForce/fm;
+            netForce.y *= maxForce/fm;
+        }
         iVel.x = parameters.dampingC * (iVel.x + parameters.stepT * netForce.x);
         iVel.y = parameters.dampingC * (iVel.y + parameters.stepT * netForce.y);
         double speed = iVel.x*iVel.x+iVel.y*iVel.y;

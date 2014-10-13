@@ -102,11 +102,18 @@ public class StaticSpringLayout implements StaticGraphLayout {
         return "StaticSpringLayout";
     }
     
-    /** Sets output stream for updates */
+    /**
+     * Sets output stream for updates
+     * @param s
+     */
     public void setStatusStream(PrintStream s) {
         this.statusStream = s;
     }
-    /** Sets listener for layout updates */
+
+    /**
+     * Sets listener for layout updates
+     * @param al
+     */
     public void setLayoutListener(ActionListener al) {
         this.al = al;
     }
