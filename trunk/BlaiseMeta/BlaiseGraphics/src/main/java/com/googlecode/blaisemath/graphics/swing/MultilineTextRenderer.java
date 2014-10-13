@@ -54,6 +54,12 @@ import java.util.logging.Logger;
  * @author petereb1
  */
 public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D> {
+
+    private static final MultilineTextRenderer INST = new MultilineTextRenderer();
+    
+    public static Renderer<AnchoredText, Graphics2D> getInstance() {
+        return INST;
+    }
     
     @Override
     public String toString() {
