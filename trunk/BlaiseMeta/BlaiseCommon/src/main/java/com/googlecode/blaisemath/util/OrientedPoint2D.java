@@ -78,6 +78,16 @@ public class OrientedPoint2D extends Point2DBean {
         setAngle(Math.atan2(p2.getY() - getY(), p2.getX() - getX()));
         return this;
     }
+    
+    /**
+     * Update angle to be in direction of given second point
+     * @param p2 second point
+     * @return this
+     */
+    public OrientedPoint2D inOppositeDirectionOf(Point2D p2) {
+        setAngle(Math.atan2(-p2.getY() + getY(), -p2.getX() + getX()));
+        return this;
+    }
 
     public double getAngle() {
         return angle;

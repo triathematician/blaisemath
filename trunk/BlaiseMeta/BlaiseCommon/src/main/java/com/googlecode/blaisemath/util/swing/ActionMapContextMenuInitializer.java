@@ -24,7 +24,10 @@ package com.googlecode.blaisemath.util.swing;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeListener;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,20 +45,63 @@ public final class ActionMapContextMenuInitializer<S> implements ContextMenuInit
     private final String[] actions;
 
     public ActionMapContextMenuInitializer(ActionMap am, String... actions) {
-        this.am = am;
+        this.am = checkNotNull(am);
         this.actions = actions;
     }
     
     public void initContextMenu(JPopupMenu popup, S src, Point2D point,
             Object focus, Set selection) {
         for (String a : actions) {
-            Action action = am.get(a);
-            if (action == null) {
-                Logger.getLogger(ActionMapContextMenuInitializer.class.getName())
-                        .log(Level.WARNING, "Action not found: {0}", a);
+            if (a == null) {
+                popup.addSeparator();
             } else {
-                popup.add(action);
+                Action action = am.get(a);
+                if (action == null) {
+                    Logger.getLogger(ActionMapContextMenuInitializer.class.getName())
+                            .log(Level.WARNING, "Action not found: {0}", a);
+                } else {
+                    popup.add(new ActionWithSource(action, src));
+                }
             }
+        }
+    }
+    
+    private static class ActionWithSource implements Action {
+        private final Object source;
+        private final Action delegate;
+
+        private ActionWithSource(Action delegate, Object source) {
+            this.source = source;
+            this.delegate = delegate;
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            e.setSource(source);
+            delegate.actionPerformed(e);
+        }
+
+        public Object getValue(String key) {
+            return delegate.getValue(key);
+        }
+
+        public void putValue(String key, Object value) {
+            delegate.putValue(key, value);
+        }
+
+        public void setEnabled(boolean b) {
+            delegate.setEnabled(b);
+        }
+
+        public boolean isEnabled() {
+            return delegate.isEnabled();
+        }
+
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            // not supported
+        }
+
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            // not supported
         }
     }
 
