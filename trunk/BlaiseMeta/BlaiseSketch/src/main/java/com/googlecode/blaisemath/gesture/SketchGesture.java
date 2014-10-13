@@ -1,6 +1,6 @@
 /**
  * SketchGesture.java
- * Created Oct 1, 2014
+ * Created Oct 11, 2014
  */
 package com.googlecode.blaisemath.gesture;
 
@@ -24,103 +24,50 @@ package com.googlecode.blaisemath.gesture;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
+import com.googlecode.blaisemath.gesture.swing.GestureOrchestrator;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 /**
- * Handler for mouse gestures, tuned to creating objects.
- * @param <C> target component type
- * @author Elisha
+ * Generic gesture based on mouse events that can be initiated and finished or canceled.
+ * 
+ * @param <C> the orchestrator for the gesture
+ * @author elisha
  */
-public abstract class SketchGesture<C> extends MouseAdapter {
-    
-    protected final String name;
-    protected final String description;
+public interface SketchGesture<C extends GestureOrchestrator> extends MouseListener, MouseMotionListener {
 
-    protected Point2D movePoint = null;
-    protected Point2D pressPoint = null;
-    protected Point2D locPoint = null;
+    /**
+     * Get the user-friendly name of the gesture
+     * @return gesture name
+     */
+    String getName();
 
-    public SketchGesture(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public String getDesription() {
-        return description;
-    }
-    
-    //<editor-fold defaultstate="collapsed" desc="DEFAULT MOUSE HANDLING">
+    /**
+     * Get the user-friendly description of the gesture
+     * @return gesture description
+     */
+    String getDesription();
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        JGraphicComponent gc = (JGraphicComponent) e.getSource();
-        movePoint = gc.toGraphicCoordinate(e.getPoint());
-        gc.repaint();
-    }
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-        movePoint = null;
-        JGraphicComponent gc = (JGraphicComponent) e.getSource();
-        gc.repaint();
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-        JGraphicComponent gc = (JGraphicComponent) e.getSource();
-        pressPoint = gc.toGraphicCoordinate(e.getPoint());
-        locPoint = gc.toGraphicCoordinate(e.getPoint());
-        gc.repaint();
-    }
-    
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        JGraphicComponent gc = (JGraphicComponent) e.getSource();
-        locPoint = gc.toGraphicCoordinate(e.getPoint());
-        gc.repaint();
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        mouseDragged(e);
-    }
-    
-    //</editor-fold>
+    /**
+     * Get the orchestrator that manages the gesture's state
+     * @return orchestrator
+     */
+    C getOrchestrator();
+        
+    /**
+     * Enable the gesture, preparing it to be used.
+     */
+    void initiate();
 
-    /** Enable the gesture, preparing it to be used. */
-    public void initiate() {
-        // do nothing by default
-    }
-    
-    /** Disable the gesture, cancelling any pending operations. */
-    public void cancel() {
-        // do nothing by default
-    }
-    
+    /**
+     * Disable the gesture, canceling any pending operations.
+     */
+    void cancel();
+
     /**
      * Finish the gesture, applying the result.
-     * @param comp the target component
      */
-    public void finish(C comp) {
-        // do nothing by default
-    }
-
-    /**
-     * Paint the gesture on the given view. Empty by default.
-     * @param g the graphics canvas
-     * @param view the context object for the gesture
-     */
-    public void paint(Graphics g, C view) {
-        // do nothing by default
-    }
+    void finish();
     
 }
