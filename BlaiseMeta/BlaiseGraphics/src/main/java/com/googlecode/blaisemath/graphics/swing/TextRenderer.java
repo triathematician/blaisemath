@@ -74,27 +74,21 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         
         canvas.setColor(style.getColor(Styles.FILL, Color.black));
         canvas.setFont(Styles.getFont(style));
-        Rectangle2D bounds = bounds(primitive, style);
+        Rectangle2D bounds = boundingBox(primitive, style);
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
     }
 
     public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
-        Rectangle2D bounds = bounds(primitive, style);
+        Rectangle2D bounds = boundingBox(primitive, style);
         return bounds != null && bounds.contains(point);
     }
 
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
-        Rectangle2D bounds = bounds(primitive, style);
+        Rectangle2D bounds = boundingBox(primitive, style);
         return bounds != null && bounds.intersects(rect);
     }
 
-    /**
-     * Get the bounds of the given text relative to the given canvas.
-     * @param primitive the text and location
-     * @param style style associated with the text
-     * @return bounding box for the text
-     */
-    public static Rectangle2D bounds(AnchoredText primitive, AttributeSet style) {
+    public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
         }

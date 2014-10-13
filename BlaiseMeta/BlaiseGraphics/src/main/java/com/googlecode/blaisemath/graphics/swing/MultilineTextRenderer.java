@@ -61,11 +61,11 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
     }
 
     public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
-        return multilineBounds(primitive, style).contains(point);
+        return boundingBox(primitive, style).contains(point);
     }
 
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
-        return multilineBounds(primitive, style).intersects(rect);
+        return boundingBox(primitive, style).intersects(rect);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         canvas.setColor(style.getColor(Styles.FILL));
         
         double lineHeight = canvas.getFontMetrics().getHeight();
-        Rectangle2D bounds = multilineBounds(text, style);
+        Rectangle2D bounds = boundingBox(text, style);
         String[] lns = text.getText().split("\n|\r\n");
         double y0 = bounds.getMaxY();
         double x0 = bounds.getMinX();
@@ -88,7 +88,7 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         }
     }
 
-    public static Rectangle2D multilineBounds(AnchoredText text, AttributeSet style) {
+    public Rectangle2D boundingBox(AnchoredText text, AttributeSet style) {
         if (Strings.isNullOrEmpty(text.getText())) {
             return null;
         }

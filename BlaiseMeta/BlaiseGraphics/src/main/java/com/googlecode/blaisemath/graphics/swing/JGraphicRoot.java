@@ -96,7 +96,8 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
                     popup.removeAll();
-                    Set<Graphic> selected = owner.isSelectionEnabled() ? owner.getSelectionModel().getSelection() : null;
+                    Set<Graphic<Graphics2D>> selected = owner.isSelectionEnabled() 
+                            ? owner.getSelectionModel().getSelection() : null;
                     initContextMenu(popup, null, mouseLoc, null, selected);
                     if (popup.getComponentCount() == 0) {
                         // cancel popup

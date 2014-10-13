@@ -124,11 +124,9 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             return -1;
         }
         AttributeSet style = renderStyle();
-        synchronized(primitive) {
-            for (int i = primitive.length-1; i >= 0; i--) {
-                if (renderer.contains(primitive[i], style, nearby)) {
-                    return i;
-                }
+        for (int i = primitive.length-1; i >= 0; i--) {
+            if (renderer.contains(primitive[i], style, nearby)) {
+                return i;
             }
         }
         return -1;
@@ -139,11 +137,20 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             return;
         }
         AttributeSet style = renderStyle();
-        synchronized(primitive) {
-            for (O o : primitive) {
-                renderer.render(o, style, canvas);
-            }
+        for (O o : primitive) {
+            renderer.render(o, style, canvas);
         }
+    }
+
+    @Override
+    public Rectangle2D boundingBox() {
+        Rectangle2D res = null;
+        AttributeSet style = renderStyle();
+        for (O o : primitive) {
+            Rectangle2D oBounds = renderer.boundingBox(o, style);
+            res = res == null ? oBounds : res.createUnion(oBounds);
+        }
+        return res;
     }
 
     public boolean contains(Point2D point) {
@@ -155,11 +162,9 @@ public abstract class PrimitiveArrayGraphicSupport<O,G> extends Graphic<G> {
             return false;
         }
         AttributeSet style = renderStyle();
-        synchronized(primitive) {
-            for (O o : primitive) {
-                if (renderer.intersects(o, style, box)) {
-                    return true;
-                }
+        for (O o : primitive) {
+            if (renderer.intersects(o, style, box)) {
+                return true;
             }
         }
         return false;

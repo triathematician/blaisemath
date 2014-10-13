@@ -62,25 +62,30 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
             canvas.draw(primitive);
         }
     }
-
-    public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
+    
+    public static Shape strokedShape(Shape primitive, AttributeSet style) {
         Color stroke = style.getColor(Styles.STROKE);
         Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
         if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-            return new BasicStroke(strokeWidth).createStrokedShape(primitive).contains(point);
+            return new BasicStroke(strokeWidth).createStrokedShape(primitive);
         } else {
-            return false;
+            return null;
         }
     }
 
+    public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
+        Shape sh = strokedShape(primitive, style);
+        return sh == null ? null : sh.getBounds2D();
+    }
+
+    public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
+        Shape sh = strokedShape(primitive, style);
+        return sh != null && sh.contains(point);
+    }
+
     public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
-        Color stroke = style.getColor(Styles.STROKE);
-        Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-        if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-            return new BasicStroke(strokeWidth).createStrokedShape(primitive).intersects(rect);
-        } else {
-            return false;
-        }
+        Shape sh = strokedShape(primitive, style);
+        return sh != null && sh.intersects(rect);
     }
 
 }

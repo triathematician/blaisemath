@@ -72,11 +72,7 @@ public class SegmentGraphic extends TwoPointGraphic {
 
     @Override
     protected void pointsUpdated() {
-        double angle = Math.atan2(
-                end.getPrimitive().getY() - start.getPrimitive().getY(),
-                end.getPrimitive().getX() - start.getPrimitive().getX());
-        start.getPrimitive().setAngle(angle+Math.PI);
-        end.getPrimitive().setAngle(angle);
+        super.pointsUpdated();
         segmentGraphic.setPrimitive(new Line2D.Double(start.getPrimitive(), end.getPrimitive()));
     }
 

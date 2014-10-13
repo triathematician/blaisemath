@@ -88,27 +88,27 @@ public class JGraphics {
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> point(Point2D primitive) {
-        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, Styles.defaultPointStyle(), PointRenderer.getInstance());
+        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, Styles.defaultPointStyle(), MarkerRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<Point2D,Graphics2D> point(Point2D primitive, AttributeSet style) {
-        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, style, PointRenderer.getInstance());
+        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, style, MarkerRenderer.getInstance());
     }
     
     public static <S> DelegatingPrimitiveGraphic<S,Point2D,Graphics2D> point(S source, Point2D primitive, ObjectStyler<S> styler) {
-        return new DelegatingPrimitiveGraphic<S,Point2D,Graphics2D>(source, primitive, styler, PointRenderer.getInstance());
+        return new DelegatingPrimitiveGraphic<S,Point2D,Graphics2D>(source, primitive, styler, MarkerRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<OrientedPoint2D,Graphics2D> marker(OrientedPoint2D primitive) {
-        return new PrimitiveGraphic<OrientedPoint2D,Graphics2D>(primitive, Styles.defaultPointStyle(), MarkerRenderer.getInstance());
+    public static PrimitiveGraphic<Point2D,Graphics2D> marker(OrientedPoint2D primitive) {
+        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, Styles.defaultPointStyle(), MarkerRenderer.getInstance());
     }
     
-    public static PrimitiveGraphic<OrientedPoint2D,Graphics2D> marker(OrientedPoint2D primitive, AttributeSet style) {
-        return new PrimitiveGraphic<OrientedPoint2D,Graphics2D>(primitive, style, MarkerRenderer.getInstance());
+    public static PrimitiveGraphic<Point2D,Graphics2D> marker(OrientedPoint2D primitive, AttributeSet style) {
+        return new PrimitiveGraphic<Point2D,Graphics2D>(primitive, style, MarkerRenderer.getInstance());
     }
     
-    public static <S> DelegatingPrimitiveGraphic<S,OrientedPoint2D,Graphics2D> marker(S source, OrientedPoint2D primitive, ObjectStyler<S> styler) {
-        return new DelegatingPrimitiveGraphic<S,OrientedPoint2D,Graphics2D>(source, primitive, styler, MarkerRenderer.getInstance());
+    public static <S> DelegatingPrimitiveGraphic<S,Point2D,Graphics2D> marker(S source, OrientedPoint2D primitive, ObjectStyler<S> styler) {
+        return new DelegatingPrimitiveGraphic<S,Point2D,Graphics2D>(source, primitive, styler, MarkerRenderer.getInstance());
     }
     
     public static PrimitiveGraphic<AnchoredText,Graphics2D> text(AnchoredText primitive) {
@@ -133,7 +133,7 @@ public class JGraphics {
 
     public static <S> DelegatingNodeLinkGraphic<S, Edge<S>, Graphics2D> nodeLink() {
         return new DelegatingNodeLinkGraphic<S,Edge<S>,Graphics2D>(
-                PointRenderer.getInstance(), TextRenderer.getInstance(), PathRenderer.getInstance());
+                MarkerRenderer.getInstance(), TextRenderer.getInstance(), PathRenderer.getInstance());
     }
     
     //</editor-fold>

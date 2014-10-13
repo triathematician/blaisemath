@@ -36,18 +36,22 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Draws an oriented point on a graphics canvas.
+/**
+ * Draws an oriented point on the graphics canvas, using a {@link Marker} object and a {@link ShapeStyle}.
+ * See also the <a href="http://www.w3.org/TR/SVG/painting.html#Markers">related SVG documentation</a> on markers.
  * 
  * @author Elisha
  */
-public class MarkerRenderer implements Renderer<OrientedPoint2D, Graphics2D> {
+public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
 
     /** Delegate for rendering the shape of the marker */
     protected Renderer<Shape, Graphics2D> shapeRenderer = new ShapeRenderer();
     
-    public static MarkerRenderer getInstance() {
+    public static Renderer<Point2D, Graphics2D> getInstance() {
         return new MarkerRenderer();
     }
 
@@ -66,22 +70,37 @@ public class MarkerRenderer implements Renderer<OrientedPoint2D, Graphics2D> {
 
     // </editor-fold>
 
-    public Shape getShape(OrientedPoint2D primitive, AttributeSet style) {
+    public Shape getShape(Point2D primitive, AttributeSet style) {
         Float rad = style.getFloat(Styles.MARKER_RADIUS, 4f);
+        double angle = primitive instanceof OrientedPoint2D ? ((OrientedPoint2D)primitive).angle : 0;
         Object marker = style.get(Styles.MARKER);
-        Marker drawMarker = marker instanceof Marker ? (Marker) marker : Markers.CIRCLE;
-        return drawMarker.create(primitive, primitive.angle, rad);
+        if (marker == null) {
+            return Markers.CIRCLE.create(primitive, angle, rad);
+        } else if (marker instanceof Marker) {
+            return ((Marker)marker).create(primitive, angle, rad);
+        } else if (marker instanceof String) {
+            Logger.getLogger(MarkerRenderer.class.getName()).log(Level.WARNING,
+                    "Invalid marker object string (not supported yet): {0}", marker);
+        } else {
+            Logger.getLogger(MarkerRenderer.class.getName()).log(Level.WARNING,
+                    "Invalid marker object: {0}", marker);
+        }
+        return null;
     }
     
-    public void render(OrientedPoint2D primitive, AttributeSet style, Graphics2D canvas) {
+    public void render(Point2D primitive, AttributeSet style, Graphics2D canvas) {
         shapeRenderer.render(getShape(primitive, style), style, canvas);
     }
 
-    public boolean contains(OrientedPoint2D primitive, AttributeSet style, Point2D point) {
+    public Rectangle2D boundingBox(Point2D primitive, AttributeSet style) {
+        return shapeRenderer.boundingBox(getShape(primitive, style), style);
+    }
+
+    public boolean contains(Point2D primitive, AttributeSet style, Point2D point) {
         return shapeRenderer.contains(getShape(primitive, style), style, point);
     }
 
-    public boolean intersects(OrientedPoint2D primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(Point2D primitive, AttributeSet style, Rectangle2D rect) {
         return shapeRenderer.intersects(getShape(primitive, style), style, rect);
     }
     

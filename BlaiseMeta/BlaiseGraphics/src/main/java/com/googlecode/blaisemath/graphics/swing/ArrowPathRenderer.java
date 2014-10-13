@@ -25,10 +25,8 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.graphics.swing.PathRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import static com.googlecode.blaisemath.style.Styles.strokeWidth;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

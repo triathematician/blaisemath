@@ -64,17 +64,26 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         }
     }
 
+    public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
+        boolean filled = style.contains(Styles.FILL);
+        Shape sh = PathRenderer.strokedShape(primitive, style);
+        if (filled && sh != null) {
+            return primitive.getBounds2D().createUnion(sh.getBounds2D());
+        } else if (filled) {
+            return primitive.getBounds2D();
+        } else if (sh != null) {
+            return sh.getBounds2D();
+        } else {
+            return null;
+        }
+    }
+
     public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
         if (style.contains(Styles.FILL) && primitive.contains(point)) {
-            return true;            
+            return true;
         } else {
-            Color stroke = style.getColor(Styles.STROKE);
-            Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-            if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-                return new BasicStroke(strokeWidth).createStrokedShape(primitive).contains(point);
-            } else {
-                return false;
-            }
+            Shape sh = PathRenderer.strokedShape(primitive, style);
+            return sh != null && sh.contains(point);
         }
     }
 
@@ -82,13 +91,8 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         if (style.contains(Styles.FILL) && primitive.intersects(rect)) {
             return true;            
         } else {
-            Color stroke = style.getColor(Styles.STROKE);
-            Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
-            if (stroke != null && strokeWidth != null && strokeWidth > 0) {
-                return new BasicStroke(strokeWidth).createStrokedShape(primitive).intersects(rect);
-            } else {
-                return false;
-            }
+            Shape sh = PathRenderer.strokedShape(primitive, style);
+            return sh != null && sh.intersects(rect);
         }
     }
 

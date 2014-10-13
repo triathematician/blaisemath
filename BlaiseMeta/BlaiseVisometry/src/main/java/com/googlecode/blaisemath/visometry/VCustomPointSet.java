@@ -27,7 +27,6 @@ package com.googlecode.blaisemath.visometry;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;

@@ -56,7 +56,7 @@ import javax.annotation.Nullable;
  *
  * @author Elisha Peterson
  */
-public class JGraphicComponent extends javax.swing.JComponent {
+public class JGraphicComponent extends javax.swing.JComponent implements TransformedCoordinateSpace {
 
     /** The visible shapes. */
     protected final JGraphicRoot root;
@@ -160,7 +160,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
         selector.setSelectionEnabled(b);
     }
 
-    public SetSelectionModel<Graphic> getSelectionModel() {
+    public SetSelectionModel<Graphic<Graphics2D>> getSelectionModel() {
         return selector.getSelectionModel();
     }
 
@@ -271,6 +271,7 @@ public class JGraphicComponent extends javax.swing.JComponent {
      * @param winLoc window location
      * @return graphic coordinate system location
      */
+    @Override
     public Point2D toGraphicCoordinate(Point2D winLoc) {
         return inverseTransform == null ? winLoc : inverseTransform.transform(winLoc, null);
     }

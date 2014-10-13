@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.style.editor;
  */
 
 import com.googlecode.blaisemath.editor.ColorEditor;
-import com.googlecode.blaisemath.graphics.swing.PointRenderer;
+import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.Markers;
@@ -233,7 +233,7 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
             double xc = c.getWidth()/2.0, yc = c.getHeight()/2.0;
             Marker shape1 = (Marker) style.get(Styles.MARKER);
             style.put(Styles.MARKER, shape);
-            PointRenderer.getInstance().render(new Point2D.Double(xc, yc), style, (Graphics2D) g);
+            MarkerRenderer.getInstance().render(new Point2D.Double(xc, yc), style, (Graphics2D) g);
             style.put(Styles.MARKER, shape1);
         }
 
