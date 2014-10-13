@@ -26,21 +26,20 @@ package com.googlecode.blaisemath.graph.modules.layout;
  */
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.Pinnable;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -76,9 +75,12 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
     private final Map<Object, Point2D.Double> loc = Maps.newHashMap();
     /** Current velocities */
     private final Map<Object, Point2D.Double> vel = Maps.newHashMap();
+    
     /** Regions used for localizing computation */
     private Region[][] regions;
-
+    /** Points that are not in a region */
+    private Region oRegion;
+    
     /** Iteration number */
     int iteration = 0;
     /** Total energy */
@@ -323,6 +325,11 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
                 }
             }
         }
+        for (Object io : oRegion.pts.keySet()) {
+            if (!pinnedNodes.contains(io)) {
+                addRepulsiveForces(g, oRegion, forces.get(io), io, oRegion.pts.get(io));
+            }
+        }
             
         // check for infinite forces
         for (V io : unpinnedNodes) {
@@ -387,28 +394,15 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
     protected void addRepulsiveForces(Graph g, Region ireg, Point2D.Double sum, Object io, Point2D.Double iLoc) {
         Point2D.Double jLoc;
         double dist;
-        if (ireg == null) {
-            for (Object jo : g.nodes()) {
-                if (!g.adjacent(io, jo)) {
-                    jLoc = loc.get(jo);
+        for (Region r : ireg.adj) {
+            for (Entry<Object, Point2D.Double> jEntry : r.pts.entrySet()) {
+                Object jo = jEntry.getKey();
+                if (io != jo && !g.adjacent(io, jo)) {
+                    jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
                     if (dist < MAX_REPEL_DIST) {
                         addRepulsiveForce(sum, io, iLoc, jo, jLoc, dist);
-                    }
-                }
-            }
-        } else {
-            for (Region r : ireg.adj) {
-                for (Entry<Object, Point2D.Double> jEntry : r.pts.entrySet()) {
-                    Object jo = jEntry.getKey();
-                    if (!g.adjacent(io, jo)) {
-                        jLoc = jEntry.getValue();
-                        dist = iLoc.distance(jLoc);
-                        // repulsive force from other nodes
-                        if (dist < MAX_REPEL_DIST) {
-                            addRepulsiveForce(sum, io, iLoc, jo, jLoc, dist);
-                        }
                     }
                 }
             }
@@ -537,7 +531,7 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
         int ix = (int) ((p.x + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
         int iy = (int) ((p.y + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
         if (ix < 0 || ix > 2*REGION_N || iy < 0 || iy > 2*REGION_N) {
-            return null;
+            return oRegion;
         }
         return regions[ix][iy];
     }
@@ -552,6 +546,7 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
                             ix*MAX_REPEL_DIST,iy*MAX_REPEL_DIST,MAX_REPEL_DIST,MAX_REPEL_DIST));
                 }
             }
+            // set up adjacencies
             for (int ix = -REGION_N; ix <= REGION_N; ix++) {
                 for (int iy = -REGION_N; iy <= REGION_N; iy++) {
                     for (int ix2 = Math.max(ix-1,-REGION_N); ix2 <= Math.min(ix+1, REGION_N); ix2++) {
@@ -561,16 +556,39 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
                     }
                 }
             }
+            // set up adjacencies with outer region
+            oRegion = new Region(null);    
+            oRegion.adj.add(oRegion);
+            for (int ix = -REGION_N; ix <= REGION_N; ix++) {
+                Region min = regions[ix+REGION_N][0];
+                Region max = regions[ix+REGION_N][2*REGION_N];
+                min.adj.add(oRegion);
+                max.adj.add(oRegion);
+                oRegion.adj.addAll(Arrays.asList(min, max));
+            }
+            for (int iy = -REGION_N+1; iy <= REGION_N-1; iy++) {
+                Region min = regions[0][iy+REGION_N];
+                Region max = regions[2*REGION_N][iy+REGION_N];
+                min.adj.add(oRegion);
+                max.adj.add(oRegion);
+                oRegion.adj.addAll(Arrays.asList(min, max));
+            }
         }
+ 
+        // refresh points
         for (int ix = -REGION_N; ix <= REGION_N; ix++) {
             for (int iy = -REGION_N; iy <= REGION_N; iy++) {
                 regions[ix+REGION_N][iy+REGION_N].pts.clear();
             }
         }
+        oRegion.pts.clear();
         for (Entry<Object,Point2D.Double> en : loc.entrySet()) {
             Region r = getRegion(en.getValue());
             if (r != null) {
                 r.pts.put(en.getKey(), en.getValue());
+            } else {
+                Logger.getLogger(SpringLayout.class.getName()).log(Level.WARNING, 
+                        "Point not in any region: {0}", en);
             }
         }
     }
@@ -662,7 +680,7 @@ public class SpringLayout implements IterativeGraphLayout, Pinnable {
     private static class Region {
         Rectangle2D.Double bounds;
         HashMap<Object,Point2D.Double> pts = Maps.newHashMap();
-        List<Region> adj = Lists.newArrayList();
+        Set<Region> adj = Sets.newLinkedHashSet();
         public Region(Rectangle2D.Double bounds) { 
             this.bounds = bounds; 
         }
