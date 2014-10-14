@@ -4,7 +4,7 @@
   
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-meta</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.0.3</version>
     <packaging>pom</packaging>
     
     <name>BlaiseGraphics Modules</name>
