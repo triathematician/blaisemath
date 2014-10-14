@@ -89,7 +89,13 @@ public class SVGElements {
             return null;
         }
         res.setId(id);
-        res.setStyle(style);
+        res.setStyle(style.copy());
+        if (style.get(Styles.FILL) == null) {
+            res.getStyle().put(Styles.FILL, null);
+        }
+        if (style.get(Styles.STROKE) == null) {
+            res.getStyle().put(Styles.STROKE, null);
+        }
         return res;
     }
 

@@ -46,9 +46,9 @@ import java.util.logging.Logger;
  */
 public final class AttributeSets {
     
-    // non-instantiable utility class
-    private AttributeSets() {
-    }
+    /** String used to represent null explicitly. */
+    private static final String NULL_STRING = "none";
+    
     
     private static final AttributeSetConverter CONVERTER_INST = new AttributeSetConverter();
     private static final AttributeValueConverter VALUE_CONVERTER_INST = new AttributeValueConverter();
@@ -59,12 +59,15 @@ public final class AttributeSets {
     private static final MapJoiner KEYVAL_JOINER = Joiner.on("; ")
             .withKeyValueSeparator(":");
     
+    // non-instantiable utility class
+    private AttributeSets() {
+    }
+    
     
     /** Return object that can be used to convert an {@link AttributeSet} to/from a string. */
     public static Converter<AttributeSet,String> stringConverter() {
         return CONVERTER_INST;
     }
-    
     
     /** Converts {@link AttributeSet} to/from a string. */
     private static class AttributeSetConverter extends Converter<AttributeSet,String> {
@@ -81,6 +84,9 @@ public final class AttributeSets {
             for (String key : vals.keySet()) {
                 String sval = vals.get(key);
                 Object val = VALUE_CONVERTER_INST.reverse().convert(sval);
+                if (NULL_STRING.equals(val)) {
+                    val = null;
+                }
                 res.put(key, val);
             }
             return res;
@@ -96,9 +102,10 @@ public final class AttributeSets {
                 Object styleValue = style.get(s);
                 try {
                     String value = VALUE_CONVERTER_INST.convert(styleValue);
-                    if (value != null) {
-                        props.put(s, value);
+                    if (value == null) {
+                        value = NULL_STRING;
                     }
+                    props.put(s, value);
                 } catch (UnsupportedOperationException x) {
                     // keep trying to convert, but log a warning
                     Logger.getLogger(AttributeSets.class.getName()).log(Level.WARNING,

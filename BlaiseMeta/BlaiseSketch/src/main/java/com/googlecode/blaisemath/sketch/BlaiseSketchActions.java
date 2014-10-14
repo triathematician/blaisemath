@@ -35,14 +35,24 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import java.awt.Frame;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -50,8 +60,65 @@ import javax.swing.SwingUtilities;
  * @author elisha
  */
 public class BlaiseSketchActions {
+
+    private static DataFlavor AS_DATA_FLAVOR;
+    static {
+        try {
+            AS_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
+                    + ";class=com.googlecode.blaisemath.style.AttributeSet");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     private BlaiseSketchActions() {
+    }
+        
+    private static class AttributeSetTransferable implements Transferable, ClipboardOwner {
+        private final AttributeSet style;
+        private AttributeSetTransferable(AttributeSet style) {
+            this.style = style;
+        }
+        public DataFlavor[] getTransferDataFlavors() {
+            return new DataFlavor[] { AS_DATA_FLAVOR };
+        }
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return flavor.equals(AS_DATA_FLAVOR);
+        }
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            return style;
+        }
+        public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        }
+    }
+    
+    public static void copyStyle(Graphic<Graphics2D> gfc) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        AttributeSetTransferable transf = new AttributeSetTransferable(gfc.getStyle());
+        clipboard.setContents(transf, transf);
+    }
+    
+    public static void pasteStyle(Iterable<Graphic<Graphics2D>> gfcs) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tr = clipboard.getContents(null);
+        if (tr.isDataFlavorSupported(AS_DATA_FLAVOR)) {
+            try {
+                AttributeSet pasteStyle = (AttributeSet) tr.getTransferData(AS_DATA_FLAVOR);
+                for (Graphic<Graphics2D> gfc : gfcs) {
+                    AttributeSet as = gfc.getStyle();
+                    if (!(as instanceof ImmutableAttributeSet)) {
+                        for (String s : pasteStyle.getAttributes()) {
+                            as.put(s, pasteStyle.get(s));
+                        }
+                    }
+                    gfc.getParent().graphicChanged(gfc);
+                }
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public static void editGraphic(Graphic<Graphics2D> src, JGraphicComponent comp) {
@@ -65,7 +132,9 @@ public class BlaiseSketchActions {
         AttributeSet style = src.getStyle();
         Map<String,Class<?>> styleClassMap = Maps.newLinkedHashMap();
         for (String k : style.getAllAttributes()) {
-            styleClassMap.put(k, style.get(k).getClass());
+            if (style.get(k) != null) {
+                styleClassMap.put(k, style.get(k).getClass());
+            }
         }
         AttributeSetPropertyModel pModel = new AttributeSetPropertyModel(style, styleClassMap);
         PropertySheetDialog dialog = new PropertySheetDialog((Frame) window, true, style, pModel);
@@ -82,8 +151,9 @@ public class BlaiseSketchActions {
         Set<Graphic<Graphics2D>> selection = comp.getSelectionModel().getSelection();
         for (Graphic g : selection) {
             GraphicComposite gc = g.getParent();
-            assert gc != null;
-            gc.removeGraphics(selection);
+            if (gc != null) {
+                gc.removeGraphics(selection);
+            }
         }
         comp.getSelectionModel().setSelection(Collections.EMPTY_SET);
     }
