@@ -352,14 +352,7 @@ public class GraphicComposite<G> extends Graphic<G> {
 
     @Override
     public Rectangle2D boundingBox() {
-        Rectangle2D res = null;
-        for (Graphic<G> en : entries) {
-            Rectangle2D enBox = en.boundingBox();
-            if (enBox != null) {
-                res = res == null ? enBox : res.createUnion(enBox);
-            }
-        }
-        return res;
+        return GraphicUtils.boundingBox(entries);
     }
 
     @Override

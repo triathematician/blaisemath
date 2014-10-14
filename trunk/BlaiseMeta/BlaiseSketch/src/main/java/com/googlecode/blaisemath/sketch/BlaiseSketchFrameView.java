@@ -30,6 +30,7 @@ import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
@@ -44,6 +45,7 @@ import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.GestureOrchestrator;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
+import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
@@ -54,6 +56,8 @@ import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
@@ -61,6 +65,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -82,7 +87,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.Application;
 import org.jdesktop.application.FrameView;
 
 /**
@@ -98,23 +102,30 @@ public class BlaiseSketchFrameView extends FrameView {
             "clearCanvas", null, 
             "quit" },
         new String[] { "Edit", 
+            "selectAll", "clearSelection", null,
+            "copySelectedStyle", "pasteSelectedStyle", null,
             "editSelected", "editSelectedStyle", null, "deleteSelected", null, 
-            "groupSelected", "ungroupSelected", null,
-            "moveForward", "moveBackward", null, "moveToFront", "moveToBack",
+            "groupSelected", "ungroupSelected", null
         },
-        new String[] { "Draw", 
+        new String[] { "Arrange", 
+            "moveForward", "moveBackward", null, "moveToFront", "moveToBack"
+        },
+        new String[] { "Tool", "toolSelect", null, 
             "createMarker", "createLine", "createPath", null,
             "createRect", "createCircle", "createEllipse", null,
-            "createText", "createImage", null, "finishGesture"
+            "createText", "createImage"
+        },
+        new String[] { "Zoom",
+            "zoomSelected", "zoomAll", "zoom100"
         }
     };
     
     private static final String[] TOOLBAR = {
         "load", "save", null,
+        "toolSelect", null, 
         "createMarker", "createLine", "createPath", 
         "createRect", "createCircle", "createEllipse", 
         "createText", "createImage", null,
-        "finishGesture", null, 
         "groupSelected", "ungroupSelected"
     };
     
@@ -146,14 +157,11 @@ public class BlaiseSketchFrameView extends FrameView {
                 firePropertyChange("groupSelected", !gpSelected, gpSelected);
                 firePropertyChange("oneSelected", !one, one);
                 firePropertyChange("moreThanOneSelected", !moreThanOne, moreThanOne);
-                if (selEmpty) {
-                    selectionPanel.setPrimaryComponent(noSelectionLabel);
-                } else {
-                    Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
-                    PropertySheet ps = PropertySheet.forBean(sel.size() == 1
-                            ? Iterables.get(sel, 0) : sel);
-                    selectionPanel.setPrimaryComponent(ps);
-                }
+                
+                Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
+                setSelectedGraphic(selEmpty ? null 
+                        : sel.size() == 1 ? Iterables.get(sel, 0)
+                        : sel);
             }
         });
         
@@ -235,6 +243,19 @@ public class BlaiseSketchFrameView extends FrameView {
         return app.getContext().getActionMap(view);
     }
     
+    private void setSelectedGraphic(Object gfc) {
+        if (gfc == null) {
+            selectionPanel.setPrimaryComponent(noSelectionLabel);
+        } else {
+            if (gfc instanceof Graphic) {
+                PropertySheet ps = PropertySheet.forBean(new ProxyGraphicEditor((Graphic) gfc));
+                selectionPanel.setPrimaryComponent(ps);
+            } else if (gfc instanceof Set) {
+                selectionPanel.setPrimaryComponent(new JLabel(((Set)gfc).size()+" graphics selected."));
+            }
+        }
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
     public JGraphicComponent getActiveCanvas() {
@@ -296,7 +317,9 @@ public class BlaiseSketchFrameView extends FrameView {
                 fis = new FileInputStream(chooser.getSelectedFile());
                 SVGRoot r = SVGRoot.load(fis);
                 activeCanvas.clearGraphics();
-                activeCanvas.addGraphics(fromSVG(r));
+                Iterable<Graphic<Graphics2D>> gfcs = fromSVG(r);
+                activeCanvas.addGraphics(gfcs);
+                SketchGraphics.configureGraphicTree(activeCanvas.getGraphicRoot(), false);
             } catch (IOException x) {
                 Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, x);
             } finally {
@@ -320,13 +343,14 @@ public class BlaiseSketchFrameView extends FrameView {
                 SVGRoot r = toSVG();
                 SVGRoot.save(r, out);
             } catch (IOException ex) {
-                Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, "Save failed", ex);
+                JOptionPane.showMessageDialog(getFrame(), ex, "Save failed", JOptionPane.ERROR_MESSAGE);
             } finally {
                 if (out != null) {
                     try {
                         out.close();
                     } catch (IOException ex) {
-                        Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, "Close failed", ex);
                     }
                 }
             }
@@ -335,14 +359,7 @@ public class BlaiseSketchFrameView extends FrameView {
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="EDIT ACTIONS">
-    
-    @Action
-    public void clearCanvas() {
-        if (JOptionPane.showConfirmDialog(getFrame(), "Are you sure?") == JOptionPane.OK_OPTION) {
-            activeCanvas.clearGraphics();
-        }
-    }
+    //<editor-fold defaultstate="collapsed" desc="Graphic EDIT ACTIONS">
     
     @Action
     public void editGraphic(ActionEvent e) {
@@ -357,6 +374,49 @@ public class BlaiseSketchFrameView extends FrameView {
     @Action
     public void deleteGraphic(ActionEvent e) {
         BlaiseSketchActions.deleteGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void copyStyle(ActionEvent e) {
+        BlaiseSketchActions.copyStyle((Graphic<Graphics2D>) e.getSource());
+    }
+    
+    @Action
+    public void pasteStyle(ActionEvent e) {
+        BlaiseSketchActions.pasteStyle(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
+    }
+    
+    // </editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="EDIT ACTIONS">
+    
+    @Action
+    public void clearCanvas() {
+        if (JOptionPane.showConfirmDialog(getFrame(), "Are you sure?") == JOptionPane.OK_OPTION) {
+            activeCanvas.clearGraphics();
+        }
+    }
+    
+    @Action(enabledProperty="oneSelected")
+    public void copySelectedStyle() {
+        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
+        BlaiseSketchActions.copyStyle(sel);
+    }
+    
+    @Action(disabledProperty="selectionEmpty")
+    public void pasteSelectedStyle() {
+        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
+        BlaiseSketchActions.pasteStyle(sel);
+    }
+    
+    @Action
+    public void selectAll() {
+        activeCanvas.getSelectionModel().setSelection(Sets.newHashSet(activeCanvas.getGraphicRoot().getGraphics()));
+    }
+    
+    @Action(disabledProperty="selectionEmpty")
+    public void clearSelection() {
+        activeCanvas.getSelectionModel().setSelection(Collections.EMPTY_SET);
     }
     
     @Action(enabledProperty="oneSelected")
@@ -411,9 +471,9 @@ public class BlaiseSketchFrameView extends FrameView {
     //<editor-fold defaultstate="collapsed" desc="TOOL ACTIONS">
     
     @Action
-    public void finishGesture() {
+    public void toolSelect() {
         gestureUI.finishActiveGesture();
-        setStatusMessage(null, -1);
+        setStatusMessage("Selection tool enabled (default)", 2000);
     }
     
     @Action
@@ -454,6 +514,31 @@ public class BlaiseSketchFrameView extends FrameView {
     @Action
     public void createImage() {
         enableGesture(CreateImageGesture.class);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ZOOM ACTIONS">
+    
+    @Action
+    public void zoomAll() {
+        Rectangle2D bounds = activeCanvas.getGraphicRoot().boundingBox();
+        PanAndZoomHandler.zoomCoordBoxAnimated(activeCanvas, new Point2D.Double(
+                bounds.getMinX(), bounds.getMinY()),
+                new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+    }
+    
+    @Action(disabledProperty="selectionEmpty")
+    public void zoomSelected() {
+        Rectangle2D bounds = GraphicUtils.boundingBox(activeCanvas.getSelectionModel().getSelection());
+        PanAndZoomHandler.zoomCoordBoxAnimated(activeCanvas, new Point2D.Double(
+                bounds.getMinX(), bounds.getMinY()),
+                new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+    }
+    
+    @Action
+    public void zoom100() {
+        activeCanvas.setTransform(null);
     }
     
     //</editor-fold>

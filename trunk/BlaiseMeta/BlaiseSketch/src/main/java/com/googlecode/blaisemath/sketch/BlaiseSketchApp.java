@@ -36,8 +36,6 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class BlaiseSketchApp extends SingleFrameApplication {
     
-    private BlaiseSketchFrameView view;
-
     @Override
     protected void startup() {
         BlaiseSketchFrameView view = new BlaiseSketchFrameView(this);

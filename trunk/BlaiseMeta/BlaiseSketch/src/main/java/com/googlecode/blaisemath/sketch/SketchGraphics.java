@@ -46,6 +46,18 @@ public class SketchGraphics {
     
     private SketchGraphics() {
     }
+
+    /** Configure the given graphics, and all child graphics */
+    public static void configureGraphicTree(Graphic<Graphics2D> gfc, boolean configureThis) {
+        if (configureThis) {
+            configureGraphic(gfc);
+        }
+        if (gfc instanceof GraphicComposite) {
+            for (Graphic<Graphics2D> g : ((GraphicComposite<Graphics2D>) gfc).getGraphics()) {
+                configureGraphicTree(g, true);
+            }
+        }
+    }
     
     public static void configureGraphic(Graphic<Graphics2D> gfc) {
         gfc.setSelectionEnabled(true);
@@ -57,7 +69,8 @@ public class SketchGraphics {
         ActionMap am = BlaiseSketchFrameView.getActionMap();
         gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
             am, "editGraphic", "editGraphicStyle", "deleteGraphic", null,
-            "groupSelected", "ungroupSelected", "deleteSelected"));
+                "copyStyle", "pasteStyle", null,
+                "groupSelected", "ungroupSelected", "deleteSelected"));
         
         if (gfc instanceof GraphicComposite) {
             GraphicComposite<Graphics2D> gc = (GraphicComposite<Graphics2D>) gfc;

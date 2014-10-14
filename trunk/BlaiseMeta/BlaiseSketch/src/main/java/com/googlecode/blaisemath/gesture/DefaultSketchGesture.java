@@ -131,6 +131,7 @@ public abstract class DefaultSketchGesture<C extends GestureOrchestrator> extend
     @Override
     public void mouseReleased(MouseEvent e) {
         mouseDragged(e);
+        finish();
     }
     
     //</editor-fold>
