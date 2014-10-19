@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>firestarter</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>Firestarter</name>
@@ -12,7 +12,6 @@
     </description>
     <url>http://blaisemath.googlecode.com</url>
     <inceptionYear>2009</inceptionYear>
-    
     <licenses>
         <license>
             <name>Apache License 2.0</name>
@@ -32,18 +31,33 @@
         <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</connection>
         <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</developerConnection>
         <url>https://blaisemath.googlecode.com/svn/trunk/Firestarter/</url>
-    </scm>
-    
+    </scm>    
     <issueManagement>
         <system>Google code</system>
         <url>https://code.google.com/p/blaisemath/issues/list</url>
     </issueManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- set license attributes for license plugin -->
         <license.organizationName>Elisha Peterson</license.organizationName>
         <license.licenseName>apache_v2</license.licenseName>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     
     <build>
         <plugins>
@@ -58,7 +72,7 @@
                 </configuration>
             </plugin>
                 
-            <!-- Automatically update file headers -->
+            <!-- Automatically update file headers, and add license file to distribution -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
@@ -86,12 +100,4 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
