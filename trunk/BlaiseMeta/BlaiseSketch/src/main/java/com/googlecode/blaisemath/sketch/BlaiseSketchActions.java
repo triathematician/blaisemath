@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.sketch;
 
 
 import static com.google.common.base.Preconditions.checkState;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -53,6 +54,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -127,13 +129,21 @@ public class BlaiseSketchActions {
         dialog.setVisible(true);
     }
 
-    public static void editGraphicStyle(Graphic<Graphics2D> src, JGraphicComponent comp) {
+
+    /**
+     * Edits the style attributes of the given graphic. Only supports attributes that
+     * the graphic already has.
+     * @param gr graphics to add attribute to
+     * @param comp current canvas
+     */
+    public static void editGraphicStyle(Graphic<Graphics2D> gr, JGraphicComponent comp) {
         Window window = SwingUtilities.getWindowAncestor(comp);
-        AttributeSet style = src.getStyle();
+        AttributeSet style = gr.getStyle();
         Map<String,Class<?>> styleClassMap = Maps.newLinkedHashMap();
         for (String k : style.getAllAttributes()) {
-            if (style.get(k) != null) {
-                styleClassMap.put(k, style.get(k).getClass());
+            Object sty = style.get(k);
+            if (sty != null) {
+                styleClassMap.put(k, sty.getClass());
             }
         }
         AttributeSetPropertyModel pModel = new AttributeSetPropertyModel(style, styleClassMap);
@@ -141,10 +151,43 @@ public class BlaiseSketchActions {
         dialog.setVisible(true);
     }
 
+    /**
+     * Adds a general attribute to the given graphics.
+     * @param gr graphic to add attribute to
+     * @param comp current canvas
+     */
+    public static void addAttribute(Graphic<Graphics2D> gr, JGraphicComponent comp) {
+        addAttribute(Collections.singleton(gr), comp);
+    }
+
+    /**
+     * Adds a general attribute to the given graphics.
+     * @param gr graphics to add attribute to
+     * @param comp current canvas
+     * @todo support values of other types
+     */
+    public static void addAttribute(Iterable<Graphic<Graphics2D>> gr, JGraphicComponent comp) {
+        String name = JOptionPane.showInputDialog("Enter attribute name:");
+        if (Strings.isNullOrEmpty(name)) {
+            return;            
+        }
+        String value = JOptionPane.showInputDialog("Enter value for attribute "+name+":");
+        if (Strings.isNullOrEmpty(value)) {
+            return;
+        }
+        for (Graphic<Graphics2D> g : gr) {
+            g.getStyle().put(name, value);
+        }
+    }
+
     public static void deleteGraphic(Graphic<Graphics2D> src, JGraphicComponent comp) {
         comp.getSelectionModel().removeSelection(src);
         GraphicComposite gc = src.getParent();
-        gc.removeGraphic(src);
+        if (gc != null) {
+            gc.removeGraphic(src);
+        } else {
+            src.setParent(null);
+        }
     }
     
     public static void deleteSelected(JGraphicComponent comp) {
