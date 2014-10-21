@@ -104,7 +104,7 @@ public class BlaiseSketchFrameView extends FrameView {
         new String[] { "Edit", 
             "selectAll", "clearSelection", null,
             "copySelectedStyle", "pasteSelectedStyle", null,
-            "editSelected", "editSelectedStyle", null, "deleteSelected", null, 
+            "editSelected", "editSelectedStyle", "addAttributeToSelected", null, "deleteSelected", null, 
             "groupSelected", "ungroupSelected", null
         },
         new String[] { "Arrange", 
@@ -372,6 +372,11 @@ public class BlaiseSketchFrameView extends FrameView {
     }
     
     @Action
+    public void addGraphicAttribute(ActionEvent e) {
+        BlaiseSketchActions.addAttribute((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
     public void deleteGraphic(ActionEvent e) {
         BlaiseSketchActions.deleteGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
     }
@@ -430,6 +435,13 @@ public class BlaiseSketchFrameView extends FrameView {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         BlaiseSketchActions.editGraphicStyle(sel, activeCanvas);
     }
+    
+    @Action(disabledProperty="selectionEmpty")
+    public void addAttributeToSelected() {
+        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
+        BlaiseSketchActions.addAttribute(sel, activeCanvas);
+    }
+    
     
     @Action(disabledProperty="selectionEmpty")
     public void deleteSelected() {

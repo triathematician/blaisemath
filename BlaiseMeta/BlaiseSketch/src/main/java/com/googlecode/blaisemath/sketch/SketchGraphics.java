@@ -68,7 +68,7 @@ public class SketchGraphics {
 
         ActionMap am = BlaiseSketchFrameView.getActionMap();
         gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-            am, "editGraphic", "editGraphicStyle", "deleteGraphic", null,
+            am, "editGraphic", "editGraphicStyle", "addGraphicAttribute", "deleteGraphic", null,
                 "copyStyle", "pasteStyle", null,
                 "groupSelected", "ungroupSelected", "deleteSelected"));
         
