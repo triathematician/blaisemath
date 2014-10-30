@@ -67,15 +67,15 @@ public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
     // PROPERTIES
     //
 
-    public final synchronized PrimitiveGraphic getWindowGraphic() {
+    public final PrimitiveGraphic getWindowGraphic() {
         return windowGraphic;
     }
 
-    public final synchronized C getPoint() {
+    public final C getPoint() {
         return point;
     }
 
-    public final synchronized void setPoint(C point) {
+    public final void setPoint(C point) {
         if (!Objects.equal(this.point, point)) {
             this.point = point;
             setUnconverted(true);
@@ -95,7 +95,7 @@ public class VBasicPoint<C,G> extends VGraphicSupport<C,G> {
     //
 
 
-    public synchronized void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
+    public void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
         windowGraphic.setPrimitive(processor.convert(point, vis));
         windowGraphic.setDragEnabled(true);
         windowGraphic.setDefaultTooltip(

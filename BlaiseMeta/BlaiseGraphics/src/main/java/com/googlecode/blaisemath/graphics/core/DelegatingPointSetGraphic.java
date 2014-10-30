@@ -38,6 +38,7 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,8 @@ import javax.swing.JPopupMenu;
 
 /**
  * Manages a collection of points that are maintained as separate {@link Graphic}s,
- * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager}.
+ * and therefore fully customizable. Point locations are handled by a {@link CoordinateManager},
+ * which allows their locations to be safely modified from other threads.
  *
  * @param <S> the type of object being displayed
  * @param <G> type of canvas to render to
@@ -60,6 +62,8 @@ import javax.swing.JPopupMenu;
  * @author Elisha Peterson
  */
 public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
+    
+    private static final int NODE_CACHE_SIZE = 20000;
     
     /** Key for flag allowing individual points to be selected */
     public static final String POINT_SELECTION_ENABLED = "point-selection-enabled";
@@ -89,7 +93,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Construct with no points
      */
     public DelegatingPointSetGraphic() {
-        this(new CoordinateManager<S, Point2D>(), null, null);
+        this(null, null);
     }
     
     /**
@@ -99,7 +103,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      */
     public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer) {
-        this(new CoordinateManager<S, Point2D>(), renderer, labelRenderer);
+        this(CoordinateManager.<S, Point2D>create(NODE_CACHE_SIZE), renderer, labelRenderer);
     }
 
     /**
@@ -119,8 +123,12 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         
         coordListener = new CoordinateListener(){
             @Override
-            public void coordinatesChanged(CoordinateChangeEvent evt) {
-                updatePointGraphics(evt.getAdded(), evt.getRemoved());
+            public void coordinatesChanged(final CoordinateChangeEvent evt) {
+                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    public void run() {
+                        updatePointGraphics(evt.getAdded(), evt.getRemoved());
+                    }
+                });
             }
         };
         
@@ -133,7 +141,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     // EVENT HANDLERS
     //
     
-    private synchronized void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
+    private void updatePointGraphics(Map<S,Point2D> added, Set<S> removed) {
         List<Graphic<G>> addMe = Lists.newArrayList();
         if (added != null) {
             for (Entry<S, Point2D> en : added.entrySet()) {
@@ -218,7 +226,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             }
             this.manager = mgr;
             this.manager.addCoordinateListener(coordListener);
-            updatePointGraphics(mgr.getCoordinates(), Collections.EMPTY_SET);
+            updatePointGraphics(mgr.getActiveLocationCopy(), Collections.EMPTY_SET);
         }
     }
 
@@ -286,11 +294,11 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     }
 
     /**
-     * Return source objects
+     * Return source objects.
      * @return source objects
      */
     public Set<? extends S> getObjects() {
-        return manager.getObjects();
+        return manager.getActive();
     }
     
     //</editor-fold>

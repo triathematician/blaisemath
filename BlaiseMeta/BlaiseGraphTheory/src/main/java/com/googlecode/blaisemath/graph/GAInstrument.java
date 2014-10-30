@@ -35,12 +35,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Provides centralized instrumentation for potentially long-executing graph algorithms.
  *
  * @author petereb1
  */
+@ThreadSafe
 public class GAInstrument {
 
     private static int id = 0;
@@ -48,7 +50,7 @@ public class GAInstrument {
     private static final String END = "end";
 
     /** Max number to keep in log */
-    private static int maxEvents = 50000;
+    private static int maxEvents = 10000;
     /** All log events */
     private static final Map<Integer,LogEvent> ALL = Maps.newLinkedHashMap();
     /** Log events split by algorithm */

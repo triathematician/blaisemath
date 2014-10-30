@@ -105,34 +105,32 @@ public class VisualGraph<G> {
      * the nodes and edges in the view graph.
      */
     protected final void initViewGraph() {
-        synchronized(layoutManager) {
-            if (viewGraph == null) {
-                if (viewGraphSupplier != null) {
-                    viewGraph = viewGraphSupplier.get();
-                } else {
-                    viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
-                            layoutManager.getCoordinateManager(), null, null, null);
-                    viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
-                }
-
-                // set up default styles, in case the graph isn't visible by default
-                if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
-                    viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
-                }
-                if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
-                    viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
-                }
-                if (viewGraph.getNodeStyler().getTipDelegate() == null) {
-                    viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
-                }
-                if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
-                    viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
-                }
+        if (viewGraph == null) {
+            if (viewGraphSupplier != null) {
+                viewGraph = viewGraphSupplier.get();
             } else {
-                viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
+                viewGraph = new DelegatingNodeLinkGraphic<Object,Edge<Object>,G>(
+                        layoutManager.getCoordinateManager(), null, null, null);
+                viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
             }
-            viewGraph.setEdgeSet(layoutManager.getGraph().edges());
+
+            // set up default styles, in case the graph isn't visible by default
+            if (viewGraph.getNodeStyler().getStyleDelegate() == null) {
+                viewGraph.getNodeStyler().setStyleConstant(DEFAULT_NODE_STYLE);
+            }
+            if (viewGraph.getNodeStyler().getLabelDelegate() == null) {
+                viewGraph.getNodeStyler().setLabelDelegate(Functions.toStringFunction());
+            }
+            if (viewGraph.getNodeStyler().getTipDelegate() == null) {
+                viewGraph.getNodeStyler().setTipDelegate(Functions.toStringFunction());
+            }
+            if (viewGraph.getEdgeStyler().getStyleDelegate() == null) {
+                viewGraph.getEdgeStyler().setStyleConstant(DEFAULT_EDGE_STYLE);
+            }
+        } else {
+            viewGraph.setCoordinateManager(layoutManager.getCoordinateManager());
         }
+        viewGraph.setEdgeSet(layoutManager.getGraph().edges());
     }
 
     
@@ -152,11 +150,11 @@ public class VisualGraph<G> {
     public final void setLayoutManager(GraphLayoutManager manager) {
         if (this.layoutManager != manager) {
             if (this.layoutManager != null) {
-                this.layoutManager.removePropertyChangeListener(GraphLayoutManager.PROP_GRAPH, layoutListener);
+                this.layoutManager.removePropertyChangeListener(GraphLayoutManager.GRAPH_PROP, layoutListener);
             }
             this.layoutManager = manager;
             initViewGraph();
-            this.layoutManager.addPropertyChangeListener(GraphLayoutManager.PROP_GRAPH, layoutListener);
+            this.layoutManager.addPropertyChangeListener(GraphLayoutManager.GRAPH_PROP, layoutListener);
         }
     }
 

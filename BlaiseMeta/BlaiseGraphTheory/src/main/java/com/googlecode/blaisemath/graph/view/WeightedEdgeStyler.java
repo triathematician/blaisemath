@@ -27,9 +27,9 @@ package com.googlecode.blaisemath.graph.view;
 import com.google.common.base.Function;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Edge;
 import java.awt.Color;
 import java.util.Map;
-import com.googlecode.blaisemath.util.Edge;
 
 /**
  * Provides a default node customizer suitable for a weighted-edge graph.
@@ -59,11 +59,11 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
         }
     }
 
-    public synchronized Map<? extends Edge, Float> getWeights() {
+    public Map<? extends Edge, Float> getWeights() {
         return weights;
     }
 
-    public synchronized void setWeights(Map<? extends Edge, Float> weights) {
+    public void setWeights(Map<? extends Edge, Float> weights) {
         if (this.weights != weights) {
             this.weights = weights;
             for (Float wt : weights.values()) {
@@ -72,7 +72,7 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
         }
     }
 
-    public synchronized AttributeSet apply(Edge o) {
+    public AttributeSet apply(Edge o) {
         Object wt = weights.get(o);
         if (wt instanceof Number) {
             float n = ((Number) wt).floatValue();

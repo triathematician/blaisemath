@@ -31,12 +31,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.util.Edge;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * <p>
@@ -48,8 +51,12 @@ import java.util.Set;
  * </p>
  * @author elisha
  */
-public class OptimizedGraph<V> extends SparseGraph<V> {
+@Immutable
+public class OptimizedGraph<V> implements Graph<V> {
 
+    /** Base graph */
+    private final SparseGraph<V> base;
+    
     /** Degree cache */
     private final Map<V, Integer> degrees = Maps.newHashMap();
     /** Isolate nodes (deg = 0) */
@@ -80,13 +87,13 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
      */
     public OptimizedGraph(boolean directed, Collection<V> nodes, Iterable<Edge<V>> edges) {
-        super(directed, nodes, edges);
+        base = SparseGraph.createFromEdges(directed, nodes, edges);
         initCachedElements();
     }
 
     private void initCachedElements() {
-        for (V v : nodes) {
-            int deg = super.degree(v);
+        for (V v : base.nodes) {
+            int deg = base.degree(v);
             degrees.put(v, deg);
             switch (deg) {
                 case 0: 
@@ -102,9 +109,9 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
                     coreNodes.add(v);
                     break;
             }
-            neighbors.putAll(v, super.neighbors(v));
+            neighbors.putAll(v, base.neighbors(v));
         }
-        for (V v : nodes) {
+        for (V v : base.nodes) {
             for (V y : neighbors.get(v)) {
                 Integer get = degrees.get(y);
                 checkState(get != null, "Node " + y + " (neighbor of " + v + ") was not found in provided node set");
@@ -125,7 +132,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @return nodes
      */
     public Set<V> getIsolates() {
-        return isolates;
+        return Collections.unmodifiableSet(isolates);
     }
 
     /**
@@ -133,7 +140,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @return nodes
      */
     public Set<V> getLeafNodes() {
-        return leafNodes;
+        return Collections.unmodifiableSet(leafNodes);
     }
 
     /**
@@ -141,7 +148,7 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @return nodes
      */
     public Set<V> getConnectorNodes() {
-        return connectorNodes;
+        return Collections.unmodifiableSet(connectorNodes);
     }
 
     /**
@@ -149,15 +156,15 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
      * @return nodes
      */
     public Set<V> getCoreNodes() {
-        return coreNodes;
+        return Collections.unmodifiableSet(coreNodes);
     }
 
     /**
-     * Collection of neighbors
+     * Get copy of neighbors.
      * @return neighbors
      */
     public Multimap<V, V> getNeighbors() {
-        return neighbors;
+        return Multimaps.unmodifiableSetMultimap(neighbors);
     }
 
     //</editor-fold>
@@ -203,6 +210,57 @@ public class OptimizedGraph<V> extends SparseGraph<V> {
     public int degree(V x) {
         return degrees.get(x);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="DELEGATES">
+    //
+    // DELEGATES
+    //
+
+    public boolean isDirected() {
+        return base.isDirected();
+    }
+
+    public int nodeCount() {
+        return base.nodeCount();
+    }
+
+    public Set<V> nodes() {
+        return base.nodes();
+    }
+
+    public boolean contains(V x) {
+        return base.contains(x);
+    }
+
+    public int edgeCount() {
+        return base.edgeCount();
+    }
+
+    public Set<Edge<V>> edges() {
+        return base.edges();
+    }
+
+    public Iterable<? extends Edge<V>> edgesAdjacentTo(V x) {
+        return base.edgesAdjacentTo(x);
+    }
+
+    public int outDegree(V x) {
+        return base.outDegree(x);
+    }
+
+    public Set<V> outNeighbors(V x) {
+        return base.outNeighbors(x);
+    }
+
+    public int inDegree(V x) {
+        return base.inDegree(x);
+    }
+
+    public Set<V> inNeighbors(V x) {
+        return base.inNeighbors(x);
+    }
+    
+    // </editor-fold>
 
 
 

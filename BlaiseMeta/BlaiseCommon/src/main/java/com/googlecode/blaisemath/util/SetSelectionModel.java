@@ -24,20 +24,26 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * <p>
- *   Model maintaining a collection of selected graphics, and notifying listeners
+ *   Model maintaining a collection of selected objects, and notifying listeners
  *   when that set changes.
  * </p>
  * @param <G> type of object that can be selected
  * @author elisha
  */
+@NotThreadSafe
 public class SetSelectionModel<G> {
     
     public static final String SELECTION_PROPERTY = "selection";
@@ -60,11 +66,19 @@ public class SetSelectionModel<G> {
         return selected.isEmpty();
     }
 
-    public synchronized Set<G> getSelection() {
+    public void clearSelection() {
+        setSelection(Collections.EMPTY_SET);
+    }
+
+    /**
+     * Return a copy of the selection.
+     * @return copy of selected
+     */
+    public Set<G> getSelection() {
         return ImmutableSet.copyOf(selected);
     }
 
-    public synchronized void setSelection(Set<G> selection) {
+    public void setSelection(Set<G> selection) {
         if (!selection.containsAll(selected) || !selected.containsAll(selection)) {
             Set<G> old = getSelection();
             selected.clear();
@@ -73,7 +87,7 @@ public class SetSelectionModel<G> {
         }
     }
 
-    public synchronized void addSelection(G g) {
+    public void select(G g) {
         if (g != null && !selected.contains(g)) {
             Set<G> old = getSelection();
             selected.add(g);
@@ -81,9 +95,30 @@ public class SetSelectionModel<G> {
         }
     }
 
-    public synchronized void removeSelection(G g) {
+    public boolean isSelected(G g) {
+        return selected.contains(g);
+    }
+
+    public void selectAll(Collection<G> g) {
+        checkNotNull(g);
+        if (!selected.containsAll(g)) {
+            Set<G> old = getSelection();
+            Iterables.addAll(selected, g);
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
+        }
+    }
+
+    public void deselect(G g) {
         if (g != null && selected.remove(g)) {
             Set<G> old = getSelection();
+            pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
+        }
+    }
+
+    public void deselectAll(Collection<G> g) {
+        checkNotNull(g);
+        Set<G> old = getSelection();
+        if (selected.removeAll(g)) {
             pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
@@ -92,7 +127,7 @@ public class SetSelectionModel<G> {
      * Toggle selection status of g
      * @param g object to toggle
      */
-    public synchronized void toggleSelection(G g) {
+    public void toggleSelection(G g) {
         if (g != null) {
             Set<G> old = getSelection();
             if (selected.contains(g)) {

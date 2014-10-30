@@ -72,7 +72,7 @@ public class VBasicPointSet<C,G> extends VGraphicSupport<C,G> {
         });
     }
     
-    private synchronized void handleWindowPropertyChange(PropertyChangeEvent evt) {
+    private void handleWindowPropertyChange(PropertyChangeEvent evt) {
         if (evt instanceof IndexedPropertyChangeEvent) {
             IndexedPropertyChangeEvent ipce = (IndexedPropertyChangeEvent) evt;
             newPointValue = (Point2D) ipce.getNewValue();
@@ -101,22 +101,22 @@ public class VBasicPointSet<C,G> extends VGraphicSupport<C,G> {
     // DraggablePointBean PROPERTIES
     //
 
-    public synchronized C getPoint(int i) {
+    public C getPoint(int i) {
         return point[i];
     }
 
-    public synchronized void setPoint(int i, C point) {
+    public void setPoint(int i, C point) {
         if (!(Objects.equal(this.point[i], point))) {
             this.point[i] = point;
             setUnconverted(true);
         }
     }
 
-    public synchronized C[] getPoint() {
+    public C[] getPoint() {
         return point.clone();
     }
 
-    public synchronized void setPoint(C[] point) {
+    public void setPoint(C[] point) {
         this.point = point.clone();
         setUnconverted(true);
     }
@@ -125,7 +125,7 @@ public class VBasicPointSet<C,G> extends VGraphicSupport<C,G> {
     // CONVERSION
     //
 
-    public synchronized void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
+    public  void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
         if (newPointValue != null) {
             C loc = vis.toLocal(newPointValue);
             if (newPointIndex >= 0 && newPointIndex < point.length) {

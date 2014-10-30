@@ -27,18 +27,20 @@ package com.googlecode.blaisemath.graph;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Edge.UndirectedEdge;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
+import java.util.Set;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * <p>
@@ -48,27 +50,30 @@ import java.util.Map.Entry;
  * </p>
  *
  * @param <V> the type of the nodes
+ * 
+ * @todo add more defensive copying
  *
  * @author Elisha Peterson
  */
-public class SparseGraph<V> extends GraphSupport<V> {
+@Immutable
+public final class SparseGraph<V> extends GraphSupport<V> {
 
     /** Edges in graph (replicated for speed) */
-    protected final Set<Edge<V>> edges = new LinkedHashSet<Edge<V>>();
+    private final Set<Edge<V>> edges = new LinkedHashSet<Edge<V>>();
     
     /**
      * Edges in graph, by vertex. Each vertex contains all edges adjacent to the
      * vertex, regardless of direction.
      */
-    protected final SetMultimap<V,Edge<V>> edgeIndex = HashMultimap.create();   
+    private final SetMultimap<V,Edge<V>> edgeIndex = HashMultimap.create();   
     /**
      * The adjacencies in components of the graph. If directed, rows are sources
      * and columns are destinations. Each pair of vertices may have multiple edges.
      * If undirected, the set of edges is the same for both directions.
      */
-    protected final Table<V, V, Set<Edge<V>>> edgeTable = HashBasedTable.create();    
+    private final Table<V, V, Set<Edge<V>>> edgeTable = HashBasedTable.create();    
     /** Information about the graph's components (replicated for speed) */
-    protected GraphComponents<V> components;
+    private GraphComponents<V> components;
 
     /**
      * Helper constructor for factory methods
@@ -85,12 +90,13 @@ public class SparseGraph<V> extends GraphSupport<V> {
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
      */
-    public SparseGraph(boolean directed, Iterable<V> nodes, Iterable<Edge<V>> edges) {
-        this(directed, nodes);
+    public static <V> SparseGraph<V> createFromEdges(boolean directed, Iterable<V> nodes, Iterable<Edge<V>> edges) {
+        SparseGraph<V> res = new SparseGraph<V>(directed, Lists.newArrayList(nodes));
         for (Edge<V> e : edges) {
-            addEdge(e.getNode1(), e.getNode2());
+            res.addEdge(e.getNode1(), e.getNode2());
         }
-        this.components = new GraphComponents(this, GraphUtils.components(edgeTable));
+        res.components = new GraphComponents(res, GraphUtils.components(res.edgeTable));
+        return res;
     }
     
     //
@@ -144,16 +150,18 @@ public class SparseGraph<V> extends GraphSupport<V> {
         return res;
     }
     
-    //<editor-fold defaultstate="collapsed" desc="add/remove Edge helpers">
+    //<editor-fold defaultstate="collapsed" desc="edge construction helpers">
 
-    protected final synchronized void addEdge(V x, V y) {
+    /** Invoke from initializer only */
+    private void addEdge(V x, V y) {
         Edge<V> edge = directed ? addDirectedEdge(x, y) : addUndirectedEdge(x, y);
         edges.add(edge);
         edgeIndex.put(x, edge);
         edgeIndex.put(y, edge);
     }
     
-    protected Edge<V> addDirectedEdge(V x, V y) {
+    /** Invoke from initializer only */
+    private Edge<V> addDirectedEdge(V x, V y) {
         if (!edgeTable.contains(x, y)) {
             edgeTable.put(x, y, new HashSet<Edge<V>>());
         }
@@ -162,7 +170,8 @@ public class SparseGraph<V> extends GraphSupport<V> {
         return edge;
     }
     
-    protected Edge<V> addUndirectedEdge(V x, V y) {
+    /** Invoke from initializer only */
+    private Edge<V> addUndirectedEdge(V x, V y) {
         if (!edgeTable.contains(x, y)) {
             edgeTable.put(x, y, new HashSet<Edge<V>>());
         }
@@ -173,6 +182,14 @@ public class SparseGraph<V> extends GraphSupport<V> {
         edgeTable.get(x, y).add(edge);
         edgeTable.get(y, x).add(edge);
         return edge;
+    }
+    
+    // </editor-fold>
+
+    @Override
+    public String toString() {
+        return String.format("SparseGraph[%s,%d nodes,%d edges]", 
+                directed?"directed":"undirected", nodeCount(), edgeCount());
     }
 
     @Override
@@ -185,33 +202,6 @@ public class SparseGraph<V> extends GraphSupport<V> {
         }
         return false;
     }
-
-    /**
-     * Remove edge between two vertices, if it exists
-     * @param v1 first vertex
-     * @param v2 second vertex
-     * @return true if edge was found and removed
-     */
-    protected synchronized boolean removeEdge(V v1, V v2) {
-        Edge<V> edge = directed ? new Edge<V>(v1, v2) : new UndirectedEdge<V>(v1, v2);
-        if (edgeTable.contains(v1, v2)) {
-            edgeTable.get(v1, v2).remove(edge);
-        }
-        if (!directed && edgeTable.contains(v2, v1)) {
-            edgeTable.get(v2, v1).remove(edge);
-        }
-        edgeIndex.remove(v1, edge);
-        edgeIndex.remove(v2, edge);
-        return edges.remove(edge);
-    }
-    
-    //</editor-fold>
-
-    @Override
-    public String toString() {
-        return String.format("SparseGraph[%s,%d nodes,%d edges]", 
-                directed?"directed":"undirected", nodeCount(), edgeCount());
-    }
     
 
     public GraphComponents<V> getComponentInfo() {
@@ -219,12 +209,11 @@ public class SparseGraph<V> extends GraphSupport<V> {
     }
 
     public Set<Edge<V>> edges() {
-        return edges;
+        return Collections.unmodifiableSet(edges);
     }
 
     public Collection<? extends Edge<V>> edgesAdjacentTo(V x) {
-        return edgeIndex.get(x);
+        return Collections.unmodifiableSet(edgeIndex.get(x));
     }
-
 
 }

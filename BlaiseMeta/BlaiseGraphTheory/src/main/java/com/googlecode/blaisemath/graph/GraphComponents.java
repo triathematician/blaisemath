@@ -28,6 +28,7 @@ import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Provides additional knowledge about the components of a graph, which may be
@@ -37,6 +38,7 @@ import java.util.Set;
  *
  * @author elisha
  */
+@Immutable
 public class GraphComponents<V> {
 
     /** What this class is modifying/describing. */
@@ -77,7 +79,7 @@ public class GraphComponents<V> {
      * @return subcomponents
      */
     public Set<Graph<V>> getComponentGraphs() {
-        return componentGraphs;
+        return Collections.unmodifiableSet(componentGraphs);
     }
 
     /**
@@ -85,7 +87,7 @@ public class GraphComponents<V> {
      * @return connected components
      */
     public Collection<Set<V>> getComponents() {
-        return components;
+        return Collections.unmodifiableCollection(components);
     }
 
     /**

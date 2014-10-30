@@ -40,28 +40,29 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ConcurrentModificationException;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * <p>
  *   Links up a {@link IterativeGraphLayout} with a {@link CoordinateManager} to maintain
- *   consistent positions of nodes in a {@link Graph}.
- *   Also provides timers/threads for executing iterative layouts, and notifies
- *   listeners when the positions change.
+ *   consistent positions of nodes in a {@link Graph}. Assumes that {@code CoordinateManager}
+ *   will be accessed from many different threads, and locks on that object as needed.
  * </p>
  *
  * @param <N> type of node in graph
  * @author elisha
  */
 public final class GraphLayoutManager<N> implements CoordinateListener {
+    
+    private static final int NODE_CACHE_SIZE = 20000;
 
     /** Graph property */
-    public static final String PROP_GRAPH = "graph";
+    public static final String GRAPH_PROP = "graph";
     
     /** Default time between layout iterations. */
     private static final int DEFAULT_DELAY = 10;
@@ -91,7 +92,8 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     /** Used for iterative graph layouts */
     private transient IterativeGraphLayout iLayout;
     /** Maintains locations of nodes in the graph (in local coordinates) */
-    private final CoordinateManager<N, Point2D.Double> coordManager = CoordinateManager.create();
+    @GuardedBy("itself")
+    private final CoordinateManager<N, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
 
     /** Timer that performs iterative layout */
     private transient java.util.Timer layoutTimer;
@@ -117,10 +119,8 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     }
 
     public void coordinatesChanged(CoordinateChangeEvent evt) {
-        synchronized (coordManager) {
-            if (iLayout != null) {
-                iLayout.requestPositions(coordManager.getCoordinates(), true);
-            }
+        if (iLayout != null) {
+            iLayout.requestPositions(coordManager.getActiveLocationCopy(), true);
         }
     }
 
@@ -146,20 +146,18 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
      * @param g the graph
      */
     public void setGraph(Graph<N> g) {
-        synchronized (coordManager) {
-            if (this.graph != g) {
-                Graph old = this.graph;
-                if (g == null) {
-                    setLayoutAnimating(false);
-                    coordManager.cacheObjects(coordManager.getObjects());
-                } else if (this.graph != g) {
+        if (this.graph != g) {
+            Graph old = this.graph;
+            if (g == null) {
+                setLayoutAnimating(false);
+            } else if (this.graph != g) {
+                synchronized (coordManager) {
                     this.graph = g;
-                    Set<N> oldNodes = new HashSet<N>(coordManager.getObjects());
-                    oldNodes.removeAll(g.nodes());
-                    coordManager.cacheObjects(oldNodes);
+                    Set<N> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
+                    coordManager.deactivate(oldNodes);
                     // defer to existing locations if possible
                     if (coordManager.locatesAll(g.nodes())) {
-                        coordManager.restoreCached(g.nodes());
+                        coordManager.reactivate(g.nodes());
                     } else {
                         try {
                             // lays out new graph entirely
@@ -168,28 +166,31 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
                                 newLoc = initialLayout.layout(g, initialLayoutParameters);
                             } else {
                                 if (addingLayout instanceof PositionalAddingLayout) {
-                                    Map<Object, Point2D.Double> curLocs = (Map<Object, Point2D.Double>) coordManager.getCoordinates();
-                                    ((PositionalAddingLayout)addingLayout).setCurLocations(curLocs);
+                                    Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
+                                    ((PositionalAddingLayout<N>)addingLayout).setCurLocations(curLocs);
                                 }
                                 newLoc = addingLayout.layout(g, addingLayoutParameters);
                             }
                             // remove objects that are already in coordinate manager
-                            newLoc.keySet().removeAll(coordManager.getObjects());
-                            newLoc.keySet().removeAll(coordManager.getCachedObjects());
-                            coordManager.restoreCached(g.nodes());
+                            newLoc.keySet().removeAll(coordManager.getActive());
+                            newLoc.keySet().removeAll(coordManager.getInactive());
+                            coordManager.reactivate(g.nodes());
                             coordManager.putAll(newLoc);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
-                boolean check = coordManager.getObjects().size() == g.nodeCount();
+                
+                // log size mismatches to help with debugging
+                int sz = coordManager.getActive().size();
+                boolean check = sz == g.nodeCount();
                 if (!check) {
                     Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.SEVERE, 
                             "Object sizes don''t match: {0} locations, but {1} nodes!", 
-                            new Object[]{coordManager.getObjects().size(), g.nodeCount()});
+                            new Object[]{sz, g.nodeCount()});
                 }
-                pcs.firePropertyChange(PROP_GRAPH, old, g);
+                pcs.firePropertyChange(GRAPH_PROP, old, g);
             }
         }
     }
@@ -200,11 +201,8 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     public void graphUpdated() {
         synchronized (coordManager) {
             try {
-                Set<N> oldNodes = Sets.newHashSet(coordManager.getObjects());
-                oldNodes.removeAll(graph.nodes());
-                coordManager.cacheObjects(oldNodes);
                 Map<N,Point2D.Double> newLoc = addingLayout.layout(graph, addingLayoutParameters);
-                for (N c : coordManager.getObjects()) {
+                for (N c : coordManager.getActive()) {
                     newLoc.remove(c);
                 }
                 coordManager.putAll(newLoc);
@@ -224,11 +222,11 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
     }
 
     /**
-     * Returns the locations of objects in the graph.
+     * Returns copy of the locations of objects in the graph.
      * @return locations, as a copy of the map provided in the point manager
      */
     public Map<N, Point2D.Double> getLocations() {
-        return coordManager.getCoordinates();
+        return coordManager.getActiveLocationCopy();
     }
 
     /**
@@ -299,7 +297,7 @@ public final class GraphLayoutManager<N> implements CoordinateListener {
             IterativeGraphLayout old = iLayout;
             iLayout = layout;
             coolingParameter0 = iLayout.getCoolingParameter();
-            iLayout.requestPositions(coordManager.getCoordinates(), true);
+            iLayout.requestPositions(coordManager.getActiveLocationCopy(), true);
             pcs.firePropertyChange("layoutAlgorithm", old, layout);
         }
     }

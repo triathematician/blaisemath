@@ -25,6 +25,10 @@ package com.googlecode.blaisemath.graph.view;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
+import com.googlecode.blaisemath.graph.longitudinal.SimultaneousLayout;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -33,10 +37,6 @@ import java.util.Map;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
-import com.googlecode.blaisemath.graph.longitudinal.SimultaneousLayout;
 
 /**
  * Manages visual display of a time graph (slices over time). Keeps track of slices
@@ -67,7 +67,7 @@ public class LongitudinalGraphManager {
     /** The active slice */
     private Graph slice;
     
-    /** Synchronized layout of a time graph */
+    /** Performs layout on multiple slices at once. */
     private SimultaneousLayout layout = null;
     /** Timer that performs iterative layout */
     private java.util.Timer layoutTimer;
@@ -144,7 +144,7 @@ public class LongitudinalGraphManager {
      * Return time data, an array including the time and the node positions as a map
      * @return time data (time, node positions as a map)
      */
-    public synchronized Object[] getTimeData() {
+    public Object[] getTimeData() {
         return new Object[]{ time, layout == null ? null : layout.getPositionMap(time) };
     }
     
@@ -152,7 +152,7 @@ public class LongitudinalGraphManager {
      * Return node positions
      * @return node positions
      */
-    public synchronized Map<Object, Point2D.Double> getNodePositions() {
+    public Map<Object, Point2D.Double> getNodePositions() {
         return layout.getPositionMap(getTime());
     }
     
@@ -200,7 +200,7 @@ public class LongitudinalGraphManager {
     }
 
     /** Iterates layout, if an iterative layout has been provided. */
-    public synchronized void iterateLayout() {
+    public void iterateLayout() {
         initLayoutAlgorithm();
         long t0 = System.currentTimeMillis();
         try {
@@ -255,32 +255,32 @@ public class LongitudinalGraphManager {
     // <editor-fold defaultstate="collapsed" desc="Event Handling">
     
     /** The entire graph has changed: nodes, positions, edges */
-    private synchronized void fireTimeChanged() {
+    private void fireTimeChanged() {
         pcs.firePropertyChange("timeData", null, getTimeData());
     }
     /** The layout algorithm has started/stopped its timer */
-    private synchronized void fireAnimatingChanged() {
+    private void fireAnimatingChanged() {
         boolean val = isLayoutAnimating();
         pcs.firePropertyChange("layoutAnimating", !val, val);
     }
     /** The node positions have changed */
-    private synchronized void firePositionChanged() {
+    private void firePositionChanged() {
         pcs.firePropertyChange("nodePositions", null, getNodePositions());
     }
     
-    public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) { pcs.addPropertyChangeListener(listener); }
+    public void addPropertyChangeListener(PropertyChangeListener listener) { pcs.addPropertyChangeListener(listener); }
 
     // </editor-fold>
 }

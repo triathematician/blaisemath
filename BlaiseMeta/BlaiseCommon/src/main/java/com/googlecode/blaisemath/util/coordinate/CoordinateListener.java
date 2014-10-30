@@ -26,7 +26,9 @@ package com.googlecode.blaisemath.util.coordinate;
  */
 
 /**
- * Receives updates regarding the locations of a collection of objects.
+ * Receives updates regarding the locations of a collection of objects. Handlers
+ * should be aware that the update may be invoked from any thread.
+ * 
  * @param <S> type of object being located
  * @param <C> type of coordinate
  * 
@@ -35,7 +37,7 @@ package com.googlecode.blaisemath.util.coordinate;
 public interface CoordinateListener<S,C> {
 
     /**
-     * Called when coordinates/points are added.
+     * Called when coordinates/points are added. This may occur on any thread.
      * @param evt description of what coordinates were added/removed/changed
      */
     void coordinatesChanged(CoordinateChangeEvent<S,C> evt);

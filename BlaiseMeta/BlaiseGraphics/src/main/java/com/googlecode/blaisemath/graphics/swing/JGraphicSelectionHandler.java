@@ -165,9 +165,9 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         if (g == null) {
             selection.setSelection(Collections.<Graphic<Graphics2D>>emptySet());
         } else if (e.isShiftDown()) {
-            selection.removeSelection(g);
+            selection.deselect(g);
         } else if (e.isAltDown()) {
-            selection.addSelection(g);
+            selection.select(g);
         } else {
             selection.toggleSelection(g);
         }

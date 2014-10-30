@@ -45,6 +45,8 @@ import java.util.Set;
  * @author elisha
  */
 public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
+    
+    private static final int NODE_CACHE_SIZE = 20000;
 
     /** The window entry */
     protected DelegatingPointSetGraphic<S,G> window = new DelegatingPointSetGraphic<S,G>();
@@ -61,7 +63,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
      * Initialize with no points
      */
     public VCustomPointSet() {
-        this(new CoordinateManager<S,C>());
+        this(CoordinateManager.<S,C>create(NODE_CACHE_SIZE));
     }
 
     /**
@@ -90,20 +92,18 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
         } else if (evt.getSource() == window.getCoordinateManager()) {
             CoordinateChangeEvent<S,Point2D> winEvt = (CoordinateChangeEvent<S,Point2D>) evt;
             // window coords changed (from dragging)
-            synchronized (coordManager) {
-                if (evt.isAddEvent()) {
-                    Visometry<C> vis = parent.getVisometry();
-                    Map<S, ? extends Point2D> add = winEvt.getAdded();
-                    Map<S,C> local = new HashMap<S,C>();
-                    for (S s : add.keySet()) {
-                        local.put(s, vis.toLocal(add.get(s)));
-                    }
-                    coordManager.putAll(local);
+            if (evt.isAddEvent()) {
+                Visometry<C> vis = parent.getVisometry();
+                Map<S, ? extends Point2D> add = winEvt.getAdded();
+                Map<S,C> local = new HashMap<S,C>();
+                for (S s : add.keySet()) {
+                    local.put(s, vis.toLocal(add.get(s)));
                 }
-                // possible for both add and remove, so this shouldn't be an else statement
-                if (evt.isRemoveEvent()) {
-                    coordManager.removeObjects(evt.getRemoved());
-                }
+                coordManager.putAll(local);
+            }
+            // possible for both add and remove, so this shouldn't be an else statement
+            if (evt.isRemoveEvent()) {
+                coordManager.forget(evt.getRemoved());
             }
         }
     }
@@ -162,7 +162,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
 
     public void removeObjects(Set<S> obj) {
         if (!obj.isEmpty()) {
-            coordManager.removeObjects(obj);
+            coordManager.forget(obj);
             setUnconverted(true);
         }
     }
@@ -182,21 +182,15 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
     @Override
     public void convert(final Visometry<C> vis, VisometryProcessor<C> processor) {
         // conversion should never occur while points are changing
-        synchronized (coordManager) {
-            converting = true;
-            Map<S,Point2D> winmap = new HashMap<S,Point2D>();
-            int n = coordManager.getObjects().size();
-            for (S s : coordManager.getObjects()) {
-                winmap.put(s, processor.convert(coordManager.apply(s), vis));
-            }
-            window.getCoordinateManager().setCoordinateMap(winmap);
-            int n2 = window.getCoordinateManager().getObjects().size();
-            if (n != n2) {
-                throw new IllegalStateException("Object sizes do not match!");
-            }
-            setUnconverted(false);
-            converting = false;
+        converting = true;
+        Map<S, C> locs = coordManager.getActiveLocationCopy();
+        Map<S,Point2D> winmap = new HashMap<S,Point2D>();
+        for (S s : locs.keySet()) {
+            winmap.put(s, processor.convert(locs.get(s), vis));
         }
+        window.getCoordinateManager().setCoordinateMap(winmap);
+        setUnconverted(false);
+        converting = false;
     }
 
 }

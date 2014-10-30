@@ -45,6 +45,8 @@ import javax.annotation.Nullable;
  * @author Elisha Peterson
  */
 public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicComposite<G> {
+    
+    private static final int NODE_CACHE_SIZE = 20000;
 
     /** Point graphics */
     private final DelegatingPointSetGraphic<S,G> pointGraphics;
@@ -55,7 +57,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      * Construct with no points
      */
     public DelegatingNodeLinkGraphic() {
-        this(new CoordinateManager<S, Point2D>(), null, null, null);
+        this(null, null, null);
     }
     
     /**
@@ -67,7 +69,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     public DelegatingNodeLinkGraphic(@Nullable Renderer<Point2D,G> nodeRenderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer,
             @Nullable Renderer<Shape, G> edgeRenderer) {
-        this(new CoordinateManager<S, Point2D>(), nodeRenderer, labelRenderer, edgeRenderer);
+        this(CoordinateManager.<S,Point2D>create(NODE_CACHE_SIZE), nodeRenderer, labelRenderer, edgeRenderer);
     }
     
     /**
@@ -115,7 +117,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
     }
     
     public Map<S, Point2D> getNodeLocations() {
-        return pointGraphics.getCoordinateManager().getCoordinates();
+        return pointGraphics.getCoordinateManager().getActiveLocationCopy();
     }
 
     public void setNodeLocations(Map<S, Point2D> pts) {

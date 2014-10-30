@@ -49,11 +49,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Lays out nodes in a graph using a force-based layout technique.
+ * Lays out nodes in a graph using a force-based layout technique. This class is not
+ * thread safe, and is intended to be accessed from a single thread only.
  * @author elisha
  */
+@NotThreadSafe
 public class StaticSpringLayout implements StaticGraphLayout {
    
     /** How long to wait between reporting status */
@@ -122,7 +125,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         return lastStepCount;
     }
 
-    public synchronized Map<Object, Point2D.Double> layout(Graph originalGraph, double... parameters) {
+    public Map<Object, Point2D.Double> layout(Graph originalGraph, double... parameters) {
         Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
                 "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 

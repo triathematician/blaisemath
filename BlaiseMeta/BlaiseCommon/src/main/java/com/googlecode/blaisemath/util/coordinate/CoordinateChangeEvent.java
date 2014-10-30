@@ -33,7 +33,8 @@ import javax.annotation.Nullable;
 /**
  * <p>
  *  Event describing a change to a collection of coordinates (specifically to
- *  a {@link CoordinateManager} instance).
+ *  a {@link CoordinateManager} instance). Initializes of this object are responsible
+ *  for providing collections that are safe to propagate to listeners.
  * </p>
  * @param <S> type of object owning the coordinates
  * @param <C> coordinate type

@@ -27,8 +27,6 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
@@ -62,7 +60,7 @@ public final class ListSlider extends JSlider {
     /**
      * @return current value as specified by the peg positions
      */
-    public synchronized double getListValue() {
+    public double getListValue() {
         int i = getValue();
         return i <= 0 ? pegs.get(0) : i >= pegs.size() ? pegs.get(pegs.size() - 1) : pegs.get(i);
     }
@@ -70,7 +68,7 @@ public final class ListSlider extends JSlider {
     /**
      * Sets up constraints
      */
-    public synchronized void setList(List<Double> values) {
+    public void setList(List<Double> values) {
         this.pegs = values;
         setMaximum(pegs.size() - 1);
         setValue(0);

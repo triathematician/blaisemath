@@ -24,87 +24,93 @@ package com.googlecode.blaisemath.util.coordinate;
  * #L%
  */
 
-import com.google.common.base.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.ArrayList;
+import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * <p>
  * Tracks locations of a collection of objects in a thread-safe manner.
- * Maintains a cacheObjects of prior locations, so that if some of the objects are removed,
+ * Maintains a cache of prior locations, so that if some of the objects are removed,
  * this class "remembers" their prior locations. Listeners may register to be notified
  * when any of the coordinates within the manager change, or when any objects are
  * added to or removed from the manager.
  * </p>
  * <p>
- * Three constructors are provided, both of which require parameters ensuring that
- * objects have initial positions.
- * </p>
- * <p>
  * The object is thread safe, so the points in the manager can be read from or written to
- * by multiple threads.
+ * by multiple threads. Thread safety involves managing access to three interdependent
+ * state variables, representing the cached locations, the objects that are "active" and
+ * the objects that are "inactive". It is fine to iterate over these sets from any thread,
+ * although they may change during iteration.
  * </p>
  *
  * @param <S> type of source object
  * @param <C> type of point
  *
  * @author Elisha Peterson
+ * 
+ * @todo review thread safety of this class
  */
-public class CoordinateManager<S, C> implements Function<S, C> {
+@ThreadSafe
+public class CoordinateManager<S, C> {
     
-
+    /** Max size of the cache */
+    private final int maxCacheSize;
+    
     /** Map with current objects and locations (stores the data) */
-    private final Map<S, C> map = Maps.newHashMap();
-    /** Cached locations */
-    private final Map<S, C> cache = Maps.newHashMap();
+    @GuardedBy("this")
+    private final ConcurrentMap<S, C> map = Maps.newConcurrentMap();
+    /** Active objects. This value may be set. */
+    @GuardedBy("this")
+    private Set<S> active = Sets.newConcurrentHashSet();
+    /** Cached objects */
+    @GuardedBy("this")
+    private final Set<S> inactive = Sets.newConcurrentHashSet();
 
-    /** Listeners that will receive updates */
-    private final List<CoordinateListener> listeners 
-            = Collections.synchronizedList(new ArrayList<CoordinateListener>());
+    /** Listeners that will receive updates. */
+    private final List<CoordinateListener> listeners = Lists.newCopyOnWriteArrayList();
     
+    private CoordinateManager(int maxCacheSize) {
+        this.maxCacheSize = maxCacheSize;
+    }
     
     //<editor-fold defaultstate="collapsed" desc="STATIC FACTORY METHOD">
     
     /**
      * Create and return new instance of coordinate manager.
+     * @param maxCacheSize maximum # of active & inactive points to include
      */
-    public static <S,C> CoordinateManager<S,C> create() {
-        return new CoordinateManager<S,C>();
+    public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {
+        return new CoordinateManager<S,C>(maxCacheSize);
     }
     
     //</editor-fold>
-    
-
-    public synchronized C apply(S src) {
-        return map.get(src);
-    }
-
-    //
-    // ACCESSORS
-    //
 
     /**
-     * Return objects currently tracked by the manager
+     * Return objects currently tracked by the manager.
      * @return objects
      */
-    public synchronized Set<S> getObjects() {
-        return map.keySet();
+    public Set<S> getActive() {
+        return Collections.unmodifiableSet(active);
     }
 
     /**
-     * Returns cached objects
+     * Returns cached objects.
      * @return cached objects
      */
-    public synchronized Set<S> getCachedObjects() {
-        return cache.keySet();
+    public Set<S> getInactive() {
+        return Collections.unmodifiableSet(inactive);
     }
 
     /**
@@ -113,21 +119,49 @@ public class CoordinateManager<S, C> implements Function<S, C> {
      * @param obj objects to test
      * @return true if all are tracked, false otherwise
      */
-    public synchronized boolean locatesAll(Collection<? extends S> obj) {
-        for (S s : obj) {
-            if (!map.containsKey(s) && !cache.containsKey(s)) {
-                return false;
-            }
-        }
-        return true;
+    public boolean locatesAll(Collection<? extends S> obj) {
+        return map.keySet().containsAll(obj);
     }
 
     /**
-     * Returns copy of map with object locations
+     * Returns copy of map with active locations. This method blocks on the entire
+     * cache, since it uses both state variables.
      * @return object locations
      */
-    public synchronized Map<S, C> getCoordinates() {
-        return new HashMap<S, C>(map);
+    public synchronized Map<S, C> getActiveLocationCopy() {
+        Map<S, C> res = Maps.newHashMap();
+        for (S s : active) {
+            res.put(s, map.get(s));
+        }
+        return res;
+    }
+    
+    /**
+     * Retrieve location of given set of objects, whether active or inactive.
+     * @param obj objects to retrieve
+     * @return map of locations
+     */
+    public <T extends S> Map<S,C> getLocationCopy(Set<T> obj) {
+        synchronized(map) {
+            Map<S, C> res = Maps.newHashMap();
+            for (S s : obj) {
+                res.put(s, map.get(s));
+            }
+            return res;
+        }
+    }
+
+    /**
+     * Returns copy of map with inactive locations. This method blocks on the entire
+     * cache, since it uses both state variables.
+     * @return object locations
+     */
+    public synchronized Map<S, C> getInactiveLocationCopy() {
+        Map<S, C> res = Maps.newHashMap();
+        for (S s : inactive) {
+            res.put(s, map.get(s));
+        }
+        return res;
     }
 
     //
@@ -135,7 +169,8 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     //
 
     /**
-     * Adds a single additional location to the manager
+     * Adds a single additional location to the manager. Use {@link #putAll(java.util.Map)}
+     * wherever possible as it will be more efficient.
      * @param s source object
      * @param c coordinate
      */
@@ -144,107 +179,100 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     }
 
     /**
-     * Adds additional locations to the manager. Sends out a property change event
-     * to notify listeners if there are updates.
+     * Adds additional locations to the manager. Blocks while the map is being
+     * updated, since it may change the active and cached object sets.
+     * Propagates the updated coordinates to interested listeners (on the invoking thread).
      * @param coords new coordinates
      */
-    public synchronized void putAll(Map<S,? extends C> coords) {
-        map.putAll(coords);
+    public void putAll(Map<S,? extends C> coords) {
+        synchronized (this) {
+            map.putAll(coords);
+            active.addAll(coords.keySet());
+            inactive.removeAll(coords.keySet());
+        }
         fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coords));
     }
 
     /**
      * Replaces the current set of objects with specified objects, and caches the rest.
+     * Propagates the updated coordinates to interested listeners (on the invoking thread).
      * @param coords new coordinates
      */
-    public synchronized void setCoordinateMap(Map<S,? extends C> coords) {
-        Map<S, C> cached = new HashMap<S, C>();
-        for (S s : map.keySet()) {
-            if (!coords.containsKey(s)) {
-                cached.put(s, map.get(s));
-            }
+    public void setCoordinateMap(Map<S,? extends C> coords) {
+        Set<S> toCache;
+        synchronized(this) {
+            toCache = Sets.difference(map.keySet(), coords.keySet()).immutableCopy();
+            map.putAll(coords);
+            active = Sets.newConcurrentHashSet(coords.keySet());
+            inactive.removeAll(coords.keySet());
+            inactive.addAll(toCache);
+            checkCache();
         }
-        cache.putAll(cached);
-        checkCache();
-        map.keySet().removeAll(cached.keySet());
-        map.putAll(coords);
-        fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coords, cached.keySet()));
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coords, toCache));
     }
 
     /**
-     * Removes objects from the manager without caching their locations
+     * Removes objects from the manager without caching their locations.
+     * Propagates the updated coordinates to interested listeners (on the invoking thread).
      * @param obj objects to remove
      */
-    public synchronized void removeObjects(Set<? extends S> obj) {
+    public void forget(Set<? extends S> obj) {
         Set<S> removed = new HashSet<S>();
-        for (S k : obj) {
-            if (map.remove(k) != null) {
-                removed.add(k);
+        synchronized (map) {
+            for (S k : obj) {
+                if (map.remove(k) != null) {
+                    removed.add(k);
+                }
             }
         }
         fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, removed));
     }
 
     /**
-     * Removes specified objects to cacheObjects
+     * Makes specified objects inactive, possibly removing them from memory.
+     * Propagates the updated coordinates to interested listeners (on the invoking thread).
      * @param obj objects to removeObjects
      */
-    public synchronized void cacheObjects(Set<? extends S> obj) {
-        Map<S,C> cached = new HashMap<S,C>();
-        for (S k : obj) {
-            if (map.containsKey(k)) {
-                cached.put(k, map.remove(k));
-            }
+    public <T extends S> void deactivate(Set<T> obj) {
+        Set<T> removed;
+        synchronized (this) {
+            removed = Sets.intersection(obj, active).immutableCopy();
+            active.removeAll(removed);
+            inactive.addAll(removed);
+            checkCache();
         }
-        cache.putAll(cached);
-        checkCache();
-        fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, cached.keySet()));
-    }
-    
-    /**
-     * Get copy of all cached locations.
-     * @return map of locations
-     */
-    public synchronized Map<S,C> getCachedLocations() {
-        Map<S,C> res = new HashMap<S,C>();
-        res.putAll(cache);
-        return res;
-    }
-    
-    /**
-     * Retrieve location of given set of cached objects.
-     * @param obj objects to retrieve
-     * @return map of locations
-     */
-    public synchronized Map<S,C> getCachedLocations(Set<? extends S> obj) {
-        Map<S,C> res = new HashMap<S,C>();
-        for (S s : obj) {
-            if (cache.containsKey(s)) {
-                res.put(s, cache.get(s));
-            }
-        }
-        return res;
+        fireCoordinatesChanged(CoordinateChangeEvent.createRemoveEvent(this, removed));
     }
 
     /**
      * Call to restore locations from the cache.
      * @param obj objects to restore
+     * @return true if cache was changed
      */
-    public synchronized void restoreCached(Set<? extends S> obj) {
-        Map<S,C> restored = new HashMap<S,C>();
-        for (S k : obj) {
-            C c = cache.remove(k);
-            if (c != null && !map.containsKey(k)) {
-                restored.put(k, c);
+    public <T extends S> boolean reactivate(Set<T> obj) {
+        Map<S,C> restoreMap = Maps.newHashMap();
+        synchronized (this) {
+            Set<T> restored = Sets.intersection(obj, inactive);
+            for (T t : restored) {
+                restoreMap.put(t, map.get(t));
             }
+            active.addAll(restored);
+            inactive.removeAll(restored);
         }
-        putAll(restored);
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, restoreMap));
+        return !restoreMap.isEmpty();
     }
 
-    /** Call to ensure appropriate size of cache */
+    /** 
+     * Call to ensure appropriate size of cache. Should always be called within
+     * a synchronization block.
+     */
     private void checkCache() {
-        for (S m : map.keySet()) {
-            cache.remove(m);
+        int n = inactive.size() - maxCacheSize;
+        if (n > 0) {
+            Set<S> remove = Sets.newHashSet(Iterables.limit(inactive, n));
+            inactive.removeAll(remove);
+            map.keySet().removeAll(remove);
         }
     }
 
@@ -254,15 +282,19 @@ public class CoordinateManager<S, C> implements Function<S, C> {
     // EVENT HANDLING
     //
 
+    /**
+     * Fire update, from the thread that invoked the change.
+     * The collections in the event are not guarded by {@code this}; they are either
+     * are either provided as arguments to {@code this}, or are immutable lists.
+     * @param evt the event to fire
+     */
     protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
         if ((evt.getAdded() == null || evt.getAdded().isEmpty()) 
                 && (evt.getRemoved() == null || evt.getRemoved().isEmpty())) {
             return;
         }
-        synchronized(listeners) {
-            for (CoordinateListener cl : listeners) {
-                cl.coordinatesChanged(evt);
-            }
+        for (CoordinateListener cl : listeners) {
+            cl.coordinatesChanged(evt);
         }
     }
 

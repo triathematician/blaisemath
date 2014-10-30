@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.visometry;
  * #L%
  */
 
+import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -31,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 
 /**
  * <p>
@@ -155,7 +155,7 @@ public class VGraphicComponent<C> extends JGraphicComponent {
      * @param canvas the canvas to render to
      */
     @Override
-    public final synchronized void renderTo(Graphics2D canvas) {
+    public final void renderTo(Graphics2D canvas) {
         // this will recompute objects if necessary
         long t0 = System.currentTimeMillis();
         recompute();

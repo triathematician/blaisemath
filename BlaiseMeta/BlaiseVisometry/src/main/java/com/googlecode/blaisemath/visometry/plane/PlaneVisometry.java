@@ -27,14 +27,6 @@ package com.googlecode.blaisemath.visometry.plane;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
 import com.googlecode.blaisemath.coordinate.DomainHint;
 import com.googlecode.blaisemath.coordinate.SampleSet;
 import com.googlecode.blaisemath.coordinate.ScreenSampleDomainProvider;
@@ -43,6 +35,14 @@ import com.googlecode.blaisemath.line.RealIntervalStepSampler;
 import com.googlecode.blaisemath.plane.SquareDomainBroadcaster;
 import com.googlecode.blaisemath.plane.SquareDomainStepSampler;
 import com.googlecode.blaisemath.visometry.Visometry;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 
 /**
  * <p>
@@ -334,16 +334,16 @@ public final class PlaneVisometry implements Visometry<Point2D.Double> {
         }
     }
 
-    public synchronized void addChangeListener(ChangeListener l) { 
+    public void addChangeListener(ChangeListener l) { 
         listenerList.add(ChangeListener.class, l);
     }
     
-    public synchronized void removeChangeListener(ChangeListener l) { 
+    public void removeChangeListener(ChangeListener l) { 
         listenerList.remove(ChangeListener.class, l); 
     }
 
     /** Notify interested listeners of an (unspecified) change in the plottable. */
-    public synchronized void fireStateChanged() {
+    public void fireStateChanged() {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ChangeListener.class) {

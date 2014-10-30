@@ -38,10 +38,12 @@ import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,7 +81,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
      * Initialize with default coordinate manager.
      */
     public DelegatingEdgeSetGraphic() {
-        this(new CoordinateManager<S,Point2D>(), null);
+        this(CoordinateManager.<S,Point2D>create(5000), null);
     }
     
     /** 
@@ -92,7 +94,11 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
         coordListener = new CoordinateListener<S,Point2D>(){
             @Override
             public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
-                updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic<G>>());
+                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    public void run() {
+                        updateEdgeGraphics(pointManager.getActiveLocationCopy(), Collections.EMPTY_LIST);
+                    }
+                });
             }
         };
         
@@ -149,7 +155,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             }
             this.pointManager = pointManager;
             this.pointManager.addCoordinateListener(coordListener);
-            updateEdgeGraphics(pointManager.getCoordinates(), new ArrayList<Graphic<G>>());
+            updateEdgeGraphics(pointManager.getActiveLocationCopy(), new ArrayList<Graphic<G>>());
         }
     }
 
@@ -187,7 +193,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             for (E e : addMe) {
                 edges.put(e, null);
             }
-            updateEdgeGraphics(pointManager.getCoordinates(), remove);
+            updateEdgeGraphics(pointManager.getActiveLocationCopy(), remove);
         }
     }
 
