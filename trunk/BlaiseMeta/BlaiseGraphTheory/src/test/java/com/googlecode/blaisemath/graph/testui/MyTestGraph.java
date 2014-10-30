@@ -71,11 +71,11 @@ public final class MyTestGraph implements Graph<String> {
         return nodes.toArray(new String[0])[idx];
     }
 
-    public synchronized void connect(String v1, String v2) {
+    public void connect(String v1, String v2) {
         addEdge(v1, v2);
     }
 
-    public synchronized void disconnect(String v1, String v2) {
+    public void disconnect(String v1, String v2) {
         removeEdge(v1, v2);
     }
 
@@ -87,7 +87,7 @@ public final class MyTestGraph implements Graph<String> {
         return i;
     }
 
-    public synchronized void addVertices(int number) {
+    public void addVertices(int number) {
         int added = 0;
         while (added < number) {
             nodes.add("" + nextAvailableVx());
@@ -96,7 +96,7 @@ public final class MyTestGraph implements Graph<String> {
         check();
     }
 
-    public synchronized void removeVertices(int number) {
+    public void removeVertices(int number) {
         for (int i = 0; i < number; i++) {
             String n = randV();
             nodes.remove(n);
@@ -107,19 +107,19 @@ public final class MyTestGraph implements Graph<String> {
         check();
     }
 
-    public synchronized void addEdges(int number) {
+    public void addEdges(int number) {
         for (int i = 0; i < number; i++) {
             connect(randV(), randV());
         }
     }
 
-    public synchronized void removeEdges(int number) {
+    public void removeEdges(int number) {
         for (int i = 0; i < number; i++) {
             disconnect(randV(), randV());
         }
     }
 
-    public synchronized void rewire(int lost, int gained) {
+    public void rewire(int lost, int gained) {
         int e0 = edgeCount();
         for (int i = 0; i < lost; i++) {
             removeEdge(randV(), randV());
@@ -214,7 +214,7 @@ public final class MyTestGraph implements Graph<String> {
      * @param v2 second vertex
      * @return true if edge was found and removed
      */
-    protected synchronized boolean removeEdge(String v1, String v2) {
+    protected boolean removeEdge(String v1, String v2) {
         Edge<String> edge = directed ? new Edge<String>(v1, v2) : new Edge.UndirectedEdge<String>(v1, v2);
         if (edgeTable.contains(v1, v2)) {
             edgeTable.get(v1, v2).remove(edge);

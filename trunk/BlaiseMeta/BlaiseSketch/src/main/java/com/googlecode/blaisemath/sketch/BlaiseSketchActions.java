@@ -181,7 +181,7 @@ public class BlaiseSketchActions {
     }
 
     public static void deleteGraphic(Graphic<Graphics2D> src, JGraphicComponent comp) {
-        comp.getSelectionModel().removeSelection(src);
+        comp.getSelectionModel().deselect(src);
         GraphicComposite gc = src.getParent();
         if (gc != null) {
             gc.removeGraphic(src);

@@ -157,7 +157,7 @@ public class GraphUtils {
      * @return an instance of the graph with the same vertices and edges, but a new copy of it
      */
     public static <V> Graph<V> copyAsSparseGraph(Graph<V> graph) {
-        return new SparseGraph<V>(graph.isDirected(), graph.nodes(), copyEdges(graph.edges()));
+        return SparseGraph.createFromEdges(graph.isDirected(), graph.nodes(), copyEdges(graph.edges()));
     }
 
     /**
@@ -166,7 +166,7 @@ public class GraphUtils {
      * @return undirected copy with the same collection of edges
      */
     public static <V> Graph<V> copyAsUndirectedSparseGraph(Graph<V> graph) {
-        return new SparseGraph<V>(false, graph.nodes(), copyEdges(graph.edges()));
+        return SparseGraph.createFromEdges(false, graph.nodes(), copyEdges(graph.edges()));
     }
 
     //</editor-fold>
@@ -192,7 +192,7 @@ public class GraphUtils {
                             && nodes.contains(input.getNode2());
                 }
             });
-        return new SparseGraph<V>(parent.isDirected(), nodes, filteredEdges);
+        return SparseGraph.createFromEdges(parent.isDirected(), nodes, filteredEdges);
     }
     
     /**
@@ -644,7 +644,7 @@ public class GraphUtils {
                     contract.contains(e.getNode2()) ? replace : e.getNode2());
             edges.add(edge);
         }
-        return new SparseGraph(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
+        return SparseGraph.createFromEdges(graph.isDirected(), contractedNodeSet(graph.nodes(), contract, replace), edges);
     }
     
     /**

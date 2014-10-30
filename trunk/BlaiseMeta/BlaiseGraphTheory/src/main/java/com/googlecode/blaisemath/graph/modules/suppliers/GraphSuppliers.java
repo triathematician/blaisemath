@@ -44,7 +44,7 @@ import java.util.List;
 public class GraphSuppliers {
 
     /** A completely empty graph */
-    public static final Graph EMPTY_GRAPH = new SparseGraph(false, Collections.EMPTY_SET, Collections.EMPTY_SET);
+    public static final Graph EMPTY_GRAPH = SparseGraph.createFromEdges(false, Collections.EMPTY_SET, Collections.EMPTY_SET);
 
     // utility class
     private GraphSuppliers() {

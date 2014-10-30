@@ -57,22 +57,22 @@ public class VBasicPolygonalPath<C,G> extends VGraphicSupport<C,G> {
         return window;
     }
 
-    public synchronized C getPoint(int i) {
+    public C getPoint(int i) {
         return pathCoordinates[i];
     }
 
-    public synchronized void setPoint(int i, C point) {
+    public void setPoint(int i, C point) {
         if (!(Objects.equal(point, pathCoordinates[i]))) {
             this.pathCoordinates[i] = point;
             setUnconverted(true);
         }
     }
 
-    public synchronized C[] getPoint() {
+    public C[] getPoint() {
         return pathCoordinates.clone();
     }
 
-    public synchronized void setPoint(C[] point) {
+    public void setPoint(C[] point) {
         this.pathCoordinates = point.clone();
         setUnconverted(true);
     }

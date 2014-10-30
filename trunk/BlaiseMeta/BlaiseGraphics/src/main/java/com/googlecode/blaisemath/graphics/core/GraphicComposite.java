@@ -41,20 +41,22 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.swing.JPopupMenu;
 
 /**
  * <p>
  *   An ordered collection of {@link Graphic}s, where the ordering indicates draw order.
  *   May also have a {@link StyleContext} that graphics can reference when rendering.
- *   The composite is thread-safe, so graphics can be added or removed to the composite from
- *   any thread.
+ *   The composite is NOT thread safe. Any access and changes should be done from a single
+ *   thread.
  * </p>
  * 
  * @param <G> type of graphics canvas to render to
  * 
  * @author Elisha
  */
+@NotThreadSafe
 public class GraphicComposite<G> extends Graphic<G> {
     
     public static final String BOUNDING_BOX_VISIBLE_PROP = "boundingBoxVisible";
@@ -113,7 +115,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * Get graphic entries in the order they are drawn.
      * @return iterator over the entries, in draw order 
      */
-    public synchronized Iterable<Graphic<G>> getGraphics() { 
+    public Iterable<Graphic<G>> getGraphics() { 
         return Iterables.unmodifiableIterable(entries);
     }
     
@@ -121,7 +123,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * Explicitly set list of entries. The draw order will correspond to the iteration order.
      * @param graphics graphics in the composite
      */
-    public synchronized void setGraphics(Iterable<? extends Graphic<G>> graphics) {
+    public void setGraphics(Iterable<? extends Graphic<G>> graphics) {
         clearGraphics();
         addGraphics(graphics);
     }
@@ -242,7 +244,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param gfc the entry
      * @return whether composite was changed by add
      */
-    public final synchronized boolean addGraphic(Graphic<G> gfc) {
+    public final boolean addGraphic(Graphic<G> gfc) {
         if (addHelp(gfc)) {
             fireGraphicChanged();
             return true;
@@ -255,7 +257,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param gfc the entry to remove
      * @return 
      */
-    public synchronized boolean removeGraphic(Graphic<G> gfc) {
+    public boolean removeGraphic(Graphic<G> gfc) {
         if (removeHelp(gfc)) {
             fireGraphicChanged();
             return true;
@@ -268,7 +270,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param add the entries to add
      * @return true if composite was changed
      */
-    public final synchronized boolean addGraphics(Iterable<? extends Graphic<G>> add) {
+    public final boolean addGraphics(Iterable<? extends Graphic<G>> add) {
         boolean change = false;
         for (Graphic<G> en : add) {
             change = addHelp(en) || change;
@@ -286,7 +288,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param remove the entries to remove
      * @return 
      */
-    public final synchronized boolean removeGraphics(Iterable<? extends Graphic<G>> remove) {
+    public final boolean removeGraphics(Iterable<? extends Graphic<G>> remove) {
         boolean change = false;
         for (Graphic<G> en : remove) {
             change = removeHelp(en) || change;
@@ -305,17 +307,15 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param add entries to add
      * @return true if composite changed
      */
-    public synchronized boolean replaceGraphics(
+    public boolean replaceGraphics(
             Iterable<? extends Graphic<G>> remove, 
             Iterable<? extends Graphic<G>> add) {
         boolean change = false;
-        synchronized (entries) {
-            for (Graphic<G> en : remove) {
-                change = removeHelp(en) || change;
-            }
-            for (Graphic<G> en : add) {
-                change = addHelp(en) || change;
-            }
+        for (Graphic<G> en : remove) {
+            change = removeHelp(en) || change;
+        }
+        for (Graphic<G> en : add) {
+            change = addHelp(en) || change;
         }
         if (change) {
             fireGraphicChanged();
@@ -327,7 +327,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * Removes all entries, clearing their parents
      * @return 
      */
-    public synchronized boolean clearGraphics() {
+    public boolean clearGraphics() {
         boolean change = !entries.isEmpty();
         for (Graphic<G> en : entries) {
             if (en.getParent() == this) {
@@ -356,12 +356,12 @@ public class GraphicComposite<G> extends Graphic<G> {
     }
 
     @Override
-    public synchronized boolean contains(Point2D point) {
+    public boolean contains(Point2D point) {
         return graphicAt(point) != null;
     }
 
     @Override
-    public synchronized boolean intersects(Rectangle2D box) {
+    public boolean intersects(Rectangle2D box) {
         for (Graphic<G> en : entries) {
             if (en.intersects(box)) {
                 return true;
@@ -371,7 +371,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     }
     
     @Override
-    public synchronized void renderTo(G canvas) {
+    public void renderTo(G canvas) {
         for (Graphic<G> en : entries) {
             if (!StyleHints.isInvisible(en.getStyleHints())) {
                 en.renderTo(canvas);
@@ -432,7 +432,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param point the window point
      * @return topmost graphic within the composite, or null if there is none
      */
-    public synchronized Graphic<G> graphicAt(Point2D point) {
+    public Graphic<G> graphicAt(Point2D point) {
         for (Graphic<G> en : visibleEntriesInReverse()) {
             if (en instanceof GraphicComposite) {
                 Graphic<G> s = ((GraphicComposite<G>)en).graphicAt(point);
@@ -450,7 +450,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     }
 
     @Override
-    public synchronized String getTooltip(Point2D p) {
+    public String getTooltip(Point2D p) {
         // return the first non-null tooltip, in draw order
         for (Graphic<G> en : visibleEntriesInReverse()) {
             if (en.isTooltipEnabled() && en.contains(p)) {
@@ -468,7 +468,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param point the window point
      * @return topmost graphic within the composite
      */
-    public synchronized Graphic<G> mouseGraphicAt(Point2D point) {
+    public Graphic<G> mouseGraphicAt(Point2D point) {
         // return the first graphic containing the point, in draw order
         for (Graphic<G> en : functionalEntriesInReverse()) {
             if (en.isMouseEnabled()) {
@@ -493,7 +493,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param point point of interest
      * @return graphic at point that can be selected
      */
-    public synchronized Graphic<G> selectableGraphicAt(Point2D point) {
+    public Graphic<G> selectableGraphicAt(Point2D point) {
         for (Graphic<G> en : visibleEntriesInReverse()) {
             if (en instanceof GraphicComposite) {
                 Graphic<G> s = ((GraphicComposite<G>)en).selectableGraphicAt(point);
@@ -512,7 +512,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @param box bounding box
      * @return graphics within bounds
      */
-    public synchronized Set<Graphic<G>> selectableGraphicsIn(Rectangle2D box) {
+    public Set<Graphic<G>> selectableGraphicsIn(Rectangle2D box) {
         Set<Graphic<G>> result = new HashSet<Graphic<G>>();
         for (Graphic<G> g : visibleEntries()) {
             if (g instanceof GraphicComposite) {

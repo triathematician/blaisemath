@@ -28,12 +28,13 @@ import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.style.StyleContext;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Encapsulates a collection of {@link VGraphic}s.
+ * Encapsulates a collection of {@link VGraphic}s. This class is not thread safe.
+ * All access & modifications should be made from the event dispatch thread.
  *
  * @param <C> local coordinate type
  *
@@ -42,10 +43,11 @@ import java.util.List;
  *
  * @author Elisha
  */
+@NotThreadSafe
 public class VGraphicComposite<C,G> extends VGraphicSupport<C,G> {
 
     /** Stores the local entries */
-    protected final List<VGraphic<C,G>> entries = Collections.synchronizedList(new ArrayList<VGraphic<C,G>>());
+    protected final List<VGraphic<C,G>> entries = Lists.newArrayList();
     /** Stores the window entry */
     protected final GraphicComposite<G> windowEntry = new GraphicComposite<G>();
 
@@ -156,19 +158,17 @@ public class VGraphicComposite<C,G> extends VGraphicSupport<C,G> {
      */
     public void replaceGraphics(Iterable<? extends VGraphic<C,G>> add) {
         boolean change = false;
-        synchronized(entries) {
-            if (!entries.isEmpty()) {
-                change = true;
+        if (!entries.isEmpty()) {
+            change = true;
+        }
+        for (VGraphic<C,G> en : entries) {
+            if (en.getParentGraphic() == this) {
+                en.setParentGraphic(null);
             }
-            for (VGraphic<C,G> en : entries) {
-                if (en.getParentGraphic() == this) {
-                    en.setParentGraphic(null);
-                }
-            }
-            entries.clear();
-            for (VGraphic<C,G> en : add) {
-                change = addHelp(en) || change;
-            }
+        }
+        entries.clear();
+        for (VGraphic<C,G> en : add) {
+            change = addHelp(en) || change;
         }
         if (change) {
             fireConversionNeeded();
@@ -197,14 +197,12 @@ public class VGraphicComposite<C,G> extends VGraphicSupport<C,G> {
 
     @Override
     public boolean isUnconverted() {
-        synchronized(entries) {
-            if (entries.isEmpty()) {
+        if (entries.isEmpty()) {
+            return true;
+        }
+        for (VGraphic<C,G> en : entries) {
+            if (en.isUnconverted()) {
                 return true;
-            }
-            for (VGraphic<C,G> en : entries) {
-                if (en.isUnconverted()) {
-                    return true;
-                }
             }
         }
         return false;
@@ -223,14 +221,12 @@ public class VGraphicComposite<C,G> extends VGraphicSupport<C,G> {
     }
 
     public void convert(Visometry<C> vis, VisometryProcessor<C> processor) {
-        synchronized(entries) {
-            for (VGraphic<C,G> e : entries) {
-                if (e.isUnconverted()) {
-                    e.convert(vis, processor);
-                }
+        for (VGraphic<C,G> e : entries) {
+            if (e.isUnconverted()) {
+                e.convert(vis, processor);
             }
-            updateEntries();
         }
+        updateEntries();
     }
 
     protected void updateEntries() {

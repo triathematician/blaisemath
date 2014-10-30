@@ -26,6 +26,9 @@ package com.googlecode.blaisemath.graph.longitudinal;
  */
 
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.SparseGraph;
+import com.googlecode.blaisemath.util.Edge;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,9 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.util.Edge;
 
 /**
  * A graph whose nodes and edges all come with associated time intervals. When queried
@@ -211,7 +211,7 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         for (IntervalTimeEdge<V> e : edgeSlice(time)) {
             edges.add(new Edge<V>(e));
         }
-        return new SparseGraph(directed, nodes, edges);
+        return SparseGraph.createFromEdges(directed, nodes, edges);
     }
 
     public double getMinimumTime() {

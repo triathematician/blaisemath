@@ -25,13 +25,12 @@ package com.googlecode.blaisemath.visometry;
  */
 
 
+import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
+import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
-import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
-import com.googlecode.blaisemath.util.Edge;
 
 /**
  * A set of draggable points defined in local coordinates. Properties of the objects
@@ -44,6 +43,8 @@ import com.googlecode.blaisemath.util.Edge;
  * @author elisha
  */
 public class VCustomGraph<C,S,E extends Edge<S>,G> extends VCustomPointSet<C,S,G> {
+    
+    private static final int NODE_CACHE_SIZE = 20000;
 
     /** Maintains collection of edges */
     protected final DelegatingNodeLinkGraphic<S,E,G> gwindow;
@@ -52,7 +53,7 @@ public class VCustomGraph<C,S,E extends Edge<S>,G> extends VCustomPointSet<C,S,G
      * Initialize without any points or edges
      */
     public VCustomGraph() {
-        this(new CoordinateManager<S,C>());
+        this(CoordinateManager.<S,C>create(NODE_CACHE_SIZE));
     }
 
     /**

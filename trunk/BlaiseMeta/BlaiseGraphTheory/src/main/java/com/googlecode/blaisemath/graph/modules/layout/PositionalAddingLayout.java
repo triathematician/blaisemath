@@ -37,15 +37,15 @@ import java.util.Map;
  * 
  * @author petereb1
  */
-public class PositionalAddingLayout implements StaticGraphLayout {
+public class PositionalAddingLayout<N> implements StaticGraphLayout {
     
-    private Map<Object, Point2D.Double> curLocations;
+    private Map<N, Point2D.Double> curLocations;
 
-    public Map<Object, Point2D.Double> getCurLocations() {
+    public Map<N, Point2D.Double> getCurLocations() {
         return curLocations;
     }
 
-    public void setCurLocations(Map<Object, Point2D.Double> curLocations) {
+    public void setCurLocations(Map<N, Point2D.Double> curLocations) {
         this.curLocations = curLocations;
     }    
 

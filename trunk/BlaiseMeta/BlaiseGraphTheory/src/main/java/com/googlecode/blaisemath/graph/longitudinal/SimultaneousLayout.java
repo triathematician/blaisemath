@@ -26,6 +26,9 @@ package com.googlecode.blaisemath.graph.longitudinal;
  */
 
 import com.google.common.collect.Lists;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,9 +38,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
 
 /**
  *
@@ -115,11 +115,9 @@ public class SimultaneousLayout {
     }
 
     public Map<Object, Point2D.Double> getPositionMap(double time) {
-        synchronized(masterPos) {
-            for (int i = 0; i < masterPos.size(); i++) {
-                if (times.get(i).equals(time)) {
-                    return masterPos.get(i);
-                }
+        for (int i = 0; i < masterPos.size(); i++) {
+            if (times.get(i).equals(time)) {
+                return masterPos.get(i);
             }
         }
         return Collections.emptyMap();
@@ -133,15 +131,13 @@ public class SimultaneousLayout {
         for (LayoutSlice s : slices) {
             s.iterate(s.graph);
         }
-        synchronized(masterPos) {
-            masterPos.clear();
-            for (LayoutSlice s : slices) {
-                HashMap<Object,Point2D.Double> nueMap = new HashMap<Object,Point2D.Double>();
-                for (Entry<Object, Point2D.Double> en : s.getPositions().entrySet()) {
-                    nueMap.put(en.getKey(), new Point2D.Double(en.getValue().x, en.getValue().y));
-                }
-                masterPos.add(nueMap);
+        masterPos.clear();
+        for (LayoutSlice s : slices) {
+            HashMap<Object,Point2D.Double> nueMap = new HashMap<Object,Point2D.Double>();
+            for (Entry<Object, Point2D.Double> en : s.getPositions().entrySet()) {
+                nueMap.put(en.getKey(), new Point2D.Double(en.getValue().x, en.getValue().y));
             }
+            masterPos.add(nueMap);
         }
     }
 

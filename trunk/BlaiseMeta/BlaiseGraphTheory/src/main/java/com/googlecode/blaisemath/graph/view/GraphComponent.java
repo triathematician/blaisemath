@@ -40,8 +40,8 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
-import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.Graphics2D;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -56,6 +56,9 @@ import java.util.logging.Logger;
  * and a {@link VisualGraph} for appearance.
  *
  * @author elisha
+ * 
+ * @todo as a swing component, should not synchronize based on this; instead, should
+ *    be not thread safe, and should be managed only within the swing dispatch thread
  */
 public class GraphComponent extends JGraphicComponent {
     
@@ -157,11 +160,11 @@ public class GraphComponent extends JGraphicComponent {
         adapter.setLayoutManager(gm);
     }
 
-    public synchronized Graph getGraph() {
+    public Graph getGraph() {
         return adapter.getGraph();
     }
 
-    public synchronized void setGraph(Graph graph) {
+    public void setGraph(Graph graph) {
         adapter.setGraph(graph);
     }
 
