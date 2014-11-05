@@ -27,6 +27,8 @@ package com.googlecode.blaisemath.util;
  */
 
 
+import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.collect.Iterables;
 import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -101,6 +103,24 @@ public class Points {
             return new Rectangle2D.Double(minx-margin, miny-margin, 
                     maxx-minx+2*margin, maxy-miny+2*margin);
         }
+    }
+
+    /**
+     * Compute the average location of a set of points.
+     * @param locs points
+     * @return average loc
+     */
+    public static Point2D average(Iterable<? extends Point2D> locs) {
+        checkArgument(Iterables.size(locs) > 0);
+        double sumx = 0;
+        double sumy = 0;
+        int count = 0;
+        for (Point2D p : locs) {
+            sumx += p.getX();
+            sumy += p.getY();
+            count++;
+        }
+        return new Point2D.Double(sumx/count, sumy/count);
     }
     
 }
