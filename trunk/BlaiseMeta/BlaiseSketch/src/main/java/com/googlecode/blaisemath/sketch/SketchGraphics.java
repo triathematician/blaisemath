@@ -31,9 +31,14 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ActionMap;
 
 /**
@@ -42,6 +47,8 @@ import javax.swing.ActionMap;
  */
 public class SketchGraphics {
     
+    private static final String GRAPHIC_CM_KEY = "Graphic";
+
     private static final AttributeSet BOUNDING_BOX_STYLE = Styles.strokeWidth(Color.red, .5f).immutable();
     
     private SketchGraphics() {
@@ -66,11 +73,15 @@ public class SketchGraphics {
             ((PrimitiveGraphicSupport)gfc).setDragEnabled(true);
         }
 
-        ActionMap am = BlaiseSketchFrameView.getActionMap();
-        gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-            am, "editGraphic", "editGraphicStyle", "addGraphicAttribute", "deleteGraphic", null,
-                "copyStyle", "pasteStyle", null,
-                "groupSelected", "ungroupSelected", "deleteSelected"));
+        try {
+            ActionMap am = BlaiseSketchFrameView.getActionMap();
+            List<String> list = (List<String>) MenuConfig.readConfig(BlaiseSketchApp.class).get(GRAPHIC_CM_KEY);
+            gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+                    gfc+"", am, list.toArray(new String[0])));
+        } catch (IOException x) {
+            Logger.getLogger(SketchGraphics.class.getName()).log(Level.SEVERE,
+                    "Invalid context menu config", x);
+        }
         
         if (gfc instanceof GraphicComposite) {
             GraphicComposite<Graphics2D> gc = (GraphicComposite<Graphics2D>) gfc;

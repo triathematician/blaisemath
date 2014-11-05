@@ -31,9 +31,14 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.swing.Action;
 import javax.swing.ActionMap;
+import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 
 /**
  * Initializes a context menu using specified keys in an {@link ActionMap}.
@@ -41,28 +46,52 @@ import javax.swing.JPopupMenu;
  */
 public final class ActionMapContextMenuInitializer<S> implements ContextMenuInitializer<S> {
 
+    /** Optional key for submenu heading. If null, no submenu is created. */
+    @Nullable
+    private final String submenu;
     private final ActionMap am;
     private final String[] actions;
 
     public ActionMapContextMenuInitializer(ActionMap am, String... actions) {
+        this(null, am, actions);
+    }
+
+    public ActionMapContextMenuInitializer(String submenu, ActionMap am, String... actions) {
         this.am = checkNotNull(am);
         this.actions = actions;
+        this.submenu = submenu;
     }
     
     public void initContextMenu(JPopupMenu popup, S src, Point2D point,
             Object focus, Set selection) {
+        if (popup.getComponentCount() > 0) {
+            popup.addSeparator();
+        }
+        JMenu addTo = submenu == null ? null : new JMenu(submenu);
         for (String a : actions) {
             if (a == null) {
-                popup.addSeparator();
+                if (addTo == null) {
+                    popup.addSeparator();
+                } else {
+                    addTo.add(new JSeparator());
+                }
             } else {
                 Action action = am.get(a);
                 if (action == null) {
                     Logger.getLogger(ActionMapContextMenuInitializer.class.getName())
                             .log(Level.WARNING, "Action not found: {0}", a);
                 } else {
-                    popup.add(new ActionWithSource(action, src));
+                    ActionWithSource act = new ActionWithSource(action, src);
+                    if (addTo == null) {
+                        popup.add(act);
+                    } else {
+                        addTo.add(act);
+                    }
                 }
             }
+        }
+        if (addTo != null) {
+            popup.add(addTo);
         }
     }
     

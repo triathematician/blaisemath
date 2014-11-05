@@ -53,7 +53,9 @@ import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.util.MPanel;
+import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
@@ -77,14 +79,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
@@ -96,38 +95,12 @@ import org.jdesktop.application.FrameView;
  */
 public class BlaiseSketchFrameView extends FrameView {
     
-    private static final String[][] MENUBAR = new String[][] {
-        new String[] { "File", 
-            "load", "save", null, 
-            "clearCanvas", null, 
-            "quit" },
-        new String[] { "Edit", 
-            "selectAll", "clearSelection", null,
-            "copySelectedStyle", "pasteSelectedStyle", null,
-            "editSelected", "editSelectedStyle", "addAttributeToSelected", null, "deleteSelected", null, 
-            "groupSelected", "ungroupSelected", null
-        },
-        new String[] { "Arrange", 
-            "moveForward", "moveBackward", null, "moveToFront", "moveToBack"
-        },
-        new String[] { "Tool", "toolSelect", null, 
-            "createMarker", "createLine", "createPath", null,
-            "createRect", "createCircle", "createEllipse", null,
-            "createText", "createImage"
-        },
-        new String[] { "Zoom",
-            "zoomSelected", "zoomAll", "zoom100"
-        }
-    };
-    
-    private static final String[] TOOLBAR = {
-        "load", "save", null,
-        "toolSelect", null, 
-        "createMarker", "createLine", "createPath", 
-        "createRect", "createCircle", "createEllipse", 
-        "createText", "createImage", null,
-        "groupSelected", "ungroupSelected"
-    };
+    public static final String SELECTION_EMPTY_PROP = "selectionEmpty";
+    public static final String MORE_THAN_ONE_SELECTED_PROP = "moreThanOneSelected";
+    public static final String ONE_SELECTED_PROP = "oneSelected";
+    public static final String GROUP_SELECTED_PROP = "groupSelected";
+        
+    private static final String SELECTION_CM_KEY = "Selection";
     
     private final JFileChooser chooser = new JFileChooser();
     
@@ -153,10 +126,10 @@ public class BlaiseSketchFrameView extends FrameView {
                 boolean one = isOneSelected();
                 boolean moreThanOne = isMoreThanOneSelected();
                 boolean gpSelected = isGroupSelected();
-                firePropertyChange("selectionEmpty", !selEmpty, selEmpty);
-                firePropertyChange("groupSelected", !gpSelected, gpSelected);
-                firePropertyChange("oneSelected", !one, one);
-                firePropertyChange("moreThanOneSelected", !moreThanOne, moreThanOne);
+                firePropertyChange(SELECTION_EMPTY_PROP, !selEmpty, selEmpty);
+                firePropertyChange(GROUP_SELECTED_PROP, !gpSelected, gpSelected);
+                firePropertyChange(ONE_SELECTED_PROP, !one, one);
+                firePropertyChange(MORE_THAN_ONE_SELECTED_PROP, !moreThanOne, moreThanOne);
                 
                 Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
                 setSelectedGraphic(selEmpty ? null 
@@ -187,9 +160,18 @@ public class BlaiseSketchFrameView extends FrameView {
         
         setComponent(mainPanel);
 
+        // set up menus
         ActionMap am = app.getContext().getActionMap(this);
-        setMenuBar(createMenuBar(am));
-        setToolBar(createToolBar(am));
+        try {
+            setMenuBar(MenuConfig.readMenuBar(BlaiseSketchApp.class, am));
+            setToolBar(MenuConfig.readToolBar(BlaiseSketchApp.class, am));
+            List<String> selCm = (List<String>) MenuConfig.readConfig(BlaiseSketchApp.class).get(SELECTION_CM_KEY);
+            activeCanvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+                    "Selection", am, selCm.toArray(new String[0])));
+        } catch (IOException ex) {
+            Logger.getLogger(BlaiseSketchFrameView.class.getName()).log(Level.SEVERE, 
+                    "Menu config failure.", ex);
+        }
         
         statusLabel = new JLabel("no status to report");
         JPanel statusBar = new JPanel();
@@ -205,38 +187,6 @@ public class BlaiseSketchFrameView extends FrameView {
         EditorRegistration.registerEditors();
     }
     
-    //<editor-fold defaultstate="collapsed" desc="INITIALIZATION">
-    
-    private JMenuBar createMenuBar(ActionMap am) {
-        JMenuBar res = new JMenuBar();
-        for (String[] arr : MENUBAR) {
-            JMenu m = new JMenu(arr[0]);
-            for (int i = 1; i < arr.length; i++) {
-                if (arr[i] == null) {
-                    m.addSeparator();
-                } else {
-                    m.add(am.get(arr[i]));
-                }
-            }
-            res.add(m);
-        }
-        return res;
-    }
-    
-    private JToolBar createToolBar(ActionMap am) {
-        JToolBar res = new JToolBar();
-        for (String s : TOOLBAR) {
-            if (s == null) {
-                res.addSeparator();
-            } else {
-                res.add(am.get(s));
-            }
-        }
-        return res;
-    }
-    
-    //</editor-fold>
-    
     public static ActionMap getActionMap() {
         BlaiseSketchApp app = (BlaiseSketchApp) BlaiseSketchApp.getInstance();
         BlaiseSketchFrameView view = (BlaiseSketchFrameView) app.getMainView();
@@ -245,13 +195,17 @@ public class BlaiseSketchFrameView extends FrameView {
     
     private void setSelectedGraphic(Object gfc) {
         if (gfc == null) {
+            selectionPanel.setTitle("Selection");
             selectionPanel.setPrimaryComponent(noSelectionLabel);
         } else {
             if (gfc instanceof Graphic) {
                 PropertySheet ps = PropertySheet.forBean(new ProxyGraphicEditor((Graphic) gfc));
+                selectionPanel.setTitle(gfc+"");
                 selectionPanel.setPrimaryComponent(ps);
             } else if (gfc instanceof Set) {
-                selectionPanel.setPrimaryComponent(new JLabel(((Set)gfc).size()+" graphics selected."));
+                Set gfx = (Set) gfc;
+                selectionPanel.setTitle(gfx.size()+" graphics selected.");
+                selectionPanel.setPrimaryComponent(new JLabel("No options."));
             }
         }
     }
@@ -359,40 +313,6 @@ public class BlaiseSketchFrameView extends FrameView {
     
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Graphic EDIT ACTIONS">
-    
-    @Action
-    public void editGraphic(ActionEvent e) {
-        BlaiseSketchActions.editGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
-    }
-    
-    @Action
-    public void editGraphicStyle(ActionEvent e) {
-        BlaiseSketchActions.editGraphicStyle((Graphic<Graphics2D>) e.getSource(), activeCanvas);
-    }
-    
-    @Action
-    public void addGraphicAttribute(ActionEvent e) {
-        BlaiseSketchActions.addAttribute((Graphic<Graphics2D>) e.getSource(), activeCanvas);
-    }
-    
-    @Action
-    public void deleteGraphic(ActionEvent e) {
-        BlaiseSketchActions.deleteGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
-    }
-    
-    @Action
-    public void copyStyle(ActionEvent e) {
-        BlaiseSketchActions.copyStyle((Graphic<Graphics2D>) e.getSource());
-    }
-    
-    @Action
-    public void pasteStyle(ActionEvent e) {
-        BlaiseSketchActions.pasteStyle(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
-    }
-    
-    // </editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="EDIT ACTIONS">
     
     @Action
@@ -402,16 +322,39 @@ public class BlaiseSketchFrameView extends FrameView {
         }
     }
     
-    @Action(enabledProperty="oneSelected")
+    @Action(enabledProperty=ONE_SELECTED_PROP)
+    public void copySelected() {
+        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
+        BlaiseSketchActions.copy(sel, activeCanvas);
+    }
+    
+    @Action
+    public void pasteGraphic() {
+        BlaiseSketchActions.paste(activeCanvas);
+    }
+    
+    @Action(enabledProperty=ONE_SELECTED_PROP)
     public void copySelectedStyle() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         BlaiseSketchActions.copyStyle(sel);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void pasteSelectedStyle() {
         Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
         BlaiseSketchActions.pasteStyle(sel);
+    }
+    
+    @Action(enabledProperty=ONE_SELECTED_PROP)
+    public void copySelectedDimension() {
+        Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
+        BlaiseSketchActions.copyDimension(sel);
+    }
+    
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
+    public void pasteSelectedDimension() {
+        Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
+        BlaiseSketchActions.pasteDimension(sel);
     }
     
     @Action
@@ -419,63 +362,87 @@ public class BlaiseSketchFrameView extends FrameView {
         activeCanvas.getSelectionModel().setSelection(Sets.newHashSet(activeCanvas.getGraphicRoot().getGraphics()));
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void clearSelection() {
         activeCanvas.getSelectionModel().setSelection(Collections.EMPTY_SET);
     }
     
-    @Action(enabledProperty="oneSelected")
+    @Action(enabledProperty=ONE_SELECTED_PROP)
     public void editSelected() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         BlaiseSketchActions.editGraphic(sel, activeCanvas);
     }
     
-    @Action(enabledProperty="oneSelected")
+    @Action(enabledProperty=ONE_SELECTED_PROP)
     public void editSelectedStyle() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         BlaiseSketchActions.editGraphicStyle(sel, activeCanvas);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void addAttributeToSelected() {
         Set<Graphic<Graphics2D>> sel = activeCanvas.getSelectionModel().getSelection();
         BlaiseSketchActions.addAttribute(sel, activeCanvas);
     }
     
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void deleteSelected() {
         BlaiseSketchActions.deleteSelected(activeCanvas);
     }
     
-    @Action(enabledProperty="moreThanOneSelected")
+    @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
     public void groupSelected() {
         BlaiseSketchActions.groupSelected(activeCanvas);
     }
     
-    @Action(enabledProperty="groupSelected")
+    @Action(enabledProperty=GROUP_SELECTED_PROP)
     public void ungroupSelected() {
         BlaiseSketchActions.ungroupSelected(activeCanvas);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="ARRANGEMENTS">
+    
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveForward() {
         BlaiseSketchActions.moveForward(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveBackward() {
         BlaiseSketchActions.moveBackward(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveToFront() {
         BlaiseSketchActions.moveToFront(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void moveToBack() {
         BlaiseSketchActions.moveToBack(activeCanvas.getSelectionModel().getSelection(), activeCanvas);
+    }
+
+    @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
+    public void alignHorizontal() {
+        BlaiseSketchActions.alignHorizontal(activeCanvas.getSelectionModel().getSelection());
+    }
+
+    @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
+    public void alignVertical() {
+        BlaiseSketchActions.alignVertical(activeCanvas.getSelectionModel().getSelection());        
+    }
+
+    @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
+    public void distributeHorizontal() {
+        BlaiseSketchActions.distributeHorizontal(activeCanvas.getSelectionModel().getSelection());
+    }
+
+    @Action(enabledProperty=MORE_THAN_ONE_SELECTED_PROP)
+    public void distributeVertical() {
+        BlaiseSketchActions.distributeVertical(activeCanvas.getSelectionModel().getSelection());
     }
     
     //</editor-fold>
@@ -540,7 +507,7 @@ public class BlaiseSketchFrameView extends FrameView {
                 new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
     }
     
-    @Action(disabledProperty="selectionEmpty")
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void zoomSelected() {
         Rectangle2D bounds = GraphicUtils.boundingBox(activeCanvas.getSelectionModel().getSelection());
         PanAndZoomHandler.zoomCoordBoxAnimated(activeCanvas, new Point2D.Double(
@@ -554,6 +521,55 @@ public class BlaiseSketchFrameView extends FrameView {
     }
     
     //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Graphic CONTEXT MENU ACTIONS">
+    
+    @Action
+    public void editGraphic(ActionEvent e) {
+        BlaiseSketchActions.editGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void editGraphicStyle(ActionEvent e) {
+        BlaiseSketchActions.editGraphicStyle((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void addGraphicAttribute(ActionEvent e) {
+        BlaiseSketchActions.addAttribute((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void deleteGraphic(ActionEvent e) {
+        BlaiseSketchActions.deleteGraphic((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void copy(ActionEvent e) {
+        BlaiseSketchActions.copy((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void copyStyle(ActionEvent e) {
+        BlaiseSketchActions.copyStyle((Graphic<Graphics2D>) e.getSource());
+    }
+    
+    @Action
+    public void pasteStyle(ActionEvent e) {
+        BlaiseSketchActions.pasteStyle(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
+    }
+    
+    @Action
+    public void copyDimension(ActionEvent e) {
+        BlaiseSketchActions.copyDimension((Graphic<Graphics2D>) e.getSource());
+    }
+    
+    @Action
+    public void pasteDimension(ActionEvent e) {
+        BlaiseSketchActions.pasteDimension(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
+    }
+    
+    // </editor-fold>
     
     /** Activates the gesture layer, and allows the user to complete the gesture. */
     private <G extends SketchGesture> void enableGesture(Class<G> gType) {

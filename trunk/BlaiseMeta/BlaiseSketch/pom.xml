@@ -39,6 +39,11 @@
             <artifactId>blaise-svg</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.14</version>
+        </dependency>
     </dependencies>
 
     <build>
