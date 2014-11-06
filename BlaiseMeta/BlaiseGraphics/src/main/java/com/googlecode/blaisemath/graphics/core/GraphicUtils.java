@@ -30,9 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
-import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Set;
+import java.awt.geom.RectangularShape;
 
 /**
  * Utility class for working with {@link Graphic}s.
@@ -136,6 +135,16 @@ public class GraphicUtils {
             Rectangle2D enBox = en.boundingBox();
             if (enBox != null) {
                 res = res == null ? enBox : res.createUnion(enBox);
+            }
+        }
+        return res;
+    }
+    
+    public static Rectangle2D boundingBoxRect(Iterable<? extends RectangularShape> shapes) {
+        Rectangle2D res = null;
+        for (RectangularShape sh : shapes) {
+            if (sh != null) {
+                res = res == null ? sh.getBounds2D() : res.createUnion(sh.getBounds2D());
             }
         }
         return res;
