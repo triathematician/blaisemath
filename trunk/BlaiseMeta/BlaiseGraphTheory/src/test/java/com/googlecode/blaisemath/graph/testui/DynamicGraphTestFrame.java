@@ -28,6 +28,8 @@ package com.googlecode.blaisemath.graph.testui;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
 import com.googlecode.blaisemath.graph.GAInstrument;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.view.GraphComponent;
@@ -36,6 +38,7 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.SwingUtilities;
 
 
 /**
@@ -50,6 +53,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
     SpringLayout energyLayout;
 
     MyTestGraph graph = new MyTestGraph();
+    Graph<String> graphCopy;
 
 
     /** Creates new form TestPlaneVisometry */
@@ -57,13 +61,14 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
         EditorRegistration.registerEditors();
         initComponents();
 
-        plot.setGraph(graph);
+        graphCopy = GraphUtils.copyAsSparseGraph(graph);
+        plot.setGraph(graphCopy);
+        plot.getAdapter().getViewGraph().setDragEnabled(true);
 
         // PANELS
 
-//        rollupPanel1.add("Visometry", new PropertySheet(plot.getVisometry()));
         rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
-                plot.getLayoutManager().getLocations()
+                plot.getLayoutManager().getNodeLocationCopy()
                 )));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
@@ -250,7 +255,7 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getLocations());
+            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
@@ -258,31 +263,38 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getLocations());
+            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
-        plot.getLayoutManager().startLayoutTask(50, 2);
+        plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        plot.getLayoutManager().stopLayoutTask();
+        plot.getLayoutManager().setLayoutTaskActive(false);
     }//GEN-LAST:event_energySBActionPerformed
 
+    private synchronized void updateGraph() {
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run() {
+                graphCopy = GraphUtils.copyAsSparseGraph(graph);
+                plot.getLayoutManager().setGraph(graphCopy);
+                plot.getAdapter().getViewGraph().setEdgeSet(graphCopy.edges());
+            }
+        });
+    }
+    
     private void addVerticesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVerticesBActionPerformed
         graph.addVertices(5);
-        plot.getLayoutManager().graphUpdated();
+        updateGraph();
     }//GEN-LAST:event_addVerticesBActionPerformed
 
     private void addEdgesBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgesBActionPerformed
         graph.addEdges(5);
-        plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
+        updateGraph();
     }//GEN-LAST:event_addEdgesBActionPerformed
 
     private void rewireBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rewireBActionPerformed
-        synchronized (graph) {
-            graph.rewire(50, 5);
-            plot.getLayoutManager().graphUpdated();
-            plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
-        }
+        graph.rewire(50, 5);
+        updateGraph();
     }//GEN-LAST:event_rewireBActionPerformed
 
     java.util.Timer t = new java.util.Timer();
@@ -293,14 +305,11 @@ public class DynamicGraphTestFrame extends javax.swing.JFrame {
             tt.cancel();
         tt = new java.util.TimerTask(){
             @Override public void run() {
-                synchronized (graph) {
-                    graph.removeVertices(1);
-                    graph.removeEdges(10);
-                    graph.addVertices(1);
-                    graph.addEdges(2);
-                    plot.getLayoutManager().graphUpdated();
-                    plot.getAdapter().getViewGraph().setEdgeSet(graph.edges());
-                }
+                graph.removeVertices(1);
+                graph.removeEdges(10);
+                graph.addVertices(1);
+                graph.addEdges(2);
+                updateGraph();
             }
         };
         t.schedule(tt, 100, 500);

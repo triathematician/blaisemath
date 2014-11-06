@@ -237,7 +237,7 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
+            energyLayout = new SpringLayout(plot.getGraphManager().getNodeLocationCopy());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
         plot.getGraphManager().iterateLayout();
         updateEL = false;
@@ -245,25 +245,25 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
+            energyLayout = new SpringLayout(plot.getGraphManager().getNodeLocationCopy());
         plot.getGraphManager().setLayoutAlgorithm(energyLayout);
-        plot.getGraphManager().startLayoutTask(10, 2);
+        plot.getGraphManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        plot.getGraphManager().stopLayoutTask();
+        plot.getGraphManager().setLayoutTaskActive(false);
     }//GEN-LAST:event_energySBActionPerformed
 
     private void timeEnergyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeEnergyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
+            energyLayout = new SpringLayout(plot.getGraphManager().getNodeLocationCopy());
         plot.getManager().iterateLayout();
         updateEL = false;
     }//GEN-LAST:event_timeEnergyIBActionPerformed
 
     private void timeEnergyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeEnergyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getGraphManager().getLocations());
+            energyLayout = new SpringLayout(plot.getGraphManager().getNodeLocationCopy());
         plot.getManager().startLayoutTask(10, 2);
     }//GEN-LAST:event_timeEnergyABActionPerformed
 

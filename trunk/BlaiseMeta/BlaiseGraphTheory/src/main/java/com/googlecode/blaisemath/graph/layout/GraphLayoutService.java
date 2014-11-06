@@ -49,7 +49,7 @@ public interface GraphLayoutService {
 
     /**
      * Generates layout for a graph. When the layout is completed, the callback provides a mechanism
-     * for returning the results asynchronously.
+     * for returning intermediate results.
      * @param graph the graph
      * @param ic initial conditions (positions on some nodes), can be null if there are none
      * @param callback function to be executed when results are returned

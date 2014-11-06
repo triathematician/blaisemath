@@ -41,9 +41,8 @@ public interface StaticGraphLayout {
      * @param parameters parameters for the layout, e.g. radius
      * @return a mapping of points to vertices
      * @param <C> graph node type
-     * @throws InterruptedException if running on a background thread which is interrupted
      */
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) throws InterruptedException;
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters);
 
     /**
      * Lays out vertices all at the origin.

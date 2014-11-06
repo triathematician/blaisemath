@@ -29,8 +29,7 @@ import java.util.Map;
 import com.googlecode.blaisemath.graph.Graph;
 
 /**
- * Contains an asynchronous callback method to be used in conjunction
- * with {@link GraphLayoutService}.
+ * Provides callback methods for intermediate reporting by {@link GraphLayoutService}.
  *
  * @author petereb1
  */

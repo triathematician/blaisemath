@@ -66,6 +66,7 @@ public class GraphSupplierTestFrame extends javax.swing.JFrame {
      */
     public GraphSupplierTestFrame() {
         initComponents();
+        grapher.getAdapter().getViewGraph().setDragEnabled(true);
         supplierChooser.setModel(new DefaultComboBoxModel(new Object[] {
                 new EmptyGraphSupplier(),
                 new CompleteGraphSupplier(),

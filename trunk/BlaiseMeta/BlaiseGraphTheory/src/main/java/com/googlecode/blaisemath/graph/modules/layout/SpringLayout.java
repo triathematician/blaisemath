@@ -47,11 +47,8 @@ import java.util.logging.Logger;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Simple energy-layout engine. This class not thread-safe, and is intended to be
- * used within a single thread only.
- * 
- * @todo this method supports the "requestLocations" method for making changes from
- *    other threads, but need to document and check whether it's being used properly
+ * Simple energy-layout engine. This class is intended to be accessed from a
+ * single thread.
  *
  * @author Elisha Peterson
  */
@@ -109,16 +106,17 @@ public class SpringLayout implements IterativeGraphLayout {
      * @param initialParameters the parameters for the initial layout
      */
     public SpringLayout(Graph g, StaticGraphLayout initialLayout, double... initialParameters) {
-        try {
-            reset(initialLayout.layout(g, initialParameters));
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SpringLayout.class.getName()).log(Level.SEVERE, "Initial layout interrupted", ex);
-        }
+        this(initialLayout.layout(g, initialParameters));
     }
 
     /** Construct using specified starting locations */
     public SpringLayout(Map<Object, Point2D.Double> positions) {
-        reset(positions);
+        for (Object v : positions.keySet()) {
+            loc.put(v, positions.get(v) == null ? new Point2D.Double() : positions.get(v));
+            vel.put(v, new Point2D.Double());
+        }
+        iteration = 0;
+        tempLoc = null;
     }
 
     
@@ -189,18 +187,13 @@ public class SpringLayout implements IterativeGraphLayout {
 
     // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
 
-    public void reset(Map<?, Point2D.Double> positions) {
-        loc.clear();
-        vel.clear();
-        for (Object v : positions.keySet()) {
-            loc.put(v, positions.get(v) == null ? new Point2D.Double() : positions.get(v));
-            vel.put(v, new Point2D.Double());
-        }
-        iteration = 0;
-        tempLoc = null;
-    }
-
-    public synchronized void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes) {
+    /**
+     * This method may be called from an external thread to update the precise
+     * locations of nodes in the layout.
+     * @param positions
+     * @param resetNodes 
+     */
+    public void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes) {
         if (tempLoc == null) {
             tempLoc = new HashMap<Object,Point2D.Double>(positions);
         } else {
@@ -208,6 +201,7 @@ public class SpringLayout implements IterativeGraphLayout {
         }
         this.resetNodes = resetNodes;
     }
+    
     // </editor-fold>
 
 
@@ -275,7 +269,7 @@ public class SpringLayout implements IterativeGraphLayout {
         }
     }
 
-    public final <V> Map<V,Point2D.Double> iterate(Graph<V> g) {
+    public final <V> void iterate(Graph<V> g) {
         Set<V> nodes = g.nodes();
         Set<V> unpinnedNodes = Sets.difference(nodes, pinnedNodes.getSelection()).immutableCopy();
         
@@ -354,13 +348,6 @@ public class SpringLayout implements IterativeGraphLayout {
         }
 
         iteration ++;
-
-        Map<V,Point2D.Double> res = new HashMap<V,Point2D.Double>();
-        for (V v : nodes) {
-            res.put(v, loc.get(v));
-        }
-
-        return res;
     }
     // </editor-fold>
 
