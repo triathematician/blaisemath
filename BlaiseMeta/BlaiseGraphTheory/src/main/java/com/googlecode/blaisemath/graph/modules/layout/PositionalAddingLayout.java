@@ -49,7 +49,7 @@ public class PositionalAddingLayout<N> implements StaticGraphLayout {
         this.curLocations = curLocations;
     }    
 
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) throws InterruptedException {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
         Map<C, Point2D.Double> res = Maps.newHashMap();
         double len = parameters[0];
         for (C node : g.nodes()) {

@@ -43,7 +43,6 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -96,7 +95,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
                     public void run() {
-                        updateEdgeGraphics(pointManager.getActiveLocationCopy(), Collections.EMPTY_LIST);
+                        updateEdgeGraphics(pointManager.getActiveLocationCopy(), new ArrayList<Graphic<G>>());
                     }
                 });
             }

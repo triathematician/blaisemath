@@ -73,8 +73,9 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
         final Graph<Integer> graph = new EdgeProbabilityGraphSupplier(false, 50, .05f).get();
         plot.setGraph(graph);
+        plot.getAdapter().getViewGraph().setDragEnabled(true);
         plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
-        PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getLocations().values(), 5));
+        PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
                 Integer i = (Integer) o;
@@ -124,7 +125,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         // PANELS
 
         rollupPanel1.add("Energy Layout", PropertySheet.forBean(energyLayout = new SpringLayout(
-                plot.getLayoutManager().getLocations()
+                plot.getLayoutManager().getNodeLocationCopy()
                 )));
         for (Graphic p : plot.getGraphicRoot().getGraphics()) {
             rollupPanel1.add(p.toString(), PropertySheet.forBean(p));
@@ -256,7 +257,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getLocations());
+            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
         plot.getLayoutManager().iterateLayout();
         updateEL = false;
@@ -264,13 +265,13 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void energyABActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyABActionPerformed
         if (energyLayout == null)
-            energyLayout = new SpringLayout(plot.getLayoutManager().getLocations());
+            energyLayout = new SpringLayout(plot.getLayoutManager().getNodeLocationCopy());
         plot.getLayoutManager().setLayoutAlgorithm(energyLayout);
-        plot.getLayoutManager().startLayoutTask(10, 2);
+        plot.getLayoutManager().setLayoutTaskActive(true);
     }//GEN-LAST:event_energyABActionPerformed
 
     private void energySBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energySBActionPerformed
-        plot.getLayoutManager().stopLayoutTask();
+        plot.getLayoutManager().setLayoutTaskActive(false);
     }//GEN-LAST:event_energySBActionPerformed
 
     /**

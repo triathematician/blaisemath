@@ -41,6 +41,7 @@ import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.util.Edge;
+import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.Graphics2D;
 import java.awt.event.HierarchyEvent;
@@ -49,17 +50,19 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.concurrent.NotThreadSafe;
 
 
 /**
  * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
- * and a {@link VisualGraph} for appearance.
+ * and a {@link VisualGraph} for appearance. The layout manager supports executing
+ * long-running layout algorithms in a background thread, and the visual graph
+ * shares a {@link CoordinateManager} that is used for updating locations from
+ * the layout manager.
  *
  * @author elisha
- * 
- * @todo as a swing component, should not synchronize based on this; instead, should
- *    be not thread safe, and should be managed only within the swing dispatch thread
  */
+@NotThreadSafe
 public class GraphComponent extends JGraphicComponent {
     
     public static final String MENU_KEY_GRAPH = "graph";
@@ -169,11 +172,11 @@ public class GraphComponent extends JGraphicComponent {
     }
 
     public boolean isLayoutAnimating() {
-        return getLayoutManager().isLayoutAnimating();
+        return getLayoutManager().isLayoutTaskActive();
     }
 
     public void setLayoutAnimating(boolean val) {
-        getLayoutManager().setLayoutAnimating(val);
+        getLayoutManager().setLayoutTaskActive(val);
     }
 
     public Predicate<Object> getNodeLabelFilter() {
