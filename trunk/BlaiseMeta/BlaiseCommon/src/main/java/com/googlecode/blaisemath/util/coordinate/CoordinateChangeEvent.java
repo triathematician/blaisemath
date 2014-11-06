@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * <p>
  *  Event describing a change to a collection of coordinates (specifically to
- *  a {@link CoordinateManager} instance). Initializes of this object are responsible
+ *  a {@link CoordinateManager} instance). Initializers of this object are responsible
  *  for providing collections that are safe to propagate to listeners.
  * </p>
  * @param <S> type of object owning the coordinates
@@ -67,6 +67,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param <C> coordinate type
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
+     * @return 
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,? extends C> added) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
@@ -80,6 +81,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param <C> coordinate type
      * @param src source of event
      * @param removed set of removed objects
+     * @return 
      */
     public static <S,C> CoordinateChangeEvent createRemoveEvent(Object src, Set<S> removed) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
@@ -94,6 +96,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
      * @param removed set of removed objects
+     * @return 
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,? extends C> added, Set<S> removed) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C> (src);

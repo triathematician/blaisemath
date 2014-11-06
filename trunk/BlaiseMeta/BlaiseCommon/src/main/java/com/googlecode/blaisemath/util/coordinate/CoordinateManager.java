@@ -54,13 +54,18 @@ import javax.annotation.concurrent.ThreadSafe;
  * the objects that are "inactive". It is fine to iterate over these sets from any thread,
  * although they may change during iteration.
  * </p>
+ * <p>
+ * Care should be taken with event handlers to ensure thread safety. Listeners
+ * registering for {@link CoordinateChangeEvent}s are notified of the change from
+ * the thread that makes the change. Collections passed with the event will be
+ * either immutable copies, or references passed to this object as parameters to
+ * a mutator method.
+ * </p>
  *
  * @param <S> type of source object
  * @param <C> type of point
  *
  * @author Elisha Peterson
- * 
- * @todo review thread safety of this class
  */
 @ThreadSafe
 public class CoordinateManager<S, C> {
@@ -89,13 +94,20 @@ public class CoordinateManager<S, C> {
     
     /**
      * Create and return new instance of coordinate manager.
+     * @param <S>
+     * @param <C>
      * @param maxCacheSize maximum # of active & inactive points to include
+     * @return 
      */
     public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {
         return new CoordinateManager<S,C>(maxCacheSize);
     }
     
     //</editor-fold>
+
+    public int getMaxCacheSize() {
+        return maxCacheSize;
+    }
 
     /**
      * Return objects currently tracked by the manager.
@@ -138,6 +150,7 @@ public class CoordinateManager<S, C> {
     
     /**
      * Retrieve location of given set of objects, whether active or inactive.
+     * @param <T>
      * @param obj objects to retrieve
      * @return map of locations
      */
@@ -231,6 +244,7 @@ public class CoordinateManager<S, C> {
     /**
      * Makes specified objects inactive, possibly removing them from memory.
      * Propagates the updated coordinates to interested listeners (on the invoking thread).
+     * @param <T>
      * @param obj objects to removeObjects
      */
     public <T extends S> void deactivate(Set<T> obj) {
@@ -246,6 +260,7 @@ public class CoordinateManager<S, C> {
 
     /**
      * Call to restore locations from the cache.
+     * @param <T>
      * @param obj objects to restore
      * @return true if cache was changed
      */
@@ -284,8 +299,10 @@ public class CoordinateManager<S, C> {
 
     /**
      * Fire update, from the thread that invoked the change.
-     * The collections in the event are not guarded by {@code this}; they are either
-     * are either provided as arguments to {@code this}, or are immutable lists.
+     * The collections in the event are either provided as arguments to
+     * {@code this}, or are immutable lists, and therefore may be used freely
+     * from any thread.
+     * 
      * @param evt the event to fire
      */
     protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
