@@ -40,9 +40,8 @@ import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredText;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.Insets;
 import java.awt.font.FontRenderContext;
-import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
@@ -58,6 +57,8 @@ public class WrappedTextRenderer extends TextRenderer {
 
     /** Provides clip boundaries */
     protected RectangularShape clipPath;
+    /** Insets used for text anchoring. */
+    private Insets insets = new Insets(2,2,2,2);
 
     public WrappedTextRenderer() {
     }
@@ -71,8 +72,13 @@ public class WrappedTextRenderer extends TextRenderer {
 
     /** Sets clip & returns pointer to object */
     public WrappedTextRenderer clipPath(RectangularShape clip) {
-        setClipPath(clip);
+        setTextBounds(clip);
         return this; 
+    }
+
+    public WrappedTextRenderer insets(Insets insets) {
+        this.insets = insets;
+        return this;
     }
     
     //</editor-fold>
@@ -83,12 +89,20 @@ public class WrappedTextRenderer extends TextRenderer {
     // PROPERTY PATTERNS
     //
     
-    public RectangularShape getClipPath() {
+    public RectangularShape getTextBounds() {
         return clipPath;
     }
 
-    public void setClipPath(RectangularShape clip) {
+    public void setTextBounds(RectangularShape clip) {
         this.clipPath = clip;
+    }
+
+    public Insets getInsets() {
+        return insets;
+    }
+
+    public void setInsets(Insets insets) {
+        this.insets = insets;
     }
 
     //</editor-fold>
@@ -100,42 +114,34 @@ public class WrappedTextRenderer extends TextRenderer {
             return;
         }
         
-        Shape curClip = canvas.getClip();
-        Area newClip = new Area();
-        newClip.add(new Area(curClip));
-        newClip.intersect(new Area(clipPath));
-        canvas.setClip(newClip);
-        
-        // set font size, decreasing it a bit if there's a lot of text relative to the clip area
-        Font f = Styles.getFont(style);
-        Rectangle2D clipBounds = newClip.getBounds2D();
-        if (clipBounds.getWidth() * clipBounds.getHeight() < (f.getSize() * f.getSize() / 1.5) * text.getText().length()
-                || clipBounds.getWidth() < f.getSize() * 5) {
-            f = f.deriveFont(f.getSize2D() - 2);
-        }
-        canvas.setFont(f);
-        
+        canvas.setFont(Styles.getFont(style));
         canvas.setColor(style.getColor(Styles.FILL));
+        Rectangle2D clip = clipPath.getBounds2D();
         if (clipPath instanceof Ellipse2D) {
-            drawInEllipse(text.getText(), style, (Ellipse2D) clipPath, canvas);
+            Ellipse2D textClip = new Ellipse2D.Double(
+                    clip.getMinX()+insets.left, clip.getMinY()+insets.top,
+                    clip.getWidth()-insets.left-insets.right, clip.getHeight()-insets.top-insets.bottom);
+            drawInEllipse(text.getText(), style, textClip, canvas);
         } else {
-            drawInRectangle(text.getText(), style, clipPath.getBounds2D(), canvas);
+            Rectangle2D textClip = new Rectangle2D.Double(
+                    clip.getMinX()+insets.left, clip.getMinY()+insets.top,
+                    clip.getWidth()-insets.left-insets.right, clip.getHeight()-insets.top-insets.bottom);
+            drawInRectangle(text.getText(), style, textClip, canvas);
         }
-        canvas.setClip(curClip);
     }
 
-    private void drawInEllipse(String text, AttributeSet style, Ellipse2D clip, Graphics2D canvas) {
+    private void drawInEllipse(String text, AttributeSet style, Ellipse2D ell, Graphics2D canvas) {
         Rectangle2D bounds = canvas.getFontMetrics().getStringBounds(text, canvas);
-        if (bounds.getWidth() < clip.getWidth() - 8 || clip.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
+        if (bounds.getWidth() < ell.getWidth() - 8 || ell.getWidth()*.6 < 3 * canvas.getFont().getSize2D()) {
             // entire string fits in box... draw centered
             AttributeSet centeredStyle = new AttributeSet(style).and(Styles.TEXT_ANCHOR, Anchor.CENTER);
-            super.render(new AnchoredText(clip.getCenterX(), clip.getCenterY(), text), centeredStyle, canvas);
+            super.render(new AnchoredText(ell.getCenterX(), ell.getCenterY(), text), centeredStyle, canvas);
         } else {
             // need to wrap string
             drawInRectangle(text, style,
                     new Rectangle2D.Double(
-                    clip.getX()+clip.getWidth()*.15, clip.getY()+clip.getHeight()*.15,
-                    clip.getWidth()*.7, clip.getHeight()*.7),
+                    ell.getX()+ell.getWidth()*.15, ell.getY()+ell.getHeight()*.15,
+                    ell.getWidth()*.7, ell.getHeight()*.7),
                     canvas
                     );
         }
@@ -160,18 +166,19 @@ public class WrappedTextRenderer extends TextRenderer {
             case NORTHWEST: 
                 // fall through
             case NORTHEAST:
-                y0 = rect.getY()+sz+2;
+                y0 = rect.getY()+sz;
                 break;
             case SOUTH: 
                 // fall through
             case SOUTHWEST: 
                 // fall through
             case SOUTHEAST:
-                y0 = rect.getMaxY()-lines.size()*(sz+2)+sz;
+                y0 = rect.getMaxY()-(lines.size()-1)*(sz+2);
                 break;
             default:
+                // y-centered
                 y0 = rect.getCenterY()-(lines.size()/2.0)*(sz+2)+sz;
-                    break;
+                break;
         }
         for (String s : lines) {
             double wid = canvas.getFontMetrics().getStringBounds(s, canvas).getWidth();
@@ -181,16 +188,17 @@ public class WrappedTextRenderer extends TextRenderer {
                 case SOUTHWEST: 
                 // fall through
                 case NORTHWEST:
-                    canvas.drawString(s, (float)(rect.getX()+2), (float) y0);
+                    canvas.drawString(s, (float) rect.getX(), (float) y0);
                     break;
                 case EAST: 
                 // fall through
                 case SOUTHEAST: 
                 // fall through
                 case NORTHEAST:
-                    canvas.drawString(s, (float)(rect.getMaxX()-wid-2), (float) y0);
+                    canvas.drawString(s, (float)(rect.getMaxX()-wid), (float) y0);
                     break;
                 default:
+                    // x-centered
                     canvas.drawString(s, (float)(rect.getCenterX()-wid/2.0), (float) y0);
                     break;
             }

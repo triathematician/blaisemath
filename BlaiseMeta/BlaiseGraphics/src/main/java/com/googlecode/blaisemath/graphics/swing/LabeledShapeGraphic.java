@@ -86,7 +86,7 @@ public class LabeledShapeGraphic<O> extends DelegatingPrimitiveGraphic<O,Shape,G
             if (!Strings.isNullOrEmpty(label) && style != null) {
                 if (textRenderer instanceof WrappedTextRenderer) {
                     WrappedTextRenderer wtr = (WrappedTextRenderer) textRenderer;
-                    wtr.setClipPath(primitive instanceof RectangularShape
+                    wtr.setTextBounds(primitive instanceof RectangularShape
                             ? (RectangularShape) primitive
                             : primitive.getBounds2D());
                 }
