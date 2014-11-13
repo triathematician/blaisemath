@@ -129,6 +129,18 @@ public class AttributeSet implements Cloneable {
         res.attributeMap.putAll(attributeMap);
         return res;
     }
+
+    /**
+     * Creates a copy of the attribute set, including all parent attributes
+     * @return copy
+     */
+    public AttributeSet flatCopy() {
+        AttributeSet res = new AttributeSet();
+        for (String k : getAllAttributes()) {
+            res.put(k, get(k));
+        }
+        return res;
+    }
     
     //</editor-fold>
     

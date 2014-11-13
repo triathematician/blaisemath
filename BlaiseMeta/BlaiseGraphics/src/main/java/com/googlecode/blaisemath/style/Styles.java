@@ -53,6 +53,8 @@ public final class Styles {
     
     @SVGAttribute
     public static final String FILL = "fill";
+    @SVGAttribute
+    public static final String FILL_OPACITY = "fill-opacity";
     
     @SVGAttribute
     public static final String STROKE = "stroke";
@@ -60,6 +62,8 @@ public final class Styles {
     public static final String STROKE_WIDTH = "stroke-width";
     @SVGAttribute
     public static final String STROKE_DASHES = "stroke-dasharray";
+    @SVGAttribute
+    public static final String STROKE_OPACITY = "stroke-opacity";
     
     public static final String MARKER = "marker";
     public static final String MARKER_RADIUS = "marker-radius";
