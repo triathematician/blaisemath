@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.graphics.swing;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -48,15 +49,36 @@ public class ShapeRenderer implements Renderer<Shape, Graphics2D> {
         return INST;
     }
     
+    private static Color fillColor(AttributeSet style) {
+        Color fill = style.getColor(Styles.FILL);
+        if (style.contains(Styles.OPACITY)) {
+            fill = Colors.alpha(fill, style.getInteger(Styles.OPACITY, 255));
+        }
+        if (style.contains(Styles.FILL_OPACITY)) {
+            fill = Colors.alpha(fill, style.getInteger(Styles.FILL_OPACITY, 255));
+        }
+        return fill;
+    }
+    
+    private static Color strokeColor(AttributeSet style) {
+        Color fill = style.getColor(Styles.STROKE);
+        if (style.contains(Styles.OPACITY)) {
+            fill = Colors.alpha(fill, style.getInteger(Styles.OPACITY, 255));
+        }
+        if (style.contains(Styles.STROKE_OPACITY)) {
+            fill = Colors.alpha(fill, style.getInteger(Styles.STROKE_OPACITY, 255));
+        }
+        return fill;
+    }
+    
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
         boolean filled = style.contains(Styles.FILL) && style.get(Styles.FILL) != null;
         if (filled) {
-            Color fill = style.getColor(Styles.FILL);
-            canvas.setColor(fill);
+            canvas.setColor(fillColor(style));
             canvas.fill(primitive);
         }
         
-        Color stroke = style.getColor(Styles.STROKE);
+        Color stroke = strokeColor(style);
         Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
         if (stroke != null && strokeWidth != null && strokeWidth > 0) {
             canvas.setColor(stroke);
