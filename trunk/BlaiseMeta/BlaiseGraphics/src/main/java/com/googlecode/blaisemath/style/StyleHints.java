@@ -46,6 +46,10 @@ public class StyleHints {
     public static final String SELECTED_HINT = "selected";
     /** Style hint indicating a highlighted element. */
     public static final String HILITE_HINT = "hilite";
+    /** Style hint indicating an outlined element. */
+    public static final String OUTLINE_HINT = "outline";
+    /** Style hint indicating a low-quality (but fast) rendered element. */
+    public static final String QUICK_RENDER_HINT = "quick_render";
 
     // utility class - no instantiation
     private StyleHints() {
