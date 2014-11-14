@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.googlecode.blaisemath</groupId>
         <artifactId>blaise-meta</artifactId>
-        <version>2.0.4-SNAPSHOT</version>
+        <version>2.0.4</version>
     </parent>
 
     <artifactId>blaise-sketch</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
     
     <name>BlaiseSketch</name>
     <description>Provides mouse gestures and a UI interface for creating and editing graphics.</description>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-graphics</artifactId>
-            <version>${parent.version}</version>
+            <version>2.0.4</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

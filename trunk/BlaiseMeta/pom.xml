@@ -4,7 +4,7 @@
   
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-meta</artifactId>
-    <version>2.0.4-SNAPSHOT</version>
+    <version>2.0.4</version>
     <packaging>pom</packaging>
     
     <name>BlaiseGraphics Modules</name>
@@ -28,9 +28,9 @@
     </developers>
     
     <scm>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseMeta</url>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMeta</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMeta</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/tags/blaise-meta-2.0.4</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-meta-2.0.4</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-meta-2.0.4</developerConnection>
     </scm>
     
     <issueManagement>
