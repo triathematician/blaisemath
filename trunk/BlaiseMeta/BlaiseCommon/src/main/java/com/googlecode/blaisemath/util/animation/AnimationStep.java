@@ -36,7 +36,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a single step of logic in a basic animation. A static method is
  * provided to launch a basic thread to do the animation.
+ * 
  * @author Elisha
+ * 
+ * @todo be able to configure the thread used for animations? e.g. run on the EDT?
  */
 public abstract class AnimationStep {
     
