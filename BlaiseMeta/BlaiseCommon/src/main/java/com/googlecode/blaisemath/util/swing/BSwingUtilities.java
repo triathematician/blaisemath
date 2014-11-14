@@ -32,6 +32,11 @@ import javax.swing.SwingUtilities;
  */
 public class BSwingUtilities {
 
+    /** 
+     * Executes the given runnable now, if the current thread is the swing event
+     * dispatch thread, or later on the EDT, if not.
+     * @param r job to run
+     */
     public static void invokeOnEventDispatchThread(Runnable r) {
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
