@@ -104,7 +104,7 @@
                 </executions>
             </plugin>
             
-            <!-- customize release plugin options -->
+            <!-- override to customize release plugin options -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>

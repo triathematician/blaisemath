@@ -30,6 +30,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -51,12 +53,11 @@ import javax.swing.SwingUtilities;
  */
 public final class FontEditor extends MPanelEditorSupport {
 
-    private static final Dimension FAMILY_COMBO_DIM = new Dimension(80, 20);
-    private static final Dimension FONT_SIZE_DIM = new Dimension(40, 20);
-    private static final Dimension STYLE_DIM = new Dimension(55, 20);
     private static final int[] PT_SIZES = {3, 5, 8, 10, 12, 14, 18, 24, 36, 48};
-    
+
+    /** Static list of fonts. Will be loaded only once. */
     private static List<String> fonts = new ArrayList<String>();
+    
     private static boolean loadStarted = false;
     private static boolean fontsLoaded = false;
 
@@ -73,14 +74,19 @@ public final class FontEditor extends MPanelEditorSupport {
 
         initializeComboBoxes();
 
-        JPanel p = new JPanel();
+        JPanel p = new JPanel(new GridBagLayout());
         p.setBackground(panel.getBackground());
-        p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
-        p.add(familyNameCombo);
-        p.add(Box.createRigidArea(new Dimension(3, 0)));
-        p.add(fontSizeCombo);
-        p.add(Box.createRigidArea(new Dimension(3, 0)));
-        p.add(styleCombo);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 1, 0, 1);
+        gbc.weightx = 1;
+        p.add(familyNameCombo, gbc);
+        gbc.weightx = .3;
+        p.add(fontSizeCombo, gbc);
+        gbc.weightx = .5;
+        p.add(styleCombo, gbc);
         panel.add(p);
     }
     
@@ -96,9 +102,7 @@ public final class FontEditor extends MPanelEditorSupport {
             familyNameCombo.setEnabled(false);
         }
 
-        familyNameCombo.setPreferredSize(FAMILY_COMBO_DIM);
-        familyNameCombo.setMinimumSize(FAMILY_COMBO_DIM);
-        familyNameCombo.setMaximumSize(FAMILY_COMBO_DIM);
+        familyNameCombo.setMinimumSize(new Dimension(60, 0));
         familyNameCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
         familyNameCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -106,17 +110,13 @@ public final class FontEditor extends MPanelEditorSupport {
         for (int i = 0; i < PT_SIZES.length; i++) {
             fontSizeCombo.addItem("" + PT_SIZES[i]);
         }
-        fontSizeCombo.setPreferredSize(FONT_SIZE_DIM);
-        fontSizeCombo.setMaximumSize(FONT_SIZE_DIM);
-        fontSizeCombo.setMinimumSize(FONT_SIZE_DIM);
+        fontSizeCombo.setMinimumSize(new Dimension(40, 0));
         fontSizeCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
         fontSizeCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
         
         styleCombo = new JComboBox(new Object[]{Font.PLAIN, Font.BOLD, Font.ITALIC, Font.BOLD+Font.ITALIC});
         styleCombo.setRenderer(new StyleComboRenderer());
-        styleCombo.setMinimumSize(STYLE_DIM);
-        styleCombo.setMaximumSize(STYLE_DIM);
-        styleCombo.setPreferredSize(STYLE_DIM);
+        styleCombo.setMinimumSize(new Dimension(50, 0));
         styleCombo.setAlignmentX(Component.CENTER_ALIGNMENT);
         styleCombo.setAlignmentY(Component.CENTER_ALIGNMENT);
         

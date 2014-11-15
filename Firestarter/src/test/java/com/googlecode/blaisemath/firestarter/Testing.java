@@ -37,6 +37,7 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyEditorManager;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 
 /**
@@ -103,7 +104,9 @@ public class Testing extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        JSplitPane center = new JSplitPane();
+        getContentPane().add(center, java.awt.BorderLayout.CENTER);
+        center.add(jScrollPane2, JSplitPane.RIGHT);
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.5);
@@ -122,7 +125,7 @@ public class Testing extends javax.swing.JFrame {
 
         jSplitPane1.setTopComponent(jScrollPane4);
 
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.LINE_START);
+        center.add(jSplitPane1, JSplitPane.LEFT);
 
         jButton1.setText("jButton1");
         jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
