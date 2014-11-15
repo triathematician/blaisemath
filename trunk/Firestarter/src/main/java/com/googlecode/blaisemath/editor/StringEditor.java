@@ -120,7 +120,7 @@ public class StringEditor extends MPropertyEditorSupport {
         setValue(text);
     }
 
-    private synchronized void setNewAsText(String text) {
+    private void setNewAsText(String text) {
         updating = true;
         setNewValue(text);
         updating = false;
