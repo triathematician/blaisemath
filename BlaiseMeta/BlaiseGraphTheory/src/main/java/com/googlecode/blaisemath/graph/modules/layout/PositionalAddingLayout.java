@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
@@ -40,6 +41,12 @@ import java.util.Map;
 public class PositionalAddingLayout<N> implements StaticGraphLayout {
     
     private Map<N, Point2D.Double> curLocations;
+    
+    private final SetSelectionModel pinned = new SetSelectionModel();
+    
+    public SetSelectionModel getPinnedNodes() {
+        return pinned;
+    }
 
     public Map<N, Point2D.Double> getCurLocations() {
         return curLocations;

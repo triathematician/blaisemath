@@ -25,8 +25,8 @@ package com.googlecode.blaisemath.graph.layout;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
@@ -39,13 +39,12 @@ import java.util.Map;
  * @author Elisha Peterson
  */
 public interface GraphLayoutService {
-
+    
     /**
-     * Returns the layout algorithm being used by the service.
-     * @param g the graph to layout
-     * @return layout algorithm
+     * Get data model representing a set of nodes to pin.
+     * @return pinnable model
      */
-    public IterativeGraphLayout getLayoutAlgorithm(Graph g);
+    SetSelectionModel getPinnedNodes();
 
     /**
      * Generates layout for a graph. When the layout is completed, the callback provides a mechanism
@@ -55,7 +54,7 @@ public interface GraphLayoutService {
      * @param callback function to be executed when results are returned
      * @throws InterruptedException if running on a background thread which is interrupted
      */
-    public void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) throws InterruptedException;
+    void layout(Graph graph, Map<Object, Point2D.Double> ic, GraphLayoutCallback callback) throws InterruptedException;
 
 
     //
@@ -65,15 +64,17 @@ public interface GraphLayoutService {
     /** Implementation for a static layout */
     public static class StaticLayoutService implements GraphLayoutService {
         private final StaticGraphLayout layout;
+        private final SetSelectionModel pinned = new SetSelectionModel();
         public StaticLayoutService(StaticGraphLayout layout) {
             this.layout = layout;
         }
+        public SetSelectionModel getPinnedNodes() {
+            return pinned;
+        }
         public void layout(Graph graph, Map<Object, Point2D.Double> ic, 
                 GraphLayoutCallback callback) throws InterruptedException {
-            callback.layoutCompleted(graph, ic, layout.layout(graph));
-        }
-        public IterativeGraphLayout getLayoutAlgorithm(Graph g) {
-            return null;
+            Map res = layout.layout(graph);
+            callback.layoutCompleted(graph, ic, res);
         }
     }
 

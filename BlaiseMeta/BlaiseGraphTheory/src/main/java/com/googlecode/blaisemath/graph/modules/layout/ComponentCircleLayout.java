@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -62,6 +63,12 @@ public class ComponentCircleLayout implements StaticGraphLayout {
     @Override
     public String toString() {
         return "ComponentCircleLayout";
+    }
+    
+    private final SetSelectionModel pinned = new SetSelectionModel();
+    
+    public SetSelectionModel getPinnedNodes() {
+        return pinned;
     }
 
     public Map<Object, Point2D.Double> layout(Graph graph, double... doubles) {
