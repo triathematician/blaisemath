@@ -99,6 +99,10 @@ public class SetSelectionModel<G> {
         return selected.contains(g);
     }
 
+    /**
+     * Adds all to the current selection.
+     * @param g elements to add
+     */
     public void selectAll(Collection<G> g) {
         checkNotNull(g);
         if (!selected.containsAll(g)) {

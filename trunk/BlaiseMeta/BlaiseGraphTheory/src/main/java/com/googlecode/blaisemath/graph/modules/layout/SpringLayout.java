@@ -36,7 +36,6 @@ import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -156,36 +155,12 @@ public class SpringLayout implements IterativeGraphLayout {
     
     //</editor-fold>
     
-    
-    //<editor-fold defaultstate="collapsed" desc="Pinnable METHODS">
-    //
-    // Pinnable METHODS
-    //
-    
-    public Set getPinnedNodes() {
-        return pinnedNodes.getSelection();
-    }
-
-    public void setPinnedNodes(Set nodes) {
-        pinnedNodes.setSelection(nodes);
-    }
-
-    public void clearPinnedNodes() {
-        pinnedNodes.clearSelection();
-    }
-
-    public void pinNodes(Collection nodes) {
-        pinnedNodes.selectAll(nodes);
-    }
-
-    public void unpinNodes(Collection nodes) {
-        pinnedNodes.deselectAll(nodes);
-    }
-
-    //</editor-fold>
-    
 
     // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
+
+    public SetSelectionModel getPinnedNodes() {
+        return pinnedNodes;
+    }
 
     /**
      * This method may be called from an external thread to update the precise

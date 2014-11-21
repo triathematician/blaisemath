@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
@@ -66,6 +67,18 @@ public interface IterativeGraphLayout {
      *   of the layout
      */
     double getEnergyStatus();
+    
+    /**
+     * Return the set of nodes that are currently "pinned" in place.
+     * @return pinned nodes
+     */
+    SetSelectionModel<?> getPinnedNodes();
+
+    /**
+     * Returns the current list of point locations.
+     * @return current list of positions
+     */
+    Map<?,Point2D.Double> getPositions();
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
@@ -74,12 +87,6 @@ public interface IterativeGraphLayout {
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
      */
     void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes);
-
-    /**
-     * Returns the current list of point locations.
-     * @return current list of positions
-     */
-    Map<?,Point2D.Double> getPositions();
 
     /**
      * <p>

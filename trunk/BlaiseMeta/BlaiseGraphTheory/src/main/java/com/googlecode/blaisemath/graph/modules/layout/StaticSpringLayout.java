@@ -37,6 +37,7 @@ import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
@@ -79,6 +80,12 @@ public class StaticSpringLayout implements StaticGraphLayout {
     /** Used to notify status */
     @Nullable
     private ActionListener al;
+    
+    private final SetSelectionModel pinned = new SetSelectionModel();
+    
+    public SetSelectionModel getPinnedNodes() {
+        return pinned;
+    }
     
     public StaticSpringLayout() {
         this(null, null);

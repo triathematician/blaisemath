@@ -24,10 +24,10 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
-import com.googlecode.blaisemath.graph.Graph;
 
 /**
  * This interface provides methods necessary to layout a graph.
@@ -35,22 +35,33 @@ import com.googlecode.blaisemath.graph.Graph;
  * @author Elisha Peterson
  */
 public interface StaticGraphLayout {
+    
+    /**
+     * Get data model representing a set of nodes to pin in the layout.
+     * @return pinnable model
+     */
+    SetSelectionModel getPinnedNodes();
 
     /**
+     * Perform layout on given graph, and return result.
      * @param g a graph written in terms of adjacencies
      * @param parameters parameters for the layout, e.g. radius
      * @return a mapping of points to vertices
      * @param <C> graph node type
      */
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters);
+    <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters);
 
     /**
      * Lays out vertices all at the origin.
      */
     public static StaticGraphLayout ORIGIN = new StaticGraphLayout() {
+        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes at origin";
+        }
+        public SetSelectionModel getPinnedNodes() {
+            return pinned;
         }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
@@ -59,14 +70,17 @@ public interface StaticGraphLayout {
             }
             return result;
         }
-    ;
     };
 
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
     public static StaticGraphLayout CIRCLE = new StaticGraphLayout() {
+        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes in a circle";
+        }
+        public SetSelectionModel getPinnedNodes() {
+            return pinned;
         }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
@@ -85,9 +99,13 @@ public interface StaticGraphLayout {
      * to first parameter).
      */
     public static StaticGraphLayout RANDOM = new StaticGraphLayout() {
+        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes randomly in a rectangle";
+        }
+        public SetSelectionModel getPinnedNodes() {
+            return pinned;
         }
         public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
             HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
