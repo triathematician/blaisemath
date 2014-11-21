@@ -149,6 +149,15 @@ public class CoordinateManager<S, C> {
     }
     
     /**
+     * Retrieve location of a single point, whether active or inactive.
+     * @param obj object to retrieve
+     * @return location
+     */
+    public C getLocation(S obj) {
+        return map.get(obj);
+    }
+    
+    /**
      * Retrieve location of given set of objects, whether active or inactive.
      * @param <T>
      * @param obj objects to retrieve
