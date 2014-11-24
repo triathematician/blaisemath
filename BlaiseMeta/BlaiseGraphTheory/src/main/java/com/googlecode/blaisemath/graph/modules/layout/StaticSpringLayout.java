@@ -43,6 +43,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  * @author elisha
  */
 @NotThreadSafe
-public class StaticSpringLayout implements StaticGraphLayout {
+public class StaticSpringLayout implements StaticGraphLayout<Double> {
    
     /** How long to wait between reporting status */
     private static final int STATUS_REPORT_STEPS = 100;
@@ -132,7 +133,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         return lastStepCount;
     }
 
-    public Map<Object, Point2D.Double> layout(Graph originalGraph, double... parameters) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, Double irad) {
         Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
                 "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
@@ -142,17 +143,17 @@ public class StaticSpringLayout implements StaticGraphLayout {
 
         // reduce graph size for layout
         OptimizedGraph graphForInfo = new OptimizedGraph(false, originalGraph.nodes(), originalGraph.edges());
-        final Set keepNodes = Sets.newHashSet(graphForInfo.getConnectorNodes());
+        final Set<C> keepNodes = Sets.newHashSet(graphForInfo.getConnectorNodes());
         keepNodes.addAll(graphForInfo.getCoreNodes());
-        Iterable<Edge> keepEdges = Iterables.filter(graphForInfo.edges(),
-            new Predicate<Edge>(){
-                public boolean apply(Edge input) {
+        Iterable<Edge<C>> keepEdges = Iterables.filter(graphForInfo.edges(),
+            new Predicate<Edge<C>>(){
+                public boolean apply(Edge<C> input) {
                     return keepNodes.contains(input.getNode1())
                             && keepNodes.contains(input.getNode2());
                 }
             });
 
-        OptimizedGraph graphForLayout = new OptimizedGraph(false, keepNodes, keepEdges);
+        OptimizedGraph<C> graphForLayout = new OptimizedGraph<C>(false, keepNodes, keepEdges);
         Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
                 "graphForLayout, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { graphForLayout.nodeCount(), graphForLayout.edgeCount(), 
@@ -161,8 +162,9 @@ public class StaticSpringLayout implements StaticGraphLayout {
                     });
         
         // perform the physics-based layout
-        double irad = parameters.length > 0 ? parameters[0] : SpringLayout.DIST_SCALE;
-        SpringLayout sl = new SpringLayout(graphForLayout, StaticGraphLayout.CIRCLE, irad);
+        Map<C,Point2D.Double> initialLocs = StaticGraphLayout.CIRCLE.layout(
+                graphForLayout, Collections.EMPTY_MAP, irad);
+        SpringLayout sl = new SpringLayout(initialLocs);
         double lastEnergy = Double.MAX_VALUE;
         double energyChange = 9999;
         int step = 0;
@@ -181,7 +183,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
         reportStatus("stop, ", step, lastEnergy);
         
         // add positions of isolates and leaf nodes back in
-        Map<Object, Point2D.Double> res = sl.getPositions();
+        Map<C, Point2D.Double> res = sl.getPositions();
         addLeafNodes(graphForInfo, res);
         addIsolates(graphForInfo.getIsolates(), res);
         
@@ -210,9 +212,9 @@ public class StaticSpringLayout implements StaticGraphLayout {
      * @param og
      * @param pos 
      */
-    public static void addLeafNodes(OptimizedGraph og, Map<Object, Point2D.Double> pos) {
+    public static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos) {
         double nomSz = SpringLayout.DIST_SCALE/2;
-        Set leafs = og.getLeafNodes();
+        Set<C> leafs = og.getLeafNodes();
         int n = leafs.size();
         if (n > 0) {
             Rectangle2D bounds = Points.boundingBox(pos.values(), SpringLayout.DIST_SCALE);
@@ -224,10 +226,10 @@ public class StaticSpringLayout implements StaticGraphLayout {
                 addPointsToBox(orderedLeafs, pairRegion, pos, nomSz, true);
             } else {
                 // add close to their neighboring point
-                Set cores = Sets.newHashSet();
-                Set pairs = Sets.newHashSet();
-                for (Object o : leafs) {
-                    Object nbr = og.getNeighborOfLeaf(o);
+                Set<C> cores = Sets.newHashSet();
+                Set<C> pairs = Sets.newHashSet();
+                for (C o : leafs) {
+                    C nbr = og.getNeighborOfLeaf(o);
                     if (leafs.contains(nbr)) {
                         pairs.add(o);
                         pairs.add(nbr);
@@ -235,8 +237,8 @@ public class StaticSpringLayout implements StaticGraphLayout {
                         cores.add(nbr);
                     }
                 }
-                for (Object o : cores) {
-                    Set leaves = og.getLeavesAdjacentTo(o);
+                for (C o : cores) {
+                    Set<C> leaves = og.getLeavesAdjacentTo(o);
                     Point2D.Double ctr = pos.get(o);
                     double r = nomSz;
                     double theta = Math.atan2(ctr.y, ctr.x);
@@ -246,7 +248,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
                     } else {
                         double th0 = theta-Math.PI/3;
                         double dth = (2*Math.PI/3)/(leaves.size()-1);
-                        for (Object l : leaves) {
+                        for (C l : leaves) {
                             pos.put(l, new Point2D.Double(ctr.getX()+r*Math.cos(th0), ctr.getY()+r*Math.sin(th0)));
                             th0 += dth;
                         }                        
@@ -282,7 +284,7 @@ public class StaticSpringLayout implements StaticGraphLayout {
      * @param isolates the isolate nodes
      * @param pos 
      */
-    public static void addIsolates(Set isolates, Map<Object, Point2D.Double> pos) {
+    public static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos) {
         double nomSz = SpringLayout.DIST_SCALE/2;
         int n = isolates.size();
         if (n > 0) {
@@ -306,12 +308,12 @@ public class StaticSpringLayout implements StaticGraphLayout {
         }
     }
 
-    private static void addPointsToBox(Set is, Rectangle2D rect, Map<Object, Point2D.Double> pos, double nomSz,
-            boolean even) {
+    private static <C> void addPointsToBox(Set<C> is, Rectangle2D rect, Map<C, Point2D.Double> pos, 
+            double nomSz, boolean even) {
         double x = rect.getMinX();
         double y = rect.getMinY();
         int added = 0;
-        for (Object o : is) {
+        for (C o : is) {
             pos.put(o, new Point2D.Double(x, y));
             added++;
             x += nomSz;

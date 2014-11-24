@@ -40,9 +40,10 @@ import java.util.Map;
  * Implementations are intended to be accessed from a single thread.
  * </p>
  *
+ * @param <C> node type
  * @author Elisha Peterson
  */
-public interface IterativeGraphLayout {
+public interface IterativeGraphLayout<C> {
 
     /**
      * Get iteration #
@@ -72,13 +73,13 @@ public interface IterativeGraphLayout {
      * Return the set of nodes that are currently "pinned" in place.
      * @return pinned nodes
      */
-    SetSelectionModel<?> getPinnedNodes();
+    SetSelectionModel<C> getPinnedNodes();
 
     /**
      * Returns the current list of point locations.
      * @return current list of positions
      */
-    Map<?,Point2D.Double> getPositions();
+    Map<C,Point2D.Double> getPositions();
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
@@ -86,7 +87,7 @@ public interface IterativeGraphLayout {
      *   during the next call to iterate()
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
      */
-    void requestPositions(Map<?, Point2D.Double> positions, boolean resetNodes);
+    void requestPositions(Map<C, Point2D.Double> positions, boolean resetNodes);
 
     /**
      * <p>
@@ -104,6 +105,6 @@ public interface IterativeGraphLayout {
      * @param <V> node type of graph
      * @param g the graph to layout
      */
-    <V> void iterate(Graph<V> g);
+    void iterate(Graph<C> g);
 
 }

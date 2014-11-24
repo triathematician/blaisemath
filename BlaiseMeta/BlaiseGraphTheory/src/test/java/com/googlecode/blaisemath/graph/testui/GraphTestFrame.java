@@ -41,15 +41,16 @@ import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
-import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.RollupPanel;
+import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
+import java.util.Collections;
 import java.util.Set;
 import javax.swing.JPopupMenu;
 
@@ -74,7 +75,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         final Graph<Integer> graph = new EdgeProbabilityGraphSupplier(false, 50, .05f).get();
         plot.setGraph(graph);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, 100);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, 100);
         PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
@@ -247,12 +248,12 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, Collections.EMPTY_MAP, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed

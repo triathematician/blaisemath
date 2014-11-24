@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.base.Function;
-import com.googlecode.blaisemath.graph.Graph;
 
 
 /**

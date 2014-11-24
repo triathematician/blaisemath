@@ -25,8 +25,6 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.Graph;
-
 /**
  * Returns a value for a single node in a graph.
  * @param <N> the type of value returned (usually a number)

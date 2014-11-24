@@ -24,6 +24,9 @@ package com.googlecode.blaisemath.graph.view;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
@@ -33,8 +36,6 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
 
 /**
  * Displays multiple graphs in a common component. Implemented as a {@link JList}
@@ -105,7 +106,7 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
             GraphLayoutManager gm = getAdapter() == null ? null : getLayoutManager();
             Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionMap(time);
             if (gm == null && gr != null) {
-                setLayoutManager(gm = new GraphLayoutManager(gr));
+                setLayoutManager(gm = new GraphLayoutManager(gr, new SpringLayout()));
                 gm.requestLocations(positionMap);
             } else if (gm != null) {
                 gm.setGraph(gr);

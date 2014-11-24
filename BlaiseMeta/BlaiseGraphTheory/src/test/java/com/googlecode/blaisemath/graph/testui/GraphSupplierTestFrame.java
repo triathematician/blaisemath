@@ -53,6 +53,7 @@ import com.googlecode.blaisemath.graph.modules.suppliers.PreferentialAttachmentG
 import com.googlecode.blaisemath.graph.modules.suppliers.ProximityGraphSupplier;
 import com.googlecode.blaisemath.graph.modules.suppliers.WattsStrogatzGraphSupplier;
 import java.awt.Rectangle;
+import java.util.Collections;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -168,7 +169,7 @@ public class GraphSupplierTestFrame extends javax.swing.JFrame {
 
     private void layoutChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutChooserActionPerformed
         StaticGraphLayout l = (StaticGraphLayout) layoutChooser.getSelectedItem();
-        grapher.getLayoutManager().applyLayout(l, 50);
+        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, 50);
     }//GEN-LAST:event_layoutChooserActionPerformed
 
     private void updateGraph() {
@@ -179,7 +180,7 @@ public class GraphSupplierTestFrame extends javax.swing.JFrame {
         }
         grapher.setGraph(s.get());
         StaticGraphLayout l = (StaticGraphLayout) layoutChooser.getSelectedItem();
-        grapher.getLayoutManager().applyLayout(l, 50);
+        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, 50);
     }
     
     /**

@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -32,9 +33,11 @@ import java.util.Map;
 /**
  * This interface provides methods necessary to layout a graph.
  *
+ * @param <P> object describing layout parameters
+ * 
  * @author Elisha Peterson
  */
-public interface StaticGraphLayout {
+public interface StaticGraphLayout<P> {
     
     /**
      * Get data model representing a set of nodes to pin in the layout.
@@ -45,14 +48,15 @@ public interface StaticGraphLayout {
     /**
      * Perform layout on given graph, and return result.
      * @param g a graph written in terms of adjacencies
+     * @param ic initial conditions
      * @param parameters parameters for the layout, e.g. radius
      * @return a mapping of points to vertices
      * @param <C> graph node type
      */
-    <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters);
+    <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> ic, P parameters);
 
     /**
-     * Lays out vertices all at the origin.
+     * Puts vertices all at the origin.
      */
     public static StaticGraphLayout ORIGIN = new StaticGraphLayout() {
         private final SetSelectionModel pinned = new SetSelectionModel();
@@ -63,9 +67,9 @@ public interface StaticGraphLayout {
         public SetSelectionModel getPinnedNodes() {
             return pinned;
         }
-        public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
-            HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
-            for (C v : g.nodes()) {
+        public Map layout(Graph g, Map ic, Object parameters) {
+            HashMap result = Maps.newHashMap();
+            for (Object v : g.nodes()) {
                 result.put(v, new Point2D.Double());
             }
             return result;
@@ -73,7 +77,7 @@ public interface StaticGraphLayout {
     };
 
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
-    public static StaticGraphLayout CIRCLE = new StaticGraphLayout() {
+    public static StaticGraphLayout<Double> CIRCLE = new StaticGraphLayout<Double>() {
         private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
@@ -82,13 +86,14 @@ public interface StaticGraphLayout {
         public SetSelectionModel getPinnedNodes() {
             return pinned;
         }
-        public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
-            HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
+        public Map layout(Graph g, Map ic, Double radius) {
+            HashMap<Object, Point2D.Double> result = Maps.newHashMap();
             int size = g.nodeCount();
-            double radius = parameters.length > 0 ? parameters[0] : 1;
             int i = 0;
-            for (C v : g.nodes()) {
-                result.put(v, new Point2D.Double(radius * Math.cos(2 * Math.PI * i / size), radius * Math.sin(2 * Math.PI * i / size)));
+            for (Object v : g.nodes()) {
+                result.put(v, new Point2D.Double(
+                        radius * Math.cos(2 * Math.PI * i / size), 
+                        radius * Math.sin(2 * Math.PI * i / size)));
                 i++;
             }
             return result;
@@ -98,7 +103,7 @@ public interface StaticGraphLayout {
      * Lays out vertices at random positions within a square (size corresponds
      * to first parameter).
      */
-    public static StaticGraphLayout RANDOM = new StaticGraphLayout() {
+    public static StaticGraphLayout<Double> RANDOM = new StaticGraphLayout<Double>() {
         private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
@@ -107,11 +112,12 @@ public interface StaticGraphLayout {
         public SetSelectionModel getPinnedNodes() {
             return pinned;
         }
-        public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
-            HashMap<C, Point2D.Double> result = new HashMap<C, Point2D.Double>();
-            double multiplier = parameters.length > 0 ? parameters[0] : 1;
-            for (C v : g.nodes()) {
-                result.put(v, new Point2D.Double(multiplier * (2 * Math.random() - 1), multiplier * (2 * Math.random() - 1)));
+        public Map layout(Graph g, Map ic, Double boxSize) {
+            HashMap<Object, Point2D.Double> result = Maps.newHashMap();
+            for (Object v : g.nodes()) {
+                result.put(v, new Point2D.Double(
+                        boxSize * (2 * Math.random() - 1), 
+                        boxSize * (2 * Math.random() - 1)));
             }
             return result;
         }
