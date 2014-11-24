@@ -25,6 +25,10 @@ package com.googlecode.blaisemath.graph.view;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -36,11 +40,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
-import com.googlecode.blaisemath.graph.view.GraphComponent;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
-import com.googlecode.blaisemath.graph.view.VisualGraph;
 import org.jdesktop.layout.GroupLayout;
 
 /**
@@ -150,7 +149,7 @@ public final class LongitudinalGraphComponent extends JPanel
                 m.addPropertyChangeListener(this);
             if (gm == null) {
                 Graph g = m == null ? null : m.getSlice();
-                plot.setLayoutManager(g == null ? null : new GraphLayoutManager(g));
+                plot.setLayoutManager(g == null ? null : new GraphLayoutManager(g, new SpringLayout()));
             } else {
                 plot.setLayoutManager(gm);
             }

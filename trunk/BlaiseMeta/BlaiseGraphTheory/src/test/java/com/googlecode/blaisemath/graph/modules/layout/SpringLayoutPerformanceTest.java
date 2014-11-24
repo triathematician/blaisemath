@@ -34,6 +34,7 @@ import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.modules.suppliers.EdgeProbabilityGraphSupplier;
 import com.googlecode.blaisemath.graph.modules.suppliers.WattsStrogatzGraphSupplier;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -67,7 +68,7 @@ public class SpringLayoutPerformanceTest {
                     GraphUtils.components(g).size(),
                     nicer(GraphUtils.degreeDistribution(g)));
             int id = GAInstrument.start("EdgePD", g+"");
-            sl.layout(g, 500);
+            sl.layout(g, Collections.EMPTY_MAP, 500.0);
             System.out.println(" .. completed in "+sl.getLastStepCount()+" steps");
             GAInstrument.end(id);
         }

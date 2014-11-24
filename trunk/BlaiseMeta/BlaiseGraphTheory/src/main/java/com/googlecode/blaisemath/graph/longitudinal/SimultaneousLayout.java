@@ -26,11 +26,11 @@ package com.googlecode.blaisemath.graph.longitudinal;
  */
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,14 +43,12 @@ import java.util.logging.Logger;
  *
  * @author elisha
  */
-public class SimultaneousLayout {
+public class SimultaneousLayout<C> {
 
-    /** The graph */
-    private final LongitudinalGraph tg;
     /** The graph's times */
     private final List<Double> times;
     /** Mapping of each slice of the graph to a layout */
-    private final List<LayoutSlice> slices = new ArrayList<LayoutSlice>();
+    private final List<LayoutSlice<C>> slices = Lists.newArrayList();
 
     // ALGORITHM PARAMETERS
 
@@ -75,18 +73,18 @@ public class SimultaneousLayout {
     // STATE VARIABLES
 
     /** Stores locations of all vertices at all times, after each iteration */
-    final List<Map<Object,Point2D.Double>> masterPos = Lists.newArrayList();
+    final List<Map<C,Point2D.Double>> masterPos = Lists.newArrayList();
 
     // CONSTRUCTORS
 
     /** Construct simultaneous layout instance */
-    public SimultaneousLayout(LongitudinalGraph tg) {
-        this.tg = tg;
+    public SimultaneousLayout(LongitudinalGraph<C> tg) {
         times = tg.getTimes();
-        Map<Object,Point2D.Double> ip = StaticGraphLayout.RANDOM.layout(tg.slice(tg.getMaximumTime(), true), 100);
+        Map<Object,Point2D.Double> ip = StaticGraphLayout.RANDOM.layout(
+                tg.slice(tg.getMaximumTime(), true), Collections.EMPTY_MAP, 100.0);
         for (int i = 0; i < times.size(); i++) {
             slices.add(new LayoutSlice(i, tg.slice(times.get(i), true), copy(ip)));
-            masterPos.add(new HashMap<Object,Point2D.Double>());
+            masterPos.add(new HashMap<C,Point2D.Double>());
         }
         parameters.setGlobalForce(1.0);
         parameters.setDampingConstant(.6);
@@ -109,7 +107,7 @@ public class SimultaneousLayout {
         return r;
     }
 
-    public Map<Object, Point2D.Double> getPositionMap(double time) {
+    public Map<C, Point2D.Double> getPositionMap(double time) {
         for (int i = 0; i < masterPos.size(); i++) {
             if (times.get(i).equals(time)) {
                 return masterPos.get(i);
@@ -127,9 +125,9 @@ public class SimultaneousLayout {
             s.iterate(s.graph);
         }
         masterPos.clear();
-        for (LayoutSlice s : slices) {
-            HashMap<Object,Point2D.Double> nueMap = new HashMap<Object,Point2D.Double>();
-            for (Entry<Object, Point2D.Double> en : s.getPositions().entrySet()) {
+        for (LayoutSlice<C> s : slices) {
+            HashMap<C,Point2D.Double> nueMap = Maps.newHashMap();
+            for (Entry<C, Point2D.Double> en : s.getPositions().entrySet()) {
                 nueMap.put(en.getKey(), new Point2D.Double(en.getValue().x, en.getValue().y));
             }
             masterPos.add(nueMap);
@@ -137,12 +135,12 @@ public class SimultaneousLayout {
     }
 
     /** Overrides SpringLayout to add time factor at each slice */
-    private class LayoutSlice extends SpringLayout {
+    private class LayoutSlice<C> extends SpringLayout<C> {
 
         int tIndex;
-        Graph graph;
+        Graph<C> graph;
 
-        public LayoutSlice(int ti, Graph g, Map<Object,Point2D.Double> ip) {
+        public LayoutSlice(int ti, Graph<C> g, Map<C,Point2D.Double> ip) {
             super(ip);
             this.tIndex = ti;
             this.graph = g;
@@ -150,7 +148,7 @@ public class SimultaneousLayout {
         }
 
         @Override
-        protected void addAdditionalForces(Graph g, Point2D.Double sum, Object io, Point2D.Double iLoc) {
+        protected void addAdditionalForces(Graph<C> g, Point2D.Double sum, C io, Point2D.Double iLoc) {
             if (masterPos == null)
                 return;
             try {

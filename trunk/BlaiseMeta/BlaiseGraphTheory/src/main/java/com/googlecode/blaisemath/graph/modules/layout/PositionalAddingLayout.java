@@ -38,9 +38,7 @@ import java.util.Map;
  * 
  * @author petereb1
  */
-public class PositionalAddingLayout<N> implements StaticGraphLayout {
-    
-    private Map<N, Point2D.Double> curLocations;
+public class PositionalAddingLayout implements StaticGraphLayout<Double> {
     
     private final SetSelectionModel pinned = new SetSelectionModel();
     
@@ -48,17 +46,8 @@ public class PositionalAddingLayout<N> implements StaticGraphLayout {
         return pinned;
     }
 
-    public Map<N, Point2D.Double> getCurLocations() {
-        return curLocations;
-    }
-
-    public void setCurLocations(Map<N, Point2D.Double> curLocations) {
-        this.curLocations = curLocations;
-    }    
-
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, double... parameters) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> curLocations, Double len) {
         Map<C, Point2D.Double> res = Maps.newHashMap();
-        double len = parameters[0];
         for (C node : g.nodes()) {
             if (curLocations.containsKey(node)) {
                 res.put(node, curLocations.get(node));
@@ -66,7 +55,7 @@ public class PositionalAddingLayout<N> implements StaticGraphLayout {
                 double sx = 0;
                 double sy = 0;
                 int n = 0;
-                for (Object o : g.neighbors(node)) {
+                for (C o : g.neighbors(node)) {
                     Point2D.Double p = curLocations.get(o);
                     if (p != null) {
                         sx += p.x;

@@ -32,6 +32,7 @@ import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.modules.layout.PositionalAddingLayout;
+import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
@@ -39,6 +40,7 @@ import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -47,6 +49,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -83,11 +86,11 @@ public final class GraphLayoutManager<N> {
     /** The initial layout scheme */
     private final StaticGraphLayout initialLayout = StaticGraphLayout.CIRCLE;
     /** The initial layout parameters */
-    private final double[] initialLayoutParameters = { 50.0 };
+    private final Double initialLayoutParameters = 50.0;
     /** The layout scheme for adding vertices */
     private final StaticGraphLayout addingLayout = new PositionalAddingLayout();
     /** The initial layout parameters */
-    private final double[] addingLayoutParameters = { 100.0 };
+    private final Double addingLayoutParameters = 100.0;
     
     /** The cooling parameter at step 0, defined by the iterative layout */
     private double coolingParameter0 = 1.0;
@@ -117,14 +120,15 @@ public final class GraphLayoutManager<N> {
 
     /** Initializes with an empty graph */
     public GraphLayoutManager() {
-        this(GraphSuppliers.EMPTY_GRAPH);
+        this(GraphSuppliers.EMPTY_GRAPH, new SpringLayout());
     }
 
     /**
      * Constructs manager for the specified graph.
      * @param graph the graph
      */
-    public GraphLayoutManager(Graph<N> graph) {
+    public GraphLayoutManager(Graph<N> graph, @Nullable IterativeGraphLayout layout) {
+        this.iLayout = layout;
         this.coolingCurve = new Function<Integer,Double>(){
             public Double apply(Integer x) {
                 return .1 + .9/Math.log10(x+10);
@@ -224,13 +228,10 @@ public final class GraphLayoutManager<N> {
                 // lays out new graph entirely
                 Map<N,Point2D.Double> newLoc;
                 if (old == null) {
-                    newLoc = initialLayout.layout(g, initialLayoutParameters);
+                    newLoc = initialLayout.layout(g, Collections.EMPTY_MAP, initialLayoutParameters);
                 } else {
-                    if (addingLayout instanceof PositionalAddingLayout) {
-                        Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
-                        ((PositionalAddingLayout<N>)addingLayout).setCurLocations(curLocs);
-                    }
-                    newLoc = addingLayout.layout(g, addingLayoutParameters);
+                    Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
+                    newLoc = addingLayout.layout(g, curLocs, addingLayoutParameters);
                 }
                 // remove objects that are already in coordinate manager
                 newLoc.keySet().removeAll(coordManager.getActive());
@@ -275,9 +276,10 @@ public final class GraphLayoutManager<N> {
      * replace the coordinates of objects in the graph.
      * @param layout static layout algorithm
      * @param parameters layout parameters
+     * @param <P> parameters type
      */
-    public void applyLayout(StaticGraphLayout layout, double... parameters){
-        Map<N, Point2D.Double> pos = layout.layout(graph, parameters);
+    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<N,Point2D.Double> ic, P parameters){
+        Map<N, Point2D.Double> pos = layout.layout(graph, ic, parameters);
         if (isLayoutTaskActive()) {
             // TODO - sync
             iLayout.requestPositions(pos, false);

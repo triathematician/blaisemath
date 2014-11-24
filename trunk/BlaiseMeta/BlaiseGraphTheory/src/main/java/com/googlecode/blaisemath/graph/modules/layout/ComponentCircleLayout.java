@@ -24,6 +24,7 @@ package com.googlecode.blaisemath.graph.modules.layout;
  * #L%
  */
 
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
@@ -32,7 +33,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +47,7 @@ import java.util.TreeSet;
  *
  * @author petereb1
  */
-public class ComponentCircleLayout implements StaticGraphLayout {
+public class ComponentCircleLayout implements StaticGraphLayout<Void> {
 
     public static final int DIST_SCALE = 50;
     
@@ -71,14 +71,14 @@ public class ComponentCircleLayout implements StaticGraphLayout {
         return pinned;
     }
 
-    public Map<Object, Point2D.Double> layout(Graph graph, double... doubles) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> graph, Map<C, Point2D.Double> ic, Void parameters) {
         if (graph.isDirected()) {
             graph = GraphUtils.copyAsUndirectedSparseGraph(graph);
         }
         Set<Graph> components = new TreeSet<Graph>(GRAPH_SIZE_DESCENDING);
         components.addAll(GraphUtils.componentGraphs(graph));
 
-        Map<Object, Point2D.Double> result = new HashMap<Object, Point2D.Double>();
+        Map<C, Point2D.Double> result = Maps.newHashMap();
 
         List<Rectangle2D.Double> priors = new ArrayList<Rectangle2D.Double>();
         List<Integer> layers = new ArrayList<Integer>();
@@ -89,11 +89,11 @@ public class ComponentCircleLayout implements StaticGraphLayout {
         return result;
     }
 
-    private static Map<Object, Point2D.Double> layoutNext(Graph graph, List<Rectangle2D.Double> priors, List<Integer> layers) {
-        Set nodes = graph.nodes();
+    private static <C> Map<C, Point2D.Double> layoutNext(Graph<C> graph, List<Rectangle2D.Double> priors, List<Integer> layers) {
+        Set<C> nodes = graph.nodes();
         int n = nodes.size();
 
-        Map<Object, Point2D.Double> result = new HashMap<Object, Point2D.Double>();
+        Map<C, Point2D.Double> result = Maps.newHashMap();
 
         Rectangle2D.Double nxt = nextBounds(n, priors, layers);
         double cx = nxt.getCenterX(), cy = nxt.getCenterY();
@@ -101,24 +101,24 @@ public class ComponentCircleLayout implements StaticGraphLayout {
 
         if (n == 3 && graph.edgeCount() == 2) {
             Object[] nn = nodes.toArray();
-            if (graph.degree(nn[0]) == 2) {
+            if (graph.degree((C) nn[0]) == 2) {
                 Object nt = nn[1];
                 nn[1] = nn[0];
                 nn[0] = nt;
             }
-            if (graph.degree(nn[2]) == 2) {
+            if (graph.degree((C) nn[2]) == 2) {
                 Object nt = nn[1];
                 nn[1] = nn[2];
                 nn[2] = nt;
             }
-            assert graph.degree(nn[1]) == 2;
-            result.put(nn[0], new Point2D.Double(cx - rad, 0));
-            result.put(nn[1], new Point2D.Double(0, 0));
-            result.put(nn[2], new Point2D.Double(cx + rad, 0));
+            assert graph.degree((C) nn[1]) == 2;
+            result.put((C) nn[0], new Point2D.Double(cx - rad, 0));
+            result.put((C) nn[1], new Point2D.Double(0, 0));
+            result.put((C) nn[2], new Point2D.Double(cx + rad, 0));
         } else {
             int rots = (int) (Math.sqrt(n) / 2);
             int i = 0;
-            for (Object o : nodes) {
+            for (C o : nodes) {
                 double pct = i++ / (double) n;
                 double theta = rots * 2 * Math.PI * pct;
                 result.put(o, new Point2D.Double(cx + pct * rad * Math.cos(theta), cy + pct * rad * Math.sin(theta)));
