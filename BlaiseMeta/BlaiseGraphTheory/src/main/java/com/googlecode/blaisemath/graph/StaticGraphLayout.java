@@ -25,10 +25,10 @@ package com.googlecode.blaisemath.graph;
  */
 
 import com.google.common.collect.Maps;
-import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This interface provides methods necessary to layout a graph.
@@ -38,36 +38,28 @@ import java.util.Map;
  * @author Elisha Peterson
  */
 public interface StaticGraphLayout<P> {
-    
-    /**
-     * Get data model representing a set of nodes to pin in the layout.
-     * @return pinnable model
-     */
-    SetSelectionModel getPinnedNodes();
 
     /**
      * Perform layout on given graph, and return result.
      * @param g a graph written in terms of adjacencies
      * @param ic initial conditions
+     * @param fixed nodes whose positions should be fixed
      * @param parameters parameters for the layout, e.g. radius
      * @return a mapping of points to vertices
      * @param <C> graph node type
      */
-    <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> ic, P parameters);
+    <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> ic, 
+            Set<C> fixed, P parameters);
 
     /**
      * Puts vertices all at the origin.
      */
     public static StaticGraphLayout ORIGIN = new StaticGraphLayout() {
-        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes at origin";
         }
-        public SetSelectionModel getPinnedNodes() {
-            return pinned;
-        }
-        public Map layout(Graph g, Map ic, Object parameters) {
+        public Map layout(Graph g, Map ic, Set fixed, Object parameters) {
             HashMap result = Maps.newHashMap();
             for (Object v : g.nodes()) {
                 result.put(v, new Point2D.Double());
@@ -78,15 +70,11 @@ public interface StaticGraphLayout<P> {
 
     /** Lays out vertices uniformly around a circle (radius corresponds to first parameter). */
     public static StaticGraphLayout<Double> CIRCLE = new StaticGraphLayout<Double>() {
-        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes in a circle";
         }
-        public SetSelectionModel getPinnedNodes() {
-            return pinned;
-        }
-        public Map layout(Graph g, Map ic, Double radius) {
+        public Map layout(Graph g, Map ic, Set fixed, Double radius) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();
             int size = g.nodeCount();
             int i = 0;
@@ -104,15 +92,11 @@ public interface StaticGraphLayout<P> {
      * to first parameter).
      */
     public static StaticGraphLayout<Double> RANDOM = new StaticGraphLayout<Double>() {
-        private final SetSelectionModel pinned = new SetSelectionModel();
         @Override
         public String toString() {
             return "Position nodes randomly in a rectangle";
         }
-        public SetSelectionModel getPinnedNodes() {
-            return pinned;
-        }
-        public Map layout(Graph g, Map ic, Double boxSize) {
+        public Map layout(Graph g, Map ic, Set fixed, Double boxSize) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();
             for (Object v : g.nodes()) {
                 result.put(v, new Point2D.Double(

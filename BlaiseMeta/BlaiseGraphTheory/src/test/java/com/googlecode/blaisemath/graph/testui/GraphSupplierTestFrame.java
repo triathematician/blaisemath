@@ -169,7 +169,7 @@ public class GraphSupplierTestFrame extends javax.swing.JFrame {
 
     private void layoutChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutChooserActionPerformed
         StaticGraphLayout l = (StaticGraphLayout) layoutChooser.getSelectedItem();
-        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, 50);
+        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, Collections.EMPTY_SET, 50);
     }//GEN-LAST:event_layoutChooserActionPerformed
 
     private void updateGraph() {
@@ -180,7 +180,7 @@ public class GraphSupplierTestFrame extends javax.swing.JFrame {
         }
         grapher.setGraph(s.get());
         StaticGraphLayout l = (StaticGraphLayout) layoutChooser.getSelectedItem();
-        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, 50);
+        grapher.getLayoutManager().applyLayout(l, Collections.EMPTY_MAP, Collections.EMPTY_SET, 50);
     }
     
     /**

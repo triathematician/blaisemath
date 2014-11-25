@@ -158,8 +158,12 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
 
     // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
 
-    public SetSelectionModel getPinnedNodes() {
-        return pinnedNodes;
+    public Set<C> getLockedNodes() {
+        return pinnedNodes.getSelection();
+    }
+    
+    public void setLockedNodes(Set<C> nodes) {
+        pinnedNodes.setSelection(nodes);
     }
 
     /**

@@ -55,6 +55,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * <p>
+ *   Manages graph layout within a background thread, in situations where the graph
+ *   or node locations might be simultaneously modified from other threads.
  *   Executes a graph layout algorithm in a background thread. Uses an
  *   {@link IterativeGraphLayout} algorithm, whose results are supplied to the
  *   {@link CoordinateManager}. This class is not thread-safe, so all of its
@@ -174,6 +176,53 @@ public final class GraphLayoutManager<N> {
     public Graph<N> getGraph() {
         return graph;
     }
+    
+    /**
+     * Changes the graph. Uses the default initial position layout to position
+     * nodes if the current graph was null, otherwise uses the adding layout for
+     * any nodes that do not have current positions.
+     *
+     * @param g the graph
+     */
+    public void setGraph(Graph<N> g) {
+        Graph old = this.graph;
+        if (g == null) {
+            setLayoutTaskActive(false);
+        } else if (this.graph != g) {
+            // TODO - sync and/or pause layout while the graph is being updated, so the layout algorithm stays in sync
+            this.graph = g;
+            Set<N> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
+            coordManager.deactivate(oldNodes);
+            // defer to existing locations if possible
+            if (coordManager.locatesAll(g.nodes())) {
+                coordManager.reactivate(g.nodes());
+            } else {
+                // lays out new graph entirely
+                Map<N,Point2D.Double> newLoc;
+                if (old == null) {
+                    newLoc = initialLayout.layout(g, Collections.EMPTY_MAP, Collections.EMPTY_SET, initialLayoutParameters);
+                } else {
+                    Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
+                    newLoc = addingLayout.layout(g, curLocs, Collections.EMPTY_SET, addingLayoutParameters);
+                }
+                // remove objects that are already in coordinate manager
+                newLoc.keySet().removeAll(coordManager.getActive());
+                newLoc.keySet().removeAll(coordManager.getInactive());
+                coordManager.reactivate(g.nodes());
+                coordManager.putAll(newLoc);
+            }
+
+            // log size mismatches to help with debugging
+            int sz = coordManager.getActive().size();
+            boolean check = sz == g.nodeCount();
+            if (!check) {
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, 
+                        "Object sizes don''t match: {0} locations, but {1} nodes!", 
+                        new Object[]{sz, g.nodeCount()});
+            }
+        }
+        pcs.firePropertyChange(GRAPH_PROP, old, g);
+    }
 
     /**
      * Get layout algorithm
@@ -199,115 +248,6 @@ public final class GraphLayoutManager<N> {
             pcs.firePropertyChange(LAYOUT_PROP, old, layout);
         }
     }
-    
-    // </editor-fold>
-    
-    
-    //<editor-fold defaultstate="collapsed" desc="MUTATORS">
-
-    /**
-     * Changes the graph. Uses the default initial position layout to position
-     * nodes if the current graph was null, otherwise uses the adding layout for
-     * any nodes that do not have current positions.
-     *
-     * @param g the graph
-     */
-    public void setGraph(Graph<N> g) {
-        Graph old = this.graph;
-        if (g == null) {
-            setLayoutTaskActive(false);
-        } else if (this.graph != g) {
-            // TODO - sync and/or pause layout while the graph is being updated, so the layout algorithm stays in sync
-            this.graph = g;
-            Set<N> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
-            coordManager.deactivate(oldNodes);
-            // defer to existing locations if possible
-            if (coordManager.locatesAll(g.nodes())) {
-                coordManager.reactivate(g.nodes());
-            } else {
-                // lays out new graph entirely
-                Map<N,Point2D.Double> newLoc;
-                if (old == null) {
-                    newLoc = initialLayout.layout(g, Collections.EMPTY_MAP, initialLayoutParameters);
-                } else {
-                    Map<N, Point2D.Double> curLocs = coordManager.getActiveLocationCopy();
-                    newLoc = addingLayout.layout(g, curLocs, addingLayoutParameters);
-                }
-                // remove objects that are already in coordinate manager
-                newLoc.keySet().removeAll(coordManager.getActive());
-                newLoc.keySet().removeAll(coordManager.getInactive());
-                coordManager.reactivate(g.nodes());
-                coordManager.putAll(newLoc);
-            }
-
-            // log size mismatches to help with debugging
-            int sz = coordManager.getActive().size();
-            boolean check = sz == g.nodeCount();
-            if (!check) {
-                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING, 
-                        "Object sizes don''t match: {0} locations, but {1} nodes!", 
-                        new Object[]{sz, g.nodeCount()});
-            }
-        }
-        pcs.firePropertyChange(GRAPH_PROP, old, g);
-    }
-
-    /**
-     * Update the locations of the specified nodes with the specified values.
-     * If an iterative layout is currently active, locations are updated at the
-     * layout. Otherwise, locations are updated by the point manager. Nodes that are
-     * in the graph but whose positions are not in the provided map will not be moved.
-     *
-     * @param nodePositions new locations for objects
-     */
-    public void requestLocations(Map<N, Point2D.Double> nodePositions) {
-        if (nodePositions != null) {
-            if (isLayoutTaskActive()) {
-                // TODO - sync
-                iLayout.requestPositions(nodePositions, false);
-            } else {
-                coordManager.putAll(nodePositions);
-            }
-        }
-    }
-
-    /**
-     * Update positions of current using specified layout algorithm. This method will
-     * replace the coordinates of objects in the graph.
-     * @param layout static layout algorithm
-     * @param parameters layout parameters
-     * @param <P> parameters type
-     */
-    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<N,Point2D.Double> ic, P parameters){
-        Map<N, Point2D.Double> pos = layout.layout(graph, ic, parameters);
-        if (isLayoutTaskActive()) {
-            // TODO - sync
-            iLayout.requestPositions(pos, false);
-        } else {
-            coordManager.setCoordinateMap(pos);
-        }
-    }
-
-    /**
-     * Iterates layout, if an iterative layout has been provided.
-     */
-    public void iterateLayout() {
-        if (iLayout != null && !isLayoutTaskActive()) {
-            int id = GAInstrument.start("GraphManager.iterateLayout");
-            // TODO - sync
-            iLayout.iterate(graph);
-            coordManager.setCoordinateMap((Map<N,Point2D.Double>) iLayout.getPositions());
-            GAInstrument.end(id);
-        }
-    }
-
-    // </editor-fold>
-
-
-    // <editor-fold defaultstate="collapsed" desc="Layout Task">
-    //
-    // LAYOUT TASK
-    //
 
     /**
      * Return whether layout task is currently active.
@@ -332,6 +272,67 @@ public final class GraphLayoutManager<N> {
             pcs.firePropertyChange(LAYOUT_ACTIVE_PROP, !value, value);
         }
     }
+    
+    // </editor-fold>
+    
+
+    //<editor-fold defaultstate="collapsed" desc="MUTATORS">
+    // 
+    // MUTATORS
+    //
+    
+    /**
+     * Update the locations of the specified nodes with the specified values.
+     * If an iterative layout is currently active, locations are updated at the
+     * layout. Otherwise, locations are updated by the point manager. Nodes that are
+     * in the graph but whose positions are not in the provided map will not be moved.
+     *
+     * @param nodePositions new locations for objects
+     */
+    public void requestLocations(Map<N, Point2D.Double> nodePositions) {
+        if (nodePositions != null) {
+            if (isLayoutTaskActive()) {
+                // TODO - sync
+                iLayout.requestPositions(nodePositions, false);
+            } else {
+                coordManager.putAll(nodePositions);
+            }
+        }
+    }
+
+    /**
+     * Update positions of current using specified layout algorithm. This method will
+     * replace the coordinates of objects in the graph.
+     * @param layout static layout algorithm
+     * @param fixed what nodes should be fixed in applying the layout
+     * @param parameters layout parameters
+     * @param <P> parameters type
+     */
+    public <P> void applyLayout(StaticGraphLayout<P> layout, Map<N,Point2D.Double> ic,
+            Set<N> fixed, P parameters){
+        requestLocations(layout.layout(graph, ic, fixed, parameters));
+    }
+
+    /**
+     * Iterates layout, if an iterative layout has been provided.
+     */
+    public void iterateLayout() {
+        if (iLayout != null && !isLayoutTaskActive()) {
+            int id = GAInstrument.start("GraphManager.iterateLayout");
+            // TODO - sync
+            iLayout.iterate(graph);
+            coordManager.setCoordinateMap((Map<N,Point2D.Double>) iLayout.getPositions());
+            GAInstrument.end(id);
+        }
+    }
+
+    // </editor-fold>
+
+
+    // <editor-fold defaultstate="collapsed" desc="Layout Task">
+    //
+    // LAYOUT TASK
+    //
 
     /**
      * Activates the layout timer, if an iterative layout has been provided.

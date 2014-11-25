@@ -27,9 +27,9 @@ package com.googlecode.blaisemath.graph.modules.layout;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
-import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Positions graph nodes nearby connected nodes. The first layout parameter
@@ -39,14 +39,8 @@ import java.util.Map;
  * @author petereb1
  */
 public class PositionalAddingLayout implements StaticGraphLayout<Double> {
-    
-    private final SetSelectionModel pinned = new SetSelectionModel();
-    
-    public SetSelectionModel getPinnedNodes() {
-        return pinned;
-    }
 
-    public <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> curLocations, Double len) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> curLocations, Set<C> fixed, Double len) {
         Map<C, Point2D.Double> res = Maps.newHashMap();
         for (C node : g.nodes()) {
             if (curLocations.containsKey(node)) {
