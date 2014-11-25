@@ -37,7 +37,6 @@ import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
-import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
@@ -81,12 +80,6 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     /** Used to notify status */
     @Nullable
     private ActionListener al;
-    
-    private final SetSelectionModel pinned = new SetSelectionModel();
-    
-    public SetSelectionModel getPinnedNodes() {
-        return pinned;
-    }
     
     public StaticSpringLayout() {
         this(null, null);
@@ -133,7 +126,8 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         return lastStepCount;
     }
 
-    public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, Double irad) {
+    public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
+            Set<C> fixed, Double irad) {
         Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
                 "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
@@ -163,7 +157,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         
         // perform the physics-based layout
         Map<C,Point2D.Double> initialLocs = StaticGraphLayout.CIRCLE.layout(
-                graphForLayout, Collections.EMPTY_MAP, irad);
+                graphForLayout, Collections.EMPTY_MAP, Collections.EMPTY_SET, irad);
         SpringLayout sl = new SpringLayout(initialLocs);
         double lastEnergy = Double.MAX_VALUE;
         double energyChange = 9999;

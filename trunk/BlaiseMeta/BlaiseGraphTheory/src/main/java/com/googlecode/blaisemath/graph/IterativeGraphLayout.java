@@ -25,9 +25,9 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
-import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.geom.Point2D;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import java.util.Map;
 public interface IterativeGraphLayout<C> {
 
     /**
-     * Get iteration #
+     * Get the current iteration #
      * @return index of current iteration (should reset to 0 whenever the reset method is called)
      */
     int getIteration();
@@ -70,10 +70,16 @@ public interface IterativeGraphLayout<C> {
     double getEnergyStatus();
     
     /**
-     * Return the set of nodes that are currently "pinned" in place.
+     * Return the set of nodes that are currently "pinned" or "locked" in place.
      * @return pinned nodes
      */
-    SetSelectionModel<C> getPinnedNodes();
+    Set<C> getLockedNodes();
+    
+    /**
+     * Update the collection of nodes that are currently "pinned".
+     * @param pinned the nodes to pin
+     */
+    void setLockedNodes(Set<C> pinned);
 
     /**
      * Returns the current list of point locations.
@@ -102,7 +108,6 @@ public interface IterativeGraphLayout<C> {
      * the positions of the requested nodes.
      * </p>
      *
-     * @param <V> node type of graph
      * @param g the graph to layout
      */
     void iterate(Graph<C> g);

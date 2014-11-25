@@ -68,7 +68,7 @@ public class SpringLayoutPerformanceTest {
                     GraphUtils.components(g).size(),
                     nicer(GraphUtils.degreeDistribution(g)));
             int id = GAInstrument.start("EdgePD", g+"");
-            sl.layout(g, Collections.EMPTY_MAP, 500.0);
+            sl.layout(g, Collections.EMPTY_MAP, Collections.EMPTY_SET, 500.0);
             System.out.println(" .. completed in "+sl.getLastStepCount()+" steps");
             GAInstrument.end(id);
         }

@@ -81,7 +81,7 @@ public class SimultaneousLayout<C> {
     public SimultaneousLayout(LongitudinalGraph<C> tg) {
         times = tg.getTimes();
         Map<Object,Point2D.Double> ip = StaticGraphLayout.RANDOM.layout(
-                tg.slice(tg.getMaximumTime(), true), Collections.EMPTY_MAP, 100.0);
+                tg.slice(tg.getMaximumTime(), true), Collections.EMPTY_MAP, Collections.EMPTY_SET, 100.0);
         for (int i = 0; i < times.size(); i++) {
             slices.add(new LayoutSlice(i, tg.slice(times.get(i), true), copy(ip)));
             masterPos.add(new HashMap<C,Point2D.Double>());

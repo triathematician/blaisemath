@@ -75,7 +75,7 @@ public class GraphTestFrame extends javax.swing.JFrame {
         final Graph<Integer> graph = new EdgeProbabilityGraphSupplier(false, 50, .05f).get();
         plot.setGraph(graph);
         plot.getAdapter().getViewGraph().setDragEnabled(true);
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, 100);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, Collections.EMPTY_SET, 100);
         PanAndZoomHandler.zoomBoxAnimated(plot, Points.boundingBox(plot.getLayoutManager().getNodeLocationCopy().values(), 5));
         plot.getAdapter().getNodeStyler().setStyleDelegate(new Function<Object, AttributeSet>(){
             public AttributeSet apply(Object o) {
@@ -248,12 +248,12 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, Collections.EMPTY_MAP, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DIST_SCALE*2);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
