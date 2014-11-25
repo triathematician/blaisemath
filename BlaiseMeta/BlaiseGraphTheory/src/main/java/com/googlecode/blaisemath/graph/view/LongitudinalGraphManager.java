@@ -44,6 +44,8 @@ import java.util.logging.Logger;
  * active slice has changed.
  *
  * @author elisha
+ * 
+ * @todo review thread safety
  */
 public class LongitudinalGraphManager {
 
