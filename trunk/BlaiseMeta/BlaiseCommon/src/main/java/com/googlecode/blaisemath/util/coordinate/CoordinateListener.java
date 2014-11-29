@@ -5,6 +5,8 @@
 
 package com.googlecode.blaisemath.util.coordinate;
 
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
+
 /*
  * #%L
  * BlaiseGraphics
@@ -37,9 +39,11 @@ package com.googlecode.blaisemath.util.coordinate;
 public interface CoordinateListener<S,C> {
 
     /**
-     * Called when coordinates/points are added. This may occur on any thread.
+     * Called when coordinates/points are added or changed in a {@link CoordinateManager}.
+     * This method is called from the same thread that made the change.
      * @param evt description of what coordinates were added/removed/changed
      */
+    @InvokedFromThread("unknown")
     void coordinatesChanged(CoordinateChangeEvent<S,C> evt);
 
 }

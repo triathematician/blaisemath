@@ -29,6 +29,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -314,6 +315,7 @@ public class CoordinateManager<S, C> {
      * 
      * @param evt the event to fire
      */
+    @InvokedFromThread("unknown")
     protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
         if ((evt.getAdded() == null || evt.getAdded().isEmpty()) 
                 && (evt.getRemoved() == null || evt.getRemoved().isEmpty())) {

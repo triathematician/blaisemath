@@ -20,12 +20,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>com.googlecode.blaisemath.util</title>
+        <title>BlaiseCommon</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
         <p>
             General purpose utility classes used throughout the BlaiseGraphics library.
         </p>
+        <h1>Threads and Concurrency</h1>
+        <p>
+            Most classes in <i>BlaiseCommon</i> are not designed for multi-threading.
+            Exceptions are:
+        </p>
+        <ul>
+            <li>
+            {@link com.googlecode.blaisemath.util.coordinate.CoordinateManager},
+            a thread-safe object for managing a collection of object locations.
+            </li>
+            <li>
+            {@link com.googlecode.blaisemath.util.animation.AnimationStep},
+            which launches a background thread for animation effects. The class
+            contains a static {@code ScheduledExecutorService}, and the static method
+            {@code runNTimes()} can be used to run animations using that service.
+            </li>
+        </ul>
     </body>
 </html>

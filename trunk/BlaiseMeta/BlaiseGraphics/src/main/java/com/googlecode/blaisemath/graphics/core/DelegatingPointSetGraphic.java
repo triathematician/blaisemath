@@ -29,6 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import static com.googlecode.blaisemath.graphics.core.LabeledPointGraphic.LABEL_RENDERER_PROP;
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
 import com.googlecode.blaisemath.style.ObjectStyler;
@@ -123,6 +124,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         
         coordListener = new CoordinateListener(){
             @Override
+            @InvokedFromThread("unknown")
             public void coordinatesChanged(final CoordinateChangeEvent evt) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
                     public void run() {

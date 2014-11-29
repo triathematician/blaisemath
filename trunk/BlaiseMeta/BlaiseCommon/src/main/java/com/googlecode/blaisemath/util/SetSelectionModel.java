@@ -33,7 +33,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * <p>
@@ -43,7 +42,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  * @param <G> type of object that can be selected
  * @author elisha
  */
-@NotThreadSafe
 public class SetSelectionModel<G> {
     
     public static final String SELECTION_PROPERTY = "selection";
