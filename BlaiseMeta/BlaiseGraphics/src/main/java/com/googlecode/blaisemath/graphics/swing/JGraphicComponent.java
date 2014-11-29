@@ -1,5 +1,5 @@
 /**
- * GraphicComponent.java
+ * JGraphicComponent.java
  * Created on Jul 30, 2009
  */
 

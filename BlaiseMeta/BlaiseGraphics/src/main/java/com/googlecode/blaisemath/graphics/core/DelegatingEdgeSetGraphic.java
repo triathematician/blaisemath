@@ -32,6 +32,7 @@ package com.googlecode.blaisemath.graphics.core;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.util.Edge;
@@ -92,6 +93,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
             Renderer<Shape,G> edgeRenderer) {
         coordListener = new CoordinateListener<S,Point2D>(){
             @Override
+            @InvokedFromThread("unknown")
             public void coordinatesChanged(CoordinateChangeEvent<S,Point2D> evt) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
                     public void run() {

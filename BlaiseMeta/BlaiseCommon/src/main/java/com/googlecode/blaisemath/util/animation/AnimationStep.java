@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.util.animation;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -47,10 +48,12 @@ public abstract class AnimationStep {
     private static ScheduledExecutorService ANIMATION_EXECUTOR_SERVICE;
     
     /**
-     * Execute logic for one step in the animation.
+     * Execute logic for one step in the animation. Expected to be invoked from
+     * the animation thread.
      * @param idx the index of the step
      * @param pct percent completion, between 0 and 1
      */
+    @InvokedFromThread("AnimationStep")
     public abstract void run(int idx, double pct);
     
     /**

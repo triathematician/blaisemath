@@ -29,10 +29,12 @@ package com.googlecode.blaisemath.graphics.swing;
 
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.animation.AnimationStep;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -242,20 +244,27 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     }
 
     /**
-     * Updates component transform so given rectangle is included within
+     * Updates component transform so given rectangle is included within. Updates
+     * to the component are made on the EDT.
      * @param gc associated component
+     * @param rect local bounds
      */
-    public static void setDesiredLocalBounds(JGraphicComponent gc, Rectangle2D rect) {
-        // TODO - this isn't quite right... needs to incorporate gc's minx and miny ???
-        Rectangle bds = gc.getBounds();
-        double scalex = rect.getWidth() / bds.getWidth();
-        double scaley = rect.getHeight() / bds.getHeight();
-        double scale = Math.max(scalex, scaley);
-        AffineTransform res = new AffineTransform();
-        res.translate(bds.getCenterX(), bds.getCenterY());
-        res.scale(1 / scale, 1 / scale);
-        res.translate(-rect.getCenterX(), -rect.getCenterY());
-        gc.setTransform(res);
+    @InvokedFromThread("multiple")
+    public static void setDesiredLocalBounds(final JGraphicComponent gc, final Rectangle2D rect) {
+        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+            public void run() {
+                // TODO - this isn't quite right... needs to incorporate gc's minx and miny ???
+                Rectangle bds = gc.getBounds();
+                double scalex = rect.getWidth() / bds.getWidth();
+                double scaley = rect.getHeight() / bds.getHeight();
+                double scale = Math.max(scalex, scaley);
+                AffineTransform res = new AffineTransform();
+                res.translate(bds.getCenterX(), bds.getCenterY());
+                res.scale(1 / scale, 1 / scale);
+                res.translate(-rect.getCenterX(), -rect.getCenterY());
+                gc.setTransform(res);
+            }
+        });
     }
 
     /**
@@ -304,6 +313,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
             @Override
+            @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
                 double zoomValue = 1.0 + (factor - 1.0) * pct;
                 setDesiredLocalBounds(gc, new Rectangle2D.Double(
@@ -345,6 +355,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
 
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
             @Override
+            @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
                 double x1 = xMin + (nxMin - xMin) * pct;
                 double y1 = yMin + (nyMin - yMin) * pct;
