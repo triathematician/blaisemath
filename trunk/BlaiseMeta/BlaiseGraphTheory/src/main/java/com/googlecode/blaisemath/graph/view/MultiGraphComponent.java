@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -43,11 +43,13 @@ import javax.swing.ListCellRenderer;
  *
  * @author elisha
  */
-public class MultiGraphComponent extends JList implements PropertyChangeListener {
+public class MultiGraphComponent extends JList {
 
     /** Time graph manager */
     private LongitudinalGraphManager manager;
-
+    /** Handles updates from manager */
+    private final PropertyChangeListener managerListener;
+    
     /** Constructs a longitudinal graph panel without an actual graph. */
     public MultiGraphComponent() {
         this(null);
@@ -57,6 +59,11 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     public MultiGraphComponent(LongitudinalGraphManager m) {
         setCellRenderer(new GraphCellRenderer());
         setListData(new Object[]{});
+        managerListener = new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                repaint();
+            }
+        };
         setManager(m);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
         super.setVisibleRowCount(10);
@@ -72,11 +79,12 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     /** Changes the manager for the longitudinal graph */
     public void setManager(LongitudinalGraphManager m) {
         if (this.manager != m) {
-            if (this.manager != null)
-                this.manager.removePropertyChangeListener(this);
+            if (this.manager != null) {
+                this.manager.removePropertyChangeListener(managerListener);
+            }
             this.manager = m;
             if (m != null) {
-                m.addPropertyChangeListener(this);
+                m.addPropertyChangeListener(managerListener);
                 setListData(m.getTimeGraph().getTimes().toArray());
             } else {
                 setListData(new Object[]{});
@@ -87,24 +95,15 @@ public class MultiGraphComponent extends JList implements PropertyChangeListener
     // </editor-fold>
 
 
-    // <editor-fold defaultstate="collapsed" desc="Event Handling">
-    public void propertyChange(PropertyChangeEvent evt) {
-        repaint();
-        // NOTHING HERE FOR THE MOMENT
-    }
-
-    // </editor-fold>
-
-
     private class GraphCellRenderer extends GraphComponent implements ListCellRenderer {
-        public GraphCellRenderer() {
+        GraphCellRenderer() {
             setPreferredSize(new Dimension(200, 200));
         }
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Double time = (Double) value;
             Graph gr = MultiGraphComponent.this.manager.getTimeGraph().slice(time, false);
             GraphLayoutManager gm = getAdapter() == null ? null : getLayoutManager();
-            Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionMap(time);
+            Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionsCopy(time);
             if (gm == null && gr != null) {
                 setLayoutManager(gm = new GraphLayoutManager(gr, new SpringLayout()));
                 gm.requestLocations(positionMap);

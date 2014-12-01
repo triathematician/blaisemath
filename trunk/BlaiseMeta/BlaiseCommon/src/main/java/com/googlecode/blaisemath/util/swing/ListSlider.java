@@ -2,7 +2,7 @@
  * ListSlider.java
  * Created Jul 8, 2010
  */
-package com.googlecode.blaisemath.util;
+package com.googlecode.blaisemath.util.swing;
 
 /*
  * #%L
@@ -23,10 +23,13 @@ package com.googlecode.blaisemath.util;
  * limitations under the License.
  * #L%
  */
+import com.google.common.base.Objects;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
@@ -64,15 +67,28 @@ public final class ListSlider extends JSlider {
         int i = getValue();
         return i <= 0 ? pegs.get(0) : i >= pegs.size() ? pegs.get(pegs.size() - 1) : pegs.get(i);
     }
+    
+    public void setListValue(double val) {
+        for (int i = 0; i < pegs.size(); i++) {
+            if (val == pegs.get(i)) {
+                setValue(i);
+                return;
+            }
+        }
+        Logger.getLogger(ListSlider.class.getName()).log(Level.INFO, 
+                "Value not found: {0}", val);
+    }
 
     /**
      * Sets up constraints
      */
     public void setList(List<Double> values) {
-        this.pegs = values;
-        setMaximum(pegs.size() - 1);
-        setValue(0);
-        initCustomLabels();
+        if (!Objects.equal(this.pegs, values)) {
+            this.pegs = values;
+            setMaximum(pegs.size() - 1);
+            setValue(0);
+            initCustomLabels();
+        }
     }
 
     /**

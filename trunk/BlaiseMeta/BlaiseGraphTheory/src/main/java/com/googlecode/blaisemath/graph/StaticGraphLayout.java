@@ -40,6 +40,12 @@ import java.util.Set;
 public interface StaticGraphLayout<P> {
 
     /**
+     * Return the object type for layout parameters
+     * @return object type
+     */
+    Class<P> getParametersType();
+
+    /**
      * Perform layout on given graph, and return result.
      * @param g a graph written in terms of adjacencies
      * @param ic initial conditions
@@ -54,10 +60,13 @@ public interface StaticGraphLayout<P> {
     /**
      * Puts vertices all at the origin.
      */
-    public static StaticGraphLayout ORIGIN = new StaticGraphLayout() {
+    public static StaticGraphLayout ORIGIN = new StaticGraphLayout<Object>() {
         @Override
         public String toString() {
             return "Position nodes at origin";
+        }
+        public Class<Object> getParametersType() {
+            return Object.class;
         }
         public Map layout(Graph g, Map ic, Set fixed, Object parameters) {
             HashMap result = Maps.newHashMap();
@@ -73,6 +82,9 @@ public interface StaticGraphLayout<P> {
         @Override
         public String toString() {
             return "Position nodes in a circle";
+        }
+        public Class<Double> getParametersType() {
+            return Double.class;
         }
         public Map layout(Graph g, Map ic, Set fixed, Double radius) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();
@@ -95,6 +107,9 @@ public interface StaticGraphLayout<P> {
         @Override
         public String toString() {
             return "Position nodes randomly in a rectangle";
+        }
+        public Class<Double> getParametersType() {
+            return Double.class;
         }
         public Map layout(Graph g, Map ic, Set fixed, Double boxSize) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();

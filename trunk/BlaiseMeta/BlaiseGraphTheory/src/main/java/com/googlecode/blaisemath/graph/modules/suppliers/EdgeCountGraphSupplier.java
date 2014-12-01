@@ -25,12 +25,15 @@ package com.googlecode.blaisemath.graph.modules.suppliers;
  * #L%
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
+import com.googlecode.blaisemath.graph.Graph;
+import com.googlecode.blaisemath.graph.SparseGraph;
+import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.GraphSupplierSupport;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers.GraphSupplierSupport;
-import com.googlecode.blaisemath.graph.SparseGraph;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Generate random graph with specified edge count.
@@ -78,13 +81,7 @@ public class EdgeCountGraphSupplier extends GraphSupplierSupport<Integer> {
 
     public EdgeCountGraphSupplier(boolean directed, int nodes, int edges) {
         super(directed, nodes);
-        if (nodes < 0 || edges < 0) {
-            throw new IllegalArgumentException("Numbers must be positive! (n,e)=(" + nodes + "," + edges + ")");
-        }
-        if ((!directed && edges > nodes * (nodes - 1) / 2) || (directed && edges > nodes * nodes)) {
-            throw new IllegalArgumentException("Too many edges! (n,e)=(" + nodes + "," + edges + ")");
-        }
-        this.edges = edges;
+        setEdges(edges);
     }
 
     @Override
@@ -92,12 +89,39 @@ public class EdgeCountGraphSupplier extends GraphSupplierSupport<Integer> {
         return "EdgeCountGraphSupplier{" + "edges=" + edges + '}';
     }
 
+    @Override
+    public void setDirected(boolean directed) {
+        super.setDirected(directed);
+        checkEdgeCount();
+    }
+
+    @Override
+    public void setNodes(int nodes) {
+        super.setNodes(nodes);
+        checkEdgeCount();
+    }
+
     public int getEdges() {
         return edges;
     }
 
     public void setEdges(int edges) {
+        checkArgument(edges >= 0);
         this.edges = edges;
+        checkEdgeCount();
+    }
+    
+    private void checkEdgeCount() {
+        if (!directed && edges > (nodes * (nodes - 1)) / 2) {
+            Logger.getLogger(EdgeCountGraphSupplier.class.getName()).log(Level.WARNING, 
+                    "Too many edges! (n,e)=({0},{1})", new Object[]{nodes, edges});
+            edges = (nodes*(nodes-1))/2;
+        }
+        if (directed && edges > nodes * nodes) {
+            Logger.getLogger(EdgeCountGraphSupplier.class.getName()).log(Level.WARNING, 
+                    "Too many edges! (n,e)=({0},{1})", new Object[]{nodes, edges});
+            edges = nodes*nodes;
+        }
     }
 
     public Graph<Integer> get() {

@@ -20,13 +20,12 @@ package com.googlecode.blaisemath.graph.longitudinal;
  * #L%
  */
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import static com.googlecode.blaisemath.graph.AssertUtils.assertCollectionContentsSame;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.SparseGraph;
-import com.googlecode.blaisemath.graph.longitudinal.SliceLongitudinalGraph;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;

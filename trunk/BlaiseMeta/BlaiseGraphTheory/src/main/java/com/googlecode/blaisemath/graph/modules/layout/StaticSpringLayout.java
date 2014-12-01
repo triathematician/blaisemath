@@ -50,27 +50,21 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * Lays out nodes in a graph using a force-based layout technique. This class is not
- * thread safe, and is intended to be accessed from a single thread only.
+ * Positions nodes in a graph using a force-based layout technique.
  * @author elisha
  */
-@NotThreadSafe
 public class StaticSpringLayout implements StaticGraphLayout<Double> {
    
     /** How long to wait between reporting status */
     private static final int STATUS_REPORT_STEPS = 100;
     
-    /** Maintain singleton instance of the class */
-    private static StaticSpringLayout INST;
-    
-    public int minSteps = 100;
-    public int maxSteps = 5000;
-    public double energyChangeThreshold = SpringLayout.DIST_SCALE*SpringLayout.DIST_SCALE*1e-6;
-    public double coolStart = 0.65;
-    public double coolEnd = 0.1;
+    private int minSteps = 100;
+    private int maxSteps = 5000;
+    private double energyChangeThreshold = SpringLayout.DIST_SCALE*SpringLayout.DIST_SCALE*1e-6;
+    private double coolStart = 0.65;
+    private double coolEnd = 0.1;
     
     private int lastStepCount = 0;
     
@@ -89,22 +83,20 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         this.statusStream = status;
     }
     
-    /** 
-     * Return a singleton instance of the class (using default settings).
-     * Logs notifications to System.out.
-     * @return instance
-     */
-    public static StaticSpringLayout getInstance() {
-        if (INST == null) {
-            INST = new StaticSpringLayout(System.out, null);
-        }
-        return INST;        
-    }
-    
     @Override
     public String toString() {
         return "StaticSpringLayout";
     }
+
+    public Class<Double> getParametersType() {
+        return Double.class;
+    }
+    
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
     
     /**
      * Sets output stream for updates
@@ -122,9 +114,52 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         this.al = al;
     }
 
+    public int getMinSteps() {
+        return minSteps;
+    }
+
+    public void setMinSteps(int minSteps) {
+        this.minSteps = minSteps;
+    }
+
+    public int getMaxSteps() {
+        return maxSteps;
+    }
+
+    public void setMaxSteps(int maxSteps) {
+        this.maxSteps = maxSteps;
+    }
+
+    public double getEnergyChangeThreshold() {
+        return energyChangeThreshold;
+    }
+
+    public void setEnergyChangeThreshold(double energyChangeThreshold) {
+        this.energyChangeThreshold = energyChangeThreshold;
+    }
+
+    public double getCoolStart() {
+        return coolStart;
+    }
+
+    public void setCoolStart(double coolStart) {
+        this.coolStart = coolStart;
+    }
+
+    public double getCoolEnd() {
+        return coolEnd;
+    }
+
+    public void setCoolEnd(double coolEnd) {
+        this.coolEnd = coolEnd;
+    }
+
     public int getLastStepCount() {
         return lastStepCount;
     }
+
+    //</editor-fold>
+
 
     public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
             Set<C> fixed, Double irad) {
@@ -167,8 +202,9 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
             double cool01 = 1-step*step/(maxSteps*maxSteps);
             sl.parameters.dampingC = coolStart*cool01 + coolEnd*(1-cool01);
             sl.iterate(graphForLayout);
-            energyChange = sl.energy - lastEnergy;
-            lastEnergy = sl.energy;
+            double energy = sl.getEnergyStatus();
+            energyChange = energy - lastEnergy;
+            lastEnergy = energy;
             step++;
             if (step % STATUS_REPORT_STEPS == 0) {
                 reportStatus("", step, lastEnergy);
@@ -177,7 +213,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         reportStatus("stop, ", step, lastEnergy);
         
         // add positions of isolates and leaf nodes back in
-        Map<C, Point2D.Double> res = sl.getPositions();
+        Map<C, Point2D.Double> res = sl.getPositionsCopy();
         addLeafNodes(graphForInfo, res);
         addIsolates(graphForInfo.getIsolates(), res);
         

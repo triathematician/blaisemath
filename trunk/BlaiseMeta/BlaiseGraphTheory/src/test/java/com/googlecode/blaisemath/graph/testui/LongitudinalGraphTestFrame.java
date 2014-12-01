@@ -62,7 +62,6 @@ public class LongitudinalGraphTestFrame extends javax.swing.JFrame {
                 new EdgeCountGraphSupplier(false, 10, 10).get(),
                 100, new float[]{0,.95f,.05f}).get();
         plot.setTimeGraph(g);
-        plot.getManager().initLayoutAlgorithm();
 
         multi = new MultiGraphComponent(plot.getManager());
         jScrollPane2.setViewportView(multi);
