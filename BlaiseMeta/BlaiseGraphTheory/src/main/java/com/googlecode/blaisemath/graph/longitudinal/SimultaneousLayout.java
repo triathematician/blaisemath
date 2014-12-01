@@ -27,6 +27,7 @@ package com.googlecode.blaisemath.graph.longitudinal;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
@@ -38,11 +39,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
- *
+ * Performs layout on a longitudinal graph by connecting nodes in adjacent slices.
  * @author elisha
  */
+@ThreadSafe
 public class SimultaneousLayout<C> {
 
     /** The graph's times */
@@ -77,9 +80,12 @@ public class SimultaneousLayout<C> {
 
     // CONSTRUCTORS
 
-    /** Construct simultaneous layout instance */
+    /** 
+     * Construct simultaneous layout instance.
+     * @param tg the longitudinal graph being laid out
+     */
     public SimultaneousLayout(LongitudinalGraph<C> tg) {
-        times = tg.getTimes();
+        times = Collections.unmodifiableList(tg.getTimes());
         Map<Object,Point2D.Double> ip = StaticGraphLayout.RANDOM.layout(
                 tg.slice(tg.getMaximumTime(), true), Collections.EMPTY_MAP, Collections.EMPTY_SET, 100.0);
         for (int i = 0; i < times.size(); i++) {
@@ -99,18 +105,19 @@ public class SimultaneousLayout<C> {
         this.parameters = parameters;
     }
 
-    private Map<Object,Point2D.Double> copy(Map<Object,Point2D.Double> ip) {
-        Map<Object,Point2D.Double> r = new HashMap<Object,Point2D.Double>();
-        for (Entry<Object,Point2D.Double> en : ip.entrySet()) {
+    private static <C> Map<C,Point2D.Double> copy(Map<C,Point2D.Double> ip) {
+        Map<C,Point2D.Double> r = new HashMap<C,Point2D.Double>();
+        for (Entry<C,Point2D.Double> en : ip.entrySet()) {
             r.put(en.getKey(), new Point2D.Double(en.getValue().x, en.getValue().y));
         }
         return r;
     }
 
-    public Map<C, Point2D.Double> getPositionMap(double time) {
+    @InvokedFromThread("unknown")
+    public synchronized Map<C, Point2D.Double> getPositionsCopy(double time) {
         for (int i = 0; i < masterPos.size(); i++) {
             if (times.get(i).equals(time)) {
-                return masterPos.get(i);
+                return copy(masterPos.get(i));
             }
         }
         return Collections.emptyMap();
@@ -120,37 +127,40 @@ public class SimultaneousLayout<C> {
     // ITERATION
     //
 
-    public void iterate() {
+    @InvokedFromThread("unknown")
+    public synchronized void iterate() {
         for (LayoutSlice s : slices) {
             s.iterate(s.graph);
         }
         masterPos.clear();
         for (LayoutSlice<C> s : slices) {
             HashMap<C,Point2D.Double> nueMap = Maps.newHashMap();
-            for (Entry<C, Point2D.Double> en : s.getPositions().entrySet()) {
+            for (Entry<C, Point2D.Double> en : s.getPositionsCopy().entrySet()) {
                 nueMap.put(en.getKey(), new Point2D.Double(en.getValue().x, en.getValue().y));
             }
             masterPos.add(nueMap);
         }
     }
 
-    /** Overrides SpringLayout to add time factor at each slice */
+    /** 
+     * Overrides SpringLayout to add time factor at each slice.
+     */
     private class LayoutSlice<C> extends SpringLayout<C> {
 
         int tIndex;
         Graph<C> graph;
 
-        public LayoutSlice(int ti, Graph<C> g, Map<C,Point2D.Double> ip) {
-            super(ip);
+        LayoutSlice(int ti, Graph<C> g, Map<C,Point2D.Double> ip) {
+            super(ip, SimultaneousLayout.this.parameters);
             this.tIndex = ti;
             this.graph = g;
-            this.parameters = SimultaneousLayout.this.parameters;
         }
 
         @Override
         protected void addAdditionalForces(Graph<C> g, Point2D.Double sum, C io, Point2D.Double iLoc) {
-            if (masterPos == null)
+            if (masterPos == null) {
                 return;
+            }
             try {
                 iLoc = masterPos.get(tIndex).get(io);
             } catch (Exception ex) {

@@ -32,7 +32,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.graphics.core.DelegatingPrimitiveGraphic;
@@ -51,7 +51,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.concurrent.NotThreadSafe;
 
 
 /**
@@ -63,7 +62,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  *
  * @author elisha
  */
-@NotThreadSafe
 public class GraphComponent extends JGraphicComponent {
     
     public static final String MENU_KEY_GRAPH = "graph";

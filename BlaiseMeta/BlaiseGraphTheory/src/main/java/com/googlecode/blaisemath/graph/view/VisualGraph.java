@@ -1,5 +1,5 @@
 /*
- * PlaneGraphAdapter.java
+ * VisualGraph.java
  * Created Jan 31, 2011
  */
 package com.googlecode.blaisemath.graph.view;
@@ -27,7 +27,7 @@ package com.googlecode.blaisemath.graph.view;
 import com.google.common.base.Functions;
 import com.google.common.base.Supplier;
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graphics.core.DelegatingNodeLinkGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;

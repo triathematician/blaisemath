@@ -63,6 +63,10 @@ public class ComponentCircleLayout implements StaticGraphLayout<Void> {
     public String toString() {
         return "ComponentCircleLayout";
     }
+    
+    public Class<Void> getParametersType() {
+        return Void.class;
+    }
 
     public <C> Map<C, Point2D.Double> layout(Graph<C> graph, Map<C, Point2D.Double> ic,
             Set<C> fixed, Void parameters) {

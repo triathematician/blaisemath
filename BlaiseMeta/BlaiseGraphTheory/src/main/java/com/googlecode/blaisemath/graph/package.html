@@ -51,5 +51,29 @@
           a list of graphs which occur at discrete times, and <code>IntervalLongitudinalGraph</code>,
           where a single graph is specified, and vertices/edges each have their own time domains.
       </p>
+      <p>
+          Two kinds of layouts are supported: <i>static</i> and <i>iterative</i>. Static layout methods
+          are described by the <code>StaticGraphLayout</code> interface, and iterative layouts
+          by the <code>IterativeGraphLayout</code> interface. The static interface contains a single
+          <code>layout</code> method which returns computed positions of a graph's nodes (with optional
+          parameters). The iterative interface contains a <code>reset</code> method, an <code>iterate</code>
+          method, and a <code>getPoints</code> method.
+      </p>
+      <h1>Multi-threading</h1>
+      <p>
+          New threads are created by {@link com.googlecode.blaisemath.graph.layout.GraphLayoutManager}
+          and {@link com.googlecode.blaisemath.graph.view.LongitudinalGraphManager},
+          both for executing layout algorithms in background threads. In part to
+          support this, the following classes are designed to be thread-safe:
+      </p>
+      <ul>
+          <li>{@link com.googlecode.blaisemath.graph.modules.layout.SpringLayout}</li>
+          <li>{@link com.googlecode.blaisemath.graph.longitudinal.SimultaneousLayout}</li>
+          <li>{@link com.googlecode.blaisemath.graph.GAInstrument}</li>
+      </ul>
+      <p>
+          Any new implementation of {@link com.googlecode.blaisemath.graph.IterativeGraphLayout}
+          should also be thread-safe, given its usage by {@code GraphLayoutManager}.
+      </p>
   </body>
 </html>

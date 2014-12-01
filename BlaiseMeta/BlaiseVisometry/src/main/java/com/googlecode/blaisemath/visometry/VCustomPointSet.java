@@ -24,12 +24,14 @@ package com.googlecode.blaisemath.visometry;
  * #L%
  */
 
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graphics.core.DelegatingPointSetGraphic;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.util.coordinate.CoordinateChangeEvent;
 import com.googlecode.blaisemath.util.coordinate.CoordinateListener;
 import com.googlecode.blaisemath.util.coordinate.CoordinateManager;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +75,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
     public VCustomPointSet(CoordinateManager<S,C> mgr) {
         coordinateListener = new CoordinateListener<S,C>(){
             @Override
+            @InvokedFromThread("unknown")
             public void coordinatesChanged(CoordinateChangeEvent<S,C> evt) {
                 handleCoordinatesChanged(evt);
             }
@@ -82,30 +85,35 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
         window.getCoordinateManager().addCoordinateListener(coordinateListener);
     }
 
-    private void handleCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
-        if (converting) {
-            return;
-        }
-        if (evt.getSource() == coordManager) {
-            // local coords changed
-            setUnconverted(true);
-        } else if (evt.getSource() == window.getCoordinateManager()) {
-            CoordinateChangeEvent<S,Point2D> winEvt = (CoordinateChangeEvent<S,Point2D>) evt;
-            // window coords changed (from dragging)
-            if (evt.isAddEvent()) {
-                Visometry<C> vis = parent.getVisometry();
-                Map<S, ? extends Point2D> add = winEvt.getAdded();
-                Map<S,C> local = new HashMap<S,C>();
-                for (S s : add.keySet()) {
-                    local.put(s, vis.toLocal(add.get(s)));
+    @InvokedFromThread("unknown")
+    private void handleCoordinatesChanged(final CoordinateChangeEvent<S,C> evt) {
+        BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+            public void run() {
+                if (converting) {
+                    return;
                 }
-                coordManager.putAll(local);
+                if (evt.getSource() == coordManager) {
+                    // local coords changed
+                    setUnconverted(true);
+                } else if (evt.getSource() == window.getCoordinateManager()) {
+                    CoordinateChangeEvent<S,Point2D> winEvt = (CoordinateChangeEvent<S,Point2D>) evt;
+                    // window coords changed (from dragging)
+                    if (evt.isAddEvent()) {
+                        Visometry<C> vis = parent.getVisometry();
+                        Map<S, ? extends Point2D> add = winEvt.getAdded();
+                        Map<S,C> local = new HashMap<S,C>();
+                        for (S s : add.keySet()) {
+                            local.put(s, vis.toLocal(add.get(s)));
+                        }
+                        coordManager.putAll(local);
+                    }
+                    // possible for both add and remove, so this shouldn't be an else statement
+                    if (evt.isRemoveEvent()) {
+                        coordManager.forget(evt.getRemoved());
+                    }
+                }
             }
-            // possible for both add and remove, so this shouldn't be an else statement
-            if (evt.isRemoveEvent()) {
-                coordManager.forget(evt.getRemoved());
-            }
-        }
+        });
     }
 
     //

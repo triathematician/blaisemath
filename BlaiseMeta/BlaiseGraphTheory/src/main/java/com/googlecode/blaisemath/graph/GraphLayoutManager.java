@@ -3,7 +3,7 @@
  * Created Jan 29, 2011
  */
 
-package com.googlecode.blaisemath.graph.layout;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L
@@ -26,11 +26,9 @@ package com.googlecode.blaisemath.graph.layout;
  */
 
 import com.google.common.base.Function;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
-import com.googlecode.blaisemath.graph.GAInstrument;
-import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.IterativeGraphLayout;
-import com.googlecode.blaisemath.graph.StaticGraphLayout;
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.modules.layout.PositionalAddingLayout;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import com.googlecode.blaisemath.graph.modules.suppliers.GraphSuppliers;
@@ -50,7 +48,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -101,15 +98,10 @@ public final class GraphLayoutManager<N> {
     
     /** Graph */
     private Graph<N> graph;
-    /**
-     * Contains the algorithm for iterating graph layouts.
-     * @todo this state object will be updated from several different threads... need to keep it sync'd
-     */
-    @GuardedBy("")
-    private IterativeGraphLayout iLayout;
-    /** Maintains locations of nodes in the graph (in local coordinates) */
-    @GuardedBy("itself")
+    /** Maintains locations of nodes in the graph */
     private final CoordinateManager<N, Point2D.Double> coordManager = CoordinateManager.create(NODE_CACHE_SIZE);
+    /** Contains the algorithm for iterating graph layouts. */
+    private IterativeGraphLayout iLayout;
 
     /** Timer that performs iterative layout */
     private final ScheduledExecutorService layoutExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -128,6 +120,7 @@ public final class GraphLayoutManager<N> {
     /**
      * Constructs manager for the specified graph.
      * @param graph the graph
+     * @param layout the layout algorithm used by the manager
      */
     public GraphLayoutManager(Graph<N> graph, @Nullable IterativeGraphLayout layout) {
         this.iLayout = layout;
@@ -137,10 +130,12 @@ public final class GraphLayoutManager<N> {
             }
         };
         coordManager.addCoordinateListener(new CoordinateListener<N,Point2D.Double>(){
+            @InvokedFromThread("unknown")
             public void coordinatesChanged(CoordinateChangeEvent<N, Point2D.Double> evt) {
-                // TODO - from a different thread, so needs sync
-                if (iLayout != null) {
-                    iLayout.requestPositions(coordManager.getActiveLocationCopy(), true);
+                // get the current iterative layout, ensuring it doesn't change between null check and use
+                IterativeGraphLayout layout = iLayout;
+                if (layout != null) {
+                    layout.requestPositions(coordManager.getActiveLocationCopy(), true);
                 }
             }
         });
@@ -188,9 +183,28 @@ public final class GraphLayoutManager<N> {
         Graph old = this.graph;
         if (g == null) {
             setLayoutTaskActive(false);
-        } else if (this.graph != g) {
-            // TODO - sync and/or pause layout while the graph is being updated, so the layout algorithm stays in sync
+        } else if (old != g) {
+            boolean active = isLayoutTaskActive();
+            setLayoutTaskActive(false);
             this.graph = g;
+            initializeNodeLocations(old, g);
+            setLayoutTaskActive(active);
+            pcs.firePropertyChange(GRAPH_PROP, old, g);
+        }
+    }
+
+    /**
+     * When the graph is changes, call this method to set up initial positions
+     * for nodes in the graph. Will attempt to use cached nodes if possible.
+     * Otherwise, it may execute the "initial layout" algorithm or the "adding
+     * layout" algorithm.
+     * 
+     * @todo may take some time to execute if the graph is large, consider improving
+     *   this class's design by running the initial layout in a background thread;
+     *   also, locking on the CM may be problematic if the layout takes a long time
+     */
+    private void initializeNodeLocations(Graph<N> old, Graph<N> g) {
+        synchronized (coordManager) {
             Set<N> oldNodes = Sets.difference(coordManager.getActive(), g.nodes());
             coordManager.deactivate(oldNodes);
             // defer to existing locations if possible
@@ -221,7 +235,6 @@ public final class GraphLayoutManager<N> {
                         new Object[]{sz, g.nodeCount()});
             }
         }
-        pcs.firePropertyChange(GRAPH_PROP, old, g);
     }
 
     /**
@@ -243,7 +256,6 @@ public final class GraphLayoutManager<N> {
             IterativeGraphLayout old = iLayout;
             iLayout = layout;
             coolingParameter0 = iLayout.getCoolingParameter();
-            // TODO - sync
             iLayout.requestPositions(coordManager.getActiveLocationCopy(), true);
             pcs.firePropertyChange(LAYOUT_PROP, old, layout);
         }
@@ -290,13 +302,11 @@ public final class GraphLayoutManager<N> {
      * @param nodePositions new locations for objects
      */
     public void requestLocations(Map<N, Point2D.Double> nodePositions) {
-        if (nodePositions != null) {
-            if (isLayoutTaskActive()) {
-                // TODO - sync
-                iLayout.requestPositions(nodePositions, false);
-            } else {
-                coordManager.putAll(nodePositions);
-            }
+        checkNotNull(nodePositions);
+        if (isLayoutTaskActive()) {
+            iLayout.requestPositions(nodePositions, false);
+        } else {
+            coordManager.putAll(nodePositions);
         }
     }
 
@@ -304,6 +314,7 @@ public final class GraphLayoutManager<N> {
      * Update positions of current using specified layout algorithm. This method will
      * replace the coordinates of objects in the graph.
      * @param layout static layout algorithm
+     * @param ic initial conditionsn fo rstatic layout algorithm
      * @param fixed what nodes should be fixed in applying the layout
      * @param parameters layout parameters
      * @param <P> parameters type
@@ -314,15 +325,12 @@ public final class GraphLayoutManager<N> {
     }
 
     /**
-     * Iterates layout, if an iterative layout has been provided.
+     * Manually iterate layout, if an iterative layout has been provided.
      */
     public void iterateLayout() {
         if (iLayout != null && !isLayoutTaskActive()) {
-            int id = GAInstrument.start("GraphManager.iterateLayout");
-            // TODO - sync
             iLayout.iterate(graph);
-            coordManager.setCoordinateMap((Map<N,Point2D.Double>) iLayout.getPositions());
-            GAInstrument.end(id);
+            coordManager.setCoordinateMap(iLayout.getPositionsCopy());
         }
     }
 
@@ -342,7 +350,6 @@ public final class GraphLayoutManager<N> {
     private void startLayoutTask(int delay, final int iter) {
         if (iLayout != null) {
             stopLayoutTaskNow();
-            // TODO - sync
             iLayout.setCoolingParameter(coolingParameter0);
             Runnable r = new IterateLayoutRunnable(iter);
             layoutFuture = layoutExecutor.scheduleWithFixedDelay(r, 0, delay, TimeUnit.MILLISECONDS);
@@ -397,20 +404,19 @@ public final class GraphLayoutManager<N> {
         }
         public void run() {
             try {
-                // TODO - operates in a different thread, so needs sync
                 for (int i = 0; i < iter; i++) {
                     iLayout.iterate(graph);
                     if (Thread.interrupted()) {
                         throw new InterruptedException("Layout canceled");
                     }
                 }
+                coordManager.setCoordinateMap(iLayout.getPositionsCopy());
                 iterTot += iter;
                 int proxyIter = Math.max(0, iterTot-100);
                 iLayout.setCoolingParameter(coolingParameter0*coolingCurve.apply(proxyIter));
                 if (Thread.interrupted()) {
                     throw new InterruptedException("Layout canceled");
                 }
-                coordManager.setCoordinateMap((Map<N,Point2D.Double>) iLayout.getPositions());
             } catch (InterruptedException x) {
                 Logger.getLogger(IterateLayoutRunnable.class.getName()).log(Level.FINE,
                         "Background layout task interrupted", x);

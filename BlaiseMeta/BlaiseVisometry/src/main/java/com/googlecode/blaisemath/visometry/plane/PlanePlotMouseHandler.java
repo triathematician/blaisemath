@@ -31,11 +31,13 @@ package com.googlecode.blaisemath.visometry.plane;
 
 
 
+import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
-import com.googlecode.blaisemath.util.animation.AnimationStep;
 import com.googlecode.blaisemath.util.CanvasPainter;
+import com.googlecode.blaisemath.util.animation.AnimationStep;
+import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -316,11 +318,16 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
 
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
             @Override
-            public void run(int i, double pct) {
-                double zoomValue = 1.0 + (factor - 1.0) * pct;
-                vis.setDesiredRange(
-                        cx - zoomValue * xMultiplier, cy - zoomValue * yMultiplier,
-                        cx + zoomValue * xMultiplier, cy + zoomValue * yMultiplier);
+            @InvokedFromThread("AnimationStep")
+            public void run(int i, final double pct) {
+                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    public void run() {
+                        double zoomValue = 1.0 + (factor - 1.0) * pct;
+                        vis.setDesiredRange(
+                                cx - zoomValue * xMultiplier, cy - zoomValue * yMultiplier,
+                                cx + zoomValue * xMultiplier, cy + zoomValue * yMultiplier);
+                    }
+                });
             }
         });
     }
@@ -348,12 +355,17 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
         
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
             @Override
-            public void run(int i, double factor) {
-                vis.setDesiredRange(
-                        min.x + (newMin.x - min.x) * factor,
-                        min.y + (newMin.y - min.y) * factor,
-                        max.x + (newMax.x - max.x) * factor,
-                        max.y + (newMax.y - max.y) * factor);
+            @InvokedFromThread("AnimationStep")
+            public void run(int i, final double factor) {
+                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    public void run() {
+                        vis.setDesiredRange(
+                                min.x + (newMin.x - min.x) * factor,
+                                min.y + (newMin.y - min.y) * factor,
+                                max.x + (newMax.x - max.x) * factor,
+                                max.y + (newMax.y - max.y) * factor);
+                    }
+                });
             }
         });
     }
@@ -372,8 +384,12 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
         
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
             @Override
-            public void run(int i, double pct) {
-                vis.setAspectRatio(oldAspect + pct * (aspect - oldAspect));
+            public void run(int i, final double pct) {
+                BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    public void run() {
+                        vis.setAspectRatio(oldAspect + pct * (aspect - oldAspect));
+                    }
+                });
             }
         });
     }

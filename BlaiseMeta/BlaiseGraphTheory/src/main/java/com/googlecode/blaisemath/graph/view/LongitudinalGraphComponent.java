@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.graph.view;
  */
 
 import com.googlecode.blaisemath.graph.Graph;
-import com.googlecode.blaisemath.graph.layout.GraphLayoutManager;
+import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.longitudinal.LongitudinalGraph;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
 import java.awt.BorderLayout;
@@ -50,8 +50,7 @@ import org.jdesktop.layout.GroupLayout;
  *
  * @author Elisha Peterson
  */
-public final class LongitudinalGraphComponent extends JPanel
-        implements PropertyChangeListener {
+public final class LongitudinalGraphComponent extends JPanel {
 
     /** Time graph manager */
     private LongitudinalGraphManager manager;
@@ -59,14 +58,15 @@ public final class LongitudinalGraphComponent extends JPanel
     private final LongitudinalGraphSlider slider;
     /** Currently active graph component */
     private final GraphComponent plot;
-    /** Flag telling component whether to update its own graph upon receiving a property time change */
-    private boolean updateWithTime = true;
 
     /** Time label (overlays on plot) */
     private final JLabel timeLabel;
+    /** Replacement label for when view graph is exporting */
+    private final JLabel hideNote;
 
-
-    // <editor-fold defaultstate="collapsed" desc="Constructors & Initializers">
+    /** Handles manager changes */
+    private final PropertyChangeListener managerListener;
+    
 
     /** Constructs a longitudinal graph panel without an actual graph. */
     public LongitudinalGraphComponent() {
@@ -84,11 +84,26 @@ public final class LongitudinalGraphComponent extends JPanel
         plot = new GraphComponent();
         slider = new LongitudinalGraphSlider();
         timeLabel = new JLabel("Slice t=??");
+        hideNote = new JLabel("Exporting...");
         initComponents();
+
+        managerListener = new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("time")) {
+                    timeLabel.setText("Slice t="+evt.getNewValue());
+                } else if (evt.getPropertyName().equals("nodePositions")) {
+                    Graph gr = manager.getSlice();
+                    plot.getLayoutManager().setGraph(gr);
+                    plot.getLayoutManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
+                }
+            }
+        };
+        
         setManager(m, gm);
     }
 
     private void initComponents() {
+        //<editor-fold defaultstate="collapsed" desc="GUI initialization">
         timeLabel.setFont(timeLabel.getFont().deriveFont(Font.ITALIC, 10f));
         timeLabel.setForeground(Color.DARK_GRAY);
         timeLabel.setOpaque(false);
@@ -112,41 +127,67 @@ public final class LongitudinalGraphComponent extends JPanel
         add(slider, BorderLayout.SOUTH); // will later be replaced
         setPreferredSize(new Dimension(600, 600));
         validate();
+        // </editor-fold>
     }
-    // </editor-fold>
 
 
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
 
-    /** Sets the underlying graph */
+    /**
+     * Sets the underlying graph
+     */
     public void setTimeGraph(LongitudinalGraph g) {
         setManager(new LongitudinalGraphManager(g));
     }
 
-    /** @return plot on which graph is displayed */
-    public GraphComponent getGraphComponent() { return plot; }
+    /**
+     * @return plot on which graph is displayed
+     */
+    public GraphComponent getGraphComponent() {
+        return plot;
+    }
 
-    /** @return graph adapter */
-    public VisualGraph getGraphAdapter() { return plot.getAdapter(); }
+    /**
+     * @return graph adapter
+     */
+    public VisualGraph getGraphAdapter() {
+        return plot.getAdapter();
+    }
 
-    /** @return manager for the longitudinal graph */
-    public LongitudinalGraphManager getManager() { return manager; }
+    /**
+     * @return manager for the longitudinal graph
+     */
+    public LongitudinalGraphManager getManager() {
+        return manager;
+    }
 
-    /** @return manager for graph */
-    public GraphLayoutManager getGraphManager() { return plot.getLayoutManager(); }
+    /**
+     * @return manager for graph
+     */
+    public GraphLayoutManager getGraphManager() {
+        return plot.getLayoutManager();
+    }
 
-    /** Changes the manager for the longitudinal graph */
-    public void setManager(LongitudinalGraphManager m) { setManager(m, null); }
+    /**
+     * Changes the manager for the longitudinal graph
+     */
+    public void setManager(LongitudinalGraphManager m) {
+        setManager(m, null);
+    }
 
-    /** Changes the manager for the longitudinal graph */
+    /**
+     * Changes the manager for the longitudinal graph
+     */
     private void setManager(LongitudinalGraphManager m, GraphLayoutManager gm) {
         if (this.manager != m) {
-            if (this.manager != null)
-                this.manager.removePropertyChangeListener(this);
+            if (this.manager != null) {
+                this.manager.removePropertyChangeListener(managerListener);
+            }
             slider.setManager(m);
             this.manager = m;
-            if (m != null)
-                m.addPropertyChangeListener(this);
+            if (m != null) {
+                m.addPropertyChangeListener(managerListener);
+            }
             if (gm == null) {
                 Graph g = m == null ? null : m.getSlice();
                 plot.setLayoutManager(g == null ? null : new GraphLayoutManager(g, new SpringLayout()));
@@ -156,57 +197,27 @@ public final class LongitudinalGraphComponent extends JPanel
         }
     }
 
-    public boolean isUpdateWithTime() {
-        return updateWithTime;
-    }
-
-    public void setUpdateWithTime(boolean updateWithTime) {
-        this.updateWithTime = updateWithTime;
-    }
-
     // </editor-fold>
 
 
-    // <editor-fold defaultstate="collapsed" desc="Event Handling">
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() == manager) {
-            if (evt.getPropertyName().equals("timeData")) {
-                Object[] arr = (Object[]) evt.getNewValue();
-                Double time = (Double) arr[0];
-                Map<Object,Point2D.Double> pos = (Map<Object, Point2D.Double>) arr[1];
-                if (updateWithTime) {
-                    Graph gr = manager.getSlice();
-                    plot.getLayoutManager().setGraph(gr);
-                }
-                if (pos != null)
-                    plot.getLayoutManager().requestLocations(pos);
-                timeLabel.setText("Slice t="+time);
-            } else if (evt.getPropertyName().equals("nodePositions")) {
-                plot.getLayoutManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
-            }
-        }
-    }
-
-    // </editor-fold>
-
-
-// <editor-fold defaultstate="collapsed" desc="Show/Hide Label">
-    private static JLabel hideNote;
+    // <editor-fold defaultstate="collapsed" desc="Show/Hide Label">
 
     public void hidePlot() {
         remove(plot);
-        add(hideNote = new JLabel("Exporting..."));
+        add(hideNote);
         repaint();
     }
 
     public void showPlot() {
         remove(hideNote);
-        for (Component c : getComponents())
-            if (c == plot)
+        for (Component c : getComponents()) {
+            if (c == plot) {
                 return;
+            }
+        }
         add(plot, java.awt.BorderLayout.CENTER);
         repaint();
     }
-// </editor-fold>
+    // </editor-fold>
 
 }

@@ -62,11 +62,8 @@ public class GraphSuppliers {
         }
         
         public GraphSupplierSupport(boolean directed, int nodes) {
-            if (nodes < 0) {
-                throw new IllegalArgumentException("Graphs must have a non-negative number of nodes: " + nodes);
-            }
-            this.directed = directed;
-            this.nodes = nodes;
+            setDirected(directed);
+            setNodes(nodes);
         }        
 
         public boolean isDirected() {
@@ -82,6 +79,7 @@ public class GraphSuppliers {
         }
 
         public void setNodes(int nodes) {
+            checkArgument(nodes >= 0);
             this.nodes = nodes;
         }
     }

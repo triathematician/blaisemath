@@ -39,6 +39,10 @@ import java.util.Set;
  * @author petereb1
  */
 public class PositionalAddingLayout implements StaticGraphLayout<Double> {
+    
+    public Class<Double> getParametersType() {
+        return Double.class;
+    }
 
     public <C> Map<C, Point2D.Double> layout(Graph<C> g, Map<C, Point2D.Double> curLocations, Set<C> fixed, Double len) {
         Map<C, Point2D.Double> res = Maps.newHashMap();

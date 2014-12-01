@@ -25,9 +25,11 @@ package com.googlecode.blaisemath.graph;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.Graph;
 import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * <p>
@@ -37,12 +39,14 @@ import java.util.Set;
  * allow the user to reset the layout scheme and to iterate the layout scheme.
  * </p>
  * <p>
- * Implementations are intended to be accessed from a single thread.
+ * Implementations should be thread-safe, as the API methods will be called from
+ * both the layout thread and UI threads.
  * </p>
  *
  * @param <C> node type
  * @author Elisha Peterson
  */
+@ThreadSafe
 public interface IterativeGraphLayout<C> {
 
     /**
@@ -82,13 +86,14 @@ public interface IterativeGraphLayout<C> {
     void setLockedNodes(Set<C> pinned);
 
     /**
-     * Returns the current list of point locations.
+     * Returns copy of the current list of positions.
      * @return current list of positions
      */
-    Map<C,Point2D.Double> getPositions();
+    Map<C,Point2D.Double> getPositionsCopy();
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.
+     * Intended to be invokable from threads other than the one performing the layout.
      * @param positions map specifying new positions for certain nodes, which should take effect
      *   during the next call to iterate()
      * @param resetNodes if true, this should adjust the graph's set of nodes to include only those in the map
@@ -97,7 +102,8 @@ public interface IterativeGraphLayout<C> {
 
     /**
      * <p>
-     * Iterate the energy layout algorithm. The graph's nodes may not be exactly
+     * Iterate the energy layout algorithm. The data structure provided to this
+     * method should not be changed during iteration. However, the graph's nodes may not be exactly
      * the same as for previous calls to iterate (i.e. some may have been added or removed).
      * If nodes are present for the first time, the algorithm should add in support for
      * those nodes. If nodes have been removed since the last iteration, the algorithm
@@ -108,7 +114,7 @@ public interface IterativeGraphLayout<C> {
      * the positions of the requested nodes.
      * </p>
      *
-     * @param g the graph to layout
+     * @param g the graph to layout (should not change while layout is being performed)
      */
     void iterate(Graph<C> g);
 

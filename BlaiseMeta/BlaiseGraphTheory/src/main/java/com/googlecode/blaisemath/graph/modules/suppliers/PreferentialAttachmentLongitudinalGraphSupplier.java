@@ -96,7 +96,8 @@ public final class PreferentialAttachmentLongitudinalGraphSupplier extends Longi
      * Common method to return longitudinal version of the randomly generated
      * graph.
      */
-    private static LongitudinalGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, final int nVertices, Object edgesPerStep) {
+    private static LongitudinalGraph<Integer> generateLongitudinal(Graph<Integer> seedGraph, 
+            final int nVertices, Object edgesPerStep) {
         // prepare parameters for graph to be created
         int nSeed = seedGraph.nodeCount();
         Map<Integer, double[]> nodeTimes = new TreeMap<Integer, double[]>();
