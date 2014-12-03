@@ -24,10 +24,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-
-
-
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.AttributeSet;
@@ -54,8 +50,6 @@ import java.util.concurrent.TimeUnit;
  * changing the
  *
  * @author Elisha
- * 
- * @todo animations need to execute changes on the EDT
  */
 public final class PanAndZoomHandler extends MouseAdapter implements CanvasPainter<Graphics2D> {
 
