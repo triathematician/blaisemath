@@ -50,8 +50,6 @@ import javax.swing.event.SwingPropertyChangeSupport;
  * </p>
  * 
  * @author elisha
- * 
- * @todo review thread safety
  */
 public class LongitudinalGraphManager {
 
