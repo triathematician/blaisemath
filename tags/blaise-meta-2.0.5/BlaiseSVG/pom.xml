@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.googlecode.blaisemath</groupId>
+        <artifactId>blaise-meta</artifactId>
+        <version>2.0.5</version>
+    </parent>
+
+    <artifactId>blaise-svg</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1.2</version>
+    
+    <name>BlaiseSVG</name>
+    <description>Utilities for working with SVG, and for converting SVG to/from Java2D graphics.</description>
+
+    <build>
+        <plugins>
+            <!-- update header blocks in code with license info -->
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>appframework</artifactId>
+            <version>1.0.3</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>blaise-graphics</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+    </dependencies>
+</project>
