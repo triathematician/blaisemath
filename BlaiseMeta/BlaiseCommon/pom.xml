@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.googlecode.blaisemath</groupId>
         <artifactId>blaise-meta</artifactId>
-        <version>2.0.6</version>
+        <version>2.0.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>blaise-common</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.3</version>
+    <version>0.1.4-SNAPSHOT</version>
     
     <name>BlaiseCommon</name>
     <description>Common utility library shared across Blaise projects.</description>
