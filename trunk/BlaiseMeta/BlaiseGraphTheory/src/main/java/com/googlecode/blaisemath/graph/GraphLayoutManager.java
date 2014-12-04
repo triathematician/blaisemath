@@ -28,6 +28,9 @@ package com.googlecode.blaisemath.graph;
 import com.google.common.base.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service;
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graph.modules.layout.PositionalAddingLayout;
 import com.googlecode.blaisemath.graph.modules.layout.SpringLayout;
@@ -41,10 +44,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -103,10 +104,8 @@ public final class GraphLayoutManager<N> {
     /** Contains the algorithm for iterating graph layouts. */
     private IterativeGraphLayout iLayout;
 
-    /** Timer that performs iterative layout */
-    private final ScheduledExecutorService layoutExecutor = Executors.newSingleThreadScheduledExecutor();
     /** Represents the currently active layout task */
-    private ScheduledFuture layoutFuture;
+    private IterateLayoutService layoutService = null;
     
     /** Handles property change events */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -266,7 +265,7 @@ public final class GraphLayoutManager<N> {
      * @return true if an iterative layout is active
      */
     public boolean isLayoutTaskActive() {
-        return layoutFuture != null && !layoutFuture.isDone();
+        return layoutService != null && layoutService.isRunning();
     }
 
     /**
@@ -351,8 +350,8 @@ public final class GraphLayoutManager<N> {
         if (iLayout != null) {
             stopLayoutTaskNow();
             iLayout.setCoolingParameter(coolingParameter0);
-            Runnable r = new IterateLayoutRunnable(iter);
-            layoutFuture = layoutExecutor.scheduleWithFixedDelay(r, 0, delay, TimeUnit.MILLISECONDS);
+            layoutService = new IterateLayoutService(delay, iter);
+            layoutService.startAsync();
         }
     }
 
@@ -360,8 +359,14 @@ public final class GraphLayoutManager<N> {
      * Stops the layout timer
      */
     private void stopLayoutTaskNow() {
-        if (layoutFuture != null) {
-            layoutFuture.cancel(true);
+        if (layoutService != null) {
+            layoutService.stopAsync();
+            try {
+                layoutService.awaitTerminated(100, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException ex) {
+                Logger.getLogger(GraphLayoutManager.class.getName()).log(Level.WARNING,
+                        "Layout service was not terminated", ex);
+            }
         }
     }
 
@@ -394,15 +399,29 @@ public final class GraphLayoutManager<N> {
     
     //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
     
-    private class IterateLayoutRunnable implements Runnable {
+    private class IterateLayoutService extends AbstractScheduledService {
+        /** Delay between iterations */
+        private final int delayMillis;
         /** # of iterations per loop */
         private final int iter;
         /** Total # of iterations */
         private int iterTot = 0;
-        IterateLayoutRunnable(int iter) {
+        
+        IterateLayoutService(int delayMillis, int iter) {
+            this.delayMillis = delayMillis;
             this.iter = iter;
+            
+            addListener(new Listener() {
+                @Override
+                public void failed(Service.State from, Throwable failure) {
+                    Logger.getLogger(IterateLayoutService.class.getName()).log(Level.SEVERE,
+                        "Layout service failed", failure);
+                }
+            }, MoreExecutors.sameThreadExecutor());
         }
-        public void run() {
+        
+        @Override
+        protected void runOneIteration() throws Exception {
             try {
                 for (int i = 0; i < iter; i++) {
                     iLayout.iterate(graph);
@@ -418,11 +437,16 @@ public final class GraphLayoutManager<N> {
                     throw new InterruptedException("Layout canceled");
                 }
             } catch (InterruptedException x) {
-                Logger.getLogger(IterateLayoutRunnable.class.getName()).log(Level.FINE,
+                Logger.getLogger(IterateLayoutService.class.getName()).log(Level.FINE,
                         "Background layout task interrupted", x);
                 // restore interrupt after bypassing update
                 Thread.currentThread().interrupt();
             }
+        }
+
+        @Override
+        protected Scheduler scheduler() {
+            return Scheduler.newFixedDelaySchedule(0, delayMillis, TimeUnit.MILLISECONDS);
         }
     }
     
