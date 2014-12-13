@@ -54,11 +54,16 @@ import java.util.logging.Logger;
 
 
 /**
- * Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
- * and a {@link VisualGraph} for appearance. The layout manager supports executing
- * long-running layout algorithms in a background thread, and the visual graph
- * shares a {@link CoordinateManager} that is used for updating locations from
- * the layout manager.
+ * <p>
+ *   Provides a view of a graph, using a {@link GraphLayoutManager} for positions/layout
+ *   and a {@link VisualGraph} for appearance.
+ * </p>
+ * <p>
+ *   The layout manager supports executing
+ *   long-running layout algorithms in a background thread, and the visual graph
+ *   shares a {@link CoordinateManager} that is used for updating locations from
+ *   the layout manager. The coordinate manager is thread-safe.
+ * </p>
  *
  * @author elisha
  */

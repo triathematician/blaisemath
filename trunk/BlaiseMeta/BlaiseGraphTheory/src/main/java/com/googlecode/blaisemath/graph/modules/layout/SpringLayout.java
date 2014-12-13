@@ -150,52 +150,51 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
     //
     // PROPERTY PATTERNS
     //
-    
 
+    /**
+     * Get the layout parameters object.
+     * @return parameters
+     */
     public Parameters getParameters() { 
         return parameters; 
     }
-    
+
+    @Override
     public double getCoolingParameter() { 
         return parameters.dampingC;
     }
 
+    @Override
     public void setCoolingParameter(double val) {
         parameters.dampingC = val;
     }    
     
+    @Override
     public double getEnergyStatus() { 
         return energy; 
     }
     
+    @Override
     public int getIteration() { 
         return iteration;
     }
-    
-    //</editor-fold>
-    
 
-    // <editor-fold defaultstate="collapsed" desc="IterativeGraphLayout interface methods (excluding main iteration)">
-
-    /**
-     * Get copy of locked node list
-     * @return 
-     */
     public Set<C> getLockedNodes() {
         synchronized (pinnedNodes) {
             return pinnedNodes.getSelection();
         }
     }
     
-    /**
-     * Set locked nodes
-     * @param nodes 
-     */
     public void setLockedNodes(Set<C> nodes) {
         synchronized (pinnedNodes) {
             pinnedNodes.setSelection(nodes);
         }
     }
+    
+    //</editor-fold>
+    
+
+    // <editor-fold defaultstate="collapsed" desc="ThreadSafe Get/Set Positions">
 
     public Map<C,Point2D.Double> getPositionsCopy() {
         synchronized (this) {
@@ -610,7 +609,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
     // </editor-fold>
 
     
-    //<editor-fold defaultstate="collapsed" desc="Parameters INNER CLASS">
+    //<editor-fold defaultstate="collapsed" desc="INNER CLASSES">
     
     /** Parameters of the SpringLayout algorithm */
     public static class Parameters {

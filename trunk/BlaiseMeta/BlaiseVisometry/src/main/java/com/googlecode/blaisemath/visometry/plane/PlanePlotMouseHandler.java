@@ -24,19 +24,12 @@ package com.googlecode.blaisemath.visometry.plane;
  * limitations under the License.
  * #L%
  */
-
-
-
-
-
-
-
 import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.swing.AnimationStep;
 import com.googlecode.blaisemath.util.CanvasPainter;
-import com.googlecode.blaisemath.util.animation.AnimationStep;
 import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
@@ -48,7 +41,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -316,7 +308,7 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
         final double xMultiplier = vis.getVisibleRange().getWidth() / 2;
         final double yMultiplier = vis.getVisibleRange().getHeight() / 2;
 
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep() {
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int i, final double pct) {
@@ -353,7 +345,7 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
         final Point2D.Double min = vis.getMinPointVisible();
         final Point2D.Double max = vis.getMaxPointVisible();
         
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep() {
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int i, final double factor) {
@@ -382,7 +374,7 @@ public final class PlanePlotMouseHandler extends MouseAdapter implements CanvasP
         final double oldAspect = vis.getAspectRatio();
 
         
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep() {
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep() {
             @Override
             public void run(int i, final double pct) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){

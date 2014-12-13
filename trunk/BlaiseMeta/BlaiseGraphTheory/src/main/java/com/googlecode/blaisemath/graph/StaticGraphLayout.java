@@ -31,7 +31,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This interface provides methods necessary to layout a graph.
+ * <p>
+ *   This interface provides methods necessary to layout a graph.
+ * </p>
  *
  * @param <P> object describing layout parameters
  * 

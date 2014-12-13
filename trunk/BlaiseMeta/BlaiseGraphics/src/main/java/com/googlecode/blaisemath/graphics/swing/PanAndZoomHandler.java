@@ -29,7 +29,7 @@ import com.googlecode.blaisemath.annotation.InvokedFromThread;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.CanvasPainter;
-import com.googlecode.blaisemath.util.animation.AnimationStep;
+import com.googlecode.blaisemath.util.swing.AnimationStep;
 import com.googlecode.blaisemath.util.swing.BSwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
@@ -43,7 +43,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Mouse handler that allows pan and zoom of a graphics canvas. Works by
@@ -305,7 +304,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double wx = rect.getWidth();
         final double wy = rect.getHeight();
 
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
@@ -347,7 +346,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double nyMax = newMax.getY();
 
 
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, TimeUnit.MILLISECONDS, new AnimationStep(){
+        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
