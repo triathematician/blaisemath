@@ -33,10 +33,10 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * <p>
- * Provides methods for a layout scheme that has several iterations. The layout
- * class may have internal parameters that are used to accomplish the layout, and
- * an internal state which changes over the course of the layout. The methods here
- * allow the user to reset the layout scheme and to iterate the layout scheme.
+ *   Provides methods for a layout scheme that has several iterations. The layout
+ *   class may have internal parameters that are used to accomplish the layout, and
+ *   an internal state which changes over the course of the layout. The methods here
+ *   allow the user to reset the layout scheme and to iterate the layout scheme.
  * </p>
  * <p>
  * Implementations should be thread-safe, as the API methods will be called from
