@@ -42,6 +42,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ImmutableAttributeSet;
+import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.Points;
 import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
@@ -62,11 +63,13 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -78,14 +81,18 @@ public class BlaiseSketchActions {
 
     private static DataFlavor AS_DATA_FLAVOR;
     private static DataFlavor DIM_DATA_FLAVOR;
+    private static DataFlavor GRAPHIC_DATA_FLAVOR;
     static {
         try {
             AS_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
                     + ";class=com.googlecode.blaisemath.style.AttributeSet");
             DIM_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
                     + ";class=java.awt.Dimension");
+            GRAPHIC_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
+                    + ";class=com.googlecode.blaisemath.graphics.core.Graphic");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE,
+                    "Problem initializing data flavors.", ex);
         }
     }
     
@@ -104,9 +111,24 @@ public class BlaiseSketchActions {
 
     /** Get the coordinate of movable graphics */
     private static final Function<Graphic<Graphics2D>,Point2D> LOC_FUNCTION = new Function<Graphic<Graphics2D>,Point2D>() {
+        @Nonnull
         public Point2D apply(Graphic<Graphics2D> input) {
             checkArgument(input instanceof PrimitiveGraphicSupport);
             return getPrimitiveLocation((PrimitiveGraphicSupport) input);
+        }
+    };
+    
+    /** Compare x coordinates of graphics */
+    private static final Comparator<Graphic<Graphics2D>> LOC_X_COMPARATOR = new Comparator<Graphic<Graphics2D>>() {
+        public int compare(Graphic<Graphics2D> o1, Graphic<Graphics2D> o2) {
+            return (int) Math.signum(LOC_FUNCTION.apply(o1).getX() - LOC_FUNCTION.apply(o2).getX());
+        }
+    };
+    
+    /** Compare y coordinates of graphics */
+    private static final Comparator<Graphic<Graphics2D>> LOC_Y_COMPARATOR = new Comparator<Graphic<Graphics2D>>() {
+        public int compare(Graphic<Graphics2D> o1, Graphic<Graphics2D> o2) {
+            return (int) Math.signum(LOC_FUNCTION.apply(o1).getY() - LOC_FUNCTION.apply(o2).getY());
         }
     };
     
@@ -115,35 +137,32 @@ public class BlaiseSketchActions {
     
     //<editor-fold defaultstate="collapsed" desc="COPY/PASTE">
 
+    /** Copies the supplied graphic object to the system clipboard. */
     public static void copy(Graphic<Graphics2D> sel, JGraphicComponent activeCanvas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public static void paste(JGraphicComponent activeCanvas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public static void copyStyle(Graphic<Graphics2D> gfc) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        AttributeSetTransferable transf = new AttributeSetTransferable(gfc.getStyle());
+        // TODO - duplicate graphic
+        GraphicTransferable transf = new GraphicTransferable(sel);
         clipboard.setContents(transf, transf);
     }
-    
-    public static void pasteStyle(Iterable<Graphic<Graphics2D>> gfcs) {
+
+    /**
+     * Pastes a graphic from the system clipboard to the given canvas, at the given location.
+     * @param canvas the canvas to paste onto
+     * @param canvasLoc location for paste, in the graphic coordinate space
+     */
+    public static void paste(JGraphicComponent canvas, Point2D canvasLoc) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable tr = clipboard.getContents(null);
-        if (tr.isDataFlavorSupported(AS_DATA_FLAVOR)) {
+        if (tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR)) {
             try {
-                AttributeSet pasteStyle = (AttributeSet) tr.getTransferData(AS_DATA_FLAVOR);
-                for (Graphic<Graphics2D> gfc : gfcs) {
-                    AttributeSet as = gfc.getStyle();
-                    if (!(as instanceof ImmutableAttributeSet)) {
-                        for (String s : pasteStyle.getAttributes()) {
-                            as.put(s, pasteStyle.get(s));
-                        }
-                    }
-                    gfc.getParent().graphicChanged(gfc);
+                Graphic graphic = (Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR);
+                if (graphic instanceof PrimitiveGraphicSupport) {
+                    setPrimitiveLocation((PrimitiveGraphicSupport) graphic, canvasLoc);
+                } else {
+                    Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.WARNING,
+                            "Attempted to paste graphic at a specified location failed because the graphic was of type {0}", graphic.getClass());
                 }
+                canvas.addGraphic(graphic);
             } catch (UnsupportedFlavorException ex) {
                 Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -152,6 +171,50 @@ public class BlaiseSketchActions {
         }
     }
     
+    /** Copy style of provided graphic. */
+    public static void copyStyle(Graphic<Graphics2D> gfc) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        // TODO - duplicate style
+        AttributeSetTransferable transf = new AttributeSetTransferable(gfc.getStyle());
+        clipboard.setContents(transf, transf);
+    }
+    
+    /**
+     * Paste clipboard style onto given graphics. Works whether a graphic or a style
+     * is copied onto the clipboard.
+     */
+    public static void pasteStyle(Iterable<Graphic<Graphics2D>> gfcs) {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tr = clipboard.getContents(null);
+        AttributeSet pasteStyle = null;
+        try {
+            if (tr.isDataFlavorSupported(AS_DATA_FLAVOR)) {
+                pasteStyle = (AttributeSet) tr.getTransferData(AS_DATA_FLAVOR);
+            } else if (tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR)) {
+                pasteStyle = ((Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR)).getStyle();
+            }
+        } catch (UnsupportedFlavorException ex) {
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (pasteStyle != null) {
+            for (Graphic<Graphics2D> gfc : gfcs) {
+                AttributeSet as = gfc.getStyle();
+                if (!(as instanceof ImmutableAttributeSet)) {
+                    for (String s : pasteStyle.getAttributes()) {
+                        as.put(s, pasteStyle.get(s));
+                    }
+                }
+                gfc.getParent().graphicChanged(gfc);
+            }
+        }
+    }
+    
+    /**
+     * Copies the dimension of a graphic onto the clipboard.
+     * @param gfc 
+     */
     public static void copyDimension(Graphic<Graphics2D> gfc) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Rectangle2D bds = gfc.boundingBox();
@@ -159,26 +222,36 @@ public class BlaiseSketchActions {
         clipboard.setContents(transf, transf);
     }
     
+    /**
+     * Paste the dimension of a graphic onto all targets.
+     * @param gfcs 
+     */
     public static void pasteDimension(Iterable<Graphic<Graphics2D>> gfcs) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable tr = clipboard.getContents(null);
-        if (tr.isDataFlavorSupported(DIM_DATA_FLAVOR)) {
-            try {
-                Dimension pasteDim = (Dimension) tr.getTransferData(DIM_DATA_FLAVOR);
-                for (Graphic<Graphics2D> gfc : gfcs) {
-                    if (gfc instanceof PrimitiveGraphicSupport) {
-                        PrimitiveGraphicSupport pgs = (PrimitiveGraphicSupport) gfc;
-                        if (pgs.getPrimitive() instanceof RectangularShape) {
-                            RectangularShape rsh = (RectangularShape) pgs.getPrimitive();
-                            rsh.setFrame(rsh.getX(), rsh.getY(), pasteDim.getWidth(), pasteDim.getHeight());
-                            gfc.getParent().graphicChanged(gfc);
-                        }
+        Dimension pasteDim = null;
+        try {
+            if (tr.isDataFlavorSupported(DIM_DATA_FLAVOR)) {
+                pasteDim = (Dimension) tr.getTransferData(DIM_DATA_FLAVOR);
+            } else if (tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR)) {
+                Rectangle2D bds = ((Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR)).boundingBox();
+                pasteDim = new Dimension((int) bds.getWidth(), (int) bds.getHeight());
+            }
+        } catch (UnsupportedFlavorException ex) {
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (pasteDim != null) {
+            for (Graphic<Graphics2D> gfc : gfcs) {
+                if (gfc instanceof PrimitiveGraphicSupport) {
+                    PrimitiveGraphicSupport pgs = (PrimitiveGraphicSupport) gfc;
+                    if (pgs.getPrimitive() instanceof RectangularShape) {
+                        RectangularShape rsh = (RectangularShape) pgs.getPrimitive();
+                        rsh.setFrame(rsh.getX(), rsh.getY(), pasteDim.getWidth(), pasteDim.getHeight());
+                        gfc.getParent().graphicChanged(gfc);
                     }
                 }
-            } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -206,7 +279,9 @@ public class BlaiseSketchActions {
         Map<String,Class<?>> styleClassMap = Maps.newLinkedHashMap();
         for (String k : style.getAllAttributes()) {
             Object sty = style.get(k);
-            if (sty != null) {
+            if (sty instanceof Marker) {
+                styleClassMap.put(k, Marker.class);
+            } else if (sty != null) {
                 styleClassMap.put(k, sty.getClass());
             }
         }
@@ -267,6 +342,24 @@ public class BlaiseSketchActions {
             }
         }
         comp.getSelectionModel().setSelection(Collections.EMPTY_SET);
+    }
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="LOCKING">
+    
+    public static void setLockPosition(Set<Graphic<Graphics2D>> gfcs, JGraphicComponent comp, boolean lock) {
+        for (Graphic<Graphics2D> g : gfcs) {
+            setLockPosition(g, comp, lock);
+        }
+    }
+    
+    public static void setLockPosition(Graphic<Graphics2D> toLock, JGraphicComponent comp, boolean lock) {
+        if (toLock instanceof PrimitiveGraphicSupport) {
+            ((PrimitiveGraphicSupport) toLock).setDragEnabled(!lock);
+        } else {
+            logUnsupported("Position locking", toLock);
+        }
     }
     
     //</editor-fold>
@@ -384,6 +477,7 @@ public class BlaiseSketchActions {
         parent.replaceGraphics(Lists.newArrayList(parent.getGraphics()), gfcs);
     }
     
+    @Nonnull
     private static Point2D getPrimitiveLocation(PrimitiveGraphicSupport<?,Graphics2D> gr) {
         Object prim = gr.getPrimitive();
         if (prim instanceof Point2D) {
@@ -403,11 +497,14 @@ public class BlaiseSketchActions {
         Object prim = gr.getPrimitive();
         if (prim instanceof Point2D) {
             ((Point2D)prim).setLocation(loc);
+            // TODO - fire event recognizing change
         } else if (prim instanceof CoordinateBean) {
             ((CoordinateBean<Point2D>)prim).setPoint(loc);
+            // TODO - fire event recognizing change
         } else if (prim instanceof RectangularShape) {
             RectangularShape rsh = (RectangularShape) prim;
             rsh.setFrame(loc.getX(), loc.getY(), rsh.getWidth(), rsh.getHeight());
+            // TODO - fire event recognizing change
         } else if (prim instanceof Shape) {
             Point2D loc0 = getPrimitiveLocation(gr);
             AffineTransform at = new AffineTransform();
@@ -416,7 +513,6 @@ public class BlaiseSketchActions {
         } else {
             throw new IllegalStateException();
         }
-        // TODO - fire event recognizing change
     }
     
     public static void alignHorizontal(Set<Graphic<Graphics2D>> selection) {
@@ -448,43 +544,39 @@ public class BlaiseSketchActions {
     }
 
     public static void distributeHorizontal(Set<Graphic<Graphics2D>> selection) {
-        Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
+        List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
             Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
                     "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
-        ImmutableMap<Graphic<Graphics2D>,Point2D> locs = Maps.toMap(sub, LOC_FUNCTION);
-        Rectangle2D.Double bds = Points.boundingBox(locs.values(), 0);
-        double minx = bds.getMinX();
-        double maxx = bds.getMaxX();
+        Collections.sort(sub, LOC_X_COMPARATOR);
+        double minx = LOC_FUNCTION.apply(sub.get(0)).getX();
+        double maxx = LOC_FUNCTION.apply(sub.get(sub.size()-1)).getX();
         double dx = (maxx-minx)/(count-1);
         double gx = minx;
-        // TODO - sort by x first so they stay in same order
         for (Graphic<Graphics2D> gr : sub) {
-            setPrimitiveLocation((PrimitiveGraphicSupport<?, Graphics2D>) gr, new Point2D.Double(gx, locs.get(gr).getY()));
+            setPrimitiveLocation((PrimitiveGraphicSupport<?, Graphics2D>) gr, new Point2D.Double(gx, LOC_FUNCTION.apply(gr).getY()));
             gx += dx;
         }
     }
 
     public static void distributeVertical(Set<Graphic<Graphics2D>> selection) {
-        Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
+        List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
             Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
                     "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
-        ImmutableMap<Graphic<Graphics2D>,Point2D> locs = Maps.toMap(sub, LOC_FUNCTION);
-        Rectangle2D.Double bds = Points.boundingBox(locs.values(), 0);
-        double miny = bds.getMinY();
-        double maxy = bds.getMaxY();
+        Collections.sort(sub, LOC_Y_COMPARATOR);
+        double miny = LOC_FUNCTION.apply(sub.get(0)).getY();
+        double maxy = LOC_FUNCTION.apply(sub.get(sub.size()-1)).getY();
         double dy = (maxy-miny)/(count-1);
         double gy = miny;
-        // TODO - sort by y first so they stay in same order
         for (Graphic<Graphics2D> gr : sub) {
-            setPrimitiveLocation((PrimitiveGraphicSupport<?, Graphics2D>) gr, new Point2D.Double(locs.get(gr).getX(), gy));
+            setPrimitiveLocation((PrimitiveGraphicSupport<?, Graphics2D>) gr, new Point2D.Double(LOC_FUNCTION.apply(gr).getX(), gy));
             gy += dy;
         }
     }
@@ -518,17 +610,28 @@ public class BlaiseSketchActions {
     }
         
     private static class AttributeSetTransferable extends TypedTransferable<AttributeSet> {
-        public AttributeSetTransferable(AttributeSet object) {
+        private AttributeSetTransferable(AttributeSet object) {
             super(object, AS_DATA_FLAVOR);
         }
     }
         
     private static class DimensionTransferable extends TypedTransferable<Dimension> {
-        public DimensionTransferable(Dimension object) {
+        private DimensionTransferable(Dimension object) {
             super(object, DIM_DATA_FLAVOR);
         }
     }
     
+    private static class GraphicTransferable extends TypedTransferable<Graphic> {
+        private GraphicTransferable(Graphic object) {
+            super(object, GRAPHIC_DATA_FLAVOR);
+        }
+    }
+    
     //</editor-fold>
+    
+    private static void logUnsupported(String op, Graphic gfc) {
+        Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.WARNING,
+                "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
+    }
     
 }

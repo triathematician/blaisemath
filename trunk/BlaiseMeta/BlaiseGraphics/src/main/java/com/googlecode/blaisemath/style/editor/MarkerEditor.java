@@ -115,7 +115,7 @@ public class MarkerEditor extends MPanelEditorSupport {
     }
     
     private static class MarkerIcon implements Icon {
-        private final AttributeSet style = Styles.fillStroke(Color.white, Color.black);
+        private final AttributeSet style = Styles.fillStroke(Color.white, Color.black, 1f);
         private final int size;
         private final Marker marker;
 
