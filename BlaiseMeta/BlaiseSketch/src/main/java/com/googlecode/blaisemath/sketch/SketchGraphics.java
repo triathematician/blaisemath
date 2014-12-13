@@ -31,10 +31,17 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.MenuConfig;
+import com.googlecode.blaisemath.util.OrientedPoint2D;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -77,7 +84,7 @@ public class SketchGraphics {
             ActionMap am = BlaiseSketchFrameView.getActionMap();
             List<String> list = (List<String>) MenuConfig.readConfig(BlaiseSketchApp.class).get(GRAPHIC_CM_KEY);
             gfc.addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
-                    gfc+"", am, list.toArray(new String[0])));
+                    friendlyName(gfc), am, list.toArray(new String[0])));
         } catch (IOException x) {
             Logger.getLogger(SketchGraphics.class.getName()).log(Level.SEVERE,
                     "Invalid context menu config", x);
@@ -89,6 +96,33 @@ public class SketchGraphics {
             gc.setBoundingBoxRenderer(ShapeRenderer.getInstance());
             gc.setBoundingBoxVisible(true);
             gc.setSelectionEnabled(true);
+        }
+    }
+    
+    public static String friendlyName(Graphic gfc) {
+        if (gfc instanceof PrimitiveGraphicSupport) {
+            Object primitive = ((PrimitiveGraphicSupport)gfc).getPrimitive();
+            if (primitive instanceof Rectangle2D.Double) {
+                return "Rectangle";
+            } else if (primitive instanceof Ellipse2D.Double) {
+                return "Ellipse";
+            } else if (primitive instanceof GeneralPath) {
+                return "Path";
+            } else if (primitive instanceof OrientedPoint2D) {
+                return "Point";
+            } else if (primitive instanceof Line2D.Double) {
+                return "Line";
+            } else if (primitive instanceof AnchoredText) {
+                return "Text";
+            } else if (primitive instanceof AnchoredImage) {
+                return "Image";
+            } else {
+                return primitive.getClass().getName();
+            }
+        } else if (gfc instanceof GraphicComposite) {
+            return "Group";
+        } else {
+            return gfc.toString();
         }
     }
     

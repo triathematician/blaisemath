@@ -29,6 +29,9 @@ Menubar:
         - 
         - groupSelected
         - ungroupSelected
+        - 
+        - lockSelected
+        - unlockSelected
     Arrange:
         - moveForward
         - moveBackward
@@ -87,10 +90,16 @@ Graphic:
     - pasteStyle
     - pasteDimension
     - 
+    - lockGraphic
+    - unlockGraphic
+    - 
     - delete
 Selection:
     - groupSelected
     - ungroupSelected
+    -
+    - lockSelected
+    - unlockSelected
     -
     - pasteSelectedStyle
     - pasteSelectedDimension

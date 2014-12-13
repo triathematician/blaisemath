@@ -50,6 +50,8 @@ import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
 import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
+import com.googlecode.blaisemath.style.Marker;
+import com.googlecode.blaisemath.style.editor.MarkerEditor;
 import com.googlecode.blaisemath.svg.SVGElement;
 import com.googlecode.blaisemath.svg.SVGRoot;
 import com.googlecode.blaisemath.util.MPanel;
@@ -57,11 +59,14 @@ import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.RollupPanel;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditorManager;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -185,6 +190,7 @@ public class BlaiseSketchFrameView extends FrameView {
         setStatusBar(statusBar);
         
         EditorRegistration.registerEditors();
+        PropertyEditorManager.registerEditor(Marker.class, MarkerEditor.class);
     }
     
     public static ActionMap getActionMap() {
@@ -330,7 +336,10 @@ public class BlaiseSketchFrameView extends FrameView {
     
     @Action
     public void pasteGraphic() {
-        BlaiseSketchActions.paste(activeCanvas);
+        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+        Point compLoc = activeCanvas.getLocationOnScreen();
+        Point2D canvasLoc = activeCanvas.toGraphicCoordinate(new Point(mouseLoc.x-compLoc.x, mouseLoc.y-compLoc.y));
+        BlaiseSketchActions.paste(activeCanvas, canvasLoc);
     }
     
     @Action(enabledProperty=ONE_SELECTED_PROP)
@@ -385,7 +394,6 @@ public class BlaiseSketchFrameView extends FrameView {
         BlaiseSketchActions.addAttribute(sel, activeCanvas);
     }
     
-    
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void deleteSelected() {
         BlaiseSketchActions.deleteSelected(activeCanvas);
@@ -399,6 +407,16 @@ public class BlaiseSketchFrameView extends FrameView {
     @Action(enabledProperty=GROUP_SELECTED_PROP)
     public void ungroupSelected() {
         BlaiseSketchActions.ungroupSelected(activeCanvas);
+    }
+    
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
+    public void lockSelected() {
+        BlaiseSketchActions.setLockPosition(activeCanvas.getSelectionModel().getSelection(), activeCanvas, true);
+    }
+    
+    @Action(disabledProperty=SELECTION_EMPTY_PROP)
+    public void unlockSelected() {
+        BlaiseSketchActions.setLockPosition(activeCanvas.getSelectionModel().getSelection(), activeCanvas, false);
     }
     
     //</editor-fold>
@@ -532,6 +550,16 @@ public class BlaiseSketchFrameView extends FrameView {
     @Action
     public void editGraphicStyle(ActionEvent e) {
         BlaiseSketchActions.editGraphicStyle((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+    }
+    
+    @Action
+    public void lockGraphic(ActionEvent e) {
+        BlaiseSketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), activeCanvas, true);
+    }
+    
+    @Action
+    public void unlockGraphic(ActionEvent e) {
+        BlaiseSketchActions.setLockPosition((Graphic<Graphics2D>) e.getSource(), activeCanvas, false);
     }
     
     @Action
