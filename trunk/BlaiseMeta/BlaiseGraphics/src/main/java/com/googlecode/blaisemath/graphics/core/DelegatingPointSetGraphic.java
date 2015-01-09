@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graphics.core;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2009 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,9 +260,11 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
         if (this.renderer != renderer) {
             Object old = this.renderer;
             this.renderer = renderer;
+            updatingPoint = true;
             for (DelegatingPrimitiveGraphic<S,Point2D,G> dpg : points.values()) {
                 dpg.setRenderer(renderer);
             }
+            updatingPoint = false;
             fireGraphicChanged();
             pcs.firePropertyChange(RENDERER_PROP, old, renderer);
         }
