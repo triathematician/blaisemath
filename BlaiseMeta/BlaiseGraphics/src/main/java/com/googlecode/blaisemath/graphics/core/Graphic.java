@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.graphics.core;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2009 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,7 +135,6 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     @Nullable
     public void setParent(@Nullable GraphicComposite p) {
         this.parent = p;
-        fireGraphicChanged();
     }
 
     /** Notify interested listeners of a change in the plottable. */
