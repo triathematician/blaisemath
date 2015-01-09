@@ -98,7 +98,7 @@ public class MarkerEditor extends MPanelEditorSupport {
         combo.setSelectedItem(getNewValue());
     }
     
-    private static class MarkerCellRenderer extends DefaultListCellRenderer {
+    public static class MarkerCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Class<? extends Marker> m = (Class<? extends Marker>) value;
