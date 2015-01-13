@@ -255,7 +255,11 @@ public class AttributeSet implements Cloneable {
     
     @Nullable
     private <C> C getTyped(String key, Class<C> cls, @Nullable C def) {
-        return cls.cast(contains(key) ? (C) get(key) : def);
+        try {
+            return cls.cast(contains(key) ? (C) get(key) : def);
+        } catch (ClassCastException x) {
+            throw new ClassCastException("Cast from "+get(key)+" to "+cls+" failed.");
+        }
     }
 
     public String getString(String key) {

@@ -32,6 +32,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveArrayGraphicSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.AttributeSet;
+import com.googlecode.blaisemath.style.AttributeSets;
 import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.svg.SVGCircle;
@@ -136,7 +137,8 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
                 Map<QName, Object> attr = sh.getOtherAttributes();
                 if (attr != null) {
                     for (Entry<QName, Object> en : attr.entrySet()) {
-                        prim.getStyle().put(en.getKey().toString(), en.getValue());
+                        Object val = AttributeSets.valueFromString((String) en.getValue());
+                        prim.getStyle().put(en.getKey().toString(), val);
                     }
                 }
                 if (sh.getId() != null) {

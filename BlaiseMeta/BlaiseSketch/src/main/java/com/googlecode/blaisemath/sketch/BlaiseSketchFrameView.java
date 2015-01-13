@@ -38,6 +38,7 @@ import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
 import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.SketchGesture;
+import com.googlecode.blaisemath.gesture.swing.BoundingBoxGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateLineGesture;
@@ -46,6 +47,7 @@ import com.googlecode.blaisemath.gesture.swing.GestureOrchestrator;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.GraphicUtils;
+import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
@@ -208,10 +210,12 @@ public class BlaiseSketchFrameView extends FrameView {
                 PropertySheet ps = PropertySheet.forBean(new ProxyGraphicEditor((Graphic) gfc));
                 selectionPanel.setTitle(gfc+"");
                 selectionPanel.setPrimaryComponent(ps);
+                gestureUI.setActiveGesture(new BoundingBoxGesture(gestureUI.getGestureOrchestrator(), (PrimitiveGraphicSupport) gfc));
             } else if (gfc instanceof Set) {
                 Set gfx = (Set) gfc;
                 selectionPanel.setTitle(gfx.size()+" graphics selected.");
                 selectionPanel.setPrimaryComponent(new JLabel("No options."));
+                toolSelect();
             }
         }
     }

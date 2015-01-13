@@ -88,6 +88,8 @@ public final class SVGPath extends SVGElement {
             GeneralPath gp = new GeneralPath();
             // ensure spaces follow every letter
             svg = svg.replaceAll("[A-Za-z]", " $0 ").trim();
+            // ensure spaces precede every negative sign
+            svg = svg.replaceAll("[\\-]", " -");
             String[] spl = svg.split("[\\s,]+");
             float[] curveRes = null;
             float[] quadCurveRes = null;
