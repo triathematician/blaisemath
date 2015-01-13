@@ -8,7 +8,6 @@ import com.googlecode.blaisemath.sketch.SketchGraphics;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.gesture.DefaultSketchGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
-import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.TransformedCanvasPainter;
 import java.awt.Component;
@@ -43,7 +42,7 @@ import javax.annotation.Nullable;
  */
 public abstract class JGraphicCreatorGesture extends DefaultSketchGesture<GestureOrchestrator> {
     
-    protected JGraphicComponent view;
+    private final JGraphicComponent view;
     
     public JGraphicCreatorGesture(GestureOrchestrator orchestrator, String name, String description) {
         super(orchestrator, name, description);

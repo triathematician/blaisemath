@@ -38,9 +38,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Convert an {@link AttributeSet} to/from a string. The string is intended to be
- * compatible with html/css, but some features of the {@code AttributeSet} cannot
- * be encoded this way, so the operation is not invertible.
+ * <p>
+ *   Utility library for {@link AttributeSet}.
+ * </p>
+ * <p>
+ *   Provides a way to convert {@link AttributeSet} to/from a string. The string is intended to be
+ *   compatible with html/css, but some features of the {@code AttributeSet} cannot
+ *   be encoded this way, so the operation is not invertible. Conversion <i>to</i> a
+ *   string uses the following rules:
+ * </p>
+ * <ul>
+ *   <li>The attribute name is not used for conversion.</li>
+ *   <li>Only values of type Number, String, Color, Marker, and Anchor are supported.</li>
+ *   <li>Number, String, and Anchor values are converted in the obvious way.</li>
+ *   <li>Colors are converted to #RRGGBB or #AARRGGBB notation, using {@link Colors#stringConverter()}.</li>
+ *   <li>Marker values are persisted using their class name.</li>
+ *   <li>Null values are converted to the string "none".</li>
+ * </ul>
+ * <p>
+ *   Conversion <i>from</i> a string uses the following rules:
+ * </p>
+ * <ul>
+ *   <li>The attribute name is not used for conversion.</li>
+ *   <li>If the value matches #RRGGBB or #AARRGGBB it is converted to a color.</li>
+ *   <li>A string value "none" is converted to a null value.</li>
+ *   <li>If a value can be parsed as an integer or double, it is converted to that type.</li>
+ *   <li>Otherwise, values are left as strings.</li>
+ * </ul>
+ * <p>
+ *   Note that values of type Marker and Anchor are deserialized as strings rather
+ *   than their previous type. Blaise supports having string values for these attributes
+ *   wherever they are used.
+ * </p>
  * 
  * @author Elisha
  */
@@ -64,9 +93,27 @@ public final class AttributeSets {
     }
     
     
-    /** Return object that can be used to convert an {@link AttributeSet} to/from a string. */
+    /**
+     * Return object that can be used to convert an {@link AttributeSet} to/from a string.
+     * The resulting style uses ";" to separate entries, and ":" to separate a key and value.
+     * @return converter instance
+     */
     public static Converter<AttributeSet,String> stringConverter() {
         return CONVERTER_INST;
+    }
+    
+    /**
+     * Return object that can be used to convert string values to/from Java object values.
+     * Supports numeric and color types.
+     * @return converter instance
+     */
+    public static Converter<Object,String> valueConverter() {
+        return VALUE_CONVERTER_INST;
+    }
+    
+    public static Object valueFromString(String x) {
+        Object val = VALUE_CONVERTER_INST.reverse().convert(x);
+        return NULL_STRING.equals(val) ? null : val;
     }
     
     /** Converts {@link AttributeSet} to/from a string. */
