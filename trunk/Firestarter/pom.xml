@@ -8,7 +8,8 @@
     
     <name>Firestarter</name>
     <description>
-        Provides a property sheet and associated editors for handling general Java bean objects.
+        Provides editors for various Java bean object types, and a generic, customizable
+        PropertySheet.
     </description>
     <url>http://blaisemath.googlecode.com</url>
     <inceptionYear>2009</inceptionYear>
