@@ -3,7 +3,7 @@
     
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-parser</artifactId>
-    <version>0.6.1</version>
+    <version>0.6.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseParser</name>
@@ -30,9 +30,9 @@
     </developers>
     
     <scm>
-        <url>https://blaisemath.googlecode.com/svn/tags/blaise-parser-0.6.1</url>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-parser-0.6.1</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-parser-0.6.1</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseParser</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseParser</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseParser</developerConnection>
     </scm>
     <issueManagement>
         <system>Google code</system>
