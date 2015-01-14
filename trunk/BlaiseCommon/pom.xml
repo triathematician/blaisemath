@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-common</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseCommon</name>
@@ -30,9 +30,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-common-0.1.5</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-common-0.1.5</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/tags/blaise-common-0.1.5</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
