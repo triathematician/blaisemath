@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-math</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseMath</name>
@@ -29,9 +29,9 @@
     </developers>
     
     <scm>
-        <url>https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</url>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</developerConnection>
     </scm>
     
     <issueManagement>
