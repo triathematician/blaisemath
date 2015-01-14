@@ -1,0 +1,48 @@
+<!--
+  #%L
+  BlaiseGraphics
+  --
+  Copyright (C) 2014 - 2015 Elisha Peterson
+  --
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BlaiseCommon</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <p>
+            General purpose utility classes used throughout the BlaiseGraphics library.
+        </p>
+        <h1>Threads and Concurrency</h1>
+        <p>
+            Most classes in <i>BlaiseCommon</i> are not designed for multi-threading.
+            Exceptions are:
+        </p>
+        <ul>
+            <li>
+            {@link com.googlecode.blaisemath.util.coordinate.CoordinateManager},
+            a thread-safe object for managing a collection of object locations.
+            </li>
+            <li>
+            {@link com.googlecode.blaisemath.util.animation.AnimationStep},
+            which launches a background thread for animation effects. The class
+            contains a static {@code ScheduledExecutorService}, and the static method
+            {@code runNTimes()} can be used to run animations using that service.
+            </li>
+        </ul>
+    </body>
+</html>
