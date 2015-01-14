@@ -49,7 +49,6 @@ public interface ContextMenuInitializer<S> {
      * @param point mouse location
      * @param focus object of focus
      * @param selection current selection (null's okay)
-     * @param <E> type of object in selection set
      */
     void initContextMenu(JPopupMenu popup, S src, Point2D point, @Nullable Object focus, @Nullable Set selection);
 

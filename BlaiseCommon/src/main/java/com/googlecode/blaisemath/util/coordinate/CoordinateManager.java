@@ -97,7 +97,7 @@ public class CoordinateManager<S, C> {
      * Create and return new instance of coordinate manager.
      * @param <S>
      * @param <C>
-     * @param maxCacheSize maximum # of active & inactive points to include
+     * @param maxCacheSize maximum # of active and inactive points to include
      * @return 
      */
     public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {

@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * An image anchored at a given location.
  * @author petereb1
  * 
- * @todo - how to handle conflicting width/height of image vs width/height here?
+ * TODO - how to handle conflicting width/height of image vs width/height here?
  */
 public class AnchoredImage extends Point2DBean {
     
