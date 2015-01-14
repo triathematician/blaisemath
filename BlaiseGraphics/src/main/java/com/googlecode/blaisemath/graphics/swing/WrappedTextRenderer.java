@@ -70,12 +70,21 @@ public class WrappedTextRenderer extends TextRenderer {
     
     //<editor-fold defaultstate="collapsed" desc="BUILDER PATTERNS">
 
-    /** Sets clip & returns pointer to object */
+    /** 
+     * Sets clip and returns pointer to object
+     * @param clip the clip to use
+     * @return this
+     */
     public WrappedTextRenderer clipPath(RectangularShape clip) {
         setTextBounds(clip);
         return this; 
     }
 
+    /** 
+     * Sets insets and returns pointer to object
+     * @param insets the insets to use
+     * @return this
+     */
     public WrappedTextRenderer insets(Insets insets) {
         this.insets = insets;
         return this;

@@ -28,6 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ImmutableAttributeSet;
+import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.util.swing.ContextMenuInitializer;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -56,16 +57,15 @@ import javax.swing.event.EventListenerList;
  * <li>A <em>parent</em> (via get and set methods), which is a
  * {@link GraphicComposite} and provides access to default styles of various
  * types.</li>
- * <li>Visibility settings (via get and set methods). See {@link VisibilityHint}
+ * <li>Visibility settings (via get and set methods). See {@link StyleHints}
  * for the parameters.</li>
  * <li>Three methods based on a point on the canvas:
  * <ul>
- * <li> {@link Graphic#contains(java.awt.Point)}, testing whether the entry
+ * <li> {@link #boundingBox()}, providing a box that encloses the graphic</li>
+ * <li> {@link #contains(java.awt.geom.Point2D)}, testing whether the entry
  * contains a point</li>
- * <li> {@link Graphic#getTooltip(java.awt.Point)}, returning the tooltip for a
+ * <li> {@link #getTooltip(java.awt.geom.Point2D)}, returning the tooltip for a
  * point (or null)</li>
- * <li> {@link Graphic#getMouseListener(java.awt.Point)}, returning an object
- * that can handle mouse actions</li>
  * </ul>
  * </li>
  * </ul>
@@ -232,7 +232,7 @@ public abstract class Graphic<G> implements ContextMenuInitializer<Graphic<G>> {
     public abstract Rectangle2D boundingBox();
     
     /**
-     * Method used to determine whether the graphic receives {@link MouseEvent}s
+     * Method used to determine whether the graphic receives mouse events
      * and will be asked to provide a tooltip at the given point. The graphic's
      * {@link MouseListener}s and {@link MouseMotionListener}s will have the
      * opportunity to receive events if the graphic is the topmost element

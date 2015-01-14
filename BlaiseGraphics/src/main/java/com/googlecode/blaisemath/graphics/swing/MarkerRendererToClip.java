@@ -63,7 +63,7 @@ public class MarkerRendererToClip extends MarkerRenderer {
 
     /** 
      * Sets extension rule and returns pointer to this object.
-     * @param extendBoth
+     * @param extendBoth whether to extend line in both directions
      * @return this
      */
     public MarkerRendererToClip extendBothDirections(boolean extendBoth) {
@@ -128,7 +128,7 @@ public class MarkerRendererToClip extends MarkerRenderer {
      * @param p1p first point
      * @param p2p second point
      * @param bounds the window boundaries
-     * @return 
+     * @return the point on the boundary
      */
     public static Point2D.Double boundaryHit(Point2D p1p, Point2D p2p, RectangularShape bounds) {
         Point2D.Double p1 = new Point2D.Double(p1p.getX(), p1p.getY());

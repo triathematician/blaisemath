@@ -99,8 +99,8 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
     
     /**
      * Construct with no points
-     * @param renderer
-     * @param labelRenderer
+     * @param renderer draws points
+     * @param labelRenderer draws labels
      */
     public DelegatingPointSetGraphic(@Nullable Renderer<Point2D, G> renderer,
             @Nullable Renderer<AnchoredText, G> labelRenderer) {
@@ -111,7 +111,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Construct with source objects and locations as a map
      * @param crdManager manages point locations
      * @param renderer used for drawing the points
-     * @param labelRenderer
+     * @param labelRenderer draws labels
      */
     public DelegatingPointSetGraphic(CoordinateManager<S, Point2D> crdManager, 
             @Nullable Renderer<Point2D, G> renderer,

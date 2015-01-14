@@ -25,10 +25,6 @@ package com.googlecode.blaisemath.graphics.core;
  * #L%
  */
 
-
-
-
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -57,7 +53,7 @@ import javax.swing.JPopupMenu;
  * 
  * @param <S> source object type
  * @param <E> edge type
- * @param <G>
+ * @param <G> type of graphics canvas to render to
  * 
  * @author elisha
  */
@@ -87,7 +83,7 @@ public class DelegatingEdgeSetGraphic<S,E extends Edge<S>,G> extends GraphicComp
     /** 
      * Initialize with given coordinate manager.
      * @param mgr manages source object loc
-     * @param edgeRenderer
+     * @param edgeRenderer edge renderer
      */
     public DelegatingEdgeSetGraphic(CoordinateManager<S,Point2D> mgr,
             Renderer<Shape,G> edgeRenderer) {

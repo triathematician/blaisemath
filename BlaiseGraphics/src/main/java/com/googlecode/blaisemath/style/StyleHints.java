@@ -1,5 +1,5 @@
 /*
- * StyleHintSet.java
+ * StyleHints.java
  * Created May 31, 2013
  */
 package com.googlecode.blaisemath.style;
