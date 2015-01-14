@@ -27,9 +27,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseMath/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphics/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphics/</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphics/</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
