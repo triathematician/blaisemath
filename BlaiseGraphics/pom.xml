@@ -9,7 +9,7 @@
     <name>BlaiseGraphics</name>
     <description>Scene graph and style library using Java2D graphics.</description>
     <url>http://blaisemath.googlecode.com</url>
-    <inceptionYear>**year</inceptionYear>
+    <inceptionYear>2009</inceptionYear>
     <licenses>
         <license>
             <name>Apache License 2.0</name>
