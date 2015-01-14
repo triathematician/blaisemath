@@ -60,7 +60,8 @@ public class RealInterval
     }
 
     /**
-     * Constructs real interval with specified min and max & booleans describing whether they are included in the domain
+     * Constructs real interval with specified min and max, and booleans describing
+     * whether they are included in the domain.
      * @param min minimum of interval
      * @param minInclusive whether minimum is included in domain
      * @param max maximum of interval
@@ -82,12 +83,18 @@ public class RealInterval
     // BEAN PROPERTIES
     //
     
-    /** @return minimum value of interval */
+    /** 
+     * @return minimum value of interval
+     */
+    @Override
     public Double getMinimum() {
         return min;
     }
 
-    /** Sets minimum value of interval; if greater than max value, reverses order of min and max. */
+    /** 
+     * Sets minimum value of interval; if greater than max value, reverses order of min and max.
+     * @param min 
+     */
     public void setMinimum(Double min) {
         if (max < min) {
             this.min = this.max;
@@ -96,12 +103,18 @@ public class RealInterval
             this.min = min;
     }
 
-    /** @return maximum value of interval */
+    /** 
+     * @return maximum value of interval 
+     */
+    @Override
     public Double getMaximum() {
         return max;
     }
 
-    /** Sets maximum value of interval; if less than min value, reverses order of min and max. */
+    /** 
+     * Sets maximum value of interval; if less than min value, reverses order of min and max.
+     * @param max
+     */
     public void setMaximum(Double max) {
         if (max < min) {
             this.max = this.min;

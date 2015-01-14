@@ -47,7 +47,8 @@ public class RealIntervalBroadcaster extends RealInterval {
     }
 
     /**
-     * Constructs real interval with specified min and max & booleans describing whether they are included in the domain
+     * Constructs real interval with specified min and max and booleans describing
+     * whether they are included in the domain
      * @param min minimum of interval
      * @param minInclusive whether minimum is included in domain
      * @param max maximum of interval
@@ -73,7 +74,11 @@ public class RealIntervalBroadcaster extends RealInterval {
         }
     }
 
-    /** Sets both boundaries of the interval */
+    /** 
+     * Sets both boundaries of the interval
+     * @param min 
+     * @param max 
+     */
     public void setBounds(Double min, Double max) {
         Double aMin = Math.min(min, max);
         Double aMax = Math.max(min, max);

@@ -36,18 +36,6 @@ import static java.lang.Math.*;
  *    This library is built to handle a "circle" of points at infinity. These are represented by a <code>Double.POSITIVE_INFINITY</code>
  *    x-coordinate, and a y-coordinate representing the infinite angle.
  * </p>
- * <p>
- *   The code is organized as follows:
- *      <li>Test methods
- *      <li>Methods for constructing new points
- *      <li>Methods for converting points between various formats
- *      <li>Methods that operate on a point (changing a point parameter)
- *      <li>Methods that use properties of existing point to create new points (dot and cross products)
- *      <li>Dot and cross product formulas
- *      <li>Angle formulas
- *      <li>Projection formulas
- *      <li>Distance formulas
- * </p>
  *
  * @author Elisha Peterson
  */
@@ -150,6 +138,7 @@ public final class PlanarMathUtils {
      * Translates first point by amount of the second. Returns the first point.
      * @param point the first point to translate (value will change)
      * @param dPoint the amount to translate by
+     * @return 
      */
     public static Point2D.Double translate(Point2D.Double point, Point2D.Double dPoint) {
         point.x += dPoint.x;
@@ -322,8 +311,8 @@ public final class PlanarMathUtils {
 
     /**
      * Computes angle between three points. In particular, this is the angle required to rotate
-     * the vector [p2->p1] to the point where it is parallel to the vector [p2->p3]. Allows for points at
-     * infinity of the form (infinity, angle)
+     * the vector [p2-&gt;p1] to the point where it is parallel to the vector [p2-&gt;p3].
+     * Allows for points at infinity of the form (infinity, angle)
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
@@ -352,7 +341,7 @@ public final class PlanarMathUtils {
      * Computes scalar projection of first vector onto second vector.
      * @param projVec vector that will be projected
      * @param dir vector to project onto
-     * @return length of component of <code>projVec> in the direction of <code>dir</code>
+     * @return length of component of <code>projVec</code> in the direction of <code>dir</code>
      */
     public static double scalarProjection(Point2D.Double projVec, Point2D.Double dir) {
         return dotProduct(projVec, dir) / magnitude(dir);

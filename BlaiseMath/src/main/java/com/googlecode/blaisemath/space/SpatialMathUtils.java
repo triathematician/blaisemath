@@ -1,5 +1,5 @@
 /**
- * SpacialMathUtils.java
+ * SpatialMathUtils.java
  * Created on Jul 29, 2009
  */
 
@@ -27,21 +27,25 @@ package com.googlecode.blaisemath.space;
 
 /**
  * <p>
- *   <code>SpacialMathUtils</code> is a library of static methods for use on elements of space (vectors).
- *   All methods work with <code>P3D</code>s.
+ *   Static methods for use on elements of space (vectors).
+ *   All methods work with <code>Point3D</code>s.
  * </p>
- *
- * @see P3D
  *
  * @author Elisha Peterson
  */
-public class SpacialMathUtils {
+public class SpatialMathUtils {
 
     /** Non-instantiable class. */
-    private SpacialMathUtils() {
+    private SpatialMathUtils() {
     }
 
-    /** Computes and returns triple product of 3 3-vectors */
+    /**
+     * Computes and returns triple product of 3 3-vectors
+     * @param p1
+     * @param p2
+     * @param p3
+     * @return 
+     */
     public static double tripleProduct(Point3D p1, Point3D p2, Point3D p3) {
         return p1.crossProduct(p2).dotProduct(p3);
     }

@@ -33,8 +33,11 @@ import java.util.Arrays;
  */
 public class Matrices {
 
-
-    /** Compute magnitude of vector */
+    /**
+     * Compute magnitude of vector
+     * @param vec
+     * @return
+     */
     public static double magnitudeOf(double[] vec) {
         double result = 0.0;
         for (int i = 0; i < vec.length; i++)
@@ -42,7 +45,10 @@ public class Matrices {
         return Math.sqrt(result);
     }
 
-    /** Normalize a vector by dividing by magnitude */
+    /** 
+     * Normalize a vector by dividing by magnitude
+     * @param vec
+     */
     public static void normalize(double[] vec) {
         double magn = magnitudeOf(vec);
         for (int i = 0; i < vec.length; i++)
@@ -51,6 +57,9 @@ public class Matrices {
 
     /**
      * Multiply matrix by vector
+     * @param mx
+     * @param vec
+     * @return 
      */
     public static double[] matrixProduct(double[][] mx, double[] vec) {
         if (mx.length != vec.length)
@@ -68,6 +77,9 @@ public class Matrices {
      * Computes product of two matrices of integers
      * First entry is row, second is column.
      * Requires # columns in m1 equal to number of rows in m2
+     * @param m1
+     * @param m2
+     * @return 
      */
     public static int[][] matrixProduct(int[][] m1, int[][] m2) {
         int rows1 = m1.length, cols1 = m1[0].length;
@@ -89,6 +101,9 @@ public class Matrices {
      * Computes product of two matrices of integers
      * First entry is row, second is column.
      * Requires # columns in m1 equal to number of rows in m2
+     * @param m1
+     * @param m2
+     * @return 
      */
     public static double[][] matrixProduct(double[][] m1, double[][] m2) {
         int rows1 = m1.length, cols1 = m1[0].length;
