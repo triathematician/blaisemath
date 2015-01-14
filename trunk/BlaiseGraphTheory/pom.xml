@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-graphtheory</artifactId>
-    <version>2.0.7-SNAPSHOT</version>
+    <version>2.0.8</version>
     <packaging>jar</packaging>
     
     <name>BlaiseGraphTheory</name>
@@ -27,9 +27,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphTheory/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphTheory/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseGraphTheory/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-graphtheory-2.0.8</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-graphtheory-2.0.8</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/tags/blaise-graphtheory-2.0.8</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
