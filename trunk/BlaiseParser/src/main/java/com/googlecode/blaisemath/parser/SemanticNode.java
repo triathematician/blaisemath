@@ -8,10 +8,10 @@ package com.googlecode.blaisemath.parser;
  * #%L
  * BlaiseParser
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2009 - 2015 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -39,12 +39,12 @@ import javax.swing.tree.TreeNode;
  *   To be completely precise:
  *  <ul>
  *  <li> The <b>value</b> of a node is the object that the
- *   node returns, possibly a numeric or boolean value or a string, or anything really.
+ *   node returns, possibly a numeric or boolean value or a string, or anything really.</li>
  *  <li> The <b>parameters</b> of a node are the <i>children</i> of the <code>TreeNode</code>
  *   interface or the "subnodes"; the <b>parameter types</b> are the class types that
- *   are expected of the arguments.
+ *   are expected of the arguments.</li>
  *  <li> Finally, the <b>variables</b> are the list of nodes in the
- *   tree with unknown values, identified by names and returned as a table.
+ *   tree with unknown values, identified by names and returned as a table.</li>
  *  </ul>
  * </p>
  *

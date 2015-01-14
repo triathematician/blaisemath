@@ -9,10 +9,10 @@ package com.googlecode.blaisemath.parser;
  * #%L
  * BlaiseParser
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2009 - 2015 Elisha Peterson
  * --
- * Licensed under the Apache License, Version 2.0.
- * You may not use this file except in compliance with the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
