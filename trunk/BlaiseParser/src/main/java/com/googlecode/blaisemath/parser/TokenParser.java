@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
  * </p>
  * <p>
  *   Here are some hints on formats supported by the tokenizer:
+ * </p>
  *   <ul>
  *      <li>Identifiers <b>MUST</b> consist of letters, numbers, or underscores, and the first
  *          letter in an expression <b>MUST</b> be a letter.</li>
@@ -57,7 +58,6 @@ import java.util.regex.Pattern;
  *          Exceptions are generated if the parenthetical expressions do not close properly.</li>
  *      <li>Operator expressions are dynamic and also depend solely on the parser.</li>
  *   </ul>
- * </p>
  *
  * @author elisha
  */
@@ -73,7 +73,10 @@ public class TokenParser implements GrammarParser {
     /** Class responsible for constructing the semantic tree from the token node. */
     SemanticTreeBuilder builder;
 
-    /** Set up a parser with a specified grammar. */
+    /** 
+     * Set up a parser with a specified grammar.
+     * @param grammar 
+     */
     public TokenParser(Grammar grammar) {
         setGrammar(grammar);
     }
