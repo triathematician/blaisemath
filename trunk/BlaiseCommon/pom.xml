@@ -30,9 +30,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/**path/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/**path/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/**path/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseCommon/</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
