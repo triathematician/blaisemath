@@ -242,7 +242,7 @@ public final class GlobalMetrics {
     
     /**
      * Global metric describing the clustering coefficient of the graph; in the
-     * directed case, measures "transitivity", i.e. when a->b,b->c implies a->c
+     * directed case, measures "transitivity", i.e. when a-%gt;b,b-%gt;c implies a-%gt;c
      */
     public static final GraphMetric<Double> CLUSTERING_A = new GraphMetric<Double>() {
         public String getName() {
@@ -271,7 +271,7 @@ public final class GlobalMetrics {
     
     /**
      * Global metric describing the clustering coefficient of the graph; in the
-     * directed case, measures "transitivity", i.e. when a->b,b->c implies a->c
+     * directed case, measures "transitivity", i.e. when a-%gt;b,b-%gt;c implies a-%gt;c
      */
     public static final GraphMetric<Double> CLUSTERING_B = new GraphMetric<Double>() {
         public String getName() {

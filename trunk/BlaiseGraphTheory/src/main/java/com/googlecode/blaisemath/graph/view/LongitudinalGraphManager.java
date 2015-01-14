@@ -39,8 +39,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 
 /**
  * <p>
- *   Manages visual display of a time graph (slices over time). Keeps track of slices
- *   of the graph using {@link GraphManager}s. Notifies listeners when the
+ *   Manages visual display of a time graph (slices over time). Notifies listeners when the
  *   active slice has changed.
  *</p>
  * <p>
