@@ -34,15 +34,17 @@ package com.googlecode.blaisemath.util;
 public class BasicMathUtils {
 
     /**
-     * Returns the negative and positive roots of a quadratic equation a*x^2+b*x+c=0 as a double array.<br>
-     * Note that if a<0 then the negative root has the smallest x-value, and if a>0 then the positive root has the smallest x-value.
+     * Returns the negative and positive roots of a quadratic equation a*x^2+b*x+c=0
+     * as a double array.<br>
+     * Note that if a&lt;0 then the negative root has the smallest x-value, and
+     * if a&gt;0 then the positive root has the smallest x-value.
      * @param a coefficient of x^2
      * @param b coefficient of x
      * @param c constant coefficient
-     * @return <li> an array [r_neg, r_pos], where r_neg is the negative root and r_pos is the positive root;
-     *         <li> an array [NaN, NaN] if the roots are complex;
-     *         <li> an array [r] if a=0 so the equation is a line and there is one root r;
-     *         <li> null if a=0 and b=0 so that there are no solutions
+     * @return an array [r_neg, r_pos], where r_neg is the negative root and r_pos is the positive root;
+     *         an array [NaN, NaN] if the roots are complex;
+     *         an array [r] if a=0 so the equation is a line and there is one root r;
+     *         null if a=0 and b=0 so that there are no solutions
      */
     public static double[] quadraticRoots(double a, double b, double c) {
         double disc = b*b-4*a*c;
@@ -82,6 +84,8 @@ public class BasicMathUtils {
      * Solves a linear system with two unknowns: <br>
      * c1[0]*x+c1[1]*y+c1[2]=0 <br>
      * c2[0]*x+c2[1]*y+c2[2]=0
+     * @param c1
+     * @param c2
      * @return solution {x,y}, or null if there is not one unique solution
      */
     public static double[] solveLinear(double[] c1, double[] c2) {

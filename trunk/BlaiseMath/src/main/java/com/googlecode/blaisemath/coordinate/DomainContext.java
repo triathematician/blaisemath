@@ -43,12 +43,22 @@ public class DomainContext {
         entries = new HashMap<String, DomainEntry>();
     }
 
-    /** Add an entry to the domain context. */
+    /**
+     * Add an entry to the domain context.
+     * @param <T>
+     * @param id
+     * @param domain
+     * @param cls 
+     */
     public <T> void addEntry(String id, Domain<T> domain, Class<? extends T> cls) {
         entries.put(id, new DomainEntry(domain, cls));
     }
 
-    /** Remove an entry from the domain context. */
+    /**
+     * Remove an entry from the domain context.
+     * @param <T> 
+     * @param id 
+     */
     public <T> void removeEntry(String id) {
         entries.remove(id);
     }

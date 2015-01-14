@@ -116,6 +116,9 @@ public class Point3D implements Cloneable {
     /**
      * Sets the location of this <code>P3D</code> to the
      * specified <code>double</code> coordinates.
+     * @param x
+     * @param y
+     * @param z
      */
     public void setLocation(double x, double y, double z) {
         this.x = x;
@@ -123,22 +126,38 @@ public class Point3D implements Cloneable {
         this.z = z;
     }
 
-    /** @return distance to second point */
+    /**
+     * @param p2
+     * @return distance to second point 
+     */
     public double distance(Point3D p2) {
         return Math.sqrt(distanceSq(p2.x, p2.y, p2.z));
     }
 
-    /** @return distance to second point */
+    /**
+     * @param x2
+     * @param y2
+     * @param z2
+     * @return distance to second point
+     */
     public double distance(double x2, double y2, double z2) {
         return Math.sqrt(distanceSq(x2, y2, z2));
     }
 
-    /** @return distance to second point squared */
+    /**
+     * @param p2
+     * @return distance to second point squared 
+     */
     public double distanceSq(Point3D p2) {
         return distanceSq(p2.x, p2.y, p2.z);
     }
 
-    /** @return distance to second point squared */
+    /**
+     * @param x2
+     * @param y2
+     * @param z2
+     * @return distance to second point squared
+     */
     public double distanceSq(double x2, double y2, double z2) {
         double dx = x - x2;
         double dy = y - y2;
@@ -146,49 +165,92 @@ public class Point3D implements Cloneable {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    /** @return magnitude of this vector */
+    /**
+     * @return magnitude of this vector
+     */
     public double magnitude() {
         return Math.sqrt(x*x + y*y + z*z);
     }
 
-    /** @return square of the magnitude of this vector */
+    /**
+     * @return square of the magnitude of this vector
+     */
     public double magnitudeSq() {
         return x*x + y*y + z*z;
     }
 
-    /** @return new point that is a unit vector in the same direction as this vector */
+    /**
+     * @return new point that is a unit vector in the same direction as this
+     * vector
+     */
     public Point3D normalized() {
         double l = Math.sqrt(x*x + y*y + z*z);
         return new Point3D(x/l, y/l, z/l);
     }
 
-    /** Returns the dotProduct product of two 3-vectors */
+    /**
+     * Returns the dotProduct product of two 3-vectors
+     * @param p2
+     * @return 
+     */
     public double dotProduct(Point3D p2) {
         return x * p2.x + y * p2.y + z * p2.z;
     }
 
-    /** Returns the crossProduct product of two 3-vectors */
+    /**
+     * Returns the crossProduct product of two 3-vectors
+     * @param p2
+     * @return 
+     */
     public Point3D crossProduct(Point3D p2) {
         return new Point3D(y * p2.z - z * p2.y, z * p2.x - x * p2.z, x * p2.y - y * p2.x);
     }
 
-    /** Subtracts this vector from a second vector, and returns the result. */
+    /**
+     * Subtracts this vector from a second vector, and returns the result.
+     * @param p2
+     * @return 
+     */
     public Point3D minus(Point3D p2) {
         return new Point3D(x - p2.x, y - p2.y, z - p2.z);
     }
-    /** Subtracts a triple of coordinates, returns the result. */
+
+    /**
+     * Subtracts a triple of coordinates, returns the result.
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     public Point3D minus(double x, double y, double z) {
         return new Point3D(this.x - x, this.y - y, this.z - z);
     }
-    /** Adds this vector to a second vector, and returns the result. */
+
+    /**
+     * Adds this vector to a second vector, and returns the result.
+     * @param p2
+     * @return 
+     */
     public Point3D plus(Point3D p2) {
         return new Point3D(x + p2.x, y + p2.y, z + p2.z);
     }
-    /** Adds to a triple of coordinates, returns the result. */
+
+    /**
+     * Adds to a triple of coordinates, returns the result.
+     * @param x
+     * @param y
+     * @param z
+     * @return 
+     */
     public Point3D plus(double x, double y, double z) {
         return new Point3D(this.x + x, this.y + y, this.z + z);
     }
-    /** Multiplies this vector by a scalar, and returns the result. */
+
+    /**
+     * Multiplies this vector by a scalar, and returns the result.
+     * @param s
+     * @return 
+     */
     public Point3D times(double s) {
         return new Point3D(s * x, s * y, s * z);
     }

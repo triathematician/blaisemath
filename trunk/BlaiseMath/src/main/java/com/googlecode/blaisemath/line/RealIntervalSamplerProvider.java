@@ -45,13 +45,23 @@ public abstract class RealIntervalSamplerProvider extends RealIntervalBroadcaste
         setBounds(getNewMinimum(), getNewMaximum());
     }
 
-    /** @return minimum value for when the change broadcaster changes. */
+    /**
+     * @return minimum value for when the change broadcaster changes.
+     */
     public abstract double getNewMinimum();
-    /** @return maximum value for when the change broadcaster changes. */
+
+    /**
+     * @return maximum value for when the change broadcaster changes.
+     */
     public abstract double getNewMaximum();
-    /** @return scale of transformation for the given pixel spacing. */
+
+    /**
+     * @param pixSpacing
+     * @return scale of transformation for the given pixel spacing.
+     */
     public abstract double getScale(float pixSpacing);
 
+    @Override
     public SampleSet<Double> samplerWithPixelSpacing(final float pixSpacing, DomainHint hint) {
         final RealIntervalStepSampler result = RealDomainUtils.stepSamplingDomain(this, getScale(pixSpacing), hint);
         addChangeListener(new ChangeListener(){
@@ -62,6 +72,7 @@ public abstract class RealIntervalSamplerProvider extends RealIntervalBroadcaste
         return result;
     }
     
+    @Override
     public void stateChanged(ChangeEvent e) { 
         setBounds(getNewMinimum(), getNewMaximum()); 
     }

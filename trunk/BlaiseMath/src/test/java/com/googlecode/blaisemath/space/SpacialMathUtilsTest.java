@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.space;
  */
 
 import com.googlecode.blaisemath.space.Point3D;
-import com.googlecode.blaisemath.space.SpacialMathUtils;
+import com.googlecode.blaisemath.space.SpatialMathUtils;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -56,7 +56,7 @@ public class SpacialMathUtilsTest {
         Point3D p2 = new Point3D(5,-1,-3);
         Point3D p3 = new Point3D(2,6,5.5);
         double expResult = 119.5;
-        double result = SpacialMathUtils.tripleProduct(p1, p2, p3);
+        double result = SpatialMathUtils.tripleProduct(p1, p2, p3);
         assertEquals(expResult, result, 1e-12);
     }
 

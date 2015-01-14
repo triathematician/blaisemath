@@ -43,15 +43,6 @@ import com.googlecode.blaisemath.util.BasicMathUtils;
  *    is infinity and the second is the x-intercept. In the case of a non-existent line (e.g. that
  *    returned for the line between two identical points), both entries are NaN.
  * </p>
- * <p>
- *   The code is organized as follows:
- *      <li>Test methods
- *      <li>Methods for constructing new lines
- *      <li>Methods for converting lines between various formats
- *      <li>Slope formulas
- *      <li>Intersection formulas
- *      <li>Distance formulas
- * </p>
  * @author Elisha Peterson
  */
 public class PlanarGeometryUtils {
@@ -319,7 +310,7 @@ public class PlanarGeometryUtils {
      * @param parabola1 the first parabola as an array [a,b,c], where the parabola is y = a*x^2 + b*x + c
      * @param parabola2 the second parabola
      * @return a pair of roots giving the lower root and the upper root; the first root is the "negative" root and
-     *   the second is the "positive" root... if a1-a2>0, the negative root has the lower x-value, otherwise the
+     *   the second is the "positive" root... if a1-a2 &gt; 0, the negative root has the lower x-value, otherwise the
      *   positive root has the lower x-value; if a1=a2, then the parabolas only intersect once and the method returns a single value instead of 2
      */
     public static double[] intersectionsOfParabolas(double[] parabola1, double[] parabola2) {
@@ -359,7 +350,7 @@ public class PlanarGeometryUtils {
      * Computes and returns point equidistant from 2 points and a line.
      * @param p1 first point
      * @param p2 second point
-     * @param the line
+     * @param line the line
      * @return the two points that are equidistant from the line and the given points
      */
     public static Point2D.Double[] pointsEquidistantTo(Point2D.Double p1, Point2D.Double p2, double[] line) {
