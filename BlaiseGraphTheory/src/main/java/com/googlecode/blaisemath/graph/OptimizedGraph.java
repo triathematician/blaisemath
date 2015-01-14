@@ -45,7 +45,7 @@ import javax.annotation.concurrent.Immutable;
  * <p>
  *   A storage-optimized graph component that caches degrees and divides nodes into
  *   <i>isolates</i>, <i>leaf nodes</i>, <i>connector nodes</i> (degree 2), and
- *   <i>core nodes</i> (degree > 2).
+ *   <i>core nodes</i> (degree &gt; 2).
  *   This maximizes speed for algorithms that make large numbers of calls to
  *   graph API methods.
  * </p>
@@ -152,7 +152,7 @@ public class OptimizedGraph<V> implements Graph<V> {
     }
 
     /**
-     * Nodes with deg >= 3
+     * Nodes with deg &gt;= 3
      * @return nodes
      */
     public Set<V> getCoreNodes() {
