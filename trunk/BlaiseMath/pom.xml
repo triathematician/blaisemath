@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-math</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.7.1</version>
     <packaging>jar</packaging>
     
     <name>BlaiseMath</name>
@@ -30,9 +29,9 @@
     </developers>
     
     <scm>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</url>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseMath</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-math-0.7.1</developerConnection>
     </scm>
     
     <issueManagement>
