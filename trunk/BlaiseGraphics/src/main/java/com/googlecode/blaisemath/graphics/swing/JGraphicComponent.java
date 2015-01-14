@@ -60,7 +60,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
 
     /** The visible shapes. */
     protected final JGraphicRoot root;
-    /** Affine transform applied to graphics canvas before drawing (enables pan & zoom). */
+    /** Affine transform applied to graphics canvas before drawing (enables pan and zoom). */
     @Nullable
     protected AffineTransform transform = null;
     /** Store inverse transform */

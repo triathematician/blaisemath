@@ -48,7 +48,12 @@ public class SegmentGraphic extends TwoPointGraphic {
     /** Where arrows are displayed */
     protected ArrowLocation arrowLoc;
 
-    /** Construct segment between specified points */
+    /** 
+     * Construct segment between specified points
+     * @param start start of segment
+     * @param end end of segment
+     * @param loc where to position arrows, relative to start and end
+     */
     public SegmentGraphic(Point2D start, Point2D end, ArrowLocation loc) {
         super(start, end);
         setArrowLocation(loc);

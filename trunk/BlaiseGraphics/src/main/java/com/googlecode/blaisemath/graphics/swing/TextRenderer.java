@@ -66,6 +66,7 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         return INST;
     }
     
+    @Override
     public void render(AnchoredText primitive, AttributeSet style, Graphics2D canvas) {
         String text = primitive.getText();
         if (Strings.isNullOrEmpty(text)) {
@@ -78,16 +79,19 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
         canvas.drawString(text, (float) bounds.getX(), (float) (bounds.getMaxY()));
     }
 
+    @Override
     public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
         Rectangle2D bounds = boundingBox(primitive, style);
         return bounds != null && bounds.contains(point);
     }
 
+    @Override
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
         Rectangle2D bounds = boundingBox(primitive, style);
         return bounds != null && bounds.intersects(rect);
     }
 
+    @Override
     public Rectangle2D boundingBox(AnchoredText primitive, AttributeSet style) {
         if (Strings.isNullOrEmpty(primitive.getText())) {
             return null;
@@ -129,10 +133,10 @@ public class TextRenderer implements Renderer<AnchoredText, Graphics2D> {
     /** 
      * Generates a shift coordinate based on a given width and height, relative to the
      * provided anchor location.
-     * @param textAnchor
-     * @param width
-     * @param height
-     * @return 
+     * @param textAnchor anchor location
+     * @param width width
+     * @param height height
+     * @return shifted coordinate
      */
     public static Point2D.Double anchorShift(Anchor textAnchor, double width, double height) {
         Point2D.Double shift = new Point2D.Double();

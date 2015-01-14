@@ -223,6 +223,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /**
      * Get current boundaries displayed in component.
      * @param gc associated component
+     * @return local bounds associated with the component
      */
     public static Rectangle2D.Double getLocalBounds(JGraphicComponent gc) {
         if (gc.getInverseTransform() == null) {
@@ -245,6 +246,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     @InvokedFromThread("multiple")
     public static void setDesiredLocalBounds(final JGraphicComponent gc, final Rectangle2D rect) {
         BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+            @Override
             public void run() {
                 // TODO - this isn't quite right... needs to incorporate gc's minx and miny ???
                 Rectangle bds = gc.getBounds();
@@ -263,11 +265,11 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /**
      * Sets visometry bounds based on the zoom about a given point.
      * The effective zoom point is between current center and mouse position...
-     * close to center => 100% at the given point, close to edge => 10% at
+     * close to center =%gt; 100% at the given point, close to edge =%gt; 10% at
      * the given point.
      * @param gc associated component
-     * @param localZoomPoint
-     * @param factor
+     * @param localZoomPoint focal point for zoom
+     * @param factor how much to zoom
      */
     public static void zoomPoint(JGraphicComponent gc, Point2D localZoomPoint, double factor) {
         Rectangle2D.Double localBounds = getLocalBounds(gc);

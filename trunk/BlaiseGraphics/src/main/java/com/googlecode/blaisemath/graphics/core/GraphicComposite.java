@@ -255,7 +255,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Remove an entry from the composite 
      * @param gfc the entry to remove
-     * @return 
+     * @return true if composite was changed
      */
     public boolean removeGraphic(Graphic<G> gfc) {
         if (removeHelp(gfc)) {
@@ -286,7 +286,7 @@ public class GraphicComposite<G> extends Graphic<G> {
     /** 
      * Removes several entries from the composite 
      * @param remove the entries to remove
-     * @return 
+     * @return true if composite was changed
      */
     public final boolean removeGraphics(Iterable<? extends Graphic<G>> remove) {
         boolean change = false;
@@ -325,7 +325,7 @@ public class GraphicComposite<G> extends Graphic<G> {
 
     /**
      * Removes all entries, clearing their parents
-     * @return 
+     * @return true if composite was changed
      */
     public boolean clearGraphics() {
         boolean change = !entries.isEmpty();

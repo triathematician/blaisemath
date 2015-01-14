@@ -48,8 +48,8 @@ import java.util.logging.Logger;
 /**
  * Draws text with line breaks, respecting the location of the line breaks.
  *
- * @todo calculate boundaries of multiline text
- * @todo use text alignment
+ * TODO - calculate boundaries of multiline text
+ * TODO - use text alignment
  * 
  * @author petereb1
  */

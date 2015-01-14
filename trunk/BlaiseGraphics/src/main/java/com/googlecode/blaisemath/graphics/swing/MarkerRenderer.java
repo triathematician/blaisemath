@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 
 /**
 /**
- * Draws an oriented point on the graphics canvas, using a {@link Marker} object and a {@link ShapeStyle}.
+ * Draws an oriented point on the graphics canvas.
  * See also the <a href="http://www.w3.org/TR/SVG/painting.html#Markers">related SVG documentation</a> on markers.
  * 
  * @author Elisha

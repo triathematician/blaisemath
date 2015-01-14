@@ -72,10 +72,10 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
 
     /** 
      * Initialize for specified component
-     * @param domain 
+     * @param compt the component for handling 
      */
-    public JGraphicSelectionHandler(JGraphicComponent domain) {
-        this.component = domain;
+    public JGraphicSelectionHandler(JGraphicComponent compt) {
+        this.component = compt;
 
         // highlight updates
         selection.addPropertyChangeListener(new PropertyChangeListener(){

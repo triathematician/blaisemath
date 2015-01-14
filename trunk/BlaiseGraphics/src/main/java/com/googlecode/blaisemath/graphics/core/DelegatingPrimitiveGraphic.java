@@ -96,11 +96,11 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
     
     /**
      * Update the context menu initializer to use the source object for the focus, rather than the graphic.
-     * @param menu
-     * @param src
-     * @param point
-     * @param focus
-     * @param selection 
+     * @param menu context menu
+     * @param src source for context menu
+     * @param point mouse location
+     * @param focus object of focus (overridden)
+     * @param selection current selection (null's okay)
      */
     @Override
     public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {

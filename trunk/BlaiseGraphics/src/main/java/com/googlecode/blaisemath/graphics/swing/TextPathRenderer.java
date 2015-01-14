@@ -61,7 +61,7 @@ public class TextPathRenderer extends PathRenderer {
     //
     
     /**
-     * Set text style & return pointer to object
+     * Set text style and return pointer to object
      * @param style the style
      * @return this
      */
@@ -71,7 +71,7 @@ public class TextPathRenderer extends PathRenderer {
     }
     
     /**
-     * Set path text & return pointer to object
+     * Set path text and return pointer to object
      * @param text the new text
      * @return this
      */
@@ -81,7 +81,7 @@ public class TextPathRenderer extends PathRenderer {
     }
     
     /**
-     * Set "stretch" attribute & return point to object
+     * Set "stretch" attribute and return point to object
      * @param stretch new stretch value
      * @return this
      */

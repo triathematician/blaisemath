@@ -54,7 +54,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * GUI form for editing a {@link PointRenderer}.
+ * GUI form for editing an {@link AttributeSet} for points.
  *
  * @author elisha
  */
@@ -80,7 +80,10 @@ public final class BasicPointStyleEditor extends JPanel implements Customizer,
         initComponents();
     }
 
-    /** Initialize with defaults and a style */
+    /** 
+     * Initialize with defaults and a style
+     * @param style the style to edit
+     */
     public BasicPointStyleEditor(AttributeSet style) {
         initComponents();
         setObject(style);

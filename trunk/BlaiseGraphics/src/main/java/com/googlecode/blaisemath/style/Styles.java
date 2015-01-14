@@ -217,7 +217,7 @@ public final class Styles {
     }
    
     /**
-     * Create a basic shape style with given fill & stroke
+     * Create a basic shape style with given fill and stroke
      * @param fill fill color
      * @param stroke stroke color
      * @return shape style
@@ -227,7 +227,7 @@ public final class Styles {
     }
    
     /**
-     * Create a basic shape style with given fill & stroke
+     * Create a basic shape style with given fill and stroke
      * @param fill fill color
      * @param stroke stroke color
      * @param width stroke width

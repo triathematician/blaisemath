@@ -76,8 +76,8 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
      * Construct with specified coordinate manager
      * @param crdManager in charge of node locations
      * @param nodeRenderer draws the nodes
-     * @param labelRenderer
-     * @param edgeRenderer
+     * @param labelRenderer draws labels
+     * @param edgeRenderer draws edges
      */
     public DelegatingNodeLinkGraphic(CoordinateManager<S,Point2D> crdManager,
             @Nullable Renderer<Point2D,G> nodeRenderer,

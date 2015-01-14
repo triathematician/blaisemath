@@ -61,7 +61,7 @@ public class AttributeSetPropertyModel extends PropertyModelSupport {
     /**
      * Create and return panel for editing an attribute set, using the specified
      * collection of editable attributes.
-     * @param model describes edit object & parameters
+     * @param model describes edit object and parameters
      * @return property component for editing the attribute set
      */
     public static Component editPane(AttributeSetPropertyModel model) {

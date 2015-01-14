@@ -37,8 +37,7 @@ import javax.annotation.Nullable;
  * A collection of points that are treated as a single graphic.
  * Customization is provided for tooltips and for dragging individual points,
  * but to customize any other attribute of graphics for individual points,
- * use {@link CustomPointSetGraphic} instead.
- * @see CustomPointSetGraphic
+ * use {@link DelegatingPointSetGraphic} instead.
  *
  * @author Elisha Peterson
  */
