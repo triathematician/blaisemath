@@ -35,8 +35,6 @@ import javax.swing.tree.TreeNode;
  *   allow for retrieving all <i>variables</i> within the tree and returning the types
  *   of the immediate children of the node (called <i>parameters</i>).
  * </p>
- * <p>
- *   To be completely precise:
  *  <ul>
  *  <li> The <b>value</b> of a node is the object that the
  *   node returns, possibly a numeric or boolean value or a string, or anything really.</li>
@@ -46,7 +44,6 @@ import javax.swing.tree.TreeNode;
  *  <li> Finally, the <b>variables</b> are the list of nodes in the
  *   tree with unknown values, identified by names and returned as a table.</li>
  *  </ul>
- * </p>
  *
  * @author Elisha Peterson
  */
