@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-visometry</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseVisometry</name>
@@ -27,9 +27,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-visometry-0.1.0</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-visometry-0.1.0</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/tags/blaise-visometry-0.1.0</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseVisometry/</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseVisometry/</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseVisometry/</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
