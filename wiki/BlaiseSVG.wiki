@@ -1,0 +1,2 @@
+#summary About BlaiseSVG
+#sidebar TableOfContents
