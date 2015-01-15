@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.sketch;
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -303,7 +303,7 @@ public class BlaiseSketchActions {
      * Adds a general attribute to the given graphics.
      * @param gr graphics to add attribute to
      * @param comp current canvas
-     * @todo support values of other types
+     * TODO - support values of other types
      */
     public static void addAttribute(Iterable<Graphic<Graphics2D>> gr, JGraphicComponent comp) {
         String name = JOptionPane.showInputDialog("Enter attribute name:");

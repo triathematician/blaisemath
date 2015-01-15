@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *   SVG Polygon object.
  * </p>
  * @author elisha
- * @todo implement functionality
+ * TODO - implement functionality
  */
 @XmlRootElement(name="polygon")
 public final class SVGPolygon extends SVGElement {

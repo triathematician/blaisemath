@@ -13,7 +13,7 @@ import java.beans.PropertyChangeSupport;
  * #%L
  * BlaiseSketch
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.beans.PropertyChangeSupport;
 
 
 /**
- * Manages an active {@link JSketchGesture}, and associated state changes.
+ * Manages an active {@link SketchGesture}, and associated state changes.
  * 
  * @author elisha
  */

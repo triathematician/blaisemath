@@ -8,7 +8,7 @@ package com.googlecode.blaisemath.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -62,7 +61,7 @@ public class SVGElements {
 
     /**
      * Create new svg object from given id, shape, and style. Supports shapes
-     * {@link Rectanlge2D}, {@link RoundRectangle2D}, {@link Ellipse2D}, and
+     * {@link Rectangle2D}, {@link RoundRectangle2D}, {@link Ellipse2D}, and
      * {@link Line2D}.
      * @param id object id
      * @param shape object's shape
