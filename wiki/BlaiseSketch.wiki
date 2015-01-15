@@ -1,0 +1,2 @@
+#summary About BlaiseSketch
+#sidebar TableOfContents
