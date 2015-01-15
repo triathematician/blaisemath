@@ -2,11 +2,13 @@
 #sidebar TableOfContents
 
   * [GettingStarted Getting Started]
+  * [BlaiseCommon]
   * [BlaiseGraphics]
-  * [Firestarter]
+  * [BlaiseGraphTheory]
   * [BlaiseMath]
   * [BlaiseParser]
-  * [BlaiseVisometry]
-  * [BlaiseGraphTheory]
+  * [BlaiseSketch]
   * [BlaiseSVG]
+  * [BlaiseVisometry]
   * [BlaiseWidgets]
+  * [Firestarter]
