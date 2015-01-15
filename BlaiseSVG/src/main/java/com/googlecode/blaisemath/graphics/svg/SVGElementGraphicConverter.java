@@ -9,7 +9,7 @@ package com.googlecode.blaisemath.graphics.svg;
  * #%L
  * BlaiseSVG
  * --
- * Copyright (C) 2009 - 2014 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ import javax.xml.namespace.QName;
  *   <li>{@link SVGImage}</li>
  *   <li>{@link SVGText}</li>
  * </ul>
- * This adapter also converts {@link SVGGroup} to/from {@link GraphicsComposite}.
+ * This adapter also converts {@link SVGGroup} to/from {@link GraphicComposite}.
  * 
  * @author elisha
  */
