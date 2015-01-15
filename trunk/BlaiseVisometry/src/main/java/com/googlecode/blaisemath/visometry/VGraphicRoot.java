@@ -36,22 +36,13 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicRoot;
  *      Adds additional {@link Visometry} (local coordinates) support to the parent {@link JGraphicRoot}.
  *      Functionally, this class behaves differently than {@code GraphicRoot}. It maintains the {@code Visometry},
  *      as well as the {@link VisometryProcessor} used to convert entries from local coordinates to view coordinates.
- *      It also maintains the {@link PlottableComposite}, which is another tree of plottable elements that can be
- *      <em>recomputed</em>.
- * </p>
- * <p>
- *      So in all, there are three trees maintained by this class:
+        So in all, there are two trees maintained by this class:
  * </p>
  * <ul>
  *      <li>the {@link Graphic} tree maintained by the parent {@link JGraphicRoot};</li>
- *      <li>the {@link VGraphic} tree maintained within the {@link PlottableComposite};</li>
- *      <li>the {@link Plottable} tree maintained within the {@link PlottableComposite}.</li>
+ *      <li>the {@link VGraphic} tree maintained within the {@link VGraphicComposite};</li>
  * </ul>
  * <p>
- *      The {@code Plottable} maintains the generic source object, and has the logic to generate one or more {@code VGraphic}s.
- *      Passing from the {@code Plottable} to the {@code VGraphic} requires <em>recomputation</em>
- *          (see {@link Plottable#recompute()} and {@link Plottable#getGraphicEntry()}).
- *      The {@code VGraphic} maintains a graphics primitive in local coordinates.
  *      Passing from the {@code VGraphic} to the {@code Graphic} requires <em>reconversion</em>
  *          (see {@link VGraphic#setUnconverted(boolean)} and {@link VGraphic#getWindowGraphic()}).
  *      The conversion step is completed with the help of the {@code Visometry} and the {@code VisometryProcessor}.

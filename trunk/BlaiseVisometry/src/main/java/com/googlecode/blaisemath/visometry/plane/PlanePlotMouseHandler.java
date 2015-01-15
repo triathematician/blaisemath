@@ -45,16 +45,14 @@ import java.awt.geom.RectangularShape;
 /**
  * <p>
  *  This class handles default mouse behavior for a plane plot.
- * </p>
- * <p>
  *   Supported behavior is as follows:
+ * </p>
  *   <ul>
  *     <li> Drag: mouse drags the canvas around
  *     <li> Shift-Drag: force dragging to keep x or y constant
  *     <li> Alt-Drag: creates a zoom box
  *     <li> Mouse wheel: zooms in and out
  *   </ul>
- * </p>
  *
  * @author Elisha Peterson
  */

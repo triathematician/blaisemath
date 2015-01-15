@@ -55,7 +55,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
     
     /** Local coordinates of the points */
     protected CoordinateManager<S,C> coordManager;
-    /** Listens for updates to both window & local coordinate managers */
+    /** Listens for updates to both window and local coordinate managers */
     protected final CoordinateListener coordinateListener;
 
     /** Ignore changes while converting */

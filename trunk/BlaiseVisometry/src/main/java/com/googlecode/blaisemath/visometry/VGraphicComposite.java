@@ -34,7 +34,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * Encapsulates a collection of {@link VGraphic}s. This class is not thread safe.
- * All access & modifications should be made from the event dispatch thread.
+ * All access and modifications should be made from the event dispatch thread.
  *
  * @param <C> local coordinate type
  *
