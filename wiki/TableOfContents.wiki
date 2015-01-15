@@ -1,7 +1,6 @@
 #summary Contents for the sidebar
 #sidebar TableOfContents
 
-  * [GettingStarted Getting Started]
   * [BlaiseCommon]
   * [BlaiseGraphics]
   * [BlaiseGraphTheory]
