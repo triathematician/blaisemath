@@ -52,7 +52,7 @@ public class VGraphicComponent<C> extends JGraphicComponent {
     
     
 
-    /** Stores the tree of graphics primitives in local & window coords */
+    /** Stores the tree of graphics primitives in local and window coords */
     protected final VGraphicRoot<C,Graphics2D> vRoot;
 
     //

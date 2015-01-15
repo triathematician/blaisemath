@@ -29,9 +29,6 @@ package com.googlecode.blaisemath.visometry;
  *
  * @param <C> the object coordinate type
  * 
- * @see org.bm.blaise.graphics.GraphicSupport
- * @see org.bm.blaise.specto.PlottableSupport
- * 
  * @author Elisha Peterson
  */
 public abstract class VGraphicSupport<C,G> implements VGraphic<C,G> {
