@@ -26,9 +26,9 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 
-import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
+import com.googlecode.blaisemath.style.Renderer;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -67,6 +67,7 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
     // PROPERTY PATTERNS
     //
 
+    @Override
     public AttributeSet getStyle() {
         return styler.style(source);
     }
@@ -106,14 +107,22 @@ public class DelegatingPrimitiveGraphic<S,O,G> extends PrimitiveGraphicSupport<O
     public void initContextMenu(JPopupMenu menu, Graphic src, Point2D point, Object focus, Set selection) {
         super.initContextMenu(menu, src, point, source, selection);
     }
+
+    /**
+     * Return the tooltip provided by the object styler.
+     * @param p point for tooltip
+     * @return tooltip
+     */
+    @Override
+    public String getTooltip(Point2D p) {
+        return styler == null ? null : styler.tooltip(source, null);
+    }
     
     /**
      * Hook method for updating the shape attributes after the source graphic or style has changed.
-     * This version of the method updates the tooltip and notifies listeners that the
-     * graphic has changed.
+     * This version of the method notifies listeners that the graphic has changed.
      */
     protected void sourceGraphicUpdated() {
-        setDefaultTooltip(styler == null ? null : styler.tooltip(source, null));
         fireGraphicChanged();
     }
     
