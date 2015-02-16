@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-sketch</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseSketch</name>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-svg</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
