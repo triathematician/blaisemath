@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-svg</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.5</version>
     <packaging>jar</packaging>
     
     <name>BlaiseSVG</name>
@@ -29,9 +29,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSVG/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSVG/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseSVG/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-svg-0.1.5</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-svg-0.1.5</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/tags/blaise-svg-0.1.5</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
