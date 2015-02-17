@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-sketch</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.5</version>
     <packaging>jar</packaging>
     
     <name>BlaiseSketch</name>
@@ -29,9 +29,9 @@
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</url>
+        <connection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-sketch-0.1.5</connection>
+        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/tags/blaise-sketch-0.1.5</developerConnection>
+        <url>https://blaisemath.googlecode.com/svn/tags/blaise-sketch-0.1.5</url>
     </scm>    
     <issueManagement>
         <system>Google code</system>
