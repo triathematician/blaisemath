@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.gesture;
  * #L%
  */
 
-import com.googlecode.blaisemath.gesture.swing.GestureOrchestrator;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -34,7 +33,7 @@ import java.awt.event.MouseMotionListener;
  * @param <C> the orchestrator for the gesture
  * @author elisha
  */
-public interface SketchGesture<C extends GestureOrchestrator> extends MouseListener, MouseMotionListener {
+public interface MouseGesture<C extends GestureOrchestrator> extends MouseListener, MouseMotionListener {
 
     /**
      * Get the user-friendly name of the gesture

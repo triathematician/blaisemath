@@ -66,6 +66,7 @@ public class PrimitiveGraphic<O,G> extends PrimitiveGraphicSupport<O,G> {
     // PROPERTY PATTERNS
     //
 
+    @Override
     @Nullable 
     public AttributeSet getStyle() {
         return style;

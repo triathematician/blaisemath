@@ -95,6 +95,10 @@ public class MenuConfig {
     
     /**
      * Create toolbar component from file
+     * @param cls
+     * @param am
+     * @return 
+     * @throws java.io.IOException 
      */
     public static JToolBar readToolBar(Class cls, ActionMap am) throws IOException {
         List<String> config = readToolBarConfig(cls, DEFAULT_TOOLBAR_KEY);
@@ -111,6 +115,10 @@ public class MenuConfig {
     
     /**
      * Create menubar from file
+     * @param cls
+     * @param am
+     * @return 
+     * @throws java.io.IOException 
      */
     public static JMenuBar readMenuBar(Class cls, ActionMap am) throws IOException {
         Map<String, List> config = readMenuBarConfig(cls, DEFAULT_MENUBAR_KEY);

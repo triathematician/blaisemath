@@ -4,10 +4,11 @@
  */
 package com.googlecode.blaisemath.gesture.swing;
 
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
-import com.googlecode.blaisemath.graphics.swing.TransformedCoordinateSpace;
+import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.Component;
 import java.awt.Graphics2D;

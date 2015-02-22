@@ -36,7 +36,7 @@ import java.beans.PropertyChangeSupport;
  * Proxy for editing a graphic's primitive and style.
  * @author elisha
  */
-public class ProxyGraphicEditor {
+public final class ProxyGraphicEditor {
 
     /** The graphic being edited */
     private final Graphic graphic;
@@ -84,7 +84,6 @@ public class ProxyGraphicEditor {
             throw new UnsupportedOperationException();
         }
     }
-    
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
     //

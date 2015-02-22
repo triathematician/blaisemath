@@ -25,8 +25,9 @@ package com.googlecode.blaisemath.gesture.swing;
  */
 
 
-import com.googlecode.blaisemath.gesture.DefaultSketchGesture;
-import com.googlecode.blaisemath.gesture.SketchGesture;
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
+import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.gesture.MouseGesture;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.util.event.MouseEvents;
 import java.awt.AWTEvent;
@@ -51,11 +52,12 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
 
     private JLayer<JGraphicComponent> layer;
     private GestureOrchestrator orchestrator;
-    private PropertyChangeListener gestureChangeListener;
+    private final PropertyChangeListener gestureChangeListener;
     private Point mouseLoc = null;
 
     public JGraphicGestureLayerUI() {
         gestureChangeListener = new PropertyChangeListener() {
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
             }
@@ -88,13 +90,13 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
     @Override
     public void paint(Graphics g, JComponent c) {
         super.paint(g, c);
-        SketchGesture gesture = orchestrator.getActiveGesture();
+        MouseGesture gesture = orchestrator.getActiveGesture();
         if (gesture != null) {
             if (mouseLoc != null) {
                 g.drawString(gesture.getName(), mouseLoc.x+2, mouseLoc.y-2);
             }
-            if (gesture instanceof DefaultSketchGesture) {
-                ((DefaultSketchGesture)gesture).paint((Graphics2D) g);
+            if (gesture instanceof MouseGestureSupport) {
+                ((MouseGestureSupport)gesture).paint((Graphics2D) g);
             }
         }
     }
@@ -107,11 +109,11 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
         }
     }
 
-    public SketchGesture getActiveGesture() {
+    public MouseGesture getActiveGesture() {
         return orchestrator == null ? null : orchestrator.getActiveGesture();
     }
 
-    public void setActiveGesture(SketchGesture gesture) {
+    public void setActiveGesture(MouseGesture gesture) {
         if (orchestrator != null) {
             orchestrator.setActiveGesture(gesture);
         }
@@ -123,7 +125,7 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
 
     @Override
     protected void processMouseEvent(MouseEvent e, JLayer<? extends JGraphicComponent> l) {
-        SketchGesture gesture = orchestrator.getActiveGesture();
+        MouseGesture gesture = orchestrator.getActiveGesture();
         if (gesture instanceof MouseListener) {
             MouseEvents.delegateEvent(e, (MouseListener) gesture);
             if (e.getID() == MouseEvent.MOUSE_ENTERED) {
@@ -139,7 +141,7 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
 
     @Override
     protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends JGraphicComponent> l) {
-        SketchGesture gesture = orchestrator.getActiveGesture();
+        MouseGesture gesture = orchestrator.getActiveGesture();
         if (gesture instanceof MouseMotionListener) {
             MouseEvents.delegateMotionEvent(e, (MouseMotionListener) gesture);
             if (e.getID() == MouseEvent.MOUSE_MOVED || e.getID() == MouseEvent.MOUSE_DRAGGED) {

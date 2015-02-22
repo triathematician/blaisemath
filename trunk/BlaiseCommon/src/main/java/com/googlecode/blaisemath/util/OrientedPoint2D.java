@@ -44,6 +44,9 @@ public class OrientedPoint2D extends Point2DBean {
     
     public OrientedPoint2D(Point2D pt) {
         super(pt.getX(), pt.getY());
+        if (pt instanceof OrientedPoint2D) {
+            angle = ((OrientedPoint2D)pt).angle;
+        }
     }
 
     public OrientedPoint2D(double x, double y) {

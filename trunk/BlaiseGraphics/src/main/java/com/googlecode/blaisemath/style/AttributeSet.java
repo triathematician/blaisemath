@@ -172,6 +172,14 @@ public class AttributeSet implements Cloneable {
     }
     
     /**
+     * Get the attributes and the values in this set as a map
+     * @return attribute map
+     */
+    public Map<String,Object> getAttributeMap() {
+        return Maps.newHashMap(attributeMap);
+    }
+    
+    /**
      * Get this attributes, and all parent attributes.
      * @return attribute keys
      */
@@ -235,6 +243,16 @@ public class AttributeSet implements Cloneable {
         Object res = attributeMap.put(key, value);
         fireStateChanged();
         return res;
+    }
+    
+    /**
+     * Set all of the attributes in the provided map.
+     * @param attr map of attributes to set
+     * @param <T> the type of values in the map
+     */
+    public <T> void putAll(Map<String,T> attr) {
+        attributeMap.putAll(attr);
+        fireStateChanged();
     }
     
     /**

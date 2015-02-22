@@ -61,12 +61,14 @@ public abstract class ShapeFromPoints {
     
     
     public static class Line extends ShapeFromPoints {
+        @Override
         public Shape create(Point2D press, Point2D release) {
             return new Line2D.Double(press, release);
         }
     }
     
     public static class Circle extends ShapeFromPoints {
+        @Override
         public Shape create(Point2D press, Point2D release) {
             double rad = press.distance(release);
             return new Ellipse2D.Double(press.getX()-rad, press.getY()-rad, 2*rad, 2*rad);
@@ -74,6 +76,7 @@ public abstract class ShapeFromPoints {
     }
     
     public static class Ellipse extends ShapeFromPoints {
+        @Override
         public Shape create(Point2D press, Point2D release) {
             Ellipse2D.Double res = new Ellipse2D.Double();
             res.setFrameFromDiagonal(press, release);
@@ -82,6 +85,7 @@ public abstract class ShapeFromPoints {
     }
     
     public static class Rectangle extends ShapeFromPoints {
+        @Override
         public Shape create(Point2D press, Point2D release) {
             Rectangle2D.Double res = new Rectangle2D.Double();
             res.setFrameFromDiagonal(press, release);

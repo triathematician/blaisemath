@@ -3,6 +3,7 @@
  */
 package com.googlecode.blaisemath.gesture.swing;
 
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.google.common.base.Strings;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
