@@ -28,16 +28,17 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * An image anchored at a given location.
  * @author petereb1
- * 
- * TODO - how to handle conflicting width/height of image vs width/height here?
  */
+@Immutable
 public class AnchoredImage extends Point2DBean {
-    
-    private final Image image;
+
+    private final Image originalImage;
+    private final Image scaledImage;
     private final String ref;
     private final java.lang.Double width;
     private final java.lang.Double height;
@@ -46,12 +47,17 @@ public class AnchoredImage extends Point2DBean {
         this(x, y, null, null, image, ref);
     }
 
-    public AnchoredImage(double x, double y, java.lang.Double width, java.lang.Double height, Image image, @Nullable String ref) {
+    public AnchoredImage(double x, double y, @Nullable java.lang.Double width, @Nullable java.lang.Double height, Image image, @Nullable String ref) {
         super(x, y);
         this.width = width;
         this.height = height;
-        this.image = image;
         this.ref = ref;
+        this.originalImage = image;
+        if (width != null && height != null && (image.getWidth(null) != width || image.getHeight(null) != height)) {
+            this.scaledImage = image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT);
+        } else {
+            this.scaledImage = image;
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
@@ -64,21 +70,25 @@ public class AnchoredImage extends Point2DBean {
     }
 
     public double getWidth() {
-        return width == null ? image.getWidth(null) : width;
+        return width == null ? scaledImage.getWidth(null) : width;
     }
 
     public double getHeight() {
-        return height == null ? image.getHeight(null) : height;
+        return height == null ? scaledImage.getHeight(null) : height;
     }
     
     public Rectangle2D getBounds(ImageObserver io) {
-        double iw = width == null ? image.getWidth(io) : width;
-        double ih = height == null ? image.getHeight(io) : height;
+        double iw = width == null ? scaledImage.getWidth(io) : width;
+        double ih = height == null ? scaledImage.getHeight(io) : height;
         return new Rectangle2D.Double(x, y, iw, ih);
     }
     
     public Image getImage() {
-        return image;
+        return scaledImage;
+    }
+    
+    public Image getOriginalImage() {
+        return originalImage;
     }
     
     //</editor-fold>

@@ -25,9 +25,7 @@ package com.googlecode.blaisemath.gesture;
  */
 
 
-import com.googlecode.blaisemath.gesture.swing.GestureOrchestrator;
-import com.googlecode.blaisemath.graphics.swing.TransformedCoordinateSpace;
-import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -40,10 +38,9 @@ import java.awt.geom.Point2D;
  * transformations into local coordinate space.
  * 
  * @param <C> target component type
- * @see JGraphicComponent
  * @author Elisha
  */
-public abstract class DefaultSketchGesture<C extends GestureOrchestrator> extends MouseAdapter implements SketchGesture<C> {
+public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends MouseAdapter implements MouseGesture<C> {
     
     /** Orchestrates the gesture */
     protected final C orchestrator;
@@ -59,7 +56,7 @@ public abstract class DefaultSketchGesture<C extends GestureOrchestrator> extend
     /** Where the mouse is following a press/drag */
     protected Point2D locPoint = null;
 
-    protected DefaultSketchGesture(C orchestrator, String name, String description) {
+    protected MouseGestureSupport(C orchestrator, String name, String description) {
         this.orchestrator = orchestrator;
         this.name = name;
         this.description = description;

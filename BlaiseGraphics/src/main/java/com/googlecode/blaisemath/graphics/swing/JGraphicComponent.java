@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
+import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.core.GMouseEvent;

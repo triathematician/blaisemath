@@ -3,6 +3,7 @@
  */
 package com.googlecode.blaisemath.gesture.swing;
 
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphics;
 import com.googlecode.blaisemath.style.Styles;
@@ -34,7 +35,7 @@ import java.awt.geom.Ellipse2D;
  * 
  * @author Elisha
  */
-public class CreateCircleGesture extends JGraphicCreatorGesture {
+public final class CreateCircleGesture extends JGraphicCreatorGesture {
     
     public CreateCircleGesture(GestureOrchestrator orchestrator) {
         super(orchestrator, "Draw circle", "Drag from center of circle to its boundary.");

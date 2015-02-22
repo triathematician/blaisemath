@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * <p>
- *   SVG-compatible rectangle.
+ *   SVG rectangle object.
  * </p>
  * @author elisha
  */
@@ -69,6 +69,10 @@ public final class SVGRectangle extends SVGElement {
         this.ry = ry;
     }
 
+    /**
+     * Get converter that translates an {@link SVGRectangle} to/from a {@link RectangularShape}.
+     * @return converter instance
+     */
     public static Converter<SVGRectangle, RectangularShape> shapeConverter() {
         return CONVERTER_INST;
     }
@@ -134,8 +138,9 @@ public final class SVGRectangle extends SVGElement {
     
     //</editor-fold>
 
-    
+    /** Handles conversion of rectangle to/from a rectangular shape */
     private static final class RectangleConverter extends Converter<SVGRectangle, RectangularShape> {
+        @Override
         public SVGRectangle doBackward(RectangularShape r) {
             checkArgument(r instanceof RoundRectangle2D || r instanceof Rectangle2D,
                     "Invalid shape: "+r);
@@ -149,6 +154,7 @@ public final class SVGRectangle extends SVGElement {
             }
         }
 
+        @Override
         public RectangularShape doForward(SVGRectangle r) {
             if (r.rx == 0 && r.ry == 0) {
                 return new Rectangle2D.Double(r.x, r.y, r.width, r.height);

@@ -25,8 +25,10 @@ package com.googlecode.blaisemath.gesture.swing;
  */
 
 
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
+import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import static com.google.common.base.Preconditions.checkArgument;
-import com.googlecode.blaisemath.gesture.DefaultSketchGesture;
+import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.graphics.swing.MarkerRenderer;
@@ -50,7 +52,9 @@ import java.util.logging.Logger;
  * 
  * @author elisha
  */
-public class BoundingBoxGesture extends DefaultSketchGesture<GestureOrchestrator> {
+public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> {
+    
+    private static final int CAPTURE_RAD = 5;
     
     private final JGraphicComponent view;
     
@@ -68,7 +72,7 @@ public class BoundingBoxGesture extends DefaultSketchGesture<GestureOrchestrator
     /** Shape at start of drag */
     private Shape startShape;
     
-    public BoundingBoxGesture(GestureOrchestrator orchestrator, PrimitiveGraphicSupport graphic) {
+    public ControlBoxGesture(GestureOrchestrator orchestrator, PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Bounding box", "Move and resize shape");
         
         checkArgument(orchestrator.getComponent() instanceof JGraphicComponent, 
@@ -104,7 +108,7 @@ public class BoundingBoxGesture extends DefaultSketchGesture<GestureOrchestrator
         } else if (prim instanceof AnchoredImage) {
             startShape = ((AnchoredImage) prim).getBounds(null);
         } else {
-            Logger.getLogger(BoundingBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
+            Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
             return;
         }
         controlPoint = capture(startShape.getBounds2D(), pressPoint);
@@ -130,9 +134,9 @@ public class BoundingBoxGesture extends DefaultSketchGesture<GestureOrchestrator
             AnchoredImage img = (AnchoredImage) prim;
             Rectangle2D newBounds = transf.createTransformedShape(startShape).getBounds2D();
             graphic.setPrimitive(new AnchoredImage(newBounds.getX(), newBounds.getY(), newBounds.getWidth(), newBounds.getHeight(),
-                    img.getImage(), img.getReference()));
+                    img.getOriginalImage(), img.getReference()));
         } else {
-            Logger.getLogger(BoundingBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
+            Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
             return;
         }
     }
@@ -153,8 +157,6 @@ public class BoundingBoxGesture extends DefaultSketchGesture<GestureOrchestrator
     //
     // ControlPoint handling
     //
-    
-    private static final int CAPTURE_RAD = 5;
 
     // get the control point for the given press point
     private static ControlPoint capture(Rectangle2D box, Point2D pressPoint) {

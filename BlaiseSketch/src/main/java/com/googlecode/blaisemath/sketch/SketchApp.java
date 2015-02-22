@@ -34,16 +34,16 @@ import org.jdesktop.application.SingleFrameApplication;
  * 
  * @author Elisha
  */
-public class BlaiseSketchApp extends SingleFrameApplication {
+public class SketchApp extends SingleFrameApplication {
     
     @Override
     protected void startup() {
-        BlaiseSketchFrameView view = new BlaiseSketchFrameView(this);
+        SketchFrameView view = new SketchFrameView(this);
         show(view);
     }
 
     public static void main(String[] args) {
-        launch(BlaiseSketchApp.class, args);
+        launch(SketchApp.class, args);
     }
     
 }

@@ -2,9 +2,8 @@
  * GestureOrchestrator.java
  * Created Oct 11, 2014
  */
-package com.googlecode.blaisemath.gesture.swing;
+package com.googlecode.blaisemath.gesture;
 
-import com.googlecode.blaisemath.gesture.SketchGesture;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -31,14 +30,14 @@ import java.beans.PropertyChangeSupport;
 
 
 /**
- * Manages an active {@link SketchGesture}, and associated state changes.
+ * Manages an active {@link MouseGesture}, and associated state changes.
  * 
  * @author elisha
  */
 public class GestureOrchestrator {
 
     private final Component component;
-    private SketchGesture activeGesture = null;
+    private MouseGesture activeGesture = null;
 
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -61,7 +60,7 @@ public class GestureOrchestrator {
      * Get the active gesture.
      * @return active gesture
      */
-    public SketchGesture getActiveGesture() {
+    public MouseGesture getActiveGesture() {
         return activeGesture;
     }
     
@@ -70,7 +69,7 @@ public class GestureOrchestrator {
      * before moving on.
      * @param g the new active gesture
      */
-    public void setActiveGesture(SketchGesture g) {
+    public void setActiveGesture(MouseGesture g) {
         if (this.activeGesture != g) {
             if (this.activeGesture != null) {
                 this.activeGesture.cancel();
@@ -88,7 +87,7 @@ public class GestureOrchestrator {
      * Called by gestures to yield control.
      * @param g the gesture yielding control
      */
-    public void finishGesture(SketchGesture g) {
+    public void finishGesture(MouseGesture g) {
         activeGesture.finish();
         setActiveGesture(null);
     }

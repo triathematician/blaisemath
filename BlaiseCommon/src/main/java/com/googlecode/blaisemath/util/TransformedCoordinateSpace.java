@@ -2,13 +2,13 @@
  * GraphicCoordinateSpace.java
  * Created Oct 11, 2014
  */
-package com.googlecode.blaisemath.graphics.swing;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
  * BlaiseGraphics
  * --
- * Copyright (C) 2009 - 2015 Elisha Peterson
+ * Copyright (C) 2014 - 2015 Elisha Peterson
  * --
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

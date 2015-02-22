@@ -77,7 +77,7 @@ import javax.swing.SwingUtilities;
  * Utility library with various actions.
  * @author elisha
  */
-public class BlaiseSketchActions {
+public class SketchActions {
 
     private static DataFlavor AS_DATA_FLAVOR;
     private static DataFlavor DIM_DATA_FLAVOR;
@@ -91,13 +91,14 @@ public class BlaiseSketchActions {
             GRAPHIC_DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType 
                     + ";class=com.googlecode.blaisemath.graphics.core.Graphic");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE,
+            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE,
                     "Problem initializing data flavors.", ex);
         }
     }
     
     /** Predicate for those graphics that can be moved. */
     private static final Predicate<Graphic<Graphics2D>> MOVABLE_PREDICATE = new Predicate<Graphic<Graphics2D>>() {
+        @Override
         public boolean apply(Graphic<Graphics2D> input) {
             if (!(input instanceof PrimitiveGraphicSupport)) {
                 return false;
@@ -112,6 +113,7 @@ public class BlaiseSketchActions {
     /** Get the coordinate of movable graphics */
     private static final Function<Graphic<Graphics2D>,Point2D> LOC_FUNCTION = new Function<Graphic<Graphics2D>,Point2D>() {
         @Nonnull
+        @Override
         public Point2D apply(Graphic<Graphics2D> input) {
             checkArgument(input instanceof PrimitiveGraphicSupport);
             return getPrimitiveLocation((PrimitiveGraphicSupport) input);
@@ -120,6 +122,7 @@ public class BlaiseSketchActions {
     
     /** Compare x coordinates of graphics */
     private static final Comparator<Graphic<Graphics2D>> LOC_X_COMPARATOR = new Comparator<Graphic<Graphics2D>>() {
+        @Override
         public int compare(Graphic<Graphics2D> o1, Graphic<Graphics2D> o2) {
             return (int) Math.signum(LOC_FUNCTION.apply(o1).getX() - LOC_FUNCTION.apply(o2).getX());
         }
@@ -127,21 +130,27 @@ public class BlaiseSketchActions {
     
     /** Compare y coordinates of graphics */
     private static final Comparator<Graphic<Graphics2D>> LOC_Y_COMPARATOR = new Comparator<Graphic<Graphics2D>>() {
+        @Override
         public int compare(Graphic<Graphics2D> o1, Graphic<Graphics2D> o2) {
             return (int) Math.signum(LOC_FUNCTION.apply(o1).getY() - LOC_FUNCTION.apply(o2).getY());
         }
     };
     
-    private BlaiseSketchActions() {
+    // utility class
+    private SketchActions() {
     }
     
     //<editor-fold defaultstate="collapsed" desc="COPY/PASTE">
 
-    /** Copies the supplied graphic object to the system clipboard. */
+    /** 
+     * Copies the supplied graphic object to the system clipboard.
+     * @param sel the graphic to copy
+     * @param activeCanvas the canvas of the graphic
+     */
     public static void copy(Graphic<Graphics2D> sel, JGraphicComponent activeCanvas) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        // TODO - duplicate graphic
-        GraphicTransferable transf = new GraphicTransferable(sel);
+        Graphic<Graphics2D> copy = SketchGraphicUtils.copy(sel);
+        GraphicTransferable transf = new GraphicTransferable(copy);
         clipboard.setContents(transf, transf);
     }
 
@@ -155,33 +164,37 @@ public class BlaiseSketchActions {
         Transferable tr = clipboard.getContents(null);
         if (tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR)) {
             try {
-                Graphic graphic = (Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR);
+                Graphic<Graphics2D> graphic = SketchGraphicUtils.copy((Graphic<Graphics2D>) tr.getTransferData(GRAPHIC_DATA_FLAVOR));
                 if (graphic instanceof PrimitiveGraphicSupport) {
                     setPrimitiveLocation((PrimitiveGraphicSupport) graphic, canvasLoc);
                 } else {
-                    Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.WARNING,
+                    Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
                             "Attempted to paste graphic at a specified location failed because the graphic was of type {0}", graphic.getClass());
                 }
                 canvas.addGraphic(graphic);
+                SketchGraphicUtils.configureGraphicTree(graphic, true);
             } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
-    /** Copy style of provided graphic. */
+    /** 
+     * Copy style of provided graphic.
+     * @param gfc what to copy from
+     */
     public static void copyStyle(Graphic<Graphics2D> gfc) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        // TODO - duplicate style
-        AttributeSetTransferable transf = new AttributeSetTransferable(gfc.getStyle());
+        AttributeSetTransferable transf = new AttributeSetTransferable(gfc.getStyle().copy());
         clipboard.setContents(transf, transf);
     }
     
     /**
      * Paste clipboard style onto given graphics. Works whether a graphic or a style
      * is copied onto the clipboard.
+     * @param gfcs what to paste on
      */
     public static void pasteStyle(Iterable<Graphic<Graphics2D>> gfcs) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -194,17 +207,15 @@ public class BlaiseSketchActions {
                 pasteStyle = ((Graphic) tr.getTransferData(GRAPHIC_DATA_FLAVOR)).getStyle();
             }
         } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (pasteStyle != null) {
             for (Graphic<Graphics2D> gfc : gfcs) {
                 AttributeSet as = gfc.getStyle();
                 if (!(as instanceof ImmutableAttributeSet)) {
-                    for (String s : pasteStyle.getAttributes()) {
-                        as.put(s, pasteStyle.get(s));
-                    }
+                    as.putAll(pasteStyle.getAttributeMap());
                 }
                 gfc.getParent().graphicChanged(gfc);
             }
@@ -213,7 +224,7 @@ public class BlaiseSketchActions {
     
     /**
      * Copies the dimension of a graphic onto the clipboard.
-     * @param gfc 
+     * @param gfc what to copy from
      */
     public static void copyDimension(Graphic<Graphics2D> gfc) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -224,7 +235,7 @@ public class BlaiseSketchActions {
     
     /**
      * Paste the dimension of a graphic onto all targets.
-     * @param gfcs 
+     * @param gfcs what to paste on
      */
     public static void pasteDimension(Iterable<Graphic<Graphics2D>> gfcs) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -238,9 +249,9 @@ public class BlaiseSketchActions {
                 pasteDim = new Dimension((int) bds.getWidth(), (int) bds.getHeight());
             }
         } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SketchActions.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (pasteDim != null) {
             for (Graphic<Graphics2D> gfc : gfcs) {
@@ -384,7 +395,7 @@ public class BlaiseSketchActions {
         
         // create the new group and add it to the new parent
         GraphicComposite<Graphics2D> groupGraphic = new GraphicComposite<Graphics2D>();
-        SketchGraphics.configureGraphic(groupGraphic);
+        SketchGraphicUtils.configureGraphic(groupGraphic);
         groupGraphic.addGraphics(selection);
         parentGraphic.addGraphic(groupGraphic);
         
@@ -518,7 +529,7 @@ public class BlaiseSketchActions {
     public static void alignHorizontal(Set<Graphic<Graphics2D>> selection) {
         Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
         if (Iterables.size(sub) < 2) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
+            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
                     "Cannot align with fewer than 2 movable predicates.");
             return;
         }
@@ -532,7 +543,7 @@ public class BlaiseSketchActions {
     public static void alignVertical(Set<Graphic<Graphics2D>> selection) {
         Iterable<Graphic<Graphics2D>> sub = Iterables.filter(selection, MOVABLE_PREDICATE);
         if (Iterables.size(sub) < 2) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
+            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
                     "Cannot align with fewer than 2 movable predicates.");
             return;
         }
@@ -547,7 +558,7 @@ public class BlaiseSketchActions {
         List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
+            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
                     "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
@@ -566,7 +577,7 @@ public class BlaiseSketchActions {
         List<Graphic<Graphics2D>> sub = Lists.newArrayList(Iterables.filter(selection, MOVABLE_PREDICATE));
         int count = Iterables.size(sub);
         if (count < 2) {
-            Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.INFO,
+            Logger.getLogger(SketchActions.class.getName()).log(Level.INFO,
                     "Cannot distribute with fewer than 2 movable predicates.");
             return;
         }
@@ -629,9 +640,13 @@ public class BlaiseSketchActions {
     
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="UTILITY METHODS">
+    
     private static void logUnsupported(String op, Graphic gfc) {
-        Logger.getLogger(BlaiseSketchActions.class.getName()).log(Level.WARNING,
+        Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
                 "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
     }
+    
+    //</editor-fold>
     
 }

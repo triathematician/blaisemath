@@ -40,6 +40,11 @@ public class MouseEvents {
     private MouseEvents() {
     }
     
+    /**
+     * Delegate a mouse event by type to the provided listener.
+     * @param e mouse event
+     * @param l listener to delegate to
+     */
     public static void delegateEvent(MouseEvent e, MouseListener l) {
         switch(e.getID()) {
             case MouseEvent.MOUSE_ENTERED:
@@ -63,6 +68,11 @@ public class MouseEvents {
         }
     }
     
+    /**
+     * Delegate a mouse motion event by type to the provided listener.
+     * @param e mouse event
+     * @param l listener to delegate to
+     */
     public static void delegateMotionEvent(MouseEvent e, MouseMotionListener l) {
         switch(e.getID()) {
             case MouseEvent.MOUSE_DRAGGED:

@@ -4,12 +4,13 @@
  */
 package com.googlecode.blaisemath.gesture.swing;
 
-import com.googlecode.blaisemath.sketch.SketchGraphics;
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
+import com.googlecode.blaisemath.sketch.SketchGraphicUtils;
 import static com.google.common.base.Preconditions.checkArgument;
-import com.googlecode.blaisemath.gesture.DefaultSketchGesture;
+import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
-import com.googlecode.blaisemath.graphics.swing.TransformedCanvasPainter;
+import com.googlecode.blaisemath.util.TransformedCanvasPainter;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import javax.annotation.Nullable;
@@ -40,7 +41,7 @@ import javax.annotation.Nullable;
  * 
  * @author Elisha
  */
-public abstract class JGraphicCreatorGesture extends DefaultSketchGesture<GestureOrchestrator> {
+public abstract class JGraphicCreatorGesture extends MouseGestureSupport<GestureOrchestrator> {
     
     private final JGraphicComponent view;
     
@@ -62,7 +63,7 @@ public abstract class JGraphicCreatorGesture extends DefaultSketchGesture<Gestur
     public void finish() {
         Graphic<Graphics2D> gfc = createGraphic();
         if (gfc != null) {
-            SketchGraphics.configureGraphic(gfc);
+            SketchGraphicUtils.configureGraphic(gfc);
             view.addGraphic(gfc);
         }
         orchestrator.setActiveGesture(null);

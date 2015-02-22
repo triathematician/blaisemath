@@ -97,10 +97,12 @@ public final class SVGText extends SVGElement {
     
     
     private static class TextConverter extends Converter<SVGText, AnchoredText> {
+        @Override
         protected SVGText doBackward(AnchoredText r) {
             return new SVGText(r.getX(), r.getY(), r.getText());
         }
 
+        @Override
         protected AnchoredText doForward(SVGText r) {
             return new AnchoredText(r.x, r.y, r.content);
         }
