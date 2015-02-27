@@ -25,9 +25,8 @@ package com.googlecode.blaisemath.gesture.swing;
  */
 
 
-import com.googlecode.blaisemath.gesture.GestureOrchestrator;
-import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import static com.google.common.base.Preconditions.checkArgument;
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
@@ -36,6 +35,7 @@ import com.googlecode.blaisemath.graphics.swing.ShapeRenderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Markers;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AffineTransformBuilder;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -69,6 +69,8 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
     
     /** Current active control */
     private ControlPoint controlPoint;
+    /** If the current gesture is to move */
+    protected boolean move = false;
     /** Shape at start of drag */
     private Shape startShape;
     
@@ -112,16 +114,19 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
             return;
         }
         controlPoint = capture(startShape.getBounds2D(), pressPoint);
+        move = controlPoint == null && startShape.contains(pressPoint);
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         super.mouseDragged(e);
+        double dx = locPoint.getX() - pressPoint.getX();
+        double dy = locPoint.getY() - pressPoint.getY();
         if (controlPoint != null) {
-            double dx = locPoint.getX() - pressPoint.getX();
-            double dy = locPoint.getY() - pressPoint.getY();
             AffineTransform transf = controlPoint.resize(startShape.getBounds2D(), dx, dy);
             applyTransformToGraphic(transf);
+        } else if (move) {
+            applyTransformToGraphic(new AffineTransformBuilder().translate(dx, dy).build());
         }
     }
     
@@ -159,9 +164,10 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
     //
 
     // get the control point for the given press point
-    private static ControlPoint capture(Rectangle2D box, Point2D pressPoint) {
+    private ControlPoint capture(Rectangle2D box, Point2D pressPoint) {
+        double cap = CAPTURE_RAD / Math.max(view.getTransform().getScaleX(), view.getTransform().getScaleY());
         for (ControlPoint cp : ControlPoint.values()) {
-            if (cp.captures(box, pressPoint)) {
+            if (cp.captures(box, pressPoint, cap)) {
                 return cp;
             }
         }
@@ -286,7 +292,7 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
         abstract Point2D location(Rectangle2D box);
         
         /** Test whether control point can use the given press point */
-        private boolean captures(Rectangle2D box, Point2D pressPoint) {
+        private boolean captures(Rectangle2D box, Point2D pressPoint, double rad) {
             double dist = location(box).distance(pressPoint);
             return dist < CAPTURE_RAD;
         }
