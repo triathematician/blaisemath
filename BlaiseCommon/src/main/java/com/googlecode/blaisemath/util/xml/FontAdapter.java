@@ -40,7 +40,8 @@ public final class FontAdapter extends XmlAdapter<String, Font> {
 
     @Override
     public Font unmarshal(String v) {
-        return Font.decode(v);
+        Font res = Font.decode(v);
+        return res;
     }
 
     @Override
@@ -49,6 +50,7 @@ public final class FontAdapter extends XmlAdapter<String, Font> {
                 : c.isBold() && c.isItalic() ? "BOLDITALIC"
                 : c.isBold() ? "BOLD"
                 : "ITALIC";
-        return String.format("%s-%s-%s", c.getName(), styStr, ""+c.getSize());
+        String res = String.format("%s-%s-%s", c.getFamily(), styStr, ""+c.getSize());
+        return res;
     }
 }
