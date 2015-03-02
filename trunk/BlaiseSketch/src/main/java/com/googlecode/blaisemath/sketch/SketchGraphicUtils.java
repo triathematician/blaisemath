@@ -35,12 +35,12 @@ import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Styles;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
+import com.googlecode.blaisemath.util.Configurer;
 import com.googlecode.blaisemath.util.MenuConfig;
 import com.googlecode.blaisemath.util.OrientedPoint2D;
 import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
@@ -66,6 +66,19 @@ public class SketchGraphicUtils {
     );
     
     private SketchGraphicUtils() {
+    }
+    
+    /**
+     * Return class that can be used to configure a graphic.
+     * @return configurer
+     */
+    public static Configurer<Graphic<Graphics2D>> configurer() {
+        return new Configurer<Graphic<Graphics2D>>(){
+            @Override
+            public void configure(Graphic<Graphics2D> obj) {
+                SketchGraphicUtils.configureGraphic(obj);
+            }
+        };
     }
 
     /**

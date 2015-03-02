@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.sketch;
  */
 
 
-import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
@@ -33,18 +32,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.googlecode.blaisemath.editor.EditorRegistration;
 import com.googlecode.blaisemath.firestarter.PropertySheet;
-import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
-import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
-import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
+import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGesture;
 import com.googlecode.blaisemath.gesture.swing.ControlBoxGesture;
 import com.googlecode.blaisemath.gesture.swing.ControlLineGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateCircleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateEllipseGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateImageGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateLineGesture;
+import com.googlecode.blaisemath.gesture.swing.CreateMarkerGesture;
+import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
-import com.googlecode.blaisemath.gesture.GestureOrchestrator;
+import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
+import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.GraphicUtils;
@@ -85,6 +85,7 @@ import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
@@ -147,9 +148,16 @@ public class SketchFrameView extends FrameView {
             }
         });
         
-        gestureUI = new JGraphicGestureLayerUI();
+        gestureUI = new JGraphicGestureLayerUI() {
+            @Override
+            public void installUI(JComponent c) {
+                super.installUI(c);
+                getGestureOrchestrator().addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
+            }
+        };
         gestureUI.addPropertyChangeListener("activeGesture", 
             new PropertyChangeListener(){
+                @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     activeGestureUpdated((MouseGesture) evt.getNewValue());
                 }
