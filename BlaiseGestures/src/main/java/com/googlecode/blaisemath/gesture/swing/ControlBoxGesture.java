@@ -56,9 +56,9 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
     
     private static final int CAPTURE_RAD = 5;
     
-    private final JGraphicComponent view;
+    protected final JGraphicComponent view;
     
-    private final PrimitiveGraphicSupport graphic;
+    protected final PrimitiveGraphicSupport graphic;
     private final AttributeSet boxStyle = Styles.strokeWidth(new Color(0,0,255,64), 1f);
     private final AttributeSet controlStyle = Styles.fillStroke(new Color(0,0,255,64), null)
             .and(Styles.MARKER, Markers.CIRCLE)
