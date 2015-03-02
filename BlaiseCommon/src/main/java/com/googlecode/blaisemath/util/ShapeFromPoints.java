@@ -2,7 +2,7 @@
  * ShapeFromPoints.java
  * Created Oct 11, 2014
  */
-package com.googlecode.blaisemath.gesture;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
