@@ -32,6 +32,7 @@ import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import javax.annotation.Nullable;
 
 /**
  * Utility class for working with {@link Graphic}s.
@@ -129,6 +130,13 @@ public class GraphicUtils {
     
     //</editor-fold>
     
+    /**
+     * Get the bounding box surrounding the given set of graphics.
+     * @param <G> type of graphic canvas
+     * @param entries the graphics
+     * @return bounding box, or null if the provided iterable is empty
+     */
+    @Nullable
     public static <G> Rectangle2D boundingBox(Iterable<? extends Graphic<G>> entries) {
         Rectangle2D res = null;
         for (Graphic<G> en : entries) {
@@ -140,6 +148,12 @@ public class GraphicUtils {
         return res;
     }
     
+    /**
+     * Get the bounding box surrounding the given set of rectangles.
+     * @param shapes the rectangular shapes
+     * @return bounding box, or null if the provided iterable is empty
+     */
+    @Nullable
     public static Rectangle2D boundingBoxRect(Iterable<? extends RectangularShape> shapes) {
         Rectangle2D res = null;
         for (RectangularShape sh : shapes) {

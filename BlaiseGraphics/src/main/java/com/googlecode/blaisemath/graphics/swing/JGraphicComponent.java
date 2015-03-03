@@ -30,6 +30,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.core.GMouseEvent;
 import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
@@ -43,6 +44,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -237,11 +239,13 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
     //<editor-fold defaultstate="collapsed" desc="CANVAS TRANSFORM">
     
     @Nullable
+    @Override
     public AffineTransform getTransform() {
         return transform;
     }
     
     @Nullable
+    @Override
     public AffineTransform getInverseTransform() {
         return inverseTransform;
     }
@@ -251,6 +255,7 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
      * @param at the transform
      * @throws IllegalArgumentException if the transform is non-null but not invertible
      */
+    @Override
     public void setTransform(@Nullable AffineTransform at) {
         if (at == null) {
             transform = null;
@@ -265,6 +270,39 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
             }
         }
         repaint();
+    }
+    
+    /**
+     * Reset transform to the default.
+     */
+    public void resetTransform() {
+        setTransform(null);
+    }
+    
+    /**
+     * Set transform to include all components in the graphic tree. Does nothing
+     * if there are no graphics.
+     */
+    public void zoomToAll() {
+        Rectangle2D bounds = getGraphicRoot().boundingBox();
+        if (bounds != null) {
+            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
+                    bounds.getMinX(), bounds.getMinY()),
+                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+        }
+    }
+    
+    /**
+     * Set transform to include all selected components. Does nothing if nothing
+     * is selected.
+     */
+    public void zoomToSelected() {
+        Rectangle2D bounds = GraphicUtils.boundingBox(getSelectionModel().getSelection());
+        if (bounds != null) {
+            PanAndZoomHandler.zoomCoordBoxAnimated(this, new Point2D.Double(
+                    bounds.getMinX(), bounds.getMinY()),
+                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+        }
     }
     
     /**

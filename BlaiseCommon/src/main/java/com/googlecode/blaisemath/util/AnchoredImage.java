@@ -53,7 +53,7 @@ public class AnchoredImage extends Point2DBean {
         this.height = height;
         this.ref = ref;
         this.originalImage = image;
-        if (width != null && height != null && (image.getWidth(null) != width || image.getHeight(null) != height)) {
+        if (width != null && width > 0 && height != null && height > 0 && (image.getWidth(null) != width || image.getHeight(null) != height)) {
             this.scaledImage = image.getScaledInstance(width.intValue(), height.intValue(), Image.SCALE_DEFAULT);
         } else {
             this.scaledImage = image;
