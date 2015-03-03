@@ -61,16 +61,16 @@ import javax.swing.event.PopupMenuListener;
  * 
  * @author Elisha
  */
-public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements MouseListener, MouseMotionListener {
+public final class JGraphicRoot extends GraphicComposite<Graphics2D> {
 
     /** Parent component upon which the graphics are drawn. */
     protected final JGraphicComponent owner;
     /** Context menu for actions on the graphics */
     protected final JPopupMenu popup = new JPopupMenu();
+    
     /** Provides a pluggable way to generate mouse events */
     @Nonnull 
     protected GMouseEvent.Factory mouseFactory = new GMouseEvent.Factory();
-
     /** Current owner of mouse events. Gets first priority for mouse events that occur. */
     private transient Graphic mouseGraphic = null;
     /** Tracks current mouse location */
@@ -82,8 +82,9 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
      */
     public JGraphicRoot(JGraphicComponent component) {
         this.owner = checkNotNull(component);
-        this.owner.addMouseListener(this);
-        this.owner.addMouseMotionListener(this);
+        MouseHandler mh = new MouseHandler();
+        this.owner.addMouseListener(mh);
+        this.owner.addMouseMotionListener(mh);
         this.owner.setComponentPopupMenu(popup);
         
         // set up style
@@ -93,6 +94,7 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
         
         // set up popup menu
         popup.addPopupMenuListener(new PopupMenuListener(){
+            @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 if (mouseLoc != null) {
                     popup.removeAll();
@@ -104,9 +106,11 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
                     }
                 }
             }
+            @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 popup.removeAll();
             }
+            @Override
             public void popupMenuCanceled(PopupMenuEvent e) {
                 popup.removeAll();
             }
@@ -230,82 +234,92 @@ public final class JGraphicRoot extends GraphicComposite<Graphics2D> implements 
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
-        GMouseEvent gme = graphicMouseEvent(e);
-        updateMouseGraphic(gme, false);
-        if (mouseGraphic != null) {
-            for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                l.mouseClicked(gme);
-                if (gme.isConsumed()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    public void mouseMoved(MouseEvent e) {
-        GMouseEvent gme = graphicMouseEvent(e);
-        mouseLoc = gme.getGraphicLocation();
-        updateMouseGraphic(gme, false);
-        if (mouseGraphic != null) {
-            gme.setGraphicSource(mouseGraphic);
-            for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
-                l.mouseMoved(gme);
-                if (gme.isConsumed()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    public void mousePressed(MouseEvent e) {
-        GMouseEvent gme = graphicMouseEvent(e);
-        updateMouseGraphic(gme, false);
-        if (mouseGraphic != null) {
-            gme.setGraphicSource(mouseGraphic);
-            for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                l.mousePressed(gme);
-                if (gme.isConsumed()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    public void mouseDragged(MouseEvent e) {
-        if (mouseGraphic != null) {
+    /** Delegate for mouse events */
+    private class MouseHandler implements MouseListener, MouseMotionListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
-            gme.setGraphicSource(mouseGraphic);
-            for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
-                l.mouseDragged(gme);
-                if (gme.isConsumed()) {
-                    return;
+            updateMouseGraphic(gme, false);
+            if (mouseGraphic != null) {
+                for (MouseListener l : mouseGraphic.getMouseListeners()) {
+                    l.mouseClicked(gme);
+                    if (gme.isConsumed()) {
+                        return;
+                    }
                 }
             }
         }
-    }
 
-    public void mouseReleased(MouseEvent e) {
-        if (mouseGraphic != null) {
+        @Override
+        public void mouseMoved(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
-            gme.setGraphicSource(mouseGraphic);
-            for (MouseListener l : mouseGraphic.getMouseListeners()) {
-                l.mouseReleased(gme);
-                if (gme.isConsumed()) {
-                    return;
+            mouseLoc = gme.getGraphicLocation();
+            updateMouseGraphic(gme, false);
+            if (mouseGraphic != null) {
+                gme.setGraphicSource(mouseGraphic);
+                for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
+                    l.mouseMoved(gme);
+                    if (gme.isConsumed()) {
+                        return;
+                    }
                 }
             }
         }
-    }
 
-    public void mouseEntered(MouseEvent e) {
-        // no behavior desired
-    }
-
-    public void mouseExited(MouseEvent e) {
-        if (mouseGraphic != null) {
+        @Override
+        public void mousePressed(MouseEvent e) {
             GMouseEvent gme = graphicMouseEvent(e);
-            mouseExit(mouseGraphic, gme);
+            updateMouseGraphic(gme, false);
+            if (mouseGraphic != null) {
+                gme.setGraphicSource(mouseGraphic);
+                for (MouseListener l : mouseGraphic.getMouseListeners()) {
+                    l.mousePressed(gme);
+                    if (gme.isConsumed()) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (mouseGraphic != null) {
+                GMouseEvent gme = graphicMouseEvent(e);
+                gme.setGraphicSource(mouseGraphic);
+                for (MouseMotionListener l : mouseGraphic.getMouseMotionListeners()) {
+                    l.mouseDragged(gme);
+                    if (gme.isConsumed()) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (mouseGraphic != null) {
+                GMouseEvent gme = graphicMouseEvent(e);
+                gme.setGraphicSource(mouseGraphic);
+                for (MouseListener l : mouseGraphic.getMouseListeners()) {
+                    l.mouseReleased(gme);
+                    if (gme.isConsumed()) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            // no behavior desired
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if (mouseGraphic != null) {
+                GMouseEvent gme = graphicMouseEvent(e);
+                mouseExit(mouseGraphic, gme);
+            }
         }
     }
 

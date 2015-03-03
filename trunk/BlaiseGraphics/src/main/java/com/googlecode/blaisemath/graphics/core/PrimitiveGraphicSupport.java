@@ -190,14 +190,17 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     
     /** A draggable point generating events when it's position changes. */
     private class ProxyPointDraggable implements DraggableCoordinate<Point2D> {
+        @Override
         public Point2D getPoint() {
             return (Point2D) primitive; 
         }
 
+        @Override
         public void setPoint(Point2D p) {
             ((Point2D)primitive).setLocation(p);
         }
 
+        @Override
         public void setPoint(Point2D initial, Point2D dragStart, Point2D dragFinish) {
             ((Point2D)primitive).setLocation(
                     initial.getX()+dragFinish.getX()-dragStart.getX(),

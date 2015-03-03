@@ -45,8 +45,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
 /**
- * Mouse handler that allows pan and zoom of a graphics canvas. Works by
- * changing the
+ * Enables pan and zoom of a graphics canvas, by changing the {@link AffineTransform}
+ * associated with the canvas.
  *
  * @author Elisha
  */
@@ -80,18 +80,30 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     private transient String mode = null;
     /** Old bounds for the window. */
     private transient Rectangle2D oldLocalBounds;
+
+    /**
+     * Initialize with given component. This method is private as the
+     * {@link #install(com.googlecode.blaisemath.graphics.swing.JGraphicComponent)}
+     * method should be used.
+     * @param comp component
+     */
+    private PanAndZoomHandler(JGraphicComponent comp) {
+        this.component = checkNotNull(comp);
+    }
     
     /**
      * Initialize handler for given component
      * @param cpt graphic component
      */
-    public PanAndZoomHandler(JGraphicComponent cpt) {
-        this.component = checkNotNull(cpt);
-        cpt.addMouseListener(this);
-        cpt.addMouseMotionListener(this);
-        cpt.addMouseWheelListener(this);
-        cpt.getOverlays().add(this);
+    public static void install(JGraphicComponent cpt) {
+        PanAndZoomHandler handler = new PanAndZoomHandler(cpt);
+        cpt.addMouseListener(handler);
+        cpt.addMouseMotionListener(handler);
+        cpt.addMouseWheelListener(handler);
+        cpt.getOverlays().add(handler);
     }
+    
+    
 
     @Override
     public void paint(Component component, Graphics2D canvas) {
