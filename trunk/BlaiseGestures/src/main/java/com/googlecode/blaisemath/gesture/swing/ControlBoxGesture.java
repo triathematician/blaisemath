@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 
 /**
  * Displays a bounding box around the object, with controls for resizing it.
+ * Clicking outside of the object (or controls) cancels the gesture.
  * 
  * @author elisha
  */
@@ -59,6 +60,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
     protected final JGraphicComponent view;
     
     protected final PrimitiveGraphicSupport graphic;
+    
     private final AttributeSet boxStyle = Styles.strokeWidth(new Color(0,0,255,64), 1f);
     private final AttributeSet controlStyle = Styles.fillStroke(new Color(0,0,255,64), null)
             .and(Styles.MARKER, Markers.CIRCLE)
@@ -74,6 +76,11 @@ public class ControlBoxGesture extends MouseGestureSupport {
     /** Shape at start of drag */
     private Shape startShape;
     
+    /**
+     * Initialize the gesture.
+     * @param orchestrator the orchestrator that handles gestures
+     * @param graphic the graphic with the bounding box
+     */
     public ControlBoxGesture(GestureOrchestrator orchestrator, PrimitiveGraphicSupport graphic) {
         super(orchestrator, "Bounding box", "Move and resize shape");
         
@@ -138,6 +145,16 @@ public class ControlBoxGesture extends MouseGestureSupport {
             applyTransformToGraphic(new AffineTransformBuilder().translate(dx, dy).build());
         }
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (graphic != null) {
+            Point2D clickPt = transformedPoint(e);
+            if (!graphic.contains(clickPt) && capture(graphic.boundingBox(), clickPt) == null) {
+                orchestrator.finishGesture(this);
+            }
+        }
+    }
     
     private void applyTransformToGraphic(AffineTransform transf) {
         Object prim = graphic.getPrimitive();
@@ -151,7 +168,6 @@ public class ControlBoxGesture extends MouseGestureSupport {
                     img.getOriginalImage(), img.getReference()));
         } else {
             Logger.getLogger(ControlBoxGesture.class.getName()).log(Level.INFO, "Resize not supported: {0}", prim);
-            return;
         }
     }
 

@@ -49,7 +49,6 @@ import com.googlecode.blaisemath.gesture.swing.CanvasHandlerGesture;
 import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
-import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport;
 import com.googlecode.blaisemath.graphics.svg.SVGElementGraphicConverter;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
@@ -69,7 +68,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditorManager;
@@ -105,7 +103,7 @@ import org.jdesktop.application.FrameView;
  * 
  * @author Elisha
  */
-public class SketchFrameView extends FrameView {
+public final class SketchFrameView extends FrameView {
     
     public static final String SELECTION_EMPTY_PROP = "selectionEmpty";
     public static final String MORE_THAN_ONE_SELECTED_PROP = "moreThanOneSelected";
@@ -126,6 +124,10 @@ public class SketchFrameView extends FrameView {
     
     private final JLabel statusLabel;
 
+    /**
+     * Initialize the view
+     * @param app application
+     */
     public SketchFrameView(SketchApp app) {
         super(app);
         
@@ -134,35 +136,11 @@ public class SketchFrameView extends FrameView {
         PanAndZoomHandler.install(activeCanvas);
         initSelectionListening();
         
-        // create gesture controller with overlay for intercepting events and rendering gesture hints
-        gestureUI = new JGraphicGestureLayerUI() {
-            @Override
-            public void installUI(JComponent c) {
-                super.installUI(c);
-                getGestureOrchestrator().addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
-            }
-        };
-        gestureUI.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
-            new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    activeGestureUpdated((MouseGesture) evt.getNewValue());
-                }
-            });
-        JLayer<JGraphicComponent> canvasWithLayer = new JLayer<JGraphicComponent>(activeCanvas, gestureUI);
-        
         detailsPanel = new RollupPanel();
         selectionPanel = new MPanel("Selection", noSelectionLabel);
         overviewPanel = new MPanel("Overview", new JLabel("overview of what's on the canvas..."));
         detailsPanel.add(selectionPanel);
         detailsPanel.add(overviewPanel);
-        
-        JSplitPane mainPanel = new JSplitPane();
-        mainPanel.setResizeWeight(.9);
-        mainPanel.add(canvasWithLayer, JSplitPane.LEFT);
-        mainPanel.add(new JScrollPane(detailsPanel), JSplitPane.RIGHT);
-        
-        setComponent(mainPanel);
 
         // set up menus
         ActionMap am = app.getContext().getActionMap(this);
@@ -190,14 +168,35 @@ public class SketchFrameView extends FrameView {
         
         EditorRegistration.registerEditors();
         PropertyEditorManager.registerEditor(Marker.class, MarkerEditor.class);
+
+        //<editor-fold defaultstate="collapsed" desc="create gesture controller with overlay for intercepting events and rendering gesture hints">
+        gestureUI = new JGraphicGestureLayerUI();
+        gestureUI.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
+            new PropertyChangeListener(){
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    activeGestureUpdated((MouseGesture) evt.getNewValue());
+                }
+            });
+        JLayer<JGraphicComponent> canvasWithLayer = new JLayer<JGraphicComponent>(activeCanvas, gestureUI);
+        GestureOrchestrator go = gestureUI.getGestureOrchestrator();
+        assert go != null;
+        go.addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
+        go.setDefaultGesture(new SelectGesture(go));
+        //</editor-fold>
         
-        // set selection as default tool
-        selectionTool();
+        JSplitPane mainPanel = new JSplitPane();
+        mainPanel.setResizeWeight(.9);
+        mainPanel.add(canvasWithLayer, JSplitPane.LEFT);
+        mainPanel.add(new JScrollPane(detailsPanel), JSplitPane.RIGHT);
+        
+        setComponent(mainPanel);
     }
     
     //<editor-fold defaultstate="collapsed" desc="INITIALIZERS">
     private void initSelectionListening() {
         activeCanvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 boolean selEmpty = isSelectionEmpty();
                 boolean one = isOneSelected();
@@ -227,29 +226,33 @@ public class SketchFrameView extends FrameView {
         if (gfc == null) {
             selectionPanel.setTitle("Selection");
             selectionPanel.setPrimaryComponent(noSelectionLabel);
-        } else {
-            if (gfc instanceof PrimitiveGraphicSupport) {
-                // activate controls gesture
-                PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
-                PropertySheet ps = PropertySheet.forBean(new GraphicStyleProxy(pgfc));
-                selectionPanel.setTitle(gfc+"");
-                selectionPanel.setPrimaryComponent(ps);
-                if (pgfc.getPrimitive() instanceof Line2D) {
-                    gestureUI.setActiveGesture(new ControlLineGesture(gestureUI.getGestureOrchestrator(), pgfc));
-                } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
-                    gestureUI.setActiveGesture(new ControlBoxGesture(gestureUI.getGestureOrchestrator(), pgfc));
-                } else {
-                    // controls not available
-                }
-            } else if (gfc instanceof Set) {
-                Set gfx = (Set) gfc;
-                selectionPanel.setTitle(gfx.size()+" graphics selected.");
-                selectionPanel.setPrimaryComponent(new JLabel("No options."));
-                selectionTool();
+        } else if (gfc instanceof PrimitiveGraphicSupport) {
+            // activate controls gesture
+            PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
+            PropertySheet ps = PropertySheet.forBean(new GraphicStyleProxy(pgfc));
+            selectionPanel.setTitle(gfc+"");
+            selectionPanel.setPrimaryComponent(ps);
+            if (pgfc.getPrimitive() instanceof Line2D) {
+                gestureUI.setActiveGesture(new ControlLineGesture(gestureUI.getGestureOrchestrator(), pgfc));
+            } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
+                gestureUI.setActiveGesture(new ControlBoxGesture(gestureUI.getGestureOrchestrator(), pgfc));
             } else {
-                Logger.getLogger(SketchFrameView.class.getName()).log(Level.WARNING,
-                        "Unable to handle selection of: {0}", gfc);
+                // controls not available
             }
+        } else if (gfc instanceof Set) {
+            Set gfx = (Set) gfc;
+            selectionPanel.setTitle(gfx.size()+" graphics selected.");
+            selectionPanel.setPrimaryComponent(new JLabel("No options."));
+            selectionTool();
+        } else if (gfc instanceof GraphicComposite) {
+            // activate controls gesture
+            GraphicComposite gc = (GraphicComposite) gfc;
+            PropertySheet ps = PropertySheet.forBean(new GraphicStyleProxy(gc));
+            selectionPanel.setTitle(gfc+"");
+            selectionPanel.setPrimaryComponent(ps);
+        } else {
+            Logger.getLogger(SketchFrameView.class.getName()).log(Level.WARNING,
+                    "Unable to handle selection of: {0}", gfc);
         }
     }
     
@@ -560,23 +563,17 @@ public class SketchFrameView extends FrameView {
     
     @Action
     public void zoomAll() {
-        Rectangle2D bounds = activeCanvas.getGraphicRoot().boundingBox();
-        PanAndZoomHandler.zoomCoordBoxAnimated(activeCanvas, new Point2D.Double(
-                bounds.getMinX(), bounds.getMinY()),
-                new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+        activeCanvas.zoomToAll();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
     public void zoomSelected() {
-        Rectangle2D bounds = GraphicUtils.boundingBox(activeCanvas.getSelectionModel().getSelection());
-        PanAndZoomHandler.zoomCoordBoxAnimated(activeCanvas, new Point2D.Double(
-                bounds.getMinX(), bounds.getMinY()),
-                new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
+        activeCanvas.zoomToSelected();
     }
     
     @Action
     public void zoom100() {
-        activeCanvas.setTransform(null);
+        activeCanvas.resetTransform();
     }
     
     //</editor-fold>
