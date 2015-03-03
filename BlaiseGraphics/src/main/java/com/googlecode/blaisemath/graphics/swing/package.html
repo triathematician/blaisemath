@@ -30,14 +30,60 @@
       <h2>Overview</h2>
       <h3>The Graphics Component and the Graphics Tree</h3>
       <p>
-          {@link org.blaise.graphics.GraphicComponent} is the top-level swing component, 
+          {@link com.googlecode.blaisemath.graphics.swing.JGraphicComponent} is the top-level swing component, 
           and works primarily with two classes: 
-          a {@link org.blaise.graphics.GraphicRoot} and a {@link org.blaise.style.StyleContext}.
+          a {@link com.googlecode.blaisemath.graphics.swing.JGraphicRoot} and a
+          {@link com.googlecode.blaisemath.style.StyleContext}.
           As might be expected, the first is responsible for storing the shapes and the
           second for drawing the shapes. However, the shapes stored in the {@code GraphicRoot}
           may also provide their own style information.
           Shapes within the {@code GraphicRoot} are stored as 
-          {@link org.blaise.graphics.Graphic}s.
+          {@link com.googlecode.blaisemath.graphics.core.Graphic}s.
       </p>
+      <h2>Mouse Handling</h2>
+      <p>
+          Mouse events are delegated through the graphics tree, in addition to being
+          handled at the component level. When passed to graphics, the mouse events
+          are enlarged to include the local coordinate.
+          The following mouse handlers are available:
+      </p>
+      <ul>
+          <li>{@link com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler}
+              - <b>pans and zooms canvs</b>, using the mouse wheel or drawing a box
+              (installed on a {@link JGraphicComponent} by invoking {@code PanAndZoomHandler.install()})
+          </li>
+          <li>{@link com.googlecode.blaisemath.graphics.swing.JGraphicSelectionHandler}
+              - enables <b>selecting graphics</b> in various ways, including clicks with control
+              keys and dragging a box; also toggles selection highlighting
+              (installed by default with every {@code JGraphicComponent}, but only
+              handles selection events if the {@code selectionEnabled} flag on the component
+              is set to true)
+          </li>
+          <li>{@link com.googlecode.blaisemath.graphics.swing.JGraphicRoot$MouseHandler} (private class)
+              - <b>delegates mouse events to graphics</b>, maintains references to the
+              current mouse location and current graphic under the mouse
+              (installed by default with {@code JGraphicRoot})
+          </li>
+          
+          <li>{@link com.googlecode.blaisemath.graphics.swing.HighlightOnMouseoverHandler}
+              - <b>highlights graphics</b> when the mouse moves over them
+              (installed by default with every {@code Graphic})
+          </li>
+          
+          <li>{@link com.googlecode.blaisemath.graphics.core.GraphicMoveHandler} 
+              - enables <b>moving graphics</b> by dragging
+              (installed for instances of {@code PrimitiveGraphicSupport} when the
+              primitive is a {@code Point2D} and {@code setDragEnabled(true)} is invoked)
+          </li>
+          <li>{@code ShapeDragHandler} (private class)
+              - enables <b>moving graphics</b> by dragging
+              (installed for instances of {@code PrimitiveGraphicSupport} when the
+              primitive is a {@code Point2D} and {@code setDragEnabled(true)} is invoked)
+          </li>
+          <li>{@link com.googlecode.blaisemath.graphics.core.BasicPointSetGraphic$IndexedPointMover}
+              - enables <b>moving individual points</b> in a {@code BasicPointSetGraphic}
+              (installed by default on this graphic)
+          </li>
+      </ul>
   </body>
 </html>

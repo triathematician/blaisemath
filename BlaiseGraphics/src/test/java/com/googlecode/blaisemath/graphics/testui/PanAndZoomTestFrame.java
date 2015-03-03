@@ -62,7 +62,7 @@ public class PanAndZoomTestFrame extends javax.swing.JFrame {
         });
 
         // init pan and zoom
-        new PanAndZoomHandler(gc);
+        PanAndZoomHandler.install(gc);
     }
 
     /**

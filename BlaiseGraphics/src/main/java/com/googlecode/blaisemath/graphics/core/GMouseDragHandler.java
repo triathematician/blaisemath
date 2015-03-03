@@ -100,23 +100,5 @@ public abstract class GMouseDragHandler extends MouseAdapter {
             mouseReleased(e);
         }
     }
-
-    /**
-     * Blank implementation of {@link GMouseDragHandler}, so implementations
-     * can only overrride select functions that need to change.
-     */
-    public static class Adapter extends GMouseDragHandler {
-        @Override
-        public void mouseDragInitiated(GMouseEvent e, Point2D start) {
-        }
-
-        @Override
-        public void mouseDragInProgress(GMouseEvent e, Point2D start) {
-        }
-
-        @Override
-        public void mouseDragCompleted(GMouseEvent e, Point2D start) {
-        }
-    }
     
 }
