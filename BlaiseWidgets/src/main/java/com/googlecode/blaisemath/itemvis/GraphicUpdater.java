@@ -32,7 +32,9 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
  * Creates and/or modifies a graphic based on an item.
  * 
  * @author Elisha
+ * @deprecated replace with {@link com.googlecode.blaisemath.core.GraphicUpdater}
  */
+@Deprecated
 public interface GraphicUpdater<Item> {
    
     /**
