@@ -41,6 +41,7 @@ import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
+import com.googlecode.blaisemath.graphics.swing.JGraphicSelectionHandler;
 import com.googlecode.blaisemath.util.SetSelectionModel;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -48,7 +49,7 @@ import java.awt.event.MouseEvent;
 
 /**
  * Gesture that allows for selection of graphics.
- * 
+ * @see JGraphicSelectionHandler
  * @author elisha
  */
 public class SelectGesture extends MouseGestureSupport {

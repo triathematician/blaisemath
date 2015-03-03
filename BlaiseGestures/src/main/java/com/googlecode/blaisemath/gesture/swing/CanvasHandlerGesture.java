@@ -38,11 +38,13 @@ package com.googlecode.blaisemath.gesture.swing;
 
 import com.googlecode.blaisemath.gesture.GestureOrchestrator;
 import com.googlecode.blaisemath.gesture.MouseGestureSupport;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 
 /**
  * Controls pan and zoom on the graphic canvas.
+ * @see PanAndZoomHandler
  * @author elisha
  */
 public class CanvasHandlerGesture extends MouseGestureSupport {
