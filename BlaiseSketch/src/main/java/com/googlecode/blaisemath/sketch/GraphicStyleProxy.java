@@ -36,14 +36,14 @@ import java.beans.PropertyChangeSupport;
  * Proxy for editing a graphic's primitive and style.
  * @author elisha
  */
-public final class ProxyGraphicEditor {
+public final class GraphicStyleProxy {
 
     /** The graphic being edited */
     private final Graphic graphic;
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public ProxyGraphicEditor(Graphic graphic) {
+    public GraphicStyleProxy(Graphic graphic) {
         this.graphic = graphic;
     }
     

@@ -594,6 +594,15 @@ public class SketchActions {
     
     //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="UTILITY METHODS">
+    
+    private static void logUnsupported(String op, Graphic gfc) {
+        Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
+                "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
+    }
+    
+    //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="HELPER CLASSES">
         
     private static class TypedTransferable<C> implements Transferable, ClipboardOwner {
@@ -636,15 +645,6 @@ public class SketchActions {
         private GraphicTransferable(Graphic object) {
             super(object, GRAPHIC_DATA_FLAVOR);
         }
-    }
-    
-    //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="UTILITY METHODS">
-    
-    private static void logUnsupported(String op, Graphic gfc) {
-        Logger.getLogger(SketchActions.class.getName()).log(Level.WARNING,
-                "{0} not supported for graphic of type {1}", new Object[]{op, gfc.getClass()});
     }
     
     //</editor-fold>
