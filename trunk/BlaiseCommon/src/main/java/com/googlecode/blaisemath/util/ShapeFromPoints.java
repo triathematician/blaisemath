@@ -45,6 +45,7 @@ public abstract class ShapeFromPoints {
      * @param release where it was released
      * @return created shape, or null if either point was null
      */
+    @Nullable
     public Shape createFromNullable(@Nullable Point2D press, @Nullable Point2D release) {
         return press == null || release == null ? null
                 : create(press, release);
