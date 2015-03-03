@@ -482,7 +482,8 @@ public class GraphicComposite<G> extends Graphic<G> {
                 }
             }
         }
-        if (GraphicUtils.isFunctional(boundingBoxGraphic) && boundingBox().contains(point)) {
+        Rectangle2D rect = boundingBox();
+        if (GraphicUtils.isFunctional(boundingBoxGraphic) && rect != null && rect.contains(point)) {
             return this;
         }
         return null;
