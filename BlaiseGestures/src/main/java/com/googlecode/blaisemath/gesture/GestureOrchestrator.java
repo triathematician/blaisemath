@@ -4,12 +4,14 @@
  */
 package com.googlecode.blaisemath.gesture;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.util.Configurer;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /*
  * #%L
@@ -33,9 +35,21 @@ import java.util.Map;
 
 
 /**
+ * <p>
  * Manages the state of an active gesture. When the active gesture changes,
  * the old one is canceled. Calling {@link #finishActiveGesture()} will finalize
- * the current gesture.
+ * the current gesture. When "turning off" a gesture, the active gesture will
+ * change to the default gesture.
+ * </p>
+ * <p>
+ * For convenience, a reference to a component is maintained, as this is useful
+ * for certain gestures.
+ * </p>
+ * <p>
+ * A table of configuration objects of type {@link Configurer} is also maintained
+ * by the orchestrator, allowing gestures to perform additional configuration
+ * after they are finalized.
+ * </p>
  * 
  * TODO - consider removing reference to component
  * 
@@ -45,13 +59,23 @@ public class GestureOrchestrator {
     
     public static final String ACTIVE_GESTURE_PROP = "activeGesture";
 
-    private final Component component;
-    private MouseGesture activeGesture = null;
-    private final Map<Class,Configurer> configs = Maps.newHashMap();
+    /** The component managed by the orchestrator */
+    protected final Component component;
+    /** Configuration map, may be used for finalizing gestures */
+    protected final Map<Class,Configurer> configs = Maps.newHashMap();
+    
+    /** The default mouse gesture */
+    protected MouseGesture defaultGesture = null;
+    /** The currently active gesture */
+    protected MouseGesture activeGesture = null;
 
     /** Handles property listening */
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
+    /**
+     * Initialize the orchestrator with the given component.
+     * @param component component
+     */
     public GestureOrchestrator(Component component) {
         this.component = component;
     }
@@ -65,6 +89,27 @@ public class GestureOrchestrator {
     public Component getComponent() {
         return component;
     }
+
+    /**
+     * Get the default gesture
+     * @return default gesture
+     */
+    @Nullable
+    public MouseGesture getDefaultGesture() {
+        return defaultGesture;
+    }
+
+    /**
+     * Set the default gesture. This will update the active gesture if the
+     * active gesture is null.
+     * @param defaultGesture default gesture
+     */
+    public void setDefaultGesture(@Nullable MouseGesture defaultGesture) {
+        this.defaultGesture = defaultGesture;
+        if (activeGesture == null && defaultGesture != null) {
+            setActiveGesture(defaultGesture);
+        }
+    }
     
     /**
      * Get the active gesture.
@@ -76,10 +121,14 @@ public class GestureOrchestrator {
     
     /**
      * Set the active gesture. This will finish any currently active gesture
-     * before moving on.
+     * before moving on. If the argument is null the gesture will be set to
+     * the default gesture.
      * @param g the new active gesture
      */
-    public void setActiveGesture(MouseGesture g) {
+    public void setActiveGesture(@Nullable MouseGesture g) {
+        if (g == null) {
+            g = defaultGesture;
+        }
         Object old = this.activeGesture;
         if (this.activeGesture != g) {
             if (this.activeGesture != null) {
@@ -94,14 +143,6 @@ public class GestureOrchestrator {
     }
     
     //</editor-fold>
-
-    public <T> void addConfigurer(Class<? super T> cls, Configurer<T> cfg) {
-        configs.put(cls, cfg);
-    }
-
-    public <T> Configurer<T> getConfigurer(Class<? super T> cls) {
-        return configs.get(cls);
-    }
     
     /**
      * Called by gestures to yield control.
@@ -121,6 +162,30 @@ public class GestureOrchestrator {
         if (activeGesture != null) {
             finishGesture(activeGesture);
         }
+    }
+
+    /**
+     * Add a configurer object for gestures returning objects of the given type.
+     * @param <T> type of object being configured
+     * @param cls class of object being configured
+     * @param cfg configurer for the object type
+     */
+    public <T> void addConfigurer(Class<? super T> cls, Configurer<T> cfg) {
+        checkNotNull(cls);
+        checkNotNull(cfg);
+        configs.put(cls, cfg);
+    }
+
+    /**
+     * Retrieve a configurer object for the given object type
+     * @param <T> type of object being configured
+     * @param cls class of object being configured
+     * @return configurer for the object type
+     */
+    @Nullable
+    public <T> Configurer<T> getConfigurer(Class<? super T> cls) {
+        checkNotNull(cls);
+        return configs.get(cls);
     }
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY CHANGE LISTENING">
