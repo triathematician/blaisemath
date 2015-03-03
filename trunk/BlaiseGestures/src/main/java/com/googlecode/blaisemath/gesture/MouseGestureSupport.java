@@ -33,21 +33,22 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
- * Handler for mouse gestures, tuned to creating objects. Allows for mouse
- * events coming from a {@link TransformedCoordinateSpace} to make coordinate
- * transformations into local coordinate space.
+ * Partial implementation of {@link MouseGesture} that captures mouse event
+ * locations during move, press, and drag. Transforms the coordinates into local
+ * space if the source of the events is a {@link TransformedCoordinateSpace}.
  * 
- * @param <C> target component type
  * @author Elisha
  */
-public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends MouseAdapter implements MouseGesture<C> {
+public abstract class MouseGestureSupport extends MouseAdapter implements MouseGesture {
     
     /** Orchestrates the gesture */
-    protected final C orchestrator;
+    protected final GestureOrchestrator orchestrator;
     /** User-friendly name of the gesture */
     protected final String name;
     /** Description of the gesture */
     protected final String description;
+    /** Consuming flag */
+    private boolean consuming = true;
 
     /** Where the mouse cursor currently is */
     protected Point2D movePoint = null;
@@ -56,7 +57,7 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
     /** Where the mouse is following a press/drag */
     protected Point2D locPoint = null;
 
-    protected MouseGestureSupport(C orchestrator, String name, String description) {
+    protected MouseGestureSupport(GestureOrchestrator orchestrator, String name, String description) {
         this.orchestrator = orchestrator;
         this.name = name;
         this.description = description;
@@ -65,7 +66,7 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
     @Override
-    public C getOrchestrator() {
+    public GestureOrchestrator getOrchestrator() {
         return orchestrator;
     }
     
@@ -78,6 +79,15 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
     public String getDesription() {
         return description;
     }
+
+    @Override
+    public boolean isConsuming() {
+        return consuming;
+    }
+
+    public void setConsuming(boolean consuming) {
+        this.consuming = consuming;
+    }
     
     //</editor-fold>
     
@@ -85,12 +95,9 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Object src = e.getSource();
-        movePoint = src instanceof TransformedCoordinateSpace 
-                ? ((TransformedCoordinateSpace)src).toGraphicCoordinate(e.getPoint())
-                : e.getPoint();
-        if (src instanceof Component) {
-            ((Component) src).repaint();
+        movePoint = transformedPoint(e);
+        if (e.getSource() instanceof Component) {
+            ((Component) e.getSource()).repaint();
         }
     }
 
@@ -104,24 +111,18 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
     
     @Override
     public void mousePressed(MouseEvent e) {
-        Object src = e.getSource();
-        pressPoint = src instanceof TransformedCoordinateSpace 
-                ? ((TransformedCoordinateSpace)src).toGraphicCoordinate(e.getPoint())
-                : e.getPoint();
+        pressPoint = transformedPoint(e);
         locPoint = pressPoint;
-        if (src instanceof Component) {
-            ((Component) src).repaint();
+        if (e.getSource() instanceof Component) {
+            ((Component) e.getSource()).repaint();
         }
     }
     
     @Override
     public void mouseDragged(MouseEvent e) {
-        Object src = e.getSource();
-        locPoint = src instanceof TransformedCoordinateSpace 
-                ? ((TransformedCoordinateSpace)src).toGraphicCoordinate(e.getPoint())
-                : e.getPoint();
-        if (src instanceof Component) {
-            ((Component) src).repaint();
+        locPoint = transformedPoint(e);
+        if (e.getSource() instanceof Component) {
+            ((Component) e.getSource()).repaint();
         }
     }
     
@@ -159,5 +160,18 @@ public abstract class MouseGestureSupport<C extends GestureOrchestrator> extends
     }
     
     //</editor-fold>
+
+    
+    /**
+     * Return a transformed mouse event location if the event's source is a 
+     * {@link TransformedCoordinateSpace}, otherwise just the event's point.
+     * @param evt the mouse event
+     * @return transformed point
+     */
+    public static Point2D transformedPoint(MouseEvent evt) {
+        return evt.getSource() instanceof TransformedCoordinateSpace 
+                ? ((TransformedCoordinateSpace)evt.getSource()).toGraphicCoordinate(evt.getPoint())
+                : evt.getPoint();
+    }
     
 }

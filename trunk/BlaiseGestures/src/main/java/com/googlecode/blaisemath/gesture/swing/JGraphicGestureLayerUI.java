@@ -39,12 +39,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.plaf.LayerUI;
 
 /**
- * Adds a layer on top of a graphics canvas to allow for gestures.
+ * Adds a layer on top of a graphics canvas to allow for gestures. Creates a
+ * {@link GestureOrchestrator} when the UI is installed, and propagates events
+ * from that orchestrator.
  * 
  * @author Elisha
  */
@@ -64,6 +67,11 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
         };
     }
 
+    /**
+     * Get the orchestrator associated with the layer's component.
+     * @return orchestrator, or null if the UI has not been installed
+     */
+    @Nullable
     public GestureOrchestrator getGestureOrchestrator() {
         return orchestrator;
     }
@@ -135,7 +143,9 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
                 mouseLoc = null;
                 l.repaint();
             }
-            e.consume();
+            if (gesture.isConsuming()) {
+                e.consume();
+            }
         }
     }
 
@@ -148,7 +158,9 @@ public class JGraphicGestureLayerUI extends LayerUI<JGraphicComponent> {
                 mouseLoc = e.getPoint();
                 l.repaint();
             }
-            e.consume();
+            if (gesture.isConsuming()) {
+                e.consume();
+            }
         }
     }
     

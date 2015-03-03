@@ -28,12 +28,17 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * Generic gesture based on mouse events that can be initiated and finished or canceled.
+ * A gesture based on mouse events that can be initiated and finished or canceled.
+ * Also provides user-friendly name and description fields.
  * 
- * @param <C> the orchestrator for the gesture
+ * Prior to receiving mouse events, the gesture's {@link #initiate()} method will
+ * be called. When the gesture is completed, it may yield control by calling
+ * {@link #finish()}, or if another gesture takes over control the {@link #cancel()}
+ * method will be called.
+ * 
  * @author elisha
  */
-public interface MouseGesture<C extends GestureOrchestrator> extends MouseListener, MouseMotionListener {
+public interface MouseGesture extends MouseListener, MouseMotionListener {
 
     /**
      * Get the user-friendly name of the gesture
@@ -52,7 +57,7 @@ public interface MouseGesture<C extends GestureOrchestrator> extends MouseListen
      * Get the orchestrator that manages the gesture's state
      * @return orchestrator
      */
-    C getOrchestrator();
+    GestureOrchestrator getOrchestrator();
         
     /**
      * Enable the gesture, preparing it to be used.
@@ -68,5 +73,11 @@ public interface MouseGesture<C extends GestureOrchestrator> extends MouseListen
      * Finish the gesture, applying the result.
      */
     void finish();
+
+    /**
+     * Whether gesture consumes mouse events that it receives, forbidding others to use them.
+     * @return true if consuming, else false
+     */
+    boolean isConsuming();
     
 }

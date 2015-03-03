@@ -52,7 +52,7 @@ import java.util.logging.Logger;
  * 
  * @author elisha
  */
-public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> {
+public class ControlBoxGesture extends MouseGestureSupport {
     
     private static final int CAPTURE_RAD = 5;
     
@@ -82,6 +82,15 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
         view = (JGraphicComponent) orchestrator.getComponent();
         
         this.graphic = graphic;
+    }
+    
+    /**
+     * Checks whether the gesture supports the given primitive.
+     * @param primitive to check
+     * @return true if supported, false otherwise
+     */
+    public static boolean supports(Object primitive) {
+        return primitive instanceof Shape || primitive instanceof AnchoredImage;
     }
     
     private Rectangle2D box() {
@@ -165,7 +174,9 @@ public class ControlBoxGesture extends MouseGestureSupport<GestureOrchestrator> 
 
     // get the control point for the given press point
     private ControlPoint capture(Rectangle2D box, Point2D pressPoint) {
-        double cap = CAPTURE_RAD / Math.max(view.getTransform().getScaleX(), view.getTransform().getScaleY());
+        AffineTransform transf = view.getTransform();
+        double cap = transf == null ? CAPTURE_RAD 
+                : CAPTURE_RAD / Math.max(transf.getScaleX(), transf.getScaleY());
         for (ControlPoint cp : ControlPoint.values()) {
             if (cp.captures(box, pressPoint, cap)) {
                 return cp;

@@ -12,7 +12,9 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.util.Configurer;
 import com.googlecode.blaisemath.util.TransformedCanvasPainter;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import javax.annotation.Nullable;
 
 /*
@@ -41,7 +43,7 @@ import javax.annotation.Nullable;
  * 
  * @author Elisha
  */
-public abstract class JGraphicCreatorGesture extends MouseGestureSupport<GestureOrchestrator> {
+public abstract class JGraphicCreatorGesture extends MouseGestureSupport {
     
     private final JGraphicComponent view;
     
@@ -60,6 +62,12 @@ public abstract class JGraphicCreatorGesture extends MouseGestureSupport<Gesture
     protected abstract Graphic<Graphics2D> createGraphic();
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        super.mouseMoved(e);  
+        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    }
+
+    @Override
     public void finish() {
         Graphic<Graphics2D> gfc = createGraphic();
         if (gfc != null) {
@@ -70,6 +78,12 @@ public abstract class JGraphicCreatorGesture extends MouseGestureSupport<Gesture
             }
         }
         orchestrator.setActiveGesture(null);
+        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    @Override
+    public void cancel() {
+        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override

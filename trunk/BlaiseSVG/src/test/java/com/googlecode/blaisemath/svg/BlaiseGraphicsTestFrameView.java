@@ -46,7 +46,7 @@ public class BlaiseGraphicsTestFrameView extends FrameView {
 
         mainPanel = new javax.swing.JPanel();
         canvas1 = new JGraphicComponent();
-        new PanAndZoomHandler(canvas1);
+        PanAndZoomHandler.install(canvas1);
         menuBar = new javax.swing.JMenuBar();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
