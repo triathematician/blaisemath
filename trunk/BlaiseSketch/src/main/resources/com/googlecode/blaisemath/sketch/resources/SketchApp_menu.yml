@@ -45,7 +45,8 @@ Menubar:
         - distributeHorizontal
         - distributeVertical
     Tool:
-        - toolSelect
+        - selectionTool
+        - canvasTool
         - 
         - createMarker
         - createLine
@@ -65,7 +66,8 @@ Toolbar:
     - load
     - save
     - 
-    - toolSelect
+    - selectionTool
+    - canvasTool
     - 
     - createMarker
     - createLine

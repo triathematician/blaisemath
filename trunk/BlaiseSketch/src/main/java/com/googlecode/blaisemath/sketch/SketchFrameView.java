@@ -45,6 +45,8 @@ import com.googlecode.blaisemath.gesture.swing.CreatePathGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateRectangleGesture;
 import com.googlecode.blaisemath.gesture.swing.CreateTextGesture;
 import com.googlecode.blaisemath.gesture.swing.JGraphicGestureLayerUI;
+import com.googlecode.blaisemath.gesture.swing.CanvasHandlerGesture;
+import com.googlecode.blaisemath.gesture.swing.SelectGesture;
 import com.googlecode.blaisemath.graphics.core.Graphic;
 import com.googlecode.blaisemath.graphics.core.GraphicComposite;
 import com.googlecode.blaisemath.graphics.core.GraphicUtils;
@@ -129,25 +131,10 @@ public class SketchFrameView extends FrameView {
         
         activeCanvas = new JGraphicComponent();
         activeCanvas.setSelectionEnabled(true);
-        new PanAndZoomHandler(activeCanvas);
-        activeCanvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean selEmpty = isSelectionEmpty();
-                boolean one = isOneSelected();
-                boolean moreThanOne = isMoreThanOneSelected();
-                boolean gpSelected = isGroupSelected();
-                firePropertyChange(SELECTION_EMPTY_PROP, !selEmpty, selEmpty);
-                firePropertyChange(GROUP_SELECTED_PROP, !gpSelected, gpSelected);
-                firePropertyChange(ONE_SELECTED_PROP, !one, one);
-                firePropertyChange(MORE_THAN_ONE_SELECTED_PROP, !moreThanOne, moreThanOne);
-                
-                Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
-                setSelectedGraphic(selEmpty ? null 
-                        : sel.size() == 1 ? Iterables.get(sel, 0)
-                        : sel);
-            }
-        });
+        PanAndZoomHandler.install(activeCanvas);
+        initSelectionListening();
         
+        // create gesture controller with overlay for intercepting events and rendering gesture hints
         gestureUI = new JGraphicGestureLayerUI() {
             @Override
             public void installUI(JComponent c) {
@@ -155,7 +142,7 @@ public class SketchFrameView extends FrameView {
                 getGestureOrchestrator().addConfigurer(Graphic.class, SketchGraphicUtils.configurer());
             }
         };
-        gestureUI.addPropertyChangeListener("activeGesture", 
+        gestureUI.addPropertyChangeListener(GestureOrchestrator.ACTIVE_GESTURE_PROP,
             new PropertyChangeListener(){
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
@@ -203,7 +190,32 @@ public class SketchFrameView extends FrameView {
         
         EditorRegistration.registerEditors();
         PropertyEditorManager.registerEditor(Marker.class, MarkerEditor.class);
+        
+        // set selection as default tool
+        selectionTool();
     }
+    
+    //<editor-fold defaultstate="collapsed" desc="INITIALIZERS">
+    private void initSelectionListening() {
+        activeCanvas.getSelectionModel().addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(PropertyChangeEvent evt) {
+                boolean selEmpty = isSelectionEmpty();
+                boolean one = isOneSelected();
+                boolean moreThanOne = isMoreThanOneSelected();
+                boolean gpSelected = isGroupSelected();
+                firePropertyChange(SELECTION_EMPTY_PROP, !selEmpty, selEmpty);
+                firePropertyChange(GROUP_SELECTED_PROP, !gpSelected, gpSelected);
+                firePropertyChange(ONE_SELECTED_PROP, !one, one);
+                firePropertyChange(MORE_THAN_ONE_SELECTED_PROP, !moreThanOne, moreThanOne);
+                
+                Set<Graphic> sel = (Set<Graphic>) evt.getNewValue();
+                setSelectedGraphic(selEmpty ? null 
+                        : sel.size() == 1 ? Iterables.get(sel, 0)
+                        : sel);
+            }
+        });
+    }
+    //</editor-fold>
     
     public static ActionMap getActionMap() {
         SketchApp app = (SketchApp) SketchApp.getInstance();
@@ -217,20 +229,23 @@ public class SketchFrameView extends FrameView {
             selectionPanel.setPrimaryComponent(noSelectionLabel);
         } else {
             if (gfc instanceof PrimitiveGraphicSupport) {
+                // activate controls gesture
                 PrimitiveGraphicSupport pgfc = (PrimitiveGraphicSupport) gfc;
-                PropertySheet ps = PropertySheet.forBean(new ProxyGraphicEditor(pgfc));
+                PropertySheet ps = PropertySheet.forBean(new GraphicStyleProxy(pgfc));
                 selectionPanel.setTitle(gfc+"");
                 selectionPanel.setPrimaryComponent(ps);
                 if (pgfc.getPrimitive() instanceof Line2D) {
                     gestureUI.setActiveGesture(new ControlLineGesture(gestureUI.getGestureOrchestrator(), pgfc));
-                } else {
+                } else if (ControlBoxGesture.supports(pgfc.getPrimitive())) {
                     gestureUI.setActiveGesture(new ControlBoxGesture(gestureUI.getGestureOrchestrator(), pgfc));
+                } else {
+                    // controls not available
                 }
             } else if (gfc instanceof Set) {
                 Set gfx = (Set) gfc;
                 selectionPanel.setTitle(gfx.size()+" graphics selected.");
                 selectionPanel.setPrimaryComponent(new JLabel("No options."));
-                toolSelect();
+                selectionTool();
             } else {
                 Logger.getLogger(SketchFrameView.class.getName()).log(Level.WARNING,
                         "Unable to handle selection of: {0}", gfc);
@@ -490,9 +505,13 @@ public class SketchFrameView extends FrameView {
     //<editor-fold defaultstate="collapsed" desc="TOOL ACTIONS">
     
     @Action
-    public void toolSelect() {
-        gestureUI.finishActiveGesture();
-        setStatusMessage("Selection tool enabled (default)", 2000);
+    public void canvasTool() {
+        enableGesture(CanvasHandlerGesture.class);
+    }
+    
+    @Action
+    public void selectionTool() {
+        enableGesture(SelectGesture.class);
     }
     
     @Action
@@ -645,7 +664,7 @@ public class SketchFrameView extends FrameView {
     
     /** Activates the gesture layer, and allows the user to complete the gesture. */
     private void activeGestureUpdated(MouseGesture gesture) {
-        setStatusMessage(gesture.getName()+" | "+gesture.getDesription(), 5000);
+        setStatusMessage(gesture == null ? "" : gesture.getName()+" | "+gesture.getDesription(), 5000);
     }
 
     
