@@ -42,17 +42,17 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
  * 
  * @author Elisha
  */
-public final class ItemVis<Item> {
+public final class ItemVis<X> {
     
     /** Collection of items being displayed */
-    private Collection<Item> items = Collections.EMPTY_LIST;
+    private Collection<X> items = Collections.EMPTY_LIST;
     /** Object used to create or update item graphics */
-    private GraphicUpdater<Item> itemGraphicUpdater = null;
+    private GraphicUpdater<X> itemGraphicUpdater = null;
     /** Object used to layout items */
-    private Function<Collection<Item>,Map<Item,Rectangle2D>> itemLayout = null;
+    private Function<Collection<X>,Map<X,Rectangle2D>> itemLayout = null;
     
     /** Contains the resulting graphic objects */
-    private final Map<Item,Graphic> graphics = Maps.newLinkedHashMap();
+    private final Map<X,Graphic> graphics = Maps.newLinkedHashMap();
     
 
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -60,7 +60,7 @@ public final class ItemVis<Item> {
     // PROPERTY PATTERNS
     //
     
-    public Collection<Item> getItems() {
+    public Collection<X> getItems() {
         return items;
     }
 
@@ -68,7 +68,7 @@ public final class ItemVis<Item> {
      * Set the collection of items
      * @param items items (must be non-null)
      */
-    public void setItems(Collection<Item> items) {
+    public void setItems(Collection<X> items) {
         checkNotNull(items);
         if (this.items != items) {
             this.items = items;
@@ -76,22 +76,22 @@ public final class ItemVis<Item> {
         }
     }
 
-    public GraphicUpdater<Item> getItemGraphicUpdater() {
+    public GraphicUpdater<X> getItemGraphicUpdater() {
         return itemGraphicUpdater;
     }
 
-    public void setItemGraphicUpdater(GraphicUpdater<Item> itemGraphicUpdater) {
+    public void setItemGraphicUpdater(GraphicUpdater<X> itemGraphicUpdater) {
         if (this.itemGraphicUpdater != itemGraphicUpdater) {
             this.itemGraphicUpdater = itemGraphicUpdater;
             updateGraphics();
         }
     }
 
-    public Function<Collection<Item>, Map<Item,Rectangle2D>> getItemLayout() {
+    public Function<Collection<X>, Map<X,Rectangle2D>> getItemLayout() {
         return itemLayout;
     }
 
-    public void setItemLayout(Function<Collection<Item>, Map<Item,Rectangle2D>> itemLayout) {
+    public void setItemLayout(Function<Collection<X>, Map<X,Rectangle2D>> itemLayout) {
         if (this.itemLayout != itemLayout) {
             this.itemLayout = itemLayout;
             updateGraphics();
@@ -114,9 +114,9 @@ public final class ItemVis<Item> {
             graphics.clear();
         } else {
             // apply layout
-            Map<Item,Rectangle2D> layout = itemLayout.apply(items);
+            Map<X,Rectangle2D> layout = itemLayout.apply(items);
             // for each item
-            for (Item it : items) {
+            for (X it : items) {
                 // get layout bounds
                 Rectangle2D bounds = layout.get(it);
                 checkNotNull(bounds);
