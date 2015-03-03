@@ -33,11 +33,17 @@ import java.util.Map;
 
 
 /**
- * Manages an active {@link MouseGesture}, and associated state changes.
+ * Manages the state of an active gesture. When the active gesture changes,
+ * the old one is canceled. Calling {@link #finishActiveGesture()} will finalize
+ * the current gesture.
+ * 
+ * TODO - consider removing reference to component
  * 
  * @author elisha
  */
 public class GestureOrchestrator {
+    
+    public static final String ACTIVE_GESTURE_PROP = "activeGesture";
 
     private final Component component;
     private MouseGesture activeGesture = null;
@@ -74,6 +80,7 @@ public class GestureOrchestrator {
      * @param g the new active gesture
      */
     public void setActiveGesture(MouseGesture g) {
+        Object old = this.activeGesture;
         if (this.activeGesture != g) {
             if (this.activeGesture != null) {
                 this.activeGesture.cancel();
@@ -82,6 +89,7 @@ public class GestureOrchestrator {
             if (this.activeGesture != null) {
                 this.activeGesture.initiate();
             }
+            pcs.firePropertyChange(ACTIVE_GESTURE_PROP, old, this.activeGesture);
         }
     }
     
@@ -100,8 +108,10 @@ public class GestureOrchestrator {
      * @param g the gesture yielding control
      */
     public void finishGesture(MouseGesture g) {
-        activeGesture.finish();
-        setActiveGesture(null);
+        if (activeGesture != null) {
+            activeGesture.finish();
+            setActiveGesture(null);
+        }
     }
 
     /**

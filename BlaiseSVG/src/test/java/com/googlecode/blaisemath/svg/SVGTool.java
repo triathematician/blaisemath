@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import com.google.common.io.ByteSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.googlecode.blaisemath.graphics.svg.SVGGraphic;
@@ -59,7 +58,7 @@ public class SVGTool extends javax.swing.JFrame {
         gsvg = new SVGGraphic();
         gsvg.setStyle(Styles.strokeWidth(Color.blue, 2f));
         canvas.addGraphic(gsvg);
-        new PanAndZoomHandler(canvas);
+        PanAndZoomHandler.install(canvas);
     }
 
     /**

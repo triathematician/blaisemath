@@ -47,7 +47,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * @author elisha
  */
-public class ControlLineGesture extends MouseGestureSupport<GestureOrchestrator> {
+public class ControlLineGesture extends MouseGestureSupport {
     
     private static final int CAPTURE_RAD = 5;
     
