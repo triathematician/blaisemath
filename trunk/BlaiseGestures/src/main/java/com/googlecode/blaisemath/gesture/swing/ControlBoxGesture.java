@@ -321,7 +321,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
         /** Test whether control point can use the given press point */
         private boolean captures(Rectangle2D box, Point2D pressPoint, double rad) {
             double dist = location(box).distance(pressPoint);
-            return dist < CAPTURE_RAD;
+            return dist < rad;
         }
 
         /**
