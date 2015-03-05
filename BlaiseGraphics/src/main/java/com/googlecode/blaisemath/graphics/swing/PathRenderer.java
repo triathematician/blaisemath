@@ -53,6 +53,7 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
         return "PathRenderer";
     }
     
+    @Override
     public void render(Shape primitive, AttributeSet style, Graphics2D canvas) {
         Color stroke = style.getColor(Styles.STROKE);
         Float strokeWidth = style.getFloat(Styles.STROKE_WIDTH);
@@ -73,16 +74,19 @@ public class PathRenderer implements Renderer<Shape, Graphics2D> {
         }
     }
 
+    @Override
     public Rectangle2D boundingBox(Shape primitive, AttributeSet style) {
         Shape sh = strokedShape(primitive, style);
         return sh == null ? null : sh.getBounds2D();
     }
 
+    @Override
     public boolean contains(Shape primitive, AttributeSet style, Point2D point) {
         Shape sh = strokedShape(primitive, style);
         return sh != null && sh.contains(point);
     }
 
+    @Override
     public boolean intersects(Shape primitive, AttributeSet style, Rectangle2D rect) {
         Shape sh = strokedShape(primitive, style);
         return sh != null && sh.intersects(rect);

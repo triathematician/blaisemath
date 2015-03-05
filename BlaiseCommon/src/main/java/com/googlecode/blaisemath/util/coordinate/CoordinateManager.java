@@ -69,7 +69,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * @author Elisha Peterson
  */
 @ThreadSafe
-public class CoordinateManager<S, C> {
+public final class CoordinateManager<S, C> {
     
     /** Max size of the cache */
     private final int maxCacheSize;
@@ -208,12 +208,13 @@ public class CoordinateManager<S, C> {
      * @param coords new coordinates
      */
     public void putAll(Map<S,? extends C> coords) {
+        Map<S,C> coordCopy = Maps.newHashMap(coords);
         synchronized (this) {
-            map.putAll(coords);
-            active.addAll(coords.keySet());
-            inactive.removeAll(coords.keySet());
+            map.putAll(coordCopy);
+            active.addAll(coordCopy.keySet());
+            inactive.removeAll(coordCopy.keySet());
         }
-        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coords));
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddEvent(this, coordCopy));
     }
 
     /**
@@ -222,16 +223,17 @@ public class CoordinateManager<S, C> {
      * @param coords new coordinates
      */
     public void setCoordinateMap(Map<S,? extends C> coords) {
+        Map<S,C> coordCopy = Maps.newHashMap(coords);
         Set<S> toCache;
         synchronized(this) {
-            toCache = Sets.difference(map.keySet(), coords.keySet()).immutableCopy();
-            map.putAll(coords);
-            active = Sets.newConcurrentHashSet(coords.keySet());
-            inactive.removeAll(coords.keySet());
+            toCache = Sets.difference(map.keySet(), coordCopy.keySet()).immutableCopy();
+            map.putAll(coordCopy);
+            active = Sets.newConcurrentHashSet(coordCopy.keySet());
+            inactive.removeAll(coordCopy.keySet());
             inactive.addAll(toCache);
             checkCache();
         }
-        fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coords, toCache));
+        fireCoordinatesChanged(CoordinateChangeEvent.createAddRemoveEvent(this, coordCopy, toCache));
     }
 
     /**
@@ -317,8 +319,9 @@ public class CoordinateManager<S, C> {
      */
     @InvokedFromThread("unknown")
     protected final void fireCoordinatesChanged(CoordinateChangeEvent<S,C> evt) {
-        if ((evt.getAdded() == null || evt.getAdded().isEmpty()) 
-                && (evt.getRemoved() == null || evt.getRemoved().isEmpty())) {
+        Map<S, C> added = evt.getAdded();
+        Set<S> removed = evt.getRemoved();
+        if ((added == null || added.isEmpty()) && (removed == null || removed.isEmpty())) {
             return;
         }
         for (CoordinateListener cl : listeners) {

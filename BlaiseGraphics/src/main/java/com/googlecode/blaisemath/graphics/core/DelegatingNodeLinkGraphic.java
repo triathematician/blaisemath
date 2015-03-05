@@ -112,7 +112,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         edgeGraphics.setCoordinateManager(ptMgr);
     }
 
-    public Set<? extends S> getNodeSet() {
+    public Set<S> getNodeSet() {
         return pointGraphics.getObjects();
     }
     
@@ -156,7 +156,7 @@ public class DelegatingNodeLinkGraphic<S,E extends Edge<S>,G> extends GraphicCom
         pointGraphics.setDragEnabled(val);
     }
 
-    public Set<? extends E> getEdgeSet() {
+    public Set<E> getEdgeSet() {
         return edgeGraphics.getEdges();
     }
 

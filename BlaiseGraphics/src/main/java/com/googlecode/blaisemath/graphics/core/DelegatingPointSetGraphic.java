@@ -127,6 +127,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             @InvokedFromThread("unknown")
             public void coordinatesChanged(final CoordinateChangeEvent evt) {
                 BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+                    @Override
                     public void run() {
                         updatePointGraphics(evt.getAdded(), evt.getRemoved());
                     }
@@ -301,7 +302,7 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
      * Return source objects.
      * @return source objects
      */
-    public Set<? extends S> getObjects() {
+    public Set<S> getObjects() {
         return manager.getActive();
     }
     

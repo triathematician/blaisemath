@@ -43,9 +43,9 @@ import javax.annotation.Nullable;
 public final class CoordinateChangeEvent<S,C> extends EventObject {
 
     /** Added coords */
-    private Map<S,? extends C> added = null;
+    private transient Map<S,C> added = null;
     /** Removed coords */
-    private Set<S> removed = null;
+    private transient Set<S> removed = null;
 
     /** 
      * Initialize with given source object
@@ -69,7 +69,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param added map of added objects, keys are objects/values are coordinates
      * @return 
      */
-    public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,? extends C> added) {
+    public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,C> added) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
         evt.added = added;
         return evt;
@@ -98,7 +98,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param removed set of removed objects
      * @return 
      */
-    public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,? extends C> added, Set<S> removed) {
+    public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,C> added, Set<S> removed) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C> (src);
         evt.added = added;
         evt.removed = removed;
@@ -135,7 +135,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @return map whose keys are the objects and values are their coordinates
      */
     @Nullable 
-    public Map<S,? extends C> getAdded() {
+    public Map<S,C> getAdded() {
         return added;
     }
 
