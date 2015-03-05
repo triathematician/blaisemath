@@ -208,11 +208,13 @@ public final class SparseGraph<V> extends GraphSupport<V> {
         return components;
     }
 
+    @Override
     public Set<Edge<V>> edges() {
         return Collections.unmodifiableSet(edges);
     }
 
-    public Collection<? extends Edge<V>> edgesAdjacentTo(V x) {
+    @Override
+    public Collection<Edge<V>> edgesAdjacentTo(V x) {
         return Collections.unmodifiableSet(edgeIndex.get(x));
     }
 

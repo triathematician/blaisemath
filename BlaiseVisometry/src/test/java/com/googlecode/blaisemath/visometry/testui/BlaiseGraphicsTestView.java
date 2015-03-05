@@ -46,7 +46,7 @@ public class BlaiseGraphicsTestView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         canvas1 = new JGraphicComponent(); 
         canvas1.setSelectionEnabled(true);
-        new PanAndZoomHandler(canvas1);
+        PanAndZoomHandler.install(canvas1);
         
         canvas2 = new PlanePlotComponent(); 
         canvas2.setSelectionEnabled(true);

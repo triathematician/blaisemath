@@ -51,7 +51,7 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
      * @param parent the parent style
      * @param weights weightings for edges in graph
      */
-    public <V> WeightedEdgeStyler(AttributeSet parent, Map<Edge<V>, Float> weights) {
+    public <V> WeightedEdgeStyler(AttributeSet parent, Map<? extends Edge<V>, Float> weights) {
         this.parent = parent;
         this.weights = weights;
         for (Float wt : weights.values()) {
@@ -72,6 +72,7 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
         }
     }
 
+    @Override
     public AttributeSet apply(Edge o) {
         Object wt = weights.get(o);
         if (wt instanceof Number) {

@@ -43,6 +43,7 @@ import java.util.Set;
  *
  * @param <C> the local coordinate
  * @param <S> the type of object being displayed
+ * @param <G> graphics canvas type
  *
  * @author elisha
  */
@@ -88,6 +89,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
     @InvokedFromThread("unknown")
     private void handleCoordinatesChanged(final CoordinateChangeEvent<S,C> evt) {
         BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
+            @Override
             public void run() {
                 if (converting) {
                     return;
@@ -146,7 +148,7 @@ public class VCustomPointSet<C,S,G> extends VGraphicSupport<C,G> {
         }
     }
 
-    public Set<? extends S> getObjects() {
+    public Set<S> getObjects() {
         return window.getObjects();
     }
 

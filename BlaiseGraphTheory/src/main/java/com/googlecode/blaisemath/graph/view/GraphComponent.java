@@ -76,6 +76,7 @@ public class GraphComponent extends JGraphicComponent {
     /** This mechanism is used to create the initial view graph for swing components, by setting up appropriate renderers. */
     private static final Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>> SWING_GRAPH_SUPPLIER
             = new Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,Graphics2D>>() {
+        @Override
         public DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> get() {
             DelegatingNodeLinkGraphic<Object, Edge<Object>, Graphics2D> res = JGraphics.nodeLink();
             res.getNodeStyler().setStyleConstant(VisualGraph.DEFAULT_NODE_STYLE);
@@ -85,8 +86,6 @@ public class GraphComponent extends JGraphicComponent {
 
     /** Manages the visual elements of the underlying graph */
     protected final VisualGraph<Graphics2D> adapter;
-    /** Pan and zoom control */
-    protected final PanAndZoomHandler zoomControl;
 
     /**
      * Construct without a graph
@@ -114,9 +113,10 @@ public class GraphComponent extends JGraphicComponent {
         // enable selection
         setSelectionEnabled(true);
         // enable zoom and drag
-        zoomControl = new PanAndZoomHandler(this);
+        PanAndZoomHandler.install(this);
         // turn off animation if component hierarchy changes
         addHierarchyListener(new HierarchyListener(){
+            @Override
             public void hierarchyChanged(HierarchyEvent e) {
                 if (e.getChangeFlags() == HierarchyEvent.PARENT_CHANGED) {
                     setLayoutAnimating(false);
