@@ -289,7 +289,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         double cy = .1 * localZoomPoint.getY() + .9 * localBounds.getCenterY();
         double wx = localBounds.getWidth();
         double wy = localBounds.getHeight();
-        setDesiredLocalBounds(gc, new Rectangle2D.Double(cx - .5 * factor * wx, cy - .5 * factor * wy, factor * wx, factor * wy));
+        setDesiredLocalBounds(gc, new Rectangle2D.Double(
+                cx - .5 * factor * wx, cy - .5 * factor * wy, 
+                factor * wx, factor * wy));
     }
 
     /**
