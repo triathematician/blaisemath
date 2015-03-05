@@ -88,18 +88,22 @@ public class MarkerRenderer implements Renderer<Point2D, Graphics2D> {
         return null;
     }
     
+    @Override
     public void render(Point2D primitive, AttributeSet style, Graphics2D canvas) {
         shapeRenderer.render(getShape(primitive, style), style, canvas);
     }
 
+    @Override
     public Rectangle2D boundingBox(Point2D primitive, AttributeSet style) {
         return shapeRenderer.boundingBox(getShape(primitive, style), style);
     }
 
+    @Override
     public boolean contains(Point2D primitive, AttributeSet style, Point2D point) {
         return shapeRenderer.contains(getShape(primitive, style), style, point);
     }
 
+    @Override
     public boolean intersects(Point2D primitive, AttributeSet style, Rectangle2D rect) {
         return shapeRenderer.intersects(getShape(primitive, style), style, rect);
     }
