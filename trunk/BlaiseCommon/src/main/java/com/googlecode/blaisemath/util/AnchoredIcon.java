@@ -24,14 +24,12 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-import javax.annotation.concurrent.Immutable;
 import javax.swing.Icon;
 
 /**
  * An icon anchored at a given location.
  * @author petereb1
  */
-@Immutable
 public final class AnchoredIcon extends Point2DBean {
 
     private final Icon icon;

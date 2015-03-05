@@ -28,13 +28,11 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * An image anchored at a given location.
  * @author petereb1
  */
-@Immutable
 public final class AnchoredImage extends Point2DBean {
 
     private final Image originalImage;
