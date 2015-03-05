@@ -2,7 +2,7 @@
  * PointBean.java
  * Created Jan 2011
  */
-package com.googlecode.blaisemath.util.coordinate;
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L

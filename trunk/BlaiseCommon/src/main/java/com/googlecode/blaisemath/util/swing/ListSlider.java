@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.util.swing;
 import com.google.common.base.Objects;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,7 +44,7 @@ public final class ListSlider extends JSlider {
     /**
      * Stores peg points for the slider
      */
-    List<Double> pegs;
+    private List<Double> pegs;
 
     /**
      * Constructs with default values
@@ -53,7 +54,8 @@ public final class ListSlider extends JSlider {
     }
 
     /**
-     * Constructs instance with specified min, max, and peg points
+     * Constructs instance with specified peg points
+     * @param pegs peg points for list
      */
     public ListSlider(List<Double> pegs) {
         super(0, pegs.size() - 1, 0);
@@ -61,6 +63,7 @@ public final class ListSlider extends JSlider {
     }
 
     /**
+     * Get current peg value of list
      * @return current value as specified by the peg positions
      */
     public double getListValue() {
@@ -68,6 +71,10 @@ public final class ListSlider extends JSlider {
         return i <= 0 ? pegs.get(0) : i >= pegs.size() ? pegs.get(pegs.size() - 1) : pegs.get(i);
     }
     
+    /**
+     * Set the pegged value of the list
+     * @param val double value of list
+     */
     public void setListValue(double val) {
         for (int i = 0; i < pegs.size(); i++) {
             if (val == pegs.get(i)) {
@@ -81,6 +88,7 @@ public final class ListSlider extends JSlider {
 
     /**
      * Sets up constraints
+     * @param values values for list
      */
     public void setList(List<Double> values) {
         if (!Objects.equal(this.pegs, values)) {
@@ -102,7 +110,7 @@ public final class ListSlider extends JSlider {
 
         setPaintTicks(true);
         setPaintLabels(true);
-        Hashtable result = new Hashtable();
+        Dictionary result = new Hashtable();
         NumberFormat nf = NumberFormat.getNumberInstance();
         for (int i = 0; i < pegs.size(); i += getMajorTickSpacing()) {
             result.put(i, new JLabel("t=" + nf.format(pegs.get(i))));

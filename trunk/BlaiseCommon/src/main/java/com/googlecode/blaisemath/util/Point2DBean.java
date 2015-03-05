@@ -27,7 +27,6 @@ package com.googlecode.blaisemath.util;
  */
 
 
-import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
 import java.awt.geom.Point2D;
 
 /**
