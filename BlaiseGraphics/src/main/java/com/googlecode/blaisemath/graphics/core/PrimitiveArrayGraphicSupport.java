@@ -25,7 +25,7 @@ package com.googlecode.blaisemath.graphics.core;
  */
 
 import static com.googlecode.blaisemath.graphics.core.PrimitiveGraphicSupport.RENDERER_PROP;
-import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
+import com.googlecode.blaisemath.util.DraggableCoordinate;
 import com.googlecode.blaisemath.style.Renderer;
 import com.googlecode.blaisemath.style.AttributeSet;
 import java.awt.geom.Point2D;

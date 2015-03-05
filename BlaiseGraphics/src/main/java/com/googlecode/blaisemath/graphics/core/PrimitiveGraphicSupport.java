@@ -26,7 +26,7 @@ package com.googlecode.blaisemath.graphics.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
+import com.googlecode.blaisemath.util.DraggableCoordinate;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
