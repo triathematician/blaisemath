@@ -43,12 +43,12 @@ import java.awt.geom.PathIterator;
 public class TaperedPathRenderer extends PathRenderer {
 
     private static final TaperedPathRenderer INST = new TaperedPathRenderer();
+
+    public TaperedPathRenderer() {
+    }
     
     public static Renderer<Shape, Graphics2D> getInstance() {
         return INST;
-    }
-
-    public TaperedPathRenderer() {
     }
     
     @Override
@@ -120,10 +120,12 @@ public class TaperedPathRenderer extends PathRenderer {
         gp.lineTo(x1+adx, y1+ady);
         gp.curveTo(x1+.25f*dx+.25f*adx, y1+.25f*dy+.25f*ady,
                 x1+.75f*dx+.25f*adx, y1+.75f*dy+.25f*ady,
-                x2+.5f*adx, y2+.5f*ady); gp.lineTo(x2-.5f*adx, y2-.5f*ady);
+                x2+.5f*adx, y2+.5f*ady); 
+        gp.lineTo(x2-.5f*adx, y2-.5f*ady);
         gp.curveTo(x1+.75f*dx-.25f*adx, y1+.75f*dy-.25f*ady,
                 x1+.25f*dx-.25f*adx, y1+.25f*dy-.25f*ady,
-                x1-adx, y1-ady); gp.closePath();
+                x1-adx, y1-ady); 
+        gp.closePath();
         return gp;
     }
     

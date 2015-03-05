@@ -28,10 +28,12 @@ package com.googlecode.blaisemath.graphics.core;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.googlecode.blaisemath.style.StyleHints;
 import com.googlecode.blaisemath.style.Styles;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.util.Collections;
 import javax.annotation.Nullable;
 
 /**
@@ -43,17 +45,17 @@ public class GraphicUtils {
     //<editor-fold defaultstate="collapsed" desc="SINGLETONS">
     
     /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic<?>> VISIBLE_FILTER = new Predicate<Graphic<?>>(){
+    private static final Predicate<Graphic> VISIBLE_FILTER = new Predicate<Graphic>(){
         @Override
-        public boolean apply(Graphic<?> input) { 
+        public boolean apply(Graphic input) { 
             return !StyleHints.isInvisible(input.getStyleHints());
         }
     };
     
     /** Filter that can be applied to pass only visible graphics */
-    private static final Predicate<Graphic<?>> FUNCTIONAL_FILTER = new Predicate<Graphic<?>>(){
+    private static final Predicate<Graphic> FUNCTIONAL_FILTER = new Predicate<Graphic>(){
         @Override
-        public boolean apply(Graphic<?> input) { 
+        public boolean apply(Graphic input) { 
             return StyleHints.isFunctional(input.getStyleHints());
         }
     };
@@ -68,18 +70,20 @@ public class GraphicUtils {
     
     /**
      * Return visibility filter for graphics.
+     * @param <G> type of graphic being filtered
      * @return visible filter
      */
-    public static Predicate<Graphic<?>> visibleFilter() {
-        return VISIBLE_FILTER;
+    public static <G extends Graphic> Predicate<G> visibleFilter() {
+        return (Predicate<G>) VISIBLE_FILTER;
     }
     
     /**
      * Return functional filter for graphics.
+     * @param <G> type of graphic being filtered
      * @return functional filter
      */
-    public static Predicate<Graphic<?>> functionalFilter() {
-        return FUNCTIONAL_FILTER;
+    public static <G extends Graphic> Predicate<G> functionalFilter() {
+        return (Predicate<G>) FUNCTIONAL_FILTER;
     }
 
     /**

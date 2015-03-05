@@ -416,7 +416,7 @@ public class GraphicComposite<G> extends Graphic<G> {
      * @return iterable
      */
     public Iterable<Graphic<G>> functionalEntries() {
-        return Iterables.filter(entries, GraphicUtils.<G>functionalFilter());
+        return Iterables.filter(entries, GraphicUtils.functionalFilter());
     }
     
     /**
