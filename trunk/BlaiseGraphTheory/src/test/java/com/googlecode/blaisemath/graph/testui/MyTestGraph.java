@@ -234,10 +234,12 @@ public final class MyTestGraph implements Graph<String> {
     // ADJACENCY
     //
 
-    public Collection<? extends Edge<String>> edgesAdjacentTo(String x) {
+    @Override
+    public Collection<Edge<String>> edgesAdjacentTo(String x) {
         return edgeIndex.get(x);
     }
 
+    @Override
     public Set<String> outNeighbors(String x) {
         if (!directed) {
             return neighbors(x);

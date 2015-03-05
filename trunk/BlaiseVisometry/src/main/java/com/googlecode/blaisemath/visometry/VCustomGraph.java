@@ -79,11 +79,11 @@ public class VCustomGraph<C,S,E extends Edge<S>,G> extends VCustomPointSet<C,S,G
         return gwindow;
     }
 
-    public Set<? extends E> getEdges() {
+    public Set<E> getEdges() {
         return gwindow.getEdgeSet();
     }
 
-    public void setEdges(Set<? extends E> edges) {
+    public void setEdges(Set<E> edges) {
         // make a copy to prevent errors in updating edges
         gwindow.setEdgeSet(new LinkedHashSet<E>(edges));
     }

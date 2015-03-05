@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.visometry;
  * Implements much of the basic functionality of {@link VGraphic}.
  *
  * @param <C> the object coordinate type
+ * @param <G> graphics canvas type
  * 
  * @author Elisha Peterson
  */

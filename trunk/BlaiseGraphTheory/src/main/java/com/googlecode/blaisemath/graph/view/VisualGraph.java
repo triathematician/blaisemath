@@ -93,6 +93,7 @@ public class VisualGraph<G> {
             @Nullable Supplier<DelegatingNodeLinkGraphic<Object,Edge<Object>,G>> graphicSupplier) {
         this.viewGraphSupplier = graphicSupplier;
         layoutListener = new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 initViewGraph();
             }

@@ -216,46 +216,57 @@ public class OptimizedGraph<V> implements Graph<V> {
     // DELEGATES
     //
 
+    @Override
     public boolean isDirected() {
         return base.isDirected();
     }
 
+    @Override
     public int nodeCount() {
         return base.nodeCount();
     }
 
+    @Override
     public Set<V> nodes() {
         return base.nodes();
     }
 
+    @Override
     public boolean contains(V x) {
         return base.contains(x);
     }
 
+    @Override
     public int edgeCount() {
         return base.edgeCount();
     }
 
+    @Override
     public Set<Edge<V>> edges() {
         return base.edges();
     }
 
-    public Iterable<? extends Edge<V>> edgesAdjacentTo(V x) {
+    @Override
+    public Iterable<Edge<V>> edgesAdjacentTo(V x) {
         return base.edgesAdjacentTo(x);
     }
 
+    @Override
     public int outDegree(V x) {
         return base.outDegree(x);
     }
 
+    @Override
     public Set<V> outNeighbors(V x) {
         return base.outNeighbors(x);
     }
 
+    @Override
     public int inDegree(V x) {
         return base.inDegree(x);
     }
 
+    @Override
     public Set<V> inNeighbors(V x) {
         return base.inNeighbors(x);
     }

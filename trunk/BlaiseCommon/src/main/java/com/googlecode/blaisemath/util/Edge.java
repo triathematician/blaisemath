@@ -6,6 +6,7 @@
 package com.googlecode.blaisemath.util;
 
 import com.google.common.base.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /*
  * #%L
@@ -33,6 +34,7 @@ import com.google.common.base.Objects;
  * 
  * @author elisha
  */
+@Immutable
 public class Edge<V> {
     
     protected final V v1;
@@ -141,7 +143,8 @@ public class Edge<V> {
     
     
     /** Undirected version of an edge */
-    public static class UndirectedEdge<V> extends Edge<V> {
+    @Immutable
+    public static final class UndirectedEdge<V> extends Edge<V> {
 
         public UndirectedEdge(V v1, V v2) {
             super(v1, v2);

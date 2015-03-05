@@ -37,6 +37,7 @@ import com.googlecode.blaisemath.graphics.core.Graphic;
  * </p>
  *
  * @param <C> the object coordinate type
+ * @param <G> graphics canvas type
  * 
  * @author Elisha Peterson
  *

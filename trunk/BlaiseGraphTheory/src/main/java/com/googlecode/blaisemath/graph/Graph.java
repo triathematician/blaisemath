@@ -145,7 +145,7 @@ public interface Graph<N> {
      * @param x a node
      * @return adjacent edges
      */
-    Iterable<? extends Edge<N>> edgesAdjacentTo(N x);
+    Iterable<Edge<N>> edgesAdjacentTo(N x);
     
     /**
      * The out-degree of a node, the number of edges with x as the first vertex
