@@ -31,6 +31,7 @@ import com.googlecode.blaisemath.graphics.core.PrimitiveGraphic;
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.ObjectStyler;
 import com.googlecode.blaisemath.style.Styles;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import com.googlecode.blaisemath.util.AnchoredImage;
 import com.googlecode.blaisemath.util.AnchoredText;
 import com.googlecode.blaisemath.util.Edge;
@@ -42,6 +43,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
+import javax.swing.Icon;
 
 /**
  * Factory methods for creating basic java2d-based graphics.
@@ -129,6 +131,14 @@ public class JGraphics {
     
     public static PrimitiveGraphic<AnchoredImage,Graphics2D> image(double x, double y, double wid, double ht, Image image, String refc) {
         return new PrimitiveGraphic<AnchoredImage,Graphics2D>(new AnchoredImage(x, y, wid, ht, image, refc), AttributeSet.EMPTY, ImageRenderer.getInstance());
+    }
+    
+    public static PrimitiveGraphic<AnchoredIcon,Graphics2D> icon(AnchoredIcon icon) {
+        return new PrimitiveGraphic<AnchoredIcon,Graphics2D>(icon, AttributeSet.EMPTY, IconRenderer.getInstance());
+    }
+    
+    public static PrimitiveGraphic<AnchoredIcon,Graphics2D> icon(Icon icon, double x, double y) {
+        return new PrimitiveGraphic<AnchoredIcon,Graphics2D>(new AnchoredIcon(x, y, icon), AttributeSet.EMPTY, IconRenderer.getInstance());
     }
 
     public static <S> DelegatingNodeLinkGraphic<S, Edge<S>, Graphics2D> nodeLink() {

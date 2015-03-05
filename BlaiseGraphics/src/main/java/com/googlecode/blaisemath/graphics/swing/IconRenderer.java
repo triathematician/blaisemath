@@ -1,6 +1,6 @@
 /**
- * ImageRenderer.java
- * Created on Sep 12, 2014
+ * IconRenderer.java
+ * Created on Mar 5, 2015
  */
 package com.googlecode.blaisemath.graphics.swing;
 
@@ -26,41 +26,41 @@ package com.googlecode.blaisemath.graphics.swing;
 
 import com.googlecode.blaisemath.style.AttributeSet;
 import com.googlecode.blaisemath.style.Renderer;
-import com.googlecode.blaisemath.util.AnchoredImage;
+import com.googlecode.blaisemath.util.AnchoredIcon;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Renderer for drawing images on a canvas.
+ * Renderer for drawing an icon on a canvas.
  * 
  * @author petereb1
  */
-public class ImageRenderer implements Renderer<AnchoredImage, Graphics2D> {
+public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 
-    private static final ImageRenderer INST = new ImageRenderer();
+    private static final IconRenderer INST = new IconRenderer();
     
-    public static Renderer<AnchoredImage, Graphics2D> getInstance() {
+    public static Renderer<AnchoredIcon, Graphics2D> getInstance() {
         return INST;
     }
 
     @Override
-    public void render(AnchoredImage primitive, AttributeSet style, Graphics2D canvas) {
-        canvas.drawImage(primitive.getImage(), (int) primitive.getX(), (int) primitive.getY(), null);
+    public void render(AnchoredIcon primitive, AttributeSet style, Graphics2D canvas) {
+        primitive.getIcon().paintIcon(null, canvas, (int) primitive.getX(), (int) primitive.getY());
     }
 
     @Override
-    public Rectangle2D boundingBox(AnchoredImage primitive, AttributeSet style) {
-        return primitive.getBounds(null);
+    public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style) {
+        return new Rectangle2D.Double(primitive.getX(), primitive.getY(), primitive.getIconWidth(), primitive.getIconHeight());
     }
 
     @Override
-    public boolean contains(AnchoredImage primitive, AttributeSet style, Point2D point) {
+    public boolean contains(AnchoredIcon primitive, AttributeSet style, Point2D point) {
         return boundingBox(primitive, style).contains(point);
     }
 
     @Override
-    public boolean intersects(AnchoredImage primitive, AttributeSet style, Rectangle2D rect) {
+    public boolean intersects(AnchoredIcon primitive, AttributeSet style, Rectangle2D rect) {
         return boundingBox(primitive, style).intersects(rect);
     }
 
