@@ -51,7 +51,8 @@ public class IconRenderer implements Renderer<AnchoredIcon, Graphics2D> {
 
     @Override
     public Rectangle2D boundingBox(AnchoredIcon primitive, AttributeSet style) {
-        return new Rectangle2D.Double(primitive.getX(), primitive.getY(), primitive.getIconWidth(), primitive.getIconHeight());
+        return new Rectangle2D.Double(primitive.getX(), primitive.getY(), 
+                primitive.getIconWidth(), primitive.getIconHeight());
     }
 
     @Override
