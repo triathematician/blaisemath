@@ -34,9 +34,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.swing.Action;
 import javax.swing.ActionMap;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
@@ -62,6 +60,7 @@ public final class ActionMapContextMenuInitializer<S> implements ContextMenuInit
         this.submenu = submenu;
     }
     
+    @Override
     public void initContextMenu(JPopupMenu popup, S src, Point2D point,
             Object focus, Set selection) {
         if (popup.getComponentCount() > 0) {
@@ -104,31 +103,38 @@ public final class ActionMapContextMenuInitializer<S> implements ContextMenuInit
             this.delegate = delegate;
         }
         
+        @Override
         public void actionPerformed(ActionEvent e) {
             e.setSource(source);
             delegate.actionPerformed(e);
         }
 
+        @Override
         public Object getValue(String key) {
             return delegate.getValue(key);
         }
 
+        @Override
         public void putValue(String key, Object value) {
             delegate.putValue(key, value);
         }
 
+        @Override
         public void setEnabled(boolean b) {
             delegate.setEnabled(b);
         }
 
+        @Override
         public boolean isEnabled() {
             return delegate.isEnabled();
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             // not supported
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             // not supported
         }
