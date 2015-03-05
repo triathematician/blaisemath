@@ -32,6 +32,10 @@ import javax.swing.SwingUtilities;
  */
 public class BSwingUtilities {
 
+    // utility class
+    private BSwingUtilities() {
+    }
+    
     /** 
      * Executes the given runnable now, if the current thread is the swing event
      * dispatch thread, or later on the EDT, if not.
