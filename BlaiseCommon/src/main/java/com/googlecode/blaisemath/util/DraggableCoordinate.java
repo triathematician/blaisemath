@@ -2,7 +2,9 @@
  * DraggablePointBean.java
  * Created Jan 229, 2011
  */
-package com.googlecode.blaisemath.util.coordinate;
+package com.googlecode.blaisemath.util;
+
+import com.googlecode.blaisemath.util.CoordinateBean;
 
 /*
  * #%L

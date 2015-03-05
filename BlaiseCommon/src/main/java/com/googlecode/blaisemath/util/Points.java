@@ -29,7 +29,6 @@ package com.googlecode.blaisemath.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
-import com.googlecode.blaisemath.util.coordinate.DraggableCoordinate;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.annotation.Nullable;
