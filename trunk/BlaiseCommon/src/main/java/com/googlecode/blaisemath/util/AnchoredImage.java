@@ -35,7 +35,7 @@ import javax.annotation.concurrent.Immutable;
  * @author petereb1
  */
 @Immutable
-public class AnchoredImage extends Point2DBean {
+public final class AnchoredImage extends Point2DBean {
 
     private final Image originalImage;
     private final Image scaledImage;

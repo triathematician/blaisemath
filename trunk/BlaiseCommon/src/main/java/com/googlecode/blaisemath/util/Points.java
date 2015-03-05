@@ -61,12 +61,15 @@ public class Points {
      */
     public static DraggableCoordinate<Point2D> asPointBean(final Point2D pt) {
         return new DraggableCoordinate<Point2D>() {
+            @Override
             public Point2D getPoint() {
                 return pt;
             }
+            @Override
             public void setPoint(Point2D p) {
                 pt.setLocation(p);
             }
+            @Override
             public void setPoint(Point2D initial, Point2D dragStart, Point2D dragFinish) {
                 pt.setLocation(initial.getX()+dragFinish.getX()-dragStart.getX(),
                         initial.getY()+dragFinish.getY()-dragStart.getY());

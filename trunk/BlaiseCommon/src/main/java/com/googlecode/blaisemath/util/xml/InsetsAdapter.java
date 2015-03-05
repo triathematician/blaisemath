@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.util.xml;
  */
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import java.awt.Insets;
 import java.util.Map;
 import java.util.logging.Level;
@@ -40,8 +41,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public class InsetsAdapter extends XmlAdapter<String,Insets> {
 
     @Override
-    public Insets unmarshal(String v) {
-        if (v == null) {
+    public Insets unmarshal(String v) throws Exception {
+        if (Strings.isNullOrEmpty(v)) {
             return null;
         }
         Matcher m = Pattern.compile("insets\\[(.*)\\]").matcher(v.toLowerCase().trim());
@@ -60,9 +61,7 @@ public class InsetsAdapter extends XmlAdapter<String,Insets> {
                 return null;
             }
         } else {
-            Logger.getLogger(InsetsAdapter.class.getName()).log(Level.FINEST,
-                    "Not a valid insets", v);
-            return null;
+            throw new IllegalArgumentException("Invalid insets: "+v);
         }
     }
 

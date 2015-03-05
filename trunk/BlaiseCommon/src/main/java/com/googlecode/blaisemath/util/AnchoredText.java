@@ -28,7 +28,6 @@ package com.googlecode.blaisemath.util;
 
 
 import com.google.common.base.Objects;
-import com.googlecode.blaisemath.util.Point2DBean;
 import java.awt.geom.Point2D;
 
 /**

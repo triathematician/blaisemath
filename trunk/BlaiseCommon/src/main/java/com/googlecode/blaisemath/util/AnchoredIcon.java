@@ -1,10 +1,8 @@
-package com.googlecode.blaisemath.util;
-
 /**
- * DraggablePoint2D.java
- * Created Aug 1, 2014
+ * AnchoredIcon.java
+ * Created on Mar 5, 2015
  */
-
+package com.googlecode.blaisemath.util;
 
 /*
  * #%L
@@ -26,36 +24,40 @@ package com.googlecode.blaisemath.util;
  * #L%
  */
 
-
-import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
-import java.awt.geom.Point2D;
+import javax.annotation.concurrent.Immutable;
+import javax.swing.Icon;
 
 /**
- * An instance of {@link Point2D} that is also a {@link CoordinateBean}.
- * @author Elisha
+ * An icon anchored at a given location.
+ * @author petereb1
  */
-public class Point2DBean extends Point2D.Double implements CoordinateBean<Point2D> {
+@Immutable
+public final class AnchoredIcon extends Point2DBean {
 
-    public Point2DBean() {
-    }
+    private final Icon icon;
 
-    public Point2DBean(double x, double y) {
+    public AnchoredIcon(double x, double y, Icon icon) {
         super(x, y);
+        this.icon = icon;
     }
 
-    @Override
-    public String toString() {
-        return "DraggablePoint{" + getX() + ',' + getY() + '}';
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    //
+    // PROPERTIES
+    //
+    
+    public Icon getIcon() {
+        return icon;
+    }
+
+    public int getIconWidth() {
+        return icon.getIconWidth();
+    }
+
+    public int getIconHeight() {
+        return icon.getIconHeight();
     }
     
-    @Override
-    public Point2D getPoint() {
-        return this;
-    }
-    
-    @Override
-    public void setPoint(Point2D p) {
-        setLocation(p);
-    }
+    //</editor-fold>
     
 }
