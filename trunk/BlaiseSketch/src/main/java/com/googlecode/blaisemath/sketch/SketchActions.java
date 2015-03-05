@@ -45,7 +45,7 @@ import com.googlecode.blaisemath.style.ImmutableAttributeSet;
 import com.googlecode.blaisemath.style.Marker;
 import com.googlecode.blaisemath.style.editor.AttributeSetPropertyModel;
 import com.googlecode.blaisemath.util.Points;
-import com.googlecode.blaisemath.util.coordinate.CoordinateBean;
+import com.googlecode.blaisemath.util.CoordinateBean;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
