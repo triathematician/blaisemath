@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Draws on a {@link JGraphicComponent} using the component's transform.
+ * Draws on a {@link Graphics2D} using the component's transform.
  * 
  * @author petereb1
  */
