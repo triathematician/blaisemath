@@ -25,14 +25,15 @@ package com.googlecode.blaisemath.itemvis;
  */
 
 
-import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Function;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import com.googlecode.blaisemath.graphics.core.Graphic;
+import com.googlecode.blaisemath.graphics.core.GraphicUpdater;
 
 /**
  * <p>
