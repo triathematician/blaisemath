@@ -100,7 +100,7 @@ public class Edge<V> {
     
     /**
      * Edge's first node
-     * @return 
+     * @return node 1
      */
     public V getNode1() {
         return v1;
@@ -108,7 +108,7 @@ public class Edge<V> {
     
     /**
      * Edge's second node
-     * @return 
+     * @return node 2
      */
     public V getNode2() {
         return v2;

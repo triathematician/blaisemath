@@ -67,7 +67,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param <C> coordinate type
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
-     * @return 
+     * @return add event
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddEvent(Object src, Map<S,C> added) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
@@ -81,7 +81,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param <C> coordinate type
      * @param src source of event
      * @param removed set of removed objects
-     * @return 
+     * @return remove event
      */
     public static <S,C> CoordinateChangeEvent createRemoveEvent(Object src, Set<S> removed) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C>(src);
@@ -96,7 +96,7 @@ public final class CoordinateChangeEvent<S,C> extends EventObject {
      * @param src source of event
      * @param added map of added objects, keys are objects/values are coordinates
      * @param removed set of removed objects
-     * @return 
+     * @return add/remove event
      */
     public static <S,C> CoordinateChangeEvent<S,C> createAddRemoveEvent(Object src, Map<S,C> added, Set<S> removed) {
         CoordinateChangeEvent<S,C> evt = new CoordinateChangeEvent<S,C> (src);

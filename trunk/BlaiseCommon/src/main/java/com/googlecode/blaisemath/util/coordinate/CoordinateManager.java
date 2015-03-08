@@ -95,10 +95,10 @@ public final class CoordinateManager<S, C> {
     
     /**
      * Create and return new instance of coordinate manager.
-     * @param <S>
-     * @param <C>
+     * @param <S> type of source object
+     * @param <C> type of point
      * @param maxCacheSize maximum # of active and inactive points to include
-     * @return 
+     * @return newly created coordinate manager.
      */
     public static <S,C> CoordinateManager<S,C> create(int maxCacheSize) {
         return new CoordinateManager<S,C>(maxCacheSize);
@@ -160,7 +160,7 @@ public final class CoordinateManager<S, C> {
     
     /**
      * Retrieve location of given set of objects, whether active or inactive.
-     * @param <T>
+     * @param <T> type of object in provided set
      * @param obj objects to retrieve
      * @return map of locations
      */
@@ -256,7 +256,7 @@ public final class CoordinateManager<S, C> {
     /**
      * Makes specified objects inactive, possibly removing them from memory.
      * Propagates the updated coordinates to interested listeners (on the invoking thread).
-     * @param <T>
+     * @param <T> type of object in provided set
      * @param obj objects to removeObjects
      */
     public <T extends S> void deactivate(Set<T> obj) {
@@ -272,7 +272,7 @@ public final class CoordinateManager<S, C> {
 
     /**
      * Call to restore locations from the cache.
-     * @param <T>
+     * @param <T> type of object in provided set
      * @param obj objects to restore
      * @return true if cache was changed
      */
