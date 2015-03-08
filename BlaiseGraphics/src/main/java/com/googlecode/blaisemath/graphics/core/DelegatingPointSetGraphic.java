@@ -182,7 +182,10 @@ public class DelegatingPointSetGraphic<S,G> extends GraphicComposite<G> {
             LabeledPointGraphic<S,G> dpg = (LabeledPointGraphic<S,G>) source;
             manager.put(dpg.getSourceObject(), dpg.getPrimitive());
         }
-        super.graphicChanged(source);
+        // do not propagate events unless flag is false
+        if (!updatingPoint) {
+            super.graphicChanged(source);
+        }
     }
 
     //</editor-fold>
