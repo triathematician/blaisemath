@@ -62,7 +62,7 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 /** 
- * Adapter for converting SVG objects to/from Blaise {@link PrimitiveGraphic} objects.
+ * Adapter for converting SVG objects to/from Blaise {@link PrimitiveGraphicSupport} objects.
  * The conversion is imperfect in this implementation. Supported SVG types include:
  * <ul>
  *   <li>{@link SVGRectangle}, {@link SVGEllipse}, {@link SVGCircle}, {@link SVGPolygon}</li>
@@ -86,7 +86,7 @@ public class SVGElementGraphicConverter extends Converter<SVGElement, Graphic<Gr
     /**
      * Convert an {@link SVGElement} to a {@link Graphic}. The resulting object will
      * be a {@link GraphicComposite} if the argument is an instance of {@link SVGGroup}
-     * or {@link SVGRoot}, and otherwise a {@link PrimitiveGraphic}. In the case of
+     * or {@link SVGRoot}, and otherwise a {@link PrimitiveGraphicSupport}. In the case of
      * a group, recursive calls are made to convert all elements in the group.
      * 
      * @param sh the element to convert
