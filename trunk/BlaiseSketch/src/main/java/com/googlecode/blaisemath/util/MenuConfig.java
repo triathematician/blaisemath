@@ -97,7 +97,7 @@ public class MenuConfig {
      * Create toolbar component from file
      * @param cls
      * @param am
-     * @return 
+     * @return toolbar
      * @throws java.io.IOException 
      */
     public static JToolBar readToolBar(Class cls, ActionMap am) throws IOException {
@@ -117,7 +117,7 @@ public class MenuConfig {
      * Create menubar from file
      * @param cls
      * @param am
-     * @return 
+     * @return menu bar
      * @throws java.io.IOException 
      */
     public static JMenuBar readMenuBar(Class cls, ActionMap am) throws IOException {
