@@ -1,0 +1,110 @@
+## YAML Template.
+---
+Menubar:
+    File:
+        - load
+        - save
+        - 
+        - clearCanvas
+        - 
+        - quit
+    Edit:
+        - selectAll
+        - clearSelection
+        -
+        - copySelected
+        - pasteGraphic
+        -
+        - copySelectedStyle
+        - pasteSelectedStyle
+        -
+        - copySelectedDimension
+        - pasteSelectedDimension
+        -
+        - editSelected
+        - editSelectedStyle
+        - addAttributeToSelected
+        - 
+        - deleteSelected
+        - 
+        - groupSelected
+        - ungroupSelected
+        - 
+        - lockSelected
+        - unlockSelected
+    Arrange:
+        - moveForward
+        - moveBackward
+        - 
+        - moveToFront
+        - moveToBack
+        - 
+        - alignHorizontal
+        - alignVertical
+        - 
+        - distributeHorizontal
+        - distributeVertical
+    Tool:
+        - selectionTool
+        - canvasTool
+        - 
+        - createMarker
+        - createLine
+        - createPath
+        - 
+        - createRect
+        - createCircle
+        - createEllipse
+        - 
+        - createText
+        - createImage
+    Zoom:
+        - zoomSelected
+        - zoomAll
+        - zoom100
+Toolbar:
+    - load
+    - save
+    - 
+    - selectionTool
+    - canvasTool
+    - 
+    - createMarker
+    - createLine
+    - createPath
+    - createRect
+    - createCircle
+    - createEllipse
+    - createText
+    - createImage
+    - 
+    - groupSelected
+    - ungroupSelected
+Graphic:
+    - editGraphic
+    - editGraphicStyle
+    - addGraphicAttribute
+    - 
+    - copy
+    - copyStyle
+    - copyDimension
+    - 
+    - pasteStyle
+    - pasteDimension
+    - 
+    - lockGraphic
+    - unlockGraphic
+    - 
+    - delete
+Selection:
+    - groupSelected
+    - ungroupSelected
+    -
+    - lockSelected
+    - unlockSelected
+    -
+    - pasteSelectedStyle
+    - pasteSelectedDimension
+    - 
+    - deleteSelected
+    
