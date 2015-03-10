@@ -3,7 +3,7 @@
  * Created on Oct 26, 2009
  */
 
-package com.googlecode.blaisemath.graph.modules.metrics;
+package com.googlecode.blaisemath.graph;
 
 /*
  * #%L
@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph.modules.metrics;
  */
 
 import java.util.Set;
-import com.googlecode.blaisemath.graph.Graph;
 
 /**
  * Returns a value associated with a subset of nodes in a graph.
@@ -38,6 +37,7 @@ public interface GraphSubsetMetric<N> {
 
     /**
      * Computes the value of the metric for the given graph and nodes.
+     * @param <V> graph node type
      * @param graph the graph
      * @param nodes a collection of nodes in the graph
      * @return value of the metric
@@ -45,5 +45,5 @@ public interface GraphSubsetMetric<N> {
      *      specified graph (e.g. graph is null, or graph is directed, but the
      *      metric only applies to undirected graphs)
      */
-    public <V> N getValue(Graph<V> graph, Set<V> nodes);
+    <V> N getValue(Graph<V> graph, Set<V> nodes);
 }

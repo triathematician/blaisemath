@@ -61,6 +61,7 @@ public class GraphStats {
     
     /**
      * The graph object.
+     * @return graph
      */
     public Graph getGraph() {
         return graph;
@@ -150,12 +151,18 @@ public class GraphStats {
             this(GraphMetrics.computeValues(graph, metric));
         }
         
-        /** Values on the nodes */
+        /** 
+         * Values on the nodes
+         * @return values
+         */
         public Collection getValues() {
             return values;
         }
         
-        /** Summary statistics */
+        /** 
+         * Summary statistics
+         * @return stats for metric values
+         */
         public SummaryStatistics getStatistics() {
             return stats;
         }

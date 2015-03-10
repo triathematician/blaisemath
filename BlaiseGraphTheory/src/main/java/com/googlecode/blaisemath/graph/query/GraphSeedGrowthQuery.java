@@ -36,6 +36,8 @@ import com.googlecode.blaisemath.graph.Graph;
  */
 public class GraphSeedGrowthQuery implements Function<Graph,Set> {
 
+    private static final String EXEC_ALGO_NAME = GraphSeedGrowthQuery.class.getName()+"#execute";
+
     private final GraphSeedRule seedRule;
     private final GraphGrowthRule growRule;
 
@@ -49,30 +51,14 @@ public class GraphSeedGrowthQuery implements Function<Graph,Set> {
         this.growRule = growRule;
     }
 
-    private static final String EXEC_ALGO_NAME = GraphSeedGrowthQuery.class.getName()+"#execute";
-
-    public Set apply(Graph graph, SeedCallback callback) {
+    @Override
+    public Set apply(Graph graph) {
         int id = GAInstrument.start(EXEC_ALGO_NAME);
         Set seedNodes = seedRule.apply(graph);
         GAInstrument.middle(id, "seeded");
-        if (callback != null) {
-            callback.seedSubset(seedNodes);
-        }
         Set result = growRule.grow(graph, seedNodes);
         GAInstrument.end(id);
         return result;
-    }
-
-    public Set apply(Graph graph) {
-        return apply(graph, null);
-    }
-
-
-
-    /** Provides intermediate results */
-    public static interface SeedCallback {
-        /** Called with intermediate results when the graph seed is obtained */
-        public void seedSubset(Set seedNodes);
     }
 
 }

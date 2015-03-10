@@ -43,7 +43,7 @@ import javax.swing.ListCellRenderer;
  *
  * @author elisha
  */
-public class MultiGraphComponent extends JList {
+public final class MultiGraphComponent extends JList {
 
     /** Time graph manager */
     private LongitudinalGraphManager manager;
@@ -55,11 +55,15 @@ public class MultiGraphComponent extends JList {
         this(null);
     }
 
-    /** Construct instance with specified graph manager */
+    /** 
+     * Construct instance with specified graph manager
+     * @param m graph manager
+     */
     public MultiGraphComponent(LongitudinalGraphManager m) {
         setCellRenderer(new GraphCellRenderer());
         setListData(new Object[]{});
         managerListener = new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 repaint();
             }
@@ -70,13 +74,18 @@ public class MultiGraphComponent extends JList {
     }
 
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
-
-    /** @return manager for the longitudinal graph */
+    
+    /**
+     * @return manager for the longitudinal graph
+     */
     public LongitudinalGraphManager getManager() {
         return manager;
     }
 
-    /** Changes the manager for the longitudinal graph */
+    /**
+     * Changes the manager for the longitudinal graph
+     * @param m the graph manager
+     */
     public void setManager(LongitudinalGraphManager m) {
         if (this.manager != m) {
             if (this.manager != null) {
@@ -99,6 +108,7 @@ public class MultiGraphComponent extends JList {
         GraphCellRenderer() {
             setPreferredSize(new Dimension(200, 200));
         }
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Double time = (Double) value;
             Graph gr = MultiGraphComponent.this.manager.getTimeGraph().slice(time, false);

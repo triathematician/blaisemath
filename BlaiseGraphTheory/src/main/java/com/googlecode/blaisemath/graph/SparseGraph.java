@@ -85,10 +85,12 @@ public final class SparseGraph<V> extends GraphSupport<V> {
     }
     
     /**
-     * Construct graph with specific nodes and edges
+     * Construct graph with specific nodes and edges.
+     * @param <V> graph node type
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
+     * @return created graph
      */
     public static <V> SparseGraph<V> createFromEdges(boolean directed, Iterable<V> nodes, Iterable<Edge<V>> edges) {
         SparseGraph<V> res = new SparseGraph<V>(directed, Lists.newArrayList(nodes));
@@ -105,6 +107,7 @@ public final class SparseGraph<V> extends GraphSupport<V> {
 
     /**
      * Construct graph with specific nodes and edges
+     * @param <V> graph node type
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
@@ -121,6 +124,7 @@ public final class SparseGraph<V> extends GraphSupport<V> {
 
     /**
      * Construct graph with specific nodes and edges
+     * @param <V> graph node type
      * @param directed whether graph is directed
      * @param nodes nodes in the graph
      * @param edges edges in the graph, as ordered node pairs; each must have a 0 element and a 1 element
@@ -137,6 +141,7 @@ public final class SparseGraph<V> extends GraphSupport<V> {
 
     /**
      * Construct graph with a sparse adjacency representation.
+     * @param <V> graph node type
      * @param directed if graph is directed
      * @param adjacencies map with adjacency info
      * @return graph

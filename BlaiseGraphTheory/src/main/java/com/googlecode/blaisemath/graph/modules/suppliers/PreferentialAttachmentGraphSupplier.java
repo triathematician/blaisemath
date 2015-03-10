@@ -98,11 +98,13 @@ public final class PreferentialAttachmentGraphSupplier extends GraphSupplierSupp
     /**
      * Probabilities of initial #s of connections; the i'th entry is the
      * probability that a new node will have i connections, starting at 0
+     * @param connectProbs array describing probabilities of connections by degree
      */
     public void setConnectProbabilities(float[] connectProbs) {
         this.connectProbs = Arrays.copyOf(connectProbs, connectProbs.length);
     }
 
+    @Override
     public Graph<Integer> get() {
         return connectProbs == null
                 ? generate(seed, nodes, edgesPerStep)

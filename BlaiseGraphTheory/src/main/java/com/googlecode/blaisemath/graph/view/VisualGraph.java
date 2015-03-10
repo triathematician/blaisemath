@@ -52,6 +52,7 @@ import javax.annotation.Nullable;
  *  and the visual elements by the graphic.
  * </p>
  *
+ * @param <G> graphics canvas type
  * @author Elisha Peterson
  */
 public class VisualGraph<G> {
@@ -198,7 +199,7 @@ public class VisualGraph<G> {
 
     /**
      * Return node styler
-     * @param styler
+     * @param styler object styler for nodes
      */
     public void setNodeStyler(ObjectStyler<Object> styler) {
         viewGraph.setNodeStyler(styler);

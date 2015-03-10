@@ -49,10 +49,12 @@ import javax.annotation.concurrent.Immutable;
  *   This maximizes speed for algorithms that make large numbers of calls to
  *   graph API methods.
  * </p>
+ * @param <V> graph node type
+ * 
  * @author elisha
  */
 @Immutable
-public class OptimizedGraph<V> implements Graph<V> {
+public final class OptimizedGraph<V> implements Graph<V> {
 
     /** Base graph */
     private final SparseGraph<V> base;

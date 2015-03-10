@@ -53,9 +53,13 @@ public final class LongitudinalGraphSlider extends JComponent {
         this(null);
     }
 
-    /** Create a slider for the graph of the specified manager */
+    /** 
+     * Create a slider for the graph of the specified manager.
+     * @param manager graph manager
+     */
     public LongitudinalGraphSlider(LongitudinalGraphManager manager) {
         managerListener = new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 String prop = evt.getPropertyName();
                 if (prop.equals("time")) {
@@ -69,6 +73,7 @@ public final class LongitudinalGraphSlider extends JComponent {
         setManager(manager);
         slider = new ListSlider();
         slider.addChangeListener(new ChangeListener(){
+            @Override
             public void stateChanged(ChangeEvent e) {
                 double time = slider.getListValue();
                 LongitudinalGraphSlider.this.manager.setTime(time);
@@ -85,6 +90,7 @@ public final class LongitudinalGraphSlider extends JComponent {
 
     /**
      * Sets manager for the slider
+     * @param m graph manager
      */
     public void setManager(LongitudinalGraphManager m) {
         if (this.manager != m) {
