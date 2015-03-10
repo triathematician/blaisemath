@@ -52,7 +52,7 @@ public interface LongitudinalGraph<V> {
 
     /**
      * Get whether longituinal graph's edges are directed
-     * @return 
+     * @return true if directed
      */
     boolean isDirected();
 

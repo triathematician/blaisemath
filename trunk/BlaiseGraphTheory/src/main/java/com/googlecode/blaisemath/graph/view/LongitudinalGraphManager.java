@@ -50,16 +50,12 @@ import javax.swing.event.SwingPropertyChangeSupport;
  * 
  * @author elisha
  */
-public class LongitudinalGraphManager {
-
-    // LAYOUT CONSTANTS
+public final class LongitudinalGraphManager {
     
     /** Default time between layout iterations. */
     private static final int DEFAULT_DELAY = 10;
     /** Default # iterations per layout step */
     private static final int DEFAULT_ITER = 2;
-    
-    // STATE VARIABLES
     
     /** The time graph */
     private final LongitudinalGraph tGraph;
@@ -80,7 +76,10 @@ public class LongitudinalGraphManager {
     private final PropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
 
     
-    /** Constructs manager for the specified graph */
+    /** 
+     * Constructs manager for the specified graph
+     * @param graph the graph
+     */
     public LongitudinalGraphManager(LongitudinalGraph graph) {
         this.tGraph = checkNotNull(graph);
         this.layout = new SimultaneousLayout(tGraph);
@@ -94,7 +93,8 @@ public class LongitudinalGraphManager {
     //
 
     /** 
-     * Get the manager's graph (immutable) 
+     * Get the manager's graph (immutable)
+     * @return graph
      */
     public LongitudinalGraph getTimeGraph() { 
         return tGraph;
@@ -102,6 +102,7 @@ public class LongitudinalGraphManager {
 
     /** 
      * Get time of the current slice
+     * @return time
      */
     public double getTime() {
         return time;
@@ -109,6 +110,7 @@ public class LongitudinalGraphManager {
 
     /**
      * Sets the graph slice to the time closest to that specified.
+     * @param time slice time
      */
     public void setTime(double time) {
         setTime(time, false);
@@ -116,6 +118,8 @@ public class LongitudinalGraphManager {
 
     /**
      * Sets the active time, which determines the currently active graph
+     * @param time slice time
+     * @param exact whether time must be exact
      */
     public void setTime(double time, boolean exact) {
         Object old = this.time;
@@ -142,11 +146,6 @@ public class LongitudinalGraphManager {
         return slice;
     }
     
-    /** Use to overwrite the default graph slice selection. Use with caution!! */
-    public void setSlice(Graph slice) {
-        this.slice = slice;
-    }
-    
     // </editor-fold>
 
 
@@ -154,6 +153,7 @@ public class LongitudinalGraphManager {
 
     /** 
      * Get current iterative layout algorithm 
+     * @return layout algorithm
      */
     public SimultaneousLayout getLayoutAlgorithm() { 
         return layout; 
@@ -161,6 +161,7 @@ public class LongitudinalGraphManager {
     
     /** 
      * Return true if an iterative layout is active 
+     * @return true if animating
      */
     public boolean isLayoutAnimating() {
         return layoutTask != null;
@@ -168,6 +169,7 @@ public class LongitudinalGraphManager {
 
     /** 
      * Sets layout to animate or stop animating
+     * @param value true if animating
      */
     public void setLayoutAnimating(boolean value) {
         boolean old = layoutTask != null;
@@ -195,6 +197,7 @@ public class LongitudinalGraphManager {
     /**
      * Activates the layout timer, if an iterative layout has been provided.
      * @param delay delay in ms between layout calls
+     * @param iter # of iterations per task execution
      */
     public void startLayoutTask(int delay, final int iter) {
         if (layoutTimer == null) {

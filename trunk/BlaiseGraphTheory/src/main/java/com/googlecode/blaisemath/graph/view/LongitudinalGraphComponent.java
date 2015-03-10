@@ -73,12 +73,19 @@ public final class LongitudinalGraphComponent extends JPanel {
         this(null, null);
     }
 
-    /** Construct instance with specified graph manager */
+    /** 
+     * Construct instance with specified graph manager
+     * @param m graph manager
+     */
     public LongitudinalGraphComponent(LongitudinalGraphManager m) {
         this(m, null);
     }
 
-    /** Construct instance with specified graph manager */
+    /** 
+     * Construct instance with specified graph manager
+     * @param m graph manager
+     * @param gm layout manager
+     */
     public LongitudinalGraphComponent(LongitudinalGraphManager m, GraphLayoutManager gm) {
         super(new java.awt.BorderLayout());
         plot = new GraphComponent();
@@ -88,6 +95,7 @@ public final class LongitudinalGraphComponent extends JPanel {
         initComponents();
 
         managerListener = new PropertyChangeListener(){
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("time")) {
                     timeLabel.setText("Slice t="+evt.getNewValue());
@@ -135,6 +143,7 @@ public final class LongitudinalGraphComponent extends JPanel {
 
     /**
      * Sets the underlying graph
+     * @param g the graph
      */
     public void setTimeGraph(LongitudinalGraph g) {
         setManager(new LongitudinalGraphManager(g));
@@ -170,6 +179,7 @@ public final class LongitudinalGraphComponent extends JPanel {
 
     /**
      * Changes the manager for the longitudinal graph
+     * @param m the graph manager
      */
     public void setManager(LongitudinalGraphManager m) {
         setManager(m, null);
@@ -177,6 +187,8 @@ public final class LongitudinalGraphComponent extends JPanel {
 
     /**
      * Changes the manager for the longitudinal graph
+     * @param m the graph manager
+     * @param gm the graph layout manager
      */
     private void setManager(LongitudinalGraphManager m, GraphLayoutManager gm) {
         if (this.manager != m) {

@@ -67,9 +67,11 @@ public interface StaticGraphLayout<P> {
         public String toString() {
             return "Position nodes at origin";
         }
+        @Override
         public Class<Object> getParametersType() {
             return Object.class;
         }
+        @Override
         public Map layout(Graph g, Map ic, Set fixed, Object parameters) {
             HashMap result = Maps.newHashMap();
             for (Object v : g.nodes()) {
@@ -85,9 +87,11 @@ public interface StaticGraphLayout<P> {
         public String toString() {
             return "Position nodes in a circle";
         }
+        @Override
         public Class<Double> getParametersType() {
             return Double.class;
         }
+        @Override
         public Map layout(Graph g, Map ic, Set fixed, Double radius) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();
             int size = g.nodeCount();
@@ -110,9 +114,11 @@ public interface StaticGraphLayout<P> {
         public String toString() {
             return "Position nodes randomly in a rectangle";
         }
+        @Override
         public Class<Double> getParametersType() {
             return Double.class;
         }
+        @Override
         public Map layout(Graph g, Map ic, Set fixed, Double boxSize) {
             HashMap<Object, Point2D.Double> result = Maps.newHashMap();
             for (Object v : g.nodes()) {

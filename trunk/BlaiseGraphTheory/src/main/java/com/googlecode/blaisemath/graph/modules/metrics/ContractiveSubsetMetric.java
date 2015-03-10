@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.modules.metrics;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Set;
 import com.googlecode.blaisemath.graph.Graph;
@@ -34,6 +35,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * Provides a derived {@link GraphSubsetMetric} by contracting all the
  * nodes in a subset to a single node, and using a {@link GraphNodeMetric}
  * on that node.
+ * @param <N> metric result type
  *
  * @author Elisha Peterson
  */
@@ -49,6 +51,7 @@ public class ContractiveSubsetMetric<N> implements GraphSubsetMetric<N> {
         this.baseMetric = baseMetric; 
     }
 
+    @Override
     public <V> N getValue(Graph<V> graph, Set<V> nodes) {
         V starNode = null;
         for (V v : nodes) { starNode = v; break; }

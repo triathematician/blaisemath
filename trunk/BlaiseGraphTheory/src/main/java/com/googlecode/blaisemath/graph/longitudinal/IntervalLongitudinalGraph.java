@@ -78,10 +78,12 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     /**
      * Factory method to generate longitudinal graph with given properties.
+     * @param <V> graph node type
      * @param directed whether graph is directed
      * @param timeSteps how many time steps to use
      * @param nodeTimes mapping of vertices together with time intervals
      * @param edgeTimes mapping of edges together with time intervals
+     * @return created graph
      */
     public static <V> IntervalLongitudinalGraph<V> getInstance(boolean directed, int timeSteps,
             Map<V, double[]> nodeTimes, Map<V, Map<V, double[]>> edgeTimes) {
@@ -117,10 +119,12 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
 
     /**
      * Factory method to generate longitudinal graph with given properties.
+     * @param <V> graph node type
      * @param directed whether graph is directed
      * @param timeSteps how many time steps to use
      * @param nodeTimes mapping of vertices together with list of node time intervals
      * @param edgeTimes mapping of edges together with list of edge time intervals
+     * @return created graph
      */
     public static <V> IntervalLongitudinalGraph<V> getInstance2(boolean directed, int timeSteps,
             Map<V, List<double[]>> nodeTimes, Map<V, Map<V, List<double[]>>> edgeTimes) {
@@ -173,14 +177,17 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     }
 
 
+    @Override
     public boolean isDirected() {
         return directed;
     }
 
+    @Override
     public Collection<V> getAllNodes() {
         return nodeTimes.keySet();
     }
 
+    @Override
     public List<double[]> getNodeIntervals(V v) {
         return nodeTimes.containsKey(v) ? nodeTimes.get(v) : null;
     }
@@ -200,11 +207,13 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         return null;
     }
 
+    @Override
     public List<double[]> getEdgeIntervals(V v1, V v2) {
         IntervalTimeEdge<V> edge = getEdge(v1,v2);
         return edge == null ? null : edge.getTimes();
     }
 
+    @Override
     public Graph<V> slice(double time, boolean exact) {
         Set<V> nodes = nodeSlice(time);
         Set<Edge<V>> edges = Sets.newHashSet();
@@ -214,26 +223,35 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         return SparseGraph.createFromEdges(directed, nodes, edges);
     }
 
+    @Override
     public double getMinimumTime() {
         return minTime;
     }
 
+    @Override
     public double getMaximumTime() {
         return maxTime;
     }
 
+    @Override
     public List<Double> getTimes() {
         return new AbstractList<Double>() {
+            @Override
             public Double get(int index) { 
                 return minTime + index*(maxTime-minTime)/(double)size(); 
             }
+            @Override
             public int size() {
                 return timeSteps; 
             }
         };
     }
 
-    /** Return set of nodes at specified time. */
+    /** 
+     * Return set of nodes at specified time.
+     * @param time slice time
+     * @return nodes active at given time
+     */
     public Set<V> nodeSlice(double time) {
         Set<V> nodes = new HashSet<V>();
         for (V v : nodeTimes.keySet()) {
@@ -245,15 +263,19 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
         return nodes;
     }
 
-    /** Return set of edges at specified time */
+    /** 
+     * Return set of edges at specified time
+     * @param time slice time
+     * @return edges active at given slice
+     */
     public Set<IntervalTimeEdge<V>> edgeSlice(double time) {
-        Set<IntervalTimeEdge<V>> edges = new HashSet<IntervalTimeEdge<V>>();
+        Set<IntervalTimeEdge<V>> sliceEdges = new HashSet<IntervalTimeEdge<V>>();
         for (IntervalTimeEdge<V> e : this.edges) {
             if (in(time, e.getTimes())) {
-                edges.add(e);
+                sliceEdges.add(e);
             }
         }
-        return edges;
+        return sliceEdges;
     }
 
 
@@ -330,7 +352,10 @@ public class IntervalLongitudinalGraph<V> implements LongitudinalGraph<V> {
     // INNER CLASSES
     //
     
-    /** Class annotation an edge with a collection of time intervals. */
+    /** 
+     * Class annotation an edge with a collection of time intervals.
+     * @param <V> graph node type
+     */
     public static class IntervalTimeEdge<V> extends Edge<V> {
         private final List<double[]> times;
         public IntervalTimeEdge(V v1, V v2, double[] interval) {

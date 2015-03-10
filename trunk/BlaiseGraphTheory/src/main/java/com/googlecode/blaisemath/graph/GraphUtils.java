@@ -82,17 +82,16 @@ public class GraphUtils {
     //
     /**
      * Returns string representation of specified graph
-     *
      * @param graph the graph to print
      * @return string representation of graph
      */
-    public static <V> String printGraph(Graph<V> graph) {
+    public static String printGraph(Graph<?> graph) {
         return printGraph(graph, true, true);
     }
 
     /**
      * Returns string representation of specified graph
-     *
+     * @param <V> graph node type
      * @param graph the graph to print
      * @param printNodes whether to print nodes or not
      * @param printEdges whether to print edges or not
@@ -136,6 +135,7 @@ public class GraphUtils {
     
     /**
      * Creates a copy of a set of edges.
+     * @param <V> graph node type
      * @param edges source edges
      * @return copy of edges
      */
@@ -153,6 +153,7 @@ public class GraphUtils {
      * either a sparse graph or a matrix graph representation. If the input
      * graph has extra properties, such as node labels, they are not included in
      * the copy.
+     * @param <V> graph node type
      * @param graph a graph
      * @return an instance of the graph with the same vertices and edges, but a new copy of it
      */
@@ -162,6 +163,7 @@ public class GraphUtils {
 
     /**
      * Creates an undirected copy of the specified graph.
+     * @param <V> graph node type
      * @param graph a graph
      * @return undirected copy with the same collection of edges
      */
@@ -179,7 +181,7 @@ public class GraphUtils {
     
     /**
      * Create a subgraph of a parent graph.
-     * @param <V> node type
+     * @param <V> graph node type
      * @param parent parent graph
      * @param nodes nodes of parent to keep
      * @return new graph
@@ -187,6 +189,7 @@ public class GraphUtils {
     public static <V> Graph<V> copySubgraph(Graph<V> parent, final Set<V> nodes) {
         Iterable<Edge<V>> filteredEdges = Iterables.filter(parent.edges(),
             new Predicate<Edge<V>>(){
+                @Override
                 public boolean apply(Edge<V> input) {
                     return nodes.contains(input.getNode1())
                             && nodes.contains(input.getNode2());
@@ -198,6 +201,7 @@ public class GraphUtils {
     /**
      * Extract the core graph from a parent graph, consisting of only nodes
      * with degree at least 2.
+     * @param <V> graph node type
      * @param parent parent graph
      * @return graph with isolates and leaves pruned
      */
@@ -226,8 +230,7 @@ public class GraphUtils {
     //
     /**
      * Computes adjacency matrix of a graph
-     *
-     * @param <V> type of vertex in the graph
+     * @param <V> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
      * @return matrix of integers describing adjacencies... contains 0's and
@@ -254,8 +257,7 @@ public class GraphUtils {
 
     /**
      * Computes the adjacency matrix and several of its powers.
-     *
-     * @param <V> type of vertex in the graph
+     * @param <V> graph node type
      * @param graph the input graph
      * @param order if empty, will be filled with order of nodes; if non-empty, will be used to order nodes in graph
      * @param maxPower maximum power of the adjacency matrix to include in
@@ -292,11 +294,13 @@ public class GraphUtils {
     
     /**
      * Return function calculating degree of elements in the given graph.
+     * @param <V> graph node type
      * @param graph graph
      * @return function providing degree of vertices
      */
     public static <V> Function<V,Integer> degreeFunction(final Graph<V> graph) {
         return new Function<V,Integer>() {
+            @Override
             public Integer apply(V input) {
                 return graph.degree(input);
             }
@@ -305,6 +309,7 @@ public class GraphUtils {
 
     /**
      * Computes and returns degree distribution.
+     * @param <V> graph node type
      * @param graph the graph
      * @return map associating degree #s with counts, sorted by degree
      */
@@ -323,7 +328,7 @@ public class GraphUtils {
      * Computes and creates a tree describing geodesic distances from a
      * specified vertex. Choice of geodesic when multiple are possible is
      * unspecified.
-     *
+     * @param <V> graph node type
      * @param graph the starting graph
      * @param vertex the starting vertex
      * @return map with vertex distance lengths
@@ -338,7 +343,7 @@ public class GraphUtils {
      * Choice of geodesic when multiple are possible is unspecified. The graph
      * only contains the vertices that are in the same component as the starting
      * vertex (forward component if directed).
-     *
+     * @param <V> graph node type
      * @param graph the starting graph
      * @param vertex the starting vertex
      * @param max the maximum distance to proceed from the starting vertex
@@ -384,7 +389,7 @@ public class GraphUtils {
 
     /**
      * Finds geodesic distance between two vertices in a graph
-     *
+     * @param <V> graph node type
      * @param graph the graph
      * @param start first vertex
      * @param end second vertex
@@ -439,6 +444,7 @@ public class GraphUtils {
     
     /**
      * Generates ordered set of nodes from an adjacency map
+     * @param <V> graph node type
      * @param adj an adjacency map
      * @return list of nodes
      */
@@ -452,6 +458,7 @@ public class GraphUtils {
     /**
      * Computes neighborhood about provided vertex up to a given radius, as a
      * set of vertices. The result <b>always includes</b> the vertex itself.
+     * @param <V> graph node type
      * @param graph the graph
      * @param vertex the starting vertex
      * @param radius the maximum distance to consider
@@ -463,6 +470,7 @@ public class GraphUtils {
 
     /**
      * Generates connected components from an adjacency map.
+     * @param <V> graph node type
      * @param adj an adjacency map
      * @return set of components, as a set of sets
      */
@@ -504,6 +512,7 @@ public class GraphUtils {
 
     /**
      * Generates connected components from an adjacency map.
+     * @param <V> graph node type
      * @param adj an adjacency map
      * @return set of components, as a set of sets
      */
@@ -517,6 +526,7 @@ public class GraphUtils {
 
     /**
      * Generates connected components from a graph.
+     * @param <V> graph node type
      * @param graph the graph
      * @return set of connected components
      */
@@ -530,6 +540,7 @@ public class GraphUtils {
 
     /**
      * Generates connected components from a subset of vertices in a graph.
+     * @param <V> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
      * @return set of connected components
@@ -540,6 +551,7 @@ public class GraphUtils {
 
     /**
      * Generates connected components as a list of subgraphs.
+     * @param <V> graph node type
      * @param graph the graph of interest
      * @return set of connected component subgraphs
      */
@@ -555,6 +567,7 @@ public class GraphUtils {
 
     /**
      * Generates adjacency map from a subgraph.
+     * @param <V> graph node type
      * @param graph the graph
      * @param nodes subset of nodes
      * @return adjacency map restricted to the given subset
@@ -570,6 +583,7 @@ public class GraphUtils {
     /**
      * Performs breadth-first search algorithm to enumerate the nodes in a
      * graph, starting from the specified start node.
+     * @param <V> graph node type
      * @param graph the graph under consideration
      * @param start the starting node.
      * @param numShortest a map that will be filled with info on the # of
@@ -631,6 +645,7 @@ public class GraphUtils {
     /**
      * Creates a contracted graph from a parent graph, where all of a specified
      * subset of nodes are contracted to a single node
+     * @param <V> graph node type
      * @param graph parent graph
      * @param contract nodes to contract
      * @param replace node to replace all contracted nodes
@@ -650,6 +665,8 @@ public class GraphUtils {
     /**
      * Contracts list of nodes, replacing all the "contract" nodes with
      * "replace".
+     * @param <V> graph node type
+     * @param nodes collection of nodes
      * @param contract nodes to contract
      * @param replace node to replace all contracted nodes
      * @return node set
@@ -664,6 +681,11 @@ public class GraphUtils {
 
     /**
      * Contracts list of components, combining all components with vertices in subset.
+     * @param <V> graph node type
+     * @param components list of components to contract
+     * @param subset subset to contract
+     * @param vertex what to replace contracted subset with
+     * @return contracted components
      */
     public static <V> Set<Set<V>> contractedComponents(Collection<Set<V>> components, Collection<V> subset, V vertex) {
         HashSet<Set<V>> result =Sets.newHashSet();

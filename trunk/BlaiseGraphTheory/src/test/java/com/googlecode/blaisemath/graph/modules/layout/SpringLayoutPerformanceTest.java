@@ -47,7 +47,7 @@ public class SpringLayoutPerformanceTest {
     public static void main(String[] args) {
         Random randomSeed = new Random(1290309812);
         
-        StaticSpringLayout sl = new StaticSpringLayout(null, null);
+        StaticSpringLayout sl = new StaticSpringLayout();
         
         Graph[] graphs = new Graph[] {
             new EdgeProbabilityGraphSupplier(false, 100, .01f).randomGenerator(randomSeed).get(),

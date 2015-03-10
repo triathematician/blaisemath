@@ -37,11 +37,8 @@ import com.googlecode.blaisemath.graph.OptimizedGraph;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
 import com.googlecode.blaisemath.util.Edge;
 import com.googlecode.blaisemath.util.Points;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.PrintStream;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -49,16 +46,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 /**
  * Positions nodes in a graph using a force-based layout technique.
  * @author elisha
  */
 public class StaticSpringLayout implements StaticGraphLayout<Double> {
-   
-    /** How long to wait between reporting status */
-    private static final int STATUS_REPORT_STEPS = 100;
     
     private int minSteps = 100;
     private int maxSteps = 5000;
@@ -68,19 +61,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     
     private int lastStepCount = 0;
     
-    /** Used to print status */
-    @Nullable
-    private PrintStream statusStream;
-    /** Used to notify status */
-    @Nullable
-    private ActionListener al;
-    
     public StaticSpringLayout() {
-        this(null, null);
-    }
-    
-    public StaticSpringLayout(PrintStream status, ActionListener al) {
-        this.statusStream = status;
     }
     
     @Override
@@ -88,6 +69,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         return "StaticSpringLayout";
     }
 
+    @Override
     public Class<Double> getParametersType() {
         return Double.class;
     }
@@ -97,22 +79,6 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     //
     // PROPERTIES
     //
-    
-    /**
-     * Sets output stream for updates
-     * @param s
-     */
-    public void setStatusStream(PrintStream s) {
-        this.statusStream = s;
-    }
-
-    /**
-     * Sets listener for layout updates
-     * @param al
-     */
-    public void setLayoutListener(ActionListener al) {
-        this.al = al;
-    }
 
     public int getMinSteps() {
         return minSteps;
@@ -161,6 +127,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     //</editor-fold>
 
 
+    @Override
     public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
             Set<C> fixed, Double irad) {
         Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
@@ -176,6 +143,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         keepNodes.addAll(graphForInfo.getCoreNodes());
         Iterable<Edge<C>> keepEdges = Iterables.filter(graphForInfo.edges(),
             new Predicate<Edge<C>>(){
+                @Override
                 public boolean apply(Edge<C> input) {
                     return keepNodes.contains(input.getNode1())
                             && keepNodes.contains(input.getNode2());
@@ -206,11 +174,7 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
             energyChange = energy - lastEnergy;
             lastEnergy = energy;
             step++;
-            if (step % STATUS_REPORT_STEPS == 0) {
-                reportStatus("", step, lastEnergy);
-            }
         }
-        reportStatus("stop, ", step, lastEnergy);
         
         // add positions of isolates and leaf nodes back in
         Map<C, Point2D.Double> res = sl.getPositionsCopy();
@@ -226,21 +190,11 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         return res;
     }
     
-    void reportStatus(String prefix, int step, double lastEnergy) {
-        String status = String.format("%sstep = %d/%d, energy=%.2f (threshold=%.2f)", 
-                prefix, step, maxSteps, lastEnergy, energyChangeThreshold);
-        if (statusStream != null) {
-            statusStream.println(status);
-        }
-        if (al != null) {
-            al.actionPerformed(new ActionEvent(this, 0, status));
-        }
-    }
-    
     /**
      * Add leaf nodes that are adjacent to the given positions.
-     * @param og
-     * @param pos 
+     * @param <C> graph node type
+     * @param og graph
+     * @param pos position map
      */
     public static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos) {
         double nomSz = SpringLayout.DIST_SCALE/2;
@@ -311,8 +265,9 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     
     /**
      * Add isolate nodes in the given graph based on the current positions in the map
+     * @param <C> graph node type
      * @param isolates the isolate nodes
-     * @param pos 
+     * @param pos position map
      */
     public static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos) {
         double nomSz = SpringLayout.DIST_SCALE/2;

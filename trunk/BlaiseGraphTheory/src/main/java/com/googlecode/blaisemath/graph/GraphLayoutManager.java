@@ -124,12 +124,14 @@ public final class GraphLayoutManager<N> {
     public GraphLayoutManager(Graph<N> graph, @Nullable IterativeGraphLayout layout) {
         this.iLayout = layout;
         this.coolingCurve = new Function<Integer,Double>(){
+            @Override
             public Double apply(Integer x) {
                 return .1 + .9/Math.log10(x+10);
             }
         };
         coordManager.addCoordinateListener(new CoordinateListener<N,Point2D.Double>(){
             @InvokedFromThread("unknown")
+            @Override
             public void coordinatesChanged(CoordinateChangeEvent<N, Point2D.Double> evt) {
                 // get the current iterative layout, ensuring it doesn't change between null check and use
                 IterativeGraphLayout layout = iLayout;

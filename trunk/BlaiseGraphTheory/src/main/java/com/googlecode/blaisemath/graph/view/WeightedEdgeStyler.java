@@ -33,25 +33,24 @@ import java.util.Map;
 
 /**
  * Provides a default node customizer suitable for a weighted-edge graph.
- *
+ * @param <E> edge type
  * @author elisha
  */
-public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
+public class WeightedEdgeStyler<E extends Edge> implements Function<E, AttributeSet> {
 
     /** Parent style */
     protected final AttributeSet parent;
     /** Edge weights */
-    protected Map<? extends Edge, Float> weights;
+    protected Map<E, Float> weights;
     /** The maximum edge weight */
     protected transient float maxWeight = 0f;
 
     /**
      * Construct the customizer
-     *
      * @param parent the parent style
      * @param weights weightings for edges in graph
      */
-    public <V> WeightedEdgeStyler(AttributeSet parent, Map<? extends Edge<V>, Float> weights) {
+    public WeightedEdgeStyler(AttributeSet parent, Map<E, Float> weights) {
         this.parent = parent;
         this.weights = weights;
         for (Float wt : weights.values()) {
@@ -59,11 +58,11 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
         }
     }
 
-    public Map<? extends Edge, Float> getWeights() {
+    public Map<E, Float> getWeights() {
         return weights;
     }
 
-    public void setWeights(Map<? extends Edge, Float> weights) {
+    public void setWeights(Map<E, Float> weights) {
         if (this.weights != weights) {
             this.weights = weights;
             for (Float wt : weights.values()) {
@@ -73,7 +72,7 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
     }
 
     @Override
-    public AttributeSet apply(Edge o) {
+    public AttributeSet apply(E o) {
         Object wt = weights.get(o);
         if (wt instanceof Number) {
             float n = ((Number) wt).floatValue();
@@ -96,12 +95,13 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
     
     //<editor-fold defaultstate="collapsed" desc="STATIC UTILS">
     
+    /** @deprecated */
     private static final float HUE_RANGE = 0.1f;
 
     /**
      * Create a "positive" weighted color derived on the base renderer's color
-     *
      * @param weight relative weight as a percentage (between 0 and 1)
+     * @deprecated
      */
     private static Color positiveColor(Color c, double weight) {
         weight = Math.min(1, Math.max(0, weight));
@@ -122,8 +122,8 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
 
     /**
      * Create a "negative" weighted color derived on the base renderer's color
-     *
      * @param weight relative weight as a percentage (between 0 and 1)
+     * @deprecated
      */
     private static Color negativeColor(Color c, double weight) {
         weight = Math.min(1, Math.max(0, weight));
@@ -142,6 +142,7 @@ public class WeightedEdgeStyler implements Function<Edge, AttributeSet> {
         }
     }
 
+    /** @deprecated */
     private static Color hsbColor(float[] hsb, int alpha) {
         Color col = new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
         return new Color(col.getRed(), col.getGreen(), col.getBlue(), alpha);

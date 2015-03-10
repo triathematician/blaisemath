@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
  * Data structure describing a node in a graph. This is a useful way to pass
  * a reference to a graph's node, providing the target object with access to
  * both the node and the graph.
+ * @param <E> node type
  *
  * @author petereb1
  */

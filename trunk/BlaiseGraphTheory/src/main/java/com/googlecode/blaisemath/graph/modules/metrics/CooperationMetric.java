@@ -2,7 +2,6 @@
  * CooperationMetric.java
  * Created Jul 14, 2010
  */
-
 package com.googlecode.blaisemath.graph.modules.metrics;
 
 /*
@@ -24,32 +23,41 @@ package com.googlecode.blaisemath.graph.modules.metrics;
  * limitations under the License.
  * #L%
  */
-
+import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import java.util.HashSet;
 import java.util.Set;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 
 /**
- * Measures difference in team performance with and without a node/subset of nodes.
- * Result contains several values: first is selfish contribution, second is altruistic;
- *  third is entire team value, fourth is partial assessment value, fifth is partial team value
- * 
+ * Measures difference in team performance with and without a node/subset of
+ * nodes. Result contains several values: first is selfish contribution, second
+ * is altruistic; third is entire team value, fourth is partial assessment
+ * value, fifth is partial team value
+ *
+ * @param <N> metric result type
+ *
  * @author Elisha Peterson
  */
 public class CooperationMetric<N extends Number> implements GraphSubsetMetric<double[]> {
 
     GraphSubsetMetric<N> baseM;
 
-    /** Construct with base subset metric. */
+    /**
+     * Construct with base subset metric.
+     *
+     * @param baseM base metric
+     */
     public CooperationMetric(GraphSubsetMetric<N> baseM) {
         this.baseM = baseM;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "CooperationMetric[" + baseM + "]";
     }
 
+    @Override
     public <V> double[] getValue(Graph<V> graph, Set<V> nodes) {
         int n = graph.nodeCount(), m = nodes.size();
         Set<V> all = graph.nodes();
@@ -58,12 +66,17 @@ public class CooperationMetric<N extends Number> implements GraphSubsetMetric<do
         double outcomeAll = n == 0 ? 0.0 : baseM.getValue(graph, all).doubleValue();
         double outcomeAll2 = m == n ? 0.0 : baseM.getValue(graph, complement).doubleValue();
         double outcomePart = m == n ? 0.0 : baseM.getValue(GraphUtils.copySubgraph(graph, complement), complement).doubleValue();
-        return new double[] { 
-            outcomeAll - outcomeAll2,   // selfish contribution
-            outcomeAll2 - outcomePart,  // altruistic contribution
-            outcomeAll,                 // value of the outcome for the whole team
-            outcomeAll2,                // value of the outcome for the whole team, perceived by complement
-            outcomePart };              // value of the outcome for the complement
+        return new double[]{
+            // selfish contribution
+            outcomeAll - outcomeAll2,
+            // altruistic contribution
+            outcomeAll2 - outcomePart,
+            // value of the outcome for the whole team
+            outcomeAll,
+            // value of the outcome for the whole team, perceived by complement
+            outcomeAll2,
+            // value of the outcome for the complement
+            outcomePart};
     }
 
 }

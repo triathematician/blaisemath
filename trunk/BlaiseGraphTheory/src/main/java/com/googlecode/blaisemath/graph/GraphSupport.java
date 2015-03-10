@@ -35,6 +35,7 @@ import com.googlecode.blaisemath.util.Edge;
  * Implements the methods of {@link Graph} that can be inferred from other methods.
  * The nodes are maintained as a {@link LinkedHashSet}.
  *
+ * @param <V> graph node type
  * @author Elisha Peterson
  */
 public abstract class GraphSupport<V> implements Graph<V> {
@@ -60,6 +61,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         return GraphUtils.printGraph(this);
     }
 
+    @Override
     public boolean isDirected() {
         return directed;
     }
@@ -68,14 +70,17 @@ public abstract class GraphSupport<V> implements Graph<V> {
     // NODES
     //
 
+    @Override
     public Set<V> nodes() {
         return Collections.unmodifiableSet(nodes);
     }
 
+    @Override
     public int nodeCount() {
         return nodes.size();
     }
 
+    @Override
     public boolean contains(V x) {
         return nodes.contains(x);
     }
@@ -84,6 +89,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
     // EDGES
     //
 
+    @Override
     public int edgeCount() {
         return edges().size();
     }
@@ -93,6 +99,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
     // ADJACENCY
     //
 
+    @Override
     public boolean adjacent(V x, V y) {
         for (Edge<V> e : edgesAdjacentTo(x)) {
             if (y.equals(e.opposite(x))) {
@@ -102,6 +109,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         return false;
     }
 
+    @Override
     public Set<V> outNeighbors(V x) {
         if (!directed) {
             return neighbors(x);
@@ -116,6 +124,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         }
     }
 
+    @Override
     public Set<V> inNeighbors(V x) {
         if (!directed) {
             return neighbors(x);
@@ -130,6 +139,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         }
     }
 
+    @Override
     public Set<V> neighbors(V x) {
         Set<V> result = new HashSet<V>();
         for (Edge<V> e : edgesAdjacentTo(x)) {
@@ -138,6 +148,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         return result;
     }
 
+    @Override
     public int outDegree(V x) {
         if (!directed) {
             return degree(x);
@@ -152,6 +163,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         }
     }
 
+    @Override
     public int inDegree(V x) {
         if (!directed) {
             return degree(x);
@@ -166,6 +178,7 @@ public abstract class GraphSupport<V> implements Graph<V> {
         }
     }
 
+    @Override
     public int degree(V x) {
         int result = 0;
         for (Edge<V> e : edgesAdjacentTo(x)) {

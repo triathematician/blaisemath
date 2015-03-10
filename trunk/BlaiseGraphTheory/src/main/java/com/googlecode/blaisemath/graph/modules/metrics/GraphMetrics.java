@@ -25,6 +25,8 @@ package com.googlecode.blaisemath.graph.modules.metrics;
  * #L%
  */
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,32 +58,12 @@ public class GraphMetrics {
 
     /**
      * Returns computeDistribution of the values of a particular metric
+     * @param <N> metric result type
      * @param graph the graph
      * @param metric metric used to generate values
+     * @return distribution of values
      */
-    public static <N> Map<N,Integer> computeDistribution(Graph graph, GraphNodeMetric<N> metric) {
-        return distribution(computeValues(graph, metric));
-    }
-
-    /**
-     * Computes the computeDistribution associated with a given map, i.e. the number of entries corresponding
-     * to each particular value. If the values are of a <code>Comparable</code> type, the map is sorted
-     * according to that order.
-     * @param values the values to consolidate
-     * @return a mapping from the values to the count of those values
-     */
-    public static <N> Map<N, Integer> distribution(Collection<N> values) {
-        if (values.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        boolean comparable = false;
-        for (N en : values) { comparable = en instanceof Comparable; break; }
-        Map<N, Integer> result = comparable ? new TreeMap<N, Integer>() : new HashMap<N, Integer>();
-
-        for (N en : values) {
-            result.put(en, result.containsKey(en) ? result.get(en) + 1 : 1);
-        }
-
-        return result;
+    public static <N> Multiset<N> computeDistribution(Graph graph, GraphNodeMetric<N> metric) {
+        return HashMultiset.create(computeValues(graph, metric));
     }
 }

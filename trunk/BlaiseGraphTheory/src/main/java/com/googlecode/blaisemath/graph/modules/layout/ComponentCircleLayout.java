@@ -64,10 +64,12 @@ public class ComponentCircleLayout implements StaticGraphLayout<Void> {
         return "ComponentCircleLayout";
     }
     
+    @Override
     public Class<Void> getParametersType() {
         return Void.class;
     }
 
+    @Override
     public <C> Map<C, Point2D.Double> layout(Graph<C> graph, Map<C, Point2D.Double> ic,
             Set<C> fixed, Void parameters) {
         if (graph.isDirected()) {

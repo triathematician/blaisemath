@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.graph.modules.metrics;
  * #L%
  */
 
+import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Set;
 import com.googlecode.blaisemath.graph.Graph;

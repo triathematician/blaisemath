@@ -35,15 +35,11 @@ import javax.annotation.Nullable;
 /**
  * Data structure describing a collection of nodes in a graph. This is a useful way to pass
  * a reference to both the collection of nodes and the graph.
+ * @param <E> node type
  * 
  * @author petereb1
  */
 public class NodeSetInGraph<E> {
-    
-    public static <E> NodeSetInGraph<E> create(E... nodes) {
-        return new NodeSetInGraph<E>(Sets.newHashSet(nodes), null);
-    }
-    
 
     private final Set<E> nodes;
     private final Graph<E> graph;
@@ -56,6 +52,16 @@ public class NodeSetInGraph<E> {
         if (graph != null) {
             this.nodes.retainAll(graph.nodes());
         }
+    }
+    
+    /**
+     * Factory method for creating a node set.
+     * @param <E> node type
+     * @param nodes nodes
+     * @return node set data structure
+     */
+    public static <E> NodeSetInGraph<E> create(E... nodes) {
+        return new NodeSetInGraph<E>(Sets.newHashSet(nodes), null);
     }
 
     public Set<E> getNodes() {
