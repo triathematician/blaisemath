@@ -125,6 +125,17 @@ public class ControlLineGesture extends MouseGestureSupport {
         controlPoint = null;
         startShape = null;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (graphic != null) {
+            Point2D clickPt = transformedPoint(e);
+            if (!graphic.contains(clickPt) && capture((Line2D) graphic.getPrimitive(), clickPt) == null) {
+                orchestrator.finishGesture(this);
+                view.getSelectionModel().deselect(graphic);
+            }
+        }
+    }
     
     //
     // ControlPoint handling

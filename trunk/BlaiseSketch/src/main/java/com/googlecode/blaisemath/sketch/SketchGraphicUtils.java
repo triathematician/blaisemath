@@ -44,6 +44,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,7 +62,7 @@ public class SketchGraphicUtils {
     private static final String GRAPHIC_CM_KEY = "Graphic";
     private static final AttributeSet BOUNDING_BOX_STYLE = Styles.strokeWidth(Color.red, .5f).immutable();
     private static final List<Class> SUPPORTED_PRIMITIVES = Arrays.<Class>asList(
-        Rectangle2D.Double.class, Ellipse2D.Double.class, Line2D.Double.class,
+        Rectangle2D.Double.class, Ellipse2D.Double.class, Line2D.Double.class, Path2D.Double.class,
         GeneralPath.class, OrientedPoint2D.class, AnchoredText.class, AnchoredImage.class
     );
     
@@ -87,7 +88,8 @@ public class SketchGraphicUtils {
      * @return copy of it
      */
     public static Graphic<Graphics2D> copy(Graphic<Graphics2D> sel) {
-        checkArgument(supported(sel));
+        checkArgument(supported(sel), "Copy not supported: "
+                +(sel instanceof PrimitiveGraphicSupport ? ((PrimitiveGraphicSupport)sel).getPrimitive() : sel));
         if (sel instanceof GraphicComposite) {
             return copyComposite((GraphicComposite<Graphics2D>) sel);
         } else {
@@ -121,6 +123,9 @@ public class SketchGraphicUtils {
             resPrim = (T) new Line2D.Double(rprim.x1, rprim.y1, rprim.x2, rprim.y2);
         } else if (prim.getClass() == GeneralPath.class) {
             GeneralPath gprim = (GeneralPath) prim;
+            resPrim = (T) new GeneralPath(gprim);
+        } else if (prim.getClass() == Path2D.Double.class) {
+            Path2D.Double gprim = (Path2D.Double) prim;
             resPrim = (T) new GeneralPath(gprim);
         } else if (prim.getClass() == OrientedPoint2D.class) {
             OrientedPoint2D gprim = (OrientedPoint2D) prim;

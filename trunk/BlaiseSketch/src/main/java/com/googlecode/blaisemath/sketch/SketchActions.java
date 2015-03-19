@@ -153,6 +153,24 @@ public class SketchActions {
         GraphicTransferable transf = new GraphicTransferable(copy);
         clipboard.setContents(transf, transf);
     }
+    
+    public static boolean isClipboardGraphic() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tr = clipboard.getContents(null);
+        return tr.isDataFlavorSupported(GRAPHIC_DATA_FLAVOR);
+    }
+    
+    public static boolean isClipboardDimension() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tr = clipboard.getContents(null);
+        return tr.isDataFlavorSupported(DIM_DATA_FLAVOR);
+    }
+    
+    public static boolean isClipboardStyle() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tr = clipboard.getContents(null);
+        return tr.isDataFlavorSupported(AS_DATA_FLAVOR);
+    }
 
     /**
      * Pastes a graphic from the system clipboard to the given canvas, at the given location.

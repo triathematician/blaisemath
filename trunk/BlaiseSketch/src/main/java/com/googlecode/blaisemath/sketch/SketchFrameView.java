@@ -85,7 +85,6 @@ import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
@@ -109,8 +108,12 @@ public final class SketchFrameView extends FrameView {
     public static final String MORE_THAN_ONE_SELECTED_PROP = "moreThanOneSelected";
     public static final String ONE_SELECTED_PROP = "oneSelected";
     public static final String GROUP_SELECTED_PROP = "groupSelected";
+    public static final String CLIPBOARD_GRAPHIC_PROP = "clipboardGraphic";
+    public static final String CLIPBOARD_DIMENSION_PROP = "clipboardDimension";
+    public static final String CLIPBOARD_STYLE_PROP = "clipboardStyle";
         
     private static final String SELECTION_CM_KEY = "Selection";
+    private static final String CANVAS_CM_KEY = "Canvas";
     
     private final JFileChooser chooser = new JFileChooser();
     
@@ -150,6 +153,9 @@ public final class SketchFrameView extends FrameView {
             List<String> selCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(SELECTION_CM_KEY);
             activeCanvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
                     "Selection", am, selCm.toArray(new String[0])));
+            List<String> cnvCm = (List<String>) MenuConfig.readConfig(SketchApp.class).get(CANVAS_CM_KEY); 
+            activeCanvas.getGraphicRoot().addContextMenuInitializer(new ActionMapContextMenuInitializer<Graphic<Graphics2D>>(
+                    null, am, cnvCm.toArray(new String[0])));
         } catch (IOException ex) {
             Logger.getLogger(SketchFrameView.class.getName()).log(Level.SEVERE, 
                     "Menu config failure.", ex);
@@ -256,6 +262,15 @@ public final class SketchFrameView extends FrameView {
         }
     }
     
+    private void updateClipboardProps() {
+        boolean gfc = isClipboardGraphic();
+        boolean dim = isClipboardDimension();
+        boolean sty = isClipboardStyle();
+        firePropertyChange(CLIPBOARD_GRAPHIC_PROP, !gfc, gfc);
+        firePropertyChange(CLIPBOARD_DIMENSION_PROP, !dim, dim);
+        firePropertyChange(CLIPBOARD_STYLE_PROP, !sty, sty);
+    }
+    
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     
     public JGraphicComponent getActiveCanvas() {
@@ -264,6 +279,18 @@ public final class SketchFrameView extends FrameView {
     
     public boolean isSelectionEmpty() {
         return activeCanvas.getSelectionModel().isEmpty();
+    }
+    
+    public boolean isClipboardGraphic() {
+        return SketchActions.isClipboardGraphic();
+    }
+    
+    public boolean isClipboardDimension() {
+        return SketchActions.isClipboardDimension();
+    }
+    
+    public boolean isClipboardStyle() {
+        return SketchActions.isClipboardStyle();
     }
     
     public boolean isOneSelected() {
@@ -372,9 +399,10 @@ public final class SketchFrameView extends FrameView {
     public void copySelected() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         SketchActions.copy(sel, activeCanvas);
+        updateClipboardProps();
     }
     
-    @Action
+    @Action(enabledProperty=CLIPBOARD_GRAPHIC_PROP)
     public void pasteGraphic() {
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
         Point compLoc = activeCanvas.getLocationOnScreen();
@@ -386,6 +414,7 @@ public final class SketchFrameView extends FrameView {
     public void copySelectedStyle() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         SketchActions.copyStyle(sel);
+        updateClipboardProps();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
@@ -398,6 +427,7 @@ public final class SketchFrameView extends FrameView {
     public void copySelectedDimension() {
         Graphic<Graphics2D> sel = Iterables.getFirst(activeCanvas.getSelectionModel().getSelection(), null);
         SketchActions.copyDimension(sel);
+        updateClipboardProps();
     }
     
     @Action(disabledProperty=SELECTION_EMPTY_PROP)
@@ -613,14 +643,16 @@ public final class SketchFrameView extends FrameView {
     @Action
     public void copy(ActionEvent e) {
         SketchActions.copy((Graphic<Graphics2D>) e.getSource(), activeCanvas);
+        updateClipboardProps();
     }
     
     @Action
     public void copyStyle(ActionEvent e) {
         SketchActions.copyStyle((Graphic<Graphics2D>) e.getSource());
+        updateClipboardProps();
     }
     
-    @Action
+    @Action(enabledProperty=CLIPBOARD_STYLE_PROP)
     public void pasteStyle(ActionEvent e) {
         SketchActions.pasteStyle(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
     }
@@ -628,9 +660,10 @@ public final class SketchFrameView extends FrameView {
     @Action
     public void copyDimension(ActionEvent e) {
         SketchActions.copyDimension((Graphic<Graphics2D>) e.getSource());
+        updateClipboardProps();
     }
     
-    @Action
+    @Action(enabledProperty=CLIPBOARD_DIMENSION_PROP)
     public void pasteDimension(ActionEvent e) {
         SketchActions.pasteDimension(Collections.singleton((Graphic<Graphics2D>) e.getSource()));
     }

@@ -91,13 +91,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-common</artifactId>
-            <version>0.2.1</version>
+            <artifactId>blaise-gestures</artifactId>
+            <version>0.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>blaise-gestures</artifactId>
-            <version>0.1.0</version>
+            <artifactId>blaise-common</artifactId>
+            <version>0.2.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
