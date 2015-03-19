@@ -1,5 +1,5 @@
 /**
- * GraphicSelector.java
+ * JGraphicSelectionHandler.java
  * Created Aug 1, 2012
  */
 package com.googlecode.blaisemath.graphics.swing;

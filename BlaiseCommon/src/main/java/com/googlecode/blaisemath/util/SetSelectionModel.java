@@ -111,8 +111,8 @@ public class SetSelectionModel<G> {
     }
 
     public void deselect(G g) {
+        Set<G> old = getSelection();
         if (g != null && selected.remove(g)) {
-            Set<G> old = getSelection();
             pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
