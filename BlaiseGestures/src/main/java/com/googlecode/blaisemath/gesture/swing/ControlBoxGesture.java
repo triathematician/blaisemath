@@ -152,6 +152,7 @@ public class ControlBoxGesture extends MouseGestureSupport {
             Point2D clickPt = transformedPoint(e);
             if (!graphic.contains(clickPt) && capture(graphic.boundingBox(), clickPt) == null) {
                 orchestrator.finishGesture(this);
+                view.getSelectionModel().deselect(graphic);
             }
         }
     }

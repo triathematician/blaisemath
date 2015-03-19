@@ -57,7 +57,7 @@ public class CanvasHandlerGesture extends MouseGestureSupport {
     @Override
     public void mouseMoved(MouseEvent e) {
         super.mouseMoved(e);
-        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+//        orchestrator.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
     }
     
 }

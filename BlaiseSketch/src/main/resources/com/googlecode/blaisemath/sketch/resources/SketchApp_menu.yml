@@ -46,7 +46,7 @@ Menubar:
         - distributeVertical
     Tool:
         - selectionTool
-        - canvasTool
+#        - canvasTool
         - 
         - createMarker
         - createLine
@@ -67,7 +67,7 @@ Toolbar:
     - save
     - 
     - selectionTool
-    - canvasTool
+#    - canvasTool
     - 
     - createMarker
     - createLine
@@ -107,4 +107,6 @@ Selection:
     - pasteSelectedDimension
     - 
     - deleteSelected
+Canvas:
+    - pasteGraphic
     
