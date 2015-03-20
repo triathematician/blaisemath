@@ -67,24 +67,16 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class SpringLayout<C> implements IterativeGraphLayout<C> {
     
-    /** Distance scale. This is the approximate length of an edge in the graph. */
-    public static final double DIST_SCALE = 50;
-
-    /** Distance outside which global force acts */
-    private static final double MINIMUM_GLOBAL_FORCE_DISTANCE = DIST_SCALE;
-    /** Maximum force that can be applied between nodes */
-    private static final double MAX_FORCE = DIST_SCALE*DIST_SCALE/100;
-    /** Min distance to assume between nodes */
-    private static final double MIN_DIST = DIST_SCALE/100;
-    /** Max distance to apply repulsive force */
-    private static final double MAX_REPEL_DIST = 2*DIST_SCALE;
+    /** Default distance scale */
+    public static final int DEFAULT_DIST_SCALE = 50;
+    
     /** # of regions away from origin in x and y directions. Region size is determined by the maximum repel distance. */
     private static final int REGION_N = 5;
 
     // STATE VARIABLES
    
     /** Algorithm parameters object */
-    protected final Parameters parameters;
+    protected Parameters parameters;
     
     /** Nodes whose locations are fixed */
     @GuardedBy("itself")
@@ -157,6 +149,10 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
      */
     public Parameters getParameters() { 
         return parameters; 
+    }
+
+    public void setParameters(Parameters parameters) {
+        this.parameters = parameters;
     }
 
     @Override
@@ -358,7 +354,8 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         // adjusts velocity with damping;
         for (C io : unpinned) {
             int deg = g.degree(io);
-            double maxForce = deg <= 15 ? MAX_FORCE : MAX_FORCE * (.2 + .8/(deg-15));
+            double maxForce = deg <= 15 ? parameters.maxForce 
+                    : parameters.maxForce * (.2 + .8/(deg-15));
             adjustVelocity(vel.get(io), forces.get(io), maxForce);
         }
 
@@ -384,7 +381,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
      */
     protected void addGlobalForce(Point2D.Double sum, Object io, Point2D.Double iLoc) {
         double dist = iLoc.distance(0,0);
-        if (dist > MINIMUM_GLOBAL_FORCE_DISTANCE) {
+        if (dist > parameters.minGlobalForceDist) {
             sum.x += -parameters.globalC * iLoc.x / dist;
             sum.y += -parameters.globalC * iLoc.y / dist;
         }
@@ -408,7 +405,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
                     jLoc = jEntry.getValue();
                     dist = iLoc.distance(jLoc);
                     // repulsive force from other nodes
-                    if (dist < MAX_REPEL_DIST) {
+                    if (dist < parameters.maxRepelDist) {
                         addRepulsiveForce(sum, io, iLoc, jo, jLoc, dist);
                     }
                 }
@@ -434,7 +431,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
             sum.x += parameters.repulsiveC * Math.cos(angle);
             sum.y += parameters.repulsiveC * Math.sin(angle);
         } else {
-            double multiplier = Math.min(parameters.repulsiveC/(dist*dist), MAX_FORCE) / dist;
+            double multiplier = Math.min(parameters.repulsiveC/(dist*dist), parameters.maxForce) / dist;
             sum.x += multiplier * (iLoc.x - jLoc.x);
             sum.y += multiplier * (iLoc.y - jLoc.y);
         }
@@ -476,7 +473,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         if (dist == 0) {
             Logger.getLogger(SpringLayout.class.getName()).log(Level.WARNING,
                     "Distance 0 between {0} and {1}: {2}, {3}", new Object[]{io, jo, iLoc, jLoc});
-            sum.x += parameters.springC / (MIN_DIST * MIN_DIST);
+            sum.x += parameters.springC / (parameters.minDist * parameters.minDist);
             sum.y += 0;
         } else {
             double displacement = dist - parameters.springL;
@@ -541,8 +538,8 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
 
     /** Return region for specified point */
     private Region getRegion(Point2D.Double p) {
-        int ix = (int) ((p.x + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
-        int iy = (int) ((p.y + REGION_N * MAX_REPEL_DIST) / MAX_REPEL_DIST);
+        int ix = (int) ((p.x + REGION_N * parameters.maxRepelDist) / parameters.maxRepelDist);
+        int iy = (int) ((p.y + REGION_N * parameters.maxRepelDist) / parameters.maxRepelDist);
         if (ix < 0 || ix > 2*REGION_N || iy < 0 || iy > 2*REGION_N) {
             return oRegion;
         }
@@ -556,7 +553,8 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
             for (int ix = -REGION_N; ix <= REGION_N; ix++) {
                 for (int iy = -REGION_N; iy <= REGION_N; iy++) {
                     regions[ix+REGION_N][iy+REGION_N] = new Region(new Rectangle2D.Double(
-                            ix*MAX_REPEL_DIST,iy*MAX_REPEL_DIST,MAX_REPEL_DIST,MAX_REPEL_DIST));
+                            ix*parameters.maxRepelDist,iy*parameters.maxRepelDist,
+                            parameters.maxRepelDist,parameters.maxRepelDist));
                 }
             }
             // set up adjacencies
@@ -613,14 +611,16 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
     
     /** Parameters of the SpringLayout algorithm */
     public static class Parameters {
+        /** Desired distance between nodes */
+        double distScale = DEFAULT_DIST_SCALE;
         /** Global attractive constant (keeps vertices closer to origin) */
         double globalC = 1;
         /** Attractive constant */
         double springC = .1;
         /** Natural spring length */
-        double springL = .5*DIST_SCALE;
+        double springL = .5*distScale;
         /** Repelling constant */
-        double repulsiveC = DIST_SCALE*DIST_SCALE;
+        double repulsiveC = distScale*distScale;
 
         /** 
          * Damping constant (the "cooling" parameter. Smaller values will make
@@ -630,7 +630,36 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         /** Time step per iteration */
         double stepT = 1;
         /** The maximum speed (movement per unit time) */
-        double maxSpeed = 10*DIST_SCALE;
+        double maxSpeed = 10*distScale;
+        
+        /** Distance outside which global force acts */
+        private double minGlobalForceDist = distScale;
+        /** Maximum force that can be applied between nodes */
+        private double maxForce = distScale*distScale/100;
+        /** Min distance between nodes */
+        private double minDist = distScale/100;
+        /** Max distance to apply repulsive force */
+        private double maxRepelDist = 2*distScale;
+
+        //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+        //
+        // PROPERTIES
+        //
+        
+        public double getDistScale() {
+            return distScale;
+        }
+
+        public void setDistScale(double distScale) {
+            this.distScale = distScale;
+            springL = .5*distScale;
+            repulsiveC = distScale*distScale;
+            maxSpeed = 10*distScale;
+            minGlobalForceDist = distScale;
+            maxForce = distScale*distScale/100;
+            minDist = distScale/100;
+            maxRepelDist = 2*distScale;
+        }
 
         public double getDampingConstant() {
             return dampingC;
@@ -687,6 +716,7 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         public void setStepTime(double stepT) {
             this.stepT = stepT;
         }
+        //</editor-fold>
     }
     
     /** Describes a region with a subset of the graph's nodes */

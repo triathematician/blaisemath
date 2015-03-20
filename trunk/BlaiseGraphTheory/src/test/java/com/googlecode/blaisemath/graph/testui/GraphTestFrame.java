@@ -248,12 +248,12 @@ public class GraphTestFrame extends javax.swing.JFrame {
 
     private void randomLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.RANDOM, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DEFAULT_DIST_SCALE*2);
     }//GEN-LAST:event_randomLBActionPerformed
 
     private void circleLBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_circleLBActionPerformed
         updateEL = true;
-        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DIST_SCALE*2);
+        plot.getLayoutManager().applyLayout(StaticGraphLayout.CIRCLE, Collections.EMPTY_MAP, Collections.EMPTY_SET, SpringLayout.DEFAULT_DIST_SCALE*2);
     }//GEN-LAST:event_circleLBActionPerformed
 
     private void energyIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_energyIBActionPerformed
