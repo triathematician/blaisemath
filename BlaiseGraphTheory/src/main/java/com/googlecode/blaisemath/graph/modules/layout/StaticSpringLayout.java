@@ -53,12 +53,12 @@ import java.util.logging.Logger;
  */
 public class StaticSpringLayout implements StaticGraphLayout<Double> {
     
+    private double distScale = SpringLayout.DEFAULT_DIST_SCALE;
     private int minSteps = 100;
     private int maxSteps = 5000;
-    private double energyChangeThreshold = SpringLayout.DIST_SCALE*SpringLayout.DIST_SCALE*1e-6;
     private double coolStart = 0.65;
-    private double coolEnd = 0.1;
-    
+    private double coolEnd = 0.1;    
+    private double energyChangeThreshold = distScale*distScale*1e-6;
     private int lastStepCount = 0;
     
     public StaticSpringLayout() {
@@ -79,6 +79,15 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     //
     // PROPERTIES
     //
+
+    public double getDistScale() {
+        return distScale;
+    }
+
+    public void setDistScale(double distScale) {
+        this.distScale = distScale;
+        this.energyChangeThreshold = distScale*distScale*1e-6;
+    }
 
     public int getMinSteps() {
         return minSteps;
@@ -162,8 +171,9 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         Map<C,Point2D.Double> initialLocs = StaticGraphLayout.CIRCLE.layout(
                 graphForLayout, Collections.EMPTY_MAP, Collections.EMPTY_SET, irad);
         SpringLayout sl = new SpringLayout(initialLocs);
+        sl.getParameters().setDistScale(distScale);
         double lastEnergy = Double.MAX_VALUE;
-        double energyChange = 9999;
+        double energyChange = Double.MAX_VALUE;
         int step = 0;
         while (step < minSteps || (step < maxSteps && Math.abs(energyChange) > energyChangeThreshold)) {
             // adjust cooling parameter
@@ -178,8 +188,8 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
         
         // add positions of isolates and leaf nodes back in
         Map<C, Point2D.Double> res = sl.getPositionsCopy();
-        addLeafNodes(graphForInfo, res);
-        addIsolates(graphForInfo.getIsolates(), res);
+        addLeafNodes(graphForInfo, res, sl.getParameters().getDistScale());
+        addIsolates(graphForInfo.getIsolates(), res, sl.getParameters().getDistScale());
         
         // report and clean up
         lastStepCount = step;
@@ -192,16 +202,17 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
     
     /**
      * Add leaf nodes that are adjacent to the given positions.
+     * @param og the graph
+     * @param pos current positions
+     * @param distScale distance between noddes
      * @param <C> graph node type
-     * @param og graph
-     * @param pos position map
      */
-    public static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos) {
-        double nomSz = SpringLayout.DIST_SCALE/2;
+    public static <C> void addLeafNodes(OptimizedGraph<C> og, Map<C, Point2D.Double> pos, double distScale) {
+        double nomSz = distScale/2;
         Set<C> leafs = og.getLeafNodes();
         int n = leafs.size();
         if (n > 0) {
-            Rectangle2D bounds = Points.boundingBox(pos.values(), SpringLayout.DIST_SCALE);
+            Rectangle2D bounds = Points.boundingBox(pos.values(), distScale);
             if (bounds == null) {
                 // no points exist, so must be all pairs
                 double sqSide = nomSz * Math.sqrt(n);
@@ -268,9 +279,10 @@ public class StaticSpringLayout implements StaticGraphLayout<Double> {
      * @param <C> graph node type
      * @param isolates the isolate nodes
      * @param pos position map
+     * @param distScale distance between nodes
      */
-    public static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos) {
-        double nomSz = SpringLayout.DIST_SCALE/2;
+    public static <C> void addIsolates(Set<C> isolates, Map<C, Point2D.Double> pos, double distScale) {
+        double nomSz = distScale/2;
         int n = isolates.size();
         if (n > 0) {
             Rectangle2D bounds = Points.boundingBox(pos.values(), nomSz);
