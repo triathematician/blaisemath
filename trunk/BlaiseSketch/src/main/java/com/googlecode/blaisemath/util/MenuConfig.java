@@ -45,6 +45,7 @@ import org.yaml.snakeyaml.Yaml;
  * Utility for reading a .yaml configuration file and generating menus and toolbars.
  * 
  * @author elisha
+ * @version 1.0
  */
 public class MenuConfig {
 
