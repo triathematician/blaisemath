@@ -37,9 +37,9 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -68,7 +68,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
 
     private transient Point pressPt;
     private transient Point dragPt;
-    private transient Rectangle selectionBox = null;
+    private transient Rectangle2D.Double selectionBox = null;
 
     /** 
      * Initialize for specified component
@@ -142,7 +142,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
             return;
         }
         Graphic g = component.selectableGraphicAt(e.getPoint());
-        Graphic gAll = component.getGraphicRoot().mouseGraphicAt(e.getPoint());
+        Graphic gAll = component.functionalGraphicAt(e.getPoint());
         if (gAll == null) {
             // reset to default if there is no active mouse graphic
             component.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -180,7 +180,7 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         }
         pressPt = e.getPoint();
         if (selectionBox == null) {
-            selectionBox = new Rectangle();
+            selectionBox = new Rectangle2D.Double();
         }
         selectionBox.setFrameFromDiagonal(pressPt, pressPt);
         e.consume();
