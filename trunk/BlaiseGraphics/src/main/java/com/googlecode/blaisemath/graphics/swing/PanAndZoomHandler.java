@@ -242,8 +242,8 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             gc.setTransform(new AffineTransform());
         }
         // apply inverse transform to min point of component bounds and max point of component bounds
-        Point2D.Double min = new Point2D.Double(gc.getX(), gc.getY());
-        Point2D.Double max = new Point2D.Double(gc.getBounds().getMaxX(), gc.getBounds().getMaxY());
+        Point2D.Double min = new Point2D.Double(0, 0);
+        Point2D.Double max = new Point2D.Double(gc.getWidth(), gc.getHeight());
         Point2D cmin = gc.getInverseTransform().transform(min, null);
         Point2D cmax = gc.getInverseTransform().transform(max, null);
         return new Rectangle2D.Double(cmin.getX(), cmin.getY(), cmax.getX() - cmin.getX(), cmax.getY() - cmin.getY());
@@ -260,13 +260,12 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
-                // TODO - this isn't quite right... needs to incorporate gc's minx and miny ???
                 Rectangle bds = gc.getBounds();
                 double scalex = rect.getWidth() / bds.getWidth();
                 double scaley = rect.getHeight() / bds.getHeight();
                 double scale = Math.max(scalex, scaley);
                 AffineTransform res = new AffineTransform();
-                res.translate(bds.getCenterX(), bds.getCenterY());
+                res.translate(bds.getWidth()/2, bds.getHeight()/2);
                 res.scale(1 / scale, 1 / scale);
                 res.translate(-rect.getCenterX(), -rect.getCenterY());
                 gc.setTransform(res);
