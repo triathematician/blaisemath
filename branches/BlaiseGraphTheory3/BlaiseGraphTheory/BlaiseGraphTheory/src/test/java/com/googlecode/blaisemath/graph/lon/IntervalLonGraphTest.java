@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graph.lon;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.lon.IntervalLonGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
