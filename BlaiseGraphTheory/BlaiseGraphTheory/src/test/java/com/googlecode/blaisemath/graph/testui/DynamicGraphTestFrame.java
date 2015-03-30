@@ -1,5 +1,5 @@
 /*
- * TestPlaneVisometry.java
+ * DynamicGraphTestFrame.java
  *
  * Created on Jul 30, 2009, 3:15:03 PM
  */

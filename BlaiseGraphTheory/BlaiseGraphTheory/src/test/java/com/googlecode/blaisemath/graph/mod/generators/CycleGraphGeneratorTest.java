@@ -25,8 +25,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.generators.DefaultGeneratorParameters;
-import com.googlecode.blaisemath.graph.mod.generators.CycleGraphGenerator;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

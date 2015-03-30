@@ -25,12 +25,10 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.generators.DegreeDistributionGenerator;
 import java.util.Arrays;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**

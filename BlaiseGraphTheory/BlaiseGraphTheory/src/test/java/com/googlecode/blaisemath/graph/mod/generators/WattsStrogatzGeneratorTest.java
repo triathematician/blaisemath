@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.mod.generators.WattsStrogatzGenerator.WattsStrogatzParameters;
 import static org.junit.Assert.assertEquals;

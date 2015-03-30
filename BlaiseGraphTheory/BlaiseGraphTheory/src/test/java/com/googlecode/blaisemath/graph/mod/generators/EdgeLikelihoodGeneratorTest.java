@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import com.googlecode.blaisemath.graph.mod.generators.EdgeLikelihoodGenerator.EdgeLikelihoodParameters;

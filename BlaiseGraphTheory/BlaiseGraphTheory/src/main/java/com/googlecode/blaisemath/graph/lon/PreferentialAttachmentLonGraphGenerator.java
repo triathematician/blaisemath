@@ -24,7 +24,6 @@ package com.googlecode.blaisemath.graph.lon;
  * #L%
  */
 import com.googlecode.blaisemath.graph.Graph;
-import static com.googlecode.blaisemath.graph.GraphUtils.nodes;
 import com.googlecode.blaisemath.graph.mod.generators.PreferentialAttachmentGenerator;
 import com.googlecode.blaisemath.graph.mod.generators.PreferentialAttachmentGenerator.PreferentialAttachmentParameters;
 import java.util.Arrays;
