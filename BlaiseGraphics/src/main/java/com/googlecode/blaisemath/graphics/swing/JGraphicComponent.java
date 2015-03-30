@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.graphics.swing;
  * #L%
  */
 
-import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.googlecode.blaisemath.graphics.core.GMouseEvent;
@@ -34,6 +33,7 @@ import com.googlecode.blaisemath.graphics.core.GraphicUtils;
 import com.googlecode.blaisemath.style.StyleContext;
 import com.googlecode.blaisemath.util.CanvasPainter;
 import com.googlecode.blaisemath.util.SetSelectionModel;
+import com.googlecode.blaisemath.util.TransformedCoordinateSpace;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -290,6 +290,20 @@ public class JGraphicComponent extends javax.swing.JComponent implements Transfo
                     bounds.getMinX(), bounds.getMinY()),
                     new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
         }
+    }
+    
+    /**
+     * Zooms in in to the graphics canvas.
+     */
+    public void zoomIn() {
+        PanAndZoomHandler.zoomIn(this);
+    }
+    
+    /**
+     * Zooms out of the graphics canvas.
+     */
+    public void zoomOut() {
+        PanAndZoomHandler.zoomOut(this);
     }
     
     /**

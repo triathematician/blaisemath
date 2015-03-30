@@ -272,6 +272,30 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
             }
         });
     }
+    
+    /**
+     * Zooms in for the given component (about the center).
+     * @param gc associated component
+     */
+    public static void zoomIn(JGraphicComponent gc) {
+        Rectangle2D.Double rect = getLocalBounds(gc);
+        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
+        zoomCoordBoxAnimated(gc, 
+                new Point2D.Double(center.x-.25*rect.getWidth(), center.y-.25*rect.getHeight()), 
+                new Point2D.Double(center.x+.25*rect.getWidth(), center.y+.25*rect.getHeight())); 
+    }
+    
+    /**
+     * Zooms in for the given component (about the center).
+     * @param gc associated component
+     */
+    public static void zoomOut(JGraphicComponent gc) {
+        Rectangle2D.Double rect = getLocalBounds(gc);
+        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
+        zoomCoordBoxAnimated(gc, 
+                new Point2D.Double(center.x-rect.getWidth(), center.y-rect.getHeight()), 
+                new Point2D.Double(center.x+rect.getWidth(), center.y+rect.getHeight())); 
+    }
 
     /**
      * Sets visometry bounds based on the zoom about a given point.
