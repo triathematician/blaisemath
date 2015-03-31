@@ -38,10 +38,10 @@ import javax.swing.event.ChangeListener;
  * A slider component that manages a longitudinal graph.
  * @author elisha
  */
-public final class LongitudinalGraphSlider extends JComponent {
+public final class LonGraphSlider extends JComponent {
 
     /** The manager of the time graph */
-    private LongitudinalGraphManager manager;
+    private LonGraphManager manager;
     /** The list slider */
     private final ListSlider slider;
     
@@ -49,7 +49,7 @@ public final class LongitudinalGraphSlider extends JComponent {
     private final PropertyChangeListener managerListener;
 
     /** Create a slider for the graph without a manager */
-    public LongitudinalGraphSlider() {
+    public LonGraphSlider() {
         this(null);
     }
 
@@ -57,14 +57,14 @@ public final class LongitudinalGraphSlider extends JComponent {
      * Create a slider for the graph of the specified manager.
      * @param manager graph manager
      */
-    public LongitudinalGraphSlider(LongitudinalGraphManager manager) {
+    public LonGraphSlider(LonGraphManager manager) {
         managerListener = new PropertyChangeListener(){
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 String prop = evt.getPropertyName();
                 if (prop.equals("time")) {
                     Double time = (Double) evt.getNewValue();
-                    List<Double> times = LongitudinalGraphSlider.this.manager.getTimeGraph().getTimes();
+                    List<Double> times = LonGraphSlider.this.manager.getTimeGraph().getTimes();
                     slider.setList(times);
                     slider.setListValue(time);
                 }
@@ -76,7 +76,7 @@ public final class LongitudinalGraphSlider extends JComponent {
             @Override
             public void stateChanged(ChangeEvent e) {
                 double time = slider.getListValue();
-                LongitudinalGraphSlider.this.manager.setTime(time);
+                LonGraphSlider.this.manager.setTime(time);
             }
         });
         setLayout(new java.awt.BorderLayout());
@@ -84,7 +84,7 @@ public final class LongitudinalGraphSlider extends JComponent {
     }
 
     /** @return manager for the slider */
-    public LongitudinalGraphManager getManager() {
+    public LonGraphManager getManager() {
         return manager;
     }
 
@@ -92,7 +92,7 @@ public final class LongitudinalGraphSlider extends JComponent {
      * Sets manager for the slider
      * @param m graph manager
      */
-    public void setManager(LongitudinalGraphManager m) {
+    public void setManager(LonGraphManager m) {
         if (this.manager != m) {
             if (this.manager != null) {
                 this.manager.removePropertyChangeListener(managerListener);

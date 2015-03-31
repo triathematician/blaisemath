@@ -1,5 +1,5 @@
 /*
- * LongitudinalGraphComponent.java
+ * LonGraphComponent.java
  * Created July 7, 2010
  */
 
@@ -25,13 +25,13 @@ package com.googlecode.blaisemath.graph.view;
  * #L%
  */
 
+import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.lon.LonGraph;
 import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.geom.Point2D;
@@ -50,26 +50,24 @@ import org.jdesktop.layout.GroupLayout;
  *
  * @author Elisha Peterson
  */
-public final class LongitudinalGraphComponent extends JPanel {
+public final class LonGraphComponent extends JPanel {
 
     /** Time graph manager */
-    private LongitudinalGraphManager manager;
+    private LonGraphManager manager;
     /** Time slider */
-    private final LongitudinalGraphSlider slider;
+    private final LonGraphSlider slider;
     /** Currently active graph component */
     private final GraphComponent plot;
 
     /** Time label (overlays on plot) */
     private final JLabel timeLabel;
-    /** Replacement label for when view graph is exporting */
-    private final JLabel hideNote;
 
     /** Handles manager changes */
     private final PropertyChangeListener managerListener;
     
 
     /** Constructs a longitudinal graph panel without an actual graph. */
-    public LongitudinalGraphComponent() {
+    public LonGraphComponent() {
         this(null, null);
     }
 
@@ -77,7 +75,7 @@ public final class LongitudinalGraphComponent extends JPanel {
      * Construct instance with specified graph manager
      * @param m graph manager
      */
-    public LongitudinalGraphComponent(LongitudinalGraphManager m) {
+    public LonGraphComponent(LonGraphManager m) {
         this(m, null);
     }
 
@@ -86,12 +84,11 @@ public final class LongitudinalGraphComponent extends JPanel {
      * @param m graph manager
      * @param gm layout manager
      */
-    public LongitudinalGraphComponent(LongitudinalGraphManager m, GraphLayoutManager gm) {
+    public LonGraphComponent(LonGraphManager m, GraphLayoutManager gm) {
         super(new java.awt.BorderLayout());
         plot = new GraphComponent();
-        slider = new LongitudinalGraphSlider();
+        slider = new LonGraphSlider();
         timeLabel = new JLabel("Slice t=??");
-        hideNote = new JLabel("Exporting...");
         initComponents();
 
         managerListener = new PropertyChangeListener(){
@@ -102,7 +99,8 @@ public final class LongitudinalGraphComponent extends JPanel {
                 } else if (evt.getPropertyName().equals("nodePositions")) {
                     Graph gr = manager.getSlice();
                     plot.getLayoutManager().setGraph(gr);
-                    plot.getLayoutManager().requestLocations((Map<Object, Point2D.Double>) evt.getNewValue());
+                    Map<Object,Point2D.Double> locs = (Map<Object, Point2D.Double>) evt.getNewValue();
+                    plot.getLayoutManager().requestLocations(locs);
                 }
             }
         };
@@ -145,8 +143,8 @@ public final class LongitudinalGraphComponent extends JPanel {
      * Sets the underlying graph
      * @param g the graph
      */
-    public void setTimeGraph(LonGraph g) {
-        setManager(new LongitudinalGraphManager(g));
+    public void setLonGraph(LonGraph g) {
+        setLonGraphManager(new LonGraphManager(g));
     }
 
     /**
@@ -164,24 +162,24 @@ public final class LongitudinalGraphComponent extends JPanel {
     }
 
     /**
-     * @return manager for the longitudinal graph
+     * @return manager for graph
      */
-    public LongitudinalGraphManager getManager() {
-        return manager;
+    public GraphLayoutManager getLayoutManager() {
+        return plot.getLayoutManager();
     }
 
     /**
-     * @return manager for graph
+     * @return manager for the longitudinal graph
      */
-    public GraphLayoutManager getGraphManager() {
-        return plot.getLayoutManager();
+    public LonGraphManager getLonGraphManager() {
+        return manager;
     }
 
     /**
      * Changes the manager for the longitudinal graph
      * @param m the graph manager
      */
-    public void setManager(LongitudinalGraphManager m) {
+    public void setLonGraphManager(LonGraphManager m) {
         setManager(m, null);
     }
 
@@ -190,7 +188,7 @@ public final class LongitudinalGraphComponent extends JPanel {
      * @param m the graph manager
      * @param gm the graph layout manager
      */
-    private void setManager(LongitudinalGraphManager m, GraphLayoutManager gm) {
+    private void setManager(LonGraphManager m, GraphLayoutManager gm) {
         if (this.manager != m) {
             if (this.manager != null) {
                 this.manager.removePropertyChangeListener(managerListener);
@@ -209,27 +207,6 @@ public final class LongitudinalGraphComponent extends JPanel {
         }
     }
 
-    // </editor-fold>
-
-
-    // <editor-fold defaultstate="collapsed" desc="Show/Hide Label">
-
-    public void hidePlot() {
-        remove(plot);
-        add(hideNote);
-        repaint();
-    }
-
-    public void showPlot() {
-        remove(hideNote);
-        for (Component c : getComponents()) {
-            if (c == plot) {
-                return;
-            }
-        }
-        add(plot, java.awt.BorderLayout.CENTER);
-        repaint();
-    }
     // </editor-fold>
 
 }

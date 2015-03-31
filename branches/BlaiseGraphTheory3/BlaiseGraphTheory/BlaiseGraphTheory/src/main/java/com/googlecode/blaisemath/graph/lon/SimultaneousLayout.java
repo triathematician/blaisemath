@@ -60,14 +60,14 @@ public class SimultaneousLayout<C> {
 
     public static class Parameters extends SpringLayout.Parameters {
         /** Force per distance */
-        double springC = 5;
+        double timeForce = .01;
 
         public double getTimeForce() {
-            return springC;
+            return timeForce;
         }
 
-        public void setTimeForce(double springC) {
-            this.springC = springC;
+        public void setTimeForce(double timeForce) {
+            this.timeForce = timeForce;
         }
     }
     //</editor-fold>
@@ -93,9 +93,6 @@ public class SimultaneousLayout<C> {
             slices.add(new LayoutSlice(i, tg.slice(times.get(i), true), copy(ip)));
             masterPos.add(new HashMap<C,Point2D.Double>());
         }
-        parameters.setGlobalForce(1.0);
-        parameters.setDampingConstant(.6);
-        parameters.setRepulsiveForce(1.0);
     }
 
     public Parameters getParameters() {
@@ -184,8 +181,8 @@ public class SimultaneousLayout<C> {
                 if (adj1 != null) {
                     double dist = adj1.distance(iLoc);
                     if (dist > .002) {
-                        sum.x += wt * SimultaneousLayout.this.parameters.springC * (adj1.x - iLoc.x) * dist * iter;
-                        sum.y += wt * SimultaneousLayout.this.parameters.springC * (adj1.y - iLoc.y) * dist * iter;
+                        sum.x += wt * SimultaneousLayout.this.parameters.timeForce * (adj1.x - iLoc.x) * dist * iter;
+                        sum.y += wt * SimultaneousLayout.this.parameters.timeForce * (adj1.y - iLoc.y) * dist * iter;
                     }
                 }
             }
