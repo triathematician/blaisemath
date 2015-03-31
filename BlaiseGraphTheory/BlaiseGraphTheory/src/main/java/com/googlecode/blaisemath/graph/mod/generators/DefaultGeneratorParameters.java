@@ -46,7 +46,7 @@ public class DefaultGeneratorParameters {
 
     public DefaultGeneratorParameters(boolean directed, int nodes) {
         setDirected(directed);
-        setNodeCount(nodeCount);
+        setNodeCount(nodes);
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
