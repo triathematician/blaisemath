@@ -33,6 +33,7 @@ import com.googlecode.blaisemath.graph.GraphMetric;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import com.googlecode.blaisemath.graph.GraphSubsetMetric;
 import com.googlecode.blaisemath.graph.GraphGenerator;
+import com.googlecode.blaisemath.graph.GraphLayoutManager;
 import com.googlecode.blaisemath.graph.GraphMetrics;
 import com.googlecode.blaisemath.graph.IterativeGraphLayout;
 import com.googlecode.blaisemath.graph.StaticGraphLayout;
@@ -56,6 +57,7 @@ import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ActionMap;
@@ -221,9 +223,7 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void applyStaticLayout(ActionEvent event) {
         Object parm = event.getSource();
-        graphComponent.getLayoutManager().applyLayout(selectedLayout, 
-                Collections.emptyMap(), null, parm);
-        zoomAll();
+        AnimationUtils.animateCoordinateChange(graphComponent.getLayoutManager(), selectedLayout, parm, graphComponent, 10.0);
     }
     
     @Action

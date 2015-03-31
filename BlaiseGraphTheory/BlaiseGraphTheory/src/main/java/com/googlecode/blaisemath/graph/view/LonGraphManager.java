@@ -50,7 +50,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
  * 
  * @author elisha
  */
-public final class LongitudinalGraphManager {
+public final class LonGraphManager {
     
     /** Default time between layout iterations. */
     private static final int DEFAULT_DELAY = 10;
@@ -80,7 +80,7 @@ public final class LongitudinalGraphManager {
      * Constructs manager for the specified graph
      * @param graph the graph
      */
-    public LongitudinalGraphManager(LonGraph graph) {
+    public LonGraphManager(LonGraph graph) {
         this.tGraph = checkNotNull(graph);
         this.layout = new SimultaneousLayout(tGraph);
         setTime(graph.getMinimumTime(), true);

@@ -20,7 +20,6 @@ package com.googlecode.blaisemath.graph.lon;
  * #L%
  */
 
-import com.googlecode.blaisemath.graph.lon.SliceLonGraph;
 import static com.googlecode.blaisemath.graph.AssertUtils.assertCollectionContentsSame;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.SparseGraph;
@@ -65,17 +64,6 @@ public class SliceLonGraphTest {
           DIR.addGraph(SparseGraph.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE[2])), 20.0);
           DIR.addGraph(SparseGraph.createFromArrayEdges(true, Arrays.asList(VV), Arrays.asList(EE[3])), 0.0);
         EMPTY = new SliceLonGraph<Integer>();
-    }
-
-    @Test
-    public void testToString() {
-        System.out.println("toString: not tested");
-        assertEquals("SliceLongitudinalGraph {}", EMPTY.toString());
-    }
-
-    @Test
-    public void testAddGraph() {
-        System.out.println("addGraph: tested as part of overall suite");
     }
 
     @Test

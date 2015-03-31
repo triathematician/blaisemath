@@ -1,5 +1,5 @@
 /*
- * MultiGraphComponent.java
+ * LonGraphListComponent.java
  * Created Nov 11, 2011
  */
 package com.googlecode.blaisemath.graph.view;
@@ -26,10 +26,12 @@ package com.googlecode.blaisemath.graph.view;
 
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphLayoutManager;
-import com.googlecode.blaisemath.graph.mod.layout.SpringLayout;
+import com.googlecode.blaisemath.graphics.swing.PanAndZoomHandler;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
@@ -43,15 +45,19 @@ import javax.swing.ListCellRenderer;
  *
  * @author elisha
  */
-public final class MultiGraphComponent extends JList {
+public final class LonGraphListComponent extends JList {
+    
+    private static final Dimension CELL_DIMENSION = new Dimension(150, 150);
+    private static final int MARGIN = 5;
+    private static final Rectangle CELL_RECT = new Rectangle(MARGIN, MARGIN, CELL_DIMENSION.width-2*MARGIN, CELL_DIMENSION.height-2*MARGIN);
 
     /** Time graph manager */
-    private LongitudinalGraphManager manager;
+    private LonGraphManager manager;
     /** Handles updates from manager */
     private final PropertyChangeListener managerListener;
     
     /** Constructs a longitudinal graph panel without an actual graph. */
-    public MultiGraphComponent() {
+    public LonGraphListComponent() {
         this(null);
     }
 
@@ -59,7 +65,7 @@ public final class MultiGraphComponent extends JList {
      * Construct instance with specified graph manager
      * @param m graph manager
      */
-    public MultiGraphComponent(LongitudinalGraphManager m) {
+    public LonGraphListComponent(LonGraphManager m) {
         setCellRenderer(new GraphCellRenderer());
         setListData(new Object[]{});
         managerListener = new PropertyChangeListener(){
@@ -70,7 +76,7 @@ public final class MultiGraphComponent extends JList {
         };
         setManager(m);
         setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        super.setVisibleRowCount(10);
+        setVisibleRowCount(-1);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Property Patterns">
@@ -78,7 +84,7 @@ public final class MultiGraphComponent extends JList {
     /**
      * @return manager for the longitudinal graph
      */
-    public LongitudinalGraphManager getManager() {
+    public LonGraphManager getManager() {
         return manager;
     }
 
@@ -86,7 +92,7 @@ public final class MultiGraphComponent extends JList {
      * Changes the manager for the longitudinal graph
      * @param m the graph manager
      */
-    public void setManager(LongitudinalGraphManager m) {
+    public void setManager(LonGraphManager m) {
         if (this.manager != m) {
             if (this.manager != null) {
                 this.manager.removePropertyChangeListener(managerListener);
@@ -106,21 +112,18 @@ public final class MultiGraphComponent extends JList {
 
     private class GraphCellRenderer extends GraphComponent implements ListCellRenderer {
         GraphCellRenderer() {
-            setPreferredSize(new Dimension(200, 200));
+            setPreferredSize(CELL_DIMENSION);
         }
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Double time = (Double) value;
-            Graph gr = MultiGraphComponent.this.manager.getTimeGraph().slice(time, false);
-            GraphLayoutManager gm = getAdapter() == null ? null : getLayoutManager();
-            Map<Object, Point2D.Double> positionMap = MultiGraphComponent.this.manager.getLayoutAlgorithm().getPositionsCopy(time);
-            if (gm == null && gr != null) {
-                setLayoutManager(gm = new GraphLayoutManager(gr, new SpringLayout()));
-                gm.requestLocations(positionMap);
-            } else if (gm != null) {
-                gm.setGraph(gr);
-                gm.requestLocations(positionMap);
-            }
+            Graph gr = LonGraphListComponent.this.manager.getTimeGraph().slice(time, false);
+            GraphLayoutManager gm = getLayoutManager();
+            Map<Object, Point2D.Double> nodeLocs = LonGraphListComponent.this.manager.getLayoutAlgorithm().getPositionsCopy(time);
+            gm.setGraph(gr);
+            gm.requestLocations(nodeLocs);
+            Rectangle2D bds = getGraphicRoot().boundingBox();
+            PanAndZoomHandler.setDesiredLocalBounds(this, CELL_RECT, bds);
             setBorder(BorderFactory.createTitledBorder("Time = " + time));
             return this;
         }
