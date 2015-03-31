@@ -252,23 +252,35 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     /**
      * Updates component transform so given rectangle is included within. Updates
      * to the component are made on the EDT.
-     * @param gc associated component
+     * @param comp associated component
      * @param rect local bounds
      */
     @InvokedFromThread("multiple")
-    public static void setDesiredLocalBounds(final JGraphicComponent gc, final Rectangle2D rect) {
+    public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle2D rect) {
+        setDesiredLocalBounds(comp, comp.getBounds(), rect);
+    }
+
+    /**
+     * Updates component transform so given rectangle is included within. Updates
+     * to the component are made on the EDT. Allows setting custom bounds for the
+     * component, in case the component is not yet visible or sized.
+     * @param comp associated component
+     * @param compBounds bounds to use for the component
+     * @param rect local bounds
+     */
+    @InvokedFromThread("multiple")
+    public static void setDesiredLocalBounds(final JGraphicComponent comp, final Rectangle compBounds, final Rectangle2D rect) {
         BSwingUtilities.invokeOnEventDispatchThread(new Runnable(){
             @Override
             public void run() {
-                Rectangle bds = gc.getBounds();
-                double scalex = rect.getWidth() / bds.getWidth();
-                double scaley = rect.getHeight() / bds.getHeight();
+                double scalex = rect.getWidth() / compBounds.getWidth();
+                double scaley = rect.getHeight() / compBounds.getHeight();
                 double scale = Math.max(scalex, scaley);
                 AffineTransform res = new AffineTransform();
-                res.translate(bds.getWidth()/2, bds.getHeight()/2);
+                res.translate(compBounds.getWidth()/2, compBounds.getHeight()/2);
                 res.scale(1 / scale, 1 / scale);
                 res.translate(-rect.getCenterX(), -rect.getCenterY());
-                gc.setTransform(res);
+                comp.setTransform(res);
             }
         });
     }
@@ -383,7 +395,6 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double nyMin = newMin.getY();
         final double nxMax = newMax.getX();
         final double nyMax = newMax.getY();
-
 
         AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
