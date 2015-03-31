@@ -51,13 +51,11 @@ public final class ExtendedGeneratorParameters extends DefaultGeneratorParameter
     @Override
     public void setDirected(boolean directed) {
         super.setDirected(directed);
-        checkEdgeCount();
     }
 
     @Override
     public void setNodeCount(int nodes) {
         super.setNodeCount(nodes);
-        checkEdgeCount();
     }
 
     public int getEdgeCount() {
@@ -67,22 +65,22 @@ public final class ExtendedGeneratorParameters extends DefaultGeneratorParameter
     public void setEdgeCount(int edges) {
         checkArgument(edges >= 0);
         this.edgeCount = edges;
-        checkEdgeCount();
     }
     
     //</editor-fold>
     
-    private void checkEdgeCount() {
+    /**
+     * Get the number of edges, limited to the maximum possible based on the current node count.
+     * @return edge count
+     */
+    public int getCheckedEdgeCount() {
         if (!directed && edgeCount > (nodeCount * (nodeCount - 1)) / 2) {
-            Logger.getLogger(EdgeCountGenerator.class.getName()).log(Level.WARNING, 
-                    "Too many edges! (n,e)=({0},{1})", new Object[]{nodeCount, edgeCount});
-            edgeCount = (nodeCount*(nodeCount-1))/2;
+            return (nodeCount*(nodeCount-1))/2;
         }
         if (directed && edgeCount > nodeCount * nodeCount) {
-            Logger.getLogger(EdgeCountGenerator.class.getName()).log(Level.WARNING, 
-                    "Too many edges! (n,e)=({0},{1})", new Object[]{nodeCount, edgeCount});
-            edgeCount = nodeCount*nodeCount;
+            return nodeCount*nodeCount;
         }
+        return edgeCount;
     }
 
 }

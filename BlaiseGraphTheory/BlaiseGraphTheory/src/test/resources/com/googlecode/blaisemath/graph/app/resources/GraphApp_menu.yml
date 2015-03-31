@@ -3,7 +3,7 @@
 Menubar:
     File:
         - quit
-    Generate: {
+    Generator: {
           action: generateGraph,
           options: com.googlecode.blaisemath.graph.GraphServices#generators
         }
@@ -31,13 +31,17 @@ Menubar:
           action: subsetMetric,
           options: com.googlecode.blaisemath.graph.GraphServices#subsetMetrics
         }
-    Zoom:
+    View:
+        - zoomIn
+        - zoomOut
         - zoomSelected
         - zoomAll
         - zoom100
 Toolbar:
     - zoomAll
 Canvas:
+    - zoomIn
+    - zoomOut
     - zoomSelected
     - zoomAll
     - zoom100

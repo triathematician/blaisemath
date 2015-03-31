@@ -59,7 +59,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
     
     @Override
     public String toString() {
-        return "StaticSpringLayout";
+        return "Position nodes using \"spring layout\" algorithm";
     }
 
     @Override

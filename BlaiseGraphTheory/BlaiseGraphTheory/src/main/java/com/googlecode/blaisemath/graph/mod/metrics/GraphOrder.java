@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.graph.Graph;
 public class GraphOrder extends GraphMetricSupport<Integer> {
 
     public GraphOrder() {
-        super("Order", "Number of vertices in the graph.", true);
+        super("Node count", "Number of vertices in the graph.", true);
     }
 
     @Override

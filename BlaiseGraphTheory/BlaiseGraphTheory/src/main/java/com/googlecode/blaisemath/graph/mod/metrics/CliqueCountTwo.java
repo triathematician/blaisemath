@@ -41,6 +41,11 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 public class CliqueCountTwo implements GraphNodeMetric<Integer> {
     
     @Override
+    public String toString() {
+        return "Clique count (radius 2)";
+    }
+    
+    @Override
     public <V> Integer apply(Graph<V> graph, V vertex) { 
         Set<V> nbhd = GraphUtils.neighborhood(graph, vertex, 2);
         return GraphUtils.copySubgraph(graph, nbhd).edgeCount() - nbhd.size() + 1;

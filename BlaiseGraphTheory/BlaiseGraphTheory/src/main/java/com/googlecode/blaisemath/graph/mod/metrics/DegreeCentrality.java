@@ -29,11 +29,16 @@ import com.googlecode.blaisemath.graph.Graph;
 
 
 /**
- * Vertex degree as a metric.
+ * Node degree as a metric.
  * 
  * @author elisha
  */
 public class DegreeCentrality implements GraphNodeMetric<Integer> {
+    
+    @Override
+    public String toString() {
+        return "Degree";
+    }
     
     @Override
     public <V> Integer apply(Graph<V> graph, V vertex) { 

@@ -40,9 +40,14 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 public class CliqueCount implements GraphNodeMetric<Integer> {
     
     @Override
-    public <V> Integer apply(Graph<V> graph, V vertex) { 
+    public String toString() {
+        return "Clique count";
+    }
+    
+    @Override
+    public <V> Integer apply(Graph<V> graph, V node) { 
         // TODO - this is inefficient
-        return GraphUtils.copySubgraph(graph, graph.neighbors(vertex)).edgeCount();
+        return GraphUtils.copySubgraph(graph, graph.neighbors(node)).edgeCount();
     }
     
 }

@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.graph.Graph;
 public class GraphAverageDegree extends GraphMetricSupport<Double> {
 
     public GraphAverageDegree() {
-        super("Average Degree", "Average degree of vertices in the graph. Uses average indegree or outdegree for a directed graph.", true);
+        super("Average degree", "Average degree of vertices in the graph. Uses average indegree or outdegree for a directed graph.", true);
     }
 
     @Override

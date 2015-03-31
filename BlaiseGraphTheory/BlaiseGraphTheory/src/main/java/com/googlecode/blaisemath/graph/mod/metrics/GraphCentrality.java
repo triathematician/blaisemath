@@ -1,5 +1,5 @@
 /*
- * ClosenessCentrality.java
+ * GraphCentrality.java
  * Created Jul 23, 2010
  */
 package com.googlecode.blaisemath.graph.mod.metrics;
@@ -24,6 +24,9 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Ordering;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,32 +47,24 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * @author elisha
  */
 public class GraphCentrality implements GraphNodeMetric<Double> {
-
-    private final boolean useSum = false;
+    
+    @Override
+    public String toString() {
+        return "Graph centrality";
+    }
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
         int n = graph.nodeCount();
-        HashMap<V, Integer> lengths = new HashMap<V, Integer>();
-        GraphUtils.breadthFirstSearch(graph, node, new HashMap<V, Integer>(), lengths, new Stack<V>(), new HashMap<V, Set<V>>());
+        Map<V, Integer> lengths = new HashMap<V, Integer>();
+        GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(), lengths, new Stack<V>(), HashMultimap.<V,V>create());
         double cptSize = lengths.size();
-        if (useSum) {
-            double sum = 0.0;
-            for (Integer i : lengths.values()) {
-                sum += i;
-            }
-            return cptSize / n * (n - 1.0) / sum;
-        } else {
-            double max = 0.0;
-            for (Integer i : lengths.values()) {
-                max = Math.max(max, i);
-            }
-            return cptSize / n * 1.0 / max;
-        }
+        Integer max = Ordering.natural().max(lengths.values());
+        return cptSize / (n * (double) max);
     }
 
     public <V> Map<V,Double> allValues(Graph<V> graph) {
-        int id = GAInstrument.start("GraphCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
+        int id = GAInstrument.start("ClosenessCentrality.allValues", graph.nodeCount()+" nodes", graph.edgeCount()+" edges");
         
         if (graph.nodeCount() == 0) {
             return Collections.emptyMap();
@@ -79,7 +74,7 @@ public class GraphCentrality implements GraphNodeMetric<Double> {
 
         int n = graph.nodeCount();
         Set<Graph<V>> components = GraphUtils.componentGraphs(graph);
-        HashMap<V, Double> values = new HashMap<V, Double>();
+        Map<V, Double> values = new HashMap<V, Double>();
         for (Graph<V> cg : components) {
             if (cg.nodeCount() == 1) {
                 values.put(cg.nodes().iterator().next(), 0.0);
@@ -93,7 +88,6 @@ public class GraphCentrality implements GraphNodeMetric<Double> {
                 values.put(v, multiplier * values.get(v));
             }
         }
-        
         GAInstrument.end(id);
         return values;
     }
@@ -103,25 +97,12 @@ public class GraphCentrality implements GraphNodeMetric<Double> {
      */
     private <V> void computeAllValuesConnected(Graph<V> graph, Map<V, Double> values) {
         Set<V> nodes = graph.nodes();
-        int n = nodes.size();
-        double max = (n - 1.0);
 
         for (V start : nodes) {
-            HashMap<V, Integer> lengths = new HashMap<V, Integer>();
-            GraphUtils.breadthFirstSearch(graph, start, new HashMap<V, Integer>(), lengths, new Stack<V>(), new HashMap<V, Set<V>>());
-            if (useSum) {
-                double sum1 = 0.0;
-                for (Integer j : lengths.values()) {
-                    sum1 += j;
-                }
-                values.put(start, max / sum1);
-            } else {
-                double max1 = 0.0;
-                for (Integer j : lengths.values()) {
-                    max1 = Math.max(max1, j);
-                }
-                values.put(start, 1.0 / max1);
-            }
+            Map<V, Integer> lengths = new HashMap<V, Integer>();
+            GraphUtils.breadthFirstSearch(graph, start, HashMultiset.<V>create(), lengths, new Stack<V>(), HashMultimap.<V,V>create());
+            double max = Ordering.natural().max(lengths.values());
+            values.put(start, 1.0 / max);
         }
     }
 }

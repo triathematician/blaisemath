@@ -37,10 +37,10 @@ import org.junit.Test;
  *
  * @author elisha
  */
-public class ClosenessCentralityTest {
+public class GraphCentralityTest {
 
     static Graph<Integer> TEST2;
-    static ClosenessCentrality INST1;
+    static GraphCentrality INST1;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -59,13 +59,13 @@ public class ClosenessCentralityTest {
         // 3--4--5--6
         // |
         // 7
-        INST1 = new ClosenessCentrality();
+        INST1 = new GraphCentrality();
     }
 
     @Test
     public void testValue() {
         System.out.println("value");
-        assertEquals(6.0/(1+1+1+2+2+2), INST1.apply(TEST2, 4), 1e-10);
+        assertEquals(1.0/2, INST1.apply(TEST2, 4), 1e-10);
     }
 
     @Test

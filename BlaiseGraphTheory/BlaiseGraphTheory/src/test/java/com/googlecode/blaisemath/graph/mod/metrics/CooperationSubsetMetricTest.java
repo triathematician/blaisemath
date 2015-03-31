@@ -26,7 +26,6 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 import com.googlecode.blaisemath.graph.mod.metrics.DegreeCentrality;
-import com.googlecode.blaisemath.graph.mod.metrics.CooperationMetric;
 import java.util.Arrays;
 import java.util.HashSet;
 import com.googlecode.blaisemath.graph.Graph;

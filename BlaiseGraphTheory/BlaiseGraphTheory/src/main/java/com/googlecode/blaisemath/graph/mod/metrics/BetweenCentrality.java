@@ -24,6 +24,10 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  * #L%
  */
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multiset;
 import com.googlecode.blaisemath.graph.GraphNodeMetric;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +46,11 @@ import com.googlecode.blaisemath.graph.GraphUtils;
  * @author Elisha Peterson
  */
 public class BetweenCentrality implements GraphNodeMetric<Double> {
+    
+    @Override
+    public String toString() {
+        return "Betweenness centrality";
+    }
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {
@@ -72,20 +81,20 @@ public class BetweenCentrality implements GraphNodeMetric<Double> {
      * @param multiplier applied to all elements of resulting map
      * @return data structure encoding the result
      */
-    static <V> HashMap<V, Double> brandes(Graph<V> graph, V start, HashMap<V, Double> between, double multiplier) {
+    static <V> Map<V, Double> brandes(Graph<V> graph, V start, Map<V, Double> between, double multiplier) {
         Set<V> nodes = graph.nodes();
         if (!nodes.contains(start)) {
             return new HashMap<V, Double>();
         }
 
         // number of shortest paths to each vertex
-        Map<V, Integer> numShortest = new HashMap<V, Integer>(); 
+        Multiset<V> numShortest = HashMultiset.create();
         // length of shortest paths to each vertex
         Map<V, Integer> lengths = new HashMap<V, Integer>(); 
         // tracks elements in non-increasing order for later use
         Stack<V> stack = new Stack<V>(); 
         // tracks vertex predecessors in resulting tree
-        Map<V, Set<V>> pred = new HashMap<V, Set<V>>(); 
+        Multimap<V,V> pred = HashMultimap.create();
 
         GraphUtils.breadthFirstSearch(graph, start, numShortest, lengths, stack, pred);
 
@@ -98,7 +107,7 @@ public class BetweenCentrality implements GraphNodeMetric<Double> {
             V w = stack.pop();
             for (V v : pred.get(w)) {
                 dependencies.put(v, dependencies.get(v)
-                        + (double) numShortest.get(v) / numShortest.get(w) * (1 + dependencies.get(w)));
+                        + (double) numShortest.count(v) / numShortest.count(w) * (1 + dependencies.get(w)));
             }
             if (w != start) {
                 between.put(w, between.get(w)+multiplier*dependencies.get(w));

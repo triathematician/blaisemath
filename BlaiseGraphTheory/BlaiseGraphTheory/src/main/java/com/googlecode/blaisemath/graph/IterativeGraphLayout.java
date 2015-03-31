@@ -56,6 +56,18 @@ public interface IterativeGraphLayout<C> {
     int getIteration();
 
     /**
+     * @return current "energy" or some double representing the convergence status
+     *   of the layout
+     */
+    double getEnergyStatus();
+
+    /**
+     * Returns copy of the current list of positions.
+     * @return current list of positions
+     */
+    Map<C,Point2D.Double> getPositionsCopy();
+
+    /**
      * Retrieve current value of cooling parameter.
      * @return current value of a "cooling parameter"
      */
@@ -66,12 +78,6 @@ public interface IterativeGraphLayout<C> {
      * @param val new value
      */
     void setCoolingParameter(double val);
-
-    /**
-     * @return current "energy" or some double representing the convergence status
-     *   of the layout
-     */
-    double getEnergyStatus();
     
     /**
      * Return the set of nodes that are currently "pinned" or "locked" in place.
@@ -84,12 +90,6 @@ public interface IterativeGraphLayout<C> {
      * @param pinned the nodes to pin
      */
     void setLockedNodes(Set<C> pinned);
-
-    /**
-     * Returns copy of the current list of positions.
-     * @return current list of positions
-     */
-    Map<C,Point2D.Double> getPositionsCopy();
 
     /**
      * Request an adjustment to the current positions of the nodes in the graph during the next iteration.

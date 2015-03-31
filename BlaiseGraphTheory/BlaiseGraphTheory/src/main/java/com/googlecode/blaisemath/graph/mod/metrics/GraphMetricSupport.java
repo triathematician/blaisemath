@@ -41,6 +41,11 @@ public abstract class GraphMetricSupport<T> implements GraphMetric<T> {
         this.supportsDirected = supportsDirected;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

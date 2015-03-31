@@ -34,6 +34,11 @@ import com.googlecode.blaisemath.graph.Graph;
  * @author elisha
  */
 public class OutDegreeCentrality implements GraphNodeMetric<Integer> {
+    
+    @Override
+    public String toString() {
+        return "Out-degree";
+    }
 
     @Override
     public <V> Integer apply(Graph<V> graph, V vertex) { 

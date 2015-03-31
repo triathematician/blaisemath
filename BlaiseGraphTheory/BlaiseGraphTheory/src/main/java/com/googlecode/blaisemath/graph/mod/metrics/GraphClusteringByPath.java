@@ -33,7 +33,7 @@ import com.googlecode.blaisemath.graph.Graph;
 public class GraphClusteringByPath extends GraphMetricSupport<Double> {
 
     public GraphClusteringByPath() {
-        super("Clustering Coefficient (by path)", "Computes the clustering coefficient:"
+        super("Clustering coefficient (by path)", "Computes the clustering coefficient:"
                 + " Out of all length-3 paths, how many are enclosed by a triangle?", true);
     }
 

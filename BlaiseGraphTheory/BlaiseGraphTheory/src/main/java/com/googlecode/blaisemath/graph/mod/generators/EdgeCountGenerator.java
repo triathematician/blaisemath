@@ -47,7 +47,7 @@ public final class EdgeCountGenerator implements GraphGenerator<ExtendedGenerato
             if (o1.length != 2 || o2.length != 2) {
                 throw new IllegalStateException("This object only compares integer pairs.");
             }
-            return o1[0] == o2[0] ? o1[1] - o2[1] : o1[0] - o2[0];
+            return o1[0].equals(o2[0]) ? o1[1] - o2[1] : o1[0] - o2[0];
         }
     };
 
@@ -90,7 +90,7 @@ public final class EdgeCountGenerator implements GraphGenerator<ExtendedGenerato
         int nodes = parm.getNodeCount();
         Set<Integer[]> edgeSet = new TreeSet<Integer[]>(directed ? PAIR_COMPARE : PAIR_COMPARE_UNDIRECTED);
         Integer[] potential;
-        for (int i = 0; i < parm.getEdgeCount(); i++) {
+        for (int i = 0; i < parm.getCheckedEdgeCount(); i++) {
             do {
                 potential = new Integer[]{(int) (nodes * Math.random()), (int) (nodes * Math.random())};
             } while ((!directed && potential[0].equals(potential[1])) || edgeSet.contains(potential));
