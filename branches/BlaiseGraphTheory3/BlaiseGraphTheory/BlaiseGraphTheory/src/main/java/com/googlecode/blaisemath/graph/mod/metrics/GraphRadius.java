@@ -21,11 +21,12 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -37,7 +38,7 @@ import java.util.Stack;
 public class GraphRadius extends GraphMetricSupport<Integer> {
 
     public GraphRadius() {
-        super("Radius", "Radius of the graph (minimum number r such that all vertices are within r links of a particular vertex).", true);
+        super("Graph radius", "Radius of the graph (minimum number r such that all vertices are within r links of a particular vertex).", true);
     }
 
     @Override
@@ -54,8 +55,8 @@ public class GraphRadius extends GraphMetricSupport<Integer> {
         for (V node : graph.nodes()) {
             int maxLength = 0;
             GraphUtils.breadthFirstSearch(graph, node,
-                    new HashMap<V, Integer>(), lengths,
-                    new Stack<V>(), new HashMap<V, Set<V>>());
+                    HashMultiset.<V>create(), lengths,
+                    new Stack<V>(), HashMultimap.<V,V>create());
             for (Integer i : lengths.values()) {
                 if (i > maxLength) {
                     maxLength = i;

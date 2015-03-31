@@ -44,6 +44,11 @@ import com.googlecode.blaisemath.linear.Matrices;
  * @author Elisha Peterson
  */
 public class EigenCentrality implements GraphNodeMetric<Double> {
+    
+    @Override
+    public String toString() {
+        return "Eigenvalue centrality (estimated)";
+    }
 
     @Override
     public <V> Double apply(Graph<V> graph, V node) {

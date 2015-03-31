@@ -38,6 +38,11 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 public class DegreeTwoCentrality implements GraphNodeMetric<Integer> {
     
     @Override
+    public String toString() {
+        return "Neighborhood size (radius 2)";
+    }
+    
+    @Override
     public <V> Integer apply(Graph<V> graph, V vertex) { 
         return GraphUtils.neighborhood(graph, vertex, 2).size() - 1;
     }

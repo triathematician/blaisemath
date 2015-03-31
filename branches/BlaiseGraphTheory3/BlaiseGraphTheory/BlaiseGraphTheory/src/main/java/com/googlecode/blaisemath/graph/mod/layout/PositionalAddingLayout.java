@@ -40,6 +40,11 @@ import java.util.Set;
  * @author petereb1
  */
 public class PositionalAddingLayout implements StaticGraphLayout<CircleLayoutParameters> {
+    
+    @Override
+    public String toString() {
+        return "Position nodes near existing adjacent nodes";
+    }
 
     @Override
     public CircleLayoutParameters createParameters() {

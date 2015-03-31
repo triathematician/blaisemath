@@ -34,6 +34,11 @@ import com.googlecode.blaisemath.graph.Graph;
  * @author elisha
  */
 public class InDegreeCentrality implements GraphNodeMetric<Integer> {
+    
+    @Override
+    public String toString() {
+        return "In-degree";
+    }
 
     @Override
     public <V> Integer apply(Graph<V> graph, V vertex) { 

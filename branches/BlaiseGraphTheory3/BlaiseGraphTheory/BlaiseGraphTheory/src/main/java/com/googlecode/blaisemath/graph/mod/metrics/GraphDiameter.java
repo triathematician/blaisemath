@@ -21,11 +21,12 @@ package com.googlecode.blaisemath.graph.mod.metrics;
  */
 
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
 import com.googlecode.blaisemath.graph.Graph;
 import com.googlecode.blaisemath.graph.GraphUtils;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -37,7 +38,7 @@ import java.util.Stack;
 public class GraphDiameter extends GraphMetricSupport<Integer> {
 
     public GraphDiameter() {
-        super("Diameter", "Diameter of the graph (longest path between two vertices).", true);
+        super("Graph diameter", "Diameter of the graph (longest path between two vertices).", true);
     }
 
     @Override
@@ -52,9 +53,8 @@ public class GraphDiameter extends GraphMetricSupport<Integer> {
         int maxLength = 0;
         Map<V, Integer> lengths = new HashMap<V, Integer>();
         for (V node : graph.nodes()) {
-            GraphUtils.breadthFirstSearch(graph, node,
-                    new HashMap<V, Integer>(), lengths,
-                    new Stack<V>(), new HashMap<V, Set<V>>());
+            GraphUtils.breadthFirstSearch(graph, node, HashMultiset.<V>create(),
+                    lengths, new Stack<V>(), HashMultimap.<V,V>create());
             for (Integer i : lengths.values()) {
                 if (i > maxLength) {
                     maxLength = i;

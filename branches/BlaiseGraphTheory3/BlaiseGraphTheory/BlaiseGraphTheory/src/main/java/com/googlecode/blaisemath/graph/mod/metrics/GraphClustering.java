@@ -35,7 +35,7 @@ import java.util.Set;
 public class GraphClustering extends GraphMetricSupport<Double> {
 
     public GraphClustering() {
-        super("Clustering Coefficient", "Computes the clustering coefficient:"
+        super("Clustering coefficient", "Computes the clustering coefficient:"
                 + " Out of all triples of vertices with at least two edges, how many have three edges?", true);
     }
 

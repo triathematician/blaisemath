@@ -30,7 +30,7 @@ import com.googlecode.blaisemath.graph.Graph;
 public class GraphDensity extends GraphMetricSupport<Double> {
 
     public GraphDensity() {
-        super("Link Density", "Number of edges in the graph divided by the total number possible.", true);
+        super("Link density", "Number of edges in the graph divided by the total number possible.", true);
     }
 
     @Override

@@ -136,6 +136,11 @@ public class SpringLayout<C> implements IterativeGraphLayout<C> {
         }
         iteration = 0;
     }
+    
+    @Override
+    public String toString() {
+        return "Spring layout algorithm";
+    }
 
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">

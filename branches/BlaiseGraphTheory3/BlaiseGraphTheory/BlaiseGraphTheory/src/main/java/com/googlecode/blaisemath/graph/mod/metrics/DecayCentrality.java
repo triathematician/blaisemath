@@ -63,7 +63,7 @@ public class DecayCentrality implements GraphNodeMetric<Double> {
 
     @Override
     public String toString() {
-        return "Decay Centrality (" + parameter + ")";
+        return "Decay centrality (" + parameter + ")";
     }
 
     /**

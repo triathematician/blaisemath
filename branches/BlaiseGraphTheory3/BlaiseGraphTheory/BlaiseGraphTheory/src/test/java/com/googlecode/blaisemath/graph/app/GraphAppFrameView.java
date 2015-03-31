@@ -52,8 +52,6 @@ import com.googlecode.blaisemath.util.swing.ActionMapContextMenuInitializer;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.util.Collections;
@@ -160,6 +158,7 @@ public final class GraphAppFrameView extends FrameView {
         this.selectedGenerator = selectedGenerator;
         generatorPanel.setBean(selectedGenerator.createParameters());
         ((MPanel)generatorPanel.getParent()).setPrimaryComponent(generatorPanel);
+        ((MPanel)generatorPanel.getParent()).setTitle(selectedGenerator.toString());
     }
     
     public Object getGeneratorParameters() {
@@ -174,6 +173,7 @@ public final class GraphAppFrameView extends FrameView {
         this.selectedLayout = selectedLayout;
         staticLayoutPanel.setBean(selectedLayout.createParameters());
         ((MPanel)staticLayoutPanel.getParent()).setPrimaryComponent(staticLayoutPanel);
+        ((MPanel)staticLayoutPanel.getParent()).setTitle(selectedLayout.toString());
     }
     
     public Object getLayoutParameters() {
@@ -188,6 +188,7 @@ public final class GraphAppFrameView extends FrameView {
         this.selectedIterativeLayout = selectedIterativeLayout;
         iterativeLayoutPanel.setBean(selectedIterativeLayout);
         ((MPanel)iterativeLayoutPanel.getParent()).setPrimaryComponent(iterativeLayoutPanel);
+        ((MPanel)iterativeLayoutPanel.getParent()).setTitle(selectedIterativeLayout.toString());
     }
     
     public Object getIterativeLayoutParameters() {
@@ -251,35 +252,27 @@ public final class GraphAppFrameView extends FrameView {
     public void globalMetric(ActionEvent event) {
         GraphMetric<?> gs = (GraphMetric<?>) event.getSource();
         Object res = gs.apply(graphComponent.getGraph());
-        System.out.println(gs);
-        System.out.println("= "+res);
+        statusLabel.setText(gs+" = "+res);
     }
     
     @Action
     public void nodeMetric(ActionEvent event) {
         GraphNodeMetric<?> gs = (GraphNodeMetric<?>) event.getSource();
-        System.out.println(gs);
         Graph g = graphComponent.getGraph();
-        System.out.println("= "+Multisets.copyHighestCountFirst(GraphMetrics.computeDistribution(g, gs)));
+        statusLabel.setText(gs+" = "+Multisets.copyHighestCountFirst(GraphMetrics.computeDistribution(g, gs)));
     }
     
     @Action
     public void subsetMetric(ActionEvent event) {
         GraphSubsetMetric<?> gs = (GraphSubsetMetric<?>) event.getSource();
-        System.out.println(gs);
+        statusLabel.setText(gs+" = ...");
     }
     
     // CANVAS ACTIONS
     
     @Action
     public void zoomAll() {
-        Rectangle2D bounds = graphComponent.getGraphicRoot().boundingBox();
-        if (bounds != null) {
-            PanAndZoomHandler.zoomCoordBoxAnimated(graphComponent, new Point2D.Double(
-                    bounds.getMinX(), bounds.getMinY()),
-                    new Point2D.Double(bounds.getMaxX(), bounds.getMaxY()));
-        }
-//        graphComponent.zoomToAll();
+        graphComponent.zoomToAll();
     }
     
     @Action
@@ -290,6 +283,16 @@ public final class GraphAppFrameView extends FrameView {
     @Action
     public void zoom100() {
         graphComponent.resetTransform();
+    }
+    
+    @Action
+    public void zoomIn() {
+        graphComponent.zoomIn();
+    }
+    
+    @Action
+    public void zoomOut() {
+        graphComponent.zoomOut();
     }
     
 }

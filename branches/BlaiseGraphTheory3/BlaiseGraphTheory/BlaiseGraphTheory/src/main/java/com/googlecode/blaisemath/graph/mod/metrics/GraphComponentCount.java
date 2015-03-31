@@ -31,7 +31,7 @@ import com.googlecode.blaisemath.graph.GraphUtils;
 public class GraphComponentCount extends GraphMetricSupport<Integer> {
 
     public GraphComponentCount() {
-        super("Components", "Number of connected components in the graph.", true);
+        super("Component count", "Number of connected components in the graph.", true);
     }
 
     @Override

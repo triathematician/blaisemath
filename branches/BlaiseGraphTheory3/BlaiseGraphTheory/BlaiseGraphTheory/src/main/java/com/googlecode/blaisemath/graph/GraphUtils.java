@@ -585,35 +585,29 @@ public class GraphUtils {
 
     /**
      * Performs breadth-first search algorithm to enumerate the nodes in a
-     * graph, starting from the specified start node.
+     *  graph, starting from the specified start node.
      * @param <V> graph node type
      * @param graph the graph under consideration
      * @param start the starting node.
      * @param numShortest a map that will be filled with info on the # of
-     * shortest paths
+     *  shortest paths
      * @param lengths a map that will be filled with info on the lengths of
-     * shortest paths
+     *  shortest paths
      * @param stack a stack that will be filled with elements in non-increasing
-     * order of distance
+     *  order of distance
      * @param pred a map that will be filled with adjacency information for the
-     * shortest paths
+     *  shortest paths
      */
     public static <V> void breadthFirstSearch(Graph<V> graph, V start,
-            Map<V, Integer> numShortest, Map<V, Integer> lengths,
-            Stack<V> stack, Map<V, Set<V>> pred) {
+            Multiset<V> numShortest, Map<V, Integer> lengths,
+            Stack<V> stack, Multimap<V,V> pred) {
 
         Set<V> nodes = graph.nodes();
-        for (V v : nodes) {
-            numShortest.put(v, 0);
-        }
-        numShortest.put(start, 1);
+        numShortest.add(start);
         for (V v : nodes) {
             lengths.put(v, -1);
         }
         lengths.put(start, 0);
-        for (V v : nodes) {
-            pred.put(v, new HashSet<V>());
-        }
 
         // breadth-first search algorithm
         LinkedList<V> queue = new LinkedList<V>(); // tracks elements for search algorithm
@@ -630,7 +624,7 @@ public class GraphUtils {
                 }
                 // adjust the number of shortest paths to w if shortest path goes through v
                 if (lengths.get(w) == lengths.get(v) + 1) {
-                    numShortest.put(w, numShortest.get(w) + numShortest.get(v));
+                    numShortest.add(w, numShortest.count(v));
                     pred.get(w).add(v);
                 }
             }
