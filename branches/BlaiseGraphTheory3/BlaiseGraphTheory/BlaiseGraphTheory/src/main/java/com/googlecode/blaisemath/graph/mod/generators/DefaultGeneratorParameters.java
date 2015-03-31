@@ -45,26 +45,25 @@ public class DefaultGeneratorParameters {
     }
 
     public DefaultGeneratorParameters(boolean directed, int nodes) {
-        this.directed = directed;
-        Preconditions.checkArgument(nodes >= 0);
-        this.nodeCount = nodes;
+        setDirected(directed);
+        setNodeCount(nodeCount);
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
 
-    public boolean isDirected() {
+    public final boolean isDirected() {
         return directed;
     }
 
-    public void setDirected(boolean directed) {
+    public final void setDirected(boolean directed) {
         this.directed = directed;
     }
 
-    public int getNodeCount() {
+    public final int getNodeCount() {
         return nodeCount;
     }
 
-    public void setNodeCount(int nodes) {
+    public final void setNodeCount(int nodes) {
         Preconditions.checkArgument(nodes >= 0);
         this.nodeCount = nodes;
     }

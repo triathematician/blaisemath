@@ -26,8 +26,6 @@ package com.googlecode.blaisemath.graph.mod.generators;
 
 
 import static com.google.common.base.Preconditions.checkArgument;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Adds edge count to {@link BasicGeneratorParameters}.
@@ -47,16 +45,6 @@ public final class ExtendedGeneratorParameters extends DefaultGeneratorParameter
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
-
-    @Override
-    public void setDirected(boolean directed) {
-        super.setDirected(directed);
-    }
-
-    @Override
-    public void setNodeCount(int nodes) {
-        super.setNodeCount(nodes);
-    }
 
     public int getEdgeCount() {
         return edgeCount;
