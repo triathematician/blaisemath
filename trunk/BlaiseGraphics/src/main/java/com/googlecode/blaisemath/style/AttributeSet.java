@@ -343,14 +343,18 @@ public class AttributeSet implements Cloneable {
 
 
     /**
-     * Get the boolean value associated with the key
+     * Get the boolean value associated with the key.
      * @param key key
      * @param def default value
      * @return boolean value, or def if there is none
      */
     @Nullable
     public Boolean getBoolean(String key, @Nullable Boolean def) {
-        return getTyped(key, Boolean.class, def);
+        try {
+            return getTyped(key, Boolean.class, def);
+        } catch (ClassCastException x) {
+            return get(key) instanceof String ? Boolean.valueOf((String) get(key)) : false;
+        }
     }
 
     /**

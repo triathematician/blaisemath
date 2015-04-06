@@ -26,6 +26,8 @@ package com.googlecode.blaisemath.style;
 
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -49,6 +51,20 @@ public class AttributeSetsTest {
         assertEquals(2, as.getAttributes().size());
         assertEquals(Color.red, as.get(Styles.FILL));
         assertEquals(Color.green, as.get(Styles.STROKE));
+    }
+    
+    @Test
+    public void testConvertFromPoint() {
+        System.out.println("testConvertFromPoint");
+        Object res = AttributeSets.valueConverter().reverse().convert("!point[5,6]");
+        assertEquals(new Point2D.Double(5, 6), res);
+    }
+    
+    @Test
+    public void testConvertFromRect() {
+        System.out.println("testConvertFromRect");
+        Object res = AttributeSets.valueConverter().reverse().convert("!rectangle[x=5,y=6,w=7,h=8]");
+        assertEquals(new Rectangle2D.Double(5, 6, 7, 8), res);
     }
     
 }
