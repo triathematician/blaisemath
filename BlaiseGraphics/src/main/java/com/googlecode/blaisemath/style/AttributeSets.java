@@ -28,6 +28,7 @@ package com.googlecode.blaisemath.style;
 import com.google.common.base.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Joiner.MapJoiner;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Splitter;
 import com.google.common.base.Splitter.MapSplitter;
 import com.google.common.collect.Maps;
@@ -44,6 +45,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -95,11 +97,11 @@ public final class AttributeSets {
             .withKeyValueSeparator(Splitter.on(":").trimResults());
     private static final MapJoiner KEYVAL_JOINER = Joiner.on("; ")
             .withKeyValueSeparator(":");
+
     
     // non-instantiable utility class
     private AttributeSets() {
     }
-    
     
     /**
      * Return object that can be used to convert an {@link AttributeSet} to/from a string.
@@ -108,6 +110,16 @@ public final class AttributeSets {
      */
     public static Converter<AttributeSet,String> stringConverter() {
         return CONVERTER_INST;
+    }
+    
+    /**
+     * Return object that can be used to convert an {@link AttributeSet} to/from a string.
+     * The resulting style uses ";" to separate entries, and ":" to separate a key and value.
+     * @param types explicit desired types
+     * @return converter instance
+     */
+    public static Converter<AttributeSet,String> stringConverter(Map<String, Class<?>> types) {
+        return new AttributeSetConverter(checkNotNull(types));
     }
     
     /**
@@ -126,6 +138,18 @@ public final class AttributeSets {
     
     /** Converts {@link AttributeSet} to/from a string. */
     private static class AttributeSetConverter extends Converter<AttributeSet,String> {
+        /** Used in deserialization for custom type mapping */
+        @Nullable
+        private final Map<String, Class<?>> types;
+
+        public AttributeSetConverter() {
+            this.types = null;
+        }
+
+        public AttributeSetConverter(Map<String, Class<?>> types) {
+            this.types = checkNotNull(types);
+        }
+        
         @Override
         protected AttributeSet doBackward(String str) {
             if (str == null) {
@@ -138,7 +162,12 @@ public final class AttributeSets {
             Map<String, String> vals = KEYVAL_SPLITTER.split(str);
             for (String key : vals.keySet()) {
                 String sval = vals.get(key);
-                Object val = VALUE_CONVERTER_INST.reverse().convert(sval);
+                Object val;
+                if (types != null && types.containsKey(key)) {
+                    val = new AttributeValueConverter(types.get(key)).reverse().convert(sval);
+                } else {
+                    val = VALUE_CONVERTER_INST.reverse().convert(sval);
+                }
                 if (NULL_STRING.equals(val)) {
                     val = null;
                 }
@@ -191,8 +220,23 @@ public final class AttributeSets {
      * always used prior to those higher up in the list.
      */
     private static class AttributeValueConverter extends Converter<Object, String> {
+        @Nullable
+        private final Class<?> prefType;
+        
+        public AttributeValueConverter() {
+            prefType = null;
+        }
+
+        public AttributeValueConverter(Class<?> prefType) {
+            this.prefType = checkNotNull(prefType);
+        }
+        
         @Override
         protected Object doBackward(String sval) {
+            return prefType == null ? doBackwardBestGuess(sval) : doBackward(sval, prefType);
+        }
+        
+        protected Object doBackwardBestGuess(String sval) {
             if (sval.matches("#[0-9a-fA-f]{6}")
                     || sval.matches("#[0-9a-fA-f]{8}")) {
                 return Colors.stringConverter().reverse().convert(sval);
@@ -210,6 +254,30 @@ public final class AttributeSets {
                 return Double.valueOf(sval);
             } catch (NumberFormatException x) {
                 // wasn't a double, try the next thing
+            }
+            return sval;
+        }
+        
+        protected Object doBackward(String sval, Class<?> prefType) {
+            checkNotNull(prefType);
+            if (prefType == Color.class) {
+                return Colors.stringConverter().reverse().convert(sval);
+            } else if (Point2D.class.isAssignableFrom(prefType)) {
+                return new Point2DAdapter().unmarshal(sval);
+            } else if (Rectangle2D.class.isAssignableFrom(prefType)) {
+                return new RectAdapter().unmarshal(sval);
+            } else if (prefType == Integer.class) {
+                return Integer.valueOf(sval);
+            } else if (prefType == Float.class) {
+                return Float.valueOf(sval);
+            } else if (prefType == Double.class) {
+                return Double.valueOf(sval);
+            } else if (prefType == String.class) {
+                return sval;
+            } else if (prefType == Boolean.class) {
+                return Boolean.valueOf(sval);
+            } else if (prefType == Anchor.class) {
+                return Anchor.valueOf(sval);
             }
             return sval;
         }
