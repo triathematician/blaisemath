@@ -180,11 +180,11 @@ public final class AttributeSets {
      * <li>Float</li>
      * <li>Integer</li>
      * <li>Color - in the form #RRGGBB or #AARRGGBB</li>
-     * <li>Boolean - TODO REVERSE</li>
-     * <li>Font - TODO REVERSE</li>
-     * <li>Rectangle - TODO REVERSE</li>
-     * <li>Anchor - TODO REVERSE</li>
      * <li>Point - TODO REVERSE</li>
+     * <li>Rectangle - reverses as text</li>
+     * <li>Boolean - reverses as text</li>
+     * <li>Font - reverses as text</li>
+     * <li>Anchor - reverses as text</li>
      * </ul>
      * When decoding from strings, the above lists describes how strings that
      * may match more than one type are handled. Types lower in the list are
@@ -196,6 +196,10 @@ public final class AttributeSets {
             if (sval.matches("#[0-9a-fA-f]{6}")
                     || sval.matches("#[0-9a-fA-f]{8}")) {
                 return Colors.stringConverter().reverse().convert(sval);
+            } else if (sval.matches("!point\\[(.*)\\]")) {
+                return new Point2DAdapter().unmarshal(sval);
+            } else if (sval.matches("!rectangle\\[(.*)\\]")) {
+                return new RectAdapter().unmarshal(sval);
             }
             try {
                 return Integer.valueOf(sval);
@@ -217,11 +221,11 @@ public final class AttributeSets {
             } else if (val instanceof Marker) {
                 return val.getClass().getSimpleName();
             } else if (val instanceof Rectangle2D) {
-                return new RectAdapter().marshal((Rectangle2D)val);
+                return "!"+new RectAdapter().marshal((Rectangle2D)val);
             } else if (val instanceof Point) {
-                return new PointAdapter().marshal((Point)val);
+                return "!"+new PointAdapter().marshal((Point)val);
             } else if (val instanceof Point2D.Double) {
-                return new Point2DAdapter().marshal((Point2D.Double)val);
+                return "!"+new Point2DAdapter().marshal((Point2D.Double)val);
             } else if (val instanceof Font) {
                 return new FontAdapter().marshal((Font) val);
             } else {
