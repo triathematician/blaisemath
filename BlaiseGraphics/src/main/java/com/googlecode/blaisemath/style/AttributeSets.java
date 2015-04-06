@@ -180,8 +180,8 @@ public final class AttributeSets {
      * <li>Float</li>
      * <li>Integer</li>
      * <li>Color - in the form #RRGGBB or #AARRGGBB</li>
-     * <li>Point - TODO REVERSE</li>
-     * <li>Rectangle - reverses as text</li>
+     * <li>Point - in the form !point[5,6.2]</li>
+     * <li>Rectangle - in the form !rectangle[x=2,y=3,w=7,h=12]</li>
      * <li>Boolean - reverses as text</li>
      * <li>Font - reverses as text</li>
      * <li>Anchor - reverses as text</li>
