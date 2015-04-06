@@ -32,7 +32,15 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Splitter.MapSplitter;
 import com.google.common.collect.Maps;
 import com.googlecode.blaisemath.util.Colors;
+import com.googlecode.blaisemath.util.xml.FontAdapter;
+import com.googlecode.blaisemath.util.xml.Point2DAdapter;
+import com.googlecode.blaisemath.util.xml.PointAdapter;
+import com.googlecode.blaisemath.util.xml.RectAdapter;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -163,7 +171,25 @@ public final class AttributeSets {
         }
     }
     
-    /** Converts {@link AttributeSet} values to/from strings. */
+    /** 
+     * Converts {@link AttributeSet} values to/from strings. Supports the following
+     * types:
+     * <ul>
+     * <li>String</li>
+     * <li>Double</li>
+     * <li>Float</li>
+     * <li>Integer</li>
+     * <li>Color - in the form #RRGGBB or #AARRGGBB</li>
+     * <li>Boolean - TODO REVERSE</li>
+     * <li>Font - TODO REVERSE</li>
+     * <li>Rectangle - TODO REVERSE</li>
+     * <li>Anchor - TODO REVERSE</li>
+     * <li>Point - TODO REVERSE</li>
+     * </ul>
+     * When decoding from strings, the above lists describes how strings that
+     * may match more than one type are handled. Types lower in the list are
+     * always used prior to those higher up in the list.
+     */
     private static class AttributeValueConverter extends Converter<Object, String> {
         @Override
         protected Object doBackward(String sval) {
@@ -188,16 +214,18 @@ public final class AttributeSets {
         protected String doForward(Object val) {
             if (val instanceof Color) {
                 return Colors.stringConverter().convert((Color) val);
-            } else if (val instanceof Number) {
-                return val.toString();
-            } else if (val instanceof String) {
-                return (String) val;
             } else if (val instanceof Marker) {
                 return val.getClass().getSimpleName();
-            } else if (val instanceof Anchor) {
-                return ((Anchor)val).toString();
+            } else if (val instanceof Rectangle2D) {
+                return new RectAdapter().marshal((Rectangle2D)val);
+            } else if (val instanceof Point) {
+                return new PointAdapter().marshal((Point)val);
+            } else if (val instanceof Point2D.Double) {
+                return new Point2DAdapter().marshal((Point2D.Double)val);
+            } else if (val instanceof Font) {
+                return new FontAdapter().marshal((Font) val);
             } else {
-                throw new IllegalArgumentException(val + " cannot be converted to string.");
+                return val+"";
             }
         }
     }

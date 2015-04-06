@@ -66,10 +66,12 @@ public class MultilineTextRenderer implements Renderer<AnchoredText, Graphics2D>
         return "MultilineTextRenderer";
     }
 
+    @Override
     public boolean contains(AnchoredText primitive, AttributeSet style, Point2D point) {
         return boundingBox(primitive, style).contains(point);
     }
 
+    @Override
     public boolean intersects(AnchoredText primitive, AttributeSet style, Rectangle2D rect) {
         return boundingBox(primitive, style).intersects(rect);
     }

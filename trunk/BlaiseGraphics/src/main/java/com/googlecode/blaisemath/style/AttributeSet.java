@@ -54,8 +54,8 @@ public class AttributeSet implements Cloneable {
     /** The map of style key/value pairs */
     protected final Map<String,Object> attributeMap = Maps.newHashMap();
     
-    private final ChangeEvent changeEvent = new ChangeEvent(this);
-    private final EventListenerList listenerList = new EventListenerList();
+    private transient final ChangeEvent changeEvent = new ChangeEvent(this);
+    private transient final EventListenerList listenerList = new EventListenerList();
 
     public AttributeSet() {
         this.parent = Optional.absent();
@@ -126,7 +126,9 @@ public class AttributeSet implements Cloneable {
      */
     public AttributeSet copy() {
         AttributeSet res = new AttributeSet(parent.orNull());
-        res.attributeMap.putAll(attributeMap);
+        for (String k : attributeMap.keySet()) {
+            res.put(k, copyValue(get(k)));
+        }
         return res;
     }
 
@@ -137,9 +139,24 @@ public class AttributeSet implements Cloneable {
     public AttributeSet flatCopy() {
         AttributeSet res = new AttributeSet();
         for (String k : getAllAttributes()) {
-            res.put(k, get(k));
+            res.put(k, copyValue(get(k)));
         }
         return res;
+    }
+    
+    /**
+     * Copies a value in an attribute set, returning a new instance if the value
+     * is not an immutable object.
+     * @param <P> value type
+     * @param val value to copy
+     * @return new value instance
+     */
+    private static <P> P copyValue(P val) {
+        if (val instanceof Point2D) {
+            return (P) ((Point2D)val).clone();
+        } else {
+            return val;
+        }
     }
     
     //</editor-fold>
