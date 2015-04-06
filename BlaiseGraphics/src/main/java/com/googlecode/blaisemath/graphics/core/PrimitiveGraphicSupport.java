@@ -26,6 +26,7 @@ package com.googlecode.blaisemath.graphics.core;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.googlecode.blaisemath.style.Renderer;
+import com.googlecode.blaisemath.util.CoordinateBean;
 import com.googlecode.blaisemath.util.DraggableCoordinate;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -119,6 +120,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
     // RENDERING
     //
     
+    @Override
     public void renderTo(G canvas) {
         if (renderer != null) {
             renderer.render(primitive, renderStyle(), canvas);
@@ -130,10 +132,12 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
         return renderer == null ? null : renderer.boundingBox(primitive, renderStyle());
     }
 
+    @Override
     public boolean contains(Point2D point) {
         return renderer != null && renderer.contains(primitive, renderStyle(), point);
     }
 
+    @Override
     public boolean intersects(Rectangle2D box) {
         return renderer != null && renderer.intersects(primitive, renderStyle(), box);
     }
@@ -146,7 +150,7 @@ public abstract class PrimitiveGraphicSupport<O,G> extends Graphic<G> {
         return primitive instanceof Point2D
             || primitive instanceof Shape
             || (primitive instanceof DraggableCoordinate 
-                && ((DraggableCoordinate)primitive).getPoint() instanceof Point2D);
+                && ((CoordinateBean)primitive).getPoint() instanceof Point2D);
     }
     
     public boolean isDragEnabled() {

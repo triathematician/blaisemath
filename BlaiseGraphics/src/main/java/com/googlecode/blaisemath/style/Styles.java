@@ -135,6 +135,11 @@ public final class Styles {
     
     //<editor-fold defaultstate="collapsed" desc="UTILITY STYLE/JAVA TRANSLATORS">
     
+    /**
+     * Get font from the provided style.
+     * @param style style object
+     * @return font
+     */
     public static Font getFont(AttributeSet style) {
         String fontFace = style.getString(Styles.FONT, "Dialog");
         Integer pointSize = style.getInteger(Styles.FONT_SIZE, 12);
