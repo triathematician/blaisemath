@@ -54,7 +54,6 @@ public class SetSelectionModel<G> {
     public SetSelectionModel() {
     }
 
-
     //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
     //
     // PROPERTIES
@@ -63,11 +62,7 @@ public class SetSelectionModel<G> {
     public boolean isEmpty() {
         return selected.isEmpty();
     }
-
-    public void clearSelection() {
-        setSelection(Collections.EMPTY_SET);
-    }
-
+    
     /**
      * Return a copy of the selection.
      * @return copy of selected
@@ -83,6 +78,12 @@ public class SetSelectionModel<G> {
             selected.addAll(selection);
             pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
+    }
+
+    //</editor-fold>
+
+    public void clearSelection() {
+        setSelection(Collections.<G>emptySet());
     }
 
     public void select(G g) {
@@ -140,9 +141,6 @@ public class SetSelectionModel<G> {
             pcs.firePropertyChange(SELECTION_PROPERTY, old, getSelection());
         }
     }
-
-    //</editor-fold>
-
 
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLING">
     //
