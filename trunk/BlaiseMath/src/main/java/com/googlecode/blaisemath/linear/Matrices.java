@@ -30,6 +30,7 @@ import java.util.Arrays;
 /**
  * Provides standard utilities for computing with matrices.
  * @author Elisha Peterson
+ * @version 1.0
  */
 public class Matrices {
 
