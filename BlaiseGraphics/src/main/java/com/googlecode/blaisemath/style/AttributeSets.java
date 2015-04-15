@@ -137,16 +137,16 @@ public final class AttributeSets {
     }
     
     /** Converts {@link AttributeSet} to/from a string. */
-    private static class AttributeSetConverter extends Converter<AttributeSet,String> {
+    private static final class AttributeSetConverter extends Converter<AttributeSet,String> {
         /** Used in deserialization for custom type mapping */
         @Nullable
         private final Map<String, Class<?>> types;
 
-        public AttributeSetConverter() {
+        private AttributeSetConverter() {
             this.types = null;
         }
 
-        public AttributeSetConverter(Map<String, Class<?>> types) {
+        private AttributeSetConverter(Map<String, Class<?>> types) {
             this.types = checkNotNull(types);
         }
         
@@ -219,15 +219,15 @@ public final class AttributeSets {
      * may match more than one type are handled. Types lower in the list are
      * always used prior to those higher up in the list.
      */
-    private static class AttributeValueConverter extends Converter<Object, String> {
+    private static final class AttributeValueConverter extends Converter<Object, String> {
         @Nullable
         private final Class<?> prefType;
         
-        public AttributeValueConverter() {
+        private AttributeValueConverter() {
             prefType = null;
         }
 
-        public AttributeValueConverter(Class<?> prefType) {
+        private AttributeValueConverter(Class<?> prefType) {
             this.prefType = checkNotNull(prefType);
         }
         

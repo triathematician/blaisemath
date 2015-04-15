@@ -226,7 +226,6 @@ public final class JGraphicSelectionHandler<G> extends MouseAdapter implements C
         selectionBox = null;
         pressPt = null;
         dragPt = null;
-        releasePt = null;
         component.repaint();
         e.consume();
     }
