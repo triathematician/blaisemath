@@ -6,6 +6,8 @@
 package com.googlecode.blaisemath.util;
 
 import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /*
@@ -37,7 +39,9 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class Edge<V> {
     
+    @Nonnull
     protected final V v1;
+    @Nonnull
     protected final V v2;
     
     /**
@@ -49,16 +53,13 @@ public class Edge<V> {
     }
 
     /**
-     * Initialize edge
+     * Initialize edge.
      * @param v1 first vertex
      * @param v2 second vertex
      */
     public Edge(V v1, V v2) {
-        if (v1 == null || v2 == null) {
-            throw new IllegalArgumentException();
-        }
-        this.v1 = v1;
-        this.v2 = v2;
+        this.v1 = checkNotNull(v1);
+        this.v2 = checkNotNull(v2);
     }
 
     @Override
@@ -68,30 +69,20 @@ public class Edge<V> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || obj.getClass() != Edge.class) {
             return false;
         }
         final Edge<?> other = (Edge<?>) obj;
-        if (this.v1 != other.v1 && (this.v1 == null || !this.v1.equals(other.v1))) {
-            return false;
-        }
-        if (this.v2 != other.v2 && (this.v2 == null || !this.v2.equals(other.v2))) {
-            return false;
-        }
-        return true;
+        return Objects.equal(v1, other.v1) && Objects.equal(v2, other.v2);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.v1 != null ? this.v1.hashCode() : 0);
-        hash = 97 * hash + (this.v2 != null ? this.v2.hashCode() : 0);
+        hash = 97 * hash + this.v1.hashCode();
+        hash = 97 * hash + this.v2.hashCode();
         return hash;
     }
-
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
     //
@@ -142,7 +133,10 @@ public class Edge<V> {
     }
     
     
-    /** Undirected version of an edge */
+    /** 
+     * Undirected version of an edge.
+     * @param <V> type of node
+     */
     @Immutable
     public static final class UndirectedEdge<V> extends Edge<V> {
 
@@ -153,27 +147,18 @@ public class Edge<V> {
         @Override
         public int hashCode() {
             int hash = 7;
-            hash = 97 * hash + (this.v1 != null ? this.v1.hashCode() : 0)
-                            + (this.v2 != null ? this.v2.hashCode() : 0);
+            hash = 97 * hash + this.v1.hashCode() + this.v2.hashCode();
             return hash;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
+            if (obj == null || obj.getClass() != UndirectedEdge.class) {
                 return false;
             }
             final UndirectedEdge<?> other = (UndirectedEdge<?>) obj;
-            if (Objects.equal(this.v1, other.v1) && Objects.equal(this.v2, other.v2)) {
-                return true;                
-            }
-            if (Objects.equal(this.v1, other.v2) && Objects.equal(this.v2, other.v1)) {
-                return true;                
-            }
-            return false;
+            return (Objects.equal(v1, other.v1) && Objects.equal(v2, other.v2))
+                    || (Objects.equal(v1, other.v2) && Objects.equal(v2, other.v1));
         }
         
     }

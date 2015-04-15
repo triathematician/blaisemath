@@ -36,10 +36,10 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 
 /**
  * Initializes a context menu using specified keys in an {@link ActionMap}.
+ * @param <S> the source object for context menu
  * @author petereb1
  */
 public final class ActionMapContextMenuInitializer<S> implements ContextMenuInitializer<S> {
@@ -72,7 +72,7 @@ public final class ActionMapContextMenuInitializer<S> implements ContextMenuInit
                 if (addTo == null) {
                     popup.addSeparator();
                 } else {
-                    addTo.add(new JSeparator());
+                    addTo.addSeparator();
                 }
             } else {
                 Action action = am.get(a);

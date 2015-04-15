@@ -37,6 +37,7 @@ package com.googlecode.blaisemath.util;
  */
 
 
+import com.googlecode.blaisemath.util.Edge.UndirectedEdge;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -47,20 +48,20 @@ import org.junit.Test;
  *
  * @author Elisha
  */
-public class EdgeTest {
+public class UndirectedEdgeTest {
     
     @Test
     public void testConstruct() {
         System.out.println("construct");
         Edge e = new Edge(1,2);
         try {
-            Edge e2 = new Edge(1, null);
+            UndirectedEdge e2 = new UndirectedEdge(1, null);
             fail();
         } catch (NullPointerException x) {
             // expected
         }
         try {
-            Edge e3 = new Edge(null, 1);
+            UndirectedEdge e3 = new UndirectedEdge(null, 1);
             fail();
         } catch (NullPointerException x) {
             // expected
@@ -73,7 +74,7 @@ public class EdgeTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Edge<Integer> inst = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> inst = new UndirectedEdge<Integer>(1,2);
         assertEquals("1:2", inst.toString());
     }
 
@@ -83,7 +84,7 @@ public class EdgeTest {
     @Test
     public void testGetNode1() {
         System.out.println("getNode1");
-        Edge<Integer> inst = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> inst = new UndirectedEdge<Integer>(1,2);
         assertEquals(1, (int) inst.getNode1());
     }
 
@@ -93,7 +94,7 @@ public class EdgeTest {
     @Test
     public void testGetNode2() {
         System.out.println("getNode2");
-        Edge<Integer> inst = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> inst = new UndirectedEdge<Integer>(1,2);
         assertEquals(2, (int) inst.getNode2());
     }
 
@@ -103,7 +104,7 @@ public class EdgeTest {
     @Test
     public void testAdjacent() {
         System.out.println("adjacent");
-        Edge<Integer> inst = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> inst = new UndirectedEdge<Integer>(1,2);
         assertTrue(inst.adjacent(1));
         assertTrue(inst.adjacent(2));
         assertFalse(inst.adjacent(3));
@@ -115,11 +116,11 @@ public class EdgeTest {
     @Test
     public void testOpposite() {
         System.out.println("opposite");
-        Edge<Integer> inst = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> inst = new UndirectedEdge<Integer>(1,2);
         assertEquals(1, (int) inst.opposite(2));
         assertEquals(2, (int) inst.opposite(1));
         
-        Edge<Integer> inst2 = new Edge<Integer>(1,1);
+        UndirectedEdge<Integer> inst2 = new UndirectedEdge<Integer>(1,1);
         assertEquals(1, (int) inst2.opposite(1));
     }
 
@@ -129,17 +130,18 @@ public class EdgeTest {
     @Test
     public void testEquals() {
         System.out.println("equals");
-        Edge<Integer> e1 = new Edge<Integer>(1,2);
-        Edge<Integer> e1b = new Edge<Integer>(1,2);
-        Edge<Integer> e2 = new Edge<Integer>(2,1);
-        Edge<Integer> e3 = new Edge<Integer>(1,3);
-        Edge<Integer> e4 = new Edge<Integer>(1,1);
-        Edge<String> e5 = new Edge<String>("","");
+        UndirectedEdge<Integer> e1 = new UndirectedEdge<Integer>(1,2);
+        UndirectedEdge<Integer> e1b = new UndirectedEdge<Integer>(1,2);
+        UndirectedEdge<Integer> e2 = new UndirectedEdge<Integer>(2,1);
+        UndirectedEdge<Integer> e3 = new UndirectedEdge<Integer>(1,3);
+        UndirectedEdge<Integer> e4 = new UndirectedEdge<Integer>(1,1);
+        UndirectedEdge<String> e5 = new UndirectedEdge<String>("","");
         assertTrue(e1.equals(e1b));
-        assertFalse(e1.equals(e2));
+        assertTrue(e1.equals(e2));
         assertFalse(e1.equals(e3));
         assertFalse(e1.equals(e4));
         assertFalse(e1.equals(e5));
+        assertFalse(e1.equals(new Edge<Integer>(1,2)));
     }
 
     /**
@@ -148,9 +150,11 @@ public class EdgeTest {
     @Test
     public void testHashCode() {
         System.out.println("hashCode");
-        Edge<Integer> e1 = new Edge<Integer>(1,2);
-        Edge<Integer> e1b = new Edge<Integer>(1,2);
+        UndirectedEdge<Integer> e1 = new UndirectedEdge<Integer>(1,2);
+        UndirectedEdge<Integer> e1b = new UndirectedEdge<Integer>(1,2);
+        UndirectedEdge<Integer> e2 = new UndirectedEdge<Integer>(2,1);
         assertTrue(e1.hashCode() == e1b.hashCode());
+        assertTrue(e1.hashCode() == e2.hashCode());
     }
     
 }
