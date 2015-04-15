@@ -25,6 +25,7 @@ package com.googlecode.blaisemath.style;
  */
 
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Converter;
 import com.google.common.base.Joiner;
 import com.google.common.base.Joiner.MapJoiner;
@@ -108,6 +109,7 @@ public final class AttributeSets {
      * The resulting style uses ";" to separate entries, and ":" to separate a key and value.
      * @return converter instance
      */
+    @Beta
     public static Converter<AttributeSet,String> stringConverter() {
         return CONVERTER_INST;
     }
@@ -118,6 +120,7 @@ public final class AttributeSets {
      * @param types explicit desired types
      * @return converter instance
      */
+    @Beta
     public static Converter<AttributeSet,String> stringConverter(Map<String, Class<?>> types) {
         return new AttributeSetConverter(checkNotNull(types));
     }
@@ -127,10 +130,12 @@ public final class AttributeSets {
      * Supports numeric and color types.
      * @return converter instance
      */
+    @Beta
     public static Converter<Object,String> valueConverter() {
         return VALUE_CONVERTER_INST;
     }
     
+    @Beta
     public static Object valueFromString(String x) {
         Object val = VALUE_CONVERTER_INST.reverse().convert(x);
         return NULL_STRING.equals(val) ? null : val;
