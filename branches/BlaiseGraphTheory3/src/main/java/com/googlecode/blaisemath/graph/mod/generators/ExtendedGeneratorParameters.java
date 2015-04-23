@@ -28,7 +28,7 @@ package com.googlecode.blaisemath.graph.mod.generators;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Adds edge count to {@link BasicGeneratorParameters}.
+ * Graph parameters with directed flag, node count, and edge count.
  * 
  * @author elisha
  */

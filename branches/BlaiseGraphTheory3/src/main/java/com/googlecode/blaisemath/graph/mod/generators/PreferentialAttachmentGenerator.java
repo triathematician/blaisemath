@@ -161,6 +161,8 @@ public final class PreferentialAttachmentGenerator implements GraphGenerator<Pre
     }
 
     /**
+     * Generate a random index based on a probability array.
+     * @param probs the probability array
      * @return index of a randomly chosen # in provided array of probabilities
      */
     public static int sampleRandom(float[] probs) {
