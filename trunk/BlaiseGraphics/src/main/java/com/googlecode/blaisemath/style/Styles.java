@@ -80,6 +80,10 @@ public final class Styles {
     /** Denotes offset from a point */
     public static final String OFFSET = "offset";
     
+    /** Tooltip text */
+    // TODO - check whether this is an existing SVG attribute, and if so, change it
+    public static final String TOOLTIP = "tooltip";
+    
     //</editor-fold>
     
     
