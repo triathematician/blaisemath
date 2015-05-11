@@ -87,7 +87,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number)newValue, Byte.MIN_VALUE, Byte.MAX_VALUE, 1));
+            spinner.setModel(new SpinnerNumberModel(((Number)newValue).byteValue(), Byte.MIN_VALUE, Byte.MAX_VALUE, 1));
         }
     }
 
@@ -111,7 +111,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number)newValue, Short.MIN_VALUE, Short.MAX_VALUE, 1));
+            spinner.setModel(new SpinnerNumberModel(((Number)newValue).shortValue(), Short.MIN_VALUE, Short.MAX_VALUE, 1));
         }
     }
 
@@ -129,7 +129,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number) newValue, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+            spinner.setModel(new SpinnerNumberModel(((Number) newValue).intValue(), Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
         }
     }
 
@@ -153,7 +153,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number) newValue, Long.MIN_VALUE, Long.MAX_VALUE, 1));
+            spinner.setModel(new SpinnerNumberModel(((Number) newValue).longValue(), Long.MIN_VALUE, Long.MAX_VALUE, 1));
         }
     }
 
@@ -177,7 +177,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number) newValue, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
+            spinner.setModel(new SpinnerNumberModel(((Number) newValue).floatValue(), -Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
         }
     }
 
@@ -195,7 +195,7 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel((Number) newValue, -Double.MAX_VALUE, Double.MAX_VALUE, 0.01));
+            spinner.setModel(new SpinnerNumberModel(((Number) newValue).doubleValue(), -Double.MAX_VALUE, Double.MAX_VALUE, 0.01));
         }
     }
 }
