@@ -87,7 +87,9 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel(((Number)newValue).byteValue(), Byte.MIN_VALUE, Byte.MAX_VALUE, 1));
+            byte ival = ((Number) newValue).byteValue();
+            // cast to Number required for proper spinner setup
+            spinner.setModel(new SpinnerNumberModel((Number) ival, Byte.MIN_VALUE, Byte.MAX_VALUE, 1));
         }
     }
 
@@ -111,7 +113,9 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel(((Number)newValue).shortValue(), Short.MIN_VALUE, Short.MAX_VALUE, 1));
+            short val = ((Number)newValue).shortValue();
+            // cast to Number required for proper spinner setup
+            spinner.setModel(new SpinnerNumberModel((Number) val, Short.MIN_VALUE, Short.MAX_VALUE, 1));
         }
     }
 
@@ -153,7 +157,9 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel(((Number) newValue).longValue(), Long.MIN_VALUE, Long.MAX_VALUE, 1));
+            long val = ((Number)newValue).longValue();
+            // cast to Number required for proper spinner setup
+            spinner.setModel(new SpinnerNumberModel((Number) val, Long.MIN_VALUE, Long.MAX_VALUE, 1));
         }
     }
 
@@ -177,7 +183,9 @@ public abstract class NumberEditor extends MPropertyEditorSupport {
 
         @Override
         protected void initEditorValue() {
-            spinner.setModel(new SpinnerNumberModel(((Number) newValue).floatValue(), -Float.MAX_VALUE, Float.MAX_VALUE, 0.1));
+            Float ival = ((Number) newValue).floatValue();
+            // cast to Number required for proper spinner setup
+            spinner.setModel(new SpinnerNumberModel((Number) ival, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
         }
     }
 

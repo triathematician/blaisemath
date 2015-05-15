@@ -60,7 +60,7 @@ public class NumberBean {
 
     @Override
     public String toString() {
-        return "" + NByte + NLong + ndouble + flot + shrt + intint;
+        return "NumberBean{" + "NByte=" + NByte + ", NLong=" + NLong + ", ndouble=" + ndouble + ", flot=" + flot + ", shrt=" + shrt + ", intint=" + intint + '}';
     }
 
 }

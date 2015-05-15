@@ -33,6 +33,8 @@ import com.googlecode.blaisemath.firestarter.IndexedBean.TestEnum;
 import com.googlecode.blaisemath.util.MPanel;
 import com.googlecode.blaisemath.util.RollupPanel;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.beans.PropertyEditorManager;
 import javax.swing.JLabel;
@@ -47,6 +49,7 @@ import javax.swing.UIManager;
 public class Testing extends javax.swing.JFrame {
 
     MPanel selectedBeanPanel;
+    NumberBean numberBean;
 
     /** Creates new form T */
     public Testing() {
@@ -67,7 +70,7 @@ public class Testing extends javax.swing.JFrame {
         rollupPanel2.add("Other", ps);
         rollupPanel2.add("Shapes", PropertySheet.forBean(new ShapeBean()));
         // working -
-        rollupPanel2.add("Numbers", PropertySheet.forBean(new NumberBean()));
+        rollupPanel2.add("Numbers", PropertySheet.forBean(numberBean = new NumberBean()));
         // working -
         rollupPanel2.add("Points", PropertySheet.forBean(new PointBean()));
         rollupPanel2.add("a Point2D.Double", PropertySheet.forBean(new Point2D.Double(3,4)));
@@ -130,6 +133,12 @@ public class Testing extends javax.swing.JFrame {
         jButton1.setText("jButton1");
         jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jPanel1.add(jButton1);
+        jButton1.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(numberBean);
+            }
+        });
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
