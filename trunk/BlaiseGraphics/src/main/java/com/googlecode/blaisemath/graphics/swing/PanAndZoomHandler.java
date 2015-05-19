@@ -286,30 +286,6 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
     }
     
     /**
-     * Zooms in for the given component (about the center).
-     * @param gc associated component
-     */
-    public static void zoomIn(JGraphicComponent gc) {
-        Rectangle2D.Double rect = getLocalBounds(gc);
-        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
-        zoomCoordBoxAnimated(gc, 
-                new Point2D.Double(center.x-.25*rect.getWidth(), center.y-.25*rect.getHeight()), 
-                new Point2D.Double(center.x+.25*rect.getWidth(), center.y+.25*rect.getHeight())); 
-    }
-    
-    /**
-     * Zooms in for the given component (about the center).
-     * @param gc associated component
-     */
-    public static void zoomOut(JGraphicComponent gc) {
-        Rectangle2D.Double rect = getLocalBounds(gc);
-        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
-        zoomCoordBoxAnimated(gc, 
-                new Point2D.Double(center.x-rect.getWidth(), center.y-rect.getHeight()), 
-                new Point2D.Double(center.x+rect.getWidth(), center.y+rect.getHeight())); 
-    }
-
-    /**
      * Sets visometry bounds based on the zoom about a given point.
      * The effective zoom point is between current center and mouse position...
      * close to center =%gt; 100% at the given point, close to edge =%gt; 10% at
@@ -328,17 +304,46 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
                 cx - .5 * factor * wx, cy - .5 * factor * wy, 
                 factor * wx, factor * wy));
     }
+    
+    // ANIMATED ZOOMS
 
+    /**
+     * Zooms in for the given component (about the center).
+     * @param gc associated component
+     * @return timer running the animation
+     */
+    public static javax.swing.Timer zoomIn(JGraphicComponent gc) {
+        Rectangle2D.Double rect = getLocalBounds(gc);
+        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
+        return zoomCoordBoxAnimated(gc, 
+                new Point2D.Double(center.x-.25*rect.getWidth(), center.y-.25*rect.getHeight()), 
+                new Point2D.Double(center.x+.25*rect.getWidth(), center.y+.25*rect.getHeight())); 
+    }
+    
+    /**
+     * Zooms in for the given component (about the center).
+     * @param gc associated component
+     * @return timer running the animation
+     */
+    public static javax.swing.Timer zoomOut(JGraphicComponent gc) {
+        Rectangle2D.Double rect = getLocalBounds(gc);
+        Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
+        return zoomCoordBoxAnimated(gc, 
+                new Point2D.Double(center.x-rect.getWidth(), center.y-rect.getHeight()), 
+                new Point2D.Double(center.x+rect.getWidth(), center.y+rect.getHeight())); 
+    }
+    
     /**
      * Creates an animating zoom using a particular timer, about the center of
      * the screen.
      * @param gc associated component
      * @param factor how far to zoom, representing the new scale
+     * @return timer running the animation
      */
-    public static void zoomCenterAnimated(JGraphicComponent gc, double factor) {
+    public static javax.swing.Timer zoomCenterAnimated(JGraphicComponent gc, double factor) {
         Rectangle2D.Double rect = getLocalBounds(gc);
         Point2D.Double center = new Point2D.Double(rect.getCenterX(), rect.getCenterY());
-        zoomPointAnimated(gc, center, factor);
+        return zoomPointAnimated(gc, center, factor);
     }
 
     /**
@@ -347,15 +352,16 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @param p the coordinate of the point to center zoom about, in local
      * coordinates
      * @param factor how far to zoom, representing the new scale
+     * @return timer running the animation
      */
-    public static void zoomPointAnimated(final JGraphicComponent gc, Point2D.Double p, final double factor) {
+    public static javax.swing.Timer zoomPointAnimated(final JGraphicComponent gc, Point2D.Double p, final double factor) {
         Rectangle2D.Double rect = getLocalBounds(gc);
         final double cx = .1 * p.x + .9 * rect.getCenterX();
         final double cy = .1 * p.y + .9 * rect.getCenterY();
         final double wx = rect.getWidth();
         final double wy = rect.getHeight();
 
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
+        return AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {
@@ -372,9 +378,10 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @param gc associated component
      * @param zoomBoxWinCoords the boundary of the zoom box (in window
      * coordinates)
+     * @return timer running the animation
      */
-    public static void zoomBoxAnimated(JGraphicComponent gc, Rectangle2D zoomBoxWinCoords) {
-        zoomCoordBoxAnimated(gc,
+    public static javax.swing.Timer zoomBoxAnimated(JGraphicComponent gc, Rectangle2D zoomBoxWinCoords) {
+        return zoomCoordBoxAnimated(gc,
                 gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMinX(), zoomBoxWinCoords.getMinY())),
                 gc.toGraphicCoordinate(new Point2D.Double(zoomBoxWinCoords.getMaxX(), zoomBoxWinCoords.getMaxY())));
     }
@@ -384,8 +391,9 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
      * @param gc associated component
      * @param newMin min of zoom box
      * @param newMax max of zoom box
+     * @return timer running the animation
      */
-    public static void zoomCoordBoxAnimated(final JGraphicComponent gc, final Point2D newMin, final Point2D newMax) {
+    public static javax.swing.Timer zoomCoordBoxAnimated(final JGraphicComponent gc, final Point2D newMin, final Point2D newMax) {
         final Rectangle2D.Double rect = getLocalBounds(gc);
         final double xMin = rect.getX();
         final double yMin = rect.getY();
@@ -396,7 +404,7 @@ public final class PanAndZoomHandler extends MouseAdapter implements CanvasPaint
         final double nxMax = newMax.getX();
         final double nyMax = newMax.getY();
 
-        AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
+        return AnimationStep.animate(0, ANIM_STEPS, ANIM_DELAY_MILLIS, new AnimationStep(){
             @Override
             @InvokedFromThread("AnimationStep")
             public void run(int idx, double pct) {

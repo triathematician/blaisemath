@@ -58,10 +58,11 @@ public abstract class AnimationStep {
      * @param max maximum index to pass to the step
      * @param delay how long to wait between steps, in milliseconds
      * @param step the step logic to execute
+     * @return timer executing the animation
      */
-    public static void animate(int min, int max, int delay, AnimationStep step) {
+    public static javax.swing.Timer animate(int min, int max, int delay, AnimationStep step) {
         NRunnable runner = new NRunnable(min, max, step);
-        runner.runNTimes(delay);
+        return runner.runNTimes(delay);
     }
     
     /**
@@ -97,14 +98,16 @@ public abstract class AnimationStep {
         /** 
          * Runs the animation cycle, with the given # of millis between firing.
          * @param period how long between animation steps
+         * @return timer executing the animation
          */
-        public void runNTimes(int period) {
+        public javax.swing.Timer runNTimes(int period) {
             runStep = min;
             timer = new javax.swing.Timer(0, this);
             timer.setRepeats(true);
             timer.setCoalesce(true);
             timer.setDelay((int) period);
             timer.start();
+            return timer;
         }
     }
     

@@ -57,7 +57,7 @@ public final class AnchoredText extends Point2DBean {
 
     @Override
     public String toString() {
-        return "LabeledPoint["+x+", "+y+"; "+text+"]";
+        return "AnchoredText["+x+", "+y+"; "+text+"]";
     }
 
     @Override
