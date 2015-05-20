@@ -63,7 +63,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>firestarter</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>blaise-common</artifactId>
-            <version>0.2.3-SNAPSHOT</version>
+            <version>0.2.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
