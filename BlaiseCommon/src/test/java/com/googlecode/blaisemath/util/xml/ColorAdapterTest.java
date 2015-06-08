@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.util.xml;
  */
 
 
-import com.googlecode.blaisemath.util.xml.ColorAdapter;
 import java.awt.Color;
 import junit.framework.TestCase;
 
@@ -44,6 +43,7 @@ public class ColorAdapterTest extends TestCase {
         assertEquals("#ff0000", ca.marshal(Color.red));
         assertEquals("#0000ff", ca.marshal(Color.blue));
         assertEquals("#c0ff8080", ca.marshal(new Color(255,128,128,192)));
+        assertEquals("#00000000", ca.marshal(new Color(0,0,0,0)));
     }
 
     /**
@@ -55,5 +55,6 @@ public class ColorAdapterTest extends TestCase {
         assertEquals(Color.red, ca.unmarshal(ca.marshal(Color.red)));
         assertEquals(Color.blue, ca.unmarshal(ca.marshal(Color.blue)));
         assertEquals(new Color(255,128,128,192), ca.unmarshal(ca.marshal(new Color(255,128,128,192))));
+        assertEquals(new Color(0,0,37,0), ca.unmarshal(ca.marshal(new Color(0,0,37,0))));
     }
 }

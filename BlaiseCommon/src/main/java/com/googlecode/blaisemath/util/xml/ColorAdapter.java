@@ -71,6 +71,6 @@ public final class ColorAdapter extends XmlAdapter<String, Color> {
     public String marshal(Color c) {
         return c == null ? "null"
                 : c.getAlpha() == 255 ? String.format("#%02x%02x%02x", c.getRed(),c.getGreen(),c.getBlue())
-                : "#"+Integer.toHexString(c.getRGB());
+                : String.format("#%02x%02x%02x%02x", c.getAlpha(),c.getRed(),c.getGreen(),c.getBlue());
     }
 }
