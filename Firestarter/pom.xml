@@ -11,7 +11,7 @@
         Provides editors for various Java bean object types, and a generic, customizable
         PropertySheet.
     </description>
-    <url>http://blaisemath.googlecode.com</url>
+    <url>https://github.com/triathematician/blaisemath</url>
     <inceptionYear>2009</inceptionYear>
     <licenses>
         <license>
@@ -24,19 +24,20 @@
         <developer>
             <name>Elisha Peterson</name>
             <email>triathematician+blaise@gmail.com</email>
+            <url>https://github.com/triathematician</url>
             <organization>NA</organization>
             <organizationUrl>NA</organizationUrl>
         </developer>
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/Firestarter/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/Firestarter/</url>
-    </scm>    
+        <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
+        <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
+        <url>https://github.com/triathematician/blaisemath</url>
+  </scm>    
     <issueManagement>
-        <system>Google code</system>
-        <url>https://code.google.com/p/blaisemath/issues/list</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/triathematician/blaisemath/issues</url>
     </issueManagement>
     <distributionManagement>
         <snapshotRepository>
