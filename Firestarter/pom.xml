@@ -3,7 +3,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>firestarter</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>1.2.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>Firestarter</name>
@@ -34,6 +34,7 @@
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:https://github.com/triathematician/blaisemath.git</developerConnection>
         <url>https://github.com/triathematician/blaisemath</url>
+    <tag>HEAD</tag>
   </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
