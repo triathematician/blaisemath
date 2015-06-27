@@ -15,4 +15,5 @@
 ## Experimental ##
   * **BlaiseVisometry** - Adapts BlaiseGraphics for mathematical coordinate systems, making it easy to write code for interactive mathematical objects.
   * **BlaiseSVG** - Converts BlaiseGraphics objects to/from SVG graphics objects and SVG files. _Under development_.
+  * **BlaiseGestures** - Provides mouse gestures for use with the Blaise graphics canvas. _Under development_.
   * **BlaiseSketch** - Basic drawing tool based on the blaise stack. _Under development_.
