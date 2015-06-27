@@ -116,6 +116,7 @@
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
+                    <pomFileName>Firestarter/pom.xml</pomFileName>
                 </configuration>
             </plugin>
         </plugins>
