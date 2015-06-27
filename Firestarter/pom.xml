@@ -32,7 +32,7 @@
     
     <scm>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
-        <developerConnection>scm:git:git://github.com/triathematician/blaisemath.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/triathematician/blaisemath.git</developerConnection>
         <url>https://github.com/triathematician/blaisemath</url>
   </scm>    
     <issueManagement>
