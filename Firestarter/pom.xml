@@ -31,11 +31,12 @@
     </developers>
     
     <scm>
-        <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
-        <developerConnection>scm:git:https://github.com/triathematician/blaisemath.git</developerConnection>
         <url>https://github.com/triathematician/blaisemath</url>
-    <tag>HEAD</tag>
-  </scm>    
+        <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
+        <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>    
+    
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/triathematician/blaisemath/issues</url>
