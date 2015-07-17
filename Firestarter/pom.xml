@@ -117,6 +117,7 @@
                         <id>default</id>
                         <goals>
                             <goal>perform</goal>
+                            <goal>deploy</goal>
                         </goals>
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
