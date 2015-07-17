@@ -119,7 +119,7 @@
                             <goal>perform</goal>
                         </goals>
                         <configuration>
-                            <pomFileName>Firestarter/pom.xml</pomFileName>
+                            <pomFileName>${project.name}/pom.xml</pomFileName>
                         </configuration>
                     </execution>
                 </executions>
