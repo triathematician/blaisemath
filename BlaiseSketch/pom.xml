@@ -9,7 +9,7 @@
     
     <name>BlaiseSketch</name>
     <description>Provides mouse gestures and a UI interface for creating and editing graphics.</description>
-    <url>http://blaisemath.googlecode.com</url>
+    <url>https://github.com/triathematician/blaisemath</url>
     <inceptionYear>2014</inceptionYear>
     <licenses>
         <license>
@@ -23,19 +23,21 @@
             <id>ElishaPeterson</id>
             <name>Elisha Peterson</name>
             <email>triathematician+blaise@gmail.com</email>
+            <url>https://github.com/triathematician</url>
             <organization>NA</organization>
             <organizationUrl>NA</organizationUrl>
         </developer>
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/trunk/BlaiseSketch/</url>
+        <url>https://github.com/triathematician/blaisemath</url>
+        <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
+        <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>    
     <issueManagement>
-        <system>Google code</system>
-        <url>https://code.google.com/p/blaisemath/issues/list</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/triathematician/blaisemath/issues</url>
     </issueManagement>
     <distributionManagement>
         <snapshotRepository>
@@ -170,7 +172,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>perform</goal>
+                        </goals>
+                        <configuration>
+                            <pomFileName>${project.name}/pom.xml</pomFileName>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
