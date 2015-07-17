@@ -4,7 +4,7 @@
 
     <groupId>com.googlecode.blaisemath</groupId>
     <artifactId>blaise-common</artifactId>
-    <version>0.2.7</version>
+    <version>0.2.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>BlaiseCommon</name>
@@ -34,7 +34,7 @@
         <url>https://github.com/triathematician/blaisemath</url>
         <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
         <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
-        <tag>blaise-common-0.2.7</tag>
+        <tag>HEAD</tag>
     </scm>    
     <issueManagement>
         <system>GitHub Issues</system>
