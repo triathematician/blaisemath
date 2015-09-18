@@ -50,7 +50,11 @@ public abstract class SVGElement {
     private AttributeSet style = null;
     private Map<QName,Object> otherAttr;
 
-    public SVGElement(String tag) {
+    protected SVGElement() {
+        this.tag = null;
+    }
+    
+    protected SVGElement(String tag) {
         this.tag = tag;
     }
 
