@@ -21,19 +21,20 @@
         <developer>
             <name>Elisha Peterson</name>
             <email>triathematician+blaise@gmail.com</email>
+            <url>https://github.com/triathematician</url>
             <organization>NA</organization>
             <organizationUrl>NA</organizationUrl>
         </developer>
     </developers>
     
     <scm>
-        <connection>scm:svn:https://blaisemath.googlecode.com/svn/branches/BlaiseGraphTheory3/</connection>
-        <developerConnection>scm:svn:https://blaisemath.googlecode.com/svn/branches/BlaiseGraphTheory3/</developerConnection>
-        <url>https://blaisemath.googlecode.com/svn/branches/BlaiseGraphTheory3/</url>
+        <url>https://github.com/triathematician/blaisemath</url>
+        <connection>scm:git:git://github.com/triathematician/blaisemath.git</connection>
+        <developerConnection>scm:git:git@github.com:triathematician/blaisemath.git</developerConnection>
     </scm>    
     <issueManagement>
-        <system>Google code</system>
-        <url>https://code.google.com/p/blaisemath/issues/list</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/triathematician/blaisemath/issues</url>
     </issueManagement>
     <distributionManagement>
         <snapshotRepository>
@@ -136,7 +137,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>perform</goal>
+                        </goals>
+                        <configuration>
+                            <pomFileName>${project.name}/pom.xml</pomFileName>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
