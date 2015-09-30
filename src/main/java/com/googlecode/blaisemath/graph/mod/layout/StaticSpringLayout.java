@@ -54,6 +54,8 @@ import java.util.logging.Logger;
  * @author elisha
  */
 public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutParameters> {
+
+    private static final Logger LOG = Logger.getLogger(StaticSpringLayout.class.getName());
     
     private static final CircleLayout INITIAL_LAYOUT = CircleLayout.getInstance();
     
@@ -70,8 +72,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
     @Override
     public <C> Map<C, Point2D.Double> layout(Graph<C> originalGraph, Map<C, Point2D.Double> ic, 
             Set<C> fixed, StaticSpringLayoutParameters parm) {
-        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
-                "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
+        LOG.log(Level.FINE, "originalGraph, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { originalGraph.nodeCount(), originalGraph.edgeCount(), 
                     GraphUtils.components(originalGraph).size(), 
                     nicer(GraphUtils.degreeDistribution(originalGraph)) 
@@ -91,8 +92,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
             });
 
         OptimizedGraph<C> graphForLayout = new OptimizedGraph<C>(false, keepNodes, keepEdges);
-        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
-                "graphForLayout, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
+        LOG.log(Level.FINE, "graphForLayout, |V|={0}, |E|={1}, #components={2}, degrees={3}\n", 
                     new Object[] { graphForLayout.nodeCount(), graphForLayout.edgeCount(), 
                     GraphUtils.components(graphForLayout).size(), 
                     nicer(GraphUtils.degreeDistribution(graphForLayout)) 
@@ -123,8 +123,7 @@ public class StaticSpringLayout implements StaticGraphLayout<StaticSpringLayoutP
         addIsolates(graphForInfo.getIsolates(), res, sl.getParameters().getDistScale());
         
         // report and clean up
-        Logger.getLogger(StaticSpringLayout.class.getName()).log(Level.INFO, 
-                "StaticSpringLayout completed in {0} steps. The final energy "
+        LOG.log(Level.FINE, "StaticSpringLayout completed in {0} steps. The final energy "
                         + "change was {1}, and the final energy was {2}", 
                 new Object[]{step, energyChange, lastEnergy});
         return res;
