@@ -87,7 +87,7 @@ public final class EnumEditor extends MPanelEditorSupport {
         Object[] vals = getEnumClass().getEnumConstants();
         String[] result = new String[vals.length];
         for (int i = 0; i < result.length; i++) {
-            result[i] = vals.toString();
+            result[i] = vals[i].toString();
         }
         return result;
     }

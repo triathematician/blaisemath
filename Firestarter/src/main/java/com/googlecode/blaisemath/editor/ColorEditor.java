@@ -77,6 +77,7 @@ public class ColorEditor extends MPanelEditorSupport {
         setNewValue(new Color(0, 0, 0));
     }
 
+    @Override
     public void initCustomizer() {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));

@@ -36,7 +36,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.event.TableModelEvent;
 
 /**
  * <p>
@@ -117,7 +116,7 @@ public final class IndexedPropertySheet extends PropertySheet {
     }
 
     @Override
-    protected void handleTableChange(TableModelEvent e) {
+    protected void handleTableChange() {
         updateRowHeights();
         firePropertyChange("size", null, null);
         repaint();

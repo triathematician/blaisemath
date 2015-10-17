@@ -95,7 +95,7 @@ public class PropertySheet extends JPanel {
         return res;
     }
 
-    protected void initComponents(PropertyModel model) {
+    protected final void initComponents(PropertyModel model) {
         initTable(model);
         initToolbar();
 
@@ -113,7 +113,7 @@ public class PropertySheet extends JPanel {
         model.addTableModelListener(new TableModelListener(){
             @Override
             public void tableChanged(TableModelEvent e) {
-                handleTableChange(e);
+                handleTableChange();
             }
         });
         table.setModel(model);
@@ -219,9 +219,8 @@ public class PropertySheet extends JPanel {
 
     /** 
      * Update row heights when the underlying data changes.
-     * @param e 
      */
-    protected void handleTableChange(TableModelEvent e) {
+    protected void handleTableChange() {
         table.getSelectionModel().clearSelection();
         if (table.getCellEditor() != null) {
             table.getCellEditor().stopCellEditing();
