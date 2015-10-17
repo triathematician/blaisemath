@@ -27,7 +27,11 @@ package com.googlecode.blaisemath.util;
 
 import com.google.common.base.Converter;
 import static com.google.common.base.Preconditions.checkArgument;
+import com.google.common.base.Strings;
+import com.googlecode.blaisemath.util.xml.ColorAdapter;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Provides a number of utilities for working with colors, e.g. creating lighter/darker colors,
@@ -103,16 +107,20 @@ public class Colors {
             if (!v.startsWith("#")) {
                 v = "#"+v;
             }
-            if (v.length() == 7) {
-                // #RRGGBB
-                return Color.decode(v);
-            } else if (v.length() == 9) {
-                // #AARRGGBB
-                int alpha = Integer.decode(v.substring(0,3));
-                int rgb = Integer.decode("#"+v.substring(3));
-                return new Color((alpha << 24) + rgb, true);
-            } else {
-                throw new IllegalArgumentException("Not a color: "+v);
+            try {
+                if (v.length() == 7) {
+                    // #RRGGBB
+                    return Color.decode(v);
+                } else if (v.length() == 9) {
+                    // #AARRGGBB
+                    int alpha = Integer.decode(v.substring(0,3));
+                    int rgb = Integer.decode("#"+v.substring(3));
+                    return new Color((alpha << 24) + rgb, true);
+                } else {
+                    throw new IllegalArgumentException("Not a color: "+v);
+                }
+            } catch (NumberFormatException x) {
+                throw new IllegalArgumentException("Not a color: "+v, x);
             }
         }
 

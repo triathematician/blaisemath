@@ -25,52 +25,40 @@ package com.googlecode.blaisemath.util.xml;
  * #L%
  */
 
+import com.google.common.base.Converter;
 import com.google.common.base.Strings;
+import com.googlecode.blaisemath.util.Colors;
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Adapter converting colors to/from hex strings. Supports #AARRGGBB and #RRGGBB notations.
+ * <p>
+ *   Adapter converting colors to/from hex strings. Supports #AARRGGBB and #RRGGBB notations.
+ *   Uses {@link Colors#stringConverter()} to perform the conversion, but provides
+ *   additional flexibility for handling nulls.
+ * </p>
  *
  * @see Color#decode(java.lang.String)
  *
  * @author Elisha Peterson
  */
 public final class ColorAdapter extends XmlAdapter<String, Color> {
+    
+    private static final Converter<Color, String> CONV = Colors.stringConverter();
 
     @Override
     public Color unmarshal(String v) {
         if (Strings.isNullOrEmpty(v) || "null".equals(v)) {
             return null;
         }
-        try {
-            if (!v.startsWith("#")) {
-                v = "#"+v;
-            }
-            if (v.length() == 7) {
-                // #RRGGBB
-                return Color.decode(v);
-            } else if (v.length() == 9) {
-                // #AARRGGBB
-                int alpha = Integer.decode(v.substring(0,3));
-                int rgb = Integer.decode("#"+v.substring(3));
-                return new Color((alpha << 24) + rgb, true);
-            } else {
-                throw new UnsupportedOperationException();
-            }
-        } catch (NumberFormatException x) {
-            Logger.getLogger(ColorAdapter.class.getName()).log(Level.SEVERE, 
-                    "Unable to interpret color: " + v, x);
-            throw x;
-        }
+        return CONV.reverse().convert(v);
     }
 
     @Override
     public String marshal(Color c) {
-        return c == null ? "null"
-                : c.getAlpha() == 255 ? String.format("#%02x%02x%02x", c.getRed(),c.getGreen(),c.getBlue())
-                : String.format("#%02x%02x%02x%02x", c.getAlpha(),c.getRed(),c.getGreen(),c.getBlue());
+        if (c == null) {
+            return "null";
+        }
+        return CONV.convert(c);
     }
 }
