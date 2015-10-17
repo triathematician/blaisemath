@@ -106,10 +106,12 @@ public final class SVGLine extends SVGElement {
     }
     
     private static final class LineConverter extends Converter<SVGLine, Line2D> {
+        @Override
         protected SVGLine doBackward(Line2D r) {
             return new SVGLine(r.getX1(), r.getY1(), r.getX2(), r.getY2());
         }
 
+        @Override
         protected Line2D doForward(SVGLine r) {
             return new Line2D.Double(r.x1, r.y1, r.x2, r.y2);
         }

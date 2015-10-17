@@ -97,11 +97,13 @@ public final class SVGCircle extends SVGElement {
 
     
     private static final class CircleConverter extends Converter<SVGCircle, Ellipse2D> {
+        @Override
         protected SVGCircle doBackward(Ellipse2D r) {
             checkArgument(r.getWidth() == r.getHeight(), "Ellipse must have width=height");
             return new SVGCircle(r.getCenterX(), r.getCenterY(), r.getWidth()/2);
         }
 
+        @Override
         protected Ellipse2D doForward(SVGCircle r) {
             return new Ellipse2D.Double(r.cx-r.r, r.cy-r.r, 2*r.r, 2*r.r);
         }

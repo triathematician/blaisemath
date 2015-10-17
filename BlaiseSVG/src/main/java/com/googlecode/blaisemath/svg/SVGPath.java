@@ -58,7 +58,7 @@ public final class SVGPath extends SVGElement {
     
     public SVGPath(String pathStr) {
         super("path");
-        this.pathStr = pathStr;
+        this.pathStr = checkSvgPathStr(pathStr);
     }
     
     //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
@@ -72,7 +72,7 @@ public final class SVGPath extends SVGElement {
     }
 
     public void setPathStr(String pathStr) {
-        this.pathStr = pathStr;
+        this.pathStr = checkSvgPathStr(pathStr);
     }
     
     //</editor-fold>
@@ -84,64 +84,7 @@ public final class SVGPath extends SVGElement {
     private static final class PathConverter extends Converter<SVGPath, Path2D> {
         @Override
         protected Path2D doForward(SVGPath path) {
-            String svg = path.pathStr;
-            GeneralPath gp = new GeneralPath();
-            // ensure spaces follow every letter
-            svg = svg.replaceAll("[A-Za-z]", " $0 ").trim();
-            // ensure spaces precede every negative sign
-            svg = svg.replaceAll("[\\-]", " -");
-            String[] spl = svg.split("[\\s,]+");
-            float[] curveRes = null;
-            float[] quadCurveRes = null;
-            for (int pos = 0; pos < spl.length; pos++) {
-                String s = spl[pos].trim();
-                if (s.length() != 1) {
-                    throw new IllegalArgumentException("invalid comand: " + s + "   svg:\n"+svg);
-                }
-                boolean rel = Character.isLowerCase(s.charAt(0));
-                float[] cur = gp.getCurrentPoint() == null ? new float[] { 0, 0 }
-                        : new float[] { (float) gp.getCurrentPoint().getX(), (float) gp.getCurrentPoint().getY() };
-                float[] add = rel ? cur : new float[] { 0, 0 };
-                float[] coords = values(spl, pos+1);
-                pos += coords.length;
-                int ch = s.toLowerCase().charAt(0);
-                switch (ch) {
-                    case 'm':
-                        move(gp, coords, add);
-                        curveRes = null;
-                        quadCurveRes = null;
-                        break;
-                    case 'l':
-                    case 'h':
-                    case 'v':
-                        line(gp, coords, ch, cur, add);
-                        curveRes = null;
-                        quadCurveRes = null;
-                        break;
-                    case 'c':
-                    case 's':
-                        curveRes = curve(gp, coords, ch, add, cur, curveRes);
-                        quadCurveRes = null;
-                        break;
-                    case 'q':
-                    case 't':
-                        quadCurveRes = quadCurve(gp, coords, ch, add, cur, quadCurveRes);
-                        curveRes = null;
-                        break;
-                    case 'a':
-                        arc(gp, coords, add);
-                        curveRes = null;
-                        quadCurveRes = null;
-                        break;
-                    case 'z':
-                        gp.closePath();
-                        break;
-                    default:
-                        throw new IllegalArgumentException(svg);
-
-                }
-            }
-            return gp;
+            return toPath(path.pathStr);
         }
 
         @Override
@@ -154,16 +97,16 @@ public final class SVGPath extends SVGElement {
                 curSegmentType = pi.currentSegment(cur);
                 switch (curSegmentType) {
                     case PathIterator.SEG_MOVETO:
-                        pathString.append(String.format("M %.6f %.6f ", cur[0], cur[1]));
+                        pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
                         break;
                     case PathIterator.SEG_LINETO:
-                        pathString.append(String.format("L %.6f %.6f ", cur[0], cur[1]));
+                        pathString.append("L ").append(numStr(" ", 6, cur[0], cur[1])).append(" ");
                         break;
                     case PathIterator.SEG_QUADTO:
-                        pathString.append(String.format("Q %.6f %.6f %.6f %.6f ", cur[0], cur[1], cur[2], cur[3]));
+                        pathString.append("Q ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3])).append(" ");
                         break;
                     case PathIterator.SEG_CUBICTO:
-                        pathString.append(String.format("C %.6f %.6f %.6f %.6f %.6f %.6f ", cur[0], cur[1], cur[2], cur[3], cur[4], cur[5]));
+                        pathString.append("M ").append(numStr(" ", 6, cur[0], cur[1], cur[2], cur[3], cur[4], cur[5])).append(" ");
                         break;
                     case PathIterator.SEG_CLOSE:
                         pathString.append("Z");
@@ -178,6 +121,92 @@ public final class SVGPath extends SVGElement {
     }
     
     //<editor-fold defaultstate="collapsed" desc="STATIC UTILITIES">
+
+    /** Checks that the given string is a valid SVG path string. */
+    static String checkSvgPathStr(String svg) {
+        toPath(svg);
+        return svg;
+    }
+    
+    /** Converts SVG path string to a Java path */
+    static GeneralPath toPath(String svg) {
+        GeneralPath gp = new GeneralPath();
+        // ensure spaces follow every letter
+        svg = svg.replaceAll("[A-Za-z]", " $0 ").trim();
+        // ensure spaces precede every negative sign
+        svg = svg.replaceAll("[\\-]", " -");
+        String[] spl = svg.split("[\\s,]+");
+        float[] curveRes = null;
+        float[] quadCurveRes = null;
+        for (int pos = 0; pos < spl.length; pos++) {
+            String s = spl[pos].trim();
+            if (s.length() != 1) {
+                throw new IllegalArgumentException("invalid comand: " + s + "   svg:\n"+svg);
+            }
+            boolean rel = Character.isLowerCase(s.charAt(0));
+            float[] cur = gp.getCurrentPoint() == null ? new float[] { 0, 0 }
+                    : new float[] { (float) gp.getCurrentPoint().getX(), (float) gp.getCurrentPoint().getY() };
+            float[] add = rel ? cur : new float[] { 0, 0 };
+            float[] coords = values(spl, pos+1);
+            pos += coords.length;
+            int ch = s.toLowerCase().charAt(0);
+            switch (ch) {
+                case 'm':
+                    move(gp, coords, add);
+                    curveRes = null;
+                    quadCurveRes = null;
+                    break;
+                case 'l':
+                case 'h':
+                case 'v':
+                    line(gp, coords, ch, cur, add);
+                    curveRes = null;
+                    quadCurveRes = null;
+                    break;
+                case 'c':
+                case 's':
+                    curveRes = curve(gp, coords, ch, add, cur, curveRes);
+                    quadCurveRes = null;
+                    break;
+                case 'q':
+                case 't':
+                    quadCurveRes = quadCurve(gp, coords, ch, add, cur, quadCurveRes);
+                    curveRes = null;
+                    break;
+                case 'a':
+                    arc(gp, coords, add);
+                    curveRes = null;
+                    quadCurveRes = null;
+                    break;
+                case 'z':
+                    gp.closePath();
+                    break;
+                default:
+                    throw new IllegalArgumentException(svg);
+
+            }
+        }
+        return gp;
+    }
+    
+    /** Prints numbers w/ up to n digits of precision, removing trailing zeros */
+    static String numStr(int prec, double val) {
+        String res = String.format("%."+prec+"f", val);
+        return res.indexOf('.') < 0 ? res : res.replaceAll("0*$", "").replaceAll("\\.$", "");
+    }
+    
+    /** Prints a sequence of numbers with the specified joiner and precision */
+    static String numStr(String join, int prec, double... vals) {
+        if (vals.length == 0) {
+            return "";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append(numStr(prec, vals[0]));
+        for (int i = 1; i < vals.length; i++) {
+            res.append(join).append(numStr(prec, vals[i]));
+        }
+        return res.toString();
+    }
     
     /** Move through list of coordinates */
     private static void move(GeneralPath gp, float[] coords, float[] add) {

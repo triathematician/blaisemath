@@ -26,7 +26,11 @@ package com.googlecode.blaisemath.svg;
  */
 
 import com.google.common.base.Converter;
+import static com.googlecode.blaisemath.svg.SVGPolyline.checkPointString;
+import static com.googlecode.blaisemath.svg.SVGPolyline.toPath;
+import static com.googlecode.blaisemath.svg.SVGPolyline.toPathString;
 import java.awt.geom.GeneralPath;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,16 +38,38 @@ import javax.xml.bind.annotation.XmlRootElement;
  *   SVG Polygon object.
  * </p>
  * @author elisha
- * TODO - implement functionality
  */
 @XmlRootElement(name="polygon")
 public final class SVGPolygon extends SVGElement {
     
     private static final PolygonConverter CONVERTER_INST = new PolygonConverter();
+    
+    private String ptStr = "";
 
     public SVGPolygon() {
         super("polygon");
     }
+
+    public SVGPolygon(String pts) {
+        super("polygon");
+        this.ptStr = checkPointString(pts);
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="PROPERTY PATTERNS">
+    //
+    // PROPERTY PATTERNS
+    //
+    
+    @XmlAttribute(name="points")
+    public String getPointStr() {
+        return ptStr;
+    }
+
+    public void setPointStr(String pathStr) {
+        this.ptStr = checkPointString(pathStr);
+    }
+    
+    //</editor-fold>
     
     public static Converter<SVGPolygon, GeneralPath> shapeConverter() {
         return CONVERTER_INST;
@@ -52,12 +78,15 @@ public final class SVGPolygon extends SVGElement {
     private static final class PolygonConverter extends Converter<SVGPolygon, GeneralPath> {
         @Override
         protected GeneralPath doForward(SVGPolygon a) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            GeneralPath gp = toPath(a.ptStr);
+            gp.closePath();
+            return gp;
         }
 
         @Override
         protected SVGPolygon doBackward(GeneralPath b) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            String s = toPathString(b);
+            return new SVGPolygon(s);
         }
     }
 

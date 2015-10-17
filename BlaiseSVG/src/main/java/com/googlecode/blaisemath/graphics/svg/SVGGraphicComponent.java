@@ -28,12 +28,17 @@ import com.googlecode.blaisemath.graphics.swing.JGraphicComponent;
 import com.googlecode.blaisemath.svg.SVGElement;
 
 /**
- * Swing component for displaying an SVG element or elements.
+ * <p>
+ *   Swing component for displaying an SVG element or elements.
+ * </p>
+ * <p>
+ *   This class is not designed for serialization.
+ * </p>
  * @author petereb1
  */
 public class SVGGraphicComponent extends JGraphicComponent {
 
-    protected final SVGGraphic graphic = new SVGGraphic();
+    protected final transient SVGGraphic graphic = new SVGGraphic();
 
     public SVGGraphicComponent() {
         addGraphic(graphic);

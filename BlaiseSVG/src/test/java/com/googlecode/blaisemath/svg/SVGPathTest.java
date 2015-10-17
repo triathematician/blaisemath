@@ -25,7 +25,6 @@ package com.googlecode.blaisemath.svg;
  * #L%
  */
 
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import org.junit.Test;
 

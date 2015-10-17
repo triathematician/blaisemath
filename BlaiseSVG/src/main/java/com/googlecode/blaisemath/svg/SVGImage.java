@@ -160,10 +160,12 @@ public final class SVGImage extends SVGElement {
     
     
     private static final class ImageConverter extends Converter<SVGImage, AnchoredImage> {
+        @Override
         protected SVGImage doBackward(AnchoredImage r) {
             return new SVGImage(r.getX(), r.getY(), r.getWidth(), r.getHeight(), r.getReference());
         }
 
+        @Override
         protected AnchoredImage doForward(SVGImage r) {
             if (r.width == null || r.height == null) {
                 BufferedImage bi = (BufferedImage) r.getImage();
