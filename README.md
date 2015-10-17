@@ -7,6 +7,7 @@
   * **BlaiseGraphics** - A [scene graph](http://en.wikipedia.org/wiki/Scene_graph) and style library for creating interactive graphics on a Swing component.
   * **BlaiseMath** - Miscellaneous mathematics utilities, including coordinate systems, planar geometry, and 3d points.
   * **BlaiseGraphTheory** - Basic graph theory, graph layout algorithms, and visual graphs.
+  * **BlaiseGraphTheory3** - Branch for next generation of `BlaiseGraphTheory`.
 
 ## Experimental ##
   * **BlaiseParser** - Lightweight library for parsing expressions.
@@ -17,14 +18,12 @@
   * **BlaiseSketch** - Basic drawing tool based on the blaise stack. _Under development_.
 
 ## Project Dependencies
- * Basic
+ * Core
   * **Firestarter** - none
-  * **BlaiseMath** - none
-  * **BlaiseParser** - none
   * **BlaiseCommon** - `guava`
   * **BlaiseGraphics** - `blaise-common`, `firestarter`
  * Graphs
-  * **BlaiseGraphTheory** - `blaise-graphics`, `blaise-math`, `commons-math`, `swing-layout`
+  * **BlaiseGraphTheory** - `blaise-graphics`, `commons-math`, `swing-layout`
   * **BlaiseGraphTheory3** - `blaise-graphics`, `commons-math`, `swing-layout`
  * SVG/Sketch
   * **BlaiseSVG** - `blaise-graphics`
@@ -33,5 +32,8 @@
  * Widgets
   * **BlaiseWidgets** - `blaise-graphics`, `swing-layout`
  * Visometry
+  * **BlaiseMath** - none
   * **BlaiseVisometry** - `blaise-graphics`, `blaise-math`
+ * Parser
+  * **BlaiseParser** - none
  
