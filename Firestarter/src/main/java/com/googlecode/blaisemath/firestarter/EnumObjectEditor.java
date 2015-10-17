@@ -1,5 +1,5 @@
 /**
- * EnumEditor.java
+ * EnumObjectEditor.java
  * Created on Jul 2, 2009
  */
 package com.googlecode.blaisemath.firestarter;
@@ -48,7 +48,7 @@ import javax.swing.JPanel;
  *  an enum value, such that each enum returns a value of the object. When the enum value is
  *  selected in a ComboBox, the underlying value is updated.
  * </p>
- *
+ * 
  * @author Elisha Peterson
  */
 public final class EnumObjectEditor extends MPanelEditorSupport {
