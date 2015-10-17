@@ -40,6 +40,7 @@ public class ColorAdapterTest extends TestCase {
     public void testMarshal() throws Exception {
         System.out.println("marshal");
         ColorAdapter ca = new ColorAdapter();
+        assertEquals("null", ca.marshal(null));
         assertEquals("#ff0000", ca.marshal(Color.red));
         assertEquals("#0000ff", ca.marshal(Color.blue));
         assertEquals("#c0ff8080", ca.marshal(new Color(255,128,128,192)));
@@ -52,9 +53,17 @@ public class ColorAdapterTest extends TestCase {
     public void testUnmarshal() throws Exception {
         System.out.println("unmarshal");
         ColorAdapter ca = new ColorAdapter();
+        assertEquals(null, ca.unmarshal(null));
+        assertEquals(null, ca.unmarshal("null"));
         assertEquals(Color.red, ca.unmarshal(ca.marshal(Color.red)));
         assertEquals(Color.blue, ca.unmarshal(ca.marshal(Color.blue)));
         assertEquals(new Color(255,128,128,192), ca.unmarshal(ca.marshal(new Color(255,128,128,192))));
         assertEquals(new Color(0,0,37,0), ca.unmarshal(ca.marshal(new Color(0,0,37,0))));
+        try {
+            assertEquals(null, ca.unmarshal("not a color"));
+            fail();
+        } catch (IllegalArgumentException x) {
+            // expected
+        }
     }
 }

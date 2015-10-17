@@ -37,18 +37,16 @@ package com.googlecode.blaisemath.util;
  */
 
 
+import com.google.common.base.Converter;
 import java.awt.Color;
-import static org.junit.Assert.assertEquals;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  *
  * @author Elisha
  */
-public class ColorsTest {
-    
-    public ColorsTest() {
-    }
+public class ColorsTest extends TestCase {
 
     @Test
     public void testLighterThan() {
@@ -73,8 +71,8 @@ public class ColorsTest {
     }
 
     @Test
-    public void testDoForward() {
-        System.out.println("doForward");
+    public void testConvertToString() {
+        System.out.println("convertToString");
         assertEquals(null, Colors.stringConverter().convert(null));
         assertEquals("#ff0000", Colors.stringConverter().convert(Color.red));
         assertEquals("#00ff00", Colors.stringConverter().convert(Color.green));
@@ -83,13 +81,26 @@ public class ColorsTest {
     }
 
     @Test
-    public void testDoBackward() {
-        System.out.println("doBackward");
-        assertEquals(null, Colors.stringConverter().reverse().convert(null));
-        assertEquals(Color.red, Colors.stringConverter().reverse().convert("#ff0000"));
-        assertEquals(Color.green, Colors.stringConverter().reverse().convert("#00ff00"));
-        assertEquals(Color.blue, Colors.stringConverter().reverse().convert("#0000ff"));
-        assertEquals(new Color(0,0,255,128), Colors.stringConverter().reverse().convert("#800000ff"));
+    public void testConvertFromString() {
+        System.out.println("convertFromString");
+        Converter<String, Color> rev = Colors.stringConverter().reverse();
+        assertEquals(null, rev.convert(null));
+        assertEquals(Color.red, rev.convert("#ff0000"));
+        assertEquals(Color.green, rev.convert("#00ff00"));
+        assertEquals(Color.blue, rev.convert("#0000ff"));
+        assertEquals(new Color(0,0,255,128), rev.convert("#800000ff"));
+        try {
+            assertEquals(null, rev.convert("null"));
+            fail();
+        } catch (IllegalArgumentException x) {
+            // expected
+        }        
+        try {
+            assertEquals(null, rev.convert("not a color"));
+            fail();
+        } catch (IllegalArgumentException x) {
+            // expected
+        }
     }
 
 }
